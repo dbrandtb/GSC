@@ -3751,46 +3751,92 @@ public class CotizacionAction extends PrincipalCoreAction
 		if(exito)
 		{
 			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
-			ManagerRespuestaSmapVO resp = cotizacionManager.subirCensoCompleto(
-					cdunieco
-					,cdramo
-					,nmpoliza
-					,feini
-					,fefin
-					,cdperpag
-					,pcpgocte
-					,rutaDocsTemp
-					,censoTimestamp
-					,getText("dominio.server.layouts")
-					,getText("user.server.layouts")
-					,getText("pass.server.layouts")
-					,getText("directorio.server.layouts")
-					,cdtipsit
-					,cdusuari
-					,cdsisrol
-					,cdagente
-					,codpostalCli
-					,cdedoCli
-					,cdmuniciCli
-					,olist1
-					,clasif
-					,LINEA_EXTENDIDA
-					,cdpersonCli
-					,nombreCli
-					,rfcCli
-					,dsdomiciCli
-					,nmnumeroCli
-					,nmnumintCli
-					,ntramite
-					,ntramiteVacio
-					,cdelemen
-					,nombreCensoConfirmado
-					,cdideper_
-					,cdideext_
-					,nmpolant
-					,nmrenova
-					,usuarioSesion
-					);
+			ManagerRespuestaSmapVO resp =  null;
+			
+			if(StringUtils.isBlank(nombreCensoConfirmado)){
+				 resp = cotizacionManager.subirCensoCompleto(
+						cdunieco
+						,cdramo
+						,nmpoliza
+						,feini
+						,fefin
+						,cdperpag
+						,pcpgocte
+						,rutaDocsTemp
+						,censoTimestamp
+						,getText("dominio.server.layouts")
+						,getText("user.server.layouts")
+						,getText("pass.server.layouts")
+						,getText("directorio.server.layouts")
+						,cdtipsit
+						,cdusuari
+						,cdsisrol
+						,cdagente
+						,codpostalCli
+						,cdedoCli
+						,cdmuniciCli
+						,olist1
+						,clasif
+						,LINEA_EXTENDIDA
+						,cdpersonCli
+						,nombreCli
+						,rfcCli
+						,dsdomiciCli
+						,nmnumeroCli
+						,nmnumintCli
+						,ntramite
+						,ntramiteVacio
+						,cdelemen
+						,nombreCensoConfirmado
+						,cdideper_
+						,cdideext_
+						,nmpolant
+						,nmrenova
+						,usuarioSesion
+						);
+			}else{
+				resp = cotizacionManager.confirmarCensoCompleto(
+						cdunieco
+						,cdramo
+						,nmpoliza
+						,feini
+						,fefin
+						,cdperpag
+						,pcpgocte
+						,rutaDocsTemp
+						,censoTimestamp
+						,getText("dominio.server.layouts")
+						,getText("user.server.layouts")
+						,getText("pass.server.layouts")
+						,getText("directorio.server.layouts")
+						,cdtipsit
+						,cdusuari
+						,cdsisrol
+						,cdagente
+						,codpostalCli
+						,cdedoCli
+						,cdmuniciCli
+						,olist1
+						,clasif
+						,LINEA_EXTENDIDA
+						,cdpersonCli
+						,nombreCli
+						,rfcCli
+						,dsdomiciCli
+						,nmnumeroCli
+						,nmnumintCli
+						,ntramite
+						,ntramiteVacio
+						,cdelemen
+						,nombreCensoConfirmado
+						,cdideper_
+						,cdideext_
+						,nmpolant
+						,nmrenova
+						,usuarioSesion
+						);
+			}
+			
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();

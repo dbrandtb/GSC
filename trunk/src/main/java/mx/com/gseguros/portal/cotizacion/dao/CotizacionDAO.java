@@ -676,4 +676,7 @@ public interface CotizacionDAO {
 			,String nmsituac
 			,String accion
 			)throws Exception;
+	
+	public void insertaReistroInfoCenso(Map<String, String> params)
+			throws Exception;
 }

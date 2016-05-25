@@ -7183,4 +7183,52 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public void insertaReistroInfoCenso(Map<String, String> params)throws Exception
+	{
+		ejecutaSP(new InsertaReistroInfoCenso(getDataSource()),params);
+	}
+	
+	protected class InsertaReistroInfoCenso extends StoredProcedure
+	{
+		protected InsertaReistroInfoCenso(DataSource dataSource)
+		{
+			super(dataSource,"PKG_TRAD.P_INS_ZWCENSOTRAD_REG_BUENO");
+			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgrupo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_parentesco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsapellido_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsapellido1_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnombre1_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otsexo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fenacimi_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdpostal_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsestado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsmunicipio_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dscolonia_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsdomici_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmnumero_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmnumint_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrfc_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsemail_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmtelefo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_identidad_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecantig_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_expocupacion_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_peso_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estatura_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_expsobrepeso_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_edocivil_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feingresoempleo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_plaza_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

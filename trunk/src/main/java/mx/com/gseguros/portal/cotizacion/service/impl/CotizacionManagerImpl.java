@@ -4466,6 +4466,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		String  nombreCenso   = null;
 		boolean pagoRepartido = false;
 		
+		int     filasError    = 0;
+		
 		if(resp.isExito())
 		{
 			try
@@ -4550,7 +4552,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            StringBuilder bufferErroresCenso = new StringBuilder();
 	            int           filasLeidas        = 0;
 	            int           filasProcesadas    = 0;
-	            int           filasError         = 0;
+	            filasError         = 0;
 	            
 	            Map<Integer,String>  familias       = new LinkedHashMap<Integer,String>();
 				Map<Integer,Boolean> estadoFamilias = new LinkedHashMap<Integer,Boolean>();
@@ -4567,6 +4569,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                StringBuilder bufferLinea    = new StringBuilder();
 	                StringBuilder bufferLineaStr = new StringBuilder();
 	                boolean       filaBuena      = true;
+	                
+	                String fechaNac =  null;
+	                String fecanti  = null;
+	                String feingreso =  null;
 	                
 	                if(Utils.isRowEmpty(row))
 	                {
@@ -4821,6 +4827,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
+		                
+		                fechaNac = auxDate!=null?
+        						renderFechas.format(auxDate)
+        						:"";
+        						
 		                logger.debug(
 		                		new StringBuilder("FECHA NACIMIENTO: ")
 		                		.append(
@@ -5148,6 +5159,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		throw new ApplicationException("El anio de la fecha de reconocimiento de antiguedad no es valido");
 		                	}
 		                }
+		                fecanti = auxDate!=null?
+        						renderFechas.format(auxDate)
+        						:"";
+        						
 		                logger.debug(
 		                		new StringBuilder("FECHA RECONOCIMIENTO ANTIGUEDAD: ")
 		                		.append(
@@ -5336,6 +5351,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		throw new ApplicationException("El anio de la fecha de ingreso no es valido");
 		                	}
 		                }
+		                
+		                feingreso = auxDate!=null?
+        						renderFechas.format(auxDate)
+        						:"";
+        						
 		                logger.debug(
 		                		new StringBuilder("FECHA INGRESO EMPLEADO: ")
 		                		.append(
@@ -5400,6 +5420,52 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
 	                	filasProcesadas = filasProcesadas + 1;
 	                	gruposValidos[((int)cdgrupo)-1]=true;
+	                	
+	                	try
+	    				{
+	                		Map<String,String> params =  new HashMap<String, String>();
+	    					
+	    					params.put("pv_cdunieco_i", cdunieco);
+	    					params.put("pv_cdramo_i", cdramo);
+	    					params.put("pv_estado_i", "W");
+	    					params.put("pv_nmpoliza_i", nmpoliza);
+	    					params.put("pv_cdgrupo_i", row.getCell(0)!=null?row.getCell(0).getStringCellValue() : "");
+	    					params.put("pv_parentesco_i", row.getCell(1)!=null?row.getCell(1).getStringCellValue() : "");
+	    					params.put("pv_dsapellido_i", row.getCell(2)!=null?row.getCell(2).getStringCellValue() : "");
+	    					params.put("pv_dsapellido1_i", row.getCell(3)!=null?row.getCell(3).getStringCellValue() : "");
+	    					params.put("pv_dsnombre_i", row.getCell(4)!=null?row.getCell(4).getStringCellValue() : "");
+	    					params.put("pv_dsnombre1_i", row.getCell(5)!=null?row.getCell(5).getStringCellValue() : "");
+	    					params.put("pv_otsexo_i", row.getCell(6)!=null?row.getCell(6).getStringCellValue() : "");
+	    					
+	    					params.put("pv_fenacimi_i", fechaNac);
+	    					params.put("pv_cdpostal_i", row.getCell(8)!=null?row.getCell(8).getStringCellValue() : "");
+	    					params.put("pv_dsestado_i", row.getCell(9)!=null?row.getCell(9).getStringCellValue() : "");
+	    					params.put("pv_dsmunicipio_i", row.getCell(10)!=null?row.getCell(10).getStringCellValue() : "");
+	    					params.put("pv_dscolonia_i", row.getCell(11)!=null?row.getCell(11).getStringCellValue() : "");
+	    					params.put("pv_dsdomici_i", row.getCell(12)!=null?row.getCell(12).getStringCellValue() : "");
+	    					params.put("pv_nmnumero_i", row.getCell(13)!=null?extraerStringDeCelda(row.getCell(13)) : "");
+	    					params.put("pv_nmnumint_i", row.getCell(14)!=null?extraerStringDeCelda(row.getCell(14)) : "");
+	    					params.put("pv_cdrfc_i",    row.getCell(15)!=null?row.getCell(15).getStringCellValue() : "");
+	    					params.put("pv_dsemail_i",  row.getCell(16)!=null?row.getCell(16).getStringCellValue() : "");
+	    					params.put("pv_nmtelefo_i", row.getCell(17)!=null?row.getCell(17).getStringCellValue() : "");
+	    					params.put("pv_identidad_i",row.getCell(18)!=null?row.getCell(18).getStringCellValue() : "");
+	    					params.put("pv_fecantig_i", fecanti);
+	    					params.put("pv_expocupacion_i", row.getCell(20)!=null?row.getCell(20).getStringCellValue() : "");
+	    					params.put("pv_peso_i", row.getCell(21)!=null?row.getCell(21).getStringCellValue() : "");
+	    					params.put("pv_estatura_i", row.getCell(22)!=null?row.getCell(22).getStringCellValue() : "");
+	    					params.put("pv_expsobrepeso_i", row.getCell(23)!=null?row.getCell(23).getStringCellValue() : "");
+	    					params.put("pv_edocivil_i", row.getCell(24)!=null?row.getCell(24).getStringCellValue() : "");
+	    					params.put("pv_feingresoempleo_i", feingreso);
+	    					params.put("pv_plaza_i", row.getCell(26)!=null?row.getCell(26).getStringCellValue() : "");
+	    					
+	    					cotizacionDAO.insertaReistroInfoCenso(params);
+	    					
+	    				}
+	    	            catch(Exception ex)
+	    	            {
+	    	            	logger.error("Error al insetar registro de censo", ex);
+	    	            }
+	                	
 	                }
 	                else
 	                {
@@ -5537,142 +5603,136 @@ public class CotizacionManagerImpl implements CotizacionManager
 					}
 	            }
 			}
-		}
-		
-		//pl censo
-		if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
-		{
-			String nombreProcedureCenso = null;
-			String tipoCensoParam       = "COMPLETO";
 			
-			//obtener el PL
-			try
+			if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado) && filasError <= 0)
 			{
-				Map<String,String>mapaAux=cotizacionDAO.obtenerParametrosCotizacion(
-						ParametroCotizacion.PROCEDURE_CENSO
-						,cdramo
-						,cdtipsit
-						,tipoCensoParam
-						,null
-						);
-				nombreProcedureCenso = mapaAux.get("P1VALOR");
-				if(StringUtils.isBlank(nombreProcedureCenso))
-				{
-					throw new ApplicationException("No se encontraron datos");
-				}
+				resp.getSmap().put("nombreCensoParaConfirmar", nombreCenso);
+				resp.setRespuesta(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
 			}
-            catch(ApplicationException ax)
-            {
-            	long timestamp = System.currentTimeMillis();
-            	resp.setExito(false);
-            	resp.setRespuesta(
-            			new StringBuilder("Error al obtener el nombre del procedimiento del censo: ")
-            			.append(ax.getMessage())
-            			.append(" #")
-            			.append(timestamp)
-            			.toString());
-            	resp.setRespuestaOculta(ax.getMessage());
-            	logger.error(resp.getRespuesta(),ax);
-            }
-            catch(Exception ex)
-            {
-            	long timestamp = System.currentTimeMillis();
-            	resp.setExito(false);
-            	resp.setRespuesta(new StringBuilder("Error al obtener el nombre del procedimiento para el censo #").append(timestamp).toString());
-            	resp.setRespuestaOculta(ex.getMessage());
-            	logger.error(resp.getRespuesta(),ex);
-            }
-			
-			//ejecutar el PL
-			if(resp.isExito())
-			{
-				try
-				{
-					cotizacionDAO.procesarCenso(
-							nombreProcedureCenso
-							,cdusuari
-							,cdsisrol
-							,nombreCenso
-							,cdunieco
-							,cdramo
-							,"W"
-							,nmpoliza
-							,cdtipsit
-							,cdagente
-							,codpostalCli
-							,cdedoCli
-							,cdmuniciCli
-							,"N"
-							);
-				}
-	            catch(Exception ex)
-	            {
-	            	long timestamp = System.currentTimeMillis();
-	            	resp.setExito(false);
-	            	resp.setRespuesta(new StringBuilder("Error al ejecutar procedimiento del censo #").append(timestamp).toString());
-	            	resp.setRespuestaOculta(ex.getMessage());
-	            	logger.error(resp.getRespuesta(),ex);
-	            }
-			}
-		}
-		
-		boolean hayTramite      = StringUtils.isNotBlank(ntramite);
-		boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
-		
-		if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
-		{
-			resp.getSmap().put("nombreCensoParaConfirmar", nombreCenso);
-			resp.setExito(true);
-			resp.setRespuesta(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
-			logger.info(resp.getRespuesta());
-			return resp;
-		}
-		
-		if(resp.isExito())
-		{
-			ManagerRespuestaSmapVO respInterna = procesoColectivoInterno(
-					grupos
-					,cdunieco
-					,cdramo
-					,nmpoliza
-					,hayTramite
-					,hayTramiteVacio
-					,clasif
-					,LINEA_EXTENDIDA
-					,cdtipsit
-					,cdpersonCli
-					,nombreCli
-					,rfcCli
-					,dsdomiciCli
-					,codpostalCli
-					,cdedoCli
-					,cdmuniciCli
-					,nmnumeroCli
-					,nmnumintCli
-					,ntramite
-					,ntramiteVacio
-					,cdagente
-					,cdusuari
-					,cdelemen
-					,true
-					,false
-					,false
-					,cdperpag
-					,false //resubirCenso
-					,cdsisrol
-					,false
-					,false //asincrono
-					,cdideper_
-					,cdideext_
-					,usuarioSesion
-					,true
-					);
 		}
 		
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ subirCensoCompleto @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+
+	
+	@Override
+	public ManagerRespuestaSmapVO confirmarCensoCompleto(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String feini
+			,String fefin
+			,String cdperpag
+			,String pcpgocte
+			,String rutaDocsTemp
+			,String censoTimestamp
+			,String dominioServerLayout
+			,String usuarioServerLayout
+			,String passwordServerLayout
+			,String direcServerLayout
+			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
+			,String cdagente
+			,String codpostalCli
+			,String cdedoCli
+			,String cdmuniciCli
+			,List<Map<String,Object>>grupos
+			,String clasif
+			,String LINEA_EXTENDIDA
+			,String cdpersonCli
+			,String nombreCli
+			,String rfcCli
+			,String dsdomiciCli
+			,String nmnumeroCli
+			,String nmnumintCli
+			,String ntramite
+			,String ntramiteVacio
+			,String cdelemen
+			,String nombreCensoConfirmado
+			,String cdideper_
+			,String cdideext_
+			,String nmpolant
+			,String nmrenova
+			,UserVO usuarioSesion
+			)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ confirmarCensoCompleto @@@@@@")
+				.append("\n@@@@@@ cdunieco=")            .append(cdunieco)
+				.append("\n@@@@@@ cdramo=")              .append(cdramo)
+				.append("\n@@@@@@ nmpoliza=")            .append(nmpoliza)
+				.append("\n@@@@@@ feini=")               .append(feini)
+				.append("\n@@@@@@ fefin=")               .append(fefin)
+				.append("\n@@@@@@ cdperpag=")            .append(cdperpag)
+				.append("\n@@@@@@ pcpgocte=")            .append(pcpgocte)
+				.append("\n@@@@@@ rutaDocsTemp=")        .append(rutaDocsTemp)
+				.append("\n@@@@@@ censoTimestamp=")      .append(censoTimestamp)
+				.append("\n@@@@@@ dominioServerLayout=") .append(dominioServerLayout)
+				.append("\n@@@@@@ usuarioServerLayout=") .append(usuarioServerLayout)
+				.append("\n@@@@@@ passwordServerLayout=").append(passwordServerLayout)
+				.append("\n@@@@@@ direcServerLayout=")   .append(direcServerLayout)
+				.append("\n@@@@@@ cdtipsit=")            .append(cdtipsit)
+				.append("\n@@@@@@ cdusuari=")            .append(cdusuari)
+				.append("\n@@@@@@ cdsisrol=")            .append(cdsisrol)
+				.append("\n@@@@@@ cdagente=")            .append(cdagente)
+				.append("\n@@@@@@ codpostalCli=")        .append(codpostalCli)
+				.append("\n@@@@@@ cdedoCli=")            .append(cdedoCli)
+				.append("\n@@@@@@ cdmuniciCli=")         .append(cdmuniciCli)
+				.append("\n@@@@@@ grupos=")              .append(grupos)
+				.append("\n@@@@@@ clasif=")              .append(clasif)
+				.append("\n@@@@@@ LINEA_EXTENDIDA=")     .append(LINEA_EXTENDIDA)
+				.append("\n@@@@@@ cdpersonCli=")         .append(cdpersonCli)
+				.append("\n@@@@@@ nombreCli=")           .append(nombreCli)
+				.append("\n@@@@@@ dsdomiciCli=")         .append(dsdomiciCli)
+				.append("\n@@@@@@ nmnumeroCli=")         .append(nmnumeroCli)
+				.append("\n@@@@@@ nmnumintCli=")         .append(nmnumintCli)
+				.append("\n@@@@@@ ntramite=")            .append(ntramite)
+				.append("\n@@@@@@ ntramiteVacio=")       .append(ntramiteVacio)
+				.append("\n@@@@@@ cdelemen=")            .append(cdelemen)
+				.append("\n@@@@@@ nombreCensoConfirmado=").append(nombreCensoConfirmado)
+				.append("\n@@@@@@ cdideper_=")            .append(cdideper_)
+				.append("\n@@@@@@ cdideext_=")            .append(cdideext_)
+				.append("\n@@@@@@ nmpolant=")             .append(nmpolant)
+				.append("\n@@@@@@ nmrenova=")             .append(nmrenova)
+				.toString()
+				);
+		
+		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
+		resp.setSmap(new HashMap<String,String>());
+		
+		try
+		{
+			new ConfirmaCensoConcurrente(cdunieco, cdramo, nmpoliza, cdtipsit,
+					nombreCensoConfirmado, cdusuari, cdsisrol, nombreCensoConfirmado, cdagente,
+					codpostalCli, cdedoCli, cdmuniciCli, ntramite, ntramiteVacio,
+					clasif, LINEA_EXTENDIDA, cdpersonCli, nombreCli, rfcCli,
+					dsdomiciCli, nmnumeroCli, nmnumintCli, cdelemen, cdideper_,
+					cdideext_, cdperpag, usuarioSesion, grupos
+					).start();
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al confirmar el censo concurrente. #").append(timestamp).toString());
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ confirmarCensoCompleto @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
@@ -7393,6 +7453,216 @@ public class CotizacionManagerImpl implements CotizacionManager
 	    			);
     	}
 	}
+    
+    
+    private class ConfirmaCensoConcurrente extends Thread
+    {
+    	private String cdunieco
+    	               ,cdramo
+    	               ,nmpoliza
+    	               ,cdtipsit
+    	               ,nombreCensoConfirmado
+    	               ,cdusuari
+    	               ,cdsisrol
+    	               ,nombreCenso
+    	               ,cdagente
+    	               ,codpostalCli
+    	               ,cdedoCli
+    	               ,cdmuniciCli
+    	               ,ntramite
+    	               ,ntramiteVacio
+    	               ,clasif
+    	               ,LINEA_EXTENDIDA
+    	               ,cdpersonCli
+    	               ,nombreCli
+					   ,rfcCli
+					   ,dsdomiciCli
+					   ,nmnumeroCli
+					   ,nmnumintCli
+					   ,cdelemen
+					   ,cdideper_
+					   ,cdideext_
+					   ,cdperpag;
+    	
+    	private UserVO usuarioSesion;
+    	List<Map<String,Object>>grupos;
+    	               
+    	public ConfirmaCensoConcurrente(String cdunieco, String cdramo, String nmpoliza, String cdtipsit,
+				String nombreCensoConfirmado, String cdusuari, String cdsisrol, String nombreCenso, String cdagente,
+				String codpostalCli, String cdedoCli, String cdmuniciCli, String ntramite, String ntramiteVacio,
+				String clasif, String lINEA_EXTENDIDA, String cdpersonCli, String nombreCli, String rfcCli,
+				String dsdomiciCli, String nmnumeroCli, String nmnumintCli, String cdelemen, String cdideper_,
+				String cdideext_, String cdperpag, UserVO usuarioSesion, List<Map<String, Object>> grupos) {
+			this.cdunieco = cdunieco;
+			this.cdramo = cdramo;
+			this.nmpoliza = nmpoliza;
+			this.cdtipsit = cdtipsit;
+			this.nombreCensoConfirmado = nombreCensoConfirmado;
+			this.cdusuari = cdusuari;
+			this.cdsisrol = cdsisrol;
+			this.nombreCenso = nombreCenso;
+			this.cdagente = cdagente;
+			this.codpostalCli = codpostalCli;
+			this.cdedoCli = cdedoCli;
+			this.cdmuniciCli = cdmuniciCli;
+			this.ntramite = ntramite;
+			this.ntramiteVacio = ntramiteVacio;
+			this.clasif = clasif;
+			LINEA_EXTENDIDA = lINEA_EXTENDIDA;
+			this.cdpersonCli = cdpersonCli;
+			this.nombreCli = nombreCli;
+			this.rfcCli = rfcCli;
+			this.dsdomiciCli = dsdomiciCli;
+			this.nmnumeroCli = nmnumeroCli;
+			this.nmnumintCli = nmnumintCli;
+			this.cdelemen = cdelemen;
+			this.cdideper_ = cdideper_;
+			this.cdideext_ = cdideext_;
+			this.cdperpag = cdperpag;
+			this.usuarioSesion = usuarioSesion;
+			this.grupos = grupos;
+		}
+
+		@Override
+    	public void run()
+    	{
+    		try
+    		{
+    			
+    			mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_TARIFA.getCodigo());
+    			
+    			//pl censo
+    			if(StringUtils.isBlank(nombreCensoConfirmado))
+    			{
+    				String nombreProcedureCenso = null;
+    				String tipoCensoParam       = "COMPLETO";
+    				
+    				//obtener el PL
+    				try
+    				{
+    					Map<String,String>mapaAux=cotizacionDAO.obtenerParametrosCotizacion(
+    							ParametroCotizacion.PROCEDURE_CENSO
+    							,cdramo
+    							,cdtipsit
+    							,tipoCensoParam
+    							,null
+    							);
+    					nombreProcedureCenso = mapaAux.get("P1VALOR");
+    					if(StringUtils.isBlank(nombreProcedureCenso))
+    					{
+    						throw new ApplicationException("No se encontraron datos");
+    					}
+    				}
+    	            catch(Exception ax)
+    	            {
+    	            	long timestamp = System.currentTimeMillis();
+    	            	throw new ApplicationException(
+    	            			new StringBuilder("Error al obtener el nombre del procedimiento del censo: ")
+    	            			.append(ax.getMessage())
+    	            			.append(" #")
+    	            			.append(timestamp)
+    	            			.toString());
+    	            }
+    				
+    				try
+					{
+						cotizacionDAO.procesarCenso(
+								nombreProcedureCenso
+								,cdusuari
+								,cdsisrol
+								,nombreCenso
+								,cdunieco
+								,cdramo
+								,"W"
+								,nmpoliza
+								,cdtipsit
+								,cdagente
+								,codpostalCli
+								,cdedoCli
+								,cdmuniciCli
+								,"N"
+								);
+					}
+		            catch(Exception ex)
+		            {
+		            	long timestamp = System.currentTimeMillis();
+		            	throw new ApplicationException(new StringBuilder("Error al ejecutar procedimiento del censo #").append(timestamp).toString());
+		            }
+    				
+    			}
+    			
+    			logger.info(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
+    			
+    			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
+    			boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
+    			
+//    			if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
+//    			{
+//    				resp.getSmap().put("nombreCensoParaConfirmar", nombreCenso);
+//    				resp.setExito(true);
+//    				resp.setRespuesta(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
+//    				logger.info(resp.getRespuesta());
+//    				return resp;
+//    			}
+    			
+    			try
+				{
+    				ManagerRespuestaSmapVO respInterna = procesoColectivoInterno(
+    						grupos
+    						,cdunieco
+    						,cdramo
+    						,nmpoliza
+    						,hayTramite
+    						,hayTramiteVacio
+    						,clasif
+    						,LINEA_EXTENDIDA
+    						,cdtipsit
+    						,cdpersonCli
+    						,nombreCli
+    						,rfcCli
+    						,dsdomiciCli
+    						,codpostalCli
+    						,cdedoCli
+    						,cdmuniciCli
+    						,nmnumeroCli
+    						,nmnumintCli
+    						,ntramite
+    						,ntramiteVacio
+    						,cdagente
+    						,cdusuari
+    						,cdelemen
+    						,true
+    						,false
+    						,false
+    						,cdperpag
+    						,false //resubirCenso
+    						,cdsisrol
+    						,false
+    						,false //asincrono
+    						,cdideper_
+    						,cdideext_
+    						,usuarioSesion
+    						,true
+    						);
+    			}
+	            catch(Exception ex)
+	            {
+	            	long timestamp = System.currentTimeMillis();
+	            	throw new ApplicationException(new StringBuilder("Error al ejecutar procesoColectivoInterno al confirmar censo concurrente #").append(timestamp).toString());
+	            }
+    			
+    			long stamp = System.currentTimeMillis();
+    			logger.debug(Utils.log(stamp,"Mandando el tramite a estatus completo despues de subir censo cocurrente y proceso colectivo interno"));
+
+    			mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
+    		}
+    		catch(Exception ex)
+    		{
+    			logger.error("Error en confirmar censo concurrente", ex);
+    		}
+    	}
+    }
+    
     
     private class EjecutaTarificacionConcurrente extends Thread
     {

@@ -414,6 +414,49 @@ public interface CotizacionManager
 			,String nmrenova
 			,UserVO usuarioSesion
 			);
+
+	public ManagerRespuestaSmapVO confirmarCensoCompleto(
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String feini
+			,String fefin
+			,String cdperpag
+			,String pcpgocte
+			,String rutaDocsTemp
+			,String censoTimestamp
+			,String dominioServerLayout
+			,String usuarioServerLayout
+			,String passwordServerLayout
+			,String direcServerLayout
+			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
+			,String cdagente
+			,String codpostalCli
+			,String cdedoCli
+			,String cdmuniciCli
+			,List<Map<String,Object>>grupos
+			,String clasif
+			,String LINEA_EXTENDIDA
+			,String cdpersonCli
+			,String nombreCli
+			,String rfcCli
+			,String dsdomiciCli
+			,String nmnumeroCli
+			,String nmnumintCli
+			,String ntramite
+			,String ntramiteVacio
+			,String cdelemen
+			,String nombreCensoConfirmado
+			,String cdideper_
+			,String cdideext_
+			,String nmpolant
+			,String nmrenova
+			,UserVO usuarioSesion
+			);
+	
+	
 	public ManagerRespuestaVoidVO validarCambioZonaGMI(
 			String cdunieco
 			,String cdramo
