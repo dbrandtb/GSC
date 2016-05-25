@@ -275,6 +275,9 @@ Ext.onReady(function()
         ,proxy      :
         {
             url          : panDocUrlCargar
+            ,actionMethods: {
+                read: 'POST'
+            }
             ,extraParams : 
             {
                 'smap1.pv_nmpoliza_i'  : panDocInputNmpoliza
