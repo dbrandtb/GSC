@@ -1058,7 +1058,7 @@ function _0_cargarPoliza()
 
 function llenandoCampos (json)
 {
-	 var panelpri = _fieldById('_p28_panelpri');
+// 	 var panelpri = _fieldById('_0_panelpri');
      var nmpoliza = _fieldByName('nmpoliza').getValue();
 	 debug('### cargar cotizacion:',json);
     
