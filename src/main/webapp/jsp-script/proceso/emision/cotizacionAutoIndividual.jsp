@@ -575,7 +575,7 @@ Ext.onReady(function()
          xtype   : 'fieldset'
         ,itemId : '_p28_fieldsetVehiculo'
         ,width  : 435
-        ,title  : '<span style="font:bold 14px Calibri;">VEH&Iacute;CULO</span>'
+        ,title  :  _p28_smap1.cdtipsit+ 'x' != 'TLx'? '<span style="font:bold 14px Calibri;">VEH&Iacute;CULO</span>' : '<span style="font:bold 14px Calibri;">LICENCIA</span>'
         ,items  : _p28_panel2Items
     }
     ,{
@@ -591,7 +591,7 @@ Ext.onReady(function()
         ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES DE P&Oacute;LIZA</span>'
         ,hidden : _p28_smap1.cdramo+'x'=='5x'
                   ?(
-                        (_p28_smap1.cdtipsit+'x'!='CRx' && _p28_smap1.cdtipsit+'x'!='TVx' ) || 
+                        (_p28_smap1.cdtipsit+'x'!='CRx' && _p28_smap1.cdtipsit+'x'!='TVx' && _p28_smap1.cdtipsit+'x'!='TLx' ) || 
                         (rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
                         //_p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
                    )
