@@ -285,6 +285,7 @@ Ext.onReady(function()
                 ,'smap1.pv_cdramo_i'   : panDocInputCdramo
                 ,'smap1.pv_estado_i'   : panDocInputEstado
                 ,'smap1.pv_ntramite_i' : panDocInputNtramite
+                ,'smap1.pv_nmsuplem_i' : panDocInputNmsuplem
                 ,'smap1.pv_dsdocume_i' : null
             }
             ,type        : 'ajax'
