@@ -3064,6 +3064,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_dsdocume_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_start_i", 	  OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_limit_i", 	  OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsuplem_i",    OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtenerDocumentosPolizaMapper()));
 			declareParameter(new SqlOutParameter("pv_num_rec_o",  OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
