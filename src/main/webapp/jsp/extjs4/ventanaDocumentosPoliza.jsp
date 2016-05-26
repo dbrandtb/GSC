@@ -671,6 +671,21 @@ Ext.onReady(function()
                                 }
                             }
                         ]
+                        ,listeners :
+                        {
+                            afterrender : function(me)
+                            {
+                                <s:if test='%{!(""+smap1.aux).equals("")}'>
+                                me.down('[name=smap1.cddocumeFlujo]').on(
+                                {
+                                    select : function(me,records)
+                                    {
+                                        me.up('form').down('[name=smap1.descripcion]').setValue(records[0].get('value'));
+                                    }
+                                });
+                                </s:if>
+                            }
+                        }
                     })
                 ]
             }).show();

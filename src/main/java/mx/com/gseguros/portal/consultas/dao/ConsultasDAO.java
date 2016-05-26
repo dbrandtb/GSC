@@ -402,7 +402,7 @@ public interface ConsultasDAO
 	public Map<String,String>recuperarDetalleImpresionLote(String lote) throws Exception;
 	
 	public List<Map<String,String>> recuperarImpresorasPorPapelYSucursal(
-			String cdunieco
+			String cdusuari
 			,String papel
 			,String activo
 			)throws Exception;

@@ -1281,21 +1281,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String ntramite
 			,String tipoflot
 			,boolean endoso
+			,FlujoVO flujo
 			)throws Exception
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ cotizacionAutoFlotilla @@@@@@")
-				.append("\n@@@@@@ cdusuari=").append(cdusuari)
-				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=")  .append(cdramo)
-				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
-				.append("\n@@@@@@ ntramite=").append(ntramite)
-				.append("\n@@@@@@ endoso=")  .append(endoso)
-				.toString()
-				);
+		logger.info(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cotizacionAutoFlotilla @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ endoso="   , endoso
+				,"\n@@@@@@ flujo="    , flujo
+				));
 		
 		ManagerRespuestaImapSmapVO resp = new ManagerRespuestaImapSmapVO(true);
 		resp.setSmap(new LinkedHashMap<String,String>());
@@ -1327,6 +1327,39 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				catch(Exception ex)
 				{
 					throw new ApplicationException("Usted no puede cotizar este producto");
+				}
+			}
+			else
+			{
+				String cdperson = consultasDAO.recuperarCdpersonClienteTramite(ntramite);
+				resp.getSmap().put("cdpercli", cdperson);
+				
+				if(flujo!=null)
+				{
+					logger.debug("Se recuperan datos del tramite accediendo por flujo");
+					
+					Map<String,Object> datosFlujo = flujoMesaControlDAO.recuperarDatosTramiteValidacionCliente(
+							flujo.getCdtipflu()
+							,flujo.getCdflujomc()
+							,flujo.getTipoent()
+							,flujo.getClaveent()
+							,flujo.getWebid()
+							,ntramite
+							,flujo.getStatus()
+							,cdunieco
+							,cdramo
+							,flujo.getEstado()
+							,flujo.getNmpoliza()
+							,flujo.getNmsituac()
+							,flujo.getNmsuplem()
+							);
+					
+					Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+					
+					cdagente = tramite.get("CDAGENTE");
+					logger.debug("CDAGENTE={}",cdagente);
+
+					resp.getSmap().put("cdagente" , cdagente);
 				}
 			}
 			
@@ -1414,6 +1447,39 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					}
 				}
 				tatrisit = aux;
+			}
+			
+			//parchamos el campo AGENTE cuando viene por flujo
+			if(flujo!=null)
+			{
+				logger.debug("Se procede a buscar el campo agente para reemplazar");
+				for(ComponenteVO item : tatrisit)
+				{
+					if("AGENTE".equals(item.getLabel()))
+					{
+						logger.debug("Se encontro y modifico el campo agente: {}",item);
+						if(StringUtils.isNotBlank(item.getCatalogo()))
+						{
+							item.setCatalogo("CATALOGO_CERRADO");
+							item.setQueryParam(null);
+							item.setParamName1(Utils.join("'params._",cdagente,"'"));
+							item.setParamValue1(Utils.join("'",cotizacionDAO.cargarNombreAgenteTramite(ntramite),"'"));
+							item.setParamName2(null);
+							item.setParamValue2(null);
+							item.setParamName3(null);
+							item.setParamValue3(null);
+							item.setParamName4(null);
+							item.setParamValue4(null);
+							item.setParamName5(null);
+							item.setParamValue5(null);
+						}
+						else
+						{
+							item.setValue(cdagente);
+							item.setSoloLectura(true);
+						}
+					}
+				}
 			}
 			
 			paso = "Organizando atributos";
@@ -1804,13 +1870,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@ ").append(resp)
-				.append("\n@@@@@@ cotizacionAutoFlotilla @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.toString()
-				);
+		logger.info(Utils.log(
+				 "\n@@@@@@ " , resp
+				,"\n@@@@@@ cotizacionAutoFlotilla @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 		return resp;
 	}
 	
