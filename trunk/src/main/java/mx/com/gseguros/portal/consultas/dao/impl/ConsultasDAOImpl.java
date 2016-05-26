@@ -3179,13 +3179,13 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	
 	@Override
 	public List<Map<String,String>> recuperarImpresorasPorPapelYSucursal(
-			String cdunieco
+			String cdusuari
 			,String papel
 			,String activo
 			)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("cdunieco" , cdunieco);
+		params.put("cdusuari" , cdusuari);
 		params.put("papel"    , papel);
 		params.put("activo"   , activo);
 		Map<String,Object>       procRes = ejecutaSP(new RecuperarImpresorasPorPapelYSucursal(getDataSource()),params);
@@ -3203,7 +3203,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		protected RecuperarImpresorasPorPapelYSucursal(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_IMPRESORAS");
-			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("papel"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("activo"   , OracleTypes.VARCHAR));
 			String[] cols = new String[]{

@@ -757,15 +757,13 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				logger.debug(Utils.log(""," paso: ",paso));
 				
 				String papel    = params.get("papel");
-				String cdunieco = usuario.getCdUnieco();
 				String swactivo = params.get("swactivo");
 				
 				Utils.validate(
 						papel     , "No se recibi\u00F3 el tipo de papel"
-						,cdunieco , "No hay sucursal de usuario"
 						);
 				
-				lista = consultasDAO.recuperarImpresorasPorPapelYSucursal(cdunieco,papel,swactivo);
+				lista = consultasDAO.recuperarImpresorasPorPapelYSucursal(cdusuari,papel,swactivo);
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_PERMISOS_IMPRESION))
 			{

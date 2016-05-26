@@ -9,30 +9,35 @@
 ////// overrides //////
 
 ////// urls //////
-var _p30_urlCargarSumaAseguradaRamo5       = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"           />';
-var _p30_urlCargarCduniecoAgenteAuto       = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"           />';
-var _p30_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento"     />';
-var _p30_urlCargarParametros               = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"        />';
-var _p30_urlRecuperarCliente               = '<s:url namespace="/"                action="buscarPersonasRepetidas"            />';
-var _p30_urlCargarCatalogo                 = '<s:url namespace="/catalogos"       action="obtieneCatalogo"                    />';
-var _p30_urlCotizar                        = '<s:url namespace="/emision"         action="cotizarAutosFlotilla"               />';
-var _p30_urlCargaMasiva                    = '<s:url namespace="/emision"         action="procesarCargaMasivaFlotilla"        />';
-var _p30_urlCargar                         = '<s:url namespace="/emision"         action="cargarCotizacionAutoFlotilla"       />';
-var _p30_urlRecuperacionSimple             = '<s:url namespace="/emision"         action="recuperacionSimple"                 />';
-var _p30_urlRecuperacionSimpleLista        = '<s:url namespace="/emision"         action="recuperacionSimpleLista"            />';
-var _p30_urlComprar                        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"                 />';
-var _p30_urlDatosComplementarios           = '<s:url namespace="/emision"         action="emisionAutoFlotilla"                />';
-var _p30_urlCargarTipoCambioWS             = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                 />';
-var _p30_urlNada                           = '<s:url namespace="/emision"         action="webServiceNada"                     />';
-var _p30_urlCargarObligatorioCamionRamo5   = '<s:url namespace="/emision"         action="cargarObligatorioTractocamionRamo5" />';
-var _p30_urlViewDoc                        = '<s:url namespace="/documentos"      action="descargaDocInline"                  />';
-var _p30_urlEnviarCorreo                   = '<s:url namespace="/general"         action="enviaCorreo"                        />';
-var _p30_urlCargarDatosEndoso              = '<s:url namespace="/emision"         action="recuperarDatosEndosoAltaIncisoAuto" />';
-var _p30_urlConfirmarEndoso                = '<s:url namespace="/endosos"         action="confirmarEndosoAltaIncisoAuto"      />';
-var _p30_urlObtencionReporteExcel          = '<s:url namespace="/reportes"        action="procesoObtencionReporte"            />';
-var _p30_urlObtencionReporteExcel2         = '<s:url namespace="/reportes"        action="procesoObtencionReporte2"           />';
+var _p30_urlCargarSumaAseguradaRamo5          = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"            />';
+var _p30_urlCargarCduniecoAgenteAuto          = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"            />';
+var _p30_urlCargarRetroactividadSuplemento    = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento"      />';
+var _p30_urlCargarParametros                  = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"         />';
+var _p30_urlRecuperarCliente                  = '<s:url namespace="/"                action="buscarPersonasRepetidas"             />';
+var _p30_urlCargarCatalogo                    = '<s:url namespace="/catalogos"       action="obtieneCatalogo"                     />';
+var _p30_urlCotizar                           = '<s:url namespace="/emision"         action="cotizarAutosFlotilla"                />';
+var _p30_urlCargaMasiva                       = '<s:url namespace="/emision"         action="procesarCargaMasivaFlotilla"         />';
+var _p30_urlCargar                            = '<s:url namespace="/emision"         action="cargarCotizacionAutoFlotilla"        />';
+var _p30_urlRecuperacionSimple                = '<s:url namespace="/emision"         action="recuperacionSimple"                  />';
+var _p30_urlRecuperacionSimpleLista           = '<s:url namespace="/emision"         action="recuperacionSimpleLista"             />';
+var _p30_urlComprar                           = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"                  />';
+var _p30_urlDatosComplementarios              = '<s:url namespace="/emision"         action="emisionAutoFlotilla"                 />';
+var _p30_urlCargarTipoCambioWS                = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                  />';
+var _p30_urlNada                              = '<s:url namespace="/emision"         action="webServiceNada"                      />';
+var _p30_urlCargarObligatorioCamionRamo5      = '<s:url namespace="/emision"         action="cargarObligatorioTractocamionRamo5"  />';
+var _p30_urlViewDoc                           = '<s:url namespace="/documentos"      action="descargaDocInline"                   />';
+var _p30_urlEnviarCorreo                      = '<s:url namespace="/general"         action="enviaCorreo"                         />';
+var _p30_urlCargarDatosEndoso                 = '<s:url namespace="/emision"         action="recuperarDatosEndosoAltaIncisoAuto"  />';
+var _p30_urlConfirmarEndoso                   = '<s:url namespace="/endosos"         action="confirmarEndosoAltaIncisoAuto"       />';
+var _p30_urlObtencionReporteExcel             = '<s:url namespace="/reportes"        action="procesoObtencionReporte"             />';
+var _p30_urlObtencionReporteExcel2            = '<s:url namespace="/reportes"        action="procesoObtencionReporte2"            />';
+var _p30_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"     action="movimientoDetalleTramite"            />';
+var _p30_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"         action="actualizarOtvalorTramitePorDsatribu" />';
+var _p30_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"         action="recuperarOtvalorTramitePorDsatribu"  />';
+
 var MontoMaximo = 0;
 var MontoMinimo = 0;
+
 var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
@@ -192,6 +197,9 @@ var _p28_smap1 =
     cdtipsit : _p30_smap1.cdtipsit
 };
 debug('_p28_smap1:',_p28_smap1);
+
+var _p30_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+debug('_p30_flujo:',_p30_flujo);
 
 var _p30_store                   = null;
 var _p30_selectedRecord          = null;
@@ -976,7 +984,41 @@ Ext.onReady(function()
     ////// contenido //////
     var itemspri=
     [
-        Ext.create('Ext.form.Panel',
+        Ext.create('Ext.panel.Panel',
+        {
+            itemId       : '_p30_panelFlujo'
+            ,title       : 'ACCIONES'
+            ,hidden      : Ext.isEmpty(_p30_flujo)
+            ,buttonAlign : 'left'
+            ,buttons     : []
+            ,listeners   :
+            {
+                afterrender : function(me)
+                {
+                    if(!Ext.isEmpty(_p30_flujo))
+                    {
+                        _cargarBotonesEntidad(
+                            _p30_flujo.cdtipflu
+                            ,_p30_flujo.cdflujomc
+                            ,_p30_flujo.tipoent
+                            ,_p30_flujo.claveent
+                            ,_p30_flujo.webid
+                            ,me.itemId//callback
+                            ,_p30_flujo.ntramite
+                            ,_p30_flujo.status
+                            ,_p30_flujo.cdunieco
+                            ,_p30_flujo.cdramo
+                            ,_p30_flujo.estado
+                            ,_p30_flujo.nmpoliza
+                            ,_p30_flujo.nmsituac
+                            ,_p30_flujo.nmsuplem
+                            ,null//callbackDespuesProceso
+                        );
+                    }
+                }
+            }
+        })
+        ,Ext.create('Ext.form.Panel',
         {
             itemId      : '_p30_form'
             ,title      : 'DATOS GENERALES'
@@ -3313,6 +3355,11 @@ Ext.onReady(function()
 	        }
 	    });
     }
+    
+    _p30_recuperarClienteTramite();
+    
+    _p30_recuperarCotizacionDeTramite();
+    
     ////// loaders //////
 });
 
@@ -4600,7 +4647,14 @@ function _p30_cotizar(sinTarificar)
                                 ,enableColumnMove : false
                                 ,listeners        :
                                 {
-                                    select : _p30_tarifaSelect
+                                    select       : _p30_tarifaSelect
+                                    ,afterrender : function(me)
+                                    {
+                                        if(!Ext.isEmpty(_p30_flujo) && !sinTarificar===true)
+                                        {
+                                            _p30_actualizarCotizacionTramite(_p30_actualizarSwexiperTramite);
+                                        }
+                                    }
                                 }
                             })
                             ,_p30_formDescuento
@@ -4816,6 +4870,8 @@ function _p30_limpiar()
     }
     
     _p30_inicializarTatripol();
+    
+    _p30_recuperarClienteTramite();
     
     debug('<_p30_limpiar');
 }
@@ -5087,6 +5143,9 @@ function _p30_bloquear(b)
         agente.setReadOnly(true);
         _p30_ramo5AgenteSelect(agente,_p30_smap1.cdagente);
     }
+    
+    _p30_recuperarClienteTramite();
+    
     debug('<_p30_bloquear');
 }
 
@@ -5461,28 +5520,47 @@ function _p30_comprar()
     panelPri.setLoading(true);
     var nombreTitular = '';
     
+    var paramsComprar =
+    {
+        comprarNmpoliza        : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+        ,comprarCdplan         : '*'
+        ,comprarCdperpag       : _p30_selectedTarifa.get('CDPERPAG')
+        ,comprarCdramo         : _p30_smap1.cdramo
+        ,comprarCdciaaguradora : '20'
+        ,comprarCdunieco       : _p30_smap1.cdunieco
+        ,cdtipsit              : _p30_smap1.cdtipsit
+        ,'smap1.fechaInicio'   : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
+        ,'smap1.fechaFin'      : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
+        ,'smap1.ntramite'      : _p30_smap1.ntramite
+        ,'smap1.cdpersonCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
+        ,'smap1.nmorddomCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.NMORDDOM
+        ,'smap1.cdideperCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
+        ,'smap1.cdagenteExt'   : _p30_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue() : ''
+        ,'smap1.flotilla'      : 'si'
+        ,'smap1.tipoflot'      : _p30_smap1.tipoflot
+    };
+    
+    if(!Ext.isEmpty(_p30_flujo))
+    {
+        paramsComprar['flujo.cdtipflu']  = _p30_flujo.cdtipflu;
+        paramsComprar['flujo.cdflujomc'] = _p30_flujo.cdflujomc;
+        paramsComprar['flujo.tipoent']   = _p30_flujo.tipoent;
+        paramsComprar['flujo.claveent']  = _p30_flujo.claveent;
+        paramsComprar['flujo.webid']     = _p30_flujo.webid;
+        paramsComprar['flujo.ntramite']  = _p30_flujo.ntramite;
+        paramsComprar['flujo.status']    = _p30_flujo.status;
+        paramsComprar['flujo.cdunieco']  = _p30_flujo.cdunieco;
+        paramsComprar['flujo.cdramo']    = _p30_flujo.cdramo;
+        paramsComprar['flujo.estado']    = _p30_flujo.estado;
+        paramsComprar['flujo.nmpoliza']  = _p30_flujo.nmpoliza;
+        paramsComprar['flujo.nmsituac']  = _p30_flujo.nmsituac;
+        paramsComprar['flujo.nmsuplem']  = _p30_flujo.nmsuplem;
+    }
+    
     Ext.Ajax.request(
     {
         url      : _p30_urlComprar
-        ,params  :
-        {
-            comprarNmpoliza        : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
-            ,comprarCdplan         : '*'
-            ,comprarCdperpag       : _p30_selectedTarifa.get('CDPERPAG')
-            ,comprarCdramo         : _p30_smap1.cdramo
-            ,comprarCdciaaguradora : '20'
-            ,comprarCdunieco       : _p30_smap1.cdunieco
-            ,cdtipsit              : _p30_smap1.cdtipsit
-            ,'smap1.fechaInicio'   : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
-            ,'smap1.fechaFin'      : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
-            ,'smap1.ntramite'      : _p30_smap1.ntramite
-            ,'smap1.cdpersonCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
-            ,'smap1.nmorddomCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.NMORDDOM
-            ,'smap1.cdideperCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
-            ,'smap1.cdagenteExt'   : _p30_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue() : ''
-            ,'smap1.flotilla'      : 'si'
-            ,'smap1.tipoflot'      : _p30_smap1.tipoflot
-        }
+        ,params  : paramsComprar
         ,success : function(response,opts)
         {
             panelPri.setLoading(false);
@@ -5498,21 +5576,42 @@ function _p30_comprar()
                    ,fn      : function()
                    {
                        var swExiper = (!Ext.isEmpty(_p30_recordClienteRecuperado) && Ext.isEmpty(_p30_recordClienteRecuperado.raw.CLAVECLI) && !Ext.isEmpty(_p30_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
+                       
+                       var paramsDatCom =
+                       {
+                           'smap1.cdunieco'  : _p30_smap1.cdunieco
+                           ,'smap1.cdramo'   : _p30_smap1.cdramo
+                           ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                           ,'smap1.estado'   : 'W'
+                           ,'smap1.nmpoliza' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                           ,'smap1.ntramite' : json.smap1.ntramite
+                           ,'smap1.swexiper' : swExiper
+                           ,'smap1.tipoflot' : _p30_smap1.tipoflot
+                       };
+                       
+                       if(!Ext.isEmpty(_p30_flujo))
+                       {
+                           paramsDatCom['flujo.cdtipflu']  = _p30_flujo.cdtipflu;
+                           paramsDatCom['flujo.cdflujomc'] = _p30_flujo.cdflujomc;
+                           paramsDatCom['flujo.tipoent']   = _p30_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
+                           paramsDatCom['flujo.claveent']  = _p30_flujo.claveent; //ACTUAL QUE SE RECUPERARA
+                           paramsDatCom['flujo.webid']     = _p30_flujo.webid;    //ACTUAL QUE SE RECUPERARA
+                           paramsDatCom['flujo.ntramite']  = _p30_flujo.ntramite;
+                           paramsDatCom['flujo.status']    = _p30_flujo.status;
+                           paramsDatCom['flujo.cdunieco']  = _p30_flujo.cdunieco;
+                           paramsDatCom['flujo.cdramo']    = _p30_flujo.cdramo;
+                           paramsDatCom['flujo.estado']    = _p30_flujo.estado;
+                           paramsDatCom['flujo.nmpoliza']  = _p30_flujo.nmpoliza;
+                           paramsDatCom['flujo.nmsituac']  = _p30_flujo.nmsituac;
+                           paramsDatCom['flujo.nmsuplem']  = _p30_flujo.nmsuplem;
+                           paramsDatCom['flujo.aux']       = 'RECUPERAR';
+                       }
+                       
                        Ext.create('Ext.form.Panel').submit(
                        {
                            url             : _p30_urlDatosComplementarios
                            ,standardSubmit : true
-                           ,params         :
-                           {
-                               'smap1.cdunieco'  : _p30_smap1.cdunieco
-                               ,'smap1.cdramo'   : _p30_smap1.cdramo
-                               ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
-                               ,'smap1.estado'   : 'W'
-                               ,'smap1.nmpoliza' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
-                               ,'smap1.ntramite' : json.smap1.ntramite
-                               ,'smap1.swexiper' : swExiper
-                               ,'smap1.tipoflot' : _p30_smap1.tipoflot
-                           }
+                           ,params         : paramsDatCom
                        });
                    }
                 }));                
@@ -6766,9 +6865,329 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
         _p30_paneles[cdtipsit].valores=tconvalsit;
     }
 }
+
+function _p30_recuperarClienteTramite()
+{
+    /*
+     * Cuando se tiene cdpercli se recupera para ramo 5 cuando exista el combo de cliente nuevo
+     * inicio
+     */
+    if(!Ext.isEmpty(_p30_smap1.cdpercli))
+    {
+        var ckCdpercli = 'Recuperando cliente de tr\u00e1mite';
+        try
+        {
+            var comboCliente = _fieldLikeLabel('CLIENTE NUEVO',_fieldById('_p30_panel3Fieldset'),true);
+            debug('combo cliente nuevo:',comboCliente);
+            if(!Ext.isEmpty(comboCliente))
+            {
+                debug('Entro a recuperar cliente con cdperson:',_p30_smap1.cdpercli);
+                _mask(ckCdpercli);
+                Ext.Ajax.request(
+                {
+                    url      : _p30_urlRecuperarCliente
+                    ,params  :
+                    {
+                        'map1.pv_cdperson_i'  : _p30_smap1.cdpercli
+                        ,'map1.soloBD'        : 'S'
+                        ,'map1.pv_rfc_i'      : ''//rfc
+                        ,'map1.cdtipsit'      : _p30_smap1.cdtipsit
+                        ,'map1.pv_cdtipsit_i' : _p30_smap1.cdtipsit
+                        ,'map1.pv_cdunieco_i' : _p30_smap1.cdunieco
+                        ,'map1.pv_cdramo_i'   : _p30_smap1.cdramo
+                        ,'map1.pv_estado_i'   : 'W'
+                        ,'map1.pv_nmpoliza_i' : _fieldByName('nmpoliza').getValue()
+                    }
+                    ,success : function(response)
+                    {
+                        _unmask();
+                        var ck = 'Decodificando respuesta al recuperar cliente de tr\u00e1mite';
+                        try
+                        {
+                            var json = Ext.decode(response.responseText);
+                            debug('### recuperacion cliente tramite:',json);
+                            
+                            comboCliente.semaforo = true;
+                            comboCliente.setValue('N');
+                            comboCliente.setReadOnly(true);
+                            comboCliente.semaforo = false;
+                            
+                            _p30_recordClienteRecuperado = new _p30_modeloRecuperado(json.slist1[0]);
+                            debug('_p30_recordClienteRecuperado:',_p30_recordClienteRecuperado);
+                            
+                            var nombreCliCmp    = _fieldLikeLabel('NOMBRE CLIENTE'      , _fieldById('_p30_panel3Fieldset'),true)
+                                ,tipoPerCmp     = _fieldLikeLabel('TIPO PERSONA'        , _fieldById('_p30_panel3Fieldset'),true)
+                                ,codPosCliCmp   = _fieldLikeLabel('CP CIRCULACI'        , _fieldById('_p30_panel3Fieldset'),true)
+                                ,feNacimiCliCmp = _fieldLikeLabel('FECHA DE NACIMIENTO' , _fieldById('_p30_panel3Fieldset'),true);
+                            
+                            if(!Ext.isEmpty(nombreCliCmp))
+                            {
+                                nombreCliCmp.setValue(_p30_recordClienteRecuperado.get('NOMBRECLI'));
+                                nombreCliCmp.setReadOnly(true);
+                            }
+                            
+                            if(!Ext.isEmpty(tipoPerCmp))
+                            {
+                                tipoPerCmp.setValue(_p30_recordClienteRecuperado.raw.TIPOPERSONA);
+                                tipoPerCmp.setReadOnly(true);
+                            }
+                            
+                            if(!Ext.isEmpty(codPosCliCmp))
+                            {
+                                codPosCliCmp.setValue(_p30_recordClienteRecuperado.raw.CODPOSTAL);
+                                codPosCliCmp.setReadOnly(true);
+                            }
+                            
+                            if(!Ext.isEmpty(feNacimiCliCmp))
+                            {
+                                feNacimiCliCmp.setValue(_p30_recordClienteRecuperado.raw.FENACIMICLI);
+                                feNacimiCliCmp.setReadOnly(true);
+                            }
+                            
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        _unmask();
+                        errorComunicacion(null,'Error al recuperar cliente de tr\u00e1mite');
+                    }
+                });
+            }
+        }
+        catch(e)
+        {
+            manejaException(e,ckCdpercli);
+        }
+    }
+    /*
+     * Cuando se tiene cdpercli se recupera para ramo 5 cuando exista el combo de cliente nuevo
+     * fin
+     */
+}
+
+/*
+ * Este metodo busca en los otvalor del tramite el numero de la ultima cotizacion
+ * realizada para recuperarla automaticamente en pantalla
+ */
+function _p30_recuperarCotizacionDeTramite()
+{
+    if(!Ext.isEmpty(_p30_flujo))
+    {
+        var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
+        try
+        {
+            _mask(ck);
+            Ext.Ajax.request(
+            {
+                url      : _p30_urlRecuperarOtvalorTramiteXDsatribu
+                ,params  :
+                {
+                    'params.ntramite'  : _p30_flujo.ntramite
+                    ,'params.dsatribu' : 'COTIZACI%N%TR%MITE'
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                    var ck = 'Decodificando respuesta al recuperar cotizaci\u00f3n de tr\u00e1mite';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### cotizacion de tramite:',json);
+                        if(json.success===true)
+                        {
+                            if(!Ext.isEmpty(json.params.otvalor))
+                            {
+                                _fieldByName('nmpoliza').setValue(json.params.otvalor);
+                                _p30_cargarClic();
+                            }
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function(response)
+                {
+                    _unmask();
+                    errorComunicacion(null,'Error al recuperar cotizaci\u00f3n de tr\u00e1mite');
+                }
+            });
+        }
+        catch(e)
+        {
+            _unmask();
+            manejaException(e,ck);
+        }
+    }
+}
+
+function _p30_actualizarCotizacionTramite(callback)
+{
+    var ck = 'Registrando cotizaci\u00f3n de tr\u00e1mite';
+    try
+    {
+        _mask(ck);
+        Ext.Ajax.request(
+        {
+            url      : _p30_urlActualizarOtvalorTramiteXDsatribu
+            ,params  :
+            {
+                'params.ntramite'  : _p30_flujo.ntramite
+                ,'params.dsatribu' : 'COTIZACI%N%TR%MITE%'
+                ,'params.otvalor'  : _fieldByName('nmpoliza').getValue()
+                ,'params.accion'   : 'U'
+            }
+            ,success : function(response)
+            {
+                _unmask();
+                var ck = 'Decodificando respuesta al guardar estatus de tr\u00e1mite';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar estatus de tramite:',json);
+                    if(json.success===true)
+                    {
+                        var ck = 'Guardando detalle de cotiazci\u00f3n de tr\u00e1mite';
+                        try
+                        {
+                            _mask(ck);
+                            Ext.Ajax.request(
+                            {
+                                url      : _p30_urlDetalleTramite
+                                ,params  :
+                                {
+                                    'smap1.ntramite'  : _p30_flujo.ntramite
+                                    ,'smap1.status'   : _p30_flujo.status
+                                    ,'smap1.dscoment' : 'Se guard\u00f3 la cotizaci\u00f3n '+_fieldByName('nmpoliza').getValue()
+                                }
+                                ,success : function(response)
+                                {
+                                    _unmask();
+                                    var ck = 'Decodificando respuesta al guardar detalle de cotizaci\u00f3n de tr\u00e1mite';
+                                    try
+                                    {
+                                        var jsonDetalle = Ext.decode(response.responseText);
+                                        debug('### guardar detalle cotizacion tramite:',jsonDetalle);
+                                        if(!Ext.isEmpty(callback))
+                                        {
+                                            callback();
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                                ,failure : function()
+                                {
+                                    _unmask();
+                                    errorComunicacion(null,'Error al guardar detalle de cotizaci\u00f3n de tr\u00e1mite');
+                                }
+                            });
+                        }
+                        catch(e)
+                        {
+                            _unmask();
+                            manejaException(e,ck);
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _unmask();
+                errorComunicacion(null,'Error al guardar estatus de tr\u00e1mite');
+            }
+        });
+    }
+    catch(e)
+    {
+        _unmask();
+        manejaException(e,ck);
+    }
+}
+
+function _p30_actualizarSwexiperTramite(callback)
+{
+    var ck = 'Registrando estado de cliente de tr\u00e1mite';
+    try
+    {
+        var swExiper =
+        (
+            !Ext.isEmpty(_p30_recordClienteRecuperado)
+            && Ext.isEmpty(_p30_recordClienteRecuperado.raw.CLAVECLI)
+            && !Ext.isEmpty(_p30_recordClienteRecuperado.raw.CDIDEPER)
+        ) ? 'N' : 'S' ;
+    
+        _mask(ck);
+        Ext.Ajax.request(
+        {
+            url      : _p30_urlActualizarOtvalorTramiteXDsatribu
+            ,params  :
+            {
+                'params.ntramite'  : _p30_flujo.ntramite
+                ,'params.dsatribu' : 'SWEXIPER'
+                ,'params.otvalor'  : swExiper
+                ,'params.accion'   : 'U'
+            }
+            ,success : function(response)
+            {
+                _unmask();
+                var ck = 'Decodificando respuesta al guardar estado de cliente de tr\u00e1mite';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar estatus de cliente de tramite:',json);
+                    if(json.success===true)
+                    {
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback();
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _unmask();
+                errorComunicacion(null,'Error al guardar estado de cliente de tr\u00e1mite');
+            }
+        });
+    }
+    catch(e)
+    {
+        _unmask();
+        manejaException(e,ck);
+    }
+}
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
-<body><div id="_p30_divpri" style="height:1000px;"</body>
+<body><div id="_p30_divpri" style="height:1100px;"</body>
 </html>

@@ -300,6 +300,11 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				
 				logger.debug(Utils.log("", "smap1 creado=", smap1));
 				
+			}
+			
+			//si viene de la pantalla de cotizacion hay que recuperar los atributos de la pantalla actual
+			if(flujo!=null)
+			{
 				if("RECUPERAR".equals(flujo.getAux()))
 				{
 					//se recibieron 3 propiedades de una pantalla anterior, hay que actualizarlas
@@ -864,6 +869,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,ntramite
 					,tipoflot
 					,"S".equals(endoso)
+					,flujo
 					);
 			
 			exito     = resp.isExito();
@@ -1214,7 +1220,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String cdusuari = usuario.getUser()
 			       ,cdsisrol = usuario.getRolActivo().getClave();
 			
-			if(flujo!=null)
+			if(flujo!=null  && smap1==null) //cuando viene desde la mesa de control
 			{
 				logger.debug(Utils.log("", "se creara el mapa porque viene de flujo"));
 				
@@ -1235,9 +1241,26 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.put("nmpoliza" , tramite.get("NMSOLICI"));
 				
 				smap1.put("ntramite" , flujo.getNtramite());
+				
 				smap1.put("tipoflot" , flujo.getAux());
 				
+				smap1.put("swexiper" , cotizacionManager.recuperarOtvalorTramitePorDsatribu(flujo.getNtramite(), "SWEXIPER"));
+				
 				logger.debug(Utils.log("", "el mapa creado desde flujo es=", smap1));
+				
+			}
+			
+			//si viene de la pantalla de cotizacion hay que recuperar los atributos de la pantalla actual
+			if(flujo!=null)
+			{
+				if("RECUPERAR".equals(flujo.getAux()))
+				{
+					//se recibieron 3 propiedades de una pantalla anterior, hay que actualizarlas
+					logger.debug("flujo antes de actualizar sus 3 propiedades de pantalla nueva={}",flujo);
+					flujoMesaControlManager.recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(flujo);
+					
+					logger.debug("flujo despues de actualizar sus 3 propiedades de pantalla nueva={}",flujo);
+				}
 			}
 			
 			Utils.validate(smap1, "No se recibieron datos");

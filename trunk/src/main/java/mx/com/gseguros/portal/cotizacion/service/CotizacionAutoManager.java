@@ -122,6 +122,7 @@ public interface CotizacionAutoManager
 			,String ntramite
 			,String tipoflot
 			,boolean endoso
+			,FlujoVO flujo
 			)throws Exception;
 	public ManagerRespuestaSlistSmapVO cotizarAutosFlotilla(
 			String cdusuari

@@ -27,6 +27,9 @@ var _p31_urlCargarCatalogo                 = '<s:url namespace="/catalogos"  act
 var _p31_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p31_smap1:',_p31_smap1);
 
+var _p31_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+debug('_p31_flujo:',_p31_flujo);
+
 var _p22_parentCallback         = false;
 var _p22_parentCallbackCallback = false;
 
@@ -309,7 +312,41 @@ Ext.onReady(function()
     
     var panelesPrincipales =
     [
-            Ext.create('Ext.form.Panel',
+            Ext.create('Ext.panel.Panel',
+            {
+                itemId       : '_p31_panelFlujo'
+                ,title       : 'ACCIONES'
+                ,hidden      : Ext.isEmpty(_p31_flujo)
+                ,buttonAlign : 'left'
+                ,buttons     : []
+                ,listeners   :
+                {
+                    afterrender : function(me)
+                    {
+                        if(!Ext.isEmpty(_p31_flujo))
+                        {
+                            _cargarBotonesEntidad(
+                                _p31_flujo.cdtipflu
+                                ,_p31_flujo.cdflujomc
+                                ,_p31_flujo.tipoent
+                                ,_p31_flujo.claveent
+                                ,_p31_flujo.webid
+                                ,me.itemId//callback
+                                ,_p31_flujo.ntramite
+                                ,_p31_flujo.status
+                                ,_p31_flujo.cdunieco
+                                ,_p31_flujo.cdramo
+                                ,_p31_flujo.estado
+                                ,_p31_flujo.nmpoliza
+                                ,_p31_flujo.nmsituac
+                                ,_p31_flujo.nmsuplem
+                                ,null//callbackDespuesProceso
+                            );
+                        }
+                    }
+                }
+            })
+            ,Ext.create('Ext.form.Panel',
             {
                 itemId    : '_p31_polizaForm'
                 ,title    : 'DATOS DE P&Oacute;LIZA'
@@ -1297,7 +1334,7 @@ function _p31_emitirFinal(me)
                 if(json.retryWS){
                 	
                 	_p31_smap1.nmpolizaEmitida=json.panel2.nmpoliza;
-                	debug("_p29_smap1.nmpolizaEmitida, en reintento WS:" , _p31_smap1.nmpolizaEmitida);
+                	debug("_p31_smap1.nmpolizaEmitida, en reintento WS:" , _p31_smap1.nmpolizaEmitida);
                 	
                     _fieldById('_p31_botonEmitirPolizaFinal').hide();
                     _fieldById('_p31_botonCancelarEmision').setDisabled(true);
