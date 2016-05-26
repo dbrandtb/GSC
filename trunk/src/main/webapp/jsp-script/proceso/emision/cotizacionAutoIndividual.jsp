@@ -817,8 +817,8 @@ Ext.onReady(function()
             sumaAsegu = _fieldByLabel('VALOR VEHICULO');
         }
         
-        var combcl = 'S';
-        if(!Ext.isEmpty(_fieldByLabel('CLIENTE NUEVO',null,true)))
+        var	combcl = 'S';
+        if(!Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
         {
             combcl    = _fieldLikeLabel('CLIENTE NUEVO');
         }
@@ -857,19 +857,20 @@ Ext.onReady(function()
         //agente
         
         //cliente nuevo
-        combcl.on(
+        if(!Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
         {
-            change : _p28_ramo5ClienteChange
-        });
-        
-        combcl.getStore().on('load',function()
-        {
-            debug('combo cliente nuevo store load');
-            combcl.setValue('S');
-        });
-        combcl.setValue('S');
+	        combcl.on(
+	        {
+	            change : _p28_ramo5ClienteChange
+	        });
+	        combcl.getStore().on('load',function()
+	        {
+	            debug('combo cliente nuevo store load');
+	            combcl.setValue('S');
+	        });
+	        combcl.setValue('S');
+	     }
         //cliente nuevo
-        
         
         
         if(('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
@@ -1080,7 +1081,7 @@ Ext.onReady(function()
         
         //uso
         var usoCmp;
-        if(!Ext.isEmpty(_fieldByLabel('TIPO USO',null,true)))
+        if(!Ext.isEmpty(_fieldByLabel('TIPO USO',null,false)))
         {
             usoCmp = _fieldByLabel('TIPO USO');
             debug('@CUSTOM uso:',usoCmp);
@@ -2896,7 +2897,7 @@ function llenandoCampos(json)
         debug('fesolici='    , fesolici);
         debug('fechaHoy='    , fechaHoy);
         debug('fechaLimite=' , fechaLimite);
-        debug('vencida='     , vencida , '.');
+        debug('vencida='     , vencida,'.');
 
         _p28_limpiar();
 
