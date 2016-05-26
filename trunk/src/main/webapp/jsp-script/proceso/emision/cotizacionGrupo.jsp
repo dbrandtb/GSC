@@ -4729,8 +4729,8 @@ function _p21_rfcBlur(field)
                                                 });
                                                 
                                                 _fieldByName('dsdomici',_p_21_panelPrincipal).setValue(record.get('DSDOMICIL'));
-                                                _fieldByName('nmnumero',_p_21_panelPrincipal).setValue(record.get('NMNUMERO'));
-                                                _fieldByName('nmnumint',_p_21_panelPrincipal).setValue(record.get('NMNUMINT'));
+//                                                _fieldByName('nmnumero',_p_21_panelPrincipal).setValue(record.get('NMNUMERO'));
+//                                                _fieldByName('nmnumint',_p_21_panelPrincipal).setValue(record.get('NMNUMINT'));
                                                 
                                                 nmorddomProspecto = record.get('NMORDOM');
                                                 

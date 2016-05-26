@@ -2603,9 +2603,9 @@ function _p25_rfcBlur(field)
                                                 });
                                                 
                                                 _fieldByName('dsdomici',_p_25_panelPrincipal).setValue(record.get('DSDOMICIL'));
-                                                _fieldByName('nmnumero',_p_25_panelPrincipal).setValue(record.get('NMNUMERO'));
-                                                _fieldByName('nmnumint',_p_25_panelPrincipal).setValue(record.get('NMNUMINT'));
-                                                
+//                                                _fieldByName('nmnumero',_p_25_panelPrincipal).setValue(record.get('NMNUMERO'));
+//                                                _fieldByName('nmnumint',_p_25_panelPrincipal).setValue(record.get('NMNUMINT'));
+//                                                
                                                 nmorddomProspecto = record.get('NMORDOM');
                                                 
                                                 /*debug('cliente obtenido de WS? ', json.clienteWS);
