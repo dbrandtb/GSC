@@ -1058,10 +1058,68 @@ function _0_cargarPoliza()
 
 function llenandoCampos (json)
 {
-    _0_panelPri.setLoading(false);
-    debug('json response:',json);
-    if(json.success)
-    {
+	 var panelpri = _fieldById('_p28_panelpri');
+     var nmpoliza = _fieldByName('nmpoliza').getValue();
+	 debug('### cargar cotizacion:',json);
+    
+     if(json.success)
+     {
+	     var maestra     =  json.slist1[0].ESTADO=='M';
+	     var fesolici    =  Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
+	     var fechaHoy    =  Ext.Date.clearTime(new Date());
+	     var fechaLimite =  Ext.Date.add(fechaHoy,Ext.Date.DAY,-1*(json.smap1.diasValidos-0));
+	     var vencida     =  fesolici<fechaLimite;
+	     debug('fesolici='    , fesolici);
+	     debug('fechaHoy='    , fechaHoy);
+	     debug('fechaLimite=' , fechaLimite);
+	     debug('vencida='     , vencida, '.');
+	
+	     _0_limpiar();
+	
+	     var iniVig = Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y').getTime();
+	     var finVig = Ext.Date.parse(json.smap1.FEPROREN,'d/m/Y').getTime();
+	     var milDif = finVig-iniVig;
+	     var diaDif = milDif/(1000*60*60*24);
+	     debug('diaDif:',diaDif);
+	   
+	     /*if(!maestra&&!vencida)
+	     {
+	         _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y'));
+	     }*/
+	     
+	     _fieldByName('feini').setValue(new Date());
+	     _fieldByName('fefin').setValue
+	     (
+	         Ext.Date.add
+	         (
+	             _fieldByName('feini').getValue()
+	             ,Ext.Date.DAY
+	             ,diaDif
+	         )
+	     );
+	     
+	     if(maestra)
+	     {
+	         _fieldByName('nmpoliza').setValue('');
+	         mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.slist1[0].NMPOLIZA);
+	     }
+	     else if(vencida)
+	     {
+	         _fieldByName('nmpoliza').setValue('');
+	         mensajeWarning('La cotizaci&oacute;n ha vencido y solo puede duplicarse');
+	     }
+	     else
+	     {
+	         _fieldByName('nmpoliza').semaforo=true;
+	         _fieldByName('nmpoliza').setValue(nmpoliza);
+	         _fieldByName('nmpoliza').semaforo=false;
+	     }
+	     
+	     var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+	     
+	    _0_panelPri.setLoading(false);
+	    debug('json response:',json);
+ //<< ----------------------------------------------------------------------------	   
         if(cargarXpoliza || Ext.isEmpty(json.smap1.NTRAMITE))
         {
             _0_limpiar();
@@ -1166,23 +1224,47 @@ function llenandoCampos (json)
 	                            _fieldByLabel('FOLIO').reset();
 	                            asignarAgente(primerInciso.get('parametros.pv_otvalor17')); 
 	                        }
+//---------------------------------------VILS	                    	
+                           if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
+                            {
+                                if(maestra&&false)
+                                {
+                                    _fieldLikeLabel('NOMBRE CLIENTE').setValue('');
+                                }
+                                else
+                                {
+                                    _0_recordClienteRecuperado = new _0_modeloRecuperado(primerInciso.raw);
+                                    debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
+                                
+                                    var combcl = 'S';
+                                    if(!Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
+                                    {combcl = _fieldLikeLabel('CLIENTE NUEVO');}
+                                    
+                                    combcl.semaforo = true;
+                                    combcl.setValue('N');
+                                    combcl.semaforo = false;
+                                }
+                            }
 	                    }
-	                    if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
+	                    
+                	    if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
 	                    	
 	                        asignarAgente(primerInciso.get('parametros.pv_otvalor32'));
 	                        _0_recuperarDescuento();
 	                    }
 	                    
-                    if(_0_smap1.cdtipsit=='GMI')
-                    {
-                        _0_gmiPostalSelect(1,2,3,true);
-                        _0_gmiCirchospSelect(1,2,3,true);
-                    }
-                    if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
-                    	
-                        asignarAgente(primerInciso.get('parametros.pv_otvalor32'));
-                        _0_recuperarDescuento();
-                    }
+	                    if(_0_smap1.cdtipsit=='GMI')
+	                    {
+	                        _0_gmiPostalSelect(1,2,3,true);
+	                        _0_gmiCirchospSelect(1,2,3,true);
+	                    }
+	                    
+	                    if('|AF|PU|AT|MC|'.lastIndexOf('|'+_0_smap1.cdtipsit+'|')!=-1)
+	                    {
+	                        _0_panelPri.setLoading(true);
+	                        cargaCotiza = true;
+	                        _0_cotizar();
+	                    }
                 }
             };
             _0_panelPri.setLoading(true);
@@ -1209,13 +1291,6 @@ function llenandoCampos (json)
     else
     {
         mensajeError(json.error);
-    }
-    
-    if('|AF|PU|AT|MC|'.lastIndexOf('|'+_0_smap1.cdtipsit+'|')!=-1)
-    {
-       	_0_panelPri.setLoading(true);
-    	cargaCotiza = true;
-    	_0_cotizar();
     }
 }
 
@@ -1286,7 +1361,7 @@ function _0_cotizar(boton)
 {
 	_0_panelPri.setLoading(true);
 	debug('_0_cotizar');
-	if(_0_validarBase() || cargaCotiza)//
+	if(_0_validarBase())//
 	{
 		var json=
 		{
@@ -1371,11 +1446,8 @@ function _0_cotizar(boton)
 					debug(Ext.decode(json.smap1.columnas));
 					debug(json.slist2);
 					
-					if(!cargaCotiza)
-					{
-						   _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
-					}
-					
+					_0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
+									
 					_grabarEvento('COTIZACION'
 					              ,'COTIZA'
 					              ,_0_smap1.ntramite
