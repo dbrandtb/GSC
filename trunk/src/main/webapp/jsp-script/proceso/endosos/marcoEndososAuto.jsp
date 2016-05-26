@@ -11,6 +11,7 @@ var _p34_urlRecuperacionSimpleLista       = '<s:url namespace="/emision"    acti
 var _p34_urlVentanaDocumentos             = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"      />';
 var _p34_urlObtenerColumnasIncisosPorRamo = '<s:url namespace="/endosos"    action="recuperarColumnasIncisoRamo"  />';
 var _p34_urlRecuperarEndososClasificados  = '<s:url namespace="/endosos"    action="recuperarEndososClasificados" />';
+var _p34_urlObtieneCatalogos              = '<s:url namespace="/catalogos"  action="obtieneCatalogo" />';
 ////// urls //////
 
 ////// variables //////
@@ -956,7 +957,7 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                                    	,proxy:
 			                                    	{
 			                                    	    type:'ajax'
-			                                    	    ,url:'/gseguros/catalogos/obtieneCatalogo.action?tstamp=1464133719722_5315'
+			                                    	    ,url:_p34_urlObtieneCatalogos
 			                                    	    ,reader:
 			                                    	    {
 			                                    	        type:'json'
@@ -1015,7 +1016,7 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nivel',nivel);
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.atrPol',(!Ext.isEmpty(recordPoliza.get('CDRAMO')) && new String(recordPoliza.get('CDRAMO')) == "6")? 'S':'N');
 			                
-			                _fieldById('_p34_gridIncisos').down('pagingtoolbar').moveFirst();
+//			                _fieldById('_p34_gridIncisos').down('pagingtoolbar').moveFirst();
 			                
 					    }
 					    else
