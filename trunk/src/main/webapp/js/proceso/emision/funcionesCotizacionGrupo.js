@@ -278,7 +278,13 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                         if(json.exito)
                         {
                         
-                            var callback = function() { _p21_turnar(19,'Observaciones de la carga',false); };
+                            //var callback = function() { _p21_turnar(19,'Observaciones de la carga',false); };
+                            var callback = function() { mensajeCorrecto('Aviso','Se ha turnado el tr\u00e1mite a mesa de control en estatus ' +
+                            							'"En Tarifa" para procesar el censo. Una vez terminado podra encontrar su tr\u00e1mite ' +
+                            							'en estatus "Carga completa".',function(){ _p21_mesacontrol(); } 
+                            							);
+                            						  };
+                            
                             
                             if(Ext.isEmpty(nombreCensoParaConfirmar))
                             {
@@ -294,7 +300,7 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                             url      : _p21_urlRecuperacionSimpleLista
                                             ,params  :
                                             {
-                                                'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS'
+                                                'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS_FINAL'
                                                 ,'smap1.cdunieco'     : _p21_smap1.cdunieco
                                                 ,'smap1.cdramo'       : _p21_smap1.cdramo
                                                 ,'smap1.estado'       : 'W'
