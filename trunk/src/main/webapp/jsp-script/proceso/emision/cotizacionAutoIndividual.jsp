@@ -1080,9 +1080,9 @@ Ext.onReady(function()
         //parametrizacion coberturas
         
         //uso
-        var usoCmp;
-        if(!Ext.isEmpty(_fieldByLabel('TIPO USO',null,false)))
+        if('TL'.lastIndexOf(_p28_smap1.cdtipsit)==-1 && !Ext.isEmpty(_fieldByLabel('TIPO USO',null,false)))
         {
+            var usoCmp;
             usoCmp = _fieldByLabel('TIPO USO');
             debug('@CUSTOM uso:',usoCmp);
             usoCmp.anidado = true;
@@ -4360,7 +4360,11 @@ function _p28_inicializarTatripol(itemsTatripol)
             }
             tatriItem.hide();
         }
-        else if(_p28_smap1.cdramo+'x'=='5x' && tatriItem.fieldLabel=='MONEDA')
+        else if(_p28_smap1.cdramo+'x'=='5x' && tatriItem.fieldLabel=='MONEDA' && '|TL|TV|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')!=-1)
+        {
+            tatriItem.select('2');
+        }
+        else if(_p28_smap1.cdramo+'x'=='5x' && tatriItem.fieldLabel=='MONEDA' && '|TL|TV|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1)
         {
             tatriItem.select('1');
         }
