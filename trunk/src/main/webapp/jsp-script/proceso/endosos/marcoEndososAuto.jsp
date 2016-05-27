@@ -890,6 +890,7 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                padre.setLoading(false);
 							_p34_storeIncisos.getProxy().setExtraParam('smap1.dsatribu', null);
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.otvalor', null);
+			                debug('******* no se setea smap1.nmfamili');
 			                //_p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili', null);
 			                centrarVentanaInterna(Ext.create('Ext.window.Window',
 			                {
@@ -979,9 +980,8 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                                    	}
 				                                    ,listeners :
 					                                {
-					                                    load: function(st){
-					                                    	debug('listener activo');
-					                                    	_fieldByName('dsatribu').setValue('NOMBRE ASEGURADO');
+					                                    load: function(st) {
+					                                    	_fieldByName('dsatribu').setValue('NOMBRE ASEGURADO'); // Se setea un valor del combo al inicio
 					                                    }
 					                                }
 			                                    })
@@ -1003,9 +1003,6 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 				                                	
 				                                    _p34_storeIncisos.getProxy().setExtraParam('smap1.dsatribu',btn.up('toolbar').down('combo[name=dsatribu]').getValue());
 				                                    _p34_storeIncisos.getProxy().setExtraParam('smap1.otvalor', btn.up('toolbar').down('textfield[name=txtBuscar]').getValue());
-				                                    
-//				                                    _fieldById('_p34_gridIncisos').down('pagingtoolbar').moveFirst();
-				                                    
 				                                    _p34_storeIncisos.loadPage(1);
 				                                }
                 							}
@@ -1019,17 +1016,14 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                }).show());
 			                
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdunieco',recordPoliza.get('CDUNIECO'));
-			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdramo',recordPoliza.get('CDRAMO'));
-			                _p34_storeIncisos.getProxy().setExtraParam('smap1.estado',recordPoliza.get('ESTADO'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdramo',  recordPoliza.get('CDRAMO'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.estado',  recordPoliza.get('ESTADO'));
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmpoliza',recordPoliza.get('NMPOLIZA'));
-			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdgrupo',recordPoliza.get('CDGRUPO'));
-			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili', nivel == 'POLIZA' ? null : recordPoliza.get('NMSITAUX'));
-			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nivel',nivel);
-			                _p34_storeIncisos.getProxy().setExtraParam('smap1.atrPol',(!Ext.isEmpty(recordPoliza.get('CDRAMO')) && new String(recordPoliza.get('CDRAMO')) == "6")? 'S':'N');
-			                
-//			                _fieldById('_p34_gridIncisos').down('pagingtoolbar').moveFirst();
-			                
-			                //_p34_storeIncisos.loadPage(1);
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdgrupo', recordPoliza.get('CDGRUPO'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili',nivel == 'POLIZA' ? null : recordPoliza.get('NMSITAUX'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nivel',   nivel);
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.atrPol',  (!Ext.isEmpty(recordPoliza.get('CDRAMO')) && new String(recordPoliza.get('CDRAMO')) == "6")? 'S':'N');
+			                _p34_storeIncisos.loadPage(1);
 					    }
 					    else
 					    {
@@ -1464,7 +1458,6 @@ function _p34_gridPolizasFamiliasClic(row)
                                     ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
                                     ,disabled : true
                                     ,handler  : function(){ _p34_botonEndososFamiliasClic(); }
-//                                    ,hidden   : true
                                 }
                                 ,'->'
                                 ,{
