@@ -98,14 +98,14 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 
 	@Override
-	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto) 
+	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto, String cdsisrol) 
 			throws Exception{
 		
 		List<SuplementoVO> suplementos;  
 		
 		// Si iCodPoliza viene vacio, es información de ICE, sino es de SISA:
 //		if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza())){
-		suplementos = consultasPolizaDAOICE.obtieneHistoricoPolizaCorto(sucursal, producto, polizacorto);
+		suplementos = consultasPolizaDAOICE.obtieneHistoricoPolizaCorto(sucursal, producto, polizacorto, cdsisrol); 
 //		} else {
 //			suplementos = consultasPolizaDAOSISA.obtieneHistoricoPoliza(polizaAsegurado);
 //		}

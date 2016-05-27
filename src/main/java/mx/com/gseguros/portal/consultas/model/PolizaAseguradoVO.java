@@ -23,7 +23,17 @@ public class PolizaAseguradoVO implements Serializable {
 	private String nombreAgente;
 	private String nmpoliex;
 	private String nmsuplem;
+	private String cdsisrol;
 	
+	
+	public String getCdsisrol() {
+		return cdsisrol;
+	}
+
+	public void setCdsisrol(String cdsisrol) {
+		this.cdsisrol = cdsisrol;
+	}
+
 	public String getNmsuplem() {
 		return nmsuplem;
 	}

@@ -287,11 +287,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 //			groupTipoBusqueda
 			
 			if(params.containsKey("tipoBusqueda") && StringUtils.isNotBlank(params.get("tipoBusqueda")) && "5".equals(params.get("tipoBusqueda"))){
-				datosSuplemento = consultasPolizaManager.obtieneHistoricoPolizaCorto(params.get("sucursal"), params.get("producto"), params.get("numpolizacorto"));
+				datosSuplemento = consultasPolizaManager.obtieneHistoricoPolizaCorto(params.get("sucursal"), params.get("producto"), params.get("numpolizacorto"), params.get("cdsisrol"));
 			}else{				
 				PolizaAseguradoVO poliza = new PolizaAseguradoVO();
 				poliza.setIcodpoliza(params.get("icodpoliza"));
 				poliza.setNmpoliex(params.get("nmpoliex"));
+				poliza.setCdsisrol(params.get("cdsisrol"));
 				datosSuplemento = consultasPolizaManager.obtieneHistoricoPoliza(poliza);
 			}
 			logger.debug(Utils.log("datos suplemento",datosSuplemento));
