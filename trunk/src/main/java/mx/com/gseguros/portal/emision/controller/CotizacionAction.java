@@ -4629,7 +4629,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                //FECHA EGRESO
 	                try
                 	{
-		                auxDate=row.getCell(20)!=null?row.getCell(22).getDateCellValue():null;
+		                auxDate=row.getCell(22)!=null?row.getCell(22).getDateCellValue():null;
 		                if(auxDate!=null)
 		                {
 		                	Calendar cal = Calendar.getInstance();
@@ -4650,8 +4650,9 @@ public class CotizacionAction extends PrincipalCoreAction
                 	}
 	                catch(Exception ex)
 	                {
+	                	logger.debug("Valor del Error ===> "+ex);
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (W) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha Ingreso ' (W) de la fila ",fila," "));
 	                }
 	                finally
 	                {
