@@ -301,7 +301,7 @@ Ext.onReady(function()
                                     }
                                     ,{
                                         xtype       : 'displayfield'
-                                        ,fieldLabel : 'STATUS'
+                                        ,fieldLabel : 'ESTATUS'
                                         ,value      : record.get('DSSTATUS')
                                     }
                                     ,{
@@ -541,7 +541,7 @@ Ext.onReady(function()
     
     try
     {
-        var comboStatus = _fieldByLabel('STATUS');
+        var comboStatus = _fieldLikeLabel('STATUS');
         
         debug('comboStatus:',comboStatus);
         

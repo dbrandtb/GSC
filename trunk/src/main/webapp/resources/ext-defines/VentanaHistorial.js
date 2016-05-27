@@ -107,7 +107,7 @@ Ext.define('VentanaHistorial',
                             ,width     : 140
                         }
                         ,{
-                            header     : 'Status'
+                            header     : 'Estatus'
                             ,dataIndex : 'DSSTATUS'
                             ,width     : 160
                             ,renderer  : function(v)
