@@ -79,7 +79,11 @@ var _p48_comboGrupos = <s:property value="items.comboGrupos" escapeHtml="false" 
 
 Ext.onReady(function()
 {
-	Ext.Ajax.timeout = 60*60*1000;
+	Ext.Ajax.timeout = 1000*60*10; // 10 minutos
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
+    
     ////// modelos //////
     Ext.define('_p48_modelo',
     {
@@ -99,7 +103,7 @@ Ext.onReady(function()
             ,url         : _p48_urlRecuperacion
             ,extraParams :
             {
-                'params.consulta'  : 'RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA'
+                'params.consulta'  : 'RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIAENDOSO'
                 ,'params.cdunieco' : _p48_params.CDUNIECO
                 ,'params.cdramo'   : _p48_params.CDRAMO
                 ,'params.estado'   : _p48_params.ESTADO
@@ -283,7 +287,7 @@ Ext.onReady(function()
                                                 ,nmsuplem             : _p48_params.nmsuplem_endoso
                                                 ,nsuplogi             : _p48_params.nsuplogi
                                                 ,fecha                : Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')
-                                                ,cdtipsitPrimerInciso : "SSI"//_p48_store.getAt(0).get('CDTIPSIT')
+                                                ,cdtipsitPrimerInciso : _p48_store.getAt(0).get('CDTIPSIT')
                                                 ,nmsolici             : _p48_params.NMSOLICI
                                             }
                                             ,list : []
