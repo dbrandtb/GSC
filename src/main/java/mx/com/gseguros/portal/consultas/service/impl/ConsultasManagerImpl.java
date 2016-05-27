@@ -394,4 +394,10 @@ public class ConsultasManagerImpl implements ConsultasManager
 		return	consultasDAO.consultaPermisosEdicionCoberturas(cdramo,cdtipsit,cdplan,cdgarant,cdsisrol);
 	}
 	
+	@Override
+	@Deprecated
+	public String recuperarCdpersonClienteTramite(String ntramite) throws Exception
+	{
+		return consultasDAO.recuperarCdpersonClienteTramite(ntramite);
+	}
 }

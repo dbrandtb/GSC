@@ -208,6 +208,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 					cdtipsit = tramite.get("CDTIPSIT");
 					map1 = new HashMap<String, String>();
 					map1.put("ntramite" , flujo.getNtramite());
+					
+					if("RECUPERAR".equals(flujo.getAux()))
+					{
+						//se recibieron 3 propiedades de una pantalla anterior, hay que actualizarlas
+						logger.debug("flujo antes de actualizar sus 3 propiedades de pantalla nueva={}",flujo);
+						flujoMesaControlManager.recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(flujo);
+						
+						logger.debug("flujo despues de actualizar sus 3 propiedades de pantalla nueva={}",flujo);
+					}
+					
+					map1.put("cdpercli" , consultasManager.recuperarCdpersonClienteTramite(flujo.getNtramite()));
 				}
 				catch(Exception ex)
 				{

@@ -685,8 +685,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			resp.setSmap(cotizacionDAO.cargarDatosComplementariosAutoInd(cdunieco,cdramo,estado,nmpoliza));
 			
 			resp.getSmap().putAll(cotizacionDAO.cargarTvalopol(cdunieco,cdramo,estado,nmpoliza));
-			
-			
 		}
 		catch(Exception ex)
 		{

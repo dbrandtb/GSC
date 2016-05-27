@@ -61,7 +61,7 @@
             var _URL_CONSULTA_CLAUSU_DETALLE = '<s:url namespace="/catalogos"       action="consultaClausulaDetalle"     />';
             var _URL_CONSULTA_CLAUSU         = '<s:url namespace="/catalogos"       action="consultaClausulas"           />';
             var _URL_ObtieneValNumeroSerie   = '<s:url namespace="/emision" 		action="obtieneValNumeroSerie"       />';
-            var urlEditarAsegurados = '${ctx}<s:property value="map1.urlAsegurados" />';
+            var urlEditarAsegurados = '${ctx}<s:property value="map1.urlAsegurados" />?now=${now}';
             var urlServidorReports  = '<s:text name="ruta.servidor.reports"         />';
             var complerepSrvUsr     = '<s:text name="pass.servidor.reports"         />';
             
@@ -366,8 +366,8 @@ function _datComTurnarSuscripcion()
                 accordion=Ext.create('Ext.tab.Panel',
                 {
                 	title:'Tr&aacute;mite '+inputNtramite,
-                	border:0,
-                	renderTo : 'maindiv'
+                	border:0
+                	//renderTo : 'maindiv'
                 	/*,layout   :
                		{
                 		type           : 'accordion'
@@ -426,6 +426,8 @@ function _datComTurnarSuscripcion()
                                     ,'map1.cdtipsit' : inputCdtipsit
                                     ,'map1.estado'   : inputEstado
                                     ,'map1.nmpoliza' : inputNmpoliza
+                                    ,'map1.cdpercli' : panDatComMap1.cdpercli
+                                    ,'map1.ntramite' : inputNtramite
                                 }
                                 ,scripts:true
                                 ,autoLoad:true
@@ -765,6 +767,7 @@ function _datComTurnarSuscripcion()
 		                                                ,buttons : Ext.Msg.OK
 		                                                ,fn      : function()
 		                                                {
+		                                                    /*
 		                                                    if(!Ext.isEmpty(panDatComFlujo))
 		                                                    {
 		                                                        var botones = Ext.ComponentQuery.query('[xtype=button][clase=botonFlujo]');
@@ -774,6 +777,7 @@ function _datComTurnarSuscripcion()
 		                                                            botones[i].show();
 		                                                        }
 		                                                    }
+		                                                    */
 		                                                }
 		                                            }));
 		                                        },
@@ -2276,6 +2280,52 @@ function _datComTurnarSuscripcion()
                     }
                 });
                 
+                Ext.create('Ext.panel.Panel',
+                {
+                    renderTo  : 'maindiv'
+                    ,defaults : { style : 'margin:5px;' }
+                    ,border   : 0
+                    ,items    :
+                    [
+                        Ext.create('Ext.panel.Panel',
+			            {
+			                itemId       : '_datcom_panelFlujo'
+			                ,title       : 'ACCIONES'
+			                ,hidden      : Ext.isEmpty(panDatComFlujo)
+			                ,buttonAlign : 'left'
+			                ,buttons     : []
+			                ,listeners   :
+			                {
+			                    afterrender : function(me)
+			                    {
+			                        if(!Ext.isEmpty(panDatComFlujo))
+			                        {
+			                            _cargarBotonesEntidad(
+			                                panDatComFlujo.cdtipflu
+			                                ,panDatComFlujo.cdflujomc
+			                                ,panDatComFlujo.tipoent
+			                                ,panDatComFlujo.claveent
+			                                ,panDatComFlujo.webid
+			                                ,me.itemId//callback
+			                                ,panDatComFlujo.ntramite
+			                                ,panDatComFlujo.status
+			                                ,panDatComFlujo.cdunieco
+			                                ,panDatComFlujo.cdramo
+			                                ,panDatComFlujo.estado
+			                                ,panDatComFlujo.nmpoliza
+			                                ,panDatComFlujo.nmsituac
+			                                ,panDatComFlujo.nmsuplem
+			                                ,null//callbackDespuesProceso
+			                            );
+			                        }
+			                    }
+			                }
+			            })
+			            ,accordion
+                    ]
+                });
+                
+                /*
                 if(!Ext.isEmpty(panDatComFlujo))
                 {
                     var formPanel = _fieldById('formPanel');
@@ -2308,6 +2358,7 @@ function _datComTurnarSuscripcion()
                         ,function(){alert();}
                     );
                 }
+                */
                 
                 function creaWindowPay(url, params, tarjet )
 			    {
@@ -2639,7 +2690,7 @@ function _datComTurnarSuscripcion()
         </script>
     </head>
     <body>
-        <div id="maindiv" style="height:1200px;"></div>
+        <div id="maindiv" style="height:1300px;"></div>
         <%--////////////////////////////////////
         ////// para el parser de archivos //////
         ////////////////////////////////////--%

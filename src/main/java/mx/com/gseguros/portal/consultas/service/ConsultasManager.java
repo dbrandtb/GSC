@@ -154,5 +154,7 @@ public interface ConsultasManager
 	 * @throws Exception
 	 */
 	public List<Map<String,String>> consultaPermisosEdicionCoberturas(int cdramo, String cdtipsit, String cdplan, String cdgarant, String cdsisrol) throws Exception;
-	
+
+	@Deprecated
+	public String recuperarCdpersonClienteTramite(String ntramite) throws Exception;
 }

@@ -64,6 +64,10 @@ var _0_urlObtieneValNumeroSerie    = '<s:url namespace="/emision" 		  action="ob
 var _p0_urlCargarPoliza           = '<s:url namespace="/emision"         action="cargarPoliza"                    />';
 var _0_urlCargarDetalleNegocioRamo5= '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"      />';
 
+var _0_urlDetalleTramite                    = '<s:url namespace="/mesacontrol" action="movimientoDetalleTramite"            />';
+var _0_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"     action="actualizarOtvalorTramitePorDsatribu" />';
+var _0_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"     action="recuperarOtvalorTramitePorDsatribu"  />';
+
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
     <s:property value="imap.modeloExtraFields" />
@@ -377,19 +381,39 @@ function _0_comprar()
                             ,y       : 50
                             ,fn      : function()
                             {
+                                var paramsDatCom =
+                                {
+                                    cdunieco         : _0_smap1.cdunieco
+                                    ,cdramo          : _0_smap1.cdramo
+                                    ,estado          : 'W'
+                                    ,nmpoliza        : _0_fieldNmpoliza.getValue()
+                                    ,'map1.ntramite' : json.smap1.ntramite
+                                    ,cdtipsit        : _0_smap1.cdtipsit
+                                };
+                                
+                                if(!Ext.isEmpty(_0_flujo))
+                                {
+                                    paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
+                                    paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
+                                    paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
+                                    paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
+                                    paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
+                                    paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
+                                    paramsDatCom['flujo.status']    = _0_flujo.status;
+                                    paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
+                                    paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
+                                    paramsDatCom['flujo.estado']    = _0_flujo.estado;
+                                    paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
+                                    paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
+                                    paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
+                                    paramsDatCom['flujo.aux']       = 'RECUPERAR';
+                                }
+                            
                                 Ext.create('Ext.form.Panel').submit(
                                 {
                                     url             : _0_urlDatosComplementarios
                                     ,standardSubmit : true
-                                    ,params         :
-                                    {
-                                        cdunieco         : _0_smap1.cdunieco
-                                        ,cdramo          : _0_smap1.cdramo
-                                        ,estado          : 'W'
-                                        ,nmpoliza        : _0_fieldNmpoliza.getValue()
-                                        ,'map1.ntramite' : json.smap1.ntramite
-                                        ,cdtipsit        : _0_smap1.cdtipsit
-                                    }
+                                    ,params         : paramsDatCom
                                 });
                             }
                         });
@@ -420,19 +444,39 @@ function _0_comprar()
                 		,y       : 50
                 		,fn      : function()
                 		{
+                		    var paramsDatCom =
+                		    {
+                		        cdunieco         : _0_smap1.cdunieco
+                                ,cdramo          : _0_smap1.cdramo
+                                ,estado          : 'W'
+                                ,nmpoliza        : _0_fieldNmpoliza.getValue()
+                                ,'map1.ntramite' : _0_smap1.ntramite
+                                ,cdtipsit        : _0_smap1.cdtipsit
+                		    };
+                		    
+                		    if(!Ext.isEmpty(_0_flujo))
+                            {
+                                paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
+                                paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
+                                paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
+                                paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
+                                paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
+                                paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
+                                paramsDatCom['flujo.status']    = _0_flujo.status;
+                                paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
+                                paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
+                                paramsDatCom['flujo.estado']    = _0_flujo.estado;
+                                paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
+                                paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
+                                paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
+                                paramsDatCom['flujo.aux']       = 'RECUPERAR';
+                            }
+                		    
                 			Ext.create('Ext.form.Panel').submit(
                 			{
                 				url             : _0_urlDatosComplementarios
                 				,standardSubmit : true
-                				,params         :
-                				{
-                					cdunieco         : _0_smap1.cdunieco
-                					,cdramo          : _0_smap1.cdramo
-                					,estado          : 'W'
-                					,nmpoliza        : _0_fieldNmpoliza.getValue()
-                					,'map1.ntramite' : _0_smap1.ntramite
-                					,cdtipsit        : _0_smap1.cdtipsit
-                				}
+                				,params         : paramsDatCom
                 			});
                 		}
                 	});
@@ -937,32 +981,38 @@ function _0_cargar()
         //request
         if(valido)
         {
-            _0_panelPri.setLoading(true);
-            Ext.Ajax.request(
-            {
-                url      : _0_urlLoad
-                ,params  :
-                {
-                    'smap1.nmpoliza'  : value
-                    ,'smap1.cdramo'   : _0_smap1.cdramo
-                    ,'smap1.cdunieco' : _0_smap1.cdunieco
-                    ,'smap1.cdtipsit' : _0_smap1.cdtipsit
-                }
-                ,success : function(response)
-                {
-                	var json=Ext.decode(response.responseText);
-                	llenandoCampos(json);
-                }
-                ,failure : function()
-                {
-                    _0_panelPri.setLoading(false);
-                    errorComunicacion();
-                }
-            });
+            _0_recuperarCotizacion(value);
         }
     });
     debug('<_mcotiza_load');
     debug('<_0_cargar');
+}
+
+function _0_recuperarCotizacion(nmpoliza)
+{
+    debug('>_0_recuperarCotizacion nmpoliza=',nmpoliza,'.');
+    _0_panelPri.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _0_urlLoad
+        ,params  :
+        {
+            'smap1.nmpoliza'  : nmpoliza
+            ,'smap1.cdramo'   : _0_smap1.cdramo
+            ,'smap1.cdunieco' : _0_smap1.cdunieco
+            ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+        }
+        ,success : function(response)
+        {
+            var json=Ext.decode(response.responseText);
+            llenandoCampos(json);
+        }
+        ,failure : function()
+        {
+            _0_panelPri.setLoading(false);
+            errorComunicacion();
+        }
+    });
 }
 
 function _0_cargarPoliza()
@@ -1272,19 +1322,39 @@ function llenandoCampos (json)
         }
         else
         {
+            var paramsDatCom =
+            {
+                cdunieco         : json.smap1.CDUNIECO
+                ,cdramo          : json.smap1.cdramo
+                ,estado          : 'W'
+                ,nmpoliza        : json.smap1.nmpoliza
+                ,'map1.ntramite' : json.smap1.NTRAMITE
+                ,cdtipsit        : json.smap1.cdtipsit
+            };
+            
+            if(!Ext.isEmpty(_0_flujo))
+            {
+                paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
+                paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
+                paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
+                paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
+                paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
+                paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
+                paramsDatCom['flujo.status']    = _0_flujo.status;
+                paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
+                paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
+                paramsDatCom['flujo.estado']    = _0_flujo.estado;
+                paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
+                paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
+                paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
+                paramsDatCom['flujo.aux']       = 'RECUPERAR';
+            }
+            
             Ext.create('Ext.form.Panel').submit(
             {
                 url             : _0_urlDatosComplementarios
                 ,standardSubmit : true
-                ,params         :
-                {
-                    cdunieco         : json.smap1.CDUNIECO
-                    ,cdramo          : json.smap1.cdramo
-                    ,estado          : 'W'
-                    ,nmpoliza        : json.smap1.nmpoliza
-                    ,'map1.ntramite' : json.smap1.NTRAMITE
-                    ,cdtipsit        : json.smap1.cdtipsit
-                }
+                ,params         : paramsDatCom
             });
         }
     }
@@ -1491,7 +1561,14 @@ function _0_cotizar(boton)
                         ]
                         ,listeners        :
                         {
-                            select : _0_tarifaSelect
+                            select       : _0_tarifaSelect
+                            ,afterrender : function(me)
+                            {
+                                if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
+                                {
+                                    _0_actualizarCotizacionTramite();
+                                }
+                            }
                         }
                     });
                     
@@ -2080,6 +2157,155 @@ function obtienefechafinplazo()
         });
 }
 
+function _0_actualizarCotizacionTramite(callback)
+{
+    var ck = 'Registrando cotizaci\u00f3n de tr\u00e1mite';
+    try
+    {
+        _mask(ck);
+        Ext.Ajax.request(
+        {
+            url      : _0_urlActualizarOtvalorTramiteXDsatribu
+            ,params  :
+            {
+                'params.ntramite'  : _0_flujo.ntramite
+                ,'params.dsatribu' : 'COTIZACI%N%TR%MITE%'
+                ,'params.otvalor'  : _fieldByName('nmpoliza').getValue()
+                ,'params.accion'   : 'U'
+            }
+            ,success : function(response)
+            {
+                _unmask();
+                var ck = 'Decodificando respuesta al guardar estatus de tr\u00e1mite';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar estatus de tramite:',json);
+                    if(json.success===true)
+                    {
+                        var ck = 'Guardando detalle de cotiazci\u00f3n de tr\u00e1mite';
+                        try
+                        {
+                            _mask(ck);
+                            Ext.Ajax.request(
+                            {
+                                url      : _0_urlDetalleTramite
+                                ,params  :
+                                {
+                                    'smap1.ntramite'  : _0_flujo.ntramite
+                                    ,'smap1.status'   : _0_flujo.status
+                                    ,'smap1.dscoment' : 'Se guard\u00f3 la cotizaci\u00f3n '+_fieldByName('nmpoliza').getValue()
+                                }
+                                ,success : function(response)
+                                {
+                                    _unmask();
+                                    var ck = 'Decodificando respuesta al guardar detalle de cotizaci\u00f3n de tr\u00e1mite';
+                                    try
+                                    {
+                                        var jsonDetalle = Ext.decode(response.responseText);
+                                        debug('### guardar detalle cotizacion tramite:',jsonDetalle);
+                                        if(!Ext.isEmpty(callback))
+                                        {
+                                            callback();
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                                ,failure : function()
+                                {
+                                    _unmask();
+                                    errorComunicacion(null,'Error al guardar detalle de cotizaci\u00f3n de tr\u00e1mite');
+                                }
+                            });
+                        }
+                        catch(e)
+                        {
+                            _unmask();
+                            manejaException(e,ck);
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _unmask();
+                errorComunicacion(null,'Error al guardar estatus de tr\u00e1mite');
+            }
+        });
+    }
+    catch(e)
+    {
+        _unmask();
+        manejaException(e,ck);
+    }
+}
+
+function _0_recuperarCotizacionDeTramite()
+{
+    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
+    {
+        var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
+        try
+        {
+            _mask(ck);
+            Ext.Ajax.request(
+            {
+                url      : _0_urlRecuperarOtvalorTramiteXDsatribu
+                ,params  :
+                {
+                    'params.ntramite'  : _0_flujo.ntramite
+                    ,'params.dsatribu' : 'COTIZACI%N%TR%MITE'
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                    var ck = 'Decodificando respuesta al recuperar cotizaci\u00f3n de tr\u00e1mite';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### cotizacion de tramite:',json);
+                        if(json.success===true)
+                        {
+                            if(!Ext.isEmpty(json.params.otvalor))
+                            {
+                                _0_recuperarCotizacion(json.params.otvalor);
+                            }
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function(response)
+                {
+                    _unmask();
+                    errorComunicacion(null,'Error al recuperar cotizaci\u00f3n de tr\u00e1mite');
+                }
+            });
+        }
+        catch(e)
+        {
+            _unmask();
+            manejaException(e,ck);
+        }
+    }
+}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -2565,7 +2791,41 @@ Ext.onReady(function()
    		        }
    		        ,items    :
    		        [
-   		            _0_formAvisos
+   		            Ext.create('Ext.panel.Panel',
+		            {
+		                itemId       : '_0_panelFlujo'
+		                ,title       : 'ACCIONES'
+		                ,hidden      : Ext.isEmpty(_0_flujo) || !_0_smap1.SITUACION === 'AUTO'
+		                ,buttonAlign : 'left'
+		                ,buttons     : []
+		                ,listeners   :
+		                {
+		                    afterrender : function(me)
+		                    {
+		                        if(!Ext.isEmpty(_0_flujo))
+		                        {
+		                            _cargarBotonesEntidad(
+		                                _0_flujo.cdtipflu
+		                                ,_0_flujo.cdflujomc
+		                                ,_0_flujo.tipoent
+		                                ,_0_flujo.claveent
+		                                ,_0_flujo.webid
+		                                ,me.itemId//callback
+		                                ,_0_flujo.ntramite
+		                                ,_0_flujo.status
+		                                ,_0_flujo.cdunieco
+		                                ,_0_flujo.cdramo
+		                                ,_0_flujo.estado
+		                                ,_0_flujo.nmpoliza
+		                                ,_0_flujo.nmsituac
+		                                ,_0_flujo.nmsuplem
+		                                ,null//callbackDespuesProceso
+		                            );
+		                        }
+		                    }
+		                }
+		            })
+   		            ,_0_formAvisos
    		            ,_0_formAgrupados
    		            ,_0_gridIncisos
    		            ,_0_botonera
@@ -3893,6 +4153,9 @@ Ext.onReady(function()
     // Para TODOS LOS PRODUCTOS (si aplican), se agrega validacion de Codigo Postal vs Estado:
     agregaValidacionCPvsEstado();
     
+    //si hay flujo de autos se recupera cotizacion ultima
+    _0_recuperarCotizacionDeTramite();
+    
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
 
@@ -3900,6 +4163,6 @@ Ext.onReady(function()
 </script>
 </head>
 <body>
-	<div id="_0_divPri" style="height: 1100px;"></div>
+	<div id="_0_divPri" style="height: 1200px;"></div>
 </body>
 </html>

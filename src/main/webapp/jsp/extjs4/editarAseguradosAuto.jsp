@@ -52,28 +52,60 @@ Ext.onReady(function()
 	        debug('### cargar datos complementarios:',json);
 	        if(json.exito)
 	        {
-	        	
 	        	var nuevaPersona =  ((!Ext.isEmpty(json.smap1.swexiper) && "N" == json.smap1.swexiper) || (Ext.isEmpty(json.smap1.cdperson)) ) ? true:  false;
-	        	
-	            _fieldById('_p20_clientePanel').loader.load(
-	            {
-	                params:
+
+	        	if(nuevaPersona && !Ext.isEmpty(_p20_map1.cdpercli))
+	        	{
+	        	    var ck = 'Recuperando cliente de tr\u00e1mite';
+	        	    try
+	        	    {
+	        	        _fieldById('_p20_clientePanel').loader.load(
+	                    {
+	                        params:
+	                        {
+	                            'smap1.cdperson' : _p20_map1.cdpercli,
+	                            'smap1.cdideper' : json.smap1.cdideper,
+	                            'smap1.cdideext' : json.smap1.cdideext,
+	                            'smap1.esSaludDanios' : 'D',
+	                            'smap1.polizaEnEmision': 'S',
+	                            'smap1.esCargaClienteNvo' : 'N', // SE PUEDE CAMBIAR EL CLIENTE //((!Ext.isEmpty(json.smap1.swexiper) && "N" == json.smap1.swexiper) || (Ext.isEmpty(json.smap1.cdperson))? 'S' : 'N' ),
+	                            'smap1.cargaCP' : '',//json.smap1.cdpostal,
+	                            'smap1.cargaTipoPersona' : '',//json.smap1.otfisjur,
+	    //                      'smap1.cargaSucursalEmi' : _p20_map1.cdunieco,
+	    //                      'smap1.cargaFenacMin' : _aplicaCobVida?_FechaMinEdad:'',
+	    //                      'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:'',
+	                            'smap1.tomarUnDomicilio' : 'S',
+	                            'smap1.cargaOrdDomicilio' : nuevaPersona? '' : json.smap1.nmorddom
+	                        }
+	                    });
+	        	    }
+	        	    catch(e)
+	        	    {
+	        	        manejaException(e,ck);
+	        	    }
+	        	}
+	        	else
+	        	{
+	                _fieldById('_p20_clientePanel').loader.load(
 	                {
-	                    'smap1.cdperson' : nuevaPersona? '' : json.smap1.cdperson,
-	                    'smap1.cdideper' : json.smap1.cdideper,
-	                    'smap1.cdideext' : json.smap1.cdideext,
-	                    'smap1.esSaludDanios' : 'D',
-	                    'smap1.polizaEnEmision': 'S',
-	                    'smap1.esCargaClienteNvo' : 'N', // SE PUEDE CAMBIAR EL CLIENTE //((!Ext.isEmpty(json.smap1.swexiper) && "N" == json.smap1.swexiper) || (Ext.isEmpty(json.smap1.cdperson))? 'S' : 'N' ),
-	                    'smap1.cargaCP' : '',//json.smap1.cdpostal,
-	                    'smap1.cargaTipoPersona' : '',//json.smap1.otfisjur,
-//	                    'smap1.cargaSucursalEmi' : _p20_map1.cdunieco,
-//	                    'smap1.cargaFenacMin' : _aplicaCobVida?_FechaMinEdad:'',
-//	                    'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:'',
-	                    'smap1.tomarUnDomicilio' : 'S',
-	                    'smap1.cargaOrdDomicilio' : nuevaPersona? '' : json.smap1.nmorddom
-	                }
-	            });
+	                    params:
+	                    {
+	                        'smap1.cdperson' : nuevaPersona? '' : json.smap1.cdperson,
+	                        'smap1.cdideper' : json.smap1.cdideper,
+	                        'smap1.cdideext' : json.smap1.cdideext,
+	                        'smap1.esSaludDanios' : 'D',
+	                        'smap1.polizaEnEmision': 'S',
+	                        'smap1.esCargaClienteNvo' : 'N', // SE PUEDE CAMBIAR EL CLIENTE //((!Ext.isEmpty(json.smap1.swexiper) && "N" == json.smap1.swexiper) || (Ext.isEmpty(json.smap1.cdperson))? 'S' : 'N' ),
+	                        'smap1.cargaCP' : '',//json.smap1.cdpostal,
+	                        'smap1.cargaTipoPersona' : '',//json.smap1.otfisjur,
+    //	                    'smap1.cargaSucursalEmi' : _p20_map1.cdunieco,
+    //	                    'smap1.cargaFenacMin' : _aplicaCobVida?_FechaMinEdad:'',
+    //	                    'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:'',
+	                        'smap1.tomarUnDomicilio' : 'S',
+	                        'smap1.cargaOrdDomicilio' : nuevaPersona? '' : json.smap1.nmorddom
+	                    }
+	                });
+	            }
 	            
 	            _p22_parentCallback = _p20_personaSaved;
 	        }
