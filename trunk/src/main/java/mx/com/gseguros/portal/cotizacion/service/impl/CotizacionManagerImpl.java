@@ -5458,7 +5458,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	    					params.put("pv_feingresoempleo_i", feingreso);
 	    					params.put("pv_plaza_i", row.getCell(26)!=null?row.getCell(26).getStringCellValue() : "");
 	    					
-	    					cotizacionDAO.insertaReistroInfoCenso(params);
+	    					cotizacionDAO.insertaRegistroInfoCenso(params);
 	    					
 	    				}
 	    	            catch(Exception ex)
@@ -5621,6 +5621,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return resp;
 	}
 
+	@Override
+	public void insertaRegistroInfoCenso(Map<String, String> params)
+			throws Exception{
+		cotizacionDAO.insertaRegistroInfoCenso(params);
+	}
 	
 	@Override
 	public ManagerRespuestaSmapVO confirmarCensoCompleto(
@@ -7648,17 +7653,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            catch(Exception ex)
 	            {
 	            	long timestamp = System.currentTimeMillis();
-	            	throw new ApplicationException(new StringBuilder("Error al ejecutar procesoColectivoInterno al confirmar censo concurrente #").append(timestamp).toString());
+	            	throw new ApplicationException(new StringBuilder("Error al ejecutar procesoColectivoInterno al confirmar censo concurrente  2 #").append(timestamp).toString());
 	            }
     			
     			long stamp = System.currentTimeMillis();
-    			logger.debug(Utils.log(stamp,"Mandando el tramite a estatus completo despues de subir censo cocurrente y proceso colectivo interno"));
+    			logger.debug(Utils.log(stamp,"Mandando el tramite a estatus completo despues de subir censo cocurrente 2 y proceso colectivo interno"));
 
     			mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
     		}
     		catch(Exception ex)
     		{
-    			logger.error("Error en confirmar censo concurrente", ex);
+    			logger.error("Error en confirmar censo concurrente 2", ex);
     		}
     	}
     }

@@ -881,4 +881,12 @@ public interface CotizacionManager
 			,String dsatribu
 			)throws Exception;
 	
+	/**
+	 * Guarda censo informativo
+	 * @param params
+	 * @throws Exception
+	 */
+	public void insertaRegistroInfoCenso(Map<String, String> params)
+			throws Exception;
+	
 }
