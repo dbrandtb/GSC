@@ -301,6 +301,7 @@ public interface EndososDAO
 			,String tipoflot
 			,String cdsisrol
 			,String cdusuari
+			,String cdtipsit
 			)throws Exception;
 	
 	public void guardarTvalositEndoso(

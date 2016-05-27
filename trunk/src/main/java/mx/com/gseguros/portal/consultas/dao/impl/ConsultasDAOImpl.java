@@ -1172,6 +1172,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"DSVALOR46" , "DSVALOR47" , "DSVALOR48" , "DSVALOR49" , "DSVALOR50"
             		//OTROS
             		,"RAMO"
+            		,"NMSITAUX", "CDTIPSIT"
     	            };
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
