@@ -23,6 +23,7 @@ public interface EndososAutoManager
 			,String cdsisrol
 			,String cancelada
 			,String cdusuari
+			,String cdtipsit
 			)throws Exception;
 	
 	/**

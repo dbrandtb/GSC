@@ -175,6 +175,7 @@ Ext.onReady(function()
             //CUSTOM
             ,'NOMBRECOMPLETO'
             ,'NTRAMITE'
+            ,'NMSITAUX','CDTIPSIT'
         ]
     });
     
@@ -568,6 +569,7 @@ function _p34_botonEndososPolizaClic()
     var nivel    = 'POLIZA';
     var multiple = 'N';
     var tipoflot = 'I';
+    var cdtipsit = poliza.get('CDTIPSIT');
     if(!Ext.isEmpty(poliza.get('TIPOFLOT')))
     {
         tipoflot = poliza.get('TIPOFLOT');
@@ -587,6 +589,7 @@ function _p34_botonEndososPolizaClic()
                 ,multiple  : multiple
                 ,tipoflot  : tipoflot
                 ,cancelada : !Ext.isEmpty(poliza.get('FEANULAC'))?'S':'N'
+                ,cdtipsit  : cdtipsit
             }
         }
         ,success : function(response)
@@ -886,7 +889,8 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                debug(new _p34_modeloInciso().data);
 			                padre.setLoading(false);
 							_p34_storeIncisos.getProxy().setExtraParam('smap1.dsatribu', null);
-			                _p34_storeIncisos.getProxy().setExtraParam('smap1.otvalor', null);	
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.otvalor', null);
+			                //_p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili', null);
 			                centrarVentanaInterna(Ext.create('Ext.window.Window',
 			                {
 			                    itemId       : '_p34_windowIncisos'
@@ -973,6 +977,13 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                                    	        ,'params.nmpoliza' : recordPoliza.get('NMPOLIZA')
 			                                    	    }
 			                                    	}
+				                                    ,listeners :
+					                                {
+					                                    load: function(st){
+					                                    	debug('listener activo');
+					                                    	_fieldByName('dsatribu').setValue('NOMBRE ASEGURADO');
+					                                    }
+					                                }
 			                                    })
 			                                })
 			                                ,{
@@ -1012,12 +1023,13 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.estado',recordPoliza.get('ESTADO'));
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmpoliza',recordPoliza.get('NMPOLIZA'));
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdgrupo',recordPoliza.get('CDGRUPO'));
-			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili',recordPoliza.get('NMSITAUX'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili', nivel == 'POLIZA' ? null : recordPoliza.get('NMSITAUX'));
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nivel',nivel);
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.atrPol',(!Ext.isEmpty(recordPoliza.get('CDRAMO')) && new String(recordPoliza.get('CDRAMO')) == "6")? 'S':'N');
 			                
 //			                _fieldById('_p34_gridIncisos').down('pagingtoolbar').moveFirst();
 			                
+			                //_p34_storeIncisos.loadPage(1);
 					    }
 					    else
 					    {
@@ -1051,6 +1063,8 @@ function _p34_botonEndososIncisosClic()
     var nivel    = 'INCISO';
     var multiple = incisos.length>1?'S':'N';
     var tipoflot = 'I';
+    debug('Creando CDTIPSIT',poliza.get('CDTIPSIT'))
+    var cdtipsit = poliza.get('CDTIPSIT');
     if(!Ext.isEmpty(poliza.get('TIPOFLOT')))
     {
         tipoflot = poliza.get('TIPOFLOT');
@@ -1078,6 +1092,7 @@ function _p34_botonEndososIncisosClic()
                 ,multiple  : multiple
                 ,tipoflot  : tipoflot
                 ,cancelada : !Ext.isEmpty(poliza.get('FEANULAC'))?'S':'N'
+                ,cdtipsit  : cdtipsit
             }
             ,slist1 : incisosRaw
         }
@@ -1449,7 +1464,7 @@ function _p34_gridPolizasFamiliasClic(row)
                                     ,icon     : '${ctx}/resources/fam3icons/icons/book_addresses.png'
                                     ,disabled : true
                                     ,handler  : function(){ _p34_botonEndososFamiliasClic(); }
-                                    ,hidden   : true
+//                                    ,hidden   : true
                                 }
                                 ,'->'
                                 ,{

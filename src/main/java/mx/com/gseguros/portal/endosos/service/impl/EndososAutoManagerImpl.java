@@ -364,6 +364,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdsisrol
 			,String cancelada
 			,String cdusuari
+			,String cdtipsit
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -377,6 +378,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdsisrol="  , cdsisrol
 				,"\n@@@@@@ cancelada=" , cancelada
 				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
 				));
 
 		SlistSmapVO resp = new SlistSmapVO();
@@ -419,7 +421,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			if("N".equals(cancelada))
 			{
-				resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot,cdsisrol, cdusuari));
+				resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot,cdsisrol, cdusuari,cdtipsit));
 				//parchamos, si el DSTIPSUP2 tiene algun *, lo metemos como DSTIPSUP
 				for(Map<String,String>endoso:resp.getSlist())
 				{

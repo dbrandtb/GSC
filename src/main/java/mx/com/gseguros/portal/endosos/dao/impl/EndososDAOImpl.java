@@ -2786,6 +2786,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String tipoflot
 			,String cdsisrol
 			,String cdusuari
+			,String cdtipsit
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -2796,6 +2797,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("tipoflot" , tipoflot);
 		params.put("cdsisrol" , cdsisrol);
 		params.put("cdusuari" , cdusuari);
+		params.put("cdtipsit" , cdtipsit);
 		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_ENDOSOS_CLASIFICADOS", params);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarEndososClasificados(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -2819,6 +2821,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("tipoflot" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			
 			String[] cols=new String[]{
 					"CDTIPSUP"
 					,"DSTIPSUP"
