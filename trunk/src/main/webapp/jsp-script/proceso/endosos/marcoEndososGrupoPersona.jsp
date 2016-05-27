@@ -9,6 +9,8 @@
 var _p26_urlBuscar             = '<s:url namespace="/endosos" action="buscarHistoricoPolizasGrupoPersona" />';
 var _p26_urlObtenerFamilias    = '<s:url namespace="/endosos" action="cargarFamiliasPoliza"               />';
 var _p26_urlObtenerIntegrantes = '<s:url namespace="/endosos" action="cargarIntegrantesFamilia"           />';
+ //Variable para conocer el rol activo del sistema.
+ var cdSisRolActivo = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
 
 var _p26_storePolizas;
 ////// variables //////

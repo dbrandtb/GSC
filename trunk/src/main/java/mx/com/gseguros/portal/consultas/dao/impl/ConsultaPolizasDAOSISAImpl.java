@@ -881,7 +881,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 	}
 
 	@Override
-	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto)
+	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto,String cdsisrol)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;

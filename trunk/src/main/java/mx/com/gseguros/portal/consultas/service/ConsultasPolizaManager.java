@@ -67,7 +67,7 @@ public interface ConsultasPolizaManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto) throws Exception;
+	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto, String cdsisrol) throws Exception;
 	
 	/**
 	 * 

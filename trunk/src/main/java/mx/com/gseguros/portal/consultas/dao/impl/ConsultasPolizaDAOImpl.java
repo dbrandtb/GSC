@@ -284,6 +284,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 		params.put("pv_cdramo_i"  , null);
 		params.put("pv_nmpoliza_i", null);
 		params.put("pv_ramo_i"    , null);
+		params.put("pv_cdsisrol_i", polizaAsegurado.getCdsisrol() );
 		
 		Map<String, Object> mapResult = ejecutaSP(new ConsultaSuplementosSP(getDataSource()), params);
 		return (List<SuplementoVO>) mapResult.get("pv_registro_o");
@@ -297,6 +298,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i",OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new SuplementoMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -306,7 +308,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto) 
+	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto, String cdsisrol ) 
 			throws Exception{
 		
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -315,6 +317,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 		params.put("pv_cdunieco_i", sucursal);
 		params.put("pv_cdramo_i"  , producto);
 		params.put("pv_nmpoliza_i", polizacorto);
+		params.put("pv_cdsisrol_i", cdsisrol);
 		params.put("pv_ramo_i"    , null);
 		
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneHistoricoPolizaCorto(getDataSource()), params);
@@ -329,6 +332,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i",OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new SuplementoMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

@@ -1094,7 +1094,8 @@ Ext.onReady(function() {
                     
                     gridPolizasAsegurado.getStore().removeAll();
                     windowPolizas.close();
-                    // Recargar store con busqueda de historicos de la poliza seleccionada                    
+                    // Recargar store con busqueda de historicos de la poliza seleccionada  
+                   // storeAsegurados.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();
                     cargaStoreSuplementos(formBusqueda.getValues());
                 }else{
                     showMessage('Aviso', 'Seleccione un registro', Ext.Msg.OK, Ext.Msg.INFO);
@@ -1558,6 +1559,11 @@ Ext.onReady(function() {
                                             width: 200,
                                             fieldLabel : 'P&oacute;liza',
                                             allowBlank: false
+                                        },{
+                                        	xtype: 'textfield',
+                                        	name : 'params.cdsisrol',
+                                        	value: cdSisRolActivo,
+                                        	hidden: true
                                         }
                                     ]
                                 }
@@ -1611,12 +1617,13 @@ Ext.onReady(function() {
                                     
                                     case 5:
                                         // Busqueda de polizas por numero corto:
-                                        if(!formBusqueda.findField('params.sucursal').isValid() || !formBusqueda.findField('params.producto').isValid() || !formBusqueda.findField('params.numpolizacorto').isValid()){
+                                   		if(!formBusqueda.findField('params.sucursal').isValid() || !formBusqueda.findField('params.producto').isValid() || !formBusqueda.findField('params.numpolizacorto').isValid()){
                                             mensajeWarning('Llene los datos requeridos.');
                                             return;
                                         }                                        
-                                        //debug('storeSuplementos',storeSuplementos.getAt(0).get('switchConvenios'));
+                                       // debug('storeSuplementos',storeSuplementos.getAt(0).get('switchConvenios'));
                                         cargaStoreSuplementos(formBusqueda.getValues());
+                                        
                                     break;
                                 }
                             }
@@ -1683,7 +1690,7 @@ Ext.onReady(function() {
         
         storeSuplementos.load({
             params: params,
-            callback: function(records, operation, success) {
+        	callback: function(records, operation, success) {
                 if(success) {                	
                 	//debug('storeSuplementos ',storeSuplementos.getAt(0).get('switchConvenios'));
                     gridSuplementos.setLoading(false);
