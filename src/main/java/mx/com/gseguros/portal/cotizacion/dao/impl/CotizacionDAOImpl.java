@@ -7185,7 +7185,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public void insertaReistroInfoCenso(Map<String, String> params)throws Exception
+	public void insertaRegistroInfoCenso(Map<String, String> params)throws Exception
 	{
 		ejecutaSP(new InsertaReistroInfoCenso(getDataSource()),params);
 	}

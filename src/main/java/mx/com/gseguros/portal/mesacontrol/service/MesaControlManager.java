@@ -96,4 +96,13 @@ public interface MesaControlManager
      */
     public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif, String cdmoddoc) throws Exception;
     
+    /**
+	 * Se pone un status al tramite y se retorna el actual, no se registra en los historicos
+	 * @param ntramite
+	 * @param statusTemporal
+	 * @return
+	 * @throws Exception
+	 */
+	public String marcarTramiteComoStatusTemporal(String ntramite, String statusTemporal) throws Exception;
+    
 }

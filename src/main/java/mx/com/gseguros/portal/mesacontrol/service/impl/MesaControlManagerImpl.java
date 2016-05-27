@@ -282,4 +282,10 @@ public class MesaControlManagerImpl implements MesaControlManager
 		return mesaControlDAO.regeneraReporte(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cddocume, nmsituac, nmcertif, cdmoddoc);
 	}
 	
+	public String marcarTramiteComoStatusTemporal(String ntramite, String statusTemporal) throws Exception{
+		return mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite, statusTemporal);
+	}
+	
+	
+	
 }
