@@ -185,11 +185,23 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.put("ntramite" , flujo.getNtramite());
 				smap1.put("cdunieco" , flujo.getCdunieco());
 				smap1.put("cdramo"   , flujo.getCdramo());
-				smap1.put("cdtipsit" ,
-						((Map<String,String>)(flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo))
-						    .get("TRAMITE"))
-						    .get("CDTIPSIT")
-						);
+				
+				logger.debug("Se recuperan datos del tramite accediendo por flujo");
+				
+				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
+				
+				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+				
+				cdagente = tramite.get("CDAGENTE");
+				
+				cdtipsit = tramite.get("CDTIPSIT");
+				
+				logger.debug("CDAGENTE={}",cdagente);
+
+				smap1.put("cdagente" , cdagente);
+				
+				smap1.put("cdtipsit" , cdtipsit);
+				
 				logger.debug(Utils.log("\nsmap1 recuperado de flujo=",smap1));
 			}
 			catch(Exception ex)
@@ -391,6 +403,28 @@ public class CotizacionAction extends PrincipalCoreAction
 								temp.remove(tatriIte);
 								componenteSustitutoListaAux.get(0).setSwsuscri("N");
 								temp.add(componenteSustitutoListaAux.get(0));
+								
+								if(flujo!=null) //entra por flujo y solo puede haber un agente
+								{
+									ComponenteVO agente = componenteSustitutoListaAux.get(0);
+									
+									if(StringUtils.isNotBlank(agente.getCatalogo()))
+									{
+										logger.debug("Se encontro y modifico el campo agente por venir de flujo: {}",agente);
+										agente.setCatalogo("CATALOGO_CERRADO");
+										agente.setQueryParam(null);
+										agente.setParamName1(Utils.join("'params._",cdagente,"'"));
+										agente.setParamValue1(Utils.join("'",cotizacionManager.cargarNombreAgenteTramite(smap1.get("ntramite")),"'"));
+										agente.setParamName2(null);
+										agente.setParamValue2(null);
+										agente.setParamName3(null);
+										agente.setParamValue3(null);
+										agente.setParamName4(null);
+										agente.setParamValue4(null);
+										agente.setParamName5(null);
+										agente.setParamValue5(null);
+									}
+								}
 							}
 						}
 						//clave gs
@@ -491,6 +525,28 @@ public class CotizacionAction extends PrincipalCoreAction
 								temp.remove(tatriIte);
 								componenteSustitutoListaAux.get(0).setSwsuscri("N");
 								temp.add(componenteSustitutoListaAux.get(0));
+								
+								if(flujo!=null) //cuando entra por mesa de control ya debe haber agente
+								{
+									ComponenteVO agente = componenteSustitutoListaAux.get(0);
+									
+									if(StringUtils.isNotBlank(agente.getCatalogo()))
+									{
+										logger.debug("Se encontro y modifico el campo agente por venir de flujo: {}",agente);
+										agente.setCatalogo("CATALOGO_CERRADO");
+										agente.setQueryParam(null);
+										agente.setParamName1(Utils.join("'params._",cdagente,"'"));
+										agente.setParamValue1(Utils.join("'",cotizacionManager.cargarNombreAgenteTramite(smap1.get("ntramite")),"'"));
+										agente.setParamName2(null);
+										agente.setParamValue2(null);
+										agente.setParamName3(null);
+										agente.setParamValue3(null);
+										agente.setParamName4(null);
+										agente.setParamValue4(null);
+										agente.setParamName5(null);
+										agente.setParamValue5(null);
+									}
+								}
 							}
 						}
 					}
