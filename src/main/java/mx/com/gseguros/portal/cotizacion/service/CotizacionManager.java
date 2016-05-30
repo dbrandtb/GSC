@@ -372,7 +372,7 @@ public interface CotizacionManager
 			,String cdgrupo
 			)throws Exception;
 	
-	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones);
+	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones,String cdtipsit,Boolean guardarExt);
 	
 	public ManagerRespuestaSmapVO subirCensoCompleto(
 			String cdunieco
@@ -888,5 +888,13 @@ public interface CotizacionManager
 	 */
 	public void insertaRegistroInfoCenso(Map<String, String> params)
 			throws Exception;
+	
+	/**
+	 * 
+	 * @param cdtipsit
+	 * @return
+	 * @throws Exception
+	 */
+	public String consultaExtraprimOcup(String cdtipsit)throws Exception;
 	
 }

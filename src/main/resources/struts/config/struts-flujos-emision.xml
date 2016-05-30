@@ -473,6 +473,10 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="consultaExtraprimaOcup" class="CotizacionAction" method="consultaExtraprimaOcup">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
     
 </struts>

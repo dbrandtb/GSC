@@ -11047,6 +11047,8 @@ public class CotizacionAction extends PrincipalCoreAction
 
 		exito   = true;
 		success = true;
+		Boolean guardarExt= false;
+		String cdtipsit= null;
 		
 		//datos completos
 		try
@@ -11054,6 +11056,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			if(slist1==null)
 			{
 				throw new ApplicationException("No se recibieron datos");
+			}
+			
+			if(params!=null){
+				guardarExt = true;
+				cdtipsit = smap1.get("cdtipsit");
 			}
 		}
 		catch(ApplicationException ax)
@@ -11068,7 +11075,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
-			ManagerRespuestaVoidVO resp = cotizacionManager.guardarValoresSituaciones(slist1);
+			ManagerRespuestaVoidVO resp = cotizacionManager.guardarValoresSituaciones(slist1,cdtipsit,guardarExt);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();

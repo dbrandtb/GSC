@@ -2296,7 +2296,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
-                                                        ,checked    : json.slist1[j].SWOBLIGA=='S' && !(json.slist1[j].SWMODIFI=='N')
+                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&!(json.slist1[j].SWMODIFI=='N')
                                                         ,disabled   : json.slist1[j].SWMODIFI=='N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
@@ -4871,6 +4871,7 @@ function _p21_estiloEditores(cdplan)
                         if(_4MAT)
                         {
                             _p21_editorAyudaMater.setValue('0');
+                             debug('>~Oculto Ayuda Maternidad');
                             _p21_editorAyudaMater.addCls('_p21_editorLectura');
                         }
                         //else if(_4AYM&&_4HOS&&!_4MAT)
@@ -4880,7 +4881,7 @@ function _p21_estiloEditores(cdplan)
                             {
                             	_p21_editorAyudaMater.setValue('0');
                             	_p21_editorAyudaMater.addCls('_p21_editorLectura');
-                            }else{
+                            }else if(cdplan!='E'){
                             	_p21_editorAyudaMater.removeCls('_p21_editorLectura');
                             }
                             
@@ -4898,6 +4899,7 @@ function _p21_estiloEditores(cdplan)
                     else
                     {
                         //if(!_4AIV||!_4MS)
+                    	_4MS=false;
                         if(!_4MS)
                         {
                             _p21_editorAsisInter.setValue('0');
@@ -4906,15 +4908,16 @@ function _p21_estiloEditores(cdplan)
                         //else if(_4AIV&&_4MS)
                         else if(_4MS)
                         {
-                            if(!_4HOS)
+                        	if(!_4HOS)
                             {
+                            	debug('No encontro 4HOS');
                             	_p21_editorEmerextr.setValue('0');
                             	_p21_editorEmerextr.addCls('_p21_editorLectura');
                             	_p21_editorAsisInter.setValue('0');
                                 _p21_editorAsisInter.addCls('_p21_editorLectura');
-                            }else{
-                            	_p21_editorAsisInter.removeCls('_p21_editorLectura');
-                            	_p21_editorEmerextr.removeCls('_p21_editorLectura');
+                            }else {
+	                            	_p21_editorAsisInter.removeCls('_p21_editorLectura');
+	                            	_p21_editorEmerextr.removeCls('_p21_editorLectura');
                             }
                         }
                     }
