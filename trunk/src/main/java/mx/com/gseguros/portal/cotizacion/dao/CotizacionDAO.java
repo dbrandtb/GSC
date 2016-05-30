@@ -677,6 +677,10 @@ public interface CotizacionDAO {
 			,String accion
 			)throws Exception;
 	
+	public String consultaExtraprimOcup(
+			String cdtipsit
+			)throws Exception;
+	
 	public void insertaRegistroInfoCenso(Map<String, String> params)
 			throws Exception;
 }

@@ -7231,4 +7231,25 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public String consultaExtraprimOcup(String cdtipsit) throws Exception {
+		
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdtipsit_i" , cdtipsit);
+		Map<String, Object> resultado = ejecutaSP(new BuscaExtraprimOcup(getDataSource()), params);
+		String otvalor = (String) resultado.get("pv_cdatribu_o");
+		return otvalor; 
+	}
+	
+	protected class BuscaExtraprimOcup extends StoredProcedure {
+		protected BuscaExtraprimOcup(DataSource dataSource) {
+			super(dataSource,"PKG_DESARROLLO.P_GET_EXTRAPRIMOCUP");
+			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdatribu_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

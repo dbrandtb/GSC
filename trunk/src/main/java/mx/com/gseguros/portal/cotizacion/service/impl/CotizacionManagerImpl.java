@@ -4249,21 +4249,35 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return lista;
 	}
 	
-	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones)
+	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones,String cdtipsit,Boolean guardarExt)
 	{
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.append("\n@@@@@@ guardarValoresSituaciones @@@@@@")
 				.append("\n@@@@@@ situaciones=").append(situaciones)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ guardarExt=").append(guardarExt)
 				.toString()
 				);
 		
 		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);
+		List<Map<String,String>> listaCobExt = null;
 		
 		//actualizar situaciones
 		try
 		{
+			//listaCobExt = ...
+		    if(guardarExt == true){
+		    logger.debug("Guardar Extraprimas ="+guardarExt);
+		    	listaCobExt = consultasDAO.recuperaCoberturasExtraprima(situaciones.get(0).get("cdramo"),cdtipsit);
+		    }
+		    			
+		    
+		    
+		    String paso = null;
+		    
+		    
 			for(Map<String,String>situacion:situaciones)
 			{
 				Map<String,String>valores=new HashMap<String,String>();
@@ -4287,6 +4301,30 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,situacion.get("nmsituac")
 						,valores
 						);
+				
+				if(guardarExt == true){
+					
+					logger.debug("Iteracion = "+guardarExt);
+					
+					for(Map<String,String> coberturaExtraprima : listaCobExt)
+					{
+						String cdgarant = coberturaExtraprima.get("CDGARANT");
+						
+						paso = Utils.join("Ejecutando valores por defecto para la cobertura ",cdgarant);
+						logger.debug(paso);
+						
+						cotizacionDAO.valoresPorDefecto(
+								situacion.get("cdunieco")
+								,situacion.get("cdramo")
+								,situacion.get("estado")
+								,situacion.get("nmpoliza")
+								,situacion.get("nmsituac")
+								,situacion.get("nmsuplem")
+								,cdgarant
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								);
+					}
+				}
 			}
 			resp.setRespuesta("Se guardaron todos los datos");
 		}
@@ -9792,6 +9830,41 @@ public class CotizacionManagerImpl implements CotizacionManager
 			)throws Exception
 	{
 		cotizacionDAO.movimientoTbloqueo(cdunieco,cdramo,estado,nmpoliza,nmsituac,accion);
+	}
+	
+	@Override
+	public String consultaExtraprimOcup(
+			String cdtipsit
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ consultaExtraprimOcup@@@@@@"
+				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				));
+
+		String paso = null;
+		String otvalor = null;
+
+		try{
+			paso = "Recuperando coberturas de extraprimas";
+			logger.debug(paso);
+			
+			otvalor = cotizacionDAO.consultaExtraprimOcup(cdtipsit);
+			
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		logger.debug(Utils.log(
+				 "\n@@@@@@ consultaExtraprimOcup @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return otvalor;
 	}
 	
 	@Override

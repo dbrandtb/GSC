@@ -87,6 +87,7 @@ var _p25_urlGuardarConfig4TVALAT        = '<s:url namespace="/emision"         a
 var _p25_urlRecuperacion                = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
 var _p25_urlRestaurarRespaldoCenso      = '<s:url namespace="/emision"         action="restaurarRespaldoCenso"           />';
 var _p25_urlBorrarRespaldoCenso         = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
+var _p25_urlconsultaExtraprimOcup       = '<s:url namespace="/emision"         action="consultaExtraprimaOcup"            />';
 
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
@@ -104,6 +105,8 @@ var _p25_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p25_smap1:',_p25_smap1);
+
+var posicionExtraprimaOcup;
 
 //se declara el mapa como cotcol para el archivo comun funcionesCotizacionGrupo.js
 var _cotcol_smap1 = _p25_smap1;
@@ -1695,6 +1698,34 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    Ext.Ajax.request(
+    {
+        url       : _p25_urlconsultaExtraprimOcup
+        ,params   : 
+        {
+        	'smap1.cdtipsit' : _p25_smap1.cdtipsit
+        }
+        ,success  : function(response)
+        {
+            var json=Ext.decode(response.responseText);
+            debug('respuesta del guardado de extraprimas:',json);
+            if(json.exito)
+            {
+                posicionExtraprimaOcup = json.params.otvalor;
+                debug('posicionExtraprimaOcup',posicionExtraprimaOcup);
+
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure  : function()
+        {
+            errorComunicacion();
+        }
+    });
+     
     if(_p25_ntramiteVacio)
     {
         _fieldByName('ntramite').setValue(_p25_ntramiteVacio);
@@ -4834,9 +4865,11 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                                     {
                                         var record = datos[i];
                                         if(record.get('parentesco')=='TITULAR')
-                                        {
-                                            alert('aki c pone xtra prima: '+record.get('nmsituac'));
-                                            //record.set('EXTPRI_OCUPACION',extrCmp.getValue());
+                                        {    
+                                        	
+                                        	debug('Aqui se pone extraprima: '+record.get('nmsituac'));
+                                        	record.set('parametros.pv_otvalor'+posicionExtraprimaOcup,extrCmp.getValue());
+                                        	
                                         }
                                     }
                                 }
@@ -5004,7 +5037,12 @@ function _p25_guardarExtraprimas(letra)
             url       : _p25_urlGuardarSituaciones
             ,jsonData :
             {
-                slist1 : asegurados
+            	params  :
+            	{
+            		cdtipsit : _p25_smap1.cdtipsit,
+            		guardarExt : 'S'
+            	}
+                ,slist1 : asegurados
             }
             ,success  : function(response)
             {
@@ -6917,8 +6955,8 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                         if(json.exito)
                         {
                             //var callback = function() { _p25_turnar(19,'Observaciones de la carga',false); };
-                            var callback = function() { mensajeCorrecto('Aviso','Se ha turnado el tr\u00e1mite a mesa de control ' +
-                            							'para procesar el censo. Una vez terminado podra encontrar su tr\u00e1mite ' +
+                            var callback = function() { mensajeCorrecto('Aviso','Se ha turnado el tr\u00e1mite a mesa de control en estatus ' +
+                            							'"En Tarifa" para procesar el censo. Una vez terminado podra encontrar su tr\u00e1mite ' +
                             							'en estatus "Carga completa".',function(){ _p25_mesacontrol(); } 
                             							);
                             						  };
