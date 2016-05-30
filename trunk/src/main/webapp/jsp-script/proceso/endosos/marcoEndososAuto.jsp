@@ -1428,15 +1428,15 @@ function _p34_gridPolizasFamiliasClic(row)
                     ,modal       : true
                     ,closeAction : 'destroy'
                     ,width       : 500
-                    ,maxHheight  : 400
-                    ,autoScroll  : true
                     ,items       :
                     [
                         Ext.create('Ext.grid.Panel',
                         {
                             itemId    : '_p34_gridFamilias'
                             ,columns  : _p34_gridFamiliasColumns
-                            ,width    : 450
+                            ,autoScroll : true 
+                            ,width    : 490
+                            ,height  : 400
                             ,selModel :
                             {
                                 selType    : 'checkboxmodel'
