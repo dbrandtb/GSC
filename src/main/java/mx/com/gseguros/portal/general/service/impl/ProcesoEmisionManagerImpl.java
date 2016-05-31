@@ -715,7 +715,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,nmsuplemEmitida
 							,new Date()
 							,urlAeua + parametros
-							,"AEUA"
+							,"Asistencia en Estados Unidos y Canad\u00E1"
 							,nmpoliza
 							,ntramite
 							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())

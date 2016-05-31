@@ -3585,7 +3585,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmsuplem
 								,new Date()
 								,urlAeua + parametros
-								,"AEUA"
+								,"Asistencia en Estados Unidos y Canad\u00E1"
 								,nmpoliza
 								,ntramite
 								,cdtipsup
