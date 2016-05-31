@@ -981,7 +981,9 @@ function _cargarBotonesEntidad(
 function _NVL(origen,valor)
 {
     if(Ext.isEmpty(origen))
-        return valor||'';
+    {
+        return !Ext.isEmpty(valor) ? valor : '';
+    }
     return origen;
 }
 

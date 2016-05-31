@@ -30,7 +30,7 @@ Ext.define('VentanaDocumentos',
                     ,'smap1.cdramo'   : config.cdramo
                     ,'smap1.estado'   : config.estado
                     ,'smap1.nmpoliza' : config.nmpoliza
-                    ,'smap1.nmsuplem' : config.nmsuplem
+                    ,'smap1.nmsuplem' : _NVL(config.nmsuplem,0)
                     ,'smap1.nmsolici' : config.nmpoliza
                     ,'smap1.ntramite' : config.ntramite
                     ,'smap1.tipomov'  : '0'
