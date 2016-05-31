@@ -14,6 +14,7 @@ public enum Documento
 	,EXTERNO_ESPECIF_SEGURO_VIDA       ("68")
 	,EXTERNO_CONDIC_GRALES_SEGURO_VIDA ("69")
 	,EXTERNO_CARATULA_B                ("71")
+	,EXTERNO_AEUA                      ("75")
 	;
 	
 	private String cdmoddoc;
