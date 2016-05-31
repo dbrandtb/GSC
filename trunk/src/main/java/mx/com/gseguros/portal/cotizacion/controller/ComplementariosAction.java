@@ -2842,7 +2842,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmsuplemEmitida
 								,new Date()
 								,urlAeua + parametros
-								,"AEUA"
+								,"Asistencia en Estados Unidos y Canad\u00E1"
 								,nmpoliza
 								,ntramite
 								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
@@ -4078,7 +4078,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,_nmsuplem
 									,new Date()
 									,urlAeua + parametros
-									,"AEUA"
+									,"Asistencia en Estados Unidos y Canad\u00E1"
 									,nmsolici
 									,ntramite
 									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
