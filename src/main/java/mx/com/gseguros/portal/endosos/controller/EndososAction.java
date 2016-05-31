@@ -11522,6 +11522,7 @@ public class EndososAction extends PrincipalCoreAction
 					
 					String urlRecibo = this.getText("recibo.impresion.autos.url");
 					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAeua = this.getText("aeua.impresion.autos.url");
 					String urlAp = this.getText("ap.impresion.autos.url");
 					
 					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
@@ -11693,6 +11694,36 @@ public class EndososAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_CAIC
+								,null
+								,null
+								);
+					}
+
+					/**
+					 * Para AEUA inciso 1
+					 */
+					
+					if(StringUtils.isNotBlank(endosoIt.get("AEUA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("AEUA"))){
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+						logger.debug("URL Generada para AEUA Inciso 1: "+ urlAeua + parametros);
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlAeua + parametros
+								,"Asistencia en Estados Unidos y Canad\u00E1"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_AEUA
 								,null
 								,null
 								);
