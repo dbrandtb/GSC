@@ -167,6 +167,7 @@ Ext.onReady(function()
             Ext.create('Ext.form.Panel',
             {
                 title   : 'Filtro'
+                ,itemId : '_p54_filtroForm'
                 ,icon   : '${icons}zoom.png'
                 ,items  : _p54_filtroItems
                 ,layout :
@@ -541,7 +542,7 @@ Ext.onReady(function()
     
     try
     {
-        var comboStatus = _fieldLikeLabel('STATUS');
+        var comboStatus = _fieldByLabel('ESTATUS',_fieldById('_p54_filtroForm'));
         
         debug('comboStatus:',comboStatus);
         
