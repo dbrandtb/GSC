@@ -135,6 +135,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Value("${caic.impresion.autos.url}")
 	private String urlImpresionCaic;
+
+	@Value("${aeua.impresion.autos.url}")
+	private String urlImpresionAeua;
 	
 	@Value("${ap.impresion.autos.url}")
 	private String urlImpresionAp;
@@ -3432,6 +3435,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 					String urlRecibo = this.urlImpresionRecibos;
 					String urlCaic = this.urlImpresionCaic;
+					String urlAeua = this.urlImpresionAeua;
 					String urlAp = this.urlImpresionAp;
 					
 					String urlIncisosFlot = this.urlImpresionIncisosFlotillas;
@@ -3564,6 +3568,32 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_CAIC, null, null
+								);
+					}
+
+					/**
+					 * Para AEUA inciso 1
+					 */
+					if(StringUtils.isNotBlank(endosoIt.get("AEUA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("AEUA"))){
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+						logger.debug("URL Generada para AEUA Inciso 1: "+ urlAeua + parametros);
+						mesaControlDAO.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlAeua + parametros
+								,"AEUA"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_AEUA, null, null
 								);
 					}
 					

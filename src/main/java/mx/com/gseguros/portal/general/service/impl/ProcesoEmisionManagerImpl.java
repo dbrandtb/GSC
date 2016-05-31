@@ -64,6 +64,9 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	
 	@Value("${caic.impresion.autos.url}")
 	private String caicImpresionAutosURL;
+
+	@Value("${aeua.impresion.autos.url}")
+	private String aeuaImpresionAutosURL;
 	
 	@Value("${ap.impresion.autos.url}")
 	private String apImpresionAutosURL;
@@ -523,6 +526,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				
 				String urlRecibo = reciboImpresionAutosURL;
 				String urlCaic = caicImpresionAutosURL;
+				String urlAeua = aeuaImpresionAutosURL;
 				String urlAp = apImpresionAutosURL;
 				
 				String urlIncisosFlot = incisosFlotillasImpresionAutosURL;
@@ -619,6 +623,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				
 				
 				boolean imprimirCaic = false;
+				boolean imprimirAeua = false;
 				boolean imprimirAP = false;
 				
 				List<Map<String,String>> listaEndosos = emisionAutosService.obtieneEndososImprimir(cdunieco, cdramo, "M", nmpolizaEmitida, nmsuplemEmitida);
@@ -630,6 +635,9 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					}
 					if(emisionIt != null && emisionIt.containsKey("AP") && Constantes.SI.equalsIgnoreCase(emisionIt.get("AP"))){
 						imprimirAP = true;
+					}
+					if(emisionIt != null && emisionIt.containsKey("AEUA") && Constantes.SI.equalsIgnoreCase(emisionIt.get("AEUA"))){
+						imprimirAeua = true;
 					}
 				}
 				
@@ -688,6 +696,34 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,"1"
 							,"0"
 							,Documento.EXTERNO_CAIC, null, null
+							);
+				}
+
+				/**
+				 * Para AEUA inciso 1
+				 */
+				if(imprimirAeua){
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,0";
+					logger.debug("URL Generada para AEUA Inciso 1: "+ urlAeua + parametros);
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAeua + parametros+"\">Asistencia en Estados Unidos y Canad\u00E1</a>";
+					
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlAeua + parametros
+							,"AEUA"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,"1"
+							,"0"
+							,Documento.EXTERNO_AEUA, null, null
 							);
 				}
 				
