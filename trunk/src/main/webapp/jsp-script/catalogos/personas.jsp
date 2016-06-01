@@ -11,7 +11,6 @@
 	 y actualizara el campo del usuario que actualizó los datos por ultima vez, para evitar esto y guardar unicamente cuando hay cambios
 	 y el usuario que modifica hay que ejecutar dicha funcion para que identifique ese valor como inicial. --%>
 	 
-	 
 <%-- Tener cuidado al cambiar la funcion _p22_tipoPersonaChange evitar hacer cambios a campos compartidos entre tipos de personas ya que 
 	 se pueden perder valores, o campos ocultos si desde el cofigurador de campos se bloquean u ocultan para algun rol. --%>
 
