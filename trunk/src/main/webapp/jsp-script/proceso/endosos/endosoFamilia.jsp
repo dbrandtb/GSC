@@ -103,7 +103,7 @@ Ext.onReady(function()
             ,url         : _p48_urlRecuperacion
             ,extraParams :
             {
-                'params.consulta'  : 'RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIAENDOSO'
+                'params.consulta'  : 'RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA'
                 ,'params.cdunieco' : _p48_params.CDUNIECO
                 ,'params.cdramo'   : _p48_params.CDRAMO
                 ,'params.estado'   : _p48_params.ESTADO
