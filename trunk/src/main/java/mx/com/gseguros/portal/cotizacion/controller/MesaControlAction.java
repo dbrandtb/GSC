@@ -219,6 +219,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			if(cdsisrol.equalsIgnoreCase(RolSistema.OPERADOR_SINIESTROS.getCdsisrol())
 				     || cdsisrol.equalsIgnoreCase(RolSistema.MEDICO_AJUSTADOR.getCdsisrol())
 				     || cdsisrol.equalsIgnoreCase(RolSistema.MESA_DE_CONTROL_SINIESTROS.getCdsisrol())
+				     || cdsisrol.equalsIgnoreCase(RolSistema.SINIESTRO_INFONAVIT.getCdsisrol())
 				     || cdsisrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO.getCdsisrol())
 				     || cdsisrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
 				     || cdsisrol.equalsIgnoreCase(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol()))
