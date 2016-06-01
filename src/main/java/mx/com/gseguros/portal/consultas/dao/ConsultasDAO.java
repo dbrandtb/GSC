@@ -168,15 +168,6 @@ public interface ConsultasDAO
 			,String otvalor
 			)throws Exception;
 
-	public List<Map<String,String>>recuperarIncisosPolizaGrupoFamiliaEndoso(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String cdgrupo
-			,String nmfamili
-			,String nivel
-			)throws Exception;
 	public List<Map<String,String>>recuperarDatosIncisoEnNivelPoliza(
 			String cdunieco
 			,String cdramo
