@@ -621,4 +621,13 @@ public interface FlujoMesaControlDAO {
 			,String claveent
 			,String webid
 			)throws Exception;
+	
+	public List<Map<String, String>> recuperaTtipflumcPorRolPorUsuario(String agrupamc,String cdsisrol,String cdusuari) throws Exception;
+	
+	public List<Map<String, String>> recuperaTflujomcPorRolPorUsuario(
+			String cdtipflu
+			,String swfinal
+			,String cdsisrol
+			,String cdusuari
+			)throws Exception;
 }

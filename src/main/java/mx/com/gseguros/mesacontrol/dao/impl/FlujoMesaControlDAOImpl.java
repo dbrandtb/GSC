@@ -2147,4 +2147,75 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperaTtipflumcPorRolPorUsuario(String agrupamc,String cdsisrol,String cdusuari) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("agrupamc" , agrupamc);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdusuari" , cdusuari);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperaTtipflumcPorRolPorUsuarioSP(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperaTtipflumcPorRolPorUsuarioSP extends StoredProcedure
+	{
+		protected RecuperaTtipflumcPorRolPorUsuarioSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TTIPFLUROL");
+			declareParameter(new SqlParameter("agrupamc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "CDTIPFLU" , "DSTIPFLU", "CDTIPTRA","SWMULTIPOL","SWREQPOL","CDTIPSUP" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperaTflujomcPorRolPorUsuario(
+			String cdtipflu
+			,String swfinal
+			,String cdsisrol
+			,String cdusuari
+			)throws Exception
+	{
+		Map<String,String>       params  = new LinkedHashMap<String,String>();
+		params.put("cdtipflu" , cdtipflu);
+		params.put("swfinal"  , swfinal);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("cdusuari" , cdusuari);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperaTflujomcPorRolPorUsuarioSP(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperaTflujomcPorRolPorUsuarioSP extends StoredProcedure
+	{
+		protected RecuperaTflujomcPorRolPorUsuarioSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUJOROL");
+			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swfinal"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","DSFLUJOMC","SWFINAL","CDTIPRAM" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
