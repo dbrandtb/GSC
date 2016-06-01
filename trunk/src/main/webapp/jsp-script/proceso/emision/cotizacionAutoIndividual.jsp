@@ -1479,7 +1479,7 @@ Ext.onReady(function()
         });
     }
     
-    if('TL'.lastIndexOf(_p28_smap1.cdtipsit)==-1)
+    if('TL'.lastIndexOf(_p28_smap1.cdtipsit)!=-1)
             {
                 Ext.Ajax.request(
                 {
