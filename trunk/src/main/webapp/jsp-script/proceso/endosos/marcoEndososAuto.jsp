@@ -1020,7 +1020,7 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.estado',  recordPoliza.get('ESTADO'));
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmpoliza',recordPoliza.get('NMPOLIZA'));
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdgrupo', recordPoliza.get('CDGRUPO'));
-			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili',nivel == 'POLIZA' ? null : recordPoliza.get('NMSITAUX'));
+			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili',nivel == 'POLIZA' ? null : recordNivel.get('NMSITAUX'));
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nivel',   nivel);
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.atrPol',  (!Ext.isEmpty(recordPoliza.get('CDRAMO')) && new String(recordPoliza.get('CDRAMO')) == "6")? 'S':'N');
 			                _p34_storeIncisos.loadPage(1);
