@@ -208,5 +208,12 @@ public interface CatalogosManager {
     
     public List<GenericVO> recuperarListaFiltroPropiedadesInciso(String cdunieco,String cdramo,String estado, String nmpoliza) throws Exception;
     
+    public List<GenericVO> recuperarTtipflumcPorRolPorUsuario(String agrupamc,String cdsisrol,String cdusuari) throws Exception;
     
+    public List<GenericVO> recuperarTflujomcPorRolPorUsuario(
+    		String cdtipflu
+    		,String swfinal
+    		,String cdsisrol
+    		,String cdusuari
+    		) throws Exception;
 }

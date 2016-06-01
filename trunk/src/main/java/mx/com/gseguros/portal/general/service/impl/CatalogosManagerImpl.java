@@ -1730,5 +1730,70 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		return catalogosDAO.recuperarListaFiltroPropiedadesInciso(cdunieco, cdramo,estado,nmpoliza);
 	}
 	
+	@Override
+	public List<GenericVO> recuperarTtipflumcPorRolPorUsuario(String agrupamc,String cdsisrol,String cdusuari) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTtipflumcPorRolPorUsuario @@@@@@"
+				,"\n@@@@@@ agrupamc=" , agrupamc
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		List<Map<String,String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumcPorRolPorUsuario(agrupamc,cdsisrol,cdusuari);
+		for(Map<String,String>tipoFlujo:tiposFlujo)
+		{
+			lista.add(new GenericVO(
+					tipoFlujo.get("CDTIPFLU")
+					,tipoFlujo.get("DSTIPFLU")
+					,tipoFlujo.get("CDTIPTRA")
+					,tipoFlujo.get("CDTIPSUP")
+					,tipoFlujo.get("SWREQPOL")
+					));
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarTtipflumcPorRolPorUsuario @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 	
+	@Override
+	public List<GenericVO> recuperarTflujomcPorRolPorUsuario(
+			String cdtipflu
+			,String swfinal
+			,String cdsisrol
+			,String cdusuari
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTflujomcPorRolPorUsuario @@@@@@"
+				,"\n@@@@@@ cdtipflu=" , cdtipflu
+				,"\n@@@@@@ swfinal="  , swfinal
+				));
+		
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		List<Map<String,String>> flujos = flujoMesaControlDAO.recuperaTflujomcPorRolPorUsuario(
+				cdtipflu
+				,swfinal
+				,cdsisrol
+				,cdusuari
+				);
+		for(Map<String,String>flujo:flujos)
+		{
+			lista.add(new GenericVO(flujo.get("CDFLUJOMC"),flujo.get("DSFLUJOMC")));
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=",lista
+				,"\n@@@@@@ recuperarTflujomcPorRolPorUsuario @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }

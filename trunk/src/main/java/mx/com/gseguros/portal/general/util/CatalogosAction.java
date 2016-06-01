@@ -898,6 +898,27 @@ public class CatalogosAction extends PrincipalCoreAction {
 						}
 					}
 					break;
+				case TTIPFLUMC_ROL_USR:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					UserVO user_TTIPFLUMC_ROL_USR = Utils.validateSession(session);
+					lista = catalogosManager.recuperarTtipflumcPorRolPorUsuario(params.get("agrupamc"),user_TTIPFLUMC_ROL_USR.getRolActivo().getClave(),user_TTIPFLUMC_ROL_USR.getUser());
+					break;
+				case TFLUJOMC_X_ROL_USR:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					UserVO user_TFLUJOMC_X_ROL_USR = Utils.validateSession(session);
+					lista = catalogosManager.recuperarTflujomcPorRolPorUsuario(
+							params.get("idPadre")
+							,params.get("swfinal")
+							,user_TFLUJOMC_X_ROL_USR.getRolActivo().getClave()
+							,user_TFLUJOMC_X_ROL_USR.getUser()
+							);
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
