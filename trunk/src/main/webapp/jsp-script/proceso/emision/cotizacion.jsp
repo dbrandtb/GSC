@@ -988,6 +988,7 @@ function _0_cargar()
     debug('<_0_cargar');
 }
 
+// Cargar Poliza y dtos del cliente
 function _0_recuperarCotizacion(nmpoliza)
 {
     debug('>_0_recuperarCotizacion nmpoliza=',nmpoliza,'.');
@@ -1005,6 +1006,15 @@ function _0_recuperarCotizacion(nmpoliza)
         ,success : function(response)
         {
             var json=Ext.decode(response.responseText);
+            
+          //-----------VILS
+            var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+            if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
+            {
+            	_0_recordClienteRecuperado = primerInciso;
+                debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
+            }
+            
             llenandoCampos(json);
         }
         ,failure : function()
@@ -1191,11 +1201,29 @@ function llenandoCampos (json)
             debug('store:',_0_storeIncisos);
             var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
             primerInciso.set('FESOLICI',json.smap1.FESOLICI);
-            if(_0_smap1.cdramo=='6')
+            
+            var combcl = 'S';
+            if(_0_smap1.cdramo=='6' && !Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
             {
-                primerInciso.set('parametros.pv_otvalor24','S');
-            }
+            	combcl = _fieldLikeLabel('CLIENTE NUEVO');
+            	if(!Ext.isEmpty(json.slist1[0].OTVALOR24))
+            		{
+            		  if(json.slist1[0].OTVALOR24==='N')
+            			  {
+		          			  combcl.semaforo = true;
+		                      combcl.setValue('N');
+		                      combcl.semaforo = false;
+            			  }
+            		  else
+            			  {
+	                          combcl.semaforo = true;
+	                          combcl.setValue('S');
+	                          combcl.semaforo = false;
+            			  }
+            		}
             debug('primerInciso:',primerInciso);
+            }
+
             //leer elementos anidados
             var form      = _0_formAgrupados;
             var formItems = form.items.items;
@@ -1274,27 +1302,6 @@ function llenandoCampos (json)
 	                            _fieldByLabel('FOLIO').reset();
 	                            asignarAgente(primerInciso.get('parametros.pv_otvalor17')); 
 	                        }
-//---------------------------------------VILS	                    	
-                           if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
-                            {
-                                if(maestra&&false)
-                                {
-                                    _fieldLikeLabel('NOMBRE CLIENTE').setValue('');
-                                }
-                                else
-                                {
-                                    _0_recordClienteRecuperado = new _0_modeloRecuperado(primerInciso.raw);
-                                    debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
-                                
-                                    var combcl = 'S';
-                                    if(!Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
-                                    {combcl = _fieldLikeLabel('CLIENTE NUEVO');}
-                                    
-                                    combcl.semaforo = true;
-                                    combcl.setValue('N');
-                                    combcl.semaforo = false;
-                                }
-                            }
 	                    }
 	                    
                 	    if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
@@ -1311,6 +1318,7 @@ function llenandoCampos (json)
 	                    
 	                    if('|AF|PU|AT|MC|'.lastIndexOf('|'+_0_smap1.cdtipsit+'|')!=-1)
 	                    {
+	                    	//vils
 	                        _0_panelPri.setLoading(true);
 	                        cargaCotiza = true;
 	                        _0_cotizar();
@@ -1433,11 +1441,32 @@ function _0_cotizar(boton)
 	debug('_0_cotizar');
 	if(_0_validarBase())//
 	{
-		var json=
-		{
-		    slist1 : []
-		    ,smap1 : _0_smap1 
-		};
+//-------------------------------------------------------VILS
+        if(_0_recordClienteRecuperado)
+       	{
+	        debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
+	        var smap = _0_smap1;
+	        _0_smap1['cdpersonCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CLAVECLI;
+	        _0_smap1['cdideperCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER;
+	        _0_smap1['nmorddomCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM;
+	           
+	        var agenteCmp=_fieldByLabel('AGENTE');
+	        if(Ext.isEmpty(agenteCmp))
+	        {
+	            smap.cdagenteAux='';
+	        }
+	        else
+	        {
+	            smap.cdagenteAux=agenteCmp.getValue();
+	        }
+	        
+			var json=
+			{
+			     slist1 :[]
+			    ,smap1 : smap 
+			};
+       	}
+		
 		if(_0_necesitoIncisos)
 		{
 			_0_storeIncisos.each(function(record)
@@ -3760,7 +3789,7 @@ Ext.onReady(function()
                 _0_recordClienteRecuperado=null;
             }
             //recuperar cliente
-            else if(combcl.getValue()=='N')
+            else if(combcl.getValue()=='N' && ( Ext.isEmpty(combcl.semaforo)||combcl.semaforo==false ))
             {
                 codpos.reset();
                 _0_storeIncisos.removeAll();
