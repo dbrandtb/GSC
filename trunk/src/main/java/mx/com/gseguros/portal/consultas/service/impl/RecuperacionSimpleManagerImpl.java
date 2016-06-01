@@ -700,26 +700,9 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,dsatribu
 						,otvalor
 						);
-			}else if(consulta.equals(RecuperacionSimple.RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIAENDOSO))
-			{
-				paso = "Recuperando incisos de p\u00F3liza/grupo/familia";
-				logger.debug(Utils.log(""," paso: ",paso));
-				String cdunieco = params.get("cdunieco");
-				String cdramo   = params.get("cdramo");
-				String estado   = params.get("estado");
-				String nmpoliza = params.get("nmpoliza");
-				String cdgrupo  = params.get("cdgrupo");
-				String nmfamili = params.get("nmfamili");
-				String nivel    = params.get("nivel");
-				lista = consultasDAO.recuperarIncisosPolizaGrupoFamiliaEndoso(
-						cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,cdgrupo
-						,nmfamili
-						,nivel
-						);
+				if(consulta.equals(RecuperacionSimple.RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA)){
+					Map<String,String>total = lista.remove(lista.size()-1);
+				}
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_MOVIMIENTOS_ENDOSO_ALTA_BAJA_ASEGURADO))
 			{
