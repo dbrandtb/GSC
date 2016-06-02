@@ -5657,7 +5657,8 @@ function _p30_comprar()
                                         mensajeCorrecto
                                         (
                                             'Tr\u00e1mite turnado'
-                                            ,json.message
+                                            //,json.message
+                                            ,'El tr\u00e1mite fue turnado para aprobaci\u00f3n del agente/promotor'
                                             ,function()
                                             {
                                                 _mask('Redireccionando');
@@ -7144,6 +7145,7 @@ function _p30_actualizarCotizacionTramite(callback)
                                     'smap1.ntramite'  : _p30_flujo.ntramite
                                     ,'smap1.status'   : _p30_flujo.status
                                     ,'smap1.dscoment' : 'Se guard\u00f3 la cotizaci\u00f3n '+_fieldByName('nmpoliza').getValue()
+                                    ,'smap1.swagente' : 'S'
                                 }
                                 ,success : function(response)
                                 {

@@ -6,9 +6,10 @@
 <style>
 #canvasdiv
 {
-    width    : 4000px;
-    height   : 4000px;
-    position : absolute;
+    width            : 4000px;
+    height           : 4000px;
+    position         : absolute;
+    background-image : url('${flujoimg}fondoModelador.png');
 }
 .catEntidad
 {
