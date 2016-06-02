@@ -247,7 +247,8 @@ Ext.onReady(function() {
     cmbRamos = Ext.create('Ext.form.field.ComboBox',{
 		colspan:2,								fieldLabel   : 'Producto',			allowBlank     : false,		editable   : false,
 		displayField: 'value',					valueField: 'key',					forceSelection : false,		queryMode :'local',
-		width: 300,								name:'cmbRamos',					store 		   : storeRamos, 	readOnly : rolSiniestro != 'INPLANTSSI',
+		width: 300,								name:'cmbRamos',					store 		   : storeRamos,
+
 		listeners : {
     		'select':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
@@ -287,7 +288,7 @@ Ext.onReady(function() {
     cmbModalidad = Ext.create('Ext.form.field.ComboBox',{
 		fieldLabel   : 'Modalidad',			allowBlank     : false,		editable   : false,
 		displayField: 'value',				valueField: 'key',			forceSelection : false,				queryMode :'local',
-		width: 300,							name:'pv_cdtipsit_i',		store 		   : storeModalidad,	readOnly : rolSiniestro != 'INPLANTSSI',
+		width: 300,							name:'pv_cdtipsit_i',		store 		   : storeModalidad,
     	listeners : {
     		'change':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
