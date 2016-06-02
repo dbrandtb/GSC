@@ -5,9 +5,10 @@
 <head>
 <script>
 ////// urls //////
-var _p54_urlCargar           = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"    />';
-var _p54_urlRecuperarPoliza  = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnica" />';
-var _p54_urlRegistrarTramite = '<s:url namespace="/flujomesacontrol" action="registrarTramite"     />';
+var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"        />'
+    ,_p54_urlRecuperarPoliza          = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnica"     />'
+    ,_p54_urlRegistrarTramite         = '<s:url namespace="/flujomesacontrol" action="registrarTramite"         />'
+    ,_p54_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto" />';
 ////// urls //////
 
 ////// variables //////
@@ -121,6 +122,7 @@ Ext.onReady(function()
     _p54_windowNuevo = Ext.create('Ext.window.Window',
     {
         title        : 'Agregar tr\u00e1mite'
+        ,itemId      : '_p54_formNuevoTramite'
         ,icon        : '${icons}add.png'
         ,modal       : true
         ,closeAction : 'hide'
@@ -150,6 +152,22 @@ Ext.onReady(function()
         {
             var me = this;
             me.down('form').getForm().reset();
+            
+            var compConValorCargado = Ext.ComponentQuery.query('[valorCargado]',me);
+            debug('compConValorCargado:',compConValorCargado,'.');
+            for(var i=0;i<compConValorCargado.length;i++)
+            {
+                compConValorCargado[i].setValue(compConValorCargado[i].valorCargado);
+                compConValorCargado[i].isValid();
+            }
+            
+            var componentesAnidados = Ext.ComponentQuery.query('[heredar]',me);
+            debug('componentesAnidados:',componentesAnidados,'.');
+            for(var i=0;i<componentesAnidados.length;i++)
+            {
+                componentesAnidados[i].heredar(true);
+            }
+            
             centrarVentanaInterna(me.show());
         }
     });
@@ -566,12 +584,17 @@ Ext.onReady(function()
     {
         manejaException(e);
     }
+    
+    _p54_recuperaSucursalesTramiteAgente();
+    
+    _p54_agregaListenersPromotorSuscriptor();
     ////// custom //////
     
     ////// loaders //////
     ////// loaders //////
 });
 
+////// funciones //////
 function _p54_registrarTramite(bot)
 {
     debug('_p54_registrarTramite');
@@ -628,7 +651,169 @@ function _p54_registrarTramite(bot)
         manejaException(e,ck);
     }
 }
-////// funciones //////
+
+/*
+ * Recupera la sucursal de un agente
+ * ejecuta el callback enviandole ese cdunieco
+ */
+function _p54_recuperarSucursalAgente(cdagente,callback)
+{
+    debug('>_p54_recuperarSucursalAgente cdagente:',cdagente,'callback:',callback,'.');
+    var ck = 'Recuperando sucursal de agente';
+    try
+    {
+        if(Ext.isEmpty(cdagente) || Ext.isEmpty(callback))
+        {
+            throw 'No hay par\u00e1metros completos para recuperar sucursal de agente';
+        }
+        
+        _mask(ck);
+        Ext.Ajax.request(
+        {
+            url      : _p54_urlCargarCduniecoAgenteAuto
+            ,params  :
+            {
+                'smap1.cdagente' : cdagente
+            }
+            ,success : function(response)
+            {
+                _unmask();
+                var ck = 'Decodificando respuesta al recuperar sucursal de agente';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### sucursal agente:',json,'.');
+                    if(json.exito === true)
+                    {
+                        callback(json.smap1.cdunieco);
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function(response)
+            {
+                _unmask();
+                errorComunicacion(null,'Error al recuperar sucursal de agente');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
+function _p54_recuperaSucursalesTramiteAgente()
+{
+    debug('>_p54_recuperaSucursalesTramiteAgente');
+    var ck = 'Recuperando sucursal agente';
+    try
+    {
+        if(_p54_params.CDSISROL === RolSistema.Agente )
+        {
+            _p54_recuperarSucursalAgente(
+                _p54_params.CDAGENTE
+                ,function(cdunieco)
+                {
+                    debug('callback al cargar sucursal de agente para los combos de sucursal, cdunieco:',cdunieco,'.');
+                
+                    var sucuAdminComp = _fieldByLabel('SUCURSAL ADMINISTRATIVA',_fieldById('_p54_formNuevoTramite'),true);
+                    debug('sucuAdminComp:',sucuAdminComp,'.');
+                    
+                    if(!Ext.isEmpty(sucuAdminComp))
+                    {
+                        sucuAdminComp.valorCargado = cdunieco;
+                    }
+                    
+                    var sucuDocuComp = _fieldByLabel('SUCURSAL DOCUMENTO',_fieldById('_p54_formNuevoTramite'),true);
+                    debug('sucuDocuComp:',sucuDocuComp,'.');
+                    
+                    if(!Ext.isEmpty(sucuDocuComp))
+                    {
+                        sucuDocuComp.valorCargado = cdunieco;
+                    }
+                }
+            );
+        }
+    }
+    catch(e)
+    {
+        _unmask();
+        manejaException(e,ck);
+    }
+}
+
+function _p54_agregaListenersPromotorSuscriptor()
+{
+    debug('>_p54_agregaListenersPromotorSuscriptor');
+    if([RolSistema.PromotorAuto,RolSistema.SuscriptorAuto].indexOf(_p54_params.CDSISROL) != -1 )
+    {
+        var agenteComp = _fieldByLabel('AGENTE',_fieldById('_p54_formNuevoTramite'),true);
+        
+        if(!Ext.isEmpty(agenteComp))
+        {
+            _p54_windowNuevo.on(
+            {
+                show : function(me)
+                {
+                    mensajeWarning('Seleccione un agente para recuperar las sucursales');
+                }
+            });
+            
+            agenteComp.on(
+            {
+                select : function(me,records)
+                {
+                    debug('agenteComp event select me:',me,'records:',records,'.');
+                    _p54_recuperarSucursalAgente(
+                        records[0].get('key')
+                        ,function(cdunieco)
+                        {
+                            debug('callback recuperando sucursal de agente seleccionado, cdunieco:',cdunieco,'.');
+                            var ck = 'Verificando sucursal de agente';
+                            try
+                            {
+                                var sucuAdminComp = _fieldByLabel('SUCURSAL ADMINISTRATIVA',_fieldById('_p54_formNuevoTramite'),true);
+			                    debug('sucuAdminComp:',sucuAdminComp,'.');
+			                    
+			                    if(!Ext.isEmpty(sucuAdminComp))
+			                    {
+			                        sucuAdminComp.setValue(cdunieco);
+			                    }
+			                    
+			                    var sucuDocuComp = _fieldByLabel('SUCURSAL DOCUMENTO',_fieldById('_p54_formNuevoTramite'),true);
+			                    debug('sucuDocuComp:',sucuDocuComp,'.');
+			                    
+			                    if(!Ext.isEmpty(sucuDocuComp))
+			                    {
+			                        sucuDocuComp.setValue(cdunieco);
+			                    }
+			                    
+			                    var componentesAnidados = Ext.ComponentQuery.query('[heredar]',_p54_windowNuevo);
+			                    debug('componentesAnidados:',componentesAnidados,'.');
+			                    for(var i=0;i<componentesAnidados.length;i++)
+			                    {
+			                        componentesAnidados[i].heredar(true);
+			                    }
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,ck);
+                            }
+                        }
+                    );
+                }
+            });
+        }
+    }
+}
 ////// funciones //////
 </script>
 </head>

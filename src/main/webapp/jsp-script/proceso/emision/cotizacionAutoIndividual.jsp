@@ -3469,7 +3469,8 @@ function _p28_comprar()
     }
     
     Ext.Ajax.request(
-    {    url     : _p28_urlComprar
+    {
+        url     : _p28_urlComprar
         ,params  : paramsComprar
         ,success : function(response,opts)
         {
@@ -3478,52 +3479,128 @@ function _p28_comprar()
             debug('### Comprar:',json);
             if (json.exito)
             {
-                centrarVentanaInterna(Ext.Msg.show(
-               {
-                   title    : 'Tr&aacute;mite generado'
-                   ,msg     : 'La cotizaci&oacute;n '+_fieldByName('nmpoliza').getValue()+' se guard&oacute; y no podr&aacute; ser modificada posteriormente'
-                   ,buttons : Ext.Msg.OK
-                   ,fn      : function()
-                   {
-                       var swExiper = (!Ext.isEmpty(_p28_recordClienteRecuperado) && Ext.isEmpty(_p28_recordClienteRecuperado.raw.CLAVECLI) && !Ext.isEmpty(_p28_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
-                       
-                       var paramsDatCom =
-                       {
-                           'smap1.cdunieco'  : _p28_smap1.cdunieco
-                           ,'smap1.cdramo'   : _p28_smap1.cdramo
-                           ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
-                           ,'smap1.estado'   : 'W'
-                           ,'smap1.nmpoliza' : _fieldByName('nmpoliza').getValue()
-                           ,'smap1.ntramite' : json.smap1.ntramite
-                           ,'smap1.swexiper' : swExiper
-                       };
-                       
-                       if(!Ext.isEmpty(_p28_flujo))
-                       {
-                           paramsDatCom['flujo.cdtipflu']  = _p28_flujo.cdtipflu;
-                           paramsDatCom['flujo.cdflujomc'] = _p28_flujo.cdflujomc;
-                           paramsDatCom['flujo.tipoent']   = _p28_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
-                           paramsDatCom['flujo.claveent']  = _p28_flujo.claveent; //ACTUAL QUE SE RECUPERARA
-                           paramsDatCom['flujo.webid']     = _p28_flujo.webid;    //ACTUAL QUE SE RECUPERARA
-                           paramsDatCom['flujo.ntramite']  = _p28_flujo.ntramite;
-                           paramsDatCom['flujo.status']    = _p28_flujo.status;
-                           paramsDatCom['flujo.cdunieco']  = _p28_flujo.cdunieco;
-                           paramsDatCom['flujo.cdramo']    = _p28_flujo.cdramo;
-                           paramsDatCom['flujo.estado']    = _p28_flujo.estado;
-                           paramsDatCom['flujo.nmpoliza']  = _p28_flujo.nmpoliza;
-                           paramsDatCom['flujo.nmsituac']  = _p28_flujo.nmsituac;
-                           paramsDatCom['flujo.nmsuplem']  = _p28_flujo.nmsuplem;
-                           paramsDatCom['flujo.aux']       = 'RECUPERAR';
-                       }
-                       
-                       Ext.create('Ext.form.Panel').submit(
-                       {
-                           url             : _p28_urlDatosComplementarios
-                           ,standardSubmit : true
-                           ,params         : paramsDatCom
-                       });
-                   }
-                }));                
+                if(Ext.isEmpty(_p28_flujo)
+                    ||Ext.isEmpty(_p28_flujo.aux)
+                    ||_p28_flujo.aux.indexOf('onComprar')==-1
+                    ) //si no hay flujo, o no hay auxiliar en flujo, o el auxiliar no contiene la palabra onComprar
+                {
+                    centrarVentanaInterna(Ext.Msg.show(
+                    {
+                        title    : 'Tr&aacute;mite generado'
+                        ,msg     : 'La cotizaci&oacute;n '+_fieldByName('nmpoliza').getValue()+' se guard&oacute; y no podr&aacute; ser modificada posteriormente'
+                        ,buttons : Ext.Msg.OK
+                        ,fn      : function()
+                        {
+                            var swExiper = (!Ext.isEmpty(_p28_recordClienteRecuperado) && Ext.isEmpty(_p28_recordClienteRecuperado.raw.CLAVECLI) && !Ext.isEmpty(_p28_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
+                            
+                            var paramsDatCom =
+                            {
+                                'smap1.cdunieco'  : _p28_smap1.cdunieco
+                                ,'smap1.cdramo'   : _p28_smap1.cdramo
+                                ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
+                                ,'smap1.estado'   : 'W'
+                                ,'smap1.nmpoliza' : _fieldByName('nmpoliza').getValue()
+                                ,'smap1.ntramite' : json.smap1.ntramite
+                                ,'smap1.swexiper' : swExiper
+                            };
+                            
+                            if(!Ext.isEmpty(_p28_flujo))
+                            {
+                                paramsDatCom['flujo.cdtipflu']  = _p28_flujo.cdtipflu;
+                                paramsDatCom['flujo.cdflujomc'] = _p28_flujo.cdflujomc;
+                                paramsDatCom['flujo.tipoent']   = _p28_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
+                                paramsDatCom['flujo.claveent']  = _p28_flujo.claveent; //ACTUAL QUE SE RECUPERARA
+                                paramsDatCom['flujo.webid']     = _p28_flujo.webid;    //ACTUAL QUE SE RECUPERARA
+                                paramsDatCom['flujo.ntramite']  = _p28_flujo.ntramite;
+                                paramsDatCom['flujo.status']    = _p28_flujo.status;
+                                paramsDatCom['flujo.cdunieco']  = _p28_flujo.cdunieco;
+                                paramsDatCom['flujo.cdramo']    = _p28_flujo.cdramo;
+                                paramsDatCom['flujo.estado']    = _p28_flujo.estado;
+                                paramsDatCom['flujo.nmpoliza']  = _p28_flujo.nmpoliza;
+                                paramsDatCom['flujo.nmsituac']  = _p28_flujo.nmsituac;
+                                paramsDatCom['flujo.nmsuplem']  = _p28_flujo.nmsuplem;
+                                paramsDatCom['flujo.aux']       = 'RECUPERAR';
+                            }
+                            
+                            Ext.create('Ext.form.Panel').submit(
+                            {
+                                url             : _p28_urlDatosComplementarios
+                                ,standardSubmit : true
+                                ,params         : paramsDatCom
+                            });
+                        }
+                    }));
+                }
+                else //flujo tiene la palabra onComprar
+                {
+                    //si el flujo tiene este comodin ejecutaremos un turnado con el status indicado
+                    var ck = 'Turnando tr\u00e1mite';
+                    try
+                    {
+                        var status = _p28_flujo.aux.split('_')[1];
+                        debug('status para turnar onComprar:',status,'.');
+                        
+                        _mask(ck);
+                        Ext.Ajax.request(
+                        {
+                            url      : _GLOBAL_COMP_URL_TURNAR
+                            ,params  :
+                            {
+                                'params.CDTIPFLU'   : _p28_flujo.cdtipflu
+                                ,'params.CDFLUJOMC' : _p28_flujo.cdflujomc
+                                ,'params.NTRAMITE'  : _p28_flujo.ntramite
+                                ,'params.STATUSOLD' : _p28_flujo.status
+                                ,'params.STATUSNEW' : status
+                                ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
+                                ,'params.SWAGENTE'  : 'S'
+                            }
+                            ,success : function(response)
+                            {
+                                _unmask();
+                                var ck = '';
+                                try
+                                {
+                                    var json = Ext.decode(response.responseText);
+                                    debug('### turnar:',json);
+                                    if(json.success)
+                                    {
+                                        mensajeCorrecto
+                                        (
+                                            'Tr\u00e1mite turnado'
+                                            ,json.message
+                                            ,function()
+                                            {
+                                                _mask('Redireccionando');
+                                                Ext.create('Ext.form.Panel').submit(
+                                                {
+                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
+                                                    ,standardSubmit : true
+                                                });
+                                            }
+                                        );
+                                    }
+                                    else
+                                    {
+                                        mensajeError(json.message);
+                                    }
+                                }
+                                catch(e)
+                                {
+                                    manejaException(e,ck);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                _unmask();
+                                errorComunicacion(null,'Error al turnar tr\u00e1mite');
+                            }
+                        });
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }                
             }
             else
             {

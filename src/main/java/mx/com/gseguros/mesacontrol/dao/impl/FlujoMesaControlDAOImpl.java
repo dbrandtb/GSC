@@ -2218,4 +2218,44 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+
+	
+	@Override
+	public Map<String,String> recuperaTflujomc(String cdflujomc) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		
+		params.put("cdflujomc" , cdflujomc);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperaTflujomcIndividualSP(getDataSource()),params);
+		
+		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		if(lista==null)
+		{
+			throw new ApplicationException("No hay flujo");
+		}
+		
+		if(lista.size()>1)
+		{
+			throw new ApplicationException("Flujo repetido");
+		}
+		
+		return lista.get(0);
+	}
+	
+	protected class RecuperaTflujomcIndividualSP extends StoredProcedure
+	{
+		protected RecuperaTflujomcIndividualSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUJOMC_IND");
+			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "CDTIPFLU","CDFLUJOMC","DSFLUJOMC","SWFINAL","CDTIPRAM" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
