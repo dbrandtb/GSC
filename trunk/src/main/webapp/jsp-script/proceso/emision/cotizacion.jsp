@@ -228,7 +228,8 @@ function _0_obtenerClaveGSPorAuto()
 
 function _0_obtenerSumaAseguradaRamo6(mostrarError,respetarValue)
 {
-    _0_panelPri.setLoading(true);
+//     _0_panelPri.setLoading(true);
+    var loading_0_obtenerSumaAseguradaRamo6 = _maskLocal();
     Ext.Ajax.request(
     {
         url      : _0_urlCargarSumaAsegurada
@@ -243,7 +244,9 @@ function _0_obtenerSumaAseguradaRamo6(mostrarError,respetarValue)
         }
         ,success : function(response)
         {
-            _0_panelPri.setLoading(false);
+
+//         	 _0_panelPri.setLoading(false);	
+            loading_0_obtenerSumaAseguradaRamo6.close();
             var json=Ext.decode(response.responseText);
             debug('### json response obtener suma asegurada:',json);
             if(json.exito)
@@ -267,7 +270,8 @@ function _0_obtenerSumaAseguradaRamo6(mostrarError,respetarValue)
         }
         ,failure : function()
         {
-            _0_panelPri.setLoading(false);
+//             _0_panelPri.setLoading(false);
+            loading_0_obtenerSumaAseguradaRamo6.close();
             errorComunicacion();
         }
     });
@@ -1159,12 +1163,15 @@ function _0_recuperarCotizacion(nmpoliza)
         {
             var json=Ext.decode(response.responseText);
             
-          //-----------VILS
-            var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
-            if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
-            {
-            	_0_recordClienteRecuperado = primerInciso;
-                debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
+            if(_0_smap1.cdramo=='6')
+            {	
+	          //-----------VILS
+	            var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+	            if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
+	            {
+	            	_0_recordClienteRecuperado = primerInciso;
+	                debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
+	            }
             }
             
             llenandoCampos(json);
@@ -1600,7 +1607,7 @@ function _0_cotizar(boton)
 			     slist1 : []
 			    ,smap1  : smap 
 			};
-	        
+
 //-------------------------------------------------------VILS
         if(_0_recordClienteRecuperado)
        	{
@@ -1690,7 +1697,7 @@ function _0_cotizar(boton)
 			,jsonData : json
 			,success  : function(response)
 			{
-			    _0_bloquear(true);
+				_0_bloquear(true);
 				_0_panelPri.setLoading(false);
 				json=Ext.decode(response.responseText);
 				if(json.success==true)

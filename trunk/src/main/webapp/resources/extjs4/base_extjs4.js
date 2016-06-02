@@ -2450,6 +2450,23 @@ function _mask(text)
     }).show());
 }
 
+function _maskLocal(text)
+{
+    return centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'Cargando...'
+        ,modal       : true
+        ,border      : 0
+        ,style       : 'padding:5px;'
+        ,closeAction : 'destroy'
+        ,items       :
+        [{
+            xtype  : 'displayfield'
+            ,value : _NVL(text,'Cargando...')
+        }]
+    }).show());
+}
+
 function _maskSession(text)
 {
     _unmask();
