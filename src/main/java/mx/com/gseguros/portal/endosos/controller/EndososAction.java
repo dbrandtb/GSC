@@ -171,9 +171,10 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n###### obtenerEndosos ######"
 				+ "\n######                ######"
 				);
-		logger.debug("smap1: "+smap1);
 		try
 		{
+			smap1.put("pv_cdsisrol_i", ((UserVO)session.get("USUARIO")).getRolActivo().getClave());
+			logger.debug("smap1: "+smap1);
 			slist1=endososManager.obtenerEndosos(smap1);
 			success=true;
 		}

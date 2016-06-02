@@ -1084,6 +1084,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			,String statusVig
 			,String finicio //Se agrega campo fecha de fin
 			,String ffin//Se agrega campo fecha de fin
+			,String cdsisrol
 			)throws Exception
 	{
     	Map<String,String>params=new LinkedHashMap<String,String>();
@@ -1097,6 +1098,8 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("statusVig" , statusVig); 
     	params.put("finicio"   , finicio);//Se agrega campo fecha de inicio
     	params.put("ffin"      , ffin);//Se agrega campo fecha de fin
+    	params.put("cdsisrol"  , cdsisrol);
+    	
     	Utils.debugProcedure(logger,"PKG_CONSULTA.P_GET_POLIZAS_PARA_ENDOSOS",params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarPolizasEndosables(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
@@ -1123,6 +1126,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlParameter("statusVig" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("finicio"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("ffin"      , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
             String[] cols=new String[]{
             		//MPOLIZAS
             		"CDUNIECO"  , "CDRAMO"   , "ESTADO"   , "NMPOLIZA"

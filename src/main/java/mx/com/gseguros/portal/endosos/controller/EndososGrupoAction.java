@@ -79,6 +79,7 @@ public class EndososGrupoAction extends PrincipalCoreAction
 		String rfc      = null;
 		String cdperson = null;
 		String nombre   = null;
+		String cdsisrol = null;
 		
 		//datos completos
 		try
@@ -91,6 +92,7 @@ public class EndososGrupoAction extends PrincipalCoreAction
 			rfc      = smap1.get("rfc");
 			cdperson = smap1.get("cdperson");
 			nombre   = smap1.get("nombre");
+			cdsisrol = smap1.get("cdsisrol");
 			
 			if(StringUtils.isBlank(nmpoliex)
 					&&StringUtils.isBlank(rfc)
@@ -112,7 +114,7 @@ public class EndososGrupoAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
-			ManagerRespuestaSlistVO resp = endososGrupoManager.buscarHistoricoPolizas(nmpoliex,rfc,cdperson,nombre);
+			ManagerRespuestaSlistVO resp = endososGrupoManager.buscarHistoricoPolizas(nmpoliex,rfc,cdperson,nombre,cdsisrol);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
