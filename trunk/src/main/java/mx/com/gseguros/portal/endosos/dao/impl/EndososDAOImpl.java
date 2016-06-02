@@ -61,7 +61,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_nmpoliex_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdrfc_i"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nombre_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nombre_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i"	 , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(columnas)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
