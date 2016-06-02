@@ -919,6 +919,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 							,user_TFLUJOMC_X_ROL_USR.getUser()
 							);
 					break;
+				case SUCURSALES_X_FLUJO:
+					if(params==null)
+					{
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarSucursalesPorFlujo(params.get("idPadre"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

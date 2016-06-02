@@ -827,7 +827,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.put("cdramo"   , flujo.getCdramo());
 				smap1.put("cdtipsit" , "AR");
 				smap1.put("ntramite" , flujo.getNtramite());
-				smap1.put("tipoflot" , flujo.getAux());
+				smap1.put("tipoflot" , flujo.getAux().split(",")[0].split(":")[1]); //primer split= tipoflot:P onComprar:16', segundo split tipoflot P
 				
 				logger.debug(Utils.log("", "el mapa creado desde flujo es=", smap1));
 			}

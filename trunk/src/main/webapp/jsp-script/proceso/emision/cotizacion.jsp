@@ -371,52 +371,128 @@ function _0_comprar()
                     if(_0_smap1.SITUACION=='AUTO')
                     {
                         debug("_0_smap1.SITUACION=='AUTO'");
-                        var msg = Ext.Msg.show(
+                        if(Ext.isEmpty(_0_flujo)
+                            ||Ext.isEmpty(_0_flujo.aux)
+                            ||_0_flujo.aux.indexOf('onComprar')==-1
+                        ) //si no hay flujo, o no hay auxiliar en flujo, o el auxiliar no contiene la palabra onComprar
                         {
-                            title    : 'Tr&aacute;mite actualizado'
-                            ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
-                                        + json.smap1.ntramite
-                                        + '<br/>y no podr&aacute; ser modificada posteriormente'
-                            ,buttons : Ext.Msg.OK
-                            ,y       : 50
-                            ,fn      : function()
-                            {
-                                var paramsDatCom =
-                                {
-                                    cdunieco         : _0_smap1.cdunieco
-                                    ,cdramo          : _0_smap1.cdramo
-                                    ,estado          : 'W'
-                                    ,nmpoliza        : _0_fieldNmpoliza.getValue()
-                                    ,'map1.ntramite' : json.smap1.ntramite
-                                    ,cdtipsit        : _0_smap1.cdtipsit
-                                };
-                                
-                                if(!Ext.isEmpty(_0_flujo))
-                                {
-                                    paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
-                                    paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
-                                    paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
-                                    paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
-                                    paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
-                                    paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
-                                    paramsDatCom['flujo.status']    = _0_flujo.status;
-                                    paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
-                                    paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
-                                    paramsDatCom['flujo.estado']    = _0_flujo.estado;
-                                    paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
-                                    paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
-                                    paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
-                                    paramsDatCom['flujo.aux']       = 'RECUPERAR';
-                                }
-                            
-                                Ext.create('Ext.form.Panel').submit(
-                                {
-                                    url             : _0_urlDatosComplementarios
-                                    ,standardSubmit : true
-                                    ,params         : paramsDatCom
-                                });
-                            }
-                        });
+	                        var msg = Ext.Msg.show(
+	                        {
+	                            title    : 'Tr&aacute;mite actualizado'
+	                            ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
+	                                        + json.smap1.ntramite
+	                                        + '<br/>y no podr&aacute; ser modificada posteriormente'
+	                            ,buttons : Ext.Msg.OK
+	                            ,y       : 50
+	                            ,fn      : function()
+	                            {
+	                                var paramsDatCom =
+	                                {
+	                                    cdunieco         : _0_smap1.cdunieco
+	                                    ,cdramo          : _0_smap1.cdramo
+	                                    ,estado          : 'W'
+	                                    ,nmpoliza        : _0_fieldNmpoliza.getValue()
+	                                    ,'map1.ntramite' : json.smap1.ntramite
+	                                    ,cdtipsit        : _0_smap1.cdtipsit
+	                                };
+	                                
+	                                if(!Ext.isEmpty(_0_flujo))
+	                                {
+	                                    paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
+	                                    paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
+	                                    paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
+	                                    paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
+	                                    paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
+	                                    paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
+	                                    paramsDatCom['flujo.status']    = _0_flujo.status;
+	                                    paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
+	                                    paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
+	                                    paramsDatCom['flujo.estado']    = _0_flujo.estado;
+	                                    paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
+	                                    paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
+	                                    paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
+	                                    paramsDatCom['flujo.aux']       = 'RECUPERAR';
+	                                }
+	                            
+	                                Ext.create('Ext.form.Panel').submit(
+	                                {
+	                                    url             : _0_urlDatosComplementarios
+	                                    ,standardSubmit : true
+	                                    ,params         : paramsDatCom
+	                                });
+	                            }
+	                        });
+	                    }
+	                    else //flujo tiene la palabra onComprar
+		                {
+		                    //si el flujo tiene este comodin ejecutaremos un turnado con el status indicado
+		                    var ck = 'Turnando tr\u00e1mite';
+		                    try
+		                    {
+		                        var status = _0_flujo.aux.split('_')[1];
+		                        debug('status para turnar onComprar:',status,'.');
+		                        
+		                        _mask(ck);
+		                        Ext.Ajax.request(
+		                        {
+		                            url      : _GLOBAL_COMP_URL_TURNAR
+		                            ,params  :
+		                            {
+		                                'params.CDTIPFLU'   : _0_flujo.cdtipflu
+		                                ,'params.CDFLUJOMC' : _0_flujo.cdflujomc
+		                                ,'params.NTRAMITE'  : _0_flujo.ntramite
+		                                ,'params.STATUSOLD' : _0_flujo.status
+		                                ,'params.STATUSNEW' : status
+		                                ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
+		                                ,'params.SWAGENTE'  : 'S'
+		                            }
+		                            ,success : function(response)
+		                            {
+		                                _unmask();
+		                                var ck = '';
+		                                try
+		                                {
+		                                    var json = Ext.decode(response.responseText);
+		                                    debug('### turnar:',json);
+		                                    if(json.success)
+		                                    {
+		                                        mensajeCorrecto
+		                                        (
+		                                            'Tr\u00e1mite turnado'
+		                                            ,json.message
+		                                            ,function()
+		                                            {
+		                                                _mask('Redireccionando');
+		                                                Ext.create('Ext.form.Panel').submit(
+		                                                {
+		                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
+		                                                    ,standardSubmit : true
+		                                                });
+		                                            }
+		                                        );
+		                                    }
+		                                    else
+		                                    {
+		                                        mensajeError(json.message);
+		                                    }
+		                                }
+		                                catch(e)
+		                                {
+		                                    manejaException(e,ck);
+		                                }
+		                            }
+		                            ,failure : function()
+		                            {
+		                                _unmask();
+		                                errorComunicacion(null,'Error al turnar tr\u00e1mite');
+		                            }
+		                        });
+		                    }
+		                    catch(e)
+		                    {
+		                        manejaException(e,ck);
+		                    }
+		                }
                     }
                     else
                     {
@@ -434,53 +510,129 @@ function _0_comprar()
                 }
                 else
                 {
-                	var msg = Ext.Msg.show(
-                	{
-                		title    : 'Tr&aacute;mite actualizado'
-                		,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
-                		            + _0_smap1.ntramite
-                		            + '<br/>y no podr&aacute; ser modificada posteriormente'
-                		,buttons : Ext.Msg.OK
-                		,y       : 50
-                		,fn      : function()
-                		{
-                		    var paramsDatCom =
-                		    {
-                		        cdunieco         : _0_smap1.cdunieco
-                                ,cdramo          : _0_smap1.cdramo
-                                ,estado          : 'W'
-                                ,nmpoliza        : _0_fieldNmpoliza.getValue()
-                                ,'map1.ntramite' : _0_smap1.ntramite
-                                ,cdtipsit        : _0_smap1.cdtipsit
-                		    };
-                		    
-                		    if(!Ext.isEmpty(_0_flujo))
+                    if(Ext.isEmpty(_0_flujo)
+                        ||Ext.isEmpty(_0_flujo.aux)
+                        ||_0_flujo.aux.indexOf('onComprar')==-1
+                    ) //si no hay flujo, o no hay auxiliar en flujo, o el auxiliar no contiene la palabra onComprar
+                    {
+	                	var msg = Ext.Msg.show(
+	                	{
+	                		title    : 'Tr&aacute;mite actualizado'
+	                		,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
+	                		            + _0_smap1.ntramite
+	                		            + '<br/>y no podr&aacute; ser modificada posteriormente'
+	                		,buttons : Ext.Msg.OK
+	                		,y       : 50
+	                		,fn      : function()
+	                		{
+	                		    var paramsDatCom =
+	                		    {
+	                		        cdunieco         : _0_smap1.cdunieco
+	                                ,cdramo          : _0_smap1.cdramo
+	                                ,estado          : 'W'
+	                                ,nmpoliza        : _0_fieldNmpoliza.getValue()
+	                                ,'map1.ntramite' : _0_smap1.ntramite
+	                                ,cdtipsit        : _0_smap1.cdtipsit
+	                		    };
+	                		    
+	                		    if(!Ext.isEmpty(_0_flujo))
+	                            {
+	                                paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
+	                                paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
+	                                paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
+	                                paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
+	                                paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
+	                                paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
+	                                paramsDatCom['flujo.status']    = _0_flujo.status;
+	                                paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
+	                                paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
+	                                paramsDatCom['flujo.estado']    = _0_flujo.estado;
+	                                paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
+	                                paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
+	                                paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
+	                                paramsDatCom['flujo.aux']       = 'RECUPERAR';
+	                            }
+	                		    
+	                			Ext.create('Ext.form.Panel').submit(
+	                			{
+	                				url             : _0_urlDatosComplementarios
+	                				,standardSubmit : true
+	                				,params         : paramsDatCom
+	                			});
+	                		}
+	                	});
+	                    msg.setY(50);
+	                }
+	                else //flujo tiene la palabra onComprar
+                    {
+                        //si el flujo tiene este comodin ejecutaremos un turnado con el status indicado
+                        var ck = 'Turnando tr\u00e1mite';
+                        try
+                        {
+                            var status = _0_flujo.aux.split('_')[1];
+                            debug('status para turnar onComprar:',status,'.');
+                            
+                            _mask(ck);
+                            Ext.Ajax.request(
                             {
-                                paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
-                                paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
-                                paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
-                                paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
-                                paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
-                                paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
-                                paramsDatCom['flujo.status']    = _0_flujo.status;
-                                paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
-                                paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
-                                paramsDatCom['flujo.estado']    = _0_flujo.estado;
-                                paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
-                                paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
-                                paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
-                                paramsDatCom['flujo.aux']       = 'RECUPERAR';
-                            }
-                		    
-                			Ext.create('Ext.form.Panel').submit(
-                			{
-                				url             : _0_urlDatosComplementarios
-                				,standardSubmit : true
-                				,params         : paramsDatCom
-                			});
-                		}
-                	});
-                    msg.setY(50);
+                                url      : _GLOBAL_COMP_URL_TURNAR
+                                ,params  :
+                                {
+                                    'params.CDTIPFLU'   : _0_flujo.cdtipflu
+                                    ,'params.CDFLUJOMC' : _0_flujo.cdflujomc
+                                    ,'params.NTRAMITE'  : _0_flujo.ntramite
+                                    ,'params.STATUSOLD' : _0_flujo.status
+                                    ,'params.STATUSNEW' : status
+                                    ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
+                                    ,'params.SWAGENTE'  : 'S'
+                                }
+                                ,success : function(response)
+                                {
+                                    _unmask();
+                                    var ck = '';
+                                    try
+                                    {
+                                        var json = Ext.decode(response.responseText);
+                                        debug('### turnar:',json);
+                                        if(json.success)
+                                        {
+                                            mensajeCorrecto
+                                            (
+                                                'Tr\u00e1mite turnado'
+                                                ,json.message
+                                                ,function()
+                                                {
+                                                    _mask('Redireccionando');
+                                                    Ext.create('Ext.form.Panel').submit(
+                                                    {
+                                                        url             : _GLOBAL_COMP_URL_MCFLUJO
+                                                        ,standardSubmit : true
+                                                    });
+                                                }
+                                            );
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.message);
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                                ,failure : function()
+                                {
+                                    _unmask();
+                                    errorComunicacion(null,'Error al turnar tr\u00e1mite');
+                                }
+                            });
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }
+                    }
                 }
             }
             else
@@ -1441,11 +1593,18 @@ function _0_cotizar(boton)
 	debug('_0_cotizar');
 	if(_0_validarBase())//
 	{
+	        var smap = _0_smap1;
+	        
+			var json=
+			{
+			     slist1 : []
+			    ,smap1  : smap 
+			};
+	        
 //-------------------------------------------------------VILS
         if(_0_recordClienteRecuperado)
        	{
 	        debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
-	        var smap = _0_smap1;
 	        _0_smap1['cdpersonCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CLAVECLI;
 	        _0_smap1['cdideperCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER;
 	        _0_smap1['nmorddomCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM;
@@ -1460,11 +1619,6 @@ function _0_cotizar(boton)
 	            smap.cdagenteAux=agenteCmp.getValue();
 	        }
 	        
-			var json=
-			{
-			     slist1 :[]
-			    ,smap1 : smap 
-			};
        	}
 		
 		if(_0_necesitoIncisos)

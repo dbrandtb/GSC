@@ -131,7 +131,9 @@ var TipoTramite = {
 
 // Catalogo de Roles del sistema (cdsisrol):
 var RolSistema = {
-    Agente : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@AGENTE.cdsisrol" />'
+    Agente         : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@AGENTE.cdsisrol"          />',
+    PromotorAuto   : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@PROMOTOR_AUTO.cdsisrol"   />',
+    SuscriptorAuto : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR_AUTO.cdsisrol" />'
 };
 
 

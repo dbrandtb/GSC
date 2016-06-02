@@ -630,4 +630,6 @@ public interface FlujoMesaControlDAO {
 			,String cdsisrol
 			,String cdusuari
 			)throws Exception;
+	
+	public Map<String,String> recuperaTflujomc(String cdflujomc) throws Exception;
 }

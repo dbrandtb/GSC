@@ -1796,4 +1796,49 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> recuperarSucursalesPorFlujo(String cdflujomc) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarSucursalesPorFlujo @@@@@@"
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				));
+
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		
+		String paso = null;
+		
+		try
+		{
+			if(StringUtils.isBlank(cdflujomc))
+			{
+				paso = "Recuperando todas las sucursales";
+				
+				lista = obtieneSucursales(null, null);
+			}
+			else
+			{
+				paso = "Recuperando flujo";
+				
+				Map<String,String> flujo = flujoMesaControlDAO.recuperaTflujomc(cdflujomc);
+				
+				String cdtipram = flujo.get("CDTIPRAM");
+				
+				lista = recuperarSucursalesPorTipoRamo(cdtipram);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista=" , lista
+				,"\n@@@@@@ recuperarSucursalesPorFlujo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }

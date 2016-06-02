@@ -215,5 +215,7 @@ public interface CatalogosManager {
     		,String swfinal
     		,String cdsisrol
     		,String cdusuari
-    		) throws Exception;
+    		)throws Exception;
+    
+    public List<GenericVO> recuperarSucursalesPorFlujo(String cdflujomc) throws Exception;
 }
