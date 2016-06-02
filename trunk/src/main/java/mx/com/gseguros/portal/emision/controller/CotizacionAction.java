@@ -11784,6 +11784,21 @@ public class CotizacionAction extends PrincipalCoreAction
     	}
     }
 	
+	
+	public String consultaExtraprimaOcup() throws Exception {
+		
+		try {
+			String otvalor = cotizacionManager.consultaExtraprimOcup(smap1.get("cdtipsit"));
+			params = new HashMap<String, String>();
+			params.put("otvalor", otvalor);
+			exito = true;
+			success =true;
+		} catch (Exception e) {
+			respuesta = Utils.manejaExcepcion(e);
+		}
+		return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
