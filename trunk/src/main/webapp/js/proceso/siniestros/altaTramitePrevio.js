@@ -1,6 +1,6 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]); 
 Ext.onReady(function() {
-	
+	var rolSiniestro;
 	    // Se aumenta el timeout para todas las peticiones:
     Ext.Ajax.timeout = 1000*60*10; // 10 minutos
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
@@ -247,7 +247,7 @@ Ext.onReady(function() {
     cmbRamos = Ext.create('Ext.form.field.ComboBox',{
 		colspan:2,								fieldLabel   : 'Producto',			allowBlank     : false,		editable   : false,
 		displayField: 'value',					valueField: 'key',					forceSelection : false,		queryMode :'local',
-		width: 300,								name:'cmbRamos',					store 		   : storeRamos,
+		width: 300,								name:'cmbRamos',					store 		   : storeRamos, 	readOnly : rolSiniestro != 'INPLANTSSI',
 		listeners : {
     		'select':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
@@ -287,7 +287,7 @@ Ext.onReady(function() {
     cmbModalidad = Ext.create('Ext.form.field.ComboBox',{
 		fieldLabel   : 'Modalidad',			allowBlank     : false,		editable   : false,
 		displayField: 'value',				valueField: 'key',			forceSelection : false,				queryMode :'local',
-		width: 300,							name:'pv_cdtipsit_i',		store 		   : storeModalidad,
+		width: 300,							name:'pv_cdtipsit_i',		store 		   : storeModalidad,	readOnly : rolSiniestro != 'INPLANTSSI',
     	listeners : {
     		'change':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
@@ -417,41 +417,25 @@ Ext.onReady(function() {
     
     
 	var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
-		name:'cmbBeneficiario',			
-		fieldLabel: 'Beneficiario',			
-		queryMode: 'remote',		
-		displayField: 'value',
-		valueField: 'key',
-		store : storeAsegurados2,//	triggerAction: 'all',
-		width		 : 300,
-		allowBlank:false,
-		queryDelay: 1000,
-		/*
-		editable:true,						
-		forceSelection : true,		
-		matchFieldWidth: false,		
-		hideTrigger:true,		
-		queryCaching: false,
-		*/
-		/*queryParam: 'params.cdperson',*/	 
-		
-		//queryParam  : 'smap1.nombre',
-		//queryMode   : 'remote',
-		queryCaching: false,
-		allQuery    : 'dummyForAllQuery',
-		//minChars    : 2,
-		//minLength   : 2,
-		//name          : 'smap1.nombre',
-	    //valueField    : 'CDRFC',
-	    //displayField  : 'NOMBRE_COMPLETO',
-	    forceSelection: false,
-	    autoSelect    : false,
-	    typeAhead     : false,
-	    anyMatch      : false,
-	    hideTrigger   : true,
-	    enableKeyEvents: true,
-		
-		
+		name	  		:'cmbBeneficiario',			
+		fieldLabel		: 'Beneficiario',			
+		queryMode 		: 'remote',		
+		displayField	: 'value',
+		valueField		: 'key',
+		store 			: storeAsegurados2,
+		width			: 300,
+		allowBlank		: false,
+		queryDelay		: 1000,
+		forceSelection	: true,
+		queryCaching	: false,
+		//hideTrigger   	: true,
+		autoSelect    	: false,
+		enableKeyEvents	: true,
+		/*		
+		allQuery    	: 'dummyForAllQuery',	    
+	    typeAhead     	: false,
+	    anyMatch      	: false,	    
+	    */
 		listeners : {
 			'change' : function(e) {
 				debug('en change', e.getValue());
@@ -1215,16 +1199,6 @@ Ext.onReady(function() {
     	            					panelInicialPral.down('[name="txtTelefono"]').setValue(record.get('telefono'));
     	            					panelInicialPral.down('[name="txtEmail"]').setValue(record.get('email'));
     	            					panelInicialPral.down('[name="txtAutEspecial"]').setValue("1");
-    	            					//.
-    	            					/*storeAsegurados2.load({
-    										params:{
-    											'params.cdunieco': record.get('cdunieco'),
-    											'params.cdramo': record.get('cdramo'),
-    											'params.estado': record.get('estado'),
-    											'params.nmpoliza': record.get('nmpoliza')
-    										}
-    									});*/
-    	            					
     	            					modPolizasAltaTramite.hide();
                 		        	}else{
                 						modPolizasAltaTramite.hide();
@@ -1729,19 +1703,35 @@ Ext.onReady(function() {
     
     if(valorAction.ntramite == null)
 	{
-    	/*Oficina Receptora*/
+		rolSiniestro = valorAction.RolSiniestro;
+		/*Oficina Receptora*/
     	oficinaReceptora.load();
     	panelInicialPral.down('combo[name=cmbOficReceptora]').setValue(valorAction.cdunieco);
-    	/*Seleccionamos el producto Salud vital*/
-    	panelInicialPral.down('combo[name=cmbRamos]').setValue(_SALUD_VITAL);
-    	/*Modalidad*/
-    	storeModalidad.removeAll();
-		storeModalidad.load({
-			params:{
-				'params.idPadre':_SALUD_VITAL
-			}
-		});
-		panelInicialPral.down('combo[name=pv_cdtipsit_i]').setValue('SL');
+    	
+    	if(rolSiniestro =="INPLANTSSI"){
+			/*Seleccionamos el producto Salud vital*/
+    		panelInicialPral.down('combo[name=cmbRamos]').setValue(_MULTISALUD);
+    		/*Modalidad*/
+	    	storeModalidad.removeAll();
+			storeModalidad.load({
+				params:{
+					'params.idPadre':_MULTISALUD
+				}
+			});
+			panelInicialPral.down('combo[name=pv_cdtipsit_i]').setValue('SSI');
+		}else{
+			/*Seleccionamos el producto Salud vital*/
+	    	panelInicialPral.down('combo[name=cmbRamos]').setValue(_SALUD_VITAL);
+	    	/*Modalidad*/
+	    	storeModalidad.removeAll();
+			storeModalidad.load({
+				params:{
+					'params.idPadre':_SALUD_VITAL
+				}
+			});
+			panelInicialPral.down('combo[name=pv_cdtipsit_i]').setValue('SL');
+		}
+		
     	/*Tipo de pago*/
     	storeTipoPago.removeAll();
 		storeTipoPago.load({

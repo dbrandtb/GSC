@@ -132,24 +132,14 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	* @return Lista AutorizaServiciosVO con la informacion de los asegurados
 	*/
 	public String guardaConfiguracionLayout(){
-		logger.debug("Entra a guardaAltaTramitParams: {} datosTablas {}", params,datosTablas);
+		logger.debug("Entra a guardaAltaTramite Params: {} datosTablas {}", params,datosTablas);
 		try{
-			//1.- Validamos la informacion del layout para ver si es uno nuevo u actualizacion del layout
-			if(params.get("txtAccion").equalsIgnoreCase(Constantes.INSERT_MODE)){
-				
-			}else{
-				
-			}
-			
-			//2.- Realizamos la eliminacion de la configuracion del layout
-			
-			//3.- Se realiza la insercion de la configuracion del layout
-			
 			//Realizamos la insercion de los guardados
-			siniestrosManager.guardaLayoutProveedor(params.get("cveLayout"), null,null,null,null,null,null,null,null,Constantes.DELETE_MODE);
+			siniestrosManager.guardaLayoutProveedor(params.get("cmbProveedor"),params.get("tipoLayout"), null,null,null,null,null,null,null,null,"D");
 			for(int i=0;i<datosTablas.size();i++) {
 				siniestrosManager.guardaLayoutProveedor(
-					params.get("cveLayout"),
+					params.get("cmbProveedor"), 
+					params.get("tipoLayout"),
 					datosTablas.get(i).get("claveAtributo"),
 					datosTablas.get(i).get("claveFormatoAtributo"),
 					datosTablas.get(i).get("valorMinimo"),
@@ -190,7 +180,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	public String consultaConfiguracionLayout(){
 		logger.debug("Entra a consultaConfiguracionLayout Params: {}", params);
 		try {
-			datosInformacionAdicional = siniestrosManager.consultaConfiguracionLayout(params.get("tipoLayout"));
+			datosInformacionAdicional = siniestrosManager.consultaConfiguracionLayout(params.get("cdpresta"));
 		}catch( Exception e){
 			logger.error("Error consultaListadoAltaTramite: {}", e.getMessage(), e);
 			return SUCCESS;

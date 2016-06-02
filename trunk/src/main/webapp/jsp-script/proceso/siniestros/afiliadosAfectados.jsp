@@ -27,8 +27,6 @@
 			var _CATALOGO_TIPOCONCEPTO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
 			var _CATALOGO_CONCEPTOSMEDICOS				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
 			var _CATALOGO_CONCEPTOSMEDICOSTOTALES   	= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS_TOTALES"/>';
-			var _11_params								= <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
-			var _CDROL									= '<s:property value="params.cdrol" />';
 			var _CAT_CAUSASINIESTRO						= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
 			var _STATUS_TRAMITE_EN_REVISION_MEDICA  	= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_REVISION_MEDICA.codigo" />';
             var _STATUS_DEVOLVER_TRAMITE				= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_EN_DEVOLUCION.codigo" />';
@@ -42,6 +40,14 @@
             var _GMMI									= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
             var _RECUPERA								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
             var _CATALOGO_PROVEEDORES  					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
+            var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONCEPTOPAGO"/>';
+			var _SINO									= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SINO" />';
+			var _TIPO_TRAMITE_SINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra"/>';
+			var _TIPO_PAGO_AUTOMATICO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@PAGO_AUTOMATICO.cdtiptra"/>';
+			var _STATUS_TRAMITE_EN_CAPTURA              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA.codigo" />';
+			
+			var _11_params								= <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+			var _CDROL									= '<s:property value="params.cdrol" />';
             var _URL_CATALOGOS							= '<s:url namespace="/catalogos" 		action="obtieneCatalogo"/>';
 			var _URL_DOCUMENTOSPOLIZA					= '<s:url namespace="/documentos" 		action="ventanaDocumentosPoliza" />';
 			var _URL_FINDETALLEMC 						= '<s:url namespace="/mesacontrol" 		action="finalizarDetalleTramiteMC" />';
@@ -90,13 +96,9 @@
 			var _URL_P_MOV_MAUTSINI						= '<s:url namespace="/siniestros"		action="obtieneMensajeMautSini"/>';
 			var _URL_TABBEDPANEL						= '<s:url namespace="/siniestros"  		action="includes/detalleSiniestro" />';
 			var _URL_CONSULTA_AUTORIZACION_ESP			= '<s:url namespace="/siniestros"		action="consultaAutorizacionServicio" />';
-			var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONCEPTOPAGO"/>';
 			var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
 			var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
-			var _SINO									= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SINO" />';
 			var _URL_APLICA_IVA_CONCEPTO				= '<s:url namespace="/siniestros"		action="obtieneAplicacionIVA"/>';
-			var _TIPO_TRAMITE_SINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra"/>';
-			var _TIPO_PAGO_AUTOMATICO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@PAGO_AUTOMATICO.cdtiptra"/>';
 			var _URL_MRECUPERA							= '<s:url namespace="/siniestros" 		action="obtenerMRecupera" />';
 			var _URL_SUMASEG_RECUPERA					= '<s:url namespace="/siniestros"		action="obtieneDatosRecupera"/>';
 			var _URL_GUARDA_CONCEPTO_RECUPERA			= '<s:url namespace="/siniestros"  		action="guardarMRecupera"/>';
@@ -107,12 +109,11 @@
 			var _11_urlActualizarSiniestro        		= '<s:url namespace="/siniestros"  		action="actualizarMultiSiniestro"      />';
 			var _URL_VALIDA_FACTMONTO					= '<s:url namespace="/siniestros" 		action="validaFacturaMontoPagoAutomatico" />';
 			var _URL_ActualizaStatusTramite 			= '<s:url namespace="/mesacontrol" 		action="actualizarStatusTramite" />';
-			var _UrlGeneraSiniestroTramite 				= '<s:url namespace="/siniestros" 	action="generaSiniestroTramite" />';
-			var _URL_TurnarAOperadorReclamacion 		= '<s:url namespace="/mesacontrol" 	action="turnarAOperadorReclamacion" />';
-			var _STATUS_TRAMITE_EN_CAPTURA              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA.codigo" />';
-			var _UrlGenerarContrarecibo     			= '<s:url namespace="/siniestros" 	action="generarContrarecibo"       />';
-			var panDocUrlViewDoc     					= '<s:url namespace="/documentos" 	action="descargaDocInline" />';
-			var _URL_ACTUALIZA_TURNADOMC				= '<s:url namespace="/siniestros" 	action="actualizaTurnadoMesaControl" />';
+			var _UrlGeneraSiniestroTramite 				= '<s:url namespace="/siniestros" 		action="generaSiniestroTramite" />';
+			var _URL_TurnarAOperadorReclamacion 		= '<s:url namespace="/mesacontrol" 		action="turnarAOperadorReclamacion" />';
+			var _UrlGenerarContrarecibo     			= '<s:url namespace="/siniestros" 		action="generarContrarecibo"       />';
+			var panDocUrlViewDoc     					= '<s:url namespace="/documentos" 		action="descargaDocInline" />';
+			var _URL_ACTUALIZA_TURNADOMC				= '<s:url namespace="/siniestros" 		action="actualizaTurnadoMesaControl" />';
 
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
@@ -5944,7 +5945,8 @@
 					'params.cdTipoAtencion'	: _11_params.OTVALOR07,
 					'params.cdpresta'		: _11_params.OTVALOR11,
 					'params.cdramo'			: _11_params.CDRAMO,
-					'params.feOcurrencia'	: _11_params.OTVALOR10
+					'params.feOcurrencia'	: _11_params.OTVALOR10,
+					'params.cdtipsit'		: _11_params.OTVALOR26
 				}
 			},
 			listeners:{

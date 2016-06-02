@@ -1084,6 +1084,7 @@ Ext.onReady(function() {
     	storeTipoAtencion.load({
 			params:{
 				'params.cdramo':valorAction.cdramo ,
+				'params.cdtipsit':valorAction.cdtipsit,
 				'params.tipoPago':valorAction.cdTipoPago
 			}
 		});

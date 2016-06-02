@@ -562,7 +562,6 @@ var msgWindow;
 	{
 		var record = grid.getStore().getAt(rowIndex);
 		debug('record Valor de respuesta :',record.data);
-		debug("Valor de Respuesta -->",record.get('cdunieco'));
 		Ext.Ajax.request({
 			url	 : _URL_INF_ASEGURADO
 			,params:{
@@ -604,10 +603,8 @@ var msgWindow;
 						});
 					}
 					else{
-						debug("json.OTVALOR22 > 0 ===>",json.OTVALOR22 > 0, json.OTVALOR22);
-						debug("json.NMAUTESP == 0 ===>",json.NMAUTESP == 0, json.NMAUTESP);
+						//AUTORIZACION ESPECIAL
 						if(json.OTVALOR22 > 0 && json.NMAUTESP == 0){
-							//mensajeWarning('Se requere una autorizaci&oacute;n especial para continuar.');
 							windowAutEsp = Ext.create('Ext.window.Window',{
 								modal       : true,
 								buttonAlign : 'center',
@@ -737,15 +734,16 @@ var msgWindow;
 											debug("Valor de respuesta ---> : ",jsonValorAsegurado);
 											
 											urlDestino = _urlSeleccionCobertura;
-											params['params.cdunieco']  = record.get('cdunieco');//record.get('cdsucdoc');
-											params['params.otvalor02'] = json.OTVALOR02;//record.get('parametros.pv_otvalor02');
-											params['params.cdramo']    = json.CDRAMO;//record.get('cdramo');
-											params['params.cdtipsit']  = json.CDTIPSIT;//record.get('cdtipsit');
+											params['params.cdunieco']  = record.get('cdunieco');
+											params['params.otvalor02'] = json.OTVALOR02;
+											params['params.cdramo']    = json.CDRAMO;
+											params['params.cdtipsit']  = json.CDTIPSIT;
 											params['params.nmpoliza']  = json.NMPOLIZA;
 											params['params.nmsituac']  = json.NMSITUAC;
 											params['params.estado']    = json.ESTADO;
 											params['params.periodoEspera']    = jsonValorAsegurado.diasAsegurado;
 											params['params.feocurre']    = json.FEOCURRE;
+											params['params.nmsuplem'] = json.NMSUPLEM;
 											debug('urlDestino_4 :',urlDestino);
 											debug('params_4 :',params);
 											Ext.create('Ext.form.Panel').submit(
