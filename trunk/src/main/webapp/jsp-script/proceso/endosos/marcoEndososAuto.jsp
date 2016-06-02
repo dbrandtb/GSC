@@ -1177,7 +1177,7 @@ function _p34_mostrarListaEndosos(nivel,stamp)
         ,_p34_window : 'si'
         ,itemId      : '_p34_windowEndosos'
         ,closeAction : 'destroy'
-        ,maxHeight   : 400
+        //,maxHeight   : 400
         ,autoScroll  : true
         ,modal       : true
         ,items       :
@@ -1189,12 +1189,18 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                 ,store       : _p34_storeEndosos
                 ,nivel       : nivel
                 ,stamp       : stamp
-                ,hideHeaders : true
+                //,hideHeaders : true
                 ,columns     :
                 [
                     {
-                        dataIndex : 'DSTIPSUP'
+                    	text      : 'CDTIPSUP'
+                        ,dataIndex : 'CDTIPSUP'
                         ,flex     : 1
+                    },
+                    {
+                    	text      : 'DSTIPSUP'
+                        ,dataIndex : 'DSTIPSUP'
+                        ,flex     : 9
                     }
                 ]
                 ,listeners :
