@@ -1171,7 +1171,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			ntramite
 	            			,new Date()
 	            			,null//cdclausu
-	            			,"Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite"
+	            			,Utils.join("Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite: ",comprarNmpoliza)
 	            			,cdusuari
 	            			,null//cdmotivo
 	            			,cdsisrol

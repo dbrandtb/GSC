@@ -7123,7 +7123,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             	
             	mesaControlDAO.movimientoDetalleTramite(
             			ntramite, new Date(), null
-            			,"Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite"
+            			,Utils.join("Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite: ",nmpoliza)
             			,cdusuari, null, cdsisrol,"S", null, null
             			,EstatusTramite.PENDIENTE.getCodigo(),false
             			);

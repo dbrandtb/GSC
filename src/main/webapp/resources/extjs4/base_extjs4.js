@@ -2450,6 +2450,11 @@ function _mask(text)
     }).show());
 }
 
+/*
+ * Esta funcion hace un mask y te regresa la variable (Ext.window)
+ * tu tienes que hacer el variable.close() porque
+ * el _unmask() no la destruye
+ */
 function _maskLocal(text)
 {
     return centrarVentanaInterna(Ext.create('Ext.window.Window',

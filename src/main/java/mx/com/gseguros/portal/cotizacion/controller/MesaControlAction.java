@@ -1172,14 +1172,15 @@ public class MesaControlAction extends PrincipalCoreAction
 			String ntramite  = smap1.get("ntramite")
 			       ,dscoment = smap1.get("dscoment")
 			       ,status   = smap1.get("status")
-			       ,cerrado  = smap1.get("cerrado");
+			       ,cerrado  = smap1.get("cerrado")
+			       ,swagente = smap1.get("swagente");
 			
 			Utils.validate(ntramite , "No se recibio el numero de tramite");
 			
 			mesaControlManager.movimientoDetalleTramite(
 					ntramite, new Date(), null
 					,dscoment, user.getUser(), null
-					,user.getRolActivo().getClave(),null
+					,user.getRolActivo().getClave(),swagente
 					,status,"S".equals(cerrado)
 					);
 		}
