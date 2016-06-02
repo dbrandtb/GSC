@@ -1270,7 +1270,7 @@
             
             if(valido)
             {
-                debug(arrayEditados);
+                debug("arrayEditados",arrayEditados);
                 Ext.getCmp('marendMenuOperaciones').collapse();
                 Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
                 var json={};
