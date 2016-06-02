@@ -906,7 +906,7 @@
 		</action>
 
 		<action name="includes/configuracionLayout" class="siniestrosAction" method="configuracionLayoutProveedor">
-			<result>/jsp-script/proceso/siniestros/parametrizacionLayout.jsp</result>
+			<result>/jsp-script/proceso/siniestros/configuracionLayout.jsp</result>
 		</action>
 		
 		<action name="includes/historialCPTPagados" class="detalleSiniestroAction">

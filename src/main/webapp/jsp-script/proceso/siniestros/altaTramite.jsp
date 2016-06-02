@@ -10,7 +10,7 @@
             
             var _CATALOGO_OFICINA_RECEP					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
             var _CAT_RAMO_SALUD		       				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOSALUD"/>';
-            var _CATALOGO_TipoAtencion 					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_ATENCION_SINIESTROS"/>';
+            //var _CATALOGO_TipoAtencion 					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_ATENCION_SINIESTROS"/>';
             var _CATALOGO_TipoPago						= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TTIPOPAGO"/>';
             var _CATALOGO_PROVEEDORES  					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
             var _CATALOGO_TipoMoneda   					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
@@ -41,12 +41,12 @@
             var _UR_TIPO_ATENCION						= '<s:url namespace="/siniestros"  		action="consultaListaTipoAtencion"/>';
             var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
             var _URL_LISTADO_ASEGURADO          		= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
-            var _URL_LISTADO_ALTATRAMITE          		= '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
+            //var _URL_LISTADO_ALTATRAMITE          		= '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
             var _URL_GUARDA_ALTA_TRAMITE     			= '<s:url namespace="/siniestros"       action="guardaAltaTramite" />';
             var _URL_CONSULTA_ALTA_TRAMITE     			= '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
             var _URL_CONSULTA_GRID_ALTA_TRAMITE     	= '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
             var _URL_CONSULTA_FACTURA_PAGADA        	= '<s:url namespace="/siniestros"       action="consultaFacturaPagada" />';
-            var _UR_LISTA_RAMO_SALUD					= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
+            //var _UR_LISTA_RAMO_SALUD					= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
             var _URL_GUARDA_FACTURA_TRAMITE				= '<s:url namespace="/siniestros"  		action="guardaFacturaAltaTramite"/>';
             var _URL_CONSULTA_FACTURAS       			= '<s:url namespace="/siniestros"		action="obtenerFacturasTramite" />';
             var _URL_VALIDA_FACTURAASEGURADO  			= '<s:url namespace="/siniestros"		action="validarFacturaAsegurado" />';
@@ -65,7 +65,7 @@
             var _URL_ELIMINAR_FACT_ASEG					= '<s:url namespace="/siniestros" 		action="eliminarFactAsegurado" />';
             var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
             var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
-            var _CAT_MODALIDADES 					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT"/>';
+            var _CAT_MODALIDADES 						= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT"/>';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             debug("valorAction ====>", valorAction);

@@ -81,7 +81,7 @@ public interface SiniestrosManager {
 	
 	public String guardaListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws Exception;
 	
-	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo) throws Exception;
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo, String rolUsuario) throws Exception;
 	
 	public void getEliminacionRegistros(String nmautser) throws Exception;
 	
@@ -242,7 +242,7 @@ public interface SiniestrosManager {
 	
 	public List<Map<String,String>> listaAseguradosTramite(String ntramite, String nfactura, String tipoProceso) throws Exception;
 	
-	public List<Map<String,String>> listaSiniestrosTramite2(String ntramite,String nfactura,String procesoInterno) throws Exception;
+	public List<Map<String,String>> listaSiniestrosTramite2(String ntramite,String nfactura) throws Exception;
 	
 	/**
 	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
@@ -612,10 +612,10 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO>obtenerAtributosLayout(String descripcion) throws Exception;
 	
-	public String guardaLayoutProveedor(String tipoLayout, String claveAtributo, String claveFormatoAtributo,
+	public String guardaLayoutProveedor(String cdpresta, String tipoLayout, String claveAtributo, String claveFormatoAtributo,
 			String valorMinimo, String valorMaximo, String columnaExcel, String claveFormatoFecha,String atributoRequerido, String nmordina, String tipoAccion) throws Exception;
 
-	public List<Map<String, String>> consultaConfiguracionLayout(String tipoLayout) throws Exception;
+	public List<Map<String, String>> consultaConfiguracionLayout(String cdpresta) throws Exception;
 	
 	public List<Map<String, String>> guardaHistorialSiniestro(String ntramite, String nfactura) throws Exception;
 	

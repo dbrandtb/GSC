@@ -377,7 +377,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				if(TipoPago.DIRECTO.getCodigo().equals(listaMesaControl.get(0).getOtvalor02mc())){
 					//PAGO DIRECTO
 					for(int i=0; i< facturas.size();i++){
-						List<Map<String,String>> siniesxfactura = siniestrosManager.listaSiniestrosTramite2(params.get("pv_ntramite_i"),facturas.get(i).get("NFACTURA"),null);
+						List<Map<String,String>> siniesxfactura = siniestrosManager.listaSiniestrosTramite2(params.get("pv_ntramite_i"),facturas.get(i).get("NFACTURA"));
 						
 						for(int a=0; a< siniesxfactura.size();a++){
 							siniestrosManager.getAltaSiniestroSinAutorizacion(msgResult,siniesxfactura.get(a).get("CDUNIECO"),siniesxfactura.get(a).get("CDRAMO"),
@@ -473,7 +473,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											siniestrosAnterior.get(r).get("AAAPERTU"), siniestrosAnterior.get(r).get("STATUS"),siniestrosAnterior.get(r).get("NMSINIES"), siniestrosAnterior.get(r).get("CDTIPSIT"));
 									for(int k=0; k < validacionFacturas.size();k++){
 										//10.- Obtenemos la informacion de Siniestro por tramite
-										List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(msgResult, validacionFacturas.get(k).get("NFACTURA"),null);
+										List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(msgResult, validacionFacturas.get(k).get("NFACTURA"));
 										
 										for(int h =0; h < asegurados.size();h++){
 											String munSiniestro=asegurados.get(h).get("NMSINIES")+"";
@@ -596,7 +596,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					
 					for(int k=0; k < validacionFacturas.size();k++){
 						//10.- Obtenemos la informacion de Siniestro por tramite
-						List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(msgResult, validacionFacturas.get(k).get("NFACTURA"),null);
+						List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(msgResult, validacionFacturas.get(k).get("NFACTURA"));
 						
 						for(int h =0; h < asegurados.size();h++){
 							String munSiniestro=asegurados.get(h).get("NMSINIES")+"";
@@ -673,7 +673,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String consultaListaPoliza(){
 		logger.debug("Entra a consultaListaPoliza params de entrada :{}",params);
 		try {
-			List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"), params.get("cdramo"));
+			UserVO usuario  = (UserVO)session.get("USUARIO");
+			List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"), params.get("cdramo"), usuario.getRolActivo().getClave());
 			if(lista!=null && !lista.isEmpty())	listaPoliza = lista;
 		}catch( Exception e){
 			logger.error("Error al obtener los datos de la poliza : {}", e.getMessage(), e);
@@ -1096,7 +1097,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			String subcobertura = factura.get("CDCONVAL");
 			String valorComplementario = "0";
 
-			slist2=siniestrosManager.obtenerFacturasTramite(ntramite);
+			slist2= facturas;//siniestrosManager.obtenerFacturasTramite(ntramite);
 			seccion = "COLUMNAS";
 
 			componentes = pantallasManager.obtenerComponentes(
@@ -1636,7 +1637,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String obtenerSiniestrosTramite() {
 		logger.debug("Entra a obtenerSiniestrosTramite smap de entrada :{}",smap);
 		try {
-			slist1 = siniestrosManager.listaSiniestrosTramite2(smap.get("ntramite"),smap.get("nfactura"),null);
+			slist1 = siniestrosManager.listaSiniestrosTramite2(smap.get("ntramite"),smap.get("nfactura"));
 			success=true;
 			mensaje="Siniestros obtenidos";
 		}
@@ -5335,189 +5336,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
     			+ "\n######                          ######"
     			);
     	logger.debug("params: "+params);
-    	/*try
-    	{
-    		String cdunieco  = params.get("cdunieco");
-    		String cdramo    = params.get("cdramo");
-    		String estado    = params.get("estado");
-    		String nmpoliza  = params.get("nmpoliza");
-    		String nmsituac  = params.get("nmsituac");
-    		String nmsuplem  = params.get("nmsuplem");
-    		String status    = params.get("status");
-    		String aaapertu  = params.get("aaapertu");
-    		String nmsinies  = params.get("nmsinies");
-    		
-    		String feocurre  = params.get("feocurre");
-    		Date   dFeocurre = renderFechas.parse(feocurre);
-    		String cdicd     = params.get("cdicd");
-    		String cdicd2    = params.get("cdicd2");
-    		String nreclamo  = params.get("nreclamo");
-    		
-    		String autrecla = params.get("autrecla");
-    		String commenar = params.get("commenar");
-    		String autmedic = params.get("autmedic");
-    		String commenme = params.get("commenme");
-    		
-    		boolean cancela     = StringUtils.isNotBlank(params.get("cancelar"));
-    		String  cdmotivo    = params.get("cdmotivo");
-    		String  rechazoCome = params.get("rechazocomment");
-    		String  ntramite    = params.get("ntramite");
-    		
-    		UserVO usuario = (UserVO)session.get("USUARIO");
-    		String cdrol   = usuario.getRolActivo().getClave();
-    		
-    		Map<String,String>tramiteCompleto = siniestrosManager.obtenerTramiteCompleto(ntramite);
-			String tipoPago = tramiteCompleto.get("OTVALOR02");
-    		
-    		siniestrosManager.actualizaMsinies(
-    				cdunieco,
-    				cdramo,
-    				estado,
-    				nmpoliza,
-    				nmsituac,
-    				nmsuplem,
-    				status,
-    				aaapertu,
-    				nmsinies,    				
-    				dFeocurre,
-    				cdicd,
-    				cdicd2,
-    				nreclamo);
-    		
-    		siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, null,
-    				null,null,null,null,null,
-    				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_SINIESTRO, commenar, Constantes.INSERT_MODE);
-    		
-    		siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, null,
-    				null,null,null,null,null,
-    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_SINIESTRO, commenme, Constantes.INSERT_MODE);
-    		
-    		if(cancela)
-    		{
-    			Boolean rolMedico = null;
-    			if(cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO.getCdsisrol())
-    					||cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
-    					||cdrol.equalsIgnoreCase(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol())
-    					||cdrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())
-    					||cdrol.equalsIgnoreCase(RolSistema.MEDICO_AJUSTADOR.getCdsisrol())
-    					)
-    			{
-    				rolMedico = Boolean.TRUE;
-    			}
-    			else if(cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_SINIESTROS.getCdsisrol())
-    					||cdrol.equalsIgnoreCase(RolSistema.OPERADOR_SINIESTROS.getCdsisrol())
-    					)
-    			{
-    				rolMedico = Boolean.FALSE;
-    			}
-    			
-    			if(rolMedico==null)
-    			{
-    				throw new Exception("El usuario actual no puede cancelar");
-    			}
-    			
-    			MesaControlAction mca = new MesaControlAction();
-    			mca.setKernelManager(kernelManagerSustituto);
-    			mca.setSession(session);
-    			Map<String,String>smap1=new HashMap<String,String>();
-    			smap1.put("ntramite" , ntramite);
-    			smap1.put("status"   , EstatusTramite.RECHAZADO.getCodigo());
-    			smap1.put("cdmotivo" , cdmotivo);
-    			smap1.put("comments" , rechazoCome);
-    			mca.setSmap1(smap1);
-    			mca.actualizarStatusTramite();
-    			if(!mca.isSuccess())
-    			{
-    				throw new Exception("Error al cancelar el tr�mite");
-    			}
-    			
-    			String nombreReporte = null;
-    			String nombreArchivo = null;
-    			if(rolMedico)
-    			{
-    				nombreReporte = getText("rdf.siniestro.cartarechazo.medico.nombre");
-    				nombreArchivo = getText("pdf.siniestro.rechazo.medico.nombre");
-    			}
-    			else//cancelacion por area de reclamaciones
-    			{
-    				boolean esReembolso = tipoPago.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo());
-    				if(esReembolso)
-    				{
-    					nombreReporte = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
-        				nombreArchivo = getText("pdf.siniestro.rechazo.reemb.nombre");
-    				}
-    				else
-    				{
-    					nombreReporte = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
-        				nombreArchivo = getText("pdf.siniestro.rechazo.pdir.nombre");
-    				}
-    			}
-    			
-    			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + ntramite);
-    			if(!carpeta.exists())
-    			{
-    				logger.debug("no existe la carpeta::: "+ntramite);
-    				carpeta.mkdir();
-    				if(carpeta.exists())
-    				{
-    					logger.debug("carpeta creada");
-    				}
-    				else
-    				{
-    					logger.debug("carpeta NO creada");
-    				}
-    			}
-    			else
-    			{
-    				logger.debug("existe la carpeta   ::: "+ntramite);
-    			}
-    			
-    			String urlContrareciboSiniestro = ""
-    					+ getText("ruta.servidor.reports")
-    					+ "?p_usuario="  + usuario.getUser()
-    					+ "&P_NTRAMITE=" + ntramite
-    					+ "&userid="     + getText("pass.servidor.reports")
-    					+ "&report="     + nombreReporte
-    					+ "&destype=cache"
-    					+ "&desformat=PDF"
-    					+ "&ACCESSIBLE=YES"
-    					+ "&paramform=no";
-    			String pathArchivo=""
-    					+ getText("ruta.documentos.poliza")
-    					+ "/" + ntramite
-    					+ "/" + nombreArchivo;
-    			
-    			HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
-    	           	        
-    			documentosManager.guardarDocumento(
-    				cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,nmsuplem
-					,new Date()
-					,nombreArchivo
-					,"Carta Rechazo"
-					,null
-					,ntramite
-					,tipoPago
-					,null
-					,null
-					,TipoTramite.SINIESTRO.getCdtiptra()
-					,null
-					,null
-				);
-    		}
-    		
-    		success = true;
-    		mensaje = "Siniestro actualizado";
-    	}
-    	catch(Exception ex)
-    	{
-    		logger.error("error al actualizar siniestro desde pantalla multisiniestro",ex);
-    		success = false;
-    		mensaje = ex.getMessage();
-    	}*/
     	success = true;
 		mensaje = "Siniestro actualizado";
     	logger.debug(""

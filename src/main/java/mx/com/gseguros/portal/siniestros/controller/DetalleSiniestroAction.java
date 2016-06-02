@@ -167,7 +167,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			
 			//Pago Normal
 			if(params.get("cdtiptra").equalsIgnoreCase(TipoTramite.SINIESTRO.getCdtiptra())){
-				List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), params.get("nfactura"),null);
+				List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), params.get("nfactura"));
 				
 				for(int i = 0; i < asegurados.size();i++){
 					String munSiniestro=asegurados.get(i).get("NMSINIES")+"";
@@ -241,7 +241,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 						siniestrosManager.guardaListaFacturaPagoAutomatico(facturasxControl.get(j).get("NTRAMITE"), params.get("nfactura"), params.get("nfacturaOrig"));
 					}
 					
-					List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(ntramite, params.get("nfactura"),null);
+					List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(ntramite, params.get("nfactura"));
 					
 					for(int i = 0; i < asegurados.size();i++){
 						String munSiniestro=asegurados.get(i).get("NMSINIES")+"";
@@ -316,7 +316,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			loadList = siniestrosManager.obtenerFacturasTramite(params.get("ntramite"));
 			String mensajeRespuesta ="";
 			for(int i=0; i< loadList.size();i++){
-				List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), loadList.get(i).get("NFACTURA"),null);
+				List<Map<String,String>> asegurados = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"), loadList.get(i).get("NFACTURA"));
 				for(int j =0; j < asegurados.size();j++){
 					Map<String,String>autorizacionesFactura = siniestrosManager.obtenerAutorizacionesFactura(
 							asegurados.get(j).get("CDUNIECO"), asegurados.get(j).get("CDRAMO"), asegurados.get(j).get("ESTADO"),

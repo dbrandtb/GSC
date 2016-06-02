@@ -77,6 +77,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			String cdunieco = null;
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			String cdUnieco = usuario.getCdUnieco();
+			String rolUsuario = usuario.getRolActivo().getClave();
 			cdunieco = usuario.getCdUnieco().toString();
 			if(params != null){
 				cdunieco  = params.get("cdunieco");
@@ -85,6 +86,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("cdunieco",cdunieco);
 			params.put("ntramite",ntramite);
+			params.put("RolSiniestro", rolUsuario);
 			setParamsJson(params);
 			logger.debug("Params : {}", params);
 		}catch( Exception e){
@@ -490,7 +492,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				siniestrosManager.getEliminacionAsegurado(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
 				success=true;
 			}else{
-				List<Map<String,String>> aseguradosFactura = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"),params.get("nfactura"),null);
+				List<Map<String,String>> aseguradosFactura = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"),params.get("nfactura"));
 				logger.debug("Paso 8.- Obtenemos los Asegurados (MSINIEST) : {}",aseguradosFactura);
 				
 				siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
