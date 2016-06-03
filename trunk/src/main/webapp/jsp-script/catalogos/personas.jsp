@@ -1,7 +1,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%-- Commentarios sobre la modificacion de este archivo --%>
+<%-- Comentarios sobre la modificacion de este archivo --%>
 
 <%-- Con el fin de guardar la pantalla unicamente cuando se han realizado cambios a los datos originales de la pantalla. --%>
 	 
