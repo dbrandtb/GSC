@@ -13,9 +13,11 @@ var _p36_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperaci
 ////// variables //////
 var _p36_smap1  = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 var _p36_slist1 = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
+var _p36_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
 
-debug('_p36_smap1:',_p36_smap1);
-debug('_p36_slist1:',_p36_slist1);
+debug('_p36_smap1:'  , _p36_smap1);
+debug('_p36_slist1:' , _p36_slist1);
+debug('_p36_flujo:'  , _p36_flujo);
 
 var _p36_store;
 ////// variables //////
@@ -286,6 +288,11 @@ Ext.onReady(function()
 		                                
 		                                var panelMask = new Ext.LoadMask('_p36_divpri', {msg:"Confirmando..."});
 										panelMask.show();
+										
+										if(!Ext.isEmpty(_p36_flujo))
+										{
+										    jsonDatosConfirmacion.flujo = _p36_flujo;
+										}
 										
 		                                Ext.Ajax.request(
 		                                {

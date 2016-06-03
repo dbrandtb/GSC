@@ -19,11 +19,17 @@ var _p34_contexto = '${ctx}';
 var _p34_smap1    = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p34_smap1:',_p34_smap1);
 
+var _p34_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+debug('_p34_flujo:',_p34_flujo);
+
 var _p34_storePolizas;
 var _p34_storeGrupos;
 var _p34_storeFamilias;
 var _p34_storeIncisos;
 var _p34_storeEndosos;
+
+var _p34_soloNivelPoliza = false;
+var _p34_soloNivelInciso = false;
 ////// variables //////
 
 ////// overrides //////
@@ -374,10 +380,45 @@ Ext.onReady(function()
         ,border   : 0
         ,items    :
         [
-            Ext.create('Ext.form.Panel',
+            Ext.create('Ext.panel.Panel',
+            {
+                itemId       : '_p34_panelFlujo'
+                ,title       : 'ACCIONES'
+                ,hidden      : Ext.isEmpty(_p34_flujo)
+                ,buttonAlign : 'left'
+                ,buttons     : []
+                ,listeners   :
+                {
+                    afterrender : function(me)
+                    {
+                        if(!Ext.isEmpty(_p34_flujo))
+                        {
+                            _cargarBotonesEntidad(
+                                _p34_flujo.cdtipflu
+                                ,_p34_flujo.cdflujomc
+                                ,_p34_flujo.tipoent
+                                ,_p34_flujo.claveent
+                                ,_p34_flujo.webid
+                                ,me.itemId//callback
+                                ,_p34_flujo.ntramite
+                                ,_p34_flujo.status
+                                ,_p34_flujo.cdunieco
+                                ,_p34_flujo.cdramo
+                                ,_p34_flujo.estado
+                                ,_p34_flujo.nmpoliza
+                                ,_p34_flujo.nmsituac
+                                ,_p34_flujo.nmsuplem
+                                ,null//callbackDespuesProceso
+                            );
+                        }
+                    }
+                }
+            })
+            ,Ext.create('Ext.form.Panel',
             {
                 itemId    : '_p34_formBusq'
                 ,title    : 'B&uacute;squeda de p&oacute;lizas'
+                ,border   : 0
                 ,items    : _p34_formBusqItems
                 ,layout   :
                 {
@@ -413,7 +454,14 @@ Ext.onReady(function()
                     {
                         selectionchange : function(me,selected)
                         {
-                            _fieldById('_p34_botonEndososPoliza').setDisabled(selected.length==0);
+                            if(_p34_soloNivelInciso === true)
+                            {
+                                mensajeWarning('Solo se permiten endosos a nivel inciso');
+                            }
+                            else
+                            {
+                                _fieldById('_p34_botonEndososPoliza').setDisabled(selected.length==0);
+                            }
                         }
                     }
                 }
@@ -452,6 +500,7 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    _p34_recuperarPolizaIncisosFlujo();
     ////// loaders //////
 });
 
@@ -490,7 +539,7 @@ function _p34_buscarClic()
     debug('<_p34_buscarClic');
 }
 
-function _p34_polizas()
+function _p34_polizas(callback)
 {
     debug('>_p34_polizas');
     
@@ -524,6 +573,11 @@ function _p34_polizas()
                     );
                 }
                 _p34_storePolizas.commitChanges();
+                
+                if(!Ext.isEmpty(callback) && typeof callback === 'function')
+                {
+                    callback();
+                }
             }
             else
             {
@@ -922,7 +976,14 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                                {
 			                                    selectionchange : function(me,selected)
 			                                    {
-			                                        _fieldById('_p34_botonEndososIncisos').setDisabled(selected.length==0);
+			                                        if(_p34_soloNivelPoliza === true)
+			                                        {
+			                                            mensajeWarning('Solo se permiten endosos a nivel p\u00f3liza');
+			                                        }
+			                                        else
+			                                        {
+			                                            _fieldById('_p34_botonEndososIncisos').setDisabled(selected.length==0);
+			                                        }
 			                                    }
 			                                }
 			                            }
@@ -1239,13 +1300,20 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                                 }
                             }).show());
                             
+                            var jsonData =
+                            {
+                                smap1   : smap1
+                                ,params : smap1
+                            };
+                            
+                            if(!Ext.isEmpty(_p34_flujo))
+                            {
+                                jsonData.flujo = _p34_flujo;
+                            }
+                            
                             _fieldById('_p34_endosoWindow').getLoader().load(
                             {
-                                jsonData :
-                                {
-                                    smap1   : smap1
-                                    ,params : smap1
-                                }
+                                jsonData : jsonData
                             });
                         }
                         else if(nivel=='INCISO')
@@ -1289,15 +1357,22 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                                 }
                             }).show());
                             
+                            var jsonData =
+                            {
+                                smap1   : smap1
+                                ,params : smap1
+                                ,slist1 : incisosRaw
+                                ,list   : incisosRaw
+                            };
+                            
+                            if(!Ext.isEmpty(_p34_flujo))
+                            {
+                                jsonData.flujo = _p34_flujo;
+                            }
+                            
                             _fieldById('_p34_endosoWindow').getLoader().load(
                             {
-                                jsonData :
-                                {
-                                    smap1   : smap1
-                                    ,params : smap1
-                                    ,slist1 : incisosRaw
-                                    ,list   : incisosRaw
-                                }
+                                jsonData : jsonData
                             });
                         }
                     }
@@ -1743,18 +1818,110 @@ function marendNavegacion(nivel)
     debug('>marendNavegacion:',nivel);
     if(Number(nivel)==2)
     {
-        var ventanas=Ext.ComponentQuery.query('[_p34_window=si]');
-        debug('ventanas:',ventanas);
-        for(var i in ventanas)
+        if(Ext.isEmpty(_p34_flujo))
         {
-            ventanas[i].close();
+            var ventanas=Ext.ComponentQuery.query('[_p34_window=si]');
+            debug('ventanas:',ventanas);
+            for(var i in ventanas)
+            {
+                ventanas[i].close();
+            }
+            _p34_storePolizas.reload();
         }
-        _p34_storePolizas.reload();
+        else
+        {
+            //cuando es por flujo, despues de confirmar un endoso, se va a mesa de control
+            Ext.create('Ext.form.Panel').submit(
+            {
+                standardSubmit : true
+                ,url           : _GLOBAL_COMP_URL_MCFLUJO
+            });
+        }
     }
     debug('<marendNavegacion');
+}
+
+function _p34_recuperarPolizaIncisosFlujo()
+{
+    debug('>_p34_recuperarPolizaFlujo');
+    if(!Ext.isEmpty(_p34_flujo))
+    {
+        debug('Si hay flujo');
+        var ck = 'Decodificando auxiliar de flujo';
+        try
+        {
+            var flujoAuxObj = Ext.decode(_p34_flujo.aux);
+            debug('flujoAuxObj:',flujoAuxObj,'.');
+            
+            var nivel = flujoAuxObj.nivel;
+            
+            if(nivel !== 'P' && nivel !== 'I')
+            {
+                throw 'El nivel '+nivel+' no es v\u00e1lido';
+            }
+            
+            var form = _fieldById('_p34_formBusq');
+            
+            var hid = Ext.ComponentQuery.query('[hidden=true]',form);
+            
+            for(var i=0; i<hid.length ; i++)
+            {
+                hid[i].show();
+            }
+            
+            _fieldByName('cdunieco',form).setValue(_p34_flujo.cdunieco);
+            
+            _fieldByName('cdramo',form).setValue(_p34_flujo.cdramo);
+            
+            _fieldByName('nmpoliza',form).setValue(_p34_flujo.nmpoliza);
+            
+            _fieldByName('finicio',form).setValue('01/01/2000');
+            
+            _fieldByName('ffin',form).setValue('01/01/2100');
+            
+            form.hide();
+            
+            _p34_polizas(
+                function()
+                {
+                    debug('callback despues de cargar poliza desde flujo');
+                    var ck = 'Recuperando incisos';
+                    try
+                    {
+                        if(nivel === 'I' && _p34_storePolizas.getCount()==1)
+                        {
+                            _p34_soloNivelInciso = true;
+                            
+                            _p34_gridPolizasIncisosClic(
+                                _p34_storePolizas.getAt(0)
+                                ,_fieldById('_p34_gridPolizas')
+                            );
+                        }
+                        else if(nivel === 'P')
+                        {
+                            _p34_soloNivelPoliza = true;
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+            );
+            
+        }
+        catch(e)
+        {
+            manejaException(e,ck);
+        }
+    }
+    else
+    {
+        debug('_p34_recuperarPolizaFlujo no hay flujo');
+    }
 }
 ////// funciones //////
 </script>
 </head>
-<body><div id="_p34_divpri" style="height:700px;border:1px solid #999999;"></div></body>
+<body><div id="_p34_divpri" style="height:700px;border:1px solid #CCCCCC;"></div></body>
 </html>

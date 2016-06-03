@@ -120,6 +120,7 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
+	@Deprecated
 	@Override
 	public Map<String, String> confirmarEndosoB(Map<String, String> params) throws Exception
 	{
@@ -3786,5 +3787,19 @@ public class EndososManagerImpl implements EndososManager
 		}
 	}
 	
-
+	@Deprecated
+	@Override
+	public void confirmarEndosoB(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsuplem
+    		,String nsuplogi
+    		,String cdtipsup
+    		,String dscoment
+    		)throws Exception
+    {
+		endososDAO.confirmarEndosoB(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, dscoment);
+    }
 }

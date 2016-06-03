@@ -16,6 +16,8 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
@@ -46,6 +48,7 @@ import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
@@ -130,6 +133,14 @@ public class EndososAction extends PrincipalCoreAction
 	
 	private String columnas;
 
+	private FlujoVO flujo;
+	
+	@Autowired
+	private MesaControlDAO mesaControlDAO;
+	
+	@Autowired
+	private FlujoMesaControlDAO flujoMesaControlDAO;
+	
 	public EndososAction()
 	{
 		logger.debug("new EndososAction");
@@ -9302,14 +9313,14 @@ public class EndososAction extends PrincipalCoreAction
 		PRIMA_TOTAL : "17339.97"
 	*/
 	/*//////////////////////*/
-	public String endosoAgente() {
-		
-		logger.debug(new StringBuilder("\n")
-		        .append("\n##########################")
-		        .append("\n##########################")
-		        .append("\n###### endosoAgente ######")
-		        .append("\n######              ######").toString());
-		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+	public String endosoAgente()
+	{
+		logger.debug(Utils.log(
+				 "\n##########################"
+				,"\n###### endosoAgente ######"
+				,"\n###### smap1=" , smap1
+				,"\n###### flujo=" , flujo
+				));
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -9389,11 +9400,10 @@ public class EndososAction extends PrincipalCoreAction
 			error = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(new StringBuilder("\n")
-		        .append("\n######              ######")
-		        .append("\n###### endosoAgente ######")
-		        .append("\n##########################")
-		        .append("\n##########################").toString());
+		logger.debug(Utils.log(
+				 "\n###### endosoAgente ######"
+				,"\n##########################"
+				));
 		
 		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
@@ -9494,16 +9504,16 @@ public class EndososAction extends PrincipalCoreAction
 		CDSUCURS=null}
 	*/
 	/*/////////////////////////////*/
-	public String guardarEndosoAgente() {
-		logger.debug("\n"
-				+ "\n#################################"
-				+ "\n#################################"
-				+ "\n###### guardarEndosoAgente ######"
-				+ "\n######                     ######"
-				);
-		logger.debug("smap1: "+smap1);
-		logger.debug("smap2: "+smap2);
-		logger.debug("slist1: "+slist1);
+	public String guardarEndosoAgente()
+	{
+		logger.debug(Utils.log(
+				 "\n#################################"
+				,"\n###### guardarEndosoAgente ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### smap2="  , smap2
+				,"\n###### slist1=" , slist1
+				,"\n###### flujo="  , flujo
+				));
 		
 		this.session=ActionContext.getContext().getSession();
 		try {
@@ -9517,6 +9527,7 @@ public class EndososAction extends PrincipalCoreAction
 			UserVO usuario             = (UserVO)session.get("USUARIO");
 			String cdelemento          = usuario.getEmpresa().getElementoId();
 			String cdusuari            = usuario.getUser();
+			String cdsisrol            = usuario.getRolActivo().getClave();
 			String proceso             = "END";
 			String cdtipsup            = TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString();
 			String comentariosEndoso   = "";
@@ -9563,8 +9574,80 @@ public class EndososAction extends PrincipalCoreAction
 			
 			endososManager.calcularRecibosCambioAgente(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 			
-	   		//// Se confirma el endoso si cumple la validacion de fechas: 
-			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
+			RespuestaConfirmacionEndosoVO respConfirmacionEndoso = null;
+			
+	   		//// Se confirma el endoso si cumple la validacion de fechas:
+			if(esProductoSalud || flujo==null) //si es de salud o si es de auto pero sin flujo
+			{
+				respConfirmacionEndoso = confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
+			}
+			else //cuando es de auto con flujo
+			{
+				String paso = null;
+				
+				try
+				{
+					paso = "Confirmando endoso de flujo";
+					logger.debug(paso);
+				
+					endososManager.confirmarEndosoB(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,nsuplogi
+							,cdtipsup
+							,comentariosEndoso
+							);
+					
+					paso = "Actualizando estatus de tr\u00e1mite de endoso";
+					logger.debug(paso);
+					
+					flujoMesaControlDAO.actualizarStatusTramite(
+							flujo.getNtramite()
+							,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+							,new Date() //fecstatu
+							,null //cdusuari
+							);
+					
+					paso = "Guardando detalle de tr\u00e1mite de endoso";
+					logger.debug(paso);
+					
+					mesaControlDAO.movimientoDetalleTramite(
+							flujo.getNtramite()
+							,new Date() //feinicio
+							,null //cdclausu
+							,Utils.join("Endoso confirmado: ",StringUtils.isBlank(comentariosEndoso) ? "(sin comentarios)" : comentariosEndoso)
+							,cdusuari
+							,null //cdmotivo
+							,cdsisrol
+							,"S" //swagente
+							,null //cdusuariDest
+							,null //cdsisrolDest
+							,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+							,true //cerrado
+							);
+					
+					paso = "Actualizar suplemento del tr\u00e1mite";
+					logger.debug(paso);
+					
+					mesaControlManager.actualizarNmsuplemTramite(flujo.getNtramite(),nmsuplem);
+					
+					paso = "Construyendo respuesta";
+					logger.debug(paso);
+					
+					respConfirmacionEndoso = new RespuestaConfirmacionEndosoVO();
+					
+					respConfirmacionEndoso.setConfirmado(true);
+					
+				}
+				catch(Exception ex)
+				{
+					Utils.generaExcepcion(ex, paso);
+				}
+				
+			}
 	   		
 			// Si el endoso fue confirmado:
 			if(respConfirmacionEndoso.isConfirmado()) {
@@ -9623,12 +9706,12 @@ public class EndososAction extends PrincipalCoreAction
 			success = false;
 			error = ex.getMessage();
 		}
-		logger.debug("\n"
-				+ "\n######                     ######"
-				+ "\n###### guardarEndosoAgente ######"
-				+ "\n#################################"
-				+ "\n#################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### success=" , success
+				,"\n###### mensaje=" , mensaje
+				,"\n###### guardarEndosoAgente ######"
+				,"\n#################################"
+				));
 		return SUCCESS;
 	}
 	/*/////////////////////////////*/
@@ -12619,6 +12702,14 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
 		this.cotizacionDAO = cotizacionDAO;
+	}
+
+	public FlujoVO getFlujo() {
+		return flujo;
+	}
+
+	public void setFlujo(FlujoVO flujo) {
+		this.flujo = flujo;
 	}
 	
 }

@@ -14,6 +14,8 @@ import java.util.Map.Entry;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
@@ -117,6 +119,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 
 	@Autowired
 	private transient Ice2sigsService ice2sigsService;
+	
+	@Autowired
+	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
 	@Value("${caratula.impresion.autos.url}")
 	private String urlImpresionCaratula;
@@ -738,6 +743,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdelemen
 			,UserVO usuarioSesion
 			,List<Map<String,String>> incisos
+			,FlujoVO flujo
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -754,6 +760,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				,"\n@@@@@@ cdelemen=" , cdelemen
 				,"\n@@@@@@ incisos="  , incisos
+				,"\n@@@@@@ flujo="    , flujo
 				));
 		
 		String paso="Guardando datos temporales";
@@ -895,43 +902,82 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String tipoGrupoInciso = (String)resParams.get("pv_tipoflot_o");
 			String nsuplogi        = (String)resParams.get("pv_nsuplogi_o");
 			
-			//para tramite
-			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
-			String ntramiteEmi = datosPoliza.get("ntramite");
-			
-			Map<String,String> valores = new HashMap<String,String>();
-			valores.put("otvalor01" , ntramiteEmi);
-			valores.put("otvalor02" , cdtipsup);
-			valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
-			valores.put("otvalor04" , nsuplogi);
-			valores.put("otvalor05" , cdusuari);
-			
-			mesaControlDAO.movimientoMesaControl(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,nmsuplem
-					,cdunieco
-					,cdunieco
-					,TipoTramite.ENDOSO.getCdtiptra()
-					,fechaEndoso
-					,null //cdagente
-					,null //referencia
-					,null //nombre
-					,fechaEndoso
-					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
-					,null //comments
-					,null //nmsolici
-					,null //cdtipsit
-					,cdusuari
-					,cdsisrol
-					,null
-					,null
-					,null
-					,valores, null
-					);
-			//para tramite
+			if(flujo == null)
+			{
+				//para tramite
+				Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
+				String ntramiteEmi = datosPoliza.get("ntramite");
+				
+				Map<String,String> valores = new HashMap<String,String>();
+				valores.put("otvalor01" , ntramiteEmi);
+				valores.put("otvalor02" , cdtipsup);
+				valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
+				valores.put("otvalor04" , nsuplogi);
+				valores.put("otvalor05" , cdusuari);
+				
+				mesaControlDAO.movimientoMesaControl(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsuplem
+						,cdunieco
+						,cdunieco
+						,TipoTramite.ENDOSO.getCdtiptra()
+						,fechaEndoso
+						,null //cdagente
+						,null //referencia
+						,null //nombre
+						,fechaEndoso
+						,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+						,null //comments
+						,null //nmsolici
+						,null //cdtipsit
+						,cdusuari
+						,cdsisrol
+						,null
+						,null
+						,null
+						,valores, null
+						);
+				//para tramite
+			}
+			else //cuando viene desde mesa de control de flujos
+			{
+				paso = "Actualizando estatus de tr\u00e1mite de endoso";
+				logger.debug(paso);
+				
+				flujoMesaControlDAO.actualizarStatusTramite(
+						flujo.getNtramite()
+						,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+						,new Date() //fecstatu
+						,null //cdusuari
+						);
+				
+				paso = "Guardando detalle de tr\u00e1mite de endoso";
+				logger.debug(paso);
+				
+				mesaControlDAO.movimientoDetalleTramite(
+						flujo.getNtramite()
+						,new Date() //feinicio
+						,null //cdclausu
+						//,Utils.join("Endoso confirmado: ",StringUtils.isBlank(comentariosEndoso) ? "(sin comentarios)" : comentariosEndoso)
+						,"Endoso confirmado"
+						,cdusuari
+						,null //cdmotivo
+						,cdsisrol
+						,"S" //swagente
+						,null //cdusuariDest
+						,null //cdsisrolDest
+						,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+						,true //cerrado
+						);
+				
+				paso = "Actualizar suplemento del tr\u00e1mite";
+				logger.debug(paso);
+				
+				mesaControlDAO.actualizarNmsuplemTramite(flujo.getNtramite(),nmsuplem);
+			}
 			
 			/**
 			 * PARA LLAMAR WS SEGUN TIPO DE ENDOSO

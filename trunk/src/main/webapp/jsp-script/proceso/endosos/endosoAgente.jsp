@@ -24,6 +24,8 @@ smap1:
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _10_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
+var _10_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
 var _10_formLectura;
 var _10_panelPri;
 var _10_panelEndoso;
@@ -36,6 +38,7 @@ var _10_urlLoadAgentes        = '<s:url namespace="/endosos" action="cargarAgent
 var _10_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"        />';
 
 debug('_10_smap1:',_10_smap1);
+debug('_10_flujo:',_10_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -402,6 +405,12 @@ function _10_confirmar()
             }
             ,slist1 : slist1
         }
+        
+        if(!Ext.isEmpty(_10_flujo))
+        {
+            json.flujo = _10_flujo;
+        }
+        
         debug('datos que se enviaran:',json);
         
         var panelMask = new Ext.LoadMask('_10_divPri', {msg:"Confirmando..."});

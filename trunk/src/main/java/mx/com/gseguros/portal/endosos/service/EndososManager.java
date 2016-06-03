@@ -18,7 +18,10 @@ public interface EndososManager
 {
     public List<Map<String,String>>  obtenerEndosos(Map<String,String>params)                 throws Exception;
     public Map<String,String>        guardarEndosoNombres(Map<String,Object>params)           throws Exception;
+    
+    @Deprecated
     public Map<String, String>       confirmarEndosoB(Map<String, String> params)             throws Exception;
+    
     public Map<String,String>        guardarEndosoDomicilio(Map<String,Object>params)         throws Exception;    
     public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception;
     
@@ -640,5 +643,17 @@ public interface EndososManager
 		String nmpoliza,
 		String cdtipsit,
 		int    numSituac) throws Exception;
+	
+	@Deprecated
+	public void confirmarEndosoB(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsuplem
+    		,String nsuplogi
+    		,String cdtipsup
+    		,String dscoment
+    		)throws Exception;
 	
 }

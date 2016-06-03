@@ -11,6 +11,7 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
@@ -41,6 +42,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private Map<String,Item>         imap;
 	private List<Map<String,String>> slist1;
 	
+	private FlujoVO flujo;
+	
 	private SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private boolean exito           = false;
@@ -62,6 +65,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n##########################"
 				,"\n###### marcoEndosos ######"
+				,"\n###### smap1=" , smap1
+				,"\n###### flujo=" , flujo
 				));
 		
 		String result = ERROR;
@@ -192,6 +197,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n###### pantallaEndosoValosit ######"
 				,"\n###### smap1="  , smap1
 				,"\n###### slist1=" , slist1
+				,"\n###### flujo="  , flujo
 				));
 		
 		String result=ERROR;
@@ -292,6 +298,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n###### confirmarEndosoTvalositAuto ######"
 				,"\n###### smap1="  , smap1
 				,"\n###### slist1=" , slist1
+				,"\n###### flujo="  , flujo
 				));
 		
 		try
@@ -336,6 +343,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,cdelemen
 					,usuarioSesion
 					,slist1
+					,flujo
 					);
 			
 			success = true;
@@ -2638,5 +2646,13 @@ public class EndososAutoAction extends PrincipalCoreAction
 
 	public void setSmap2(Map<String, String> smap2) {
 		this.smap2 = smap2;
+	}
+
+	public FlujoVO getFlujo() {
+		return flujo;
+	}
+
+	public void setFlujo(FlujoVO flujo) {
+		this.flujo = flujo;
 	}
 }
