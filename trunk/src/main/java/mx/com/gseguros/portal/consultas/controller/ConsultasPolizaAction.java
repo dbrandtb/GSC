@@ -164,30 +164,21 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	 * @return String result
 	 */
 	public String consultaDatosPoliza() {
-		logger.debug(" **** Entrando a Consulta de Poliza ****");
 		try {
-
 			PolizaAseguradoVO polizaAseguradoVO = new PolizaAseguradoVO();
 			polizaAseguradoVO.setCdunieco(params.get("cdunieco"));
 			polizaAseguradoVO.setCdramo(params.get("cdramo"));
 			polizaAseguradoVO.setEstado(params.get("estado"));
 			polizaAseguradoVO.setNmpoliza(params.get("nmpoliza"));
 			polizaAseguradoVO.setIcodpoliza(params.get("icodpoliza"));
-
-			List<PolizaDTO> lista = consultasPolizaManager
-					.obtieneDatosPoliza(polizaAseguradoVO);
-
-			if (lista != null && !lista.isEmpty())
+			List<PolizaDTO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
+			if (lista != null && !lista.isEmpty()) {
 				datosPoliza = lista.get(0);
-
-			logger.debug("Resultado de la consulta de poliza:{}", datosPoliza);
-
+			}
+			success = true;
 		} catch (Exception e) {
 			logger.error("Error al obtener los datos de la poliza ", e);
-			return SUCCESS;
 		}
-
-		success = true;
 		return SUCCESS;
 	}
 
