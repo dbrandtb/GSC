@@ -638,7 +638,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			poliza.setNmsuplem(params.get("suplemento"));
 			poliza.setIcodpoliza(params.get("icodpoliza"));
 			datosAsegurados = consultasPolizaManager.obtieneAsegurados(poliza);
-			logger.debug("Resultado de la consultaDatosAsegurado:{}", datosAsegurados);
+			if(datosAsegurados != null) {
+				logger.debug("Asegurados obtenidos:{}", datosAsegurados.size());
+			}
 		} catch (Exception e) {
 			logger.error("Error al obtener los datos del Asegurado ", e);
 			return SUCCESS;
@@ -670,7 +672,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			if(datosAsegurados != null && datosAsegurados.size() > 0) {
 				totalCount = datosAsegurados.get(0).getTotal();
 			}
-			logger.debug("Resultado de la consultaDatosAsegurado:{}", datosAsegurados);
 			if(datosAsegurados != null) {
 				logger.debug("Asegurados obtenidos:{}", datosAsegurados.size());
 			}
