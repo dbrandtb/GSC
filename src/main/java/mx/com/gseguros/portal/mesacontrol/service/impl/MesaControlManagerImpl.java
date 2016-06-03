@@ -286,6 +286,10 @@ public class MesaControlManagerImpl implements MesaControlManager
 		return mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite, statusTemporal);
 	}
 	
-	
-	
+	@Override
+	@Deprecated
+	public void actualizarNmsuplemTramite(String ntramite, String nmsuplem) throws Exception
+	{
+		mesaControlDAO.actualizarNmsuplemTramite(ntramite, nmsuplem);
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 
@@ -80,6 +81,7 @@ public interface EndososAutoManager
 			,String cdelemen
 			,UserVO usuarioSesion
 			,List<Map<String,String>> incisos
+			,FlujoVO flujo
 			)throws Exception;
 	
 	/**

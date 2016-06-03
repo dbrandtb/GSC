@@ -104,5 +104,7 @@ public interface MesaControlManager
 	 * @throws Exception
 	 */
 	public String marcarTramiteComoStatusTemporal(String ntramite, String statusTemporal) throws Exception;
-    
+
+	@Deprecated
+	public void actualizarNmsuplemTramite(String ntramite, String nmsuplem) throws Exception;
 }

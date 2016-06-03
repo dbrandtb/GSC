@@ -289,4 +289,6 @@ public interface MesaControlDAO
 			String ntramite
 			,String dsatribu
 			)throws Exception;
+	
+	public void actualizarNmsuplemTramite(String ntramite, String nmsuplem) throws Exception;
 }

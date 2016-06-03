@@ -1163,4 +1163,34 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
+	
+	@Override
+	public void actualizarNmsuplemTramite(String ntramite, String nmsuplem) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String,Object> procRes = ejecutaSP(new ActualizarNmsuplemTramiteSP(getDataSource()),params);
+		
+		String error = (String)procRes.get("pv_error_o");
+		
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+	}
+	
+	protected class ActualizarNmsuplemTramiteSP extends StoredProcedure
+	{
+		protected ActualizarNmsuplemTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"P_ACTUALIZA_NMSUPLEM_TRAMITE");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
