@@ -5801,9 +5801,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	    					params.put("pv_peso_i", row.getCell(21)!=null?row.getCell(21).getStringCellValue() : "");
 	    					params.put("pv_estatura_i", row.getCell(22)!=null?row.getCell(22).getStringCellValue() : "");
 	    					params.put("pv_expsobrepeso_i", row.getCell(23)!=null?row.getCell(23).getStringCellValue() : "");
-	    					params.put("pv_edocivil_i", row.getCell(24)!=null?row.getCell(24).getStringCellValue() : "");
-	    					params.put("pv_feingresoempleo_i", feingreso);
-	    					params.put("pv_plaza_i", row.getCell(26)!=null?row.getCell(26).getStringCellValue() : "");
+	    					params.put("pv_edocivil_i", "");
+	    					params.put("pv_feingresoempleo_i", "");
+	    					params.put("pv_plaza_i", "");
 	    					
 	    					cotizacionManager.insertaRegistroInfoCenso(params);
 	    					
@@ -5946,7 +5946,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		if(exito&&StringUtils.isBlank(nombreCensoConfirmado) && filasError <= 0)
+		if(exito&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			smap1.put("nombreCensoParaConfirmar", nombreCenso);
 			respuesta = Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]");

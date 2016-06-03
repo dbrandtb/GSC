@@ -5642,7 +5642,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            }
 			}
 			
-			if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado) && filasError <= 0)
+			if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
 			{
 				resp.getSmap().put("nombreCensoParaConfirmar", nombreCenso);
 				resp.setRespuesta(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
@@ -7574,66 +7574,61 @@ public class CotizacionManagerImpl implements CotizacionManager
     			
     			mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_TARIFA.getCodigo());
     			
-    			//pl censo
-    			if(StringUtils.isBlank(nombreCensoConfirmado))
-    			{
-    				String nombreProcedureCenso = null;
-    				String tipoCensoParam       = "COMPLETO";
-    				
-    				//obtener el PL
-    				try
-    				{
-    					Map<String,String>mapaAux=cotizacionDAO.obtenerParametrosCotizacion(
-    							ParametroCotizacion.PROCEDURE_CENSO
-    							,cdramo
-    							,cdtipsit
-    							,tipoCensoParam
-    							,null
-    							);
-    					nombreProcedureCenso = mapaAux.get("P1VALOR");
-    					if(StringUtils.isBlank(nombreProcedureCenso))
-    					{
-    						throw new ApplicationException("No se encontraron datos");
-    					}
-    				}
-    	            catch(Exception ax)
-    	            {
-    	            	long timestamp = System.currentTimeMillis();
-    	            	throw new ApplicationException(
-    	            			new StringBuilder("Error al obtener el nombre del procedimiento del censo: ")
-    	            			.append(ax.getMessage())
-    	            			.append(" #")
-    	            			.append(timestamp)
-    	            			.toString());
-    	            }
-    				
-    				try
+				String nombreProcedureCenso = null;
+				String tipoCensoParam       = "COMPLETO";
+				
+				//obtener el PL
+				try
+				{
+					Map<String,String>mapaAux=cotizacionDAO.obtenerParametrosCotizacion(
+							ParametroCotizacion.PROCEDURE_CENSO
+							,cdramo
+							,cdtipsit
+							,tipoCensoParam
+							,null
+							);
+					nombreProcedureCenso = mapaAux.get("P1VALOR");
+					if(StringUtils.isBlank(nombreProcedureCenso))
 					{
-						cotizacionDAO.procesarCenso(
-								nombreProcedureCenso
-								,cdusuari
-								,cdsisrol
-								,nombreCenso
-								,cdunieco
-								,cdramo
-								,"W"
-								,nmpoliza
-								,cdtipsit
-								,cdagente
-								,codpostalCli
-								,cdedoCli
-								,cdmuniciCli
-								,"N"
-								);
+						throw new ApplicationException("No se encontraron datos");
 					}
-		            catch(Exception ex)
-		            {
-		            	long timestamp = System.currentTimeMillis();
-		            	throw new ApplicationException(new StringBuilder("Error al ejecutar procedimiento del censo #").append(timestamp).toString());
-		            }
+				}
+	            catch(Exception ax)
+	            {
+	            	long timestamp = System.currentTimeMillis();
+	            	throw new ApplicationException(
+	            			new StringBuilder("Error al obtener el nombre del procedimiento del censo: ")
+	            			.append(ax.getMessage())
+	            			.append(" #")
+	            			.append(timestamp)
+	            			.toString());
+	            }
+				
+				try
+				{
+					cotizacionDAO.procesarCenso(
+							nombreProcedureCenso
+							,cdusuari
+							,cdsisrol
+							,nombreCenso
+							,cdunieco
+							,cdramo
+							,"W"
+							,nmpoliza
+							,cdtipsit
+							,cdagente
+							,codpostalCli
+							,cdedoCli
+							,cdmuniciCli
+							,"N"
+							);
+				}
+	            catch(Exception ex)
+	            {
+	            	long timestamp = System.currentTimeMillis();
+	            	throw new ApplicationException(new StringBuilder("Error al ejecutar procedimiento del censo #").append(timestamp).toString());
+	            }
     				
-    			}
-    			
     			logger.info(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
     			
     			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
