@@ -5,6 +5,8 @@
     <head>
         <title>Consulta de p&oacute;lizas</title>
         
+        <script type="text/javascript" src="${ctx}/resources/extjs4/plugins/pagingpersistence/pagingselectionpersistence.js?${now}"></script>
+        
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
             

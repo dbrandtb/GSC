@@ -679,7 +679,8 @@ Ext.onReady(function() {
             {type:'string', name:'cdfamilia'},
             {type:'string', name:'dsplan'},
             {type:'string', name:'parentesco'}
-        ]
+        ],
+        idProperty: 'cdperson'
     });
     
     // Store
@@ -724,9 +725,8 @@ Ext.onReady(function() {
         id      : 'gridDatosAsegurado',
         width   : 950,
         autoScroll:true,
-        //width   : 900,
-        //height  : 350,
-        //autoScroll:true,
+        selModel: Ext.create('Ext.selection.CheckboxModel', {mode: 'MULTI'}),
+        plugins: [{ptype : 'pagingselectpersist'}],
         items:[{
            xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120
         }],
@@ -874,26 +874,6 @@ Ext.onReady(function() {
                 labelWidth : 100,
                 width: 260,
                 maxLength : 50
-                /*listeners:{
-                	change: function(elem,newValue,oldValue){
-                		newValue = Ext.util.Format.uppercase(newValue);
-                		
-	            		//Validacion de valor anterior ya que la pantalla hace lowercase en automatico y manda doble change
-						if( newValue == Ext.util.Format.uppercase(oldValue)){
-							return false;
-						}
-						
-						try{
-//	                		storeAsegurados.clearFilter();
-//	                		storeAsegurados.filter('nombre',newValue);
-//	                		storeAsegurados.filter(storeAsegurados.createFilterFn('nombre',newValue, true));
-	                		storeAsegurados.removeFilter('filtroAseg');
-	                		storeAsegurados.filter(Ext.create('Ext.util.Filter', {property: 'nombre', anyMatch: true, value: newValue, root: 'data', id:'filtroAseg'}));
-						}catch(e){
-							error('Error al filtrar por asegurado',e);
-						}
-                	}
-                }*/
             },'-',{
                 xtype : 'textfield',
                 name : 'filtrarCveAseg',
@@ -901,52 +881,12 @@ Ext.onReady(function() {
                 labelWidth : 120,
                 width: 220,
                 maxLength : 50
-             /*   listeners:{
-                	change: function(elem,newValue,oldValue){
-                		newValue = Ext.util.Format.uppercase(newValue);
-                		
-                		//Validacion de valor anterior ya que la pantalla hace lowercase en automatico y manda doble change
-						if( newValue == Ext.util.Format.uppercase(oldValue)){
-							return false;
-						}
-						
-						try{
-//			        		storeAsegurados.clearFilter();
-//	                		storeAsegurados.filter('familia',newValue);
-//							storeAsegurados.filter(storeAsegurados.createFilterFn('familia',newValue, true));
-							storeAsegurados.removeFilter('filtroCveAseg');
-	                		storeAsegurados.filter(Ext.create('Ext.util.Filter', {property: 'cdperson', anyMatch: true, value: newValue, root: 'data', id:'filtroCveAseg'}));
-						}catch(e){
-							error('Error al filtrar por clave de asegurado',e);
-						}
-                	}
-                }*/
             },'-',{
                 xtype : 'textfield',
                 name : 'filtrarFam',
                 fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
                 labelWidth : 80,
                 width: 240
-               /* listeners:{
-                	change: function(elem,newValue,oldValue){
-                		newValue = Ext.util.Format.uppercase(newValue);
-                		
-                		//Validacion de valor anterior ya que la pantalla hace lowercase en automatico y manda doble change
-						if( newValue == Ext.util.Format.uppercase(oldValue)){
-							return false;
-						}
-						
-						try{
-//			        		storeAsegurados.clearFilter();
-//	                		storeAsegurados.filter('familia',newValue);
-//							storeAsegurados.filter(storeAsegurados.createFilterFn('familia',newValue, true));
-							storeAsegurados.removeFilter('filtroFam');
-	                		storeAsegurados.filter(Ext.create('Ext.util.Filter', {property: 'familia', anyMatch: true, value: newValue, root: 'data', id:'filtroFam'}));
-						}catch(e){
-							error('Error al filtrar por familia',e);
-						}
-                	}
-                } */
             },{
 	            xtype    : 'button',
 	            text     : 'Buscar',
@@ -954,8 +894,6 @@ Ext.onReady(function() {
 	            handler : function(btn) {
 	            	debug('antes de asignar valores', storeAsegurados.getProxy().extraParams);
 		            storeAsegurados.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();
-		            //storeAsegurados.getProxy().setExtraParam('start', 0);
-		           // storeAsegurados.getProxy().setExtraParam('page', 1);
 		            storeAsegurados.getProxy().setExtraParam('params.familia', btn.up('grid').down('[name=filtrarFam]').getValue());
 		            storeAsegurados.getProxy().setExtraParam('params.nombre', btn.up('grid').down('textfield[name=filtrarAseg]').getValue());
 		            storeAsegurados.getProxy().setExtraParam('params.cdperson', btn.up('grid').down('textfield[name=filtrarCveAseg]').getValue());
