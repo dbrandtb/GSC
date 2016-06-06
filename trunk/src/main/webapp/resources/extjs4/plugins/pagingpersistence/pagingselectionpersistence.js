@@ -1,4 +1,27 @@
-//Plugin para agregar un modelo de paginado sin perder la seleccion entre paginas
+/**
+ * Grid PagingSelectionPersistence plugin
+ * 
+ * Maintains row selection state when moving between pages of a paginated grid
+ * 
+ * Public Methods: getPersistedSelection() - retrieve the array of selected
+ * records across all pages clearPersistedSelection() - deselect records across
+ * all pages
+ * 
+ * {@link http://www.sencha.com/forum/showthread.php?263871-Selection-of-records-over-multiple-pages-in-a-grid-Select-All}
+ * 
+ * Antoine Verron :
+ * 
+ * <pre> 
+ * - add getPersistedSelection method to the grid 
+ * - put selection and selected in instance attribute instead of class attribute
+ * </pre>
+ * 
+ * @class Ext.ux.grid.plugin.PagingSelectionPersistence
+ * @extends Ext.AbstractPlugin
+ * @author Bill Dami, Antoine Verron
+ * @date December 20th, 2011
+ * 
+ */
 Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
     alias: 'plugin.pagingselectpersist',
     extend: 'Ext.AbstractPlugin',
@@ -15,7 +38,7 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
         me.grid = grid;
         me.selModel = me.grid.getSelectionModel();
         me.isCheckboxModel = me.selModel.$className == 'Ext.selection.CheckboxModel';
-        me.origOnHeaderClick = me.selModel.onHeaderClick; // NOT NEEDED ANYMORE in ExtJs 6
+        // me.origOnHeaderClick = me.selModel.onHeaderClick; // NOT NEEDED ANYMORE in ExtJs 6
         me.bindListeners();
 
         // Psycho
@@ -50,17 +73,17 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
                 //                //For CheckboxModel, we need to detect when the header deselect/select page checkbox
                 //                //is clicked, to make sure the plugin's selection array is updated. This is because Ext.selection.CheckboxModel
                 //                //interally supresses event firings for selectAll/deselectAll when its clicked
-                               me.selModel.onHeaderClick = function(headerCt, header, e) {
-                                   var isChecked = header.el.hasCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
-                                   me.origOnHeaderClick.apply(me, arguments);
-                
-                                   if (isChecked) {
-                                       me.onDeselectPage();
-                                   }
-                                   else {
-                                       me.onSelectPage();
-                                   }
-                               };
+                //                me.selModel.onHeaderClick = function(headerCt, header, e) {
+                //                    var isChecked = header.el.hasCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
+                //                    me.origOnHeaderClick.apply(me, arguments);
+                //
+                //                    if (isChecked) {
+                //                        me.onDeselectPage();
+                //                    }
+                //                    else {
+                //                        me.onSelectPage();
+                //                    }
+                //                };
             }
         }
 
@@ -123,7 +146,7 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
             return;
         }
 
-//        this.selectRecord(rec);
+        this.selectRecord(rec);
     },
 
     onRowDeselect: function(sm, rec, idx, eOpts) {
@@ -249,7 +272,7 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
             scope: this
         });
 
-//         this.selectRecord(rec);
+        // this.selectRecord(rec);
     },
 
     countAll: function() {
@@ -262,7 +285,7 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
         return storeA.getCount();
     },
 
-    privates: {
+//    privates: {
         selectRecords: function(records) {
             records = records || [];
             if (!Ext.isArray(records)) {
@@ -282,6 +305,6 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
                 this.selected[id] = true;
             }
         }
-    }
+//    }
 
 });
