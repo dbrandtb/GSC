@@ -81,9 +81,9 @@ function _4_authEndosoDocumentos(grid,rowIndex,colIndex){
 				,'smap1.cdunieco' : record.get('cdunieco')
 				,'smap1.cdramo'   : record.get('cdramo')
 				,'smap1.estado'   : record.get('estado')
-				,'smap1.nmsuplem' : record.get('nmsuplem')
+				,'smap1.nmsuplem' : record.raw.nmsuplem
 				,'smap1.ntramite' : record.get('ntramite')
-				,'smap1.nmsolici' : ''
+				,'smap1.nmsolici' : record.raw.nmsolici
 				,'smap1.tipomov'  : _TIPO_TRAMITE_AUTORIZACION_SERVICIOS
 				,'smap1.cdtiptra' : _TIPO_TRAMITE_AUTORIZACION_SERVICIOS
 				//,'smap1.readOnly' : 'si'
