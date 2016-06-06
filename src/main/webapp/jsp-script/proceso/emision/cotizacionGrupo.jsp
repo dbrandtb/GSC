@@ -604,6 +604,7 @@ Ext.onReady(function()
                 ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
                 ,handler : function()
                 {
+                	debug('_p21_editorAsisInter '+_p21_editorAsisInter.getValue());
                     _p21_setActiveConcepto();
                 }
             }
@@ -4902,8 +4903,15 @@ function _p21_estiloEditores(cdplan)
                     	_4MS=false;
                         if(!_4MS)
                         {
-                            _p21_editorAsisInter.setValue('0');
-                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+                        	debug('Era 0 _4MS');
+                        	if(cdplan == 'PA'){
+                        		//Se selecciona el segundo elemento, es decir, el siguiente depues de cero:
+	                            _p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(1).data.key); 
+	                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+                        	}else{
+                        		_p21_editorAsisInter.setValue('0'); 
+	                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+                        	}
                         }
                         //else if(_4AIV&&_4MS)
                         else if(_4MS)
@@ -4913,7 +4921,7 @@ function _p21_estiloEditores(cdplan)
                             	debug('No encontro 4HOS');
                             	_p21_editorEmerextr.setValue('0');
                             	_p21_editorEmerextr.addCls('_p21_editorLectura');
-                            	_p21_editorAsisInter.setValue('0');
+                            	_p21_editorAsisInter.setValue('0'); //Era 0
                                 _p21_editorAsisInter.addCls('_p21_editorLectura');
                             }else {
 	                            	_p21_editorAsisInter.removeCls('_p21_editorLectura');
