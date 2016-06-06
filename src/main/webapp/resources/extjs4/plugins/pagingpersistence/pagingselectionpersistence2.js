@@ -26,6 +26,7 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
     selected: {},
     
     init: function(grid) {
+        console.log('init ()');
         this.grid = grid;
         this.selModel = this.grid.getSelectionModel();
         this.isCheckboxModel = (this.selModel.$className == 'Ext.selection.CheckboxModel');
@@ -34,12 +35,14 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
     },
     
     destroy: function() {
+        console.log('destroy ()');
         this.selection = [];
         this.selected = {};
         this.disable();
     },
     
     enable: function() {
+        console.log('enable ()');
         var me = this;
         
         if(this.disabled && this.grid) {
@@ -68,6 +71,7 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
     },
     
     disable: function() {
+        console.log('disable ()');
         if(this.grid) {
             this.grid.getView().un('refresh', this.onViewRefresh, this);
             this.selModel.un('select', this.onRowSelect, this);
@@ -79,6 +83,7 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
     },
     
     bindListeners: function() {
+        console.log('bindListeners ()');
         var disabled = this.disabled;
         
         this.disable();
@@ -89,6 +94,7 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
     },
     
     onViewRefresh : function(view, eOpts) {
+        console.log('onViewRefresh()', view);
         var store = this.grid.getStore(),
             sel = [],
             hdSelectState,
@@ -115,21 +121,31 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
         }
         
         this.ignoreChanges = false;
+        
+        console.log('selection', this.selection);
+        console.log('selected', this.selected);
     },
     
     onRowSelect: function(sm, rec, idx, eOpts) {
+        console.log('onRowSelect()', sm, rec, idx);
         if(this.ignoreChanges === true) {
             return;
         }
         
         if(!this.selected[rec.getId()]) 
         {
+            console.log('if , rec.getId()=' + rec.getId() );
             this.selection.push(rec);
             this.selected[rec.getId()] = true;
+        } else {
+            console.log('else , rec.getId()=' + rec.getId() );
         }
+        console.log('selection', this.selection);
+        console.log('selected', this.selected);
     },
     
     onRowDeselect: function(sm, rec, idx, eOpts) {
+        console.log('onRowDeselect()', sm, rec, idx);
         var i;
         
         if(this.ignoreChanges === true) {
@@ -146,9 +162,12 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
                 }
             }
         }
+        console.log('selection', this.selection);
+        console.log('selected', this.selected);
     },
     
     onSelectPage: function() {
+        console.log('onSelectPage()');
         var sel = this.selModel.getSelection(),
             len = this.getPersistedSelection().length,
             i;
@@ -160,9 +179,12 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
         if(len !== this.getPersistedSelection().length) {
             this.selModel.fireEvent('selectionchange', this.selModel, [], {});
         }
+        console.log('selection', this.selection);
+        console.log('selected', this.selected);
     },
     
     onDeselectPage: function() {
+        console.log('onDeselectPage()');
         var store = this.grid.getStore(),
             len = this.getPersistedSelection().length,
             i;
@@ -174,13 +196,17 @@ Ext.define('Ext.ux.grid.plugin.PagingSelectionPersistence', {
         if(len !== this.getPersistedSelection().length) {
             this.selModel.fireEvent('selectionchange', this.selModel, [], {});
         }
+        console.log('selection', this.selection);
+        console.log('selected', this.selected);
     },
     
     getPersistedSelection: function() {
+        console.log('getPersistedSelection()', this.selection, this.selected);
         return [].concat(this.selection);
     },
     
     clearPersistedSelection: function() {
+        console.log('clearPersistedSelection()', this.selection, this.selected);
         var changed = (this.selection.length > 0);
         
         this.selection = [];
