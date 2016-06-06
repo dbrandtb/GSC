@@ -287,7 +287,7 @@ Ext.onReady(function()
                                                 ,nmsuplem             : _p48_params.nmsuplem_endoso
                                                 ,nsuplogi             : _p48_params.nsuplogi
                                                 ,fecha                : Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')
-                                                ,cdtipsitPrimerInciso : _p48_store.getAt(0).get('CDTIPSIT')
+                                                ,cdtipsitPrimerInciso : 'SSI'//_p48_store.getAt(0).get('CDTIPSIT')
                                                 ,nmsolici             : _p48_params.NMSOLICI
                                             }
                                             ,list : []
