@@ -1850,6 +1850,8 @@ function _p34_recuperarPolizaIncisosFlujo()
         var ck = 'Decodificando auxiliar de flujo';
         try
         {
+            var nivel = '';
+            /* SE COMENTA EL NIVEL PORQUE YA NO SE USA LA SEPARACION NIVEL P Y NIVEL I (poliza/inciso)
             var flujoAuxObj = Ext.decode(_p34_flujo.aux);
             debug('flujoAuxObj:',flujoAuxObj,'.');
             
@@ -1859,6 +1861,7 @@ function _p34_recuperarPolizaIncisosFlujo()
             {
                 throw 'El nivel '+nivel+' no es v\u00e1lido';
             }
+            */
             
             var form = _fieldById('_p34_formBusq');
             
