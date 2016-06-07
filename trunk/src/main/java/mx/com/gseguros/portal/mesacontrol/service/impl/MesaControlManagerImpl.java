@@ -292,4 +292,33 @@ public class MesaControlManagerImpl implements MesaControlManager
 	{
 		mesaControlDAO.actualizarNmsuplemTramite(ntramite, nmsuplem);
 	}
+	
+	@Override
+	public void regeneraReverso(String ntramite, String cdsisrol,String cdusuari) throws Exception{
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ regeneraReverso @@@@@@"
+				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				));
+		
+		String paso = null;
+		try
+		{
+			
+		 mesaControlDAO.regeneraReverso(ntramite, cdsisrol, cdusuari) ;
+	
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ regeneraReverso @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 }

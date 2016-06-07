@@ -1228,6 +1228,42 @@ public class MesaControlAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	
+	public String regenerarReverso()
+	{
+		logger.debug(Utils.log(
+				 "\n####################################"
+				,"\n###### Validar Reversar ######"
+				,"\n###### smap1=",smap1
+				));
+		
+		try
+		{
+			UserVO usuario  = Utils.validateSession(session);
+			String  cdusuari = usuario.getUser();
+			String cdsisrol = usuario.getRolActivo().getClave();
+			
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			String ntramite = smap1.get("pv_ntramite");
+			
+			
+			mesaControlManager.regeneraReverso(ntramite,cdsisrol,cdusuari);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			String message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### Validar Reversar ######"
+				,"\n####################################"
+				));
+		return SUCCESS;
+	}
 	/////////////////////////////////
 	////// getters ans setters //////
 	/*/////////////////////////////*/

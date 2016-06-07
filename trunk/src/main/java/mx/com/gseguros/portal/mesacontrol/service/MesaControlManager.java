@@ -107,4 +107,7 @@ public interface MesaControlManager
 
 	@Deprecated
 	public void actualizarNmsuplemTramite(String ntramite, String nmsuplem) throws Exception;
+	
+	public void regeneraReverso(String ntramite, String cdsisrol, String cdusuari) throws Exception;
+	 
 }
