@@ -20,6 +20,49 @@ debug('_p32_smap1:',_p32_smap1);
 var _p32_store = null;
 ////// variables //////
 
+//////
+
+var objetoColumnas  = 
+            [
+                {
+                    dataIndex : 'mov'
+                    ,text     : 'OPERACI&Oacute;N'
+                    ,width    : 100
+                    ,renderer : function(mov)
+                    {
+                         if(mov+'x'=='-x')
+                        {
+                            return '<span style="font-style:italic;">(eliminar)</span>';
+                        }
+                        else if(mov+'x'=='+x')
+                        {
+                            return '<span style="font-style:italic;">(agregar)</span>';
+                        }
+                    }
+                }
+                ,<s:property value="imap.mpoliperColumns" />
+            ]
+
+
+if(_p32_smap1.cdramo+'x'=='5x' || _p32_smap1.cdramo+'x'=='16x') // Y 16
+{
+	for(var i=0;i<objetoColumnas.length;i++)
+	{
+	    //DESHABILITO LOS CAMPOS DE FECHA DE NACIMIENTO PARA LOS TIPOS TL Y TV
+		if(objetoColumnas[i].text === 'FECHA NACIMIENTO')
+		{
+			objetoColumnas[i].hidden=true;
+// 			objetoColumnas[i].setHidden(true);
+			
+			i=objetoColumnas.length;
+		}
+	}
+// 	alert(objetoColumnas);
+    debug('>columnas<',objetoColumnas);
+} 
+
+//////
+
 Ext.onReady(function()
 {
     ////// modelos //////
@@ -85,26 +128,7 @@ Ext.onReady(function()
                     ,mode          : 'SINGLE'
                 }
                 ,store     : _p32_store
-                ,columns   :
-                [
-                    {
-                        dataIndex : 'mov'
-                        ,text     : 'OPERACI&Oacute;N'
-                        ,width    : 100
-                        ,renderer : function(mov)
-                        {
-                            if(mov+'x'=='-x')
-                            {
-                                return '<span style="font-style:italic;">(eliminar)</span>';
-                            }
-                            else if(mov+'x'=='+x')
-                            {
-                                return '<span style="font-style:italic;">(agregar)</span>';
-                            }
-                        }
-                    }
-                    ,<s:property value="imap.mpoliperColumns" />
-                ]
+                ,columns   : objetoColumnas 
                 ,tbar :
                 [
                     {
@@ -136,6 +160,13 @@ Ext.onReady(function()
                         ,handler : function(){ _p32_guardarClic(); }
                     }
                 ]
+//                 ,listeners :
+//                 {
+//                     afterrender : function()
+//                     {
+ 
+//                     }
+//                 }
             })
         ]
     });
@@ -145,6 +176,7 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+
     if(_p32_smap1.ultimaImagen+'x'=='Sx')
     {
         Ext.Ajax.request(
