@@ -1075,6 +1075,46 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 	}
 	
+	/*******************************************************************/
+	/*  Se agrega pkg_db_report.P_REVERSA_STATUS_IMPRESO
+	 * 	para realizar el reverso de impresion 
+	 *  para que dado un trámite que ya haya sido impreso,
+	 *   actualizar el mismo como "pendiente por imprimir", 
+	 * 
+	 */
+	@Override
+	public void regeneraReverso(String ntramite, String cdsisrol,String cdusuari) throws Exception{
+		
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_ntramite" , ntramite);
+		params.put("pv_CdRol"    , cdsisrol);
+		params.put("pv_cUser"	 , cdusuari);
+		Map<String,Object> procRes = ejecutaSP(new regeneraReverso(getDataSource()),params);
+		String error = (String)procRes.get("pv_msg_id_o");
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+		
+	}
+	
+	protected class regeneraReverso extends StoredProcedure
+	{
+		protected regeneraReverso(DataSource dataSource)
+		{
+			super(dataSource,"pkg_db_report.P_REVERSA_STATUS_IMPRESO");
+			declareParameter(new SqlParameter("pv_ntramite" 	, OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_CdRol"   		, OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cUser"   		, OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"	, OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	/*******************************************************************/
+	
+	
 	@Override
 	public void actualizarOtvalorTramitePorDsatribu(
 			String ntramite

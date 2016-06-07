@@ -15,6 +15,7 @@ var mesConUrlDocu                = '<s:url namespace="/documentos"   action="ven
 var mesConUrlDetMC               = '<s:url namespace="/mesacontrol"  action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC        = '<s:url namespace="/mesacontrol"  action="finalizarDetalleTramiteMC" />';
 var _4_urlRecuperacion           = '<s:url namespace="/recuperacion" action="recuperar"                 />';
+var _4_onReversarTramite		 = '<s:url namespace="/mesacontrol"	 action="reversaTramite"			/>';
 ////// variables //////
 
 Ext.onReady(function()
@@ -525,6 +526,70 @@ function _4_onClockClick(rowIndex)
     Ext.getCmp('inputReadDetalleHtmlVisor').getToolbar().hide();
 }
 
+function _4_onReversarClic(row){
+    debug('>_4_onReversarClic row:',row);
+    var record=mcdinStore.getAt(row);
+    debug('record.get(ntramite): ', record.get('ntramite'));
+    var tramite = record.get('ntramite');
+    
+  var ck = 'Solicitando Revesar Tramite';
+    
+    try
+    {
+	    
+	    
+	    var win = mcdinGrid;
+	    _setLoading(true,win);
+	    Ext.Ajax.request(
+	    {
+	        url      : _4_onReversarTramite
+	        ,params  :
+	        {
+	            'smap1.pv_ntramite' : record.get('ntramite')
+	            
+	        }
+	        ,success : function(response)
+	        {
+	            _setLoading(false,win);
+	            
+	            var vk = 'Decodificando respuesta al cambiar status de tramite';
+	            try
+	            {
+	                var json = Ext.decode(response.responseText);
+	                debug('### actualizar status reverso:',json);
+	                if(json.success==true)
+	                {
+	                    mensajeCorrecto(
+	                        'Reverso actualizado'
+	                        ,'El reverso ha sido actualizado'
+	                        ,function()
+	                        {
+	                            loadMcdinStore();
+	                        }
+	                    );
+	                }
+	                else
+	                {
+	                    mensajeError(json.message);
+	                }
+	            }
+	            catch(e)
+	            {
+	                manejaException(e,ck);
+	            }
+	        }
+	        ,failure : function()
+	        {
+	            _setLoading(false,win);
+	            errorComunicacion(null,'Error al solicitar cambio de reverso');
+	        }
+	    });
+	}
+	catch(e)
+	{
+	    manejaException(e,ck);
+	}
+}
 function _4_onContinuarImpresionClic(row)
 {
     debug('>_4_onContinuarImpresionClic row:',row,'.');

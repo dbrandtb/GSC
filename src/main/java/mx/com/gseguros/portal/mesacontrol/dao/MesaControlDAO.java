@@ -264,6 +264,15 @@ public interface MesaControlDAO
 	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif, String cdmoddoc) throws Exception;
 	
 	/**
+	 * Reversa por tramite dado impreso
+	 * @param ntramite
+	 * @param cdsisrol
+	 * @param cdusuari
+	 * @throws Exception
+	 */
+	public void regeneraReverso(String ntramite, String cdsisrol,String cdusuari) throws Exception;
+	
+	/**
 	 * ACTUALIZA UN OTVALOR USANDO UN LIKE %+dsatribu+%
 	 * @param ntramite
 	 * @param dsatribu

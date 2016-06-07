@@ -35,6 +35,9 @@
         <action name="finalizarDetalleTramiteMC" method="finalizarDetalleTramiteMC" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
+		<action name="reversaTramite" method="regenerarReverso" class="MesaControlAction">
+            <result name="success" type="json" />
+        </action>
         <action name="loadTareasSuper" method="loadTareasSuper" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
