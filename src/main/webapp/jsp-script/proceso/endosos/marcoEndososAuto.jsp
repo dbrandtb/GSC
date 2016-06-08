@@ -6,12 +6,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p34_urlRecuperacionSimple            = '<s:url namespace="/emision"    action="recuperacionSimple"           />';
-var _p34_urlRecuperacionSimpleLista       = '<s:url namespace="/emision"    action="recuperacionSimpleLista"      />';
-var _p34_urlVentanaDocumentos             = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"      />';
-var _p34_urlObtenerColumnasIncisosPorRamo = '<s:url namespace="/endosos"    action="recuperarColumnasIncisoRamo"  />';
-var _p34_urlRecuperarEndososClasificados  = '<s:url namespace="/endosos"    action="recuperarEndososClasificados" />';
-var _p34_urlObtieneCatalogos              = '<s:url namespace="/catalogos"  action="obtieneCatalogo" />';
+var _p34_urlRecuperacionSimple            = '<s:url namespace="/emision"      action="recuperacionSimple"           />';
+var _p34_urlRecuperacionSimpleLista       = '<s:url namespace="/emision"      action="recuperacionSimpleLista"      />';
+var _p34_urlVentanaDocumentos             = '<s:url namespace="/documentos"   action="ventanaDocumentosPoliza"      />';
+var _p34_urlObtenerColumnasIncisosPorRamo = '<s:url namespace="/endosos"      action="recuperarColumnasIncisoRamo"  />';
+var _p34_urlRecuperarEndososClasificados  = '<s:url namespace="/endosos"      action="recuperarEndososClasificados" />';
+var _p34_urlObtieneCatalogos              = '<s:url namespace="/catalogos"    action="obtieneCatalogo"              />';
+var _p34_urlRecuperacion                  = '<s:url namespace="/recuperacion" action="recuperar"                    />';
 ////// urls //////
 
 ////// variables //////
@@ -1831,6 +1832,7 @@ function marendNavegacion(nivel)
         else
         {
             //cuando es por flujo, despues de confirmar un endoso, se va a mesa de control
+            _mask('Redireccionando...');
             Ext.create('Ext.form.Panel').submit(
             {
                 standardSubmit : true
@@ -1847,80 +1849,159 @@ function _p34_recuperarPolizaIncisosFlujo()
     if(!Ext.isEmpty(_p34_flujo))
     {
         debug('Si hay flujo');
-        var ck = 'Decodificando auxiliar de flujo';
-        try
-        {
-            var nivel = '';
-            /* SE COMENTA EL NIVEL PORQUE YA NO SE USA LA SEPARACION NIVEL P Y NIVEL I (poliza/inciso)
-            var flujoAuxObj = Ext.decode(_p34_flujo.aux);
-            debug('flujoAuxObj:',flujoAuxObj,'.');
-            
-            var nivel = flujoAuxObj.nivel;
-            
-            if(nivel !== 'P' && nivel !== 'I')
-            {
-                throw 'El nivel '+nivel+' no es v\u00e1lido';
-            }
-            */
-            
-            var form = _fieldById('_p34_formBusq');
-            
-            var hid = Ext.ComponentQuery.query('[hidden=true]',form);
-            
-            for(var i=0; i<hid.length ; i++)
-            {
-                hid[i].show();
-            }
-            
-            _fieldByName('cdunieco',form).setValue(_p34_flujo.cdunieco);
-            
-            _fieldByName('cdramo',form).setValue(_p34_flujo.cdramo);
-            
-            _fieldByName('nmpoliza',form).setValue(_p34_flujo.nmpoliza);
-            
-            _fieldByName('finicio',form).setValue('01/01/2000');
-            
-            _fieldByName('ffin',form).setValue('01/01/2100');
-            
-            form.hide();
-            
-            _p34_polizas(
-                function()
+            _p34_recuperarCduniext(
+                _p34_flujo.cdunieco
+                ,_p34_flujo.cdramo
+                ,_p34_flujo.estado
+                ,_p34_flujo.nmpoliza
+                ,function(cduniext)
                 {
-                    debug('callback despues de cargar poliza desde flujo');
-                    var ck = 'Recuperando incisos';
+                    debug('callback despues de cduniext:',cduniext,'.');
+                    
+                    var ck = 'Decodificando auxiliar de flujo';
+                    
                     try
                     {
-                        if(nivel === 'I' && _p34_storePolizas.getCount()==1)
-                        {
-                            _p34_soloNivelInciso = true;
-                            
-                            _p34_gridPolizasIncisosClic(
-                                _p34_storePolizas.getAt(0)
-                                ,_fieldById('_p34_gridPolizas')
-                            );
-                        }
-                        else if(nivel === 'P')
-                        {
-                            _p34_soloNivelPoliza = true;
-                        }
-                    }
-                    catch(e)
-                    {
-                        manejaException(e,ck);
-                    }
+	                    var nivel = '';
+	                    
+			            /* SE COMENTA EL NIVEL PORQUE YA NO SE USA LA SEPARACION NIVEL P Y NIVEL I (poliza/inciso)
+			            var flujoAuxObj = Ext.decode(_p34_flujo.aux);
+			            debug('flujoAuxObj:',flujoAuxObj,'.');
+			            
+			            var nivel = flujoAuxObj.nivel;
+			            
+			            if(nivel !== 'P' && nivel !== 'I')
+			            {
+			                throw 'El nivel '+nivel+' no es v\u00e1lido';
+			            }
+			            */
+			            
+			            var form = _fieldById('_p34_formBusq');
+			            
+			            var hid = Ext.ComponentQuery.query('[hidden=true]',form);
+			            
+			            for(var i=0; i<hid.length ; i++)
+			            {
+			                hid[i].show();
+			            }
+			            
+			            _fieldByName('cdunieco',form).setValue( Ext.isEmpty(cduniext) ? _p34_flujo.cdunieco : cduniext );
+			            
+			            _fieldByName('cdramo',form).setValue(_p34_flujo.cdramo);
+			            
+			            _fieldByName('nmpoliza',form).setValue(_p34_flujo.nmpoliza);
+			            
+			            _fieldByName('finicio',form).setValue('01/01/2000');
+			            
+			            _fieldByName('ffin',form).setValue('01/01/2100');
+			            
+			            form.hide();
+			            
+			            _p34_polizas(
+			                function()
+			                {
+			                    debug('callback despues de cargar poliza desde flujo');
+			                    var ck = 'Recuperando incisos';
+			                    try
+			                    {
+			                        if(nivel === 'I' && _p34_storePolizas.getCount()==1)
+			                        {
+			                            _p34_soloNivelInciso = true;
+			                            
+			                            _p34_gridPolizasIncisosClic(
+			                                _p34_storePolizas.getAt(0)
+			                                ,_fieldById('_p34_gridPolizas')
+			                            );
+			                        }
+			                        else if(nivel === 'P')
+			                        {
+			                            _p34_soloNivelPoliza = true;
+			                        }
+			                    }
+			                    catch(e)
+			                    {
+			                        manejaException(e,ck);
+			                    }
+			                }
+			            );
+		            }
+		            catch(e)
+		            {
+		                manejaException(e,ck);
+		            }
                 }
             );
-            
-        }
-        catch(e)
-        {
-            manejaException(e,ck);
-        }
     }
     else
     {
         debug('_p34_recuperarPolizaFlujo no hay flujo');
+    }
+}
+
+//Se recupera el cduniext por cdunieco,cdramo,estado y nmpoliza. Se le envia al callback
+function _p34_recuperarCduniext(cdunieco,cdramo,estado,nmpoliza,callback)
+{
+    debug('_p34_recuperarCduniext cdunieco,cdramo,estado:',cdunieco,cdramo,estado,'.');
+    debug('_p34_recuperarCduniext nmpoliza,callback:',nmpoliza,callback);
+    
+    var ck = 'Recuperando unidad externa';
+    try
+    {
+        if(Ext.isEmpty(cdunieco)
+            ||Ext.isEmpty(cdramo)
+            ||Ext.isEmpty(estado)
+            ||Ext.isEmpty(nmpoliza)
+            ||Ext.isEmpty(callback)
+            ||typeof callback !== 'function'
+        )
+        {
+            throw 'Faltan datos para recuperar unidad externa';
+        }
+        
+        _mask(ck);
+        Ext.Ajax.request(
+        {
+            url      : _p34_urlRecuperacion
+            ,params  :
+            {
+                'params.consulta'  : 'RECUPERAR_CDUNIEXT_POR_LLAVE_POLIZA'
+                ,'params.cdunieco' : cdunieco
+                ,'params.cdramo'   : cdramo
+                ,'params.estado'   : estado
+                ,'params.nmpoliza' : nmpoliza
+            }
+            ,success : function(response)
+            {
+                _unmask();
+                var ck = 'Decodificando respuesta al recuperar unidad externa';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### cduniext:',json);
+                    if(json.success === true)
+                    {
+                        callback(json.params.cduniext);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                } 
+            }
+            ,failure : function()
+            {
+                _unmask();
+                errorComunicacion(null,'Error al recuperar unidad externa');
+            }
+        })
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
     }
 }
 ////// funciones //////

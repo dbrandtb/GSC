@@ -26,6 +26,8 @@ smap1:
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _9_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
+var _9_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
 var _9_formLectura;
 var _9_formFormaPago;
 var _9_panelPri;
@@ -37,6 +39,7 @@ var _9_urlLoaderLectura      = '<s:url namespace="/consultasPoliza" action="cons
 var _9_urlRecuperacionSimple = '<s:url namespace="/emision"         action="recuperacionSimple"     />';
 
 debug('_9_smap1:',_9_smap1);
+debug('_9_flujo:',_9_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -291,6 +294,12 @@ function _9_confirmar()
                 ,cdperpag    : _9_formFormaPago.items.items[1].getValue()
             }
         }
+        
+        if(!Ext.isEmpty(_9_flujo))
+        {
+            json.flujo = _9_flujo;
+        }
+        
         debug('datos que se enviaran:',json);
         
         var panelMask = new Ext.LoadMask('_9_divPri', {msg:"Confirmando..."});

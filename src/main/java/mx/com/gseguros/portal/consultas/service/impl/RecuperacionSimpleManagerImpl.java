@@ -637,6 +637,18 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						);
 				mapa.put("ACTIVAR_BOTON_COMPRAR" , consultasDAO.recuperarPermisoBotonEmitir(cdsisrol,cdusuari,cdtipsit));
 			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_CDUNIEXT_POR_LLAVE_POLIZA))
+			{
+				paso = "Recuperando cduniext";
+				logger.debug(paso);
+				
+				mapa.put("cduniext" , consultasDAO.recuperarCduniextPorLlavePoliza(
+						params.get("cdunieco"),
+						params.get("cdramo"),
+						params.get("estado"),
+						params.get("nmpoliza")
+						));
+			}
 		}
 		catch(Exception ex)
 		{

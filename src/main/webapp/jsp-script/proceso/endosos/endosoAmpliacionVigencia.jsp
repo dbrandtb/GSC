@@ -6,7 +6,11 @@ var _CONTEXT = '${ctx}';
 	var paramsEntrada          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 	var guarda_Vigencia_Poliza = '<s:url namespace="/endosos" action=" guardarEndosoAmpliacionVigencia"       />';
 	
+	var endAmpVigFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+	
 	debug('paramsEntrada  -->:',paramsEntrada);
+	
+	debug('endAmpVigFlujo:',endAmpVigFlujo);
 	
 	Ext.onReady(function() {
 		
@@ -74,6 +78,12 @@ var _CONTEXT = '${ctx}';
 						    //Exito
 							var submitValues={};
 	        				submitValues['smap1']= paramsEntrada;
+	        				
+	        				if(!Ext.isEmpty(endAmpVigFlujo))
+	        				{
+	        				    submitValues['flujo'] = endAmpVigFlujo;
+	        				}
+	        				
 	        				Ext.Ajax.request( {
 	   						    url: guarda_Vigencia_Poliza,
 	   						    jsonData: Ext.encode(submitValues),
