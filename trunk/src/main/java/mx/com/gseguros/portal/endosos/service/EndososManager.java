@@ -65,6 +65,7 @@ public interface EndososManager
 	/**
 	 * PKG_ENDOSOS.P_ENDOSO_INICIA
 	 */
+	@Deprecated
 	public Map<String,String>        iniciarEndoso(Map<String,String>params)                  throws Exception;
 	/**
 	 * PKG_ENDOSOS.P_ENDOSO_INICIA

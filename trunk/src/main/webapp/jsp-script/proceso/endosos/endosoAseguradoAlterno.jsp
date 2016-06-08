@@ -7,8 +7,11 @@
 	var guarda_Aseg_alterno              = '<s:url namespace="/endosos" action="guardarEndosoAseguradoAlterno" />';
 	var _pAsegAlte_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"             />';
 	
+	var endAseAltflujo = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
+	
 	debug('asegAlterno :',asegAlterno);
 	debug('smap2Alterno :',smap2Alterno);
+	debug('endAseAltflujo:',endAseAltflujo);
 	
 	Ext.onReady(function() {
 		
@@ -58,6 +61,11 @@
 						asegAlterno.ASEG_ALTERNO = panelInicialPral.down('[name="asegAlt"]').getValue();
 						asegAlterno.FEINIVAL  = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
         				submitValues['smap1']= asegAlterno;
+        				
+        				if(!Ext.isEmpty(endAseAltflujo))
+        				{
+        				    submitValues['flujo'] = endAseAltflujo;
+        				}
         				
         				Ext.Ajax.request(
    						{

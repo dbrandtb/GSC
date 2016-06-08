@@ -912,14 +912,14 @@ public class EndososAutoAction extends PrincipalCoreAction
 		return isSuccess() ? SUCCESS : ERROR;
 	}
 	
-	public String guardarEndosoAseguradoAlterno() {
-        
+	public String guardarEndosoAseguradoAlterno()
+	{
 		logger.debug(Utils.log(
-				"\n###########################################"
-				,"\n###########################################"
+				 "\n###########################################"
 				,"\n###### guardarEndosoAseguradoAlterno ######"
-				,"\n###### smap1="  , smap1
-				,"\n######                               ######"));
+				,"\n###### smap1 = " , smap1
+				,"\n###### flujo = " , flujo
+				));
 		try
 		{
 			logger.debug("Validando datos de entrada");
@@ -961,7 +961,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					fechaEndoso,
 					dFechaEndoso,
 					aseguradoAlterno,
-					cdsisrol
+					cdsisrol,
+					flujo
 					);
 			
 			respuesta = "Endoso generado correctamente";
@@ -973,7 +974,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				 "\n###### guardarEndosoAseguradoAlterno ######"
+				 "\n###### success   = " , success
+				,"\n###### respuesta = " , respuesta
+				,"\n###### guardarEndosoAseguradoAlterno ######"
 				,"\n###########################################"
 				));
 		return SUCCESS;
@@ -1057,11 +1060,11 @@ public class EndososAutoAction extends PrincipalCoreAction
 	public String guardarEndosoAmpliacionVigencia() {
 		
 		logger.debug(Utils.log(
-				"\n############################################"
-				,"\n###########################################"
-				,"\n######  guardarEndosoAmpliacionVigencia  ######"
-				,"\n###### smap1="  , smap1
-				,"\n######                               ######"));
+				 "\n#############################################"
+				,"\n###### guardarEndosoAmpliacionVigencia ######"
+				,"\n###### smap1 = " , smap1
+				,"\n###### flujo = " , flujo
+				));
 		try
 		{
 			logger.debug("Validando datos de entrada");
@@ -1116,11 +1119,13 @@ public class EndososAutoAction extends PrincipalCoreAction
 					feproren,
 					nmsuplemOriginal,
 					usuarioSesion,
-					tipoGrupoInciso
+					tipoGrupoInciso,
+					flujo,
+					cdsisrol
 					);
 			
 			respuesta = "Endoso generado correctamente";
-			success   = false;
+			success   = true;
 		}
 		catch(Exception ex)
 		{
@@ -1128,8 +1133,10 @@ public class EndososAutoAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				"\n###### guardarEndosoAmpliacionVigencia ######"
-				,"\n#########################################"
+				 "\n###### success   = " , success
+				,"\n###### respuesta = " , respuesta
+				,"\n###### guardarEndosoAmpliacionVigencia ######"
+				,"\n#############################################"
 				));
 		return SUCCESS;
 	}
@@ -1199,15 +1206,15 @@ public class EndososAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
-	public String guardarEndosoTextoLibre() {
-		
+	public String guardarEndosoTextoLibre()
+	{
 		logger.debug(Utils.log(
-				"\n############################################"
-				,"\n###########################################"
-				,"\n######  guardarEndosoTextoLibre  ######"
-				,"\n###### smap1 ="  , smap1
-				,"\n###### slist1="  , slist1
-				,"\n######                               ######"));
+				 "\n#####################################"
+				,"\n###### guardarEndosoTextoLibre ######"
+				,"\n###### smap1  = " , smap1
+				,"\n###### slist1 = " , slist1
+				,"\n###### flujo  = " , flujo
+				));
 		try
 		{
 			logger.debug("Validando datos de entrada");
@@ -1271,8 +1278,10 @@ public class EndososAutoAction extends PrincipalCoreAction
 					feproren,
 					situaciones,
 					dslinea,
-					cdsisrol
+					cdsisrol,
+					flujo
 					);
+			
 			respuesta = "Endoso generado correctamente";
 			success   = true;
 		}
@@ -1282,9 +1291,12 @@ public class EndososAutoAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				"\n###### guardarEndosoTextoLibre ######"
-				,"\n#########################################"
+				 "\n###### success   = " , true
+				,"\n###### respuesta = " , respuesta
+				,"\n###### guardarEndosoTextoLibre ######"
+				,"\n#####################################"
 				));
+		
 		return SUCCESS;
 	}
 	

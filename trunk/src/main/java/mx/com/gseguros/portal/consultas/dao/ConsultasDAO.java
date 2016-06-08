@@ -577,4 +577,6 @@ public interface ConsultasDAO
 	public String recuperarEsSaludDaniosTramite(String ntramite) throws Exception;
 	
 	public List<Map<String,String>> llenaCombo(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
+	
+	public String recuperarCduniextPorLlavePoliza(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
 }

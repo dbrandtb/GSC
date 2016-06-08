@@ -169,6 +169,7 @@ public interface EndososAutoManager
 			,Date dFechaEndoso
 			,String aseguradoAlterno
 			,String cdsisrol
+			,FlujoVO flujo
 			)throws Exception;
 	
 	public void guardarEndosoVigenciaPoliza(
@@ -206,6 +207,7 @@ public interface EndososAutoManager
 			,List<Map<String,String>> situaciones
 			,String dslinea
 			,String cdsisrol
+			,FlujoVO flujo
 			)throws Exception;
 	
 	public void validarEndosoAnterior(
@@ -449,6 +451,8 @@ public interface EndososAutoManager
 			,String nmsuplemOriginal
 			,UserVO usuarioSesion
 			,String tipoGrupoInciso
+			,FlujoVO flujo
+			,String cdsisrol
 			)throws Exception;
 	
 	public List<Map<String,String>> obtieneRecibosDespagados(

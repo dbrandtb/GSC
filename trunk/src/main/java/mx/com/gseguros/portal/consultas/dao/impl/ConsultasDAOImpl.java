@@ -4874,4 +4874,35 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	}
     }
 	
+	@Override
+	public String recuperarCduniextPorLlavePoliza(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarCduniextPorLlavePolizaSP(getDataSource()),params);
+		String cduniext = (String)procRes.get("pv_cduniext_o");
+		if(cduniext == null)
+		{
+			cduniext = "";
+		}
+		logger2.debug("cduniext recuperado = {}",cduniext);
+		return cduniext;
+	}
+
+	protected class RecuperarCduniextPorLlavePolizaSP extends StoredProcedure {
+    	protected RecuperarCduniextPorLlavePolizaSP(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_GET_CDUNIEXT");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cduniext_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }
