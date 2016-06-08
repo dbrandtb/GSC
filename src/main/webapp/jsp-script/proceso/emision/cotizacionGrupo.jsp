@@ -4894,8 +4894,14 @@ function _p21_estiloEditores(cdplan)
                 {
                     if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))
                     {
-                        _p21_editorAsisInter.setValue('0');
-                        _p21_editorAsisInter.addCls('_p21_editorLectura');
+                    	if(cdplan == 'PA'){
+                    		//Se selecciona el segundo elemento, es decir, el siguiente depues de cero:
+                            _p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(1).data.key); 
+                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+                    	}else{
+                    		_p21_editorAsisInter.setValue('0'); 
+                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+                    	}
                     }
                     else
                     {
