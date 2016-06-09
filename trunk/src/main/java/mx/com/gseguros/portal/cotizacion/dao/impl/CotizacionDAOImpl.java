@@ -7244,7 +7244,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	
 	protected class BuscaExtraprimOcup extends StoredProcedure {
 		protected BuscaExtraprimOcup(DataSource dataSource) {
-			super(dataSource,"PKG_DESARROLLO.P_GET_EXTRAPRIMOCUP");
+			super(dataSource,"PKG_CONS_INCISOS.P_GET_EXTRAPRIMOCUP");
 			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdatribu_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
