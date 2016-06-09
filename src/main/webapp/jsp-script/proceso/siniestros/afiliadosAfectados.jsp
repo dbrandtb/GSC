@@ -3315,7 +3315,7 @@
 								,'smap1.cdramo'   : ''
 								,'smap1.estado'   : ''
 								,'smap1.nmpoliza' : ''
-								,'smap1.nmsuplem' : ''
+								,'smap1.nmsuplem' : '0'
 								,'smap1.nmsolici' : ''
 								,'smap1.tipomov'  :  _11_params.OTVALOR02
 							}

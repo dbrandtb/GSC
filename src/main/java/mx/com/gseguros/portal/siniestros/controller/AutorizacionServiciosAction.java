@@ -904,6 +904,32 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	/**
+	* Funcion para validar los datos de la Causa del siniestro de acuerdo al producto
+	* @param params (feautori, cdramo, cdpresta)
+	* @return datosInformacionAdicional del Multisalud
+	*/
+	public String consultaInfCausaSiniestroProducto(){
+		logger.debug("Entra a consultaInfCausaSiniestroProducto Params: {}", params);
+		try {
+			
+			HashMap<String, Object> paramsCausaSini = new HashMap<String, Object>();
+			paramsCausaSini.put("pv_cdramo_i",params.get("cdramo"));
+			paramsCausaSini.put("pv_cdtipsit_i",params.get("cdtipsit"));
+			paramsCausaSini.put("pv_causa_i",params.get("causaSini"));
+			paramsCausaSini.put("pv_codigo_i",params.get("cveCausa"));
+			datosInformacionAdicional = siniestrosManager.listaConsultaInfCausaSiniestroProducto(paramsCausaSini);
+			
+			
+			logger.debug("Total datosInformacionAdicional: {}", datosInformacionAdicional.size());
+		}catch( Exception e){
+			logger.error("Error consultaInfCausaSiniestroProducto : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
 	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
 		this.ice2sigsService = ice2sigsService;
 	}

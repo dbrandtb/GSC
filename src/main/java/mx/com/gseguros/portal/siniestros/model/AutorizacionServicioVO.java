@@ -53,6 +53,7 @@ public class AutorizacionServicioVO implements Serializable{
 	private String cdtipsit;
 	private String aplicaZonaHosp;
 	private String aplicaCirHos;
+	private String descTipsit;
 	
 	
 	public String getCopagofi() {
@@ -386,6 +387,14 @@ public class AutorizacionServicioVO implements Serializable{
 
 	public void setAplicaCirHos(String aplicaCirHos) {
 		this.aplicaCirHos = aplicaCirHos;
+	}
+
+	public String getDescTipsit() {
+		return descTipsit;
+	}
+
+	public void setDescTipsit(String descTipsit) {
+		this.descTipsit = descTipsit;
 	}	
 	
 }

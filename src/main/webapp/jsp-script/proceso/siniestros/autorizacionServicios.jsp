@@ -61,19 +61,20 @@
             var _p12_urlMesaControl              	= '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
             var _URL_MONTO_MAXIMO					= '<s:url namespace="/siniestros"  action="consultaMontoMaximo"/>';
             var _URL_MESES_MAXIMO_MAT				= '<s:url namespace="/siniestros"  action="consultaMesesMaximoMaternidad"/>';
-            var _URL_Existe_Documentos				= '<s:url namespace="/siniestros" action="validaDocumentosAutoServ" />';
-            var _URL_NUM_MESES_TIEMPO_ESPERA   		= '<s:url namespace="/siniestros" action="obtieneMesesTiempoEspera" />';
+            var _URL_Existe_Documentos				= '<s:url namespace="/siniestros"  action="validaDocumentosAutoServ" />';
+            var _URL_NUM_MESES_TIEMPO_ESPERA   		= '<s:url namespace="/siniestros"  action="obtieneMesesTiempoEspera" />';
             var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';
-            var _URL_MONTO_DISP_PROVEEDOR           = '<s:url namespace="/siniestros" action="obtieneRequiereAutServ"         />';
+            var _URL_MONTO_DISP_PROVEEDOR           = '<s:url namespace="/siniestros"  action="obtieneRequiereAutServ"/>';
             
             var _URL_LOADER_DATOS_POLIZA            = '<s:url namespace="/consultasPoliza" action="includes/ventanaDatosPoliza" />';
             var _URL_LOADER_ASEGURADOS_POLIZA       = '<s:url namespace="/consultasPoliza" action="includes/ventanaAseguradosPoliza" />';
             var _URL_LOADER_RECIBOS                 = '<s:url namespace="/general"         action="includes/loadRecibos" />';
             var _URL_LOADER_VER_EXCLUSIONES         = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
-            var _URL_CIRCULO_HOSP_MULTISALUD        = '<s:url namespace="/siniestros" action="consultaCirculoHospitalarioMultisalud" />';
-            var _URL_CIRCULO_HOSPITALARIO        	= '<s:url namespace="/siniestros" action="consultaCirculoHospitalario" />';
-            var _URL_PORCENTAJE_QUIRURGICO        	= '<s:url namespace="/siniestros" action="consultaPorcentajeQuirurgico" />';
-            var _URL_LOADER_HISTORIAL_RECLAMACIONES= '<s:url namespace="/siniestros"	 action="includes/historialReclamaciones" />';
+            var _URL_CIRCULO_HOSP_MULTISALUD        = '<s:url namespace="/siniestros" 	   action="consultaCirculoHospitalarioMultisalud" />';
+            var _URL_CIRCULO_HOSPITALARIO        	= '<s:url namespace="/siniestros" 	   action="consultaCirculoHospitalario" />';
+            var _URL_PORCENTAJE_QUIRURGICO        	= '<s:url namespace="/siniestros"      action="consultaPorcentajeQuirurgico" />';
+            var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros"	   action="includes/historialReclamaciones" />';
+            var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	   action="consultaInfCausaSiniestroProducto" />';
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             debug("valor d_SALUD_VITAL --->",_SALUD_VITAL);
         </script>

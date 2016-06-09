@@ -1182,6 +1182,26 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="obtenerInfCoberturaInfonavit" class="siniestrosAction" method="obtenerInfCoberturaInfonavit">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosInformacionAdicional.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaInfCausaSiniestroProducto" class="autorizacionServiciosAction" method="consultaInfCausaSiniestroProducto">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosInformacionAdicional.*,
+					success
+				</param>
+			</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

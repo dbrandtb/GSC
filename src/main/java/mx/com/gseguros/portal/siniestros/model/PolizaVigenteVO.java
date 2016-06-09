@@ -40,6 +40,7 @@ public class PolizaVigenteVO implements Serializable {
 	private String email;
 	private String telefono;
 	private String nombAsegurado;
+	private String dsTipsit;
 	 
 	
 	
@@ -374,6 +375,16 @@ public class PolizaVigenteVO implements Serializable {
 
 	public void setNombAsegurado(String nombAsegurado) {
 		this.nombAsegurado = nombAsegurado;
+	}
+
+
+	public String getDsTipsit() {
+		return dsTipsit;
+	}
+
+
+	public void setDsTipsit(String dsTipsit) {
+		this.dsTipsit = dsTipsit;
 	}
 	
 }

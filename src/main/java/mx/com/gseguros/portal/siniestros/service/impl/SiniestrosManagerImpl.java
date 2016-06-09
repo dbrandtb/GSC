@@ -2373,4 +2373,22 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public List<Map<String, String>> obtieneInfCoberturaInfonavit(HashMap<String, Object> paramsInfonavit) throws Exception {
+		try {
+			return siniestrosDAO.obtieneInfCoberturaInfonavit(paramsInfonavit);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> listaConsultaInfCausaSiniestroProducto(HashMap<String, Object> paramsCausaSini) throws Exception {
+		try {
+			return siniestrosDAO.obtieneInfCausaSiniestroProducto(paramsCausaSini);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 }
