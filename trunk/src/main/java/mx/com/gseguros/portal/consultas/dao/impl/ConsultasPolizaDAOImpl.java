@@ -239,7 +239,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 	
 	protected class ConsultaPolizasAseguradoSP extends StoredProcedure {
 		protected ConsultaPolizasAseguradoSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.P_Get_Polizas_Asegurado");
+			super(dataSource, "PKG_CONSULTA_PRUEBA.P_Get_Polizas_Asegurado");
 			declareParameter(new SqlParameter("pv_user_i", OracleTypes.VARCHAR)); //Agrego parametro user: campo cdusurari de la tabla TUSUARIO
     		declareParameter(new SqlParameter("pv_cdrfc_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
