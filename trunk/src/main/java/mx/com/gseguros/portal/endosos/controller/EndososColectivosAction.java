@@ -643,7 +643,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 			String cdtipsup           = TipoEndoso.EMISION_POLIZA.getCdTipSup().toString();
 			long timestamp            = System.currentTimeMillis();
 			boolean esProductoSalud   = consultasManager.esProductoSalud(cdramo);
-			boolean esPolizaColectiva = ("F".equalsIgnoreCase(params.get("TIPOFLOT")));// flotilla o Colectiva
+			boolean esPolizaColectiva =  ("F".equalsIgnoreCase(params.get("TIPOFLOT")));// flotilla o Colectiva
 			logger.debug(Utils.log("usuario en sesion ",usuario.getRolActivo().getClave()));
             logger.debug(Utils.log("######		parametros		######\n", 
 					  			   "##################################\n",
