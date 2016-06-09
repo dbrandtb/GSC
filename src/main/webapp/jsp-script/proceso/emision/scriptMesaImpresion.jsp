@@ -564,7 +564,33 @@ function _4_onReversarClic(row){
 	                        ,'El reverso ha sido actualizado'
 	                        ,function()
 	                        {
-	                            loadMcdinStore();
+	                        	var params1=
+		    	    			{
+		    	    				'smap1.pv_cdunieco_i'      : _fieldByName('smap2.pv_cdunieco_i').getValue()
+		    	    			    ,'smap1.pv_cdramo_i'       : _fieldByName('smap2.pv_cdramo_i').getValue()
+		    	                    ,'smap1.pv_cdtipsit_i'     : _fieldByName('smap2.pv_cdtipsit_i').getValue()
+		    	                    ,'smap1.pv_estado_i'       : _fieldByName('smap2.pv_estado_i').getValue()
+		    	    			    ,'smap1.pv_nmpoliza_i'     : _fieldByName('smap2.pv_nmpoliza_i').getValue()
+		    	                    ,'smap1.pv_cdagente_i'     : _fieldByName('smap2.pv_cdagente_i').getValue()
+		    	    			    ,'smap1.pv_ntramite_i'     : _fieldByName('smap2.pv_ntramite_i').getValue()
+		    	                    ,'smap1.pv_status_i'       : _fieldByName('smap2.pv_status_i').getValue()
+		    	                    ,'smap1.pv_fedesde_i'      : Ext.isEmpty(_fieldByName('smap2.pv_fedesde_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fedesde_i').getValue(),'d/m/Y')
+		    	                    ,'smap1.pv_fehasta_i'      : Ext.isEmpty(_fieldByName('smap2.pv_fehasta_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fehasta_i').getValue(),'d/m/Y')
+		    	                    ,'smap1.pv_cdtiptra_i'     : mcdinInput['tiptra']
+		    	    				,'smap1.pv_contrarecibo_i' : Ext.isEmpty(_fieldByName('smap2.pv_contrarecibo_i').getValue())?'':_fieldByName('smap2.pv_contrarecibo_i').getValue()
+		    	    				,'smap1.pv_tipoPago_i'	   : Ext.isEmpty(_fieldByName('smap2.pv_tipoPago_i').getValue())?'':_fieldByName('smap2.pv_tipoPago_i').getValue()
+		    	    				,'smap1.pv_nfactura_i'	   : Ext.isEmpty(_fieldByName('smap2.pv_nfactura_i').getValue())?'':_fieldByName('smap2.pv_nfactura_i').getValue()
+		    	    				,'smap1.pv_cdpresta_i'	   : Ext.isEmpty(_fieldByName('smap2.pv_cdpresta_i').getValue())?'':_fieldByName('smap2.pv_cdpresta_i').getValue()
+		    	    				,'smap1.filtro'            : loadMcdinStoreFiltro
+		    	    				,'smap1.lote'              : _getValueByName('smap1.lote'          , false)
+		    	    				,'smap1.tipolote'          : _getValueByName('smap1.tipolote'      , false)
+		    	    				,'smap1.tipoimpr'          : _getValueByName('smap1.tipoimpr'      , false)
+		    	    				,'smap1.cdusuari_busq'     : _getValueByName('smap1.cdusuari_busq' , false)
+		    	    			};
+	                           cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params1, function()
+	                           {
+	                           
+	                           }, mcdinGrid);
 	                        }
 	                    );
 	                }
