@@ -1016,7 +1016,7 @@ Ext.onReady(function() {
     var windowPolizas= Ext.create('Ext.window.Window', {
         title : 'Elija una p&oacute;liza:',
         modal:true,
-        autoScroll : true,
+        //autoScroll : true,
         width : 950,
         closeAction: 'hide',
         items:[gridPolizasAsegurado],
@@ -1512,6 +1512,7 @@ Ext.onReady(function() {
                             flex : 6,
                             text : 'Buscar',
                             handler: function(btn, e) {
+                            	panelBusqueda.setLoading(true);
                                 var formBusqueda = this.up('form').getForm();
                                 switch (formBusqueda.findField('params.tipoBusqueda').getValue()) {
                                     case 1:
@@ -1629,6 +1630,7 @@ Ext.onReady(function() {
         storeSuplementos.load({
             params: params,
         	callback: function(records, operation, success) {
+        		panelBusqueda.setLoading(false);
                 if(success) {                	
                 	//debug('storeSuplementos ',storeSuplementos.getAt(0).get('switchConvenios'));
                     gridSuplementos.setLoading(false);
@@ -1708,6 +1710,7 @@ Ext.onReady(function() {
     function cargaPolizasAsegurado(formBusqueda, btn) {
         gridPolizasAsegurado.down('pagingtoolbar').moveFirst();
         var callbackGetPolizasAsegurado = function(options, success, response) {
+        	panelBusqueda.setLoading(false);
             if(success){
                 var jsonResponse = Ext.decode(response.responseText);
                 if(jsonResponse.polizasAsegurado && jsonResponse.polizasAsegurado.length == 0) {
