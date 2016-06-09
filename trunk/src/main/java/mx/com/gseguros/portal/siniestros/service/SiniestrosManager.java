@@ -681,5 +681,9 @@ public interface SiniestrosManager {
 	public String existeRegistrosProcesarSISCO() throws Exception;
 	
 	public String validaPersonaSisaSicaps(HashMap<String, Object> paramPersona) throws Exception;
+
+	public List<Map<String, String>> obtieneInfCoberturaInfonavit(HashMap<String, Object> paramsInfonavit) throws Exception;
+
+	public List<Map<String, String>> listaConsultaInfCausaSiniestroProducto(HashMap<String, Object> paramsCausaSini) throws Exception;
 	
 }

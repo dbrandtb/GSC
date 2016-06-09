@@ -5529,6 +5529,28 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String obtenerInfCoberturaInfonavit(){
+		logger.debug("Entra a obtenerInfCoberturaInfonavit params de entrada :{}",params);
+		try {
+			HashMap<String, Object> paramsInfonavit = new HashMap<String, Object>();
+			paramsInfonavit.put("pv_cdunieco_i",params.get("cdunieco"));
+			paramsInfonavit.put("pv_cdramo_i",params.get("cdramo"));
+			paramsInfonavit.put("pv_estado_i",params.get("estado"));
+			paramsInfonavit.put("pv_nmpoliza_i",params.get("nmpoliza"));
+			paramsInfonavit.put("pv_nmsuplem_i",params.get("nmsuplem"));
+			paramsInfonavit.put("pv_nmsituac_i",params.get("nmsituac"));
+			paramsInfonavit.put("pv_cdgarant_i",params.get("cdgarant"));
+			paramsInfonavit.put("pv_cdconval_i",params.get("cdconval"));
+			datosInformacionAdicional = siniestrosManager.obtieneInfCoberturaInfonavit(paramsInfonavit);
+			logger.debug("Valor de Respuesta ==>>>"+datosInformacionAdicional);
+		}catch( Exception e){
+			logger.error("Error al obtenerInfCoberturaInfonavit : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;

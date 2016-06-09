@@ -114,6 +114,8 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setCdtipsit(rs.getString("CDTIPSIT"));
         	consulta.setAplicaCirHos(rs.getString("SWPECIHO"));
         	consulta.setAplicaZonaHosp(rs.getString("SWPEZOHO"));
+        	consulta.setDescTipsit(rs.getString("SWPEZOHO"));
+        	consulta.setDescTipsit(rs.getString("DESCTIPSIT"));
             return consulta;
         }
     }
@@ -870,6 +872,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setTelefono(rs.getString("TELEFONO"));
         	consulta.setEmail(rs.getString("EMAIL"));
         	consulta.setNombAsegurado(rs.getString("NOMBASEGURADO"));
+        	consulta.setDsTipsit(rs.getString("DESCTIPSIT"));
             return consulta;
         }
     }
@@ -5476,4 +5479,57 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		compile();
     	}
     }
+    
+	@Override
+	public List<Map<String, String>> obtieneInfCoberturaInfonavit(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneInfCoberturaInfonavit(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneInfCoberturaInfonavit extends StoredProcedure {
+		protected ObtieneInfCoberturaInfonavit(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_DESARROLLO.P_GET_NUM_CONSULTAS_AFI");
+			declareParameter(new SqlParameter("pv_cdunieco_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconval_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NO_CONSULTAS", "MONTO", "OTVALOR07", "OTVALOR15","OTVALOR16"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneInfCausaSiniestroProducto(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneInfCausaSiniestroProducto(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneInfCausaSiniestroProducto extends StoredProcedure {
+		protected ObtieneInfCausaSiniestroProducto(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_DESARROLLO.P_GET_SINIESTRO_GRAL");
+			declareParameter(new SqlParameter("pv_cdramo_i",   	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i",  OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_causa_i",   	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_codigo_i",   	OracleTypes.VARCHAR));
+			
+			String[] cols = new String[]{
+					"PROCESAAUT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

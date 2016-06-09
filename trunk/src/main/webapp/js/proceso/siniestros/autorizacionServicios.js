@@ -49,7 +49,8 @@ Ext.onReady(function() {
 					{type:'string',    name:'nmsuplem'},			{type:'string',    name:'cdtipsit'},				{type:'string',    name:'estatusCliente'},
 					{type:'string',    name:'faltaAsegurado'},		{type:'string',    name:'fcancelacionAfiliado'},	{type:'string',    name:'mtoBeneficioMax'},
 					{type:'string',    name:'zonaContratada'},		{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'desEstatusCliente'},
-					{type:'string',    name:'numPoliza'},			{type:'string',    name:'dsplan'},					{type:'string',    name:'mesesAsegurado'}]
+					{type:'string',    name:'numPoliza'},			{type:'string',    name:'dsplan'},					{type:'string',    name:'mesesAsegurado'},
+					{type:'string',    name:'dsTipsit'}]
 	});
 
 	Ext.define('modelListadoTmanteni',{
@@ -580,6 +581,7 @@ Ext.onReady(function() {
 				'<br/> asegurado',						dataIndex : 'fcancelacionAfiliado',	width	: 150        },
 			{   header : 'Estatus<br/> asegurado',				dataIndex : 'desEstatusCliente',	width	: 100        },
 			{   header : 'Producto',							dataIndex : 'dsramo',				width   : 150        },
+			{   header : 'Modalidad',							dataIndex : 'dsTipsit',				width   : 150        },
 			{   header : 'Sucursal',							dataIndex : 'dssucursal',			width   : 150        },
 			{   header : 'Estado',								dataIndex : 'estado',				width	: 100        },
 			{   header : 'N&uacute;mero de Situaci&oacute;n',	dataIndex : 'nmsituac',		        width	: 150        }
@@ -598,6 +600,7 @@ Ext.onReady(function() {
 				Ext.getCmp('polizaAfectada').setValue(record.get('nmpoliza'));
 				Ext.getCmp('polizaAfectadaCom').setValue(record.get('numPoliza'));
 				Ext.getCmp('iddsplanAsegurado').setValue(record.get('dsplan'));
+				Ext.getCmp('idModalidad').setValue(record.get('dsTipsit'));
 				if(record.get('mtoBase') == null || record.get('mtoBase')==''){
 					Ext.getCmp('idMontoBase').setValue("21000");
 				}else{
@@ -833,26 +836,48 @@ Ext.onReady(function() {
 		labelWidth : 170,			queryMode    :'local',				editable  :false,						name			:'cdcausa',
 		store : storeCausaSinestro,
 		listeners : {
-			'select' :function(e){
-				switch (this.getValue()) {
-					case '1': //ENFERMEDAD
-						obtieneInformacion();
-					break;
-					case '2' : // ACCIDENTE
-					case '3' : // MATERNIDAD
-						Ext.getCmp('notaInterna').setValue('');
-						Ext.getCmp('idCopagoFin').setValue('0');
-						Ext.getCmp('idCopagoPrevio').setValue('0');
-						Ext.getCmp('idPenalCircHospitalario').setValue('0');
-						Ext.getCmp('idPenalCambioZona').setValue('0');
-						if(e.getValue() == _CODIGO_CAUSA_MATERNIDAD){
-							var salarioMin = Ext.getCmp('idSalarioMin').getValue();
-							Ext.getCmp('sumDisponible').setValue(salarioMin);
+			'select':function(field,value){
+				Ext.Ajax.request({
+					url     : _URL_VAL_CAUSASINI
+					,params : {
+						'params.cdramo'   : Ext.getCmp('idcdRamo').getValue(),
+						'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue(),
+						'params.causaSini': 'CAUSA',
+						'params.cveCausa' : this.getValue()
+					}
+					,success : function (response){
+						var datosExtras = Ext.decode(response.responseText);
+						if(Ext.decode(response.responseText).datosInformacionAdicional != null){
+							var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
+							debug("cveCauSini ===>",cveCauSini);
+							Ext.getCmp('idCausaSini').setValue(cveCauSini.PROCESAAUT);
+							
+							if(cveCauSini.PROCESAAUT =="S"){
+								obtieneInformacion();
+							}else{
+								Ext.getCmp('notaInterna').setValue('');
+								Ext.getCmp('idCopagoFin').setValue('0');
+								Ext.getCmp('idCopagoPrevio').setValue('0');
+								Ext.getCmp('idPenalCircHospitalario').setValue('0');
+								Ext.getCmp('idPenalCambioZona').setValue('0');
+							}
+							if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){
+								debug("1.- Entra a 1");
+								var salarioMin = Ext.getCmp('idSalarioMin').getValue();
+								Ext.getCmp('sumDisponible').setValue(salarioMin);
+							}
 						}
-					break;
-					default: 
-						obtieneInformacion();
-				}
+					},
+					failure : function (){
+						me.up().up().setLoading(false);
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						}));
+					}
+				});
 			}
 		}
 	});
@@ -1246,7 +1271,9 @@ Ext.onReady(function() {
 							ptimport: datos.importeConAutorizado,
 							cdtipaut:'1'
 						});
-						if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){
+						debug("Entra a la opcion 2");
+						if(Ext.getCmp('idCausaSini').getValue() =="N"){
+						//if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){//2.-
 							Ext.getCmp('idCopagoPrevio').setValue("0");
 							Ext.getCmp('idCopagoFin').setValue("0");
 						}else{
@@ -1456,7 +1483,9 @@ Ext.onReady(function() {
 				var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
 				Ext.getCmp('sumDisponible').setValue((+sumaDisponible) + (+importeEliminar));
 			}
-			if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){
+			debug("Entra a 3");
+			if(Ext.getCmp('idCausaSini').getValue() =="N"){
+			//if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){//3.-
 				Ext.getCmp('idCopagoPrevio').setValue("0");
 				Ext.getCmp('idCopagoFin').setValue("0");
 			}else{
@@ -1733,6 +1762,9 @@ Ext.onReady(function() {
 			{	 xtype       : 'textfield',			fieldLabel : 'idEstatusTramite'		,	id       : 'idEstatusTramite', 		name:'idEstatusTramite',
 				labelWidth: 170,					hidden:true
 			},
+			{	 xtype       : 'textfield',			fieldLabel : 'idCausaSini'			,	id       : 'idCausaSini', 			name:'idCausaSini',
+				labelWidth: 170,					hidden:true
+			},
 			{	colspan:2
 				,border: false
 				,layout      :	{
@@ -1817,6 +1849,9 @@ Ext.onReady(function() {
 						}
 					}
 				]
+			}
+			,{	xtype       : 'textfield',			fieldLabel : 'Modalidad',			id  : 'idModalidad',	width	: 500,
+				name        : 'idModalidad',		labelWidth	: 170,					readOnly   : true,		colspan:2
 			}
 			,//3.- Fecha de Solicitud
 			{	id: 'fechaSolicitud'		,xtype		: 'datefield'				,fieldLabel	: 'Fecha Solicitud',
@@ -2309,7 +2344,8 @@ Ext.onReady(function() {
 			}
 			,success : function (response) {
 				var json=Ext.decode(response.responseText).datosAutorizacionEsp;
-				debug("Valor de Respuesta====> ",json);
+				var cdtipsitRe= json.cdtipsit;
+				Ext.getCmp('idcdtipsit').setValue(json);
 				if(json.aplicaCirHos == null ||json.aplicaCirHos ==''){
 					Ext.getCmp('idaplicaCirHosp').setValue('S');
 				}else{
@@ -2320,7 +2356,7 @@ Ext.onReady(function() {
 				}else{
 					Ext.getCmp('idaplicaZona').setValue(json.aplicaZonaHosp);
 				}
-				
+				Ext.getCmp('idModalidad').setValue(json.descTipsit);
 				Ext.getCmp('idUnieco').setValue(json.cdunieco);								// Valor de Cdunieco
 				Ext.getCmp('idEstado').setValue(json.estado);								// Valor de Estado
 				Ext.getCmp('idcdRamo').setValue(json.cdramo);								// Valor del Ramo
@@ -2503,7 +2539,36 @@ Ext.onReady(function() {
 				Ext.getCmp('idProveedor').setValue(json.cdprovee);								// Valor del Proveedor
 				storeCausaSinestro.load();
 				Ext.getCmp('idCausaSiniestro').setValue(json.cdcausa);							// Valor de la Causa del Siniestro
-				obtieneInformacion();
+				
+				Ext.Ajax.request({
+					url     : _URL_VAL_CAUSASINI
+					,params : {
+						'params.cdramo'   : Ext.getCmp('idcdRamo').getValue(),
+						'params.cdtipsit' : json.cdtipsit,
+						'params.causaSini': 'CAUSA',
+						'params.cveCausa' : json.cdcausa
+					}
+					,success : function (response){
+						var datosExtras = Ext.decode(response.responseText);
+						if(Ext.decode(response.responseText).datosInformacionAdicional != null){
+							var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
+							debug("cveCauSini ===>",cveCauSini);
+							Ext.getCmp('idCausaSini').setValue(cveCauSini.PROCESAAUT);
+							obtieneInformacion();
+						}else{
+							obtieneInformacion();
+						}
+					},
+					failure : function (){
+						me.up().up().setLoading(false);
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						}));
+					}
+				});
 			},
 			failure : function (){
 				me.up().up().setLoading(false);
@@ -2656,7 +2721,9 @@ Ext.onReady(function() {
 							});
 						}
 					}else{
-						if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){
+						debug("Entra a 4");
+						if(Ext.getCmp('idCausaSini').getValue() =="N"){
+						//if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){//4.-
 							Ext.getCmp('idCopagoFin').setValue('0');
 							Ext.getCmp('idCopagoPrevio').setValue('0');
 							Ext.getCmp('idPenalCircHospitalario').setValue('0');
@@ -2704,7 +2771,9 @@ Ext.onReady(function() {
 		Ext.getCmp('idPenalCircHospitalario').setValue('');
 		Ext.getCmp('idPenalCambioZona').setValue('');
 		// === > Validacion de la causa del Siniestro
-		if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){
+		debug("Entra a 5");
+		if(Ext.getCmp('idCausaSini').getValue() =="N"){
+		//if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){//5.-
 			Ext.getCmp('idCopagoFin').setValue('0');
 			Ext.getCmp('idPenalCircHospitalario').setValue('0');
 			Ext.getCmp('idPenalCambioZona').setValue('0');

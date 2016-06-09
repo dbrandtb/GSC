@@ -547,6 +547,10 @@ public interface SiniestrosDAO {
 	public String validaPersonaSisaSicaps(HashMap<String, Object> paramPersona) throws Exception;
 	
 	public List<Map<String, String>> obtieneListaLayoutConfigurados(HashMap<String, Object> params) throws Exception;
+
+	public List<Map<String, String>> obtieneInfCoberturaInfonavit(HashMap<String, Object> paramsInfonavit) throws Exception;
+	
+	public List<Map<String, String>> obtieneInfCausaSiniestroProducto(HashMap<String, Object> paramsInfonavit) throws Exception;
 	
 	
 }
