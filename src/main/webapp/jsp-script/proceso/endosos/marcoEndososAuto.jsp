@@ -4,6 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!-- Paging Persistence library -->
+<script type="text/javascript" src="${ctx}/resources/extjs4/plugins/pagingpersistence/pagingselectionpersistence2.js?${now}"></script>
+
 <script>
 ////// urls //////
 var _p34_urlRecuperacionSimple            = '<s:url namespace="/emision"      action="recuperacionSimple"           />';
@@ -115,7 +119,9 @@ Ext.onReady(function()
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
-
+    
+    Ext.tip.QuickTipManager.init();
+    
     ////// modelos //////
     Ext.define('_p34_modeloPoliza',
     {
@@ -201,8 +207,9 @@ Ext.onReady(function()
     
     Ext.define('_p34_modeloInciso',
     {
-        extend  : 'Ext.data.Model'
-        ,fields : []
+        extend     : 'Ext.data.Model'
+        ,idProperty: 'NMSITUAC'
+        ,fields    : []
     });
     
     Ext.define('_p34_modeloEndoso',
@@ -298,8 +305,10 @@ Ext.onReady(function()
         ,pageSize : 25
         ,proxy    :
         {
-            type         : 'ajax'
+            type         : 'ajax' 
+            /* type         : 'jsonp' */
             ,url         : _p34_urlRecuperacionSimpleLista
+            ,callbackKey : 'callback'
             ,extraParams :
             {
                 'smap1.procedimiento' : 'RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA'
@@ -312,6 +321,11 @@ Ext.onReady(function()
                 ,messageProperty : 'respuesta'
                 ,totalProperty   : 'total'
             }
+            ,call: function()
+            {
+               debug('call');
+            }
+            ,simpleSortMode: true
         }
         ,listeners : {
 		  	load: function(me, records, success){
@@ -805,7 +819,7 @@ function _p34_gridPolizasIncisosClic(record,padre)
             debug('### columnas ramo:',json);
             if(json.success)
             {
-                _fieldById('_p34_gridPolizas').getSelectionModel().select(record);
+            _fieldById('_p34_gridPolizas').getSelectionModel().select(record);
                 var cols=Ext.decode('['+json.smap1.columnas+']');
                 debug('columnas:',cols);
                 _p34_incisos('POLIZA',record,cols,padre);
@@ -847,11 +861,9 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
             var jsonPol=Ext.decode(responsePol.responseText);
             debug('### leer descripcion atributos de Poliza:',jsonPol);
             if(jsonPol.exito)
-            {
-                var arrayAtributosPol = [];
-                
-                if(!Ext.isEmpty(recordPoliza.get('CDRAMO')) && new String(recordPoliza.get('CDRAMO')) == "6"){
-
+            {            	
+            	var arrayAtributosPol = [];                
+                if(!Ext.isEmpty(recordPoliza.get('CDRAMO')) && new String(recordPoliza.get('CDRAMO')) == "6"){					
                 	var atributosPol = jsonPol.smap1.listaNombres.split('@#@');
 	                for(var atr in atributosPol)
 	                {
@@ -929,6 +941,8 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                    ,'DSPLAN'
 			                ];
 			                var splited = json.smap1.listaNombres.split('@#@');
+			                /* debug('json.smap1.listaNombre',json.smap1.listaNombres); */
+			                arrayAtributos.push('swselect');
 			                for(var i in splited)
 			                {
 			                    arrayAtributos.push(splited[i]);
@@ -946,7 +960,7 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 							_p34_storeIncisos.getProxy().setExtraParam('smap1.dsatribu', null);
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.otvalor', null);
 			                debug('******* no se setea smap1.nmfamili');
-			                //_p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili', null);
+			                //_p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili', null);			                
 			                centrarVentanaInterna(Ext.create('Ext.window.Window',
 			                {
 			                    itemId       : '_p34_windowIncisos'
@@ -969,15 +983,16 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                            ,width      : 910
 			                            ,height     : 330
 			                            ,autoScroll : true
-			                            ,selModel   :
-			                            {
+			                            /* ,selModel   : Ext.create('Ext.selection.CheckboxModel', {mode: 'MULTI'}) */			                            
+			                            ,selModel   : 
+  			                             {			                              
 			                                selType    : 'checkboxmodel'
-			                                ,mode      : 'SIMPLE'
-			                                ,listeners :
+			                                 ,mode      : 'MULTI' 
+			                                 ,listeners :
 			                                {
 			                                    selectionchange : function(me,selected)
 			                                    {
-			                                        if(_p34_soloNivelPoliza === true)
+													if(_p34_soloNivelPoliza === true)
 			                                        {
 			                                            mensajeWarning('Solo se permiten endosos a nivel p\u00f3liza');
 			                                        }
@@ -988,6 +1003,18 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                                    }
 			                                }
 			                            }
+				                        ,viewConfig: {
+				                        	id: 'gv'
+				                            ,trackOver: true
+				                            ,stripeRows: true
+				                            ,loadMask : false
+				                        }
+			                        	,plugins: [
+			                        	           {
+			                        	        	   ptype       : 'pagingselectpersist'
+			                        	        	   ,pluginId   : 'pagingselect'
+			                        	        	   }
+			                        	           ] 
 			                            ,store   : _p34_storeIncisos
 			                            ,tbar    :
 			                            [
@@ -999,6 +1026,14 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                                    ,handler  : function(){ _p34_botonEndososIncisosClic(); }
 			                                }
 			                                ,'->'
+					                        ,{
+				                            	 xtype    : 'button'
+				                            	 ,text    : 'Limpiar todo'
+				                            	 ,icon  : '${ctx}/resources/fam3icons/icons/delete.png'
+				                            	 ,handler : function(btn) {
+				                            		 _fieldById('_p34_gridIncisos').getPlugin('pagingselect').clearPersistedSelection();
+				                            	 }
+				                             }
 			                                ,Ext.create('Ext.form.ComboBox',
 			                                {
 			                                    name        : 'dsatribu'
@@ -1051,18 +1086,17 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                                ,{
 			                                    xtype      : 'textfield',
 			                                    name       : 'txtBuscar'
-			                                },{
+			                                }
+				                            ,{
 				                                xtype    : 'button'
 				                                ,text    : 'Buscar'
 				                                //,icon  : panDocContexto+'/resources/fam3icons/icons/add.png'
 				                                ,handler : function(btn) {
-				                                	debug('Buscando...')
-				                                	
+				                                	debug('Buscando...');				                                	
 				                                	if(Ext.isEmpty(btn.up('toolbar').down('textfield[name=txtBuscar]').getValue())){
 				                                    	debug('valor nulo...');
 				                                    	btn.up('toolbar').down('combo[name=dsatribu]').setValue(null);
-				                                    }
-				                                	
+				                                    }				                                	
 				                                    _p34_storeIncisos.getProxy().setExtraParam('smap1.dsatribu',btn.up('toolbar').down('combo[name=dsatribu]').getValue());
 				                                    _p34_storeIncisos.getProxy().setExtraParam('smap1.otvalor', btn.up('toolbar').down('textfield[name=txtBuscar]').getValue());
 				                                    _p34_storeIncisos.loadPage(1);
@@ -1073,8 +1107,17 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 								            store: _p34_storeIncisos,
 								            displayInfo: true
 								        })
+								        //,renderTo: '_p34_gridIncisos-grid'
 			                        })
 			                    ]
+			                    ,listeners:{
+			                    	close:function(me){
+			                    		/* debug('grid incisos '    ,_fieldById('_p34_gridIncisos').getPlugin('pagingselect'));
+			                    		debug('grid incisos plug',_fieldById('_p34_gridIncisos').getPlugin('pagingselect')); */
+			                    		_fieldById('_p34_gridIncisos').getPlugin('pagingselect').clearPersistedSelection();
+			                    		debug('seleccionados',_fieldById('_p34_gridIncisos').getPlugin('pagingselect').selected);
+			                    	}
+			                    }
 			                }).show());
 			                
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.cdunieco',recordPoliza.get('CDUNIECO'));
