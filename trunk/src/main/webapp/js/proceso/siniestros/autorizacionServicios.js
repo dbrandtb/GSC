@@ -2936,9 +2936,8 @@ Ext.onReady(function() {
 			}
 			,success : function (response){
 				var datosExtras = Ext.decode(response.responseText);
-				debug("VALOR RECUPERADO ===>",Ext.decode(response.responseText).datosInformacionAdicional);
 				if(Ext.decode(response.responseText).datosInformacionAdicional != null){
-					var copagoOrig = Ext.getCmp('idCopago').getValue();
+					var copagoOrig = Ext.getCmp('idCopago').getValue() ;
 					var sumatoria = 0;
 					var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
 					if(json == null){
