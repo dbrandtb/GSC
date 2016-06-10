@@ -2936,13 +2936,20 @@ Ext.onReady(function() {
 			}
 			,success : function (response){
 				var datosExtras = Ext.decode(response.responseText);
+				debug("VALOR RECUPERADO ===>",Ext.decode(response.responseText).datosInformacionAdicional);
 				if(Ext.decode(response.responseText).datosInformacionAdicional != null){
-					var copagoOrig = Ext.getCmp('idCopago').getValue() ;
+					var copagoOrig = Ext.getCmp('idCopago').getValue();
 					var sumatoria = 0;
 					var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
-					Ext.getCmp('idMultiploIncrem').setValue(json.MULTINCREMENTO);
-					Ext.getCmp('idHospitalPlus').setValue(json.HOSPITALPLUS);
-					Ext.getCmp('idPorcIncremento').setValue(json.PORCINCREMENTO);
+					if(json == null){
+						Ext.getCmp('idMultiploIncrem').setValue("0");
+						Ext.getCmp('idHospitalPlus').setValue("0");
+						Ext.getCmp('idPorcIncremento').setValue("0");
+					}else{
+						Ext.getCmp('idMultiploIncrem').setValue(json.MULTINCREMENTO);
+						Ext.getCmp('idHospitalPlus').setValue(json.HOSPITALPLUS);
+						Ext.getCmp('idPorcIncremento').setValue(json.PORCINCREMENTO);
+					}
 					validacionCopagoTotal();
 				}
 			},
