@@ -686,6 +686,20 @@ function _datComTurnarSuscripcion()
                                             readOnly:true,
                                             fieldLabel:'Plan',
                                             style:'margin:5px;'
+                                        },
+		                                {
+                                            xtype:'numberfield',
+                                            name:'panel2.nmrenova',
+                                            //readOnly:true,
+                                            fieldLabel:'Numero Renova',
+                                            style:'margin:5px;'
+                                        },
+		                                {
+                                            xtype:'textfield',
+                                            name:'panel2.nmpolant',
+                                           // readOnly:true,
+                                            fieldLabel:'Numero de Poliza Completo',
+                                            style:'margin:5px;'
                                         }
                                         ,{
                                             xtype           : 'combo'
