@@ -12,9 +12,11 @@ var _p37_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperaci
 ////// variables //////
 var _p37_smap1  = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 var _p37_slist1 = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
+var _p37_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
 
 debug('_p37_smap1:'  , _p37_smap1);
 debug('_p37_slist1:' , _p37_slist1);
+debug('_p37_flujo:'  , _p37_flujo);
 
 var _p37_store;
 ////// variables //////
@@ -244,14 +246,22 @@ function _p37_confirmar(boton)
     
     boton.setDisabled(true);
     boton.setText('Cargando...');
+    
+    var jsonData =
+    {
+        smap1   : _p37_smap1
+        ,slist1 : _p37_slist1
+    };
+    
+    if(!Ext.isEmpty(_p37_flujo))
+    {
+        jsonData.flujo = _p37_flujo;
+    }
+    
     Ext.Ajax.request(
     {
         url       : _p37_urlConfirmar
-        ,jsonData :
-        {
-            smap1   : _p37_smap1
-            ,slist1 : _p37_slist1
-        }
+        ,jsonData : jsonData
         ,success  : function(response)
         {
             boton.setText('Confirmar');

@@ -33,6 +33,7 @@ _5_smap1:
 */
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _5_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+var _5_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 
 var _5_urlLoadMdomicil = '<s:url namespace="/catalogos"  action="obtenerDomicilioContratante" />';
 var _5_urlGuardar      = '<s:url namespace="/endosos"    action="guardarEndosoDomicilioAutoFull" />';
@@ -47,6 +48,7 @@ var _5_panelPri;
 var datosIniciales;
 
 debug('_5_smap1:',_5_smap1);
+debug('_5_flujo:',_5_flujo);
 
 
 var _p5_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple" />';
@@ -445,6 +447,12 @@ function _5_confirmar(boton)
 					}
 					//,parametros : _5_panelTatriper.getValues()
 				};
+				
+				if(!Ext.isEmpty(_5_flujo))
+				{
+				    json.flujo = _5_flujo;
+				}
+				
 				debug('datos a enviar:',json);
 				var panelMask = new Ext.LoadMask('divEndDomCP', {msg:"Confirmando..."});
 				panelMask.show();

@@ -24,6 +24,8 @@ smap1:
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _35_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
+var _35_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
 var _35_formLectura;
 var _35_formContratante;
 var _35_panelPri;
@@ -36,6 +38,8 @@ var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoRfcCl
 var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContratantesEndosoContratante" />';
 
 debug('_35_smap1:',_35_smap1);
+
+debug('_35_flujo:',_35_flujo);
 
 var nombreInicial;
 
@@ -410,6 +414,12 @@ function _35_confirmar()
             }
             ,slist1 : slist1
         }
+        
+        if(!Ext.isEmpty(_35_flujo))
+        {
+            json.flujo = _35_flujo;
+        }
+        
         debug('datos que se enviaran:',json);
         
         var panelMask = new Ext.LoadMask('_35_divPri', {msg:"Confirmando..."});

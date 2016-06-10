@@ -2143,7 +2143,7 @@ Ext.onReady(function() {
                                     boxLabel    : 'No'
                                     ,name       : 'SWAGENTE2'
                                     ,inputValue : 'N'
-                                    ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
+                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
                                 }
                             ]
                         }
@@ -3366,7 +3366,7 @@ Ext.onReady(function() {
                                                     boxLabel    : 'No'
                                                     ,name       : 'SWAGENTE3'
                                                     ,inputValue : 'N'
-                                                    ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
+                                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
                                                 }
                                             ]
                                         }],

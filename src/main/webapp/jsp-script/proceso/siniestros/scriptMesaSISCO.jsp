@@ -398,7 +398,7 @@ var msgWindow;
 													boxLabel    : 'No'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'N'
-													,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
+													,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
 												}
 											]
 										}],
@@ -683,7 +683,7 @@ var msgWindow;
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE2'
        	                                ,inputValue : 'N'
-                                        ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
+                                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
        	                            }
        	                        ]
        	                    }],
@@ -1407,7 +1407,7 @@ var msgWindow;
 				        	                                boxLabel    : 'No'
 				        	                                ,name       : 'SWAGENTE3'
 				        	                                ,inputValue : 'N'
-                                                            ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
+                                                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
 				        	                            }
 				        	                        ]
 				        	                    }],
@@ -1558,7 +1558,7 @@ var msgWindow;
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE5'
        	                                ,inputValue : 'N'
-                                        ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
+                                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
        	                            }
        	                        ]
        	                    }],

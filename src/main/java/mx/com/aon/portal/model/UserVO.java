@@ -16,6 +16,7 @@ import mx.com.aon.portal.util.UserSQLDateConverter;
 import mx.com.aon.portal.util.UserStringConverter;
 import mx.com.aon.portal.util.UserTimestampConverter;
 import mx.com.gseguros.portal.general.model.RolVO;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.beanutils.Converter;
 import org.apache.log4j.Logger;
@@ -395,6 +396,21 @@ public class UserVO implements Serializable {
 
 	public void setCdUnieco(String cdUnieco) {
 		this.cdUnieco = cdUnieco;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return Utils.join(
+				 "\n*********************"
+				,"\n****** USUARIO ******"
+				,"\n*** cdusuari   = " , this.user
+				,"\n*** cdsisrol   = " , (this.rolActivo == null ? null : this.rolActivo.getClave())
+				,"\n*** name       = " , this.name
+				,"\n*** cdunieco   = " , this.cdUnieco
+				,"\n*** elementoId = " , (this.empresa   == null ? null : this.empresa.getElementoId()) 
+				,"\n*********************"
+				);
 	}
 
 }

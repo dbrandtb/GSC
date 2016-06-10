@@ -1467,7 +1467,7 @@ Ext.onReady(function()
 	                                            boxLabel    : 'No'
 	                                            ,name       : 'SWAGENTE'
 	                                            ,inputValue : 'N'
-	                                            ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
+	                                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
 	                                        }
 	                                    ]
 	                                }

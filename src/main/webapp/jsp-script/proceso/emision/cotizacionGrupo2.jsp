@@ -4446,7 +4446,7 @@ function _p25_turnar(status,titulo,closable)
                         boxLabel    : 'No'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'N'
-                        ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
+                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
                     }
                 ]
             }

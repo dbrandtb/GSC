@@ -339,7 +339,7 @@ function rechazarTramiteWindow(grid,rowIndex,colIndex){
                     boxLabel    : 'No'
                     ,name       : 'SWAGENTE2'
                     ,inputValue : 'N'
-                    ,checked    : !_GLOBAL_CDSISROL===RolSistema.Agente
+                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
                 }
             ]
         }],
