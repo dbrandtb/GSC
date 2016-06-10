@@ -93,32 +93,35 @@ Ext.onReady(function()
     ////// modelos //////
     
     ////// stores //////
-    _p48_store = Ext.create('Ext.data.Store',
-    {
-        autoLoad : false
-        ,model   : '_p48_modelo'
-        ,proxy   :
-        {
-            type         : 'ajax'
-            ,url         : _p48_urlRecuperacion
-            ,extraParams :
-            {
-                'params.consulta'  : 'RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA'
-                ,'params.cdunieco' : _p48_params.CDUNIECO
-                ,'params.cdramo'   : _p48_params.CDRAMO
-                ,'params.estado'   : _p48_params.ESTADO
-                ,'params.nmpoliza' : _p48_params.NMPOLIZA
-            }
-            ,reader :
-            {
-                type             : 'json'
-                ,root            : 'list'
-                ,successProperty : 'success'
-                ,messageProperty : 'message'
-            }
-        }
-    });
-    _p48_cargarStore();
+    debug("VALOR DEL CDTIPSUP ===> ",+_p48_params.cdtipsup);
+   	if(+_p48_params.cdtipsup > 9){
+	    _p48_store = Ext.create('Ext.data.Store',
+	    {
+	        autoLoad : false
+	        ,model   : '_p48_modelo'
+	        ,proxy   :
+	        {
+	            type         : 'ajax'
+	            ,url         : _p48_urlRecuperacion
+	            ,extraParams :
+	            {
+	                'params.consulta'  : 'RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA'
+	                ,'params.cdunieco' : _p48_params.CDUNIECO
+	                ,'params.cdramo'   : _p48_params.CDRAMO
+	                ,'params.estado'   : _p48_params.ESTADO
+	                ,'params.nmpoliza' : _p48_params.NMPOLIZA
+	            }
+	            ,reader :
+	            {
+	                type             : 'json'
+	                ,root            : 'list'
+	                ,successProperty : 'success'
+	                ,messageProperty : 'message'
+	            }
+	        }
+	    });
+	    _p48_cargarStore();	
+   	}
     
     _p48_storeMov = Ext.create('Ext.data.Store',
     {
@@ -274,7 +277,11 @@ Ext.onReady(function()
                                             throw 'Revisar datos del endoso';
                                         }
                                        	
-                                        debug()
+                                        if(+_p48_params.cdtipsup > 9){
+                                        	var cdtipsitPrimerInc = _p48_store.getAt(0).get('CDTIPSIT');
+                                        }else{
+                                        	var cdtipsitPrimerInc = _p48_params.CDTIPSIT;
+                                        }
                                         var datos =
                                         {
                                             params : 
@@ -287,7 +294,7 @@ Ext.onReady(function()
                                                 ,nmsuplem             : _p48_params.nmsuplem_endoso
                                                 ,nsuplogi             : _p48_params.nsuplogi
                                                 ,fecha                : Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')
-                                                ,cdtipsitPrimerInciso : 'SSI'//_p48_store.getAt(0).get('CDTIPSIT')
+                                                ,cdtipsitPrimerInciso : cdtipsitPrimerInc
                                                 ,nmsolici             : _p48_params.NMSOLICI
                                             }
                                             ,list : []
@@ -499,7 +506,7 @@ function _p48_quitarAseguradoClic(me)
             debug('datos:',datos);
             Ext.Ajax.request(
             {
-                url       : _p48_urlMovimientosSMD 			//1.- 
+                url       : _p48_urlMovimientosSMD 
                 ,jsonData : { params : datos }
                 ,success  : function(response)
                 {
