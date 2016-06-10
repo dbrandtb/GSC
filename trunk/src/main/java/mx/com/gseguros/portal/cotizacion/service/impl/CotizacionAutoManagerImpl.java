@@ -1332,7 +1332,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				String cdperson = consultasDAO.recuperarCdpersonClienteTramite(ntramite);
 				resp.getSmap().put("cdpercli", cdperson);
 				
-				if(flujo!=null)
+				if(flujo!=null
+						&&!endoso)
 				{
 					logger.debug("Se recuperan datos del tramite accediendo por flujo");
 					
@@ -1448,7 +1449,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			}
 			
 			//parchamos el campo AGENTE cuando viene por flujo
-			if(flujo!=null)
+			if(flujo!=null && !endoso)
 			{
 				logger.debug("Se procede a buscar el campo agente para reemplazar");
 				for(ComponenteVO item : tatrisit)

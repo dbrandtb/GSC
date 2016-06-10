@@ -9,6 +9,10 @@
 	
 	debug('paramsEntrada  -->:',paramsEntrada);
 	
+	var endDespFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+	
+	debug('endDespFlujo:',endDespFlujo);
+	
 	Ext.onReady(function() {
 		
 		
@@ -87,6 +91,11 @@
 				        				paramsEntrada.NMRECIBO = record.get('NMRECIBO');
 				        				paramsEntrada.NMIMPRES = record.get('NMIMPRES');
 				        				submitValues['smap1']= paramsEntrada;
+				        				
+				        				if(!Ext.isEmpty(endDespFlujo))
+				        				{
+				        				    submitValues['flujo'] = endDespFlujo;
+				        				}
 				        				
 				        				var panelMask = new Ext.LoadMask('mainDivDespago', {msg:"Confirmando..."});
 										panelMask.show();

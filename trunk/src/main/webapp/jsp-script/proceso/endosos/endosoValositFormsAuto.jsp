@@ -16,6 +16,9 @@ debug('_p44_smap1:',_p44_smap1);
 
 var _p44_slist1 = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
 debug('_p44_slist1:',_p44_slist1);
+
+var _p44_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+debug('_p44_flujo:',_p44_flujo);
 ////// variables //////
 
 ////// overrides //////
@@ -154,6 +157,11 @@ Ext.onReady(function()
 		                        }
 		                        
 		                        json.slist1.push(inciso);
+		                    }
+		                    
+		                    if(!Ext.isEmpty(_p44_flujo))
+		                    {
+		                        json.flujo = _p44_flujo;
 		                    }
 		                    
 		                    debug('json a enviar:',json);

@@ -817,9 +817,18 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String cdusuari  = usuario.getUser()
 			       ,cdsisrol = usuario.getRolActivo().getClave();
 			
-			if(flujo!=null)
+			if(flujo!=null
+				&&
+				(
+					smap1==null
+					||!"MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen"))
+				)
+			)//si hay flujo y (o no hay mapa o hay mapa pero no vengo de endosos)
 			{
-				logger.debug(Utils.log("", "se creara el mapa porque viene de flujo"));
+				//EN ENDOSO NO SE BOORA PORQUE
+				//TRAE DATOS DEL MARCO
+				
+				logger.debug(Utils.log("FLUJO: se creara el mapa porque viene de flujo y no es endoso (es emision)"));
 				
 				smap1 = new HashMap<String,String>();
 				
@@ -830,6 +839,10 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.put("tipoflot" , flujo.getAux().split(",")[0].split(":")[1]); //primer split= tipoflot:P onComprar:16', segundo split tipoflot P
 				
 				logger.debug(Utils.log("", "el mapa creado desde flujo es=", smap1));
+			}
+			else
+			{
+				logger.debug("FLUJO: No entra porque no es flujo o porque es flujo de endoso");
 			}
 			
 			Utils.validate(smap1, "No se recibieron datos");

@@ -15,8 +15,10 @@ var _p38_urlRecuperacionSimple       = '<s:url namespace="/emision" action="recu
 ////// variables //////
 var _p38_smap1  = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 var _p38_slist1 = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
+var _p38_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
 debug('_p38_smap1:'  , _p38_smap1);
 debug('_p38_slist1:' , _p38_slist1);
+debug('_p38_flujo:'  , _p38_flujo);
 ////// variables //////
 
 ////// overrides //////
@@ -87,15 +89,25 @@ Ext.onReady(function()
                     
                     me.setDisabled(true);
                     me.setText('Cargando...');
+                    
+                    var jsonConfirmar =
+                    {
+                        smap1   : _p38_smap1
+                        ,smap2  : me.up('form').getValues()
+                        ,slist1 : _p38_slist1
+                    };
+                    
+                    if(!Ext.isEmpty(_p38_flujo))
+                    {
+                        jsonConfirmar.flujo = _p38_flujo;
+                    }
+                    
+                    debug('jsonConfirmar:',jsonConfirmar);
+                    
                     Ext.Ajax.request(
                     {
                         url       : _p38_urlConfirmarEndoso
-                        ,jsonData :
-                        {
-                            smap1   : _p38_smap1
-                            ,smap2  : me.up('form').getValues()
-                            ,slist1 : _p38_slist1
-                        }
+                        ,jsonData : jsonConfirmar
                         ,success  : function(response)
                         {
                             me.setText('Confirmar');

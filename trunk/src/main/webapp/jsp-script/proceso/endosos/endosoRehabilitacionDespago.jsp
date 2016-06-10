@@ -5,9 +5,12 @@
 	var paramsEntrada          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 	var guarda_RehabilitacionDespago = '<s:url namespace="/endosos" action="guardarEndosoRehabilitacionDespago"       />';
 	
+	var _endRehDesp_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+	
 	var _URL_CONSULTA_RECIBOS_DESPAGADOS = '<s:url namespace="/endosos" action="obtieneRecibosDespagados" />';
 	
 	debug('paramsEntrada  -->:',paramsEntrada);
+	debug('_endRehDesp_flujo:',_endRehDesp_flujo);
 	
 	Ext.onReady(function() {
 		
@@ -87,6 +90,11 @@
 				        				paramsEntrada.NMRECIBO = record.get('NMRECIBO');
 				        				paramsEntrada.NMIMPRES = record.get('NMIMPRES');
 				        				submitValues['smap1']= paramsEntrada;
+				        				
+				        				if(!Ext.isEmpty(_endRehDesp_flujo))
+				        				{
+				        				    submitValues['flujo'] = _endRehDesp_flujo;
+				        				}
 				        				
 				        				var panelMask = new Ext.LoadMask('mainDivDespago', {msg:"Confirmando..."});
 										panelMask.show();

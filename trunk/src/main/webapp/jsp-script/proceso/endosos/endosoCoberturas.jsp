@@ -43,6 +43,10 @@
     debug('inputCdpersonap3',inputCdpersonap3);
     debug('inputNtramitep3',inputNtramitep3);
     debug('inputAltabajap3',inputAltabajap3);
+    
+    var _p3_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+    
+    debug('_p3_flujo:',_p3_flujo);
     /*///////////////////*/
     //////variables //////
     ///////////////////////
@@ -100,7 +104,12 @@
             _p3_smap1['confirmar'] = confirmar;
             
             json['smap1']=_p3_smap1;
-
+            
+            if(!Ext.isEmpty(_p3_flujo))
+            {
+                json['flujo'] = _p3_flujo;
+            }
+            
             debug(json);
             
             if(slist1.length <= 0){

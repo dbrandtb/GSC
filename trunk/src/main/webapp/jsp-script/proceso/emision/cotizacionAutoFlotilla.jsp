@@ -6650,6 +6650,11 @@ function _p30_confirmarEndoso()
         json.slist2.push(recordTvalositPoliza.data);
         //crear record con los valores del formulario y el formulario oculto
         
+        if(!Ext.isEmpty(_p30_flujo))
+        {
+            json.flujo = _p30_flujo;
+        }
+        
         debug('>>> json a enviar:',json);
         
         var boton=_fieldById('_p30_endosoButton');

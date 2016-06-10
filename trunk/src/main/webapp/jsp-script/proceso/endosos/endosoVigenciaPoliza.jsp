@@ -6,6 +6,8 @@
 	var guarda_Aseg_alterno  = '<s:url namespace="/endosos" action="guardarEndosoAseguradoAlterno"       />';
 	var guarda_Vigencia_Poliza = '<s:url namespace="/endosos" action="guardarEndosoVigenciaPoliza"       />';
 	
+	var endVigPolFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+	
 	debug('asegAlterno  -->:',asegAlterno);
 	
 	Ext.onReady(function() {
@@ -74,6 +76,12 @@
 	        				asegAlterno.FEPROREN = Ext.Date.format(panelInicialPral.down('[name="feFin"]').getValue(),'d/m/Y');
 	        				asegAlterno.FEINIVAL = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
 	        				submitValues['smap1']= asegAlterno;
+	        				
+	        				if(!Ext.isEmpty(endVigPolFlujo))
+	        				{
+	        				    submitValues['flujo'] = endVigPolFlujo;
+	        				}
+	        				
 	        				Ext.Ajax.request( {
 	   						    url: guarda_Vigencia_Poliza,
 	   						    jsonData: Ext.encode(submitValues),

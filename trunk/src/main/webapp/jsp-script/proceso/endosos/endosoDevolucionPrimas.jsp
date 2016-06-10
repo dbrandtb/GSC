@@ -15,8 +15,10 @@ var _p39_urlRecuperacionSimple      = '<s:url namespace="/emision" action="recup
 ////// variables //////
 var _p39_smap1  = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 var _p39_slist1 = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
+var _p39_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
 debug('_p39_smap1:'  , _p39_smap1);
 debug('_p39_slist1:' , _p39_slist1);
+debug('_p39_flujo:'  , _p39_flujo);
 
 var _p39_storeIncisos    = null;
 var _p39_storeCoberturas = null;
@@ -318,15 +320,23 @@ Ext.onReady(function()
                             
                             me.setDisabled(true);
                             me.setText('Cargando...');
+                            
+                            var jsonData =
+                            {
+                                smap1   : _p39_smap1
+                                ,smap2  : me.up('form').getForm().getValues()
+                                ,slist1 : lista
+                            };
+                            
+                            if(!Ext.isEmpty(_p39_flujo))
+                            {
+                                jsonData.flujo = _p39_flujo;
+                            }
+                            
                             Ext.Ajax.request(
                             {
                                 url       : _p39_urlConfirmarEndoso
-                                ,jsonData :
-                                {
-                                    smap1   : _p39_smap1
-                                    ,smap2  : me.up('form').getForm().getValues()
-                                    ,slist1 : lista
-                                }
+                                ,jsonData : jsonData
                                 ,success  : function(response)
                                 {
                                     me.setDisabled(false);

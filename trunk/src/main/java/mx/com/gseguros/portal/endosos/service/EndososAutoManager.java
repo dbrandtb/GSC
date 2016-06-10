@@ -110,6 +110,9 @@ public interface EndososAutoManager
 			,String cdtipsup
 			,String fecha
 			,UserVO usuarioSesion
+			,String cdsisrol
+			,FlujoVO flujo
+			
 			)throws Exception;
 	
 	public Map<String,Item> endosoBajaIncisos(
@@ -128,6 +131,8 @@ public interface EndososAutoManager
 			,String fecha
 			,UserVO usuarioSesion
 			,boolean devolver
+			,String cdsisrol
+			,FlujoVO flujo
 			)throws Exception;
 
 	public void guardarEndosoDespago(
@@ -140,6 +145,9 @@ public interface EndososAutoManager
 			,String nmimpres
 			,String cdtipsup
 			,UserVO usuarioSesion
+			,String cdusuari
+			,String cdsisrol
+			,FlujoVO flujo
 			)throws Exception;
 	
 	
@@ -188,6 +196,7 @@ public interface EndososAutoManager
 			,String feproren
 			,String nmsuplemOriginal
 			,String cdsisrol
+			,FlujoVO flujo
 			)throws Exception;
 
 	public void guardarEndosoTextoLibre(
@@ -245,6 +254,7 @@ public interface EndososAutoManager
 			,Map<String,String> valores
 			,Map<String,String> incisoAnterior
 			,UserVO usuarioSesion
+			,FlujoVO flujo
 			)throws Exception;
 	
 	public List<Map<String,String>> obtenerRetroactividad(
@@ -296,6 +306,7 @@ public interface EndososAutoManager
 			,String nmsuplem
 			,String cdelemen
 			,UserVO usuarioSesion
+			,FlujoVO flujo
 			)throws Exception;
 
 	public void confirmarEndosoRehabilitacionSalud(
@@ -348,6 +359,7 @@ public interface EndososAutoManager
 			,String cdelemen
 			,Date   fechainicio
 			,UserVO usuarioSesion
+			,FlujoVO flujo
 			)throws Exception;
 	
 	public void guardarEndosoDevolucionPrimas(
@@ -363,6 +375,7 @@ public interface EndososAutoManager
 			,Date   feefecto
 			,List<Map<String,String>> incisos
 			,UserVO usuarioSesion
+			,FlujoVO flujo
 			)throws Exception;
 	
 	public Map<String,Item> endosoCancelacionPolAuto(String cdsisrol, String cdramo) throws Exception;
@@ -381,6 +394,8 @@ public interface EndososAutoManager
 			,Date fecancel
 			,String cdtipsup
 			,UserVO usuarioSesion
+			,String cdsisrol
+			,FlujoVO flujo
 			)throws Exception;
 	
 	public Map<String,Item> endosoValositFormsAuto(
@@ -409,6 +424,7 @@ public interface EndososAutoManager
 			,Date feinival
 			,List<Map<String,String>> incisos
 			,UserVO usuarioSesion
+			,FlujoVO flujo
 			)throws Exception;
 	
 	public Map<String,Item> confirmarEndosoRehabilitacionPolAuto(String cdsisrol, String cdramo) throws Exception;
@@ -472,6 +488,9 @@ public interface EndososAutoManager
 			,String nmimpres
 			,String cdtipsup
 			,UserVO usuarioSesion
+			,String cdusuari
+			,String cdsisrol
+			,FlujoVO flujo
 			)throws Exception;
 
 	public int guardarEndosoNombreRFCFecha(String cdunieco, String cdramo, String estado, String nmpoliza,
@@ -481,7 +500,7 @@ public interface EndososAutoManager
 			String residencia, String nongrata, String cdideext, String cdestciv, String cdsucemi, String cdusuari,
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso, String tipoPantalla,
 			String codigoCliExt,String sucursalEnt,String ramoEntrada,String polizaEnt, String cdpersonNew, String dsnombreComp,
-			String tramite, String numsuplemen, String urlCaratula, UserVO usuarioSesion)throws Exception;
+			String tramite, String numsuplemen, String urlCaratula, UserVO usuarioSesion, FlujoVO flujo)throws Exception;
 	
 	public int guardarEndosoDomicilioNoSICAPS(String tipoPantalla, String sucursalEnt, String ramoEntrada,
 			String polizaEnt, String codigoCliExt, String cdpersonNew, String codigoPostal, String cveEstado,
