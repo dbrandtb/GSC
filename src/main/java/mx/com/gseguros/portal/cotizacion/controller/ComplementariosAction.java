@@ -325,6 +325,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdperpag"));
 				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.dsplan"));
 				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.nmcuadro"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.nmrenova"));
+				fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.nmpolant"));
 			}
 			catch(Exception ex)
 			{
@@ -514,6 +516,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 			panel2.put("cdperpag", (String) select.get("cdperpag"));
 			panel2.put("dsplan", (String) select.get("dsplan"));
 			panel2.put("nmcuadro" , (String) select.get("nmcuadro"));
+			panel2.put("nmrenova", (String) select.get("nmrenova"));
+			panel2.put("nmpolant", (String) select.get("nmpolant"));
 			/*/////////////////////////////////*/
 			////// Cargar info de mpolizas //////
 			/////////////////////////////////////
@@ -614,7 +618,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             nuevo.put("pv_hhefecto",     (String)anterior.get("hhefecto"));
             nuevo.put("pv_feproren",     panel2.get("ferenova"));//renderFechas.format(fechaEnUnAnio.getTime()));
             nuevo.put("pv_fevencim",     anterior.get("fevencim")!=null?renderFechas.format(anterior.get("fevencim")):null);
-            nuevo.put("pv_nmrenova",     (String)anterior.get("nmrenova"));
+            nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?0:panel2.get("nmrenova"))); 
             nuevo.put("pv_ferecibo",     anterior.get("ferecibo")!=null?renderFechas.format(anterior.get("ferecibo")):null);
             nuevo.put("pv_feultsin",     anterior.get("feultsin")!=null?renderFechas.format(anterior.get("feultsin")):null);
             nuevo.put("pv_nmnumsin",     (String)anterior.get("nmnumsin"));
@@ -629,7 +633,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             		:(String)anterior.get("nmcuadro"));
             nuevo.put("pv_porredau",     (String)anterior.get("porredau"));
             nuevo.put("pv_swconsol",     (String)anterior.get("swconsol"));
-            nuevo.put("pv_nmpolant",     (String)anterior.get("nmpolant"));
+            nuevo.put("pv_nmpolant",     panel2.get("nmpolant")==null?"":panel2.get("nmpolant"));//  // Se agrega TextField
             nuevo.put("pv_nmpolnva",     (String)anterior.get("nmpolnva"));
             nuevo.put("pv_fesolici",     panel2.get("fesolici"));
             nuevo.put("pv_cdramant",     (String)anterior.get("cdramant"));

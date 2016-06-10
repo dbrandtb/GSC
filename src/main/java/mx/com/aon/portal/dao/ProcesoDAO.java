@@ -1509,6 +1509,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             columns.add("cdperpag");
             columns.add("cdplan");
             columns.add("dsplan");
+            columns.add("nmrenova");
+            columns.add("nmpolant");
             Map<String,Object>map=new HashMap<String,Object>(0);
             for(String columnName:columns)
             {
