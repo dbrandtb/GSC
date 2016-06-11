@@ -131,9 +131,14 @@ var TipoTramite = {
 
 // Catalogo de Roles del sistema (cdsisrol):
 var RolSistema = {
-    Agente         : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@AGENTE.cdsisrol"          />',
-    PromotorAuto   : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@PROMOTOR_AUTO.cdsisrol"   />',
-    SuscriptorAuto : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR_AUTO.cdsisrol" />'
+    Agente                        : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@AGENTE.cdsisrol"                    />'
+    ,PromotorAuto                 : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@PROMOTOR_AUTO.cdsisrol"             />'
+    ,SuscriptorAuto               : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR_AUTO.cdsisrol"           />'
+    ,TecnicoSuscripcionDanios     : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@TECNICO_SUSCRI_DANIOS.cdsisrol"     />'
+    ,JefeSuscripcionDanios        : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@JEFE_SUSCRI_DANIOS.cdsisrol"        />'
+    ,GerenteSuscripcionDanios     : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GERENTE_SUSCRI_DANIOS.cdsisrol"     />'
+    ,EmisorSuscripcionDanios      : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@EMISOR_SUSCRI_DANIOS.cdsisrol"      />'
+    ,SubdirectorSuscripcionDanios : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUBDIRECTOR_SUSCRI_DANIOS.cdsisrol" />'
 };
 
 

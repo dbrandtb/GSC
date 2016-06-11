@@ -3688,21 +3688,23 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected GuardaEndosoDespago(DataSource dataSource)
 		{
 			super(dataSource,"P_CALC_RECIBOS_DESPAGOS");
-			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
-//			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmrecibo_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmimpres_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cduser_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipsup_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_nmsuplem_o"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_ntramite_o"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_tipoflot_o"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+//			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmrecibo_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmimpres_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cduser_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nsuplogi_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_feinival_o" , OracleTypes.DATE));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
@@ -4348,6 +4350,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nsuplogi_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

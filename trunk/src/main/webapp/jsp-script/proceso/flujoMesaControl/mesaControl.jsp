@@ -753,7 +753,17 @@ function _p54_recuperaSucursalesTramiteAgente()
 function _p54_agregaListenersPromotorSuscriptor()
 {
     debug('>_p54_agregaListenersPromotorSuscriptor');
-    if([RolSistema.PromotorAuto,RolSistema.SuscriptorAuto].indexOf(_p54_params.CDSISROL) != -1 )
+    if(
+        [
+            RolSistema.PromotorAuto
+            ,RolSistema.SuscriptorAuto
+            ,RolSistema.TecnicoSuscripcionDanios
+            ,RolSistema.JefeSuscripcionDanios
+            ,RolSistema.GerenteSuscripcionDanios
+            ,RolSistema.EmisorSuscripcionDanios
+            ,RolSistema.SubdirectorSuscripcionDanios
+        ].indexOf(_p54_params.CDSISROL) != -1
+    )
     {
         var agenteComp = _fieldByLabel('AGENTE',_fieldById('_p54_formNuevoTramite'),true);
         
