@@ -1758,9 +1758,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						,cdtipsup
 						);
 			
-			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
-			String ntramite = (String) resParams.get("pv_ntramite_o");
+			String nmsuplemGen     = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
+			Date   feinival        = (Date)   resParams.get("pv_feinival_o");
+			
+			logger.debug(Utils.log("nsuplogi=",nsuplogi,",feinival=",feinival));
 			
 			this.confirmarGuardandoDetallesTramiteEndoso(
 					ntramite
@@ -1770,9 +1774,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,nmpoliza
 					,nmsuplemGen
 					,cdtipsup
-					,null //TODO nsuplogi
+					,nsuplogi
 					,null //dscoment
-					,null //TODO dFechaEndoso
+					,feinival
 					,flujo
 					,cdusuari
 					,cdsisrol
@@ -4731,6 +4735,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String nmsuplemGen     = (String) resParams.get("pv_nmsuplem_o");
 			String ntramite        = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
 			
 			this.confirmarGuardandoDetallesTramiteEndoso(
 					ntramite
@@ -4740,7 +4745,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,nmpoliza
 					,nmsuplemGen
 					,cdtipsup
-					,null //TODO nsuplogi
+					,nsuplogi
 					,null //dscoment
 					,feefecto
 					,flujo
@@ -4969,9 +4974,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,usuarioSesion.getRolActivo().getClave()
 					);
 			
-			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
-			String ntramite = (String) resParams.get("pv_ntramite_o");
+			String nmsuplemGen     = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
 			
 			this.confirmarGuardandoDetallesTramiteEndoso(
 					ntramite
@@ -4981,7 +4987,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,nmpoliza
 					,nmsuplemGen
 					,cdtipsup
-					,null //TODO nsuplogi
+					,nsuplogi
 					,null //dscoment
 					,fecancel
 					,flujo
@@ -5898,9 +5904,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						,cdtipsup
 						);
 			
-			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
-			String ntramite = (String) resParams.get("pv_ntramite_o");
+			String nmsuplemGen     = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
+			Date   feinival        = (Date)   resParams.get("pv_feinival_o");
+			
+			logger.debug(Utils.log("nsuplogi=",nsuplogi,",feinival=",feinival));
 			
 			this.confirmarGuardandoDetallesTramiteEndoso(
 					ntramite
@@ -5910,9 +5920,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,nmpoliza
 					,nmsuplemGen
 					,cdtipsup
-					,null //TODO nsuplogi
+					,nsuplogi
 					,null //dscoment
-					,null //TODO dFechaEndoso
+					,feinival
 					,flujo
 					,cdusuari
 					,cdsisrol
