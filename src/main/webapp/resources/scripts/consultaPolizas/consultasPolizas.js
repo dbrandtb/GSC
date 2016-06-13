@@ -1637,9 +1637,11 @@ Ext.onReady(function() {
                     
                     //Limpiar seleccion de la lista de opciones de consulta:
                     limpiaSeleccionTiposConsulta();
-                    params['params.switchConvenios'] = storeSuplementos.getAt(0).get('switchConvenios');
+                    if( !Ext.isEmpty(records) ) {
+                    params['params.switchConvenios'] = records[0].get('switchConvenios');
                     //debug("switch convenios",params.switchConvenios);
                     obtieneAvisosPoliza(params);
+                    }
                     
                 } else {
                     showMessage('Error', 'Error al obtener el hist\u00F3rico de la p\u00F3liza', Ext.Msg.OK, Ext.Msg.ERROR);
