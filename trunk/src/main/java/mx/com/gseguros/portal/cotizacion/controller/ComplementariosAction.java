@@ -618,7 +618,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             nuevo.put("pv_hhefecto",     (String)anterior.get("hhefecto"));
             nuevo.put("pv_feproren",     panel2.get("ferenova"));//renderFechas.format(fechaEnUnAnio.getTime()));
             nuevo.put("pv_fevencim",     anterior.get("fevencim")!=null?renderFechas.format(anterior.get("fevencim")):null);
-            nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?0:panel2.get("nmrenova"))); 
+            nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?null:panel2.get("nmrenova"))); 
             nuevo.put("pv_ferecibo",     anterior.get("ferecibo")!=null?renderFechas.format(anterior.get("ferecibo")):null);
             nuevo.put("pv_feultsin",     anterior.get("feultsin")!=null?renderFechas.format(anterior.get("feultsin")):null);
             nuevo.put("pv_nmnumsin",     (String)anterior.get("nmnumsin"));
@@ -633,7 +633,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             		:(String)anterior.get("nmcuadro"));
             nuevo.put("pv_porredau",     (String)anterior.get("porredau"));
             nuevo.put("pv_swconsol",     (String)anterior.get("swconsol"));
-            nuevo.put("pv_nmpolant",     panel2.get("nmpolant")==null?"":panel2.get("nmpolant"));//  // Se agrega TextField
+            nuevo.put("pv_nmpolant",     (String) panel2.get("nmpolant")==null?null:panel2.get("nmpolant"));//  // Se agrega TextField
             nuevo.put("pv_nmpolnva",     (String)anterior.get("nmpolnva"));
             nuevo.put("pv_fesolici",     panel2.get("fesolici"));
             nuevo.put("pv_cdramant",     (String)anterior.get("cdramant"));
