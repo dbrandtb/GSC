@@ -690,7 +690,11 @@ function _datComTurnarSuscripcion()
 		                                {
                                             xtype:'numberfield',
                                             name:'panel2.nmrenova',
+                                            allowBlank:false,
+                                            maxValue: 99,
+        									minValue: 0,
                                             //readOnly:true,
+                                            value:0,
                                             fieldLabel:'Numero Renova',
                                             style:'margin:5px;'
                                         },
