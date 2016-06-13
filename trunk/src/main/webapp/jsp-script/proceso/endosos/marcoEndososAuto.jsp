@@ -1298,12 +1298,13 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                 ,columns     :
                 [
                     {
-                    	text      : 'CDTIPSUP'
-                        ,dataIndex : 'CDTIPSUP'
+                        text      : 'Clave'
+                        ,dataIndex: 'CDTIPSUP'
                         ,flex     : 1
+                        ,hidden   : true
                     },
                     {
-                    	text      : 'DSTIPSUP'
+                        text      : 'Descripci\u00F3n'
                         ,dataIndex : 'DSTIPSUP'
                         ,flex     : 9
                     }
