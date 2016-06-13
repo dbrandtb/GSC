@@ -67,6 +67,7 @@ var _0_urlCargarDetalleNegocioRamo5= '<s:url namespace="/emision"         action
 var _0_urlDetalleTramite                    = '<s:url namespace="/mesacontrol" action="movimientoDetalleTramite"            />';
 var _0_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"     action="actualizarOtvalorTramitePorDsatribu" />';
 var _0_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"     action="recuperarOtvalorTramitePorDsatribu"  />';
+var _0_urlCargarParamerizacionCoberturas  = '<s:url namespace="/emision"     action="cargarParamerizacionConfiguracionCoberturas"/>';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -2498,6 +2499,262 @@ function _0_recuperarCotizacionDeTramite()
         }
     }
 }
+
+function _0_cargarParametrizacionCoberturas(callback)
+{
+// 	alert(1);
+    debug('>_p28_cargarParametrizacionCoberturas callback:',!Ext.isEmpty(callback),'DUMMY');
+    
+    var _f1_tipoServicio;
+    var _f1_modelo;
+    
+    if(!Ext.isEmpty(_fieldLikeLabel('TIPO SERVICIO',null,true)))
+    { _f1_tipoServicio = _fieldByLabel('TIPO SERVICIO').getValue();}
+   
+    if(!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true)))
+    { _f1_modelo = _fieldByLabel('MODELO').getValue();}
+    
+    var valido =   !Ext.isEmpty(_f1_tipoServicio)
+                 && !Ext.isEmpty(_f1_modelo);
+                 
+    if(valido)
+    {
+//         var _f1_panelpri = _fieldById('_0_panelpri');
+        _0_panelPri.setLoading(true);
+        var params =
+        {
+            'smap1.cdtipsit'      : _0_smap1.cdtipsit
+            ,'smap1.cdsisrol'     : _0_smap1.cdsisrol
+            ,'smap1.negocio'      : (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1) ? '999999' : '0' //_0_smap1.cdsisrol == 'SUSCRIAUTO'
+            ,'smap1.tipoServicio' : (_f1_tipoServicio=='P') ? '01' : '03' 
+            ,'smap1.modelo'       : _f1_modelo
+            ,'smap1.tipoPersona'  : 'F'
+            ,'smap1.submarca'     : '00000'
+            ,'smap1.clavegs'      : '00000'
+        };
+        Ext.Ajax.request(
+        {
+            url      : _0_urlCargarParamerizacionCoberturas
+            ,params  : params
+            ,success : function(response)
+            {
+            	_0_panelPri.setLoading(false);
+                var _f1_json=Ext.decode(response.responseText);
+                debug('### parametrizacion:',_f1_json);
+                if(_f1_json.exito)
+                {
+//                 	alert('EXITO');
+                	debug('Vils campos',_f1_json);
+                    for(var i=0;i<_f1_json.slist1.length;i++)
+                    {
+                        var item = _fieldByName('parametros.pv_otvalor'+(('00'+_f1_json.slist1[i].cdatribu).slice(-2)));
+                        if(_f1_json.slist1[i].aplica+'x'=='1x')
+                        {
+                            if(<s:property value='%{getSmap1().containsKey("debug")}' />)
+                            {
+                                item.setReadOnly(false);
+                                item.addCls('green');
+                                item.removeCls('red');
+                            }
+                            else
+                            {
+                                item.show();
+                            }
+                            var minimo = _f1_json.slist1[i].minimo;
+                            var maximo = _f1_json.slist1[i].maximo;
+                            if(!Ext.isEmpty(minimo)&&!Ext.isEmpty(maximo))
+                            {
+                                item.minValue = minimo;
+                                item.maxValue = maximo;
+                                if(item.xtype=='combobox')
+                                {
+                                    item.validator=function(value)
+                                    {
+                                        var valido=true;
+                                        if(value+'x'!='x')
+                                        {
+                                            var value=this.getStore().findRecord('value',value).get('key');
+                                            if(Number(value)<Number(this.minValue))
+                                            {
+                                                valido = 'El valor m&iacute;nimo es '+this.minValue;
+                                            }
+                                            else if(Number(value)>Number(this.maxValue))
+                                            {
+                                                valido = 'El valor m&aacute;ximo es '+this.maxValue;
+                                            }
+                                        }
+                                        return valido;
+                                    }
+                                    if(!item.isValid())
+                                    {
+                                        item.reset();
+                                    }
+                                    debug('item=',item.fieldLabel);
+                                    debug('minimo=',minimo,'maximo=',maximo);
+                                    item.store.filterBy(function(record)
+                                    {
+                                        //VILS
+                                        debug('filtrando record=',record);
+                                        var key=record.get('key')-0;
+                                        debug('quitando key=',key,key>=minimo&&key<=maximo,'.');
+                                        return key>=minimo&&key<=maximo;
+                                    });
+                                    item.on(
+                                    {
+                                        expand : function(me)
+                                        {
+                                            var minimo = me.minValue;
+                                            var maximo = me.maxValue;
+                                            me.store.filterBy(function(record)
+                                            {
+                                                debug('filtrando record=',record);
+                                                var key=record.get('key')-0;
+                                                debug('quitando key=',key,key>=minimo&&key<=maximo,'.');
+                                                return key>=minimo&&key<=maximo;
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                            item.isValid();
+                        }
+                        else
+                        {
+                            if(<s:property value='%{getSmap1().containsKey("debug")}' />)
+                            {
+                                item.setReadOnly(true);
+                                item.addCls('red');
+                                item.removeCls('green');
+                            }
+                            else
+                            {
+                                item.hide();
+                            }
+                            item.setValue(_f1_json.slist1[i].valor);
+                        }
+                    }
+                    if(<s:property value='%{getSmap1().containsKey("debug")}' />)
+                    {
+                        var aux1 = '';
+                        for(var i in params)
+                        {
+                            aux1 = aux1+i+':'+params[i]+'\n';
+                        }
+                        var aux2 = '';
+                        for(var i=0;i<_f1_json.slist1.length;i++)
+                        {
+                            aux2 = aux2
+                                   +_f1_json.slist1[i].cdatribu+' - '
+                                   +'aplica ('+_f1_json.slist1[i].aplica
+                                   +') valor ('+_f1_json.slist1[i].valor
+                                   +') minimo ('+_f1_json.slist1[i].minimo
+                                   +') maximo ('+_f1_json.slist1[i].maximo
+                                   +')\n';
+                        }
+                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                        {
+                            title   : '[DEBUG] PARAMETRIZACION DE COBERTURAS'
+                            ,items  :
+                            [
+                                {
+                                    xtype   : 'textarea'
+                                    ,width  : 400
+                                    ,height : 150
+                                    ,value  : aux1
+                                }
+                                ,{
+                                    xtype   : 'textarea'
+                                    ,width  : 400
+                                    ,height : 450
+                                    ,value  : aux2
+                                }
+                            ]
+                        }).show());
+                    }
+                    if(!Ext.isEmpty(callback))
+                    {
+                        callback();
+                    }
+                    
+                    if(_0_smap1.cdtipsit+'x'=='AFx'||_0_smap1.cdtipsit+'x'=='PUx')
+                    {
+                    	var canadaCmp = _fieldLikeLabel('CANAD');
+                        debug('@CUSTOM canada:',canadaCmp);
+                        canadaCmp.anidado = true;
+                        canadaCmp.heredar = function(remoto,micallback)
+                        {
+                            var me        = _fieldLikeLabel('CANAD');
+                            var postalCmp = _fieldLikeLabel('POSTAL');
+                            var postalVal = postalCmp.getValue();
+                            if((postalVal+'x').length==6)
+                            {
+                                me.setLoading(true);
+                                Ext.Ajax.request(
+                                {
+                                    url     : _0_urlRecuperacionSimple
+                                    ,params :
+                                    {
+                                        'smap1.procedimiento' : 'VERIFICAR_CODIGO_POSTAL_FRONTERIZO'
+                                        ,'smap1.cdpostal'     : postalVal
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        me.setLoading(false);
+                                        var json=Ext.decode(response.responseText);
+                                        debug('### canada:',json);
+                                        if(json.exito)
+                                        {
+                                            if(json.smap1.fronterizo+'x'=='Sx')
+                                            {
+                                                me.setValue('S');
+                                            }
+                                            else
+                                            {
+                                                me.setValue('N');
+                                            }
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.respuesta);
+                                        }
+                                        if(!Ext.isEmpty(micallback))
+                                        {
+                                            micallback(_fieldLikeLabel('CANAD'));
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        me.setLoading(false);
+                                        errorComunicacion();
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                if(!Ext.isEmpty(micallback))
+                                {
+                                    micallback(_fieldLikeLabel('CANAD'));
+                                }
+                            }
+                        }
+                        _fieldLikeLabel('CANAD').heredar();
+                    }
+                }
+                else
+                {
+                    mensajeError(_f1_json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+            	_0_panelPri.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    
+    debug('<_p28_cargarParametrizacionCoberturas');
+}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -3465,6 +3722,20 @@ Ext.onReady(function()
                 {
                     'select' : retroactividadfechaini
                 });
+        
+        var tipoServicio = _fieldLikeLabel('TIPO SERVICIO',null,true);
+        tipoServicio.on(
+		        		{
+		        			change : function(){ _0_cargarParametrizacionCoberturas();}
+		        	    }
+		        	   );
+//         { _f1_tipoServicio = _fieldByLabel('TIPO SERVICIO').getValue();}
+        var modelo = _fieldLikeLabel('MODELO',null,true);
+        modelo.on(
+                        {
+                        	'blur' : function(){ _0_cargarParametrizacionCoberturas();}
+                        }
+                       );
     }
     //fin [parche]
     

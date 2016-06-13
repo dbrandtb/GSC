@@ -155,10 +155,7 @@ Ext.onReady(function()
          */
         toRawNumber: function (value) {
             
-            debug("VIL >>> Cadena(value): " + value);
             var cadena = String(value).replace(this.decimalSeparator,'.').replace(new RegExp(Ext.util.Format.thousandSeparator, "g"), '');
-            debug("VIL >>> Cadena: " + cadena);
-            
             return cadena;
         },
         
@@ -219,7 +216,6 @@ Ext.onReady(function()
             value = me.fixPrecision(value);
             value = Ext.isNumber(value) ? value : parseFloat(me.toRawNumber(value));
             value = isNaN(value) ? '' : String(Ext.util.Format.number(value, format)).replace('.', me.decimalSeparator);
-            debug("VILS >>> Cadena(value) 1: " + value);
             return value;
         },
         
@@ -235,7 +231,6 @@ Ext.onReady(function()
             if (true||!me.submitLocaleSeparator) {
                 value = me.toRawNumber(value);
             }
-            debug("Cadena(value) 2: " + value);
             return value;
         },
         
@@ -1054,11 +1049,13 @@ Ext.onReady(function()
         if(!Ext.isEmpty(_fieldLikeLabel('NEGOCIO',null,true)))
         _fieldByLabel('NEGOCIO').on(
         {
+        	//VILS llama filtrando record
             change : function(){ _p28_cargarParametrizacionCoberturas(); }
         });
         if(!Ext.isEmpty(_fieldLikeLabel('TIPO PERSONA',null,true)))
         _fieldByLabel('TIPO PERSONA').on(
         {
+        	//vils llama filtrando record
             change : function(){ _p28_cargarParametrizacionCoberturas(); }
         });
         if(!Ext.isEmpty(_fieldLikeLabel('TIPO SERVICIO',null,true)))
@@ -1068,6 +1065,7 @@ Ext.onReady(function()
             {
                 if(me.findRecord('key',val)!=false)
                 {
+                	////vils llama filtrando record
                     _p28_cargarParametrizacionCoberturas();
                     if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
                     {
@@ -1169,13 +1167,9 @@ Ext.onReady(function()
                         change : function(me,val)
                         {
                             valido = false;
-                            debug('### VIL valido:',valido);
-                            
                             var valido  = !Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true))
                                         &&!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true))
                                         && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1);
-                           debug('### VIL valido:',valido);
-                            
                             if(valido)
                             {
                                 var claveCmp = "";
@@ -3250,6 +3244,7 @@ function _p28_cargarRangoValorRamo5(callback)
                        return r;
                     }
                     valor.isValid();
+                    //vils llama filtrando record
                     _p28_cargarParametrizacionCoberturas(callback);
                 }
                 else
@@ -4100,6 +4095,7 @@ function _p28_cargarParametrizacionCoberturas(callback)
                                     debug('minimo=',minimo,'maximo=',maximo);
                                     item.store.filterBy(function(record)
                                     {
+                                    	//VILS
                                         debug('filtrando record=',record);
                                         var key=record.get('key')-0;
                                         debug('quitando key=',key,key>=minimo&&key<=maximo,'.');
@@ -4221,7 +4217,7 @@ function _p28_cargarConfig()
             debug('### config:',json);
             if(json.exito)
             {
-                for(var prop in json.smap1)
+                for(var prop in json.smap1)//json.smap1{parametros.pv_otvalor02:	"0", parametros.pv_otvalor03:"01"...}
                 {
                     var cmp = _fieldByName(prop,null,true);
                     if(!Ext.isEmpty(cmp))
