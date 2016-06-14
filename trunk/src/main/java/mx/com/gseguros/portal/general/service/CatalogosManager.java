@@ -218,4 +218,8 @@ public interface CatalogosManager {
     		)throws Exception;
     
     public List<GenericVO> recuperarSucursalesPorFlujo(String cdflujomc) throws Exception;
+    
+    public List<GenericVO> recuperarRamosPorSucursalPorTipogrupo(String cdunieco, String tipogrupo) throws Exception;
+    
+    public List<GenericVO> recuperarTipsitPorRamoPorTipogrupo(String cdramo, String tipogrupo) throws Exception;
 }

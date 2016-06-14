@@ -638,11 +638,24 @@ Ext.onReady(function()
                         ,allowBlank : false
                     }
                     ,{
-                        xtype       : 'checkbox'
-                        ,boxLabel   : 'VISIBLE'
+                        xtype       : 'fieldcontainer'
                         ,fieldLabel : 'PROPIEDADES'
-                        ,name       : 'SWFINAL'
-                        ,inputValue : 'S'
+                        ,items      :
+                        [
+                            {
+                                xtype       : 'checkbox'
+                                ,boxLabel   : 'VISIBLE'
+                                ,name       : 'SWFINAL'
+                                ,inputValue : 'S'
+                            }
+                            ,{
+                                xtype       : 'checkbox'
+                                ,boxLabel   : 'COLECTIVO/GRUPO'
+                                ,name       : 'SWGRUPO'
+                                ,inputValue : 'S'
+                                ,align      : 'right'
+                            }
+                        ]
                     }
                     ,<s:property value="items.comboCdtipram" escapeHtml="false" />
                 ]
@@ -1346,6 +1359,7 @@ Ext.onReady(function()
                                 ,'DSFLUJOMC'
                                 ,'SWFINAL'
                                 ,'CDTIPRAM'
+                                ,'SWGRUPO'
                             ]
                             ,proxy   :
                             {

@@ -216,8 +216,15 @@ public interface FlujoMesaControlDAO {
 	 * @param accion
 	 * @throws Exception
 	 */
-	public void movimientoTflujomc(String cdtipflu, String cdflujomc,
-			String dsflujomc, String swfinal, String cdtipram, String accion) throws Exception;
+	public void movimientoTflujomc(
+			String cdtipflu
+			,String cdflujomc
+			,String dsflujomc
+			,String swfinal
+			,String cdtipram
+			,String swgrupo
+			,String accion
+			)throws Exception;
 
 	/**
 	 * 
@@ -632,4 +639,10 @@ public interface FlujoMesaControlDAO {
 			)throws Exception;
 	
 	public Map<String,String> recuperaTflujomc(String cdflujomc) throws Exception;
+	
+	public Map<String,String> recuperarPolizaUnicaDanios(
+			String cduniext
+			,String ramo
+			,String nmpoliex
+			)throws Exception;
 }

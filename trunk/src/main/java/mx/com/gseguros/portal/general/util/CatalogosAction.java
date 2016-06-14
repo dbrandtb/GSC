@@ -926,6 +926,20 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.recuperarSucursalesPorFlujo(params.get("idPadre"));
 					break;
+				case RAMO_X_UNIECO_X_GRUPO:
+					if(params == null)
+					{
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarRamosPorSucursalPorTipogrupo(params.get("idPadre"),params.get("tipogrupo"));
+					break;
+				case TIPSIT_X_RAMO_X_GRUPO:
+					if(params == null)
+					{
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperarTipsitPorRamoPorTipogrupo(params.get("idPadre"),params.get("tipogrupo"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

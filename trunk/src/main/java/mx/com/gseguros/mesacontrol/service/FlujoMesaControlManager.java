@@ -31,6 +31,7 @@ public interface FlujoMesaControlManager
 			,String dsflujomc
 			,String swfinal
 			,String cdtipram
+			,String swgrupo
 			)throws Exception;
 	
 	public void movimientoCatalogo(
@@ -272,4 +273,10 @@ public interface FlujoMesaControlManager
 	 * @throws Exception
 	 */
 	public void recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(FlujoVO flujo) throws Exception;
+	
+	public Map<String,String> recuperarPolizaUnicaDanios(
+			String cduniext
+			,String ramo
+			,String nmpoliex
+			)throws Exception;
 }
