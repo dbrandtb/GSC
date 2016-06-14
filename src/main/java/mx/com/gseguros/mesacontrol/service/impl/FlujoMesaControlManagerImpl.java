@@ -143,17 +143,19 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String dsflujomc
 			,String swfinal
 			,String cdtipram
+			,String swgrupo
 			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ movimientoTflujomc @@@@@@"
-				,"\n@@@@@@ accion="     , accion
-				,"\n@@@@@@ cdtipflu="   , cdtipflu
-				,"\n@@@@@@ cdflujomc="  , cdflujomc
-				,"\n@@@@@@ dsflujomc="  , dsflujomc
-				,"\n@@@@@@ swfinal="    , swfinal
-				,"\n@@@@@@ cdtipram="   , cdtipram
+				,"\n@@@@@@ accion    = " , accion
+				,"\n@@@@@@ cdtipflu  = " , cdtipflu
+				,"\n@@@@@@ cdflujomc = " , cdflujomc
+				,"\n@@@@@@ dsflujomc = " , dsflujomc
+				,"\n@@@@@@ swfinal   = " , swfinal
+				,"\n@@@@@@ cdtipram  = " , cdtipram
+				,"\n@@@@@@ swgrupo   = " , swgrupo
 				));
 		
 		String paso = "Guardando proceso";
@@ -167,6 +169,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,dsflujomc
 					,"S".equals(swfinal) ? "S" : "N"
 					,cdtipram
+					,"S".equals(swgrupo) ? "S" : "N"
 					,accion
 					);
 		}
@@ -2408,5 +2411,41 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+	}
+	
+	@Override
+	public Map<String,String> recuperarPolizaUnicaDanios(
+			String cduniext
+			,String ramo
+			,String nmpoliex
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarPolizaUnicaDanios @@@@@@"
+				,"\n@@@@@@ cduniext = " , cduniext
+				,"\n@@@@@@ ramo     = " , ramo
+				,"\n@@@@@@ nmpoliex = " , nmpoliex
+				));
+		String             paso   = "Recuperando p\u00f3liza";
+		Map<String,String> poliza = null;
+		try
+		{
+			poliza = flujoMesaControlDAO.recuperarPolizaUnicaDanios(
+					cduniext
+					,ramo
+					,nmpoliex
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		logger.debug(Utils.log(
+				 "\n@@@@@@ recuperarPolizaUnicaDanios @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return poliza;
 	}
 }

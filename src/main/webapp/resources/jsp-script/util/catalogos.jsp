@@ -141,5 +141,11 @@ var RolSistema = {
     ,SubdirectorSuscripcionDanios : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUBDIRECTOR_SUSCRI_DANIOS.cdsisrol" />'
 };
 
+// Catalogo de tipos de ramo (salud/autos)
+var TipoRamo = {
+    Salud  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoRamo@SALUD.cdtipram" />'
+    ,Autos : '<s:property value="@mx.com.gseguros.portal.general.util.TipoRamo@AUTOS.cdtipram" />'
+};
+
 
 </script>

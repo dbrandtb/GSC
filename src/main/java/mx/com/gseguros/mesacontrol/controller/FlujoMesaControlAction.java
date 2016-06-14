@@ -410,7 +410,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,cdflujomc = params.get("CDFLUJOMC")
 			       ,dsflujomc = params.get("DSFLUJOMC")
 			       ,swfinal   = params.get("SWFINAL")
-			       ,cdtipram  = params.get("CDTIPRAM");
+			       ,cdtipram  = params.get("CDTIPRAM")
+			       ,swgrupo   = params.get("SWGRUPO");
 			
 			Utils.validate(
 					accion     , "No se recibi\u00f3 la acci\u00f3n"
@@ -426,6 +427,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,dsflujomc
 					,swfinal
 					,cdtipram
+					,swgrupo
 					);
 			
 			success = true;
@@ -1908,6 +1910,51 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		{
 			message = Utils.manejaExcepcion(ex);
 		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "recuperarPolizaUnicaDanios",
+			results = { @Result(name="success", type="json") }
+			)
+	public String recuperarPolizaUnicaDanios()
+	{
+		logger.debug(Utils.log(
+				 "\n########################################"
+				,"\n###### recuperarPolizaUnicaDanios ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			String cduniext = params.get("CDUNIEXT")
+			       ,ramo     = params.get("RAMO")
+			       ,nmpoliex = params.get("NMPOLIEX");
+			
+			Utils.validate(
+					cduniext  , "No se recibi\u00f3n la sucursal"
+					,ramo     , "No se recibi\u00f3n el ramo"
+					,nmpoliex , "No se recibi\u00f3n la p\u00f3nliza"
+					);
+			
+			params.putAll(flujoMesaControlManager.recuperarPolizaUnicaDanios(cduniext,ramo,nmpoliex));
+			
+			success = true;
+			
+			logger.debug(Utils.log(
+					 "\n###### params=",params
+					,"\n###### recuperarPolizaUnicaDanios ######"
+					,"\n########################################"
+					));
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
 		return SUCCESS;
 	}
 

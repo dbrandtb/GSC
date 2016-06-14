@@ -2233,7 +2233,7 @@ public class EndososAction extends PrincipalCoreAction
 							endososManager.revierteDomicilio(paramRevDom);
 							
 							logger.error("Endoso revertido exitosamente.");
-							error+=" Favor de volver a itentar.";
+							error+=" Favor de volver a intentar.";
 						}else{
 							logger.error("Error al revertir el endoso");
 							error+=" No se ha revertido el endoso.";
@@ -2984,7 +2984,7 @@ public class EndososAction extends PrincipalCoreAction
 								
 								if(endosoRevertido){
 									logger.error("Endoso revertido exitosamente.");
-									error+=" Favor de volver a itentar.";
+									error+=" Favor de volver a intentar.";
 								}else{
 									logger.error("Error al revertir el endoso");
 									error+=" No se ha revertido el endoso.";
@@ -7763,7 +7763,7 @@ public class EndososAction extends PrincipalCoreAction
 								endososManager.revierteDomicilio(paramRevDom);
 								
 								logger.error("Endoso revertido exitosamente.");
-								error+=" Favor de volver a itentar.";
+								error+=" Favor de volver a intentar.";
 							}else{
 								logger.error("Error al revertir el endoso");
 								error+=" No se ha revertido el endoso.";
@@ -9766,7 +9766,7 @@ public class EndososAction extends PrincipalCoreAction
 							
 							if(endosoRevertido){
 								logger.error("Endoso revertido exitosamente.");
-								error+=" Favor de volver a itentar.";
+								error+=" Favor de volver a intentar.";
 							}else{
 								logger.error("Error al revertir el endoso");
 								error+=" No se ha revertido el endoso.";
@@ -10142,7 +10142,7 @@ public class EndososAction extends PrincipalCoreAction
 						
 						if(endosoRevertido){
 							logger.error("Endoso revertido exitosamente.");
-							error+=" Favor de volver a itentar.";
+							error+=" Favor de volver a intentar.";
 						}else{
 							logger.error("Error al revertir el endoso");
 							error+=" No se ha revertido el endoso.";
@@ -10658,7 +10658,7 @@ public class EndososAction extends PrincipalCoreAction
 								boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), true);
 								if(endosoRevertido){
 									logger.error("Endoso revertido exitosamente.");
-									error+=" Favor de volver a itentar.";
+									error+=" Favor de volver a intentar.";
 								}else{
 									logger.error("Error al revertir el endoso");
 									error+=" No se ha revertido el endoso.";
@@ -10695,7 +10695,7 @@ public class EndososAction extends PrincipalCoreAction
 		//					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso Tavalosit auto, tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), false);
 		//					if(endosoRevertido){
 		//						logger.error("Endoso revertido exitosamente.");
-		//						error+=" Favor de volver a itentar.";
+		//						error+=" Favor de volver a intentar.";
 		//					}else{
 		//						logger.error("Error al revertir el endoso");
 		//						error+=" No se ha revertido el endoso.";
@@ -10724,7 +10724,7 @@ public class EndososAction extends PrincipalCoreAction
 								
 								if(endosoRevertido){
 									logger.error("Endoso revertido exitosamente.");
-									error+=" Favor de volver a itentar.";
+									error+=" Favor de volver a intentar.";
 								}else{
 									logger.error("Error al revertir el endoso");
 									error+=" No se ha revertido el endoso.";
@@ -10779,7 +10779,7 @@ public class EndososAction extends PrincipalCoreAction
 		//							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.CAMBIO_CONTRATANTE.toString(), true);
 		//							if(endosoRevertido){
 		//								logger.error("Endoso revertido exitosamente.");
-		//								error+=" Favor de volver a itentar.";
+		//								error+=" Favor de volver a intentar.";
 		//							}else{
 		//								logger.error("Error al revertir el endoso");
 		//								error+=" No se ha revertido el endoso.";
@@ -11198,7 +11198,7 @@ public class EndososAction extends PrincipalCoreAction
 							endososManager.revierteNombrePersona(paramRevNom);
 							
 							logger.error("Endoso revertido exitosamente.");
-							error+=" Favor de volver a itentar.";
+							error+=" Favor de volver a intentar.";
 						}else{
 							logger.error("Error al revertir el endoso");
 							error+=" No se ha revertido el endoso.";
@@ -11493,7 +11493,7 @@ public class EndososAction extends PrincipalCoreAction
 							endososManager.revierteNombrePersona(paramRevNom);
 							
 							logger.error("Endoso revertido exitosamente.");
-							error+=" Favor de volver a itentar.";
+							error+=" Favor de volver a intentar.";
 						}else{
 							logger.error("Error al revertir el endoso");
 							error+=" No se ha revertido el endoso.";

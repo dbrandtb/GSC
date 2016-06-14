@@ -1786,7 +1786,14 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		for(Map<String,String>flujo:flujos)
 		{
-			lista.add(new GenericVO(flujo.get("CDFLUJOMC"),flujo.get("DSFLUJOMC")));
+			lista.add(
+					new GenericVO(
+							flujo.get("CDFLUJOMC")
+							,flujo.get("DSFLUJOMC")
+							,flujo.get("CDTIPRAM")
+							,flujo.get("SWGRUPO")
+					)
+			);
 		}
 		
 		logger.debug(Utils.log(
@@ -1838,6 +1845,64 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				 "\n@@@@@@ lista=" , lista
 				,"\n@@@@@@ recuperarSucursalesPorFlujo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO> recuperarRamosPorSucursalPorTipogrupo(String cdunieco, String tipogrupo) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarRamosPorSucursalPorTipogrupo @@@@@@"
+				,"\n@@@@@@ cdunieco  = " , cdunieco
+				,"\n@@@@@@ tipogrupo = " , tipogrupo
+				));
+		
+		String paso = "Recuperando ramos por sucursal por tipo grupo";
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		try
+		{
+			lista = catalogosDAO.recuperarRamosPorSucursalPorTipogrupo(cdunieco,tipogrupo);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista = " , lista
+				,"\n@@@@@@ recuperarRamosPorSucursalPorTipogrupo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO> recuperarTipsitPorRamoPorTipogrupo(String cdramo, String tipogrupo) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTipsitPorRamoPorTipogrupo @@@@@@"
+				,"\n@@@@@@ cdramo    = " , cdramo
+				,"\n@@@@@@ tipogrupo = " , tipogrupo
+				));
+		
+		String paso = "Recuperando tipos de situaci\u00f3n por ramo por tipo grupo";
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		try
+		{
+			lista = catalogosDAO.recuperarTipsitPorRamoPorTipogrupo(cdramo,tipogrupo);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista = " , lista
+				,"\n@@@@@@ recuperarTipsitPorRamoPorTipogrupo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return lista;
 	}

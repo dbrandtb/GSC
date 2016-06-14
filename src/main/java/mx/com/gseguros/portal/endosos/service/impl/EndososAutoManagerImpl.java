@@ -940,7 +940,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -954,7 +954,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -968,7 +968,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -983,7 +983,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -999,7 +999,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -1372,7 +1372,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -1683,7 +1683,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -1808,7 +1808,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -2747,7 +2747,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -2938,7 +2938,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -3071,7 +3071,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -3380,7 +3380,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -4112,7 +4112,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -4639,7 +4639,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -4763,7 +4763,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -5008,7 +5008,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -5372,7 +5372,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -5388,7 +5388,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
 						if(endosoRevertido){
 							logger.error("Endoso revertido exitosamente.");
-							throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+							throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 						}else{
 							logger.error("Error al revertir el endoso");
 							throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -5403,7 +5403,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -5434,7 +5434,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -5657,7 +5657,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -5820,7 +5820,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				if(endosoRevertido){
 					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 				}else{
 					logger.error("Error al revertir el endoso");
 					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
@@ -5954,7 +5954,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 					if(endosoRevertido){
 						logger.error("Endoso revertido exitosamente.");
-						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a itentar.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
 					}else{
 						logger.error("Error al revertir el endoso");
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");

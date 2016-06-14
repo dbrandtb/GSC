@@ -1903,4 +1903,83 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<GenericVO> recuperarRamosPorSucursalPorTipogrupo(String cdunieco, String tipogrupo) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		
+		params.put("cdunieco"  , cdunieco);
+		params.put("tipogrupo" , tipogrupo);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperarRamosPorSucursalPorTipogrupoSP(getDataSource()),params);
+		
+		List<Map<String,String>> lista = (List<Map<String,String>>) procRes.get("pv_registro_o");
+		
+		List<GenericVO> lista2 = new ArrayList<GenericVO>();
+		
+		if(lista!=null)
+		{
+			for(Map<String,String> ramo : lista)
+			{
+				lista2.add(new GenericVO(ramo.get("CDRAMO"),ramo.get("DSRAMO")));
+			}
+		}
+		
+		return lista2;
+	}
+	
+	protected class RecuperarRamosPorSucursalPorTipogrupoSP extends StoredProcedure
+	{
+		protected RecuperarRamosPorSucursalPorTipogrupoSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_OBT_RAMO_X_CDUNIECO");
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipogrupo" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"CDRAMO","DSRAMO"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO> recuperarTipsitPorRamoPorTipogrupo(String cdramo, String tipogrupo) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		
+		params.put("cdramo"    , cdramo);
+		params.put("tipogrupo" , tipogrupo);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperarTipsitPorRamoPorTipogrupoSP(getDataSource()),params);
+		
+		List<Map<String,String>> lista = (List<Map<String,String>>) procRes.get("pv_registro_o");
+		
+		List<GenericVO> lista2 = new ArrayList<GenericVO>();
+		
+		if(lista!=null)
+		{
+			for(Map<String,String> ramo : lista)
+			{
+				lista2.add(new GenericVO(ramo.get("CDTIPSIT"),ramo.get("DSTIPSIT")));
+			}
+		}
+		
+		return lista2;
+	}
+	
+	protected class RecuperarTipsitPorRamoPorTipogrupoSP extends StoredProcedure
+	{
+		protected RecuperarTipsitPorRamoPorTipogrupoSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_OBTIENE_SITUACION");
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("tipogrupo" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"CDTIPSIT","DSTIPSIT"})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
