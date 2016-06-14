@@ -66,6 +66,7 @@
             var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
             var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
             var _CAT_MODALIDADES 						= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT"/>';
+            var _URL_VAL_CAUSASINI			        	= '<s:url namespace="/siniestros" 	   	action="consultaInfCausaSiniestroProducto" />';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             debug("valorAction ====>", valorAction);
