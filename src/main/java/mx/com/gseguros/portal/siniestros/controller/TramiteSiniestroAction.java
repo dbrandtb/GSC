@@ -142,6 +142,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				valores.put("otvalor20" , params.get("cmbRamos"));
 				valores.put("otvalor22" , params.get("txtAutEspecial"));
 				valores.put("otvalor26" , params.get("pv_cdtipsit_i"));
+				valores.put("otvalor27" , params.get("idCveBeneficiario"));
 				
 				if(params.get("cmbProveedor").toString().length() > 0){
 					valores.put("otvalor13",TipoPrestadorServicio.CLINICA.getCdtipo());
@@ -227,6 +228,8 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				modMesaControl.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
 				modMesaControl.put("pv_otvalor20_i",params.get("cmbRamos"));
 				modMesaControl.put("pv_otvalor22_i",params.get("txtAutEspecial"));
+				modMesaControl.put("pv_otvalor26_i",params.get("pv_cdtipsit_i"));
+				modMesaControl.put("pv_otvalor27_i",params.get("idCveBeneficiario"));
 				
 				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 					modMesaControl.put("pv_otvalor12","7RDH");
@@ -471,6 +474,9 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			modMesaControl.put("pv_otvalor11_i",lista.get(0).getOtvalor11mc());
 			modMesaControl.put("pv_otvalor15_i",lista.get(0).getOtvalor15mc());
 			modMesaControl.put("pv_otvalor20_i",lista.get(0).getOtvalor20mc());
+			modMesaControl.put("pv_otvalor22_i",lista.get(0).getOtvalor22mc());
+			modMesaControl.put("pv_otvalor26_i",lista.get(0).getOtvalor26mc());
+			modMesaControl.put("pv_otvalor27_i",lista.get(0).getOtvalor20mc());
 			siniestrosManager.actualizaValorMC(modMesaControl);
 		}catch( Exception e){
 			logger.error("Error actualizaMesaControlSiniestro : {}", e.getMessage(), e);

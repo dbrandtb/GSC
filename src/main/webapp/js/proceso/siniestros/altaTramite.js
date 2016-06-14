@@ -345,7 +345,7 @@ Ext.onReady(function() {
     cmbModalidad = Ext.create('Ext.form.field.ComboBox',{
 		fieldLabel   : 'Modalidad',			allowBlank     : false,		editable   : false,
 		displayField: 'value',				valueField: 'key',			forceSelection : false,				queryMode :'local',
-		width: 300,							name:'pv_cdtipsit_i',		store 		   : storeModalidad,
+		width: 350,							name:'pv_cdtipsit_i',		store 		   : storeModalidad,
     	listeners : {
     		'select':function(e){
     			panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue(null);
@@ -356,6 +356,9 @@ Ext.onReady(function() {
 						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
 					}
 				});
+    		},
+    		'select':function(e){
+    			panelInicialPral.down('combo[name=cmbTipoPago]').setValue('');
     		}
     	}
 	})
@@ -378,14 +381,49 @@ Ext.onReady(function() {
 				});
 				if(e.getValue() == _TIPO_PAGO_DIRECTO){
 					limpiarRegistrosTipoPago(e.getValue());
-					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
-					
-				}else if(e.getValue() == _TIPO_PAGO_REEMBOLSO){
-					limpiarRegistrosTipoPago(e.getValue());
-					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");					
 				}else{
-					limpiarRegistrosTipoPago(e.getValue());
-					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+					Ext.Ajax.request({
+						url     : _URL_VAL_CAUSASINI
+						,params : {
+							'params.cdramo'   : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+							'params.cdtipsit' : panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue(),
+							'params.causaSini': 'IDBENEFI',
+							'params.cveCausa' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+						}
+						,success : function (response){
+							var datosExtras = Ext.decode(response.responseText);
+							if(Ext.decode(response.responseText).datosInformacionAdicional != null){
+								var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
+								
+								if(cveCauSini.REQVALIDACION =="S"){
+									//Visualizamos el campo
+									panelInicialPral.down('[name=idCveBeneficiario]').show();
+									panelInicialPral.down('[name=idCveBeneficiario]').setValue('');
+								}else{
+									//ocultamos el campo
+									panelInicialPral.down('[name=idCveBeneficiario]').setValue('0');
+									panelInicialPral.down('[name=idCveBeneficiario]').hide();
+								}
+								
+								limpiarRegistrosTipoPago(e.getValue());
+			    				if(panelInicialPral.down('combo[name=cmbOficReceptora]').getValue() == "1104"){
+						    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+						    	}else{
+						    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
+						    	}
+							}
+						},
+						failure : function (){
+							me.up().up().setLoading(false);
+							centrarVentanaInterna(Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							}));
+						}
+					});
 				}
 			}
 		}
@@ -1890,6 +1928,9 @@ Ext.onReady(function() {
 			},
 			aseguradoAfectado,
 			cmbBeneficiario,
+			{	xtype: 'numberfield',				fieldLabel: 'Id. Beneficiario',	name		: 'idCveBeneficiario' 
+                ,width		 : 350,					allowBlank : false
+            },
 			cmbProveedor,
 			{	xtype	: 'textfield',		fieldLabel : 'Nombre Proveedor',	name   : 'idnombreBeneficiarioProv',	colspan:2,	 width	: 350,
 				listeners:{
@@ -2387,7 +2428,47 @@ Ext.onReady(function() {
 							}
 						});
 						
-						panelInicialPral.down('combo[name=cmbBeneficiario]').setValue(json.otvalor04mc);
+						panelInicialPral.down('combo[name=cmbBeneficiario]').setValue(json.otvalor04mc);						
+						Ext.Ajax.request({
+							url     : _URL_VAL_CAUSASINI
+							,params : {
+								'params.cdramo'   : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+								'params.cdtipsit' : panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue(),
+								'params.causaSini': 'IDBENEFI',
+								'params.cveCausa' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+							}
+							,success : function (response){
+								var datosExtras = Ext.decode(response.responseText);
+								if(Ext.decode(response.responseText).datosInformacionAdicional != null){
+									var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
+									
+									if(cveCauSini.REQVALIDACION =="S"){
+										//Visualizamos el campo
+										panelInicialPral.down('[name=idCveBeneficiario]').show();
+										panelInicialPral.down('[name=idCveBeneficiario]').setValue(json.otvalor27mc);
+									}else{
+										//ocultamos el campo
+										panelInicialPral.down('[name=idCveBeneficiario]').setValue('0');
+										panelInicialPral.down('[name=idCveBeneficiario]').hide();
+									}
+								}
+							},
+							failure : function (){
+								me.up().up().setLoading(false);
+								centrarVentanaInterna(Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								}));
+							}
+						});
+						
+						
+						
+						
+						
+						
 					}
 					
 					/*COMO SEGUNDO PUNTO ES OBTENER LA INFORMACION DE LOS GRIDS*/
@@ -2942,6 +3023,7 @@ Ext.onReady(function() {
 			}
 		}
 		panelInicialPral.down('combo[name=cmbBeneficiario]').allowBlank = pagoReembolso;
+		panelInicialPral.down('[name=idCveBeneficiario]').allowBlank = pagoReembolso;
 		panelInicialPral.down('combo[name=cmbAseguradoAfectado]').allowBlank = pagoReembolso;
 		panelInicialPral.down('[name=dtFechaOcurrencia]').allowBlank = pagoReembolso;
 		panelInicialPral.down('[name=txtTelefono]').allowBlank = pagoReembolso;

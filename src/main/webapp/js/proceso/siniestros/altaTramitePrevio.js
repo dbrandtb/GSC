@@ -299,6 +299,9 @@ Ext.onReady(function() {
 						'params.tipoPago':panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
 					}
 				});
+    		},
+    		'select':function(e){
+    			panelInicialPral.down('combo[name=cmbTipoPago]').setValue('');
     		}
     	}
 	});
@@ -318,11 +321,61 @@ Ext.onReady(function() {
 					}
 				});
 				
-	    		if(panelInicialPral.down('combo[name=cmbRamos]').getValue() == _RECUPERA){
-    				panelInicialPral.down('combo[name=cmbTipoAtencion]').setValue('9');
+				if(e.getValue() == _TIPO_PAGO_DIRECTO){
+    				//PAGO DIRECTO
+	    			limpiarRegistrosTipoPago(e.getValue());
+					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
+    			}else{
+					Ext.Ajax.request({
+						url     : _URL_VAL_CAUSASINI
+						,params : {
+							'params.cdramo'   : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+							'params.cdtipsit' : panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue(),
+							'params.causaSini': 'IDBENEFI',
+							'params.cveCausa' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+						}
+						,success : function (response){
+							var datosExtras = Ext.decode(response.responseText);
+							if(Ext.decode(response.responseText).datosInformacionAdicional != null){
+								var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
+								
+								if(cveCauSini.REQVALIDACION =="S"){
+									//Visualizamos el campo
+									panelInicialPral.down('[name=idCveBeneficiario]').show();
+									panelInicialPral.down('[name=idCveBeneficiario]').setValue('');
+								}else{
+									//ocultamos el campo
+									panelInicialPral.down('[name=idCveBeneficiario]').setValue('0');
+									panelInicialPral.down('[name=idCveBeneficiario]').hide();
+								}
+								
+								limpiarRegistrosTipoPago(e.getValue());
+			    				if(panelInicialPral.down('combo[name=cmbOficReceptora]').getValue() == "1104"){
+						    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
+						    	}else{
+						    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
+						    	}
+							}
+						},
+						failure : function (){
+							me.up().up().setLoading(false);
+							centrarVentanaInterna(Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							}));
+						}
+					});
     			}
 				
-				if(e.getValue() == _TIPO_PAGO_DIRECTO){
+				
+				
+				
+
+				
+				
+	    		/*if(e.getValue() == _TIPO_PAGO_DIRECTO){
     				//PAGO DIRECTO
 	    			limpiarRegistrosTipoPago(e.getValue());
 					panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
@@ -342,7 +395,7 @@ Ext.onReady(function() {
 			    	}else{
 			    		panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1000");
 			    	}
-    			}
+    			}*/
     		}
     	}
 	});
@@ -1343,6 +1396,9 @@ Ext.onReady(function() {
                     },
             		aseguradoAfectado,
 	            	cmbBeneficiario,
+	            	{	xtype: 'numberfield',				fieldLabel: 'Id. Beneficiario'				,name		: 'idCveBeneficiario' 
+		                ,width		 : 300,					allowBlank : false
+		            },
 	            	cmbProveedor,
 	        	    {   colspan	:2,		xtype	: 'textfield',	fieldLabel : 'Nombre Proveedor',	name : 'idnombreBeneficiarioProv',		width	: 300,
 					    listeners:{
@@ -1786,9 +1842,11 @@ Ext.onReady(function() {
 			panelInicialPral.down('[name=editorPagoIndemnizatorioRecupera]').hide();
 		    panelInicialPral.down('[name=editorFacturaReembolso]').hide();
 		    panelInicialPral.down('combo[name=cmbBeneficiario]').hide();
+		    //panelInicialPral.down('[name=idCveBeneficiario]').hide();
 		    panelInicialPral.down('combo[name=cmbAseguradoAfectado]').hide();
 		    panelInicialPral.down('[name=dtFechaOcurrencia]').hide();
 		    panelInicialPral.down('combo[name=cmbBeneficiario]').setValue('');
+		    panelInicialPral.down('[name=idCveBeneficiario]').setValue('');
 		    panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
 		    panelInicialPral.down('[name=dtFechaOcurrencia]').setValue('');
 		    panelInicialPral.down('combo[name=cmbProveedor]').show();
@@ -1805,6 +1863,7 @@ Ext.onReady(function() {
 		    panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
 		    panelInicialPral.down('[name=idnombreBeneficiarioProv]').hide();
 		    panelInicialPral.down('combo[name=cmbBeneficiario]').show();
+		    //panelInicialPral.down('[name=idCveBeneficiario]').show();
 		    panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
 		    panelInicialPral.down('[name=dtFechaOcurrencia]').show();
 		    panelInicialPral.down('[name=txtTelefono]').show();
@@ -1821,6 +1880,7 @@ Ext.onReady(function() {
 				panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
 				panelInicialPral.down('[name=idnombreBeneficiarioProv]').hide();
 				panelInicialPral.down('combo[name=cmbBeneficiario]').show();
+				//panelInicialPral.down('[name=idCveBeneficiario]').show();
 				panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
 				panelInicialPral.down('[name=dtFechaOcurrencia]').show();
 				panelInicialPral.down('[name=txtTelefono]').show();
@@ -1834,6 +1894,7 @@ Ext.onReady(function() {
 				panelInicialPral.down('combo[name=cmbProveedor]').setValue('');
 				panelInicialPral.down('[name=idnombreBeneficiarioProv]').hide();
 				panelInicialPral.down('combo[name=cmbBeneficiario]').show();
+				//panelInicialPral.down('[name=idCveBeneficiario]').show();
 				panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
 				panelInicialPral.down('[name=dtFechaOcurrencia]').show();
 				panelInicialPral.down('[name=txtTelefono]').show();
@@ -1841,6 +1902,7 @@ Ext.onReady(function() {
 			}
 		}
 		panelInicialPral.down('combo[name=cmbBeneficiario]').allowBlank = pagoReembolso;
+		panelInicialPral.down('[name=idCveBeneficiario]').allowBlank = pagoReembolso;
 		panelInicialPral.down('combo[name=cmbAseguradoAfectado]').allowBlank = pagoReembolso;
 		panelInicialPral.down('[name=dtFechaOcurrencia]').allowBlank = pagoReembolso;
 		panelInicialPral.down('[name=txtTelefono]').allowBlank = pagoReembolso;

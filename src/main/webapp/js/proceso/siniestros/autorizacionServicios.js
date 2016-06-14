@@ -850,9 +850,9 @@ Ext.onReady(function() {
 						if(Ext.decode(response.responseText).datosInformacionAdicional != null){
 							var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
 							debug("cveCauSini ===>",cveCauSini);
-							Ext.getCmp('idCausaSini').setValue(cveCauSini.PROCESAAUT);
+							Ext.getCmp('idCausaSini').setValue(cveCauSini.REQVALIDACION);
 							
-							if(cveCauSini.PROCESAAUT =="S"){
+							if(cveCauSini.REQVALIDACION =="S"){
 								obtieneInformacion();
 							}else{
 								Ext.getCmp('notaInterna').setValue('');
@@ -2553,7 +2553,7 @@ Ext.onReady(function() {
 						if(Ext.decode(response.responseText).datosInformacionAdicional != null){
 							var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
 							debug("cveCauSini ===>",cveCauSini);
-							Ext.getCmp('idCausaSini').setValue(cveCauSini.PROCESAAUT);
+							Ext.getCmp('idCausaSini').setValue(cveCauSini.REQVALIDACION);
 							obtieneInformacion();
 						}else{
 							obtieneInformacion();
