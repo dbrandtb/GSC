@@ -32,6 +32,7 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
 	private String                   message;
 	private Map<String,String>       params;
 	private List<Map<String,String>> list;
+	private Long total;
 	
 	@Autowired
 	private RecuperacionSimpleManager recuperacionSimpleManager;
@@ -73,6 +74,12 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
 			else if("L".equals(rec.getTipo()))
 			{
 				list=recuperacionSimpleManager.recuperarLista(cdusuari,cdsisrol,rec,params,usuario);
+				
+				if(rec.equals(RecuperacionSimple.RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA)){
+					Map<String,String>total = list.remove(list.size()-1);
+					this.total = Long.parseLong(total.get("total"));
+//					this.total=total.get("total");
+				}
 			}
 			else
 			{
@@ -125,7 +132,15 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
                                                           //
 	public void setList(List<Map<String, String>> list) { //
 		this.list = list;                                 //
-	}                                                     //
+	}													  //
+														  //
+	public Long getTotal() {							  //
+		return total;									  //
+	}   												  //
+													      //
+	public void setTotal(Long total) {                    //
+		this.total = total;                               //
+	}													  //
 	////////////////////////////////////////////////////////
 	
 }
