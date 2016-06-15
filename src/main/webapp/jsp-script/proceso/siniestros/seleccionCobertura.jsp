@@ -13,16 +13,18 @@
             var _selCobForm;
             var gridFacturasTramite;
             var ventanaDetalleCobertura;
-            var _selCobUrlSave                = '<s:url namespace="/siniestros" action="guardarSeleccionCobertura"/>';
-            var _selCobUrlSavexTramite        = '<s:url namespace="/siniestros" action="guardarSeleccionCoberturaxTramite"/>';
-            var _selCobUrlAvanza              = '<s:url namespace="/siniestros" action="afiliadosAfectados"/>';
-            var _selCobUrlAvanzaReembolso     = '<s:url namespace="/siniestros" action="detalleSiniestro"/>';
-            //var _selDetalleSiniestoDatos    = '<s:url namespace="/siniestros" action="detalleSiniestroDatos"/>';
-            var _URL_LoadFacturasxTramite     = '<s:url namespace="/siniestros" action="obtenerFacturasTramite"/>';
-            var _URL_guardarCoberturaxFactura = '<s:url namespace="/siniestros" action="guardarCoberturaxFactura"/>';
-            var _PeriodoEspera                = '<s:url namespace="/siniestros" action="obtenerPeriodoEspera"/>';
+            var _selCobUrlSave                = '<s:url namespace="/siniestros" 	action="guardarSeleccionCobertura"/>';
+            var _selCobUrlSavexTramite        = '<s:url namespace="/siniestros" 	action="guardarSeleccionCoberturaxTramite"/>';
+            var _selCobUrlAvanza              = '<s:url namespace="/siniestros" 	action="afiliadosAfectados"/>';
+            var _selCobUrlAvanzaReembolso     = '<s:url namespace="/siniestros" 	action="detalleSiniestro"/>';
+            //var _selDetalleSiniestoDatos    = '<s:url namespace="/siniestros" 	action="detalleSiniestroDatos"/>';
+            var _URL_LoadFacturasxTramite     = '<s:url namespace="/siniestros" 	action="obtenerFacturasTramite"/>';
+            var _URL_guardarCoberturaxFactura = '<s:url namespace="/siniestros" 	action="guardarCoberturaxFactura"/>';
+            var _PeriodoEspera                = '<s:url namespace="/siniestros" 	action="obtenerPeriodoEspera"/>';
+            var _URL_DATOS_INFONAVIT          = '<s:url namespace="/siniestros" 	action="obtenerInfCoberturaInfonavit"/>';
             var _UrlRechazarTramiteWindwow    = '<s:url namespace="/siniestros" 	action="includes/rechazoReclamaciones" />';
-            var _URL_MESACONTROL			  = '<s:url namespace="/mesacontrol" 		action="mcdinamica" />';
+            var _URL_MESACONTROL			  = '<s:url namespace="/mesacontrol" 	action="mcdinamica" />';
+            var _URL_VAL_CONDICIONGRAL		  = '<s:url namespace="/siniestros" 	action="consultaInfCausaSiniestroProducto" />';
             var _TIPO_PAGO_REEMBOLSO		  = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
             var _SALUD_VITAL				  = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo" />';
             var _MULTISALUD					  = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
@@ -305,8 +307,194 @@
 								json['cdgarant'] = coberturaInt;
 								json['cdconval'] = subcoberInt;
 								
+								//Validamos la informacion general  por producto 1.- Periodo Espera x producto 2.- Maximo de Consultas
+								var periodoEspera = true;
+								var maxconsultas  = true;
 								
-								if(_selCobParams.cdramo == _RECUPERA){
+								Ext.Ajax.request({
+									url     : _URL_VAL_CONDICIONGRAL
+									,params : {
+										'params.cdramo'   : _selCobParams.cdramo,
+										'params.cdtipsit' : _selCobForm.items.items[2].getValue(),
+										'params.causaSini': 'VALGRAL',
+										'params.cveCausa' : '1'
+									}
+									,success : function (response){
+										var datosExtras = Ext.decode(response.responseText);
+										if(Ext.decode(response.responseText).datosInformacionAdicional != null){
+											var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
+											debug("cveCauSini.REQVALIDACION ==>",cveCauSini.REQVALIDACION,"cveCauSini.REQCONSULTAS ===>",cveCauSini.REQCONSULTAS);
+											if(cveCauSini.REQVALIDACION =="S" || cveCauSini.REQCONSULTAS =="S" ){
+												if(cveCauSini.REQVALIDACION =="S"){//1.- Validacion del periodo de espera
+													Ext.Ajax.request( {
+														url		:	_PeriodoEspera
+														,params	:	{
+															'params.cdunieco'  : _selCobParams.cdunieco,
+															'params.cdramo'    : _selCobParams.cdramo,
+															'params.estado'    : _selCobParams.estado,
+															'params.nmpoliza'  : _selCobParams.nmpoliza,
+															'params.nmsituac'  : _selCobParams.nmsituac,
+															'params.feocurre'  : _selCobParams.feocurre,
+															'params.cdgarant'  : coberturaInt,
+															'params.cdconval'  : subcoberInt
+														}
+														,success : function (response){
+															var jsonRes = Ext.decode(response.responseText);
+															debug("Valor de Respuesta ===>",jsonRes.success);
+															if(jsonRes.success == false){
+																periodoEspera = jsonRes.success;
+																centrarVentanaInterna(Ext.Msg.show({
+																	title:'Error',
+																	msg: jsonRes.mensaje,
+																	buttons: Ext.Msg.OK,
+																	icon: Ext.Msg.ERROR
+																}));
+															}
+														},
+														failure : function (){
+															me.up().up().setLoading(false);
+															centrarVentanaInterna(Ext.Msg.show({
+																title:'Error',
+																msg: 'Error de comunicaci&oacute;n',
+																buttons: Ext.Msg.OK,
+																icon: Ext.Msg.ERROR
+															}));
+														}
+													});
+												}
+												if(cveCauSini.REQCONSULTAS =="S"){//2.- No. de Consultas
+													Ext.Ajax.request({
+														url		:	_URL_DATOS_INFONAVIT
+														,params	:	{
+															'params.cdunieco'  : _selCobParams.cdunieco,
+															'params.cdramo'    : _selCobParams.cdramo,
+															'params.estado'    : _selCobParams.estado,
+															'params.nmpoliza'  : _selCobParams.nmpoliza,
+															'params.nmsuplem'  :  _selCobParams.nmsuplem,
+															'params.nmsituac'  : _selCobParams.nmsituac,
+															'params.cdgarant'  : coberturaInt,
+															'params.cdconval'  : subcoberInt
+														}
+														,success : function (response){
+															var jsonRes = Ext.decode(response.responseText);
+															debug("Valor de Respuesta ===>",jsonRes);
+															if(jsonRes.success == true){
+																var infonavit = Ext.decode(response.responseText).datosInformacionAdicional[0];
+																debug("infonavit ===>",infonavit);
+																var consultasTotales = infonavit.NO_CONSULTAS;
+																var maxConsulta      = infonavit.OTVALOR07;
+																var diferenciador    = infonavit.OTVALOR15;
+																debug("consultasTotales =>",consultasTotales,"maxConsulta =>",maxConsulta);
+																debug("diferenciador =>",diferenciador);
+																
+																if(diferenciador == "MEI"){
+																	if(+consultasTotales >= +maxConsulta){
+																		maxconsultas = false;
+							        				    				centrarVentanaInterna(Ext.Msg.show({
+							        				    	                   title: 'Aviso',
+							        				    	                   msg: 'Se sobrepas&oacute; el n&uacute;mero m&aacute;ximo de consultas.',
+							        				    	                   buttons: Ext.Msg.OK,
+							        				    	                   icon: Ext.Msg.WARNING
+																		}));
+																	}
+																}else{
+																	if(+consultasTotales <= +maxConsulta){
+																		maxconsultas = false;
+																		centrarVentanaInterna(Ext.Msg.show({
+							        				    	                   title: 'Aviso',
+							        				    	                   msg: 'Se sobrepas&oacute; el n&uacote;mero m&aacute;ximo de consultas.',
+							        				    	                   buttons: Ext.Msg.OK,
+							        				    	                   icon: Ext.Msg.WARNING
+																		}));
+																	}
+																}
+																//alert("Valor de respuesta ==> "+infonavit.MONTO);
+															}else{
+																maxconsultas = jsonRes.success;
+																centrarVentanaInterna(Ext.Msg.show({
+																	title:'Error',
+																	msg: jsonRes.mensaje,
+																	buttons: Ext.Msg.OK,
+																	icon: Ext.Msg.ERROR
+																}));
+															}
+														},
+														failure : function (){
+															me.up().up().setLoading(false);
+															centrarVentanaInterna(Ext.Msg.show({
+																title:'Error',
+																msg: 'Error de comunicaci&oacute;n',
+																buttons: Ext.Msg.OK,
+																icon: Ext.Msg.ERROR
+															}));
+														}
+													});
+												}
+												/*if(periodoEspera == true && maxconsultas  == true){
+													Ext.Ajax.request({
+														url       : _selCobUrlSavexTramite
+														,jsonData : {
+															params : json
+														}
+														,params	:	{
+															'params.cdramo'    : _selCobParams.cdramo,
+															'params.cdgarant'  : _selCobParams.estado,
+															'params.nmpoliza'  : _selCobParams.nmpoliza,
+															'params.nmsituac'  : _selCobParams.nmsituac,
+															'params.feocurre'  : _selCobParams.feocurre,
+															'params.cdgarant'  : coberturaInt,
+															'params.cdconval'  : subcoberInt
+														}
+														,success  : function(response){
+															_selCobForm.setLoading(false);
+															json = Ext.decode(response.responseText);
+															debug('respuesta:',json);
+															_selCobAvanza();
+														}
+														,failure  : function(response){
+															_selCobForm.setLoading(false);
+															json = Ext.decode(response.responseText);
+															debug('respuesta:',json);
+															centrarVentanaInterna(mensajeError(json.mensaje));
+														}
+													});
+												}*/
+											}else{
+												Ext.Ajax.request({
+													url       : _selCobUrlSavexTramite
+													,jsonData : {
+														params : json
+													}
+													,success  : function(response){
+														_selCobForm.setLoading(false);
+														json = Ext.decode(response.responseText);
+														debug('respuesta:',json);
+														_selCobAvanza();
+													}
+													,failure  : function(response){
+														_selCobForm.setLoading(false);
+														json = Ext.decode(response.responseText);
+														debug('respuesta:',json);
+														centrarVentanaInterna(mensajeError(json.mensaje));
+													}
+												});
+											}
+										}
+									},failure : function (){
+										centrarVentanaInterna(Ext.Msg.show({
+											title:'Error',
+											msg: 'Error de comunicaci&oacute;n',
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.ERROR
+										}));
+									}
+								});
+								
+								
+								
+								
+								
+								/*if(_selCobParams.cdramo == _RECUPERA){
 									Ext.Ajax.request(
 									{
 										url		:	_PeriodoEspera
@@ -332,7 +520,7 @@
 													}
 													,params	:	{
 														'params.cdramo'    : _selCobParams.cdramo,
-														'params.cdgarant'    : _selCobParams.estado,
+														'params.cdgarant'  : _selCobParams.estado,
 														'params.nmpoliza'  : _selCobParams.nmpoliza,
 														'params.nmsituac'  : _selCobParams.nmsituac,
 														'params.feocurre'  : _selCobParams.feocurre,
@@ -391,7 +579,7 @@
 											centrarVentanaInterna(mensajeError(json.mensaje));
 										}
 									});
-								}
+								}*/
 							}else{
 								centrarVentanaInterna(mensajeError("Verificar la Cobertura - Subcobertura de las factura"));
 							}
