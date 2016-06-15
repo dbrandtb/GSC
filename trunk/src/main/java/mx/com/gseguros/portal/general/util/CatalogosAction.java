@@ -926,20 +926,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.recuperarSucursalesPorFlujo(params.get("idPadre"));
 					break;
-				case RAMO_X_UNIECO_X_GRUPO:
-					if(params == null)
-					{
-						params = new HashMap<String,String>();
-					}
-					lista = catalogosManager.recuperarRamosPorSucursalPorTipogrupo(params.get("idPadre"),params.get("tipogrupo"));
-					break;
-				case TIPSIT_X_RAMO_X_GRUPO:
-					if(params == null)
-					{
-						params = new HashMap<String,String>();
-					}
-					lista = catalogosManager.recuperarTipsitPorRamoPorTipogrupo(params.get("idPadre"),params.get("tipogrupo"));
-					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
@@ -984,7 +970,11 @@ public class CatalogosAction extends PrincipalCoreAction {
     
     public String obtieneTablasApoyo()throws Exception{
     	
+    	
     	try{
+    		// Obtenemos el rol de sistema del usuario en sesion:
+			UserVO usuario = (UserVO) session.get("USUARIO");
+			params.put("PV_CDSISROL_I", usuario.getRolActivo().getClave() );
     		loadList = catalogosManager.obtieneTablasApoyo(params);
     	}catch(Exception ex){
     		logger.error("Error al obtieneTablasApoyo",ex);
