@@ -69,6 +69,7 @@ var _URL_P_MOV_MAUTSINI					= '<s:url namespace="/siniestros"	action="obtieneMen
 var _URL_VALIDA_AUTESPECIFICA			= '<s:url namespace="/siniestros"	action="validaAutorizacionEspecial"/>';
 var _URL_MESACONTROL					= '<s:url namespace="/mesacontrol" 	action="mcdinamica" />';
 var _URL_EXISTE_COBERTURA				= '<s:url namespace="/siniestros" 	action="consultaExisteCoberturaTramite" />';
+var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	action="consultaInfCausaSiniestroProducto" />';
 var windowLoader;
 var msgWindow;
 
@@ -1441,6 +1442,12 @@ var msgWindow;
    		    	        queryMode    :'local',		store 			: storeConceptoPago
    		    	    });
 	        		
+   		    	    var idCveBeneficiario = Ext.create('Ext.form.field.Number',
+					{
+						colspan	   :2,				fieldLabel   	: 'Id. Beneficiario', 	name			:'idCveBeneficiario',
+						allowBlank : false,			editable     	: true,				width			:350
+					});
+						
    		    		var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
 						name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode: 'local'/*'remote'*/,			displayField: 'value',
 						valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
@@ -1485,6 +1492,41 @@ var msgWindow;
 						}
 					});
    		    		
+					Ext.Ajax.request({
+						url     : _URL_VAL_CAUSASINI
+						,params : {
+							'params.cdramo'   : record.raw.cdramo,
+							'params.cdtipsit' : record.raw.cdtipsit,
+							'params.causaSini': 'IDBENEFI',
+							'params.cveCausa' : record.get('parametros.pv_otvalor02')
+						}
+						,success : function (response){
+							var datosExtras = Ext.decode(response.responseText);
+							if(Ext.decode(response.responseText).datosInformacionAdicional != null){
+								var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
+								debug("Valor de Respuesta ==> ",record.raw.cdramo,record.raw.cdtipsit,record.get('parametros.pv_otvalor02'),cveCauSini);
+								if(cveCauSini.REQVALIDACION =="S"){
+									//Visualizamos el campo
+									panelModificacion.down('[name=idCveBeneficiario]').show();
+								}else{
+									//ocultamos el campo
+									panelModificacion.down('[name=idCveBeneficiario]').setValue('0');
+									panelModificacion.down('[name=idCveBeneficiario]').hide();
+								}
+							}
+						},
+						failure : function (){
+							me.up().up().setLoading(false);
+							centrarVentanaInterna(Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							}));
+						}
+					});
+					
+					
    		    		var cdramoTramite="";
    		    		var cdtipsitTramite ="";
 	        		//LLAMADA A LA MESA DE CONTROL PARA VERIFICAR LOS CAMPOS OTVALOR18 Y OTVALOR19
@@ -1510,6 +1552,10 @@ var msgWindow;
 	        			    		{
 		        			    		panelModificacion.query('combo[name=concepPago]')[0].setValue(json.otvalor19mc);
 	        			    		}
+	        			    		if(json.otvalor27mc !=null)
+									{
+										panelModificacion.query('[name=idCveBeneficiario]')[0].setValue(json.otvalor27mc);
+									}
 	        		    		}
 	        			    },
 	        			    failure : function ()
@@ -1536,7 +1582,8 @@ var msgWindow;
 			        	                bodyPadding: 5,
 			        	                items: [pagocheque,
 			        	                        concepPago,
-												cmbBeneficiario],
+												cmbBeneficiario,
+												idCveBeneficiario],
 			        	        	    buttonAlign:'center',
 			        	        	    buttons: [{
 			        	            		text: 'Solicitar'
@@ -1555,6 +1602,7 @@ var msgWindow;
 			        	        	        					destinoPago:datos.destinoPago,
 			        	        	        					concepPago:datos.concepPago,
 			        	        	        					beneficiario : datos.cmbBeneficiario,
+			        	        	        					cvebeneficiario : datos.idCveBeneficiario,
 																tipoPago : record.get('parametros.pv_otvalor02')
 			        	        	        				}
 	        	                                        }

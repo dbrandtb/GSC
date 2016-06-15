@@ -114,6 +114,7 @@
 			var _UrlGenerarContrarecibo     			= '<s:url namespace="/siniestros" 		action="generarContrarecibo"       />';
 			var panDocUrlViewDoc     					= '<s:url namespace="/documentos" 		action="descargaDocInline" />';
 			var _URL_ACTUALIZA_TURNADOMC				= '<s:url namespace="/siniestros" 		action="actualizaTurnadoMesaControl" />';
+			var _URL_VAL_CAUSASINI			        	= '<s:url namespace="/siniestros" 	   	action="consultaInfCausaSiniestroProducto" />';
 
 			debug("VALOR DE _11_params --->",_11_params);
 			debug("VALOR DEL ROL ACTIVO --->",_CDROL);
@@ -6153,6 +6154,12 @@
 							queryMode    :'local',		store 			: storeConceptoPago
 						});
 						
+						var idCveBeneficiario = Ext.create('Ext.form.field.Number',
+						{
+							colspan	   :2,				fieldLabel   	: 'Id. Beneficiario', 	name			:'idCveBeneficiario',
+							allowBlank : false,			editable     	: true,				width			:350
+						});
+						
 						var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
 							name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode: 'local'/*'remote'*/,			displayField: 'value',
 							valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
@@ -6197,6 +6204,40 @@
 							}
 						});
 						
+						Ext.Ajax.request({
+							url     : _URL_VAL_CAUSASINI
+							,params : {
+								'params.cdramo'   : _11_params.CDRAMO,
+								'params.cdtipsit' : _cdtipsitProducto,
+								'params.causaSini': 'IDBENEFI',
+								'params.cveCausa' : _tipoPago
+							}
+							,success : function (response){
+								var datosExtras = Ext.decode(response.responseText);
+								if(Ext.decode(response.responseText).datosInformacionAdicional != null){
+									var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
+									debug("Valor de Respuesta ==> ",_11_params.CDRAMO,_cdtipsitProducto,_tipoPago,cveCauSini);
+									if(cveCauSini.REQVALIDACION =="S"){
+										//Visualizamos el campo
+										panelModificacion.down('[name=idCveBeneficiario]').show();
+									}else{
+										//ocultamos el campo
+										panelModificacion.down('[name=idCveBeneficiario]').setValue('0');
+										panelModificacion.down('[name=idCveBeneficiario]').hide();
+									}
+								}
+							},
+							failure : function (){
+								me.up().up().setLoading(false);
+								centrarVentanaInterna(Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								}));
+							}
+						});
+						
 						var cdramoTramite="";
 						var cdtipsitTramite ="";
 						//3.- Obtenemos los valores de TMESACONTROL  el destino y concepto de pago si es que existen
@@ -6221,6 +6262,10 @@
 									if(json.otvalor19mc !=null)
 									{
 										panelModificacion.query('combo[name=concepPago]')[0].setValue(json.otvalor19mc);
+									}
+									if(json.otvalor27mc !=null)
+									{
+										panelModificacion.query('[name=idCveBeneficiario]')[0].setValue(json.otvalor27mc);
 									}
 								}
 							},
@@ -6247,7 +6292,8 @@
 									bodyPadding: 5,
 									items: [pagocheque,
 											concepPago,
-											cmbBeneficiario],
+											cmbBeneficiario,
+											idCveBeneficiario],
 									buttonAlign:'center',
 									buttons: [
 									{
@@ -6257,7 +6303,6 @@
 										,handler: function() { 
 											if (panelModificacion.form.isValid()) {
 												var datos=panelModificacion.form.getValues();
-												debug("VALOR DEL DATO ")
 												//4.- Guardamos la informacion del destino y el tipo de concepto
 												Ext.Ajax.request({
 													url     : _URL_CONCEPTODESTINO
@@ -6268,6 +6313,7 @@
 															destinoPago:datos.destinoPago,
 															concepPago:datos.concepPago,
 															beneficiario : datos.cmbBeneficiario,
+															cvebeneficiario : datos.idCveBeneficiario,
 															tipoPago : _11_params.OTVALOR02
 														}
 													}
