@@ -25,6 +25,7 @@ var _p48_store;
 var _p48_storeRespaldo;
 var _p48_storeMov;
 var _p48_nfamilia = 0;
+var _p48_storeFamilia;
 ////// variables //////
 
 ////// overrides //////
@@ -97,12 +98,17 @@ Ext.onReady(function()
    	if(+_p48_params.cdtipsup > 9){
 	    _p48_store = Ext.create('Ext.data.Store',
 	    {
-	        autoLoad : false
-	        ,model   : '_p48_modelo'
-	        ,proxy   :
+	        autoLoad  : false
+	        ,model    : '_p48_modelo'
+	        ,pageSize : 25
+	        ,proxy    :
 	        {
-	            type         : 'ajax'
+	        	startParam   : 'params.start'
+	        	,limitParam  : 'params.limit'
+	        	,pageParam   : 'params.page'
+	            ,type        : 'ajax'
 	            ,url         : _p48_urlRecuperacion
+	            ,callbackKey : 'callback'
 	            ,extraParams :
 	            {
 	                'params.consulta'  : 'RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA'
@@ -118,6 +124,7 @@ Ext.onReady(function()
 	                ,successProperty : 'success'
 	                ,messageProperty : 'message'
 	            }
+	            ,simpleSortMode: true
 	        }
 	    });
 	    _p48_cargarStore();	
@@ -125,12 +132,13 @@ Ext.onReady(function()
     
     _p48_storeMov = Ext.create('Ext.data.Store',
     {
-        autoLoad : false
-        ,model   : '_p48_modelo'
-        ,proxy   :
+        autoLoad  : false
+        ,model    : '_p48_modelo'
+        ,proxy    :
         {
             type         : 'ajax'
             ,url         : _p48_urlRecuperacion
+            ,callbackKey : 'callback'
             ,extraParams :
             {
                 'params.consulta'  : 'RECUPERAR_MOVIMIENTOS_ENDOSO_ALTA_BAJA_ASEGURADO'
@@ -147,12 +155,51 @@ Ext.onReady(function()
                 ,successProperty : 'success'
                 ,messageProperty : 'message'
             }
+            ,call: function()
+            {
+               debug('call');
+            }
+            ,simpleSortMode: true
         }
     });
     if(!Ext.isEmpty(_p48_params.nmsuplem_endoso))
     {
         _p48_cargarStoreMov();
     }
+    
+     _p48_storeFamilia = Ext.create('Ext.data.Store',
+	    {
+	        autoLoad  : false
+	        ,model    : '_p48_modelo'
+	        ,proxy    :
+	        {
+	            type         : 'ajax'
+	            ,url         : _p48_urlRecuperacion
+	            ,callbackKey : 'callback'
+	            ,extraParams :
+	            {
+	                'params.consulta'  : 'RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA'
+	                ,'params.cdunieco' : _p48_params.CDUNIECO
+	                ,'params.cdramo'   : _p48_params.CDRAMO
+	                ,'params.estado'   : _p48_params.ESTADO
+	                ,'params.nmpoliza' : _p48_params.NMPOLIZA
+	                ,'params.nmfamili' : _p48_params.NMSITAUX
+	            }
+	            ,reader :
+	            {
+	                type             : 'json'
+	                ,root            : 'list'
+	                ,successProperty : 'success'
+	                ,messageProperty : 'message'
+	            }
+	            ,call: function()
+	            {
+	               debug('call');
+	            }
+	            ,simpleSortMode: true
+	        }
+	    });
+	   
     ////// stores //////
     
     ////// componentes //////
@@ -180,7 +227,7 @@ Ext.onReady(function()
                 ,itemId   : '_p48_gridAsegurados'
                 ,columns  : _p48_colsInciso
                 ,store    : _p48_store
-                ,height   : 200
+                ,height   : 265
                 ,selModel :
                 {
                     selType        : 'checkboxmodel'
@@ -236,6 +283,10 @@ Ext.onReady(function()
                         }
                     }
                 ]
+                ,bbar: Ext.create('Ext.PagingToolbar', {
+		            store: _p48_store, //Funcionalidad en la barra de paginado.
+		            displayInfo: true
+		        })
             })
             ,Ext.create('Ext.grid.Panel',
             {
@@ -389,6 +440,7 @@ Ext.onReady(function()
                     afterrender : function(me)
                     {
                         _p48_validarEstadoBotonCancelar();
+                       	_p48_store.loadPage(1);
                         var ck = 'Limitando fecha de endoso';
                         try
                         {
@@ -404,6 +456,8 @@ Ext.onReady(function()
             })
         ]
     });
+    
+    
     ////// contenido //////
     
     ////// custom //////
@@ -440,6 +494,7 @@ function _p48_quitarAseguradoClic(me)
 {
     debug('>_p48_quitarAseguradoClic');
     var ck = 'Quitando asegurado';
+    
     try
     {
         var gridAsegurados = _fieldById('_p48_gridAsegurados');
@@ -449,8 +504,44 @@ function _p48_quitarAseguradoClic(me)
         }
         
         var record = gridAsegurados.getSelectionModel().getSelection()[0];
+        
+        //Agregado de beneficiarios a grid de Movimientos
+//        var recordsQueSeQuitan = [];
+//	    _p48_storeFamilia.load(function(records,op,success)
+//	    {
+//	    	if(!success)
+//	        {
+//	            mensajeError('Error al recuperar familia: '+op.getError());
+//	        }
+//	        
+//	        var fieldValue
+//	        
+//	        debug('Redors: ',_p48_storeFamilia.getCount());
+//	        
+//			for(q=0;q < _p48_storeFamilia.getCount();q++){
+//				fieldValue = _p48_storeFamilia.getAt(q);
+//				debug('Records: ',_p48_storeFamilia.getAt(q));
+//				
+//				recordsQueSeQuitan.push(fieldValue);
+//				debug('recordsQueSeQuitan:',recordsQueSeQuitan);
+//			}
+//			
+//	    });
+//        
+//        debug('record:',record);
+//        
+//	    debug('_p48_storeFamilia ',_p48_storeFamilia);
+//	    
+//        _p48_storeMov.each(function(record2)
+//        {
+//            if(Number(record2.get('NMSITUAC'))==Number(_p48_storeFamilia.get('NMSITUAC')))
+//            {
+//                throw 'Este inciso ya se encuentra en los movimientos';
+//            }
+//        });
+        
         _p48_store.clearFilter();
-    	_fieldById('eliminarFiltro').setValue('');
+        _fieldById('eliminarFiltro').setValue('');
         debug('record:',record);
         
         _p48_storeMov.each(function(record2)
@@ -463,8 +554,8 @@ function _p48_quitarAseguradoClic(me)
         
         var recordsQueSeQuitan = [];
         
-        if(record.get('CVE_PARENTESCO')=='T')
-        {
+//        if(record.get('CVE_PARENTESCO')=='T')
+//        {
             var familia = Number(record.get('NMSITAUX'));
             _p48_store.each(function(rec)
             {
@@ -486,16 +577,17 @@ function _p48_quitarAseguradoClic(me)
                     }
                 }
             });
-        }
-        else
-        {
-            record.set('MOV','-');
-            recordsQueSeQuitan.push(record);
-        }
+//        }
+//        else
+//        {
+//            record.set('MOV','-');
+//            recordsQueSeQuitan.push(record);
+//        }
         debug('recordsQueSeQuitan:',recordsQueSeQuitan);
         
         var quitados = 0;
         _setLoading(true,'_p48_gridAsegurados');
+        debug('Longitud =>',recordsQueSeQuitan.length);
         for(var i in recordsQueSeQuitan)
         {
             var datos           = parseaFechas(recordsQueSeQuitan[i].data);
@@ -514,6 +606,7 @@ function _p48_quitarAseguradoClic(me)
                     try
                     {
                         quitados = quitados + 1;
+                        debug('Longitud =>',recordsQueSeQuitan.length);
                         if(quitados==recordsQueSeQuitan.length)
                         {
                             _setLoading(false,'_p48_gridAsegurados');
