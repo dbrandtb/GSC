@@ -121,6 +121,13 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				valor, params.get("cdperson"), params.get("tipoProceso"),
 				params.get("complemento"));
 			
+			siniestrosManager.actualizaDatosGeneralesConceptos(
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("nmsuplem"),params.get("aaapertu"),
+					params.get("nmsinies"), params.get("cdgarant"), 
+					params.get("cdconval"));
+			
 			String formatoFeEgreso;
 			if(params.get("feegreso").length() > 0){
 				formatoFeEgreso = params.get("feegreso").toString().substring(8,10)+"/"+params.get("feegreso").toString().substring(5,7)+"/"+params.get("feegreso").toString().substring(0,4);

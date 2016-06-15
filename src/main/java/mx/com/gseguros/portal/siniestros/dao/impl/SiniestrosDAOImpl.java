@@ -5532,4 +5532,46 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+    @Override
+    public String validaFeocurreAsegurado(HashMap<String, Object> paramPersona) throws Exception {
+    	Map<String, Object> resultado = ejecutaSP(new ValidaFeocurreAsegurado(getDataSource()), paramPersona);
+    	logger.debug("Valor de respuesta ==> "+resultado.get("pv_extsinie_o"));
+    	return (String) resultado.get("pv_extsinie_o");
+    }
+
+    protected class ValidaFeocurreAsegurado extends StoredProcedure {
+    	protected ValidaFeocurreAsegurado(DataSource dataSource) {    		
+    		super(dataSource, "PKG_DESARROLLO.P_VALIDA_FEOCURRE_ASEG");
+    		declareParameter(new SqlParameter("pv_feocurre_i",   OracleTypes.DATE));
+    		declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_extsinie_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+	@Override
+	public Map<String, Object> actualizaDatosGeneralesConceptos(Map<String, Object> params) throws Exception {
+		return ejecutaSP(new ActualizaDatosGeneralesConceptos(this.getDataSource()), params);
+	}
+	
+	protected class ActualizaDatosGeneralesConceptos extends StoredProcedure {
+		protected ActualizaDatosGeneralesConceptos(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_UPD_CONCEPTASEGURADO");
+            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdgarant_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdconval_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
