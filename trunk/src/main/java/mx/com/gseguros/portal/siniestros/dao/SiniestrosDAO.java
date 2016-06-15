@@ -552,5 +552,7 @@ public interface SiniestrosDAO {
 	
 	public List<Map<String, String>> obtieneInfCausaSiniestroProducto(HashMap<String, Object> paramsInfonavit) throws Exception;
 	
+	public String validaFeocurreAsegurado(HashMap<String, Object> paramPersona) throws Exception;
 	
+	public Map<String, Object> actualizaDatosGeneralesConceptos(Map<String, Object> params) throws Exception;
 }

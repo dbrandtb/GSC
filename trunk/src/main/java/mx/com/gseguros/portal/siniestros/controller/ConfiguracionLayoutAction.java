@@ -442,12 +442,17 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                double cdgrupo	= -1d;
 
 		                // Empezamos a leer los campos del archivo de Excel
+		                String fechaOcurrencia = null;
+		                String aseguradoAfectado = null;
+		                int total = 1;
 		                for(int i = 0; i < datosInformacionLayout.size();i++){
 		                	//logger.debug("Valor de los datos ===> "+datosInformacionLayout.get(i));
 		                	int celdaPrincipal = Integer.parseInt(datosInformacionLayout.get(i).get("CVEEXCEL").toString())-1;
 		                	auxCell = row.getCell(celdaPrincipal);
+		                	
+		                	logger.debug("Valor ===>"+datosInformacionLayout.get(i).get("DESCEXCEL").toString());
 		                	try{
-		                		//logger.debug("Valor ==>"+i+"   tipo: "+row.getCell(celdaPrincipal).getCellType() );
+		                		//ALFANUMERICO
 		                		if(row.getCell(celdaPrincipal).getCellType()>0){
 			                		//validamos si es una fecha
 		                			if(datosInformacionLayout.get(i).get("CVEFORMATO").toString().equalsIgnoreCase("F")){
@@ -458,7 +463,12 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                					Date date = formatter.parse(dateInString);
 		                					bufferLinea.append(
 				                				auxCell!=null?renderFechas.format(date)+"|":"|"
-					                		);
+					                		);		                					
+		                					//logger.debug("1.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString());
+		                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
+		                						logger.debug("1.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+"  "+renderFechas.format(date));
+		                						fechaOcurrencia = renderFechas.format(date);
+		                					}
 		                				}
 		                				
 		                				if(datosInformacionLayout.get(i).get("FORMATFECH").toString().equalsIgnoreCase(TipoFecha.ddMMyyyy_Gion.getCodigo())){
@@ -467,6 +477,11 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                					bufferLinea.append(
 				                				auxCell!=null?renderFechas.format(date)+"|":"|"
 					                		);
+		                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
+		                						logger.debug("2.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+"  "+renderFechas.format(date));
+		                						fechaOcurrencia = renderFechas.format(date);
+		                					}
+		                					
 		                				}
 		                				if(datosInformacionLayout.get(i).get("FORMATFECH").toString().equalsIgnoreCase(TipoFecha.yyyyMMdd_Diagonal.getCodigo())){
 		                					SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
@@ -474,6 +489,10 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                					bufferLinea.append(
 				                				auxCell!=null?renderFechas.format(date)+"|":"|"
 					                		);
+		                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
+		                						logger.debug("3.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+"  "+renderFechas.format(date));
+		                						fechaOcurrencia = renderFechas.format(date);
+		                					}
 		                				}
 		                				if(datosInformacionLayout.get(i).get("FORMATFECH").toString().equalsIgnoreCase(TipoFecha.yyyyMMdd_Gion.getCodigo())){
 		                					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -481,6 +500,10 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                					bufferLinea.append(
 				                				auxCell!=null?renderFechas.format(date)+"|":"|"
 					                		);
+		                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
+		                						logger.debug("4.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+"  "+renderFechas.format(date));
+		                						fechaOcurrencia = renderFechas.format(date);
+		                					}
 		                				}
 		                				if(datosInformacionLayout.get(i).get("FORMATFECH").toString().equalsIgnoreCase(TipoFecha.ddMMyyyyhhmmss_Diagonal.getCodigo())){
 		                					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.US);
@@ -488,10 +511,12 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                					bufferLinea.append(
 				                				auxCell!=null?renderFechas.format(date)+"|":"|"
 					                		);
+		                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
+		                						logger.debug("5.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+"  "+renderFechas.format(date));
+		                						fechaOcurrencia = renderFechas.format(date);
+		                					}
 		                				}
 		                			}else{
-		                				//logger.debug(i+" "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+":"+(				                			//auxCell!=null?auxCell.getStringCellValue().trim()+"|":"|"
-		                				//));
 		                				String cadenaModificada = auxCell.getStringCellValue().trim().
 		                						replaceAll("á","a").
 		                						replaceAll("é","e").
@@ -504,7 +529,6 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                						replaceAll("Ó","O").
 		                						replaceAll("Ú","U").
 		                						replaceAll("\\*","");
-		                				logger.debug("Valor de Cadena modificada ===> {}",cadenaModificada);
 		                				
 		                				if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CVE. ASEGURADO")){
 		                					HashMap<String, Object> paramPersona = new HashMap<String, Object>();
@@ -512,6 +536,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                					
 		                					String existePersona = siniestrosManager.validaPersonaSisaSicaps(paramPersona);
 		                					if(Integer.parseInt(existePersona) > 0){
+		                						aseguradoAfectado = "G"+existePersona;
 		                						bufferLinea.append(
 					                				auxCell!=null?"G"+existePersona+"|":"|"
 						                		);
@@ -523,25 +548,37 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 				                				auxCell!=null?cadenaModificada.trim()+"|":"|"
 					                		);
 		                				}
+		                				
+		                				if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CLAVE ASEGURADO")){
+		                					aseguradoAfectado = cadenaModificada.trim();
+		                				}
 		                			}
 			                	}else{
-			                		//logger.debug(i+" "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+":"+(
-					                	//auxCell!=null?String.valueOf(auxCell.getNumericCellValue()).toString().trim()+"|":"|"
-				                	//));
+			                		//NUMERICO
 			                		bufferLinea.append(
 			                			auxCell!=null?String.valueOf(auxCell.getNumericCellValue()).toString()+"|":"|"
 			                		);
 			                	}
+		                		
+		                		if(fechaOcurrencia!= null && aseguradoAfectado != null && total <= 1){
+		                			total = total+1;
+		                			HashMap<String, Object> paramPersona = new HashMap<String, Object>();
+                					paramPersona.put("pv_feocurre_i",renderFechas.parse(fechaOcurrencia));
+                					paramPersona.put("pv_cdperson_i",aseguradoAfectado.replaceAll("G", "")); 
+                					String feocurreAsegurado = siniestrosManager.validaFeocurreAsegurado(paramPersona);
+                					if(Integer.parseInt(feocurreAsegurado) == 0){
+                						throw new Exception("El rango de la fecha no se encuentra en la p&oacute;liza");
+                					}
+		                		}
 		                	}
 		                	catch(Exception ex){
 		                		filaBuena = false;
-		                		logger.debug("Entra al catch ===>"+ex);
+		                		logger.debug("Error ===>>>> {}", ex);
 		                		if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CVE. ASEGURADO")){
 		                			bufferErroresCenso.append(Utils.join("La Clavel del Asegurado (CDIDEEXT) no se encuentra en SICAPS.\nError en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
 		                		}else{
 		                			bufferErroresCenso.append(Utils.join("Error en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
 		                		}
-		                		
 			                }
 			                finally{
 			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(celdaPrincipal)),"-"));
@@ -552,9 +589,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	                	totalConsultasAseg.put(nConsulta,"");
 	                	estadoConsultas.put(nConsulta,true);
 	                	
-	                	//logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
-		                
-		                if(filaBuena) {
+	                	if(filaBuena) {
 		                	totalConsultasAseg.put(nConsulta,Utils.join(totalConsultasAseg.get(nConsulta),bufferLinea.toString(),"\n"));
 		                	filasProcesadas = filasProcesadas + 1;
 		                }

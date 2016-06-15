@@ -686,4 +686,9 @@ public interface SiniestrosManager {
 
 	public List<Map<String, String>> listaConsultaInfCausaSiniestroProducto(HashMap<String, Object> paramsCausaSini) throws Exception;
 	
+	public String validaFeocurreAsegurado(HashMap<String, Object> paramPersona) throws Exception;
+	
+	public Map<String, Object> actualizaDatosGeneralesConceptos(String cdunieco, String cdramo, String estado, 
+			String nmpoliza, String nmsuplem, String aaapertu, String nmsinies, String cdgarant, 
+			String cdconval) throws Exception;
 }

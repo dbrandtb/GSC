@@ -2375,6 +2375,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
+	public String validaFeocurreAsegurado(HashMap<String, Object> paramPersona) throws Exception {
+		try {
+			return siniestrosDAO.validaFeocurreAsegurado(paramPersona);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
 	public List<Map<String, String>> obtieneInfCoberturaInfonavit(HashMap<String, Object> paramsInfonavit) throws Exception {
 		try {
 			return siniestrosDAO.obtieneInfCoberturaInfonavit(paramsInfonavit);
@@ -2391,4 +2400,24 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public Map<String, Object> actualizaDatosGeneralesConceptos(String cdunieco, String cdramo, String estado, 
+			String nmpoliza, String nmsuplem, String aaapertu, String nmsinies, String cdgarant, 
+			String cdconval) throws Exception {
+
+		HashMap<String,Object> params=new HashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i",   cdramo);
+		params.put("pv_estado_i",   estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_aaapertu_i", aaapertu);
+		params.put("pv_nmsinies_i", nmsinies);
+		params.put("pv_cdgarant_i",  cdgarant);
+		params.put("pv_cdconval_i",  cdconval);
+		log.debug("actualizaDatosGeneralesConceptos params: "+params);
+		return siniestrosDAO.actualizaDatosGeneralesConceptos(params);
+	}
+	
 }
