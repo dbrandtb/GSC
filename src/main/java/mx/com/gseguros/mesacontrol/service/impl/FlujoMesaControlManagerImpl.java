@@ -1816,7 +1816,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					ntramite
 					,new Date()
 					,null//cdclausu
-					,"Se registra un nuevo tr\u00e1mite desde mesa de control"
+					,Utils.join("Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: "
+							,StringUtils.isBlank(comments) ? "(sin observaciones)" : comments
+							)
 					,cdusuari
 					,null//cdmotivo
 					,cdsisrol

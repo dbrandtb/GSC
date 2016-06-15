@@ -1078,7 +1078,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	/*******************************************************************/
 	/*  Se agrega pkg_db_report.P_REVERSA_STATUS_IMPRESO
 	 * 	para realizar el reverso de impresion 
-	 *  para que dado un trámite que ya haya sido impreso,
+	 *  para que dado un trï¿½mite que ya haya sido impreso,
 	 *   actualizar el mismo como "pendiente por imprimir", 
 	 * 
 	 */
@@ -1228,6 +1228,26 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void borrarNmsoliciTramite(String ntramite) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		ejecutaSP(new BorrarNmsoliciTramiteSP(getDataSource()),params);
+	}
+	
+	protected class BorrarNmsoliciTramiteSP extends StoredProcedure
+	{
+		protected BorrarNmsoliciTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_BORRA_NMSOLICI_TRAMITE");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

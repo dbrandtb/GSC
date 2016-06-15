@@ -5065,19 +5065,19 @@ public class ComplementariosAction extends PrincipalCoreAction
 		logger.debug(comments);
 		// Se reemplazan acentos y otros caracteres:
 		String commentsM   = comments.
-				replaceAll("\u00E1", "%C3%A1").
-				replaceAll("\u00C1", "%C3%81").
-				replaceAll("\u00E9", "%C3%A9").
-				replaceAll("\u00C9", "%C3%89").
-				replaceAll("\u00ED", "%C3%AD").
-				replaceAll("\u00CD", "%C3%8D").
-				replaceAll("\u00F3", "%C3%B3").
-				replaceAll("\u00D3", "%C3%93").
-				replaceAll("\u00FA", "%C3%BA").
-				replaceAll("\u00DA", "%C3%9A").
-				replaceAll("\u00F1", "%C3%B1").
-				replaceAll("\u00D1", "%C3%91").
-				replaceAll("\n"    , "%0A");
+				replaceAll("\u00E1", "_a_").
+				replaceAll("\u00C1", "_A_").
+				replaceAll("\u00E9", "_e_").
+				replaceAll("\u00C9", "_E_").
+				replaceAll("\u00ED", "_i_").
+				replaceAll("\u00CD", "_I_").
+				replaceAll("\u00F3", "_o_").
+				replaceAll("\u00D3", "_O_").
+				replaceAll("\u00FA", "_u_").
+				replaceAll("\u00DA", "_U_").
+				replaceAll("\u00F1", "_n_").
+				replaceAll("\u00D1", "_N_").
+				replaceAll("\n"    , "_s_");
 		String cdsisrol    = map1.get("cdsisrol");
 		String cdunieco    = map1.get("cdunieco");
 		String cdramo      = map1.get("cdramo");

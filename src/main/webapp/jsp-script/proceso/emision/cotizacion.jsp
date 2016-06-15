@@ -3118,7 +3118,7 @@ Ext.onReady(function()
 		                                id        : 'inputTextareaCommentsToRechazo'
 		                                ,width  : 570
 		                                ,height : 300
-		                                ,xtype  : 'textfield'
+		                                ,xtype  : 'textarea'
 		                            }
 		                            ,{
 						                xtype       : 'radiogroup'

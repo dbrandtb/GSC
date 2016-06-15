@@ -321,4 +321,30 @@ public class MesaControlManagerImpl implements MesaControlManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
+	@Override
+	public void borrarNmsoliciTramite(String ntramite) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ borrarNmsoliciTramite @@@@@@"
+				,"\n@@@@@@ ntramite = " , ntramite
+				));
+		
+		String paso = "Borrando liga de solicitud";
+		
+		try
+		{
+			mesaControlDAO.borrarNmsoliciTramite(ntramite);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ borrarNmsoliciTramite @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 }

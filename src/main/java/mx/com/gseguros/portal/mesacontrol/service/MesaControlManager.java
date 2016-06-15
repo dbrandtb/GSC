@@ -109,5 +109,7 @@ public interface MesaControlManager
 	public void actualizarNmsuplemTramite(String ntramite, String nmsuplem) throws Exception;
 	
 	public void regeneraReverso(String ntramite, String cdsisrol, String cdusuari) throws Exception;
+	
+	public void borrarNmsoliciTramite(String ntramite) throws Exception;
 	 
 }
