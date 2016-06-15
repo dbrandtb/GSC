@@ -2078,98 +2078,80 @@ function _datComTurnarSuscripcion()
    		                                                                {
    		                                                                    var window=this.up().up();
    		                                                                    window.setLoading(true);
-   		                                                                    /*form.submit({
-   		                                                                        params:{
-   		                                                                            'map1.pv_cdunieco' :  inputCdunieco,
-   		                                                                            'map1.pv_cdramo' :    inputCdramo,
-   		                                                                            'map1.pv_estado' :    inputEstado,
-   		                                                                            'map1.pv_nmpoliza' :  inputNmpoliza
-   		                                                                        },
-   		                                                                        success:function(){*/
-   		                                                                            Ext.Ajax.request
-   		                                                                            ({
-   		                                                                                url     : datComUrlMCUpdateStatus
-   		                                                                                ,params : 
-   		                                                                                {
-   		                                                                                    'smap1.ntramite' : inputNtramite
-   		                                                                                    ,'smap1.status'  : '4'//rechazado
-   		                                                                                    ,'smap1.comments' : Ext.getCmp('inputTextareaComments').getValue()
-   		                                                                                    ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
-   		                                                                                }
-   		                                                                                ,success : function(response)
-   		                                                                                {
-   		                                                                                    var json=Ext.decode(response.responseText);
-   		                                                                                    if(json.success==true)
-   		                                                                                    {
-   		                                                                                        Ext.Ajax.request(
-   		                                                                                        {
-   		                                                                                            url     : compleUrlGuardarCartoRechazo
-   		                                                                                         	,method:'GET'
-   		                                                                                            ,params :
-   		                                                                                            {
-   		                                                                                                'map1.ntramite'  : inputNtramite
-   		                                                                                                ,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
-   		                                                                                                ,'map1.cdsisrol' : sesionDsrol
-   		                                                                                                ,'map1.cdunieco' : inputCdunieco
-   		                                                                                                ,'map1.cdramo'   : inputCdramo
-   		                                                                                                ,'map1.estado'   : inputEstado
-   		                                                                                                ,'map1.nmpoliza' : inputNmpoliza
-   		                                                                                            }
-		   		                                                                                    ,success : function(response)
-		   	   		                                                                                {
-		   		                                                                                    	Ext.create('Ext.form.Panel').submit
-		   		                                                                                        ({
-		   		                                                                                            url             : datComUrlMC
-		   		                                                                                            ,standardSubmit : true
-		   		                                                                                            ,params         :
-		   		                                                                                            {
-		   		                                                                                                'smap1.gridTitle':'Tareas',
-		   		                                                                                                'smap2.pv_cdtiptra_i':1,
-		   		                                                                                                'smap1.editable':1
-		   		                                                                                            }
-		   		                                                                                        });
-		   	   		                                                                                }
-			   		                                                                                 ,failure : function()
-		    		                                                                                {
-		    		                                                                                    Ext.Msg.show({
-		    		                                                                                        title:'Error',
-		    		                                                                                        msg: 'Error de comunicaci&oacute;n',
-		    		                                                                                        buttons: Ext.Msg.OK,
-		    		                                                                                        icon: Ext.Msg.ERROR
-		    		                                                                                    });
-		    		                                                                                }
-   		                                                                                        });
-   		                                                                                    }else{
-   		                                                                                        window.setLoading(false);
-   		                                                                                        Ext.Msg.show({
-   		                                                                                            title:'Error',
-   		                                                                                            msg: 'Error al rechazar',
-   		                                                                                            buttons: Ext.Msg.OK,
-   		                                                                                            icon: Ext.Msg.ERROR
-   		                                                                                        });
-   		                                                                                    }
-   		                                                                                }
-   		                                                                                ,failure : function()
-   		                                                                                {
-   		                                                                                    Ext.Msg.show({
-   		                                                                                        title:'Error',
-   		                                                                                        msg: 'Error de comunicaci&oacute;n',
-   		                                                                                        buttons: Ext.Msg.OK,
-   		                                                                                        icon: Ext.Msg.ERROR
-   		                                                                                    });
-   		                                                                                }
-   		                                                                            });/*
-   		                                                                        },
-   		                                                                        failure:function(){
-   		                                                                            window.setLoading(false);
-   		                                                                            Ext.Msg.show({
-   		                                                                                title:'Error',
-   		                                                                                msg: 'Error de comunicaci&oacute;n',
-   		                                                                                buttons: Ext.Msg.OK,
-   		                                                                                icon: Ext.Msg.ERROR
-   		                                                                            });
-   		                                                                        }
-   		                                                                    });*/
+   		                                                                    
+                                                                            Ext.Ajax.request
+                                                                            ({
+                                                                                url     : datComUrlMCUpdateStatus
+                                                                                ,params : 
+                                                                                {
+                                                                                    'smap1.ntramite' : inputNtramite
+                                                                                    ,'smap1.status'  : '4'//rechazado
+                                                                                    ,'smap1.comments' : Ext.getCmp('inputTextareaComments').getValue()
+                                                                                    ,'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
+                                                                                }
+                                                                                ,success : function(response)
+                                                                                {
+                                                                                    var json=Ext.decode(response.responseText);
+                                                                                    if(json.success==true)
+                                                                                    {
+                                                                                        Ext.Ajax.request(
+                                                                                        {
+                                                                                            url     : compleUrlGuardarCartoRechazo
+                                                                                         	,method:'GET'
+                                                                                            ,params :
+                                                                                            {
+                                                                                                'map1.ntramite'  : inputNtramite
+                                                                                                ,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+                                                                                                ,'map1.cdsisrol' : sesionDsrol
+                                                                                                ,'map1.cdunieco' : inputCdunieco
+                                                                                                ,'map1.cdramo'   : inputCdramo
+                                                                                                ,'map1.estado'   : inputEstado
+                                                                                                ,'map1.nmpoliza' : inputNmpoliza
+                                                                                            }
+		                                                                                    ,success : function(response)
+	   		                                                                                {
+		                                                                                    	Ext.create('Ext.form.Panel').submit
+		                                                                                        ({
+		                                                                                            url             : datComUrlMC
+		                                                                                            ,standardSubmit : true
+		                                                                                            ,params         :
+		                                                                                            {
+		                                                                                                'smap1.gridTitle':'Tareas',
+		                                                                                                'smap2.pv_cdtiptra_i':1,
+		                                                                                                'smap1.editable':1
+		                                                                                            }
+		                                                                                        });
+	   		                                                                                }
+ 		                                                                                 ,failure : function()
+ 		                                                                                {
+ 		                                                                                    Ext.Msg.show({
+ 		                                                                                        title:'Error',
+ 		                                                                                        msg: 'Error de comunicaci&oacute;n',
+ 		                                                                                        buttons: Ext.Msg.OK,
+ 		                                                                                        icon: Ext.Msg.ERROR
+ 		                                                                                    });
+ 		                                                                                }
+                                                                                        });
+                                                                                    }else{
+                                                                                        window.setLoading(false);
+                                                                                        Ext.Msg.show({
+                                                                                            title:'Error',
+                                                                                            msg: 'Error al rechazar',
+                                                                                            buttons: Ext.Msg.OK,
+                                                                                            icon: Ext.Msg.ERROR
+                                                                                        });
+                                                                                    }
+                                                                                }
+                                                                                ,failure : function()
+                                                                                {
+                                                                                    Ext.Msg.show({
+                                                                                        title:'Error',
+                                                                                        msg: 'Error de comunicaci&oacute;n',
+                                                                                        buttons: Ext.Msg.OK,
+                                                                                        icon: Ext.Msg.ERROR
+                                                                                    });
+                                                                                }
+                                                                            });
    		                                                                }
    		                                                                else
    		                                                                {

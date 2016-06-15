@@ -300,4 +300,6 @@ public interface MesaControlDAO
 			)throws Exception;
 	
 	public void actualizarNmsuplemTramite(String ntramite, String nmsuplem) throws Exception;
+	
+	public void borrarNmsoliciTramite(String ntramite) throws Exception;
 }
