@@ -430,7 +430,7 @@
 														}
 													});
 												}
-												/*if(periodoEspera == true && maxconsultas  == true){
+												if(periodoEspera == true && maxconsultas  == true){
 													Ext.Ajax.request({
 														url       : _selCobUrlSavexTramite
 														,jsonData : {
@@ -458,7 +458,7 @@
 															centrarVentanaInterna(mensajeError(json.mensaje));
 														}
 													});
-												}*/
+												}
 											}else{
 												Ext.Ajax.request({
 													url       : _selCobUrlSavexTramite

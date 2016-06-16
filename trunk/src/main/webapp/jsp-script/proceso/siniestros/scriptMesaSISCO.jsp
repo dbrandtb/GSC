@@ -1870,12 +1870,11 @@ var msgWindow;
 				                            ,olist1 : grupos
 				                        }
 				                        ,success  : function(response) {
-				                            form.setLoading(false);
+				                            form.setLoading(true);
 				                            var json=Ext.decode(response.responseText);
 				                            debug('### subir censo completo response:',json);
 				                            
 				                            if(json.exito){
-				                            	form.setLoading(false); 
 				                            	//Realizamos el llamado al procedure de la validacion del
 				                            	Ext.Ajax.request( {
 													url         : _URL_ValidaLayoutConfigExcel
@@ -1898,7 +1897,6 @@ var msgWindow;
 																success: function(response, opts) {
 																	var respuesta = Ext.decode(response.responseText);
 																	debug("Valor de la respuesta ===> ",respuesta);
-																	form.setLoading(false); 
 																	if(respuesta.success){
 																		form.setLoading(false);
 																		centrarVentanaInterna(Ext.Msg.show({
@@ -1925,7 +1923,7 @@ var msgWindow;
 																},
 																failure: function(){
 																	mcdinGrid.setLoading(false);
-																	mensajeError('No se pudo solicitar el pago.');
+																	mensajeError('Redireccionar a Mesa de Control.');
 																}
 															});
 														 }
@@ -2032,6 +2030,10 @@ var msgWindow;
 	}
 
 	Ext.onReady(function(){
+		    Ext.Ajax.timeout = 1000*60*15; // 15 minutos
+		    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+		    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+		    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 		Ext.define('DetalleMC',{
 	        extend:'Ext.data.Model',
 	        fields:
