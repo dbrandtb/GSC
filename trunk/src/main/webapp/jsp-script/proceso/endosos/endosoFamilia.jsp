@@ -13,6 +13,7 @@ var _p48_urlMovimientos              = '<s:url namespace="/movimientos"  action=
 var _p48_urlMovimientosSMD           = '<s:url namespace="/movimientos"  action="ejecutarSMD"                       />';
 var _p48_urlAgregarFamilia           = '<s:url namespace="/emision"  	 action="includes/cotizacionGrupo"          />';
 var _p48_urlInforFamiliaEndoso       = '<s:url namespace="/endosos"      action="obtieneInfoFamiliaEndoso"          />';
+var _p48_urlObtieneCatalogos         = '<s:url namespace="/catalogos"    action="obtieneCatalogo"                   />';
 var _p21_urlBorrarRespaldoCenso      = '<s:url namespace="/emision"      action="borrarRespaldoCenso"              />';
 var _p21_urlRestaurarRespaldoCenso   = '<s:url namespace="/emision"      action="restaurarRespaldoCenso"           />';
 ////// urls //////
@@ -204,7 +205,7 @@ Ext.onReady(function()
     
     ////// componentes //////
     ////// componentes //////
-    
+	    
     ////// contenido //////
     Ext.create('Ext.panel.Panel',
     {
@@ -217,7 +218,7 @@ Ext.onReady(function()
             Ext.create('Ext.panel.Panel',
             {
                 title     : 'DATOS DE P\u00D3LIZA'
-                ,defaults : { style : 'margin:5px;' }
+                ,defaults : { style : 'margin:5px;' } 
                 ,layout   : 'hbox'
                 ,items    : _p48_itemsPoliza
             })
@@ -249,39 +250,74 @@ Ext.onReady(function()
                         ,handler : _p48_quitarAseguradoClic
                     }
                     ,'->'
-                    ,{
-                        xtype      : 'textfield'
-                        ,itemId     : 'eliminarFiltro'
-                        ,listeners :
+                    ,Ext.create('Ext.form.ComboBox',
+                    {
+                        name        : 'dsatribu'
+                        ,allowBlank : false
+                        ,style:'margin:5px'
+                        ,typeAhead:true
+                        ,anyMatch:true
+                        ,displayField:'value'
+                        ,valueField:'key'
+                        ,matchFieldWidth:false
+                        ,listConfig:
                         {
-                            change : function(me,fil)
-                            {
-                                if(Ext.isEmpty(fil))
-							    {
-                                	_p48_store.clearFilter();
-							    }
-							    else
-							    {
-	                                fil = fil.toUpperCase().replace(/ /g,'');
-							        debug('filtro:',fil);
-							        _p48_store.filterBy(function(record)
-							        {
-							            var incluido = false;
-							            for(var clave in record.raw)
-							            {
-							                var valor=(String(record.raw[clave])).toUpperCase().replace(/ /g,'');
-							                if(valor.lastIndexOf(fil)!=-1)
-							                {
-							                    incluido=true;
-							                    break;
-							                }
-							            }
-							            return incluido;
-							        });
-							    }
-                            }
+                            maxHeight:150
+                            ,minWidth:120
                         }
+                        ,forceSelection:true
+                        ,editable:true
+                        ,queryMode:'local'
+                        ,store:Ext.create('Ext.data.Store',
+                        {
+                        	model:'Generic'
+                        	,autoLoad:true
+                        	,proxy:
+                        	{
+                        	    type:'ajax'
+                        	    ,url:_p48_urlObtieneCatalogos
+                        	    ,reader:
+                        	    {
+                        	        type:'json'
+                        	        ,root:'lista'
+                        	        ,rootProperty:'lista'
+                        	    }
+                        	    ,extraParams:
+                        	    {
+                        	        catalogo           : 'RECUPERAR_LISTA_FILTRO_PROPIEDADDES_INCISO'
+                        	        ,'params.cdunieco' :  _p48_params.CDUNIECO
+                        	        ,'params.cdramo'   :  _p48_params.CDRAMO
+                        	        ,'params.estado'   :  _p48_params.ESTADO
+                        	        ,'params.nmpoliza' :  _p48_params.NMPOLIZA
+                        	    }
+                        	}
+                            ,listeners :
+                            {
+                                load: function(st) {
+                                	_fieldByName('dsatribu').setValue('NOMBRE ASEGURADO'); // Se setea un valor del combo al inicio
+                                }
+                            }
+                        })
+                    })
+                    ,{
+                        xtype      : 'textfield',
+                        name       : 'txtBuscar'
                     }
+                    ,{
+                        xtype    : 'button'
+                        ,text    : 'Buscar'
+                        //,icon  : panDocContexto+'/resources/fam3icons/icons/add.png'
+                        ,handler : function(btn) {
+                        	debug('Buscando...');				                                	
+                        	if(Ext.isEmpty(btn.up('toolbar').down('textfield[name=txtBuscar]').getValue())){
+                            	debug('valor nulo...');
+                            	btn.up('toolbar').down('combo[name=dsatribu]').setValue('NOMBRE ASEGURADO');
+                            }				                                	
+                            _p48_store.getProxy().setExtraParam('params.dsatribu',btn.up('toolbar').down('combo[name=dsatribu]').getValue());
+                            _p48_store.getProxy().setExtraParam('params.otvalor', btn.up('toolbar').down('textfield[name=txtBuscar]').getValue());
+                            _p48_store.loadPage(1);
+                        }
+					}
                 ]
                 ,bbar: Ext.create('Ext.PagingToolbar', {
 		            store: _p48_store, //Funcionalidad en la barra de paginado.
