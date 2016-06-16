@@ -1095,7 +1095,7 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 				                                	debug('Buscando...');				                                	
 				                                	if(Ext.isEmpty(btn.up('toolbar').down('textfield[name=txtBuscar]').getValue())){
 				                                    	debug('valor nulo...');
-				                                    	btn.up('toolbar').down('combo[name=dsatribu]').setValue(null);
+				                                    	btn.up('toolbar').down('combo[name=dsatribu]').setValue('NOMBRE ASEGURADO');
 				                                    }				                                	
 				                                    _p34_storeIncisos.getProxy().setExtraParam('smap1.dsatribu',btn.up('toolbar').down('combo[name=dsatribu]').getValue());
 				                                    _p34_storeIncisos.getProxy().setExtraParam('smap1.otvalor', btn.up('toolbar').down('textfield[name=txtBuscar]').getValue());
