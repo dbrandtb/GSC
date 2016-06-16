@@ -5489,7 +5489,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class ObtieneInfCoberturaInfonavit extends StoredProcedure {
 		protected ObtieneInfCoberturaInfonavit(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_DESARROLLO.P_GET_NUM_CONSULTAS_AFI");
+			super(dataSource, "PKG_SINIESTRO.P_GET_NUM_CONSULTAS_AFI");
 			declareParameter(new SqlParameter("pv_cdunieco_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
@@ -5517,7 +5517,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class ObtieneInfCausaSiniestroProducto extends StoredProcedure {
 		protected ObtieneInfCausaSiniestroProducto(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_DESARROLLO.P_GET_SINIESTRO_GRAL");
+			super(dataSource, "PKG_SINIESTRO.P_GET_SINIESTRO_GRAL");
 			declareParameter(new SqlParameter("pv_cdramo_i",   	OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i",  OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_causa_i",   	OracleTypes.VARCHAR));
@@ -5542,7 +5542,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
     protected class ValidaFeocurreAsegurado extends StoredProcedure {
     	protected ValidaFeocurreAsegurado(DataSource dataSource) {    		
-    		super(dataSource, "PKG_DESARROLLO.P_VALIDA_FEOCURRE_ASEG");
+    		super(dataSource, "PKG_SINIESTRO.P_VALIDA_FEOCURRE_ASEG");
     		declareParameter(new SqlParameter("pv_feocurre_i",   OracleTypes.DATE));
     		declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_extsinie_o", OracleTypes.VARCHAR));
