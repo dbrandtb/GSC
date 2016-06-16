@@ -490,81 +490,85 @@ function _p48_cargarStoreMov()
     });
 }
 
-function _p48_agregarAseguradoMov(recordsQueSeQuitan){
-  //Agrega al asegurado a un grid donde se encuentren todos los asegurados 
-	            
-    _p48_storeMov.each(function(record2)
-    {
-        if(Number(record2.get('NMSITUAC'))==Number(record.get('NMSITUAC')))
+function _p48_agregarAseguradoMov(recordsQueSeQuitan, record) {
+    //Agrega al asegurado a un grid donde se encuentren todos los asegurados 
+	
+	try {
+	
+        _p48_storeMov.each(function(record2) {
+            if(Number(record2.get('NMSITUAC'))==Number(record.get('NMSITUAC'))) {
+                throw 'Este inciso ya se encuentra en los movimientos';
+            }
+        });
+        
+        debug('recordsQueSeQuitan:',recordsQueSeQuitan);
+        
+        var quitados = 0;
+        _setLoading(true,'_p48_gridAsegurados');
+        debug('Longitud =>',recordsQueSeQuitan.length);
+        for(var i in recordsQueSeQuitan)
         {
-            throw 'Este inciso ya se encuentra en los movimientos';
-        }
-    });
-    
-    debug('recordsQueSeQuitan:',recordsQueSeQuitan);
-    
-    var quitados = 0;
-    _setLoading(true,'_p48_gridAsegurados');
-    debug('Longitud =>',recordsQueSeQuitan.length);
-    for(var i in recordsQueSeQuitan)
-    {
-        var datos           = parseaFechas(recordsQueSeQuitan[i].data);
-        datos['FEPROREN']   = _p48_params.FEPROREN;
-        datos['cdtipsup']   = _p48_params.cdtipsup;
-        datos['movimiento'] = 'PASO_QUITAR_ASEGURADO';
-        datos['sleep']      = i*300;
-        debug('datos:',datos);
-        Ext.Ajax.request(
-        {
-            url       : _p48_urlMovimientosSMD 
-            ,jsonData : { params : datos }
-            ,success  : function(response)
+            var datos           = parseaFechas(recordsQueSeQuitan[i].data);
+            datos['FEPROREN']   = _p48_params.FEPROREN;
+            datos['cdtipsup']   = _p48_params.cdtipsup;
+            datos['movimiento'] = 'PASO_QUITAR_ASEGURADO';
+            datos['sleep']      = i*300;
+            debug('datos:',datos);
+            Ext.Ajax.request(
             {
-                var ck = 'Decodificando respuesta al quitar asegurado';
-                try
+                url       : _p48_urlMovimientosSMD 
+                ,jsonData : { params : datos }
+                ,success  : function(response)
+                {
+                    var ck = 'Decodificando respuesta al quitar asegurado';
+                    try
+                    {
+                        quitados = quitados + 1;
+                        debug('Longitud =>',recordsQueSeQuitan.length);
+                        if(quitados==recordsQueSeQuitan.length)
+                        {
+                            _setLoading(false,'_p48_gridAsegurados');
+                        }
+                        var json = Ext.decode(response.responseText);
+                        debug('### quitar:',json);
+                        if(json.success==true)
+                        {
+                            if(quitados==recordsQueSeQuitan.length)
+                            {
+                                _p48_params.nmsuplem_endoso = json.params.nmsuplem_endoso;
+                                _p48_params.nsuplogi        = json.params.nsuplogi;
+                                debug('_p48_params:',_p48_params);
+                                _p48_storeMov.proxy.extraParams['params.nmsuplem'] = _p48_params.nmsuplem_endoso;
+                                _p48_cargarStoreMov();
+                                mensajeCorrecto('Movimiento guardado','Se ha guardado el movimiento');
+                                
+                                _p48_validarEstadoBotonCancelar();
+                            }
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
                 {
                     quitados = quitados + 1;
-                    debug('Longitud =>',recordsQueSeQuitan.length);
                     if(quitados==recordsQueSeQuitan.length)
                     {
                         _setLoading(false,'_p48_gridAsegurados');
                     }
-                    var json = Ext.decode(response.responseText);
-                    debug('### quitar:',json);
-                    if(json.success==true)
-                    {
-                        if(quitados==recordsQueSeQuitan.length)
-                        {
-                            _p48_params.nmsuplem_endoso = json.params.nmsuplem_endoso;
-                            _p48_params.nsuplogi        = json.params.nsuplogi;
-                            debug('_p48_params:',_p48_params);
-                            _p48_storeMov.proxy.extraParams['params.nmsuplem'] = _p48_params.nmsuplem_endoso;
-                            _p48_cargarStoreMov();
-                            mensajeCorrecto('Movimiento guardado','Se ha guardado el movimiento');
-                            
-                            _p48_validarEstadoBotonCancelar();
-                        }
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
+                    errorComunicacion(null,'Error al quitar asegurado');
                 }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                quitados = quitados + 1;
-                if(quitados==recordsQueSeQuitan.length)
-                {
-                    _setLoading(false,'_p48_gridAsegurados');
-                }
-                errorComunicacion(null,'Error al quitar asegurado');
-            }
-        });
+            });
+        }
+        
+    } catch(e) {
+        manejaException(e);
     }
 }
 
@@ -590,7 +594,7 @@ function _p48_quitarAseguradoClic(me)
         	//Agrega a un asegurado que no sea Titular
         	recordsQueSeQuitan.push(record);
         	
-        	 _p48_agregarAseguradoMov(recordsQueSeQuitan);
+        	 _p48_agregarAseguradoMov(recordsQueSeQuitan, record);
         }else{
         
 		    _p48_storeFamilia.getProxy().setExtraParam('params.nmfamili', record.get('NMSITAUX'));
@@ -612,7 +616,7 @@ function _p48_quitarAseguradoClic(me)
 		    	debug('record:',record);
 			    debug('_p48_storeFamilia ',_p48_storeFamilia);
 			    
-			    _p48_agregarAseguradoMov(recordsQueSeQuitan);
+			    _p48_agregarAseguradoMov(recordsQueSeQuitan, record);
 		        
 		    });
         }  
