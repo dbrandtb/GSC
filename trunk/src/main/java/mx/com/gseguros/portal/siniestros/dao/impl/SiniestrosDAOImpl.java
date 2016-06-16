@@ -114,7 +114,6 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setCdtipsit(rs.getString("CDTIPSIT"));
         	consulta.setAplicaCirHos(rs.getString("SWPECIHO"));
         	consulta.setAplicaZonaHosp(rs.getString("SWPEZOHO"));
-        	consulta.setDescTipsit(rs.getString("SWPEZOHO"));
         	consulta.setDescTipsit(rs.getString("DESCTIPSIT"));
             return consulta;
         }
