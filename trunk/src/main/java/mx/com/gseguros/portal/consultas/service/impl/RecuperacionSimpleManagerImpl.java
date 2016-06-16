@@ -712,9 +712,9 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						,dsatribu
 						,otvalor
 						);
-				if(consulta.equals(RecuperacionSimple.RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA)){
-					Map<String,String>total = lista.remove(lista.size()-1);
-				}
+//				if(consulta.equals(RecuperacionSimple.RECUPERAR_INCISOS_POLIZA_GRUPO_FAMILIA)){
+//					Map<String,String> total = lista.remove(lista.size()-1);				
+//				}
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_MOVIMIENTOS_ENDOSO_ALTA_BAJA_ASEGURADO))
 			{
