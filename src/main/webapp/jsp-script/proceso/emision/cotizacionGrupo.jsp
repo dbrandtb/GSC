@@ -4869,11 +4869,12 @@ function _p21_estiloEditores(cdplan)
                     else
                     {
                         //if(!_4AYM||!_4HOS||_4MAT)
-                        if(_4MAT)
+                        if(_4MAT || _4HOS)
                         {
                             _p21_editorAyudaMater.setValue('0');
                              debug('>~Oculto Ayuda Maternidad');
                             _p21_editorAyudaMater.addCls('_p21_editorLectura');
+                             
                         }
                         //else if(_4AYM&&_4HOS&&!_4MAT)
                         else if(!_4MAT)
