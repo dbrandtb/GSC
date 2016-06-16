@@ -695,7 +695,7 @@ function _datComTurnarSuscripcion()
         									minValue: 0,
                                             //readOnly:true,
                                             value:0,
-                                            fieldLabel:'N&Uacute;mero Renovaci&Oacute;n',
+                                            fieldLabel:'N&uacute;mero Renovaci&Oacute;n',
                                             style:'margin:5px;'
                                         },
 		                                {
