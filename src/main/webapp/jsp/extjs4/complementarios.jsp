@@ -695,14 +695,14 @@ function _datComTurnarSuscripcion()
         									minValue: 0,
                                             //readOnly:true,
                                             value:0,
-                                            fieldLabel:'Numero Renovacion',
+                                            fieldLabel:'N&Uacute;mero Renovaci&Oacute;n',
                                             style:'margin:5px;'
                                         },
 		                                {
                                             xtype:'textfield',
                                             name:'panel2.nmpolant',
                                            // readOnly:true,
-                                            fieldLabel:'Poliza Anterior',
+                                            fieldLabel:'P&oacute;liza Anterior',
                                             style:'margin:5px;'
                                         }
                                         ,{
