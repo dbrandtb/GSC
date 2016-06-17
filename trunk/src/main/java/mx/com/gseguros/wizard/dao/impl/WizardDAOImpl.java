@@ -1565,12 +1565,13 @@ protected class BorraVarTmp extends StoredProcedure {
 	
 	protected class ObtieneTablasApoyo extends StoredProcedure {
 		protected ObtieneTablasApoyo(DataSource dataSource) {
-	        super(dataSource,"PKG_LISTAS.P_OBTIENE_TABLAS_APOYO");
+	        super(dataSource,"Pkg_Tabapoyo_2.P_OBTIENE_TABLAS_APOYO");
 	        declareParameter(new SqlParameter("PV_NMTABLA_I"  , OracleTypes.VARCHAR));
 	        declareParameter(new SqlParameter("PV_CDTABLA_I"  , OracleTypes.VARCHAR));
 	        declareParameter(new SqlParameter("PV_DSTABLA_I"  , OracleTypes.VARCHAR));
 	        declareParameter(new SqlParameter("PV_OTTIPOTB_I" , OracleTypes.VARCHAR));
 	        declareParameter(new SqlParameter("PV_CDSISROL_I" , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("PV_CDUSER_I"   , OracleTypes.VARCHAR));
 	        String[] cols = new String[]{
 	        		"NMTABLA"
 	        		,"CDTABLA"
