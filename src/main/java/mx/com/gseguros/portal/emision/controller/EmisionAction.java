@@ -138,9 +138,10 @@ public class EmisionAction extends PrincipalCoreAction
 		String cdunieco = smap1.get("cdsucursal"),
 		       cdramo = smap1.get("cdramo"),
 		       cdpoliza = smap1.get("cdpoliza"),
-		       agt = smap1.get("cdusuari");
+		       agt = smap1.get("cdusuari"),
+			   tipoflot = smap1.get("tipoflot");
 		try {
-			     String params = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&agt=",agt),
+			     String params = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&agt=",agt,"&tipoflot=",tipoflot),
 			     valoresCampos  = HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
 			     logger.debug(Utils.log("" + "\n Parametros Regresados"
 							+ "\nValores de Campos: ",valoresCampos));
