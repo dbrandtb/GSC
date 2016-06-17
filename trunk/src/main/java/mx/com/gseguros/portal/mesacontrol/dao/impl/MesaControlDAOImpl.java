@@ -65,7 +65,8 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			,Date festatus   , String status   , String comments   , String nmsolici
 			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
 			,String cdtipflu , String cdflujomc
-			,Map<String, String> valores, String cdtipsup
+			,Map<String, String> valores
+			,String cdtipsup , String renuniext , String renramo , String renpoliex
 			)throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
@@ -92,6 +93,9 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("cdtipflu"  , cdtipflu);
 		params.put("cdflujomc" , cdflujomc);
 		params.put("cdtipsup"  , cdtipsup);
+		params.put("renuniext" , renuniext);
+		params.put("renramo"   , renramo);
+		params.put("renpoliex" , renpoliex);
 		
 		if(valores==null)
 		{
@@ -200,6 +204,9 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("renuniext"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("renramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("renpoliex"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));

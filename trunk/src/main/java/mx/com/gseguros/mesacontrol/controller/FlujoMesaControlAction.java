@@ -1432,7 +1432,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,nombre     = params.get("NOMBRE")
 			       ,status     = params.get("STATUS")
 			       ,comments   = params.get("COMMENTS")
-			       ,estado     = params.get("ESTADO");
+			       ,estado     = params.get("ESTADO")
+			       ,cduniext   = params.get("CDUNIEXT")
+			       ,ramo       = params.get("RAMO")
+			       ,nmpoliex   = params.get("NMPOLIEX");
 			       
 			Utils.validate(
 					cdtiptra   , "No se recibi\u00f3 el tipo de tr\u00e1imte"
@@ -1469,6 +1472,9 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdflujomc
 					,null
 					,cdtipsup
+					,cduniext
+					,ramo
+					,nmpoliex
 					);
 			
 			params.put("ntramite" , ntramite);

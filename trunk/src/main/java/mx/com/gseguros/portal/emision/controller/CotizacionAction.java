@@ -7591,7 +7591,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            			,datosFlujo.get("cdtipflu")
 	            			,datosFlujo.get("cdflujomc")
 							,valores
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null
 							);
 					smap1.put("ntramite",ntramiteNew);
 					
@@ -8424,7 +8424,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            			,datosFlujo.get("cdtipflu")
 	            			,datosFlujo.get("cdflujomc")
 							,valores
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null
 							);
 					smap1.put("ntramite",ntramiteNew);
 					

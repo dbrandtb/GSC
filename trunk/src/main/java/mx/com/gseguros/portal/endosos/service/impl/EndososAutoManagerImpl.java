@@ -1361,7 +1361,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valores, null
+					,valores, null, null, null, null
 					);
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
@@ -6577,7 +6577,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						,null
 						,null
 						,null
-						,valores, null
+						,valores, null, null, null, null
 						);
 			}
 			else

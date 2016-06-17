@@ -1748,43 +1748,59 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,Date festatus   , String status   , String comments   , String nmsolici
 			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
 			,String cdtipflu , String cdflujomc
-			,Map<String, String> valores, String cdtipsup
+			,Map<String, String> valores
+			,String cdtipsup, String cduniext, String ramo, String nmpoliex
 			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ registrarTramite @@@@@@"
-				,"\n@@@@@@ cdunieco="   , cdunieco
-				,"\n@@@@@@ cdramo="     , cdramo
-				,"\n@@@@@@ estado="     , estado
-				,"\n@@@@@@ nmpoliza="   , nmpoliza
-				,"\n@@@@@@ nmsuplem="   , nmsuplem
-				,"\n@@@@@@ cdsucadm="   , cdsucadm
-				,"\n@@@@@@ cdsucdoc="   , cdsucdoc
-				,"\n@@@@@@ cdtiptra="   , cdtiptra
-				,"\n@@@@@@ ferecepc="   , ferecepc
-				,"\n@@@@@@ cdagente="   , cdagente
-				,"\n@@@@@@ referencia=" , referencia
-				,"\n@@@@@@ nombre="     , nombre
-				,"\n@@@@@@ festatus="   , festatus
-				,"\n@@@@@@ status="     , status
-				,"\n@@@@@@ comments="   , comments
-				,"\n@@@@@@ nmsolici="   , nmsolici
-				,"\n@@@@@@ cdtipsit="   , cdtipsit
-				,"\n@@@@@@ cdusuari="   , cdusuari
-				,"\n@@@@@@ cdsisrol="   , cdsisrol
-				,"\n@@@@@@ swimpres="   , swimpres
-				,"\n@@@@@@ cdtipflu="   , cdtipflu
-				,"\n@@@@@@ cdflujomc="  , cdflujomc
-				,"\n@@@@@@ valores="    , valores
-				,"\n@@@@@@ cdtipsup="   , cdtipsup
+				,"\n@@@@@@ cdunieco   = " , cdunieco
+				,"\n@@@@@@ cdramo     = " , cdramo
+				,"\n@@@@@@ estado     = " , estado
+				,"\n@@@@@@ nmpoliza   = " , nmpoliza
+				,"\n@@@@@@ nmsuplem   = " , nmsuplem
+				,"\n@@@@@@ cdsucadm   = " , cdsucadm
+				,"\n@@@@@@ cdsucdoc   = " , cdsucdoc
+				,"\n@@@@@@ cdtiptra   = " , cdtiptra
+				,"\n@@@@@@ ferecepc   = " , ferecepc
+				,"\n@@@@@@ cdagente   = " , cdagente
+				,"\n@@@@@@ referencia = " , referencia
+				,"\n@@@@@@ nombre     = " , nombre
+				,"\n@@@@@@ festatus   = " , festatus
+				,"\n@@@@@@ status     = " , status
+				,"\n@@@@@@ comments   = " , comments
+				,"\n@@@@@@ nmsolici   = " , nmsolici
+				,"\n@@@@@@ cdtipsit   = " , cdtipsit
+				,"\n@@@@@@ cdusuari   = " , cdusuari
+				,"\n@@@@@@ cdsisrol   = " , cdsisrol
+				,"\n@@@@@@ swimpres   = " , swimpres
+				,"\n@@@@@@ cdtipflu   = " , cdtipflu
+				,"\n@@@@@@ cdflujomc  = " , cdflujomc
+				,"\n@@@@@@ valores    = " , valores
+				,"\n@@@@@@ cdtipsup   = " , cdtipsup
+				,"\n@@@@@@ cduniext   = " , cduniext
+				,"\n@@@@@@ ramo       = " , ramo
+				,"\n@@@@@@ nmpoliex   = " , nmpoliex
 				));
 		
 		String paso = "Registrando tr\u00e1mite";
 		logger.debug(paso);
 		String ntramite = null;
 		try
-		{		
+		{
+			String renuniext   = null
+					,renramo   = null
+					,renpoliex = null;
+			
+			if("21".equals(cdtiptra)) // si es una renovacion
+			{
+				logger.debug(Utils.log("Es una renovacion: ",renuniext,", ",renramo,", ",renpoliex));
+				renuniext = cduniext;
+				renramo   = ramo;
+				renpoliex = nmpoliex;
+			}
+			
 			ntramite = mesaControlDAO.movimientoMesaControl(
 					cdunieco
 					,cdramo
@@ -1810,6 +1826,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,cdflujomc
 					,valores
 					,cdtipsup
+					,renuniext
+					,renramo
+					,renpoliex
 					);
 			
 			mesaControlDAO.movimientoDetalleTramite(
