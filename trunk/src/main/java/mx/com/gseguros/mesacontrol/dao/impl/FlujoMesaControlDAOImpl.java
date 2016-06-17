@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.portal.cotizacion.model.PMovMpolisitDTO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.utils.Utils;
@@ -19,6 +20,7 @@ import oracle.jdbc.driver.OracleTypes;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
 import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -2309,4 +2311,163 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> recuperarTtipflurol(String cdtipflu) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtipflu" , cdtipflu);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperarTtipflurolSP(getDataSource()),params);
+		
+		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		if(lista == null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		
+		logger.debug(Utils.log("lista ttipflurol=",lista));
+		
+		return lista;
+	}
+	
+	protected class RecuperarTtipflurolSP extends StoredProcedure
+	{
+		protected RecuperarTtipflurolSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TTIPFLUROL");
+			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
+			String cols[]=new String[]{
+					"CDTIPFLU"
+					,"CDSISROL"
+					,"SWACTIVO"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void guardarTtipflurol(String cdtipflu, List<Map<String,String>> lista) throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdtipflu" , cdtipflu);
+		
+		String[][] array = new String[lista.size()][];
+		
+		int i = 0;
+		for(Map<String,String> permiso : lista)
+		{
+			array[i++] = new String[]{
+					permiso.get("CDTIPFLU")
+					,permiso.get("CDSISROL")
+					,permiso.get("SWACTIVO")
+			};
+		}
+		
+		params.put("array" , new SqlArrayValue(array));
+		
+		ejecutaSP(new GuardarTtipflurolSP(getDataSource()),params);
+	}
+	
+	protected class GuardarTtipflurolSP extends StoredProcedure
+	{
+		protected GuardarTtipflurolSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_MOV_TTIPFLUROL");
+			declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("array"    , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> recuperarTflujorol(String cdtipflu, String cdflujomc) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtipflu"  , cdtipflu);
+		params.put("cdflujomc" , cdflujomc);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperarTflujorolSP(getDataSource()),params);
+		
+		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		if(lista == null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		
+		logger.debug(Utils.log("lista tflujorol=",lista));
+		
+		return lista;
+	}
+	
+	protected class RecuperarTflujorolSP extends StoredProcedure
+	{
+		protected RecuperarTflujorolSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUJOROL");
+			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+			String cols[]=new String[]{
+					"CDTIPFLU"
+					,"CDFLUJOMC"
+					,"CDSISROL"
+					,"SWACTIVO"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void guardarTflujorol(
+			String cdtipflu
+			,String cdflujomc
+			,List<Map<String,String>> lista
+			)throws Exception
+	{
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdtipflu"  , cdtipflu);
+		params.put("cdflujomc" , cdflujomc);
+		
+		String[][] array = new String[lista.size()][];
+		
+		int i = 0;
+		for(Map<String,String> permiso : lista)
+		{
+			array[i++] = new String[]{
+					permiso.get("CDTIPFLU")
+					,permiso.get("CDFLUJOMC")
+					,permiso.get("CDSISROL")
+					,permiso.get("SWACTIVO")
+			};
+		}
+		
+		params.put("array" , new SqlArrayValue(array));
+		
+		ejecutaSP(new GuardarTflujorolSP(getDataSource()),params);
+	}
+	
+	protected class GuardarTflujorolSP extends StoredProcedure
+	{
+		protected GuardarTflujorolSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUJOROL");
+			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("array"     , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

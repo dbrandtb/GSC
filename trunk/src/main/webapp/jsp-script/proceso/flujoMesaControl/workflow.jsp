@@ -245,6 +245,8 @@ var _p52_urlGuardarDatosRevision   = '<s:url namespace="/flujomesacontrol" actio
 var _p52_urlMovimientoTdocume      = '<s:url namespace="/flujomesacontrol" action="movimientoTdocume"      />';
 var _p52_urlCargarDatosAccion      = '<s:url namespace="/flujomesacontrol" action="cargarDatosAccion"      />';
 var _p52_urlGuardarDatosAccion     = '<s:url namespace="/flujomesacontrol" action="guardarDatosAccion"     />';
+var _p52_urlGuardarTtipflurol      = '<s:url namespace="/flujomesacontrol" action="guardarTtipflurol"      />';
+var _p52_urlGuardarTflujorol       = '<s:url namespace="/flujomesacontrol" action="guardarTflujorol"       />';
 ////// urls //////
 
 ////// variables //////
@@ -519,67 +521,50 @@ Ext.onReady(function()
                         ]
                     }
                 ]
-                ,buttonAlign : 'center'
-                ,buttons     :
+            })//zxc
+            ,Ext.create('Ext.grid.Panel',
+            {
+                title        : 'Permisos'
+                ,hideHeaders : true
+                ,width       : 300
+                ,height      : 200
+                ,border      : 0
+                ,columns     :
                 [
                     {
-                        text     : 'Guardar'
-                        ,icon    : '${icons}disk.png'
-                        ,handler : function(me)
-                        {
-                            var ck = 'Guardando';
-                            try
-                            {
-                                var win  = me.up('window');
-                                var form = me.up('form').getForm();
-                                if(!form.isValid())
-                                {
-                                    throw 'Favor de revisar los datos';
-                                }
-                                
-                                _setLoading(true,win);
-                                Ext.Ajax.request(
-                                {
-                                    url      : _p52_urlMovimientoTtipflumc
-                                    ,params  : _formValuesToParams(form.getValues())
-                                    ,success : function(response)
-                                    {
-                                        _setLoading(false,win);
-                                        var ck = 'Decodificando respuesta al guardar tr\u00E1mite';
-                                        try
-                                        {
-                                            var json = Ext.decode(response.responseText);
-                                            debug('### mov ttipflumc:',json);
-                                            if(json.success==true)
-                                            {
-                                                win.hide();
-                                                _p52_gridTramites.store.reload();
-                                            }
-                                            else
-                                            {
-                                                mensajeError(json.message);
-                                            }
-                                        }
-                                        catch(e)
-                                        {
-                                            manejaException(e,ck);
-                                        }
-                                    }
-                                    ,failure : function()
-                                    {
-                                        _setLoading(false,win);
-                                        errorComunicacion(null,'Error guardando tr\u00E1mite');
-                                    }
-                                });
-                            }
-                            catch(e)
-                            {
-                                _setLoading(false,win);
-                                manejaException(e,ck);
-                            }
-                        }
+                        dataIndex : 'DSSISROL'
+                        ,flex     : 1
+                    }
+                    ,{
+                        xtype      : 'checkcolumn'
+                        ,dataIndex : 'SWACTIVO'
+                        ,width     : 30
                     }
                 ]
+                ,store : Ext.create('Ext.data.Store',
+                {
+                    autoLoad : true
+                    ,fields  :
+                    [
+                        'CDSISROL'
+                        ,'DSSISROL'
+                        ,{ name : 'SWACTIVO' , type : 'boolean' }
+                    ]
+                    ,proxy   :
+                    {
+                        type         : 'ajax'
+                        ,url         : _p52_urlRecuperacion
+                        ,extraParams :
+                        {
+                            'params.consulta' : 'RECUPERAR_ROLES'
+                        }
+                        ,reader      :
+                        {
+                            type  : 'json'
+                            ,root : 'list'
+                        }
+                    }
+                })
             })
         ]
         ,showNew : function()
@@ -587,6 +572,13 @@ Ext.onReady(function()
             var me = this;
             me.down('form').getForm().reset();
             me.down('[name=ACCION]').setValue('I');
+            me.down('grid').getStore().each(function(r)
+            {
+                r.set('SWACTIVO',false);
+            });
+            
+            me.down('grid').getStore().commitChanges();
+            
             centrarVentanaInterna(me.show());
         }
         ,showEdit : function(record)
@@ -594,8 +586,193 @@ Ext.onReady(function()
             var me = this;
             me.down('form').getForm().loadRecord(record);
             me.down('[name=ACCION]').setValue('U');
-            centrarVentanaInterna(me.show());
+            
+            var store = me.down('grid').getStore();
+            
+            store.each(function(r)
+            {
+                r.set('SWACTIVO',false);
+            });
+            
+            store.commitChanges();
+            
+            var ck = 'Recuperando permisos por tr\u00e1mite';
+            try
+            {
+                _mask(ck);
+                Ext.Ajax.request(
+                {
+                    url      : _p52_urlRecuperacion
+                    ,params  :
+                    {
+                        'params.consulta'  : 'RECUPERAR_TTIPFLUROL'
+                        ,'params.cdtipflu' : record.get('CDTIPFLU')
+                    }
+                    ,success : function(response)
+                    {
+                        _unmask();
+                        var ck = 'Decodificando respuesta al recuperar permisos por tr\u00e1mite';
+                        try
+                        {
+                            var json = Ext.decode(response.responseText);
+                            debug('### ttipflurol:',json,'.');
+                            if(json.success === true)
+                            {
+                                ck = 'Iterando permisos';
+                                
+                                for(var i = 0 ; i < json.list.length ; i++)
+                                {
+                                    store.getAt(store.find('CDSISROL',json.list[i].CDSISROL)).set('SWACTIVO',json.list[i].SWACTIVO === 'S');
+                                }
+                                
+                                store.commitChanges();
+                                
+                                centrarVentanaInterna(me.show());
+                            }
+                            else
+                            {
+                                mensajeError(json.message);
+                            }
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        _unmask();
+                        errorComunicacion(null,'Error al recuperar permisos por tr\u00e1mite');
+                    }
+                });
+            }
+            catch(e)
+            {
+                _unmask();
+                manejaException(e,ck);
+            }
         }
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Guardar'
+                ,icon    : '${icons}disk.png'
+                ,handler : function(me)
+                {
+                    var ck = 'Guardando';
+                    try
+                    {
+                        var win    = me.up('window')
+                            ,form  = win.down('form').getForm()
+                            ,store = win.down('grid').getStore();
+                        
+                        if(!form.isValid())
+                        {
+                            throw 'Favor de revisar los datos';
+                        }
+                        
+                        _setLoading(true,win);
+                        Ext.Ajax.request(
+                        {
+                            url      : _p52_urlMovimientoTtipflumc
+                            ,params  : _formValuesToParams(form.getValues())
+                            ,success : function(response)
+                            {
+                                _setLoading(false,win);
+                                var ck = 'Decodificando respuesta al guardar tr\u00E1mite';
+                                try
+                                {
+                                    var json = Ext.decode(response.responseText);
+                                    debug('### mov ttipflumc:',json);
+                                    if(json.success==true)
+                                    {
+                                        ck = 'Guardando permisos';
+                                        
+                                        var jsonPerm =
+                                        {
+                                            params :
+                                            {
+                                                cdtipflu : json.params.CDTIPFLU
+                                            }
+                                            ,list : []
+                                        };
+                                        
+                                        store.each(function(r)
+                                        {
+                                            if(r.get('SWACTIVO') === true)
+                                            {
+                                                jsonPerm.list.push(
+                                                {
+                                                    CDTIPFLU  : json.params.CDTIPFLU
+                                                    ,CDSISROL : r.get('CDSISROL')
+                                                    ,SWACTIVO : 'S'
+                                                });
+                                            }
+                                        });
+                                        
+                                        debug('jsonPerm:',jsonPerm,'.');
+                                        
+                                        _mask(ck);
+                                        Ext.Ajax.request(
+                                        {
+                                            url       : _p52_urlGuardarTtipflurol
+                                            ,jsonData : jsonPerm
+                                            ,success  : function(response)
+                                            {
+                                                _unmask();
+                                                var ck = 'Decodificando respuesta al guardar permisos de rol';
+                                                try
+                                                {
+                                                    var jsonRespPerm = Ext.decode(response.responseText);
+                                                    debug('### guardar ttipflurol:',jsonRespPerm,'.');
+                                                    if(jsonRespPerm.success === true)
+                                                    {
+                                                        win.hide();
+                                                        _p52_gridTramites.store.reload();
+                                                    }
+                                                    else
+                                                    {
+                                                        mensajeError(jsonRespPerm.message);
+                                                    }
+                                                }
+                                                catch(e)
+                                                {
+                                                    manejaException(e,ck);
+                                                }
+                                            }
+                                            ,failure  : function()
+                                            {
+                                                _unmask();
+                                                errorComunicacion(null,'Error al guardar permisos de tr\u00e1mite');
+                                            }
+                                        });
+                                    }
+                                    else
+                                    {
+                                        mensajeError(json.message);
+                                    }
+                                }
+                                catch(e)
+                                {
+                                    manejaException(e,ck);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                _setLoading(false,win);
+                                errorComunicacion(null,'Error guardando tr\u00E1mite');
+                            }
+                        });
+                    }
+                    catch(e)
+                    {
+                        _setLoading(false,win);
+                        manejaException(e,ck);
+                    }
+                }
+            }
+        ]
     });
     
     _p52_formTflujomc = Ext.create('Ext.window.Window',
@@ -659,77 +836,50 @@ Ext.onReady(function()
                     }
                     ,<s:property value="items.comboCdtipram" escapeHtml="false" />
                 ]
-                ,buttonAlign : 'center'
-                ,buttons     :
+            })
+            ,Ext.create('Ext.grid.Panel',
+            {
+                title        : 'Permisos'
+                ,hideHeaders : true
+                ,width       : 300
+                ,height      : 200
+                ,border      : 0
+                ,columns     :
                 [
                     {
-                        text     : 'Guardar'
-                        ,icon    : '${icons}disk.png'
-                        ,handler : function(me)
-                        {
-                            var ck = 'Guardando';
-                            try
-                            {
-                                var win     = me.up('window');
-                                var formCmp = me.up('form');
-                                var form    = me.up('form').getForm();
-                                if(!form.isValid())
-                                {
-                                    throw 'Favor de revisar los datos';
-                                }
-                                
-                                var formValues = form.getValues();
-                                
-                                _setLoading(true,win);
-                                Ext.Ajax.request(
-                                {
-                                    url      : _p52_urlMovimientoTflujomc
-                                    ,params  : _formValuesToParams(formValues)
-                                    ,success : function(response)
-                                    {
-                                        _setLoading(false,win);
-                                        var ck = 'Decodificando respuesta al guardar proceso';
-                                        try
-                                        {
-                                            var json = Ext.decode(response.responseText);
-                                            debug('### mov tflujomc:',json);
-                                            if(json.success==true)
-                                            {
-                                                win.hide();
-                                                _p52_gridProcesos.store.reload();
-                                                
-                                                if(!_p52_panelDibujo.isHidden())
-                                                {
-                                                    _p52_panelDibujo.setTitle(json.params.DSFLUJOMC);
-                                                    _p52_selectedFlujo.set('DSFLUJOMC' , json.params.DSFLUJOMC);
-                                                    _p52_selectedFlujo.set('SWFINAL'   , json.params.SWFINAL);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                mensajeError(json.message);
-                                            }
-                                        }
-                                        catch(e)
-                                        {
-                                            manejaException(e,ck);
-                                        }
-                                    }
-                                    ,failure : function()
-                                    {
-                                        _setLoading(false,win);
-                                        errorComunicacion(null,'Error guardando proceso');
-                                    }
-                                });
-                            }
-                            catch(e)
-                            {
-                                _setLoading(false,win);
-                                manejaException(e,ck);
-                            }
-                        }
+                        dataIndex : 'DSSISROL'
+                        ,flex     : 1
+                    }
+                    ,{
+                        xtype      : 'checkcolumn'
+                        ,dataIndex : 'SWACTIVO'
+                        ,width     : 30
                     }
                 ]
+                ,store : Ext.create('Ext.data.Store',
+                {
+                    autoLoad : true
+                    ,fields  :
+                    [
+                        'CDSISROL'
+                        ,'DSSISROL'
+                        ,{ name : 'SWACTIVO' , type : 'boolean' }
+                    ]
+                    ,proxy   :
+                    {
+                        type         : 'ajax'
+                        ,url         : _p52_urlRecuperacion
+                        ,extraParams :
+                        {
+                            'params.consulta' : 'RECUPERAR_ROLES'
+                        }
+                        ,reader      :
+                        {
+                            type  : 'json'
+                            ,root : 'list'
+                        }
+                    }
+                })
             })
         ]
         ,showNew : function()
@@ -747,6 +897,14 @@ Ext.onReady(function()
                 me.down('form').getForm().reset();
                 me.down('[name=ACCION]').setValue('I');
                 me.down('[name=CDTIPFLU]').setValue(sel[0].get('CDTIPFLU'));
+                
+                me.down('grid').getStore().each(function(r)
+                {
+                    r.set('SWACTIVO',false);
+                });
+                
+                me.down('grid').getStore().commitChanges();
+                
                 centrarVentanaInterna(me.show());
             }
             catch(e)
@@ -760,8 +918,206 @@ Ext.onReady(function()
             debug('record:',record);
             me.down('form').getForm().loadRecord(record);
             me.down('[name=ACCION]').setValue('U');
-            centrarVentanaInterna(me.show());
+            
+            var store = me.down('grid').getStore();
+            
+            store.each(function(r)
+            {
+                r.set('SWACTIVO',false);
+            });
+            
+            store.commitChanges();
+            
+            var ck = 'Recuperando permisos por proceso';
+            try
+            {
+                _mask(ck);
+                Ext.Ajax.request(
+                {
+                    url      : _p52_urlRecuperacion
+                    ,params  :
+                    {
+                        'params.consulta'   : 'RECUPERAR_TFLUJOROL'
+                        ,'params.cdtipflu'  : record.get('CDTIPFLU')
+                        ,'params.cdflujomc' : record.get('CDFLUJOMC')
+                    }
+                    ,success : function(response)
+                    {
+                        _unmask();
+                        var ck = 'Decodificando respuesta al recuperar permisos por proceso';
+                        try
+                        {
+                            var json = Ext.decode(response.responseText);
+                            debug('### tflujorol:',json,'.');
+                            if(json.success === true)
+                            {
+                                ck = 'Iterando permisos';
+                                
+                                for(var i = 0 ; i < json.list.length ; i++)
+                                {
+                                    store.getAt(store.find('CDSISROL',json.list[i].CDSISROL)).set('SWACTIVO',json.list[i].SWACTIVO === 'S');
+                                }
+                                
+                                store.commitChanges();
+                                
+                                centrarVentanaInterna(me.show());
+                            }
+                            else
+                            {
+                                mensajeError(json.message);
+                            }
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        _unmask();
+                        errorComunicacion(null,'Error al recuperar permisos por proceso');
+                    }
+                });
+            }
+            catch(e)
+            {
+                _unmask();
+                manejaException(e,ck);
+            }
         }
+        ,buttonAlign : 'center'
+        ,buttons     :
+        [
+            {
+                text     : 'Guardar'
+                ,icon    : '${icons}disk.png'
+                ,handler : function(me)
+                {
+                    var ck = 'Guardando';
+                    try
+                    {
+                        var win      = me.up('window')
+                            ,formCmp = win.down('form')
+                            ,form    = win.down('form').getForm()
+                            ,store   = win.down('grid').getStore();
+                        
+                        if(!form.isValid())
+                        {
+                            throw 'Favor de revisar los datos';
+                        }
+                        
+                        var formValues = form.getValues();
+                        
+                        _setLoading(true,win);
+                        Ext.Ajax.request(
+                        {
+                            url      : _p52_urlMovimientoTflujomc
+                            ,params  : _formValuesToParams(formValues)
+                            ,success : function(response)
+                            {
+                                _setLoading(false,win);
+                                var ck = 'Decodificando respuesta al guardar proceso';
+                                try
+                                {
+                                    var json = Ext.decode(response.responseText);
+                                    debug('### mov tflujomc:',json);
+                                    if(json.success==true)
+                                    {
+                                        ck = 'Guardando permisos';
+                                        
+                                        var jsonPerm =
+                                        {
+                                            params :
+                                            {
+                                                cdtipflu   : json.params.CDTIPFLU
+                                                ,cdflujomc : json.params.CDFLUJOMC
+                                            }
+                                            ,list : []
+                                        };
+                                        
+                                        store.each(function(r)
+                                        {
+                                            if(r.get('SWACTIVO') === true)
+                                            {
+                                                jsonPerm.list.push(
+                                                {
+                                                    CDTIPFLU   : json.params.CDTIPFLU
+                                                    ,CDFLUJOMC : json.params.CDFLUJOMC
+                                                    ,CDSISROL  : r.get('CDSISROL')
+                                                    ,SWACTIVO  : 'S'
+                                                });
+                                            }
+                                        });
+                                        
+                                        debug('jsonPerm:',jsonPerm,'.');
+                                        
+                                        _mask(ck);
+                                        Ext.Ajax.request(
+                                        {
+                                            url       : _p52_urlGuardarTflujorol
+                                            ,jsonData : jsonPerm
+                                            ,success  : function(response)
+                                            {
+                                                _unmask();
+                                                var ck = 'Decodificando respuesta al guardar permisos de rol';
+                                                try
+                                                {
+                                                    var jsonRespPerm = Ext.decode(response.responseText);
+                                                    debug('### guardar ttipflurol:',jsonRespPerm,'.');
+                                                    if(jsonRespPerm.success === true)
+                                                    {
+                                                        win.hide();
+                                                        _p52_gridProcesos.store.reload();
+                                                        
+                                                        if(!_p52_panelDibujo.isHidden())
+                                                        {
+                                                            _p52_panelDibujo.setTitle(json.params.DSFLUJOMC);
+                                                            _p52_selectedFlujo.set('DSFLUJOMC' , json.params.DSFLUJOMC);
+                                                            _p52_selectedFlujo.set('SWFINAL'   , json.params.SWFINAL);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        mensajeError(jsonRespPerm.message);
+                                                    }
+                                                }
+                                                catch(e)
+                                                {
+                                                    manejaException(e,ck);
+                                                }
+                                            }
+                                            ,failure  : function()
+                                            {
+                                                _unmask();
+                                                errorComunicacion(null,'Error al guardar permisos de proceso');
+                                            }
+                                        });
+                                    }
+                                    else
+                                    {
+                                        mensajeError(json.message);
+                                    }
+                                }
+                                catch(e)
+                                {
+                                    manejaException(e,ck);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                _setLoading(false,win);
+                                errorComunicacion(null,'Error guardando proceso');
+                            }
+                        });
+                    }
+                    catch(e)
+                    {
+                        _setLoading(false,win);
+                        manejaException(e,ck);
+                    }
+                }
+            }
+        ]
     });
     
     _p52_formEstado = Ext.create('Ext.window.Window',
