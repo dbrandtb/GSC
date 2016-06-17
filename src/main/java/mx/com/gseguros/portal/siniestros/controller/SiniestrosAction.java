@@ -326,7 +326,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					,null //swimpres
 					,null //cdtipflu
 					,null //cdflujomc
-					,valores, null
+					,valores, null, null, null, null
 					);
 			
 			//if(res.getItemMap() == null){

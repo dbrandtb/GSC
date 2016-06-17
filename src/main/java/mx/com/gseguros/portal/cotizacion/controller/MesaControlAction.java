@@ -355,7 +355,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,null //swimpres
 					,null //cdtipflu
 					,null //cdflujomc
-					,smap1, null
+					,smap1, null, null, null, null
 					);
 			//if(res.getItemMap() == null)log.error("Sin mensaje respuesta de nmtramite!!");
 			if(ntramiteGenerado==null)log.error("Sin mensaje respuesta de nmtramite!!");
@@ -992,7 +992,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,null //swimpres
 					,null //cdtipflu
 					,null //cdflujomc
-					,smap1, null
+					,smap1, null, null, null, null
 					);
 			////// Se guarda el tramite //////
 			//////////////////////////////////

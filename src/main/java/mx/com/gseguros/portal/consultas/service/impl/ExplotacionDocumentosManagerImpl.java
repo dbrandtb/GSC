@@ -273,7 +273,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null //swimpres
 						,null //cdtipflu
 						,null //cdflujomc
-						,valores, null
+						,valores, null, null, null, null
 						);
 				
 				mesaControlDAO.movimientoDetalleTramite(

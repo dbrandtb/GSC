@@ -71,7 +71,7 @@ public interface MesaControlManager
 			,String swimpres
 			,String cdtipflu
 			,String cdflujomc
-			,Map<String,String>valores, String cdtipsup
+			,Map<String,String>valores, String cdtipsup, String renuniext, String renramo, String renpoliex
 			)throws Exception;
     
     public void marcarTramiteVistaPrevia(String ntramite) throws Exception;

@@ -219,7 +219,8 @@ public interface FlujoMesaControlManager
 			,Date festatus   , String status   , String comments   , String nmsolici
 			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
 			,String cdtipflu , String cdflujomc
-			,Map<String, String> valores, String cdtipsup
+			,Map<String, String> valores
+			,String cdtipsup, String cduniext, String ramo, String nmpoliex
 			)throws Exception;
 	
 	public List<Map<String,String>>cargarAccionesEntidad(

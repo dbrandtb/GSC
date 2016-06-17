@@ -1242,7 +1242,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,datosFlujo.get("cdtipflu")
 	            			,datosFlujo.get("cdflujomc")
 	            			,null//valores
-	            			,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+	            			,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null
 	            			);
 	            	
 	            	smap1.put("ntramite",ntramite);
