@@ -1095,6 +1095,32 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				
 				lista = consultasDAO.llenaCombo(cdunieco, cdramo, estado, nmpoliza);
 			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TTIPFLUROL))
+			{
+				paso = "Recuperando permisos de tr\u00e1mite por rol";
+				logger.debug(paso);
+				
+				String cdtipflu = params.get("cdtipflu");
+				
+				Utils.validate(cdtipflu, "No se recibi\u00f3 el tr\u00e1mite");
+				
+				lista = flujoMesaControlDAO.recuperarTtipflurol(cdtipflu);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUJOROL))
+			{
+				paso = "Recuperando permisos de proceso por rol";
+				logger.debug(paso);
+				
+				String cdtipflu    = params.get("cdtipflu")
+						,cdflujomc = params.get("cdflujomc");
+				
+				Utils.validate(
+						cdtipflu   , "No se recibi\u00f3 el tr\u00e1mite"
+						,cdflujomc , "No se recibi\u00f3 el proceso"
+						);
+				
+				lista = flujoMesaControlDAO.recuperarTflujorol(cdtipflu,cdflujomc);
+			}
 		}
 		catch(Exception ex)
 		{

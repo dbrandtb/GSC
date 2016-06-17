@@ -279,4 +279,12 @@ public interface FlujoMesaControlManager
 			,String ramo
 			,String nmpoliex
 			)throws Exception;
+	
+	public void guardarTtipflurol(String cdtipflu, List<Map<String,String>> lista) throws Exception;
+	
+	public void guardarTflujorol(
+			String cdtipflu
+			,String cdflujomc
+			,List<Map<String,String>> lista
+			)throws Exception;
 }

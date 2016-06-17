@@ -1957,6 +1957,104 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		
 		return SUCCESS;
 	}
+	
+	@Action(value           = "guardarTtipflurol",
+			results         = { @Result(name="success", type="json") },
+            interceptorRefs = {
+			    @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+			})
+	public String guardarTtipflurol()
+	{
+		logger.debug(Utils.log(
+				 "\n###############################"
+				,"\n###### guardarTtipflurol ######"
+				,"\n###### params = " , params
+				,"\n###### list   = " , list
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			if(list==null)
+			{
+				throw new ApplicationException("No se recibi\u00f3 lista");
+			}
+			
+			String cdtipflu = params.get("cdtipflu");
+			
+			Utils.validate(cdtipflu , "No se recibi\u00f3 el tr\u00e1mite");
+			
+			flujoMesaControlManager.guardarTtipflurol(cdtipflu,list);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### message = " , message
+				,"\n###### guardarTtipflurol ######"
+				,"\n###############################"
+				));
+		return SUCCESS;
+	}
+	
+	@Action(value           = "guardarTflujorol",
+			results         = { @Result(name="success", type="json") },
+            interceptorRefs = {
+			    @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+			})
+	public String guardarTflujorol()
+	{
+		logger.debug(Utils.log(
+				 "\n##############################"
+				,"\n###### guardarTflujorol ######"
+				,"\n###### params = " , params
+				,"\n###### list   = " , list
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			if(list==null)
+			{
+				throw new ApplicationException("No se recibi\u00f3 lista");
+			}
+			
+			String cdtipflu    = params.get("cdtipflu")
+					,cdflujomc = params.get("cdflujomc");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tr\u00e1mite"
+					,cdflujomc , "No se recibi\u00f3 el proceso"
+					);
+			
+			flujoMesaControlManager.guardarTflujorol(cdtipflu,cdflujomc,list);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### message = " , message
+				,"\n###### guardarTtipflurol ######"
+				,"\n###############################"
+				));
+		return SUCCESS;
+	}
 
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //

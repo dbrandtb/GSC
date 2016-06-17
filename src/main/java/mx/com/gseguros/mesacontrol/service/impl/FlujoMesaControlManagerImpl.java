@@ -2450,4 +2450,63 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		return poliza;
 	}
+	
+	@Override
+	public void guardarTtipflurol(String cdtipflu, List<Map<String,String>> lista) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarTtipflurol @@@@@@"
+				,"\n@@@@@@ cdtipflu = " , cdtipflu
+				,"\n@@@@@@ lista    = " , lista
+				));
+		
+		String paso = "Guardando permisos de tr\u00e1mite";
+		
+		try
+		{
+			flujoMesaControlDAO.guardarTtipflurol(cdtipflu,lista);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ guardarTtipflurol @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public void guardarTflujorol(
+			String cdtipflu
+			,String cdflujomc
+			,List<Map<String,String>> lista
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarTflujorol @@@@@@"
+				,"\n@@@@@@ cdtipflu  = " , cdtipflu
+				,"\n@@@@@@ cdflujomc = " , cdflujomc
+				,"\n@@@@@@ lista     = " , lista
+				));
+		
+		String paso = "Guardando permisos de proceso";
+		
+		try
+		{
+			flujoMesaControlDAO.guardarTflujorol(cdtipflu,cdflujomc,lista);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ guardarTflujorol @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
 }

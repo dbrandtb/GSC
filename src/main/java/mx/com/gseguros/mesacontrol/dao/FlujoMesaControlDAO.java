@@ -645,4 +645,16 @@ public interface FlujoMesaControlDAO {
 			,String ramo
 			,String nmpoliex
 			)throws Exception;
+	
+	public List<Map<String,String>> recuperarTtipflurol(String cdtipflu) throws Exception;
+	
+	public void guardarTtipflurol(String cdtipflu, List<Map<String,String>> lista) throws Exception;
+	
+	public List<Map<String,String>> recuperarTflujorol(String cdtipflu, String cdflujomc) throws Exception;
+	
+	public void guardarTflujorol(
+			String cdtipflu
+			,String cdflujomc
+			,List<Map<String,String>> lista
+			)throws Exception;
 }
