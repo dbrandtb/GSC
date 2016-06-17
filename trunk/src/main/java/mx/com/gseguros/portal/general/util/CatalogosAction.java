@@ -984,11 +984,12 @@ public class CatalogosAction extends PrincipalCoreAction {
     
     public String obtieneTablasApoyo()throws Exception{
     	
-    	
     	try{
     		// Obtenemos el rol de sistema del usuario en sesion:
-			UserVO usuario = (UserVO) session.get("USUARIO");
+			//String usuario = (String) session.get("USUARIO");
+    		UserVO usuario = (UserVO) session.get("USUARIO");
 			params.put("PV_CDSISROL_I", usuario.getRolActivo().getClave() );
+			params.put("PV_CDUSER_I", usuario.getUser());
     		loadList = catalogosManager.obtieneTablasApoyo(params);
     	}catch(Exception ex){
     		logger.error("Error al obtieneTablasApoyo",ex);
