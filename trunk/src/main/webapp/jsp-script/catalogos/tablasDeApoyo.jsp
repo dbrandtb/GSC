@@ -25,6 +25,12 @@ var _URL_LOADER_DATOS_TABLA = '<s:url namespace="/catalogos"    action="includes
 var _MSG_SIN_DATOS          = 'No hay datos';
 var _MSG_BUSQUEDA_SIN_DATOS = 'No hay datos para la b\u00FAsqueda actual.';
 
+var cdSisRolActivo = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
+var cdUserActivo   ='<s:property value="%{#session['USUARIO'].user}" />';
+
+
+
+
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -96,6 +102,7 @@ Ext.onReady(function(){
         tbar: [{
             icon    : '${ctx}/resources/fam3icons/icons/add.png',
             text    : 'Agregar Tabla',
+            disabled: (cdSisRolActivo=='PARAMETRIZADOR')||(cdSisRolActivo=='PARAMETRIZASIS')||(cdUserActivo=='ICE')||(cdUserActivo=='MDGUZMANM') ? false: true,//se evalua habilitar o desabilitar Boton, dependiendo el rol
             handler : function()
             {
             	windowLoader = Ext.create('Ext.window.Window',
@@ -124,6 +131,7 @@ Ext.onReady(function(){
         },{
             icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
             text    : 'Editar Tabla',
+            disabled: (cdSisRolActivo=='PARAMETRIZADOR')||(cdSisRolActivo=='PARAMETRIZASIS')||(cdUserActivo=='ICE')||(cdUserActivo=='MDGUZMANM') ? false: true,//se evalua habilitar o desabilitar Boton, dependiendo el rol
             handler : function()
             {
             	var model =  gridTablas.getSelectionModel();
@@ -175,6 +183,7 @@ Ext.onReady(function(){
         },{
             icon    : '${ctx}/resources/fam3icons/icons/delete.png',
             text    : 'Eliminar Tabla',
+            disabled: (cdSisRolActivo=='PARAMETRIZADOR')||(cdSisRolActivo=='PARAMETRIZASIS')||(cdUserActivo=='ICE')||(cdUserActivo=='MDGUZMANM') ? false: true,//se evalua habilitar o desabilitar Boton, dependiendo el rol
             scope   : this,
             handler : function (btn, e){
             	var model =  gridTablas.getSelectionModel();
