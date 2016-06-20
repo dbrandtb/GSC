@@ -564,7 +564,7 @@ Ext.onReady(function()
           ,width  : 435
           ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
           ,items  : _p28_panel7Items
-          ,hidden : true
+          ,hidden : false
     }
    ,{
          xtype   : 'fieldset'
@@ -2847,7 +2847,7 @@ function _p28_cargarPoliza(boton)
                   'smap1.cdsucursal' : sucursal
                  ,'smap1.cdramo' : ramo
                  ,'smap1.cdpoliza' : poliza
-                 ,'smap1.cdusuari' : _p28_smap1.cdusuari,
+                 ,'smap1.cdusuari' : _p28_smap1.cdusuari
                  ,'smap1.tipoflot' : 'I'
              }
              ,success : function(response)
