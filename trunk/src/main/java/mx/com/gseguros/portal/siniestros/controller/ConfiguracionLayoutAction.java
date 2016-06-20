@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -450,7 +451,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                	int celdaPrincipal = Integer.parseInt(datosInformacionLayout.get(i).get("CVEEXCEL").toString())-1;
 		                	auxCell = row.getCell(celdaPrincipal);
 		                	
-		                	logger.debug("Valor ===>"+datosInformacionLayout.get(i).get("DESCEXCEL").toString());
+		                	//logger.debug("Valor ===>"+datosInformacionLayout.get(i).get("DESCEXCEL").toString());
 		                	try{
 		                		//ALFANUMERICO
 		                		if(row.getCell(celdaPrincipal).getCellType()>0){
@@ -555,8 +556,9 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                			}
 			                	}else{
 			                		//NUMERICO
+			                		DecimalFormat df = new DecimalFormat("####################.###");
 			                		bufferLinea.append(
-			                			auxCell!=null?String.valueOf(auxCell.getNumericCellValue()).toString()+"|":"|"
+			                			auxCell!=null?df.format(auxCell.getNumericCellValue()).toString()+"|":"|"
 			                		);
 			                	}
 		                		
