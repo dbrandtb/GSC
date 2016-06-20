@@ -103,7 +103,7 @@
      */
     public FolioWSServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext) throws org.apache.axis2.AxisFault {
         
-                    this(configurationContext,"http://10.1.1.134:8000/folioserviciopublico-ws/servicios" );
+                    this(configurationContext,"http://10.1.1.134:9005/folioserviciopublico-ws/servicios" );
                 
     }
 
@@ -112,7 +112,7 @@
      */
     public FolioWSServiceStub() throws org.apache.axis2.AxisFault {
         
-                    this("http://10.1.1.134:8000/folioserviciopublico-ws/servicios" );
+                    this("http://10.1.1.134:9005/folioserviciopublico-ws/servicios" );
                 
     }
 
@@ -129,7 +129,7 @@
                     /**
                      * Auto generated method signature
                      * 
-                     * @see mx.com.gseguros.ws.autosgs.client.axis2.FolioWSService#validarFolio
+                     * @see mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSService#validarFolio
                      * @param validarFolio0
                     
                      */
@@ -248,7 +248,7 @@
                 /**
                 * Auto generated method signature for Asynchronous Invocations
                 * 
-                * @see mx.com.gseguros.ws.autosgs.client.axis2.FolioWSService#startvalidarFolio
+                * @see mx.com.gseguros.ws.folioserviciopublico.client.axis2.FolioWSService#startvalidarFolio
                     * @param validarFolio0
                 
                 */
@@ -422,7 +422,7 @@
         }
         return false;
     }
-     //http://10.1.1.134:8000/folioserviciopublico-ws/servicios
+     //http://10.1.1.134:9005/folioserviciopublico-ws/servicios
         public static class ValidarFolioResponseE
         implements org.apache.axis2.databinding.ADBBean{
         
@@ -3301,6 +3301,198 @@
         
 
                         /**
+                        * field for Cdramo
+                        */
+
+                        
+                                    protected int localCdramo ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getCdramo(){
+                               return localCdramo;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Cdramo
+                               */
+                               public void setCdramo(int param){
+                            
+                                            this.localCdramo=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for Cdsisrol
+                        */
+
+                        
+                                    protected java.lang.String localCdsisrol ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localCdsisrolTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getCdsisrol(){
+                               return localCdsisrol;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Cdsisrol
+                               */
+                               public void setCdsisrol(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localCdsisrolTracker = true;
+                                       } else {
+                                          localCdsisrolTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localCdsisrol=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for Cdtipsit
+                        */
+
+                        
+                                    protected java.lang.String localCdtipsit ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localCdtipsitTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getCdtipsit(){
+                               return localCdtipsit;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Cdtipsit
+                               */
+                               public void setCdtipsit(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localCdtipsitTracker = true;
+                                       } else {
+                                          localCdtipsitTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localCdtipsit=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for Cdusuario
+                        */
+
+                        
+                                    protected java.lang.String localCdusuario ;
+                                
+                           /*  This tracker boolean wil be used to detect whether the user called the set method
+                          *   for this attribute. It will be used to determine whether to include this field
+                           *   in the serialized XML
+                           */
+                           protected boolean localCdusuarioTracker = false ;
+                           
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getCdusuario(){
+                               return localCdusuario;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Cdusuario
+                               */
+                               public void setCdusuario(java.lang.String param){
+                            
+                                       if (param != null){
+                                          //update the setting tracker
+                                          localCdusuarioTracker = true;
+                                       } else {
+                                          localCdusuarioTracker = false;
+                                              
+                                       }
+                                   
+                                            this.localCdusuario=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for Id_usu
+                        */
+
+                        
+                                    protected int localId_usu ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return int
+                           */
+                           public  int getId_usu(){
+                               return localId_usu;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Id_usu
+                               */
+                               public void setId_usu(int param){
+                            
+                                            this.localId_usu=param;
+                                    
+
+                               }
+                            
+
+                        /**
                         * field for Num_folio
                         */
 
@@ -3457,6 +3649,166 @@
                
                    }
                
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"cdramo", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"cdramo");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("cdramo");
+                                    }
+                                
+                                               if (localCdramo==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("cdramo cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCdramo));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                              if (localCdsisrolTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"cdsisrol", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"cdsisrol");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("cdsisrol");
+                                    }
+                                
+
+                                          if (localCdsisrol==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("cdsisrol cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localCdsisrol);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             } if (localCdtipsitTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"cdtipsit", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"cdtipsit");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("cdtipsit");
+                                    }
+                                
+
+                                          if (localCdtipsit==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("cdtipsit cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localCdtipsit);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             } if (localCdusuarioTracker){
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"cdusuario", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"cdusuario");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("cdusuario");
+                                    }
+                                
+
+                                          if (localCdusuario==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("cdusuario cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localCdusuario);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             }
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"id_usu", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"id_usu");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("id_usu");
+                                    }
+                                
+                                               if (localId_usu==java.lang.Integer.MIN_VALUE) {
+                                           
+                                                         throw new org.apache.axis2.databinding.ADBException("id_usu cannot be null!!");
+                                                      
+                                               } else {
+                                                    xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId_usu));
+                                               }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
                                     namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
@@ -3678,6 +4030,45 @@
 
                 
                                       elementList.add(new javax.xml.namespace.QName("",
+                                                                      "cdramo"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCdramo));
+                             if (localCdsisrolTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "cdsisrol"));
+                                 
+                                        if (localCdsisrol != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCdsisrol));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("cdsisrol cannot be null!!");
+                                        }
+                                    } if (localCdtipsitTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "cdtipsit"));
+                                 
+                                        if (localCdtipsit != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCdtipsit));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("cdtipsit cannot be null!!");
+                                        }
+                                    } if (localCdusuarioTracker){
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "cdusuario"));
+                                 
+                                        if (localCdusuario != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCdusuario));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("cdusuario cannot be null!!");
+                                        }
+                                    }
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "id_usu"));
+                                 
+                                elementList.add(
+                                   org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localId_usu));
+                            
+                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "num_folio"));
                                  
                                 elementList.add(
@@ -3764,6 +4155,98 @@
                     
                     reader.next();
                 
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","cdramo").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setCdramo(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","cdsisrol").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setCdsisrol(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","cdtipsit").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setCdtipsit(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","cdusuario").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setCdusuario(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                    else {
+                                        
+                                    }
+                                
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","id_usu").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setId_usu(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInt(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
