@@ -258,6 +258,7 @@ Ext.onReady(function()
                         ,typeAhead:true
                         ,anyMatch:true
                         ,displayField:'value'
+                        ,hidden  : _p48_params.operacion!='baja'
                         ,valueField:'key'
                         ,matchFieldWidth:false
                         ,listConfig:
@@ -301,11 +302,13 @@ Ext.onReady(function()
                     })
                     ,{
                         xtype      : 'textfield',
-                        name       : 'txtBuscar'
+                        name       : 'txtBuscar',
+                        hidden     : _p48_params.operacion!='baja'
                     }
                     ,{
                         xtype    : 'button'
                         ,text    : 'Buscar'
+                        ,hidden  : _p48_params.operacion!='baja'
                         //,icon  : panDocContexto+'/resources/fam3icons/icons/add.png'
                         ,handler : function(btn) {
                         	debug('Buscando...');				                                	
@@ -476,7 +479,9 @@ Ext.onReady(function()
                     afterrender : function(me)
                     {
                         _p48_validarEstadoBotonCancelar();
-                       	_p48_store.loadPage(1);
+                       	if(+_p48_params.cdtipsup > 9){
+                        	_p48_store.loadPage(1);
+                        }
                         var ck = 'Limitando fecha de endoso';
                         try
                         {
