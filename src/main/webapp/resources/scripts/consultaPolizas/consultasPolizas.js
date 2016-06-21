@@ -338,7 +338,8 @@ Ext.onReady(function() {
             {type:'string', name:'dsramo'},
             {type:'string', name:'dsplan'},
             {type:'string', name:'tipopol'},
-            {type:'string', name:'dstipsit'}//,
+            {type:'string', name:'dstipsit'},
+            {type:'string', name:'nmrenova'}
 //            {type:'string', name:'switchConvenios'}
         ]
     });
@@ -394,13 +395,15 @@ Ext.onReady(function() {
             items : [
                 {xtype: 'textfield', name: 'dsunieco', fieldLabel: 'Sucursal',      readOnly: true, labelWidth: 120, width: 300},
                 {xtype: 'textfield', name: 'dsramo',   fieldLabel: 'Ramo',      readOnly: true, labelWidth: 65,  width: 290, labelAlign: 'right'},
-                {xtype: 'textfield', name: 'nmpoliex', fieldLabel: 'P&oacute;liza', readOnly: true, labelWidth: 50,  width: 210, labelAlign: 'right'}
+                {xtype: 'textfield', name: 'nmpoliex', fieldLabel: 'P&oacute;liza', readOnly: true, labelWidth: 70,  width: 210, labelAlign: 'right'}
             ]
         },{
             layout : 'hbox',
             items : [
                 {xtype: 'textfield', name: 'dsplan',   fieldLabel: 'Plan',      readOnly: true, labelWidth: 120, width: 300},
-                {xtype: 'textfield', name: 'dstipsit', fieldLabel: 'Subramo', readOnly: true, labelWidth: 65,  width: 290, labelAlign: 'right'}
+                {xtype: 'textfield', name: 'dstipsit', fieldLabel: 'Subramo', readOnly: true, labelWidth: 65,  width: 290, labelAlign: 'right'},
+                {xtype: 'textfield', name: 'nmrenova', fieldLabel: 'N&uacute;mero Renovaci&oacute;n',  readOnly: true, labelWidth: 70, width: 210,labelAlign: 'right'}
+                
             ]
         },{
             layout : 'hbox',
