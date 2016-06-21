@@ -383,9 +383,8 @@ Ext.onReady(function() {
     var panelDatosPoliza = Ext.create('Ext.form.Panel', {
         model : 'DatosPolizaModel',
         title  : 'Datos Generales',
-        width : 815 ,
+        collapsible: true,
         border : false,
-        //height : 280,
         defaults : {
             bodyPadding : 5,
             border : false
@@ -436,66 +435,71 @@ Ext.onReady(function() {
                 {xtype: 'textfield', name: 'dsperpag', fieldLabel: 'Forma de Pago',  readOnly: true, labelWidth: 120, width: 300},
                 {xtype: 'textfield', name: 'dstempot', fieldLabel: 'Tipo de P&oacute;liza', readOnly: true, labelWidth: 120, width: 290, labelAlign: 'right'}
             ]
-        }, Ext.create('Ext.form.Panel',
-                    {
-            title  : 'Datos Adicionales'
-            ,defaults : { style : 'margin:5px' }
-            ,layout :
-            {
-                type     : 'table'
-                ,columns : 2
+        }, Ext.create('Ext.form.Panel', {
+        	title : 'Datos Adicionales',
+        	layout: {
+                type     : 'table',
+                columns : 2
+        	},
+            defaults : {
+            	style : 'margin:5px',
+            	xtype : 'textfield',
+            	readOnly: true,
+            	labelWidth: 160,
+            	width: 390,
+            	hidden: true
             },
-            items : [ 
-                {xtype: 'textfield', name: 'otvalor1', fieldLabel: 'otvalor1',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor2', fieldLabel: 'otvalor2',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor3', fieldLabel: 'otvalor3',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor4', fieldLabel: 'otvalor4',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor5', fieldLabel: 'otvalor5',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor6', fieldLabel: 'otvalor6',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor7', fieldLabel: 'otvalor7',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor8', fieldLabel: 'otvalor8',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor9', fieldLabel: 'otvalor9',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor10', fieldLabel: 'otvalor10',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor11', fieldLabel: 'otvalor11',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor12', fieldLabel: 'otvalor12',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor13', fieldLabel: 'otvalor13',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor14', fieldLabel: 'otvalor14',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor15', fieldLabel: 'otvalor15',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor16', fieldLabel: 'otvalor16',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor17', fieldLabel: 'otvalor17',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor18', fieldLabel: 'otvalor18',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor19', fieldLabel: 'otvalor19',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor20', fieldLabel: 'otvalor20',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor21', fieldLabel: 'otvalor21',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor22', fieldLabel: 'otvalor22',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor23', fieldLabel: 'otvalor23',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor24', fieldLabel: 'otvalor24',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor25', fieldLabel: 'otvalor25',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor26', fieldLabel: 'otvalor26',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor27', fieldLabel: 'otvalor27',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor28', fieldLabel: 'otvalor28',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor29', fieldLabel: 'otvalor29',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor30', fieldLabel: 'otvalor30',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor31', fieldLabel: 'otvalor31',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor32', fieldLabel: 'otvalor32',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor33', fieldLabel: 'otvalor33',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor34', fieldLabel: 'otvalor34',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor35', fieldLabel: 'otvalor35',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor36', fieldLabel: 'otvalor36',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor37', fieldLabel: 'otvalor37',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor38', fieldLabel: 'otvalor38',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor39', fieldLabel: 'otvalor39',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor40', fieldLabel: 'otvalor40',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor41', fieldLabel: 'otvalor41',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor42', fieldLabel: 'otvalor42',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor43', fieldLabel: 'otvalor43',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor44', fieldLabel: 'otvalor44',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor45', fieldLabel: 'otvalor45',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor46', fieldLabel: 'otvalor46',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor47', fieldLabel: 'otvalor47',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor48', fieldLabel: 'otvalor48',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor49', fieldLabel: 'otvalor49',  readOnly: true, labelWidth: 120, width: 300, hidden: true},
-                {xtype: 'textfield', name: 'otvalor50', fieldLabel: 'otvalor50',  readOnly: true, labelWidth: 120, width: 300, hidden: true}
+            items : [
+                {name: 'otvalor1',  fieldLabel: 'otvalor1'},
+                {name: 'otvalor2',  fieldLabel: 'otvalor2'},
+                {name: 'otvalor3',  fieldLabel: 'otvalor3'},
+                {name: 'otvalor4',  fieldLabel: 'otvalor4'},
+                {name: 'otvalor5',  fieldLabel: 'otvalor5'},
+                {name: 'otvalor6',  fieldLabel: 'otvalor6'},
+                {name: 'otvalor7',  fieldLabel: 'otvalor7'},
+                {name: 'otvalor8',  fieldLabel: 'otvalor8'},
+                {name: 'otvalor9',  fieldLabel: 'otvalor9'},
+                {name: 'otvalor10', fieldLabel: 'otvalor10'},
+                {name: 'otvalor11', fieldLabel: 'otvalor11'},
+                {name: 'otvalor12', fieldLabel: 'otvalor12'},
+                {name: 'otvalor13', fieldLabel: 'otvalor13'},
+                {name: 'otvalor14', fieldLabel: 'otvalor14'},
+                {name: 'otvalor15', fieldLabel: 'otvalor15'},
+                {name: 'otvalor16', fieldLabel: 'otvalor16'},
+                {name: 'otvalor17', fieldLabel: 'otvalor17'},
+                {name: 'otvalor18', fieldLabel: 'otvalor18'},
+                {name: 'otvalor19', fieldLabel: 'otvalor19'},
+                {name: 'otvalor20', fieldLabel: 'otvalor20'},
+                {name: 'otvalor21', fieldLabel: 'otvalor21'},
+                {name: 'otvalor22', fieldLabel: 'otvalor22'},
+                {name: 'otvalor23', fieldLabel: 'otvalor23'},
+                {name: 'otvalor24', fieldLabel: 'otvalor24'},
+                {name: 'otvalor25', fieldLabel: 'otvalor25'},
+                {name: 'otvalor26', fieldLabel: 'otvalor26'},
+                {name: 'otvalor27', fieldLabel: 'otvalor27'},
+                {name: 'otvalor28', fieldLabel: 'otvalor28'},
+                {name: 'otvalor29', fieldLabel: 'otvalor29'},
+                {name: 'otvalor30', fieldLabel: 'otvalor30'},
+                {name: 'otvalor31', fieldLabel: 'otvalor31'},
+                {name: 'otvalor32', fieldLabel: 'otvalor32'},
+                {name: 'otvalor33', fieldLabel: 'otvalor33'},
+                {name: 'otvalor34', fieldLabel: 'otvalor34'},
+                {name: 'otvalor35', fieldLabel: 'otvalor35'},
+                {name: 'otvalor36', fieldLabel: 'otvalor36'},
+                {name: 'otvalor37', fieldLabel: 'otvalor37'},
+                {name: 'otvalor38', fieldLabel: 'otvalor38'},
+                {name: 'otvalor39', fieldLabel: 'otvalor39'},
+                {name: 'otvalor40', fieldLabel: 'otvalor40'},
+                {name: 'otvalor41', fieldLabel: 'otvalor41'},
+                {name: 'otvalor42', fieldLabel: 'otvalor42'},
+                {name: 'otvalor43', fieldLabel: 'otvalor43'},
+                {name: 'otvalor44', fieldLabel: 'otvalor44'},
+                {name: 'otvalor45', fieldLabel: 'otvalor45'},
+                {name: 'otvalor46', fieldLabel: 'otvalor46'},
+                {name: 'otvalor47', fieldLabel: 'otvalor47'},
+                {name: 'otvalor48', fieldLabel: 'otvalor48'},
+                {name: 'otvalor49', fieldLabel: 'otvalor49'},
+                {name: 'otvalor50', fieldLabel: 'otvalor50'}
             ]
         })
         ],
@@ -1048,20 +1052,11 @@ Ext.onReady(function() {
         items: [{
             title : 'DATOS DE LA POLIZA',
             border:false,
-            items:[{
-                items: [panelDatosPoliza]
-                   
-            }]
-        },/* {
-            //title: 'DATOS TARIFICACION',
-            title: 'COBERTURAS',
-            //itemId: 'tabDatosTarificacion',
-            itemId: 'tabDatosCopagosPoliza',
-            items:[{                
-                //items: [gridDatosTarificacion]
-                items: [gridCopagosPoliza]
-            }]
-        },*/{
+            autoScroll: true,
+            items:[
+                panelDatosPoliza
+            ]
+        },{
             title: 'ASEGURADOS',
             autoScroll  : true,
             itemId: 'tabDatosAsegurados',
