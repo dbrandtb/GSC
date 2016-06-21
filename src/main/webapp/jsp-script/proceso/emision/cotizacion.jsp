@@ -67,7 +67,7 @@ var _0_urlCargarDetalleNegocioRamo5= '<s:url namespace="/emision"         action
 var _0_urlDetalleTramite                    = '<s:url namespace="/mesacontrol" action="movimientoDetalleTramite"            />';
 var _0_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"     action="actualizarOtvalorTramitePorDsatribu" />';
 var _0_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"     action="recuperarOtvalorTramitePorDsatribu"  />';
-var _0_urlCargarParamerizacionCoberturas  = '<s:url namespace="/emision"     action="cargarParamerizacionConfiguracionCoberturas"/>';
+var _0_urlCargarParamerizacionCoberturas    = '<s:url namespace="/emision"     action="cargarParamerizacionConfiguracionCoberturas"/>';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -4014,98 +4014,101 @@ Ext.onReady(function()
                 }
             }
             ,'blur' : function()
-            {
-                if(!Ext.isEmpty(folio.getValue())&&folio.getValue()>0)
-                {
-                    _0_panelPri.setLoading(true);
-                    Ext.Ajax.request(
-                    {
-                        url      : _0_urlCargarAgentePorFolio
-                        ,params  :
-                        {
-                            'smap1.folio'     : folio.getValue()
-                            ,'smap1.cdunieco' : _0_smap1.cdunieco
-                        }
-                        ,success : function(response)
-                        {
-                            _0_panelPri.setLoading(false);
-                            var json=Ext.decode(response.responseText);
-                            debug('json response obtener agente por folio:',json);
-                            if(json.exito)
-                            {
-                                if(_0_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
-                                {
-                                    var contiene=false;
-                                    agente.getStore().each(function(record)
-                                    {
-                                        debug('buscando agente',json.smap1.cdagente,'en',record.data);
-                                        if(record.get('key')==json.smap1.cdagente)
-                                        {
-                                            contiene=true;
-                                        }
-                                    });
-                                    if(contiene)
-                                    {
-                                        agente.setValue(json.smap1.cdagente);
-                                    }
-                                    else
-                                    {
-                                        mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
-                                        agente.reset();
-                                    }
-                                }
-                                //para suscriptor y agente
-                                else
-                                {
-                                    //agente
-                                    if(_0_smap1.cdsisrol+'x'=='EJECUTIVOCUENTAx')
-                                    {
-                                        if(json.smap1.cdagente!=agente.getValue())
-                                        {
-                                            mensajeWarning('El folio pertenece a otro agente');
-                                            folio.reset();
-                                            folio.focus();
-                                        }
-                                    }
-                                    //suscriptor
-                                    else
-                                    {
-                                        agente.getStore().load(
-                                        {
-                                            params :
-                                            {
-                                                'params.agente' : json.smap1.cdagente 
-                                            }
-                                            ,callback : function(records)
-                                            {
-                                               debug('callback records:',records,records.length);
-                                               if(_fieldByLabel('AGENTE').findRecord('key',json.smap1.cdagente)){
-                                            	   agente.setValue(json.smap1.cdagente);
-                                               }else{
-                                            	   mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
-                                            	   folio.reset();
-                                            	   agente.reset();
-                                               }
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                mensajeError(json.respuesta);
-                                folio.reset();
-                                agente.reset();
-                            }
-                        }
-                        ,failure : function(response)
-                        {
-                            _0_panelPri.setLoading(false);
-                            errorComunicacion();
-                        }
-                    });
-                }
-            }
+			            {
+			                if(!Ext.isEmpty(folio.getValue())&&folio.getValue()>0)
+			                {
+			                    _0_panelPri.setLoading(true);
+			                    Ext.Ajax.request(
+			                    {
+			                        url      : _0_urlCargarAgentePorFolio
+			                        ,params  :
+			                        {
+			                            'smap1.folio'    : folio.getValue(),
+			                            'smap1.cdunieco' : _0_smap1.cdunieco,
+			                            'smap1.cdtipsit' : _0_smap1.cdtipsit,
+			                            'smap1.cdramo'   : _0_smap1.cdramo,
+			                            'smap1.idusu'   : <s:property value="%{#session['USUARIO'].claveUsuarioCaptura}"/>
+			                        }
+			                        ,success : function(response)
+			                        {
+			                            _0_panelPri.setLoading(false);
+			                            var json=Ext.decode(response.responseText);
+			                            debug('json response obtener agente por folio:',json);
+			                            if(json.exito)
+			                            {
+			                                if(_0_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+			                                {
+			                                    var contiene=false;
+			                                    agente.getStore().each(function(record)
+			                                    {
+			                                        debug('buscando agente',json.smap1.cdagente,'en',record.data);
+			                                        if(record.get('key')==json.smap1.cdagente)
+			                                        {
+			                                            contiene=true;
+			                                        }
+			                                    });
+			                                    if(contiene)
+			                                    {
+			                                        agente.setValue(json.smap1.cdagente);
+			                                    }
+			                                    else
+			                                    {
+			                                        mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
+			                                        agente.reset();
+			                                    }
+			                                }
+			                                //para suscriptor y agente
+			                                else
+			                                {
+			                                    //agente
+			                                    if(_0_smap1.cdsisrol+'x'=='EJECUTIVOCUENTAx')
+			                                    {
+			                                        if(json.smap1.cdagente!=agente.getValue())
+			                                        {
+			                                            mensajeWarning('El folio pertenece a otro agente');
+			                                            folio.reset();
+			                                            folio.focus();
+			                                        }
+			                                    }
+			                                    //suscriptor
+			                                    else
+			                                    {
+			                                        agente.getStore().load(
+			                                        {
+			                                            params :
+			                                            {
+			                                                'params.agente' : json.smap1.cdagente 
+			                                            }
+			                                            ,callback : function(records)
+			                                            {
+			                                               debug('callback records:',records,records.length);
+			                                               if(_fieldByLabel('AGENTE').findRecord('key',json.smap1.cdagente)){
+			                                            	   agente.setValue(json.smap1.cdagente);
+			                                               }else{
+			                                            	   mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
+			                                            	   folio.reset();
+			                                            	   agente.reset();
+			                                               }
+			                                            }
+			                                        });
+			                                    }
+			                                }
+			                            }
+			                            else
+			                            {
+			                                mensajeError(json.respuesta);
+			                                folio.reset();
+			                                agente.reset();
+			                            }
+			                        }
+			                        ,failure : function(response)
+			                        {
+			                            _0_panelPri.setLoading(false);
+			                            errorComunicacion();
+			                        }
+			                    });
+			                }
+			            }
         });
         
         //tipo de unidad
