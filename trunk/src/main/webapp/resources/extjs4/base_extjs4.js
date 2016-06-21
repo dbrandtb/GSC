@@ -572,10 +572,22 @@ function manejaException(e,ck,compLoading)
     else
     {
         debugError('!exception:',e);
-        if(!Ext.isEmpty(compLoading))
+        
+        try
         {
             compLoading.setLoading(false);
         }
+        catch(e){}
+        
+        try
+        {
+            if(compLoading.maskLocal === true)
+            {
+                compLoading.close(); // para cuando es un mask del metodo _maskLocal
+            }
+        }
+        catch(e){}
+        
         mensajeError('Error '+(ck.toLowerCase()));
     }
 }
@@ -2464,6 +2476,8 @@ function _maskLocal(text)
         ,border      : 0
         ,style       : 'padding:5px;'
         ,closeAction : 'destroy'
+        ,closable    : false
+        ,maskLocal   : true
         ,items       :
         [{
             xtype  : 'displayfield'
@@ -2523,6 +2537,30 @@ function testTimeout(min) {
         }
     });
 }
+
+function _flujoToParams(flujo)
+{
+    var params =
+    {
+        'flujo.ntramite'   : flujo.ntramite
+        ,'flujo.status'    : flujo.status
+        ,'flujo.cdtipflu'  : flujo.cdtipflu
+        ,'flujo.cdflujomc' : flujo.cdflujomc
+        ,'flujo.webid'     : flujo.webid
+        ,'flujo.tipoent'   : flujo.tipoent
+        ,'flujo.claveent'  : flujo.claveent
+        ,'flujo.cdunieco'  : flujo.cdunieco
+        ,'flujo.cdramo'    : flujo.cdramo
+        ,'flujo.estado'    : flujo.estado
+        ,'flujo.nmpoliza'  : flujo.nmpoliza
+        ,'flujo.nmsituac'  : flujo.nmsituac
+        ,'flujo.nmsuplem'  : flujo.nmsuplem
+        ,'flujo.aux'       : flujo.aux
+    };
+    debug('_flujoToParams:',params);
+    return params;
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

@@ -20,7 +20,8 @@ var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" ac
     ,_p54_urlRecuperarPoliza          = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnica"       />'
     ,_p54_urlRegistrarTramite         = '<s:url namespace="/flujomesacontrol" action="registrarTramite"           />'
     ,_p54_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto"   />'
-    ,_p54_urlRecuperarPolizaDanios    = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnicaDanios" />';
+    ,_p54_urlRecuperarPolizaDanios    = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnicaDanios" />'
+    ,_p54_urlRecuperarPolizaSIGS      = '<s:url namespace="/emision"          action="cargarPoliza"               />';
 ////// urls //////
 
 ////// variables //////
@@ -98,6 +99,11 @@ _p54_gridButtons.push(
 
 Ext.onReady(function()
 {
+    Ext.Ajax.timeout = 1000*60*2; //2 minutos
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
+
     ////// requires //////
     ////// requires //////
     
@@ -281,7 +287,7 @@ Ext.onReady(function()
                         me.down('[name=NMPOLIEX]').allowBlank = true;
                         _hide(me.down('[name=NMPOLIEX]'));
                     }
-                    else if(Number(cdtiptra) === 15) // para endoso
+                    else if(Number(cdtiptra) === 15 || Number(cdtiptra) === 21) // para endoso o renovacion
                     {
                         // indistinto salud y danios
                         
@@ -363,7 +369,90 @@ Ext.onReady(function()
 	                        
 	                        _hide(me.down('[name=CDSUCDOC]'));
                         }
-                    }
+                    }/*
+                    else if(Number(cdtiptra) === 21) // para renovacion
+                    {
+                        // indistinto salud y danios
+                        
+                        //ocultar
+                        
+                        _fieldByName('REFERENCIA',me).allowBlank = true;
+                        _hide(_fieldByName('REFERENCIA',me));
+                        
+                        _fieldByName('NOMBRE',me).allowBlank = true;
+                        _hide(_fieldByName('NOMBRE',me));
+                        
+                        _fieldByName('COMMENTS',me).allowBlank = true;
+                        _hide(_fieldByName('COMMENTS',me));
+                        
+                        // salud
+                        
+                        if(Number(cdtipram) === Number(TipoRamo.Salud)) 
+                        {
+                            // mostrar
+                            
+                            _fieldByName('CDSUCADM',me).allowBlank = false;
+                            _show(_fieldByName('CDSUCADM',me));
+                            
+                            _fieldByName('CDSUCDOC',me).allowBlank = false;
+                            _show(_fieldByName('CDSUCDOC',me));
+                            
+                            me.down('[name=CDRAMO]').allowBlank = false;
+                            _show(me.down('[name=CDRAMO]'));
+                            
+                            me.down('[name=CDTIPSIT]').allowBlank = false;
+                            _show(me.down('[name=CDTIPSIT]'));
+                            
+                            me.down('[name=NMPOLIZA]').allowBlank = false;
+                            _show(me.down('[name=NMPOLIZA]'));
+                            
+                            // ocultar
+                            
+                            me.down('[name=CDUNIEXT]').allowBlank = true;
+                            _hide(me.down('[name=CDUNIEXT]'));
+                            
+                            me.down('[name=RAMO]').allowBlank = true;
+                            _hide(me.down('[name=RAMO]'));
+                            
+                            me.down('[name=NMPOLIEX]').allowBlank = true;
+                            _hide(me.down('[name=NMPOLIEX]'));
+                            
+                        }
+                        
+                        // autos
+                        
+                        else if(Number(cdtipram) === Number(TipoRamo.Autos))
+                        {
+                            // mostrar
+                            
+                            me.down('[name=CDUNIEXT]').allowBlank = false;
+                            _show(me.down('[name=CDUNIEXT]'));
+                            
+                            // la sucursal queda abierta para los endosos de autos
+                            me.down('[name=CDUNIEXT]').setReadOnly(false);
+                            
+                            me.down('[name=RAMO]').allowBlank = false;
+                            _show(me.down('[name=RAMO]'));
+                            
+                            me.down('[name=NMPOLIEX]').allowBlank = false;
+                            _show(me.down('[name=NMPOLIEX]'));
+                            
+                            // ocultar
+                            
+                            me.down('[name=CDRAMO]').allowBlank = true;
+                            _hide(me.down('[name=CDRAMO]'));
+                            
+                            me.down('[name=CDTIPSIT]').allowBlank = true;
+                            _hide(me.down('[name=CDTIPSIT]'));
+                            
+                            me.down('[name=NMPOLIZA]').allowBlank = true;
+                            _hide(me.down('[name=NMPOLIZA]'));
+                            
+                            _hide(me.down('[name=CDSUCADM]'));
+                            
+                            _hide(me.down('[name=CDSUCDOC]'));
+                        }
+                    }*/
                 }
             }
             catch(e)
@@ -850,194 +939,435 @@ Ext.onReady(function()
                 var ck = 'Recuperando p\u00f3liza';
                 try
                 {
-                
-                    var cduniext = _p54_windowNuevo.down('[name=CDUNIEXT]').getValue()
-                        ,ramo    = _p54_windowNuevo.down('[name=RAMO]').getValue();
+                    var cduniext  = _p54_windowNuevo.down('[name=CDUNIEXT]').getValue()
+                        ,ramo     = _p54_windowNuevo.down('[name=RAMO]').getValue()
+                        ,cdtiptra = _p54_windowNuevo.down('[name=CDTIPTRA]').getValue()
+                        ,agente   = _p54_windowNuevo.down('[name=CDAGENTE]').getValue();
                     
-                    if(Ext.isEmpty(cduniext)||Ext.isEmpty(ramo))
+                    if(Ext.isEmpty(cduniext))
                     {
-                        throw 'Seleccione sucursal y el ramo antes de confirmar la p\u00f3liza';
+                        throw 'Seleccione la sucursal antes de confirmar la p\u00f3liza';
                     }
-                
-                    _setLoading(true,_p54_windowNuevo);
-                    Ext.Ajax.request(
+                    
+                    if(Ext.isEmpty(ramo))
                     {
-                        url      : _p54_urlRecuperarPolizaDanios
-                        ,params  :
+                        throw 'Seleccione el ramo antes de confirmar la p\u00f3liza';
+                    }
+                    
+                    if(Ext.isEmpty(agente))
+                    {
+                        throw 'Seleccione el agente antes de confirmar la p\u00f3liza';
+                    }
+                    
+                    if(Number(cdtiptra) === 15) //endoso
+                    {
+                        ck = 'Recuperando p\u00f3liza ICE';
+                        
+	                    _setLoading(true,_p54_windowNuevo);
+	                    Ext.Ajax.request(
+	                    {
+	                        url      : _p54_urlRecuperarPolizaDanios
+	                        ,params  :
+	                        {
+	                            'params.CDUNIEXT'  : cduniext
+	                            ,'params.RAMO'     : ramo
+	                            ,'params.NMPOLIEX' : val
+	                        }
+	                        ,success : function(response)
+	                        {
+	                            _setLoading(false,_p54_windowNuevo);
+	                            var ck = 'Decodificando respuesta al recuperar p\u00f3liza';
+	                            try
+	                            {
+	                                var json = Ext.decode(response.responseText);
+	                                debug('### poliza:',json);
+	                                if(json.success==true)
+	                                {
+	                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+	                                    {
+	                                        title     : 'P\u00f3liza'
+	                                        ,modal    : true
+	                                        ,closable : false
+	                                        ,width    : 400
+	                                        ,border   : 0
+	                                        ,defaults : { style : 'margin:5px;' }
+	                                        ,items    :
+	                                        [
+	                                            {
+	                                                xtype       : 'displayfield'
+	                                                ,fieldLabel : 'SUCURSAL'
+	                                                ,value      : json.params.CDUNIEXT
+	                                            }
+	                                            ,{
+	                                                xtype       : 'displayfield'
+	                                                ,fieldLabel : 'RAMO'
+	                                                ,value      : json.params.RAMO
+	                                            }
+	                                            ,{
+	                                                xtype       : 'displayfield'
+	                                                ,fieldLabel : 'P\u00d3LIZA'
+	                                                ,value      : json.params.NMPOLIEX
+	                                            }
+	                                            ,{
+	                                                xtype       : 'displayfield'
+	                                                ,fieldLabel : 'FECHA DE EMISI\u00d3N'
+	                                                ,value      : json.params.FEEMISIO
+	                                            }
+	                                            ,{
+	                                                xtype       : 'displayfield'
+	                                                ,fieldLabel : 'INICIO DE VIGENCIA'
+	                                                ,value      : json.params.FEEFECTO
+	                                            }
+	                                            ,{
+	                                                xtype       : 'displayfield'
+	                                                ,fieldLabel : 'CONTRATANTE'
+	                                                ,value      : json.params.CONTRATANTE
+	                                            }
+	                                            ,{
+	                                                xtype       : 'displayfield'
+	                                                ,fieldLabel : 'AGENTE'
+	                                                ,value      : json.params.AGENTE
+	                                            }
+	                                        ]
+	                                        ,buttonAlign : 'center'
+	                                        ,buttons     :
+	                                        [
+	                                            {
+	                                                text     : 'Aceptar'
+	                                                ,icon    : '${icons}accept.png'
+	                                                ,handler : function(bot)
+	                                                {
+	                                                    bot.up('window').destroy();
+	                                                    me.up('window').down('[name=CDAGENTE]').focus();
+	                                                    estadoCmp.setValue('M');
+	                                                    
+	                                                    var setear = function(name,val,cb) // funcion que setea, simple o lanzando herencia
+	                                                    {
+	                                                        debug('setear args:',name,val,'.');
+	                                                        var comp = me.up('window').down('[name='+name+']');
+	                                                        if(typeof comp.heredar === 'function')
+	                                                        {
+	                                                            comp.heredar(
+	                                                                true
+	                                                                ,function()
+	                                                                {
+	                                                                    comp.setValue(val);
+	                                                                    cb();
+	                                                                }
+	                                                            );
+	                                                        }
+	                                                        else
+	                                                        {
+	                                                            comp.setValue(val);
+	                                                            cb();
+	                                                        }
+	                                                    };
+	                                                    
+	                                                    _mask('Recuperando propiedades...');
+	                                                    setear(
+	                                                        'CDSUCADM'
+	                                                        ,json.params.CDUNIECO
+	                                                        ,function()
+	                                                        {
+	                                                            setear(
+	                                                                'CDSUCDOC'
+	                                                                ,json.params.CDUNIECO
+	                                                                ,function()
+	                                                                {
+	                                                                    setear(
+	                                                                        'CDRAMO'
+	                                                                        ,json.params.CDRAMO
+	                                                                        ,function()
+	                                                                        {
+	                                                                            setear(
+	                                                                                'CDTIPSIT'
+	                                                                                ,json.params.CDTIPSIT
+	                                                                                ,function()
+	                                                                                {
+	                                                                                    setear(
+	                                                                                        'NMPOLIZA'
+	                                                                                        ,json.params.NMPOLIZA
+	                                                                                        ,function()
+	                                                                                        {
+	                                                                                            _unmask();
+	                                                                                        }
+	                                                                                    );
+	                                                                                }
+	                                                                            );
+	                                                                        }
+	                                                                    );
+	                                                                }
+	                                                            );
+	                                                        }
+	                                                    );
+	                                                    
+	                                                }
+	                                            }
+	                                            ,{
+	                                                text     : 'Cancelar'
+	                                                ,icon    : '${icons}cancel.png'
+	                                                ,handler : function(bot)
+	                                                {
+	                                                    me.setValue('');
+	                                                    estadoCmp.reset();
+	                                                    me.isValid();
+	                                                    bot.up('window').destroy();
+	                                                }
+	                                            }
+	                                        ]
+	                                    }).show());
+	                                }
+	                                else
+	                                {
+	                                    mensajeError(json.message);
+	                                    me.setValue('');
+	                                    estadoCmp.reset();
+	                                    me.isValid();
+	                                }
+	                            }
+	                            catch(e)
+	                            {
+	                                me.setValue('');
+	                                estadoCmp.reset();
+	                                me.isValid();
+	                                manejaException(e,ck);
+	                            }
+	                        }
+	                        ,failure : function()
+	                        {
+	                            _setLoading(false,_p54_windowNuevo);
+	                            me.setValue('');
+	                            estadoCmp.reset();
+	                            me.isValid();
+	                            errorComunicacion(null,'Error Recuperando p\u00f3liza');
+	                        }
+	                    });
+                    }
+                    else if(Number(cdtiptra) === 21)//renovacion
+                    {
+                        ck = 'Recuperando p\u00f3liza SIGS';
+                        
+                        var cdflujoCmp = _p54_windowNuevo.down('[name=CDFLUJOMC]');
+                        debug('cdflujoCmp:',cdflujoCmp,'.');
+                        
+                        var cdflujoRec = cdflujoCmp.findRecord('key',cdflujoCmp.getValue());
+                        debug('cdflujoRec:',cdflujoRec,'.');
+                        
+                        var dsflujo = cdflujoRec.get('value');
+                        
+                        debug('dsflujo:',dsflujo,'.');
+                        
+                        debug("dsflujo.toUpperCase().indexOf('PYME'):",dsflujo.toUpperCase().indexOf('PYME'),'.');
+                        
+                        debug("dsflujo.toUpperCase().indexOf('FLOTILLA'):",dsflujo.toUpperCase().indexOf('FLOTILLA'),'.');
+                        
+                        var tipoflot = 'I';
+                        
+                        if(dsflujo.toUpperCase().indexOf('PYME')!=-1)
                         {
-                            'params.CDUNIEXT'  : cduniext
-                            ,'params.RAMO'     : ramo
-                            ,'params.NMPOLIEX' : val
+                            tipoflot = 'P';
                         }
-                        ,success : function(response)
+                        else if(dsflujo.toUpperCase().indexOf('FLOTILLA')!=-1)
                         {
-                            _setLoading(false,_p54_windowNuevo);
-                            var ck = 'Decodificando respuesta al recuperar p\u00f3liza';
-                            try
+                            tipoflot = 'F';
+                        }
+                        
+                        debug('tipoflot:',tipoflot,'.');
+                        
+                        _setLoading(true,_p54_windowNuevo);
+                        Ext.Ajax.request(
+                        {
+                            url      : _p54_urlRecuperarPolizaSIGS
+                            ,params  :
                             {
-                                var json = Ext.decode(response.responseText);
-                                debug('### poliza:',json);
-                                if(json.success==true)
+                                'smap1.cdsucursal' : cduniext
+                                ,'smap1.cdramo'    : ramo
+                                ,'smap1.cdpoliza'  : val
+                                ,'smap1.cdusuari'  : _p54_params.CDUSUARI
+                                ,'smap1.tipoflot'  : tipoflot
+                            }
+                            ,success : function(response)
+                            {
+                                _setLoading(false,_p54_windowNuevo);
+                                var ck = 'Decodificando respuesta al recuperar p\u00f3liza SIGS';
+                                try
                                 {
-                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                    var json = Ext.decode(response.responseText);
+                                    debug('### poliza SIGS:',json);
+                                    if(json.success==true && !Ext.isEmpty(json.smap1.valoresCampos))
                                     {
-                                        title     : 'P\u00f3liza'
-                                        ,modal    : true
-                                        ,closable : false
-                                        ,width    : 400
-                                        ,border   : 0
-                                        ,defaults : { style : 'margin:5px;' }
-                                        ,items    :
-                                        [
-                                            {
-                                                xtype       : 'displayfield'
-                                                ,fieldLabel : 'SUCURSAL'
-                                                ,value      : json.params.CDUNIEXT
-                                            }
-                                            ,{
-                                                xtype       : 'displayfield'
-                                                ,fieldLabel : 'RAMO'
-                                                ,value      : json.params.RAMO
-                                            }
-                                            ,{
-                                                xtype       : 'displayfield'
-                                                ,fieldLabel : 'P\u00d3LIZA'
-                                                ,value      : json.params.NMPOLIEX
-                                            }
-                                            ,{
-                                                xtype       : 'displayfield'
-                                                ,fieldLabel : 'FECHA DE EMISI\u00d3N'
-                                                ,value      : json.params.FEEMISIO
-                                            }
-                                            ,{
-                                                xtype       : 'displayfield'
-                                                ,fieldLabel : 'INICIO DE VIGENCIA'
-                                                ,value      : json.params.FEEFECTO
-                                            }
-                                            ,{
-                                                xtype       : 'displayfield'
-                                                ,fieldLabel : 'CONTRATANTE'
-                                                ,value      : json.params.CONTRATANTE
-                                            }
-                                            ,{
-                                                xtype       : 'displayfield'
-                                                ,fieldLabel : 'AGENTE'
-                                                ,value      : json.params.AGENTE
-                                            }
-                                        ]
-                                        ,buttonAlign : 'center'
-                                        ,buttons     :
-                                        [
-                                            {
-                                                text     : 'Aceptar'
-                                                ,icon    : '${icons}accept.png'
-                                                ,handler : function(bot)
+                                        var jsonSIGS = Ext.decode(json.smap1.valoresCampos);
+                                        
+                                        debug('jsonSIGS:',jsonSIGS);
+                                        
+                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                        {
+                                            title     : 'P\u00f3liza'
+                                            ,modal    : true
+                                            ,closable : false
+                                            ,width    : 400
+                                            ,border   : 0
+                                            ,defaults : { style : 'margin:5px;' }
+                                            ,items    :
+                                            [
                                                 {
-                                                    bot.up('window').destroy();
-                                                    me.up('window').down('[name=CDAGENTE]').focus();
-                                                    estadoCmp.setValue('M');
+                                                    xtype       : 'displayfield'
+                                                    ,fieldLabel : 'SUCURSAL'
+                                                    ,value      : json.smap1.cdsucursal
+                                                }
+                                                ,{
+                                                    xtype       : 'displayfield'
+                                                    ,fieldLabel : 'RAMO'
+                                                    ,value      : json.smap1.cdramo
+                                                }
+                                                ,{
+                                                    xtype       : 'displayfield'
+                                                    ,fieldLabel : 'P\u00d3LIZA'
+                                                    ,value      : json.smap1.cdpoliza
+                                                }
+                                                ,{
+                                                    xtype       : 'displayfield'
+                                                    ,fieldLabel : 'FECHA DE EMISI\u00d3N'
+                                                    ,value      : jsonSIGS.smap1.FESOLICI
+                                                }
+                                                ,{
+                                                    xtype       : 'displayfield'
+                                                    ,fieldLabel : 'INICIO DE VIGENCIA'
+                                                    ,value      : jsonSIGS.smap1.FEEFECTO
+                                                }
+                                                ,{
+                                                    xtype       : 'displayfield'
+                                                    ,fieldLabel : 'CONTRATANTE'
+                                                    ,value      : jsonSIGS.smap1.nombreContratante
                                                     
-                                                    var setear = function(name,val,cb) // funcion que setea, simple o lanzando herencia
+                                                }
+                                                ,{
+                                                    xtype       : 'displayfield'
+                                                    ,fieldLabel : 'AGENTE'
+                                                    ,value      : jsonSIGS.smap1.cdagente+' - '+jsonSIGS.smap1.nombreAgente
+                                                }
+                                            ]
+                                            ,buttonAlign : 'center'
+                                            ,buttons     :
+                                            [
+                                                {
+                                                    text     : 'Aceptar'
+                                                    ,icon    : '${icons}accept.png'
+                                                    ,handler : function(bot)
                                                     {
-                                                        debug('setear args:',name,val,'.');
-                                                        var comp = me.up('window').down('[name='+name+']');
-                                                        if(typeof comp.heredar === 'function')
+                                                        bot.up('window').destroy();
+                                                        me.up('window').down('[name=CDAGENTE]').focus();
+                                                        
+                                                        var setear = function(name,val,cb) // funcion que setea, simple o lanzando herencia
                                                         {
-                                                            comp.heredar(
-                                                                true
-                                                                ,function()
-                                                                {
-                                                                    comp.setValue(val);
-                                                                    cb();
-                                                                }
-                                                            );
-                                                        }
-                                                        else
-                                                        {
-                                                            comp.setValue(val);
-                                                            cb();
-                                                        }
-                                                    };
-                                                    
-                                                    _mask('Recuperando propiedades...');
-                                                    setear(
-                                                        'CDSUCADM'
-                                                        ,json.params.CDUNIECO
-                                                        ,function()
-                                                        {
-                                                            setear(
-                                                                'CDSUCDOC'
-                                                                ,json.params.CDUNIECO
-                                                                ,function()
-                                                                {
-                                                                    setear(
-                                                                        'CDRAMO'
-                                                                        ,json.params.CDRAMO
-                                                                        ,function()
-                                                                        {
-                                                                            setear(
-                                                                                'CDTIPSIT'
-                                                                                ,json.params.CDTIPSIT
-                                                                                ,function()
-                                                                                {
-                                                                                    setear(
-                                                                                        'NMPOLIZA'
-                                                                                        ,json.params.NMPOLIZA
-                                                                                        ,function()
-                                                                                        {
-                                                                                            _unmask();
-                                                                                        }
-                                                                                    );
-                                                                                }
-                                                                            );
-                                                                        }
-                                                                    );
-                                                                }
-                                                            );
-                                                        }
-                                                    );
-                                                    
+                                                            debug('setear args:',name,val,'.');
+                                                            var comp = me.up('window').down('[name='+name+']');
+                                                            if(typeof comp.heredar === 'function')
+                                                            {
+                                                                comp.heredar(
+                                                                    true
+                                                                    ,function()
+                                                                    {
+                                                                        comp.setValue(val);
+                                                                        cb();
+                                                                    }
+                                                                );
+                                                            }
+                                                            else
+                                                            {
+                                                                comp.setValue(val);
+                                                                cb();
+                                                            }
+                                                        };
+                                                        
+                                                        _mask('Recuperando propiedades...');
+                                                        setear(
+                                                            'CDSUCADM'
+                                                            ,me.up('window').down('[name=CDSUCADM]').getValue()
+                                                            ,function()
+                                                            {
+                                                                setear(
+                                                                    'CDSUCDOC'
+                                                                    ,me.up('window').down('[name=CDSUCDOC]').getValue()
+                                                                    ,function()
+                                                                    {
+                                                                        setear(
+                                                                            'CDRAMO'
+                                                                            ,jsonSIGS.smap1.cdramo
+                                                                            ,function()
+                                                                            {
+                                                                                setear(
+                                                                                    'CDTIPSIT'
+                                                                                    ,jsonSIGS.smap1.cdtipsit
+                                                                                    ,function()
+                                                                                    {
+                                                                                        setear(
+                                                                                            'NMPOLIZA'
+                                                                                            ,'0'
+                                                                                            ,function()
+                                                                                            {
+                                                                                                _unmask();
+                                                                                                
+                                                                                                var agente = _fieldLikeLabel('AGENTE').getValue();
+                                                                                                
+                                                                                                if(Number(agente) !== Number(jsonSIGS.smap1.cdagente) )
+                                                                                                {
+                                                                                                    _fieldByName('NMPOLIEX' , _p54_windowNuevo).reset();
+                                                                                                    mensajeError('La p\u00f3liza no pertenece al agente<br/>Por favor seleccione a '+jsonSIGS.smap1.cdagente+' - '+jsonSIGS.smap1.nombreAgente+' e intente de nuevo');
+                                                                                                }
+                                                                                            }
+                                                                                        );
+                                                                                    }
+                                                                                );
+                                                                            }
+                                                                        );
+                                                                    }
+                                                                );
+                                                            }
+                                                        );
+                                                        
+                                                    }
                                                 }
-                                            }
-                                            ,{
-                                                text     : 'Cancelar'
-                                                ,icon    : '${icons}cancel.png'
-                                                ,handler : function(bot)
-                                                {
-                                                    me.setValue('');
-                                                    estadoCmp.reset();
-                                                    me.isValid();
-                                                    bot.up('window').destroy();
+                                                ,{
+                                                    text     : 'Cancelar'
+                                                    ,icon    : '${icons}cancel.png'
+                                                    ,handler : function(bot)
+                                                    {
+                                                        me.setValue('');
+                                                        estadoCmp.reset();
+                                                        me.isValid();
+                                                        bot.up('window').destroy();
+                                                    }
                                                 }
-                                            }
-                                        ]
-                                    }).show());
+                                            ]
+                                        }).show());
+                                    }
+                                    else
+                                    {
+                                        mensajeError(json.message || 'No se encuentra la p\u00f3liza '+cduniext+' - '+ramo+' - '+val);
+                                        me.setValue('');
+                                        estadoCmp.reset();
+                                        me.isValid();
+                                    }
                                 }
-                                else
+                                catch(e)
                                 {
-                                    mensajeError(json.message);
                                     me.setValue('');
                                     estadoCmp.reset();
                                     me.isValid();
+                                    manejaException(e,ck);
                                 }
                             }
-                            catch(e)
+                            ,failure : function()
                             {
+                                _setLoading(false,_p54_windowNuevo);
                                 me.setValue('');
                                 estadoCmp.reset();
                                 me.isValid();
-                                manejaException(e,ck);
+                                errorComunicacion(null,'Error Recuperando p\u00f3liza');
                             }
-                        }
-                        ,failure : function()
-                        {
-                            _setLoading(false,_p54_windowNuevo);
-                            me.setValue('');
-                            estadoCmp.reset();
-                            me.isValid();
-                            errorComunicacion(null,'Error Recuperando p\u00f3liza');
-                        }
-                    });
+                        });
+                    }
                 }
                 catch(e)
                 {

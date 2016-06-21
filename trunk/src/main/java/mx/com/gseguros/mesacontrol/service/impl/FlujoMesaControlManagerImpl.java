@@ -2404,7 +2404,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ flujo=", flujo
 				));
 		
-		String paso = null;
+		String paso = "Recuperando propiedades actuales desde componente anterior";
 		
 		try
 		{

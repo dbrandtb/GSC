@@ -70,33 +70,34 @@ Ext.override(Ext.form.TextField,
 ////// overrides //////
 
 ////// urls //////
-var _p28_urlCargarCduniecoAgenteAuto          = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"                       />';
-var _p28_urlCotizar                           = '<s:url namespace="/emision"         action="cotizar"                                        />';
-var _p28_urlRecuperarCliente                  = '<s:url namespace="/"                action="buscarPersonasRepetidas"                        />';
-var _p28_urlCargarRetroactividadSuplemento    = '<s:url namespace="/emision"         action="cargarRetroactividadSuplemento"                 />';
-var _p28_urlCargarSumaAseguradaRamo5          = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"                       />';
-var _p28_urlCargar                            = '<s:url namespace="/emision"         action="cargarCotizacion"                               />';
-var _p28_urlDatosComplementarios              = '<s:url namespace="/emision"         action="emisionAutoIndividual"                          />';
-var _p28_urlCargarParametros                  = '<s:url namespace="/emision"         action="obtenerParametrosCotizacion"                    />';
-var _p28_urlCoberturas                        = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"                             />';
-var _p28_urlComprar                           = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"                             />';
-var _p28_urlViewDoc                           = '<s:url namespace ="/documentos"     action="descargaDocInline"                              />';
-var _p28_urlEnviarCorreo                      = '<s:url namespace="/general"         action="enviaCorreo"                                    />';
-var _p28_urlDetalleCotizacion                 = '<s:url namespace="/"                action="detalleCotizacion"                              />';
-var _p28_urlGuardarConfig                     = '<s:url namespace="/emision"         action="guardarConfigCotizacion"                        />';
-var _p28_urlCargarConfig                      = '<s:url namespace="/emision"         action="cargarConfigCotizacion"                         />';
-var _p28_urlRecuperacionSimple                = '<s:url namespace="/emision"         action="recuperacionSimple"                             />';
-var _p28_urlCargarParamerizacionCoberturas    = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturas"    />';
-var _p28_urlValidarTractocamionRamo5          = '<s:url namespace="/emision"         action="cargarValidacionTractocamionRamo5"              />';
-var _p28_urlCargarObligatorioCamionRamo5      = '<s:url namespace="/emision"         action="cargarObligatorioTractocamionRamo5"             />';
-var _p28_urlCargarDetalleNegocioRamo5         = '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"                      />';
-var _p28_urlCargarParamerizacionCoberturasRol = '<s:url namespace="/emision"         action="cargarParamerizacionConfiguracionCoberturasRol" />';
-var _p28_urlCargarTipoCambioWS                = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                             />';
-var _p28_urlRecuperacion                      = '<s:url namespace="/recuperacion"    action="recuperar"                                      />';
-var _p28_urlCargarPoliza                      = '<s:url namespace="/emision"         action="cargarPoliza"                                   />';
-var _p28_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"     action="movimientoDetalleTramite"                       />';
-var _p28_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"         action="actualizarOtvalorTramitePorDsatribu"            />';
-var _p28_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"         action="recuperarOtvalorTramitePorDsatribu"             />';
+var _p28_urlCargarCduniecoAgenteAuto          = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto"                       />';
+var _p28_urlCotizar                           = '<s:url namespace="/emision"          action="cotizar"                                        />';
+var _p28_urlRecuperarCliente                  = '<s:url namespace="/"                 action="buscarPersonasRepetidas"                        />';
+var _p28_urlCargarRetroactividadSuplemento    = '<s:url namespace="/emision"          action="cargarRetroactividadSuplemento"                 />';
+var _p28_urlCargarSumaAseguradaRamo5          = '<s:url namespace="/emision"          action="cargarSumaAseguradaRamo5"                       />';
+var _p28_urlCargar                            = '<s:url namespace="/emision"          action="cargarCotizacion"                               />';
+var _p28_urlDatosComplementarios              = '<s:url namespace="/emision"          action="emisionAutoIndividual"                          />';
+var _p28_urlCargarParametros                  = '<s:url namespace="/emision"          action="obtenerParametrosCotizacion"                    />';
+var _p28_urlCoberturas                        = '<s:url namespace="/flujocotizacion"  action="obtenerCoberturas4"                             />';
+var _p28_urlComprar                           = '<s:url namespace="/flujocotizacion"  action="comprarCotizacion4"                             />';
+var _p28_urlViewDoc                           = '<s:url namespace ="/documentos"      action="descargaDocInline"                              />';
+var _p28_urlEnviarCorreo                      = '<s:url namespace="/general"          action="enviaCorreo"                                    />';
+var _p28_urlDetalleCotizacion                 = '<s:url namespace="/"                 action="detalleCotizacion"                              />';
+var _p28_urlGuardarConfig                     = '<s:url namespace="/emision"          action="guardarConfigCotizacion"                        />';
+var _p28_urlCargarConfig                      = '<s:url namespace="/emision"          action="cargarConfigCotizacion"                         />';
+var _p28_urlRecuperacionSimple                = '<s:url namespace="/emision"          action="recuperacionSimple"                             />';
+var _p28_urlCargarParamerizacionCoberturas    = '<s:url namespace="/emision"          action="cargarParamerizacionConfiguracionCoberturas"    />';
+var _p28_urlValidarTractocamionRamo5          = '<s:url namespace="/emision"          action="cargarValidacionTractocamionRamo5"              />';
+var _p28_urlCargarObligatorioCamionRamo5      = '<s:url namespace="/emision"          action="cargarObligatorioTractocamionRamo5"             />';
+var _p28_urlCargarDetalleNegocioRamo5         = '<s:url namespace="/emision"          action="cargarDetalleNegocioRamo5"                      />';
+var _p28_urlCargarParamerizacionCoberturasRol = '<s:url namespace="/emision"          action="cargarParamerizacionConfiguracionCoberturasRol" />';
+var _p28_urlCargarTipoCambioWS                = '<s:url namespace="/emision"          action="cargarTipoCambioWS"                             />';
+var _p28_urlRecuperacion                      = '<s:url namespace="/recuperacion"     action="recuperar"                                      />';
+var _p28_urlCargarPoliza                      = '<s:url namespace="/emision"          action="cargarPoliza"                                   />';
+var _p28_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"      action="movimientoDetalleTramite"                       />';
+var _p28_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"          action="actualizarOtvalorTramitePorDsatribu"            />';
+var _p28_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"          action="recuperarOtvalorTramitePorDsatribu"             />';
+var _p28_urlRecuperarDatosTramiteValidacion   = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente"         />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -1577,6 +1578,8 @@ Ext.onReady(function()
     
     _p28_recuperarCotizacionDeTramite();
     
+    _p28_recuperarPolizaSIGS();
+    
     ////// loaders //////
 });
 
@@ -2154,6 +2157,7 @@ function _p28_bloquear(b)
 
 function _p28_ramo5AgenteSelect(comp,records)
 {
+    debug('_p28_ramo5AgenteSelect comp,records:',comp,records,'.');
     cdagente = typeof records == 'string' ? records : records[0].get('key');
     debug('>_p28_ramo5AgenteSelect cdagente:',cdagente);
     Ext.Ajax.request(
@@ -4586,10 +4590,11 @@ function _p28_recuperarCotizacionDeTramite()
 {
     if(!Ext.isEmpty(_p28_flujo))
     {
-        var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
+        var mask, ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
+        
         try
         {
-            _mask(ck);
+            mask = _maskLocal(ck);
             Ext.Ajax.request(
             {
                 url      : _p28_urlRecuperarOtvalorTramiteXDsatribu
@@ -4600,7 +4605,7 @@ function _p28_recuperarCotizacionDeTramite()
                 }
                 ,success : function(response)
                 {
-                    _unmask();
+                    mask.close();
                     var ck = 'Decodificando respuesta al recuperar cotizaci\u00f3n de tr\u00e1mite';
                     try
                     {
@@ -4626,15 +4631,14 @@ function _p28_recuperarCotizacionDeTramite()
                 }
                 ,failure : function(response)
                 {
-                    _unmask();
+                    mask.close();
                     errorComunicacion(null,'Error al recuperar cotizaci\u00f3n de tr\u00e1mite');
                 }
             });
         }
         catch(e)
         {
-            _unmask();
-            manejaException(e,ck);
+            manejaException(e,ck,mask);
         }
     }
 }
@@ -4792,6 +4796,121 @@ function _p28_actualizarSwexiperTramite(callback)
     {
         _unmask();
         manejaException(e,ck);
+    }
+}
+
+/*
+ * Esta funcion se usa para recuperar una poliza de SIGS para renovacion en ICE
+ * solo debe llamarse si: es por flujo, y si no hay una cotizacion anterior
+ * si se recupera cotizacion por _p28_recuperarCotizacionDeTramite entonces
+ * esta funcion no debe recuperar nada porque seria doble recuperacion, es decir
+ * la condicion que tenga _p28_recuperarCotizacionDeTramite debe estar negada aqui
+ */
+function _p28_recuperarPolizaSIGS()
+{
+    if(!Ext.isEmpty(_p28_flujo))
+    {
+        debug('_p28_recuperarPolizaSIGS');
+        
+        var mask, ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite para revisar renovaci\u00f3n';
+        
+        try
+        {
+            mask = _maskLocal(ck);
+            Ext.Ajax.request(
+            {
+                url      : _p28_urlRecuperarOtvalorTramiteXDsatribu
+                ,params  :
+                {
+                    'params.ntramite'  : _p28_flujo.ntramite
+                    ,'params.dsatribu' : 'COTIZACI%N%TR%MITE'
+                }
+                ,success : function(response)
+                {
+                    mask.close();
+                    var ck = 'Decodificando respuesta al recuperar cotizaci\u00f3n de tr\u00e1mite';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### cotizacion de tramite:',json);
+                        if(json.success===true)
+                        {
+                            if(Ext.isEmpty(json.params.otvalor)) // si no se ha cotizado antes, verificamos si hay renovacion
+                            {
+                                ck = 'Revisando p\u00f3liza de renovaci\u00f3n';
+                                
+                                mask = _maskLocal(ck);
+                                
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p28_urlRecuperarDatosTramiteValidacion
+                                    ,params  : _flujoToParams(_p28_flujo)
+                                    ,success : function(response)
+                                    {
+                                        mask.close();
+                                        
+                                        var ck = 'Decodificando respuesta al recuperar datos para revisar renovaci\u00f3n';
+                                        
+                                        try
+                                        {
+                                            var jsonDatTram = Ext.decode(response.responseText);
+                                            debug('### jsonDatTram:',jsonDatTram,'.');
+                                            
+                                            if(jsonDatTram.success === true)
+                                            {
+                                                if(!Ext.isEmpty(jsonDatTram.datosTramite.TRAMITE.RENPOLIEX))
+                                                {
+                                                    var renuniext  = jsonDatTram.datosTramite.TRAMITE.RENUNIEXT
+                                                        ,renramo   = jsonDatTram.datosTramite.TRAMITE.RENRAMO
+                                                        ,renpoliex = jsonDatTram.datosTramite.TRAMITE.RENPOLIEX;
+                                                        
+                                                    debug('se encontraron datos para renovar:',renuniext,renramo,renpoliex,'.');
+                                                    
+                                                    ck = 'Seteando valores para renovaci\u00f3n';
+                                                    
+                                                    _fieldByName('sucursal').setValue(jsonDatTram.datosTramite.TRAMITE.RENUNIEXT);
+                                                    _fieldByName('ramo').setValue(jsonDatTram.datosTramite.TRAMITE.RENRAMO);
+                                                    _fieldByName('poliza').setValue(jsonDatTram.datosTramite.TRAMITE.RENPOLIEX);
+                                                    
+                                                    _p28_cargarPoliza();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                mensajeError(jsonDatTram.message);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck,mask);
+                                        }
+                                        
+                                    }
+                                    ,failure : function()
+                                    {
+                                        mask.close();
+                                        errorComunicacion(null,'Error al recuperar datos de tr\u00e1mite para revisar renovaci\u00f3n');
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck,mask);
+                    }
+                }
+                ,failure : function()
+                {
+                    mask.close();
+                    errorComunicacion(null,'Error al recuperar cotizaci\u00f3n de tr\u00e1mite para revisar renovaci\u00f3n');
+                }
+            });
+        }
+        catch(e)
+        {
+            manejaException(e,ck,mask);
+        }
     }
 }
 ////// funciones //////

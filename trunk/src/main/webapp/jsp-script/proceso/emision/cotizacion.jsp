@@ -64,10 +64,12 @@ var _0_urlObtieneValNumeroSerie    = '<s:url namespace="/emision" 		  action="ob
 var _p0_urlCargarPoliza           = '<s:url namespace="/emision"         action="cargarPoliza"                    />';
 var _0_urlCargarDetalleNegocioRamo5= '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"      />';
 
-var _0_urlDetalleTramite                    = '<s:url namespace="/mesacontrol" action="movimientoDetalleTramite"            />';
-var _0_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"     action="actualizarOtvalorTramitePorDsatribu" />';
-var _0_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"     action="recuperarOtvalorTramitePorDsatribu"  />';
-var _0_urlCargarParamerizacionCoberturas    = '<s:url namespace="/emision"     action="cargarParamerizacionConfiguracionCoberturas"/>';
+var _0_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"      action="movimientoDetalleTramite"                    />';
+var _0_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"          action="actualizarOtvalorTramitePorDsatribu"         />';
+var _0_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"          action="recuperarOtvalorTramitePorDsatribu"          />';
+var _0_urlCargarParamerizacionCoberturas    = '<s:url namespace="/emision"          action="cargarParamerizacionConfiguracionCoberturas" />';
+var _0_urlRecuperarDatosTramiteValidacion   = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente"      />';
+var _0_urlCargarPoliza                      = '<s:url namespace="/emision"          action="cargarPoliza"                                />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -246,7 +248,7 @@ function _0_obtenerSumaAseguradaRamo6(mostrarError,respetarValue)
         ,success : function(response)
         {
 
-//         	 _0_panelPri.setLoading(false);	
+//           _0_panelPri.setLoading(false); 
             loading_0_obtenerSumaAseguradaRamo6.close();
             var json=Ext.decode(response.responseText);
             debug('### json response obtener suma asegurada:',json);
@@ -289,12 +291,12 @@ function _0_funcionFechaChange(field,value)
 
 function _0_comprar()
 {
-	debug('comprar');
-	_0_panelPri.setLoading(true);
-	var nombreTitular = '';
-	
-	Ext.Ajax.request(
-	{
+    debug('comprar');
+    _0_panelPri.setLoading(true);
+    var nombreTitular = '';
+    
+    Ext.Ajax.request(
+    {
         url      : _0_urlComprar
         ,params  :
         {
@@ -313,18 +315,18 @@ function _0_comprar()
             ,'smap1.cdideperCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER
             ,'smap1.cdagenteExt'   : (_0_smap1.cdramo == '6' || _0_smap1.cdramo == '16') ? _fieldByLabel('AGENTE').getValue() : ''
         }
-	    ,success : function(response,opts)
-	    {
-	    	_0_panelPri.setLoading(false);
+        ,success : function(response,opts)
+        {
+            _0_panelPri.setLoading(false);
             var json = Ext.decode(response.responseText);
             if (json.exito)
             {
-            	Ext.getCmp('_0_botComprarId').hide();
-            	Ext.getCmp('_0_botDetallesId').hide();
-            	Ext.getCmp('_0_botCoberturasId').hide();
-            	Ext.getCmp('_0_botEditarId').hide();
-            	Ext.getCmp('_0_botMailId').hide();
-            	Ext.getCmp('_0_botImprimirId').hide();
+                Ext.getCmp('_0_botComprarId').hide();
+                Ext.getCmp('_0_botDetallesId').hide();
+                Ext.getCmp('_0_botCoberturasId').hide();
+                Ext.getCmp('_0_botEditarId').hide();
+                Ext.getCmp('_0_botMailId').hide();
+                Ext.getCmp('_0_botImprimirId').hide();
                 //window.parent.scrollTo(0, 0);//ELIMINADA
                 
                 debug("mostrar documentos");
@@ -336,41 +338,41 @@ function _0_comprar()
                     centrarVentanaInterna(
                         Ext.create('Ext.window.Window',
                         {
-                        	width        : 600
-                        	,height      : 400
-                        	,title       : 'Subir documentos de tu tr&aacute;mite'
-                        	,closable    : false
-                        	,modal       : true
-                        	,buttonAlign : 'center'
-                        	,loadingMask : true
-                        	,loader      :
-                        	{
-                        		url       : _0_urlVentanaDocumentos
-                        		,scripts  : true
-                        		,autoLoad : true
-                        		,params   :
-                        		{
-                        			'smap1.cdunieco'  : _0_smap1.cdunieco
-                        			,'smap1.cdramo'   : _0_smap1.cdramo
-                        			,'smap1.estado'   : 'W'
-                        			,'smap1.nmpoliza' : ''
-                        			,'smap1.nmsuplem' : '0'
-                        			,'smap1.ntramite' : json.smap1.ntramite
-                        			,'smap1.tipomov'  : '0'
-                        			,'smap1.nmsolici' : _0_fieldNmpoliza.getValue()
-                        		}
-                        	}
-                        	,buttons     :
-                        	[
-                        	    {
-                        	    	text     : 'Aceptar'
-                        	    	,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                        	    	,handler : function()
-                        	    	{
-                        	    		this.up().up().destroy();
-                        	    	}
-                        	    }
-                        	]
+                            width        : 600
+                            ,height      : 400
+                            ,title       : 'Subir documentos de tu tr&aacute;mite'
+                            ,closable    : false
+                            ,modal       : true
+                            ,buttonAlign : 'center'
+                            ,loadingMask : true
+                            ,loader      :
+                            {
+                                url       : _0_urlVentanaDocumentos
+                                ,scripts  : true
+                                ,autoLoad : true
+                                ,params   :
+                                {
+                                    'smap1.cdunieco'  : _0_smap1.cdunieco
+                                    ,'smap1.cdramo'   : _0_smap1.cdramo
+                                    ,'smap1.estado'   : 'W'
+                                    ,'smap1.nmpoliza' : ''
+                                    ,'smap1.nmsuplem' : '0'
+                                    ,'smap1.ntramite' : json.smap1.ntramite
+                                    ,'smap1.tipomov'  : '0'
+                                    ,'smap1.nmsolici' : _0_fieldNmpoliza.getValue()
+                                }
+                            }
+                            ,buttons     :
+                            [
+                                {
+                                    text     : 'Aceptar'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                    ,handler : function()
+                                    {
+                                        this.up().up().destroy();
+                                    }
+                                }
+                            ]
                         }).show()
                     );
                     if(_0_smap1.SITUACION=='AUTO')
@@ -381,135 +383,135 @@ function _0_comprar()
                             ||_0_flujo.aux.indexOf('onComprar')==-1
                         ) //si no hay flujo, o no hay auxiliar en flujo, o el auxiliar no contiene la palabra onComprar
                         {
-	                        var msg = Ext.Msg.show(
-	                        {
-	                            title    : 'Tr&aacute;mite actualizado'
-	                            ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
-	                                        + json.smap1.ntramite
-	                                        + '<br/>y no podr&aacute; ser modificada posteriormente'
-	                            ,buttons : Ext.Msg.OK
-	                            ,y       : 50
-	                            ,fn      : function()
-	                            {
-	                                var paramsDatCom =
-	                                {
-	                                    cdunieco         : _0_smap1.cdunieco
-	                                    ,cdramo          : _0_smap1.cdramo
-	                                    ,estado          : 'W'
-	                                    ,nmpoliza        : _0_fieldNmpoliza.getValue()
-	                                    ,'map1.ntramite' : json.smap1.ntramite
-	                                    ,cdtipsit        : _0_smap1.cdtipsit
-	                                };
-	                                
-	                                if(!Ext.isEmpty(_0_flujo))
-	                                {
-	                                    paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
-	                                    paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
-	                                    paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
-	                                    paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
-	                                    paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
-	                                    paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
-	                                    paramsDatCom['flujo.status']    = _0_flujo.status;
-	                                    paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
-	                                    paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
-	                                    paramsDatCom['flujo.estado']    = _0_flujo.estado;
-	                                    paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
-	                                    paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
-	                                    paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
-	                                    paramsDatCom['flujo.aux']       = 'RECUPERAR';
-	                                }
-	                            
-	                                Ext.create('Ext.form.Panel').submit(
-	                                {
-	                                    url             : _0_urlDatosComplementarios
-	                                    ,standardSubmit : true
-	                                    ,params         : paramsDatCom
-	                                });
-	                            }
-	                        });
-	                    }
-	                    else //flujo tiene la palabra onComprar
-		                {
-		                    //si el flujo tiene este comodin ejecutaremos un turnado con el status indicado
-		                    var ck = 'Turnando tr\u00e1mite';
-		                    try
-		                    {
-		                        var status = _0_flujo.aux.split('_')[1];
-		                        debug('status para turnar onComprar:',status,'.');
-		                        
-		                        _mask(ck);
-		                        Ext.Ajax.request(
-		                        {
-		                            url      : _GLOBAL_COMP_URL_TURNAR
-		                            ,params  :
-		                            {
-		                                'params.CDTIPFLU'   : _0_flujo.cdtipflu
-		                                ,'params.CDFLUJOMC' : _0_flujo.cdflujomc
-		                                ,'params.NTRAMITE'  : _0_flujo.ntramite
-		                                ,'params.STATUSOLD' : _0_flujo.status
-		                                ,'params.STATUSNEW' : status
-		                                ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
-		                                ,'params.SWAGENTE'  : 'S'
-		                            }
-		                            ,success : function(response)
-		                            {
-		                                _unmask();
-		                                var ck = '';
-		                                try
-		                                {
-		                                    var json = Ext.decode(response.responseText);
-		                                    debug('### turnar:',json);
-		                                    if(json.success)
-		                                    {
-		                                        mensajeCorrecto
-		                                        (
-		                                            'Tr\u00e1mite turnado'
-		                                            //,json.message
-		                                            ,'El tr\u00e1mite fue turnado para aprobaci\u00f3n del agente/promotor'
-		                                            ,function()
-		                                            {
-		                                                _mask('Redireccionando');
-		                                                Ext.create('Ext.form.Panel').submit(
-		                                                {
-		                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
-		                                                    ,standardSubmit : true
-		                                                });
-		                                            }
-		                                        );
-		                                    }
-		                                    else
-		                                    {
-		                                        mensajeError(json.message);
-		                                    }
-		                                }
-		                                catch(e)
-		                                {
-		                                    manejaException(e,ck);
-		                                }
-		                            }
-		                            ,failure : function()
-		                            {
-		                                _unmask();
-		                                errorComunicacion(null,'Error al turnar tr\u00e1mite');
-		                            }
-		                        });
-		                    }
-		                    catch(e)
-		                    {
-		                        manejaException(e,ck);
-		                    }
-		                }
+                            var msg = Ext.Msg.show(
+                            {
+                                title    : 'Tr&aacute;mite actualizado'
+                                ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
+                                            + json.smap1.ntramite
+                                            + '<br/>y no podr&aacute; ser modificada posteriormente'
+                                ,buttons : Ext.Msg.OK
+                                ,y       : 50
+                                ,fn      : function()
+                                {
+                                    var paramsDatCom =
+                                    {
+                                        cdunieco         : _0_smap1.cdunieco
+                                        ,cdramo          : _0_smap1.cdramo
+                                        ,estado          : 'W'
+                                        ,nmpoliza        : _0_fieldNmpoliza.getValue()
+                                        ,'map1.ntramite' : json.smap1.ntramite
+                                        ,cdtipsit        : _0_smap1.cdtipsit
+                                    };
+                                    
+                                    if(!Ext.isEmpty(_0_flujo))
+                                    {
+                                        paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
+                                        paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
+                                        paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
+                                        paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
+                                        paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
+                                        paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
+                                        paramsDatCom['flujo.status']    = _0_flujo.status;
+                                        paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
+                                        paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
+                                        paramsDatCom['flujo.estado']    = _0_flujo.estado;
+                                        paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
+                                        paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
+                                        paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
+                                        paramsDatCom['flujo.aux']       = 'RECUPERAR';
+                                    }
+                                
+                                    Ext.create('Ext.form.Panel').submit(
+                                    {
+                                        url             : _0_urlDatosComplementarios
+                                        ,standardSubmit : true
+                                        ,params         : paramsDatCom
+                                    });
+                                }
+                            });
+                        }
+                        else //flujo tiene la palabra onComprar
+                        {
+                            //si el flujo tiene este comodin ejecutaremos un turnado con el status indicado
+                            var ck = 'Turnando tr\u00e1mite';
+                            try
+                            {
+                                var status = _0_flujo.aux.split('_')[1];
+                                debug('status para turnar onComprar:',status,'.');
+                                
+                                _mask(ck);
+                                Ext.Ajax.request(
+                                {
+                                    url      : _GLOBAL_COMP_URL_TURNAR
+                                    ,params  :
+                                    {
+                                        'params.CDTIPFLU'   : _0_flujo.cdtipflu
+                                        ,'params.CDFLUJOMC' : _0_flujo.cdflujomc
+                                        ,'params.NTRAMITE'  : _0_flujo.ntramite
+                                        ,'params.STATUSOLD' : _0_flujo.status
+                                        ,'params.STATUSNEW' : status
+                                        ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
+                                        ,'params.SWAGENTE'  : 'S'
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        _unmask();
+                                        var ck = '';
+                                        try
+                                        {
+                                            var json = Ext.decode(response.responseText);
+                                            debug('### turnar:',json);
+                                            if(json.success)
+                                            {
+                                                mensajeCorrecto
+                                                (
+                                                    'Tr\u00e1mite turnado'
+                                                    //,json.message
+                                                    ,'El tr\u00e1mite fue turnado para aprobaci\u00f3n del agente/promotor'
+                                                    ,function()
+                                                    {
+                                                        _mask('Redireccionando');
+                                                        Ext.create('Ext.form.Panel').submit(
+                                                        {
+                                                            url             : _GLOBAL_COMP_URL_MCFLUJO
+                                                            ,standardSubmit : true
+                                                        });
+                                                    }
+                                                );
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.message);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _unmask();
+                                        errorComunicacion(null,'Error al turnar tr\u00e1mite');
+                                    }
+                                });
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,ck);
+                            }
+                        }
                     }
                     else
                     {
                         var msg = Ext.Msg.show(
                         {
-                        	title    : 'Solicitud enviada'
-                        	,msg     : 'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '
-                        	            + json.smap1.ntramite
-                        	            + ', ahora puede subir los documentos del trámite'
-                        	,buttons : Ext.Msg.OK
-                        	,y       : 50
+                            title    : 'Solicitud enviada'
+                            ,msg     : 'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '
+                                        + json.smap1.ntramite
+                                        + ', ahora puede subir los documentos del trámite'
+                            ,buttons : Ext.Msg.OK
+                            ,y       : 50
                         });
                         msg.setY(50);
                     }
@@ -521,55 +523,55 @@ function _0_comprar()
                         ||_0_flujo.aux.indexOf('onComprar')==-1
                     ) //si no hay flujo, o no hay auxiliar en flujo, o el auxiliar no contiene la palabra onComprar
                     {
-	                	var msg = Ext.Msg.show(
-	                	{
-	                		title    : 'Tr&aacute;mite actualizado'
-	                		,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
-	                		            + _0_smap1.ntramite
-	                		            + '<br/>y no podr&aacute; ser modificada posteriormente'
-	                		,buttons : Ext.Msg.OK
-	                		,y       : 50
-	                		,fn      : function()
-	                		{
-	                		    var paramsDatCom =
-	                		    {
-	                		        cdunieco         : _0_smap1.cdunieco
-	                                ,cdramo          : _0_smap1.cdramo
-	                                ,estado          : 'W'
-	                                ,nmpoliza        : _0_fieldNmpoliza.getValue()
-	                                ,'map1.ntramite' : _0_smap1.ntramite
-	                                ,cdtipsit        : _0_smap1.cdtipsit
-	                		    };
-	                		    
-	                		    if(!Ext.isEmpty(_0_flujo))
-	                            {
-	                                paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
-	                                paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
-	                                paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
-	                                paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
-	                                paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
-	                                paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
-	                                paramsDatCom['flujo.status']    = _0_flujo.status;
-	                                paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
-	                                paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
-	                                paramsDatCom['flujo.estado']    = _0_flujo.estado;
-	                                paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
-	                                paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
-	                                paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
-	                                paramsDatCom['flujo.aux']       = 'RECUPERAR';
-	                            }
-	                		    
-	                			Ext.create('Ext.form.Panel').submit(
-	                			{
-	                				url             : _0_urlDatosComplementarios
-	                				,standardSubmit : true
-	                				,params         : paramsDatCom
-	                			});
-	                		}
-	                	});
-	                    msg.setY(50);
-	                }
-	                else //flujo tiene la palabra onComprar
+                        var msg = Ext.Msg.show(
+                        {
+                            title    : 'Tr&aacute;mite actualizado'
+                            ,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
+                                        + _0_smap1.ntramite
+                                        + '<br/>y no podr&aacute; ser modificada posteriormente'
+                            ,buttons : Ext.Msg.OK
+                            ,y       : 50
+                            ,fn      : function()
+                            {
+                                var paramsDatCom =
+                                {
+                                    cdunieco         : _0_smap1.cdunieco
+                                    ,cdramo          : _0_smap1.cdramo
+                                    ,estado          : 'W'
+                                    ,nmpoliza        : _0_fieldNmpoliza.getValue()
+                                    ,'map1.ntramite' : _0_smap1.ntramite
+                                    ,cdtipsit        : _0_smap1.cdtipsit
+                                };
+                                
+                                if(!Ext.isEmpty(_0_flujo))
+                                {
+                                    paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
+                                    paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
+                                    paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
+                                    paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
+                                    paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
+                                    paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
+                                    paramsDatCom['flujo.status']    = _0_flujo.status;
+                                    paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
+                                    paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
+                                    paramsDatCom['flujo.estado']    = _0_flujo.estado;
+                                    paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
+                                    paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
+                                    paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
+                                    paramsDatCom['flujo.aux']       = 'RECUPERAR';
+                                }
+                                
+                                Ext.create('Ext.form.Panel').submit(
+                                {
+                                    url             : _0_urlDatosComplementarios
+                                    ,standardSubmit : true
+                                    ,params         : paramsDatCom
+                                });
+                            }
+                        });
+                        msg.setY(50);
+                    }
+                    else //flujo tiene la palabra onComprar
                     {
                         //si el flujo tiene este comodin ejecutaremos un turnado con el status indicado
                         var ck = 'Turnando tr\u00e1mite';
@@ -643,10 +645,10 @@ function _0_comprar()
             }
             else
             {
-            	mensajeError(json.respuesta);
+                mensajeError(json.respuesta);
             }
         }
-	    ,failure : function()
+        ,failure : function()
         {
             _0_panelPri.setLoading(false);
             errorComunicacion();
@@ -656,7 +658,7 @@ function _0_comprar()
 
 function _0_imprimir()
 {
-	var me = this;
+    var me = this;
     var urlRequestImpCotiza = _0_urlImprimirCotiza
             + '?p_unieco='      + _0_smap1.cdunieco
             + '&p_ramo='        + _0_smap1.cdramo
@@ -701,8 +703,8 @@ function _0_imprimir()
                 debug(width,height);
                 $('[innerframe="'+ numRand+ '"]').attr(
                 {
-                	'width'   : width - 20
-                	,'height' : height - 60
+                    'width'   : width - 20
+                    ,'height' : height - 60
                 });
             }
         }
@@ -712,47 +714,47 @@ function _0_imprimir()
 
 function _0_mail()
 {
-	Ext.create('Ext.window.Window',
-	{
-		title : 'Enviar cotizaci&oacute;n'
-		,width : 550
-		,modal : true
-		,height : 150
-		,buttonAlign : 'center'
-		,bodyPadding : 5
-		,items :
-		[
-		    {
-		    	xtype       : 'textfield'
-		    	,id         : '_0_idInputCorreos'
-		    	,fieldLabel : 'Correo(s)'
-		    	,emptyText  : 'Correo(s) separados por ;'
-		    	,labelWidth : 100
-		    	,allowBlank : false
-		    	,blankText  : 'Introducir correo(s) separados por ;'
-		    	,width      : 500
-		    }
-		]
-		,buttons :
-		[
-		    {
-		    	text : 'Enviar'
-		    	,icon : '${ctx}/resources/fam3icons/icons/accept.png'
-		    	,handler : function()
-		    	{
-		    		var me = this;
-		    		if (Ext.getCmp('_0_idInputCorreos').getValue().length > 0
-		    				&&Ext.getCmp('_0_idInputCorreos').getValue() != 'Correo(s) separados por ;')
-		    		{
-		    			debug('Se va a enviar cotizacion');
-		    			me.up().up().setLoading(true);
-		    			Ext.Ajax.request(
-		    			{
-		    				url : _0_urlEnviarCorreo
-		    				,params :
-		    				{
-		    					to : Ext.getCmp('_0_idInputCorreos').getValue(),
-		    					urlArchivo : _0_urlImprimirCotiza
+    Ext.create('Ext.window.Window',
+    {
+        title : 'Enviar cotizaci&oacute;n'
+        ,width : 550
+        ,modal : true
+        ,height : 150
+        ,buttonAlign : 'center'
+        ,bodyPadding : 5
+        ,items :
+        [
+            {
+                xtype       : 'textfield'
+                ,id         : '_0_idInputCorreos'
+                ,fieldLabel : 'Correo(s)'
+                ,emptyText  : 'Correo(s) separados por ;'
+                ,labelWidth : 100
+                ,allowBlank : false
+                ,blankText  : 'Introducir correo(s) separados por ;'
+                ,width      : 500
+            }
+        ]
+        ,buttons :
+        [
+            {
+                text : 'Enviar'
+                ,icon : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function()
+                {
+                    var me = this;
+                    if (Ext.getCmp('_0_idInputCorreos').getValue().length > 0
+                            &&Ext.getCmp('_0_idInputCorreos').getValue() != 'Correo(s) separados por ;')
+                    {
+                        debug('Se va a enviar cotizacion');
+                        me.up().up().setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url : _0_urlEnviarCorreo
+                            ,params :
+                            {
+                                to : Ext.getCmp('_0_idInputCorreos').getValue(),
+                                urlArchivo : _0_urlImprimirCotiza
                                              + '?p_unieco='      + _0_smap1.cdunieco
                                              + '&p_ramo='        + _0_smap1.cdramo
                                              + '&p_subramo='     + _0_smap1.cdtipsit
@@ -770,89 +772,89 @@ function _0_mail()
                                              + "&ACCESSIBLE=YES"
                                              + "&report="        + _0_reporteCotizacion
                                              + "&paramform=no",
-		    					nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
-		    			    },
-		    			    callback : function(options,success,response)
-		    			    {
-		    			    	me.up().up().setLoading(false);
-		    			    	if (success)
-		    			    	{
-		    			    		var json = Ext.decode(response.responseText);
-		    			    		if (json.success == true)
-		    			    		{
-		    			    			me.up().up().destroy();
-		    			    			Ext.Msg.show(
-		    			    			{
-		    			    				title : 'Correo enviado'
-		    			    				,msg : 'El correo ha sido enviado'
-		    			    				,buttons : Ext.Msg.OK
-		    			    			});
-		    			    		}
-		    			    		else
-		    			    		{
-		    			    			mensajeError('Error al enviar');
-		    			    		}
-		    			    	}
-		    			    	else
-		    			    	{
-		    			    		errorComunicacion();
-		    			    	}
-		    			    }
-		    			});
-		    		}
-		    		else
-		    		{
-		    			mensajeWarning('Introduzca al menos un correo');
-		    		}
-		    	}
-		    }
-		    ,
-		    {
-		    	text     : 'Cancelar'
-		    	,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                                nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
+                            },
+                            callback : function(options,success,response)
+                            {
+                                me.up().up().setLoading(false);
+                                if (success)
+                                {
+                                    var json = Ext.decode(response.responseText);
+                                    if (json.success == true)
+                                    {
+                                        me.up().up().destroy();
+                                        Ext.Msg.show(
+                                        {
+                                            title : 'Correo enviado'
+                                            ,msg : 'El correo ha sido enviado'
+                                            ,buttons : Ext.Msg.OK
+                                        });
+                                    }
+                                    else
+                                    {
+                                        mensajeError('Error al enviar');
+                                    }
+                                }
+                                else
+                                {
+                                    errorComunicacion();
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        mensajeWarning('Introduzca al menos un correo');
+                    }
+                }
+            }
+            ,
+            {
+                text     : 'Cancelar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
                 ,handler : function()
                 {
                     this.up().up().destroy();
                 }
-		    }
-		]
+            }
+        ]
     }).show();
-	Ext.getCmp('_0_idInputCorreos').focus();
+    Ext.getCmp('_0_idInputCorreos').focus();
 }
 
 function _0_bloquear(b)
 {
-	for(var i=2;i<_0_formAgrupados.items.items.length-1;i++)
-	{
-		_0_formAgrupados.items.items[i].setReadOnly(b);
-	}
-	_0_gridIncisos.setDisabled(b);
-	_0_botonera.setDisabled(b);
-	if(b)
-	{
-		//window.parent.scrollTo(0, _0_formAgrupados.getHeight()+_0_gridIncisos.getHeight());//ELIMINADA
+    for(var i=2;i<_0_formAgrupados.items.items.length-1;i++)
+    {
+        _0_formAgrupados.items.items[i].setReadOnly(b);
+    }
+    _0_gridIncisos.setDisabled(b);
+    _0_botonera.setDisabled(b);
+    if(b)
+    {
+        //window.parent.scrollTo(0, _0_formAgrupados.getHeight()+_0_gridIncisos.getHeight());//ELIMINADA
         // Se aplica el focus en algun boton habilitado del grid de tarifas:
         try {
            _0_gridTarifas.down('button[disabled=false]').focus(false, 1000);
         } catch(e) {
             debug(e);
         }
-	} else {
-		// Se aplica el focus en el numero de poliza:
+    } else {
+        // Se aplica el focus en el numero de poliza:
         try {
             _0_fieldNmpoliza.focus();
         } catch(e) {
             debug(e);
         }
-	}
+    }
 }
 
 function _0_detallesCobertura()
 {
-	_0_windowCoberturas.setLoading(true);
-	Ext.Ajax.request(
-	{
-		url      : _0_urlDetalleCobertura
+    _0_windowCoberturas.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url      : _0_urlDetalleCobertura
         ,params  :
         {
             idCobertura       : _0_selectedIdcobertura
@@ -877,20 +879,20 @@ function _0_detallesCobertura()
             }
             else
             {
-            	mensajeWarning('No hay detalle de cobertura');
+                mensajeWarning('No hay detalle de cobertura');
             }
         }
         ,failure : function()
         {
-        	_0_windowCoberturas.setLoading(false);
+            _0_windowCoberturas.setLoading(false);
             mensajeError('Error al obtener detalle');
         }
     });
 }
 function _0_coberturas()
 {
-	_0_storeCoberturas.load(
-	{
+    _0_storeCoberturas.load(
+    {
         params :
         {
             jsonCober_unieco   : _0_smap1.cdunieco
@@ -902,15 +904,15 @@ function _0_coberturas()
             ,jsonCober_situa   : _0_selectedNmsituac
         }
     });
-	_0_gridCoberturas.setTitle('Plan ' + _0_selectedDsplan);
-	_0_botDetalleCobertura.setDisabled(true);
-	_0_windowCoberturas.show();
+    _0_gridCoberturas.setTitle('Plan ' + _0_selectedDsplan);
+    _0_botDetalleCobertura.setDisabled(true);
+    _0_windowCoberturas.show();
 }
 
 function _0_detalles()
 {
-	Ext.Ajax.request(
-	{
+    Ext.Ajax.request(
+    {
         url      : _0_urlDetalleCotizacion
         ,params  :
         {
@@ -927,7 +929,7 @@ function _0_detalles()
             debug(json);
             if (json.success == true)
             {
-            	var orden = 0;
+                var orden = 0;
                 var parentescoAnterior = 'werty';
                 for ( var i = 0; i < json.slist1.length; i++)
                 {
@@ -941,53 +943,53 @@ function _0_detalles()
                 debug(json);
                 var wndDetalleCotizacion = Ext.create('Ext.window.Window',
                 {
-                	title       : 'Detalles de cotizaci&oacute;n'
-                	//,maxHeight  : 500
-                	,width      : 600
-                	,autoScroll : true
-                	,modal      : true
-                	,items      :
-                	[
-                	    Ext.create('Ext.grid.Panel',
-                	    {
-                	    	store    : Ext.create('Ext.data.Store',
-                	    	{
-                	    		model       : 'ModeloDetalleCotizacion'
-                	    		,groupField : 'orden_parentesco'
-                	    		,sorters    :
-                	    		[
-                	    		    {
-                	    		    	sorterFn : function(o1,o2)
-                	    		    	{
-                	    		    	    debug('sorting:',o1,o2);
-                	    		    		if (o1.get('orden') === o2.get('orden'))
-                	    		    		{
-                	    		    			return 0;
-                	    		    		}
-                	    		    		return o1.get('orden')-0 < o2.get('orden')-0 ? -1 : 1;
-                	    		    	}
-                	    		    }
-                	    		]
-                	    	    ,proxy      :
-                	    	    {
-                	    	    	type    : 'memory'
-                	    	    	,reader : 'json'
-                	    	    }
-                	    	    ,data : json.slist1
-                	    	})
-                	    	,columns :
-                	    	[
-                	    	    {
-                	    	    	header           : 'Nombre de la cobertura'
-                	    	    	,dataIndex       : 'Nombre_garantia'
-                	    	    	,flex            : 3
-                	    	    	,summaryType     : 'count'
-                	    	    	,summaryRenderer : function(value)
-                	    	    	{
-                	    	    		return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
-                	    	    	}
-                	    	    }
-                	    	    ,{
+                    title       : 'Detalles de cotizaci&oacute;n'
+                    //,maxHeight  : 500
+                    ,width      : 600
+                    ,autoScroll : true
+                    ,modal      : true
+                    ,items      :
+                    [
+                        Ext.create('Ext.grid.Panel',
+                        {
+                            store    : Ext.create('Ext.data.Store',
+                            {
+                                model       : 'ModeloDetalleCotizacion'
+                                ,groupField : 'orden_parentesco'
+                                ,sorters    :
+                                [
+                                    {
+                                        sorterFn : function(o1,o2)
+                                        {
+                                            debug('sorting:',o1,o2);
+                                            if (o1.get('orden') === o2.get('orden'))
+                                            {
+                                                return 0;
+                                            }
+                                            return o1.get('orden')-0 < o2.get('orden')-0 ? -1 : 1;
+                                        }
+                                    }
+                                ]
+                                ,proxy      :
+                                {
+                                    type    : 'memory'
+                                    ,reader : 'json'
+                                }
+                                ,data : json.slist1
+                            })
+                            ,columns :
+                            [
+                                {
+                                    header           : 'Nombre de la cobertura'
+                                    ,dataIndex       : 'Nombre_garantia'
+                                    ,flex            : 3
+                                    ,summaryType     : 'count'
+                                    ,summaryRenderer : function(value)
+                                    {
+                                        return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
+                                    }
+                                }
+                                ,{
                                     header       : 'Importe por cobertura'
                                     ,dataIndex   : 'Importe'
                                     ,flex        : 1
@@ -995,64 +997,64 @@ function _0_detalles()
                                     ,align       : 'right'
                                     ,summaryType : 'sum'
                                 } 
-                	    	]
-                	        ,features :
-                	        [
-                	            {
-                	            	groupHeaderTpl :
-                	            	[
-                	            	    '{name:this.formatName}'
-                	            	    ,{
-                	            	    	formatName : function(name)
-                	            	    	{
-                	            	    		return name.split("_")[1];
-                	            	    	}
-                	            	    }
-                	            	]
-                	            ,ftype          : 'groupingsummary'
-                	            ,startCollapsed : true
-                	            }
-                	        ]
-                	    })
-                	    ,Ext.create('Ext.toolbar.Toolbar',
-                	    {
-                	    	buttonAlign : 'right'
-                	    	,items      :
-                	    	[
-                	    	    '->'
-                	    	    ,Ext.create('Ext.form.Label',
-                	    	    {
-                	    	    	style          : 'color:white;'
-                	    	    	,initComponent : function()
-                	    	    	{
-                	    	    		var sum = 0;
-                	    	    		for ( var i = 0; i < json.slist1.length; i++)
-                	    	    		{
-                	    	    			sum += parseFloat(json.slist1[i].Importe);
-                	    	    		}
-                	    	    		this.setText('Total: '+ Ext.util.Format.usMoney(sum));
-                	    	    		this.callParent();
-                	    	    	}
-                	    	    })
-                	    	]
-                	    })
-                	]
+                            ]
+                            ,features :
+                            [
+                                {
+                                    groupHeaderTpl :
+                                    [
+                                        '{name:this.formatName}'
+                                        ,{
+                                            formatName : function(name)
+                                            {
+                                                return name.split("_")[1];
+                                            }
+                                        }
+                                    ]
+                                ,ftype          : 'groupingsummary'
+                                ,startCollapsed : true
+                                }
+                            ]
+                        })
+                        ,Ext.create('Ext.toolbar.Toolbar',
+                        {
+                            buttonAlign : 'right'
+                            ,items      :
+                            [
+                                '->'
+                                ,Ext.create('Ext.form.Label',
+                                {
+                                    style          : 'color:white;'
+                                    ,initComponent : function()
+                                    {
+                                        var sum = 0;
+                                        for ( var i = 0; i < json.slist1.length; i++)
+                                        {
+                                            sum += parseFloat(json.slist1[i].Importe);
+                                        }
+                                        this.setText('Total: '+ Ext.util.Format.usMoney(sum));
+                                        this.callParent();
+                                    }
+                                })
+                            ]
+                        })
+                    ]
                 }).show();
                 centrarVentanaInterna(wndDetalleCotizacion);
             }
             else
             {
-            	mensajeError('Error al obtener detalle');
+                mensajeError('Error al obtener detalle');
             }
         }
         ,failure : errorComunicacion
-	});
+    });
 }
 
 function _0_nueva()
 {
-	_0_formAgrupados.getForm().reset();
-	_0_fieldNmpoliza.setValue('');
+    _0_formAgrupados.getForm().reset();
+    _0_fieldNmpoliza.setValue('');
     _0_storeIncisos.removeAll();
     _0_panelPri.remove(_0_gridTarifas);
     _0_panelPri.doLayout();
@@ -1069,8 +1071,8 @@ function _0_nueva()
 
 function _0_clonar()
 {
-	_0_panelPri.remove(_0_gridTarifas);
-	_0_panelPri.doLayout();
+    _0_panelPri.remove(_0_gridTarifas);
+    _0_panelPri.doLayout();
     _0_fieldNmpoliza.setValue('');
     _0_bloquear(false);
     if(_0_formAgrupados.items.items[2])
@@ -1085,10 +1087,10 @@ function _0_clonar()
 
 function _0_editar()
 {
-	_0_panelPri.remove(_0_gridTarifas);
-	_0_panelPri.doLayout();
-	_0_bloquear(false);
-	if(_0_formAgrupados.items.items[2])
+    _0_panelPri.remove(_0_gridTarifas);
+    _0_panelPri.doLayout();
+    _0_bloquear(false);
+    if(_0_formAgrupados.items.items[2])
     {
         _0_formAgrupados.items.items[2].focus();
     }
@@ -1100,9 +1102,9 @@ function _0_editar()
 
 function _0_limpiar()
 {
-	_0_formAgrupados.getForm().reset();
-	_0_storeIncisos.removeAll();
-	if(_0_formAgrupados.items.items[2])
+    _0_formAgrupados.getForm().reset();
+    _0_storeIncisos.removeAll();
+    if(_0_formAgrupados.items.items[2])
     {
         _0_formAgrupados.items.items[2].focus();
     }
@@ -1166,14 +1168,14 @@ function _0_recuperarCotizacion(nmpoliza)
             var json=Ext.decode(response.responseText);
             
             if(_0_smap1.cdramo=='6')
-            {	
-	          //-----------VILS
-	            var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
-	            if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
-	            {
-	            	_0_recordClienteRecuperado = primerInciso;
-	                debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
-	            }
+            {   
+              //-----------VILS
+                var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+                if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
+                {
+                    _0_recordClienteRecuperado = primerInciso;
+                    debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
+                }
             }
             
             llenandoCampos(json);
@@ -1220,58 +1222,58 @@ function _0_cargarPoliza()
         ],
         buttonAlign:'center',
         buttons: 
-       	[
+        [
             {
-	            text: 'Aceptar',
-	            icon: '${ctx}/resources/fam3icons/icons/accept.png',
-	            buttonAlign : 'center',
-	            handler: function(button) {
-	            	
-	            	var ventana = button.up('window');
-	            	var form = button.up('window').down('form');
-	                debug('form.getValue():',form.getValues());
-	                var valores= form.getValues();
-// 	                var valores = Ext.decode(cadena);
-	                debug('Valores:',valores);
-	                debug('Sucursal: ', valores['textfield-1059-inputEl']);
-	                var sucursal= valores['textfield-1059-inputEl'];
-	                debug('Ramo: ', valores['textfield-1060-inputEl']);
+                text: 'Aceptar',
+                icon: '${ctx}/resources/fam3icons/icons/accept.png',
+                buttonAlign : 'center',
+                handler: function(button) {
+                    
+                    var ventana = button.up('window');
+                    var form = button.up('window').down('form');
+                    debug('form.getValue():',form.getValues());
+                    var valores= form.getValues();
+//                  var valores = Ext.decode(cadena);
+                    debug('Valores:',valores);
+                    debug('Sucursal: ', valores['textfield-1059-inputEl']);
+                    var sucursal= valores['textfield-1059-inputEl'];
+                    debug('Ramo: ', valores['textfield-1060-inputEl']);
                     var ramo = valores['textfield-1060-inputEl'];
-	                debug('Poliza: ', valores['textfield-1061-inputEl']);
+                    debug('Poliza: ', valores['textfield-1061-inputEl']);
                     var poliza = valores['textfield-1061-inputEl'];
                                         
                     ventana.close();
                     _0_panelPri.setLoading(true);
                     
-	                Ext.Ajax.request(
-	                        {
-	                            url      : _p0_urlCargarPoliza
-	                             ,params  :
-	                             {
-	                                  'smap1.cdsucursal' : sucursal
-	                                 ,'smap1.cdramo' : ramo
-	                                 ,'smap1.cdpoliza' : poliza
-	                                 ,'smap1.cdusuari' : _0_smap1.cdusuari,
-	                             }
-	                             ,success : function(response)
-	                             {
-	                              _0_panelPri.setLoading(false);
-	                              var json=Ext.decode(response.responseText);
-	                              debug("valoresCampos: ",json);
-	                              var json2=Ext.decode(json.smap1.valoresCampos);
-	                              json2['success']=true;
-	                              cdper     = json2.smap1.cdper;   //D00000000111005
-	                              cdperson  = json2.smap1.cdperson;//530400
-	                              debug("valoresCampos 2: ",json2);
-	                              llenandoCampos(json2);
-	                             }
-	                            ,failure : function()
-	                            {
-	                             _0_panelPri.setLoading(false);
-	                             errorComunicacion();
-	                            }
-	                        });
-	            }
+                    Ext.Ajax.request(
+                            {
+                                url      : _p0_urlCargarPoliza
+                                 ,params  :
+                                 {
+                                      'smap1.cdsucursal' : sucursal
+                                     ,'smap1.cdramo' : ramo
+                                     ,'smap1.cdpoliza' : poliza
+                                     ,'smap1.cdusuari' : _0_smap1.cdusuari,
+                                 }
+                                 ,success : function(response)
+                                 {
+                                  _0_panelPri.setLoading(false);
+                                  var json=Ext.decode(response.responseText);
+                                  debug("valoresCampos: ",json);
+                                  var json2=Ext.decode(json.smap1.valoresCampos);
+                                  json2['success']=true;
+                                  cdper     = json2.smap1.cdper;   //D00000000111005
+                                  cdperson  = json2.smap1.cdperson;//530400
+                                  debug("valoresCampos 2: ",json2);
+                                  llenandoCampos(json2);
+                                 }
+                                ,failure : function()
+                                {
+                                 _0_panelPri.setLoading(false);
+                                 errorComunicacion();
+                                }
+                            });
+                }
             }
         ]
     }).show();
@@ -1279,68 +1281,68 @@ function _0_cargarPoliza()
 
 function llenandoCampos (json)
 {
-// 	 var panelpri = _fieldById('_0_panelpri');
+//   var panelpri = _fieldById('_0_panelpri');
      var nmpoliza = _fieldByName('nmpoliza').getValue();
-	 debug('### cargar cotizacion:',json);
+     debug('### cargar cotizacion:',json);
     
      if(json.success)
      {
-	     var maestra     =  json.slist1[0].ESTADO=='M';
-	     var fesolici    =  Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
-	     var fechaHoy    =  Ext.Date.clearTime(new Date());
-	     var fechaLimite =  Ext.Date.add(fechaHoy,Ext.Date.DAY,-1*(json.smap1.diasValidos-0));
-	     var vencida     =  fesolici<fechaLimite;
-	     debug('fesolici='    , fesolici);
-	     debug('fechaHoy='    , fechaHoy);
-	     debug('fechaLimite=' , fechaLimite);
-	     debug('vencida='     , vencida, '.');
-	
-	     _0_limpiar();
-	
-	     var iniVig = Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y').getTime();
-	     var finVig = Ext.Date.parse(json.smap1.FEPROREN,'d/m/Y').getTime();
-	     var milDif = finVig-iniVig;
-	     var diaDif = milDif/(1000*60*60*24);
-	     debug('diaDif:',diaDif);
-	   
-	     /*if(!maestra&&!vencida)
-	     {
-	         _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y'));
-	     }*/
-	     
-	     _fieldByName('feini').setValue(new Date());
-	     _fieldByName('fefin').setValue
-	     (
-	         Ext.Date.add
-	         (
-	             _fieldByName('feini').getValue()
-	             ,Ext.Date.DAY
-	             ,diaDif
-	         )
-	     );
-	     
-	     if(maestra)
-	     {
-	         _fieldByName('nmpoliza').setValue('');
-	         mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.slist1[0].NMPOLIZA);
-	     }
-	     else if(vencida)
-	     {
-	         _fieldByName('nmpoliza').setValue('');
-	         mensajeWarning('La cotizaci&oacute;n ha vencido y solo puede duplicarse');
-	     }
-	     else
-	     {
-	         _fieldByName('nmpoliza').semaforo=true;
-	         _fieldByName('nmpoliza').setValue(nmpoliza);
-	         _fieldByName('nmpoliza').semaforo=false;
-	     }
-	     
-	     var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
-	     
-	    _0_panelPri.setLoading(false);
-	    debug('json response:',json);
- //<< ----------------------------------------------------------------------------	   
+         var maestra     =  json.slist1[0].ESTADO=='M';
+         var fesolici    =  Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
+         var fechaHoy    =  Ext.Date.clearTime(new Date());
+         var fechaLimite =  Ext.Date.add(fechaHoy,Ext.Date.DAY,-1*(json.smap1.diasValidos-0));
+         var vencida     =  fesolici<fechaLimite;
+         debug('fesolici='    , fesolici);
+         debug('fechaHoy='    , fechaHoy);
+         debug('fechaLimite=' , fechaLimite);
+         debug('vencida='     , vencida, '.');
+    
+         _0_limpiar();
+    
+         var iniVig = Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y').getTime();
+         var finVig = Ext.Date.parse(json.smap1.FEPROREN,'d/m/Y').getTime();
+         var milDif = finVig-iniVig;
+         var diaDif = milDif/(1000*60*60*24);
+         debug('diaDif:',diaDif);
+       
+         /*if(!maestra&&!vencida)
+         {
+             _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y'));
+         }*/
+         
+         _fieldByName('feini').setValue(new Date());
+         _fieldByName('fefin').setValue
+         (
+             Ext.Date.add
+             (
+                 _fieldByName('feini').getValue()
+                 ,Ext.Date.DAY
+                 ,diaDif
+             )
+         );
+         
+         if(maestra)
+         {
+             _fieldByName('nmpoliza').setValue('');
+             mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.slist1[0].NMPOLIZA);
+         }
+         else if(vencida)
+         {
+             _fieldByName('nmpoliza').setValue('');
+             mensajeWarning('La cotizaci&oacute;n ha vencido y solo puede duplicarse');
+         }
+         else
+         {
+             _fieldByName('nmpoliza').semaforo=true;
+             _fieldByName('nmpoliza').setValue(nmpoliza);
+             _fieldByName('nmpoliza').semaforo=false;
+         }
+         
+         var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+         
+        _0_panelPri.setLoading(false);
+        debug('json response:',json);
+ //<< ----------------------------------------------------------------------------     
         if(cargarXpoliza || Ext.isEmpty(json.smap1.NTRAMITE))
         {
             _0_limpiar();
@@ -1366,22 +1368,22 @@ function llenandoCampos (json)
             var combcl = 'S';
             if(_0_smap1.cdramo=='6' && !Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
             {
-            	combcl = _fieldLikeLabel('CLIENTE NUEVO');
-            	if(!Ext.isEmpty(json.slist1[0].OTVALOR24))
-            		{
-            		  if(json.slist1[0].OTVALOR24==='N')
-            			  {
-		          			  combcl.semaforo = true;
-		                      combcl.setValue('N');
-		                      combcl.semaforo = false;
-            			  }
-            		  else
-            			  {
-	                          combcl.semaforo = true;
-	                          combcl.setValue('S');
-	                          combcl.semaforo = false;
-            			  }
-            		}
+                combcl = _fieldLikeLabel('CLIENTE NUEVO');
+                if(!Ext.isEmpty(json.slist1[0].OTVALOR24))
+                    {
+                      if(json.slist1[0].OTVALOR24==='N')
+                          {
+                              combcl.semaforo = true;
+                              combcl.setValue('N');
+                              combcl.semaforo = false;
+                          }
+                      else
+                          {
+                              combcl.semaforo = true;
+                              combcl.setValue('S');
+                              combcl.semaforo = false;
+                          }
+                    }
             debug('primerInciso:',primerInciso);
             }
 
@@ -1441,49 +1443,49 @@ function llenandoCampos (json)
                 else
                 {
                     if(!cargarXpoliza)
-                    	{
-                    	   _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
-                    	}
+                        {
+                           _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
+                        }
                     
-                	_0_panelPri.setLoading(false);
-                	
-                	    if(_0_smap1.cdramo=='6')
-	                    {
-	                    	if(_0_smap1.cdtipsit=='MC')
-	                        {
-	                    		 asignarAgente(primerInciso.get('parametros.pv_otvalor17'));	
-	                        }
-	                    	if(_0_smap1.cdtipsit=='AT')
-	                        {
-	                            _0_obtenerClaveGSPorAuto();
-	                            _0_obtenerSumaAseguradaRamo6(true,true);
-	                        }
-	                        if(_fieldByLabel('FOLIO').getValue()==0)
-	                        {
-	                            _fieldByLabel('FOLIO').reset();
-	                            asignarAgente(primerInciso.get('parametros.pv_otvalor17')); 
-	                        }
-	                    }
-	                    
-                	    if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
-	                    	
-	                        asignarAgente(primerInciso.get('parametros.pv_otvalor32'));
-	                        _0_recuperarDescuento();
-	                    }
-	                    
-	                    if(_0_smap1.cdtipsit=='GMI')
-	                    {
-	                        _0_gmiPostalSelect(1,2,3,true);
-	                        _0_gmiCirchospSelect(1,2,3,true);
-	                    }
-	                    
-	                    if('|AF|PU|AT|MC|'.lastIndexOf('|'+_0_smap1.cdtipsit+'|')!=-1)
-	                    {
-	                    	//vils
-	                        _0_panelPri.setLoading(true);
-	                        cargaCotiza = true;
-	                        _0_cotizar();
-	                    }
+                    _0_panelPri.setLoading(false);
+                    
+                        if(_0_smap1.cdramo=='6')
+                        {
+                            if(_0_smap1.cdtipsit=='MC')
+                            {
+                                 asignarAgente(primerInciso.get('parametros.pv_otvalor17'));    
+                            }
+                            if(_0_smap1.cdtipsit=='AT')
+                            {
+                                _0_obtenerClaveGSPorAuto();
+                                _0_obtenerSumaAseguradaRamo6(true,true);
+                            }
+                            if(_fieldByLabel('FOLIO').getValue()==0)
+                            {
+                                _fieldByLabel('FOLIO').reset();
+                                asignarAgente(primerInciso.get('parametros.pv_otvalor17')); 
+                            }
+                        }
+                        
+                        if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
+                            
+                            asignarAgente(primerInciso.get('parametros.pv_otvalor32'));
+                            _0_recuperarDescuento();
+                        }
+                        
+                        if(_0_smap1.cdtipsit=='GMI')
+                        {
+                            _0_gmiPostalSelect(1,2,3,true);
+                            _0_gmiCirchospSelect(1,2,3,true);
+                        }
+                        
+                        if('|AF|PU|AT|MC|'.lastIndexOf('|'+_0_smap1.cdtipsit+'|')!=-1)
+                        {
+                            //vils
+                            _0_panelPri.setLoading(true);
+                            cargaCotiza = true;
+                            _0_cotizar();
+                        }
                 }
             };
             _0_panelPri.setLoading(true);
@@ -1535,138 +1537,107 @@ function llenandoCampos (json)
 
 function _0_agregarAsegu(boton)
 {
-	var valido=true;
-	if(valido)
-	{
-		if(!_0_necesitoIncisos)
-		{
-			valido=_0_storeIncisos.getCount()<1;
-			if(!valido)
-			{
-				mensajeWarning('Solo se puede introducir un inciso');
-			}
-		}
-	}
-	if(valido)
-	{
-	    var grid=boton.up().up();
-		debug('_0_agregarAsegu');
-		var arrayEditores = _0_rowEditing.editor.form.monitor.getItems().items; 
-		debug('arrayEditores:',arrayEditores);
-		var record = new _0_modelo();
-		for(var i = 0;i<arrayEditores.length;i++)
-		{
-			var iEditor = arrayEditores[i];
-			if(iEditor.store)
-			{
-				record.set(iEditor.name,iEditor.store.getAt(0).get('key'));
-			}
-			else if(iEditor.format)
-			{
-				record.set(iEditor.name,Ext.Date.format(new Date(),'d/m/Y'));
-			}
-			else
-			{
-				var estaEnModeloExtra=false;
-				debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
-				for(var j=0;j<_0_modeloExtraFields.length;j++)
-				{
-					if(iEditor.name==_0_modeloExtraFields[j].name)
-					{
-						estaEnModeloExtra=true;
-					}
-				}
-				if(!estaEnModeloExtra)
-	            {
-	                record.set(iEditor.name,iEditor.name);
-	            }
-			}
-		}
-		record.set('contador',_0_storeIncisos.getCount()+1);
-		_0_storeIncisos.add(record);
-		_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
-		_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
-		// Se aplica el focus en algun boton habilitado del grid de incisos:
-		try {
-            _0_botonera.down('button[disabled=false]').focus();
-		} catch(e) {
-        	debug(e);
+    var valido=true;
+    if(valido)
+    {
+        if(!_0_necesitoIncisos)
+        {
+            valido=_0_storeIncisos.getCount()<1;
+            if(!valido)
+            {
+                mensajeWarning('Solo se puede introducir un inciso');
+            }
         }
-		//window.parent.scrollTo(0, _0_formAgrupados.getHeight());//ELIMINADA
-	}
+    }
+    if(valido)
+    {
+        var grid=boton.up().up();
+        debug('_0_agregarAsegu');
+        var arrayEditores = _0_rowEditing.editor.form.monitor.getItems().items; 
+        debug('arrayEditores:',arrayEditores);
+        var record = new _0_modelo();
+        for(var i = 0;i<arrayEditores.length;i++)
+        {
+            var iEditor = arrayEditores[i];
+            if(iEditor.store)
+            {
+                record.set(iEditor.name,iEditor.store.getAt(0).get('key'));
+            }
+            else if(iEditor.format)
+            {
+                record.set(iEditor.name,Ext.Date.format(new Date(),'d/m/Y'));
+            }
+            else
+            {
+                var estaEnModeloExtra=false;
+                debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
+                for(var j=0;j<_0_modeloExtraFields.length;j++)
+                {
+                    if(iEditor.name==_0_modeloExtraFields[j].name)
+                    {
+                        estaEnModeloExtra=true;
+                    }
+                }
+                if(!estaEnModeloExtra)
+                {
+                    record.set(iEditor.name,iEditor.name);
+                }
+            }
+        }
+        record.set('contador',_0_storeIncisos.getCount()+1);
+        _0_storeIncisos.add(record);
+        _0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
+        _0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
+        // Se aplica el focus en algun boton habilitado del grid de incisos:
+        try {
+            _0_botonera.down('button[disabled=false]').focus();
+        } catch(e) {
+            debug(e);
+        }
+        //window.parent.scrollTo(0, _0_formAgrupados.getHeight());//ELIMINADA
+    }
 }
 
 function _0_cotizar(boton)
 {
-	_0_panelPri.setLoading(true);
-	debug('_0_cotizar');
-	if(_0_validarBase())//
-	{
-	        var smap = _0_smap1;
-	        
-			var json=
-			{
-			     slist1 : []
-			    ,smap1  : smap 
-			};
+    _0_panelPri.setLoading(true);
+    debug('_0_cotizar');
+    if(_0_validarBase())//
+    {
+            var smap = _0_smap1;
+            
+            var json=
+            {
+                 slist1 : []
+                ,smap1  : smap 
+            };
 
 //-------------------------------------------------------VILS
         if(_0_recordClienteRecuperado)
-       	{
-	        debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
-	        _0_smap1['cdpersonCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CLAVECLI;
-	        _0_smap1['cdideperCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER;
-	        _0_smap1['nmorddomCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM;
-	           
-	        var agenteCmp=_fieldByLabel('AGENTE');
-	        if(Ext.isEmpty(agenteCmp))
-	        {
-	            smap.cdagenteAux='';
-	        }
-	        else
-	        {
-	            smap.cdagenteAux=agenteCmp.getValue();
-	        }
-	        
-       	}
-		
-		if(_0_necesitoIncisos)
-		{
-			_0_storeIncisos.each(function(record)
-			{
-				var inciso=_0_formAgrupados.getValues();
-				for(var key in record.data)
-				{
-					var value=record.data[key];
-					debug(typeof value,key,value);
-					if((typeof value=='object')&&value&&value.getDate)
-					{
-						var fecha='';
-						fecha+=value.getDate();
-						if((fecha+'x').length==2)//1x 
-						{
-							fecha = ('x'+fecha).replace('x','0');//x1=01 
-						}
-						fecha+='/';
-						fecha+=value.getMonth()+1<10?
-								(('x'+(value.getMonth()+1)).replace('x','0'))
-								:(value.getMonth()+1);
-						fecha+='/';
-						fecha+=value.getFullYear();
-						value=fecha;
-					}
-					inciso[key]=value;
-				}
-				json['slist1'].push(inciso);
-			});
-		}
-		else
-		{
-			var inciso=_0_formAgrupados.getValues();
-			if(_0_storeIncisos.getCount()==1)
-			{
-				var record=_0_storeIncisos.getAt(0);
-				for(var key in record.data)
+        {
+            debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
+            _0_smap1['cdpersonCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CLAVECLI;
+            _0_smap1['cdideperCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER;
+            _0_smap1['nmorddomCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM;
+               
+            var agenteCmp=_fieldByLabel('AGENTE');
+            if(Ext.isEmpty(agenteCmp))
+            {
+                smap.cdagenteAux='';
+            }
+            else
+            {
+                smap.cdagenteAux=agenteCmp.getValue();
+            }
+            
+        }
+        
+        if(_0_necesitoIncisos)
+        {
+            _0_storeIncisos.each(function(record)
+            {
+                var inciso=_0_formAgrupados.getValues();
+                for(var key in record.data)
                 {
                     var value=record.data[key];
                     debug(typeof value,key,value);
@@ -1688,46 +1659,77 @@ function _0_cotizar(boton)
                     }
                     inciso[key]=value;
                 }
-			}
-			json['slist1'].push(inciso);
-		}
-		debug('json para cotizar:',json);
-		_0_panelPri.setLoading(true);
-		Ext.Ajax.request(
-		{
-			url       : _0_smap1['externo']=='si'?_0_urlCotizarExterno:_0_urlCotizar
-			,jsonData : json
-			,success  : function(response)
-			{
-				_0_bloquear(true);
-				_0_panelPri.setLoading(false);
-				json=Ext.decode(response.responseText);
-				if(json.success==true)
-				{
-					debug(Ext.decode(json.smap1.fields));
-					debug(Ext.decode(json.smap1.columnas));
-					debug(json.slist2);
-					
-					_0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
-									
-					_grabarEvento('COTIZACION'
-					              ,'COTIZA'
-					              ,_0_smap1.ntramite
-					              ,_0_smap1.cdunieco
-					              ,_0_smap1.cdramo
-					              ,'W'
-					              ,json.smap1.nmpoliza
-					              ,json.smap1.nmpoliza
-					              ,'buscar'
-					              );
-					
-					Ext.define('_0_modeloTarifa',
-					{
-						extend  : 'Ext.data.Model'
-						,fields : Ext.decode(json.smap1.fields)
-					});
-					
-					_0_gridTarifas=Ext.create('Ext.grid.Panel',
+                json['slist1'].push(inciso);
+            });
+        }
+        else
+        {
+            var inciso=_0_formAgrupados.getValues();
+            if(_0_storeIncisos.getCount()==1)
+            {
+                var record=_0_storeIncisos.getAt(0);
+                for(var key in record.data)
+                {
+                    var value=record.data[key];
+                    debug(typeof value,key,value);
+                    if((typeof value=='object')&&value&&value.getDate)
+                    {
+                        var fecha='';
+                        fecha+=value.getDate();
+                        if((fecha+'x').length==2)//1x 
+                        {
+                            fecha = ('x'+fecha).replace('x','0');//x1=01 
+                        }
+                        fecha+='/';
+                        fecha+=value.getMonth()+1<10?
+                                (('x'+(value.getMonth()+1)).replace('x','0'))
+                                :(value.getMonth()+1);
+                        fecha+='/';
+                        fecha+=value.getFullYear();
+                        value=fecha;
+                    }
+                    inciso[key]=value;
+                }
+            }
+            json['slist1'].push(inciso);
+        }
+        debug('json para cotizar:',json);
+        _0_panelPri.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url       : _0_smap1['externo']=='si'?_0_urlCotizarExterno:_0_urlCotizar
+            ,jsonData : json
+            ,success  : function(response)
+            {
+                _0_bloquear(true);
+                _0_panelPri.setLoading(false);
+                json=Ext.decode(response.responseText);
+                if(json.success==true)
+                {
+                    debug(Ext.decode(json.smap1.fields));
+                    debug(Ext.decode(json.smap1.columnas));
+                    debug(json.slist2);
+                    
+                    _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
+                                    
+                    _grabarEvento('COTIZACION'
+                                  ,'COTIZA'
+                                  ,_0_smap1.ntramite
+                                  ,_0_smap1.cdunieco
+                                  ,_0_smap1.cdramo
+                                  ,'W'
+                                  ,json.smap1.nmpoliza
+                                  ,json.smap1.nmpoliza
+                                  ,'buscar'
+                                  );
+                    
+                    Ext.define('_0_modeloTarifa',
+                    {
+                        extend  : 'Ext.data.Model'
+                        ,fields : Ext.decode(json.smap1.fields)
+                    });
+                    
+                    _0_gridTarifas=Ext.create('Ext.grid.Panel',
                     {
                         title             : 'Resultados'
                         ,store            : Ext.create('Ext.data.Store',
@@ -1769,65 +1771,65 @@ function _0_cotizar(boton)
                         Ext.getCmp('_0_botDetallesId').setDisabled(true);
                         Ext.getCmp('_0_botCoberturasId').setDisabled(true);
                     }
-					
-					_0_panelPri.add(_0_gridTarifas);
-					_0_panelPri.doLayout();
-					//setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);//ELIMINADO
-					// Se aplica el focus en algun boton habilitado del grid de tarifas:
-					try {
-					   _0_gridTarifas.down('button[disabled=false]').focus(false, 1000);
-					} catch(e) {
+                    
+                    _0_panelPri.add(_0_gridTarifas);
+                    _0_panelPri.doLayout();
+                    //setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);//ELIMINADO
+                    // Se aplica el focus en algun boton habilitado del grid de tarifas:
+                    try {
+                       _0_gridTarifas.down('button[disabled=false]').focus(false, 1000);
+                    } catch(e) {
                         debug(e);
                     }
-				}
-				else
-				{
-					_0_bloquear(false);
-					mensajeError('Error al cotizar:<br/>'+json.error);
-				}
-			}
-		    ,failure  : function(response)
-		    {
-		    	_0_panelPri.setLoading(false);
-		    	errorComunicacion();
-		    }
-		});
-	}
+                }
+                else
+                {
+                    _0_bloquear(false);
+                    mensajeError('Error al cotizar:<br/>'+json.error);
+                }
+            }
+            ,failure  : function(response)
+            {
+                _0_panelPri.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
 }
 
 function _0_validarBase()
 {
-	var valido=true;
-	debug('>_0_validarBase');
-	
-	//form validation
-	if(valido && !cargaCotiza)
-	{
-		valido=_0_formAgrupados.isValid();
-		if(!valido)
-		{
-			datosIncompletos();
-		}
-	}
-	
-	//algun inciso
-	if(valido&&_0_necesitoIncisos)
-	{
-		valido=_0_storeIncisos.getCount()>0;
-		if(!valido)
-		{
-			mensajeWarning('No hay incisos');
-		}
-	}
-	
-	//validar atributos de tatrisit en grid
-	if(valido&&_0_necesitoIncisos)
-	{
-		_0_storeIncisos.each(function(record)
+    var valido=true;
+    debug('>_0_validarBase');
+    
+    //form validation
+    if(valido && !cargaCotiza)
+    {
+        valido=_0_formAgrupados.isValid();
+        if(!valido)
+        {
+            datosIncompletos();
+        }
+    }
+    
+    //algun inciso
+    if(valido&&_0_necesitoIncisos)
+    {
+        valido=_0_storeIncisos.getCount()>0;
+        if(!valido)
+        {
+            mensajeWarning('No hay incisos');
+        }
+    }
+    
+    //validar atributos de tatrisit en grid
+    if(valido&&_0_necesitoIncisos)
+    {
+        _0_storeIncisos.each(function(record)
         {
             for(var key in record.data)
             {
-            	debug('validando:',record.data);
+                debug('validando:',record.data);
                 //debug('modelo extra fields:',_0_modeloExtraFields);
                 var estaEnModeloExtra=false;
                 //debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
@@ -1840,8 +1842,8 @@ function _0_validarBase()
                 }
                 if(!estaEnModeloExtra)
                 {
-                	var value=record.data[key];
-                	valido=valido&&value;
+                    var value=record.data[key];
+                    valido=valido&&value;
                     if(!valido)
                     {
                         debug('falta: ',key);
@@ -1853,88 +1855,88 @@ function _0_validarBase()
         {
             mensajeWarning('Los datos de los incisos son requeridos');
         }
-	}
-	
-	if(valido && _0_necesitoIncisos && _0_smap1.SITUACION=='PERSONA'){
-		
-		try{
-			var colNameParentesco = _0_gridIncisos.down('[text=PARENTESCO]').dataIndex; 
-			var colNameFechaNacimi = _0_gridIncisos.down('[text*=NACIMIENTO]').dataIndex; 
-			var fechaHoy = new Date();
-			
-			_0_storeIncisos.each(function(record){
-	
-				var parentescoRecord = record.get(colNameParentesco);
-				var fechaRecord      = record.get(colNameFechaNacimi);
-				
-				debug('fechaHoy: ', fechaHoy);
-				debug('fechaRecord: ', fechaRecord);
-				
-				var years = calculaAniosTranscurridos(fechaRecord,fechaHoy);
-				
-				debug('years: ', years);
-				
-				if((parentescoRecord == _parentescoTitular) && years != null && (years < 18) ){
-					mensajeWarning('El Titular es Menor de Edad, se requerir&aacute; una autorizaci&oacute;n posterior.');
-				}
-	            
-	        });
-		}catch(e){
-			debug('Error en la validacion de Edad del Titular!!!',e);
-		}
-	}
-	
-	//custom validation
-	if(valido)
-	{
-		valido=_0_validacion_custom();
-	}
-	
-	debug('<_0_validarBase');
-	return valido;
+    }
+    
+    if(valido && _0_necesitoIncisos && _0_smap1.SITUACION=='PERSONA'){
+        
+        try{
+            var colNameParentesco = _0_gridIncisos.down('[text=PARENTESCO]').dataIndex; 
+            var colNameFechaNacimi = _0_gridIncisos.down('[text*=NACIMIENTO]').dataIndex; 
+            var fechaHoy = new Date();
+            
+            _0_storeIncisos.each(function(record){
+    
+                var parentescoRecord = record.get(colNameParentesco);
+                var fechaRecord      = record.get(colNameFechaNacimi);
+                
+                debug('fechaHoy: ', fechaHoy);
+                debug('fechaRecord: ', fechaRecord);
+                
+                var years = calculaAniosTranscurridos(fechaRecord,fechaHoy);
+                
+                debug('years: ', years);
+                
+                if((parentescoRecord == _parentescoTitular) && years != null && (years < 18) ){
+                    mensajeWarning('El Titular es Menor de Edad, se requerir&aacute; una autorizaci&oacute;n posterior.');
+                }
+                
+            });
+        }catch(e){
+            debug('Error en la validacion de Edad del Titular!!!',e);
+        }
+    }
+    
+    //custom validation
+    if(valido)
+    {
+        valido=_0_validacion_custom();
+    }
+    
+    debug('<_0_validarBase');
+    return valido;
 }
 
 function _0_tarifaSelect(selModel, record, row, column, eOpts)
 {
-	debug('column:',column);
-	if(column>0)
-	{
-		column = (column * 2) -1;
-	}
-	debug('( column * 2 )-1:',column);
+    debug('column:',column);
+    if(column>0)
+    {
+        column = (column * 2) -1;
+    }
+    debug('( column * 2 )-1:',column);
     var columnName=_0_gridTarifas.columns[column].dataIndex;
     debug('record',record);
     debug('columnName',columnName);
     if(columnName=='DSPERPAG')
     {
-    	debug('DSPERPAG');
-    	Ext.getCmp('_0_botDetallesId').setDisabled(true);
-    	Ext.getCmp('_0_botCoberturasId').setDisabled(true);
-    	Ext.getCmp('_0_botMailId').setDisabled(true);
-    	Ext.getCmp('_0_botImprimirId').setDisabled(true);
-    	Ext.getCmp('_0_botComprarId').setDisabled(true);
+        debug('DSPERPAG');
+        Ext.getCmp('_0_botDetallesId').setDisabled(true);
+        Ext.getCmp('_0_botCoberturasId').setDisabled(true);
+        Ext.getCmp('_0_botMailId').setDisabled(true);
+        Ext.getCmp('_0_botImprimirId').setDisabled(true);
+        Ext.getCmp('_0_botComprarId').setDisabled(true);
     }
     else
     {
-    	// M N P R I M A X
-    	//0 1 2 3 4 5 6 7
-    	_0_selectedCdperpag = record.get("CDPERPAG");
-    	_0_selectedCdplan   = columnName.substr(7);
-    	_0_selectedDsplan   = record.get("DSPLAN"+_0_selectedCdplan);
-    	_0_selectedNmsituac = record.get("NMSITUAC");
-    	debug('_0_selectedCdperpag',_0_selectedCdperpag);
-    	debug('_0_selectedCdplan',_0_selectedCdplan);
-    	debug('_0_selectedDsplan',_0_selectedDsplan);
-    	debug('_0_selectedNmsituac',_0_selectedNmsituac);
-    	
-    	Ext.getCmp('_0_botDetallesId').setDisabled(false);
-    	Ext.getCmp('_0_botCoberturasId').setDisabled(false);
-    	if(_0_smap1.cdramo+'x'!='6x')
-    	{
-    	    Ext.getCmp('_0_botMailId').setDisabled(false);
-    	    Ext.getCmp('_0_botImprimirId').setDisabled(false);
-    	}
-    	Ext.getCmp('_0_botComprarId').setDisabled(false);
+        // M N P R I M A X
+        //0 1 2 3 4 5 6 7
+        _0_selectedCdperpag = record.get("CDPERPAG");
+        _0_selectedCdplan   = columnName.substr(7);
+        _0_selectedDsplan   = record.get("DSPLAN"+_0_selectedCdplan);
+        _0_selectedNmsituac = record.get("NMSITUAC");
+        debug('_0_selectedCdperpag',_0_selectedCdperpag);
+        debug('_0_selectedCdplan',_0_selectedCdplan);
+        debug('_0_selectedDsplan',_0_selectedDsplan);
+        debug('_0_selectedNmsituac',_0_selectedNmsituac);
+        
+        Ext.getCmp('_0_botDetallesId').setDisabled(false);
+        Ext.getCmp('_0_botCoberturasId').setDisabled(false);
+        if(_0_smap1.cdramo+'x'!='6x')
+        {
+            Ext.getCmp('_0_botMailId').setDisabled(false);
+            Ext.getCmp('_0_botImprimirId').setDisabled(false);
+        }
+        Ext.getCmp('_0_botComprarId').setDisabled(false);
     }
 }
 
@@ -2024,8 +2026,8 @@ function agregaValidacionCPvsEstado() {
     var tmpPostal = _fieldLikeLabel('POSTAL', null, true);
     var tmpEstado = _fieldLikeLabel('ESTADO', null, true);
     if( tmpPostal && tmpEstado && !Ext.isEmpty(tmpEstado.anidado) && tmpEstado.anidado == true) {
-    	// Se agrega listener al store de Estado para verificar si tiene elementos:
-    	debug("***** Se agrega validacion de CP VS Estado *****");
+        // Se agrega listener al store de Estado para verificar si tiene elementos:
+        debug("***** Se agrega validacion de CP VS Estado *****");
         tmpEstado.getStore().on({
             load : function(store, records, successful, eOpts) {
                 if(store.count() == 0) {
@@ -2041,73 +2043,73 @@ function _0_recuperarDescuento()
     var ck = 'Recuperando descuento';
     try
     {
-    	Ext.Ajax.request(
-	    {
-	        url     : _0_urlRecuperacionSimple
-	        ,params :
-	        {
-	            'smap1.procedimiento' : 'RECUPERAR_DESCUENTO_RECARGO_RAMO_5'
-	            ,'smap1.cdtipsit'     : _0_smap1.cdtipsit
-	            ,'smap1.cdagente'     : _fieldByLabel('AGENTE').getValue()
-	            ,'smap1.negocio'      : (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1) ? '999999' : '0' //_0_smap1.cdsisrol == 'SUSCRIAUTO'
-	            ,'smap1.tipocot'      : 'I'
-	            ,'smap1.cdsisrol'     : _0_smap1.cdsisrol
-	            ,'smap1.cdusuari'     : _0_smap1.cdusuari
-	        }
-	        ,success : function(response)
-	        {
-	            var ck = 'Decodificando descuento por rol/usuario';
-	            try
-	            {
-	                var json = Ext.decode(response.responseText);
-	                debug('### cargar rango descuento fronterizo:',json);
-	                
-	                ck           = 'Recuperando componente de descuento';
-	                var itemDesc = _fieldLikeLabel('DESCUENTO',null,true);
-	                
-	                if(json.exito)
-	                {
-	                    itemDesc.minValue=100*Number(json.smap1.min);
-	                    itemDesc.maxValue=100*Number(json.smap1.max);
-	                    itemDesc.isValid();
-	                    debug('min:',itemDesc.minValue);
-	                    debug('max:',itemDesc.maxValue);
-	                    itemDesc.setReadOnly(false);
-	                }
-	                else
-	                {
-	                    itemDesc.minValue=0;
-	                    itemDesc.maxValue=0;
-	                    itemDesc.setValue(0);
-	                    itemDesc.isValid();
-	                    itemDesc.setReadOnly(true);
-	                    mensajeError(json.respuesta);
-	                }
-	            }
-	            catch(e)
-	            {
-	                manejaException(e,ck);
-	            }
-	        }
-	        ,failure : function()
-	        {
-	            var ck = 'Recuperando componente de descuento';
-	            try
-	            {
-	                var itemDesc = _fieldLikeLabel('DESCUENTO',null,true);
-	                itemDesc.minValue=0;
-	                itemDesc.maxValue=0;
-	                itemDesc.setValue(0);
-	                itemDesc.isValid();
-	                itemDesc.setReadOnly(true);
-	                errorComunicacion();
-	            }
-	            catch(e)
-	            {
-	                manejaException(e,ck);
-	            }
-	        }
-	    });
+        Ext.Ajax.request(
+        {
+            url     : _0_urlRecuperacionSimple
+            ,params :
+            {
+                'smap1.procedimiento' : 'RECUPERAR_DESCUENTO_RECARGO_RAMO_5'
+                ,'smap1.cdtipsit'     : _0_smap1.cdtipsit
+                ,'smap1.cdagente'     : _fieldByLabel('AGENTE').getValue()
+                ,'smap1.negocio'      : (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1) ? '999999' : '0' //_0_smap1.cdsisrol == 'SUSCRIAUTO'
+                ,'smap1.tipocot'      : 'I'
+                ,'smap1.cdsisrol'     : _0_smap1.cdsisrol
+                ,'smap1.cdusuari'     : _0_smap1.cdusuari
+            }
+            ,success : function(response)
+            {
+                var ck = 'Decodificando descuento por rol/usuario';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### cargar rango descuento fronterizo:',json);
+                    
+                    ck           = 'Recuperando componente de descuento';
+                    var itemDesc = _fieldLikeLabel('DESCUENTO',null,true);
+                    
+                    if(json.exito)
+                    {
+                        itemDesc.minValue=100*Number(json.smap1.min);
+                        itemDesc.maxValue=100*Number(json.smap1.max);
+                        itemDesc.isValid();
+                        debug('min:',itemDesc.minValue);
+                        debug('max:',itemDesc.maxValue);
+                        itemDesc.setReadOnly(false);
+                    }
+                    else
+                    {
+                        itemDesc.minValue=0;
+                        itemDesc.maxValue=0;
+                        itemDesc.setValue(0);
+                        itemDesc.isValid();
+                        itemDesc.setReadOnly(true);
+                        mensajeError(json.respuesta);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                var ck = 'Recuperando componente de descuento';
+                try
+                {
+                    var itemDesc = _fieldLikeLabel('DESCUENTO',null,true);
+                    itemDesc.minValue=0;
+                    itemDesc.maxValue=0;
+                    itemDesc.setValue(0);
+                    itemDesc.isValid();
+                    itemDesc.setReadOnly(true);
+                    errorComunicacion();
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+        });
     }
     catch(e)
     {
@@ -2117,69 +2119,69 @@ function _0_recuperarDescuento()
 
 function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta)
 {
-	var panelImagen = new Ext.Panel({
-		defaults 	: {
-			style   : 'margin:5px;'
-		},
-		layout: {
-			type: 'hbox'
-			,align: 'center'
-			,pack: 'center'
-		}
-		,border: false
-		,items:[{	        	
-			xtype   : 'image'
-			,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
-			,width: 200
-			,height: 100
-		}]
-	});
+    var panelImagen = new Ext.Panel({
+        defaults    : {
+            style   : 'margin:5px;'
+        },
+        layout: {
+            type: 'hbox'
+            ,align: 'center'
+            ,pack: 'center'
+        }
+        ,border: false
+        ,items:[{               
+            xtype   : 'image'
+            ,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
+            ,width: 200
+            ,height: 100
+        }]
+    });
 
-	validacionNumSerie = Ext.create('Ext.window.Window',{
-		title        : titulo
-		,modal       : true
-		,buttonAlign : 'center'
-		,width		 : 520
-		,icon :imagenSeccion
-		,resizable: false
-		,height      : 250
-		,items       :[
-			Ext.create('Ext.form.Panel', {
-				id: 'panelClausula'
-				,width		 : 500
-				,height      : 150
-				,bodyPadding: 5
-				,renderTo: Ext.getBody()
-				,defaults 	 : {
-					style : 'margin:5px;'
-				}
-				,border: false
-				,items: [
-				{
-					xtype  : 'label'
-					,text  : txtRespuesta
-					,width: 100
-					,height      : 100
-					,style : 'color:red;margin:10px;'
-				}
-				,{
-					border: false
-					,items    :
-						[	panelImagen		]
-				}]
-			})
-		],
-		buttonAlign:'center',
-		buttons: [{
-			text: 'Aceptar',
-			icon: _CONTEXT+'/resources/fam3icons/icons/accept.png',
-			buttonAlign : 'center',
-			handler: function() {
-				validacionNumSerie.close();
-			}
-		}]
-	});
-	centrarVentanaInterna(validacionNumSerie.show());
+    validacionNumSerie = Ext.create('Ext.window.Window',{
+        title        : titulo
+        ,modal       : true
+        ,buttonAlign : 'center'
+        ,width       : 520
+        ,icon :imagenSeccion
+        ,resizable: false
+        ,height      : 250
+        ,items       :[
+            Ext.create('Ext.form.Panel', {
+                id: 'panelClausula'
+                ,width       : 500
+                ,height      : 150
+                ,bodyPadding: 5
+                ,renderTo: Ext.getBody()
+                ,defaults    : {
+                    style : 'margin:5px;'
+                }
+                ,border: false
+                ,items: [
+                {
+                    xtype  : 'label'
+                    ,text  : txtRespuesta
+                    ,width: 100
+                    ,height      : 100
+                    ,style : 'color:red;margin:10px;'
+                }
+                ,{
+                    border: false
+                    ,items    :
+                        [   panelImagen     ]
+                }]
+            })
+        ],
+        buttonAlign:'center',
+        buttons: [{
+            text: 'Aceptar',
+            icon: _CONTEXT+'/resources/fam3icons/icons/accept.png',
+            buttonAlign : 'center',
+            handler: function() {
+                validacionNumSerie.close();
+            }
+        }]
+    });
+    centrarVentanaInterna(validacionNumSerie.show());
 }
 
 /**
@@ -2188,7 +2190,7 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta)
 */
 function asignarAgente(agente)
 {
-	 if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+     if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
      {
          _fieldByLabel('AGENTE').getStore().load(
          {
@@ -2207,12 +2209,12 @@ function asignarAgente(agente)
      }
      else
      {
-    	 if(!cargarXpoliza){
+         if(!cargarXpoliza){
              _fieldByLabel('AGENTE').setValue(
                  _fieldByLabel('AGENTE').findRecord('key',agente)
                  );
          }
-    	 /* else{
+         /* else{
          _fieldByLabel('FOLIO').reset();
          } */
      }
@@ -2220,7 +2222,7 @@ function asignarAgente(agente)
 
 function _0_calculaVigencia(comp,val)
 {
-// 	alert('_0_calculaVigencia');
+//  alert('_0_calculaVigencia');
     debug('>_0_calculaVigencia');
     var feini = _fieldByName('feini');
     var fefin = _fieldByName('fefin');
@@ -2240,8 +2242,8 @@ function _0_calculaVigencia(comp,val)
 
 function retroactividadfechaini()
 {
-// 	alert('retroactividadfechaini');
-	  Ext.Ajax.request(
+//  alert('retroactividadfechaini');
+      Ext.Ajax.request(
           {
               url      : _0_urlRetroactividadDifer
               ,params  :
@@ -2287,7 +2289,7 @@ function retroactividadfechaini()
 
 function obtienefechafinplazo()
 {
-// 	alert('obtienefechafinplazo');
+//  alert('obtienefechafinplazo');
     Ext.Ajax.request(
         {
             url     : _0_urlCargarDetalleNegocioRamo5
@@ -2308,8 +2310,8 @@ function obtienefechafinplazo()
                 _fieldByName('fefin').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR,plazoenanios));
                    
                 if(Number(json.smap1.MULTIANUAL) != 0) {
-                	
-//                 	 plazoenanios = Number(json.smap1.MULTIANUAL);
+                    
+//                   plazoenanios = Number(json.smap1.MULTIANUAL);
 //                     _fieldByName('FESOLICI').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR, Number(json.smap1.MULTIANUAL)));
 //                     _fieldByName('fefin').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR,plazoenanios));
                     _fieldByName('fefin').validator=function(val)
@@ -2502,8 +2504,8 @@ function _0_recuperarCotizacionDeTramite()
 
 function _0_cargarParametrizacionCoberturas(callback)
 {
-// 	alert(1);
-    debug('>_p28_cargarParametrizacionCoberturas callback:',!Ext.isEmpty(callback),'DUMMY');
+//  alert(1);
+    debug('>_0_cargarParametrizacionCoberturas callback:',!Ext.isEmpty(callback),'DUMMY');
     
     var _f1_tipoServicio;
     var _f1_modelo;
@@ -2538,13 +2540,13 @@ function _0_cargarParametrizacionCoberturas(callback)
             ,params  : params
             ,success : function(response)
             {
-            	_0_panelPri.setLoading(false);
+                _0_panelPri.setLoading(false);
                 var _f1_json=Ext.decode(response.responseText);
                 debug('### parametrizacion:',_f1_json);
                 if(_f1_json.exito)
                 {
-//                 	alert('EXITO');
-                	debug('Vils campos',_f1_json);
+//                  alert('EXITO');
+                    debug('Vils campos',_f1_json);
                     for(var i=0;i<_f1_json.slist1.length;i++)
                     {
                         var item = _fieldByName('parametros.pv_otvalor'+(('00'+_f1_json.slist1[i].cdatribu).slice(-2)));
@@ -2678,7 +2680,7 @@ function _0_cargarParametrizacionCoberturas(callback)
                     
                     if(_0_smap1.cdtipsit+'x'=='AFx'||_0_smap1.cdtipsit+'x'=='PUx')
                     {
-                    	var canadaCmp = _fieldLikeLabel('CANAD');
+                        var canadaCmp = _fieldLikeLabel('CANAD');
                         debug('@CUSTOM canada:',canadaCmp);
                         canadaCmp.anidado = true;
                         canadaCmp.heredar = function(remoto,micallback)
@@ -2747,18 +2749,216 @@ function _0_cargarParametrizacionCoberturas(callback)
             }
             ,failure : function()
             {
-            	_0_panelPri.setLoading(false);
+                _0_panelPri.setLoading(false);
                 errorComunicacion();
             }
         });
     }
     
-    debug('<_p28_cargarParametrizacionCoberturas');
+    debug('<_0_cargarParametrizacionCoberturas');
 }
+
+/*
+ * Esta funcion se usa para recuperar una poliza de SIGS para renovacion en ICE
+ * solo debe llamarse si: es por flujo, y si no hay una cotizacion anterior
+ * si se recupera cotizacion por _0_recuperarCotizacionDeTramite entonces
+ * esta funcion no debe recuperar nada porque seria doble recuperacion, es decir
+ * la condicion que tenga _0_recuperarCotizacionDeTramite debe estar negada aqui
+ */
+function _0_recuperarPolizaSIGS()
+{
+    if(!Ext.isEmpty(_0_flujo))
+    {
+        debug('_0_recuperarPolizaSIGS');
+        
+        var mask, ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite para revisar renovaci\u00f3n';
+        
+        try
+        {
+            mask = _maskLocal(ck);
+            Ext.Ajax.request(
+            {
+                url      : _0_urlRecuperarOtvalorTramiteXDsatribu
+                ,params  :
+                {
+                    'params.ntramite'  : _0_flujo.ntramite
+                    ,'params.dsatribu' : 'COTIZACI%N%TR%MITE'
+                }
+                ,success : function(response)
+                {
+                    mask.close();
+                    var ck = 'Decodificando respuesta al recuperar cotizaci\u00f3n de tr\u00e1mite';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### cotizacion de tramite:',json);
+                        if(json.success===true)
+                        {
+                            if(Ext.isEmpty(json.params.otvalor)) // si no se ha cotizado antes, verificamos si hay renovacion
+                            {
+                                ck = 'Revisando p\u00f3liza de renovaci\u00f3n';
+                                
+                                mask = _maskLocal(ck);
+                                
+                                Ext.Ajax.request(
+                                {
+                                    url      : _0_urlRecuperarDatosTramiteValidacion
+                                    ,params  : _flujoToParams(_0_flujo)
+                                    ,success : function(response)
+                                    {
+                                        mask.close();
+                                        
+                                        var ck = 'Decodificando respuesta al recuperar datos para revisar renovaci\u00f3n';
+                                        
+                                        try
+                                        {
+                                            var jsonDatTram = Ext.decode(response.responseText);
+                                            debug('### jsonDatTram:',jsonDatTram,'.');
+                                            
+                                            if(jsonDatTram.success === true)
+                                            {
+                                                if(!Ext.isEmpty(jsonDatTram.datosTramite.TRAMITE.RENPOLIEX))
+                                                {
+                                                    var renuniext  = jsonDatTram.datosTramite.TRAMITE.RENUNIEXT
+                                                        ,renramo   = jsonDatTram.datosTramite.TRAMITE.RENRAMO
+                                                        ,renpoliex = jsonDatTram.datosTramite.TRAMITE.RENPOLIEX;
+                                                        
+                                                    debug('se encontraron datos para renovar:',renuniext,renramo,renpoliex,'.');
+                                                    
+                                                    _0_cargarPoliza(
+                                                        jsonDatTram.datosTramite.TRAMITE.RENUNIEXT
+                                                        ,jsonDatTram.datosTramite.TRAMITE.RENRAMO
+                                                        ,jsonDatTram.datosTramite.TRAMITE.RENPOLIEX
+                                                        ,_0_smap1.cdusuari
+                                                        ,'I'
+                                                    );
+                                                }
+                                            }
+                                            else
+                                            {
+                                                mensajeError(jsonDatTram.message);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck,mask);
+                                        }
+                                        
+                                    }
+                                    ,failure : function()
+                                    {
+                                        mask.close();
+                                        errorComunicacion(null,'Error al recuperar datos de tr\u00e1mite para revisar renovaci\u00f3n');
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck,mask);
+                    }
+                }
+                ,failure : function()
+                {
+                    mask.close();
+                    errorComunicacion(null,'Error al recuperar cotizaci\u00f3n de tr\u00e1mite para revisar renovaci\u00f3n');
+                }
+            });
+        }
+        catch(e)
+        {
+            manejaException(e,ck,mask);
+        }
+    }
+}
+
+function _0_cargarPoliza(cduniext,ramo,nmpoliex,cdusuari,tipoflot)
+{
+    debug('_0_cargarPoliza arguments:',arguments,'.');
+    
+    var mask, ck = 'Recuperando p\u00f3liza para renovaci\u00f3n';
+    
+    try
+    {
+        if(Ext.isEmpty(cduniext)
+            ||Ext.isEmpty(ramo)
+            ||Ext.isEmpty(nmpoliex)
+            ||Ext.isEmpty(cdusuari)
+            ||Ext.isEmpty(tipoflot)
+        )
+        {
+            throw 'No hay datos suficientes para renovaci\u00f3n';
+        }
+        
+        mask = _maskLocal(ck);
+        
+        Ext.Ajax.request(
+        {
+            url       : _0_urlCargarPoliza
+            ,params  :
+            {
+                'smap1.cdsucursal' : cduniext
+                ,'smap1.cdramo'     : ramo
+                ,'smap1.cdpoliza'   : nmpoliex
+                ,'smap1.cdusuari'   : cdusuari
+                ,'smap1.tipoflot'   : tipoflot
+            }
+            ,success : function(response)
+            {
+                mask.close();
+                
+                var ck = 'Decodificando respuesta al recuperar p\u00f3liza para renovaci\u00f3n';
+                
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug("### poliza renovacion: ",json,'.');
+                    
+                    if(json.success === true)
+                    {
+                        var jsonSIGS = Ext.decode(json.smap1.valoresCampos);
+                        debug('### datos SIGS:',jsonSIGS,'.');
+                        
+                        jsonSIGS.success = true;
+                        
+                        cargarXpoliza = true; // variable Jaime o_O
+                        
+                        llenandoCampos(jsonSIGS);
+                        
+                        /*json2['success']=true;
+                        cdper     = json2.smap1.cdper;   //D00000000111005
+                        cdperson  = json2.smap1.cdperson;//530400
+                        debug("valoresCampos 2: ",json2);
+                        llenandoCampos(json2);*/
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                mask.close();
+                errorComunicacion(null,'Error al recuperar p\u00f3liza para renovaci\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck,mask);
+    }
+}
+
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
-    
+
 Ext.onReady(function()
 {
     
@@ -3238,6 +3438,7 @@ Ext.onReady(function()
    		        {
    		            style : 'margin:5px;'
    		        }
+   		        ,border   : 0
    		        ,items    :
    		        [
    		            Ext.create('Ext.panel.Panel',
@@ -4014,101 +4215,101 @@ Ext.onReady(function()
                 }
             }
             ,'blur' : function()
-			            {
-			                if(!Ext.isEmpty(folio.getValue())&&folio.getValue()>0)
-			                {
-			                    _0_panelPri.setLoading(true);
-			                    Ext.Ajax.request(
-			                    {
-			                        url      : _0_urlCargarAgentePorFolio
-			                        ,params  :
-			                        {
-			                            'smap1.folio'    : folio.getValue(),
-			                            'smap1.cdunieco' : _0_smap1.cdunieco,
-			                            'smap1.cdtipsit' : _0_smap1.cdtipsit,
-			                            'smap1.cdramo'   : _0_smap1.cdramo,
-			                            'smap1.idusu'   : '<s:property value="%{#session['USUARIO'].claveUsuarioCaptura}"/>'
-			                        }
-			                        ,success : function(response)
-			                        {
-			                            _0_panelPri.setLoading(false);
-			                            var json=Ext.decode(response.responseText);
-			                            debug('json response obtener agente por folio:',json);
-			                            if(json.exito)
-			                            {
-			                                if(_0_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
-			                                {
-			                                    var contiene=false;
-			                                    agente.getStore().each(function(record)
-			                                    {
-			                                        debug('buscando agente',json.smap1.cdagente,'en',record.data);
-			                                        if(record.get('key')==json.smap1.cdagente)
-			                                        {
-			                                            contiene=true;
-			                                        }
-			                                    });
-			                                    if(contiene)
-			                                    {
-			                                        agente.setValue(json.smap1.cdagente);
-			                                    }
-			                                    else
-			                                    {
-			                                        mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
-			                                        agente.reset();
-			                                    }
-			                                }
-			                                //para suscriptor y agente
-			                                else
-			                                {
-			                                    //agente
-			                                    if(_0_smap1.cdsisrol+'x'=='EJECUTIVOCUENTAx')
-			                                    {
-			                                        if(json.smap1.cdagente!=agente.getValue())
-			                                        {
-			                                            mensajeWarning('El folio pertenece a otro agente');
-			                                            folio.reset();
-			                                            folio.focus();
-			                                        }
-			                                    }
-			                                    //suscriptor
-			                                    else
-			                                    {
-			                                        agente.getStore().load(
-			                                        {
-			                                            params :
-			                                            {
-			                                                'params.agente' : json.smap1.cdagente 
-			                                            }
-			                                            ,callback : function(records)
-			                                            {
-			                                               debug('callback records:',records,records.length);
-			                                               if(_fieldByLabel('AGENTE').findRecord('key',json.smap1.cdagente)){
-			                                            	   agente.setValue(json.smap1.cdagente);
-			                                               }else{
-			                                            	   mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
-			                                            	   folio.reset();
-			                                            	   agente.reset();
-			                                               }
-			                                            }
-			                                        });
-			                                    }
-			                                }
-			                            }
-			                            else
-			                            {
-			                                mensajeError(json.respuesta);
-			                                folio.reset();
-			                                agente.reset();
-			                            }
-			                        }
-			                        ,failure : function(response)
-			                        {
-			                            _0_panelPri.setLoading(false);
-			                            errorComunicacion();
-			                        }
-			                    });
-			                }
-			            }
+            {
+                if(!Ext.isEmpty(folio.getValue())&&folio.getValue()>0)
+                {
+                    _0_panelPri.setLoading(true);
+                    Ext.Ajax.request(
+                    {
+                        url      : _0_urlCargarAgentePorFolio
+                        ,params  :
+                        {
+                            'smap1.folio'    : folio.getValue(),
+                            'smap1.cdunieco' : _0_smap1.cdunieco,
+                            'smap1.cdtipsit' : _0_smap1.cdtipsit,
+                            'smap1.cdramo'   : _0_smap1.cdramo,
+                            'smap1.idusu'   : '<s:property value="%{#session['USUARIO'].claveUsuarioCaptura}"/>'
+                        }
+                        ,success : function(response)
+                        {
+                            _0_panelPri.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('json response obtener agente por folio:',json);
+                            if(json.exito)
+                            {
+                                if(_0_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                                {
+                                    var contiene=false;
+                                    agente.getStore().each(function(record)
+                                    {
+                                        debug('buscando agente',json.smap1.cdagente,'en',record.data);
+                                        if(record.get('key')==json.smap1.cdagente)
+                                        {
+                                            contiene=true;
+                                        }
+                                    });
+                                    if(contiene)
+                                    {
+                                        agente.setValue(json.smap1.cdagente);
+                                    }
+                                    else
+                                    {
+                                        mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
+                                        agente.reset();
+                                    }
+                                }
+                                //para suscriptor y agente
+                                else
+                                {
+                                    //agente
+                                    if(_0_smap1.cdsisrol+'x'=='EJECUTIVOCUENTAx')
+                                    {
+                                        if(json.smap1.cdagente!=agente.getValue())
+                                        {
+                                            mensajeWarning('El folio pertenece a otro agente');
+                                            folio.reset();
+                                            folio.focus();
+                                        }
+                                    }
+                                    //suscriptor
+                                    else
+                                    {
+                                        agente.getStore().load(
+                                        {
+                                            params :
+                                            {
+                                                'params.agente' : json.smap1.cdagente 
+                                            }
+                                            ,callback : function(records)
+                                            {
+                                               debug('callback records:',records,records.length);
+                                               if(_fieldByLabel('AGENTE').findRecord('key',json.smap1.cdagente)){
+                                                   agente.setValue(json.smap1.cdagente);
+                                               }else{
+                                                   mensajeWarning('El agente '+json.smap1.cdagente+' no se encuentra en la lista del promotor/suscriptor');
+                                                   folio.reset();
+                                                   agente.reset();
+                                               }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                mensajeError(json.respuesta);
+                                folio.reset();
+                                agente.reset();
+                            }
+                        }
+                        ,failure : function(response)
+                        {
+                            _0_panelPri.setLoading(false);
+                            errorComunicacion();
+                        }
+                    });
+                }
+            }
         });
         
         //tipo de unidad
@@ -4622,13 +4823,14 @@ Ext.onReady(function()
     //si hay flujo de autos se recupera cotizacion ultima
     _0_recuperarCotizacionDeTramite();
     
+    //recuperar poliza desde sigs para renovacion
+    _0_recuperarPolizaSIGS();
+    
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
 
 });
 </script>
 </head>
-<body>
-	<div id="_0_divPri" style="height: 1200px;"></div>
-</body>
+<body><div id="_0_divPri" style="height: 1200px;border:1px solid #CCCCCC;"></div></body>
 </html>
