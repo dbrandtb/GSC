@@ -2297,8 +2297,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
-                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&!(json.slist1[j].SWMODIFI=='N')
-                                                        ,disabled   : json.slist1[j].SWMODIFI=='N'
+                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&(json.slist1[j].SWSELECCIONADO=='S')//SWMODIFI == 'S' es el encargado de la Asistencia a VIajes
+                                                        ,disabled   : json.slist1[j].SWHABILITADO=='N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
                                                         {
