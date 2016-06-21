@@ -4027,7 +4027,7 @@ Ext.onReady(function()
 			                            'smap1.cdunieco' : _0_smap1.cdunieco,
 			                            'smap1.cdtipsit' : _0_smap1.cdtipsit,
 			                            'smap1.cdramo'   : _0_smap1.cdramo,
-			                            'smap1.idusu'   : <s:property value="%{#session['USUARIO'].claveUsuarioCaptura}"/>
+			                            'smap1.idusu'   : '<s:property value="%{#session['USUARIO'].claveUsuarioCaptura}"/>'
 			                        }
 			                        ,success : function(response)
 			                        {
