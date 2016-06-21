@@ -994,7 +994,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 				if(aux == null || !aux.isExitoRecibos()){
 					
-					logger.error("Error al ejecutar los WS de endoso");
+					logger.error("Error al ejecutar los WS de endoso, Tipo de endoso: "+ cdtipsup);
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 							
 					if(endosoRevertido){
@@ -1366,7 +1366,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
-				logger.error("Error al ejecutar los WS de endoso");
+				logger.error("Error al ejecutar los WS de endoso para la Alta de inciso");
 				
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 				
@@ -1677,7 +1677,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
-				logger.error("Error al ejecutar los WS de endoso");
+				logger.error("Error al ejecutar los WS de endoso para la Baja de Inciso");
 				
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 				
@@ -1802,7 +1802,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 				if(aux == null || !aux.isExitoRecibos()){
-					logger.error("Error al ejecutar los WS de endoso");
+					logger.error("Error al ejecutar los WS de endoso para Despago");
 					
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 					
@@ -2933,7 +2933,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			if(this.endosoVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
 				logger.info("Endoso de Vigencia exitoso...");
 			}else{
-				logger.error("Error al ejecutar los WS de endoso de Vigencia");
+				logger.error("Error al ejecutar los WS de endoso de Vigencia de poliza");
 				
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
 				if(endosoRevertido){
@@ -3374,7 +3374,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
-				logger.error("Error al ejecutar los WS de endoso");
+				logger.error("Error al ejecutar los WS de endoso de clave auto o amis");
 				
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 				
@@ -3520,7 +3520,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			List<Map<String,String>> listaEndosos = emisionAutosService.obtieneEndososImprimir(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
 			if(listaEndosos == null || listaEndosos.isEmpty()){
-				logger.error("Error al ejecutar caratula endoso con tarifa, Sin Datos de consulta.");
+				logger.error("Error al ejecutar caratula endoso con tarifa, Sin Datos de consulta. Para Tipo de endoso: "+ cdtipsup);
 				return false;
 			}
 			
@@ -3904,7 +3904,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			
 		}catch(Exception ex){
-			logger.error("Error al ejecutar caratula endoso con tarifa", ex);
+			logger.error("Error al ejecutar caratula endoso con tarifa, para tipo de endoso: " + cdtipsup, ex);
 			return false;
 		}
 		return true;
@@ -4106,7 +4106,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
-				logger.error("Error al ejecutar los WS de endoso");
+				logger.error("Error al ejecutar los WS de endoso para Rehabilitacion Auto");
 				
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 				
@@ -4633,7 +4633,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 				if(aux == null || !aux.isExitoRecibos()){
-					logger.error("Error al ejecutar los WS de endoso");
+					logger.error("Error al ejecutar los WS de endoso para cancelacion de endoso");
 					
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 					
@@ -4757,7 +4757,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			// Se envian los datos a traves del WS de autos:
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
-				logger.error("Error al ejecutar los WS de endoso");
+				logger.error("Error al ejecutar los WS de endoso para devolucion de primas");
 				
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 				
@@ -5002,7 +5002,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
-				logger.error("Error al ejecutar los WS de endoso");
+				logger.error("Error al ejecutar los WS de endoso para cancelacion de poliza de auto");
 				
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 				
@@ -5426,7 +5426,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						codigoErr = aux.getResRecibos();
 					}
 					
-					logger.error("Error al ejecutar los WS de endoso");
+					logger.error("Error al ejecutar los WS de endoso para tipo de endoso: " +  cdtipsup);
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, 
 							codigoErr,
 									"Error en endoso auto, tipo: "+
@@ -5651,7 +5651,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
-				logger.error("Error al ejecutar los WS de endoso");
+				logger.error("Error al ejecutar los WS de endoso para rehabilitacion de poliza de auto");
 				
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 				
@@ -5814,7 +5814,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 			if(aux == null || !aux.isExitoRecibos()){
-				logger.error("Error al ejecutar los WS de endoso");
+				logger.error("Error al ejecutar los WS de endoso para Ampliacion de Vigencia");
 				
 				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 				
@@ -5948,7 +5948,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 				if(aux == null || !aux.isExitoRecibos()){
-					logger.error("Error al ejecutar los WS de endoso");
+					logger.error("Error al ejecutar los WS de endoso para rehabilitcion de despago");
 					
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 					
