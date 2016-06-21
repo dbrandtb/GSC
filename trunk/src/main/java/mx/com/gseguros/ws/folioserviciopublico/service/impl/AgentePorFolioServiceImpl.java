@@ -27,7 +27,7 @@ public class AgentePorFolioServiceImpl implements AgentePorFolioService {
 	private String endpoint;
 	
 	
-	public EmAdmfolId obtieneAgentePorFolioSucursal(int numFolio, int sucursalAdmin){
+	public EmAdmfolId obtieneAgentePorFolioSucursal(int numFolio, int sucursalAdmin, int cdramo, String cdsisrol, String cdusuari, int idusu, String cdtipsit){
 		
 		logger.debug(">>>>> Entrando a metodo WS ObtieneAgentePorFolioSucursal para servicio publico");
 		
@@ -35,7 +35,7 @@ public class AgentePorFolioServiceImpl implements AgentePorFolioService {
 		
 		if(numFolio != 0 ){
 			try{
-				WrapperResultadosWS resultWS = this.ejecutaAgentePorFolioYSucursalWS(numFolio, sucursalAdmin);
+				WrapperResultadosWS resultWS = this.ejecutaAgentePorFolioYSucursalWS(numFolio, sucursalAdmin, cdramo, cdsisrol, cdusuari, idusu, cdtipsit);
 						
 				ResponseFolio resFol = (ResponseFolio) resultWS.getResultadoWS();
 				
@@ -68,7 +68,7 @@ public class AgentePorFolioServiceImpl implements AgentePorFolioService {
 		return resAgenteFolio;
 	}
 	
-	private WrapperResultadosWS ejecutaAgentePorFolioYSucursalWS(int numFolio, int sucursalAdmin) throws Exception{
+	private WrapperResultadosWS ejecutaAgentePorFolioYSucursalWS(int numFolio, int sucursalAdmin, int cdramo, String cdsisrol, String cdusuari, int idusu, String cdtipsit) throws Exception{
 		
 		WrapperResultadosWS resultWS = new WrapperResultadosWS();
 		FolioWSServiceStub stubGS = null;
@@ -85,6 +85,12 @@ public class AgentePorFolioServiceImpl implements AgentePorFolioService {
 		RequestFolio requestFolio = new RequestFolio();
 		requestFolio.setNum_folio(numFolio);
 		requestFolio.setSucursal_admin(sucursalAdmin);
+		
+		requestFolio.setCdramo(cdramo);
+		requestFolio.setCdsisrol(cdsisrol);
+		requestFolio.setCdtipsit(cdtipsit);
+		requestFolio.setCdusuario(cdusuari);
+		requestFolio.setId_usu(idusu);
 		
 		ValidarFolio validarFolio = new ValidarFolio();
 		validarFolio.setArg0(requestFolio);

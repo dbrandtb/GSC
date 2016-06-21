@@ -10032,14 +10032,29 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		int folio    = -1;
 		int cdunieco = -1;
-		
+		int cdramo   = -1;
+		String cdsisrol = "";
+		String cdusuari = "";
+		int idusu    = 0;
+		String cdtipsit = "";
 		//checar datos
 		if(exito)
 		{
 			try
 			{
+				UserVO usuario=(UserVO)session.get("USUARIO");
+				
 				folio    = Integer.valueOf(smap1.get("folio"));
 				cdunieco = Integer.valueOf(smap1.get("cdunieco"));
+				cdramo   = Integer.valueOf(smap1.get("cdramo"));
+				cdsisrol = usuario.getRolActivo().getClave();
+				cdusuari = usuario.getUser();
+				cdtipsit = String.valueOf(smap1.get("cdtipsit"));
+				
+				if(StringUtils.isNotBlank(smap1.get("idusu")))
+				{
+					idusu    = Integer.valueOf(smap1.get("idusu"));
+				}
 			}
 			catch(Exception ex)
 			{
@@ -10056,7 +10071,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-				EmAdmfolId agente = agentePorFolioService.obtieneAgentePorFolioSucursal(folio,cdunieco);
+				EmAdmfolId agente = agentePorFolioService.obtieneAgentePorFolioSucursal(folio,cdunieco,cdramo,cdsisrol,cdusuari,idusu,cdtipsit);
 				if(agente==null)
 				{
 					throw new Exception("No existe el agente");

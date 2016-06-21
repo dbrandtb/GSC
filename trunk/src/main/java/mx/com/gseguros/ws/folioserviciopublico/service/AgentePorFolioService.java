@@ -10,5 +10,5 @@ public interface AgentePorFolioService {
 	 * @param sucursalAdmin
 	 * @return
 	 */
-	public EmAdmfolId obtieneAgentePorFolioSucursal(int numFolio, int sucursalAdmin);
+	public EmAdmfolId obtieneAgentePorFolioSucursal(int numFolio, int sucursalAdmin, int cdramo, String cdsisrol, String cdusuari, int idusu, String cdtipsit);
 }
