@@ -2777,14 +2777,14 @@ public class EndososManagerImpl implements EndososManager
 		{
 			paso = "Regenerando suplemento";
 			String nmsuplemRegenerado = endososDAO.regeneraSuplementoFamiliaEndoso(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,nmsuplem
-					,nsuplogi
-					,fecha
-					);
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplem
+				,nsuplogi
+				,fecha
+			);
 			
 			/*for(String nmsituac:incisos){
 				paso = "Obtenemos los valores por defecto";
