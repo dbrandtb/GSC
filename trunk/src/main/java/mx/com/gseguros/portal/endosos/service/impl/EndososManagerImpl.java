@@ -2785,7 +2785,8 @@ public class EndososManagerImpl implements EndososManager
 					,nsuplogi
 					,fecha
 					);
-			for(String nmsituac:incisos){
+			
+			/*for(String nmsituac:incisos){
 				paso = "Obtenemos los valores por defecto";
 				cotizacionDAO.valoresPorDefecto(
 						cdunieco
@@ -2797,7 +2798,7 @@ public class EndososManagerImpl implements EndososManager
 						,"TODO"
 						,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 				);
-			}
+			}*/
 			
 			paso = "Tarificando inciso";
 			endososDAO.sigsvalipolEnd(
