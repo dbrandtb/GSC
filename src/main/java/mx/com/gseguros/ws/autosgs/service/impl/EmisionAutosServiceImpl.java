@@ -111,7 +111,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			listaEndosos = storedProceduresManager.procedureListCall(
 					ObjetoBD.OBTIENE_DATOS_WS_ENDOSO_AUTO.getNombre(), params, null);
 		} catch (Exception e2) {
-			logger.error("Error al obtener lista de endosos o emision para WS de autos.",e2);
+			logger.error("Error al obtener lista de endosos o emision para enviar datos al WS de autos.",e2);
 		}
 		
 //		params.put("param6" , tipopol);
@@ -604,7 +604,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						
 					}
 				} catch (Exception e1) {
-					logger.error("Error en llamar al PL de obtencion de datos para Emision WS Autos",e1);
+					logger.error("Error en PL de obtencion de datos para envio de Emision WS Autos",e1);
 					return null;
 				}	
 				
@@ -703,7 +703,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 								storedProceduresManager.procedureVoidCall(
 										ObjetoBD.ACTUALIZA_ENDOSO_SIGS.getNombre(), paramsEnd, null);
 							} catch (Exception e2) {
-								logger.error("Error al actualizar el numero de endoso.",e2);
+								logger.error("Error al actualizar el numero de endoso para la poliza: "+ nmpoliza,e2);
 							}
 						}
 						return null;
@@ -725,13 +725,27 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 								storedProceduresManager.procedureVoidCall(
 										ObjetoBD.ACTUALIZA_ENDOSO_SIGS.getNombre(), paramsEnd, null);
 							} catch (Exception e2) {
-								logger.error("Error al actualizar el numero de endoso.",e2);
+								logger.error("Error al actualizar el numero de endoso para la poliza: " + nmpoliza,e2);
 							}
 						}
 						return null;
 					}
 				}else{
-					logger.error("Error, No se tienen datos del Auto");
+					
+					if(cdramo.equalsIgnoreCase(Ramo.AUTOS_FRONTERIZOS.getCdramo())){
+						logger.error("Error, No se encontraron datos a enviar para el WebService de Cotizacion-Emision/Endosos Autos");
+						logger.error("SP: " + ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre());
+						logger.error("Parametros: " + params);
+					}else if(cdramo.equalsIgnoreCase(Ramo.SERVICIO_PUBLICO.getCdramo())){
+						logger.error("Error, No se encontraron datos a enviar para el WebService de Cotizacion-Emision/Endosos Autos");
+						logger.error("SP: " + ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre());
+						logger.error("Parametros: " + params);
+					}else if(cdramo.equalsIgnoreCase(Ramo.AUTOS_RESIDENTES.getCdramo())){
+						logger.error("Error, No se encontraron datos a enviar para el WebService de Cotizacion-Emision/Endosos Autos");
+						logger.error("SP: " + ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre());
+						logger.error("Parametros: " + params);
+					}
+					
 					return null;
 				}
 		
@@ -747,7 +761,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			if(!exitoRecibosSigs){
 				emisionAutoRes.setExitoRecibos(false);
 				emisionAutoRes.setResRecibos((valida == null) ?9999 : valida);
-				logger.debug("Error al Ejecutar la emision de la poliza de autos: "+ valida);
+				logger.debug("Error al Ejecutar la emision de la poliza de autos: "+nmpoliza+" valida:"+ valida);
 			}else{
 				emisionAutoRes.setExitoRecibos(true);
 				emisionAutoRes.setResRecibos(valida);
