@@ -763,7 +763,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			if(!exitoRecibosSigs){
 				emisionAutoRes.setExitoRecibos(false);
 				emisionAutoRes.setResRecibos((valida == null) ?9999 : valida);
-				logger.debug("Error al Ejecutar la emision de la poliza de autos: "+nmpoliza+" valida:"+ valida);
+				logger.error("Error al Ejecutar la emision de la poliza de autos: "+nmpoliza+" valida:"+ valida);
 			}else{
 				emisionAutoRes.setExitoRecibos(true);
 				emisionAutoRes.setResRecibos(valida);
