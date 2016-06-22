@@ -79,6 +79,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_CDUNIEXT_POR_LLAVE_POLIZA                     ("M" , "RECUPERAR_CDUNIEXT_POR_LLAVE_POLIZA")
 	,RECUPERAR_TTIPFLUROL                                    ("L" , "RECUPERAR_TTIPFLUROL")
 	,RECUPERAR_TFLUJOROL                                     ("L" , "RECUPERAR_TFLUJOROL")
+	,RECUPERAR_FLUJO_POR_DESCRIPCION                         ("M" , "RECUPERAR_FLUJO_POR_DESCRIPCION")
 	;
 	 
 	private String tipo;

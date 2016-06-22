@@ -657,4 +657,6 @@ public interface FlujoMesaControlDAO {
 			,String cdflujomc
 			,List<Map<String,String>> lista
 			)throws Exception;
+	
+	public Map<String,String> recuperarFlujoPorDescripcion(String descripcion) throws Exception;
 }

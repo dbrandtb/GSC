@@ -649,6 +649,16 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						params.get("nmpoliza")
 						));
 			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_FLUJO_POR_DESCRIPCION))
+			{
+				String descripcion = params.get("descripcion");
+				
+				paso = "Recuperando flujo por descripcion";
+				
+				logger.debug(Utils.log(paso, " descripcion = ", descripcion));
+				
+				mapa = flujoMesaControlDAO.recuperarFlujoPorDescripcion(params.get("descripcion"));
+			}
 		}
 		catch(Exception ex)
 		{
