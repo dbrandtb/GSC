@@ -1,10 +1,16 @@
 package mx.com.gseguros.portal.general.controller;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
+import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
+import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.utils.Utils;
 
@@ -34,6 +40,15 @@ public class ServiciosAction extends PrincipalCoreAction
 	@Autowired
 	private ServiciosManager serviciosManager;
 
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
+	
+	@Autowired
+	private RecuperacionSimpleManager recuperacionSimpleManager;
+	
+	@Autowired
+	private CotizacionManager cotizacionManager;
+	
 	@Action(value   = "reemplazarDocumentoCotizacion",
 		    results = {
 		        @Result(name="input"   , location="/jsp-script/servicios/input.jsp"),
@@ -216,6 +231,150 @@ public class ServiciosAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n###### recibosSubsecuentesTest ######"
 				,"\n#####################################"
+				));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "registrarTramiteRenovacion",
+		    results = {
+	        @Result(name="input"   , location="/jsp-script/servicios/input.jsp"),
+	        @Result(name="success" , location="/jsp-script/servicios/respuesta.jsp")
+	    })
+	public String registrarTramiteRenovacion()
+	{
+		logger.debug(Utils.log(
+				 "\n########################################"
+				,"\n###### registrarTramiteRenovacion ######"
+				,"\n###### params=" , params
+				));
+		
+		try
+		{
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtiptra     = "21" //RENOVACION
+					,cdtipsup   = "0"  //emision
+					,nmpoliza   = "0"
+					,referencia = "1"
+					,nombre     = null
+					,status     = "13" // EN COTIZACION
+					,comments   = "Tr\u00e1mite importado de sistema externo"
+					,estado     = "W"
+					//recuperados de BD:
+					,cdtipflu   = null //recuperar
+					,cdflujomc  = null //recuperar
+					,cdsucadm   = null //recuperar del agente
+					,cdsucdoc   = null //recuperar del agente
+					//recibidos:
+					,cdagente   = params.get("cdagente")
+					,cduniext   = params.get("sucursal")
+					,ramo       = params.get("ramo")
+					,nmpoliex   = params.get("poliza")
+					,cdramo     = params.get("cdramo")
+					,cdtipsit   = params.get("cdtipsit")
+					,tipoflot   = params.get("tipoflot")
+					,cdusuari   = params.get("cdusuari")
+					,cdsisrol   = params.get("cdsisrol");
+			
+			Date fechaRecep    = new Date()
+			     ,fechaEstatus = new Date();
+			
+			Utils.validate(
+					cdagente  , "No se recibi\u00f3 el agente"
+					,cduniext , "No se recibi\u00f3 la sucursal"
+					,ramo     , "No se recibi\u00f3 el ramo"
+					,nmpoliex , "No se recibi\u00f3 la p\u00f3liza"
+					,cdramo   , "No se recibi\u00f3 el cdramo"
+					,cdtipsit , "No se recibi\u00f3 el cdtipsit"
+					,tipoflot , "No se recibi\u00f3 el tipo de flotilla"
+					,cdusuari , "No se recibi\u00f3 el usuario"
+					,cdsisrol , "No se recibi\u00f3 el rol"
+					);
+			
+			if("IPF".indexOf(tipoflot) == -1)
+			{
+				throw new ApplicationException("El tipo de flotilla debe ser I, P, o F");
+			}
+			
+			String cadena = "INDIVIDUAL";
+			
+			if("P".equals(tipoflot))
+			{
+				cadena = "PYME";
+			}
+			else if("F".equals(tipoflot))
+			{
+				cadena = "FLOTILLA";
+			}
+			
+			Map<String,String> paramsFlujo = new LinkedHashMap<String,String>();
+			paramsFlujo.put("descripcion" , Utils.join("RENOVACI%N%AUTO%",cadena));
+			
+			Map<String,String> flujo = recuperacionSimpleManager.recuperarMapa(
+					cdusuari
+					,cdsisrol
+					,RecuperacionSimple.RECUPERAR_FLUJO_POR_DESCRIPCION
+					,paramsFlujo
+					,null //usuario
+					);
+			
+			cdtipflu  = flujo.get("CDTIPFLU");
+			cdflujomc = flujo.get("CDFLUJOMC");
+			
+			logger.debug(Utils.log(
+					"cdtipflu recuperado = "     , cdtipflu
+					,", cdflujomc recuperado = " , cdflujomc
+					));
+			
+			cdsucadm = cotizacionManager.cargarCduniecoAgenteAuto(cdagente);
+			
+			logger.debug(Utils.log("sucursal recuperada para el agente '",cdagente,"' = ",cdsucadm));
+			
+			Utils.validate(cdsucadm , "No se pudo recuperar la sucursal del agente");
+			
+			cdsucdoc = cdsucadm;
+			
+			String ntramite = flujoMesaControlManager.registrarTramite(
+					cdsucdoc
+					,cdramo
+					,estado
+					,nmpoliza
+					,null //nmsuplem
+					,cdsucadm
+					,cdsucdoc
+					,cdtiptra
+					,fechaRecep
+					,cdagente
+					,referencia
+					,nombre
+					,fechaEstatus
+					,status
+					,comments
+					,null //nmsolici
+					,cdtipsit
+					,cdusuari
+					,cdsisrol
+					,null //swimpres
+					,cdtipflu
+					,cdflujomc
+					,null
+					,cdtipsup
+					,cduniext
+					,ramo
+					,nmpoliex
+					);
+			
+			respuesta = Utils.join("OK,",ntramite);
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### respuesta = " , respuesta
+				,"\n###### registrarTramiteRenovacion ######"
+				,"\n########################################"
 				));
 		return SUCCESS;
 	}
