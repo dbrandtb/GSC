@@ -744,6 +744,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						logger.error("Error, No se encontraron datos a enviar para el WebService de Cotizacion-Emision/Endosos Autos");
 						logger.error("SP: " + ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre());
 						logger.error("Parametros: " + params);
+					} else {
+						logger.error("Error, No se tienen datos del Auto");
 					}
 					
 					return null;
