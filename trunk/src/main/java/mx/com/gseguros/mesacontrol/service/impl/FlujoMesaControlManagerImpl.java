@@ -2055,6 +2055,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String cdusuariSes
 			,String cdsisrolSes
 			,String comments
+			,boolean cerrado
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -2068,6 +2069,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ cdusuariSes="  , cdusuariSes
 				,"\n@@@@@@ cdsisrolSes="  , cdsisrolSes
 				,"\n@@@@@@ comments="     , comments
+				,"\n@@@@@@ cerrado="      , cerrado
 				));
 		String paso     = "Iniciando turnado"
 		       ,message = null;
@@ -2241,7 +2243,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,usuarioDestino.get("cdusuari")
 					,usuarioDestino.get("cdsisrol")
 					,statusNew
-					,false
+					,cerrado
 					);
 			
 			if(destinoSimple)
@@ -2317,6 +2319,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String statusNew
 			,String swagente
 			,String comments
+			,boolean cerrado
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -2331,6 +2334,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ statusNew=" , statusNew
 				,"\n@@@@@@ swagente="  , swagente
 				,"\n@@@@@@ comments="  , comments
+				,"\n@@@@@@ cerrado="   , cerrado
 				));
 		
 		String message = null
@@ -2380,6 +2384,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,cdusuari
 					,cdsisrol
 					,comments
+					,cerrado
 					);
 		}
 		catch(Exception ex)
