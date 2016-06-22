@@ -225,6 +225,7 @@ Ext.define('VentanaRechazo',
                         values.SWAGENTE = _fieldById('SWAGENTE',win).getGroupValue();
                         debug('values:',values);
                         values.COMMENTS = values.COMMENTSINT;
+                        values.cerrado  = 'S';
                         
                         _mask(ck);
                         Ext.Ajax.request(
@@ -251,7 +252,7 @@ Ext.define('VentanaRechazo',
                                                 ,params  :
                                                 {
                                                     'map1.ntramite'  : config.ntramite
-                                                    ,'map1.comments' : me.up('window').down('[name=COMMENTSINT]').getValue()
+                                                    ,'map1.comments' : me.up('window').down('[name=COMMENTSEXT]').getValue()
                                                     ,'map1.cdsisrol' : config.cdsisrol
                                                     ,'map1.cdunieco' : config.cdunieco
                                                     ,'map1.cdramo'   : config.cdramo

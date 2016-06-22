@@ -249,6 +249,7 @@ public interface FlujoMesaControlManager
 			,String cdusuariSes
 			,String cdsisrolSes
 			,String comments
+			,boolean cerrado
 			)throws Exception;
 	
 	public Map<String,Object> recuperarDatosTramiteValidacionCliente(FlujoVO flujo)throws Exception;
@@ -263,6 +264,7 @@ public interface FlujoMesaControlManager
 			,String statusNew
 			,String swagente
 			,String comments
+			,boolean cerrado
 			)throws Exception;
 	
 	/**

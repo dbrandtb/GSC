@@ -1788,6 +1788,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,cdtipasigNew    = params.get("cdtipasigNew")
 			       ,comments        = params.get("comments");
 			
+			boolean cerrado = "S".equals(params.get("cerrado"));
+			
 			Utils.validate(
 					ntramite      , "No se recibi\u00f3 el tr\u00e1mite"
 					,statusOld    , "No se recibi\u00f3 el status anterior"
@@ -1805,6 +1807,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdusuariSes
 					,cdsisrolSes
 					,comments
+					,cerrado
 					);
 			
 			success = true;
@@ -1885,6 +1888,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,swagente  = params.get("SWAGENTE")
 			       ,comments  = params.get("COMMENTS");
 			
+			boolean cerrado = "S".equals(params.get("cerrado"));
+			
 			Utils.validate(
 					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
 					,cdflujomc , "No se recibi\u00f3 el proceso"
@@ -1903,6 +1908,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,statusNew
 					,swagente
 					,comments
+					,cerrado
 					);
 			
 			success = true;
