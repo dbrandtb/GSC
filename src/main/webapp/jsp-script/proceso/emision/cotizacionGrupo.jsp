@@ -4234,7 +4234,7 @@ function _p21_turnar(status,titulo,closable)
                                             
                                             if(json.smap1.ASYNC=='S')
                                             {
-                                                mensajeTurnado = 'El tr\u00e1mite qued\u00f3 en espera y ser\u00e1 procesado posteriormente';
+                                                mensajeTurnado = 'El tr\u00e1mite '+_p21_smap1.ntramite+' qued\u00f3 en espera y ser\u00e1 procesado posteriormente';
                                             }
                                         
                                             mensajeCorrecto('Tr&aacute;mite guardado'
