@@ -59,11 +59,40 @@ public class PolizaVO implements Serializable {
 	
 	private String familia;
 	
+	/*
+	 * Se agrega nmrenova 
+	 */
+	private String nmrenova;
+	
+	/*
+	 * Se agrega nmpolant
+	 */
+	
+	private String nmpolant;
+	 
+	
 	
 	//Constructors:
 	
+	
 	public String getFamilia() {
 		return familia;
+	}
+
+	public String getNmrenova() {
+		return nmrenova;
+	}
+
+	public void setNmrenova(String nmrenova) {
+		this.nmrenova = nmrenova;
+	}
+
+	public String getNmpolant() {
+		return nmpolant;
+	}
+
+	public void setNmpolant(String nmpolant) {
+		this.nmpolant = nmpolant;
 	}
 
 	public void setFamilia(String familia) {
