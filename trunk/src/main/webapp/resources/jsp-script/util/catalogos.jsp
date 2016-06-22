@@ -139,7 +139,12 @@ var RolSistema = {
     ,GerenteSuscripcionDanios     : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GERENTE_SUSCRI_DANIOS.cdsisrol"     />'
     ,EmisorSuscripcionDanios      : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@EMISOR_SUSCRI_DANIOS.cdsisrol"      />'
     ,SubdirectorSuscripcionDanios : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUBDIRECTOR_SUSCRI_DANIOS.cdsisrol" />'
+    ,Parametrizador				  : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@PARAMETRIZADOR.cdsisrol" />'
+    ,ParametrizadorAreaTecnica	  : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@PARAMETRIZADOR_AREA_TECNICA.cdsisrol" />'
+    ,ParametrizadorSistemas  	  : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@PARAMETRIZADOR_SISTEMAS.cdsisrol" />'
 };
+
+
 
 // Catalogo de tipos de ramo (salud/autos)
 var TipoRamo = {
