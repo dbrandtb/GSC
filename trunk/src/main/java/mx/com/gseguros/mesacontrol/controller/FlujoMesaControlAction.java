@@ -363,7 +363,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdtiptra  , "No se recibi\u00f3 el tipo de tr\u00e1mite"
 					);
 			
-			flujoMesaControlManager.movimientoTtipflumc(
+			cdtipflu = flujoMesaControlManager.movimientoTtipflumc(
 					accion
 					,cdtipflu
 					,dstipflu
@@ -372,6 +372,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,swmultipol
 					,cdtipsup
 					);
+			
+			params.put("CDTIPFLU",cdtipflu);
 			
 			success = true;
 			
@@ -420,7 +422,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdtipram  , "No se recibi\u00f3 el tipo de ramo"
 					);
 			
-			flujoMesaControlManager.movimientoTflujomc(
+			cdflujomc = flujoMesaControlManager.movimientoTflujomc(
 					accion
 					,cdtipflu
 					,cdflujomc
@@ -429,6 +431,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdtipram
 					,swgrupo
 					);
+			
+			params.put("CDFLUJOMC" , cdflujomc); // regresa el nuevo cuando se inserta
 			
 			success = true;
 			
@@ -2062,8 +2066,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n###### success = " , success
 				,"\n###### message = " , message
-				,"\n###### guardarTtipflurol ######"
-				,"\n###############################"
+				,"\n###### guardarTflujorol ######"
+				,"\n##############################"
 				));
 		return SUCCESS;
 	}

@@ -88,7 +88,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public void movimientoTtipflumc(
+	public String movimientoTtipflumc(
 			String accion
 			,String cdtipflu
 			,String dstipflu
@@ -113,9 +113,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		String paso = "Guardando tr\u00E1mite";
 		logger.debug(paso);
 		
+		String cdtipfluRes = null;
+		
 		try
 		{
-			flujoMesaControlDAO.movimientoTtipflumc(
+			cdtipfluRes = flujoMesaControlDAO.movimientoTtipflumc(
 					cdtipflu
 					,dstipflu
 					,cdtiptra
@@ -130,13 +132,16 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		logger.debug(Utils.log(
-				 "\n@@@@@@ movimientoTtipflumc @@@@@@"
+				 "\n@@@@@@ cdtipflu = ", cdtipfluRes
+				,"\n@@@@@@ movimientoTtipflumc @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+		
+		return cdtipfluRes;
 	}
 	
 	@Override
-	public void movimientoTflujomc(
+	public String movimientoTflujomc(
 			String accion
 			,String cdtipflu
 			,String cdflujomc
@@ -161,9 +166,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		String paso = "Guardando proceso";
 		logger.debug(paso);
 		
+		String cdflujomcRes = null;
+		
 		try
 		{
-			flujoMesaControlDAO.movimientoTflujomc(
+			cdflujomcRes = flujoMesaControlDAO.movimientoTflujomc(
 					cdtipflu
 					,cdflujomc
 					,dsflujomc
@@ -179,9 +186,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}
 		
 		logger.debug(Utils.log(
-				 "\n@@@@@@ movimientoTflujomc @@@@@@"
+				 "\n@@@@@@ cdflujomc = ", cdflujomcRes
+				,"\n@@@@@@ movimientoTflujomc @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+		
+		return cdflujomcRes;
 	}
 	
 	@Override
