@@ -2841,37 +2841,63 @@ function _p28_cargarPoliza(boton)
     
     if(valido)
     {
-        var panelpri = _fieldById('_p28_panelpri');
-        panelpri.setLoading(true);
-        Ext.Ajax.request(
+        var mask,ck = 'Recuperando p\u00f3liza para renovar';
+        
+        try
         {
-            url      : _p28_urlCargarPoliza
-             ,params  :
-             {
-                  'smap1.cdsucursal' : sucursal
-                 ,'smap1.cdramo' : ramo
-                 ,'smap1.cdpoliza' : poliza
-                 ,'smap1.cdusuari' : _p28_smap1.cdusuari
-                 ,'smap1.tipoflot' : 'I'
-             }
-             ,success : function(response)
-             {
-              panelpri.setLoading(false);
-              var json=Ext.decode(response.responseText);
-              debug("valoresCampos: ",json);
-              var json2=Ext.decode(json.smap1.valoresCampos);
-              json2['success']=true;
-              cdper     = json2.smap1.cdper;   //D00000000111005
-              cdperson  = json2.smap1.cdperson;//530400
-              debug("valoresCampos 2: ",json2);
-              llenandoCampos(json2);
-             }
-            ,failure : function()
-            {
-             panelpri.setLoading(false);
-             errorComunicacion();
-            }
-        });
+            mask = _maskLocal(ck);
+	        var panelpri = _fieldById('_p28_panelpri');
+	        //panelpri.setLoading(true);
+	        Ext.Ajax.request(
+	        {
+	            url      : _p28_urlCargarPoliza
+	             ,params  :
+	             {
+	                  'smap1.cdsucursal' : sucursal
+	                 ,'smap1.cdramo' : ramo
+	                 ,'smap1.cdpoliza' : poliza
+	                 ,'smap1.cdusuari' : _p28_smap1.cdusuari
+	                 ,'smap1.tipoflot' : 'I'
+	             }
+	             ,success : function(response)
+	             {
+	              //panelpri.setLoading(false);
+	                  mask.close();
+	                  var ck = 'Decodificando respuesta al recuperar p\u00f3liza para renovar';
+	                  try
+	                  {
+			              var json=Ext.decode(response.responseText);
+			              debug("valoresCampos: ",json);
+			              
+			              if(Ext.isEmpty(json.smap1.valoresCampos))
+			              {
+			                  throw 'No se encontraron datos para renovar';
+			              }
+			              
+			              var json2=Ext.decode(json.smap1.valoresCampos);
+			              json2['success']=true;
+			              cdper     = json2.smap1.cdper;   //D00000000111005
+			              cdperson  = json2.smap1.cdperson;//530400
+			              debug("valoresCampos 2: ",json2);
+			              llenandoCampos(json2);
+			          }
+			          catch(e)
+			          {
+			              manejaException(e,ck);
+			          }
+	             }
+	            ,failure : function()
+	            {
+	             //panelpri.setLoading(false);
+	             mask.close();
+	             errorComunicacion();
+	            }
+	        });
+	    }
+	    catch(e)
+	    {
+	        manejaException(e,ck,mask);
+	    }
     }
 }
 
