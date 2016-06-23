@@ -14,7 +14,7 @@ public interface FlujoMesaControlManager
 			String cdsisrol
 			)throws Exception;
 	
-	public void movimientoTtipflumc(
+	public String movimientoTtipflumc(
 			String accion
 			,String cdtipflu
 			,String dstipflu
@@ -24,7 +24,7 @@ public interface FlujoMesaControlManager
 			,String cdtipsup
 			)throws Exception;
 	
-	public void movimientoTflujomc(
+	public String movimientoTflujomc(
 			String accion
 			,String cdtipflu
 			,String cdflujomc

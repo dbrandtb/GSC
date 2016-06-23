@@ -662,7 +662,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	
 	// SP 21
 	@Override
-	public void movimientoTtipflumc(
+	public String movimientoTtipflumc(
 			String cdtipflu
 			,String dstipflu
 			,String cdtiptra
@@ -670,7 +670,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String swreqpol
 			,String cdtipsup
 			,String accion
-			) throws Exception
+			)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdtipflu"   , cdtipflu);
@@ -680,7 +680,17 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("swreqpol"   , swreqpol);
 		params.put("cdtipsup"   , cdtipsup);
 		params.put("accion"     , accion);
-		ejecutaSP(new MovimientoTtipflumcSP(getDataSource()),params);
+		Map<String,Object> procRes = ejecutaSP(new MovimientoTtipflumcSP(getDataSource()),params);
+		
+		String cdtipfluSalida = cdtipflu;
+		
+		if("I".equals(accion))
+		{
+			cdtipfluSalida = (String)procRes.get("pv_cdtipflu_o");
+			logger.debug("PKG_MESACONTROL.P_MOV_TTIPFLUMC cdtipflu generado '{}'",cdtipfluSalida);
+		}
+		
+		return cdtipfluSalida;
 	}
 	
 	protected class MovimientoTtipflumcSP extends StoredProcedure
@@ -695,6 +705,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("swreqpol"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdtipflu_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -704,7 +715,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	
 	// SP 22
 	@Override
-	public void movimientoTflujomc(
+	public String movimientoTflujomc(
 			String cdtipflu
 			,String cdflujomc
 			,String dsflujomc
@@ -722,7 +733,17 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("cdtipram"  , cdtipram);
 		params.put("swgrupo"   , swgrupo);
 		params.put("accion"    , accion);
-		ejecutaSP(new MovimientoTflujomcSP(getDataSource()),params);
+		Map<String,Object> procRes = ejecutaSP(new MovimientoTflujomcSP(getDataSource()),params);
+		
+		String cdflujomcSalida = cdtipflu;
+		
+		if("I".equals(accion))
+		{
+			cdflujomcSalida = (String)procRes.get("pv_cdtipflu_o");
+			logger.debug("PKG_MESACONTROL.P_MOV_TFLUJOMC genera el flujo '{}'",cdflujomcSalida);
+		}
+		
+		return cdflujomcSalida;
 	}
 	
 	protected class MovimientoTflujomcSP extends StoredProcedure
@@ -737,6 +758,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdtipram"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swgrupo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdtipflu_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

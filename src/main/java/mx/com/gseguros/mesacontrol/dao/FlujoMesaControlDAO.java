@@ -204,7 +204,7 @@ public interface FlujoMesaControlDAO {
 	 * @param accion
 	 * @throws Exception
 	 */
-	public void movimientoTtipflumc(String cdtipflu, String dstipflu, String cdtiptra,
+	public String movimientoTtipflumc(String cdtipflu, String dstipflu, String cdtiptra,
 			String swmultipol, String swreqpol, String cdtipsup, String accion) throws Exception;
 
 	/**
@@ -216,7 +216,7 @@ public interface FlujoMesaControlDAO {
 	 * @param accion
 	 * @throws Exception
 	 */
-	public void movimientoTflujomc(
+	public String movimientoTflujomc(
 			String cdtipflu
 			,String cdflujomc
 			,String dsflujomc
