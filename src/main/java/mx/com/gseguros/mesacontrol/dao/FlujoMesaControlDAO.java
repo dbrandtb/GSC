@@ -659,4 +659,17 @@ public interface FlujoMesaControlDAO {
 			)throws Exception;
 	
 	public Map<String,String> recuperarFlujoPorDescripcion(String descripcion) throws Exception;
+	
+	public void movimientoTflutit(
+			String cdtipflu,
+			String cdflujomc,
+			String cdtitulo,
+			String dstitulo,
+			String webid,
+			String xpos,
+			String ypos,
+			String accion
+			)throws Exception;
+	
+	public List<Map<String, String>> recuperaTflutit(String cdtipflu, String cdflujomc, String cdtitulo) throws Exception;
 }

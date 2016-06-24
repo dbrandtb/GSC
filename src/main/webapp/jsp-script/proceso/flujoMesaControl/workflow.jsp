@@ -111,6 +111,30 @@
     width       : 200px;
     text-align  : center;
 }
+.titulo .image
+{
+    width            : 50px;
+    height           : 20px;
+    background-image : url('${flujoimg}titulo.png');
+}
+.labelT
+{
+    position       : absolute;
+    left           : 0%;
+    margin-left    : 10px;
+    border         : 0px solid red;
+    top            : 3px;
+    text-align     : left;
+    text-transform : uppercase;
+}
+.labelT0
+{
+    width : 500px;
+}
+.labelT1
+{
+    width : 1000px;
+}
 .entidad:hover
 {
     border : 0px solid blue;
@@ -163,47 +187,113 @@
     border           : 0px solid red;
     background-image : url('${flujoimg}revision.png');
 }
+.entidadT0
+{
+    position         : absolute;
+    width            : 500px;
+    height           : 20px;
+    border           : 0px solid red;
+    background-image : url('${flujoimg}titulo0.png');
+}
+.entidadT1
+{
+    position         : absolute;
+    width            : 1000px;
+    height           : 20px;
+    border           : 0px solid red;
+    background-image : url('${flujoimg}titulo1.png');
+}
 .plus
 {
     position         : absolute;
-    top              : 0;
-    left             : 0;
-    margin-top       : -32px;
-    margin-left      : -16px;
+    top              : 50%;
+    left             : 50%;
+    margin-top       : -8px;
+    margin-left      : -24px;
     width            : 16px;
     height           : 16px;
     border           : 0px solid green;
-    background-image : url('${icons}add.png')
+    background-image : url('${icons}add.png');
+    visibility       : hidden;
+}
+.entidad:hover .plus
+{
+    visibility : visible;
 }
 .edit
 {
     position         : absolute;
-    top              : 0;
+    top              : 50%;
     left             : 50%;
-    margin-top       : -32px;
+    margin-top       : -8px;
     margin-left      : -8px;
     width            : 16px;
     height           : 16px;
     border           : 0px solid green;
-    background-image : url('${icons}pencil.png')
+    background-image : url('${icons}pencil.png');
+    visibility       : hidden;
+}
+.entidad:hover .edit
+{
+    visibility : visible;
 }
 .remove
 {
     position         : absolute;
-    top              : 0;
-    right            : 0;
-    margin-top       : -32px;
-    margin-right     : -16px;
+    top              : 50%;
+    left             : 50%;
+    margin-top       : -8px;
+    margin-left      : 8px;
     width            : 16px;
     height           : 16px;
     border           : 0px solid green;
-    background-image : url('${icons}delete.png')
+    background-image : url('${icons}delete.png');
+    visibility       : hidden;
+}
+.entidad:hover .remove
+{
+    visibility : visible;
 }
 .catedit
 {
     position : absolute;
     top      : 0;
     left     : 0;
+}
+.entidad:hover .labelE
+{
+    top : -10px;
+    font-weight: bold;
+}
+.entidad:hover .labelP
+{
+    top : -10px;
+    font-weight: bold;
+}
+.entidad:hover .labelC
+{
+    top : -10px;
+    font-weight: bold;
+}
+.entidad:hover .labelO
+{
+    top : -10px;
+    font-weight: bold;
+}
+.entidad:hover .labelV
+{
+    top : -10px;
+    font-weight: bold;
+}
+.entidad:hover .labelR
+{
+    top : -10px;
+    font-weight: bold;
+}
+.entidad:hover .labelT
+{
+    top : -10px;
+    font-weight: bold;
 }
 </style>
 <script type="text/javascript" src="${ctx}/resources/jsPlumb/jsPlumb-2.0.4.js?${now}"></script>
@@ -247,6 +337,8 @@ var _p52_urlCargarDatosAccion      = '<s:url namespace="/flujomesacontrol" actio
 var _p52_urlGuardarDatosAccion     = '<s:url namespace="/flujomesacontrol" action="guardarDatosAccion"     />';
 var _p52_urlGuardarTtipflurol      = '<s:url namespace="/flujomesacontrol" action="guardarTtipflurol"      />';
 var _p52_urlGuardarTflujorol       = '<s:url namespace="/flujomesacontrol" action="guardarTflujorol"       />';
+var _p52_urlCargarDatosTitulo      = '<s:url namespace="/flujomesacontrol" action="cargarDatosTitulo"      />';
+var _p52_urlGuardarDatosTitulo     = '<s:url namespace="/flujomesacontrol" action="guardarDatosTitulo"     />';
 ////// urls //////
 
 ////// variables //////
@@ -271,6 +363,7 @@ var _p52_catalogoValidaciones;
 var _p52_catalogoRevisiones;
 var _p52_formValidacion;
 var _p52_panelRevision;
+var _p52_panelTitulo;
 var _p52_panelAccion;
 var _p52_catalogoIconos;
 
@@ -430,6 +523,20 @@ Ext.onReady(function()
         ,'</div>'
     ]);
     
+    tituloTpl = new Ext.Template(
+    [
+         '<div id="T{cdtitulo}" class="catEntidad titulo" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dstitulo}">'
+        ,'    <table width="90" border="0">'
+        ,'        <tr>'
+        ,'            <td align="center"><div class="image"></div></td>'
+        ,'        </tr>'
+        ,'        <tr>'
+        ,'            <td align="center">{dstitulo}</td>'
+        ,'        </tr>'
+        ,'    </table>'
+        ,'</div>'
+    ]);
+    
     iconoTpl = new Ext.Template(
     [
          '<div class="radioicono">'
@@ -484,6 +591,13 @@ Ext.onReady(function()
         anchor     : [ 'Perimeter' , { shape : 'Rectangle' } ]
         ,isSource  : true
         ,isTarget  : true
+    };
+    
+    epProps['T'] =
+    {
+        anchor     : [ 'Perimeter' , { shape : 'Rectangle' } ]
+        ,isSource  : false
+        ,isTarget  : false
     };
     
     _p52_formTtipflumc = Ext.create('Ext.window.Window',
@@ -1542,7 +1656,7 @@ Ext.onReady(function()
         renderTo : '_p52_divpri'
         ,itemId  : '_p52_panelpri'
         ,title   : 'C O N F I G U R A D O R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P R O C E S O S'
-        ,height  : 700
+        ,height  : 730
         ,border  : 0
         ,layout  : 'border'
         ,header  :
@@ -1936,6 +2050,29 @@ Ext.onReady(function()
                                             ,'- Debe tener al menos una conexi\u00f3n,'
                                             ,'- Puede tener una sola conexi\u00f3n sin valor,'
                                             ,'- Puede tener dos conexiones, una con valor EXITO y otra con valor ERROR.'
+                                        ]);
+                                    }
+                                }]
+                            }
+                            ,{
+                                title       : 'T\u00CDTULOS'
+                                ,itemId     : '_p52_catalogoTitulos'
+                                ,defaults   : { style : 'margin : 5px;' }
+                                ,autoScroll : true
+                                ,layout     :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                    ,tdAttrs : { valign : 'top' }
+                                }
+                                ,tools :
+                                [{
+                                    type     : 'help'
+                                    ,tooltip : 'Tips'
+                                    ,handler : function()
+                                    {
+                                        _p52_ventanaTips([
+                                            'Se utilizan para dividir o seccionar el flujo'
                                         ]);
                                     }
                                 }]
@@ -2666,6 +2803,109 @@ Ext.onReady(function()
                             })
                             ,Ext.create('Ext.panel.Panel',
                             {
+                                itemId       : '_p52_panelTitulo'
+                                ,title       : 'T\u00CDTULO'
+                                ,hidden      : true
+                                ,buttonAlign : 'center'
+                                ,buttons     :
+                                [
+                                    {
+                                        text     : 'Guardar'
+                                        ,icon    : '${icons}disk.png'
+                                        ,handler : function(me)
+                                        {
+                                            _p52_guardarDatosTitulo(me,function(me)
+                                            {
+                                                _p52_panelCanvas.enable();
+                                                me.up('panel').hide();
+                                                _p52_actualizaLabel(
+                                                    'T'
+                                                    ,_p52_panelTitulo.down('[name=WEBID]').getValue()
+                                                    ,_p52_panelTitulo.down('[name=DSTITULO]').getValue()
+                                                );
+                                            });
+                                        }
+                                    }
+                                    ,{
+                                        text     : 'Cancelar'
+                                        ,icon    : '${icons}cancel.png'
+                                        ,handler : function(me)
+                                        {
+                                            _p52_panelCanvas.enable();
+                                            me.up('panel').hide();
+                                        }
+                                    }
+                                ]
+                                ,items :
+                                [
+                                    {
+                                        xtype     : 'form'
+                                        ,border   : 0
+                                        ,defaults : { style : 'margin:5px;' }
+                                        ,items    :
+                                        [
+                                            {
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_ACCION'
+                                                ,name       : 'ACCION'
+                                                ,allowBlank : false
+                                                ,hidden     : !_p52_debug
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_CDTIPFLU'
+                                                ,name       : 'CDTIPFLU'
+                                                ,allowBlank : false
+                                                ,hidden     : !_p52_debug
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_CDFLUJOMC'
+                                                ,name       : 'CDFLUJOMC'
+                                                ,allowBlank : false
+                                                ,hidden     : !_p52_debug
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_CDTITULO'
+                                                ,name       : 'CDTITULO'
+                                                ,allowBlank : false
+                                                ,hidden     : !_p52_debug
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_WEBID'
+                                                ,name       : 'WEBID'
+                                                ,allowBlank : false
+                                                ,hidden     : !_p52_debug
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_XPOS'
+                                                ,name       : 'XPOS'
+                                                ,allowBlank : false
+                                                ,hidden     : !_p52_debug
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : '_YPOS'
+                                                ,name       : 'YPOS'
+                                                ,allowBlank : false
+                                                ,hidden     : !_p52_debug
+                                            }
+                                            ,{
+                                                xtype       : 'textfield'
+                                                ,fieldLabel : 'Nombre'
+                                                ,labelAlign : 'top'
+                                                ,name       : 'DSTITULO'
+                                                ,allowBlank : false
+                                            }
+                                        ]
+                                    }
+                                ]
+                            })
+                            ,Ext.create('Ext.panel.Panel',
+                            {
                                 itemId       : '_p52_panelAccion'
                                 ,title       : 'ACCI\u00D3N'
                                 ,hidden      : true
@@ -2853,6 +3093,75 @@ Ext.onReady(function()
                                             ,columns : 3
                                             ,tdAttrs : { valign : 'top' }
                                         }
+                                        ,header :
+                                        {
+                                            titlePosition : 0
+                                            ,items        :
+                                            [
+                                                {
+                                                    xtype    : 'button'
+                                                    ,icon    : '${icons}cancel.png'
+                                                    ,handler : function()
+                                                    {
+                                                        _fieldById('enfocadorIconos').setValue('');
+                                                        _fieldById('enfocadorIconos').focus();
+                                                    }
+                                                },
+                                                {
+                                                    xtype      : 'textfield'
+                                                    ,itemId    : 'enfocadorIconos'
+                                                    ,width     : 100
+                                                    ,indice    : 0
+                                                    ,listeners :
+                                                    {
+                                                        change : function(me,val)
+                                                        {
+                                                            me.indice = 0;
+                                                            debug('indice 0');
+                                                        }
+                                                    }
+                                                    ,buscar : function()
+                                                    {
+                                                        var me = this, val = me.getValue();
+                                                        debug('buscar indice:',me.indice,',val:',val,'.');
+                                                        if(!Ext.isEmpty(val))
+                                                        {
+                                                            var iconos = $('[name=iconoaccion][value*='+val.toLowerCase().split(' ').join('_')+']');
+                                                            debug('iconos:',iconos,'.');
+                                                            if(iconos.length>0)
+                                                            {
+                                                                iconos[me.indice%iconos.length].focus();
+                                                                iconos[me.indice%iconos.length].checked = true;
+                                                                me.indice++;
+                                                            }
+                                                        }
+                                                        me.focus();
+                                                    }
+                                                }
+                                                ,{
+                                                    xtype    : 'button'
+                                                    ,icon    : '${icons}tick.png'
+                                                    ,handler : function(me)
+                                                    {
+                                                        _fieldById('enfocadorIconos').buscar();
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                        ,tools  :
+                                        [{
+                                            type     : 'pin'
+                                            ,tooltip : 'Ir al seleccionado'
+                                            ,handler : function(me)
+                                            {
+                                                var iconos = $('[name=iconoaccion]:checked');
+                                                debug('iconos:',iconos,'.');
+                                                if(iconos.length>0)
+                                                {
+                                                    iconos[0].focus();
+                                                }
+                                            }
+                                        }]
                                     })
                                 ]
                             })
@@ -2915,8 +3224,10 @@ Ext.onReady(function()
     _p52_catalogoProcesos     = _fieldById('_p52_catalogoProcesos');
     _p52_catalogoValidaciones = _fieldById('_p52_catalogoValidaciones');
     _p52_catalogoRevisiones   = _fieldById('_p52_catalogoRevisiones');
+    _p52_catalogoTitulos      = _fieldById('_p52_catalogoTitulos');
     _p52_formValidacion       = _fieldById('_p52_formValidacion');
     _p52_panelRevision        = _fieldById('_p52_panelRevision');
+    _p52_panelTitulo          = _fieldById('_p52_panelTitulo');
     _p52_panelAccion          = _fieldById('_p52_panelAccion');
     _p52_catalogoIconos       = _fieldById('_p52_catalogoIconos');
     ////// custom //////
@@ -2928,6 +3239,7 @@ Ext.onReady(function()
     _p52_cargarProcesos();
     _p52_cargarValidaciones();
     _p52_cargarRevisiones();
+    _p52_cargarTitulos();
     _p52_cargarIconos();
     
     //_p52_navega(2);
@@ -3301,6 +3613,35 @@ function _p52_cargarRevisiones()
     });
 }
 
+function _p52_cargarTitulos()
+{
+    debug('_p52_cargarTitulos');
+    _p52_catalogoTitulos.removeAll();
+    _p52_catalogoTitulos.add(
+    [
+	    {
+	        xtype   : 'panel'
+	        ,tpl    : tituloTpl
+	        ,border : 0
+	        ,data   :
+            {
+                cdtitulo  : 0
+                ,dstitulo : 'T\u00edtulo 500'
+            }
+	    }
+	    ,{
+	        xtype   : 'panel'
+            ,tpl    : tituloTpl
+            ,border : 0
+            ,data   :
+            {
+                cdtitulo  : 1
+                ,dstitulo : 'T\u00edtulo 1000'
+            }
+        }
+    ]);
+}
+
 function _p52_cargarIconos()
 {
     debug('_p52_cargarIconos');
@@ -3432,6 +3773,13 @@ function _p52_drop(event)
             _p52_addEndpoint(id,tipo);
         });
     }
+    else if(tipo=='T')
+    {
+        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
+        {
+            _p52_addDiv(id,tipo,clave,'',x,y);
+        });
+    }
 }
 
 function _p52_generaId()
@@ -3455,6 +3803,7 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelEstado.show();
         _p52_formValidacion.hide();
         _p52_panelRevision.hide();
+        _p52_panelTitulo.hide();
         _p52_panelAccion.hide();
         
         _p52_cargarDatosEstado(clave);
@@ -3465,6 +3814,7 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelEstado.hide();
         _p52_formValidacion.show();
         _p52_panelRevision.hide();
+        _p52_panelTitulo.hide();
         _p52_panelAccion.hide();
         
         _p52_cargarDatosValidacion(clave);
@@ -3475,9 +3825,21 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelEstado.hide();
         _p52_formValidacion.hide();
         _p52_panelRevision.show();
+        _p52_panelTitulo.hide();
         _p52_panelAccion.hide();
         
         _p52_cargarDatosRevision(clave);
+    }
+    else if(tipo=='T')
+    {
+        _p52_panelCanvas.disable();
+        _p52_panelEstado.hide();
+        _p52_formValidacion.hide();
+        _p52_panelRevision.hide();
+        _p52_panelTitulo.show();
+        _p52_panelAccion.hide();
+        
+        _p52_cargarDatosTitulo(id);
     }
     else if(tipo=='A')
     {
@@ -3485,6 +3847,7 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelEstado.hide();
         _p52_formValidacion.hide();
         _p52_panelRevision.hide();
+        _p52_panelTitulo.hide();
         _p52_panelAccion.show();
         
         _p52_cargarDatosAccion(clave);
@@ -4028,6 +4391,12 @@ function _p52_cargarModelado()
                                     descrip = ite.DSREVISI;
                                     _p52_addDiv(id,tipo,clave,descrip,x,y);
                                 }
+                                else if(tipo=='T')
+                                {
+                                    clave   = ite.CDTITULO;
+                                    descrip = ite.DSTITULO;
+                                    _p52_addDiv(id,tipo,clave,descrip,x,y,0);
+                                }
                                 else if(tipo=='A')
                                 {
                                     _p52_cargando = true;
@@ -4074,8 +4443,7 @@ function _p52_cargarModelado()
 
 function _p52_addDiv(id,tipo,clave,descrip,x,y)
 {
-    debug('_p52_addDiv:',id,tipo,clave,'.');
-    debug(descrip,x,y,'.');
+    debug('_p52_addDiv arguments:',arguments,'.');
     
     if(Ext.isEmpty(descrip))
     {
@@ -4105,6 +4473,10 @@ function _p52_addDiv(id,tipo,clave,descrip,x,y)
     else if(tipo=='R')
     {
         $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelR">'+descrip+'</div></div>');
+    }
+    else if(tipo=='T')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+clave+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelT labelT'+clave+'">'+descrip+'</div></div>');
     }
     
     toolkit.draggable(id,
@@ -4313,6 +4685,69 @@ function _p52_cargarDatosRevision(cdrevisi)
     catch(e)
     {
         _setLoading(false,_p52_panelRevision);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_cargarDatosTitulo(webid)
+{
+    debug('_p52_cargarDatosTitulo webid:',webid,'.');
+    var ck = 'Borrando datos de revisi\u00f3n';
+    try
+    {
+        _p52_panelTitulo.down('form').getForm().reset();
+    
+        ck = 'Recuperando datos de t\u00edtulo';
+    
+        _setLoading(true,_p52_panelTitulo);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlCargarDatosTitulo
+            ,params  :
+            {
+                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
+                ,'params.webid'     : webid
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_panelTitulo);
+                var ck = 'Decodificando respuesta al recuperar datos de t\u00edtulo';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### datos titulo:',json);
+                    if(json.success==true)
+                    {
+                        _p52_panelTitulo.down('form').loadRecord(
+                        {
+                            getData : function()
+                            {
+                                return json.params;
+                            }
+                        });
+                        _p52_panelTitulo.down('[name=ACCION]').setValue('U');
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelTitulo);
+                errorComunicacion(null,'Error al recuperar datos de t\u00edtulo');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelTitulo);
         manejaException(e,ck);
     }
 }
@@ -4615,6 +5050,58 @@ function _p52_guardarDatosRevision(bot,callback)
     }
 }
 
+function _p52_guardarDatosTitulo(bot,callback)
+{
+    debug('_p52_guardarDatosTitulo');
+    var ck = 'Guardando datos de t\u00edtulo';
+    try
+    {
+        var form  = _p52_panelTitulo.down('form').getForm();
+        if(!form.isValid())
+        {
+            throw 'Favor de revisar los datos';
+        }
+        
+        _setLoading(true,_p52_panelTitulo);
+        Ext.Ajax.request(
+        {
+            url       : _p52_urlGuardarDatosTitulo
+            ,params   : _formValuesToParams(form.getValues())
+            ,success  : function(response)
+            {
+                _setLoading(false,_p52_panelTitulo);
+                var ck = 'Decodificando respuesta al guardar datos de t\u00edtulo';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    if(json.success==true)
+                    {
+                        callback(bot);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_panelTitulo);
+                errorComunicacion(null,'Error al guardar datos de t\u00edtulo');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_panelTitulo);
+        manejaException(e,ck);
+    }
+}
+
 function _p52_guardarDatosAccion(bot,callback)
 {
     debug('_p52_guardarDatosAccion');
@@ -4801,6 +5288,6 @@ function _p52_ventanaTips(tips)
 </script>
 </head>
 <body>
-<div id="_p52_divpri" style="height:710px;border:1px solid #CCCCCC;"></div>
+<div id="_p52_divpri" style="height:740px;border:1px solid #CCCCCC;"></div>
 </body>
 </html>

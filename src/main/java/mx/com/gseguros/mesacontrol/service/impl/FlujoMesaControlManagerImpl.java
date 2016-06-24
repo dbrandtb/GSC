@@ -374,6 +374,19 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,"I"
 						);
 			}
+			else if("T".equals(tipo))
+			{
+				flujoMesaControlDAO.movimientoTflutit(
+						cdtipflu
+						,cdflujomc
+						,clave
+						,""   //dstitulo
+						,webid
+						,xpos
+						,ypos
+						,"I"
+						);
+			}
 		}
 		catch(Exception ex)
 		{
@@ -492,6 +505,19 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,"D" //accion
 						);
 			}
+			else if("T".equals(tipo))
+			{
+				flujoMesaControlDAO.movimientoTflutit(
+						cdtipflu
+						,cdflujomc
+						,clave //cdrevisi
+						,null //dsrevisi
+						,webid
+						,null //xpos
+						,null //ypos
+						,"D" //accion
+						);
+			}
 		}
 		catch(Exception ex)
 		{
@@ -573,10 +599,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				
 				List<Map<String,String>> validaciones = flujoMesaControlDAO.recuperaTfluval(cdtipflu, cdflujomc, null);
 				
-				for(Map<String,String>proceso:validaciones)
+				for(Map<String,String>validacion:validaciones)
 				{
-					proceso.put("TIPO" , "V");
-					list.add(proceso);
+					validacion.put("TIPO" , "V");
+					list.add(validacion);
 				}
 				
 				List<Map<String,String>> revisiones = flujoMesaControlDAO.recuperaTflurev(cdtipflu, cdflujomc);
@@ -585,6 +611,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				{
 					revision.put("TIPO" , "R");
 					list.add(revision);
+				}
+				
+				List<Map<String,String>> titulos = flujoMesaControlDAO.recuperaTflutit(cdtipflu, cdflujomc, null);
+				
+				for(Map<String,String>titulo:titulos)
+				{
+					titulo.put("TIPO" , "T");
+					list.add(titulo);
 				}
 				
 				List<Map<String,String>> acciones = flujoMesaControlDAO.recuperaTfluacc(cdtipflu,cdflujomc);
@@ -2541,6 +2575,110 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		logger.debug(Utils.log(
 				 "\n@@@@@@ guardarTflujorol @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public Map<String,String> cargarDatosTitulo(
+			String cdtipflu
+			,String cdflujomc
+			,String webid
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarDatosTitulo @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ webid="     , webid
+				));
+		
+		Map<String,String> titulo = null;
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Recuperando validaciones";
+			logger.debug(paso);
+			
+			List<Map<String,String>> titulos = flujoMesaControlDAO.recuperaTflutit(cdtipflu, cdflujomc, null);
+			
+			for(Map<String,String>tituloIte : titulos)
+			{
+				if(tituloIte.get("WEBID").equals(webid))
+				{
+					titulo = tituloIte;
+					break;
+				}
+			}
+			
+			if(titulo==null)
+			{
+				throw new ApplicationException("No se encuentra el t\u00edtulo");
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ cargarDatosTitulo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return titulo;
+	}
+	
+	@Override
+	public void guardarDatosTitulo(
+			String cdtipflu
+			,String cdflujomc
+			,String cdtitulo
+			,String webid
+			,String xpos
+			,String ypos
+			,String dstitulo
+			,String accion
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarDatosTitulo @@@@@@"
+				,"\n@@@@@@ cdtipflu="   , cdtipflu
+				,"\n@@@@@@ cdflujomc="  , cdflujomc
+				,"\n@@@@@@ cdtitulo="   , cdtitulo
+				,"\n@@@@@@ webid="      , webid
+				,"\n@@@@@@ xpos="       , xpos
+				,"\n@@@@@@ ypos="       , ypos
+				,"\n@@@@@@ dstitulo="   , dstitulo
+				,"\n@@@@@@ accion="     , accion
+				));
+		
+		String paso = "Guardando datos de validaci\u00f3n";
+		logger.debug(paso);
+		
+		try
+		{
+			flujoMesaControlDAO.movimientoTflutit(
+					cdtipflu
+					,cdflujomc
+					,cdtitulo
+					,dstitulo
+					,webid
+					,xpos
+					,ypos
+					,accion
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ guardarDatosTitulo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
 }

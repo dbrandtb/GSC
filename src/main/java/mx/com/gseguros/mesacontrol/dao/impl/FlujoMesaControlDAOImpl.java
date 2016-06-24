@@ -2540,4 +2540,81 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		}
 	}
 	
+	
+	// SP 35
+	@Override
+	public void movimientoTflutit(
+			String cdtipflu
+			,String cdflujomc
+			,String cdtitulo
+			,String dstitulo
+			,String webid
+			,String xpos
+			,String ypos
+			,String accion
+			) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtipflu"  , cdtipflu);
+		params.put("cdflujomc" , cdflujomc);
+		params.put("cdtitulo"  , cdtitulo);
+		params.put("dstitulo"  , dstitulo);
+		params.put("webid"     , webid);
+		params.put("xpos"      , xpos);
+		params.put("ypos"      , ypos);
+		params.put("accion"    , accion);
+		ejecutaSP(new MovimientoTflutitSP(getDataSource()),params);
+	}
+	
+	protected class MovimientoTflutitSP extends StoredProcedure
+	{
+		protected MovimientoTflutitSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUTIT");
+			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtitulo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("dstitulo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("webid"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("xpos"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ypos"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperaTflutit(String cdtipflu, String cdflujomc, String cdtitulo) throws Exception 
+	{
+		Map<String,String> params = new LinkedHashMap<String, String>();
+		params.put("cdtipflu"  , cdtipflu);
+		params.put("cdflujomc" , cdflujomc);
+		params.put("cdtitulo"  , cdtitulo);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperaTflutitSP(getDataSource()), params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperaTflutitSP extends StoredProcedure
+	{
+		protected RecuperaTflutitSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUTIT");
+			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtitulo"  , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "CDTIPFLU", "CDFLUJOMC", "CDTITULO", "DSTITULO", "WEBID", "XPOS", "YPOS"};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

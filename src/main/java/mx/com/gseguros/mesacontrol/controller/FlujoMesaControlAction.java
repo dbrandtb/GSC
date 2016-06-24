@@ -2071,6 +2071,118 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	@Action(value   = "cargarDatosTitulo",
+			results = { @Result(name="success", type="json") }
+			)
+	public String cargarDatosTitulo()
+	{
+		logger.debug(Utils.log(
+				 "\n###############################"
+				,"\n###### cargarDatosTitulo ######"
+				,"\n###### params=",params
+				));
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+				   ,cdflujomc = params.get("cdflujomc")
+				   ,webid     = params.get("webid");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 la clave de flujo"
+					,webid     , "No se recibi\u00f3 el id web"
+					);
+			
+			Map<String,String> res = flujoMesaControlManager.cargarDatosTitulo(
+					cdtipflu
+					,cdflujomc
+					,webid
+					);
+			
+			params.putAll(res);
+			
+			success = true;
+			
+			logger.debug(Utils.log(
+					 "\n###### cargarDatosTitulo ######"
+					,"\n###############################"
+					));
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "guardarDatosTitulo",
+			results = { @Result(name="success", type="json") }
+			)
+	public String guardarDatosTitulo()
+	{
+		logger.debug(Utils.log(
+				 "\n################################"
+				,"\n###### guardarDatosTitulo ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu    = params.get("CDTIPFLU")
+			       ,cdflujomc  = params.get("CDFLUJOMC")
+			       ,cdtitulo   = params.get("CDTITULO")
+			       ,webid      = params.get("WEBID")
+			       ,xpos       = params.get("XPOS")
+			       ,ypos       = params.get("YPOS")
+			       ,dstitulo   = params.get("DSTITULO")
+			       ,accion     = params.get("ACCION");
+			
+			Utils.validate(
+					cdtipflu    , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc  , "No se recibi\u00f3 la clave de flujo"
+					,cdtitulo   , "No se recibi\u00f3 la clave de t\u00edtulo"
+					,webid      , "No se recibi\u00f3 el id"
+					,xpos       , "No se recibi\u00f3 x"
+					,ypos       , "No se recibi\u00f3 y"
+					,dstitulo   , "No se recibi\u00f3 el nombre"
+					,accion     , "No se recibi\u00f3 el tipo de operaci\u00f3n"
+					);
+			
+			flujoMesaControlManager.guardarDatosTitulo(
+					cdtipflu
+					,cdflujomc
+					,cdtitulo
+					,webid
+					,xpos
+					,ypos
+					,dstitulo
+					,accion
+					);
+			
+			success = true;
+			
+			logger.debug(Utils.log(
+					 "\n###### guardarDatosTitulo ######"
+					,"\n################################"
+					));
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
 
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
