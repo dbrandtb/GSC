@@ -290,4 +290,21 @@ public interface FlujoMesaControlManager
 			,String cdflujomc
 			,List<Map<String,String>> lista
 			)throws Exception;
+	
+	public Map<String,String> cargarDatosTitulo(
+			String cdtipflu
+			,String cdflujomc
+			,String webid
+			)throws Exception;
+	
+	public void guardarDatosTitulo(
+			String cdtipflu
+			,String cdflujomc
+			,String cdtitulo
+			,String webid
+			,String xpos
+			,String ypos
+			,String dstitulo
+			,String accion
+			)throws Exception;
 }
