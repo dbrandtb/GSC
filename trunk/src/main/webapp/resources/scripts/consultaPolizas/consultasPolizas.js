@@ -1394,6 +1394,7 @@ Ext.onReady(function() {
                                             xtype: 'numberfield',
                                             name : 'params.cdperson',
                                             fieldLabel : 'Clave de asegurado',
+                                            labelWidth: 120,
                                             maxLength : 9,
                                             allowBlank: false,
                                             minValue: 0
