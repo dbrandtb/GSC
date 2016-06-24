@@ -4107,7 +4107,11 @@ function _p52_addDiv(id,tipo,clave,descrip,x,y)
         $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelR">'+descrip+'</div></div>');
     }
     
-    toolkit.draggable(id);
+    toolkit.draggable(id,
+    {
+        snapThreshold : 20
+        ,grid         : [20,20]
+    });
 }
 
 function _p52_cargarDatosEstado(cdestadomc)
