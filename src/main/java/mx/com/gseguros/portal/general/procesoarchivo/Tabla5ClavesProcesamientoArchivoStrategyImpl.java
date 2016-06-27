@@ -88,7 +88,7 @@ public class Tabla5ClavesProcesamientoArchivoStrategyImpl implements Procesamien
 
 
 	@Override
-	public RespuestaVO ejecutaProcesamiento(File archivoOrigen, List<CampoVO> campos, Integer nmtabla) throws Exception {
+	public RespuestaVO ejecutaProcesamiento(File archivoOrigen, List<CampoVO> campos, Integer nmtabla, Integer tipoproceso, String feCierre) throws Exception {
 		
 		RespuestaVO respVO = null;
 		File fileCSVLocal = null;
@@ -156,7 +156,7 @@ public class Tabla5ClavesProcesamientoArchivoStrategyImpl implements Procesamien
 			if(fileUploaded) {
 				
 				//Ejecutar SP que realice la carga del archivo CSV:
-				String resp = tablasApoyoDAO.cargaMasiva(nmtabla, TipoTabla.CINCO.getCodigo(), fileCSVLocal.getName(), CARACTER_SEPARADOR_CAMPOS);
+				String resp = tablasApoyoDAO.cargaMasiva(nmtabla, tipoproceso, feCierre, TipoTabla.CINCO.getCodigo(), fileCSVLocal.getName(), CARACTER_SEPARADOR_CAMPOS);
 				respVO = new RespuestaVO(true, resp);
 				
 			} else {

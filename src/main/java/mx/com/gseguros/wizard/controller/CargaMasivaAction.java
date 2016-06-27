@@ -139,6 +139,8 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 					file,
 					campos,
 					Integer.parseInt(params.get("pi_nmtabla")),
+					Integer.parseInt(params.get("tipoproceso")),
+					params.get("feCierre"),
 					estrategiaProcesaArchivo);
 			if(!resp.isSuccess()) {
 				String msjeError = "Error en el guardado";

@@ -50,6 +50,6 @@ public interface TablasApoyoDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public String cargaMasiva(Integer nmtabla, Integer tipoTabla, String nombreArchivo, String separador) throws Exception; 
+	public String cargaMasiva(Integer nmtabla, Integer tipoproceso, String feCierre, Integer tipoTabla, String nombreArchivo, String separador) throws Exception; 
 	
 }

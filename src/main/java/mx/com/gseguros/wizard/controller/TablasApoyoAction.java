@@ -64,7 +64,7 @@ public class TablasApoyoAction extends PrincipalCoreAction {
     	
     	try{
     		
-    		logger.debug("Parametros para obtener valores de Tabla de Apoyo: " + params);
+    		logger.debug("Parametros para obtener valores de Tabla de Apoyo 01 : " + params);
 
     		Map<String, Object> resultado = tablasApoyoManager.obtieneValoresTablaApoyo5claves(params);
     		loadList = (List<Map<String, String>>) resultado.get("PV_REGISTRO_O"); 
@@ -91,7 +91,7 @@ public class TablasApoyoAction extends PrincipalCoreAction {
 		
 		try{
 			
-			logger.debug("Parametros para obtener valores de Tabla de Apoyo: " + params);
+			logger.debug("Parametros para obtener valores de Tabla de Apoyo:02 " + params);
 			
 			Map<String, Object> resultado = tablasApoyoManager.obtieneValoresTablaApoyo1clave(params);
     		loadList = (List<Map<String, String>>) resultado.get("PV_REGISTRO_O"); 

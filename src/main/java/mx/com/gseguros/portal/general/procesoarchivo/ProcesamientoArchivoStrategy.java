@@ -20,6 +20,6 @@ public interface ProcesamientoArchivoStrategy {
 	 * @return respuesta del proceso
 	 * @throws Exception
 	 */
-	public RespuestaVO ejecutaProcesamiento(File archivo, List<CampoVO> campos, Integer nmtabla) throws Exception;
+	public RespuestaVO ejecutaProcesamiento(File archivo, List<CampoVO> campos, Integer nmtabla, Integer tipoproceso, String feCierre) throws Exception;
 	
 }
