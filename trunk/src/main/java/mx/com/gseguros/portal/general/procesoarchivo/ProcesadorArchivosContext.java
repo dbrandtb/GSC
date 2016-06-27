@@ -34,12 +34,12 @@ public class ProcesadorArchivosContext {
 	 * @return
 	 * @throws Exception
 	 */
-	public RespuestaVO ejecutaProcesamientoArchivo(File archivo, List<CampoVO> campos, Integer tipoTabla, Strategy strategy) throws Exception {
+	public RespuestaVO ejecutaProcesamientoArchivo(File archivo, List<CampoVO> campos, Integer tipoTabla, Integer tipoproceso, String feCierre, Strategy strategy) throws Exception {
 		
 		logger.debug("Entrando a ejecutaProcesamientoArchivo, strategy=" + strategy);
 		
 		ProcesamientoArchivoStrategy procesoArchivoStrategy = procesamientoArchivoStrategies.get(strategy);
-		return procesoArchivoStrategy.ejecutaProcesamiento(archivo, campos, tipoTabla);
+		return procesoArchivoStrategy.ejecutaProcesamiento(archivo, campos, tipoTabla, tipoproceso,  feCierre);
 	}
 
 	

@@ -21,6 +21,7 @@ var _NMTABLA = '<s:property value="params.nmtabla" />';
 var _CDTABLA = '<s:property value="params.cdtabla" />';
 var _DSTABLA = '<s:property value="params.dstabla" />';
 var _TIPOTABLA = '<s:property value="params.tipotab" />';
+var tipoproceso ;
 
 
 
@@ -121,7 +122,7 @@ Ext.onReady(function() {
             }
         }
     });
-    
+   
     
     // Create an instance of the Spread panel
     var panelValoresTabCincoClaves = new Spread.grid.Panel({
@@ -518,7 +519,7 @@ Ext.onReady(function() {
 							    	tooltip: 'Carga Masiva de la tabla, agrega sin eliminar los registros existentes.',
 							    	icon:_CONTEXT+'/resources/fam3icons/icons/database_lightning.png',
 							    	handler: function(btn){
-							    			
+							    		
 						    			var _p22_windowAgregarDocu=Ext.create('Ext.window.Window',
 							            {
 							                title       : 'Subir Archivo de Carga Masiva'
@@ -562,15 +563,62 @@ Ext.onReady(function() {
 							                                            });
 							                                            me.reset();
 							                                            Ext.getCmp('_p22_botGuaDoc').setDisabled(true);
+							                                            
 							                                        }
 							                                        else
 							                                        {
 							                                            Ext.getCmp('_p22_botGuaDoc').setDisabled(false);
+							                                            
 							                                        }
 							                                    }
 							                                }
-							                            }
-							                        ]
+							                            },///////////////////
+							                            {
+										                	xtype: 'radiogroup',
+			                            					name: 'groupTipoBusqueda',
+			                            					flex: 15,
+			                            					columns: 1,
+			                            					
+			                            					vertical: true,
+			                            					items: [
+			                            						{boxLabel: 'Agregar Datos Nuevos', name: 'tipoBusqueda', inputValue: 1,  width: 200},
+			                            						{boxLabel: 'Actualizar Tarifas', name: 'tipoBusqueda', inputValue: 2, checked: true, width: 200},
+			                            						{boxLabel: 'Reemplazar Datos', name: 'tipoBusqueda', inputValue: 3,width: 200}
+									                                ],
+			                            					listeners : {
+			                            						change : function(radiogroup, newValue, oldValue, eOpts) {
+			                            							var valor = this.up('form').getForm().findField('tipoBusqueda').inputValue;
+			                            							switch (newValue.tipoBusqueda) {
+			                            								case 1:
+			                            								tipoproceso = 1;
+			                            									this.up('form').getForm().findField("params.feCierre").setVisible(false);
+				                            								
+			                            								break;
+			                            								case 2: 
+			                            								tipoproceso = 2;
+				                            								this.up('form').getForm().findField("params.feCierre").setVisible(true);
+				                            								
+			                            								break;
+			                            								case 3:
+			                            								tipoproceso = 3;
+			                            									this.up('form').getForm().findField("params.feCierre").setVisible(false);
+				                            								
+			                            								break;
+			                            								}
+			                            						}
+			                            						}
+			                            				},{
+							                                            // Fecha de Cierre de Tarifa
+							                                            xtype : 'datefield',
+							                                            name : 'params.feCierre',
+							                                            itemId:'feCierre',
+							                                            bodyStyle:'padding:2px;',
+							                                            fieldLabel : 'Fecha Cierre',
+							                                            value : new Date(),
+							                                            hidden : false,
+							                                            allowBlank: false
+							                                        }
+										                        ]
 							                        ,buttons     :
 							                        [
 							                            {
@@ -583,14 +631,20 @@ Ext.onReady(function() {
 							                                    button.setDisabled(true);
 							                                    Ext.getCmp('_p22_BotCanDoc').setDisabled(true);
 							                                    
-							                                    button.up().up().getForm().submit(
+							                                    /////TODO: setear valores en los campos hiden campoHidden.setValue(_NMTABLA)
+							                                    
+							                                    button.up('form').getForm().submit(
 							                                    {
 							                                        //standardSubmit : true
+							                                    	
 							                                        params        :
 							                                        {
 							                                            'params.pi_nmtabla': _NMTABLA
 							                                            ,'params.tipotabla': _TIPOTABLA
+							                                            ,'params.tipoproceso' : tipoproceso!=null?tipoproceso:2
+							                                            //,'params.feinicio' : 
 							                                        },
+							                                        
 							                                        waitMsg: 'Ejecutando Carga Masiva...',
 												                    success: function(form, action) {
 												                    	_p22_windowAgregarDocu.destroy();
@@ -646,7 +700,8 @@ Ext.onReady(function() {
 							                            }
 							                        ]
 							                    })
-							                ]
+							                
+    								]
 							            }).show();
 							            centrarVentanaInterna(_p22_windowAgregarDocu);
 							    	}
