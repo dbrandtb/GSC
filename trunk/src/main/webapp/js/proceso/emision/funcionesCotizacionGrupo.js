@@ -1008,3 +1008,198 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
          });
      }
  }
+
+function  checkEdit(editor, context, eOpts) {
+	debug('entrando a checkEdit');
+	debug('context',context.newValues);
+	var gras = _fieldById('gridAseg');
+	gras.getSelectionModel().select(context.record, false);
+	if(!compareObjects(context.newValues, context.originalValues)){
+		gras.getSelectionModel().select(context.record, true);
+	}
+//	else{
+//		gras.getSelectionModel().select(context.record, false);	
+//	}
+//	for(var i in gras.getPlugin('pagingselect').selected){
+//		debug('i',i);
+//	}
+//	debug('selecteds',gras.getPlugin('pagingselect').selected);
+}
+/* se agregan listener para que el plugin
+ * pagingselectpersist y ROWEDITING funcionen
+ * juntos
+ */
+function  beforedesel(sm, record) {
+	debug('entrando a beforedesel');
+	return !_fieldById('gridAseg').getPlugin('rowedit');
+}
+
+function beforeed(editor, context) {
+	debug('entrando a beforeed');
+    return context.colIdx !== 0;
+}
+/* terminan funciones para pagingselectpersist
+ * y rowediting
+ */
+/*
+ * Funcion que compara objetos pero excluye
+ * campos de check
+ */
+function compareObjects(obj1, obj2){
+	console.log('entrando a compareObjects');
+	var keys1 = [],
+	keys2   = [],
+	isEqual = true;
+	//Se obtienen keys de objetos
+	for(var k in obj1){
+		//Se excluyen los campos que contengan check		
+		if(!k.includes('displayfield')){
+			keys1.push(k);
+		}
+	}
+	for(var k in obj2){
+		//Se excluyen los campos que contengan check
+		if(!k.includes('displayfield')){
+			keys2.push(k);			
+		}
+	}
+	//Se compara si tiene las mismas llaves
+	if (keys1.length != keys2.length || keys1.length === 0 || keys2.length === 0){
+		console.log('objectos no validos');
+		isEqual = false;
+	}
+	else{
+		//Se busca si tiene contenido diferente
+		for (var i in keys1){
+			console.log('key',keys1[i]);
+			console.log('obj1',obj1[keys1[i]]);
+			console.log('obj2',obj2[keys2[i]]);
+			if(obj1[keys1[i]] != obj2[keys2[i]]){
+				isEqual = false;
+				break;
+			}
+		}
+	}
+	console.log('termina compareObjects',isEqual);
+	return isEqual;
+}
+
+function _p25_guardarExtraprimasTitulares(){
+    debug('>_p25_guardarExtraprimas:');
+ 	_mask('Actualizado valores');
+    Ext.Ajax.request(
+    		{
+    	url       : _p25_urlGuardarSituacionesTitulares
+    	,jsonData :
+    	{
+    		params  : {
+    			cdunieco   : _p25_smap1.cdunieco
+            	,cdramo    : _p25_smap1.cdramo
+            	,estado    : _p25_smap1.estado
+            	,nmpoliza  : _p25_smap1.nmpoliza
+            	,nmsuplem  : '0'
+            	,cdtipsit  : _p25_smap1.cdtipsit
+            	,valor	   : document.getElementsByName("extrtitu")[0].value
+            	}
+    	}
+    	,success  : function(response){
+    		var json=Ext.decode(response.responseText);
+            debug('respuesta del guardado de extraprimas:',json);
+            if(json.exito){
+            	_fieldById('gridAseg').getStore().reload();
+                mensajeCorrecto('Datos guardados',json.respuesta);
+                _unmask();
+            }
+            else{
+                mensajeError(json.respuesta);
+                _umask();
+            }
+        }
+        ,failure  : function(){
+            errorComunicacion();
+            _unmask();
+        }
+    		});
+}
+
+function _p25_guardarExtraprimas(letra)
+{
+    debug('>_p25_guardarExtraprimas:',letra);
+    _mask('Guardando...');
+    var records = [];
+    var store = _fieldById('gridAseg').getStore();
+    for(var i in _fieldById('gridAseg').getPlugin('pagingselect').selection){
+    	records.push(_fieldById('gridAseg').getPlugin('pagingselect').selection[i].data);
+    }
+    debug('records',records);
+    if(records.length==0)
+    {
+        mensajeWarning('No hay cambios');
+        _p25_setActiveResumen();
+    }
+    else
+    {
+    	var asegurados = [];
+    	$.each(records,function(i,record)
+    			{
+    		var asegurado = { nmsituac  : record.nmsituac };
+			for(var i = 1; i <= 99; i++){
+				var valor = record['parametros.pv_otvalor'+(('00'+i).slice(-2))];
+                debug('valor:',valor,'typeof valor:',typeof valor);
+                if(typeof valor == 'object'){
+                    valor = Ext.Date.format(valor,'d/m/Y');
+                }
+                if(valor == 'undefined'+(('00'+i).slice(-2))){
+                	valor = '';
+                } 
+                asegurado['otvalor'+(('00'+i).slice(-2))] = valor;
+            }
+            asegurados.push(asegurado);
+            debug('cdunieco:',_p25_smap1.cdunieco);
+        	debug('cdunieco:',_p25_smap1.cdramo);
+        	debug('cdunieco:',_p25_smap1.estado);
+        	debug('cdunieco:',_p25_smap1.nmpoliza);
+        	debug('nmsuplem:',0);
+            debug('situaciones a guardar:',asegurados);
+        });        
+        Ext.Ajax.request(
+        {
+            url       : _p25_urlGuardarSituaciones
+            ,jsonData :
+            {
+            	params  :
+            	{
+            		cdunieco   : _p25_smap1.cdunieco,
+            		cdramo     : _p25_smap1.cdramo,
+            		estado	   : _p25_smap1.estado,
+            		nmpoliza   : _p25_smap1.nmpoliza,
+            		nmsuplem   : 0,
+            		cdtipsit   : _p25_smap1.cdtipsit,
+            		guardarExt : 'S'
+            	}
+                ,slist1 : asegurados
+            }
+            ,success  : function(response)
+            {
+                var json = Ext.decode(response.responseText);
+                debug('respuesta del guardado de extraprimas:',json);
+                if(json.exito)
+                {
+                	_unmask();
+                	mensajeCorrecto('Datos guardados',json.respuesta);   
+                }
+                else
+                {
+                	_unmask();
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure  : function()
+            {
+            	_unmask();
+                errorComunicacion();
+            }
+        });
+    }
+    debug('<_p25_guardarExtraprimas');
+}

@@ -4249,12 +4249,25 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return lista;
 	}
 	
-	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones,String cdtipsit,Boolean guardarExt)
+	public ManagerRespuestaVoidVO guardarValoresSituaciones(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			List<Map<String,String>> situaciones,
+			String cdtipsit,
+			Boolean guardarExt)
 	{
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.append("\n@@@@@@ guardarValoresSituaciones @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=").append(cdramo)
+				.append("\n@@@@@@ estado=").append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
 				.append("\n@@@@@@ situaciones=").append(situaciones)
 				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
 				.append("\n@@@@@@ guardarExt=").append(guardarExt)
@@ -4265,67 +4278,29 @@ public class CotizacionManagerImpl implements CotizacionManager
 		List<Map<String,String>> listaCobExt = null;
 		
 		//actualizar situaciones
-		try
-		{
+		try{
 			//listaCobExt = ...
-		    if(guardarExt == true){
-		    logger.debug("Guardar Extraprimas ="+guardarExt);
-		    	listaCobExt = consultasDAO.recuperaCoberturasExtraprima(situaciones.get(0).get("cdramo"),cdtipsit);
+			String paso = Utils.join("antes de entrar a recuperaCoberturasExtraprima");
+		    listaCobExt = consultasDAO.recuperaCoberturasExtraprima(cdramo,cdtipsit);
+		    cotizacionDAO.actualizaValoresSituacion(cdunieco, cdramo, estado, nmpoliza, nmsuplem, situaciones);
+		    paso = Utils.join("despues de pasar a recuperaCoberturasExtraprima");
+		    for(Map<String,String>situacion:situaciones){
+		    	for(Map<String,String> coberturaExtraprima : listaCobExt){
+					String cdgarant = coberturaExtraprima.get("CDGARANT");					
+					paso = Utils.join("Ejecutando valores por defecto para la cobertura ",cdgarant);
+					logger.debug(paso);					
+					cotizacionDAO.valoresPorDefecto(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,situacion.get("nmsituac")
+							,nmsuplem
+							,cdgarant
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							);
+		    	}
 		    }
-		    			
-		    
-		    
-		    String paso = null;
-		    
-		    
-			for(Map<String,String>situacion:situaciones)
-			{
-				Map<String,String>valores=new HashMap<String,String>();
-				for(Entry<String,String>en:situacion.entrySet())
-				{
-					String key = en.getKey();
-					if(StringUtils.isNotBlank(key)
-							&&key.length()>"otvalor".length()
-							&&key.substring(0,"otvalor".length()).equals("otvalor")
-							)
-					{
-						valores.put(key,en.getValue());
-					}
-				}
-				cotizacionDAO.actualizaValoresSituacion(
-						situacion.get("cdunieco")
-						,situacion.get("cdramo")
-						,situacion.get("estado")
-						,situacion.get("nmpoliza")
-						,situacion.get("nmsuplem")
-						,situacion.get("nmsituac")
-						,valores
-						);
-				
-				if(guardarExt == true){
-					
-					logger.debug("Iteracion = "+guardarExt);
-					
-					for(Map<String,String> coberturaExtraprima : listaCobExt)
-					{
-						String cdgarant = coberturaExtraprima.get("CDGARANT");
-						
-						paso = Utils.join("Ejecutando valores por defecto para la cobertura ",cdgarant);
-						logger.debug(paso);
-						
-						cotizacionDAO.valoresPorDefecto(
-								situacion.get("cdunieco")
-								,situacion.get("cdramo")
-								,situacion.get("estado")
-								,situacion.get("nmpoliza")
-								,situacion.get("nmsituac")
-								,situacion.get("nmsuplem")
-								,cdgarant
-								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-								);
-					}
-				}
-			}
 			resp.setRespuesta("Se guardaron todos los datos");
 		}
 		catch(Exception dx)
@@ -4336,12 +4311,61 @@ public class CotizacionManagerImpl implements CotizacionManager
 			resp.setRespuestaOculta(dx.getMessage());
 			logger.error(resp.getRespuesta(),dx);
 		}
-		
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ guardarValoresSituaciones @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	public ManagerRespuestaVoidVO guardarValoresSituacionesTitular(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String cdtipsit,
+			String valor)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ guardarValoresSituacionesTitular @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=").append(cdramo)
+				.append("\n@@@@@@ estado=").append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ valor=").append(valor)
+				.toString()
+				);
+		
+		ManagerRespuestaVoidVO resp = new ManagerRespuestaVoidVO(true);		
+		//actualizar situaciones
+		try{
+			//listaCobExt = ...
+			String paso = Utils.join("antes de entrar a actualizaValoresSituacionTitulares");
+		    cotizacionDAO.actualizaValoresSituacionTitulares(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsit, valor);
+		    paso = Utils.join("despues de pasar a actualizaValoresSituacionTitulares");
+			resp.setRespuesta("Se guardaron todos los datos");
+		}
+		catch(Exception dx)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al guardar situacion #").append(timestamp).toString());
+			resp.setRespuestaOculta(dx.getMessage());
+			logger.error(resp.getRespuesta(),dx);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ guardarValoresSituacionesTitular @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;
@@ -9927,6 +9951,102 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return otvalor;
+	}
+	
+	@Override
+	public List<Map<String,String>> cargarAseguradosExtraprimas2(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			,String start
+			,String limit
+			)throws Exception
+	{
+		logger.info(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				,"\n@@@@@@ cdgrupo="  , cdgrupo
+				,"\n@@@@@@ start="    , start
+				,"\n@@@@@@ limit="    , limit
+				));
+		
+		List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
+		
+		String paso = "Recuperando asegurados extraprima";
+		
+		//cargar situaciones grupo
+		try
+		{
+			List<Map<String,String>>situaciones=cotizacionDAO.cargarSituacionesGrupo(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdgrupo
+					,start
+					,limit);
+			
+			for(Map<String,String>situacion:situaciones)
+		    {
+		    	String tpl = null;
+		    	if(StringUtils.isBlank(situacion.get("titular")))
+		    	{
+		    		tpl = "Asegurados";
+		    	}
+		    	else
+		    	{
+		    		tpl = Utils.join(
+		    				"Familia (" , situacion.get("familia") , ") de " , situacion.get("titular")
+		    				);
+		    	}
+		    	situacion.put("agrupador",
+		    			Utils.join(StringUtils.leftPad(situacion.get("familia"),3,"0") , "_" , tpl)
+		    			);
+		    	
+		    	Map<String,String>editada=new HashMap<String,String>();
+		    	for(Entry<String,String>en:situacion.entrySet())
+		    	{
+		    		String key = en.getKey();
+		    		if(StringUtils.isNotBlank(key)
+		    				&&key.length()>"otvalor".length()
+		    				&&key.substring(0, "otvalor".length()).equals("otvalor")
+		    				)
+		    		{
+		    			editada.put(new StringBuilder("parametros.pv_").append(key).toString(),en.getValue());
+		    		}
+		    		else
+		    		{
+		    			editada.put(key,en.getValue());
+		    		}
+		    	}
+		    	lista.add(editada);
+		    }
+			Map<String,String>	total = lista.remove(lista.size()-1);
+			Map<String,String> tot = situaciones.remove(situaciones.size()-1);
+			tot.put("total", tot.get("total"));
+	    	lista.add(tot);
+		}		
+		catch(ApplicationException ax)
+		{
+			Utils.generaExcepcion(ax, paso);
+		}
+		
+		logger.info(Utils.log(
+				 "\n@@@@@@ lista=" , lista
+				,"\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return lista;
 	}
 	
 	/////////////////////////////////////////////////////

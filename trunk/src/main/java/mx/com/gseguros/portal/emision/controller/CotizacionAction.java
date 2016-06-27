@@ -118,6 +118,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	private CotizacionManager                cotizacionManager;
 	private SiniestrosManager                siniestrosManager;
 	private FlujoVO                          flujo;
+	private String start;
+	private String limit;
+	private String total;
 	
 	@Autowired
 	private EmisionManager emisionManager;
@@ -9072,15 +9075,17 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdgrupo  = smap1.get("cdgrupo");
 			
 			Utils.validate(
-					cdunieco , "No se recibio la sucursal"
-					,cdramo  , "No se recibio el producto"
-					,estado  , "No se recibio el estado"
+					cdunieco  , "No se recibio la sucursal"
+					,cdramo   , "No se recibio el producto"
+					,estado   , "No se recibio el estado"
 					,nmpoliza , "No se recibio el numero de cotizacion"
 					,nmpoliza , "No se recibio el numero de cotizacion"
 					,nmpoliza , "No se recibio el numero de cotizacion"
 					,nmsuplem , "No se recibio el suplemento"
 					,cdgrupo  , "No se recibio la clave de grupo"
-			);
+			);		
+			smap1.put("start", start);
+			smap1.put("limit", limit);				
 			
 		    slist1 = cotizacionManager.cargarAseguradosExtraprimas2(
 		    		cdunieco
@@ -9089,8 +9094,18 @@ public class CotizacionAction extends PrincipalCoreAction
 		    		,nmpoliza
 		    		,nmsuplem
 		    		,cdgrupo
+		    		,start
+		    		,limit
 		    		);
-		    			
+		    Map<String,String> total = slist1.remove(slist1.size()-1);
+			this.total = total.get("total");
+		    logger.debug(Utils.log(
+					 "\n##########################################"
+					,"\n###### start=" , start
+					,"\n###### limit=" , limit
+					,"\n###### total=" , total.get("total")
+					));
+//		    this.total = slist1.get("total");			
 			exito   = true;
 			success = true;
 		}
@@ -9798,6 +9813,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		//checar datos
 		if(exito)
 		{
+			
 			try
 			{
 				UserVO usuario=(UserVO)session.get("USUARIO");
@@ -10808,50 +10824,72 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String guardarValoresSituaciones()
-	{
+	public String guardarValoresSituaciones(){
 		logger.debug(
 				new StringBuilder()
 				.append("\n#######################################")
 				.append("\n###### guardarValoresSituaciones ######")
 				.append("\n###### slist1=").append(slist1)
+				.append("\n###### params=").append(params)
 				.toString()
 				);
 
 		exito   = true;
 		success = true;
 		Boolean guardarExt= false;
-		String cdtipsit= null;
-		
-		//datos completos
-		try
-		{
-			if(slist1==null)
-			{
-				throw new ApplicationException("No se recibieron datos");
-			}
-			
-			if(params!=null){
-				guardarExt = true;
-				cdtipsit = smap1.get("cdtipsit");
-			}
-		}
-		catch(ApplicationException ax)
-		{
-			long timestamp  = System.currentTimeMillis();
-			exito           = false;
-			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
-			respuestaOculta = ax.getMessage();
-			logger.error(respuesta,ax);
-		}
-		
 		//proceso
-		if(exito)
-		{
-			ManagerRespuestaVoidVO resp = cotizacionManager.guardarValoresSituaciones(slist1,cdtipsit,guardarExt);
+		try{
+			Utils.validate(slist1, "No se recibieron datos");
+			Utils.validate(params, "No se recibieron parametros");
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String estado	= params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String cdtipsit = params.get("cdtipsit");
+			String nmsuplem = params.get("nmsuplem");
+			ManagerRespuestaVoidVO resp = cotizacionManager.guardarValoresSituaciones(cdunieco, cdramo, estado, nmpoliza, nmsuplem, slist1, cdtipsit, guardarExt);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
+		}catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n###### guardarValoresSituaciones ######")
+				.append("\n#######################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String guardarValoresSituacionesTitular()
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n#######################################")
+				.append("\n###### guardarValoresSituacionesTitular ######")
+				.append("\n###### params=").append(params)
+				.toString()
+				);
+		success = true;		
+		try{
+			Utils.validate(params, "No se recibieron parametros");
+			String cdunieco = params.get("cdunieco");
+			String cdramo 	= params.get("cdramo");
+			String estado	= params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String nmsuplem = params.get("nmsuplem");
+			String cdtipsit = params.get("cdtipsit");
+			String valor 	= params.get("valor");
+		//proceso
+			ManagerRespuestaVoidVO resp = cotizacionManager.guardarValoresSituacionesTitular(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsit, valor);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+		}catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
 		logger.debug(
@@ -11742,6 +11780,30 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setFlujo(FlujoVO flujo) {
 		this.flujo = flujo;
+	}
+
+	public String getStart() {
+		return start;
+	}
+
+	public void setStart(String start) {
+		this.start = start;
+	}
+
+	public String getLimit() {
+		return limit;
+	}
+
+	public void setLimit(String limit) {
+		this.limit = limit;
+	}
+
+	public String getTotal() {
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
 	}
 
 }
