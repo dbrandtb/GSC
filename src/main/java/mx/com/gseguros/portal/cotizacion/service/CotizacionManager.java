@@ -372,7 +372,24 @@ public interface CotizacionManager
 			,String cdgrupo
 			)throws Exception;
 	
-	public ManagerRespuestaVoidVO guardarValoresSituaciones(List<Map<String,String>>situaciones,String cdtipsit,Boolean guardarExt);
+	public ManagerRespuestaVoidVO guardarValoresSituaciones(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			List<Map<String,String>>situaciones,
+			String cdtipsit,
+			Boolean guardarExt);
+	
+	public ManagerRespuestaVoidVO guardarValoresSituacionesTitular(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String cdtipsit,
+			String valor);
 	
 	public ManagerRespuestaSmapVO subirCensoCompleto(
 			String cdunieco
@@ -896,5 +913,16 @@ public interface CotizacionManager
 	 * @throws Exception
 	 */
 	public String consultaExtraprimOcup(String cdtipsit)throws Exception;
+	
+	public List<Map<String,String>> cargarAseguradosExtraprimas2(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			,String start
+			,String limit
+			)throws Exception;
 	
 }

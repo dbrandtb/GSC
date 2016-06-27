@@ -683,4 +683,30 @@ public interface CotizacionDAO {
 	
 	public void insertaRegistroInfoCenso(Map<String, String> params)
 			throws Exception;
+	
+	public List<Map<String, String>> cargarSituacionesGrupo(String cdunieco,
+			String cdramo, 
+			String estado, 
+			String nmpoliza, 
+			String nmsuplem,
+			String cdgrupo, 
+			String start, 
+			String limit) throws Exception;
+	
+	public void actualizaValoresSituacion(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			List<Map<String,String>> valores)throws Exception;
+
+	public void actualizaValoresSituacionTitulares(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String cdtipsit,
+			String valor)throws Exception;
 }
