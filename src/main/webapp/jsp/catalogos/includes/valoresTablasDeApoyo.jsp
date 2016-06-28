@@ -21,6 +21,8 @@ var _NMTABLA = '<s:property value="params.nmtabla" />';
 var _CDTABLA = '<s:property value="params.cdtabla" />';
 var _DSTABLA = '<s:property value="params.dstabla" />';
 var _TIPOTABLA = '<s:property value="params.tipotab" />';
+var cdSisRolActivo = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
+var cdUserActivo   ='<s:property value="%{#session['USUARIO'].user}" />';
 var tipoproceso ;
 
 
@@ -687,6 +689,7 @@ Ext.onReady(function() {
 												                    	});
 												        			}
 							                                    });
+							                                    tipoproceso = null;
 							                                }
 							                            }
 							                            ,{
@@ -709,6 +712,7 @@ Ext.onReady(function() {
 							    	text : 'Exportar',
 							    	tooltip: 'Exporta la tabla a formato Excel.',
 							    	icon:_CONTEXT+'/resources/fam3icons/icons/database_table.png',
+							    	 hidden: (cdSisRolActivo==RolSistema.ParametrizadorSistemas ||  cdSisRolActivo==RolSistema.Parametrizador) ? false : true,//se evalua habilitar o desabilitar Boton, dependiendo el rol
 							    	handler: function(btn){
 							    		var loadMaskExport = new Ext.LoadMask('divValoresCincoClaves', {msg:"Exportando Tabla de Apoyo..."});
 										loadMaskExport.show();
