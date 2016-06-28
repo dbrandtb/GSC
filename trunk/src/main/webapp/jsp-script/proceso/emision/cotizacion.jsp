@@ -1795,6 +1795,7 @@ function _0_cotizar(boton)
             }
         });
     }
+    _0_panelPri.setLoading(false);
 }
 
 function _0_validarBase()
