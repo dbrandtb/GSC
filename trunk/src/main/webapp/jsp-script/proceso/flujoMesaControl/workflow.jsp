@@ -262,37 +262,37 @@
 }
 .entidad:hover .labelE
 {
-    top : -10px;
+    top : -15px;
     font-weight: bold;
 }
 .entidad:hover .labelP
 {
-    top : -10px;
+    top : -15px;
     font-weight: bold;
 }
 .entidad:hover .labelC
 {
-    top : -10px;
+    top : -15px;
     font-weight: bold;
 }
 .entidad:hover .labelO
 {
-    top : -10px;
+    top : -15px;
     font-weight: bold;
 }
 .entidad:hover .labelV
 {
-    top : -10px;
+    top : -15px;
     font-weight: bold;
 }
 .entidad:hover .labelR
 {
-    top : -10px;
+    top : -15px;
     font-weight: bold;
 }
 .entidad:hover .labelT
 {
-    top : -10px;
+    top : -15px;
     font-weight: bold;
 }
 </style>
@@ -940,11 +940,26 @@ Ext.onReady(function()
                                 ,inputValue : 'S'
                             }
                             ,{
-                                xtype       : 'checkbox'
+                                xtype       : 'radio'
+                                ,boxLabel   : 'INDIVIDUAL'
+                                ,name       : 'SWGRUPO'
+                                ,inputValue : 'I'
+                                ,align      : 'right'
+                            }
+                            ,{
+                                xtype       : 'radio'
                                 ,boxLabel   : 'COLECTIVO/GRUPO'
                                 ,name       : 'SWGRUPO'
-                                ,inputValue : 'S'
+                                ,inputValue : 'C'
                                 ,align      : 'right'
+                            }
+                            ,{
+                                xtype       : 'radio'
+                                ,boxLabel   : 'AMBOS'
+                                ,name       : 'SWGRUPO'
+                                ,inputValue : ''
+                                ,align      : 'right'
+                                ,itemId     : 'swgrupoInd'
                             }
                         ]
                     }
@@ -1011,6 +1026,7 @@ Ext.onReady(function()
                 me.down('form').getForm().reset();
                 me.down('[name=ACCION]').setValue('I');
                 me.down('[name=CDTIPFLU]').setValue(sel[0].get('CDTIPFLU'));
+                me.down('#swgrupoInd').setValue(true);
                 
                 me.down('grid').getStore().each(function(r)
                 {
@@ -1032,6 +1048,14 @@ Ext.onReady(function()
             debug('record:',record);
             me.down('form').getForm().loadRecord(record);
             me.down('[name=ACCION]').setValue('U');
+            
+            me.down('#swgrupoInd').setValue(true);
+            
+            if(!Ext.isEmpty(record.get('SWGRUPO')))
+            {
+                debug('se marcara radio:',record.get('SWGRUPO'),',');
+                me.down('[name=SWGRUPO][inputValue='+record.get('SWGRUPO')+']').setValue(true);
+            }
             
             var store = me.down('grid').getStore();
             

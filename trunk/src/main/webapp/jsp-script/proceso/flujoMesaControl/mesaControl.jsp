@@ -912,9 +912,9 @@ Ext.onReady(function()
         {
             select : function(me,records)
             {
-                _p54_windowNuevo.down('[name=CDRAMO]').store.proxy.extraParams['params.tipogrupo'] = records[0].get('aux2') === 'S' ? 'C' : 'I';
+                _p54_windowNuevo.down('[name=CDRAMO]').store.proxy.extraParams['params.tipogrupo'] = records[0].get('aux2');
                 
-                _p54_windowNuevo.down('[name=CDTIPSIT]').store.proxy.extraParams['params.tipogrupo'] = records[0].get('aux2') === 'S' ? 'C' : 'I';
+                _p54_windowNuevo.down('[name=CDTIPSIT]').store.proxy.extraParams['params.tipogrupo'] = records[0].get('aux2');
                 
                 debug('extraParams cdramo:',_p54_windowNuevo.down('[name=CDRAMO]').store.proxy.extraParams);
                 

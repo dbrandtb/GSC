@@ -176,7 +176,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,dsflujomc
 					,"S".equals(swfinal) ? "S" : "N"
 					,cdtipram
-					,"S".equals(swgrupo) ? "S" : "N"
+					,swgrupo
 					,accion
 					);
 		}

@@ -1382,10 +1382,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,nmpoliza = params.get("NMPOLIZA");
 			
 			Utils.validate(
-					cdunieco  , "No se recibi\u00f3n la sucursal"
-					,cdramo   , "No se recibi\u00f3n el producto"
-					,estado   , "No se recibi\u00f3n el estado"
-					,nmpoliza , "No se recibi\u00f3n la p\u00f3nliza"
+					cdunieco  , "No se recibi\u00f3 la sucursal"
+					,cdramo   , "No se recibi\u00f3 el producto"
+					,estado   , "No se recibi\u00f3 el estado"
+					,nmpoliza , "No se recibi\u00f3 la p\u00f3liza"
 					);
 			
 			params.putAll(flujoMesaControlManager.recuperarPolizaUnica(cdunieco,cdramo,estado,nmpoliza));
