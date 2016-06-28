@@ -17,6 +17,8 @@ var _p34_urlObtenerColumnasIncisosPorRamo = '<s:url namespace="/endosos"      ac
 var _p34_urlRecuperarEndososClasificados  = '<s:url namespace="/endosos"      action="recuperarEndososClasificados" />';
 var _p34_urlObtieneCatalogos              = '<s:url namespace="/catalogos"    action="obtieneCatalogo"              />';
 var _p34_urlRecuperacion                  = '<s:url namespace="/recuperacion" action="recuperar"                    />';
+
+var _p34_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision" action="actualizarOtvalorTramitePorDsatribu" />';
 ////// urls //////
 
 ////// variables //////
@@ -26,6 +28,24 @@ debug('_p34_smap1:',_p34_smap1);
 
 var _p34_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 debug('_p34_flujo:',_p34_flujo);
+
+var _p34_flujoAux = {};
+
+if(!Ext.isEmpty(_p34_flujo)
+    &&!Ext.isEmpty(_p34_flujo.aux)
+)
+{
+    try
+    {
+        _p34_flujoAux = Ext.decode(_p34_flujo.aux);
+    }
+    catch(e)
+    {
+        manejaException(e);
+    }
+}
+
+debug('_p34_flujoAux:',_p34_flujoAux,'.');
 
 var _p34_storePolizas;
 var _p34_storeGrupos;
@@ -1316,7 +1336,114 @@ function _p34_mostrarListaEndosos(nivel,stamp)
                         var nivel = view.up('grid').nivel;
                         var stamp = view.up('grid').stamp;
                         debug('nivel:',nivel,'stamp:',stamp);
-                        if(nivel=='POLIZA')
+                        /*
+                         * Si viene esta bandera encendida significa que esta pantalla solo se utiliza para seleccionar un endoso
+                         * y guardar el cdtipsup en el otvalor de mesa de control correspondiente
+                         */
+                        if(_p34_flujoAux.seleccionarEndoso === 'S' && !Ext.isEmpty(_p34_flujoAux.onSeleccionar) )
+                        {
+                            var ck = 'Guardando clave de endoso';
+                            try
+                            {
+                                centrarVentanaInterna(
+                                    Ext.MessageBox.confirm(
+                                        'Confirmar'
+                                        ,'¿Desea marcar el tr\u00e1mite para endoso '+record.get('DSTIPSUP')+'?<br>Esta acci\u00f3n no podr\u00e1 deshacerse'
+                                        ,function(btn)
+                                        {
+                                            if(btn === 'yes')
+                                            {
+				                                _p34_guardarAtributoTramitePorDescripcion(
+				                                    _p34_flujo.ntramite
+				                                    ,'CDTIPSUP'
+				                                    ,record.get('CDTIPSUP')
+				                                    ,function()
+				                                    {
+				                                        _p34_guardarAtributoTramitePorDescripcion(
+						                                    _p34_flujo.ntramite
+						                                    ,'DSTIPSUP'
+						                                    ,record.get('DSTIPSUP')
+						                                    ,function()
+						                                    {
+						                                        var mask, ck = 'Cambiando estatus de tr\u00e1mite';
+						                                        try
+						                                        {
+						                                    	    mask = _maskLocal(ck);
+											                        Ext.Ajax.request(
+											                        {
+											                            url      : _GLOBAL_COMP_URL_TURNAR
+											                            ,params  :
+											                            {
+											                                'params.CDTIPFLU'   : _p34_flujo.cdtipflu
+											                                ,'params.CDFLUJOMC' : _p34_flujo.cdflujomc
+											                                ,'params.NTRAMITE'  : _p34_flujo.ntramite
+											                                ,'params.STATUSOLD' : _p34_flujo.status
+											                                ,'params.STATUSNEW' : _p34_flujoAux.onSeleccionar
+											                                ,'params.COMMENTS'  : 'Endoso seleccionado: '+record.get('DSTIPSUP')
+											                                ,'params.SWAGENTE'  : 'S'
+											                            }
+											                            ,success : function(response)
+											                            {
+											                                mask.close();
+											                                var ck = 'Decodificando respuesta al cambiar status de tr\u00e1mite';
+											                                try
+											                                {
+											                                    var json = Ext.decode(response.responseText);
+											                                    debug('### cambiar estatus:',json);
+											                                    if(json.success)
+											                                    {
+											                                        mensajeCorrecto
+											                                        (
+											                                            'Estatus actualizado'
+											                                            //,json.message
+											                                            ,'El estatus de tr\u00e1mite fue actualizado'
+											                                            ,function()
+											                                            {
+											                                                _mask('Redireccionando');
+											                                                Ext.create('Ext.form.Panel').submit(
+											                                                {
+											                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
+											                                                    ,standardSubmit : true
+											                                                });
+											                                            }
+											                                        );
+											                                    }
+											                                    else
+											                                    {
+											                                        mensajeError(json.message);
+											                                    }
+											                                }
+											                                catch(e)
+											                                {
+											                                    manejaException(e,ck);
+											                                }
+											                            }
+											                            ,failure : function()
+											                            {
+											                                mask.close();
+											                                errorComunicacion(null,'Error al cambiar estatus de tr\u00e1mite');
+											                            }
+											                        });
+											                    }
+											                    catch(e)
+											                    {
+											                        manejaException(e,ck,mask);
+											                    }
+						                                    }
+						                                );
+				                                    }
+				                                );
+				                            }
+				                        }
+				                    )
+				                );
+                            }
+                            catch(e)
+                            {
+                                manejaException(e,ck);
+                            }
+                        }
+                        else if(nivel=='POLIZA')
                         {
                             var poliza        = _fieldById('_p34_gridPolizas').getSelectionModel().getSelection()[0];
                             var smap1         = poliza.raw;
@@ -1985,8 +2112,7 @@ function _p34_recuperarPolizaIncisosFlujo()
 //Se recupera el cduniext por cdunieco,cdramo,estado y nmpoliza. Se le envia al callback
 function _p34_recuperarCduniext(cdunieco,cdramo,estado,nmpoliza,callback)
 {
-    debug('_p34_recuperarCduniext cdunieco,cdramo,estado:',cdunieco,cdramo,estado,'.');
-    debug('_p34_recuperarCduniext nmpoliza,callback:',nmpoliza,callback);
+    debug('_p34_recuperarCduniext arguments:',arguments,'.');
     
     var ck = 'Recuperando unidad externa';
     try
@@ -2046,6 +2172,60 @@ function _p34_recuperarCduniext(cdunieco,cdramo,estado,nmpoliza,callback)
     catch(e)
     {
         manejaException(e,ck);
+    }
+}
+
+function _p34_guardarAtributoTramitePorDescripcion(ntramite,descripcion,valor,callback)
+{
+    debug('_p34_guardarAtributoTramitePorDescripcion args:',arguments,'.');
+    var mask, ck = 'Guardando atributo de tr\u00e1mite';
+    try
+    {
+        mask = _maskLocal(ck);
+        Ext.Ajax.request(
+        {
+            url      : _p34_urlActualizarOtvalorTramiteXDsatribu
+            ,params  :
+            {
+                'params.ntramite'  : ntramite
+                ,'params.dsatribu' : descripcion
+                ,'params.otvalor'  : valor
+                ,'params.accion'   : 'U'
+            }
+            ,success : function(response)
+            {
+                mask.close();
+                var ck = 'Decodificando respuesta al guardar atributo de tr\u00e1mite';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar atributo tramite:',json);
+                    if(json.success===true)
+                    {
+                        ck = 'Ejecutando callback al guardar atributo de tr\u00e1mite';
+                        
+                        callback();
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                mask.close();
+                errorComunicacion(null,'Error al guardar atributo de tr\u00e1mite');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck,mask);
     }
 }
 ////// funciones //////
