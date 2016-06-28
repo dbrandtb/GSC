@@ -244,6 +244,7 @@ public class EndososManagerImpl implements EndososManager
 	
 	//PKG_ENDOSOS.P_ENDOSO_INICIA
 	@Override
+	@Deprecated
 	public Map<String,String> iniciarEndoso(Map<String, String> params) throws Exception
 	{
 		logger.debug("EndososManager iniciarEndoso params: "+params);
@@ -256,6 +257,7 @@ public class EndososManagerImpl implements EndososManager
 	 * PKG_ENDOSOS.P_ENDOSO_INICIA
 	 */
 	@Override
+	@Deprecated
 	public Map<String,String> iniciarEndoso(
 			String cdunieco
 			,String cdramo

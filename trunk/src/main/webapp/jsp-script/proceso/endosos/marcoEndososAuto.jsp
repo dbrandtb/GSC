@@ -397,6 +397,25 @@ Ext.onReady(function()
             type  : 'memory'
             ,data : []
         }
+        ,listeners :
+        {
+            add : function(me,records)
+            {
+                debug('_p34_storeEndosos add arguments:',arguments,'.');
+                if(!Ext.isEmpty(_p34_flujoAux.endosoSeleccionado))
+                {
+                    for(var i=0 ; i<records.length ; i++)
+                    {
+                        var cdtipsup = Number(records[i].get('CDTIPSUP'));
+                        if(cdtipsup !== Number(_p34_flujoAux.endosoSeleccionado))
+                        {
+                            debug('se quita el record porque no coincide ',cdtipsup,' con ',_p34_flujoAux.endosoSeleccionado,'.');
+                            me.remove(records[i]);
+                        }
+                    }
+                }
+            }
+        }
     });
     ////// stores //////
     

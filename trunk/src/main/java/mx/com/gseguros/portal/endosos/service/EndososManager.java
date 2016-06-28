@@ -67,9 +67,11 @@ public interface EndososManager
 	 */
 	@Deprecated
 	public Map<String,String>        iniciarEndoso(Map<String,String>params)                  throws Exception;
+	
 	/**
 	 * PKG_ENDOSOS.P_ENDOSO_INICIA
 	 */
+	@Deprecated
 	public Map<String,String>        iniciarEndoso(
 			String cdunieco
 			,String cdramo
@@ -80,6 +82,7 @@ public interface EndososManager
 			,String cdusuari
 			,String proceso
 			,String cdtipsup) throws Exception;
+	
 	/**
 	 * PKG_SATELITES.P_INSERTA_TWORKSUP_END
 	 * @param accion TODO
