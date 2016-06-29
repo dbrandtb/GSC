@@ -926,7 +926,6 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			}
 		}
 		
-		
 		/**
 		 * PARA EL GUARDADO CADA PDF DE RECIBO
 		 */
@@ -939,15 +938,14 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			recibo = recVO.getRecibo();
 			
 			/**
-			 * Si el Recibo Tiene estatus 1 se guarda en tdocupol como documento de la poliza, excepto algunos endosos como el de forma de pago,
-			 * donde se generan recibos negativos para cancelar y esos no deben de guardarse, estos casos el estatus es distinto de 1
+			 * Algunos recibos no se guardan en la base de datos
 			 */
-			if(!"1".equals(recibo.getStatusr())) continue;
-			/**
-			 * Por default se permite imprimir solo el primer recibo y los demas se guardan ocultos.
-			 */
-
+			if(!recVO.isGuardarDocumento()) continue;
 			
+			
+			/**
+			 * Por default se permite ver solo el primer recibo en combinacion con el tipo de endoso y los demas se guardan ocultos.
+			 */
 			String llave = recVO.getRecibo().getTipEnd() + Integer.toString(recVO.getRecibo().getNumEnd());
 			
 			if(!imprimir.containsKey(llave)){
@@ -990,23 +988,6 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				
 					String parametros = "?9999,"+modalidad+","+sucursal+","+cdtipsitGS+","+nmpoliza+",0,"+numEndoso+","+tipoEndoso+","+recibo.getNumRec();
 					logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
-					//HttpRequestUtil.generaReporte(this.getText("recibos.impresion.url")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
-					
-					/*HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-					paramsR.put("pv_cdunieco_i", cdunieco);
-					paramsR.put("pv_cdramo_i", cdramo);
-					paramsR.put("pv_estado_i", estado);
-					paramsR.put("pv_nmpoliza_i", nmpoliza);
-					paramsR.put("pv_nmsuplem_i", nmsuplem);
-					paramsR.put("pv_feinici_i", new Date());
-					paramsR.put("pv_cddocume_i", urlImpresionRecibos + parametros);
-					paramsR.put("pv_dsdocume_i", "Recibo "+recibo.getNumRec());
-					paramsR.put("pv_nmsolici_i", nmsolici);
-					paramsR.put("pv_ntramite_i", ntramite);
-					paramsR.put("pv_tipmov_i", tipoMov);
-					paramsR.put("pv_swvisible_i", visible);*/					
-					
-					//kernelManager.guardarArchivo(paramsR);
 					
 					mesaControlDAO.guardarDocumento
 					(
