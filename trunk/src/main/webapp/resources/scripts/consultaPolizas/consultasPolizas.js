@@ -448,7 +448,7 @@ Ext.onReady(function() {
             	style : 'margin:5px',
             	xtype : 'textfield',
             	readOnly: true,
-            	labelWidth: 160,
+            	labelWidth: 190,
             	width: 390,
             	hidden: true
             },
