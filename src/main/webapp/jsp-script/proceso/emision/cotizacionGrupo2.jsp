@@ -4888,22 +4888,22 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
    							,totalProperty   : 'total'
    						}
    						,simpleSortMode: true
-                       },
-                       listeners : {
+                  },
+                  listeners : {
                     	   'load' :  {
                     		   fn : function(store,records,successful) {
-                    			   debug('reseteando los datos');                    			   
+                    			   debug('reseteando los datos');
                     			   for(var s in _fieldById('gridAseg').store.data.items){
                     				   var rec = _fieldById('gridAseg').store.getAt(s);
                     				   for(var y in rec.data){
                     					   rec.set(y,rec.raw[y]);
                     				   }
                     				   rec.commit();
+                    				   }
                     			   }
-                    			   }
-                       }
-                       }
-                   })
+                  }
+                  }
+                  })
                 ,bbar :
                 {
                     displayInfo : true

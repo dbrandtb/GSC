@@ -884,7 +884,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String cdgrupo)throws Exception
+			,String cdgrupo
+			,String start
+			,String limit)throws Exception
 	{
 		logger.debug(""
 				+ "\n#########################################"
@@ -895,6 +897,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				+ "\nnmpoliza "+nmpoliza
 				+ "\nnmsuplem "+nmsuplem
 				+ "\ncdgrupo "+cdgrupo
+				+ "\nstart "+start
+				+ "\nlimit "+limit
 				);
 		
 		Map<String,String>params=new HashMap<String,String>();
@@ -904,8 +908,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdgrupo"  , cdgrupo);
-		List<Map<String,String>>lista=cotizacionDAO.cargarAseguradosExtraprimas(params);
-		
+		params.put("start"    , start);
+		params.put("limit"    , limit);
+		List<Map<String,String>> lista = cotizacionDAO.cargarAseguradosExtraprimas(cdunieco, 
+				cdramo, 
+				estado, 
+				nmpoliza,
+				nmsuplem,
+				cdgrupo, 
+				start, 
+				limit);		
 		logger.debug(""
 				+ "\nlista size "+lista.size()
 				+ "\n###### cargarAseguradosExtraprimas ######"
@@ -992,6 +1004,78 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,cdgarant
 						,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 						);
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ guardarExtraprimaAsegurado @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public void guardarExtraprimaAsegurado(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsit
+			,List<Map<String,String>> slist1
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarExtraprimaAsegurado @@@@@@"
+				,"\n@@@@@@ cdunieco="            , cdunieco
+				,"\n@@@@@@ cdramo="              , cdramo
+				,"\n@@@@@@ estado="              , estado
+				,"\n@@@@@@ nmpoliza="            , nmpoliza
+				,"\n@@@@@@ nmsuplem="            , nmsuplem
+				,"\n@@@@@@ cdtipsit="            , cdtipsit
+				,"\n@@@@@@ slist1="              , slist1
+				));
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Actualizando valores adicionales de situaci\u00f3n";
+			logger.debug(paso);
+			
+			cotizacionDAO.guardarExtraprimaAsegurado(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,slist1
+					);
+			
+			paso = "Recuperando coberturas de extraprimas";
+			logger.debug(paso);
+			
+			List<Map<String,String>> coberturasDeExtraprimas = consultasDAO.recuperaCoberturasExtraprima(cdramo,cdtipsit);
+			
+			for(Map<String,String> situacion:slist1){
+				String nmsituac = situacion.get("nmsituac");
+				for(Map<String,String> coberturaExtraprima : coberturasDeExtraprimas){
+					String cdgarant = coberturaExtraprima.get("CDGARANT");
+					cotizacionDAO.valoresPorDefecto(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsituac
+							,nmsuplem
+							,cdgarant
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							);
+				}
 			}
 		}
 		catch(Exception ex)
@@ -4349,7 +4433,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 		try{
 			//listaCobExt = ...
 			String paso = Utils.join("antes de entrar a actualizaValoresSituacionTitulares");
-		    cotizacionDAO.actualizaValoresSituacionTitulares(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsit, valor);
+		    List<Map<String, String>> situaciones = cotizacionDAO.actualizaValoresSituacionTitulares(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsit, valor);
+		    if(situaciones.size() > 0 || !situaciones.isEmpty()){
+		    	valoresDefectoExtraprima(cdunieco,cdramo,estado,nmpoliza,situaciones,nmsuplem,cdtipsit,"4EXO");
+		    }
 		    paso = Utils.join("despues de pasar a actualizaValoresSituacionTitulares");
 			resp.setRespuesta("Se guardaron todos los datos");
 		}
@@ -4369,6 +4456,91 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.toString()
 				);
 		return resp;
+	}
+	
+	public void valoresDefectoExtraprima(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			List<Map<String, String>> situaciones,
+			String nmsuplem,
+			String cdtipsit,
+			String cdgarant) throws Exception{		
+		String paso = "llamando hilos de extraprima";		
+		logger.debug(paso);
+		new valoresDefectoExtraprima(cdunieco, 
+				cdramo,
+				estado, 
+				nmpoliza, 
+				situaciones, 
+				nmsuplem, 
+				cdtipsit, 
+				cdgarant).start();
+	}
+	
+	private class valoresDefectoExtraprima extends Thread{
+		private String cdunieco;
+		private String cdramo;
+		private String estado;
+		private String nmpoliza;
+		private List<Map<String, String>> situaciones;
+		private String nmsuplem;
+		private String cdtipsit;
+		private String cdgarant;
+		
+		public valoresDefectoExtraprima(
+				String cdunieco,
+				String cdramo,
+				String estado,
+				String nmpoliza,
+				List<Map<String,String>> situaciones,
+				String nmsuplem,
+				String cdtipsit,
+				String cdgarant){
+			this.cdunieco  = cdunieco;
+			this.cdramo    = cdramo;
+			this.estado    = estado;
+			this.nmpoliza  = nmpoliza;
+			this.situaciones = situaciones;
+			this.nmsuplem = nmsuplem;
+			this.cdtipsit  = cdtipsit;
+			this.cdgarant = cdgarant;
+		}
+		
+		@Override
+		public void run(){
+			try{
+				cotizacionDAO.movimientoTbloqueo(
+						cdunieco, 
+						cdramo, 
+						estado, 
+						nmpoliza, 
+						"0", 
+						"I");
+				for(Map<String,String> situacion:situaciones){
+					cotizacionDAO.valoresPorDefecto(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,situacion.get("NMSITUAC")
+							,nmsuplem
+							,cdgarant
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							);
+				}
+				cotizacionDAO.movimientoTbloqueo(
+						cdunieco, 
+						cdramo, 
+						estado, 
+						nmpoliza, 
+						"0", 
+						"D");
+			}catch(Exception ex){
+				logger.error("error lanzando valores po defecto extraprima: ",ex);
+			}
+		}
 	}
 	
 	@Override
