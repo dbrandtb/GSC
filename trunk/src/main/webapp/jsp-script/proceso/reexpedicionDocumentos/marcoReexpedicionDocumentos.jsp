@@ -14,7 +14,7 @@ var _p16_urlDocumentos                             = '<s:url namespace="/documen
 Ext.onReady(function()
 {
 	// Se aumenta el timeout para todas las peticiones:
-    Ext.Ajax.timeout = 1000*60*5; // 5 minutos
+    Ext.Ajax.timeout = 1000*60*10; // 10 minutos
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
