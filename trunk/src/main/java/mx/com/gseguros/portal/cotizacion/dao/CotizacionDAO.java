@@ -89,6 +89,14 @@ public interface CotizacionDAO {
 			,String extraprimaSobrepeso
 			)throws Exception;
 
+	public void guardarExtraprimaAsegurado(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			List<Map<String,String>> valores)throws Exception;
+	
 	public List<Map<String, String>> cargarAseguradosGrupo(
 			Map<String, String> params) throws Exception;
 
@@ -681,6 +689,16 @@ public interface CotizacionDAO {
 			String cdtipsit
 			)throws Exception;
 	
+	public List<Map<String,String>>cargarAseguradosExtraprimas(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			,String start
+			,String limit)throws Exception;
+	
 	public void insertaRegistroInfoCenso(Map<String, String> params)
 			throws Exception;
 	
@@ -701,7 +719,7 @@ public interface CotizacionDAO {
 			String nmsuplem,
 			List<Map<String,String>> valores)throws Exception;
 
-	public void actualizaValoresSituacionTitulares(
+	public List<Map<String,String>> actualizaValoresSituacionTitulares(
 			String cdunieco,
 			String cdramo,
 			String estado,

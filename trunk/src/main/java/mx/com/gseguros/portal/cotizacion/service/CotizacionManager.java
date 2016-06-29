@@ -171,7 +171,9 @@ public interface CotizacionManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
-			,String cdgrupo)throws Exception;
+			,String cdgrupo
+			,String start
+			,String limit)throws Exception;
 	
 	public void guardarExtraprimaAsegurado(
 			String cdunieco
@@ -187,6 +189,16 @@ public interface CotizacionManager
 			,String estatura
 			,String extraprimaSobrepeso
 			,String cdgrupo
+			)throws Exception;
+	
+	public void guardarExtraprimaAsegurado(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsit
+			,List<Map<String,String>> slist1
 			)throws Exception;
 	
 	public List<Map<String,String>>cargarAseguradosGrupo(

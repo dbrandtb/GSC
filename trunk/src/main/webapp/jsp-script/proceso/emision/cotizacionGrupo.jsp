@@ -18,6 +18,7 @@
     display : none;
 }
 </style>
+<script type="text/javascript" src="${ctx}/resources/extjs4/plugins/pagingpersistence/pagingselectionpersistence2.js?${now}"></script>
 <script>
 ////// overrides //////
 Ext.override(Ext.form.TextField,
@@ -69,6 +70,7 @@ var _p21_urlEmitir                       = '<s:url namespace="/emision"         
 var _p21_urlViewDoc                      = '<s:url namespace="/documentos"      action="descargaDocInline"                />';
 var _p21_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas"      />';
 var _p21_urlGuardarExtraprimas           = '<s:url namespace="/emision"         action="guardarExtraprimasAsegurados"     />';
+var _p21_urlGuardarSituacionesTitulares  = '<s:url namespace="/emision"         action="guardarValoresSituacionesTitular" />';
 var _p21_urlSigsvalipol                  = '<s:url namespace="/emision"         action="ejecutaSigsvalipol"               />';
 var _p21_urlCargarAseguradosGrupo        = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"            />';
 var _p21_urlRecuperarPersona             = '<s:url namespace="/"                action="buscarPersonasRepetidas"          />';
@@ -358,7 +360,9 @@ Ext.onReady(function()
     Ext.define('_p21_modeloExtraprima',
     {
         extend  : 'Ext.data.Model'
+        ,idProperty : 'NMSITUAC'
         ,fields : [ <s:property value='%{getImap().containsKey("extraprimasFields")?getImap().get("extraprimasFields").toString():""}' /> ]
+        ,mode       : 'MULTI'
     });
     
     Ext.define('_p21_modeloAsegurados',
@@ -3123,7 +3127,9 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 {
                                                     text     : 'Guardar'
                                                     ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-                                                    ,handler : function(button){_p21_guardarGrupo(button.up().up());}
+                                                    ,handler : function(button){
+                                                    	_p21_guardarGrupo(button.up().up());
+                                                    	}
                                                     ,hidden  : _p21_smap1.COBERTURAS=='N'||_p21_smap1.COBERTURAS_BOTON=='N'
                                                 }
                                             ]
@@ -5927,14 +5933,29 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
         [
             Ext.create('Ext.grid.Panel',
             {
-                columns     : [ <s:property value='%{getImap().containsKey("extraprimasColumns")?getImap().get("extraprimasColumns").toString():""}' escapeHtml='false' /> ]
+                id			 :	'gridAseg'
+                ,selModel     : Ext.create('Ext.selection.CheckboxModel', 
+                		{
+                	mode: 				'MULTI',
+                	showHeaderCheckbox: false
+                	})
+				,columns     : [ <s:property value='%{getImap().containsKey("extraprimasColumns")?getImap().get("extraprimasColumns").toString():""}' escapeHtml='false' /> ]
                 ,width      : 980
                 ,height     : 500
-                ,plugins    : _p21_smap1.EXTRAPRIMAS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
-                {
-                    clicksToEdit  : 1
-                    ,errorSummary : false
-                }) : null
+                ,plugins    : [_p21_smap1.EXTRAPRIMAS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
+                            		   {
+                            	   clicksToEdit  : 1
+                            	   ,errorSummary : true
+                            	   ,pluginId     : 'rowedit'
+                            	   ,listeners: {
+                            		   edit: checkEdit
+                            		   }
+                               }) : null
+                               ,{
+                            	   ptype       : 'pagingselectpersist'
+                            	   ,pluginId   : 'pagingselect'
+                            	   }
+                               ]
                 ,tbar       :
                 [
                     {
@@ -5963,7 +5984,8 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                                     {
                                         filterFn = function(record)
 	                                    {
-	                                        var nombre = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
+	                                        
+											var nombre = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
 	                                        var filtro = val.toUpperCase().replace(/ /g,'');
 	                                        var posNombre = nombre.lastIndexOf(filtro);
 	                                        
@@ -5979,26 +6001,8 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
 	                                        }
 	                                    };
 	                                }
-	                                
-                                    cargaStorePaginadoLocalFiltro(
-		                                Ext.getStore('_p21_storeExtraprimas'+record.get('letra'))
-		                                ,_p21_urlCargarAseguradosExtraprimas
-		                                ,'slist1'
-		                                ,{
-    		                                'smap1.cdunieco'  : _p21_smap1.cdunieco
-		                                    ,'smap1.cdramo'   : _p21_smap1.cdramo
-		                                    ,'smap1.estado'   : _p21_smap1.estado
-		                                    ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-		                                    ,'smap1.nmsuplem' : '0'
-		                                    ,'smap1.cdgrupo'  : record.get('letra')
-		                                }
-		                                ,null
-		                                ,grid
-		                                ,null
-		                                ,filterFn
-		                            );
-		                        };
-		                        
+	                                                                   
+		                        };		                        
 		                        clearTimeout(comp.timeoutFn);
 		                        comp.timeoutFn = setTimeout(timeoutFn,3000);
                             }
@@ -6018,30 +6022,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                         ,text    : 'Aplicar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/bell_link.png'
                         ,grupo   : record.get('letra')
-                        ,handler : function(me)
-                        {
-                            var ck = 'Asignando extraprimas de ocupaci&oacute;n';
-                            try
-                            {
-                                var extrCmp = Ext.ComponentQuery.query('[name=extrtitu][grupo='+me.grupo+']')[0];
-                                if(extrCmp.isValid())
-                                {
-                                    var datos = extrCmp.up('grid').store.datos;
-                                    for(var i in datos)
-                                    {
-                                        var record = datos[i];
-                                        if(record.get('PARENTESCO')=='T')
-                                        {
-                                            record.set('EXTPRI_OCUPACION',extrCmp.getValue());
-                                        }
-                                    }
-                                }
-                            }
-                            catch(e)
-                            {
-                                manejaException(e,ck);
-                            }
-                        }
+                        ,handler : _p21_guardarExtraprimasTitulares
                     }
                 ]
                 ,store      : Ext.create('Ext.data.Store',
@@ -6053,11 +6034,44 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                     ,storeId    : '_p21_storeExtraprimas'+record.get('letra')
                     ,proxy      :
 			        {
-			            enablePaging : true,
-			            reader       : 'json',
-			            type         : 'memory',
-			            data         : []
+						type         : 'ajax'
+   						,url         : _p21_urlCargarAseguradosExtraprimas
+   						,callbackKey : 'callback'
+   						,extraParams :
+   						{
+   							'smap1.cdunieco'  : _p21_smap1.cdunieco
+   							,'smap1.cdramo'   : _p21_smap1.cdramo
+   							,'smap1.estado'   : _p21_smap1.estado
+   							,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+   							,'smap1.nmsuplem' : '0'
+   							,'smap1.cdgrupo'  : record.get('letra')
+   						}
+   						,reader      :
+   						{
+   							type             : 'json'
+   							,root            : 'slist1'
+   							,successProperty : 'success'
+   							,messageProperty : 'respuesta'
+   							,totalProperty   : 'total'
+   						}
+   						,simpleSortMode: true
 			        }
+                	,listeners : {
+                		'load' :  {
+                			fn : function(store,records,successful) {
+                				debug('reseteando los datos');
+                				debug('valores',_fieldById('gridAseg').getPlugin('pagingselect').selection);
+                				for(var s in _fieldById('gridAseg').store.data.items){
+                					var rec = _fieldById('gridAseg').store.getAt(s);
+                					for(var y in rec.data){
+                						debug('rec',rec);
+                						rec.set(y,rec.raw[y]);
+                						}
+                					rec.commit();
+                					}
+                				}
+                	}
+               }
                 })
                 ,bbar :
                 {
@@ -6122,26 +6136,10 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 {
                     afterrender : function(me)
                     {
-                        cargaStorePaginadoLocalFiltro(
-                            Ext.getStore('_p21_storeExtraprimas'+record.get('letra'))
-                            ,_p21_urlCargarAseguradosExtraprimas
-                            ,'slist1'
-                            ,{
-                                'smap1.cdunieco'  : _p21_smap1.cdunieco
-                                ,'smap1.cdramo'   : _p21_smap1.cdramo
-                                ,'smap1.estado'   : _p21_smap1.estado
-                                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-                                ,'smap1.nmsuplem' : '0'
-                                ,'smap1.cdgrupo'  : record.get('letra')
-                            }
-                            ,null
-                            ,me
-                            ,null
-                            ,null
-                        );
-                        
                         Ext.getStore('_p21_storeExtraprimas'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
+					,beforedeselect: beforedesel
+                	,beforeedit	    : beforeed
                 }
                 ,buttonAlign : 'center'
                 ,buttons     :
@@ -6159,6 +6157,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
             })
         ]
     });
+    _fieldById('gridAseg').store.loadPage(1);
     debug('<_p21_revisarAseguradosClic');
 }
 
@@ -6284,7 +6283,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
 		                                };
 		                            }
 		                            
-		                            cargaStorePaginadoLocalFiltro(
+		                            /* cargaStorePaginadoLocalFiltro(
                                         Ext.getStore('_p21_storeAsegurados'+record.get('letra'))
                                         ,_p21_urlCargarAseguradosGrupo
                                         ,'slist1'
@@ -6300,7 +6299,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                                         ,grid
                                         ,null
                                         ,filterFn
-                                    );
+                                    ); */
                                 };
                                 
                                 clearTimeout(comp.timeoutFn);
@@ -6354,7 +6353,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                 {
                     afterrender : function(me)
                     {
-                        cargaStorePaginadoLocalFiltro(
+                        /* cargaStorePaginadoLocalFiltro(
                             Ext.getStore('_p21_storeAsegurados'+record.get('letra'))
                             ,_p21_urlCargarAseguradosGrupo
                             ,'slist1'
@@ -6370,7 +6369,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                             ,me
                             ,null
                             ,null
-                        );
+                        ); */
                         
                         Ext.getStore('_p21_storeAsegurados'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
@@ -6394,90 +6393,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     debug('<_cotcol_aseguradosClic');
 }
 
-function _p21_guardarExtraprimas(letra)
-{
-    debug('>_p21_guardarExtraprimas:',letra);
-    var tab=Ext.ComponentQuery.query('[extraprimaLetraGrupo='+letra+']')[0];
-    debug('tab a guardar:',tab);
-    var grid=tab.down('[xtype=grid]');
-    debug('grid a guardar:',grid);
-    var store=grid.getStore();
-    debug('store a guardar:',store);
-    var records = [];
-    for(var i in store.datos)
-    {
-        var record = store.datos[i];
-        
-        if(record.dirty)
-        {
-            records.push(record);
-        }
-    }
-    debug('records a guardar:',records);
-    if(records.length==0)
-    {
-        mensajeWarning('No hay cambios');
-        _p21_setActiveResumen();
-    }
-    else
-    {
-        var asegurados = [];
-        $.each(records,function(i,record)
-        {
-            var asegurado =
-            {
-                cdunieco          : _p21_smap1.cdunieco
-                ,cdramo           : _p21_smap1.cdramo
-                ,estado           : _p21_smap1.estado
-                ,nmpoliza         : _p21_smap1.nmpoliza
-                ,nmsuplem         : '0'
-                ,nmsituac         : record.get('NMSITUAC')
-                ,cdtipsit         : _p21_smap1.cdtipsit
-                ,ocupacion        : record.get('OCUPACION')
-                ,extpri_ocupacion : record.get('EXTPRI_OCUPACION')
-                ,peso             : record.get('PESO')
-                ,estatura         : record.get('ESTATURA')
-                ,extpri_estatura  : record.get('EXTPRI_SOBREPESO')
-                ,cdgrupo          : letra
-            };
-            asegurados.push(asegurado);
-        });
-        tab.setLoading(true);
-        Ext.Ajax.request(
-        {
-            url       : _p21_urlGuardarExtraprimas
-            ,jsonData :
-            {
-                slist1 : asegurados
-            }
-            ,success  : function(response)
-            {
-                tab.setLoading(false);
-                var json=Ext.decode(response.responseText);
-                debug('respuesta del guardado de extraprimas:',json);
-                if(json.exito)
-                {
-                    for(var i=0;i<records.length;i++)
-                    {
-                        records[i].commit();
-                    }
-                    mensajeCorrecto('Datos guardados',json.respuesta);
-                    _p21_setActiveResumen();
-                }
-                else
-                {
-                    mensajeError(json.respuesta);
-                }
-            }
-            ,failure  : function()
-            {
-                tab.setLoading(false);
-                errorComunicacion();
-            }
-        });
-    }
-    debug('<_p21_guardarExtraprimas');
-}
+
 
 function _p21_sigsvalipol(callback)
 {

@@ -8995,19 +8995,45 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-			    slist1=cotizacionManager.cargarAseguradosExtraprimas(
-			    		smap1.get("cdunieco")
-			    		,smap1.get("cdramo")
-			    		,smap1.get("estado")
-			    		,smap1.get("nmpoliza")
-			    		,smap1.get("nmsuplem")
-			    		,smap1.get("cdgrupo")
+				Utils.validateSession(session);				
+				Utils.validate(smap1 , "No se recibieron datos");				
+				String cdunieco  = null
+						,cdramo   = null
+						,estado   = null
+						,nmpoliza = null
+						,nmsuplem = null
+						,cdgrupo  = null;				
+				cdunieco = smap1.get("cdunieco");
+				cdramo   = smap1.get("cdramo");
+				estado   = smap1.get("estado");
+				nmpoliza = smap1.get("nmpoliza");
+				nmsuplem = smap1.get("nmsuplem");
+				cdgrupo  = smap1.get("cdgrupo");
+				Utils.validate(
+						cdunieco  , "No se recibio la sucursal"
+						,cdramo   , "No se recibio el producto"
+						,estado   , "No se recibio el estado"
+						,nmpoliza , "No se recibio el numero de cotizacion"
+						,nmpoliza , "No se recibio el numero de cotizacion"
+						,nmpoliza , "No se recibio el numero de cotizacion"
+						,nmsuplem , "No se recibio el suplemento"
+						,cdgrupo  , "No se recibio la clave de grupo"
+				);		
+				smap1.put("start", start);
+				smap1.put("limit", limit);
+			    slist1 = cotizacionManager.cargarAseguradosExtraprimas(
+			    		cdunieco
+			    		,cdramo
+			    		,estado
+			    		,nmpoliza
+			    		,nmsuplem
+			    		,cdgrupo
+			    		,start
+			    		,limit
 			    		);
-			    for(Map<String,String>iAsegurado:slist1)
-			    {
+			    for(Map<String,String>iAsegurado:slist1){
 			    	String tpl = null;
-			    	if(StringUtils.isBlank(iAsegurado.get("TITULAR")))
-			    	{
+			    	if(StringUtils.isBlank(iAsegurado.get("TITULAR"))){
 			    		tpl = "Asegurados";
 			    	}
 			    	else
@@ -9026,6 +9052,16 @@ public class CotizacionAction extends PrincipalCoreAction
 			    	            .append(tpl)
 			    	            .toString());
 			    }
+			    Map<String,String> total = slist1.remove(slist1.size()-1);
+				this.total = total.get("total");
+			    logger.debug(Utils.log(
+						 "\n##########################################"
+						,"\n###### start=" , start
+						,"\n###### limit=" , limit
+						,"\n###### total=" , total.get("total")
+						));			
+				exito   = true;
+				success = true;
 			}
 			catch(Exception ex)
 			{
@@ -9129,30 +9165,39 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n##########################################"
 				,"\n###### guardarExtraprimasAsegurados ######"
+				,"\n###### cdunieco: "+params.get("cdunieco")
+				,"\n###### cdramo: "+params.get("cdramo")
+				,"\n###### estado: "+params.get("estado")
+				,"\n###### nmpoliza: "+params.get("nmpoliza")
+				,"\n###### nmsuplem: "+params.get("nmsuplem")
+				,"\n###### cdtipsit: "+params.get("cdtipsit")
+				,"\n###### guardarExt: "+params.get("guardarExt")
 				,"\n###### slist1: "+slist1
 				));
 		
 		try
 		{
-			for(Map<String,String>iAsegurado:slist1)
-			{
-				cotizacionManager.guardarExtraprimaAsegurado(
-						iAsegurado.get("cdunieco")
-						,iAsegurado.get("cdramo")
-						,iAsegurado.get("estado")
-						,iAsegurado.get("nmpoliza")
-						,iAsegurado.get("nmsuplem")
-						,iAsegurado.get("nmsituac")
-						,iAsegurado.get("cdtipsit")
-						,iAsegurado.get("ocupacion")
-						,iAsegurado.get("extpri_ocupacion")
-						,iAsegurado.get("peso")
-						,iAsegurado.get("estatura")
-						,iAsegurado.get("extpri_estatura")
-						,iAsegurado.get("cdgrupo")
-						);
-			}
-			
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String estado   = params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String nmsuplem = params.get("nmsuplem");
+			String cdtipsit = params.get("cdtipsit");
+			Utils.validate(cdunieco, "no se recibio oficina");
+			Utils.validate(cdramo, "no se recibio ramo");
+			Utils.validate(estado, "no se recibio estado");
+			Utils.validate(nmpoliza, "no se recibio poliza");
+			Utils.validate(cdtipsit, "no se recibio tipo de situacion");
+			Utils.validate(slist1,"no se recibieron datos para guardar");
+			cotizacionManager.guardarExtraprimaAsegurado(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdtipsit
+					,slist1
+					);			
 			respuesta = "Se guardaron todos los datos";
 			success   = true;
 			exito     = true;

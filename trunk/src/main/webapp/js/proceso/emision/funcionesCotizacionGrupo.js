@@ -1122,6 +1122,44 @@ function _p25_guardarExtraprimasTitulares(){
     		});
 }
 
+function _p21_guardarExtraprimasTitulares(){
+    debug('>_p21_guardarExtraprimas:');
+ 	_mask('Actualizado valores');
+    Ext.Ajax.request(
+    		{
+    	url       : _p21_urlGuardarSituacionesTitulares
+    	,jsonData :
+    	{
+    		params  : {
+    			cdunieco   : _p21_smap1.cdunieco
+            	,cdramo    : _p21_smap1.cdramo
+            	,estado    : _p21_smap1.estado
+            	,nmpoliza  : _p21_smap1.nmpoliza
+            	,nmsuplem  : '0'
+            	,cdtipsit  : _p21_smap1.cdtipsit
+            	,valor	   : document.getElementsByName("extrtitu")[0].value
+            	}
+    	}
+    	,success  : function(response){
+    		var json=Ext.decode(response.responseText);
+            debug('respuesta del guardado de extraprimas:',json);
+            if(json.exito){
+            	_fieldById('gridAseg').getStore().reload();
+                mensajeCorrecto('Datos guardados',json.respuesta);
+                _unmask();
+            }
+            else{
+                mensajeError(json.respuesta);
+                _umask();
+            }
+        }
+        ,failure  : function(){
+            errorComunicacion();
+            _unmask();
+        }
+    		});
+}
+
 function _p25_guardarExtraprimas(letra)
 {
     debug('>_p25_guardarExtraprimas:',letra);
@@ -1202,4 +1240,93 @@ function _p25_guardarExtraprimas(letra)
         });
     }
     debug('<_p25_guardarExtraprimas');
+}
+
+function _p21_guardarExtraprimas(letra)
+{
+    debug('>_p21_guardarExtraprimas:',letra);
+//    var tab=Ext.ComponentQuery.query('[extraprimaLetraGrupo='+letra+']')[0];
+//    debug('tab a guardar:',tab);
+//    var grid=tab.down('[xtype=grid]');
+//    debug('grid a guardar:',grid);
+//    var store=grid.getStore();
+    var records = [];
+    var store = _fieldById('gridAseg').getStore();
+    for(var i in _fieldById('gridAseg').getPlugin('pagingselect').selection){
+    	records.push(_fieldById('gridAseg').getPlugin('pagingselect').selection[i].data);
+    }
+    debug('store a guardar:',store);
+    
+//    for(var i in store.datos)
+//    {
+//        var record = store.datos[i];
+//        if(record.dirty)
+//        {
+//            records.push(record);
+//        }
+//    }
+    debug('records a guardar:',records);
+    if(records.length==0)
+    {
+        mensajeWarning('No hay cambios');
+        _p21_setActiveResumen();
+    }
+    else
+    {
+        var asegurados = [];
+        $.each(records,function(i,record)
+        {
+            var asegurado =
+            {
+                nmsituac          : record['NMSITUAC']
+                ,ocupacion        : record['OCUPACION']
+                ,extpri_ocupacion : record['EXTPRI_OCUPACION']
+                ,peso             : record['PESO']
+                ,estatura         : record['ESTATURA']
+                ,extpri_estatura  : record['EXTPRI_SOBREPESO']
+                ,cdgrupo          : letra
+            };
+            asegurados.push(asegurado);
+        });
+//        tab.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url       : _p21_urlGuardarExtraprimas
+            ,jsonData :
+            {
+            	params  :
+            	{
+            		cdunieco   : _p21_smap1.cdunieco,
+            		cdramo     : _p21_smap1.cdramo,
+            		estado	   : _p21_smap1.estado,
+            		nmpoliza   : _p21_smap1.nmpoliza,
+            		nmsuplem   : 0,
+            		cdtipsit   : _p21_smap1.cdtipsit,
+            		guardarExt : 'S'
+            	}
+                ,slist1 : asegurados
+            }
+            ,success  : function(response)
+            {
+//                tab.setLoading(false);
+                var json=Ext.decode(response.responseText);
+                debug('respuesta del guardado de extraprimas:',json);
+                if(json.exito)
+                {
+                    mensajeCorrecto('Datos guardados',json.respuesta);
+//                    _p21_setActiveResumen();
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure  : function()
+            {
+//                tab.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+    debug('<_p21_guardarExtraprimas');
 }
