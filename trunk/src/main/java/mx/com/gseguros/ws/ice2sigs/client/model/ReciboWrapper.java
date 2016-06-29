@@ -26,6 +26,7 @@ public class ReciboWrapper implements Serializable{
 	
 	private String operacion;
 	private Recibo recibo;
+	private boolean guardarDocumento;
 	
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
@@ -45,5 +46,13 @@ public class ReciboWrapper implements Serializable{
 
 	public void setRecibo(Recibo recibo) {
 		this.recibo = recibo;
+	}
+
+	public boolean isGuardarDocumento() {
+		return guardarDocumento;
+	}
+
+	public void setGuardarDocumento(boolean guardarDocumento) {
+		this.guardarDocumento = guardarDocumento;
 	}
 }

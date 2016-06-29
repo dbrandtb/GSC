@@ -3582,6 +3582,9 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	recVO.setRecibo(recibo);
         	recVO.setOperacion(rs.getString("TIPOPER"));
         	
+        	String guardaDocumento =  rs.getString("GENERA_LIGA");
+        	recVO.setGuardarDocumento((StringUtils.isNotBlank(guardaDocumento) &&  Constantes.SI.equalsIgnoreCase(guardaDocumento))?true:false);
+        	
         	return recVO;
         }
     }
