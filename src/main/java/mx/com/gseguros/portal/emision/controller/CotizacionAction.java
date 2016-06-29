@@ -7562,8 +7562,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		return resp;
 	}
 	
-	
-	
 	private tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolEndoso(
 			String clasif
 			,String LINEA
@@ -8409,7 +8407,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		return resp;
 	}
 	
-	
 	public String obtenerDetalleCotizacionGrupo()
 	{
 		logger.debug(""
@@ -8980,7 +8977,17 @@ public class CotizacionAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
-	
+		
+	/** 
+	 *************cargarAseguradosExtraprimas****************
+	 ********************************************************
+	 **Carga los valores de asegurados y 
+	 **la informacion a nivel de situacion 
+	 **como lo son las extraprimas, ademas  
+	 **de agruparlos por familia para el
+	 **ramo multialud colectivo (MSC)
+	 * @return
+	 */
 	public String cargarAseguradosExtraprimas()
 	{
 		logger.debug(""
@@ -9080,6 +9087,16 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	/**
+	 ****************************************************
+	 ************cargarAseguradosExtraprimas2************
+	 ****************************************************
+	 **Paginado de la asegurados que muestra 
+	 **los valores por situacion como extraprimas,
+	 **ademas de agruparlos por familia.
+	 ****************************************************
+	 * @return
+	 */
 	public String cargarAseguradosExtraprimas2()
 	{
 		logger.debug(Utils.log(
@@ -9115,8 +9132,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdramo   , "No se recibio el producto"
 					,estado   , "No se recibio el estado"
 					,nmpoliza , "No se recibio el numero de cotizacion"
-					,nmpoliza , "No se recibio el numero de cotizacion"
-					,nmpoliza , "No se recibio el numero de cotizacion"
 					,nmsuplem , "No se recibio el suplemento"
 					,cdgrupo  , "No se recibio la clave de grupo"
 			);		
@@ -9140,8 +9155,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,"\n###### start=" , start
 					,"\n###### limit=" , limit
 					,"\n###### total=" , total.get("total")
-					));
-//		    this.total = slist1.get("total");			
+					));			
 			exito   = true;
 			success = true;
 		}
@@ -9160,6 +9174,14 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	/**
+	 ****************************************************
+	 ************guardarExtraprimasAsegurados************
+	 ****************************************************
+	 **Guarda los cambios en la pagina de asegurados
+	 **agrupados de una sola vez
+	 * @return
+	 */
 	public String guardarExtraprimasAsegurados()
 	{
 		logger.debug(Utils.log(
@@ -10869,6 +10891,14 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	/**
+	 ***********guardarValoresSituaciones***********
+	 ***********************************************
+	 **Guarda los cambios en la pagina de asegurados
+	 **agrupados por familia para los datos de 
+	 **situacion como extraprimas 
+	 * @return
+	 */
 	public String guardarValoresSituaciones(){
 		logger.debug(
 				new StringBuilder()
@@ -10909,6 +10939,14 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	/**
+	 *************guardarValoresSituacionesTitular*************
+	 **********************************************************
+	 **Cambia el valor de extraprima ocupacional
+	 **para todos los titulares de la poliza
+	 **recibida 
+	 * @return
+	 */
 	public String guardarValoresSituacionesTitular()
 	{
 		logger.debug(
@@ -11518,7 +11556,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	
 	private class ConfirmaCensoConcurrente1 extends Thread
     {
 		private Map<String,String> smap1;
@@ -11639,7 +11676,6 @@ public class CotizacionAction extends PrincipalCoreAction
     		}
     	}
     }
-	
 	
 	public String consultaExtraprimaOcup() throws Exception {
 		

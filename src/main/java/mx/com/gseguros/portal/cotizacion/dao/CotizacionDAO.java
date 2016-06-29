@@ -711,6 +711,19 @@ public interface CotizacionDAO {
 			String start, 
 			String limit) throws Exception;
 	
+	/**
+	 ***********actualizaValoresSituacion***********
+	 ***********************************************
+	 **Actualiza los valores por situacion de
+	 **una sola vez
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param valores
+	 * @throws Exception
+	 */
 	public void actualizaValoresSituacion(
 			String cdunieco,
 			String cdramo,
@@ -719,6 +732,20 @@ public interface CotizacionDAO {
 			String nmsuplem,
 			List<Map<String,String>> valores)throws Exception;
 
+	/**
+	 ****************actualizaValoresSituacionTitulares****************
+	 ******************************************************************
+	 **
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param cdtipsit
+	 * @param valor
+	 * @return
+	 * @throws Exception
+	 */
 	public List<Map<String,String>> actualizaValoresSituacionTitulares(
 			String cdunieco,
 			String cdramo,

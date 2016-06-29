@@ -165,6 +165,21 @@ public interface CotizacionManager
 
 	public int obtieneTipoValorAutomovil(String codigoPostal, String tipoVehiculo)throws Exception;
 	
+	/**
+	 *********cargarAseguradosExtraprimas*********
+	 *********************************************
+	 **Obtiene asegurados y agrupa por familia
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param cdgrupo
+	 * @param start
+	 * @param limit
+	 * @return
+	 * @throws Exception
+	 */
 	public List<Map<String,String>>cargarAseguradosExtraprimas(
 			String cdunieco
 			,String cdramo
@@ -191,6 +206,19 @@ public interface CotizacionManager
 			,String cdgrupo
 			)throws Exception;
 	
+	/**
+	 ***********guardarExtraprimaAsegurado***********
+	 ************************************************
+	 **Guarda valores de situacion de una sola vez
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param cdtipsit
+	 * @param slist1
+	 * @throws Exception
+	 */
 	public void guardarExtraprimaAsegurado(
 			String cdunieco
 			,String cdramo
@@ -383,7 +411,22 @@ public interface CotizacionManager
 			,String nmsuplem
 			,String cdgrupo
 			)throws Exception;
-	
+	/**
+	 **************guardarValoresSituaciones**************
+	 *****************************************************
+	 * Recibe los valores a actualizar en
+	 * base de datos y lanza valores por 
+	 * defecto
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param situaciones
+	 * @param cdtipsit
+	 * @param guardarExt
+	 * @return
+	 */
 	public ManagerRespuestaVoidVO guardarValoresSituaciones(
 			String cdunieco,
 			String cdramo,
@@ -394,6 +437,21 @@ public interface CotizacionManager
 			String cdtipsit,
 			Boolean guardarExt);
 	
+	/**
+	 **************guardarValoresSituacionesTitular**************
+	 ************************************************************
+	 **Actualiza el valor de extraprima ocupacional
+	 **y devuelve las situaciones correspondientes
+	 **para lanzar los valores por defecto
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param cdtipsit
+	 * @param valor
+	 * @return
+	 */
 	public ManagerRespuestaVoidVO guardarValoresSituacionesTitular(
 			String cdunieco,
 			String cdramo,
@@ -926,6 +984,20 @@ public interface CotizacionManager
 	 */
 	public String consultaExtraprimOcup(String cdtipsit)throws Exception;
 	
+	/**
+	 *************cargarAseguradosExtraprimas2*************
+	 **Carga asegurados y agrupa por familia
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param cdgrupo
+	 * @param start
+	 * @param limit
+	 * @return
+	 * @throws Exception
+	 */
 	public List<Map<String,String>> cargarAseguradosExtraprimas2(
 			String cdunieco
 			,String cdramo
