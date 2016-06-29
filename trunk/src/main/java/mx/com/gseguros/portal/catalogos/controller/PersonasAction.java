@@ -344,10 +344,11 @@ public class PersonasAction extends PrincipalCoreAction
 		    	
 	    		Calendar calendar =  Calendar.getInstance();
 	    		
-	    		String sexo = "H"; //Hombre
-		    	if(cliImport.getSexoCli() > 0){
+	    		String sexo = null; //Por default se pide mandar en nulo en vez de Hombre(H)
+		    	/**
+	    		if(cliImport.getSexoCli() > 0){
 		    		if(cliImport.getSexoCli() == 2) sexo = "M";
-		    	}
+		    	}**/
 		    	
 		    	String tipoPersona = "F"; //Fisica
 		    	if(cliImport.getFismorCli() > 0){
@@ -559,10 +560,11 @@ public class PersonasAction extends PrincipalCoreAction
 			    	
 		    		Calendar calendar =  Calendar.getInstance();
 		    		
-		    		String sexo = "H"; //Hombre
-			    	if(cliImport.getSexoCli() > 0){
+		    		String sexo = null; //Por default se pide mandar en nulo en vez de Hombre(H)
+			    	/**
+		    		if(cliImport.getSexoCli() > 0){
 			    		if(cliImport.getSexoCli() == 2) sexo = "M";
-			    	}
+			    	}**/
 			    	
 			    	String tipoPersona = "F"; //Fisica
 			    	if(cliImport.getFismorCli() > 0){
