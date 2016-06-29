@@ -1600,7 +1600,6 @@ function _0_agregarAsegu(boton)
 
 function _0_cotizar(boton)
 {
-    _0_panelPri.setLoading(true);
     debug('_0_cotizar');
     if(_0_validarBase())//
     {
@@ -1795,7 +1794,6 @@ function _0_cotizar(boton)
             }
         });
     }
-    _0_panelPri.setLoading(false);
 }
 
 function _0_validarBase()
