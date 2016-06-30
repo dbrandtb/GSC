@@ -4789,6 +4789,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            int           filasProcesadas    = 0;
 	            filasError         = 0;
 	            
+	            Map<Integer,List<Map<String,String>>> listaFamilias = new HashMap<Integer, List<Map<String,String>>>(); 
+	            List<Map<String,String>>             filasFamilia = new ArrayList<Map<String,String>>(); 
+	            
 	            Map<Integer,String>  familias       = new LinkedHashMap<Integer,String>();
 				Map<Integer,Boolean> estadoFamilias = new LinkedHashMap<Integer,Boolean>();
 				Map<Integer,Integer> errorFamilia   = new LinkedHashMap<Integer,Integer>();
@@ -5002,10 +5005,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                
 		                if("T".equals(parentesco))
 		                {
+		                	if(nFamilia > 0){
+		                		listaFamilias.put(nFamilia, filasFamilia);
+		                		filasFamilia = new ArrayList<Map<String,String>>(); 
+		                	}
+		                	
 		                	nFamilia++;
 		                	familias.put(nFamilia,"");
 		                	estadoFamilias.put(nFamilia,true);
 		                	titulares.put(nFamilia,nombre);
+		                	
 		                }
                 	}
 	                catch(Exception ex)
@@ -5656,50 +5665,42 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	filasProcesadas = filasProcesadas + 1;
 	                	gruposValidos[((int)cdgrupo)-1]=true;
 	                	
-	                	try
-	    				{
-	                		Map<String,String> params =  new HashMap<String, String>();
-	    					
-	    					params.put("pv_cdunieco_i", cdunieco);
-	    					params.put("pv_cdramo_i", cdramo);
-	    					params.put("pv_estado_i", "W");
-	    					params.put("pv_nmpoliza_i", nmpoliza);
-	    					params.put("pv_cdgrupo_i", row.getCell(0)!=null?row.getCell(0).getStringCellValue() : "");
-	    					params.put("pv_parentesco_i", row.getCell(1)!=null?row.getCell(1).getStringCellValue() : "");
-	    					params.put("pv_dsapellido_i", row.getCell(2)!=null?row.getCell(2).getStringCellValue() : "");
-	    					params.put("pv_dsapellido1_i", row.getCell(3)!=null?row.getCell(3).getStringCellValue() : "");
-	    					params.put("pv_dsnombre_i", row.getCell(4)!=null?row.getCell(4).getStringCellValue() : "");
-	    					params.put("pv_dsnombre1_i", row.getCell(5)!=null?row.getCell(5).getStringCellValue() : "");
-	    					params.put("pv_otsexo_i", row.getCell(6)!=null?row.getCell(6).getStringCellValue() : "");
-	    					
-	    					params.put("pv_fenacimi_i", fechaNac);
-	    					params.put("pv_cdpostal_i", row.getCell(8)!=null?row.getCell(8).getStringCellValue() : "");
-	    					params.put("pv_dsestado_i", row.getCell(9)!=null?row.getCell(9).getStringCellValue() : "");
-	    					params.put("pv_dsmunicipio_i", row.getCell(10)!=null?row.getCell(10).getStringCellValue() : "");
-	    					params.put("pv_dscolonia_i", row.getCell(11)!=null?row.getCell(11).getStringCellValue() : "");
-	    					params.put("pv_dsdomici_i", row.getCell(12)!=null?row.getCell(12).getStringCellValue() : "");
-	    					params.put("pv_nmnumero_i", row.getCell(13)!=null?extraerStringDeCelda(row.getCell(13)) : "");
-	    					params.put("pv_nmnumint_i", row.getCell(14)!=null?extraerStringDeCelda(row.getCell(14)) : "");
-	    					params.put("pv_cdrfc_i",    row.getCell(15)!=null?row.getCell(15).getStringCellValue() : "");
-	    					params.put("pv_dsemail_i",  row.getCell(16)!=null?row.getCell(16).getStringCellValue() : "");
-	    					params.put("pv_nmtelefo_i", row.getCell(17)!=null?row.getCell(17).getStringCellValue() : "");
-	    					params.put("pv_identidad_i",row.getCell(18)!=null?row.getCell(18).getStringCellValue() : "");
-	    					params.put("pv_fecantig_i", fecanti);
-	    					params.put("pv_expocupacion_i", row.getCell(20)!=null?row.getCell(20).getStringCellValue() : "");
-	    					params.put("pv_peso_i", row.getCell(21)!=null?row.getCell(21).getStringCellValue() : "");
-	    					params.put("pv_estatura_i", row.getCell(22)!=null?row.getCell(22).getStringCellValue() : "");
-	    					params.put("pv_expsobrepeso_i", row.getCell(23)!=null?row.getCell(23).getStringCellValue() : "");
-	    					params.put("pv_edocivil_i", row.getCell(24)!=null?row.getCell(24).getStringCellValue() : "");
-	    					params.put("pv_feingresoempleo_i", feingreso);
-	    					params.put("pv_plaza_i", row.getCell(26)!=null?row.getCell(26).getStringCellValue() : "");
-	    					
-	    					cotizacionDAO.insertaRegistroInfoCenso(params);
-	    					
-	    				}
-	    	            catch(Exception ex)
-	    	            {
-	    	            	logger.error("Error al insetar registro de censo", ex);
-	    	            }
+                		Map<String,String> params =  new HashMap<String, String>();
+    					
+    					params.put("pv_cdunieco_i", cdunieco);
+    					params.put("pv_cdramo_i", cdramo);
+    					params.put("pv_estado_i", "W");
+    					params.put("pv_nmpoliza_i", nmpoliza);
+    					params.put("pv_cdgrupo_i", extraerStringDeCelda(row.getCell(0)));
+    					params.put("pv_parentesco_i", extraerStringDeCelda(row.getCell(1)));
+    					params.put("pv_dsapellido_i", extraerStringDeCelda(row.getCell(2)));
+    					params.put("pv_dsapellido1_i", extraerStringDeCelda(row.getCell(3)));
+    					params.put("pv_dsnombre_i", extraerStringDeCelda(row.getCell(4)));
+    					params.put("pv_dsnombre1_i", extraerStringDeCelda(row.getCell(5)));
+    					params.put("pv_otsexo_i", extraerStringDeCelda(row.getCell(6)));
+    					
+    					params.put("pv_fenacimi_i", fechaNac);
+    					params.put("pv_cdpostal_i", extraerStringDeCelda(row.getCell(8)));
+    					params.put("pv_dsestado_i", extraerStringDeCelda(row.getCell(9)));
+    					params.put("pv_dsmunicipio_i", extraerStringDeCelda(row.getCell(10)));
+    					params.put("pv_dscolonia_i", extraerStringDeCelda(row.getCell(11)));
+    					params.put("pv_dsdomici_i", extraerStringDeCelda(row.getCell(12)));
+    					params.put("pv_nmnumero_i", extraerStringDeCelda(row.getCell(13)));
+    					params.put("pv_nmnumint_i", extraerStringDeCelda(row.getCell(14)));
+    					params.put("pv_cdrfc_i",    extraerStringDeCelda(row.getCell(15)));
+    					params.put("pv_dsemail_i",  extraerStringDeCelda(row.getCell(16)));
+    					params.put("pv_nmtelefo_i", extraerStringDeCelda(row.getCell(17)));
+    					params.put("pv_identidad_i",extraerStringDeCelda(row.getCell(18)));
+    					params.put("pv_fecantig_i", fecanti);
+    					params.put("pv_expocupacion_i", extraerStringDeCelda(row.getCell(20)));
+    					params.put("pv_peso_i",     extraerStringDeCelda(row.getCell(21)));
+    					params.put("pv_estatura_i", extraerStringDeCelda(row.getCell(22)));
+    					params.put("pv_expsobrepeso_i", extraerStringDeCelda(row.getCell(23)));
+    					params.put("pv_edocivil_i", extraerStringDeCelda(row.getCell(24)));
+    					params.put("pv_feingresoempleo_i", feingreso);
+    					params.put("pv_plaza_i", extraerStringDeCelda(row.getCell(26)));
+    					
+    					filasFamilia.add(params);
 	                	
 	                }
 	                else
@@ -5780,6 +5781,31 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            	resp.getSmap().put("filasLeidas"     , Integer.toString(filasLeidas));
 	            	resp.getSmap().put("filasProcesadas" , Integer.toString(filasProcesadas));
 	            	resp.getSmap().put("filasErrores"    , Integer.toString(filasError));
+	            	
+	            	
+	            	if(nFamilia > 0 && !filasFamilia.isEmpty()){
+	            		listaFamilias.put(nFamilia, filasFamilia);
+	            		
+	            		try
+	    				{
+	            			for(Entry<Integer, List<Map<String,String>>> entry : listaFamilias.entrySet())
+	            			{
+	            				Integer numFam = entry.getKey();
+	            				
+	            				if(estadoFamilias.containsKey(numFam) && estadoFamilias.get(numFam)){
+	            					
+	            					for(Map<String,String> paramsElemFam: listaFamilias.get(numFam)){
+	            						cotizacionDAO.insertaRegistroInfoCenso(paramsElemFam);
+	            					}
+	            				}
+	            			}
+	    				}
+	    	            catch(Exception ex)
+	    	            {
+	    	            	logger.error("Error al insetar registro de censo", ex);
+	    	            }
+	            		
+	            	}
 	            }
 	            
 	            if(resp.isExito())
