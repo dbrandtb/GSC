@@ -253,9 +253,7 @@
                     onEditClick: function(grid, rowIndex){
                         var record=grid.getStore().getAt(rowIndex);
                        debug("VALOR DEL RECORD --->",record);
-                        //_selCobForm.hiden(false);
-                        if(record.data.CDGARANT == null ||record.data.CDGARANT == "")
-                        {
+                        if(record.data.CDGARANT == null ||record.data.CDGARANT == ""){
                             tipoAccion = "I";
                         }else{
                             tipoAccion = "U";
@@ -373,7 +371,8 @@
 															'params.nmsuplem'  :  _selCobParams.nmsuplem,
 															'params.nmsituac'  : _selCobParams.nmsituac,
 															'params.cdgarant'  : coberturaInt,
-															'params.cdconval'  : subcoberInt
+															'params.cdconval'  : subcoberInt,
+															'params.nmsinies'  : null
 														}
 														,success : function (response){
 															var jsonRes = Ext.decode(response.responseText);
