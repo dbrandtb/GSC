@@ -400,4 +400,11 @@ public class ConsultasManagerImpl implements ConsultasManager
 	{
 		return consultasDAO.recuperarCdpersonClienteTramite(ntramite);
 	}
+	
+	@Override
+	@Deprecated
+	public Map<String,String> recuperarDatosFlujoEndoso(String cdramo, String cdtipsup) throws Exception
+	{
+		return consultasDAO.recuperarDatosFlujoEndoso(cdramo, cdtipsup);
+	}
 }

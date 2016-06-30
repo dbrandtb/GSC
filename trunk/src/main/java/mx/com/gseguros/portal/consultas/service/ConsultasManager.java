@@ -157,4 +157,7 @@ public interface ConsultasManager
 
 	@Deprecated
 	public String recuperarCdpersonClienteTramite(String ntramite) throws Exception;
+	
+	@Deprecated
+	public Map<String,String> recuperarDatosFlujoEndoso(String cdramo, String cdtipsup) throws Exception;
 }

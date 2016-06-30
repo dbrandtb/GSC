@@ -579,4 +579,6 @@ public interface ConsultasDAO
 	public List<Map<String,String>> llenaCombo(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
 	
 	public String recuperarCduniextPorLlavePoliza(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
+	
+	public Map<String,String> recuperarDatosFlujoEndoso(String cdramo, String cdtipsup) throws Exception;
 }

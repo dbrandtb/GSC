@@ -126,6 +126,7 @@
     top            : 3px;
     text-align     : left;
     text-transform : uppercase;
+    font-weight    : bold;
 }
 .labelT0
 {
