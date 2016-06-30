@@ -101,6 +101,8 @@ public class EndososAction extends PrincipalCoreAction
 	private boolean                  endosoSimple = false;
 	private ConsultasManager         consultasManager;
 	
+	private String message;
+	
 	@Autowired
 	private ConsultasPolizaManager   consultasPolizaManager;
 	private CotizacionDAO  			 cotizacionDAO;
@@ -6686,29 +6688,101 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////*/
 	public String autorizarEndoso()
 	{
-		logger.debug("\n"
-				+ "\n##############################"
-				+ "\n##############################"
-				+ "\n###### autorizar endoso ######"
-				+ "\n######                  ######"
-				);
-		logger.debug("smap1: "+smap1);
+		logger.debug(Utils.log(
+				 "\n#############################"
+				,"\n###### autorizarEndoso ######"
+				,"\n###### smap1 = " , smap1
+				,"\n###### flujo = " , flujo
+				));
 		try
 		{
-			String cdunieco    = smap1.get("cdunieco");
-			String cdramo      = smap1.get("cdramo");
-			String estado      = smap1.get("estado");
-			String nmpoliza    = smap1.get("nmpoliza");
-			String nmsuplem    = smap1.get("nmsuplem");
-			String nsuplogi    = smap1.get("nsuplogi");
-			String cdtipsup    = smap1.get("cdtipsup");
-			String ntramiteEmi = smap1.get("ntramiteemi");
-			String ntramiteEnd = smap1.get("ntramiteend");
-			String status      = smap1.get("status");
-			String coment      = smap1.get("observacion");
-			String cdtipsit    = smap1.get("cdtipsit");
-			UserVO usuario     = (UserVO)session.get("USUARIO");
-			String cdusuari    = usuario.getUser();
+			String cdunieco      = null
+					,cdramo      = null
+					,estado      = null
+					,nmpoliza    = null
+					,nmsuplem    = null
+					,nsuplogi    = null
+					,cdtipsup    = null
+					,ntramiteEmi = null
+					,ntramiteEnd = null
+					,status      = null
+					,coment      = null;
+			
+			UserVO usuario = Utils.validateSession(session);
+			
+			String cdusuari = usuario.getUser();
+			
+			String cdsisrol = usuario.getRolActivo().getClave();
+			
+			if(flujo!=null)
+			{
+				logger.debug("Viene por flujo y se recuperan los datos del flujo");
+				
+				cdunieco = flujo.getCdunieco();
+				cdramo   = flujo.getCdramo();
+				estado   = flujo.getEstado();
+				nmpoliza = flujo.getNmpoliza();
+				nmsuplem = flujo.getNmsuplem();
+				
+				Map<String,Object> datos = flujoMesaControlDAO.recuperarDatosTramiteValidacionCliente(
+						flujo.getCdtipflu()
+						,flujo.getCdflujomc()
+						,flujo.getTipoent()
+						,flujo.getClaveent()
+						,flujo.getWebid()
+						,flujo.getNtramite()
+						,flujo.getStatus()
+						,flujo.getCdunieco()
+						,flujo.getCdramo()
+						,flujo.getEstado()
+						,flujo.getNmpoliza()
+						,flujo.getNmsituac()
+						,flujo.getNmsuplem()
+						);
+				
+				Map<String,String> tramite = (Map<String,String>)datos.get("TRAMITE");
+				
+				nsuplogi = tramite.get("OTVALOR04");
+				
+				cdtipsup = tramite.get("OTVALOR02");
+				
+				ntramiteEmi = tramite.get("OTVALOR01");
+				
+				ntramiteEnd = flujo.getNtramite();
+				
+				status = EstatusTramite.ENDOSO_CONFIRMADO.getCodigo();
+				
+				coment = flujo.getAux();
+			}
+			else
+			{
+				cdunieco    = smap1.get("cdunieco");
+				cdramo      = smap1.get("cdramo");
+				estado      = smap1.get("estado");
+				nmpoliza    = smap1.get("nmpoliza");
+				nmsuplem    = smap1.get("nmsuplem");
+				nsuplogi    = smap1.get("nsuplogi");
+				cdtipsup    = smap1.get("cdtipsup");
+				ntramiteEmi = smap1.get("ntramiteemi");
+				ntramiteEnd = smap1.get("ntramiteend");
+				status      = smap1.get("status");
+				coment      = smap1.get("observacion");
+				//cdtipsit    = smap1.get("cdtipsit");
+			}
+			
+			logger.debug(Utils.log(
+					 "\ncdunieco    = " , cdunieco
+					,"\ncdramo      = " , cdramo
+					,"\nestado      = " , estado
+					,"\nnmpoliza    = " , nmpoliza
+					,"\nnmsuplem    = " , nmsuplem
+					,"\nnsuplogi    = " , nsuplogi
+					,"\ncdtipsup    = " , cdtipsup
+					,"\nntramiteEmi = " , ntramiteEmi
+					,"\nntramiteEnd = " , ntramiteEnd
+					,"\nstatus      = " , status
+					,"\ncoment      = " , coment
+					));
 			
 			kernelManager.mesaControlUpdateStatus(ntramiteEnd, status);
 			
@@ -6724,6 +6798,21 @@ public class EndososAction extends PrincipalCoreAction
 			endososManager.confirmarEndosoB(paramConfirmarEndosoB);
 			String nmsolici = null;
 			String rutaCarpeta = null;
+			
+			mesaControlDAO.movimientoDetalleTramite(
+					flujo.getNtramite()
+					,new Date() //feinicio
+					,null //cdclausu
+					,StringUtils.isBlank(coment) ? "Endoso autorizado sin observaciones" : Utils.join("Endoso autorizado: ",coment)
+					,cdusuari
+					,null //cdmotivo
+					,cdsisrol
+					,"S" //swagente
+					,null //cdusuariDest
+					,null //cdsisrolDest
+					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+					,true //cerrado
+					);
 			
 			///////////////////////////////////////
 			///// Generacion de Documentos ///////
@@ -6812,16 +6901,18 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			success=false;
-			error=ex.toString();
-			logger.error("error al autorizar el endoso: ",ex);
+			error   = Utils.manejaExcepcion(ex);
+			message = error;
 		}
-		logger.debug("\n"
-				+ "\n######                  ######"
-				+ "\n###### autorizar endoso ######"
-				+ "\n##############################"
-				+ "\n##############################"
-				);
+		
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### message = " , message
+				,"\n###### autorizarEndoso ######"
+				,"\n#############################"
+				));
+		
 		return SUCCESS;
 	}
 	/*//////////////////////////*/
@@ -13503,6 +13594,14 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setFlujo(FlujoVO flujo) {
 		this.flujo = flujo;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 }
