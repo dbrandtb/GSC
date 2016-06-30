@@ -4905,4 +4905,36 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		compile();
     	}
     }
+	
+	@Override
+	public Map<String,String> recuperarDatosFlujoEndoso(String cdramo, String cdtipsup) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsup" , cdtipsup);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperarDatosFlujoEndosoSP(getDataSource()),params);
+		
+		Map<String,String> result = new HashMap<String,String>();
+		result.put("cdtipflu"  , (String)procRes.get("pv_cdtipflu_o"));
+		result.put("cdflujomc" , (String)procRes.get("pv_cdflujomc_o"));
+		
+		logger.debug(Utils.log("P_GET_DATOS_FLUJO_END params = ",params," result = ",result));
+		
+		return result;
+	}
+
+	protected class RecuperarDatosFlujoEndosoSP extends StoredProcedure {
+    	protected RecuperarDatosFlujoEndosoSP(DataSource dataSource) {
+    		super(dataSource, "P_GET_DATOS_FLUJO_END");
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdtipflu_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdflujomc_o" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

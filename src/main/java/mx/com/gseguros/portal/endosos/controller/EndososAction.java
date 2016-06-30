@@ -6247,40 +6247,262 @@ public class EndososAction extends PrincipalCoreAction
 		
 		try
 		{
-			if(flujo == null || consultasManager.esProductoSalud(cdramo)) //si no es de flujo, ó, es de flujo de salud
+			if(consultasManager.esProductoSalud(cdramo)) // SALUD
 			{
-				paso = "Recuperando d\u00edas de endoso v\u00e1lido";
-				logger.debug(paso);
-				
-				long numMaximoDias = (long)endososManager.recuperarDiasDiferenciaEndosoValidos(cdramo,cdtipsup);
-				
-				paso = "Recuperando tr\u00e1mite de emisi\u00f3n";
-				logger.debug(paso);
-				
-				// Se obtiene el numero de tramite de emision de una poliza:
-				String ntramiteEmision=endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
-				
-				// Se almacena la diferencia entre la fecha actual y a fecha que tendra el endoso:
-				Date fechaHoy=new Date();
-				long diferenciaFechaActualVSEndoso = fechaHoy.getTime() - fechaEndoso.getTime();
-				diferenciaFechaActualVSEndoso = Math.abs(diferenciaFechaActualVSEndoso);
-				// Se almacena el maximo de dias permitidos para realizar un endoso (30 dias):
-				long maximoDiasPermitidos = numMaximoDias*24l*60l*60l*1000l;
-				
-				paso = "Recuperando descripci\u00f3n de endoso";
-				logger.debug(paso);
-				
-				String descEndoso = endososManager.obtieneDescripcionEndoso(cdtipsup); 
-				
-				logger.debug("************* diferenciaFechaActualVSEndoso=" + diferenciaFechaActualVSEndoso);
-				logger.debug("************* maximoDiasPermitidos         =" + maximoDiasPermitidos);
-				
-				String estatusTramite = null;
-				if(diferenciaFechaActualVSEndoso > maximoDiasPermitidos) {
-					logger.debug("************* El Endoso esta en espera, confirmado false");
-					estatusTramite = EstatusTramite.ENDOSO_EN_ESPERA.getCodigo();
-					respuesta.setConfirmado(false);
-				} else {
+				if(flujo == null) // SALUD SIN FLUJO
+				{
+					paso = "Recuperando d\u00edas de endoso v\u00e1lido";
+					logger.debug(paso);
+					
+					long numMaximoDias = (long)endososManager.recuperarDiasDiferenciaEndosoValidos(cdramo,cdtipsup);
+					
+					paso = "Recuperando tr\u00e1mite de emisi\u00f3n";
+					logger.debug(paso);
+					
+					// Se obtiene el numero de tramite de emision de una poliza:
+					String ntramiteEmision=endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
+					
+					// Se almacena la diferencia entre la fecha actual y a fecha que tendra el endoso:
+					Date fechaHoy=new Date();
+					long diferenciaFechaActualVSEndoso = fechaHoy.getTime() - fechaEndoso.getTime();
+					diferenciaFechaActualVSEndoso = Math.abs(diferenciaFechaActualVSEndoso);
+					// Se almacena el maximo de dias permitidos para realizar un endoso (30 dias):
+					long maximoDiasPermitidos = numMaximoDias*24l*60l*60l*1000l;
+					
+					paso = "Recuperando descripci\u00f3n de endoso";
+					logger.debug(paso);
+					
+					String descEndoso = endososManager.obtieneDescripcionEndoso(cdtipsup); 
+					
+					logger.debug("************* diferenciaFechaActualVSEndoso=" + diferenciaFechaActualVSEndoso);
+					logger.debug("************* maximoDiasPermitidos         =" + maximoDiasPermitidos);
+					
+					String estatusTramite = null;
+					if(diferenciaFechaActualVSEndoso > maximoDiasPermitidos) {
+						logger.debug("************* El Endoso esta en espera, confirmado false");
+						estatusTramite = EstatusTramite.ENDOSO_EN_ESPERA.getCodigo();
+						respuesta.setConfirmado(false);
+					} else {
+						// Se confirma endoso:
+						Map<String,String> paramsConfirmarEndosoB = new LinkedHashMap<String,String>(0);
+						paramsConfirmarEndosoB.put("pv_cdunieco_i" , cdunieco);
+						paramsConfirmarEndosoB.put("pv_cdramo_i"   , cdramo);
+						paramsConfirmarEndosoB.put("pv_estado_i"   , estado);
+						paramsConfirmarEndosoB.put("pv_nmpoliza_i" , nmpoliza);
+						paramsConfirmarEndosoB.put("pv_nmsuplem_i" , nmsuplem);
+						paramsConfirmarEndosoB.put("pv_nsuplogi_i" , nsuplogi);
+						paramsConfirmarEndosoB.put("pv_cdtipsup_i" , cdtipsup);
+						paramsConfirmarEndosoB.put("pv_dscoment_i" , dscoment);
+						
+						endososManager.confirmarEndosoB(paramsConfirmarEndosoB);
+						
+						estatusTramite = EstatusTramite.ENDOSO_CONFIRMADO.getCodigo();
+						respuesta.setConfirmado(true);
+						logger.debug("************* El Endoso fue confirmado, confirmado true");
+					}
+					
+					Map<String,String> valores = new LinkedHashMap<String,String>();
+					valores.put("otvalor01" , ntramiteEmision);
+					valores.put("otvalor02" , cdtipsup);
+					valores.put("otvalor03" , descEndoso);
+					valores.put("otvalor04" , nsuplogi);
+					valores.put("otvalor05" , ((UserVO)session.get("USUARIO")).getUser());
+					
+					String cdtipflu    = null
+							,cdflujomc = null;
+					
+					Map<String,String> datosFlujoEndoso = consultasManager.recuperarDatosFlujoEndoso(cdramo,cdtipsup);
+					
+					cdtipflu  = datosFlujoEndoso.get("cdtipflu");
+					cdflujomc = datosFlujoEndoso.get("cdflujomc");
+					
+					String ntramiteGenerado = mesaControlManager.movimientoTramite(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,cdunieco
+							,cdunieco
+							,TipoTramite.ENDOSO.getCdtiptra()
+							,fechaEndoso
+							,null
+							,null
+							,null
+							,fechaEndoso
+							,estatusTramite
+							,dscoment
+							,null
+							,cdtipsit
+							,((UserVO)session.get("USUARIO")).getUser()
+							,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+							,null //swimpres
+							,cdtipflu
+							,cdflujomc
+							,valores
+							,cdtipsup
+							,null
+							,null
+							,null
+							);
+					
+					// Si fue confirmado no asignamos numero de tramite:
+					if(respuesta.isConfirmado()) {
+						respuesta.setNumeroTramite(null);
+					} else {
+						//respuesta.setNumeroTramite( (String)wr.getItemMap().get("ntramite") );
+						respuesta.setNumeroTramite(ntramiteGenerado);
+					}
+				}
+				else // SALUD CON FLUJO
+				{
+					paso = "Recuperando d\u00edas de endoso v\u00e1lido";
+					logger.debug(paso);
+					
+					long numMaximoDias = (long)endososManager.recuperarDiasDiferenciaEndosoValidos(cdramo,cdtipsup);
+					
+					paso = "Recuperando tr\u00e1mite de emisi\u00f3n";
+					logger.debug(paso);
+					
+					// Se almacena la diferencia entre la fecha actual y a fecha que tendra el endoso:
+					Date fechaHoy=new Date();
+					long diferenciaFechaActualVSEndoso = fechaHoy.getTime() - fechaEndoso.getTime();
+					diferenciaFechaActualVSEndoso = Math.abs(diferenciaFechaActualVSEndoso);
+					// Se almacena el maximo de dias permitidos para realizar un endoso (30 dias):
+					long maximoDiasPermitidos = numMaximoDias*24l*60l*60l*1000l;
+					
+					logger.debug("************* diferenciaFechaActualVSEndoso=" + diferenciaFechaActualVSEndoso);
+					logger.debug("************* maximoDiasPermitidos         =" + maximoDiasPermitidos);
+					
+					String estatusTramite = null;
+					if(diferenciaFechaActualVSEndoso > maximoDiasPermitidos)
+					{
+						logger.debug("************* El Endoso esta en espera, confirmado false");
+						estatusTramite = EstatusTramite.ENDOSO_EN_ESPERA.getCodigo();
+						respuesta.setConfirmado(false);
+					}
+					else
+					{
+						// Se confirma endoso:
+						Map<String,String> paramsConfirmarEndosoB = new LinkedHashMap<String,String>(0);
+						paramsConfirmarEndosoB.put("pv_cdunieco_i" , cdunieco);
+						paramsConfirmarEndosoB.put("pv_cdramo_i"   , cdramo);
+						paramsConfirmarEndosoB.put("pv_estado_i"   , estado);
+						paramsConfirmarEndosoB.put("pv_nmpoliza_i" , nmpoliza);
+						paramsConfirmarEndosoB.put("pv_nmsuplem_i" , nmsuplem);
+						paramsConfirmarEndosoB.put("pv_nsuplogi_i" , nsuplogi);
+						paramsConfirmarEndosoB.put("pv_cdtipsup_i" , cdtipsup);
+						paramsConfirmarEndosoB.put("pv_dscoment_i" , dscoment);
+						
+						endososManager.confirmarEndosoB(paramsConfirmarEndosoB);
+						
+						estatusTramite = EstatusTramite.ENDOSO_CONFIRMADO.getCodigo();
+						respuesta.setConfirmado(true);
+						logger.debug("************* El Endoso fue confirmado, confirmado true");
+					}
+					
+					paso = "Actualizando estatus de tr\u00e1mite de endoso";
+					logger.debug(paso);
+					
+					flujoMesaControlDAO.actualizarStatusTramite(
+							flujo.getNtramite()
+							,estatusTramite
+							,new Date() //fecstatu
+							,null //cdusuari
+							);
+					
+					paso = "Guardando detalle de tr\u00e1mite de endoso";
+					logger.debug(paso);
+					
+					String comments = Utils.join("Endoso confirmado: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment);
+					
+					if(estatusTramite.equals(EstatusTramite.ENDOSO_EN_ESPERA.getCodigo()))
+					{
+						comments = Utils.join("Endoso enviado a autorizaci\u00f3n: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment);
+					}
+					
+					mesaControlDAO.movimientoDetalleTramite(
+							flujo.getNtramite()
+							,new Date() //feinicio
+							,null //cdclausu
+							,comments
+							,cdusuari
+							,null //cdmotivo
+							,cdsisrol
+							,"S" //swagente
+							,null //cdusuariDest
+							,null //cdsisrolDest
+							,estatusTramite
+							,true //cerrado
+							);
+					
+					paso = "Actualizar suplemento del tr\u00e1mite";
+					logger.debug(paso);
+					
+					mesaControlManager.actualizarNmsuplemTramite(flujo.getNtramite(),nmsuplem);
+					
+					paso = "Actualizando atributos variables de tr\u00e1mite";
+					logger.debug(paso);
+					
+					mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
+							flujo.getNtramite()
+							,"MITE%EMISI"
+							,endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza)
+							,Constantes.UPDATE_MODE
+							);
+					
+					mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
+							flujo.getNtramite()
+							,"CDTIPSUP"
+							,cdtipsup
+							,Constantes.UPDATE_MODE
+							);
+					
+					mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
+							flujo.getNtramite()
+							,"DSTIPSUP"
+							,endososManager.obtieneDescripcionEndoso(cdtipsup)
+							,Constantes.UPDATE_MODE
+							);
+					
+					mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
+							flujo.getNtramite()
+							,"NSUPLOGI"
+							,nsuplogi
+							,Constantes.UPDATE_MODE
+							);
+					
+					mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
+							flujo.getNtramite()
+							,"CDUSUARI"
+							,cdusuari
+							,Constantes.UPDATE_MODE
+							);
+					
+					// Si fue confirmado no asignamos numero de tramite:
+					if(respuesta.isConfirmado()) {
+						respuesta.setNumeroTramite(null);
+					} else {
+						//respuesta.setNumeroTramite( (String)wr.getItemMap().get("ntramite") );
+						respuesta.setNumeroTramite(flujo.getNtramite());
+					}
+				}
+			}
+			else// AUTOS
+			{
+				if(flujo == null) // AUTOS SIN FLUJO
+				{
+					paso = "Recuperando tr\u00e1mite de emisi\u00f3n";
+					logger.debug(paso);
+					
+					// Se obtiene el numero de tramite de emision de una poliza:
+					String ntramiteEmision = endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
+					
+					paso = "Recuperando descripci\u00f3n de endoso";
+					logger.debug(paso);
+					
+					String descEndoso = endososManager.obtieneDescripcionEndoso(cdtipsup); 
+					
 					// Se confirma endoso:
 					Map<String,String> paramsConfirmarEndosoB = new LinkedHashMap<String,String>(0);
 					paramsConfirmarEndosoB.put("pv_cdunieco_i" , cdunieco);
@@ -6294,170 +6516,152 @@ public class EndososAction extends PrincipalCoreAction
 					
 					endososManager.confirmarEndosoB(paramsConfirmarEndosoB);
 					
-					estatusTramite = EstatusTramite.ENDOSO_CONFIRMADO.getCodigo();
+					String estatusTramite = EstatusTramite.ENDOSO_CONFIRMADO.getCodigo();
 					respuesta.setConfirmado(true);
 					logger.debug("************* El Endoso fue confirmado, confirmado true");
+					
+					Map<String,String> valores = new LinkedHashMap<String,String>();
+					valores.put("otvalor01" , ntramiteEmision);
+					valores.put("otvalor02" , cdtipsup);
+					valores.put("otvalor03" , descEndoso);
+					valores.put("otvalor04" , nsuplogi);
+					valores.put("otvalor05" , ((UserVO)session.get("USUARIO")).getUser());
+					
+					String cdtipflu    = null
+							,cdflujomc = null;
+					
+					Map<String,String> datosFlujoEndoso = consultasManager.recuperarDatosFlujoEndoso(cdramo,cdtipsup);
+					
+					cdtipflu  = datosFlujoEndoso.get("cdtipflu");
+					cdflujomc = datosFlujoEndoso.get("cdflujomc");
+					
+					String ntramiteGenerado = mesaControlManager.movimientoTramite(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,cdunieco
+							,cdunieco
+							,TipoTramite.ENDOSO.getCdtiptra()
+							,fechaEndoso
+							,null
+							,null
+							,null
+							,fechaEndoso
+							,estatusTramite
+							,dscoment
+							,null
+							,cdtipsit
+							,((UserVO)session.get("USUARIO")).getUser()
+							,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+							,null //swimpres
+							,cdtipflu
+							,cdflujomc
+							,valores
+							,cdtipsup
+							,null
+							,null
+							,null
+							);
+					
+					// Si fue confirmado no asignamos numero de tramite:
+					if(respuesta.isConfirmado()) {
+						respuesta.setNumeroTramite(null);
+					} else {
+						//respuesta.setNumeroTramite( (String)wr.getItemMap().get("ntramite") );
+						respuesta.setNumeroTramite(ntramiteGenerado);
+					}
 				}
+				else // AUTOS CON FLUJO
+				{
+					paso = "Confirmando endoso de flujo";
+					logger.debug(paso);
 				
-				// Se inserta en la Mesa de Control:
-				/*Map<String,Object>paramsMesaControl = new HashMap<String,Object>();
-				paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
-				paramsMesaControl.put("pv_cdramo_i"     , cdramo);
-				paramsMesaControl.put("pv_estado_i"     , estado);
-				paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
-				paramsMesaControl.put("pv_nmsuplem_i"   , nmsuplem);
-				paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
-				paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
-				paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.ENDOSO.getCdtiptra());
-				paramsMesaControl.put("pv_ferecepc_i"   , fechaEndoso);
-				paramsMesaControl.put("pv_cdagente_i"   , null);
-				paramsMesaControl.put("pv_referencia_i" , null);
-				paramsMesaControl.put("pv_nombre_i"     , null);
-				paramsMesaControl.put("pv_festatus_i"   , fechaEndoso);
-				paramsMesaControl.put("pv_status_i"     , estatusTramite);
-				paramsMesaControl.put("pv_comments_i"   , dscoment);
-				paramsMesaControl.put("pv_nmsolici_i"   , null);
-				paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
-				paramsMesaControl.put("pv_otvalor01"    , ntramiteEmision);
-				paramsMesaControl.put("pv_otvalor02"    , cdtipsup);
-				paramsMesaControl.put("pv_otvalor03"    , descEndoso);
-				paramsMesaControl.put("pv_otvalor04"    , nsuplogi);
-				paramsMesaControl.put("pv_otvalor05"    , ((UserVO)session.get("USUARIO")).getUser());
-				
-				paramsMesaControl.put("cdusuari" , ((UserVO)session.get("USUARIO")).getUser());
-				paramsMesaControl.put("cdsisrol" , ((UserVO)session.get("USUARIO")).getRolActivo().getClave());
-				
-				WrapperResultados wr = kernelManager.PMovMesacontrol(paramsMesaControl);*/
-				
-				Map<String,String> valores = new LinkedHashMap<String,String>();
-				valores.put("otvalor01" , ntramiteEmision);
-				valores.put("otvalor02" , cdtipsup);
-				valores.put("otvalor03" , descEndoso);
-				valores.put("otvalor04" , nsuplogi);
-				valores.put("otvalor05" , ((UserVO)session.get("USUARIO")).getUser());
-				
-				String ntramiteGenerado = mesaControlManager.movimientoTramite(
-						cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,nmsuplem
-						,cdunieco
-						,cdunieco
-						,TipoTramite.ENDOSO.getCdtiptra()
-						,fechaEndoso
-						,null
-						,null
-						,null
-						,fechaEndoso
-						,estatusTramite
-						,dscoment
-						,null
-						,cdtipsit
-						,((UserVO)session.get("USUARIO")).getUser()
-						,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
-						,null //swimpres
-						,null //cdtipflu
-						,null //cdflujomc
-						,valores, null, null, null, null
-						);
-				
-				// Si fue confirmado no asignamos numero de tramite:
-				if(respuesta.isConfirmado()) {
-					respuesta.setNumeroTramite(null);
-				} else {
-					//respuesta.setNumeroTramite( (String)wr.getItemMap().get("ntramite") );
-					respuesta.setNumeroTramite(ntramiteGenerado);
+					endososManager.confirmarEndosoB(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,nsuplogi
+							,cdtipsup
+							,dscoment
+							);
+					
+					paso = "Actualizando estatus de tr\u00e1mite de endoso";
+					logger.debug(paso);
+					
+					flujoMesaControlDAO.actualizarStatusTramite(
+							flujo.getNtramite()
+							,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+							,new Date() //fecstatu
+							,null //cdusuari
+							);
+					
+					paso = "Guardando detalle de tr\u00e1mite de endoso";
+					logger.debug(paso);
+					
+					mesaControlDAO.movimientoDetalleTramite(
+							flujo.getNtramite()
+							,new Date() //feinicio
+							,null //cdclausu
+							,Utils.join("Endoso confirmado: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment)
+							,cdusuari
+							,null //cdmotivo
+							,cdsisrol
+							,"S" //swagente
+							,null //cdusuariDest
+							,null //cdsisrolDest
+							,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+							,true //cerrado
+							);
+					
+					paso = "Actualizar suplemento del tr\u00e1mite";
+					logger.debug(paso);
+					
+					mesaControlManager.actualizarNmsuplemTramite(flujo.getNtramite(),nmsuplem);
+					
+					paso = "Actualizando atributos variables de tr\u00e1mite";
+					logger.debug(paso);
+					
+					mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
+							flujo.getNtramite()
+							,"MITE%EMISI"
+							,endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza)
+							,Constantes.UPDATE_MODE
+							);
+					
+					mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
+							flujo.getNtramite()
+							,"CDTIPSUP"
+							,cdtipsup
+							,Constantes.UPDATE_MODE
+							);
+					
+					mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
+							flujo.getNtramite()
+							,"DSTIPSUP"
+							,endososManager.obtieneDescripcionEndoso(cdtipsup)
+							,Constantes.UPDATE_MODE
+							);
+					
+					mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
+							flujo.getNtramite()
+							,"NSUPLOGI"
+							,nsuplogi
+							,Constantes.UPDATE_MODE
+							);
+					
+					mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
+							flujo.getNtramite()
+							,"CDUSUARI"
+							,cdusuari
+							,Constantes.UPDATE_MODE
+							);
+					
+					respuesta.setConfirmado(true);
 				}
-			}
-			else //es de autos y viene por flujo
-			{
-				paso = "Confirmando endoso de flujo";
-				logger.debug(paso);
-			
-				endososManager.confirmarEndosoB(
-						cdunieco
-						,cdramo
-						,estado
-						,nmpoliza
-						,nmsuplem
-						,nsuplogi
-						,cdtipsup
-						,dscoment
-						);
-				
-				paso = "Actualizando estatus de tr\u00e1mite de endoso";
-				logger.debug(paso);
-				
-				flujoMesaControlDAO.actualizarStatusTramite(
-						flujo.getNtramite()
-						,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
-						,new Date() //fecstatu
-						,null //cdusuari
-						);
-				
-				paso = "Guardando detalle de tr\u00e1mite de endoso";
-				logger.debug(paso);
-				
-				mesaControlDAO.movimientoDetalleTramite(
-						flujo.getNtramite()
-						,new Date() //feinicio
-						,null //cdclausu
-						,Utils.join("Endoso confirmado: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment)
-						,cdusuari
-						,null //cdmotivo
-						,cdsisrol
-						,"S" //swagente
-						,null //cdusuariDest
-						,null //cdsisrolDest
-						,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
-						,true //cerrado
-						);
-				
-				paso = "Actualizar suplemento del tr\u00e1mite";
-				logger.debug(paso);
-				
-				mesaControlManager.actualizarNmsuplemTramite(flujo.getNtramite(),nmsuplem);
-				
-				paso = "Actualizando atributos variables de tr\u00e1mite";
-				logger.debug(paso);
-				
-				mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
-						flujo.getNtramite()
-						,"MITE%EMISI"
-						,endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza)
-						,Constantes.UPDATE_MODE
-						);
-				
-				mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
-						flujo.getNtramite()
-						,"CDTIPSUP"
-						,cdtipsup
-						,Constantes.UPDATE_MODE
-						);
-				
-				mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
-						flujo.getNtramite()
-						,"DSTIPSUP"
-						,endososManager.obtieneDescripcionEndoso(cdtipsup)
-						,Constantes.UPDATE_MODE
-						);
-				
-				mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
-						flujo.getNtramite()
-						,"NSUPLOGI"
-						,nsuplogi
-						,Constantes.UPDATE_MODE
-						);
-				
-				mesaControlDAO.actualizarOtvalorTramitePorDsatribu(
-						flujo.getNtramite()
-						,"CDUSUARI"
-						,cdusuari
-						,Constantes.UPDATE_MODE
-						);
-				
-				respuesta.setConfirmado(true);
 			}
 		}
 		catch(Exception ex)
