@@ -4518,18 +4518,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 						nmpoliza, 
 						"0", 
 						"I");
-				for(Map<String,String> situacion:situaciones){
+//				for(Map<String,String> situacion:situaciones){
 					cotizacionDAO.valoresPorDefecto(
 							cdunieco
 							,cdramo
 							,estado
 							,nmpoliza
-							,situacion.get("NMSITUAC")
+//							,situacion.get("NMSITUAC")
+							,"0"
 							,nmsuplem
 							,cdgarant
 							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 							);
-				}
+//				}
 				cotizacionDAO.movimientoTbloqueo(
 						cdunieco, 
 						cdramo, 
