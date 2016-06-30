@@ -1500,7 +1500,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"CDCAUSA",			"CDGARANT",			"CDCONVAL",			"NMSINREF"
 					,"IMPORTEASEG",		"PTIVAASEG",		"PTIVARETASEG",		"PTISRASEG"
 					,"PTIMPCEDASEG",	"DEDUCIBLE",		"IMPORTETOTALPAGO",	"COMPLEMENTO"
-					,"REQAUTES",		"NMAUTESP"
+					,"REQAUTES",		"NMAUTESP"//, 		"REQAUTESPECIAL"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1631,7 +1631,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"CDPRESTA"      , "NOMBREPROVEEDOR" , "PTIMPORT"  , "CDGARANT" , "DSGARANT"
 					,"DESCPORC"      , "DESCNUME"        , "CDCONVAL"  , "DSSUBGAR" , "CDMONEDA"
 					,"DESTIPOMONEDA" , "TASACAMB"        , "PTIMPORTA" , "DCTONUEX" , "CODRECLAM"
-					,"FEEGRESO" 	 , "DIASDEDU"        , "NOMBPROV"  , "CONTRARECIBO"
+					,"FEEGRESO" 	 , "DIASDEDU"        , "NOMBPROV"  , "CONTRARECIBO"//, "TOTALPAGAR"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -5426,7 +5426,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class ProcesaPagoAutomaticoLayout extends StoredProcedure {
 		protected ProcesaPagoAutomaticoLayout(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_SINIESTRO.P_GET_TCONLAYSIN");
+			super(dataSource, "PKG_NOVA.P_GET_TCONLAYSIN");
 			String[] cols = new String[]{
 					"NTRAMITE"
 			};
@@ -5497,8 +5497,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nmsituac_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdgarant_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdconval_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i",   OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"NO_CONSULTAS", "MONTO", "OTVALOR07", "OTVALOR15","OTVALOR16"
+					"NO_CONSULTAS", "MONTO", "IMPGASTADOCOB", "OTVALOR04","OTVALOR07", "OTVALOR15","OTVALOR16"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
