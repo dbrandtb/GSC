@@ -1,14 +1,12 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 var datosgrid;
 var storeIncisos;
-Ext.define('modelClau',
-{
+Ext.define('modelClau', {
 	extend:'Ext.data.Model',
 	fields:['noFactura','fechaFactura','tipoServicio','proveedor','importe']
 });
 
-storeIncisos=new Ext.data.Store(
-{
+storeIncisos=new Ext.data.Store( {
 	autoDestroy: true,
 	model: 'modelClau'
 });
@@ -21,7 +19,7 @@ Ext.onReady(function() {
 	///// NUEVOS
 	Ext.define('DatosFacturaxTramite',{
 		extend: 'Ext.data.Model',
-		fields: [ 
+			fields: [ 
 				{type:'string',    name:'reclamacion'		},				{type:'string',    name:'ntramite'			},
 				{type:'string',    name:'factura'			},				{type:'date',      name:'fechaFactura',	dateFormat : 'd/m/Y'},
 				{type:'string',    name:'cdtipser'			},				{type:'string',    name:'descServicio'		},
@@ -33,19 +31,19 @@ Ext.onReady(function() {
 				{type:'string',    name:'descMoneda'		},				{type:'string',    name:'tasaCambio'		},
 				{type:'string',    name:'ptimporta'			},				{type:'string',    name:'dctoNuex'			},
 				{type:'string',    name:'feegreso'          },				{type:'string',    name:'diasdedu'			},
-				{type:'string',    name:'contraRecibo'      }
-		]
-    });
-    
+				{type:'string',    name:'contraRecibo'      },				{type:'string',    name:'totalpagar'		}
+			]
+	});
+
 	var storeDatosFacturaxTramite = Ext.create('Ext.data.Store', {
-	storeId: 'storeDatosFacturaxTramite',
-	model: 'DatosFacturaxTramite',
+		storeId: 'storeDatosFacturaxTramite',
+		model: 'DatosFacturaxTramite',
 		data : recordsStoreFactura
 	});
 
 	var gridDatosFacturaxTramite = Ext.create('Ext.grid.Panel', {
 		width   : 980,
-		height: 300,
+		height	: 300,
 		title   : 'Facturas',
 		store   : storeDatosFacturaxTramite,
 		autoScroll:true,
@@ -55,53 +53,47 @@ Ext.onReady(function() {
 		}],
 		columns: _11_columnas_Factura
 		,tbar: [{
-                    text     : 'Agregar Factura'
-                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
-                    , hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
-                    ,handler : _p11_agregarFacturas
-                }]
+			text     : 'Agregar Factura'
+			,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+			, hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
+			,handler : _p11_agregarFacturas
+		}]
 	});
-	
+
 	gridDatosFacturaxTramite.store.sort([{ 
 		property    : 'factura',
 		direction   : 'ASC'
 	}]);
-	
+
 	_11_itemsForm.push({
 		colspan:2,
 		border    : 0,
-		items    :
-		[
+		items     :	[
 			gridDatosFacturaxTramite
 		]
 	});
-	
 
 	_11_form=Ext.create('Ext.form.Panel',{
-		border    : 0
-		,title: 'Afiliados Afectados'
-		,renderTo : 'div_clau'
+		border    	: 0
+		,title	  	: 'Afiliados Afectados'
+		,renderTo 	: 'div_clau'
 		,bodyPadding: 5
-		,width: 1000
-		,layout     :
-		{
+		,width		: 1000
+		,layout     : {
 			type     : 'table' 
 			,columns : 2
 		}
-		,defaults   :
-		{
-			style : 'margin:5px;'
+		,defaults   : {
+			style   : 'margin:5px;'
 		}
-		,listeners :
-		{
-			afterrender : function(form)
-			{
-			    heredarPanel(form);
+		,listeners 	: {
+			afterrender : function(form){
+				heredarPanel(form);
 			}
 		}
-		,items    : _11_itemsForm
+		,items    	: _11_itemsForm
 		,buttonAlign:'center'
-		,buttons:[
+		,buttons	:[
 			{
 				text     : 'Regresar'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/book_previous.png'
@@ -134,7 +126,7 @@ Ext.onReady(function() {
 				text     : 'Turnar Operador Reclamaci&oacute;n'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
 				,handler : _11_retornarMedAjustadorAOperador
-				,hidden:  _CDROL ==  _OPERADOR_REC ||  _CDROL == _ROL_MESASINIESTRO
+				,hidden  : _CDROL ==  _OPERADOR_REC ||  _CDROL == _ROL_MESASINIESTRO
 			},
 			{
 				text     : 'Historial'
@@ -150,7 +142,7 @@ Ext.onReady(function() {
 			{
 				text     : 'Turnar Operador Reclamaci&oacute;n'
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/user_go.png'
-							,handler : _11_turnarAreclamaciones
+				,handler : _11_turnarAreclamaciones
 				,hidden  : _CDROL != _ROL_MESASINIESTRO
 			},
 			{
@@ -160,5 +152,5 @@ Ext.onReady(function() {
 				,hidden  : _CDROL != _ROL_MESASINIESTRO
 			}
 		]
-	}); 
+	});
 });

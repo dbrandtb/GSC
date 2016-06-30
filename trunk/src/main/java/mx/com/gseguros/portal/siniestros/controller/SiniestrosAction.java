@@ -5543,6 +5543,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			paramsInfonavit.put("pv_nmsituac_i",params.get("nmsituac"));
 			paramsInfonavit.put("pv_cdgarant_i",params.get("cdgarant"));
 			paramsInfonavit.put("pv_cdconval_i",params.get("cdconval"));
+			paramsInfonavit.put("pv_nmsinies_i",params.get("nmsinies"));
 			datosInformacionAdicional = siniestrosManager.obtieneInfCoberturaInfonavit(paramsInfonavit);
 			logger.debug("Valor de Respuesta ==>>>"+datosInformacionAdicional);
 		}catch( Exception e){
