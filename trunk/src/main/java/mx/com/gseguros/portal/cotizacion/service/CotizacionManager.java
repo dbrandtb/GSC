@@ -189,7 +189,7 @@ public interface CotizacionManager
 			,String cdgrupo
 			,String start
 			,String limit)throws Exception;
-	
+		
 	public void guardarExtraprimaAsegurado(
 			String cdunieco
 			,String cdramo
