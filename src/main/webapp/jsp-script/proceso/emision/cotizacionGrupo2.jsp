@@ -6893,6 +6893,39 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
 	                                                _p25_tabpanel().setLoading(false);
 	                                                var json2 = Ext.decode(response.responseText);
 	                                                debug('### asegurados:',json2);
+	                                                
+	                                                var ngrupos = 0;
+	                                                
+                                                    var tabgrupos = _p25_tabGrupos; //Obtiene los grupos de Resumen Subgrupos
+                                                    debug('tabgrupos cotizacion endoso',tabgrupos,'.');
+                                                    
+                                                    ngrupos = tabgrupos.items.items.items[0].store.getCount();
+                                                    debug('ngrupos ',ngrupos,'.'); //Numero de Grupos en Resumen Subgrupos
+                                                    
+                                                    
+                                                    var gruposValidos = [];
+                                                    for(var i=0; i < ngrupos;i++){
+                                                    	gruposValidos[i+1]=false;
+                                                    }
+                                                    debug('gruposValidos',gruposValidos,'.');
+                                                    
+                                                    
+                                                    for(var i=0; i<json2.slist1.length;i++){
+                                                    	debug('GPO.',json2.slist1[i].CDGRUPO,'.');
+                                                    	gruposValidos[Number(json2.slist1[i].CDGRUPO)]=true;//De los grupos asigna true al array cuando este disponible.
+                                                    }
+                                                    debug('iteracion completa gruposValidos',gruposValidos,'.');
+                                                    
+                                                    var enableBoton = true;
+                                                    for(var i=0; i<ngrupos;i++){
+                                                    	debug('boton ->',gruposValidos[i+1],'.');
+                                                    	if(gruposValidos[i+1]===false){//Segun el valor en el array, se sabe si el boton esta o no habilitado.	
+                                                    		enableBoton = false;
+                                                    		break;
+                                                    	}
+                                                    }
+                                                    debug('EnableBoton',enableBoton);
+	                                                
 	                                                var store = Ext.create('Ext.data.Store',
 	                                                {
 	                                                    model : '_p25_modeloRevisionAsegurado'
@@ -7012,9 +7045,10 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
 	                                                    ,buttons     :
 	                                                    [
 	                                                        {
-	                                                            text     : 'Aceptar y continuar'
-	                                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-	                                                            ,handler : function(me)
+	                                                            text      : 'Aceptar y continuar'
+	                                                            ,icon     : '${ctx}/resources/fam3icons/icons/accept.png'
+	                                                            ,disabled : !enableBoton
+	                                                            ,handler  : function(me)
 	                                                            {
 	                                                                var ck = 'Borrando respaldo';
                                                                     try
