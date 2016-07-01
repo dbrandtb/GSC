@@ -157,6 +157,7 @@ public class ExcelValidacionesFormatoStrategyImpl implements ValidacionesFormato
     	String strValor = null;
 		if(campo.getType().equals(CampoVO.FECHA)) {
         	//SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			logger.debug("Cell type:" + celda.getCellType());
 			if(celda.getCellType() == Cell.CELL_TYPE_STRING){
 				strValor = celda.getStringCellValue();
 			} else if(celda.getCellType() == Cell.CELL_TYPE_NUMERIC) {
