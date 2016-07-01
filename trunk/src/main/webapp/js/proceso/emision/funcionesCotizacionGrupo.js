@@ -901,7 +901,7 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
                                                             {
                                                                 text       : 'Aceptar y continuar'
                                                                 ,icon      : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/accept.png'
-                                                                ,disabled  : !enableBoton
+                                                                //,disabled  : !enableBoton
                                                                 ,handler   : function(me)
                                                                 {
                                                                     var ck = 'Borrando respaldo';
