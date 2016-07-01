@@ -6343,11 +6343,26 @@ public class CotizacionAction extends PrincipalCoreAction
 				                	logger.debug("FENACIMI: "+"|");
 				                	bufferLinea.append("|");
 				                }
+				                
+				                if(
+				                		(
+				                				row.getCell(3) == null
+				                				|| row.getCell(3).getNumericCellValue() == 0d
+				                		)
+				                		&& (
+				                				row.getCell(4) == null
+				                				|| row.getCell(4).getDateCellValue() == null
+				                			)
+				                )
+				                {
+				                	logger.error(Utils.join("No hay edad ni fecha de nacimiento para la fila ",fila));
+				                	throw new ApplicationException(Utils.join("No hay edad ni fecha de nacimiento para la fila ",fila));
+				                }
 			                }
 			                catch(Exception ex)
 			                {
 			                	filaBuena          = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad' o 'Fecha de nacimiento' (D) de la fila ",fila," "));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad' o 'Fecha de nacimiento' (D, E) de la fila ",fila," "));
 			                }
 		                    finally
 		                    {
