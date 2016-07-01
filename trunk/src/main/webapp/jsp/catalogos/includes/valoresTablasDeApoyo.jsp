@@ -712,7 +712,7 @@ Ext.onReady(function() {
 							    	text : 'Exportar',
 							    	tooltip: 'Exporta la tabla a formato Excel.',
 							    	icon:_CONTEXT+'/resources/fam3icons/icons/database_table.png',
-							    	 hidden: (cdSisRolActivo==RolSistema.ParametrizadorSistemas ||  cdSisRolActivo==RolSistema.Parametrizador) ? false : true,//se evalua habilitar o desabilitar Boton, dependiendo el rol
+							    	 hidden: true ,//(cdSisRolActivo==RolSistema.ParametrizadorSistemas ||  cdSisRolActivo==RolSistema.Parametrizador) ? false : true,//se evalua habilitar o desabilitar Boton, dependiendo el rol
 							    	handler: function(btn){
 							    		var loadMaskExport = new Ext.LoadMask('divValoresCincoClaves', {msg:"Exportando Tabla de Apoyo..."});
 										loadMaskExport.show();
