@@ -172,7 +172,7 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 	}
 
 	@Override
-	public String cargaMasiva(Integer nmtabla,Integer tipoproceso, String feCierre, Integer tipoTabla, String nombreArchivo, String separador) throws Exception {
+	public String cargaMasiva(Integer nmtabla, Integer tipoTabla, String nombreArchivo, String separador, Integer tipoproceso, String feCierre) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_tipotabla_i", tipoTabla);
 		params.put("pv_nmtabla_i", nmtabla);
@@ -186,7 +186,7 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 	
 	protected class CargaMasivaTablaApoyoSP extends StoredProcedure {
 		protected CargaMasivaTablaApoyoSP(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO_02.P_BULK_INSERT_TABLA_APOYO");
+			super(dataSource,"PKG_TABAPOYO.P_BULK_INSERT_TABLA_APOYO");
 			declareParameter(new SqlParameter("pv_tipotabla_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmtabla_i"    , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_tipoProceso_i", OracleTypes.NUMERIC));

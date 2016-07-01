@@ -20,6 +20,18 @@ public interface ProcesamientoArchivoStrategy {
 	 * @return respuesta del proceso
 	 * @throws Exception
 	 */
+	 public RespuestaVO ejecutaProcesamiento(File archivo, List<CampoVO> campos, Integer nmtabla) throws Exception;
+	
+	/**
+	 * Realiza el proceso del archivo para cierre de periodos
+	 * @param archivo
+	 * @param campos
+	 * @param nmtabla
+	 * @param tipoproceso
+	 * @param feCierre
+	 * @return
+	 * @throws Exception
+	 */
 	public RespuestaVO ejecutaProcesamiento(File archivo, List<CampoVO> campos, Integer nmtabla, Integer tipoproceso, String feCierre) throws Exception;
 	
 }

@@ -155,7 +155,7 @@ public class Tabla1ClaveProcesamientoArchivoStrategyImpl implements Procesamient
 			if(fileUploaded) {
 				
 				//Ejecutar SP que realice la carga del archivo CSV:
-				String resp = tablasApoyoDAO.cargaMasiva(nmtabla, TipoTabla.UNA.getCodigo(), fileCSVLocal.getName(), CARACTER_SEPARADOR_CAMPOS);
+				String resp = tablasApoyoDAO.cargaMasiva(nmtabla, TipoTabla.UNA.getCodigo(), fileCSVLocal.getName(), CARACTER_SEPARADOR_CAMPOS, null, null);
 				respVO = new RespuestaVO(true, resp);
 				
 			} else {
@@ -179,5 +179,16 @@ public class Tabla1ClaveProcesamientoArchivoStrategyImpl implements Procesamient
 		
 		return respVO;
 	}
+
+	
+	@Override
+	public RespuestaVO ejecutaProcesamiento(File archivo, List<CampoVO> campos,
+			Integer nmtabla, Integer tipoproceso, String feCierre)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 
 }
