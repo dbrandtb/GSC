@@ -6353,7 +6353,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                 {
                     afterrender : function(me)
                     {
-                        /* cargaStorePaginadoLocalFiltro(
+                        cargaStorePaginadoLocalFiltro(
                             Ext.getStore('_p21_storeAsegurados'+record.get('letra'))
                             ,_p21_urlCargarAseguradosGrupo
                             ,'slist1'
@@ -6369,7 +6369,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                             ,me
                             ,null
                             ,null
-                        ); */
+                        );
                         
                         Ext.getStore('_p21_storeAsegurados'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
