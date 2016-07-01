@@ -47,9 +47,11 @@ public interface TablasApoyoDAO {
 	 * @param tipoTabla
 	 * @param nombreArchivo
 	 * @param separador
+	 * @param tipoproceso (Opcional) Es para el cierre de tarifas
+	 * @param feCierre    (Opcional) Es para el cierre de tarifas
 	 * @return
 	 * @throws Exception
 	 */
-	public String cargaMasiva(Integer nmtabla, Integer tipoproceso, String feCierre, Integer tipoTabla, String nombreArchivo, String separador) throws Exception; 
+	public String cargaMasiva(Integer nmtabla, Integer tipoTabla, String nombreArchivo, String separador, Integer tipoproceso, String feCierre) throws Exception; 
 	
 }
