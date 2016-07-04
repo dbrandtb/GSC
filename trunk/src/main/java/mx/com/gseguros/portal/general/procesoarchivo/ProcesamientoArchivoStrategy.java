@@ -12,15 +12,7 @@ import mx.com.gseguros.portal.general.validacionformato.CampoVO;
  */
 public interface ProcesamientoArchivoStrategy {
 	
-	/**
-	 * Realiza el proceso del archivo
-	 * @param archivo Archivo a procesar
-	 * @param campos Configuraciond de campos
-	 * @param nmtabla Nmtabla a utilizar
-	 * @return respuesta del proceso
-	 * @throws Exception
-	 */
-	 public RespuestaVO ejecutaProcesamiento(File archivo, List<CampoVO> campos, Integer nmtabla) throws Exception;
+	
 	
 	/**
 	 * Realiza el proceso del archivo para cierre de periodos

@@ -88,13 +88,6 @@ public class Tabla5ClavesProcesamientoArchivoStrategyImpl implements Procesamien
 
 	
 	@Override
-	public RespuestaVO ejecutaProcesamiento(File archivo, List<CampoVO> campos,
-			Integer nmtabla) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public RespuestaVO ejecutaProcesamiento(File archivoOrigen, List<CampoVO> campos, Integer nmtabla, Integer tipoproceso, String feCierre) throws Exception {
 		
 		RespuestaVO respVO = null;
