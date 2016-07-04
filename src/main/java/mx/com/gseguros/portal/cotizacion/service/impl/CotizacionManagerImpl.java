@@ -1125,6 +1125,46 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 
 	@Override
+	public List<Map<String,String>>cargarAseguradosGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			,String start
+			,String limit)throws Exception
+	{
+		logger.info(""
+				+ "\n###################################"
+				+ "\n###### cargarAseguradosGrupo ######"
+				+ "\ncdunieco "+cdunieco
+				+ "\ncdramo "+cdramo
+				+ "\nestado "+estado
+				+ "\nnmpoliza "+nmpoliza
+				+ "\nnmsuplem "+nmsuplem
+				+ "\ncdgrupo "+cdgrupo
+				+ "\nstart "+start
+				+ "\nlimit "+limit
+				);
+		List<Map<String,String>>lista=cotizacionDAO.cargarAseguradosGrupo(
+				cdunieco,
+				cdramo,
+				estado,
+				nmpoliza,
+				nmsuplem,
+				cdgrupo,
+				start,
+				limit);
+		logger.info(""
+				+ "\nlista size "+lista.size()
+				+ "\n###### cargarAseguradosGrupo ######"
+				+ "\n###################################"
+				);
+		return lista;
+	}
+	
+	@Override
 	public void borrarMpoliperGrupo(
 			String cdunieco
 			,String cdramo

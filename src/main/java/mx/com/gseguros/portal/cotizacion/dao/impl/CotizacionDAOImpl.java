@@ -1135,6 +1135,102 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
+	public List<Map<String,String>>cargarAseguradosGrupo(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String cdgrupo,
+			String start,
+			String limit)throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n*************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_ASEGURADOS_GRUPO ******")
+				.append("\n****** cdunieco=").append(cdunieco)
+				.append("\n****** cdramo=").append(cdramo)
+				.append("\n****** estado=").append(estado)
+				.append("\n****** nmpoliza=").append(nmpoliza)
+				.append("\n****** nmsuplem=").append(nmsuplem)
+				.append("\n****** cdgrupo=").append(cdgrupo)
+				.append("\n****** start=").append(start)
+				.append("\n****** limit=").append(limit)
+				.append("\n********************************************")
+				.toString()
+				);
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdunieco", cdunieco);
+		params.put("cdramo", cdramo);
+		params.put("estado", estado);
+		params.put("nmpoliza", nmpoliza);
+		params.put("nmsuplem", nmsuplem);
+		params.put("cdgrupo", cdgrupo);
+		params.put("start", start);
+		params.put("limit", limit);
+		Map<String,Object> respuesta   = ejecutaSP(new CargarAseguradosGrupoPag(getDataSource()),params);
+		List<Map<String,String>> lista = (List<Map<String,String>>)respuesta.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		Map<String,String> total = new HashMap<String,String>();
+		total.put("total", String.valueOf(respuesta.get("pv_num_o")));
+		lista.add(total);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*******************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_ASEGURADOS_GRUPO ******")
+				.append("\n****** total=").append(String.valueOf(respuesta.get("pv_num_o")))
+				.append("\n*******************************************************")
+				.toString()
+				);
+		return lista;
+	}
+	
+	protected class CargarAseguradosGrupoPag extends StoredProcedure
+	{
+		protected CargarAseguradosGrupoPag(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_ASEGURADOS_GRUPO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("start"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("limit"    , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDGRUPO"
+					,"NMSITUAC"
+					,"CDPERSON"
+					,"PARENTESCO"
+					,"NOMBRE"
+					,"SEGUNDO_NOMBRE"
+					,"APELLIDO_PATERNO"
+					,"APELLIDO_MATERNO"
+					,"FECHA_NACIMIENTO"
+					,"SEXO"
+					,"NACIONALIDAD"
+					,"RFC"
+					,"CDROL"
+					,"SWEXIPER"
+					,"CDIDEPER"
+					,"FAMILIA"
+					,"TITULAR"
+					,"FEANTIGU"
+			};
+			declareParameter(new SqlOutParameter("pv_num_o"   	 , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public void borrarMpoliperTodos(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
