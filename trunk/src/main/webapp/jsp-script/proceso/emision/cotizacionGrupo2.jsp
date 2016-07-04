@@ -70,6 +70,7 @@ var _p25_urlGuardarSituaciones          = '<s:url namespace="/emision"         a
 var _p25_urlGuardarSituacionesTitulares = '<s:url namespace="/emision"         action="guardarValoresSituacionesTitular" />';
 var _p25_urlSubirCensoCompleto          = '<s:url namespace="/emision"         action="subirCensoCompleto2"              />';
 var _p25_urlCargarAseguradosGrupo       = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"            />';
+var _p25_urlCargarAseguradosGrupoPag    = '<s:url namespace="/emision"         action="cargarAseguradosGrupoPag"		  />';
 var _p25_urlRecuperarPersona            = '<s:url namespace="/"                action="buscarPersonasRepetidas"          />';
 var _p25_urlPantallaPersonas            = '<s:url namespace="/catalogos"       action="includes/personasLoader"          />';
 var _p25_urlPantallaDomicilio           = '<s:url namespace="/catalogos"       action="includes/editarDomicilioAsegurado"/>';
@@ -5735,14 +5736,20 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
         [
             Ext.create('Ext.grid.Panel',
             {
-                columns     : columnas
+            	id			: 'gridAsegurados'
+            	,columns    : columnas
                 ,width      : 980
                 ,height     : 500
-                ,plugins    : false && _p25_smap1.ASEGURADOS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
-                {
-                    clicksToEdit  : 1
-                    ,errorSummary : false
-                }) : null
+                ,plugins    : [
+                               _p25_smap1.ASEGURADOS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',{
+                            	   clicksToEdit  : 1
+                            	   ,errorSummary : false
+                            	   }) : null
+                            	   ,{
+           							ptype       : 'pagingselectpersist'
+            							,pluginId   : 'pagingselectasegurados'
+            						}
+                            	   ]
                 ,tbar       :
                 [
                     {
@@ -5790,23 +5797,6 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                                         };
                                     }
                                     
-                                    cargaStorePaginadoLocalFiltro(
-                                        Ext.getStore('_p25_storeAsegurados'+record.get('letra'))
-                                        ,_p25_urlCargarAseguradosGrupo
-                                        ,'slist1'
-                                        ,{
-                                            'smap1.cdunieco'  : _p25_smap1.cdunieco
-                                            ,'smap1.cdramo'   : _p25_smap1.cdramo
-                                            ,'smap1.estado'   : _p25_smap1.estado
-                                            ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
-                                            ,'smap1.nmsuplem' : '0'
-                                            ,'smap1.cdgrupo'  : record.get('letra')
-                                        }
-                                        ,null
-                                        ,grid
-                                        ,null
-                                        ,filterFn
-                                    ); 
                                 };
                                 
                                 clearTimeout(comp.timeoutFn);
@@ -5826,10 +5816,28 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                     ,rowIndexSubgrupo : rowIndexSubgrupo
                     ,proxy            :
                     {
-                        enablePaging : true,
-                        reader       : 'json',
-                        type         : 'memory',
-                        data         : []
+                        type         : 'ajax'
+	   						/* ,url         : _p21_urlCargarAseguradosGrupo */
+	   						,url         : _p25_urlCargarAseguradosGrupoPag
+	   						,callbackKey : 'callback'
+	   						,extraParams :
+	   						{
+	   							'smap1.cdunieco'  : _p25_smap1.cdunieco
+	   							,'smap1.cdramo'   : _p25_smap1.cdramo
+	   							,'smap1.estado'   : _p25_smap1.estado
+	   							,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+	   							,'smap1.nmsuplem' : '0'
+	   							,'smap1.cdgrupo'  : record.get('letra')
+	   						}
+	   						,reader      :
+	   						{
+	   							type             : 'json'
+	   							,root            : 'slist1'
+	   							,successProperty : 'success'
+	   							,messageProperty : 'respuesta'
+	   							,totalProperty   : 'total'
+	   						}
+	   						,simpleSortMode: true
                     }
                 })
                 ,bbar :
@@ -5860,7 +5868,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                 {
                     afterrender : function(me)
                     {
-                        cargaStorePaginadoLocalFiltro(
+/*                         cargaStorePaginadoLocalFiltro(
                             Ext.getStore('_p25_storeAsegurados'+record.get('letra'))
                             ,_p25_urlCargarAseguradosGrupo
                             ,'slist1'
@@ -5876,7 +5884,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                             ,me
                             ,null
                             ,null
-                        );
+                        ); */
                         
                         Ext.getStore('_p25_storeAsegurados'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
@@ -5897,6 +5905,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
             })
         ]
     });
+    _fieldById('gridAsegurados').store.loadPage(1);
     debug('<_cotcol_aseguradosClic');
 }
 

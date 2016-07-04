@@ -237,6 +237,16 @@ public interface CotizacionManager
 			,String nmsuplem
 			,String cdgrupo)throws Exception;
 	
+	public List<Map<String,String>>cargarAseguradosGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			,String start
+			,String limit)throws Exception;
+	
 	public void borrarMpoliperGrupo(
 			String cdunieco
 			,String cdramo

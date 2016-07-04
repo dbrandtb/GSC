@@ -9386,6 +9386,71 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String cargarAseguradosGrupoPag()
+	{
+		logger.debug(""
+				+ "\n###################################"
+				+ "\n###### cargarAseguradosGrupoPag ######"
+				+ "\nsmap1 "+smap1
+				);
+		success = true;
+		exito   = true;
+		if(exito)
+		{
+			try
+			{
+				slist1=cotizacionManager.cargarAseguradosGrupo(
+						smap1.get("cdunieco")
+						,smap1.get("cdramo")
+						,smap1.get("estado")
+						,smap1.get("nmpoliza")
+						,smap1.get("nmsuplem")
+						,smap1.get("cdgrupo")
+						,start
+						,limit
+						);
+				Map<String,String> total = slist1.remove(slist1.size()-1);
+				this.total = total.get("total");
+				for(Map<String,String>iAsegurado:slist1)
+			    {
+			    	String tpl = null;
+			    	if(StringUtils.isBlank(iAsegurado.get("TITULAR")))
+			    	{
+			    		tpl = "Asegurados";
+			    	}
+			    	else
+			    	{
+			    		tpl = new StringBuilder()
+			    		        .append("Familia (")
+			    		        .append(iAsegurado.get("FAMILIA"))
+			    		        .append(") de ")
+    			    		    .append(iAsegurado.get("TITULAR"))
+			    		        .toString();
+			    	}
+			    	iAsegurado.put("AGRUPADOR",
+			    			new StringBuilder()
+			    	            .append(StringUtils.leftPad(iAsegurado.get("FAMILIA"),3,"0"))
+			    	            .append("_")
+			    	            .append(tpl)
+			    	            .toString());
+			    }
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al cargar los asegurados del grupo #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		logger.debug(""
+				+ "\n###### cargarAseguradosGrupoPag ######"
+				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	
 	public String guardarAseguradosCotizacion()
 	{
 		this.session=ActionContext.getContext().getSession();

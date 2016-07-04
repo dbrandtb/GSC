@@ -183,6 +183,9 @@
        <action name="cargarAseguradosGrupo" class="CotizacionAction" method="cargarAseguradosGrupo">
            <result type="json" />
        </action>
+       <action name="cargarAseguradosGrupoPag" class="CotizacionAction" method="cargarAseguradosGrupoPag">
+           <result type="json" />
+       </action>
        
        <action name="guardarAseguradosCotizacion" class="CotizacionAction" method="guardarAseguradosCotizacion">
            <interceptor-ref name="json">

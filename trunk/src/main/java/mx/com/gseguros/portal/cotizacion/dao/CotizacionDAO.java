@@ -100,6 +100,16 @@ public interface CotizacionDAO {
 	public List<Map<String, String>> cargarAseguradosGrupo(
 			Map<String, String> params) throws Exception;
 
+	public List<Map<String,String>>cargarAseguradosGrupo(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String cdgrupo,
+			String start,
+			String limit) throws Exception;
+	
 	public void borrarMpoliperGrupo(Map<String, String> params)
 			throws Exception;
 
