@@ -91,12 +91,13 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 			String cdramo   = stringMap.get("CDRAMO");
 			String estado   = stringMap.get("ESTADO");
 			String nmpoliza = stringMap.get("NMPOLIZA");
+			String cdmoddoc = "1314";
 			//String nmsuplem = stringMap.get("NMSUPLEM");
 
 			// Reimprimimos todos los Documentos de Endosos de Medicina preventiva de una poliza:
 			String [] paginas = {"P_1_INDIS", "P_2_INDIS"};
 			List<Map<String, String>> listaDocsEndosos = endososManager.obtenerListaDocumentosEndosos(
-					new PolizaVO(cdunieco,cdramo, estado, nmpoliza));
+					new PolizaVO(cdunieco,cdramo, estado, nmpoliza),cdmoddoc);
 			logger.debug("listaDocsEndosos=" + listaDocsEndosos);
 			for(Map<String,String> sMapDoc : listaDocsEndosos) {
 				
@@ -163,11 +164,12 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 			String cdramo   = stringMap.get("CDRAMO");
 			String estado   = stringMap.get("ESTADO");
 			String nmpoliza = stringMap.get("NMPOLIZA");
+			String cdmoddoc = "1516";
 			
 			// Reimprimimos todos los Documentos de Endosos de Medicina preventiva de Especialista de una poliza:
 			String [] paginas = {"P_1_ESPE", "P_2_ESPE"};
 			List<Map<String, String>> listaDocsEndosos = endososManager.obtenerListaDocumentosEndosos(
-					new PolizaVO(cdunieco,cdramo, estado, nmpoliza));
+					new PolizaVO(cdunieco,cdramo, estado, nmpoliza),cdmoddoc);
 			logger.debug("listaDocsEndosos=" + listaDocsEndosos);
 			for(Map<String,String> sMapDoc : listaDocsEndosos) {
 				
