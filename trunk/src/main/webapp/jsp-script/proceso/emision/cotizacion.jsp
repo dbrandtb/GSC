@@ -120,6 +120,7 @@ var _0_recordClienteRecuperado;
 var _0_semaforoAux;
 var sinTarificar;
 var cdagenteCotiza;
+var cduniecocotiza;
 var _0_validacion_custom;
 
 var _parentescoTitular = 'T';
@@ -1473,6 +1474,7 @@ function llenandoCampos (json)
                         	if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
                             {
                         		cdagenteCotiza = primerInciso.get('parametros.pv_otvalor32');
+                        		cduniecocotiza = primerInciso.raw.CDUNIECO;
                         	}
                         	
                             asignarAgente(primerInciso.get('parametros.pv_otvalor32'));
@@ -1637,8 +1639,12 @@ function _0_cotizar(boton)
         	 _0_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';//Se utiliza para no retarificar 
         	 if(!Ext.isEmpty(cdagenteCotiza))
         	 {
-        		  _0_smap1['cdagente']    = 'A'+cdagenteCotiza;
+        		  _0_smap1['cdusuari']    = 'A'+cdagenteCotiza;
         	 }
+        	 if(!Ext.isEmpty(cduniecocotiza))
+             {
+                  _0_smap1['cdunieco']    = ''+cduniecocotiza;
+             }
         	 else if(!Ext.isEmpty(_fieldByLabel('AGENTE').getValue()))
              {
         		 cdagenteCotiza = _fieldByLabel('AGENTE').getValue();
