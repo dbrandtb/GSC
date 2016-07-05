@@ -4480,28 +4480,14 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
-		                logger.debug("FECHA DE INGRESO  ===>: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
 		                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
                 	} catch(Exception ex) {
-	                	logger.debug("Valor del Error ===> "+ex);
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha Ingreso ' (AB) de la fila ",fila," "));
 	                } finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(27)),"-"));
 	                }
-	                
-	                //ID SISA
-	                /*try {
-		                auxCell=row.getCell(28);
-		                logger.debug("ID. SISA: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Id. SISA' (AC) de la fila ",fila," "));
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(28)),"-"));
-	                }*/
-	                
+
 	                //ID SISA
 	                try {
 		                logger.debug("ID SISA: "+(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|"));
@@ -4509,17 +4495,15 @@ public class CotizacionAction extends PrincipalCoreAction
                 	} catch(Exception ex2) {
 	                	logger.warn("error al leer el peso, se intentara como string:",ex2);
 	                	try {
-	                		logger.debug("ID SISA: "+row.getCell(28).getStringCellValue()+"|");
-			                bufferLinea.append(row.getCell(28).getStringCellValue()+"|");
+	                		auxCell=row.getCell(28);
+			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 	                	} catch(Exception ex) {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (AC) de la fila ",fila," "));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Id. SISA' (AC) de la fila ",fila," "));
 		                }
 	                } finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(28)),"-"));
 	                }
-	                
-	                
 	                
 	                //PLAZA
 	                try {
