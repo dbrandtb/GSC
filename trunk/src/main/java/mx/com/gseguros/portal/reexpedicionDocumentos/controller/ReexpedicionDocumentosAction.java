@@ -165,7 +165,6 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 			String estado   = stringMap.get("ESTADO");
 			String nmpoliza = stringMap.get("NMPOLIZA");
 			String cdmoddoc = "1516";
-			
 			// Reimprimimos todos los Documentos de Endosos de Medicina preventiva de Especialista de una poliza:
 			String [] paginas = {"P_1_ESPE", "P_2_ESPE"};
 			List<Map<String, String>> listaDocsEndosos = endososManager.obtenerListaDocumentosEndosos(
