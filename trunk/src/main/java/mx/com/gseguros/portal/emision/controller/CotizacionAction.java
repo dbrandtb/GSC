@@ -4334,10 +4334,45 @@ public class CotizacionAction extends PrincipalCoreAction
 	                }
 	                
 	                //IDENTIDAD NO.DE EMPLEADO
-	                try {
+	                /*try {
 		                auxCell=row.getCell(19);
 		                logger.debug("IDENTIDAD: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+                	} catch(Exception ex) {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (T) de la fila ",fila," "));
+	                } finally {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
+	                }*/
+	                
+	                //IDENTIDAD NO.DE EMPLEADO
+	                try {
+		                auxCell=row.getCell(19);
+		                logger.debug("IDENTIDAD: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                
+		                if(cdunieco.equalsIgnoreCase("1403")){
+		                	if(auxCell!=null){
+		                		//Validamos que en verdad
+		                		String identidad = auxCell.getStringCellValue();
+		                		String identidadModificada[] = identidad.split("\\-");
+		                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
+		                		logger.debug("Seccion 1 IDENTIDAD : {}",seccion1);
+		                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
+		                		logger.debug("Seccion 2 IDENTIDAD : {}",seccion2);
+		                		
+		                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
+		                			bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+		                		}else{
+		                			//mandamos excepcion
+			                		throw new Exception("No es numero");
+		                		}		                		
+		                	}else{
+		                		//mandamos excepcion
+		                		throw new Exception("La identidad no puede ser null");
+		                	}
+		                }else{
+		                	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+		                }
                 	} catch(Exception ex) {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (T) de la fila ",fila," "));
@@ -4456,7 +4491,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                }
 	                
 	                //ID SISA
-	                try {
+	                /*try {
 		                auxCell=row.getCell(28);
 		                logger.debug("ID. SISA: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
@@ -4465,8 +4500,10 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Id. SISA' (AC) de la fila ",fila," "));
 	                } finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(28)),"-"));
-	                }
-	                /*try {
+	                }*/
+	                
+	                //ID SISA
+	                try {
 		                logger.debug("ID SISA: "+(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|"));
 		                bufferLinea.append(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|");
                 	} catch(Exception ex2) {
@@ -4480,7 +4517,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                }
 	                } finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(28)),"-"));
-	                }*/
+	                }
 	                
 	                
 	                
