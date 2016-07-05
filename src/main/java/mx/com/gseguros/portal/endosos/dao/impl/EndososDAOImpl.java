@@ -2706,7 +2706,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	
 	@Override
-	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception {
+	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza,String cdmoddoc) throws Exception {
 		
 		logger.debug(new StringBuilder().append("PKG_CONSULTA.P_GET_SUPL_TDOCUPOL params=").append(poliza).toString());
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -2714,6 +2714,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("pv_cdramo_i",   poliza.getCdramo());
 		params.put("pv_estado_i",   poliza.getEstado());
 		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
+		params.put("pv_cdmoddoc_i", cdmoddoc);
 		Map<String,Object> resultadoMap = this.ejecutaSP(new ObtenerListaDocumentosEndososSP(this.getDataSource()), params);
 		logger.debug("resultado map= "+ resultadoMap);
 		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
@@ -2727,6 +2728,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdmoddoc_i", OracleTypes.VARCHAR));
 			String[] cols = new String[]{"NMSUPLEM", "CDTIPSUP"};
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));

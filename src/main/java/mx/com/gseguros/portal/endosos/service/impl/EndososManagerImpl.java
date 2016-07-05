@@ -2312,8 +2312,8 @@ public class EndososManagerImpl implements EndososManager
 				));
 	}
 	
-	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception {
-		return endososDAO.obtenerListaDocumentosEndosos(poliza);
+	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza, String cdmoddoc) throws Exception {
+		return endososDAO.obtenerListaDocumentosEndosos(poliza, cdmoddoc);
 	}
 	
 	public void guardarMpolicot(String cdunieco, String cdramo, String estado,

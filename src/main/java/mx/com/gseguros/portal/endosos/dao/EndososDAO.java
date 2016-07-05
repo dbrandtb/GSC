@@ -280,7 +280,7 @@ public interface EndososDAO
 	 * @return listado de documentos de endosos
 	 * @throws Exception
 	 */
-	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception;
+	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza, String cdmoddoc) throws Exception;
 	
 	public void insertarIncisoEvaluacion(
 			String stamp
