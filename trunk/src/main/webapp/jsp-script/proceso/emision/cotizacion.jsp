@@ -118,7 +118,8 @@ var _0_windowAyudaCobertura;
 var _0_selectedIdcobertura;
 var _0_recordClienteRecuperado;
 var _0_semaforoAux;
-
+var sinTarificar;
+var cdagenteCotiza;
 var _0_validacion_custom;
 
 var _parentescoTitular = 'T';
@@ -1469,6 +1470,11 @@ function llenandoCampos (json)
                         
                         if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
                             
+                        	if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+                            {
+                        		cdagenteCotiza = primerInciso.get('parametros.pv_otvalor32');
+                        	}
+                        	
                             asignarAgente(primerInciso.get('parametros.pv_otvalor32'));
                             _0_recuperarDescuento();
                         }
@@ -1484,7 +1490,9 @@ function llenandoCampos (json)
                             //vils
                             _0_panelPri.setLoading(true);
                             cargaCotiza = true;
+                            sinTarificar = !maestra&&!vencida ;
                             _0_cotizar();
+                            
                         }
                 }
             };
@@ -1532,6 +1540,7 @@ function llenandoCampos (json)
     else
     {
         mensajeError(json.error);
+        _0_panelPri.setLoading(false);
     }
 }
 
@@ -1603,22 +1612,14 @@ function _0_cotizar(boton)
     debug('_0_cotizar');
     if(_0_validarBase())//
     {
-            var smap = _0_smap1;
-            
-            var json=
-            {
-                 slist1 : []
-                ,smap1  : smap 
-            };
-
-//-------------------------------------------------------VILS
-        if(_0_recordClienteRecuperado)
+        if(!Ext.isEmpty(_0_recordClienteRecuperado))
         {
             debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
             _0_smap1['cdpersonCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CLAVECLI;
             _0_smap1['cdideperCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER;
             _0_smap1['nmorddomCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM;
-               
+            _0_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';//Se utiliza para no retarificar   
+          
             var agenteCmp=_fieldByLabel('AGENTE');
             if(Ext.isEmpty(agenteCmp))
             {
@@ -1630,6 +1631,28 @@ function _0_cotizar(boton)
             }
             
         }
+        
+        if(_0_smap1.cdramo=='16')
+        {
+        	 _0_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';//Se utiliza para no retarificar 
+        	 if(!Ext.isEmpty(cdagenteCotiza))
+        	 {
+        		  _0_smap1['cdagente']    = 'A'+cdagenteCotiza;
+        	 }
+        	 else if(!Ext.isEmpty(_fieldByLabel('AGENTE').getValue()))
+             {
+        		 cdagenteCotiza = _fieldByLabel('AGENTE').getValue();
+                  _0_smap1['cdagente']    = 'A'+cdagenteCotiza;
+             }
+        }
+        
+        var smap = _0_smap1;
+        
+        var json=
+        {
+             slist1 : []
+            ,smap1  : smap 
+        };
         
         if(_0_necesitoIncisos)
         {
@@ -2208,11 +2231,16 @@ function asignarAgente(agente)
      }
      else
      {
-         if(!cargarXpoliza){
-             _fieldByLabel('AGENTE').setValue(
-                 _fieldByLabel('AGENTE').findRecord('key',agente)
-                 );
-         }
+//       else
+//       {
+      _fieldByLabel('AGENTE').setValue(agente);
+//       }
+        
+//              if(!cargarXpoliza){
+//              _fieldByLabel('AGENTE').setValue(
+//                  _fieldByLabel('AGENTE').findRecord('key',agente)
+//                  );
+//          }
          /* else{
          _fieldByLabel('FOLIO').reset();
          } */
