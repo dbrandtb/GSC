@@ -1800,7 +1800,7 @@ Ext.onReady(function() {
             {text: 'Nombre', dataIndex: 'nombreAsegurado', width: 240},
             {text: 'Identificaci&oacute;n', dataIndex: 'identificacion', width: 145, hidden:true},
             /*{text: 'Sucursal', dataIndex: 'dsunieco', width: 145},*/
-            {text: 'Estatus', dataIndex: 'estado', width: 100},
+            {text: 'Estatus P&oacute;liza', dataIndex: 'estado', width: 100},
         	{text: 'Producto', dataIndex: 'dsramo', width:145},            
             {text: 'C&oacute;digo de la p&oacuteliza',  dataIndex: 'icodpoliza', hidden:true},
             {text: 'Origen', dataIndex: 'origen', width: 60},
