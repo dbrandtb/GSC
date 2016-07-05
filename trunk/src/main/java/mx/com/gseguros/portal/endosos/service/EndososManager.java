@@ -453,7 +453,7 @@ public interface EndososManager
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza) throws Exception;
+	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza,String cdmoddoc) throws Exception;
 	
 	public int recuperarDiasDiferenciaEndosoValidos(String cdramo,String cdtipsup)throws Exception;
 	
