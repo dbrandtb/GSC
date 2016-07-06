@@ -26,6 +26,7 @@ import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
@@ -245,7 +246,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						||StringUtils.isBlank(cdtipsit)
 						)
 				{
-					throw new Exception("Faltan datos (sesion o cdunieco o cdramo o estado o npoliza o cdtipsit");
+					throw new Exception("Faltan datos (sesion o cdunieco o cdramo o estado o npoliza o cdtipsit)");
 				}
 				else
 				{
@@ -618,6 +619,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             nuevo.put("pv_hhefecto",     (String)anterior.get("hhefecto"));
             nuevo.put("pv_feproren",     panel2.get("ferenova"));//renderFechas.format(fechaEnUnAnio.getTime()));
             nuevo.put("pv_fevencim",     anterior.get("fevencim")!=null?renderFechas.format(anterior.get("fevencim")):null);
+            nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?0:panel2.get("nmrenova"))); 
             nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?"0":panel2.get("nmrenova"))); 
             nuevo.put("pv_ferecibo",     anterior.get("ferecibo")!=null?renderFechas.format(anterior.get("ferecibo")):null);
             nuevo.put("pv_feultsin",     anterior.get("feultsin")!=null?renderFechas.format(anterior.get("feultsin")):null);
@@ -633,6 +635,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             		:(String)anterior.get("nmcuadro"));
             nuevo.put("pv_porredau",     (String)anterior.get("porredau"));
             nuevo.put("pv_swconsol",     (String)anterior.get("swconsol"));
+            nuevo.put("pv_nmpolant",     panel2.get("nmpolant")==null?"":panel2.get("nmpolant"));//  // Se agrega TextField
             nuevo.put("pv_nmpolant",     (String) (panel2.get("nmpolant")==null?null:panel2.get("nmpolant")));//  // Se agrega TextField
             nuevo.put("pv_nmpolnva",     (String)anterior.get("nmpolnva"));
             nuevo.put("pv_fesolici",     panel2.get("fesolici"));
@@ -760,7 +763,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Nombre"))
 					.add(new Item("dataIndex", "nombre"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					//.add(Item.crear("editor",null,Item.OBJ)
 					//		.add("xtype","textfield")
 					//		.add("allowBlank",false)
@@ -770,7 +773,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Segundo nombre"))
 					.add(new Item("dataIndex", "segundo_nombre"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("allowBlank",true)
@@ -779,7 +782,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Apellido paterno"))
 					.add(new Item("dataIndex", "Apellido_Paterno"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("allowBlank",true)
@@ -788,7 +791,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Apellido materno"))
 					.add(new Item("dataIndex", "Apellido_Materno"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("allowBlank",true)
@@ -797,28 +800,28 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Fecha de nacimiento"))
 					.add(new Item("dataIndex", "fenacimi"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("editor","editorFechap2").setQuotes(""))
 					.add(Item.crear("renderer","Ext.util.Format.dateRenderer('d M Y')").setQuotes(""))
 					);
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Sexo"))
 					.add(new Item("dataIndex", "sexo"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("renderer","rendererSexop2").setQuotes(""))
 					.add(Item.crear("editor","editorGenerosp2").setQuotes(""))
 					);
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "T. Persona"))
 					.add(new Item("dataIndex", "tpersona"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("renderer","rendererTpersonap2").setQuotes(""))
 					.add(Item.crear("editor","editorTpersonap2").setQuotes(""))
 					);
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Nacionalidad"))
 					.add(new Item("dataIndex", "nacional"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("renderer","rendererNacionesp2").setQuotes(""))
 					.add(Item.crear("editor","editorNacionesp2").setQuotes(""))
 					);
@@ -896,7 +899,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Nombre"))
 					.add(new Item("dataIndex", "nombre"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("allowBlank",false)
@@ -905,7 +908,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Segundo nombre"))
 					.add(new Item("dataIndex", "segundo_nombre"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 120))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("allowBlank",true)
@@ -914,7 +917,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Apellido paterno"))
 					.add(new Item("dataIndex", "Apellido_Paterno"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 120))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("allowBlank",false)
@@ -923,7 +926,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Apellido materno"))
 					.add(new Item("dataIndex", "Apellido_Materno"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 120))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("allowBlank",false)
@@ -932,28 +935,28 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Fecha de nacimiento"))
 					.add(new Item("dataIndex", "fenacimi"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("editor","editorFechap2").setQuotes(""))
 					.add(Item.crear("renderer","Ext.util.Format.dateRenderer('d M Y')").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Sexo"))
 					.add(new Item("dataIndex", "sexo"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 90))
 					.add(Item.crear("renderer","rendererSexop2").setQuotes(""))
 					.add(Item.crear("editor","editorGenerosBp2").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "T. Persona"))
 					.add(new Item("dataIndex", "tpersona"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("renderer","rendererTpersonap2").setQuotes(""))
 					.add(Item.crear("editor","editorTpersonaBp2").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Parentesco"))
 					.add(new Item("dataIndex", "Parentesco"))
-					.add(new Item("flex", 1))
+					.add(new Item("width", 100))
 					.add(Item.crear("renderer","rendererParentescop2").setQuotes(""))
 					.add(Item.crear("editor","editorParentescoBp2").setQuotes(""))
 					);
@@ -963,6 +966,46 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(new Item("width", 120))
 					.add(Item.crear("editor","editorRFCBp2").setQuotes(""))
 					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Estado Civil"))
+					.add(new Item("dataIndex", "cdestciv"))
+					.add(new Item("width", 100))
+					.add(Item.crear("renderer","rendererEstcivp2").setQuotes(""))
+					.add(Item.crear("editor","editorEstcivp2").setQuotes(""))
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "N° de Socio"))
+					.add(new Item("dataIndex", "numsoc"))
+					.add(new Item("width", 100))
+					.add(Item.crear("editor",null,Item.OBJ)
+							.add("xtype","textfield")
+							.add("name","numsoc")
+							.add("allowBlank",false)
+							.add("maxLength",6)
+						)
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Clave Familiar"))
+					.add(new Item("dataIndex", "clvfam"))
+					.add(new Item("width", 100))
+					.add(Item.crear("editor",null,Item.OBJ)
+							.add("xtype","textfield")
+							.add("name","clvfam")
+							.add("allowBlank",false)
+							.add("maxLength",2)
+						)
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Ocupación"))
+					.add(new Item("dataIndex", "ocup"))
+					.add(new Item("width", 100))
+					.add(Item.crear("editor",null,Item.OBJ)
+							.add("xtype","textfield")
+							.add("name","ocup")
+							.add("allowBlank",false)
+						)
+					);
+			
 			/*xtype: 'actioncolumn',
 	                        width: 30,
 	                        sortable: false,
@@ -1254,6 +1297,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		try
 		{
 			UserVO usuario = (UserVO) session.get("USUARIO");
+			logger.debug(Utils.log("usuario ->",usuario));
 			String usuarioCaptura =  null;
 			
 			if(usuario!=null){
@@ -1272,8 +1316,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			HashMap<String, String> cdpersonsAsegs = new HashMap<String, String>();
 			
 			for(Map<String,Object>personaIt:list1){
+				logger.debug(Utils.log("cdrol",(String) personaIt.get("cdrol")));
+				logger.debug(Utils.log("cdrol",(String) personaIt.get("cdperson")));
+				
 				String cdrolIt = (String) personaIt.get("cdrol");
 				String cdpersonIt = (String) personaIt.get("cdperson");
+				
 				
 				if(StringUtils.isNotBlank(cdrolIt) && "1".equals(cdrolIt)){
 					cdpersonContrat = cdpersonIt;
@@ -1335,11 +1383,43 @@ public class ComplementariosAction extends PrincipalCoreAction
 			////// para borrar los mpoliper anterior //////
 			///////////////////////////////////////////////
 			
+			
 			int i=1;
 			for(Map<String,Object>aseg:list1)
 			{
+				
+				String situaext = null, ns =null, cf =null;
+				String clvfam   = (String) aseg.get("clvfam");
+				String numsoc   = (String) aseg.get("numsoc");
+				String nmsituac = (String) aseg.get("nmsituac");
+				
+				
+				//Número de socio y Clave Familiar, para el atributo SITUAEXT
+				try{
+					ns = StringUtils.rightPad(numsoc, 6, "0");
+					cf = StringUtils.leftPad(clvfam, 2, "0");
+				}catch(Exception e){
+					throw new ApplicationException("Generando Situaext desde Clave familiar y Numero de Socio");
+				}
+
+				//NMSITUAEXT
+				situaext = ns + "-" + cf;
+				
+				logger.debug(Utils.log("situaext ->"+situaext));
+				
+				Map<String,String>paramsObtenerDatosMpolisit=new HashMap<String,String>();
+				paramsObtenerDatosMpolisit.put("pv_cdunieco_i" , map1.get("pv_cdunieco"));
+				paramsObtenerDatosMpolisit.put("pv_cdramo_i"   , map1.get("pv_cdramo"));
+				paramsObtenerDatosMpolisit.put("pv_estado_i"   , map1.get("pv_estado"));
+				paramsObtenerDatosMpolisit.put("pv_nmpoliza_i" , map1.get("pv_nmpoliza"));
+				Map<String,String>respuestaObtenerDatosMpolisit=endososManager.obtieneDatosMpolisit(paramsObtenerDatosMpolisit);
+				String nmsituacNuevo=respuestaObtenerDatosMpolisit.get("pv_nmsituac_o");
+				String cdplan=respuestaObtenerDatosMpolisit.get("pv_cdplan_o");
+				
 				Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 				String swExiper = (String)aseg.get("swexiper");
+				
+				nmsituac=nmsituacNuevo;
 		
 				if(StringUtils.isBlank(swExiper) || swExiper.equalsIgnoreCase("N")){
 				
@@ -1366,12 +1446,37 @@ public class ComplementariosAction extends PrincipalCoreAction
 					parametros.put("pv_residencia_i"  , null);
 					parametros.put("pv_nongrata_i"    , null);
 					parametros.put("pv_cdideext_i"    , cdIdeExtAseg);
-					parametros.put("pv_cdestciv_i"    , null);
+					parametros.put("pv_cdestciv_i"    , (String)aseg.get("cdestciv")); 
 					parametros.put("pv_cdsucemi_i"    , null);
 					parametros.put("pv_cdusuario_i"   , usuarioCaptura);
+					parametros.put("pv_dsocupacion_i" , (String)aseg.get("ocup"));
 					parametros.put("pv_accion_i"      , "I");
 					logger.debug("#iteracion mov mpersonas "+i);
 					kernelManager.movMpersona(parametros);
+					
+					Map<String,Object>mapaPolisit=new HashMap<String,Object>(0);
+	                mapaPolisit.put("pv_cdunieco_i",    map1.get("pv_cdunieco"));
+	                mapaPolisit.put("pv_cdramo_i",      map1.get("pv_cdramo"));
+	                mapaPolisit.put("pv_estado_i",      map1.get("pv_estado"));
+	                mapaPolisit.put("pv_nmpoliza_i",    map1.get("pv_nmpoliza"));
+	                mapaPolisit.put("pv_nmsituac_i",    nmsituac);
+	                mapaPolisit.put("pv_nmsuplem_i",    "0");
+	                mapaPolisit.put("pv_status_i",      "V");
+	                mapaPolisit.put("pv_cdtipsit_i",    map1.get("cdtipsit")); 
+	                mapaPolisit.put("pv_swreduci_i",    null);
+	                mapaPolisit.put("pv_cdagrupa_i",    "1");
+	                mapaPolisit.put("pv_cdestado_i",    "0");
+	                mapaPolisit.put("pv_fefecsit_i",    calendarHoy.getTime()); 
+	                mapaPolisit.put("pv_fecharef_i",    calendarHoy.getTime());
+	                mapaPolisit.put("pv_cdgrupo_i",     null);
+	                mapaPolisit.put("pv_nmsituaext_i",  situaext);
+	                mapaPolisit.put("pv_nmsitaux_i",    null);
+	                mapaPolisit.put("pv_nmsbsitext_i",  null);
+	                mapaPolisit.put("pv_cdplan_i",      cdplan);
+	                mapaPolisit.put("pv_cdasegur_i",    "30");
+	                mapaPolisit.put("pv_accion_i",      "I");
+	                logger.debug(Utils.log("¬Mpolisit",mapaPolisit));
+	                kernelManager.insertaPolisit(mapaPolisit);
 				}
 				
 				String cdRolAseg = (String)aseg.get("cdrol");
@@ -1381,7 +1486,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				parametros.put("pv_cdramo_i",	map1.get("pv_cdramo"));
 				parametros.put("pv_estado_i",	map1.get("pv_estado"));
 				parametros.put("pv_nmpoliza_i",	map1.get("pv_nmpoliza"));
-				parametros.put("pv_nmsituac_i",	(String)aseg.get("nmsituac"));
+				parametros.put("pv_nmsituac_i",	nmsituac); 
 				parametros.put("pv_cdrol_i", 	cdRolAseg);
 				parametros.put("pv_cdperson_i",	(String)aseg.get("cdperson"));
 				parametros.put("pv_nmsuplem_i",	"0");
@@ -1793,7 +1898,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			mapaDuroResultados.put("pv_cdtipsit_i", datosUsuario.getCdtipsit());
 			List<ResultadoCotizacionVO> listaResultados=kernelManager.obtenerResultadosCotizacion(mapaDuroResultados);
 			//utilizando logica anterior
-			CotizacionManagerImpl managerAnterior=new CotizacionManagerImpl();
+			CotizacionManagerImpl mangerAnterior=new CotizacionManagerImpl();
 			gridResultados=managerAnterior.adaptarDatosCotizacion(listaResultados);
 			logger.debug("### session poniendo resultados con grid: "+listaResultados.size());
 			session.put(ResultadoCotizacionAction.DATOS_GRID, gridResultados);
