@@ -6870,6 +6870,7 @@ public class EndososAction extends PrincipalCoreAction
 			case CAMBIO_FORMA_PAGO:
 			case CAMBIO_AGENTE:
 			case CANCELACION_POR_REEXPEDICION:
+			case CAMBIO_CONTRATANTE:
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
 						rutaCarpeta, sucursal, nmsolici, ntramiteEmi, true, cdtipsup, 
