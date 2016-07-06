@@ -2561,6 +2561,179 @@ function _flujoToParams(flujo)
     return params;
 }
 
+/**
+ *
+ * ESTA FUNCION CARGA LAS ACCIONES RELACIONADAS A UNA ENTIDAD
+ * Y EJECUTA EL CALLBACK ENVIANDO LA LISTA DE ACCIONES
+ *
+ */
+function _cargarAccionesEntidad(cdtipflu,cdflujomc,tipoent,cdentidad,webid,callback)
+{
+    debug('_cargarAccionesEntidad args:',arguments,'.');
+    var mask, ck = 'Recuperando acciones de entidad';
+    try
+    {
+        _validate(
+            cdtipflu   , 'Falta flujo para recuperar acciones de entidad'
+            ,cdflujomc , 'Falta proceso para recuperar acciones de entidad'
+            ,tipoent   , 'Falta tipo de entidad para recuperar acciones de entidad'
+            ,cdentidad , 'Falta clave de entidad para recuperar acciones de entidad'
+            ,webid     , 'Falta id web de entidad para recuperar acciones de entidad'
+            ,callback  , 'Falta callback para recuperar acciones de entidad'
+        );
+        
+        mask = _maskLocal(ck);
+        Ext.Ajax.request(
+        {
+            url      : _GLOBAL_URL_CARGAR_ACCIONES_ENTIDAD
+            ,params  :
+            {
+                'params.cdtipflu'   : cdtipflu
+                ,'params.cdflujomc' : cdflujomc
+                ,'params.tipoent'   : tipoent
+                ,'params.cdentidad' : cdentidad
+                ,'params.webid'     : webid
+            }
+            ,success : function(response)
+            {
+                mask.close();
+                var ck = 'Decodificando respuesta al recuperar acciones de entidad';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### acciones entidad:',json,'.');
+                    if(json.success === true)
+                    {
+                        ck = 'Ejecutando callback al recuperar acciones de entidad';
+                        callback(json.list);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                mask.close();
+                errorComunicacion(null,'Error al recuperar acciones de entidad');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck,mask);
+    }
+}
+
+/**
+ *
+ * ESTA FUNCION REVISA ARGUMENTOS EN PARES, SI EL PRIMERO ES EMPTY
+ * LANZA EL SEGUNDO COMO EXCEPTION,
+ * ES SIMILAR AL UTILS.VALIDATE DE JAVA
+ *
+ */
+function _validate()
+{
+    debug('_validate args:',arguments,'.');
+    
+    if(arguments.length % 2 === 1) // si el numero de argumentos no es par
+    {
+        throw 'Argumentos inv\u00e1lidos para funci\u00f3n _validate';
+    }
+    
+    for(var i = 0 ; i < arguments.length ; i=i+2)
+    {
+        if(Ext.isEmpty(arguments[i]))
+        {
+            throw arguments[i+1];
+        }
+    }
+}
+
+/**
+ *
+ * ESTA FUNCION SETEA UN CAMPO DE CDAGENTE
+ * SI ES TEXTIELD HACE UN SETVALUE NORMAL
+ * SI ES COMBO HACE UN SELECT
+ * SI ES AUTOCOMPLETER LO CARGA Y LUEGO LE HACE EL SELECT
+ *
+ */
+function _setValueCampoAgente(campo,cdagente)
+{
+    debug('>_setValueCampoAgente:',arguments,'.');
+    
+    var ck;
+    
+    try
+    {
+        _validate(
+            campo     , 'No se recibi\u00f3 el campo agente para setear'
+            ,cdagente , 'No se recibi\u00f3 el valor de agente para setear'
+        );
+        
+        ck = 'Identificando tipo de campo de agente';
+        debug(ck);
+        
+        if(campo.xtype === 'textfield')
+        {
+            ck = 'Seteando valor normal de agente';
+            
+            debug(ck);
+            
+            campo.setValue(cdagente);
+        }
+        else if(campo.xtype === 'combobox')
+        {
+            if(campo.hideTrigger === true)
+            {
+                ck = 'Seteando autocompleter de agente';
+                
+                debug(ck);
+                
+                campo.getStore().load(
+                {
+                    params :
+                    {
+                        'params.agente' : cdagente
+                    }
+                    ,callback : function()
+                    {
+                        campo.setValue(campo.findRecord('key',cdagente));
+                    }
+                });
+                
+            }
+            else
+            {
+                ck = 'Seteando combo de agente'
+                
+                var rec = campo.findRecord('key',cdagente);
+                
+                debug(ck,'rec:',rec,'.');
+                
+                if(rec)
+                {
+                    campo.select(rec);
+                }
+            }
+        }
+        else
+        {
+            throw 'El campo de agente es tipo desconocido';
+        }
+        
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

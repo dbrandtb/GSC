@@ -220,7 +220,7 @@ public interface FlujoMesaControlManager
 			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
 			,String cdtipflu , String cdflujomc
 			,Map<String, String> valores
-			,String cdtipsup, String cduniext, String ramo, String nmpoliex
+			,String cdtipsup, String cduniext, String ramo, String nmpoliex, boolean origenMesa
 			)throws Exception;
 	
 	public List<Map<String,String>>cargarAccionesEntidad(

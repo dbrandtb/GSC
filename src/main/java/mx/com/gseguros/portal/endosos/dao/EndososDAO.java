@@ -707,4 +707,12 @@ public interface EndososDAO
 			String nmpoliza
 			)throws Exception;
 	
+	public String recuperarNmsuplemPorNsuplogi(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nsuplogi
+			)throws Exception;
+	
 }

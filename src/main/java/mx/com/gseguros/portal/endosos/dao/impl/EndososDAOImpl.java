@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.endosos.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -5416,4 +5415,49 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}	
 	
+	@Override
+	public String recuperarNmsuplemPorNsuplogi(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nsuplogi
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nsuplogi" , nsuplogi);
+		
+		Map<String,Object> procRes = ejecutaSP(new RecuperarNmsuplemPorNsuplogiSP(getDataSource()),params);
+		
+		String nmsuplem = (String) procRes.get("pv_nmsuplem_o");
+		
+		if(StringUtils.isBlank(nmsuplem))
+		{
+			throw new ApplicationException(Utils.join("No hay suplemento para el l\u00f3gico ",nsuplogi));
+		}
+		
+		return nmsuplem;
+	}
+	
+	protected class RecuperarNmsuplemPorNsuplogiSP extends StoredProcedure
+	{
+		protected RecuperarNmsuplemPorNsuplogiSP(DataSource dataSource)
+		{
+			super(dataSource,"P_RECUPERA_NMSUPLEM_X_NSUPLOGI");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nsuplogi" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

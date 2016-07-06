@@ -1706,7 +1706,7 @@ public class EndososManagerImpl implements EndososManager
 						,cdtipsit
 						,cdusuari
 						,cdsisrol, null,null,null
-						,valores, null, null, null, null
+						,valores, null, null, null, null, false
 						);
 			}
 			catch(Exception ex)
@@ -2208,7 +2208,7 @@ public class EndososManagerImpl implements EndososManager
 					,null //cdtipsit << no lo tengo
 					,cdusuari
 					,cdsisrol, null,null,null
-					,valores, null, null, null, null
+					,valores, null, null, null, null, false
 					);
 			
 			paso = "Reimprimiendo documentos";
@@ -2893,7 +2893,7 @@ public class EndososManagerImpl implements EndososManager
 					,cdtipsitPrimerInciso
 					,cdusuari
 					,cdsisrol, null,null,null
-					,valoresMesaControl, null, null, null, null
+					,valoresMesaControl, null, null, null, null, false
 					);
 			
 			if(!enEspera)
@@ -3104,7 +3104,7 @@ public class EndososManagerImpl implements EndososManager
 					,cdtipsitPrimerInciso
 					,cdusuari
 					,cdsisrol, null,null,null
-					,valoresMesaControl, null, null, null, null
+					,valoresMesaControl, null, null, null, null, false
 					);
 			
 			if(!enEspera)

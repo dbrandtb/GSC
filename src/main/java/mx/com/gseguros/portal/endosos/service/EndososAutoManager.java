@@ -508,4 +508,6 @@ public interface EndososAutoManager
 			String cveColonia, String colonia, String calle, String numExterior, String numInterior, String cdusuari,
 			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso,
 			String urlCaratula, String telefono1, String telefono2, String telefono3, UserVO usuarioSesion)throws Exception;
+	
+	public void sacaEndosoFlujo(FlujoVO flujo) throws Exception;
 }
