@@ -250,6 +250,7 @@ public interface FlujoMesaControlManager
 			,String cdsisrolSes
 			,String comments
 			,boolean cerrado
+			,String swagente
 			)throws Exception;
 	
 	public Map<String,Object> recuperarDatosTramiteValidacionCliente(FlujoVO flujo)throws Exception;

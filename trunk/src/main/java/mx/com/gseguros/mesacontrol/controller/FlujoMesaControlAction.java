@@ -1786,12 +1786,13 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(params, "No se recibieron datos");
 			
-			String ntramite         = params.get("ntramite")
-			       ,statusOld       = params.get("statusOld")
-			       ,cdtipasigOld    = params.get("cdtipasigOld")
-			       ,statusNew       = params.get("statusNew")
-			       ,cdtipasigNew    = params.get("cdtipasigNew")
-			       ,comments        = params.get("comments");
+			String ntramite      = params.get("ntramite")
+			       ,statusOld    = params.get("statusOld")
+			       ,cdtipasigOld = params.get("cdtipasigOld")
+			       ,statusNew    = params.get("statusNew")
+			       ,cdtipasigNew = params.get("cdtipasigNew")
+			       ,comments     = params.get("comments")
+			       ,swagente     = params.get("swagente");
 			
 			boolean cerrado = "S".equals(params.get("cerrado"));
 			
@@ -1813,6 +1814,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdsisrolSes
 					,comments
 					,cerrado
+					,swagente
 					);
 			
 			success = true;
