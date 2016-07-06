@@ -619,7 +619,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             nuevo.put("pv_hhefecto",     (String)anterior.get("hhefecto"));
             nuevo.put("pv_feproren",     panel2.get("ferenova"));//renderFechas.format(fechaEnUnAnio.getTime()));
             nuevo.put("pv_fevencim",     anterior.get("fevencim")!=null?renderFechas.format(anterior.get("fevencim")):null);
-            nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?0:panel2.get("nmrenova"))); 
+            nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?"0":panel2.get("nmrenova"))); 
             nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?"0":panel2.get("nmrenova"))); 
             nuevo.put("pv_ferecibo",     anterior.get("ferecibo")!=null?renderFechas.format(anterior.get("ferecibo")):null);
             nuevo.put("pv_feultsin",     anterior.get("feultsin")!=null?renderFechas.format(anterior.get("feultsin")):null);
