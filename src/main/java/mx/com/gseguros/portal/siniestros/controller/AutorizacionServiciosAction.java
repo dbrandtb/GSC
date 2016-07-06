@@ -833,6 +833,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		String cdramo      = map1.get("cdramo");
 		String estado      = map1.get("estado");
 		String nmpoliza    = map1.get("nmpoliza");
+		String nmsuplem    = map1.get("nmsuplem");
 		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
 
 		File carpeta=new File(this.getText("ruta.documentos.poliza")+"/"+ntramite);
@@ -881,16 +882,16 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					,cdramo
 					,estado
 					,nmpoliza
-					,"0"
+					,nmsuplem
 					,new Date()
 					,this.getText("pdf.emision.rechazo.nombre")
 					,"CARTA RECHAZO"
 					,nmpoliza
 					,ntramite
-					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra()
 					,Constantes.SI
 					,null
-					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra()
 					,null
 					,null
 					,null

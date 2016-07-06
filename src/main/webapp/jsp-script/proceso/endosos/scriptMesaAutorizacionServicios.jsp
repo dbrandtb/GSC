@@ -339,13 +339,14 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 															url     : compleUrlGuardarCartoRechazo
 															,method:'GET'
 															,params :{
-																'map1.ntramite'  : record.get('ntramite')
+																'map1.ntramite'  : record.raw.ntramite
 																,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
 																,'map1.cdsisrol' : 'MEDICO'
-																,'map1.cdunieco' : record.get('cdunieco')
-																,'map1.cdramo'   : record.get('cdramo')
-																,'map1.estado'   : record.get('estado')
-																,'map1.nmpoliza' : record.get('nmpoliza')
+																,'map1.cdunieco' : record.raw.cdunieco
+																,'map1.cdramo'   : record.raw.cdramo
+																,'map1.estado'   : record.raw.estado
+																,'map1.nmpoliza' : record.raw.nmpoliza
+																,'map1.nmsuplem' : record.raw.nmsuplem
 															}
 															,success : function(response){
 																// YA NO REALIZA NADA PORQUE YA SE GENERO EL ARCHIVO
@@ -408,13 +409,14 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 												url     : compleUrlGuardarCartoRechazo
 												,method:'GET'
 												,params :{
-													'map1.ntramite'  : record.get('ntramite')
+													'map1.ntramite'  : record.raw.ntramite
 													,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
 													,'map1.cdsisrol' : 'MEDICO'
-													,'map1.cdunieco' : record.get('cdunieco')
-													,'map1.cdramo'   : record.get('cdramo')
-													,'map1.estado'   : record.get('estado')
-													,'map1.nmpoliza' : record.get('nmpoliza')
+													,'map1.cdunieco' : record.raw.cdunieco
+													,'map1.cdramo'   : record.raw.cdramo
+													,'map1.estado'   : record.raw.estado
+													,'map1.nmpoliza' : record.raw.nmpoliza
+													,'map1.nmsuplem' : record.raw.nmsuplem
 												}
 												,success : function(response){
 													// YA NO REALIZA NADA PORQUE YA SE GENERO EL ARCHIVO
