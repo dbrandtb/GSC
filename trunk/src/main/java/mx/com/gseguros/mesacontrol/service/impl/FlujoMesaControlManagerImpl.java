@@ -1793,7 +1793,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
 			,String cdtipflu , String cdflujomc
 			,Map<String, String> valores
-			,String cdtipsup, String cduniext, String ramo, String nmpoliex
+			,String cdtipsup, String cduniext, String ramo, String nmpoliex, boolean origenMesa
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -1826,6 +1826,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ cduniext   = " , cduniext
 				,"\n@@@@@@ ramo       = " , ramo
 				,"\n@@@@@@ nmpoliex   = " , nmpoliex
+				,"\n@@@@@@ origenMesa = " , origenMesa
 				));
 		
 		String paso = "Registrando tr\u00e1mite";
@@ -1873,6 +1874,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,renuniext
 					,renramo
 					,renpoliex
+					,origenMesa
 					);
 			
 			mesaControlDAO.movimientoDetalleTramite(

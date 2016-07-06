@@ -257,7 +257,7 @@ public class ServiciosAction extends PrincipalCoreAction
 					,nmpoliza   = "0"
 					,referencia = "1"
 					,nombre     = null
-					,status     = "13" // EN COTIZACION
+					,status     = "13" // EN SUSCRIPCION
 					,comments   = "Tr\u00e1mite importado de sistema externo"
 					,estado     = "W"
 					//recuperados de BD:
@@ -362,6 +362,7 @@ public class ServiciosAction extends PrincipalCoreAction
 					,cduniext
 					,ramo
 					,nmpoliex
+					,false
 					);
 			
 			respuesta = Utils.join("OK,",ntramite);

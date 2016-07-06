@@ -54,8 +54,9 @@ import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,7 +65,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EndososAutoManagerImpl implements EndososAutoManager
 {
-	private static Logger           logger       = Logger.getLogger(EndososAutoManagerImpl.class);
+	private static Logger           logger       = LoggerFactory.getLogger(EndososAutoManagerImpl.class);
 	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	@Autowired
@@ -1361,7 +1362,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,null
 					,null
-					,valores, null, null, null, null
+					,valores, null, null, null, null, false
 					);
 			
 			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
@@ -6577,7 +6578,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						,null
 						,null
 						,null
-						,valores, null, null, null, null
+						,valores, null, null, null, null, false
 						);
 			}
 			else
@@ -6663,6 +6664,66 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		logger.debug(Utils.log(
 				 "\n@@@@@@ confirmarGuardandoDetallesTramiteEndoso @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public void sacaEndosoFlujo(FlujoVO flujo) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ sacaEndosoFlujo @@@@@@"
+				,"\n@@@@@@ flujo = " , flujo
+				));
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Recuperando nsuplogi";
+			logger.debug(paso);
+			
+			String nsuplogi = mesaControlDAO.recuperarOtvalorTramitePorDsatribu(
+					flujo.getNtramite()
+					,"NSUPLOGI"
+					);
+			
+			logger.debug("nsuplog recuperado '{}'",nsuplogi);
+			
+			paso = "Recuperando suplemento";
+			logger.debug(paso);
+			
+			String nmsuplem = endososDAO.recuperarNmsuplemPorNsuplogi(
+					flujo.getCdunieco()
+					,flujo.getCdramo()
+					,flujo.getEstado()
+					,flujo.getNmpoliza()
+					,nsuplogi
+					);
+			
+			logger.debug("Suplemento recuperado '{}'",nmsuplem);
+			
+			paso = "Revirtiendo endoso";
+			logger.debug(paso);
+			
+			endososDAO.sacaEndoso(
+					flujo.getCdunieco()
+					,flujo.getCdramo()
+					,flujo.getEstado()
+					,flujo.getNmpoliza()
+					,nsuplogi
+					,nmsuplem
+					);
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ sacaEndosoFlujo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
 }

@@ -4047,7 +4047,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,datosFlujo.get("cdtipflu")
 	            			,datosFlujo.get("cdflujomc")
 							,otvalorMesaControl
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null, false
 							);
 					resp.getSmap().put("ntramite" , ntramite);
 					
@@ -7477,7 +7477,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     			
             	ntramite = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo,"W", "0", "0", 
             			null, null, "1", new Date(), cdagente, null, "", new Date(), EstatusTramite.PENDIENTE.getCodigo(),
-            			"", nmpoliza, cdtipsit, cdusuari, cdsisrol, null, null, null, null, null, null, null, null);
+            			"", nmpoliza, cdtipsit, cdusuari, cdsisrol, null, null, null, null, null, null, null, null, false);
             	
             	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
             			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"

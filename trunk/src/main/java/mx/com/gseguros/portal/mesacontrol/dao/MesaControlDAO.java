@@ -41,6 +41,7 @@ public interface MesaControlDAO
 	 * @param renuniext TODO
 	 * @param renramo TODO
 	 * @param renpoliex TODO
+	 * @param origenMesa TODO
 	 * @return
 	 * @throws Exception
 	 */
@@ -51,7 +52,7 @@ public interface MesaControlDAO
 			,Date festatus   , String status   , String comments   , String nmsolici
 			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
 			,String cdtipflu , String cdflujomc
-			,Map<String, String> valores, String cdtipsup, String renuniext, String renramo, String renpoliex
+			,Map<String, String> valores, String cdtipsup, String renuniext, String renramo, String renpoliex, boolean origenMesa
 			)throws Exception;
 	
 	/**

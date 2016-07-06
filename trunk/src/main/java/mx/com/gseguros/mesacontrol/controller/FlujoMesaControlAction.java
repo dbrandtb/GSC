@@ -1479,6 +1479,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cduniext
 					,ramo
 					,nmpoliex
+					,true
 					);
 			
 			params.put("ntramite" , ntramite);

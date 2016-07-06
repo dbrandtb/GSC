@@ -673,7 +673,8 @@ Ext.onReady(function()
         ,nmpolizaCmp = _fieldByName('NMPOLIZA' , _p54_windowNuevo)
         ,nmpoliexCmp = _fieldByName('NMPOLIEX' , _p54_windowNuevo)
         ,estadoCmp   = _fieldByName('ESTADO'   , _p54_windowNuevo)
-        ,cduniextCmp = _fieldByName('CDUNIEXT' , _p54_windowNuevo);
+        ,cduniextCmp = _fieldByName('CDUNIEXT' , _p54_windowNuevo)
+        ,estatusCmp  = _fieldByName('STATUS'   , _p54_windowNuevo);
     
     cdtipfluCmp.on(
     {
@@ -700,6 +701,24 @@ Ext.onReady(function()
                 
                 nmpoliexCmp.allowBlank      = true;
                 nmpoliexCmp.verificarPoliza = false;
+            }
+        }
+    });
+    
+    cdtiptraCmp.on(
+    {
+        change : function(me,val)
+        {
+            if(_p54_params.CDSISROL === 'SUSCRIPTOR')
+            {
+                if(Number(val)===1)
+                {
+                    estatusCmp.setValue('2'); // para SUSCRIPTOR para EMISION el status es PENDIENTE
+                }
+                else
+                {
+                    estatusCmp.reset();
+                }
             }
         }
     });
@@ -821,7 +840,11 @@ Ext.onReady(function()
                                                 ,handler : function(bot)
                                                 {
                                                     bot.up('window').destroy();
-                                                    me.up('window').down('[name=CDAGENTE]').focus();
+                                                    
+                                                    var agenteCmp = me.up('window').down('[name=CDAGENTE]');
+                                                    
+                                                    _setValueCampoAgente(agenteCmp,json.params.CDAGENTE);
+                                                    
                                                     estadoCmp.setValue('M');
                                                 }
                                             }
