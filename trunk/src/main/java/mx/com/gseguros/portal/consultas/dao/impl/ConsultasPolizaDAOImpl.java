@@ -308,6 +308,39 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<SuplementoVO> obtieneHistoricoPolizaAsegurado(PolizaAseguradoVO polizaAsegurado) throws Exception {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmpoliex_i", polizaAsegurado.getNmpoliex());
+		params.put("pv_cdunieco_i", polizaAsegurado.getCdunieco());
+		params.put("pv_cdramo_i"  , polizaAsegurado.getCdramo());
+		params.put("pv_nmpoliza_i", polizaAsegurado.getNmpoliza());
+		params.put("pv_ramo_i"    , polizaAsegurado.getDsramo());
+		params.put("pv_cdsisrol_i", polizaAsegurado.getCdsisrol() );
+		params.put("pv_dsperson"  , polizaAsegurado.getNombreAsegurado());
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaSuplementosAseguradoSP(getDataSource()), params);
+		return (List<SuplementoVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ConsultaSuplementosAseguradoSP extends StoredProcedure {
+		protected ConsultaSuplementosAseguradoSP(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
+			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i",OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsperson", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new SuplementoMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<SuplementoVO> obtieneHistoricoPolizaCorto(String sucursal, String producto, String polizacorto, String cdsisrol ) 
 			throws Exception{
 		
