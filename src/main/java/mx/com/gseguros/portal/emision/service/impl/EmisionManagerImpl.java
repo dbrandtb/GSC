@@ -173,4 +173,27 @@ public class EmisionManagerImpl implements EmisionManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	@Deprecated
+	public void actualizaNmsituaextMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac 
+			,String nmsuplem
+			,String nmsituaext
+			)throws Exception
+	{
+		cotizacionDAO.actualizaNmsituaextMpolisit(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsituac
+				,nmsuplem
+				,nmsituaext
+				);
+	}
 }

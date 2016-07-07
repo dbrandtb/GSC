@@ -764,4 +764,14 @@ public interface CotizacionDAO {
 			String nmsuplem,
 			String cdtipsit,
 			String valor)throws Exception;
+	
+	public void actualizaNmsituaextMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac 
+			,String nmsuplem
+			,String nmsituaext
+			)throws Exception;
 }

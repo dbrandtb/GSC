@@ -38,8 +38,6 @@ import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
-import com.informix.msg.util_en_US;
-
 public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionDAO
 {
 	private final static Logger logger = Logger.getLogger(CotizacionDAOImpl.class);
@@ -7740,6 +7738,46 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizaNmsituaextMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac 
+			,String nmsuplem
+			,String nmsituaext
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco"   , cdunieco);
+		params.put("cdramo"     , cdramo);
+		params.put("estado"     , estado);
+		params.put("nmpoliza"   , nmpoliza);
+		params.put("nmsituac"   , nmsituac);
+		params.put("nmsuplem"   , nmsuplem);
+		params.put("nmsituaext" , nmsituaext);
+		ejecutaSP(new ActualizaNmsituaextMpolisitSP(getDataSource()),params);
+	}
+	
+	protected class ActualizaNmsituaextMpolisitSP extends StoredProcedure
+	{
+		protected ActualizaNmsituaextMpolisitSP(DataSource dataSource)
+		{
+			super(dataSource,"P_ACT_NMSITUAEXT_MPOLISIT");
+			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"	    , OracleTypes.VARCHAR));	
+			declareParameter(new SqlParameter("nmpoliza"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituaext"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

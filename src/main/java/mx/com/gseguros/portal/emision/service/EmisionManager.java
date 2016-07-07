@@ -28,4 +28,15 @@ public interface EmisionManager
 	*/
 
 	public void getActualizaCuadroComision(Map<String, Object> paramsPoliage)throws Exception;
+	
+	@Deprecated
+	public void actualizaNmsituaextMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac 
+			,String nmsuplem
+			,String nmsituaext
+			)throws Exception;
 }
