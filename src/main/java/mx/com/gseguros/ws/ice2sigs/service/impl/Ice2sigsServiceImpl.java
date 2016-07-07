@@ -634,10 +634,6 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				
 			} catch (Exception e1) {
 				logger.error("Error en llamar al PL de obtencion de ejecutaWSdireccionClienteGeneral",e1);
-				/**
-				 * �QUE SE DEBE DE HACER?
-				 */
-				
 				return false;
 			}	
 			
@@ -683,7 +679,44 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				if (Estatus.EXITO.getCodigo() != direccionRespuesta.getCodigo() 
 						&& Estatus.LLAVE_DUPLICADA.getCodigo() != direccionRespuesta.getCodigo()) {
 					logger.error("Error al guardar domicilio: "+direccionCliIt);
-					return false;
+					
+					if(Estatus.LLAVE_INEXISTENTE.getCodigo() == direccionRespuesta.getCodigo() 
+							&& Constantes.UPDATE_MODE.equalsIgnoreCase(direccionCliIt.get("OPERACION"))){
+
+						//Reintenta la operacion en modo INSERT
+						try{
+							resultWS = ejecutaDomicilioClienteGeneralGS(Ice2sigsService.Operacion.INSERTA, direccionCliente);
+							direccionRespuesta = (DirCliRespuesta) resultWS.getResultadoWS();
+							
+						}catch(WSException e){
+							logger.error("Error al ejecutar WSdireccionClienteGeneral cdperson modo Reintenta INSERTA: " + cdperson , e);
+							logger.error("Error al guardar domicilio: "+direccionCliIt);
+							logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
+							return false;
+//							if (Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo()){
+//								try {
+//									kernelManager.movBitacobro(
+//											(String) params.get("pv_cdunieco_i"),
+//											(String) params.get("pv_cdramo_i"),
+//											(String) params.get("pv_estado_i"),
+//											(String) params.get("pv_nmpoliza_i"), 
+//											(String) params.get("pv_nmsuplem_i"), 
+//											Ice2sigsService.TipoError.ErrWScliCx.getCodigo(), 
+//											"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
+//											usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteGeneralGS",
+//											e.getPayload(), null);
+//								} catch (Exception e1) {
+//									logger.error("Error al insertar en bitacora", e1);
+//								}
+//							}
+							
+						}catch (Exception e){
+							logger.error("Error al ejecutar WSdireccionClienteGeneral cdperson modo Reintenta INSERTA: " + cdperson , e);
+							return false;
+						}
+					}else{
+						return false;
+					}
 					
 //					try {
 //						kernelManager.movBitacobro(
