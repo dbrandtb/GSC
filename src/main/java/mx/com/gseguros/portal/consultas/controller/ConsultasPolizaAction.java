@@ -276,14 +276,23 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		try {
 			
 //			groupTipoBusqueda
-			
-			if(params.containsKey("tipoBusqueda") && StringUtils.isNotBlank(params.get("tipoBusqueda")) && "5".equals(params.get("tipoBusqueda"))){
-				datosSuplemento = consultasPolizaManager.obtieneHistoricoPolizaCorto(params.get("sucursal"), params.get("producto"), params.get("numpolizacorto"), params.get("cdsisrol"));
-			}else{				
-				PolizaAseguradoVO poliza = new PolizaAseguradoVO();
+			PolizaAseguradoVO poliza = new PolizaAseguradoVO();
+			if(params.containsKey("tipoBusqueda") && StringUtils.isNotBlank(params.get("tipoBusqueda")) && "5".equals(params.get("tipoBusqueda"))){				
+				poliza.setCdunieco(params.get("sucursal"));
+				poliza.setCdramo(params.get("producto"));
+				poliza.setNmpoliza(params.get("numpolizacorto"));
+				poliza.setCdsisrol(params.get("cdsisrol"));
+				poliza.setNombreAsegurado(params.get("nombre"));
+				if(poliza.getNombreAsegurado().isEmpty()){
+					datosSuplemento = consultasPolizaManager.obtieneHistoricoPolizaCorto(poliza.getCdunieco(), poliza.getCdramo(), poliza.getNmpoliza(), poliza.getCdsisrol());
+				}else{
+					datosSuplemento = consultasPolizaManager.obtieneHistoricoPoliza(poliza);
+				}
+			}else{
 				poliza.setIcodpoliza(params.get("icodpoliza"));
 				poliza.setNmpoliex(params.get("nmpoliex"));
 				poliza.setCdsisrol(params.get("cdsisrol"));
+				poliza.setNombreAsegurado(params.get("nombre"));
 				datosSuplemento = consultasPolizaManager.obtieneHistoricoPoliza(poliza);
 			}
 			logger.debug(Utils.log("datos suplemento",datosSuplemento));

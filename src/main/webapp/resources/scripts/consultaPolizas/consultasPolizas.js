@@ -904,6 +904,7 @@ Ext.onReady(function() {
 		            storeAsegurados.getProxy().setExtraParam('params.familia', btn.up('grid').down('[name=filtrarFam]').getValue());
 		            storeAsegurados.getProxy().setExtraParam('params.nombre', btn.up('grid').down('textfield[name=filtrarAseg]').getValue());
 		            storeAsegurados.getProxy().setExtraParam('params.cdperson', btn.up('grid').down('textfield[name=filtrarCveAseg]').getValue());
+		            debug('cdperson','params.cdperson', btn.up('grid').down('textfield[name=filtrarCveAseg]').getValue());
 		            debug('despues de asignar valores', storeAsegurados.getProxy().extraParams);
 		            //storeAsegurados.load();
 		            storeAsegurados.loadPage(1);
@@ -1041,7 +1042,9 @@ Ext.onReady(function() {
                     windowPolizas.close();
                     // Recargar store con busqueda de historicos de la poliza seleccionada  
                    // storeAsegurados.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();
-                    cargaStoreSuplementos(formBusqueda.getValues());
+                    var params = formBusqueda.getValues();                    
+                    params['params.nombre'] = rowPolizaSelected.data['nombreAsegurado'];                    
+                    cargaStoreSuplementos(params);
                 }else{
                     showMessage('Aviso', 'Seleccione un registro', Ext.Msg.OK, Ext.Msg.INFO);
                 }
@@ -1256,7 +1259,7 @@ Ext.onReady(function() {
             colspan:2,
             collapsible:true,
             width:990,
-            height:120,
+            height:90,
             items: [
                 {
                     xtype: 'form',
@@ -1287,23 +1290,34 @@ Ext.onReady(function() {
                             		Ext.getCmp('subpanelBusquedas').query('panel').forEach(function(c){c.hide();});
                                     this.up('form').getForm().findField('params.rfc').setValue('');
                                     this.up('form').getForm().findField('params.cdperson').setValue('');
-                                    this.up('form').getForm().findField('params.nombre').setValue('');                                    
-                                    console.log('newValue', newValue);
-                                    
+                                    this.up('form').getForm().findField('params.nombre').setValue('');
+                                    var nombreAsegurado = Ext.getCmp('nombreAsegurado');
+                                    var buscarAsegurado = Ext.getCmp('buscarAsegurado');
+                                    console.log('newValue', newValue);                                    
                                     switch (newValue) {
                                         case 1:
+                                            nombreAsegurado.setVisible(true);
+                                            buscarAsegurado.setVisible(true);
                                             Ext.getCmp('subpanelBusquedaGral').show();
                                             break;
                                         case 2:
+                                        	nombreAsegurado.setVisible(false);
+                                            buscarAsegurado.setVisible(false);
                                             Ext.getCmp('subpanelBusquedaRFC').show();
                                             break;
                                         case 3:
+                                            nombreAsegurado.setVisible(false);
+                                            buscarAsegurado.setVisible(false);
                                             Ext.getCmp('subpanelBusquedaCodigoPersona').show();
                                             break;
                                         case 4:
+                                            nombreAsegurado.setVisible(false);
+                                            buscarAsegurado.setVisible(false);
                                             Ext.getCmp('subpanelBusquedaNombre').show();
                                             break;
                                         case 5:
+                                        	nombreAsegurado.setVisible(true);
+                                            buscarAsegurado.setVisible(true);
                                             Ext.getCmp('subpanelBusquedaPolCorto').show();
                                             break;
                                     }
@@ -1518,6 +1532,7 @@ Ext.onReady(function() {
                                         // Busqueda por Datos Generales de la poliza:
                                         if(!formBusqueda.findField('params.nmpoliex').isValid()){
                                             showMessage('', _MSG_NMPOLIEX_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
+                                            panelBusqueda.setLoading(false);
                                             return;
                                         }
                                         debug('busqueda2 ',formBusqueda.getValues());
@@ -1528,6 +1543,7 @@ Ext.onReady(function() {
                                         // Busqueda de polizas por RFC:
                                         if(!formBusqueda.findField('params.rfc').isValid()){
                                             showMessage('', _MSG_RFC_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
+                                            panelBusqueda.setLoading(false);
                                             return;
                                         } 
                                         cargaPolizasAsegurado(formBusqueda, btn);
@@ -1537,6 +1553,7 @@ Ext.onReady(function() {
                                         // Busqueda de polizas por CDPERSON:
                                         if(!formBusqueda.findField('params.cdperson').isValid()){
                                             showMessage('', _MSG_CDPERSON_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
+                                            panelBusqueda.setLoading(false);
                                             return;
                                         }
                                         cargaPolizasAsegurado(formBusqueda, btn);
@@ -1547,6 +1564,7 @@ Ext.onReady(function() {
                                         // Busqueda de polizas por nombre:
                                         if(!formBusqueda.findField('params.nombre').isValid()){
                                             showMessage('', _MSG_NOMBRE_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
+                                            panelBusqueda.setLoading(false);
                                             return;
                                         }
                                         cargaPolizasAsegurado(formBusqueda, btn);
@@ -1557,6 +1575,7 @@ Ext.onReady(function() {
                                         // Busqueda de polizas por numero corto:
                                    		if(!formBusqueda.findField('params.sucursal').isValid() || !formBusqueda.findField('params.producto').isValid() || !formBusqueda.findField('params.numpolizacorto').isValid()){
                                             mensajeWarning('Llene los datos requeridos.');
+                                            panelBusqueda.setLoading(false);
                                             return;
                                         }                                        
                                        // debug('storeSuplementos',storeSuplementos.getAt(0).get('switchConvenios'));
@@ -1579,13 +1598,39 @@ Ext.onReady(function() {
         {
             title:'HIST\u00D3RICO DE MOVIMIENTOS',
             width:990,
-            height:150,
+            height:220,
             colspan:2,
             autoScroll : true,
             collapsible: true,
             items : [
                 gridSuplementos
-            ]
+            ],
+            tbar: [
+                   {
+                	   xtype      : 'textfield',
+                	   fieldLabel : '<div style="color: white">Nombre</div>',
+//                	   style      : 'margin:5px',
+//                	   labelWidth : 100,
+//                       width      : 300,
+                       heigth	  : 10,
+                       maxLength  : 50,
+                       id		  : 'nombreAsegurado'
+                   },
+                   {
+                	   xtype   : 'button', 
+                	   text    : 'Buscar',
+                	   style   : 'margin:5px',
+                	   icon    : _CONTEXT+'/resources/fam3icons/icons/zoom.png',
+                	   id      : 'buscarAsegurado',
+                       handler : function(){
+                           var formBusqueda = panelBusqueda.down('form').getForm();
+                           var params = formBusqueda.getValues();
+                           params['params.nombre'] = Ext.getCmp('nombreAsegurado').getValue();                    
+                           debug('params',params);
+                           cargaStoreSuplementos(params);
+                    	 }   
+                   }
+                  ]
         },
         {
             //title:
@@ -1624,7 +1669,7 @@ Ext.onReady(function() {
     */
     function cargaStoreSuplementos(params){
         
-        //debug('Params busqueda de suplemento: ',params);
+        debug('Params busqueda de suplemento: ',params);
         
         storeSuplementos.load({
             params: params,

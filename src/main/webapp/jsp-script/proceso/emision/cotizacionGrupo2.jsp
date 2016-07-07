@@ -5746,8 +5746,8 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                             	   ,errorSummary : false
                             	   }) : null
                             	   ,{
-           							ptype       : 'pagingselectpersist'
-            							,pluginId   : 'pagingselectasegurados'
+                            		   ptype       : 'pagingselectpersist'
+                            		   ,pluginId   : 'pagingselectasegurados'
             						}
                             	   ]
                 ,tbar       :

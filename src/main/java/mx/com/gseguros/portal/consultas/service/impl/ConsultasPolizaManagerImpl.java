@@ -85,11 +85,15 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	public List<SuplementoVO> obtieneHistoricoPoliza(
 			PolizaAseguradoVO polizaAsegurado) throws Exception {
 		
-		List<SuplementoVO> suplementos;  
+		List<SuplementoVO> suplementos;
 		
 		// Si iCodPoliza viene vacio, es información de ICE, sino es de SISA:
 //		if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza())){
-			suplementos = consultasPolizaDAOICE.obtieneHistoricoPoliza(polizaAsegurado);
+		if(polizaAsegurado.getNombreAsegurado().isEmpty()){
+			suplementos = consultasPolizaDAOICE.obtieneHistoricoPoliza(polizaAsegurado);			
+		}else{
+			suplementos = consultasPolizaDAOICE.obtieneHistoricoPolizaAsegurado(polizaAsegurado);
+		}
 //		} else {
 //			suplementos = consultasPolizaDAOSISA.obtieneHistoricoPoliza(polizaAsegurado);
 //		}

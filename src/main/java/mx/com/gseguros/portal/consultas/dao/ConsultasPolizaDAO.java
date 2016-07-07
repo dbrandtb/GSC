@@ -71,6 +71,15 @@ public interface ConsultasPolizaDAO {
 	public List<SuplementoVO> obtieneHistoricoPoliza(PolizaAseguradoVO polizaAsegurado) throws Exception;
 	
 	/**
+	 * recupera historico de suplementos en los que
+	 * se encuentra el asegurado insertado
+	 * @param polizaAsegurado
+	 * @return
+	 * @throws Exception
+	 */
+	public List<SuplementoVO> obtieneHistoricoPolizaAsegurado(PolizaAseguradoVO polizaAsegurado) throws Exception;
+	
+	/**
 	 * Obtiene el historial de una poliza por medio de numero de poliza corto
 	 * @param sucursal
 	 * @param producto
