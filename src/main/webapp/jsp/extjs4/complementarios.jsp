@@ -199,55 +199,39 @@
           		accordion.setActiveTab(comp);
           	}
             
-//             Ext.Ajax.request(
-//             	    {
-//             	        url     : _URL_urlCargarTvalosit
-//             	        ,params :
-//             	        {
-//             	            'smap1.cdunieco'  : inputCdunieco
-//             	            ,'smap1.cdramo'   : inputCdramo
-//             	            ,'smap1.estado'   : inputEstado
-//             	            ,'smap1.nmpoliza' : inputNmpoliza
-//             	            ,'smap1.nmsituac' : '1'
-//             	        }
-//             	        ,success : function(response)
-//             	        {
-//             	            var json=Ext.decode(response.responseText);
-//             	            debug('### tvalosit:',json);
-//             	            if(json.exito)
-//             	            {
-//             	                var form = _fieldById('_p29_adicionalesForm');
-//             	                for(var i in json.smap1)
-//             	                {
-//             	                    var item = _fieldByName(i,form,true);
-//             	                    if(item)
-//             	                    {
-//             	                        item.setValue(json.smap1[i]);
-//             	                        if(_p29_smap1.cdramo+'x'=='5x')
-//             	                        {
-//             	                            if(item.fieldLabel=='CONDUCTOR'&&Ext.isEmpty(json.smap1[i]))
-//             	                            {
-//             	                                item.setValue(json.smap1['parametros.pv_otvalor15']);
-//             	                            }
-//             	                            _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
-//             	                            if(_p29_validaSeguro =="S"){
-//             	                                _fieldById('_p29_BeneficiarioPanel').show();
-//             	                            }else{
-//             	                                _fieldById('_p29_BeneficiarioPanel').hide();
-//             	                            }
-//             	                        }
-//             	                    }
-//             	                }
-
-//             	                _p29_loadCallback();
-//             	            }
-//             	            else
-//             	            {
-//             	                mensajeError(json.respuesta);
-//             	            }
-//             	        }
-//             	        ,failure : errorComunicacion
-//             	    });
+            Ext.Ajax.request(
+            	    {
+            	        url     : _URL_urlCargarTvalosit
+            	        ,params :
+            	        {
+            	            'smap1.cdunieco'  : inputCdunieco
+            	            ,'smap1.cdramo'   : inputCdramo
+            	            ,'smap1.estado'   : inputEstado
+            	            ,'smap1.nmpoliza' : inputNmpoliza
+            	            ,'smap1.nmsituac' : '1'
+            	        }
+            	        ,success : function(response)
+            	        {
+            	            var json=Ext.decode(response.responseText);
+            	            debug('### tvalosit:',json);
+            	            if(json.exito)
+            	            {
+  	                            var _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
+  	                            if(_p29_validaSeguro =="S")
+  	                            {
+  	                                _fieldById('_BeneficiarioPanel').show();
+  	                            }
+  	                            else
+  	                            {
+  	                                _fieldById('_BeneficiarioPanel').hide();
+  	                            }
+            	            }
+            	            else
+            	            {
+            	                mensajeError(json.respuesta);
+            	            }
+            	        }
+            	    });
             
 function _datComTurnarSuscripcion()
 {
@@ -813,7 +797,7 @@ function _datComTurnarSuscripcion()
                                 {
 		                        	itemId      : '_BeneficiarioPanel'
                                     ,height     : 300
-                                    ,autoScroll : true
+                                    ,autoScroll : false
                                     ,hidden     : false
                                     ,loader:
                                     {
