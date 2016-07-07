@@ -580,7 +580,7 @@ Ext.onReady(function(){
             Ext.Msg.show({
                 title:'Aviso',
                 icon: Ext.Msg.WARNING,
-                msg: 'No se encotr&oacute; domicilio anteior',
+                msg: 'No se encotr&oacute; domicilio anterior',
                 buttons: Ext.Msg.OK
             });
         }
