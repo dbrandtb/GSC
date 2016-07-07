@@ -224,36 +224,59 @@
 
     function rendererParentescop2(v)
     {
-        var leyenda='';
-        if(typeof v == 'string')
-                   //tengo solo el indice
+        debug('>rendererParentescop2 args:',arguments,'.');
+        var leyenda = '';
+        try
         {
-            //window.console&&console.log('string:');
-            storeParentescop2.each(function(rec){
-                //window.console&&console.log('iterando...',rec.data);
-                if(rec.data.key==v)
+            if(!Ext.isEmpty(v))
+            {
+                storeParentescop2.each(function(rec)
                 {
-                    leyenda=rec.data.value; 
-                }
-            });
-            //window.console&&console.log(leyenda);
+                    debug('buscando',v,'en',rec.data,'.');
+                    if(''+rec.get('key') === ''+v)
+                    {
+                        leyenda = rec.get('value');
+                    }
+                });
+            }
+            
+            /*
+	        if(typeof v == 'string')
+	                   //tengo solo el indice
+	        {
+	            //window.console&&console.log('string:');
+	            storeParentescop2.each(function(rec){
+	                //window.console&&console.log('iterando...',rec.data);
+	                if(rec.data.key==v)
+	                {
+	                    leyenda=rec.data.value; 
+	                }
+	            });
+	            //window.console&&console.log(leyenda);
+	        }
+	        else
+	        //tengo objeto que puede venir como Generic u otro mas complejo
+	        {
+	            //window.console&&console.log('object:');
+	            if(v.key&&v.value)
+	            //objeto Generic
+	            {
+	                leyenda=v.value;
+	            }
+	            else
+	            {
+	                leyenda=v.data.value;
+	            }
+	            //window.console&&console.log(leyenda);
+	        }
+	        //console.log('return',leyenda);
+	        */
         }
-        else
-        //tengo objeto que puede venir como Generic u otro mas complejo
+        catch(e)
         {
-            //window.console&&console.log('object:');
-            if(v.key&&v.value)
-            //objeto Generic
-            {
-                leyenda=v.value;
-            }
-            else
-            {
-                leyenda=v.data.value;
-            }
-            //window.console&&console.log(leyenda);
+            leyenda = '- ERROR -';
+            debugError('error en rendererParentescop2:',e,'.');
         }
-        //console.log('return',leyenda);
         return leyenda;
     }
     
@@ -1191,7 +1214,7 @@ debug("validarYGuardar flag:2");
             queryMode:'local',
             displayField: 'value',
             valueField: 'key',
-            allowBlank:false,
+            allowBlank:true,
             editable:false
         });
         
@@ -1843,11 +1866,10 @@ debug("validarYGuardar flag:2");
                             console.log("e.column.xtype",e.column.xtype);
 //                          e.column.xtype !== 'actioncolumn';
                             return e.column.xtype !== 'actioncolumn';//para que no edite sobre actioncolumn
-                        },
+                        }/*,
                         beforecellclick: function( vwTable, td, cellIndex, record, tr, rowIndex, e, eOpts ){
                             if(record.get("estomador"))return true; //Deja editar cuando un conrtratante es agregado.
-                            
-                        }
+                        }*/
                     }/*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/
 
                 });

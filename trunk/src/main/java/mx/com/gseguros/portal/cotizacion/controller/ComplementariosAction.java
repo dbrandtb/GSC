@@ -970,17 +970,19 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(new Item("header", "Estado Civil"))
 					.add(new Item("dataIndex", "cdestciv"))
 					.add(new Item("width", 100))
+					.add(new Item("hidden", true))
 					.add(Item.crear("renderer","rendererEstcivp2").setQuotes(""))
 					.add(Item.crear("editor","editorEstcivp2").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
-					.add(new Item("header", "N° de Socio"))
+					.add(new Item("header", "No. de Socio"))
 					.add(new Item("dataIndex", "numsoc"))
 					.add(new Item("width", 100))
+					.add(new Item("hidden", true))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("name","numsoc")
-							.add("allowBlank",false)
+							.add("allowBlank",true)
 							.add("maxLength",6)
 						)
 					);
@@ -988,21 +990,23 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(new Item("header", "Clave Familiar"))
 					.add(new Item("dataIndex", "clvfam"))
 					.add(new Item("width", 100))
+					.add(new Item("hidden", true))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("name","clvfam")
-							.add("allowBlank",false)
+							.add("allowBlank",true)
 							.add("maxLength",2)
 						)
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
-					.add(new Item("header", "Ocupación"))
+					.add(new Item("header", "Ocupaci\u00f3n"))
 					.add(new Item("dataIndex", "ocup"))
 					.add(new Item("width", 100))
+					.add(new Item("hidden", true))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("name","ocup")
-							.add("allowBlank",false)
+							.add("allowBlank",true)
 						)
 					);
 			
@@ -1388,13 +1392,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 			for(Map<String,Object>aseg:list1)
 			{
 				
-				String situaext = null, ns =null, cf =null;
+				String nmsituaext = null, ns =null, cf =null;
 				String clvfam   = (String) aseg.get("clvfam");
 				String numsoc   = (String) aseg.get("numsoc");
 				String nmsituac = (String) aseg.get("nmsituac");
 				
 				
-				//Número de socio y Clave Familiar, para el atributo SITUAEXT
+				//Nï¿½mero de socio y Clave Familiar, para el atributo SITUAEXT
 				try{
 					ns = StringUtils.rightPad(numsoc, 6, "0");
 					cf = StringUtils.leftPad(clvfam, 2, "0");
@@ -1403,23 +1407,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 
 				//NMSITUAEXT
-				situaext = ns + "-" + cf;
+				nmsituaext = ns + "-" + cf;
 				
-				logger.debug(Utils.log("situaext ->"+situaext));
-				
-				Map<String,String>paramsObtenerDatosMpolisit=new HashMap<String,String>();
-				paramsObtenerDatosMpolisit.put("pv_cdunieco_i" , map1.get("pv_cdunieco"));
-				paramsObtenerDatosMpolisit.put("pv_cdramo_i"   , map1.get("pv_cdramo"));
-				paramsObtenerDatosMpolisit.put("pv_estado_i"   , map1.get("pv_estado"));
-				paramsObtenerDatosMpolisit.put("pv_nmpoliza_i" , map1.get("pv_nmpoliza"));
-				Map<String,String>respuestaObtenerDatosMpolisit=endososManager.obtieneDatosMpolisit(paramsObtenerDatosMpolisit);
-				String nmsituacNuevo=respuestaObtenerDatosMpolisit.get("pv_nmsituac_o");
-				String cdplan=respuestaObtenerDatosMpolisit.get("pv_cdplan_o");
+				logger.debug(Utils.log("situaext ->"+nmsituaext));
 				
 				Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 				String swExiper = (String)aseg.get("swexiper");
 				
-				nmsituac=nmsituacNuevo;
+				//nmsituac=nmsituacNuevo;
 		
 				if(StringUtils.isBlank(swExiper) || swExiper.equalsIgnoreCase("N")){
 				
@@ -1454,29 +1449,16 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug("#iteracion mov mpersonas "+i);
 					kernelManager.movMpersona(parametros);
 					
-					Map<String,Object>mapaPolisit=new HashMap<String,Object>(0);
-	                mapaPolisit.put("pv_cdunieco_i",    map1.get("pv_cdunieco"));
-	                mapaPolisit.put("pv_cdramo_i",      map1.get("pv_cdramo"));
-	                mapaPolisit.put("pv_estado_i",      map1.get("pv_estado"));
-	                mapaPolisit.put("pv_nmpoliza_i",    map1.get("pv_nmpoliza"));
-	                mapaPolisit.put("pv_nmsituac_i",    nmsituac);
-	                mapaPolisit.put("pv_nmsuplem_i",    "0");
-	                mapaPolisit.put("pv_status_i",      "V");
-	                mapaPolisit.put("pv_cdtipsit_i",    map1.get("cdtipsit")); 
-	                mapaPolisit.put("pv_swreduci_i",    null);
-	                mapaPolisit.put("pv_cdagrupa_i",    "1");
-	                mapaPolisit.put("pv_cdestado_i",    "0");
-	                mapaPolisit.put("pv_fefecsit_i",    calendarHoy.getTime()); 
-	                mapaPolisit.put("pv_fecharef_i",    calendarHoy.getTime());
-	                mapaPolisit.put("pv_cdgrupo_i",     null);
-	                mapaPolisit.put("pv_nmsituaext_i",  situaext);
-	                mapaPolisit.put("pv_nmsitaux_i",    null);
-	                mapaPolisit.put("pv_nmsbsitext_i",  null);
-	                mapaPolisit.put("pv_cdplan_i",      cdplan);
-	                mapaPolisit.put("pv_cdasegur_i",    "30");
-	                mapaPolisit.put("pv_accion_i",      "I");
-	                logger.debug(Utils.log("¬Mpolisit",mapaPolisit));
-	                kernelManager.insertaPolisit(mapaPolisit);
+					//se actualiza situaext
+					emisionManager.actualizaNmsituaextMpolisit(
+							map1.get("pv_cdunieco")
+							,map1.get("pv_cdramo")
+							,map1.get("pv_estado")
+							,map1.get("pv_nmpoliza")
+							,nmsituac
+							,"0"
+							,nmsituaext
+							);
 				}
 				
 				String cdRolAseg = (String)aseg.get("cdrol");
