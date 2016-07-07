@@ -1179,13 +1179,26 @@ public class PersonasAction extends PrincipalCoreAction
 		    	ClienteGeneralRespuesta clientesRes = null;
 		    	ClienteGeneralRespuesta clientesRes2 = null;
 		    	
-		    	boolean sinPrimerCodigo = StringUtils.isBlank(smap1.get("codigoExterno"));
-		    	boolean sinSegundoCodigo = StringUtils.isBlank(smap1.get("codigoExterno2"));
+		    	boolean tienePrimerCompania = StringUtils.isNotBlank(smap1.get("codigoExterno"));
+		    	boolean tieneSegundaCompania = StringUtils.isNotBlank(smap1.get("codigoExterno2"));
 		    	
-		    	if(StringUtils.isBlank(smap1.get("codigoExterno"))){
+		    	if(tienePrimerCompania){
+		    	     //Actualiza cliente en primer compania
+		    		 clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, null, false);
+		    		 
+		    		 //Actualiza cliente en segunda compania
+		    		 if(tieneSegundaCompania){
+		    			 ClienteGeneral clienteGeneral2 = new ClienteGeneral();
+		    			 clienteGeneral2.setClaveCia((saludDanios.equalsIgnoreCase("S"))?"D":"S");
+		 		    	 clienteGeneral2.setNumeroExterno(smap1.get("codigoExterno2"));
+		 		    	 clientesRes2 = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral2, null, false);
+		    		 }
+		    	}else {
+		    		 //Inserta cliente en primer compania
 		    		 clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.INSERTA, clienteGeneral, null, false);
 		    		 
-		    		 if(clientesRes != null && (Estatus.EXITO.getCodigo() == clientesRes.getCodigo()) && StringUtils.isNotBlank(smap1.get("codigoExterno2"))){
+		    		 //Actualiza cliente en segunda compania
+		    		 if(tieneSegundaCompania){
 		    			 ClienteGeneral clienteGeneral2 = new ClienteGeneral();
 		    			 clienteGeneral2.setClaveCia((saludDanios.equalsIgnoreCase("S"))?"D":"S");
 		 		    	 clienteGeneral2.setNumeroExterno(smap1.get("codigoExterno2"));
@@ -1193,30 +1206,12 @@ public class PersonasAction extends PrincipalCoreAction
 		    			 
 		    		 }
 		    		 
-		    	}else {
-		    		 clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, null, false);
-		    		 
-		    		 if(clientesRes != null && (Estatus.EXITO.getCodigo() == clientesRes.getCodigo()) && StringUtils.isNotBlank(smap1.get("codigoExterno2"))){
-		    			 ClienteGeneral clienteGeneral2 = new ClienteGeneral();
-		    			 clienteGeneral2.setClaveCia((saludDanios.equalsIgnoreCase("S"))?"D":"S");
-		 		    	 clienteGeneral2.setNumeroExterno(smap1.get("codigoExterno2"));
-		 		    	 clientesRes2 = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, smap1.get("cdperson"), Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral2, null, false);
-		    			 
-		    		 }
 		    	}
 		    	
-		    	if(clientesRes == null || (Estatus.EXITO.getCodigo() != clientesRes.getCodigo())){
-		    		
-		    		logger.debug("Error en WS, exito false");
-		    		exito           = false;
-					respuesta       = "No se encontr\u00F3 la persona al Guardar. Consulte a soporte.";
-					respuestaOculta = "No se encontr\u00F3 la persona al Guardar. Consulte a soporte.";
-					slist1          = null;
-					
-		    		return SUCCESS;
-		    	}else{
+		    	if(clientesRes != null && (Estatus.EXITO.getCodigo() == clientesRes.getCodigo())){
+		    	
 		    		exito = true;
-		    		if(StringUtils.isBlank(smap1.get("codigoExterno"))){
+		    		if(!tienePrimerCompania){
 		    			smap1.put("codigoExterno", clientesRes.getClientesGeneral()[0].getNumeroExterno());
 		    			logger.debug("Codigo externo obtenido: " + clientesRes.getClientesGeneral()[0].getNumeroExterno());
 		    			
@@ -1227,21 +1222,30 @@ public class PersonasAction extends PrincipalCoreAction
 			    		 
 			    		 personasManager.actualizaCodigoExterno(params);
 		    		}else{
-		    			logger.debug("Codigo externo obtenido smap1: "+ smap1.get("codigoExterno"));
+		    			logger.debug("Codigo externo actualizado smap1: "+ smap1.get("codigoExterno"));
 		    		}
 		    		
+		    	}else{
+		    		
+		    		logger.debug("Error en WS, exito false");
+		    		exito           = false;
+					respuesta       = "No se encontr\u00F3 la persona al Guardar. Consulte a soporte.";
+					respuestaOculta = "No se encontr\u00F3 la persona al Guardar. Consulte a soporte.";
+					slist1          = null;
+					
+		    		return SUCCESS;
 		    	}
 		    	
 		    	boolean exitoDomicilios = true; 
 		    	if(clientesRes != null && (Estatus.EXITO.getCodigo() == clientesRes.getCodigo())){
-		    		exitoDomicilios = ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("cdperson"), saludDanios, saveList, updateList, sinPrimerCodigo, usuario);
+		    		exitoDomicilios = ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("cdperson"), saludDanios, saveList, updateList, !tienePrimerCompania, usuario);
 	    		 }
 		    	
 		    	if(clientesRes2 != null && (Estatus.EXITO.getCodigo() == clientesRes2.getCodigo())){
 		    		/**
 		    		 * TODO: Validar si necesita insertar las direcciones en el codigo de compania contrario
 		    		 */
-	    			 ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("cdperson"), (saludDanios.equalsIgnoreCase("S"))?"D":"S", saveList, updateList, sinSegundoCodigo, usuario);
+	    			 ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("cdperson"), (saludDanios.equalsIgnoreCase("S"))?"D":"S", saveList, updateList, !tieneSegundaCompania, usuario);
 	    		 }
 		    	
 		    	if(!exitoDomicilios){
