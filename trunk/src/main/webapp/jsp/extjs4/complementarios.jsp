@@ -199,6 +199,45 @@
           		accordion.setActiveTab(comp);
           	}
             
+            var ventanaBenef;
+            if(inputCdramo == 16)
+            {
+            	ventanaBenef =
+            		Ext.create('Ext.panel.Panel',
+                            {
+                                itemId      : '_BeneficiarioPanel'
+                                ,height     : 300
+                                ,autoScroll : false
+                                ,hidden     : inputCdramo != 16
+                                ,loader:
+                                {
+                                    url : urlPantallaBeneficiarios
+                                    ,params   :
+                                    {
+                                        'smap1.cdunieco'      : inputCdunieco
+                                        ,'smap1.cdramo'       : inputCdramo
+                                        ,'smap1.estado'       : inputEstado
+                                        ,'smap1.nmpoliza'     : inputNmpoliza
+                                        ,'smap1.nmsuplem'     : '1'
+                                        ,'smap1.nmsituac'     : '0'
+                                        ,'smap1.cdrolPipes'   : '3'
+                                        ,'smap1.cdtipsup'     : '1'
+                                        ,'smap1.ultimaImagen' : 'N'
+                                    }
+                                    ,autoLoad: inputCdramo == 16
+                                    ,scripts:true
+                                }
+                                ,listeners:
+                                {
+                                    afterrender:function(tab)
+                                    {
+                                        debug('afterrender tabPanelAsegurados');
+                                        tab.loader.load();
+                                    }
+                                }
+                            });
+            	
+            	
             Ext.Ajax.request(
             	    {
             	        url     : _URL_urlCargarTvalosit
@@ -219,11 +258,11 @@
   	                            var _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
   	                            if(_p29_validaSeguro =="S")
   	                            {
-  	                                _fieldById('_BeneficiarioPanel').show();
+  	                            	ventanaBenef.show();
   	                            }
   	                            else
   	                            {
-  	                                _fieldById('_BeneficiarioPanel').hide();
+  	                            	ventanaBenef.hide();
   	                            }
             	            }
             	            else
@@ -232,6 +271,7 @@
             	            }
             	        }
             	    });
+            }
             
 function _datComTurnarSuscripcion()
 {
@@ -793,39 +833,7 @@ function _datComTurnarSuscripcion()
 		                            },
 		                            <s:property value="items" />
 		                        })//VILS
-		                        ,Ext.create('Ext.panel.Panel',
-                                {
-		                        	itemId      : '_BeneficiarioPanel'
-                                    ,height     : 300
-                                    ,autoScroll : false
-                                    ,hidden     : false
-                                    ,loader:
-                                    {
-                                        url : urlPantallaBeneficiarios
-                                        ,params   :
-                                        {
-                                            'smap1.cdunieco'      : inputCdunieco
-                                            ,'smap1.cdramo'       : inputCdramo
-                                            ,'smap1.estado'       : inputEstado
-                                            ,'smap1.nmpoliza'     : inputNmpoliza
-                                            ,'smap1.nmsuplem'     : '1'
-                                            ,'smap1.nmsituac'     : '0'
-                                            ,'smap1.cdrolPipes'   : '3'
-                                            ,'smap1.cdtipsup'     : '1'
-                                            ,'smap1.ultimaImagen' : 'N'
-                                        }
-                                        ,autoLoad:true
-                                        ,scripts:true
-                                    }
-			                        ,listeners:
-		                            {
-		                                afterrender:function(tab)
-		                                {
-		                                    debug('afterrender tabPanelAsegurados');
-		                                    tab.loader.load();
-		                                }
-		                            }
-                                })
+		                        ,ventanaBenef
 		                    ],
 		                    buttons:
 		                    [
