@@ -2988,6 +2988,36 @@ function _0_cargarPoliza(cduniext,ramo,nmpoliex,cdusuari,tipoflot)
     }
 }
 
+function _0_atributoNacimientoContratante(combo)
+{
+    var val = 'S';
+    
+    if(combo != 'S')
+    {
+        val = combo.getValue();
+    }
+    
+    debug('_0_atributoNacimientoContratante val:',val,'.');
+    
+    if(val == 'S')
+        {
+            if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
+            {
+                _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=false;
+                _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').show();
+            }
+
+        }
+    else
+        {
+           if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
+           {
+                _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=true;
+                _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').hide();
+           }
+
+        }
+}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -3970,6 +4000,15 @@ Ext.onReady(function()
                         	'blur' : function(){ _0_cargarParametrizacionCoberturas();}
                         }
                        );
+        
+        _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').hide();
+        if(!Ext.isEmpty(_fieldByLabel('SEGURO DE VIDA',null,true)))
+        {
+            _fieldByLabel('SEGURO DE VIDA').on(
+                            {
+                                select : _0_atributoNacimientoContratante
+                            });
+        }
     }
     //fin [parche]
     
