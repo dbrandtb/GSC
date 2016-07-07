@@ -2208,7 +2208,6 @@ debug("validarYGuardar flag:2");
         gridPersonasp2.getView().headerCt.child("[dataIndex=estomador]").on({
             beforecheckchange: function(chkCol, rowIndex, checked, eOpts){
                 if(checked){
-                    alert('cambio 12');
                     var datosContr = obtieneDatosClienteContratante();
                     if(Ext.isEmpty(datosContr.cdperson)){
                         mensajeWarning('Primero debe de caputurar y guardar el Contratante.');
