@@ -110,14 +110,27 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 				}
 			}
 			
-			
 			//si cdperson es nulo y cdideper no, Importa el cliente y le crea un cdperson y default nmorddom 1
 			ManagerRespuestaSlistSmapVO resp = cotizacionManager.cotizar(
-					params.get("cdunieco"), params.get("cdramo"), params.get("cdtipsit"), 
-					params.get("cdusuari"), params.get("cdelemento"),
-					nmpoliza, feini, fefin, params.get("fesolici"), params.get("cdpersonCli"), params.get("nmorddomCli"), params.get("cdideperCli"),
-					noTarificar, conIncisos, list, params.containsKey("movil"),
-					tvalopol, params.get("cdagenteAux"), userVO);
+					params.get("cdunieco"),
+					params.get("cdramo"), 
+					params.get("cdtipsit"), 
+					params.get("cdusuari"), 
+					params.get("cdelemento"),
+					nmpoliza, 
+					feini, 
+					fefin, 
+					params.get("fesolici"),
+					params.get("cdpersonCli"), 
+					params.get("nmorddomCli"), 
+					params.get("cdideperCli"),
+					noTarificar, 
+					conIncisos, 
+					list, 
+					params.containsKey("movil"),
+					tvalopol, 
+					params.get("cdagenteAux"), 
+					userVO);
 			
 			// Se vacian los datos de entrada para no devolverlos de nuevo:
 			params = new HashMap<String, String>();

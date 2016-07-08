@@ -7781,4 +7781,100 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	public boolean validandoCoberturasPLan(
+			  String cdunieco
+     		 ,String cdramo
+     		 ,String estado //estado
+     		 ,String nmpoliza
+     		 ,String nmsuplem)throws Exception{
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************JOHAN PROCEDURE*********************************")
+				.append("\n************* PROCEDURE : P_COBERTURAS_PAQUETEO **************")
+				.append("\n****** cdunieco=").append(cdunieco)
+				.append("\n****** cdramo=").append(cdramo)
+				.append("\n****** estado=").append(estado)
+				.append("\n****** nmpoliza=").append(nmpoliza)
+				.append("\n****** nmsuplem=").append(nmsuplem)
+				.append("\n******************************************************")
+				.toString()
+				);
+		Map<String,Object> params = new LinkedHashMap<String,Object>();		
+		params.put("cdunieco", cdunieco);
+		params.put("cdramo",   cdramo);
+		params.put("estado",   estado);
+		params.put("nmpoliza", nmpoliza);
+		params.put("nmsuplem", nmsuplem);
+		Map<String,Object>     procResult = ejecutaSP(new validandoCoberturasPLan(getDataSource()), params);
+		String bandera = (String)procResult.get("pv_bandera_o");
+    	if(StringUtils.isNotBlank(bandera)&&bandera.equals("1"))
+    	{
+    		return true;
+    	}
+		else 
+		{
+			//return false;
+			return true;
+		}
+	}
+	
+	protected class validandoCoberturasPLan extends StoredProcedure
+	{
+		protected validandoCoberturasPLan(DataSource dataSource)
+		{
+			super(dataSource,"P_COBERTURAS_PAQUETE");
+			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"	  , OracleTypes.VARCHAR));	
+			declareParameter(new SqlParameter("nmpoliza"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_bandera_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String> obtenerCorreosReportarIncidenciasPorTipoSituacion(
+			String cdtipsit
+			)throws Exception,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdtipsit" , cdtipsit);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n**** P_OBTENER_CORREOS_X_SITUACION ******")
+				.append("\n**** CDTIPSIT=").append(params)
+				.append("\n*****************************************")
+				.toString()
+				);
+		Map<String,Object>procResult = ejecutaSP(new obtenerCorreosReportarIncidenciasPorTipoSituacion(getDataSource()), params);
+		String listaDatos = (String)procResult.get("pv_registro_o");
+		if(listaDatos.isEmpty())
+		{
+			throw new Exception("No se pudo cargar la poliza");
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	protected class obtenerCorreosReportarIncidenciasPorTipoSituacion extends StoredProcedure
+	{
+		protected obtenerCorreosReportarIncidenciasPorTipoSituacion(DataSource dataSource)
+		{
+			super(dataSource,"P_OBTENER_CORREOS_X_SITUACION");
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
