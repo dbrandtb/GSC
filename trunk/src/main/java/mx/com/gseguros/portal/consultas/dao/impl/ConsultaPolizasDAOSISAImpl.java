@@ -921,4 +921,10 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		return null;
 	}
 
+	@Override
+	public List<SuplementoVO> obtieneHistoricoPolizaAsegurado(PolizaAseguradoVO polizaAsegurado) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
