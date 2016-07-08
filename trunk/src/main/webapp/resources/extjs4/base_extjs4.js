@@ -2538,26 +2538,47 @@ function testTimeout(min) {
     });
 }
 
-function _flujoToParams(flujo)
+/**
+ *
+ * ESTA FUNCIONA CONVIERTE UN OBJETO FLUJO EN UN OBJETO CUYAS PROPIEDADES SON FLUJO.X, FLUJO.Y, FLUJO.Z ...
+ * SIRVE PARA ENVIAR UN FLUJO JAVASCRIPT A LA VARIABLE FLUJO DE LOS ACTION
+ * Sirve para mandarlo dentro de un form.submit como params
+ * o dentro de un Ext.Ajax.request como params
+ * Para enviarlo como jsonData no hace falta usar esta funcion
+ * El segundo parametro es un mapa de parametros (objeto) ya existente, es opcional
+ * si viene el segundo parametro entonces solo se le agregan a ese los
+ * datos del flujo
+ *
+ * Ejemplo: flujo  = { cdtipflu : 1 , cdflujomc : 2 , status : 10 ... }
+ *          salida = { 'flujo.cdtipflu' : 1 , 'flujo.cdflujomc' : 2 , 'flujo.status' : 10 ... }
+ */
+function _flujoToParams(flujo,paramsEntrada)
 {
-    var params =
+    debug('>_flujoToParams args:',arguments,'.');
+    
+    var params = {};
+    
+    if(!Ext.isEmpty(paramsEntrada)) //cuando vienen parametros de entrada se usan esos para agregar los nuevos
     {
-        'flujo.ntramite'   : flujo.ntramite
-        ,'flujo.status'    : flujo.status
-        ,'flujo.cdtipflu'  : flujo.cdtipflu
-        ,'flujo.cdflujomc' : flujo.cdflujomc
-        ,'flujo.webid'     : flujo.webid
-        ,'flujo.tipoent'   : flujo.tipoent
-        ,'flujo.claveent'  : flujo.claveent
-        ,'flujo.cdunieco'  : flujo.cdunieco
-        ,'flujo.cdramo'    : flujo.cdramo
-        ,'flujo.estado'    : flujo.estado
-        ,'flujo.nmpoliza'  : flujo.nmpoliza
-        ,'flujo.nmsituac'  : flujo.nmsituac
-        ,'flujo.nmsuplem'  : flujo.nmsuplem
-        ,'flujo.aux'       : flujo.aux
-    };
-    debug('_flujoToParams:',params);
+        params = paramsEntrada;
+    }
+    
+    params['flujo.ntramite']  = flujo.ntramite;
+    params['flujo.status']    = flujo.status;
+    params['flujo.cdtipflu']  = flujo.cdtipflu;
+    params['flujo.cdflujomc'] = flujo.cdflujomc;
+    params['flujo.webid']     = flujo.webid;
+    params['flujo.tipoent']   = flujo.tipoent;
+    params['flujo.claveent']  = flujo.claveent;
+    params['flujo.cdunieco']  = flujo.cdunieco;
+    params['flujo.cdramo']    = flujo.cdramo;
+    params['flujo.estado']    = flujo.estado;
+    params['flujo.nmpoliza']  = flujo.nmpoliza;
+    params['flujo.nmsituac']  = flujo.nmsituac;
+    params['flujo.nmsuplem']  = flujo.nmsuplem;
+    params['flujo.aux']       = flujo.aux;
+    
+    debug('<_flujoToParams salida:',params,'.');
     return params;
 }
 

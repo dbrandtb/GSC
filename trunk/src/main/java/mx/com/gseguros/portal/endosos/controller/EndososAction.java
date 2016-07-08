@@ -1048,15 +1048,16 @@ public class EndososAction extends PrincipalCoreAction
 		 */
 		this.session=ActionContext.getContext().getSession();
         UserVO usuario=(UserVO) session.get("USUARIO");
-		logger.debug(""
-				+ "\n##################################"
-				+ "\n##################################"
-				+ "\n###### guardarEndosoNombres ######"
-				+ "\n######                      ######"
-				);
-		logger.debug("omap1: "+omap1);
-		logger.debug("slist1: "+slist1);
-		try {
+		
+        logger.debug(Utils.log(
+				 "\n##################################"
+				,"\n###### guardarEndosoNombres ######"
+				,"\n###### omap1  = " , omap1
+				,"\n###### slist1 = " , slist1
+				,"\n###### flujo  = " , flujo
+				));
+		
+        try {
 			
 			String usuarioCaptura =  null;
 			
@@ -1286,12 +1287,13 @@ public class EndososAction extends PrincipalCoreAction
 			success=false;
 			error=ex.getMessage();
 		}
-		logger.debug(""
-				+ "\n######                      ######"
-				+ "\n###### guardarEndosoNombres ######"
-				+ "\n##################################"
-				+ "\n##################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoNombres ######"
+				,"\n##################################"
+				));
 		return SUCCESS;
 	}
 	/*////////////////////////////////////////////////*/
@@ -1303,13 +1305,13 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////////////////////*/
 	public String guardarEndosoNombresSimple() {
         
-		logger.debug(new StringBuilder()
-				.append("\n########################################")
-				.append("\n########################################")
-				.append("\n###### guardarEndosoNombresSimple ######")
-				.append("\n######                            ######").toString());
-		logger.debug(new StringBuilder("omap1: ").append(omap1).toString());
-		logger.debug(new StringBuilder("slist1: ").append(slist1).toString());
+		logger.debug(Utils.log(
+				 "\n########################################"
+				,"\n###### guardarEndosoNombresSimple ######"
+				,"\n###### omap1  = " , omap1
+				,"\n###### slist1 = " , slist1
+				,"\n###### flujo  = " , flujo
+				));
 		
 		// Se obtiene la sesion manualmente por el enableSMD de struts...xml:
 		this.session = ActionContext.getContext().getSession();
@@ -1418,11 +1420,15 @@ public class EndososAction extends PrincipalCoreAction
 			success = false;
 			error   = ex.getMessage();
 		}
-		logger.debug(new StringBuilder()
-				.append("\n######                            ######")
-				.append("\n###### guardarEndosoNombresSimple ######")
-				.append("\n########################################")
-				.append("\n########################################").toString());
+		
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoNombresSimple ######"
+				,"\n########################################"
+				));
+		
 		return SUCCESS;
 	}
 	/*////////////////////////////////////////////////*/
@@ -1450,13 +1456,14 @@ public class EndososAction extends PrincipalCoreAction
     ////// smap1.fecha_endoso           //////
 	/*//////////////////////////////////////*/
 	public String guardarEndosoClausulaPaso() {
-		logger.debug(""
-				+ "\n#######################################"
-				+ "\n#######################################"
-				+ "\n###### guardarEndosoClausulaPaso ######"
-				+ "\n######                           ######"
-				);
-		logger.debug("smap1: "+smap1);
+		
+		logger.debug(Utils.log(
+				 "\n#######################################"
+				,"\n###### guardarEndosoClausulaPaso ######"
+				,"\n###### smap1 = " , smap1
+				,"\n###### flujo = " , flujo
+				));
+		
 		try {
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			
@@ -1608,12 +1615,15 @@ public class EndososAction extends PrincipalCoreAction
 			success=false;
 			error=ex.getMessage();
 		}
-		logger.debug(""
-				+ "\n######                           ######"
-				+ "\n###### guardarEndosoClausulaPaso ######"
-				+ "\n#######################################"
-				+ "\n#######################################"
-				);
+		
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoClausulaPaso ######"
+				,"\n#######################################"
+				));
+		
 		return SUCCESS;
 	}
 	/*//////////////////////////////////////*/
@@ -1651,15 +1661,17 @@ public class EndososAction extends PrincipalCoreAction
     //////                                          //////
 	/*//////////////////////////////////////////////////*/
 	public String guardarEndosoDomicilio() {
-		logger.debug("\n#########################################"
-				+ "\n#########################################"
-				+ "\n###### guardar endoso de domicilio ######"
-				+ "\n######                             ######"
-				+ "\n######                             ######");
+		
+		logger.debug(Utils.log(
+				 "\n####################################"
+				,"\n###### guardarEndosoDomicilio ######"
+				,"\n###### smap1      = " , smap1
+				,"\n###### smap2      = " , smap2
+				,"\n###### parametros = " , parametros
+				,"\n###### flujo      = " , flujo
+				));
+		
 		try {
-			logger.debug("smap1: "+smap1);
-			logger.debug("smap2: "+smap2);
-			logger.debug("parametros: "+parametros);
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
 			
@@ -1922,11 +1934,15 @@ public class EndososAction extends PrincipalCoreAction
 			success = false;
 			error = ex.getMessage();
 		}
-		logger.debug("\n######                             ######"
-				   + "\n######                             ######"
-				   + "\n###### guardar endoso de domicilio ######"
-				   + "\n#########################################"
-			       + "\n#########################################");
+		
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoDomicilio ######"
+				,"\n####################################"
+				));
+		
 		return SUCCESS;
 	}
 	/*//////////////////////////////////////////////////*/
@@ -2313,14 +2329,14 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////////////////////////////////*/
 	public String guardarEndosoDomicilioSimple() {
 		
-		logger.debug(new StringBuilder()
-		        .append("\n##########################################")
-		        .append("\n##########################################")
-		        .append("\n###### guardarEndosoDomicilioSimple ######")
-		        .append("\n######                              ######").toString());
-		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		logger.debug(new StringBuilder("smap2: ").append(smap2).toString());
-		logger.debug(new StringBuilder("parametros: ").append(parametros).toString());
+		logger.debug(Utils.log(
+				 "\n##########################################"
+				,"\n###### guardarEndosoDomicilioSimple ######"
+				,"\n###### smap1      = " , smap1
+				,"\n###### smap2      = " , smap2
+				,"\n###### parametros = " , parametros
+				,"\n###### flujo      = " , flujo
+				));
 		
 		try {
 			
@@ -2518,11 +2534,13 @@ public class EndososAction extends PrincipalCoreAction
 			error = ex.getMessage();
 		}
 		
-		logger.debug(new StringBuilder()
-	        .append("\n######                              ######")
-	        .append("\n######                              ######")
-	        .append("\n###### guardarEndosoDomicilioSimple ######")
-	        .append("\n##########################################").toString());
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoDomicilioSimple ######"
+				,"\n##########################################"
+				));
 		
 		return SUCCESS;
 	}
@@ -3294,14 +3312,14 @@ public class EndososAction extends PrincipalCoreAction
 	////// parametros: tvalosit          //////
 	/*///////////////////////////////////////*/
 	public String guardarEndosoValositBasico(){
-		logger.debug(""
-				+ "\n########################################"
-				+ "\n########################################"
-				+ "\n###### guardarEndosoValositBasico ######"
-				+ "\n######                            ######"
-				);
-		logger.debug("smap1: "+smap1);
-		logger.debug("parametros: "+parametros);
+		
+		logger.debug(Utils.log(
+				 "\n########################################"
+				,"\n###### guardarEndosoValositBasico ######"
+				,"\n###### smap1      = " , smap1
+				,"\n###### parametros = " , parametros
+				,"\n###### flujo      = " , flujo
+				));
 		
 		try {
 			UserVO usuario=(UserVO)session.get("USUARIO");
@@ -3538,25 +3556,27 @@ public class EndososAction extends PrincipalCoreAction
 			error=ex.getMessage();
 		}
 		
-		logger.debug(""
-				+ "\n######                            ######"
-				+ "\n###### guardarEndosoValositBasico ######"
-				+ "\n########################################"
-				+ "\n########################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoValositBasico ######"
+				,"\n########################################"
+				));
+		
 		return SUCCESS;
 	}
 
-	public String guardarEndosoParentescoAntiguedad(){
-		logger.debug(""
-				+ "\n#############################################"
-				+ "\n#############################################"
-				+ "\n###### guardarEndosoParentescoAntiguedad ####"
-				+ "\n######                            ###########"
-				);
-		logger.debug("smap1: "+smap1);
-		logger.debug("slist1: "+slist1);
-		logger.debug("parametros: "+parametros);
+	public String guardarEndosoParentescoAntiguedad()
+	{
+		logger.debug(Utils.log(
+				 "\n###############################################"
+				,"\n###### guardarEndosoParentescoAntiguedad ######"
+				,"\n###### smap1      = " , smap1
+				,"\n###### slist1     = " , slist1
+				,"\n###### parametros = " , parametros
+				,"\n###### flujo      = " , flujo
+				));
 		
 		try {
 			UserVO usuario=(UserVO)session.get("USUARIO");
@@ -3792,12 +3812,14 @@ public class EndososAction extends PrincipalCoreAction
 			error=ex.getMessage();
 		}
 		
-		logger.debug(""
-				+ "\n######                                   ######"
-				+ "\n###### guardarEndosoParentescoAntiguedad ######"
-				+ "\n###############################################"
-				+ "\n###############################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoParentescoAntiguedad ######"
+				,"\n###############################################"
+				));
+		
 		return SUCCESS;
 	}
 	/*///////////////////////////////////////*/
@@ -3818,13 +3840,14 @@ public class EndososAction extends PrincipalCoreAction
 	////// parametros: tvalosit          //////
 	/*///////////////////////////////////////*/
 	public String guardarEndosoValositBasicoSimple() {
-		logger.debug(new StringBuilder()
-		        .append("\n##############################################")
-		        .append("\n##############################################")
-		        .append("\n###### guardarEndosoValositBasicoSimple ######")
-		        .append("\n######                                  ######").toString());
-		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
-		logger.debug(new StringBuilder("parametros: ").append(parametros).toString());
+		
+		logger.debug(Utils.log(
+				 "\n##############################################"
+				,"\n###### guardarEndosoValositBasicoSimple ######"
+				,"\n###### smap1      = " , smap1
+				,"\n###### parametros = " , parametros
+				,"\n###### flujo      = " , flujo
+				));
 		
 		try {
 			UserVO usuario=(UserVO)session.get("USUARIO");
@@ -4006,11 +4029,13 @@ public class EndososAction extends PrincipalCoreAction
 			error = ex.getMessage();
 		}
 		
-		logger.debug(new StringBuilder()
-        .append("\n######                                  ######")
-        .append("\n###### guardarEndosoValositBasicoSimple ######")
-        .append("\n##############################################")
-        .append("\n##############################################").toString());
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoValositBasicoSimple ######"
+				,"\n##############################################"
+				));
 		
 		return SUCCESS;
 	}
@@ -4520,16 +4545,16 @@ public class EndososAction extends PrincipalCoreAction
 	{
 		this.session=ActionContext.getContext().getSession();
 		
-		logger.debug("\n"
-				+ "\n############################################"
-				+ "\n############################################"				
-				+ "\n###### guardarEndosoAltaBajaAsegurado ######"
-				+ "\n######                                ######"
-				);
-		logger.debug("smap1: "+smap1);
-		logger.debug("smap2: "+smap2);
-		logger.debug("smap3: "+smap3);
-		logger.debug("slist1: "+slist1);
+		logger.debug(Utils.log(
+				 "\n############################################"
+				,"\n###### guardarEndosoAltaBajaAsegurado ######"
+				,"\n###### smap1  = " , smap1
+				,"\n###### smap2  = " , smap2
+				,"\n###### smap3  = " , smap3
+				,"\n###### slist1 = " , slist1
+				,"\n###### flujo  = " , flujo
+				));
+		
 		try
 		{
 			UserVO usuario=(UserVO) session.get("USUARIO");
@@ -4568,6 +4593,8 @@ public class EndososAction extends PrincipalCoreAction
 			
 			String fechaEndoso    = smap3.get("fecha_endoso");
 			Date   fechaEndosoD   = renderFechas.parse(fechaEndoso);
+			
+			String ocupacion = smap1.get("dsocupacion");
 			
 			/*
 			 * Parche para validar que PREVEX tenga 49 y 50 de tvaloper
@@ -4757,7 +4784,8 @@ public class EndososAction extends PrincipalCoreAction
 				mapaMpersona.put("pv_cdideext_i"    , null);
 				mapaMpersona.put("pv_cdestciv_i"    , null);
 				mapaMpersona.put("pv_cdsucemi_i"    , null);
-				mapaMpersona.put("pv_cdusuario_i"    , usuarioCaptura);
+				mapaMpersona.put("pv_cdusuario_i"   , usuarioCaptura);
+				mapaMpersona.put("pv_dsocupacion_i" , ocupacion);
 				mapaMpersona.put("pv_accion_i"      , "I");
 				kernelManager.movMpersona(mapaMpersona);
                 ////// mpersona //////
@@ -5395,12 +5423,15 @@ public class EndososAction extends PrincipalCoreAction
 			success=false;
 			error=ex.getMessage();
 		}
-		logger.debug("\n"
-				+ "\n######                                ######"
-				+ "\n###### guardarEndosoAltaBajaAsegurado ######"
-				+ "\n############################################"
-				+ "\n############################################"				
-				);
+		
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoAltaBajaAsegurado ######"
+				,"\n############################################"
+				));
+		
 		return SUCCESS;
 	}
 	/*/////////////////////////////////////////////////////*/
@@ -5522,15 +5553,16 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////*/
 	public String guardarEndosoEdad() {
 		this.session=ActionContext.getContext().getSession();
-		logger.debug("\n"
-				+ "\n####################################"
-				+ "\n####################################"
-				+ "\n###### guardar endoso de edad ######"
-				+ "\n######                        ######"
-				);
-		logger.debug("smap1: "+smap1);
-		logger.debug("smap2: "+smap2);
-		logger.debug("slist1: "+slist1);
+		
+		logger.debug(Utils.log(
+				 "\n###############################"
+				,"\n###### guardarEndosoEdad ######"
+				,"\n###### smap1  = " , smap1
+				,"\n###### smap2  = " , smap2
+				,"\n###### slist1 = " , slist1
+				,"\n###### flujo  = " , flujo
+				));
+		
 		try {
 			String  cdunieco    = smap1.get("cdunieco");
 			String  cdramo      = smap1.get("cdramo");
@@ -5823,12 +5855,15 @@ public class EndososAction extends PrincipalCoreAction
 			success=false;
 			error=ex.getMessage();
 		}
-		logger.debug("\n"
-				+ "\n######                        ######"
-				+ "\n###### guardar endoso de edad ######"
-				+ "\n####################################"
-				+ "\n####################################"
-				);
+		
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoEdad ######"
+				,"\n###############################"
+				));
+		
 		return SUCCESS;
 	}
 	/*////////////////////////////////*/
@@ -5925,16 +5960,16 @@ public class EndososAction extends PrincipalCoreAction
            ]
 	*/
 	/*//////////////////////////////////////////*/
-	public String guardarEndosoSexo() {
-		logger.debug("\n"
-				+ "\n###############################################"
-				+ "\n###############################################"
-				+ "\n###### guardar endoso de camibio de sexo ######"
-				+ "\n######                                   ######"
-				);
-		logger.debug("smap1: "+smap1);
-		logger.debug("smap2: "+smap2);
-		logger.debug("slist1: "+slist1);
+	public String guardarEndosoSexo()
+	{
+		logger.debug(Utils.log(
+				 "\n###############################"
+				,"\n###### guardarEndosoSexo ######"
+				,"\n###### smap1  = " , smap1
+				,"\n###### smap2  = " , smap2
+				,"\n###### slist1 = " , slist1
+				,"\n###### flujo  = " , flujo
+				));
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -6178,12 +6213,15 @@ public class EndososAction extends PrincipalCoreAction
 			error=ex.getMessage();
 			logger.error("error al guardar endoso de cambio de sexo",ex);
 		}
-		logger.debug("\n"
-				+ "\n######                                   ######"
-				+ "\n###### guardar endoso de camibio de sexo ######"
-				+ "\n###############################################"
-				+ "\n###############################################"
-				);
+		
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoSexo ######"
+				,"\n###############################"
+				));
+		
 		return SUCCESS;
 	}
 	/*//////////////////////////////////////////*/
@@ -8303,14 +8341,14 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////*/
 	public String guardarEndosoDeducible() {
 		this.session=ActionContext.getContext().getSession();
-		logger.debug("\n"
-				+ "\n####################################"
-				+ "\n####################################"
-				+ "\n###### guardarEndosoDeducible ######"
-				+ "\n######                        ######"
-				);
-		logger.debug("smap1:"+smap1);
-		logger.debug("smap2:"+smap2);
+		
+		logger.debug(Utils.log(
+				 "\n####################################"
+				,"\n###### guardarEndosoDeducible ######"
+				,"\n###### smap1 = " , smap1
+				,"\n###### smap2 = " , smap2
+				,"\n###### flujo = " , flujo
+				));
 		
 		try {
 			UserVO usuario    = (UserVO)session.get("USUARIO");
@@ -8434,12 +8472,14 @@ public class EndososAction extends PrincipalCoreAction
 			logger.error("error al guardar endoso de deducible",ex);
 		}
 		
-		logger.debug("\n"
-				+ "\n######                        ######"
-				+ "\n###### guardarEndosoDeducible ######"
-				+ "\n####################################"
-				+ "\n####################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoDeducible ######"
+				,"\n####################################"
+				));
+		
 		return SUCCESS;
 	}
 	/*////////////////////////////////*/
@@ -8621,14 +8661,14 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////*/
 	public String guardarEndosoCopago() {
 		this.session=ActionContext.getContext().getSession();
-		logger.debug("\n"
-				+ "\n#################################"
-				+ "\n#################################"
-				+ "\n###### guardarEndosoCopago ######"
-				+ "\n######                     ######"
-				);
-		logger.debug("smap1:"+smap1);
-		logger.debug("smap2:"+smap2);
+		
+		logger.debug(Utils.log(
+				 "\n#################################"
+				,"\n###### guardarEndosoCopago ######"
+				,"\n###### smap1 = " , smap1
+				,"\n###### smap2 = " , smap2
+				,"\n###### flujo = " , flujo
+				));
 		
 		try
 		{
@@ -8754,12 +8794,14 @@ public class EndososAction extends PrincipalCoreAction
 			logger.error("error al guardar endoso de copago",ex);
 		}
 		
-		logger.debug("\n"
-				+ "\n######                     ######"
-				+ "\n###### guardarEndosoCopago ######"
-				+ "\n#################################"
-				+ "\n#################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoCopago ######"
+				,"\n#################################"
+				));
+		
 		return SUCCESS;
 	}
 	/*/////////////////////////////*/
@@ -9124,18 +9166,20 @@ public class EndososAction extends PrincipalCoreAction
 		nmpoliex=1006213000025000000
 	*/
 	/*//////////////////////////////////////*/
-	public String guardarEndosoReexpedicion() {
-		logger.debug("\n"
-				+ "\n#######################################"
-				+ "\n#######################################"
-				+ "\n###### guardarEndosoReexpedicion ######"
-				+ "\n######                           ######"
-				);
-		logger.debug("smap1:"+smap1);
-		logger.debug("smap2:"+smap2);
-		logger.debug("smap3:"+smap3);
-		logger.debug("Grupos a actualizar slist1:"+slist1);
-		logger.debug("Grupos a no actualizar slist2:"+slist2);
+	public String guardarEndosoReexpedicion()
+	{
+		logger.debug(Utils.log(
+				 "\n#######################################"
+				,"\n###### guardarEndosoReexpedicion ######"
+				,"\n###### smap1  = " , smap1
+				,"\n###### smap2  = " , smap2
+				,"\n###### smap3  = " , smap3
+				,"\n###### grupos a actualizar:"
+				,"\n###### slist1 = " , slist1
+				,"\n###### grupos a no actualizar:"
+				,"\n###### slist2 = " , slist2
+				,"\n###### flujo  = " , flujo
+				));
 		
 		this.session=ActionContext.getContext().getSession();
 		
@@ -9363,12 +9407,14 @@ public class EndososAction extends PrincipalCoreAction
 			logger.error("error al guardar endoso de reexpedicion",ex);
 		}
 		
-		logger.debug("\n"
-				+ "\n######                           ######"
-				+ "\n###### guardarEndosoReexpedicion ######"
-				+ "\n#######################################"
-				+ "\n#######################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoReexpedicion ######"
+				,"\n#######################################"
+				));
+		
 		return SUCCESS;
 	}
 	/*///////////////////////////////////*/
@@ -9649,15 +9695,16 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////////*/
 	public String guardarEndosoExtraprima() {
 		this.session=ActionContext.getContext().getSession();
-		logger.debug("\n"
-				+ "\n#####################################"
-				+ "\n#####################################"
-				+ "\n###### guardarEndosoExtraprima ######"
-				+ "\n######                         ######"
-				);
-		logger.debug("smap1:"+smap1);
-		logger.debug("smap2:"+smap2);
-		logger.debug("slist1:"+slist1);
+		
+		logger.debug(Utils.log(
+				 "\n#####################################"
+				,"\n###### guardarEndosoExtraprima ######"
+				,"\n###### smap1  = " , smap1
+				,"\n###### smap2  = " , smap2
+				,"\n###### slist1 = " , slist1
+				,"\n###### flujo  = " , flujo
+				));
+		
 		try {
 			UserVO usuario    = (UserVO)session.get("USUARIO");
 			String cdunieco   = smap1.get("CDUNIECO");
@@ -9770,12 +9817,14 @@ public class EndososAction extends PrincipalCoreAction
 			logger.error("error al guardar endoso de extraprima",ex);
 		}
 		
-		logger.debug("\n"
-				+ "\n######                         ######"
-				+ "\n###### guardarEndosoExtraprima ######"
-				+ "\n#####################################"
-				+ "\n#####################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
+				,"\n###### guardarEndosoExtraprima ######"
+				,"\n#####################################"
+				));
+		
 		return SUCCESS;
 	}
 	/*/////////////////////////////////*/
@@ -10467,8 +10516,9 @@ public class EndososAction extends PrincipalCoreAction
 			error = ex.getMessage();
 		}
 		logger.debug(Utils.log(
-				 "\n###### success=" , success
-				,"\n###### mensaje=" , mensaje
+				 "\n###### success = " , success
+				,"\n###### error   = " , error
+				,"\n###### mensaje = " , mensaje
 				,"\n###### guardarEndosoAgente ######"
 				,"\n#################################"
 				));
@@ -12206,115 +12256,92 @@ public class EndososAction extends PrincipalCoreAction
 	public String guardarEndosoAtributosSituacionGeneral()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.debug(
-				new StringBuilder()
-				.append("\n####################################################")
-				.append("\n###### guardarEndosoAtributosSituacionGeneral ######")
-				.append("\n###### smap1=").append(smap1)
-				.append("\n###### smap2=").append(smap2)
-				.append("\n###### smap3=").append(smap3)
-				.toString()
-				);
 		
-		exito   = true;
-		success = true;
-		
-		String cdunieco = null;
-		String cdramo   = null;
-		String cdtipsit = null;
-		String estado   = null;
-		String nmpoliza = null;
-		String nmsuplem = null;
-		String cdtipsup = null;
-		String ntramite = null;
-		String feefecto = null;
+		logger.debug(Utils.log(
+				 "\n####################################################"
+				,"\n###### guardarEndosoAtributosSituacionGeneral ######"
+				,"\n###### smap1 = " , smap1
+				,"\n###### smap2 = " , smap2
+				,"\n###### smap3 = " , smap3
+				,"\n###### flujo = " , flujo
+				));
 		
 		//datos completos
 		try
 		{
-			if(smap1==null)
-			{
-				throw new ApplicationException("No se recibieron datos de poliza");
-			}
-			if(smap2==null)
-			{
-				throw new ApplicationException("No se recibieron datos modificables");
-			}
-			if(smap3==null)
-			{
-				throw new ApplicationException("No se recibieron datos del endoso");
-			}
-			cdunieco = smap1.get("CDUNIECO");
-			cdramo   = smap1.get("CDRAMO");
-			cdtipsit = smap1.get("CDTIPSIT");
-			estado   = smap1.get("ESTADO");
-			nmpoliza = smap1.get("NMPOLIZA");
-			nmsuplem = smap1.get("NMSUPLEM");
-			cdtipsup = smap1.get("cdtipsup");
-			ntramite = smap1.get("NTRAMITE");
+			Utils.validateSession(session);
 			
-			if(StringUtils.isBlank(cdunieco)) {
-				throw new ApplicationException("No se recibio la sucursal");
-			}
-			if(StringUtils.isBlank(cdramo)) {
-				throw new ApplicationException("No se recibio el producto");
-			}
-			if(StringUtils.isBlank(cdtipsit)) {
-				throw new ApplicationException("No se recibio la modalidad");
-			}
-			if(StringUtils.isBlank(estado)) {
-				throw new ApplicationException("No se recibio el estado");
-			}
-			if(StringUtils.isBlank(nmpoliza)) {
-				throw new ApplicationException("No se recibio el numero de poliza");
-			}
-			if(StringUtils.isBlank(nmsuplem)) {
-				throw new ApplicationException("No se recibio el suplemento");
-			}
-			if(StringUtils.isBlank(cdtipsup)) {
-				throw new ApplicationException("No se recibio el tipo de endoso");
-			}
+			Utils.validate(smap1 , "No se recibieron datos de poliza");
 			
-			feefecto = smap3.get("feefecto");
-			if(StringUtils.isBlank(feefecto)) {
-				throw new ApplicationException("No se recibio la fecha de efecto del endoso");
-			}
+			Utils.validate(smap2 , "No se recibieron datos modificables");
 			
-			if(session==null) {
-				throw new ApplicationException("No hay sesion");
-			}
-			if(session.get("USUARIO")==null) {
-				throw new ApplicationException("No hay usuario en la sesion");
-			}
-		}
-		catch(ApplicationException ax)
-		{
-			long timestamp  = System.currentTimeMillis();
-			exito           = false;
-			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
-			respuestaOculta = ax.getMessage();
-			logger.error(respuesta,ax);
-		}
-		
-		//proceso
-		if(exito)
-		{
+			Utils.validate(smap3 , "No se recibieron datos del endoso");
+			
+			String cdunieco   = smap1.get("CDUNIECO")
+					,cdramo   = smap1.get("CDRAMO")
+					,cdtipsit = smap1.get("CDTIPSIT")
+					,estado   = smap1.get("ESTADO")
+					,nmpoliza = smap1.get("NMPOLIZA")
+					,nmsuplem = smap1.get("NMSUPLEM")
+					,cdtipsup = smap1.get("cdtipsup")
+					,ntramite = smap1.get("NTRAMITE");
+			
+			Utils.validate(
+					cdunieco  , "No se recibio la sucursal"
+					,cdramo   , "No se recibio el producto"
+					,cdtipsit , "No se recibio la modalidad"
+					,estado   , "No se recibio el estado"
+					,nmpoliza , "No se recibio el numero de poliza"
+					,nmsuplem , "No se recibio el suplemento"
+					,cdtipsup , "No se recibio el tipo de endoso"
+					);
+			
+			String feefecto = smap3.get("feefecto");
+			
+			Utils.validate(feefecto , "No se recibio la fecha de efecto del endoso");
+			
+			//proceso
 			ManagerRespuestaVoidVO resp = endososManager.guardarEndosoAtributosSituacionGeneral(
-					cdunieco, cdramo, estado, nmpoliza, nmsuplem,
-					cdtipsit, cdtipsup, ntramite, feefecto, smap2, (UserVO) session.get("USUARIO"),
-					getText("ruta.documentos.poliza"), getText("ruta.servidor.reports"), getText("pass.servidor.reports"));
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdtipsit
+					,cdtipsup
+					,ntramite
+					,feefecto
+					,smap2
+					,(UserVO) session.get("USUARIO")
+					,getText("ruta.documentos.poliza")
+					,getText("ruta.servidor.reports")
+					,getText("pass.servidor.reports")
+					,flujo
+					);
 			
-			exito           = resp.isExito();
-			respuesta       = resp.getRespuesta();
-			respuestaOculta = resp.getRespuestaOculta();
+			exito     = resp.isExito();
+			respuesta = resp.getRespuesta();
+			
+			if(!exito)
+			{
+				throw new ApplicationException(respuesta);
+			}
+			
+			success = exito;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(
-				new StringBuilder()
-				.append("\n###### guardarEndosoAtributosSituacionGeneral ######")
-				.append("\n####################################################")
-				.toString()
-				);
+		logger.debug(Utils.log(
+				 "\n###### success   = " , success
+				,"\n###### exito     = " , exito
+				,"\n###### respuesta = " , respuesta
+				,"\n###### guardarEndosoAtributosSituacionGeneral ######"
+				,"\n####################################################"
+				));
+		
 		return SUCCESS;
 	}
 	
@@ -12323,8 +12350,9 @@ public class EndososAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n########################################"
 				,"\n###### guardarEndosoBeneficiarios ######"
-				,"\n###### smap1="  , smap1
-				,"\n###### slist1=" , slist1
+				,"\n###### smap1  = " , smap1
+				,"\n###### slist1 = " , slist1
+				,"\n###### flujo  = " , flujo
 				));
 		
 		try
@@ -12365,6 +12393,7 @@ public class EndososAction extends PrincipalCoreAction
 					,ntramite
 					,cdsisrol
 					,usuarioSesion
+					,flujo
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -12376,7 +12405,10 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				 "\n###### guardarEndosoBeneficiarios ######"
+				 "\n###### success   = " , success
+				,"\n###### exito     = " , exito
+				,"\n###### respuesta = " , respuesta
+				,"\n###### guardarEndosoBeneficiarios ######"
 				,"\n########################################"
 				));
 		return SUCCESS;

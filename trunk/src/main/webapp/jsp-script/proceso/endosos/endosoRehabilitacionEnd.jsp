@@ -15,6 +15,10 @@ var _p40_smap1  = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="fal
 debug('_p40_smap1:',_p40_smap1);
 
 var _p40_storeEndosos = null;
+
+var _p40_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
+debug('_p40_flujo:',_p40_flujo);
 ////// variables //////
 
 ////// componentes dinamicos //////
@@ -150,26 +154,34 @@ Ext.onReady(function()
                             me.disable();
                             me.setText('Cargando...');
                             var record = _fieldById('_p40_gridEndosos').getSelectionModel().getSelection()[0];
+                            
+                            var submitParams =
+                            {
+                                'smap1.cdunieco'  : _p40_smap1.CDUNIECO
+                                ,'smap1.cdramo'   : _p40_smap1.CDRAMO
+                                ,'smap1.estado'   : _p40_smap1.ESTADO
+                                ,'smap1.nmpoliza' : _p40_smap1.NMPOLIZA
+                                ,'smap1.nsuplogi' : record.get('NSUPLOGI')
+                                ,'smap1.cddevcia' : record.get('CDDEVCIA')
+                                ,'smap1.cdgestor' : record.get('CDGESTOR')
+                                ,'smap1.feemisio' : record.raw['FEEMISIO']
+                                ,'smap1.feinival' : record.raw['FEINIVAL']
+                                ,'smap1.fefinval' : record.raw['FEFINVAL']
+                                ,'smap1.feefecto' : record.raw['FEEFECTO']
+                                ,'smap1.feproren' : record.raw['FEPROREN']
+                                ,'smap1.cdmoneda' : record.get('CDMONEDA')
+                                ,'smap1.nmsuplem' : record.get('NMSUPLEM')
+                            };
+                            
+                            if(!Ext.isEmpty(_p40_flujo))
+                            {
+                                submitParams = _flujoToParams(_p40_flujo,submitParams);
+                            }
+                            
                             Ext.Ajax.request(
                             {
                                 url      : _p40_urlConfirmarEndoso
-                                ,params  :
-                                {
-                                    'smap1.cdunieco'  : _p40_smap1.CDUNIECO
-                                    ,'smap1.cdramo'   : _p40_smap1.CDRAMO
-                                    ,'smap1.estado'   : _p40_smap1.ESTADO
-                                    ,'smap1.nmpoliza' : _p40_smap1.NMPOLIZA
-                                    ,'smap1.nsuplogi' : record.get('NSUPLOGI')
-                                    ,'smap1.cddevcia' : record.get('CDDEVCIA')
-                                    ,'smap1.cdgestor' : record.get('CDGESTOR')
-                                    ,'smap1.feemisio' : record.raw['FEEMISIO']
-                                    ,'smap1.feinival' : record.raw['FEINIVAL']
-                                    ,'smap1.fefinval' : record.raw['FEFINVAL']
-                                    ,'smap1.feefecto' : record.raw['FEEFECTO']
-                                    ,'smap1.feproren' : record.raw['FEPROREN']
-                                    ,'smap1.cdmoneda' : record.get('CDMONEDA')
-                                    ,'smap1.nmsuplem' : record.get('NMSUPLEM')
-                                }
+                                ,params  : submitParams
                                 ,success : function(response)
                                 {
                                     me.enable();

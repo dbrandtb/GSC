@@ -41,6 +41,10 @@ var _storeParentescos;
 var _gridAsegurados;
 
 debug('input',pantallaValositInput);
+
+var _endParen_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
+debug('_endParen_flujo:',_endParen_flujo);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -113,6 +117,12 @@ function endvalbasSumit(form,confirmar){
             }
             ,slist1 : slist1
         }
+    
+    if(!Ext.isEmpty(_endParen_flujo))
+    {
+        json.flujo = _endParen_flujo;
+    }
+    
     debug('datos que se enviaran:',json);
         
 	_setLoading(true,form);

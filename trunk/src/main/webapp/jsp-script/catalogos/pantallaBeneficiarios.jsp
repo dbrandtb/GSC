@@ -18,6 +18,10 @@ var _p32_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false
 debug('_p32_smap1:',_p32_smap1);
 
 var _p32_store = null;
+
+var _p32_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
+debug('_p32_flujo:',_p32_flujo);
 ////// variables //////
 
 //////
@@ -437,6 +441,11 @@ function _p32_guardarClic(callback)
         {
             json.slist1.push(parseaFechas(record.data));
         });
+        
+        if(!Ext.isEmpty(_p32_flujo))
+        {
+            json.flujo = _p32_flujo;
+        }
         
         debug('json a enviar:',json);
         

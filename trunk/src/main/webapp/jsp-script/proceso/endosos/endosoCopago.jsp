@@ -35,6 +35,10 @@ var _7_fieldFechaEndoso;
 var _7_urlGuardar = '<s:url namespace="/endosos" action="guardarEndosoCopago" />';
 
 debug('_7_smap1:',_7_smap1);
+
+var _p7_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
+debug('_p7_flujo:',_p7_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -238,6 +242,12 @@ function _7_confirmar()
                 ,copago      : _7_formCopago.items.items[1].getValue()
             }
         }
+        
+        if(!Ext.isEmpty(_p7_flujo))
+        {
+            json.flujo = _p7_flujo;
+        }
+        
         debug('datos que se enviaran:',json);
         _setLoading(true,_7_panelPri);
         Ext.Ajax.request(

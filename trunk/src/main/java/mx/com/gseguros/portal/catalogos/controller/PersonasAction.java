@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.endosos.controller.EndososAction;
@@ -47,6 +48,8 @@ public class PersonasAction extends PrincipalCoreAction
 	private Map<String,String>       smap1;
 	private Map<String,String>       smap2;
 	private Map<String,String>       smap3;
+	
+	private FlujoVO flujo;
 	
 	@Autowired
 	private transient Ice2sigsService ice2sigsService;
@@ -1713,6 +1716,14 @@ public class PersonasAction extends PrincipalCoreAction
 
 	public void setPersonaWS(boolean personaWS) {
 		this.personaWS = personaWS;
+	}
+
+	public FlujoVO getFlujo() {
+		return flujo;
+	}
+
+	public void setFlujo(FlujoVO flujo) {
+		this.flujo = flujo;
 	}
 	
 }

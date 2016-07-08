@@ -32,6 +32,10 @@
     var venExcluStoreTipos;
     var loadExcluTimeoutVar;
     var _2_form;
+    
+    var _endCla_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+    
+    debug('_endCla_flujo:',_endCla_flujo);
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -87,23 +91,31 @@ function _2_confirmar()
     if(valido)
     {
     	_setLoading(true,boton);
+    	
+    	var submitParams =
+    	{
+            'smap1.pv_cdunieco_i'  : inputCduniecopx
+            ,'smap1.pv_cdramo_i'   : inputCdramopx
+            ,'smap1.pv_estado_i'   : inputEstadopx
+            ,'smap1.pv_nmpoliza_i' : inputNmpolizapx
+            ,'smap1.pv_nmsituac_i' : inputNmsituacpx
+            ,'smap1.pv_nmsuplem_i' : panendExInput['nmsuplem']
+            ,'smap1.pv_ntramite_i' : panendExInput['ntramite']
+            ,'smap1.pv_cdtipsit_i' : panendExInput['cdtipsit']
+            ,'smap1.confirmar'     : 'si'
+            ,'smap1.fecha_endoso'  : Ext.Date.format(Ext.getCmp('_2_fieldFechaId').getValue(),'d/m/Y')
+        };
+    	
+    	if(!Ext.isEmpty(_endCla_flujo))
+    	{
+    	    submitParams = _flujoToParams(_endCla_flujo,submitParams);
+    	}
+    	
 	    Ext.Ajax.request(
 	    {
-	        url     : venExcluUrlAddExclu
+	        url      : venExcluUrlAddExclu
 	        ,timeout : 180000
-	        ,params : 
-	        {
-	            'smap1.pv_cdunieco_i'  : inputCduniecopx
-	            ,'smap1.pv_cdramo_i'   : inputCdramopx
-	            ,'smap1.pv_estado_i'   : inputEstadopx
-	            ,'smap1.pv_nmpoliza_i' : inputNmpolizapx
-	            ,'smap1.pv_nmsituac_i' : inputNmsituacpx
-	            ,'smap1.pv_nmsuplem_i' : panendExInput['nmsuplem']
-	            ,'smap1.pv_ntramite_i' : panendExInput['ntramite']
-	            ,'smap1.pv_cdtipsit_i' : panendExInput['cdtipsit']
-	            ,'smap1.confirmar'     : 'si'
-	            ,'smap1.fecha_endoso'  : Ext.Date.format(Ext.getCmp('_2_fieldFechaId').getValue(),'d/m/Y')
-	        }
+	        ,params  : submitParams
 	        ,success : function (response)
 	        {
 	            debug('success');

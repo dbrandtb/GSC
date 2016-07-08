@@ -36,6 +36,10 @@ var _3_urlLoadHtml            = '<s:url namespace="/"           action="cargarHt
 
 debug('panendabaseguInputSmap1',panendabaseguInputSmap1);
 debug('panendabaseguInputSmap2',panendabaseguInputSmap2);
+
+var _endAseg_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
+debug('_endAseg_flujo:',_endAseg_flujo);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -968,6 +972,11 @@ Ext.onReady(function()
 	    		{
 	    			json['slist1'].push(record.getData());
 	    		});
+	    		
+	    		if(!Ext.isEmpty(_endAseg_flujo))
+	    		{
+	    		    json.flujo = _endAseg_flujo;
+	    		}
 	    		
 	    		debug('json:',json);
 	    		_setLoading(true,panendabaseguPanelPrincipal);

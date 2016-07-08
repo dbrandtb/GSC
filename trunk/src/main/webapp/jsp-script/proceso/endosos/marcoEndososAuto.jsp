@@ -19,6 +19,7 @@ var _p34_urlObtieneCatalogos              = '<s:url namespace="/catalogos"    ac
 var _p34_urlRecuperacion                  = '<s:url namespace="/recuperacion" action="recuperar"                    />';
 
 var _p34_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision" action="actualizarOtvalorTramitePorDsatribu" />';
+var _p34_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision" action="recuperarOtvalorTramitePorDsatribu"  />';
 ////// urls //////
 
 ////// variables //////
@@ -555,6 +556,8 @@ Ext.onReady(function()
     
     ////// loaders //////
     _p34_recuperarPolizaIncisosFlujo();
+    
+    _p34_recuperarTipoEndosoFlujo();
     ////// loaders //////
 });
 
@@ -2022,12 +2025,47 @@ function marendNavegacion(nivel)
         else
         {
             //cuando es por flujo, despues de confirmar un endoso, se va a mesa de control
-            _mask('Redireccionando...');
-            Ext.create('Ext.form.Panel').submit(
+            
+            var ck = 'Creando componente de documentos';
+            try
             {
-                standardSubmit : true
-                ,url           : _GLOBAL_COMP_URL_MCFLUJO
-            });
+                Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES+'VentanaDocumentos');
+                new window['VentanaDocumentos'](
+                {
+                    cdtipflu   : _p34_flujo.cdtipflu
+                    ,cdflujomc : _p34_flujo.cdflujomc
+                    ,tipoent   : _p34_flujo.tipodest
+                    ,claveent  : _p34_flujo.clavedest
+                    ,webid     : _p34_flujo.webiddest
+                    ,aux       : _p34_flujo.aux
+                    ,ntramite  : _p34_flujo.ntramite
+                    ,status    : _p34_flujo.status
+                    ,cdunieco  : _p34_flujo.cdunieco
+                    ,cdramo    : _p34_flujo.cdramo
+                    ,estado    : _p34_flujo.estado
+                    ,nmpoliza  : _p34_flujo.nmpoliza
+                    ,nmsituac  : _p34_flujo.nmsituac
+                    ,nmsuplem  : _p34_flujo.nmsuplem
+                    ,cdusuari  : _p34_flujo.cdusuari
+                    ,cdsisrol  : _p34_flujo.cdsisrol
+                    ,listeners :
+                    {
+                        close : function()
+                        {
+                            _mask('Redireccionando...');
+                            Ext.create('Ext.form.Panel').submit(
+                            {
+                                standardSubmit : true
+                                ,url           : _GLOBAL_COMP_URL_MCFLUJO
+                            });
+                        }
+                    }
+                }).mostrar();
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
         }
     }
     debug('<marendNavegacion');
@@ -2245,6 +2283,87 @@ function _p34_guardarAtributoTramitePorDescripcion(ntramite,descripcion,valor,ca
     catch(e)
     {
         manejaException(e,ck,mask);
+    }
+}
+
+function _p34_recuperarAtributoTramitePorDescripcion(ntramite,descripcion,callback)
+{
+    debug('_p34_recuperarAtributoTramitePorDescripcion args:',arguments,'.');
+    var mask, ck = 'Recuperando atributo de tr\u00e1mite';
+    try
+    {
+        mask = _maskLocal(ck);
+        Ext.Ajax.request(
+        {
+            url      : _p34_urlRecuperarOtvalorTramiteXDsatribu
+            ,params  :
+            {
+                'params.ntramite'  : ntramite
+                ,'params.dsatribu' : descripcion
+            }
+            ,success : function(response)
+            {
+                mask.close();
+                var ck = 'Decodificando respuesta al recuperar atributo de tr\u00e1mite';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### recuperar atributo tramite:',json);
+                    if(json.success===true)
+                    {
+                        ck = 'Ejecutando callback al recuperar atributo de tr\u00e1mite';
+                        
+                        callback(json);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                mask.close();
+                errorComunicacion(null,'Error al recuperar atributo de tr\u00e1mite');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck,mask);
+    }
+}
+
+function _p34_recuperarTipoEndosoFlujo()
+{
+    //endosoSeleccionado
+    debug('>_p34_recuperarTipoEndosoFlujo');
+    if(_p34_flujoAux.endosoSeleccionado === 'Recuperar')
+    {
+        debug('Voy a recuperar el tipo de endoso');
+        _p34_recuperarAtributoTramitePorDescripcion(
+            _p34_flujo.ntramite
+            ,'CDTIPSUP'
+            ,function(json)
+            {
+                var ck = 'Procesando tipo de endoso recuperado';
+                try
+                {
+                    debug('json de tipo de endoso recuperado:',json);
+                    _p34_flujoAux.endosoSeleccionado = json.params.otvalor;
+                    
+                    debug('_p34_flujoAux.endosoSeleccionado:',_p34_flujoAux.endosoSeleccionado,'.');
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+        );
     }
 }
 ////// funciones //////
