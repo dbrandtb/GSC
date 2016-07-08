@@ -1703,9 +1703,10 @@ public class EndososAutoAction extends PrincipalCoreAction
 	public String confirmarEndosoRehabilitacionSalud()
 	{
 		logger.debug(Utils.log(
-				"\n###############################################"
+				 "\n################################################"
 				,"\n###### confirmarEndosoRehabilitacionSalud ######"
-				,"\n###### smap1=",smap1
+				,"\n###### smap1 = " , smap1
+				,"\n###### flujo = " , flujo
 				));
 		
 		try
@@ -1768,6 +1769,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,nmsuplem
 					,user.getEmpresa().getElementoId()
 					,usuarioSesion
+					,flujo
 					);
 			
 			success = true;
@@ -1778,8 +1780,10 @@ public class EndososAutoAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				"\n###### confirmarEndosoRehabilitacionSalud ######"
-				,"\n###############################################"
+				 "\n###### success   = " , success
+				,"\n###### respuesta = " , respuesta
+				,"\n###### confirmarEndosoRehabilitacionSalud ######"
+				,"\n################################################"
 				));
 		return SUCCESS;
 	}

@@ -329,6 +329,7 @@ public interface EndososAutoManager
 			,String nmsuplem
 			,String cdelemen
 			,UserVO usuarioSesion
+			,FlujoVO flujo
 			)throws Exception;
 	
 	public Map<String,Item> endosoCancelacionAuto(

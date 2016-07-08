@@ -8,6 +8,9 @@ var _p27_urlConfirmar             = '<s:url namespace="/endosos" action="guardar
 var _p27_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p27_smap1:',_p27_smap1);
 
+var _p27_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
+debug('_p27_flujo:',_p27_flujo);
 ////// variables //////
 
 Ext.onReady(function()
@@ -242,16 +245,26 @@ function _p27_confirmar(me)
     if(valido)
     {
         _setLoading(true,_fieldById('_p27_panelpri'));
+        
+        var jsonData =
+        {
+            smap1  : _p27_smap1
+            ,smap2 : _fieldById('_p27_nuevoForm').getValues()
+            ,smap3 : _fieldById('_p27_endosoForm').getValues()
+        };
+        
+        if(!Ext.isEmpty(_p27_flujo))
+        {
+            jsonData.flujo = _p27_flujo;
+        }
+        
+        debug('jsonData:',jsonData,'.');
+        
         Ext.Ajax.request(
         {
             url       : _p27_urlConfirmar
-            ,jsonData :
-            {
-                smap1  : _p27_smap1
-                ,smap2 : _fieldById('_p27_nuevoForm').getValues()
-                ,smap3 : _fieldById('_p27_endosoForm').getValues()
-            }
-            ,success : function(response)
+            ,jsonData : jsonData
+            ,success  : function(response)
             {
                 _setLoading(false,_fieldById('_p27_panelpri'));
                 var json = Ext.decode(response.responseText);

@@ -1723,7 +1723,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			)throws Exception
 	{
 		logger.debug(Utils.log(
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoDespago @@@@@@"
 				,"\n@@@@@@ cdunieco      = " , cdunieco
 				,"\n@@@@@@ cdramo        = " , cdramo
@@ -4255,29 +4255,32 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String nmsuplem
 			,String cdelemen
 			,UserVO usuarioSesion
+			,FlujoVO flujo
 			)throws Exception
 	{
 		logger.debug(Utils.log(
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ confirmarEndosoRehabilitacionSalud @@@@@@"
-				,"\n@@@@@@ cdusuari=" , cdusuari
-				,"\n@@@@@@ cdsisrol=" , cdsisrol
-				,"\n@@@@@@ cdunieco=" , cdunieco
-				,"\n@@@@@@ cdramo="   , cdramo
-				,"\n@@@@@@ estado="   , estado
-				,"\n@@@@@@ nmpoliza=" , nmpoliza
-				,"\n@@@@@@ cdtipsup=" , cdtipsup
-				,"\n@@@@@@ nsuplogi=" , nsuplogi
-				,"\n@@@@@@ cddevcia=" , cddevcia
-				,"\n@@@@@@ cdgestor=" , cdgestor
-				,"\n@@@@@@ feemisio=" , feemisio
-				,"\n@@@@@@ feinival=" , feinival
-				,"\n@@@@@@ fefinval=" , fefinval
-				,"\n@@@@@@ feefecto=" , feefecto
-				,"\n@@@@@@ feproren=" , feproren
-				,"\n@@@@@@ cdmoneda=" , cdmoneda
-				,"\n@@@@@@ nmsuplem=" , nmsuplem
-				,"\n@@@@@@ cdelemen=" , cdelemen
+				,"\n@@@@@@ cdusuari      = " , cdusuari
+				,"\n@@@@@@ cdsisrol      = " , cdsisrol
+				,"\n@@@@@@ cdunieco      = " , cdunieco
+				,"\n@@@@@@ cdramo        = "   , cdramo
+				,"\n@@@@@@ estado        = "   , estado
+				,"\n@@@@@@ nmpoliza      = " , nmpoliza
+				,"\n@@@@@@ cdtipsup      = " , cdtipsup
+				,"\n@@@@@@ nsuplogi      = " , nsuplogi
+				,"\n@@@@@@ cddevcia      = " , cddevcia
+				,"\n@@@@@@ cdgestor      = " , cdgestor
+				,"\n@@@@@@ feemisio      = " , feemisio
+				,"\n@@@@@@ feinival      = " , feinival
+				,"\n@@@@@@ fefinval      = " , fefinval
+				,"\n@@@@@@ feefecto      = " , feefecto
+				,"\n@@@@@@ feproren      = " , feproren
+				,"\n@@@@@@ cdmoneda      = " , cdmoneda
+				,"\n@@@@@@ nmsuplem      = " , nmsuplem
+				,"\n@@@@@@ cdelemen      = " , cdelemen
+				,"\n@@@@@@ usuarioSesion = " , usuarioSesion
+				,"\n@@@@@@ flujo         = " , flujo
 				));
 		
 		String paso = null;
@@ -4306,15 +4309,32 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					);
 			
 			String nmsuplemGen = (String) resParams.get("pv_nmsuplem_o");
-			String ntramite = (String) resParams.get("pv_ntramite_o");
+			String ntramiteEmi = (String) resParams.get("pv_ntramite_o");
 //			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
 			
 			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 					estado, nmpoliza, 
 					nmsuplemGen, null, 
-					cdunieco, null, ntramite, 
+					cdunieco, null, ntramiteEmi, 
 					true, cdtipsup, 
 					usuarioSesion);
+			
+			this.confirmarGuardandoDetallesTramiteEndoso(
+					ntramiteEmi
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplemGen
+					,cdtipsup
+					,nsuplogi
+					,""//dscoment
+					,new Date()
+					,flujo
+					,cdusuari
+					,cdsisrol
+					,false //confirmar
+					);
 		}
 		catch(Exception ex)
 		{
@@ -4322,8 +4342,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		}
 		
 		logger.debug(Utils.log(
-				"\n@@@@@@ confirmarEndosoRehabilitacionSalud @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				 "\n@@@@@@ confirmarEndosoRehabilitacionSalud @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
 	

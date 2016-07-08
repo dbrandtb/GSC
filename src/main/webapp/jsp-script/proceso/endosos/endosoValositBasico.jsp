@@ -30,6 +30,10 @@ if(pantallaValositInput['cdtipsit']=='MS')
 }
 
 debug('input',pantallaValositInput);
+
+var _endValBas_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
+debug('_endValBas_flujo:',_endValBas_flujo);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -66,18 +70,26 @@ function endvalbasSumit(form,confirmar)
         if(titularvalido==true)
         {
             _setLoading(true,form);
+            
+            var submitParams =
+            {
+                'smap1.cdunieco'   : pantallaValositInput['cdunieco']
+                ,'smap1.cdramo'    : pantallaValositInput['cdramo']
+                ,'smap1.estado'    : pantallaValositInput['estado']
+                ,'smap1.nmpoliza'  : pantallaValositInput['nmpoliza']
+                ,'smap1.cdtipsit'  : pantallaValositInput['cdtipsit']
+                ,'smap1.nmsituac'  : pantallaValositInput['nmsituac']
+                ,'smap1.confirmar' : confirmar
+            };
+            
+            if(!Ext.isEmpty(_endValBas_flujo))
+            {
+                submitParams = _flujoToParams(_endValBas_flujo,submitParams);
+            }
+            
             form.submit({
-                params:
-                {
-                    'smap1.cdunieco'   : pantallaValositInput['cdunieco']
-                    ,'smap1.cdramo'    : pantallaValositInput['cdramo']
-                    ,'smap1.estado'    : pantallaValositInput['estado']
-                    ,'smap1.nmpoliza'  : pantallaValositInput['nmpoliza']
-                    ,'smap1.cdtipsit'  : pantallaValositInput['cdtipsit']
-                    ,'smap1.nmsituac'  : pantallaValositInput['nmsituac']
-                    ,'smap1.confirmar' : confirmar
-                },
-                success:function(action,response)
+                params  : submitParams,
+                success : function(action,response)
                 {
                     debug(response);
                     _setLoading(false,form);

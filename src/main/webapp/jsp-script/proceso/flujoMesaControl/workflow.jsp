@@ -6,8 +6,8 @@
 <style>
 #canvasdiv
 {
-    width            : 4000px;
-    height           : 4000px;
+    width            : 5000px;
+    height           : 5000px;
     position         : absolute;
     background-image : url('${flujoimg}fondoModelador.png');
 }

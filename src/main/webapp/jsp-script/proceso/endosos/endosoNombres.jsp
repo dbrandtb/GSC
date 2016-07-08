@@ -25,6 +25,10 @@ endnomInput['ntramite'] = '<s:property value="smap1.ntramite" />';
 endnomInput['simple']   = <s:property value="endosoSimple" />;
 endnomInput['fechainicio'] = endnomInput['simple'] ? '<s:property value="mensaje" />' : new Date(); 
 debug('endnomInput',endnomInput);
+
+var _endnom_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+    
+debug('_endnom_flujo:',_endnom_flujo);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -325,6 +329,12 @@ Ext.onReady(function(){
                     				});
                     			});
                     			json['slist1']=slist1;
+                    			
+                    			if(!Ext.isEmpty(_endnom_flujo))
+                    			{
+                    			    json.flujo = _endnom_flujo;
+                    			}
+                    			
                     			debug(json);
                     			Ext.Ajax.request(
                     			{

@@ -35,6 +35,10 @@ var _6_fieldFechaEndoso;
 var _6_urlGuardar = '<s:url namespace="/endosos" action="guardarEndosoDeducible" />';
 
 debug('_6_smap1:',_6_smap1);
+
+var _p6_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+
+debug('_p6_flujo:',_p6_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -238,6 +242,12 @@ function _6_confirmar()
 				,deducible   : _6_formDeducible.items.items[1].getValue()
 			}
 		}
+		
+		if(!Ext.isEmpty(_p6_flujo))
+		{
+		    json.flujo = _p6_flujo;
+		}
+		
 		debug('datos que se enviaran:',json);
 		_setLoading(true,_6_panelPri);
 		Ext.Ajax.request(

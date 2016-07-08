@@ -1,12 +1,12 @@
 package mx.com.gseguros.portal.endosos.service;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
@@ -405,6 +405,7 @@ public interface EndososManager
 			,String cdusuari
 			,String cdtipsup);
 	public ManagerRespuestaSmapVO cargarTvalositTitular(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem);
+	
 	public ManagerRespuestaVoidVO guardarEndosoAtributosSituacionGeneral(
 			String cdunieco
 			,String cdramo
@@ -420,7 +421,8 @@ public interface EndososManager
 			,String rutaDocsPoliza
 			,String rutaServReports
 			,String passServReports
-			);
+			,FlujoVO flujo
+			)throws Exception;
 	
 	public ManagerRespuestaVoidVO guardarEndosoBeneficiarios(
 			String cdunieco
@@ -435,6 +437,7 @@ public interface EndososManager
 			,String ntramite
 			,String cdsisrol
 			,UserVO usuarioSesion
+			,FlujoVO flujo
 			)throws Exception;
 
 	
@@ -557,6 +560,7 @@ public interface EndososManager
 			,List<String> incisos
 			,String cdtipsitPrimerInciso
 			,String nmsolici
+			,FlujoVO flujo
 			)throws Exception;
 	
 	public String confirmarEndosoBajaFamilia(
@@ -578,6 +582,7 @@ public interface EndososManager
 			,List<String> incisos
 			,String cdtipsitPrimerInciso
 			,String nmsolici
+			,FlujoVO flujo
 			)throws Exception;
 	
 	@Deprecated
