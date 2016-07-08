@@ -224,7 +224,7 @@
 
     function rendererParentescop2(v)
     {
-        debug('>rendererParentescop2 args:',arguments,'.');
+//        debug('>rendererParentescop2 args:',arguments,'.');
         var leyenda = '';
         try
         {
@@ -232,7 +232,7 @@
             {
                 storeParentescop2.each(function(rec)
                 {
-                    debug('buscando',v,'en',rec.data,'.');
+//                    debug('buscando',v,'en',rec.data,'.');
                     if(''+rec.get('key') === ''+v)
                     {
                         leyenda = rec.get('value');
@@ -987,7 +987,7 @@ debug("validarYGuardar flag:2");
                             debug('iterando',record);
                             if(record.get('cdperson')==cdpersonTomador)
                             {
-                                debug('es el contratante',record);
+                                debug('es el contratante',record);                            
                                 record.set('estomador',true);
                                 recordTomadorp2=record.copy();
                                 recordTomadorp2.set('cdrol','1');
@@ -1687,24 +1687,11 @@ debug("validarYGuardar flag:2");
 
             initComponent: function() {
                 this.cellEditing = new Ext.grid.plugin.CellEditing({
-                    clicksToEdit: 1,
-                    listeners : {
-                        validateedit : function(editor, e, eOpts){
-                            debug('editor ',editor);
-                            debug('e',e);
-                            
-//                        if (e.row == myTargetRow) {
-                               e.row = true;
-//                             e.record.data[e.field] = e.value;
-//                        }
-//                          e.cancel = true;
-//                          e.record.data[e.field] = e.value+ '0000';
-                        }
-                    }   
+                    clicksToEdit: 1
                 });
 
                 Ext.apply(this, {
-//                  width: 750,
+//                  	width: 750,
                     height: 200,
                     plugins: [this.cellEditing],
                     store: storePersonasp2,
@@ -2263,6 +2250,7 @@ debug("validarYGuardar flag:2");
                     recordContr.set('cdrfc'   , datosContr.rfc);
                     recordContr.set('cdideper', datosContr.cdideper);
                     recordContr.set('cdideext', datosContr.cdideext);
+                    recordContr.set('swexiper', 'S');
                     recordContr.set('cdestciv', datosContr.cdestciv);
                 }
                     
