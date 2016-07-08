@@ -1,0 +1,17 @@
+.custom-x-form-invalid-field
+{
+    background-color:white;
+    background-image:url(invalid_line.gif);
+    background-repeat:repeat-x;
+    background-position:bottom;
+    border:1px solid #c30;
+}
+.x-form-invalid-field
+{
+    border:2px solid #c30;
+}
+.x-action-col-icon {
+    height: 16px;
+    width: 16px;
+    margin-right: 8px;
+}
