@@ -32,6 +32,8 @@ import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.MailService;
+import mx.com.gseguros.portal.general.service.MailServiceForSms;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
@@ -93,6 +95,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	@Autowired
 	private transient Ice2sigsService ice2sigsService;
 	
+	@Autowired
+    private MailService mailService;
+	    
 	@Override
 	public void movimientoTvalogarGrupo(
 			String cdunieco
@@ -7097,6 +7102,44 @@ public class CotizacionManagerImpl implements CotizacionManager
             ///////////////////////////////////
             ////// Generacion cotizacion //////
             /*///////////////////////////////*/
+            
+            ////// 0.1 verificamos que el plan tenga las coberturas que le corresponden //////
+            paso = "Validando coberturas del plan";
+            for(int i=0;i<incisos.size();i++)
+            {
+            	if(StringUtils.isNotBlank(incisos.get(i).get("estado")) && StringUtils.isNotBlank(incisos.get(i).get("nmsuplem")))
+            	{
+                    boolean planValido = cotizacionDAO.validandoCoberturasPLan(
+                  		  cdunieco
+                  		 ,cdramo
+                  		 ,incisos.get(i).get("estado") //estado
+                  		 ,nmpoliza
+                  		 ,incisos.get(i).get("nmsuplem") //nmsuplem
+                  		);
+                    	logger.debug("listaResultados: "+planValido);
+                  
+      	            if(planValido)
+      	            {
+
+//      	            	public Map<String,String> listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdtipsit);
+//      	            	//{ "ahernandezc@gsalud.com.mx","nlromeroc@gsalud.com.mx","jvargas@gsalud.com.mx" };
+//      	            	String mensajeAgente = "Presenta conflicto al cotizar la poliza: "+cdunieco+"/"+cdramo+"/"+nmpoliza+", al no encontrarse por completo las coberturas que le corresponden.";
+//      	            	String [] adjuntos = new String[0];
+//      	            	boolean mailSend = mailService.enviaCorreo(listamails, null, null, "Conflicto en coberturas", mensajeAgente, adjuntos, false);
+//      	        		if(!mailSend)
+//      	        		{
+//      	        			throw new ApplicationException("4");
+//      	        		}
+//      	        		else
+//      	        		{
+//      	        			//correo envio exitosamente
+//      	    			}
+      	            }
+            	}
+            }
+            
+            ////// 0.1 verificamos que el plan tenga las coberturas que le corresponden //////
+            
             paso = "Recuperando resultados de cotizaci\u00F3n";
             List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
             		cdusuari
