@@ -308,4 +308,6 @@ public interface FlujoMesaControlManager
 			,String dstitulo
 			,String accion
 			)throws Exception;
+	
+	public void modificarDetalleTramiteMC(String ntramite, String nmordina, String comments) throws Exception;
 }

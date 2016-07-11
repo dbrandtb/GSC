@@ -2617,4 +2617,28 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		}
 	}
 	
+	@Override
+	public void modificarDetalleTramiteMC(String ntramite, String nmordina, String comments) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("nmordina" , nmordina);
+		params.put("comments" , comments);
+		ejecutaSP(new ModificarDetalleTramiteMCSP(getDataSource()),params);
+	}
+	
+	protected class ModificarDetalleTramiteMCSP extends StoredProcedure
+	{
+		protected ModificarDetalleTramiteMCSP(DataSource dataSource)
+		{
+			super(dataSource,"P_ACT_TDMESACONTROL");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmordina" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("comments" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

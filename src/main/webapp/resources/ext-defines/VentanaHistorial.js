@@ -97,14 +97,14 @@ Ext.define('VentanaHistorial',
                             ,xtype     : 'datecolumn'
                             ,dataIndex : 'FECHAINI'
                             ,format    : 'd M Y H:i'
-                            ,width     : 140
+                            ,width     : 125
                         }
                         ,{
                             header     : 'Fin'
                             ,xtype     : 'datecolumn'
                             ,dataIndex : 'FECHAFIN'
                             ,format    : 'd M Y H:i'
-                            ,width     : 140
+                            ,width     : 125
                         }
                         ,{
                             header     : 'Estatus'
@@ -116,42 +116,18 @@ Ext.define('VentanaHistorial',
                             }
                         }
                         ,{
-                            width         : 30
-                            ,menuDisabled : true
-                            ,dataIndex    : 'FECHAFIN'
-                            ,renderer     : function(value)
+                            dataIndex : 'usuario_ini'
+                            ,width    : 30
+                            ,renderer : function(val,md,rec)
                             {
-                                debug(value);
-                                if(value&&value!=null)
+                                var r = '';
+                                if(config.cdsisrol!='EJECUTIVOCUENTA'||rec.raw.SWAGENTE=='S')
                                 {
-                                    value='';
+                                    r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'book_edit.png" style="cursor:pointer;" data-qtip="Modificar detalle" />';
                                 }
-                                else
-                                {
-                                    value='<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'accept.png" style="cursor:pointer;" data-qtip="Finalizar" />';
-                                }
-                                return value;
+                                return r;
                             }
-                            ,hidden       : true
                         }
-                        /*,{
-                            width         : 30
-                            ,menuDisabled : true
-                            ,dataIndex    : 'CDCLAUSU'
-                            ,renderer     : function(value)
-                            {
-                                debug(value);
-                                if(value&&value!=null&&value.length>0)
-                                {
-                                    value='<img src="${ctx}/resources/fam3icons/icons/printer.png" style="cursor:pointer;" data-qtip="Imprimir" />';
-                                }
-                                else
-                                {
-                                    value='';
-                                }
-                                return value;
-                            }
-                        }*/
                     ]
                     ,listeners :
                     {
@@ -160,16 +136,16 @@ Ext.define('VentanaHistorial',
                                 rowIndex, e, eOpts)
                         {
                             debug(record);
-                            if(/*cellIndex<6*/$(td).find('img').length==0)
+                            if($(td).find('img').length==0)
                             {
                                 _fieldById('_c21_inputReadDetalleHtmlVisor').setValue((config.cdsisrol!='EJECUTIVOCUENTA'||record.raw.SWAGENTE=='S')?record.get('COMMENTS'):'');
                             }
-                            else if(/*cellIndex==6&&*/$(td).find('img').length>0)
+                            else if($(td).find('img').length>0)
                             {
                                 debug('finalizar');
                                 centrarVentanaInterna(Ext.create('Ext.window.Window',
                                 {
-                                    title        : 'Finalizar detalle'
+                                    title        : 'Modificar detalle'
                                     ,width       : 600
                                     ,height      : 400
                                     ,buttonAlign : 'center'
@@ -180,7 +156,6 @@ Ext.define('VentanaHistorial',
                                     [
                                         {
                                             xtype   : 'textarea'
-                                            ,itemId : '_c21_inputHtmlEditorFinalizarDetalleMesCon'
                                             ,width  : 570
                                             ,height : 300
                                             ,value  : record.get('COMMENTS')
@@ -193,51 +168,60 @@ Ext.define('VentanaHistorial',
                                             ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'disk.png'
                                             ,handler : function(me)
                                             {
-                                                var win = me.up('window');
-                                                win.setLoading(true);
-                                                Ext.Ajax.request(
+                                                var mask, ck = 'Modificando detalle';
+                                                try
                                                 {
-                                                    url      : _GLOBAL_COMP_URL_FINAL_HIST
-                                                    ,params  :
+                                                    mask = _maskLocal(ck);
+                                                    Ext.Ajax.request(
                                                     {
-                                                        'smap1.pv_ntramite_i'  : record.get('NTRAMITE')
-                                                        ,'smap1.pv_nmordina_i' : record.get('NMORDINA')
-                                                        ,'smap1.pv_comments_i' : _fieldById('_c21_inputHtmlEditorFinalizarDetalleMesCon').getValue()
-                                                    }
-                                                    ,success : function (response)
-                                                    {
-                                                        var json=Ext.decode(response.responseText);
-                                                        if(json.success==true)
+                                                        url      : _GLOBAL_COMP_URL_MODIF_HIST
+                                                        ,params  :
                                                         {
-                                                            win.destroy();
-                                                            Ext.Msg.show({
-                                                                title:'Detalle actualizado',
-                                                                msg: 'Se finaliz&oacute; el detalle',
-                                                                buttons: Ext.Msg.OK
-                                                            });
+                                                            'params.ntramite'  : record.get('NTRAMITE')
+                                                            ,'params.nmordina' : record.get('NMORDINA')
+                                                            ,'params.comments' : me.up('window').down('textarea').getValue()
                                                         }
-                                                        else
+                                                        ,success : function (response)
                                                         {
-                                                            win.setLoading(false);
-                                                            Ext.Msg.show({
-                                                                title:'Error',
-                                                                msg: 'Error al finalizar detalle',
-                                                                buttons: Ext.Msg.OK,
-                                                                icon: Ext.Msg.ERROR
-                                                            });
+                                                            mask.close();
+                                                            var ck = 'Decodificando respuesta al modificar detalle';
+                                                            try
+                                                            {
+                                                                var json=Ext.decode(response.responseText);
+                                                                if(json.success === true)
+                                                                {
+                                                                    mensajeCorrecto(
+                                                                        'Detalle actualizado'
+                                                                        ,'Detalle actualizado'
+                                                                        ,function()
+                                                                        {
+                                                                            record.set('COMMENTS',me.up('window').down('textarea').getValue());
+                                                                            _fieldById('_c21_inputReadDetalleHtmlVisor').setValue(record.get('COMMENTS'));
+                                                                            me.up('window').destroy();
+                                                                        }
+                                                                    );
+                                                                }
+                                                                else
+                                                                {
+                                                                    mensajeError(json.message);
+                                                                }
+                                                            }
+                                                            catch(e)
+                                                            {
+                                                                manejaException(e,ck);
+                                                            }
                                                         }
-                                                    }
-                                                    ,failure : function()
-                                                    {
-                                                        win.setLoading(false);
-                                                        Ext.Msg.show({
-                                                            title:'Error',
-                                                            msg: 'Error de comunicaci&oacute;n',
-                                                            buttons: Ext.Msg.OK,
-                                                            icon: Ext.Msg.ERROR
-                                                        });
-                                                    }
-                                                });
+                                                        ,failure : function()
+                                                        {
+                                                            mask.close();
+                                                            errorComunicacion(null,'Error al modificar detalle');
+                                                        }
+                                                    });
+                                                }
+                                                catch(e)
+                                                {
+                                                    manejaException(e,ck,mask);
+                                                }
                                             }
                                         }
                                         ,{
@@ -251,10 +235,6 @@ Ext.define('VentanaHistorial',
                                     ]
                                 }).show());
                             }
-                            /*else if(cellIndex==5&&$(td).find('img').length>0)
-                            {
-                                debug("APRETASTE EL BOTON IMPRIMIR PARA EL RECORD:",record);
-                            }*/
                         }
                     }
                 })

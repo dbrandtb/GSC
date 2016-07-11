@@ -2186,6 +2186,52 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		
 		return SUCCESS;
 	}
+	
+	@Action(value   = "modificarDetalleTramiteMC",
+			results = { @Result(name="success", type="json") }
+			)
+	public String modificarDetalleTramiteMC()
+	{
+		logger.debug(Utils.log(
+				 "\n#######################################"
+				,"\n###### modificarDetalleTramiteMC ######"
+				,"\n###### params = " , params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String ntramite   = params.get("ntramite")
+					,nmordina = params.get("nmordina")
+					,comments = params.get("comments");
+			
+			Utils.validate(
+					ntramite  , "No se recibi\u00f3 el tr\u00e1mite"
+					,nmordina , "No se recibi\u00f3 el ordinal"
+					,comments , "No se recibi\u00f3 el detalle"
+					);
+			
+			flujoMesaControlManager.modificarDetalleTramiteMC(ntramite,nmordina,comments);
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### message = " , message
+				,"\n###### modificarDetalleTramiteMC ######"
+				,"\n#######################################"
+				));
+		
+		return SUCCESS;
+	}
 
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //

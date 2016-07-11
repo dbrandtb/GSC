@@ -2686,4 +2686,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
+	@Override
+	public void modificarDetalleTramiteMC(String ntramite, String nmordina, String comments) throws Exception
+	{
+		flujoMesaControlDAO.modificarDetalleTramiteMC(ntramite, nmordina, comments);
+	}
 }

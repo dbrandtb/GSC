@@ -33,6 +33,7 @@
     var _GLOBAL_COMP_URL_VENTANA_DOCS               = '<s:url namespace="/documentos"       action="ventanaDocumentosPoliza"   />'
         ,_GLOBAL_COMP_URL_GET_HISTORIAL             = '<s:url namespace="/mesacontrol"      action="obtenerDetallesTramite"    />'
         ,_GLOBAL_COMP_URL_FINAL_HIST                = '<s:url namespace="/mesacontrol"      action="finalizarDetalleTramiteMC" />'
+        ,_GLOBAL_COMP_URL_MODIF_HIST                = '<s:url namespace="/flujomesacontrol" action="modificarDetalleTramiteMC" />'
         ,_GLOBAL_COMP_URL_TURNAR                    = '<s:url namespace="/flujomesacontrol" action="turnarDesdeComp"           />'
         ,_GLOBAL_COMP_URL_CONS_CLAU                 = '<s:url namespace="/catalogos"        action="consultaClausulas"         />'
         ,_GLOBAL_COMP_URL_CONS_CLAU_DET             = '<s:url namespace="/catalogos"        action="consultaClausulaDetalle"   />'
