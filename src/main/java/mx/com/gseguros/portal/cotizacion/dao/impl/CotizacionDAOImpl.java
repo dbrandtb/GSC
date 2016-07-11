@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.cotizacion.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -7782,7 +7784,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 	}
 	
-	public boolean validandoCoberturasPLan(
+	public String validandoCoberturasPLan(
 			  String cdunieco
      		 ,String cdramo
      		 ,String estado //estado
@@ -7801,22 +7803,30 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 				.append("\n******************************************************")
 				.toString()
 				);
+		String mensaje = "";
+		
 		Map<String,Object> params = new LinkedHashMap<String,Object>();		
 		params.put("cdunieco", cdunieco);
 		params.put("cdramo",   cdramo);
 		params.put("estado",   estado);
 		params.put("nmpoliza", nmpoliza);
 		params.put("nmsuplem", nmsuplem);
-		Map<String,Object>     procResult = ejecutaSP(new validandoCoberturasPLan(getDataSource()), params);
-		String bandera = (String)procResult.get("pv_bandera_o");
-    	if(StringUtils.isNotBlank(bandera)&&bandera.equals("1"))
-    	{
-    		return true;
-    	}
+		Map<String,Object> procResult = ejecutaSP(new validandoCoberturasPLan(getDataSource()), params);
+		
+		Map<String, String> newMap = new HashMap<String, String>();
+		@SuppressWarnings("unchecked")
+		Map<String, Object> intermediate = (Map)Collections.checkedMap(newMap, String.class, String.class);
+		intermediate.putAll(procResult);
+		
+		if(StringUtils.isNotBlank(newMap.get("pv_bandera_o")) && newMap.get("pv_bandera_o").contains("1"))
+		{
+			mensaje = newMap.get("pv_title_o");
+			return mensaje;
+		}
 		else 
 		{
 			//return false;
-			return true;
+			return "";
 		}
 	}
 	
@@ -7838,12 +7848,13 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public Map<String,String> obtenerCorreosReportarIncidenciasPorTipoSituacion(
-			String cdtipsit
+	public String[] obtenerCorreosReportarIncidenciasPorTipoSituacion(
+			String ramo
 			)throws Exception,Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
-		params.put("cdtipsit" , cdtipsit);
+		params.put("PV_CDRAMO_I" , ramo);
+		
 		logger.debug(
 				new StringBuilder()
 				.append("\n*****************************************")
@@ -7852,15 +7863,30 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 				.append("\n*****************************************")
 				.toString()
 				);
-		Map<String,Object>procResult = ejecutaSP(new obtenerCorreosReportarIncidenciasPorTipoSituacion(getDataSource()), params);
-		String listaDatos = (String)procResult.get("pv_registro_o");
-		if(listaDatos.isEmpty())
+		
+		Map<String,Object> procResult = ejecutaSP(new obtenerCorreosReportarIncidenciasPorTipoSituacion(getDataSource()), params);
+		List<Map<String,String>> lista = (List<Map<String,String>>)procResult.get("PV_CORREOS_O");
+		if(lista==null||lista.size()==0)
 		{
-			throw new Exception("No se pudo cargar la poliza");
+			throw new ApplicationException(Utils.join("No existe correos registrados para enviar relacionados al tipo de ramo: ",params.get("cdtipsit").toString()));
 		}
 		else
 		{
-			return null;
+			String[] arrEmails = null;
+			List<String> listaCorreo = new ArrayList<String>();
+			for(Map<String,String>en:lista)
+			{
+				listaCorreo.add(en.get("OTVALOR01"));
+			}
+				
+			List<String> listaCorreoSeparados = new ArrayList<String>();
+			for(String strMails : listaCorreo) 
+			{
+				// Se agregan todos los e-mails separados por ";":
+				listaCorreoSeparados.addAll( Arrays.asList( StringUtils.split(strMails, ";") ) );
+			}
+			arrEmails = listaCorreoSeparados.toArray(new String[listaCorreo.size()]);
+			return arrEmails;
 		}
 	}
 	
@@ -7869,11 +7895,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		protected obtenerCorreosReportarIncidenciasPorTipoSituacion(DataSource dataSource)
 		{
 			super(dataSource,"P_OBTENER_CORREOS_X_SITUACION");
-			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRAMO_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_CORREOS_O" , OracleTypes.CURSOR, new GenericMapper(new String[]{"OTVALOR01"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
+			compile(); 	 	
 		}
 	}
 	
