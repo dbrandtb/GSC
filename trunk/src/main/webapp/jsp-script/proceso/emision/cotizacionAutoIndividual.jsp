@@ -565,7 +565,7 @@ Ext.onReady(function()
           ,width  : 435
           ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
           ,items  : _p28_panel7Items
-          ,hidden : false
+          ,hidden : true
     }
    ,{
          xtype   : 'fieldset'
@@ -1734,7 +1734,7 @@ function _p28_cotizar(sinTarificar)
                 {
                 	if(!Ext.isEmpty(json.smap1.msnPantalla))
                 	{
-                		   mensajeError(json.smap1.msnPantalla);
+                		mensajeCorrecto(json.smap1.msnPantalla);
                 	}
                 	
                     debug(Ext.decode(json.smap1.fields));
