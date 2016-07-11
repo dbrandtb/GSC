@@ -1368,7 +1368,7 @@ function llenandoCampos (json)
             primerInciso.set('FESOLICI',json.smap1.FESOLICI);
             
             var combcl = 'S';
-            if(_0_smap1.cdramo=='6' && !Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
+            if(_0_smap1.cdramo=='6' || !Ext.isEmpty(_fieldLikeLabel('CLIENTE NUEVO',null,true)))
             {
                 combcl = _fieldLikeLabel('CLIENTE NUEVO');
                 if(!Ext.isEmpty(json.slist1[0].OTVALOR24))
@@ -4499,6 +4499,8 @@ Ext.onReady(function()
                 codpos.setReadOnly(false);
                 codpos.setFieldLabel('C&Oacute;DIGO POSTAL CLIENTE');
                 _0_recordClienteRecuperado=null;
+                _0_smap1['cdideperCli']=null;
+                _0_smap1['cdpersonCli']=null;
             }
             //recuperar cliente
             else if(combcl.getValue()=='N' && ( Ext.isEmpty(combcl.semaforo)||combcl.semaforo==false ))
