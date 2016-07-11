@@ -1622,16 +1622,18 @@ function _0_cotizar(boton)
             _0_smap1['nmorddomCli'] = Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM;
             _0_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';//Se utiliza para no retarificar   
           
-            var agenteCmp=_fieldByLabel('AGENTE');
-            if(Ext.isEmpty(agenteCmp))
+            if(_0_smap1.cdramo=='16')
             {
-                smap.cdagenteAux='';
+	            var agenteCmp=_fieldByLabel('AGENTE');
+	            if(Ext.isEmpty(agenteCmp))
+	            {
+	                smap.cdagenteAux='';
+	            }
+	            else
+	            {
+	                smap.cdagenteAux=agenteCmp.getValue();
+	            }
             }
-            else
-            {
-                smap.cdagenteAux=agenteCmp.getValue();
-            }
-            
         }
         
         if(_0_smap1.cdramo=='16')
@@ -3160,7 +3162,7 @@ Ext.onReady(function()
         ,id       : '_0_botImprimirId'
         ,text     : 'Imprimir'
         ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
-        ,disabled : true
+        ,disabled : false
         ,handler  : _0_imprimir
     });
     
