@@ -5426,7 +5426,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class ProcesaPagoAutomaticoLayout extends StoredProcedure {
 		protected ProcesaPagoAutomaticoLayout(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_NOVA.P_GET_TCONLAYSIN");
+			super(dataSource, "PKG_SINIESTRO.P_GET_TCONLAYSIN");
 			String[] cols = new String[]{
 					"NTRAMITE"
 			};
