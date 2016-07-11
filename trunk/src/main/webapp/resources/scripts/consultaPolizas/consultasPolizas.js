@@ -87,7 +87,10 @@ Ext.onReady(function() {
                                 debug('antes de cargar storeAsegurados=', storeAsegurados);
                                 
                                 //Datos para asegurados
-                                storeAsegurados.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();
+                                var params = panelBusqueda.down('form').getForm().getValues();
+                                params['params.nombre'] = null;
+                                storeAsegurados.getProxy().extraParams = params;
+//                                storeAsegurados.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();
                                 debug('se asignaron extra params', storeAsegurados.getProxy().extraParams);
                                 storeAsegurados.load({
                                     //params: panelBusqueda.down('form').getForm().getValues(),
