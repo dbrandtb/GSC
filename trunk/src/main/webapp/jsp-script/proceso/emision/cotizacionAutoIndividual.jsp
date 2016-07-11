@@ -565,7 +565,7 @@ Ext.onReady(function()
           ,width  : 435
           ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
           ,items  : _p28_panel7Items
-          ,hidden : true
+          ,hidden : false
     }
    ,{
          xtype   : 'fieldset'
@@ -1681,7 +1681,7 @@ function _p28_cotizar(sinTarificar)
         _p28_smap1['cdpersonCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CLAVECLI;
         _p28_smap1['cdideperCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CDIDEPER;
         _p28_smap1['nmorddomCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.NMORDDOM;
-        _p28_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';
+        _p28_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';//Se utiliza para no retarid
         
         if(cargarXpoliza)
             {
@@ -1732,6 +1732,11 @@ function _p28_cotizar(sinTarificar)
                 debug('### cotizar:',json);
                 if(json.success==true)
                 {
+                	if(!Ext.isEmpty(json.smap1.msnPantalla))
+                	{
+                		   mensajeError(json.smap1.msnPantalla);
+                	}
+                	
                     debug(Ext.decode(json.smap1.fields));
                     debug(Ext.decode(json.smap1.columnas));
                     debug(json.slist2);

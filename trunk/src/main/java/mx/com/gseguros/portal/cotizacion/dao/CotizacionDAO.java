@@ -775,14 +775,14 @@ public interface CotizacionDAO {
 			,String nmsituaext
 			)throws Exception;
 	
-	public boolean validandoCoberturasPLan(
+	public String validandoCoberturasPLan(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String nmsituac)throws Exception;
 	
-	public Map<String,String> obtenerCorreosReportarIncidenciasPorTipoSituacion(
+	public String[] obtenerCorreosReportarIncidenciasPorTipoSituacion(
 			String cdtipsit
 			)throws Exception,Exception;
 }

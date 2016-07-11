@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -6959,7 +6960,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 										}else{
 											usuarioCaptura = usuarioSesion.getCodigoPersona();
 										}
-										
 									}
 						    		
 						    		String apellidoPat = "";
@@ -7105,38 +7105,43 @@ public class CotizacionManagerImpl implements CotizacionManager
             
             ////// 0.1 verificamos que el plan tenga las coberturas que le corresponden //////
             paso = "Validando coberturas del plan";
-            for(int i=0;i<incisos.size();i++)
-            {
-            	if(StringUtils.isNotBlank(incisos.get(i).get("estado")) && StringUtils.isNotBlank(incisos.get(i).get("nmsuplem")))
+//            for(int i=0;i<incisos.size();i++)
+//            {
+//            	if(StringUtils.isNotBlank(incisos.get(i).get("estado")) && StringUtils.isNotBlank(incisos.get(i).get("nmsuplem")))
+            	if(StringUtils.isNotBlank(cdramo) && cdramo.equals("5"))
             	{
-                    boolean planValido = cotizacionDAO.validandoCoberturasPLan(
+                    String planValido = cotizacionDAO.validandoCoberturasPLan(
                   		  cdunieco
                   		 ,cdramo
-                  		 ,incisos.get(i).get("estado") //estado
+                  		 ,"W"//estado
                   		 ,nmpoliza
-                  		 ,incisos.get(i).get("nmsuplem") //nmsuplem
+                  		 ,"0"//nmsuplem
                   		);
-                    	logger.debug("listaResultados: "+planValido);
+                    	logger.debug("Amis Y Modelo con Irregularidades en coberturas: "+planValido);
                   
-      	            if(planValido)
+      	            if(StringUtils.isNotBlank(planValido))
       	            {
-
-//      	            	public Map<String,String> listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdtipsit);
-//      	            	//{ "ahernandezc@gsalud.com.mx","nlromeroc@gsalud.com.mx","jvargas@gsalud.com.mx" };
-//      	            	String mensajeAgente = "Presenta conflicto al cotizar la poliza: "+cdunieco+"/"+cdramo+"/"+nmpoliza+", al no encontrarse por completo las coberturas que le corresponden.";
-//      	            	String [] adjuntos = new String[0];
-//      	            	boolean mailSend = mailService.enviaCorreo(listamails, null, null, "Conflicto en coberturas", mensajeAgente, adjuntos, false);
-//      	        		if(!mailSend)
-//      	        		{
-//      	        			throw new ApplicationException("4");
-//      	        		}
-//      	        		else
-//      	        		{
-//      	        			//correo envio exitosamente
-//      	    			}
+      	            	String mensajeAPantalla = "Por el  momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas";
+      	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
+      	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud\n" + 
+      	            			nmpoliza +" del producto de Automóviles:\n" + 
+      	            			planValido;
+      	            	
+      	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
+      	            	//{"XXXX@XXX.com.mx","YYYYY@YYYY.com.mx"};";
+      	            	String [] adjuntos = new String[0];
+      	            	boolean mailSend = mailService.enviaCorreo(listamails, null, null, "Reporte de Tarifa incompleta - SICAPS", mensajeACorreo, adjuntos, false);
+      	        		if(!mailSend)
+      	        		{
+      	        			throw new ApplicationException("4");
+      	        		}
+      	        		else
+      	        		{
+      	        			//correo envio exitosamente
+      	    			}
       	            }
             	}
-            }
+//            }
             
             ////// 0.1 verificamos que el plan tenga las coberturas que le corresponden //////
             
@@ -7422,7 +7427,6 @@ public class CotizacionManagerImpl implements CotizacionManager
     	resp.setRespuesta("El n\u00FAmero de p\u00F3liza es : "+nmpoliza);
     	return resp;
     }
-    
     
     @Override
     public String procesoComprarCotizacion(String cdunieco, String cdramo, String nmpoliza, String cdtipsit,
