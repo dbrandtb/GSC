@@ -1734,7 +1734,7 @@ function _p28_cotizar(sinTarificar)
                 {
                 	if(!Ext.isEmpty(json.smap1.msnPantalla))
                 	{
-                		mensajeCorrecto(json.smap1.msnPantalla);
+                		mensajeCorrecto('Aviso',json.smap1.msnPantalla);
                 	}
                 	
                     debug(Ext.decode(json.smap1.fields));

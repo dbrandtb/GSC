@@ -7121,7 +7121,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                   
       	            if(StringUtils.isNotBlank(planValido))
       	            {
-      	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas";
+      	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
       	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
       	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Automóviles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
       	            			planValido;
