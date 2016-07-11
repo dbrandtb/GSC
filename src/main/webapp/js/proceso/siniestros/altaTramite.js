@@ -2459,7 +2459,8 @@ Ext.onReady(function() {
                                 'params.cdunieco': json.cduniecomc,
                                 'params.cdramo':   json.cdramomc,
                                 'params.estado':   json.estadomc,
-                                'params.nmpoliza': json.nmpolizamc
+                                'params.nmpoliza': json.nmpolizamc,
+                                'params.cdperson': json.otvalor04mc
                             }
                         });
                         
