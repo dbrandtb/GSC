@@ -419,6 +419,28 @@
         });
     }
     
+    //
+    function editarCamposPorCdunieco(grid,cdunieco){
+    	//Obtiene las columnas del grid
+    	var gridColumns = grid.headerCt.getGridColumns();
+    	
+    	//Sucursal 1403 para el campo No. de Socio
+    	for (var i = 0; i < gridColumns.length; i++) {
+    	  if (gridColumns[i].dataIndex == "numsoc" && cdunieco == 1403) {
+	    		gridColumns[i].editor.allowBlank = false;
+	    		debug(gridColumns[i].editor);
+    	  }
+    	}
+
+    	//Sucursal 1403 para el campo Clave Familiar   	
+    	for (var i = 0; i < gridColumns.length; i++) {
+    	  if (gridColumns[i].dataIndex == "clvfam" && cdunieco == 1403) {
+	    		gridColumns[i].editor.allowBlank = false;
+	    		debug(gridColumns[i].editor);
+    	  }
+    	}
+    }
+    
     //guardador
     function validarYGuardar()
     {
@@ -1214,7 +1236,7 @@ debug("validarYGuardar flag:2");
             queryMode:'local',
             displayField: 'value',
             valueField: 'key',
-            allowBlank:true,
+            allowBlank:false,
             editable:false
         });
         
@@ -1792,6 +1814,9 @@ debug("validarYGuardar flag:2");
                                     }
                                 });
                                 debug('hay tomador '+(hayTomador?'true':'false'));
+                                
+                                //Validacion para La sucursal 1403
+                                editarCamposPorCdunieco(gridPersonasp2,inputCduniecop2);
                                 
                                 if(!hayTomador)
                                 {
