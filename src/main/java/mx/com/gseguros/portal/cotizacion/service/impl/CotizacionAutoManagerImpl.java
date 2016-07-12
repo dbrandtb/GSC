@@ -43,6 +43,7 @@ import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -111,6 +112,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
+	
+	@Autowired
+    private MailService mailService;
 	
 	@Override
 	public Map<String,Object> cotizacionAutoIndividual(
@@ -2086,6 +2090,39 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				cotizacionDAO.movimientoMpolisitLote(listaPMovMpolisit);
 				logger.debug(Utils.log("Tiempo en mpolisit=",(System.currentTimeMillis()-inicioMpolisit)/1000d));
 			}
+			
+        	if(StringUtils.isNotBlank(cdramo) && cdramo.equals("5"))
+        	{
+                String planValido = cotizacionDAO.validandoCoberturasPLan(
+              		  cdunieco
+              		 ,cdramo
+              		 ,"W"//estado
+              		 ,nmpoliza
+              		 ,"0"//nmsuplem
+              		);
+                	logger.debug("Amis Y Modelo con Irregularidades en coberturas: "+planValido);
+              
+  	            if(StringUtils.isNotBlank(planValido))
+  	            {
+  	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
+  	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
+  	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Automóviles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
+  	            			planValido;
+  	            	
+  	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
+  	            	//{"XXXX@XXX.com.mx","YYYYY@YYYY.com.mx"};";
+  	            	String [] adjuntos = new String[0];
+  	            	boolean mailSend = mailService.enviaCorreo(listamails, null, null, "Reporte de Tarifa incompleta - SICAPS", mensajeACorreo, adjuntos, false);
+  	        		if(!mailSend)
+  	        		{
+  	        			throw new ApplicationException("4");
+  	        		}
+  	        		else
+  	        		{
+  	        			//correo envio exitosamente
+  	    			}
+  	            }
+        	}
 				
 			paso = ("Construyendo lote de atributos de situacion");
 			logger.debug("\nPaso: "+paso);
@@ -2157,6 +2194,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			logger.debug("\nPaso: "+paso);
 			cotizacionDAO.movimientoTbasvalsitLote(listaPInsertaTbasvalsit);
 			logger.debug(Utils.log("Tiempo en tbasvalsit=",(System.currentTimeMillis()-inicioTbasvalsit)/1000d));
+			
+			
 			
 			if(noTarificar==false)
 			{
