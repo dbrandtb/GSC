@@ -1001,7 +1001,7 @@ Ext.onReady(function() {
                 }
             },
             {
-                text: 'Estado', 
+                text: 'Estatus P&oacute;liza', 
                 dataIndex: 'estado', 
                 width: 100,
                 renderer: function(value, metaData, record, rowIndex , colIndex, store, view) {
