@@ -48,13 +48,13 @@ function _4_onFolderClick(rowIndex)
             url       : mesConUrlDocu
             ,params   :
             {
-                'smap1.nmpoliza'  : record.get('nmpoliza')&&record.get('nmpoliza').length>0?record.get('nmpoliza'):'0'
+                'smap1.nmpoliza'  : !Ext.isEmpty(record.get('nmpoliza'))?record.get('nmpoliza'):'0'
                 ,'smap1.cdunieco' : record.get('cdunieco')
                 ,'smap1.cdramo'   : record.get('cdramo')
                 ,'smap1.estado'   : record.get('estado')
                 ,'smap1.nmsuplem' : '0'
                 ,'smap1.ntramite' : record.get('ntramite')
-                ,'smap1.nmsolici' : record.get('nmsolici')&&record.get('nmsolici').length>0?record.get('nmsolici'):'0'
+                ,'smap1.nmsolici' : !Ext.isEmpty(record.get('nmsolici'))?record.get('nmsolici'):'0'
                 ,'smap1.tipomov'  : '0'
             }
             ,scripts  : true
