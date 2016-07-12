@@ -619,7 +619,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             nuevo.put("pv_hhefecto",     (String)anterior.get("hhefecto"));
             nuevo.put("pv_feproren",     panel2.get("ferenova"));//renderFechas.format(fechaEnUnAnio.getTime()));
             nuevo.put("pv_fevencim",     anterior.get("fevencim")!=null?renderFechas.format(anterior.get("fevencim")):null);
-            nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?"0":panel2.get("nmrenova"))); 
+//            nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?"0":panel2.get("nmrenova"))); 
             nuevo.put("pv_nmrenova",     (String) (panel2.get("nmrenova")==null?"0":panel2.get("nmrenova"))); 
             nuevo.put("pv_ferecibo",     anterior.get("ferecibo")!=null?renderFechas.format(anterior.get("ferecibo")):null);
             nuevo.put("pv_feultsin",     anterior.get("feultsin")!=null?renderFechas.format(anterior.get("feultsin")):null);
@@ -635,7 +635,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             		:(String)anterior.get("nmcuadro"));
             nuevo.put("pv_porredau",     (String)anterior.get("porredau"));
             nuevo.put("pv_swconsol",     (String)anterior.get("swconsol"));
-            nuevo.put("pv_nmpolant",     panel2.get("nmpolant")==null?"":panel2.get("nmpolant"));//  // Se agrega TextField
+//            nuevo.put("pv_nmpolant",     panel2.get("nmpolant")==null?"":panel2.get("nmpolant"));//  // Se agrega TextField
             nuevo.put("pv_nmpolant",     (String) (panel2.get("nmpolant")==null?null:panel2.get("nmpolant")));//  // Se agrega TextField
             nuevo.put("pv_nmpolnva",     (String)anterior.get("nmpolnva"));
             nuevo.put("pv_fesolici",     panel2.get("fesolici"));
@@ -970,15 +970,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(new Item("header", "Estado Civil"))
 					.add(new Item("dataIndex", "cdestciv"))
 					.add(new Item("width", 100))
-					.add(new Item("hidden", true))
 					.add(Item.crear("renderer","rendererEstcivp2").setQuotes(""))
-					.add(Item.crear("editor","editorEstcivp2").setQuotes(""))
+					.add(Item.crear("editor","editorEstcivp2").setQuotes("")
+						)	
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "No. de Socio"))
 					.add(new Item("dataIndex", "numsoc"))
 					.add(new Item("width", 100))
-					.add(new Item("hidden", true))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("name","numsoc")
@@ -990,7 +989,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(new Item("header", "Clave Familiar"))
 					.add(new Item("dataIndex", "clvfam"))
 					.add(new Item("width", 100))
-					.add(new Item("hidden", true))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("name","clvfam")
@@ -1002,11 +1000,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(new Item("header", "Ocupaci\u00f3n"))
 					.add(new Item("dataIndex", "ocup"))
 					.add(new Item("width", 100))
-					.add(new Item("hidden", true))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
 							.add("name","ocup")
-							.add("allowBlank",true)
+							.add("allowBlank",false)
 						)
 					);
 			
@@ -1398,23 +1395,33 @@ public class ComplementariosAction extends PrincipalCoreAction
 				String nmsituac = (String) aseg.get("nmsituac");
 				
 				
-				//Nï¿½mero de socio y Clave Familiar, para el atributo SITUAEXT
+				//Número de socio y Clave Familiar, para el atributo SITUAEXT
 				try{
-					ns = StringUtils.rightPad(numsoc, 6, "0");
-					cf = StringUtils.leftPad(clvfam, 2, "0");
+					if(StringUtils.isEmpty(numsoc) || StringUtils.isEmpty(clvfam)){
+						ns = " ";
+						cf = " ";
+						
+						nmsituaext = " ";
+						logger.debug(Utils.log("situaext ->"+nmsituaext));
+					}else{
+						logger.debug(Utils.log("Generando Situaext..."));
+						ns = StringUtils.rightPad(numsoc, 6, "0");
+						cf = StringUtils.leftPad(clvfam, 2, "0");
+						
+						//NMSITUAEXT
+						nmsituaext = ns + "-" + cf;
+						logger.debug(Utils.log("situaext ->"+nmsituaext));
+					}
+						
+					
 				}catch(Exception e){
 					throw new ApplicationException("Generando Situaext desde Clave familiar y Numero de Socio");
 				}
 
-				//NMSITUAEXT
-				nmsituaext = ns + "-" + cf;
-				
-				logger.debug(Utils.log("situaext ->"+nmsituaext));
-				
+								
 				Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 				String swExiper = (String)aseg.get("swexiper");
-				
-				//nmsituac=nmsituacNuevo;
+				logger.debug(Utils.log("swexiper ->"+swExiper));
 		
 				if(StringUtils.isBlank(swExiper) || swExiper.equalsIgnoreCase("N")){
 				
@@ -1459,6 +1466,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,"0"
 							,nmsituaext
 							);
+					logger.debug(Utils.log("Se agrego el nmsituaext en mpolisit "+i));
 				}
 				
 				String cdRolAseg = (String)aseg.get("cdrol");
