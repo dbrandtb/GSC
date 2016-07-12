@@ -41,6 +41,8 @@ var MontoMinimo = 0;
 var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
+
+var cargarXpoliza = false;
 ////// urls //////
 
 ////// variables //////
@@ -223,7 +225,7 @@ var _p30_endoso = _p30_smap1.endoso+'x'=='Sx';
 
 var _p30_bufferAutos = [];
 
-var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
+var rolesSuscriptores ='|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 ////// variables //////
 
 ////// dinamicos //////
@@ -290,6 +292,70 @@ _p30_gridCols.push(
     ]
 }
 );
+
+// Inserta los cuadros para sucursal, ramo y poliza que cargaran del sigs al ice para renovacion
+var _p30_panel7Items =
+[
+    {
+        layout  :
+        {
+           type    : 'table'
+          ,columns : 1
+          ,style   : 'width:10px !important;'
+       }
+       ,border : 0
+       ,items  :
+       [
+        {
+                 xtype       : 'numberfield'
+                ,itemId      : '_p30_numsuc'
+                ,fieldLabel  : 'SUCURSAL'
+                ,name        : 'sucursal'               
+                ,sinOverride : true
+                ,labelWidth  : 170
+                ,style       : 'margin:5px;margin-left:15px;'//'margin:5px;margin-left:15px;width:20px !important;'
+                ,listeners   :
+                {
+                    change : _p30_nmpolizaChange
+                }
+            }
+           ,{
+                    xtype       : 'numberfield'
+                   ,itemId      : '_p30_numram'
+                   ,fieldLabel  : 'RAMO'
+                   ,name        : 'ramo'                   
+                   ,sinOverride : true                   
+                   ,labelWidth  : 170
+                   ,style       : 'margin:5px;margin-left:15px;'//'width : 30px !important;'
+                   ,listeners   :
+                   {
+                       change : _p30_nmpolizaChange
+                   }
+              }
+             ,{
+                  xtype       : 'numberfield'
+                 ,itemId      : '_p30_numpol'
+                 ,fieldLabel  : 'POLIZA'
+                 ,name        : 'poliza'
+                 ,sinOverride : true                 
+                 ,labelWidth  : 170
+                 ,style       : 'margin:5px;margin-left:15px;'//'width : 50px !important;'
+                 ,listeners   :
+                 {
+                     change : _p30_nmpolizaChange
+                 }
+           }
+          ,{
+                 xtype   : 'button'
+                ,itemId  : '_p30_botonCargarPoliza'
+                ,text    : 'BUSCAR'
+                ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                ,style   : 'margin-right'
+                ,handler : _p30_cargarPoliza
+          }
+       ]
+    }
+ ];
 
 var _p30_panel1ItemsConf =
 [
@@ -900,7 +966,7 @@ Ext.onReady(function()
                 }
             ]
         }
-        ,{
+        ,{//VILS
             xtype   : 'fieldset'
             ,itemId : '_p30_panel3Fieldset'
             ,title  : '<span style="font:bold 14px Calibri;">CLIENTE</span>'
@@ -939,7 +1005,16 @@ Ext.onReady(function()
         ,style      : 'margin:5px;margin-left:15px;'
         ,allowBlank : !_p30_endoso
         ,hidden     : !_p30_endoso
-    });
+    }
+    ,{
+        xtype   : 'fieldset'
+        ,itemId : '_p28_fieldBusquedaPoliza'
+        ,width  : 435
+        ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
+        ,items  : _p30_panel7Items
+        ,hidden : true
+      }
+    );
     
     var itemsTatripol=
     [
@@ -2421,7 +2496,7 @@ Ext.onReady(function()
                             url      : _p30_urlCargarSumaAseguradaRamo5
                             ,params  :
                             {
-                                'smap1.cdtipsit'  : cdtipsit
+                                 'smap1.cdtipsit' : cdtipsit
                                 ,'smap1.clave'    : versionVal
                                 ,'smap1.modelo'   : modeloVal
                                 ,'smap1.cdsisrol' : _p30_smap1.cdsisrol
@@ -3395,7 +3470,9 @@ function _p30_configuracionPanelDinClic(cdtipsit,titulo)
         var panel    = _p30_paneles[cdtipsit];
         var itemDesc = panel.down('[fieldLabel*=DESCUENTO]');
         if((rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
-            &&!Ext.isEmpty(itemDesc))
+            &&!Ext.isEmpty(itemDesc)
+            && 'TL'.lastIndexOf(cdtipsit)==-1
+          )
         {
             Ext.Ajax.request(
             {
@@ -4439,6 +4516,12 @@ function _p30_cotizar(sinTarificar)
                 debug('### cotizar:',json);
                 if(json.exito)
                 {
+                	
+                	if(!Ext.isEmpty(json.smap1.msnPantalla))
+                    {
+                           mensajeError(json.smap1.msnPantalla);
+                    }
+                	
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(json.smap1.nmpoliza);
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
@@ -7268,6 +7351,55 @@ function _p30_actualizarSwexiperTramite(callback)
         manejaException(e,ck);
     }
 }
+
+function _p30_cargarPoliza(boton)
+{   cargarXpoliza = true;
+    var sucursal = _fieldByName('sucursal').getValue();
+    var ramo = _fieldByName('ramo').getValue();
+    var poliza = _fieldByName('poliza').getValue();
+    var agt ;
+    var valido   = !Ext.isEmpty(poliza);// !Ext.isEmpty(ramo) !Ext.isEmpty(sucursal);
+    if(!valido)
+    {
+        mensajeWarning('Introduce los datos necesarios');
+    }
+    
+    if(valido)
+    {
+        var panelpri = _fieldById('_p28_panelpri');
+        panelpri.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url      : _p28_urlCargarPoliza
+             ,params  :
+             {
+                  'smap1.cdsucursal' : sucursal
+                 ,'smap1.cdramo' : ramo
+                 ,'smap1.cdpoliza' : poliza
+                 ,'smap1.cdusuari' : _p28_smap1.cdusuari
+                 ,'smap1.tipoflot' : 'I'
+             }
+             ,success : function(response)
+             {
+              panelpri.setLoading(false);
+              var json=Ext.decode(response.responseText);
+              debug("valoresCampos: ",json);
+              var json2=Ext.decode(json.smap1.valoresCampos);
+              json2['success']=true;
+              cdper     = json2.smap1.cdper;   //D00000000111005
+              cdperson  = json2.smap1.cdperson;//530400
+              debug("valoresCampos 2: ",json2);
+              llenandoCampos(json2);
+             }
+            ,failure : function()
+            {
+             panelpri.setLoading(false);
+             errorComunicacion();
+            }
+        });
+    }
+}
+
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
