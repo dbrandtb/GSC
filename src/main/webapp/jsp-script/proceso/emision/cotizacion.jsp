@@ -70,7 +70,7 @@ var _0_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"      
 var _0_urlCargarParamerizacionCoberturas    = '<s:url namespace="/emision"          action="cargarParamerizacionConfiguracionCoberturas" />';
 var _0_urlRecuperarDatosTramiteValidacion   = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente"      />';
 var _0_urlCargarPoliza                      = '<s:url namespace="/emision"          action="cargarPoliza"                                />';
-
+var _0_urlCargarCatalogo                    = '<s:url namespace="/catalogos"       action="obtieneCatalogo"                     />';
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
     <s:property value="imap.modeloExtraFields" />
@@ -1171,7 +1171,6 @@ function _0_recuperarCotizacion(nmpoliza)
             
             if(_0_smap1.cdramo=='6')
             {   
-              //-----------VILS
                 var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
                 if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
                 {
@@ -1489,7 +1488,6 @@ function llenandoCampos (json)
                         
                         if('|AF|PU|AT|MC|'.lastIndexOf('|'+_0_smap1.cdtipsit+'|')!=-1)
                         {
-                            //vils
                             _0_panelPri.setLoading(true);
                             cargaCotiza = true;
                             sinTarificar = !maestra&&!vencida ;
@@ -2581,7 +2579,6 @@ function _0_cargarParametrizacionCoberturas(callback)
                 if(_f1_json.exito)
                 {
 //                  alert('EXITO');
-                    debug('Vils campos',_f1_json);
                     for(var i=0;i<_f1_json.slist1.length;i++)
                     {
                         var item = _fieldByName('parametros.pv_otvalor'+(('00'+_f1_json.slist1[i].cdatribu).slice(-2)));
@@ -2630,7 +2627,6 @@ function _0_cargarParametrizacionCoberturas(callback)
                                     debug('minimo=',minimo,'maximo=',maximo);
                                     item.store.filterBy(function(record)
                                     {
-                                        //VILS
                                         debug('filtrando record=',record);
                                         var key=record.get('key')-0;
                                         debug('quitando key=',key,key>=minimo&&key<=maximo,'.');
@@ -4011,6 +4007,48 @@ Ext.onReady(function()
                                 select : _0_atributoNacimientoContratante
                             });
         }
+        
+        Ext.Ajax.request(
+                {
+                    url      : _0_urlCargarCatalogo
+                    ,params  :
+                    {
+                         'catalogo'        : 'RAMO_5_TIPOS_VALOR_X_ROL'
+                        ,'params.cdtipsit' : _0_smap1.cdtipsit
+                    }
+                    ,success : function(response)
+                    {
+                        setTimeout(
+                    		function ()
+                    		{
+//                     			alert('timer');
+		                        _fieldByLabel('TIPO VALOR').setLoading(false);
+		                        var json=Ext.decode(response.responseText);
+		                        debug('respuesta json obtener rango TIPO VALOR:',json);
+		                        
+	                        	//VILS
+	                            var tipoValor =_fieldByLabel('TIPO VALOR');
+	//                          _fieldByName('parametros.pv_otvalor01');
+	//                         	_0_formAgrupados.down('[name=parametros.pv_otvalor02]');
+	                        	
+	                        	debug('vilsss:',tipoValor);
+	                        	tipoValor.getStore().removeAll();
+	                        	for(var i=0 ; i<json.lista.length; i++)
+	                       		{
+	                        	    tipoValor.getStore().add(json.lista[i]);
+	                       		}
+                    			
+                    		},
+                    		1500
+                    	);
+                    	
+                    }
+                    ,failure : function()
+                    {
+                        _fieldByLabel('TIPO VALOR').setLoading(false);
+                        errorComunicacion();
+                    }
+                });
     }
     //fin [parche]
     
