@@ -2865,6 +2865,7 @@ Ext.onReady(function() {
 	}
 
 	function validacionCopagoTotal(){
+		var copagoPositivo = 0;
 		var copagoOrig = Ext.getCmp('idCopago').getValue() ;
 		var tipoCopago = Ext.getCmp('idTipoCopago').getValue() ;
 		var sumatoria = 0;
@@ -2879,7 +2880,13 @@ Ext.onReady(function() {
 		if(validaRamoTramite (Ext.getCmp('idcdRamo').getValue()) == true){
 			if( copagoOrig =="NO" || copagoOrig =="NA"){
 				sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() +  +Ext.getCmp('idPenalCambioZona').getValue();
-				Ext.getCmp('idCopagoFin').setValue(sumatoria);
+				//Ext.getCmp('idCopagoFin').setValue(sumatoria);
+				if(+sumatoria > 0){
+					Ext.getCmp('idCopagoFin').setValue(sumatoria);
+				}else{
+					Ext.getCmp('idCopagoFin').setValue(copagoPositivo);
+				}
+				
 				return true;
 			}
 			if(tipoCopago =="$"){
@@ -2893,12 +2900,22 @@ Ext.onReady(function() {
 			}
 			if(tipoCopago =="%"){
 				sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig.replace("%","");
-				Ext.getCmp('idCopagoFin').setValue(sumatoria);
+				//Ext.getCmp('idCopagoFin').setValue(sumatoria);
+				if(+sumatoria > 0){
+					Ext.getCmp('idCopagoFin').setValue(sumatoria);
+				}else{
+					Ext.getCmp('idCopagoFin').setValue(copagoPositivo);
+				}
 				return true;
 			}
 			else{
 				sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig;//.replace("%","");
-				Ext.getCmp('idCopagoFin').setValue(sumatoria);
+				//Ext.getCmp('idCopagoFin').setValue(sumatoria);
+				if(+sumatoria > 0){
+					Ext.getCmp('idCopagoFin').setValue(sumatoria);
+				}else{
+					Ext.getCmp('idCopagoFin').setValue(copagoPositivo);
+				}
 				return true;
 			}
 		}else{
@@ -2918,7 +2935,12 @@ Ext.onReady(function() {
 				}
 				if(tipoCopago =="%"){
 					var sumatoria = + valorCopago + +Ext.getCmp('idPorcIncremento').getValue();
-					Ext.getCmp('idCopagoFin').setValue(sumatoria);
+					//Ext.getCmp('idCopagoFin').setValue(sumatoria);
+					if(+sumatoria > 0){
+						Ext.getCmp('idCopagoFin').setValue(sumatoria);
+					}else{
+						Ext.getCmp('idCopagoFin').setValue(copagoPositivo);
+					}
 					return true;
 				}
 			}
