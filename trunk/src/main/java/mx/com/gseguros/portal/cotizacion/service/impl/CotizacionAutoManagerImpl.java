@@ -2091,39 +2091,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				logger.debug(Utils.log("Tiempo en mpolisit=",(System.currentTimeMillis()-inicioMpolisit)/1000d));
 			}
 			
-        	if(StringUtils.isNotBlank(cdramo) && cdramo.equals("5"))
-        	{
-                String planValido = cotizacionDAO.validandoCoberturasPLan(
-              		  cdunieco
-              		 ,cdramo
-              		 ,"W"//estado
-              		 ,nmpoliza
-              		 ,"0"//nmsuplem
-              		);
-              
-  	            if(StringUtils.isNotBlank(planValido))
-  	            {
-  	            	logger.debug("Amis Y Modelo con Irregularidades en coberturas: "+planValido);
-  	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
-  	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
-  	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Automóviles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
-  	            			planValido;
-  	            	
-  	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
-  	            	//{"XXXX@XXX.com.mx","YYYYY@YYYY.com.mx"};";
-  	            	String [] adjuntos = new String[0];
-  	            	boolean mailSend = mailService.enviaCorreo(listamails, null, null, "Reporte de Tarifa incompleta - SICAPS", mensajeACorreo, adjuntos, false);
-  	        		if(!mailSend)
-  	        		{
-  	        			throw new ApplicationException("4");
-  	        		}
-  	        		else
-  	        		{
-  	        			//correo envio exitosamente
-  	    			}
-  	            }
-        	}
-				
 			paso = ("Construyendo lote de atributos de situacion");
 			logger.debug("\nPaso: "+paso);
 			long                  inicioTvalosit    = System.currentTimeMillis();
@@ -2432,6 +2399,39 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,"1" //cdperpag
 						);
 			}
+			
+			if(StringUtils.isNotBlank(cdramo) && cdramo.equals("5"))
+        	{
+                String planValido = cotizacionDAO.validandoCoberturasPLan(
+              		  cdunieco
+              		 ,cdramo
+              		 ,"W"//estado
+              		 ,nmpoliza
+              		 ,"0"//nmsuplem
+              		);
+              
+  	            if(StringUtils.isNotBlank(planValido))
+  	            {
+  	            	logger.debug("Amis Y Modelo con Irregularidades en coberturas: "+planValido);
+  	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
+  	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
+  	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Automóviles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
+  	            			planValido;
+  	            	
+  	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
+  	            	//{"XXXX@XXX.com.mx","YYYYY@YYYY.com.mx"};";
+  	            	String [] adjuntos = new String[0];
+  	            	boolean mailSend = mailService.enviaCorreo(listamails, null, null, "Reporte de Tarifa incompleta - SICAPS", mensajeACorreo, adjuntos, false);
+  	        		if(!mailSend)
+  	        		{
+  	        			throw new ApplicationException("4");
+  	        		}
+  	        		else
+  	        		{
+  	        			//correo envio exitosamente
+  	    			}
+  	            }
+        	}
 			
 			paso = ("Recuperando tarificacion");
 			logger.debug("\nPaso: "+paso);
