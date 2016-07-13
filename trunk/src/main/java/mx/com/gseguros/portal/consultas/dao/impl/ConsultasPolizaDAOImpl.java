@@ -325,16 +325,16 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 	protected class ConsultaSuplementosAseguradoSP extends StoredProcedure {
 		protected ConsultaSuplementosAseguradoSP(DataSource dataSource) {
 			super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
-			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ramo_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdsisrol_i",OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_dsperson", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliex_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ramo_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsperson",      OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new SuplementoMapper()));
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
     		compile();
 		}
 	}
