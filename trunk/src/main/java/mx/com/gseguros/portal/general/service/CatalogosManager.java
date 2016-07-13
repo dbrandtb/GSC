@@ -23,6 +23,18 @@ public interface CatalogosManager {
 
 	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre) throws Exception;
 	
+	
+	/**
+	 * Obtiene los atributos de situacion restringidos por rol del sistema (EGS)
+	 * @param cdAtribu  Numero o posicion del atributo
+	 * @param cdTipSit  Tipo de situaci&oacute;n
+	 * @param idPadre   Identificador del elemento padre (si es un elemento dependiente)
+	 * @param cdSisRol  C&oacute;digo del Rol en el sistema
+	 * @return Atributos de situacion
+	 * @throws Exception
+	 */
+	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre, String cdSisRol) throws Exception; // se utiliza para atributos situacion x rol (EGS)
+	
 	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit, String idPadre) throws Exception;
 	
 	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String idPadre) throws Exception;

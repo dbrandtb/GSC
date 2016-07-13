@@ -10,6 +10,12 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.StoredProcedure;
+
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
@@ -20,12 +26,6 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
-
-import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.StoredProcedure;
 
 public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO {
 
@@ -225,7 +225,40 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
         }
     }
     
-    @Override
+	@Override
+    public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor, String cdSisRol) throws Exception{
+		try{
+			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
+			params.put("pv_cdtipsit_i", cdTipSit);
+			params.put("pv_cdatribu_i", cdAtribu);
+			params.put("pv_otvalor_i", otValor);
+			params.put("pv_cdsisrol_i", cdSisRol);
+			Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosSitRol(getDataSource()), params);
+			return (List<GenericVO>) resultado.get("pv_registro_o");
+		}catch (Exception e){
+			throw new Exception(e.getMessage(),e);
+		}
+	}
+	
+	protected class ObtieneAtributosSitRol extends StoredProcedure {
+
+        protected ObtieneAtributosSitRol(DataSource dataSource) {
+            super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_SIT_X_ROL");
+            declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
+            
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosSitMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+	
+	
+	@Override
 	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit, String otValor) throws Exception {
 		try {
     		HashMap<String,Object> params = new LinkedHashMap<String,Object>();
