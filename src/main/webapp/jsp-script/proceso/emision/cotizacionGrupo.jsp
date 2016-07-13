@@ -5923,6 +5923,21 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
     var record=grid.getStore().getAt(rowIndex);
     debug('>_p21_revisarAseguradosClic record:',record);
     _p21_quitarTabExtraprima(record.get('letra'));
+    var plugins = [];
+    plugins.push({
+    	ptype       : 'pagingselectpersist'
+    	,pluginId   : 'pagingselect'
+    	});
+    if (_p21_smap1.EXTRAPRIMAS_EDITAR =='S'){
+    	plugins.push(Ext.create('Ext.grid.plugin.RowEditing',{
+    		clicksToEdit  : 1
+    		,errorSummary : true
+    		,pluginId     : 'rowedit'
+    		,listeners: {
+    			edit: checkEdit
+    			}
+    	}));
+    }
     _p21_agregarTab(
     {
         title                 : 'EXTRAPRIMAS DE SUBGRUPO '+record.get('letra')
@@ -5930,7 +5945,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
         ,extraprimaLetraGrupo : record.get('letra')
         ,defaults             : { style : 'margin:5px;' }
         ,border               : 0
-        ,items                :
+         ,items                :
         [
             Ext.create('Ext.grid.Panel',
             {
@@ -5943,20 +5958,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
 				,columns     : [ <s:property value='%{getImap().containsKey("extraprimasColumns")?getImap().get("extraprimasColumns").toString():""}' escapeHtml='false' /> ]
                 ,width      : 980
                 ,height     : 500
-                ,plugins    : [_p21_smap1.EXTRAPRIMAS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
-                            		   {
-                            	   clicksToEdit  : 1
-                            	   ,errorSummary : true
-                            	   ,pluginId     : 'rowedit'
-                            	   ,listeners: {
-                            		   edit: checkEdit
-                            		   }
-                               }) : null
-                               ,{
-                            	   ptype       : 'pagingselectpersist'
-                            	   ,pluginId   : 'pagingselect'
-                            	   }
-                               ]
+                ,plugins    : plugins
                 ,tbar       :
                 [
                     {
@@ -6152,9 +6154,11 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                         ,handler : function()
                         {
                             _p21_guardarExtraprimas(record.get('letra'));
+                            _fieldById('gridAseg').store.commitChanges();
+                            debug('aun guardados', records.lenght());
                         }
                     }
-                ]
+                ] 
             })
         ]
     });
