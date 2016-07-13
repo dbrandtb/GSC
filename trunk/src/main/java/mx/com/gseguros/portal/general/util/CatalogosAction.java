@@ -942,6 +942,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.recuperarTipsitPorRamoPorTipogrupo(params.get("idPadre"),params.get("tipogrupo"));
 					break;
+				case TIPOS_ENDOSO_X_CDRAMO_X_CDTIPSIT:
+					if(params != null)
+					{
+						lista = catalogosManager.recuperarTiposDeEndosoPorCdramoPorCdtipsit(params.get("cdramo"),params.get("cdtipsit"));
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

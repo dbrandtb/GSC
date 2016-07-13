@@ -286,6 +286,9 @@ Ext.onReady(function()
                         
                         me.down('[name=NMPOLIEX]').allowBlank = true;
                         _hide(me.down('[name=NMPOLIEX]'));
+                        
+                        me.down('[name=CDTIPSUPEND]').allowBlank = true;
+                        _hide(me.down('[name=CDTIPSUPEND]'));
                     }
                     else if(Number(cdtiptra) === 15 || Number(cdtiptra) === 21) // para endoso o renovacion
                     {
@@ -301,6 +304,17 @@ Ext.onReady(function()
                         
                         _fieldByName('COMMENTS',me).allowBlank = true;
                         _hide(_fieldByName('COMMENTS',me));
+                        
+                        if(Number(cdtiptra) === 15)
+                        {
+                            _fieldByName('CDTIPSUPEND',me).allowBlank = false;
+                            _show(_fieldByName('CDTIPSUPEND',me));
+                        }
+                        else
+                        {
+                            _fieldByName('CDTIPSUPEND',me).allowBlank = true;
+                            _hide(_fieldByName('CDTIPSUPEND',me));
+                        }
                         
                         // salud
                         
@@ -790,6 +804,11 @@ Ext.onReady(function()
                                 debug('### poliza:',json);
                                 if(json.success==true)
                                 {
+                                    if(json.params.CDTIPSIT !== _fieldByName('CDTIPSIT' , _p54_windowNuevo).getValue())
+                                    {
+                                        throw 'La p\u00f3liza no corresponde al subramo seleccionado';
+                                    }
+                                    
                                     centrarVentanaInterna(Ext.create('Ext.window.Window',
                                     {
                                         title     : 'P\u00f3liza'
@@ -846,6 +865,15 @@ Ext.onReady(function()
                                                     _setValueCampoAgente(agenteCmp,json.params.CDAGENTE);
                                                     
                                                     estadoCmp.setValue('M');
+                                                    
+                                                    _fieldByName('CDTIPSUPEND' , _p54_windowNuevo).getStore().load(
+                                                    {
+                                                        params :
+                                                        {
+                                                            'params.cdramo'    : json.params.CDRAMO
+                                                            ,'params.cdtipsit' : json.params.CDTIPSIT
+                                                        }
+                                                    });
                                                 }
                                             }
                                             ,{
@@ -1112,6 +1140,14 @@ Ext.onReady(function()
 	                                                                                        ,json.params.NMPOLIZA
 	                                                                                        ,function()
 	                                                                                        {
+	                                                                                            _fieldByName('CDTIPSUPEND' , _p54_windowNuevo).getStore().load(
+	                                                                                            {
+	                                                                                                params :
+	                                                                                                {
+	                                                                                                    'params.cdramo'    : json.params.CDRAMO
+	                                                                                                    ,'params.cdtipsit' : json.params.CDTIPSIT
+	                                                                                                }
+	                                                                                            });
 	                                                                                            _unmask();
 	                                                                                        }
 	                                                                                    );
@@ -1424,11 +1460,20 @@ function _p54_registrarTramite(bot)
             throw 'Favor de revisar los datos';
         }
         
+        var values = form.getValues();
+        if(Number(values.CDTIPTRA) === 15 && Number(values.CDTIPSUP) === 0)
+        {
+            debug('se reemplaza el cdtipsup 0 por ',values.CDTIPSUPEND,'.');
+            values.CDTIPSUP = values.CDTIPSUPEND;
+        }
+        
+        debug('values:',values,'.');
+        
         _setLoading(true,form);
         Ext.Ajax.request(
         {
             url      : _p54_urlRegistrarTramite
-            ,params  : _formValuesToParams(form.getValues())
+            ,params  : _formValuesToParams(values)
             ,success : function(response)
             {
                 _setLoading(false,form);
