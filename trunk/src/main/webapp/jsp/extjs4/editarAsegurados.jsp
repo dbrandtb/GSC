@@ -429,6 +429,7 @@
     	  if (gridColumns[i].dataIndex == "numsoc" && cdunieco == 1403) {
 	    		gridColumns[i].editor.allowBlank = false;
 	    		debug(gridColumns[i].editor);
+	    		break;
     	  }
     	}
 
@@ -437,6 +438,7 @@
     	  if (gridColumns[i].dataIndex == "clvfam" && cdunieco == 1403) {
 	    		gridColumns[i].editor.allowBlank = false;
 	    		debug(gridColumns[i].editor);
+	    		break;
     	  }
     	}
     }
@@ -1801,6 +1803,10 @@ debug("validarYGuardar flag:2");
                         afterrender: function (grid)
                         {
                             var view = grid.getView();
+                            
+                            //Validacion para La sucursal 1403
+                            editarCamposPorCdunieco(gridPersonasp2,inputCduniecop2);
+                            
                          // validation on record level through "itemupdate" event
                             view.on('itemupdate', function (record, y, node, options) {
                                 
@@ -1815,8 +1821,6 @@ debug("validarYGuardar flag:2");
                                 });
                                 debug('hay tomador '+(hayTomador?'true':'false'));
                                 
-                                //Validacion para La sucursal 1403
-                                editarCamposPorCdunieco(gridPersonasp2,inputCduniecop2);
                                 
                                 if(!hayTomador)
                                 {

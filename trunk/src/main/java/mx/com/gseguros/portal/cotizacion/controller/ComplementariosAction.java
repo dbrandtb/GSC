@@ -1405,7 +1405,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug(Utils.log("situaext ->"+nmsituaext));
 					}else{
 						logger.debug(Utils.log("Generando Situaext..."));
-						ns = StringUtils.rightPad(numsoc, 6, "0");
+						ns = StringUtils.leftPad(numsoc, 6, "0");
 						cf = StringUtils.leftPad(clvfam, 2, "0");
 						
 						//NMSITUAEXT
@@ -1456,18 +1456,20 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug("#iteracion mov mpersonas "+i);
 					kernelManager.movMpersona(parametros);
 					
-					//se actualiza situaext
-					emisionManager.actualizaNmsituaextMpolisit(
-							map1.get("pv_cdunieco")
-							,map1.get("pv_cdramo")
-							,map1.get("pv_estado")
-							,map1.get("pv_nmpoliza")
-							,nmsituac
-							,"0"
-							,nmsituaext
-							);
-					logger.debug(Utils.log("Se agrego el nmsituaext en mpolisit "+i));
+					
 				}
+				
+				//se actualiza situaext
+				emisionManager.actualizaNmsituaextMpolisit(
+						map1.get("pv_cdunieco")
+						,map1.get("pv_cdramo")
+						,map1.get("pv_estado")
+						,map1.get("pv_nmpoliza")
+						,nmsituac
+						,"0"
+						,nmsituaext
+						);
+				logger.debug(Utils.log("Se agrego el nmsituaext en mpolisit "+i));
 				
 				String cdRolAseg = (String)aseg.get("cdrol");
 				
