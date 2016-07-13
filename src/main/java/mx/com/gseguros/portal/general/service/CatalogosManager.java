@@ -234,4 +234,6 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarRamosPorSucursalPorTipogrupo(String cdunieco, String tipogrupo) throws Exception;
     
     public List<GenericVO> recuperarTipsitPorRamoPorTipogrupo(String cdramo, String tipogrupo) throws Exception;
+    
+    public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit) throws Exception;
 }

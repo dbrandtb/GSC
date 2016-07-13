@@ -1912,4 +1912,35 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit) throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarTiposDeEndosoPorCdramoPorCdtipsit @@@@@@"
+				,"\n@@@@@@ cdramo   = " , cdramo
+				,"\n@@@@@@ cdtipsit = " , cdtipsit
+				));
+		
+		String paso = "Recuperando tipos de endoso por ramo por tipo de situaci\00f3n";
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		try
+		{
+			lista = catalogosDAO.recuperarTiposDeEndosoPorCdramoPorCdtipsit(cdramo,cdtipsit);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista = " , lista
+				,"\n@@@@@@ recuperarTiposDeEndosoPorCdramoPorCdtipsit @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
+	
+	
 }
