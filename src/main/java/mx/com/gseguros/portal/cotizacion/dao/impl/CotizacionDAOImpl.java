@@ -3983,45 +3983,65 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 				.append("\n*******************************************************")
 				.toString()
 				);
-		Map<String,Object>procResult;
+		Map<String,Object>procResult = null;
+		List<Map<String,String>>tatrist =new ArrayList<Map<String,String>>();
+		List<Map<String,String>>atrixrol=new ArrayList<Map<String,String>>();
+		List<Map<String,String>>atrixant=new ArrayList<Map<String,String>>();
+		List<Map<String,String>>atrixper=new ArrayList<Map<String,String>>();
+		List<Map<String,String>>atrixcam=new ArrayList<Map<String,String>>();
+		List<Map<String,String>>atrirang=new ArrayList<Map<String,String>>();
+	
 		if(cdtipsit.contains("AF") || cdtipsit.contains("PU"))
 		{
-		procResult = ejecutaSP(new CargarParamerizacionConfiguracionCoberturasFronterizos(getDataSource()),params);
+			try 
+			{
+				procResult = ejecutaSP(new CargarParamerizacionConfiguracionCoberturasFronterizos(getDataSource()),params);
+			}
+			catch(Exception ex)
+			{
+				procResult=null;
+			}
 		}
 		else
 		{
 		procResult = ejecutaSP(new CargarParamerizacionConfiguracionCoberturas(getDataSource()),params);
 		}
-		List<Map<String,String>>tatrist = (List<Map<String,String>>)procResult.get("pv_cur_tatrisit_o");
-		if(tatrist==null)
-		{
-			tatrist=new ArrayList<Map<String,String>>();
+		
+		if(procResult!=null)
+		{	
+			tatrist = (List<Map<String,String>>)procResult.get("pv_cur_tatrisit_o");
+			if(tatrist==null)
+			{
+				tatrist=new ArrayList<Map<String,String>>();
+			}
+			atrixrol = (List<Map<String,String>>)procResult.get("pv_cur_atrixrol_o");
+			if(atrixrol==null)
+			{
+				atrixrol=new ArrayList<Map<String,String>>();
+			}
+			atrixant = (List<Map<String,String>>)procResult.get("pv_cur_atrixant_o");
+			if(atrixant==null)
+			{
+				atrixant=new ArrayList<Map<String,String>>();
+			}
+			atrixper = (List<Map<String,String>>)procResult.get("pv_cur_atrixper_o");
+			if(atrixper==null)
+			{
+				atrixper=new ArrayList<Map<String,String>>();
+			}
+			atrixcam = (List<Map<String,String>>)procResult.get("pv_cur_atrixcam_o");
+			if(atrixcam==null)
+			{
+				atrixcam=new ArrayList<Map<String,String>>();
+			}
+			atrirang = (List<Map<String,String>>)procResult.get("pv_cur_atrirang_o");
+			if(atrirang==null)	
+			{
+				atrirang=new ArrayList<Map<String,String>>();
+			}
 		}
-		List<Map<String,String>>atrixrol = (List<Map<String,String>>)procResult.get("pv_cur_atrixrol_o");
-		if(atrixrol==null)
-		{
-			atrixrol=new ArrayList<Map<String,String>>();
-		}
-		List<Map<String,String>>atrixant = (List<Map<String,String>>)procResult.get("pv_cur_atrixant_o");
-		if(atrixant==null)
-		{
-			atrixant=new ArrayList<Map<String,String>>();
-		}
-		List<Map<String,String>>atrixper = (List<Map<String,String>>)procResult.get("pv_cur_atrixper_o");
-		if(atrixper==null)
-		{
-			atrixper=new ArrayList<Map<String,String>>();
-		}
-		List<Map<String,String>>atrixcam = (List<Map<String,String>>)procResult.get("pv_cur_atrixcam_o");
-		if(atrixcam==null)
-		{
-			atrixcam=new ArrayList<Map<String,String>>();
-		}
-		List<Map<String,String>>atrirang = (List<Map<String,String>>)procResult.get("pv_cur_atrirang_o");
-		if(atrirang==null)	
-		{
-			atrirang=new ArrayList<Map<String,String>>();
-		}
+
+
 		logger.debug(
 				new StringBuilder()
 				.append("\n*******************************************************")

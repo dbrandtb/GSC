@@ -2100,10 +2100,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
               		 ,nmpoliza
               		 ,"0"//nmsuplem
               		);
-                	logger.debug("Amis Y Modelo con Irregularidades en coberturas: "+planValido);
               
   	            if(StringUtils.isNotBlank(planValido))
   	            {
+  	            	logger.debug("Amis Y Modelo con Irregularidades en coberturas: "+planValido);
   	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
   	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
   	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Automóviles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
