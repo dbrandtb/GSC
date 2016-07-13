@@ -17,6 +17,17 @@ public interface CatalogosDAO {
 	
 	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit ,String otValor) throws Exception;
 	
+	/**
+	 * Obtiene los atributos de situacion restringidos por rol del sistema (EGS)
+	 * @param cdAtribu  Numero o posicion del atributo
+	 * @param cdTipSit  Tipo de situaci&oacute;n
+	 * @param otValor   Identificador del elemento padre (si es un elemento dependiente)
+	 * @param cdSisRol  C&oacute;digo del Rol en el sistema
+	 * @return Atributos de situacion
+	 * @throws Exception
+	 */
+	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor, String cdSisRol) throws Exception; //utilizado para atributos situacion x rol (EGS)
+	
 	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit ,String otValor) throws Exception;
 	
 	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String otValor) throws Exception;

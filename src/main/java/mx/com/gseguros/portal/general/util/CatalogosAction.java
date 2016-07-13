@@ -193,8 +193,10 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = catalogosManager.obtieneStatusTramite(params);
 					break;
 				case TATRISIT:
-					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
-		            break;
+					//lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
+					//para contemplar atributos situacion por rol (EGS)
+					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"),((UserVO) session.get("USUARIO")).getRolActivo().getClave());
+					break;
 				case TATRISIN:
 		            lista = catalogosManager.obtieneAtributosSiniestro(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					break;
