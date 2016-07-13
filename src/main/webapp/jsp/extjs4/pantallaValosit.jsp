@@ -314,4 +314,4 @@ Ext.onReady(function()
     ////// custom //////
 });
 </script>
-<div id="maindivpantallavalosit<s:property value='smap1.timestamp' />" style="height:1200px;"></div>
+<div id="maindivpantallavalosit<s:property value='smap1.timestamp' />" style="height:1500px;"></div>
