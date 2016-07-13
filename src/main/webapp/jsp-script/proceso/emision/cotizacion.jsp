@@ -2709,68 +2709,72 @@ function _0_cargarParametrizacionCoberturas(callback)
                         callback();
                     }
                     
-                    if(_0_smap1.cdtipsit+'x'=='AFx'||_0_smap1.cdtipsit+'x'=='PUx')
-                    {
-                        var canadaCmp = _fieldLikeLabel('CANAD');
-                        debug('@CUSTOM canada:',canadaCmp);
-                        canadaCmp.anidado = true;
-                        canadaCmp.heredar = function(remoto,micallback)
-                        {
-                            var me        = _fieldLikeLabel('CANAD');
-                            var postalCmp = _fieldLikeLabel('POSTAL');
-                            var postalVal = postalCmp.getValue();
-                            if((postalVal+'x').length==6)
-                            {
-                                me.setLoading(true);
-                                Ext.Ajax.request(
-                                {
-                                    url     : _0_urlRecuperacionSimple
-                                    ,params :
-                                    {
-                                        'smap1.procedimiento' : 'VERIFICAR_CODIGO_POSTAL_FRONTERIZO'
-                                        ,'smap1.cdpostal'     : postalVal
-                                    }
-                                    ,success : function(response)
-                                    {
-                                        me.setLoading(false);
-                                        var json=Ext.decode(response.responseText);
-                                        debug('### canada:',json);
-                                        if(json.exito)
-                                        {
-                                            if(json.smap1.fronterizo+'x'=='Sx')
-                                            {
-                                                me.setValue('S');
-                                            }
-                                            else
-                                            {
-                                                me.setValue('N');
-                                            }
-                                        }
-                                        else
-                                        {
-                                            mensajeError(json.respuesta);
-                                        }
-                                        if(!Ext.isEmpty(micallback))
-                                        {
-                                            micallback(_fieldLikeLabel('CANAD'));
-                                        }
-                                    }
-                                    ,failure : function()
-                                    {
-                                        me.setLoading(false);
-                                        errorComunicacion();
-                                    }
-                                });
-                            }
-                            else
-                            {
-                                if(!Ext.isEmpty(micallback))
-                                {
-                                    micallback(_fieldLikeLabel('CANAD'));
-                                }
-                            }
-                        }
-                        _fieldLikeLabel('CANAD').heredar();
+                    if(!Ext.isEmpty(_fieldLikeLabel('CANAD',null,true)))
+                    {	
+	                    if(_0_smap1.cdtipsit+'x'=='AFx'||_0_smap1.cdtipsit+'x'=='PUx')
+	                    {
+	                        
+	                    	var canadaCmp = _fieldLikeLabel('CANAD');
+	                        debug('@CUSTOM canada:',canadaCmp);
+	                        canadaCmp.anidado = true;
+	                        canadaCmp.heredar = function(remoto,micallback)
+	                        {
+	                            var me        = _fieldLikeLabel('CANAD');
+	                            var postalCmp = _fieldLikeLabel('POSTAL');
+	                            var postalVal = postalCmp.getValue();
+	                            if((postalVal+'x').length==6)
+	                            {
+	                                me.setLoading(true);
+	                                Ext.Ajax.request(
+	                                {
+	                                    url     : _0_urlRecuperacionSimple
+	                                    ,params :
+	                                    {
+	                                        'smap1.procedimiento' : 'VERIFICAR_CODIGO_POSTAL_FRONTERIZO'
+	                                        ,'smap1.cdpostal'     : postalVal
+	                                    }
+	                                    ,success : function(response)
+	                                    {
+	                                        me.setLoading(false);
+	                                        var json=Ext.decode(response.responseText);
+	                                        debug('### canada:',json);
+	                                        if(json.exito)
+	                                        {
+	                                            if(json.smap1.fronterizo+'x'=='Sx')
+	                                            {
+	                                                me.setValue('S');
+	                                            }
+	                                            else
+	                                            {
+	                                                me.setValue('N');
+	                                            }
+	                                        }
+	                                        else
+	                                        {
+	                                            mensajeError(json.respuesta);
+	                                        }
+	                                        if(!Ext.isEmpty(micallback))
+	                                        {
+	                                            micallback(_fieldLikeLabel('CANAD'));
+	                                        }
+	                                    }
+	                                    ,failure : function()
+	                                    {
+	                                        me.setLoading(false);
+	                                        errorComunicacion();
+	                                    }
+	                                });
+	                            }
+	                            else
+	                            {
+	                                if(!Ext.isEmpty(micallback))
+	                                {
+	                                    micallback(_fieldLikeLabel('CANAD'));
+	                                }
+	                            }
+	                        }
+	                        _fieldLikeLabel('CANAD').heredar();
+	                    }
                     }
                 }
                 else
