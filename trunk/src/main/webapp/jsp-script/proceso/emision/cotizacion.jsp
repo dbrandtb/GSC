@@ -3004,7 +3004,6 @@ function _0_atributoNacimientoContratante(combo)
                 _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=false;
                 _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').show();
             }
-
         }
     else
         {
@@ -3999,7 +3998,11 @@ Ext.onReady(function()
                         }
                        );
         
-        _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').hide();
+        if(!Ext.isEmpty(_fieldByLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
+       	{
+                    _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').hide();
+       	}
+        
         if(!Ext.isEmpty(_fieldByLabel('SEGURO DE VIDA',null,true)))
         {
             _fieldByLabel('SEGURO DE VIDA').on(
