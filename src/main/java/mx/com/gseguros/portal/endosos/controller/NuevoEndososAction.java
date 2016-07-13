@@ -68,6 +68,41 @@ public class NuevoEndososAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
+	@Action(value   = "endosoAltaAsegurados",
+		    results = {
+		        @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+		        @Result(name="success" , location="/jsp-script/proceso/endosos/endosoAltaAsegurados.jsp")
+		    })
+	public String endosoAltaAsegurados()
+	{
+		logger.debug(Utils.log(
+				 "\n##################################"
+				,"\n###### endosoAltaAsegurados ######"
+				,"\n###### params = " , params
+				,"\n###### flujo  = " , flujo
+				));
+		
+		String result = ERROR;
+		
+		try
+		{
+			result = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### result  = " , result
+				,"\n###### message = " , message
+				,"\n###### endosoAltaAsegurados ######"
+				,"\n##################################"
+				));
+		
+		return result;
+	}
+	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////// GETTERS Y SETTERS //////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
