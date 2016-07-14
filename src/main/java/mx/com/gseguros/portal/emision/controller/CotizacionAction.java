@@ -890,6 +890,138 @@ public class CotizacionAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+
+	public String webServiceNadaEndosos()
+	{
+		logger.debug(""
+				+ "\n##################################"
+				+ "\n###### webServiceNadaEdosos ######"
+				);
+		logger.debug("smap1: "+smap1);
+		
+		String  vim                  = null;
+		success                      = true;
+		VehicleValue_Struc datosAuto = null;
+		String cdunieco                = null;
+		String cdramo                = null;
+		String nmpoliza                = null;
+		String cdtipsit              = null;
+		String tipoVehiculo          = null;
+		String nmsituac              = null;
+		String nmsuplem              = null;
+		
+		//revisar numero de serie
+		if(success)
+		{
+			
+			success = smap1!=null&&StringUtils.isNotBlank(vim=smap1.get("vim"))
+					&&StringUtils.isNotBlank(cdunieco=smap1.get("cdunieco"))
+					&&StringUtils.isNotBlank(cdramo=smap1.get("cdramo"))
+					&&StringUtils.isNotBlank(nmpoliza=smap1.get("nmpoliza"))
+					&&StringUtils.isNotBlank(cdtipsit=smap1.get("cdtipsit"))
+					&&StringUtils.isNotBlank(tipoVehiculo=smap1.get("tipoveh"))
+					&&StringUtils.isNotBlank(nmsituac=smap1.get("nmsituac"))
+					&&StringUtils.isNotBlank(nmsuplem=smap1.get("nmsuplem"))
+					;
+			logger.debug("Vils tipo de vehiculo: "+ tipoVehiculo);
+			if(!success)
+			{
+				error="No se recibi\u00f3 el n\u00famero de serie";
+				logger.error(error);
+			}
+		}
+		
+		//obtener factor convenido
+		if(success)
+		{
+			try
+			{
+				LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
+				params.put("param1",cdramo);
+				params.put("param2",cdtipsit);
+				Map<String,String>factor=storedProceduresManager.procedureMapCall(
+						ObjetoBD.OBTIENE_FACTOR_CONVENIDO.getNombre(), params, null);
+				smap1.putAll(factor);
+			}
+			catch(Exception ex)
+			{
+				logger.warn("error SIN IMPACTO FUNCIONAL al obtener factor convenido o el factor no se encuentra",ex);
+				smap1.put("FACTOR_MIN","0");
+				smap1.put("FACTOR_MAX","0");
+			}
+		}
+		
+		//llamar web service
+		if(success)
+		{
+			datosAuto = nadaService.obtieneDatosAutomovilNADA(vim);
+			success   = datosAuto!=null;
+			if(!success)
+			{
+				error="No se encontr\u00f3 informaci\u00f3n para el n\u00famero de serie";
+				logger.error(error);
+				/*parche
+				datosAuto = new VehicleValue_Struc();
+				datosAuto.setVehicleYear(1);
+				datosAuto.setSeriesDescr("a");
+				datosAuto.setBodyDescr("b");
+				datosAuto.setAvgTradeIn(BigDecimal.valueOf(123d));
+				datosAuto.setMakeDescr("c");
+				success=true;*/
+			}
+		}
+		
+		int tipoValorVehiculo = 3;
+		String codigoPostal =  null;
+		
+		if(success){
+			
+			try{
+				codigoPostal = cotizacionManager.obtieneCodigoPostalAutomovil(cdunieco,cdramo,"M",nmpoliza,nmsituac,nmsuplem);
+				logger.debug("Tipo de Valor de auto a tomar: "+ tipoValorVehiculo);
+			}catch(Exception ex){
+				logger.error("Error al consultar el tipo de valor del automovil segun CP y tipo auto",ex);
+				success = false;
+			}
+		}
+		
+		if(success){
+			
+			try{
+				tipoValorVehiculo = cotizacionManager.obtieneTipoValorAutomovil(codigoPostal,tipoVehiculo);
+				logger.debug("Tipo de Valor de auto a tomar: "+ tipoValorVehiculo);
+			}catch(Exception ex){
+				logger.error("Error al consultar el tipo de valor del automovil segun CP y tipo auto",ex);
+				success = false;
+			}
+		}
+		
+		//datos regresados
+		if(success)
+		{
+			smap1.put("AUTO_ANIO"        , datosAuto.getVehicleYear()+"");
+			smap1.put("AUTO_DESCRIPCION" , datosAuto.getSeriesDescr()+" "+datosAuto.getBodyDescr());
+			
+			logger.debug("AvgTradeIn:" + datosAuto.getAvgTradeIn().toString());
+			logger.debug("TradeIn:"    + datosAuto.getAvgTradeIn().toString());
+			
+			String precioAuto = null;
+			if(tipoValorVehiculo == 1 || tipoValorVehiculo == 0){
+				precioAuto = datosAuto.getAvgTradeIn().toString();
+			} else if(tipoValorVehiculo == 2){
+				precioAuto = datosAuto.getTradeIn().toString();				
+			}
+			
+			smap1.put("AUTO_PRECIO", precioAuto);
+			smap1.put("AUTO_MARCA", datosAuto.getMakeDescr());
+		}
+		
+		logger.debug(""
+				+ "\n###### webServiceNada ######"
+				+ "\n############################"
+				);
+		return SUCCESS;
+	}
 	
 	public String emitirColectivo()
 	{

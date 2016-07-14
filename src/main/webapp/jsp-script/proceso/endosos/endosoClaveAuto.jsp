@@ -10,6 +10,10 @@ var _p38_urlCargarSumaAseguradaRamo5 = '<s:url namespace="/emision" action="carg
 var _p38_urlCargarParametros         = '<s:url namespace="/emision" action="obtenerParametrosCotizacion" />';
 var _p38_urlConfirmarEndoso          = '<s:url namespace="/endosos" action="guardarEndosoClaveAuto"      />';
 var _p38_urlRecuperacionSimple       = '<s:url namespace="/emision" action="recuperacionSimple"          />';
+
+var _p38_urlNadaEndoso               = '<s:url namespace="/emision" action="webServiceNadaEndosos"              />';
+var _p38_urlObtieneValNumeroSerie    = '<s:url namespace="/emision" action="obtieneValNumeroSerie"       />';
+
 ////// urls //////
 
 ////// variables //////
@@ -19,6 +23,9 @@ var _p38_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="fal
 debug('_p38_smap1:'  , _p38_smap1);
 debug('_p38_slist1:' , _p38_slist1);
 debug('_p38_flujo:'  , _p38_flujo);
+
+var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
+
 ////// variables //////
 
 ////// overrides //////
@@ -44,7 +51,7 @@ Ext.onReady(function()
     ////// componentes //////
     
     ////// contenido //////
-    Ext.create('Ext.form.Panel',
+    _38_formAuto = Ext.create('Ext.form.Panel',
     {
         renderTo  : '_p38_divpri'
         ,itemId   : '_p38_form'
@@ -151,35 +158,38 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
-    _fieldLikeLabel('CLAVE').on(
-    {
-        select : function(me,records)
-        {
-            var marcaCmp    = _fieldByLabel('MARCA');
-            var submarcaCmp = _fieldByLabel('SUBMARCA');
-            var modeloCmp   = _fieldByLabel('MODELO');
-            var versionCmp  = _fieldLikeLabel('VERSI');
-            var record      = records[0];
-            
-            debug('marcaCmp:'            , marcaCmp);
-            debug('submarcaCmp:'         , submarcaCmp);
-            debug('submarcaCmp.heredar:' , submarcaCmp.heredar , '.');
-            debug('record.data'          , record.data);
-            
-            var cadena = record.get('value');
-            debug('cadena:',cadena);
-            
-            var tok = cadena.split(' - ');
-            marcaCmp.setValue(marcaCmp.findRecordByDisplay(tok[1]));
-            submarcaCmp.heredar(true,function()
-            {
-                submarcaCmp.setValue(submarcaCmp.findRecordByDisplay(tok[2]));
-            });
-            modeloCmp.setValue(tok[3]);
-            versionCmp.setValue(tok[4]);
-            _p38_cargarSumaAseguradaRamo5();
-        }
-    });
+    if(_p38_slist1[0].CDTIPSIT != 'AF' && _p38_slist1[0].CDTIPSIT != 'PU'){
+	    _fieldLikeLabel('CLAVE').on(
+	    {
+	        select : function(me,records)
+	        {
+	            var marcaCmp    = _fieldByLabel('MARCA');
+	            var submarcaCmp = _fieldByLabel('SUBMARCA');
+	            var modeloCmp   = _fieldByLabel('MODELO');
+	            var versionCmp  = _fieldLikeLabel('VERSI');
+	            var record      = records[0];
+	            
+	            debug('marcaCmp:'            , marcaCmp);
+	            debug('submarcaCmp:'         , submarcaCmp);
+	            debug('submarcaCmp.heredar:' , submarcaCmp.heredar , '.');
+	            debug('record.data'          , record.data);
+	            
+	            var cadena = record.get('value');
+	            debug('cadena:',cadena);
+	            
+	            var tok = cadena.split(' - ');
+	            marcaCmp.setValue(marcaCmp.findRecordByDisplay(tok[1]));
+	            submarcaCmp.heredar(true,function()
+	            {
+	                submarcaCmp.setValue(submarcaCmp.findRecordByDisplay(tok[2]));
+	            });
+	            modeloCmp.setValue(tok[3]);
+	            versionCmp.setValue(tok[4]);
+	            _p38_cargarSumaAseguradaRamo5();
+	        }
+	    });
+	    
+	}
     ////// custom //////
     
     ////// loaders //////
@@ -263,9 +273,231 @@ Ext.onReady(function()
     */
     
     ////// loaders //////
+    
+    if(_p38_slist1[0].CDTIPSIT == 'AF' || _p38_slist1[0].CDTIPSIT == 'PU')
+    {
+        _38_formAuto.down('[name=OTVALOR92]').addListener('change',function()
+        {
+            debug('cleaning');
+            _38_formAuto.down('[name=OTVALOR93]').setValue('');
+            _38_formAuto.down('[name=OTVALOR95]').setValue('');
+            _38_formAuto.down('[name=OTVALOR96]').setValue('');
+            _38_formAuto.down('[name=OTVALOR97]').setValue('');
+        });
+        _38_formAuto.down('[name=OTVALOR92]').addListener('blur',function()
+        {
+            var vim = this.value;
+            if( (this.minLength > 0 && vim.length < this.minLength) || (vim.length < this.minLength || vim.length > this.maxLength) )
+            {
+            	if(this.minLength == this.maxLength) {
+            		mensajeWarning('La longitud del n&uacute;mero de serie debe ser ' + this.minLength);
+            	} else {
+            		mensajeWarning('La longitud del n&uacute;mero de serie debe ser entre ' + this.minLength + ' y ' + this.maxLength);
+            	}
+                return;
+            }
+            debug('>llamando a nada:',vim);
+            _38_formAuto.setLoading(true);
+            
+            Ext.Ajax.request(
+            {
+                url     : _p38_urlNadaEndoso
+                ,params :
+                {
+                    'smap1.vim'       : vim
+                    ,'smap1.cdunieco' : _p38_slist1[0].CDUNIECO
+                    ,'smap1.cdramo'   : _p38_slist1[0].CDRAMO
+                    ,'smap1.nmpoliza' : _p38_slist1[0].NMPOLIZA
+                    ,'smap1.cdtipsit' : _p38_slist1[0].CDTIPSIT
+                    ,'smap1.tipoveh'  : _38_formAuto.down('[name=OTVALOR91]').getValue()
+                    ,'smap1.nmsituac' : _p38_slist1[0].NMSITUAC
+                    ,'smap1.nmsuplem' : _p38_slist1[0].NMSUPLEM
+                }
+                ,success : function(response)
+                {
+                    _38_formAuto.setLoading(false);
+                    var json = Ext.decode(response.responseText);
+                    debug('nada response:', json);
+                    if(json.success)
+                    {
+                        var precioDolar = 200000;/*_38_formAuto.down('[name=parametros.pv_otvalor24]').getValue()-0;
+                        debug('precioDolar:',precioDolar); */
+                        _38_formAuto.down('[name=OTVALOR93]').setValue(json.smap1.AUTO_MARCA);
+                        _38_formAuto.down('[name=OTVALOR95]').setValue(json.smap1.AUTO_ANIO);
+                        _38_formAuto.down('[name=OTVALOR96]').setValue(json.smap1.AUTO_DESCRIPCION);
+                        _38_formAuto.down('[name=OTVALOR97]').setMinValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
+                        _38_formAuto.down('[name=OTVALOR97]').setMaxValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
+                        _38_formAuto.down('[name=OTVALOR97]').setValue((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2));
+                        debug('set min value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
+                        debug('set max value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
+                        
+                        Ext.Ajax.request({
+            				url     : _p38_urlObtieneValNumeroSerie
+            				,params :
+            				{
+            					'smap1.numSerie'  :  _38_formAuto.down('[name=OTVALOR92]').getValue()
+            					,'smap1.feini'    :  _fieldByName('feefecto').getValue()
+            				}
+            				,success : function(response)
+            				{
+            					var json=Ext.decode(response.responseText);
+            					debug(json);
+                    	    	if(json.exito!=true)
+                    	    	{
+                                    if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|')==-1)                    	    			
+                    	    		{
+                    	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
+                    				}else{
+                    					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
+                    				}
+                    	    	}
+            				}
+            				,failure : errorComunicacion
+            			});
+                    }
+                    else
+                    {
+                    	// Si no obtuvo datos el servicio "NADA", reseteamos valores:
+                		_38_formAuto.down('[name=OTVALOR93]').setValue();
+                        _38_formAuto.down('[name=OTVALOR95]').setValue();
+                        _38_formAuto.down('[name=OTVALOR96]').setValue();
+                        _38_formAuto.down('[name=OTVALOR97]').setValue();
+                        _38_formAuto.down('[name=OTVALOR97]').setMinValue();
+                        _38_formAuto.down('[name=OTVALOR97]').setMaxValue();
+                    }
+                }
+                ,failure : function()
+                {
+                    _38_formAuto.setLoading(false);
+                    debug("Entra a esta parte");
+                    errorComunicacion();
+                }
+            });
+            debug('<llamando a nada');            
+        });
+        
+        Ext.Ajax.request(
+        {
+            url      : _p38_urlCargarParametros
+            ,params  :
+            {
+                'smap1.parametro' : 'RANGO_ANIO_MODELO'
+                ,'smap1.cdramo'   : _p38_slist1[0].CDRAMO
+                ,'smap1.cdtipsit' : _p38_slist1[0].CDTIPSIT
+                ,'smap1.clave4'   : _p38_smap1.cdsisrol
+            }
+            ,success : function(response)
+            {
+                var json=Ext.decode(response.responseText);
+                debug('### obtener rango años response:',json);
+                if(json.exito)
+                {
+                    var limiteInferior = json.smap1.P1VALOR-0;
+                    var limiteSuperior = json.smap1.P2VALOR-0;
+                    _38_formAuto.down('[name=OTVALOR95]').validator=function(value)
+                    {
+                        var r = true;
+                        var anioActual = new Date().getFullYear();
+                        var max = anioActual+limiteSuperior;
+                        var min = anioActual+limiteInferior;
+                        debug('limiteInferior:',limiteInferior);
+                        debug('limiteSuperior:',limiteSuperior);
+                        debug('anioActual:',anioActual);
+                        debug('max:',max);
+                        debug('min:',min);
+                        debug('value:',value);
+                        if(value<min||value>max)
+                        {
+                            r='El modelo debe estar en el rango '+min+'-'+max;
+                        }
+                        return r;
+                    };
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                errorComunicacion();
+            }
+        });
+        
+	}
+    
 });
 
 ////// funciones //////
+
+function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta)
+{
+    var panelImagen = new Ext.Panel({
+        defaults    : {
+            style   : 'margin:5px;'
+        },
+        layout: {
+            type: 'hbox'
+            ,align: 'center'
+            ,pack: 'center'
+        }
+        ,border: false
+        ,items:[{               
+            xtype   : 'image'
+            ,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
+            ,width: 200
+            ,height: 100
+        }]
+    });
+
+    validacionNumSerie = Ext.create('Ext.window.Window',{
+        title        : titulo
+        ,modal       : true
+        ,buttonAlign : 'center'
+        ,width       : 520
+        ,icon :imagenSeccion
+        ,resizable: false
+        ,height      : 250
+        ,items       :[
+            Ext.create('Ext.form.Panel', {
+                id: 'panelClausula'
+                ,width       : 500
+                ,height      : 150
+                ,bodyPadding: 5
+                ,renderTo: Ext.getBody()
+                ,defaults    : {
+                    style : 'margin:5px;'
+                }
+                ,border: false
+                ,items: [
+                {
+                    xtype  : 'label'
+                    ,text  : txtRespuesta
+                    ,width: 100
+                    ,height      : 100
+                    ,style : 'color:red;margin:10px;'
+                }
+                ,{
+                    border: false
+                    ,items    :
+                        [   panelImagen     ]
+                }]
+            })
+        ],
+        buttonAlign:'center',
+        buttons: [{
+            text: 'Aceptar',
+            icon: '${ctx}/resources/fam3icons/icons/accept.png',
+            buttonAlign : 'center',
+            handler: function() {
+                validacionNumSerie.close();
+            }
+        }]
+    });
+    centrarVentanaInterna(validacionNumSerie.show());
+}
+
+
 function _p38_cargarSumaAseguradaRamo5()
 {
     debug('>_p38_cargarSumaAseguradaRamo5');
