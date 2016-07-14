@@ -3212,7 +3212,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			declareParameter(new SqlParameter("papel"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("activo"   , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"cdunieco"
+					"cdusuari"
 					,"ip"
 					,"nmimpres"
 					,"nombre"

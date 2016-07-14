@@ -363,9 +363,9 @@ Ext.define('VentanaImpresionLote',
                                         ,columns :
                                         [
                                             {
-                                                text       : 'SUCURSAL'
-                                                ,width     : 80
-                                                ,dataIndex : 'cdunieco'
+                                                text       : 'USUARIO'
+                                                ,width     : 100
+                                                ,dataIndex : 'cdusuari'
                                             }
                                             ,{
                                                 text       : 'NOMBRE'
@@ -383,7 +383,7 @@ Ext.define('VentanaImpresionLote',
                                         {
                                             fields :
                                             [
-                                                "cdunieco"
+                                                "cdusuari"
                                                 ,"ip"
                                                 ,"nmimpres"
                                                 ,"nombre"
