@@ -860,6 +860,46 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+
+	@Override
+	public String obtieneCodigoPostalAutomovil(Map<String,String>params)throws Exception
+	{
+		
+		String codigoPostal  =  null;
+		
+		Map<String,Object>respuestaProcedure=ejecutaSP(new ObtieneCodigoPostalAutomovil(getDataSource()), params);
+			
+		List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+		Map<String,String>respuesta=null;
+		if(lista!=null&&lista.size()>0)
+		{
+			respuesta=lista.get(0);
+			if(respuesta.containsKey("CDPOSTAL")){
+				codigoPostal = respuesta.get("CDPOSTAL");
+			}
+		}
+		return codigoPostal;
+	}
+	
+	protected class ObtieneCodigoPostalAutomovil extends StoredProcedure
+	{
+		protected ObtieneCodigoPostalAutomovil(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_GET_CODIPOSTAL_X_SITUACION");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"   , OracleTypes.VARCHAR));
+			
+			String[] cols=new String[]{"CDPOSTAL"};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public void guardarCensoCompletoMultisalud(

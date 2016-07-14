@@ -2992,6 +2992,10 @@ public class EndososAction extends PrincipalCoreAction
 					    	String nmsuplem = respEndCob.get("pv_nmsuplem_o");
 					    	String nsuplogi = respEndCob.get("pv_nsuplogi_o");
 					    	       ntramite = (String)omap1.get("pv_ntramite_i");
+					    	       
+					    	       
+			    	        paso = "Realizando endoso en Web Service Autos";
+							logger.debug(paso);
 					    	
 					    	EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
 							if(aux == null || !aux.isExitoRecibos()){
@@ -3009,6 +3013,10 @@ public class EndososAction extends PrincipalCoreAction
 									logger.error("Error al revertir el endoso");
 									error+=" No se ha revertido el endoso.";
 								}
+								
+						    	if(aux!=null && aux.isEndosoSinRetarif()){
+						    		throw new ApplicationException("Endoso sin Tarifa. "+error);
+						    	}
 								
 								return SUCCESS;
 							}
@@ -10099,6 +10107,9 @@ public class EndososAction extends PrincipalCoreAction
 					}
 					else
 					{
+						paso = "Realizando endoso en Web Service Autos";
+						logger.debug(paso);
+						
 						EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, (UserVO) session.get("USUARIO"));
 						if(aux == null || !aux.isExitoRecibos())
 						{
@@ -10116,6 +10127,10 @@ public class EndososAction extends PrincipalCoreAction
 								logger.error("Error al revertir el endoso");
 								error+=" No se ha revertido el endoso.";
 							}
+							
+							if(aux!=null && aux.isEndosoSinRetarif()){
+					    		throw new ApplicationException("Endoso sin Tarifa. "+error);
+					    	}
 							
 							return SUCCESS;
 						}
@@ -10492,6 +10507,10 @@ public class EndososAction extends PrincipalCoreAction
 							logger.error("Error al revertir el endoso");
 							error+=" No se ha revertido el endoso.";
 						}
+						
+						if(aux!=null && aux.isEndosoSinRetarif()){
+				    		throw new ApplicationException("Endoso sin Tarifa. "+error);
+				    	}
 						
 						return SUCCESS;
 					}

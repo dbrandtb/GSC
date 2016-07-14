@@ -65,6 +65,9 @@ public interface CotizacionDAO {
 
 	public Map<String, String> obtieneTipoValorAutomovil(
 			Map<String, String> params) throws Exception;
+	
+		public String obtieneCodigoPostalAutomovil(
+				Map<String, String> params) throws Exception;
 
 	public void guardarCensoCompletoMultisalud(String nombreArchivo,
 			String cdunieco, String cdramo, String estado, String nmpoliza,
