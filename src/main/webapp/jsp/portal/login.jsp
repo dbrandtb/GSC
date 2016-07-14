@@ -44,12 +44,12 @@
                     <br/>
                     Haz clic en los iconos para descargar:
                     
-                    <a href="http://www.mozilla.org/es-MX/firefox/new/" target="_blank" style="text-decoration:none">
-						<img src="http://icons.iconarchive.com/icons/benjigarner/softdimension/48/Firefox-icon.png" height="32" width="32" border="0" alt="Firefox" />
-					</a>
-                    
 					<a href="https://www.google.com/intl/es/chrome/browser/?hl=es" target="_blank" style="text-decoration:none">
 						<img src="http://icons.iconarchive.com/icons/google/chrome/128/Google-Chrome-icon.png" height="32" width="32" border="0" alt="Google Chrome" />
+					</a>
+					&nbsp;&nbsp;
+                    <a href="http://www.mozilla.org/es-MX/firefox/new/" target="_blank" style="text-decoration:none">
+						<img src="http://icons.iconarchive.com/icons/benjigarner/softdimension/48/Firefox-icon.png" height="32" width="32" border="0" alt="Firefox" />
 					</a>
 					
 			    </td>
