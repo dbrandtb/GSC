@@ -51,7 +51,7 @@ public class ImpresionServiceUNIXImpl implements ImpresionService {
 				));
         
 		// Se valida la existencia / instalacion de la impresora a utilizar:
-		validaExistenciaImpresora(nombreImpresora);
+		//validaExistenciaImpresora(nombreImpresora); // Se comenta, ya que no reconocia algunas impresoras en Produccion
 		
 		// Se valida la existencia del documento a imprimir:
 		validaExistenciaDocumento(documento);
