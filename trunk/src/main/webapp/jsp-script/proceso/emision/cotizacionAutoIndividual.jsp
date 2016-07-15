@@ -4945,6 +4945,42 @@ function _p28_recuperarPolizaSIGS()
         }
     }
 }
+
+function mensajeCorrectoTarifas(titulo,mensaje,funcion)
+{//VILS
+    
+    if(!Ext.isEmpty(funcion))
+    {
+        var tmpMensajeEmergente=Ext.Msg.show({
+            title    : titulo
+            ,icon: 'x-message-box-ok' 
+            ,msg     : mensaje
+            ,buttons : Ext.Msg.OK
+            ,fn      : funcion 
+        });
+    }
+    else
+    {
+        var tmpMensajeEmergente=Ext.Msg.show({
+            title    : titulo
+            ,icon: 'x-message-box-ok' 
+            ,msg     : mensaje
+            ,buttons : Ext.Msg.OK 
+        });
+    }
+    centrarVentanaTarifas(tmpMensajeEmergente);
+}
+
+
+function centrarVentanaTarifas(ventana)
+{
+    try {
+        ventana.setPosition(225,1200);
+    } catch(e) {
+        debug(e);
+    }
+    return ventana;
+}
 ////// funciones //////
 </script>
 </head>
