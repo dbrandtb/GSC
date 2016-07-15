@@ -30,6 +30,8 @@ import mx.com.gseguros.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -47,7 +49,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     private String fileFileName;
     private String fileContentType;
     private String targetId;
-    private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(SubirArchivoAction.class);
+    private final static Logger logger = LoggerFactory.getLogger(SubirArchivoAction.class);
     private String uploadKey;
     private float progreso;
     private String progresoTexto;
@@ -97,16 +99,16 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     public String ponerLlaveSesion()
     {
         session.put("SK_LLAVE_ULTIMO_ARCHIVO",uploadKey);
-        log.debug("Se puso la ultima llave en sesion: "+session.get("SK_LLAVE_ULTIMO_ARCHIVO"));
+        logger.debug("Se puso la ultima llave en sesion: "+session.get("SK_LLAVE_ULTIMO_ARCHIVO"));
         return SUCCESS;
     }
     
     public String subirArchivo()
     {
-    	log.debug("smap1 "+smap1);
-        log.debug("file "+file);
-        log.debug("fileFileName "+fileFileName);
-        log.debug("fileContentType "+fileContentType);
+    	logger.debug("smap1 "+smap1);
+        logger.debug("file "+file);
+        logger.debug("fileFileName "+fileFileName);
+        logger.debug("fileContentType "+fileContentType);
         
         try
         {
@@ -114,44 +116,44 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         	String nuevaRuta=this.getText("ruta.documentos.poliza")+Constantes.SEPARADOR_ARCHIVO+smap1.get("ntramite")+Constantes.SEPARADOR_ARCHIVO
                 +nombreArchivo;
         	String antiguaRuta=file.getAbsolutePath();
-        	log.debug("se movera desde::: "+antiguaRuta);
-            log.debug("se movera a    ::: "+nuevaRuta);
+        	logger.debug("se movera desde::: "+antiguaRuta);
+            logger.debug("se movera a    ::: "+nuevaRuta);
             
             String rutaCarpeta=this.getText("ruta.documentos.poliza")+Constantes.SEPARADOR_ARCHIVO+smap1.get("ntramite");
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
-            	log.info("no existe la carpeta::: "+rutaCarpeta);
+            	logger.info("no existe la carpeta::: "+rutaCarpeta);
             	carpeta.mkdir();
             	if(carpeta.exists())
             	{
-            		log.info("carpeta creada");
+            		logger.info("carpeta creada");
             	}
             	else
             	{
-            		log.info("carpeta NO creada");
+            		logger.info("carpeta NO creada");
             	}
             }
             else
             {
-            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
+            	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
             }
             
             try {
             	FileUtils.copyFile(file, new File(nuevaRuta));
-            	log.info("archivo movido");
+            	logger.info("archivo movido");
 			} catch (Exception e) {
-				log.error("archivo NO movido", e);
+				logger.error("archivo NO movido", e);
 			}
             
             /*
             if(file.renameTo(new File(nuevaRuta)))
     		{
-    			log.debug("archivo movido");	
+    			logger.debug("archivo movido");	
     		}
     		else
     		{
-    			log.debug("archivo NO movido");
+    			logger.debug("archivo NO movido");
     		}
     		*/
             
@@ -220,17 +222,17 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         
         catch(Exception ex)
         {
-        	log.error("error al mover el archivo",ex);
+        	logger.error("error al mover el archivo",ex);
         }
         return SUCCESS;
     }
     
     public String subirArchivoPersona()
     {
-    	log.debug("smap1 "+smap1);
-        log.debug("file "+file);
-        log.debug("fileFileName "+fileFileName);
-        log.debug("fileContentType "+fileContentType);
+    	logger.debug("smap1 "+smap1);
+        logger.debug("file "+file);
+        logger.debug("fileFileName "+fileFileName);
+        logger.debug("fileContentType "+fileContentType);
         
         try
         {
@@ -238,43 +240,43 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         	String nuevaRuta=this.getText("ruta.documentos.persona")+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson")+Constantes.SEPARADOR_ARCHIVO
                 +nombreArchivo;
         	String antiguaRuta=file.getAbsolutePath();
-        	log.debug("se movera desde::: "+antiguaRuta);
-            log.debug("se movera a    ::: "+nuevaRuta);
+        	logger.debug("se movera desde::: "+antiguaRuta);
+            logger.debug("se movera a    ::: "+nuevaRuta);
             
             String rutaCarpeta=this.getText("ruta.documentos.persona")+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson");
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
-            	log.debug("no existe la carpeta::: "+rutaCarpeta);
+            	logger.debug("no existe la carpeta::: "+rutaCarpeta);
             	carpeta.mkdir();
             	if(carpeta.exists())
             	{
-            		log.debug("carpeta creada");
+            		logger.debug("carpeta creada");
             	}
             	else
             	{
-            		log.debug("carpeta NO creada");
+            		logger.debug("carpeta NO creada");
             	}
             }
             else
             {
-            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
+            	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
             }
             
             try {
             	FileUtils.copyFile(file, new File(nuevaRuta));
-            	log.info("archivo movido");
+            	logger.info("archivo movido");
 			} catch (Exception e) {
-				log.error("archivo NO movido", e);
+				logger.error("archivo NO movido", e);
 			}
             /*
             if(file.renameTo(new File(nuevaRuta)))
     		{
-    			log.debug("archivo movido");	
+    			logger.debug("archivo movido");	
     		}
     		else
     		{
-    			log.debug("archivo NO movido");
+    			logger.debug("archivo NO movido");
     		}
             */
             kernelManager.guardarArchivoPersona(smap1.get("cdperson"),renderFechas.parse(smap1.get("fecha")),nombreArchivo,smap1.get("descripcion"),smap1.get("codidocu"));
@@ -282,16 +284,16 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         
         catch(Exception ex)
         {
-        	log.error("error al mover el archivo",ex);
+        	logger.error("error al mover el archivo",ex);
         }
         return SUCCESS;
     }
 
     public String subirArchivoCobranza(){
-    	log.debug("Subiendo Archivo de Cobranza ... ");
-        log.debug("file "+file);
-        log.debug("fileFileName "+fileFileName);
-        log.debug("fileContentType "+fileContentType);
+    	logger.debug("Subiendo Archivo de Cobranza ... ");
+        logger.debug("file "+file);
+        logger.debug("fileFileName "+fileFileName);
+        logger.debug("fileContentType "+fileContentType);
         
         try{
         	success = FTPSUtils.upload(
@@ -306,7 +308,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         		return SUCCESS;
         	}
         }catch(Exception ex) {
-        	log.error("Error al subir el archivo al servidor " + this.getText("dominio.server.layouts"), ex);
+        	logger.error("Error al subir el archivo al servidor " + this.getText("dominio.server.layouts"), ex);
         	mensajeRespuesta = "Error al subir archivo.";
         	success= false;
         	return SUCCESS;
@@ -317,7 +319,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         	params.put("pv_archivo_i", fileFileName);
         	kernelManager.cargaCobranzaMasiva(params);
         } catch(Exception ex) {
-        	log.error("Error al aplicar la Cobranza",ex);
+        	logger.error("Error al aplicar la Cobranza",ex);
         	mensajeRespuesta = "Error al aplicar la cobranza.";
         	success= false;
         	return SUCCESS;
@@ -327,13 +329,13 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     }
     
     public String consultaCobranza(){
-    	log.debug("Consulta Cobranza Aplicada... ");
+    	logger.debug("Consulta Cobranza Aplicada... ");
         
         try{
         	slist1 = kernelManager.obtieneCobranzaAplicada(new HashMap<String,String>());
         }catch(Exception ex)
         {
-        	log.error("Error al Consultar la Cobranza",ex);
+        	logger.error("Error al Consultar la Cobranza",ex);
         	mensajeRespuesta = "Error al Consultar la Cobranza.";
         	success= false;
         	return SUCCESS;
@@ -345,13 +347,13 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     
     
     public String consultaRemesa(){
-    	log.debug("Consulta Remesa Aplicada... ");
+    	logger.debug("Consulta Remesa Aplicada... ");
         
         try{
         	slist1 = kernelManager.obtieneRemesaAplicada(new HashMap<String,String>());
         }catch(Exception ex)
         {
-        	log.error("Error al Consultar la Remesa",ex);
+        	logger.error("Error al Consultar la Remesa",ex);
         	mensajeRespuesta = "Error al Consultar la Remesa.";
         	success= false;
         	return SUCCESS;
@@ -364,15 +366,17 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     
 	public String ventanaDocumentosPolizaLoad()
 	{
-		logger.debug(""
-				+ "\n#########################################"
-				+ "\n#########################################"
-				+ "\n###### ventanaDocumentosPolizaLoad ######"
-				+ "\n######                             ######"
-				+ "\n######                             ######"
-				);
+		logger.debug(Utils.log(
+				 "\n#########################################"
+				,"\n###### ventanaDocumentosPolizaLoad ######"
+				,"\n###### start = " , start
+				,"\n###### limit = " , limit
+				,"\n###### smap1 = " , smap1
+				));
 		try
 		{
+			Utils.validate(smap1, "No se recibieron datos");
+			
 			/*
 			pv_cdunieco_i
 			pv_cdramo_i
@@ -391,47 +395,67 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 				Entry e=(Entry) it.next();
 				paramGetDocu.put((String)e.getKey(),e.getValue());
 			}
+			
 			slist1=kernelManager.obtenerDocumentosPoliza(paramGetDocu);
+			
+			//SI VIENE ACTIVO smap1.usuariosPrimero = S entonces se muestran primero los docs de usuario
+			boolean usuariosPrimero = "S".equals(smap1.get("usuariosPrimero"));
+			
 			if(slist1!=null&&slist1.size()>0)
 			{
 				totalCount = Long.parseLong(slist1.get(0).get("total"));
 				
 				for(int i=0;i<slist1.size();i++)
 				{
-					String nombre=slist1.get(i).get("cddocume");
-					String descripcion=slist1.get(i).get("dsdocume");
-					String tipmov     =slist1.get(i).get("tipmov");
-					String nmsuplem   =slist1.get(i).get("nmsuplem");
-					String nsuplogi   =slist1.get(i).get("nsuplogi");
+					String nombre       = slist1.get(i).get("cddocume")
+					       ,descripcion = slist1.get(i).get("dsdocume")
+					       ,tipmov      = slist1.get(i).get("tipmov")
+					       ,nmsuplem    = slist1.get(i).get("nmsuplem")
+					       ,nsuplogi    = slist1.get(i).get("nsuplogi")
+					       ,ntramite    = slist1.get(i).get("ntramite");
+					
 					if(descripcion==null||descripcion.length()==0)
 					{
 						descripcion="(no especificado)";
 					}
-					String mezcla=nombre+"#_#"+descripcion;
+					
+					String mezcla = Utils.join(nombre,"#_#",descripcion);
+					
 					slist1.get(i).put("liga",mezcla);
-					slist1.get(i).put("orden",nmsuplem+"#_#"+tipmov+"#_#"+nsuplogi);
 					
+					String orden = null;
 					
+					if("USUARIO".equals(tipmov) && usuariosPrimero)
+					{
+						nsuplogi = ntramite;
+						slist1.get(i).put("nsuplogi",nsuplogi);
+					}
 					
+					orden = Utils.join(nmsuplem,"#_#",tipmov,"#_#",nsuplogi);
+					
+					slist1.get(i).put("orden",orden);
 				}
-			} else {
+			}
+			else
+			{
 				totalCount = 0;
 			}
 				
-			success=true;
+			success = true;
 		}
 		catch(Exception ex)
 		{
-			logger.error("Error al cargar documentos",ex);
-			success=false;
+			respuesta = Utils.manejaExcepcion(ex);
 		}
-		logger.debug(""
-				+ "\n######                             ######"
-				+ "\n######                             ######"
-				+ "\n###### ventanaDocumentosPolizaLoad ######"
-				+ "\n#########################################"
-				+ "\n#########################################"
-				);
+		
+		logger.debug(Utils.log(
+				 "\n###### success    = " , success
+				,"\n###### respuesta  = " , respuesta
+				,"\n###### totalCount = " , totalCount
+				,"\n###### ventanaDocumentosPolizaLoad ######"
+				,"\n#########################################"
+				));
+		
 		return SUCCESS;
 	}
     

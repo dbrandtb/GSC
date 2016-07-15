@@ -266,7 +266,7 @@ Ext.onReady(function()
             			r=0;
             		else
             			r=1;
-            		//debug(nmsuplemA,nmsuplemB,r);
+            		debug(nmsuplemA,nmsuplemB,r);
             		return r;
             	}
             }
@@ -280,13 +280,14 @@ Ext.onReady(function()
             }
             ,extraParams : 
             {
-                'smap1.pv_nmpoliza_i'  : panDocInputNmpoliza
-                ,'smap1.pv_cdunieco_i' : panDocInputCdunieco
-                ,'smap1.pv_cdramo_i'   : panDocInputCdramo
-                ,'smap1.pv_estado_i'   : panDocInputEstado
-                ,'smap1.pv_ntramite_i' : panDocInputNtramite
-                ,'smap1.pv_nmsuplem_i' : panDocInputNmsuplem
-                ,'smap1.pv_dsdocume_i' : null
+                'smap1.pv_nmpoliza_i'    : panDocInputNmpoliza
+                ,'smap1.pv_cdunieco_i'   : panDocInputCdunieco
+                ,'smap1.pv_cdramo_i'     : panDocInputCdramo
+                ,'smap1.pv_estado_i'     : panDocInputEstado
+                ,'smap1.pv_ntramite_i'   : panDocInputNtramite
+                ,'smap1.pv_nmsuplem_i'   : panDocInputNmsuplem
+                ,'smap1.pv_dsdocume_i'   : null
+                ,'smap1.usuariosPrimero' : panDocSmap1.usuariosPrimero
             }
             ,type        : 'ajax'
             ,reader      :
@@ -549,7 +550,7 @@ Ext.onReady(function()
                                 ,value      : new Date()
                                 ,fieldLabel : 'Fecha'
                             }
-                            <s:if test='%{!(""+smap1.aux).equals("")}'>,<s:property value="items.comboDocs" escapeHtml="false" /></s:if>
+                            <s:if test='%{!(""+smap1.lista).equals("")}'>,<s:property value="items.comboDocs" escapeHtml="false" /></s:if>
                             ,{
                             	xtype       : 'textfield'
                             	,fieldLabel : 'Descripci&oacute;n'
@@ -677,7 +678,7 @@ Ext.onReady(function()
                         {
                             afterrender : function(me)
                             {
-                                <s:if test='%{!(""+smap1.aux).equals("")}'>
+                                <s:if test='%{!(""+smap1.lista).equals("")}'>
                                 me.down('[name=smap1.cddocumeFlujo]').on(
                                 {
                                     select : function(me,records)
@@ -877,7 +878,7 @@ Ext.onReady(function()
 	                        }
 	                    ],
 	                ftype:'groupingsummary',
-	                startCollapsed :false
+	                startCollapsed : panDocSmap1.usuariosPrimero === 'S'
 	            }]
                 ,dockedItems :
                 [
