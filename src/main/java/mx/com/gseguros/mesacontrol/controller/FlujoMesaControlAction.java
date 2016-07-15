@@ -11,6 +11,9 @@ import mx.com.gseguros.mesacontrol.model.AgrupadorMC;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -61,6 +64,12 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	
 	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
+	
+	@Autowired
+	private CotizacionManager cotizacionManager;
+	
+	@Autowired
+	private EndososManager endososManager;
 	
 	@Action(value   = "workflow",
 	        results = {
@@ -1481,6 +1490,25 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,nmpoliex
 					,true
 					);
+			
+			if(TipoTramite.ENDOSO.getCdtiptra().equals(cdtiptra))
+			{
+				logger.debug("Guardando clave y descripci\u00f3n de tipo de endoso en valores adicionales");
+				
+				cotizacionManager.actualizarOtvalorTramitePorDsatribu(
+						ntramite
+						,"CDTIPSUP"
+						,cdtipsup
+						,"U"
+						);
+				
+				cotizacionManager.actualizarOtvalorTramitePorDsatribu(
+						ntramite
+						,"DSTIPSUP"
+						,endososManager.obtieneDescripcionEndoso(cdtipsup)
+						,"U"
+						);
+			}
 			
 			params.put("ntramite" , ntramite);
 			
