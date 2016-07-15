@@ -3,18 +3,6 @@
 <script>
 </s:if>
 var _CONTEXT = '${ctx}';
-
-
-/* ******************** CATALOGOS ******************** */
-
-// Catalogo Tipos de pago a utilizar:
-
-var _UrlValidaDocumentosCargados		= '<s:url namespace="/siniestros" 	action="validaDocumentosCargados"        />';
-var _UrlDetalleSiniestro        		= '<s:url namespace="/siniestros" 	action="detalleSiniestro" />';
-var _URL_P_MOV_MAUTSINI					= '<s:url namespace="/siniestros"	action="obtieneMensajeMautSini"/>';
-var _URL_VALIDA_FACTURAASEGURADO  		= '<s:url namespace="/siniestros"	action="validarFacturaAsegurado" />';
-
-
 ///////////////////////////////////////////////////
 var _STATUS_TRAMITE_RECHAZADO               = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@RECHAZADO.codigo" />';
 var _PAGO_AUTOMATICO						= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@PAGO_AUTOMATICO.cdtiptra" />';
@@ -30,9 +18,8 @@ var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.gen
 var _CATALOGO_PROVEEDORES  					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
 var _CATALOGO_ConfLayout					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONFLAYOUT"/>';
 
-
-
-
+var _UrlValidaDocumentosCargados			= '<s:url namespace="/siniestros" 	action="validaDocumentosCargados"/>';
+var _URL_P_MOV_MAUTSINI						= '<s:url namespace="/siniestros"	action="obtieneMensajeMautSini"/>';
 var _UrlRechazarTramiteWindwow  			= '<s:url namespace="/siniestros" 	action="includes/rechazoReclamaciones" />';
 var _UrlDocumentosPoliza    				= '<s:url namespace="/documentos" 	action="ventanaDocumentosPoliza"   />';
 var _UrlGenerarContrarecibo     			= '<s:url namespace="/siniestros" 	action="generarContrarecibo"       />';
@@ -63,12 +50,12 @@ var _mesasin_url_lista_reasignacion 		= '<s:url namespace="/siniestros" 	action=
 var _URL_ACTUALIZA_TURNADOMC				= '<s:url namespace="/siniestros" 	action="actualizaTurnadoMesaControl" />';
 var _UrlProcesarTramiteLayout            	= '<s:url namespace="/siniestros" 	action="procesarTramiteLayout"       />';
 var _UrlProcesarTramiteSiniestro          	= '<s:url namespace="/siniestros" 	action="procesarTramiteSiniestroSISCO"       />';
-
-
 var _URL_SubirLayout                    	= '<s:url namespace="/siniestros"   action="subirLayoutGeneral" />';
 var _URL_EXISTE_CONF_PROV 					= '<s:url namespace="/siniestros"	action="validaExisteConfiguracionProv" />';
 var _URL_ValidaLayoutFormatoExcel       	= '<s:url namespace="/siniestros"   action="validaLayoutFormatoExcel"   />';
 var _URL_ValidaLayoutConfigExcel        	= '<s:url namespace="/siniestros"   action="validaLayoutConfiguracionExcel"   />';
+var _URL_VALIDA_COBASEGURADOS				= '<s:url namespace="/siniestros" 	action="validaLimiteCoberturaAsegurados"/>';
+var _URL_VALIDA_COBASEGURADOSCR				= '<s:url namespace="/siniestros" 	action="validarMultiplesCRSISCO"/>';
 
 
 
@@ -121,8 +108,6 @@ var msgWindow;
 	/***** SUBIR DOCUMENTOS *****/
 	function documentosWindow(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
-	    debug('record',record);
-	    
 	    windowLoader = Ext.create('Ext.window.Window',{
 	        modal       : true,
 	        buttonAlign : 'center',
@@ -153,7 +138,7 @@ var msgWindow;
 	            }
 	        }
 	    }).show();
-	    centrarVentana(windowLoader);
+	    centrarVentanaInterna(windowLoader);
 	}
 
 	/***** GENERACION DE CONTRARECIBO *****/
@@ -201,9 +186,9 @@ var msgWindow;
 		        		}
 		        	}).show();
 		        	windowVerDocu.center();
-					}else {
-						mensajeError(jsonRes.msgResult);
-					}
+				}else {
+					mensajeError(jsonRes.msgResult);
+				}
 			},
 			failure: function(){
 				mensajeError('No se pudo generar contrarecibo.');
@@ -222,13 +207,8 @@ var msgWindow;
 			,success : function (response){
 				if(Ext.decode(response.responseText).datosValidacion != null){
 					var json = Ext.decode(response.responseText).datosValidacion[0];
-					debug("Valor del Json --> ",json);
 					var formapago = json.OTVALOR02;
-					debug('formapago:',formapago);
-					
 					var esPagoDirecto = formapago == _PAGO_DIRECTO;
-					debug('esPagoDirecto:',esPagoDirecto ? 'si' : 'no');
-					
 					var params = {};
 					
 					params['params.tipopago'] = formapago;
@@ -283,19 +263,17 @@ var msgWindow;
 												debug("Valor de respuesta ---> : ",jsonValorAsegurado);
 												
 												urlDestino = _urlSeleccionCobertura;
-												params['params.cdunieco']  = record.get('cdunieco');//record.get('cdsucdoc');
-												params['params.otvalor02'] = json.OTVALOR02;//record.get('parametros.pv_otvalor02');
-												params['params.cdramo']    = json.CDRAMO;//record.get('cdramo');
-												params['params.cdtipsit']  = json.CDTIPSIT;//record.get('cdtipsit');
-												params['params.nmpoliza']  = json.NMPOLIZA;
-												params['params.nmsituac']  = json.NMSITUAC;
-												params['params.estado']    = json.ESTADO;
-												params['params.periodoEspera']    = jsonValorAsegurado.diasAsegurado;
-												params['params.feocurre']    = json.FEOCURRE;
-												debug('urlDestino_4 :',urlDestino);
-												debug('params_4 :',params);
-												Ext.create('Ext.form.Panel').submit(
-												{
+												params['params.cdunieco']  		= record.get('cdunieco');
+												params['params.otvalor02'] 		= json.OTVALOR02;
+												params['params.cdramo']    		= json.CDRAMO;
+												params['params.cdtipsit']  		= json.CDTIPSIT;
+												params['params.nmpoliza']  		= json.NMPOLIZA;
+												params['params.nmsituac']  		= json.NMSITUAC;
+												params['params.estado']    		= json.ESTADO;
+												params['params.periodoEspera']  = jsonValorAsegurado.diasAsegurado;
+												params['params.feocurre']    	= json.FEOCURRE;
+												
+												Ext.create('Ext.form.Panel').submit( {
 													url             : urlDestino
 													,params         : params
 												    ,standardSubmit : true
@@ -418,22 +396,18 @@ var msgWindow;
 																'params.pv_ntramite_i' : record.get('ntramite')
 															},
 															success: function(response, opt) {
-																
 																var jsonRes=Ext.decode(response.responseText);
-	
 																if(jsonRes.success == true){
 																	formPanel.form.submit({
 																		waitMsg:'Procesando...',
 																		params: {
-																			'smap1.ntramite' : record.get('ntramite'), 
-																			'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
+																			'smap1.ntramite'  : record.get('ntramite'), 
+																			'smap1.status'    : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
 																			,'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
 																		},
-																		failure: function(form, action)
-																		{
+																		failure: function(form, action) {
 																			debug(action);
-																			switch (action.failureType)
-																			{
+																			switch (action.failureType) {
 																				case Ext.form.action.Action.CONNECT_FAILURE:
 																					errorComunicacion();
 																					break;
@@ -443,26 +417,22 @@ var msgWindow;
 																			}
 																		},
 																		success: function(form, action) {
-																			Ext.Ajax.request(
-																			{
+																			Ext.Ajax.request( {
 																				url: _URL_TurnarAOperadorReclamacion,
 																				params: {
-																						'smap1.ntramite' : record.get('ntramite'), 
-																						'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+																						'smap1.ntramite' 		 : record.get('ntramite'), 
+																						'smap1.status'   		 : _STATUS_TRAMITE_EN_CAPTURA
 																						,'smap1.rol_destino'     : 'operadorsini'
 																						,'smap1.usuario_destino' : ''
 																				},
 																				success:function(response,opts){
-																					Ext.Ajax.request(
-																					{
+																					Ext.Ajax.request( {
 																						url     : _URL_NOMBRE_TURNADO
-																						,params : 
-																						{           
+																						,params : {
 																							'params.ntramite': record.get('ntramite'),
 																							'params.rolDestino': 'operadorsini'
 																						}
-																						,success : function (response)
-																						{
+																						,success : function (response) {
 																							var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
 																							Ext.Ajax.request({
 																								url     : _URL_ACTUALIZA_TURNADOMC
@@ -484,8 +454,7 @@ var msgWindow;
 																								}
 																							});
 																						},
-																						failure : function ()
-																						{
+																						failure : function () {
 																							me.up().up().setLoading(false);
 																							centrarVentanaInterna(Ext.Msg.show({
 																								title:'Error',
@@ -496,8 +465,7 @@ var msgWindow;
 																						}
 																					});
 																				},
-																				failure:function(response,opts)
-																				{
+																				failure:function(response,opts) {
 																					Ext.Msg.show({
 																						title:'Error',
 																						msg: 'Error de comunicaci&oacute;n',
@@ -526,8 +494,7 @@ var msgWindow;
 															},
 															failure: function(form, action) {
 																debug(action);
-																switch (action.failureType)
-																{
+																switch (action.failureType) {
 																	case Ext.form.action.Action.CONNECT_FAILURE:
 																		errorComunicacion();
 																		break;
@@ -537,26 +504,22 @@ var msgWindow;
 																}
 															},
 															success: function(form, action) {
-																Ext.Ajax.request(
-																{
+																Ext.Ajax.request( {
 																	url: _URL_TurnarAOperadorReclamacion,
 																	params: {
-																			'smap1.ntramite' : record.get('ntramite'), 
-																			'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+																			'smap1.ntramite' 	 	 : record.get('ntramite'), 
+																			'smap1.status'   		 : _STATUS_TRAMITE_EN_CAPTURA
 																			,'smap1.rol_destino'     : 'operadorsini'
 																			,'smap1.usuario_destino' : ''
 																	},
 																	success:function(response,opts){
-																		Ext.Ajax.request(
-																		{
+																		Ext.Ajax.request( {
 																			url     : _URL_NOMBRE_TURNADO
-																			,params : 
-																			{           
-																				'params.ntramite': record.get('ntramite'),
+																			,params : {
+																				'params.ntramite'  : record.get('ntramite'),
 																				'params.rolDestino': 'operadorsini'
 																			}
-																			,success : function (response)
-																			{
+																			,success : function (response) {
 																				var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
 																				Ext.Ajax.request({
 																					url     : _URL_ACTUALIZA_TURNADOMC
@@ -578,8 +541,7 @@ var msgWindow;
 																					}
 																				});
 																			},
-																			failure : function ()
-																			{
+																			failure : function () {
 																				centrarVentanaInterna(Ext.Msg.show({
 																					title:'Error',
 																					msg: 'Error de comunicaci&oacute;n',
@@ -589,8 +551,7 @@ var msgWindow;
 																			}
 																		});
 																	},
-																	failure:function(response,opts)
-																	{
+																	failure:function(response,opts) {
 																		Ext.Msg.show({
 																			title:'Error',
 																			msg: 'Error de comunicaci&oacute;n',
@@ -807,7 +768,7 @@ var msgWindow;
 					
 					if(jsonRespuesta.success == true){
 						if( record.get('parametros.pv_otvalor02') ==_PAGO_DIRECTO){
-							mostrarSolicitudPago(grid,rowIndex,colIndex);
+							_11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex,"0");
 						}else{
 							Ext.Ajax.request({
 								url	 : _URL_VAL_AJUSTADOR_MEDICO
@@ -834,7 +795,7 @@ var msgWindow;
 											if(banderaValidacion == "1"){
 												centrarVentanaInterna(mensajeWarning(result));
 											}else{
-												mostrarSolicitudPago(grid,rowIndex,colIndex);
+												_11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex,"0");
 											}
 										}else{
 											centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
@@ -866,6 +827,39 @@ var msgWindow;
 				}
 			});
 		}
+	}
+	
+	//Validamos si existe las Validaciones 
+	function _11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex,procesaPago){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
+		var record = grid.getStore().getAt(rowIndex);
+		Ext.Ajax.request({
+			url     : _URL_VALIDA_COBASEGURADOS
+			,params:{
+				'params.ntramite'  : record.get('ntramite')
+			}
+			,success : function (response) {
+				json = Ext.decode(response.responseText);
+				if(json.success==false){
+					myMask.hide();
+					centrarVentanaInterna(mensajeWarning(json.msgResult));
+				}else{
+					myMask.hide();
+					if(procesaPago =="0"){
+						mostrarSolicitudPago(grid,rowIndex,colIndex);
+					}
+				}
+			},
+			failure : function (){
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
+		});
 	}
 	
 	function mostrarSolicitudPago(grid,rowIndex,colIndex){
@@ -1139,19 +1133,6 @@ var msgWindow;
 	    });
 		centrarVentana(msgWindow);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	/*** VALIDACION DE LOS BOTONES ***/
 	/*Validacion de los aranceles para el pago automatico*/
@@ -1222,7 +1203,6 @@ var msgWindow;
    						form.setLoading(false);
    					}
    				});
-                
             }
 			form.setLoading(false);
 			Ext.create('Ext.form.Panel').submit({
@@ -1242,8 +1222,9 @@ var msgWindow;
 
 	/*Validacion de los aranceles para el pago automatico*/
 	function solicitarPagoAutomatico(button, grid,rowIndex,colIndex){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
 		var form=button.up().up();
-		
 		if(mcdinGrid.getView().getSelectionModel().hasSelection()){
 			totalTramites = mcdinGrid.getView().getSelectionModel().getSelection();
 			var totalTramite ="";
@@ -1254,38 +1235,60 @@ var msgWindow;
                 	totalTramite = totalTramite+"|";
                 }
             }
-			form.setLoading(true);
 			Ext.Ajax.request({
-				url	 : _URL_VALIDA_FACTMONTO
+				url	 : _URL_VALIDA_COBASEGURADOSCR
 				,params:{
 					'params.ntramite'  : totalTramite
 				}
 				,success : function (response) {
-					form.setLoading(false);
-					banderaAranceles ="0";
-					var resultAranceles = 'Los siguientes C.R. no se procesaran : <br/>';
-					var arancelesTra = Ext.decode(response.responseText).loadList;
-					for(i = 0; i < arancelesTra.length; i++){
-						banderaAranceles = "1";
-						resultAranceles = resultAranceles + '   - El C.R.' + arancelesTra[i].NTRAMITE+ ' el n&uacute;mero de factura es:  ' + arancelesTra[i].NFACTURA + ' el importe de la factura es : '+ arancelesTra[i].PTIMPORT+'<br/>';
-					}
 					
-					if(banderaAranceles == "1"){
-						
-						centrarVentanaInterna(Ext.Msg.show({
-							title:'Aviso del sistema',
-							msg: resultAranceles, //'Se requere una autorizaci&oacute;n especial para continuar.',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.WARNING,
-							fn: function(){
-								debug("Mandamos el listado de los tramites");
-								validaInformacion(totalTramite);
-							}
-						}));
+					json = Ext.decode(response.responseText);
+					if(json.success==false){
+						myMask.hide();
+						centrarVentanaInterna(mensajeWarning(json.msgResult));
 					}else{
-						validaInformacion(totalTramite);
+						Ext.Ajax.request({
+							url	 : _URL_VALIDA_FACTMONTO
+							,params:{
+								'params.ntramite'  : totalTramite
+							}
+							,success : function (response) {
+								myMask.hide();
+								banderaAranceles ="0";
+								var resultAranceles = 'Los siguientes C.R. no se procesaran : <br/>';
+								var arancelesTra = Ext.decode(response.responseText).loadList;
+								for(i = 0; i < arancelesTra.length; i++){
+									banderaAranceles = "1";
+									resultAranceles = resultAranceles + '   - El C.R.' + arancelesTra[i].NTRAMITE+ ' el n&uacute;mero de factura es:  ' + arancelesTra[i].NFACTURA + ' el importe de la factura es : '+ arancelesTra[i].PTIMPORT+'<br/>';
+								}
+								
+								if(banderaAranceles == "1"){
+									centrarVentanaInterna(Ext.Msg.show({
+										title:'Aviso del sistema',
+										msg: resultAranceles, //'Se requere una autorizaci&oacute;n especial para continuar.',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.WARNING,
+										fn: function(){
+											debug("Mandamos el listado de los tramites");
+											validaInformacion(totalTramite);
+										}
+									}));
+								}else{
+									myMask.show();
+									validaInformacion(totalTramite);
+								}
+								
+							},failure : function () {
+								form.setLoading(false);
+								Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								});
+							}
+						});
 					}
-					
 				},failure : function () {
 					form.setLoading(false);
 					Ext.Msg.show({
@@ -1296,20 +1299,21 @@ var msgWindow;
 					});
 				}
 			});
-			
 		}else {
 			centrarVentanaInterna(mensajeWarning("Debe seleccionar al menos un Contrarecibo."));
 		}
 	}
 	
 	function validaInformacion(totalTramite){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
 		Ext.Ajax.request({
 			url: _URL_VALIDA_SOLICITUD_PAGO,
 			params: {
 	    		'params.ntramite' : totalTramite
 	    	},
 			success: function(response, opts) {
-				
+				myMask.hide();
 				var respuestaMensaje = Ext.decode(response.responseText).loadList;
 				var resultRespuesta  = 'C.R. Procesados : <br/>';
 				var banderaRespuesta = 0;
@@ -1319,9 +1323,10 @@ var msgWindow;
 				}
 				
 				if(banderaRespuesta == "1"){
+					myMask.hide();
 					centrarVentanaInterna(Ext.Msg.show({
 						title:'Respuesta Pagos',
-						msg: resultRespuesta, //'Se requere una autorizaci&oacute;n especial para continuar.',
+						msg: resultRespuesta,
 						buttons: Ext.Msg.OK,
 						fn: function(){
 							Ext.create('Ext.form.Panel').submit({
@@ -1504,16 +1509,6 @@ var msgWindow;
 			}
 		});
 	}
-	
-
-	
-
-	
-	
-	
-
-	
-
 	
 	function turnarAoperadorReclamaciones(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);

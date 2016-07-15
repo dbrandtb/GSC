@@ -1202,6 +1202,26 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="validaLimiteCoberturaAsegurados" class="siniestrosAction" method="validaLimiteCoberturaAsegurados">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
+		
+        <action name="validarMultiplesCRSISCO" class="siniestrosAction" method="validarMultiplesCRSISCO">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

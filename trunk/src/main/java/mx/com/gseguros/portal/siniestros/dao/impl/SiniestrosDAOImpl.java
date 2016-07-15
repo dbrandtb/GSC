@@ -1500,7 +1500,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"CDCAUSA",			"CDGARANT",			"CDCONVAL",			"NMSINREF"
 					,"IMPORTEASEG",		"PTIVAASEG",		"PTIVARETASEG",		"PTISRASEG"
 					,"PTIMPCEDASEG",	"DEDUCIBLE",		"IMPORTETOTALPAGO",	"COMPLEMENTO"
-					,"REQAUTES",		"NMAUTESP", 		"REQAUTESPECIAL"
+					,"REQAUTES",		"NMAUTESP", 		"REQAUTESPECIAL",	"VALTOTALCOB"
+					,"LIMITE",			"IMPPAGCOB"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

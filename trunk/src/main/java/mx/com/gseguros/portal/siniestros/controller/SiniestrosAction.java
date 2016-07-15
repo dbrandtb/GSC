@@ -5308,6 +5308,114 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String validaLimiteCoberturaAsegurados(){
+		logger.debug("Entra a obtieneUsuarioTurnado params de entrada :{}",params);
+		
+		try {
+			Map<String,String> factura        = null;
+			Map<String,String> siniestroIte   = null;
+			List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(params.get("ntramite"));
+			String banderaValidacion = "0";
+			String mensaje = "";
+			for(int i = 0; i < facturasAux.size(); i++){
+				factura = facturasAux.get(i);
+				List<Map<String,String>> siniesxfactura = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"),factura.get("NFACTURA"));
+				for( int j= 0; j < siniesxfactura.size();j++){
+					siniestroIte    = siniesxfactura.get(j);
+					double limite 		 		 ;
+					double importePagado 		 ;
+					double importePagarAsegurado ;
+					
+					try{
+						limite = Double.valueOf(siniestroIte.get("LIMITE"));
+					}catch(Exception ex){
+						limite = 0d;
+					}
+					
+					try{
+						importePagado = Double.valueOf(siniestroIte.get("IMPPAGCOB"));
+					}catch(Exception ex){
+						importePagado = 0d;
+					}
+					
+					try{
+						importePagarAsegurado = Double.valueOf(siniestroIte.get("IMPORTETOTALPAGO"));
+					}catch(Exception ex){
+						importePagarAsegurado = 0d;
+					}
+					
+					double importeDisponible		= (limite - importePagado);
+					
+					//logger.debug("limite :{} importePagado:{} importePagarAsegurado: {} importeDisponible:{}",limite,importePagado,importePagarAsegurado,importeDisponible);
+					if(siniestroIte.get("VALTOTALCOB").equalsIgnoreCase("1")){
+						logger.debug("Entra a 1");
+						if(importeDisponible <=limite && +importePagarAsegurado < importeDisponible){
+							
+						}else{
+							banderaValidacion = "1";
+							mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el Límite permitido. <br/>";							
+						}
+					}
+				}
+			}
+			if(banderaValidacion.equalsIgnoreCase("1")){
+				logger.debug("entra la validacion banderaValidacion" );
+				success = false;
+				msgResult = mensaje;
+			}else{
+				success = true;
+				msgResult = "";
+			}
+		}catch( Exception e){
+			logger.error("Error al consultar el periodo de espera en meses : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		return SUCCESS;
+	}
+	
+	
+	public String validarMultiplesCRSISCO(){
+		logger.debug("Entra a validarMultiplesCRSISCO params de entrada :{}",params);
+		try {
+			String tramites = params.get("ntramite");
+			logger.debug("Valor del tramite ==>"+tramites);
+			String totalTramites[] = tramites.split("\\|");
+			logger.debug("Total de Registros"+totalTramites.length);
+			loadList = new ArrayList<HashMap<String,String>>();
+			String mensajeCRs="";
+			String banderaTotal = "0";
+			for(int i = 0; i < totalTramites.length; i++){
+				logger.debug(totalTramites[i]);
+				
+				// Realizamos la validacion para cada uno de los conceptos 
+				HashMap<String,String> params = new HashMap<String, String>();
+				params.put("ntramite",totalTramites[i].toString());
+				this.params=params;
+				validaLimiteCoberturaAsegurados();
+				logger.debug("Valores de respuesta ===> :{}  Mensaje : {}",success,msgResult);
+				if(success == false){
+					banderaTotal = "1";
+					mensajeCRs = mensajeCRs+msgResult;
+				}
+			}
+			
+			if(banderaTotal.equalsIgnoreCase("1") ){
+				logger.debug("if banderaTotal ===>> "+banderaTotal);
+				success = false;
+				msgResult = mensajeCRs;
+			}else{
+				logger.debug("else banderaTotal ===>> "+banderaTotal);
+				success = true;
+				msgResult = "";
+			}
+		}catch( Exception e){
+			logger.error("Error al obtener las consultaExisteCoberturaTramite : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		//success = true;
+		return SUCCESS;
+	}
+	
 	public String pantallaInicial(){
 		success = true;
 		return SUCCESS;
