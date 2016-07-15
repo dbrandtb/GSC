@@ -70,6 +70,7 @@ var _URL_VALIDA_AUTESPECIFICA			= '<s:url namespace="/siniestros"	action="valida
 var _URL_MESACONTROL					= '<s:url namespace="/mesacontrol" 	action="mcdinamica" />';
 var _URL_EXISTE_COBERTURA				= '<s:url namespace="/siniestros" 	action="consultaExisteCoberturaTramite" />';
 var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	action="consultaInfCausaSiniestroProducto" />';
+var _URL_VALIDA_COBASEGURADOS			= '<s:url namespace="/siniestros" 	action="validaLimiteCoberturaAsegurados"/>';
 var windowLoader;
 var msgWindow;
 
@@ -1234,7 +1235,8 @@ var msgWindow;
 								
 								if(jsonRespuesta.success == true){
 									if( record.get('parametros.pv_otvalor02') ==_PAGO_DIRECTO){
-										mostrarSolicitudPago(grid,rowIndex,colIndex);
+										//mostrarSolicitudPago(grid,rowIndex,colIndex); --------------->
+										_11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex);
 									}else{
 										Ext.Ajax.request({
 											url	 : _URL_VAL_AJUSTADOR_MEDICO
@@ -1261,7 +1263,8 @@ var msgWindow;
 														if(banderaValidacion == "1"){
 															centrarVentanaInterna(mensajeWarning(result));
 														}else{
-															mostrarSolicitudPago(grid,rowIndex,colIndex);
+															//mostrarSolicitudPago(grid,rowIndex,colIndex);--------------->
+															_11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex);
 														}
 													}else{
 														centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
@@ -1354,6 +1357,39 @@ var msgWindow;
 	}
 	
 	
+	//Validamos si existe las Validaciones 
+	function _11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
+		var record = grid.getStore().getAt(rowIndex);
+		Ext.Ajax.request({
+			url     : _URL_VALIDA_COBASEGURADOS
+			,params:{
+				'params.ntramite'  : record.get('ntramite')
+			}
+			,success : function (response) {
+				json = Ext.decode(response.responseText);
+				if(json.success==false){
+					myMask.hide();
+					centrarVentanaInterna(mensajeWarning(json.msgResult));
+				}else{
+					myMask.hide();
+					_11_mostrarSolicitudPago(grid,rowIndex,colIndex);
+				}
+			},
+			failure : function (){
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
+		});
+	}
+	
+	
+	
 	function mostrarSolicitudPago(grid,rowIndex,colIndex){
 		storeDestinoPago = Ext.create('Ext.data.JsonStore', {
 		    model:'Generic',
@@ -1399,8 +1435,6 @@ var msgWindow;
 		});
 		
 		//1.- Validamos que no existe 
-		
-		
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea solicitar el pago?',
@@ -1417,12 +1451,13 @@ var msgWindow;
 						}
 					});
 	        		
-	        		storeAsegurados2.load({
+					storeAsegurados2.load({
 						params:{
 							'params.cdunieco': record.raw.cdunieco,
 							'params.cdramo': record.raw.cdramo,
 							'params.estado': record.raw.estado,
-							'params.nmpoliza': record.raw.nmpoliza
+							'params.nmpoliza': record.raw.nmpoliza,
+							'params.cdperson': record.raw.otvalor04
 						}
 					});
 	        		

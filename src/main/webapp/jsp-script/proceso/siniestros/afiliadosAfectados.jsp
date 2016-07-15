@@ -123,6 +123,8 @@
 			var _URL_P_MOV_MAUTSINI						= '<s:url namespace="/siniestros"		action="obtieneMensajeMautSini"/>';
 			var _URL_VALIDADOCCARGADOS					= '<s:url namespace="/siniestros" 		action="validaDocumentosCargados"/>';
             var _UrlGenerarContrarecibo     			= '<s:url namespace="/siniestros" 		action="generarContrarecibo"       />';
+			var _URL_VALIDA_COBASEGURADOS				= '<s:url namespace="/siniestros" 		action="validaLimiteCoberturaAsegurados"/>';
+			
 			
 			var _11_itemsForm	= [
 				<s:property value="imap.itemsForm" />
@@ -231,6 +233,7 @@
 			];
 
 			Ext.onReady(function() {
+				
 				/*############################		MODEL		########################################*/
 				Ext.define('modelAseguradosFactura',{
 					extend: 'Ext.data.Model',
@@ -257,7 +260,9 @@
 						{type:'string',	name:'PTISRASEG'},		{type:'string',	name:'PTIMPCEDASEG'},
 						{type:'string',	name:'DEDUCIBLE'},		{type:'string',	name:'IMPORTETOTALPAGO'},
 						{type:'string',	name:'COMPLEMENTO'},	{type:'string',	name:'REQAUTES'},
-						{type:'string',	name:'NMAUTESP'},		{type:'string',	name:'REQAUTESPECIAL'}
+						{type:'string',	name:'NMAUTESP'},		{type:'string',	name:'REQAUTESPECIAL'},
+						{type:'string',	name:'VALTOTALCOB'},	{type:'string',	name:'LIMITE'},
+						{type:'string',	name:'IMPPAGCOB'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -1594,6 +1599,15 @@
 							},
 							{
 								header: 'ReqValidacion',			dataIndex: 'REQAUTESPECIAL',			hidden	:	true
+							},
+							{
+								header: 'ValidacionTotal',			dataIndex: 'VALTOTALCOB'//,renderer  : Ext.util.Format.usMoney
+							},
+							{
+								header: 'Limite',					dataIndex: 'LIMITE'//,renderer  : Ext.util.Format.usMoney
+							},
+							{
+								header: 'TotalPagado',				dataIndex: 'IMPPAGCOB'//,renderer  : Ext.util.Format.usMoney
 							}
 						],
 						tbar:[
@@ -1772,28 +1786,7 @@
 													obtenerSumaAseguradaMontoGastados (
 														record.get('CDUNIECO'), record.get('CDRAMO'),record.get('ESTADO'),record.get('NMPOLIZA'), 
 														record.get('NMSUPLEM'), record.get('NMSITUAC'), record.get('CDGARANT'), record.get('CDCONVAL'),
-														record.get('CDPERSON'), record.get('NMSINREF'), totalConsumido, record.get('NMSINIES'));
-																			  
-																			  
-													if(record.get('CDRAMO') == _GMMI){
-														panelComplementos.down('[name=params.sumaAsegurada]').show();
-														panelComplementos.down('[name=params.sumaGastada]').show();
-														panelComplementos.down('[name=params.sublimite]').hide();
-														panelComplementos.down('[name=params.pagado]').hide();
-														panelComplementos.down('[name=params.disponibleCob]').hide();
-													}else if(record.get('CDRAMO') == _MULTISALUD){
-														panelComplementos.down('[name=params.sumaAsegurada]').hide();
-														panelComplementos.down('[name=params.sumaGastada]').hide();
-														panelComplementos.down('[name=params.sublimite]').show();
-														panelComplementos.down('[name=params.pagado]').show();
-														panelComplementos.down('[name=params.disponibleCob]').show();
-													}else{
-														panelComplementos.down('[name=params.sumaAsegurada]').hide();
-														panelComplementos.down('[name=params.sumaGastada]').hide();
-														panelComplementos.down('[name=params.sublimite]').hide();
-														panelComplementos.down('[name=params.pagado]').hide();
-														panelComplementos.down('[name=params.disponibleCob]').show();
-													}
+														record.get('CDPERSON'), record.get('NMSINREF'), totalConsumido, record.get('NMSINIES'), record.get('VALTOTALCOB'));
 												},
 												failure : function () {
 													Ext.Msg.show({
@@ -2552,7 +2545,7 @@
 	    	                }
 						},
 						{
-							xtype		: 'displayfield',			fieldLabel	: 'Pagado',			name	: 'params.pagado', value : '0.00',
+							 xtype		: 'displayfield',			fieldLabel	: 'Pagado',			name	: 'params.pagado', value : '0.00',
     	    	    		valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
 	    	                }
@@ -2561,7 +2554,7 @@
 							xtype		: 'displayfield',			fieldLabel	: 'Disponible',			name	: 'params.disponibleCob', value : '0.00',
     	    	    		valueToRaw : function(value){
 	    	                    return Ext.util.Format.usMoney(value);
-	    	                }
+	    	                },colspan:2
 						},
 						{
     	    	    		xtype       : 'displayfield',		fieldLabel : 'Subtotal Factura',		name	: 'params.subtotalFac', value : '0.00',
@@ -3783,7 +3776,8 @@
 								
 								if(jsonRespuesta.success == true){
 									if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
-										_11_mostrarSolicitudPago();
+										//_11_mostrarSolicitudPago(); ...1
+										_11_validaAseguroLimiteCoberturas();
 									}else{
 										//Verificamos si tiene la validacion del dictaminador medico
 										Ext.Ajax.request({
@@ -3812,7 +3806,8 @@
 														if(banderaValidacion == "1"){
 															centrarVentanaInterna(mensajeWarning(result));
 														}else{
-															_11_mostrarSolicitudPago();
+															//_11_mostrarSolicitudPago(); ..2
+															_11_validaAseguroLimiteCoberturas();
 														}
 													}else{
 														centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
@@ -3857,8 +3852,39 @@
 		}
 	}
 	
+	//Validamos si existe las Validaciones 
+	function _11_validaAseguroLimiteCoberturas(){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
+		Ext.Ajax.request({
+			url     : _URL_VALIDA_COBASEGURADOS
+			,params:{
+				'params.ntramite'  : _11_params.NTRAMITE
+			}
+			,success : function (response) {
+				json = Ext.decode(response.responseText);
+				if(json.success==false){
+					myMask.hide();
+					centrarVentanaInterna(mensajeWarning(json.msgResult));
+				}else{
+					myMask.hide();
+					_11_mostrarSolicitudPago();
+				}
+			},
+			failure : function (){
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
+		});
+	}
+	
 	// Mostrar solicitud de pago 
 	function _11_mostrarSolicitudPago(){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
 		msgWindow = Ext.Msg.show({
 			title: 'Aviso',
 				msg: '&iquest;Esta seguro que desea solicitar el pago?',
@@ -3871,13 +3897,14 @@
 								'params.cdramo': _tipoProducto
 							}
 						});
-						
+						debug("Valor del Asegurado ===> ",_11_params);
 						storeAsegurados2.load({
 							params:{
 								'params.cdunieco': _11_params.CDUNIECO,
 								'params.cdramo': _tipoProducto,
 								'params.estado': _11_params.ESTADO,
-								'params.nmpoliza': _11_params.NMPOLIZA
+								'params.nmpoliza': _11_params.NMPOLIZA,
+								'params.cdperson': _11_params.OTVALOR04
 							}
 						});
 						
@@ -4036,6 +4063,7 @@
 										,handler: function() { 
 											if (panelModificacion.form.isValid()) {
 												var datos=panelModificacion.form.getValues();
+												myMask.show();
 												//4.- Guardamos la informacion del destino y el tipo de concepto
 												Ext.Ajax.request({
 													url     : _URL_CONCEPTODESTINO
@@ -4062,6 +4090,7 @@
 															success: function(response, opts) {
 																var respuesta = Ext.decode(response.responseText);
 																if(respuesta.success){
+																	myMask.hide();
 																	centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','El pago se ha solicitado con &eacute;xito.',function(){
 																		Ext.create('Ext.form.Panel').submit( {
 																			url		: _URL_MESACONTROL
@@ -4073,10 +4102,12 @@
 																		});
 																	}));
 																}else {
+																	myMask.hide();
 																	centrarVentanaInterna(mensajeError(respuesta.mensaje));
 																}
 															},
 															failure: function(){
+																myMask.hide();
 																centrarVentanaInterna(mensajeError('No se pudo solicitar el pago.'));
 															}
 														});
@@ -4930,6 +4961,7 @@
 			}
 			,success : function (response) {
 				var aseguradosTotales = Ext.decode(response.responseText).slist1;
+				debug("Valores totales ==> ",aseguradosTotales);
 				var totalPago = 0;
 				var subtotalFactura=0;
 		    	var ivaFactura=0;
@@ -4937,9 +4969,11 @@
 		    	var isrFactura=0;
 		    	var impCedFactura=0;
 		    	var imporTotalFactura=0;
-		    	 
+		    	var resultadoTope = "";
+		    	var banderaValidacion = 0;
 		    	for(var i = 0; i < aseguradosTotales.length; i++) {
-		    	    totalPago = 0;
+		    		debug()
+		    		totalPago = 0;
 		    	   	var importeAseg = aseguradosTotales[i].IMPORTEASEG;
 		    	   	var ivaAseg     = aseguradosTotales[i].PTIVAASEG;
 		    	   	var ivaRete     = aseguradosTotales[i].PTIVARETASEG;
@@ -4982,13 +5016,95 @@
 			    	}else{
 			    		imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPago);
 			    	}
+			    	
+			    	
+			    	var limite = aseguradosTotales[i].LIMITE;
+			    	var importePagado = aseguradosTotales[i].IMPPAGCOB;
+					var importeDisponible = (+limite - +importePagado);
+					var importePagarAsegurado = aseguradosTotales[i].IMPORTETOTALPAGO; 
+
+					var validaTope = aseguradosTotales[i].VALTOTALCOB;
+					if( validaTope  == '1'){
+						debug("Limite ",limite, "importeDisponible",importeDisponible,"importePagarAsegurado",importePagarAsegurado);
+						if(+importeDisponible <=limite && +importePagarAsegurado < importeDisponible){
+							//resultadoTope = resultadoTope + 'La Factura ' + nfactura + ' del siniestro '+ aseguradosTotales[i].NMSINIES+ ' Es éxitoso. <br/>';
+						}else{
+							banderaValidacion = 1;
+							resultadoTope = resultadoTope + 'El CR '+ntramite+' de Factura ' + nfactura + ' del siniestro '+ aseguradosTotales[i].NMSINIES+ ' Sobrepasa el límite permitido. <br/>';							
+						}
+					}
 		    	}
+		    	
+	    	    if(banderaValidacion == "1"){
+				    centrarVentanaInterna(mensajeWarning(resultadoTope));
+				}
+		    	
+		    	
 		    	panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
 		    	panelComplementos.down('[name=params.ivaFac]').setValue(ivaFactura);
 		    	panelComplementos.down('[name=params.ivaRetFac]').setValue(ivaRetFactura);
 		    	panelComplementos.down('[name=params.isrFac]').setValue(isrFactura);
 		    	panelComplementos.down('[name=params.impCedularFac]').setValue(impCedFactura);
 		    	panelComplementos.down('[name=params.impPagarFac]').setValue(imporTotalFactura);
+		    	
+		    	/*var resultadoTope = "";
+		    	var banderaValidacion = 0;
+		    	for(var i = 0; i < aseguradosTotales.length; i++) {
+		    		
+		    		debug("Asegurados Totales ==> ",aseguradosTotales[i]);
+		    		var validaTope = aseguradosTotales[i].VALTOTALCOB; 
+		    		debug("Valor validaTope ", validaTope);
+		    		var importePagarAsegurado = aseguradosTotales[i].IMPORTETOTALPAGO;
+		    		var nmsinies = aseguradosTotales[i].NMSINIES;
+		    		if( validaTope  == '1'){
+						Ext.Ajax.request({
+							url		:	_URL_VALIDACION_CONSULTA
+							,params	:	{
+								'params.cdunieco'  : aseguradosTotales[i].CDUNIECO,
+								'params.cdramo'    : aseguradosTotales[i].CDRAMO,
+								'params.estado'    : aseguradosTotales[i].ESTADO,
+								'params.nmpoliza'  : aseguradosTotales[i].NMPOLIZA,
+								'params.nmsuplem'  : aseguradosTotales[i].NMSUPLEM,
+								'params.nmsituac'  : aseguradosTotales[i].NMSITUAC,
+								'params.cdgarant'  : aseguradosTotales[i].CDGARANT,
+								'params.cdconval'  : aseguradosTotales[i].CDCONVAL,
+								'params.nmsinies'  : aseguradosTotales[i].NMSINIES
+							}
+							,success : function (response){
+								var jsonResp = Ext.decode(response.responseText);
+								debug("Valor de Respuesta ===>",jsonResp);
+								if(jsonResp.success == true){
+									var infonavit = Ext.decode(response.responseText).datosInformacionAdicional[0];
+									var limite = infonavit.OTVALOR04;
+									var importeDisponible = (+infonavit.OTVALOR04 - +infonavit.IMPGASTADOCOB);									
+
+									if(+importeDisponible <=limite && +importePagarAsegurado < importeDisponible){
+										resultadoTope = resultadoTope + 'La Factura ' + nfactura + ' del siniestro '+ nmsinies+ ' Es éxitoso. <br/>';
+									}else{
+										resultadoTope = resultadoTope + 'La Factura ' + nfactura + ' del siniestro '+ nmsinies+ ' Sobrepasa el Límite. <br/>';
+										
+									}
+								}else{
+									maxconsultas = jsonResp.success;
+									centrarVentanaInterna(Ext.Msg.show({
+										title:'Error',
+										msg: jsonRes.mensaje,
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
+									}));
+								}
+							},
+							failure : function (){
+								centrarVentanaInterna(Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								}));
+							}
+						});
+		    		}
+		    	}*/
 			},
 			failure : function (){
 				Ext.Msg.show({
@@ -6170,14 +6286,108 @@
 		});
 	}
 	
-	/*obtenerSumaAsegurada (
-														record.get('CDUNIECO'), record.get('CDRAMO'),record.get('ESTADO'),record.get('NMPOLIZA'), 
-														record.get('NMSUPLEM'), record.get('NMSITUAC'), record.get('CDGARANT'), record.get('CDCONVAL'),
-														record.get('CDPERSON'), record.get('NMSINREF'), totalConsumido);*/
-	
 	//22.- Obtenemos la Suma Asegurada para Gastos Medicos Mayores
-	function obtenerSumaAseguradaMontoGastados (cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdgarant, cdconval, cdperson, nmsinref, totalConsumido, nmsinies){
-		if(cdramo == _GMMI){
+	function obtenerSumaAseguradaMontoGastados (cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdgarant, cdconval, 
+			cdperson, nmsinref, totalConsumido, nmsinies, valSesion){
+		
+		if(valSesion =="1"){
+			//MULTISALUD INFONAVIT
+			panelComplementos.down('[name=params.sumaAsegurada]').hide();
+			panelComplementos.down('[name=params.sumaGastada]').hide();
+			panelComplementos.down('[name=params.sublimite]').show();
+			panelComplementos.down('[name=params.pagado]').show();
+			panelComplementos.down('[name=params.disponibleCob]').show();
+			Ext.Ajax.request({
+				url		:	_URL_VALIDACION_CONSULTA
+				,params	:	{
+					'params.cdunieco'  : cdunieco,
+					'params.cdramo'    : cdramo,
+					'params.estado'    : estado,
+					'params.nmpoliza'  : nmpoliza,
+					'params.nmsuplem'  : nmsuplem,
+					'params.nmsituac'  : nmsituac,
+					'params.cdgarant'  : cdgarant,
+					'params.cdconval'  : cdconval,
+					'params.nmsinies'  : nmsinies
+				}
+				,success : function (response){
+					var jsonResp = Ext.decode(response.responseText);
+					debug("Valor de Respuesta ===>",jsonResp);
+					if(jsonResp.success == true){
+						var infonavit = Ext.decode(response.responseText).datosInformacionAdicional[0];
+						var consultasTotales = infonavit.NO_CONSULTAS;
+						var maxConsulta      = infonavit.OTVALOR07;
+						var diferenciador    = infonavit.OTVALOR15;
+						panelComplementos.down('[name=params.sublimite]').setValue(infonavit.OTVALOR04);
+						panelComplementos.down('[name=params.pagado]').setValue(infonavit.IMPGASTADOCOB);
+						panelComplementos.down('[name=params.disponibleCob]').setValue(+infonavit.OTVALOR04 - +infonavit.IMPGASTADOCOB);
+					}else{
+						maxconsultas = jsonResp.success;
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Error',
+							msg: jsonRes.mensaje,
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						}));
+					}
+				},
+				failure : function (){
+					centrarVentanaInterna(Ext.Msg.show({
+						title:'Error',
+						msg: 'Error de comunicaci&oacute;n',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.ERROR
+					}));
+				}
+			});
+			
+		}else if(valSesion =="2"){
+			// GASTOS MEDICOS MAYORES
+			panelComplementos.down('[name=params.sumaAsegurada]').show();
+			panelComplementos.down('[name=params.sumaGastada]').show();
+			panelComplementos.down('[name=params.sublimite]').hide();
+			panelComplementos.down('[name=params.pagado]').hide();
+			panelComplementos.down('[name=params.disponibleCob]').hide();
+			
+			Ext.Ajax.request( {
+				url	 : _URL_OBTENER_SUMAASEGURADA
+				,params:{
+					'params.cdunieco' 	: cdunieco
+					,'params.cdramo'  	: cdramo
+					,'params.estado'  	: estado
+					,'params.nmpoliza' 	: nmpoliza
+					,'params.cdperson' 	: cdperson
+					,'params.nmsinref' 	: nmsinref
+				}
+				,success : function (response){
+					var jsonResponse  = Ext.decode(response.responseText).datosValidacion[0];
+					var sumAsegurada  = jsonResponse.SUMA_ASEGURADA;
+					var sumDisponible = jsonResponse.RESERVA_DISPONIBLE;
+					
+					var sumaConceptos = (+sumDisponible) - (+ totalConsumido);
+					
+					panelComplementos.down('[name=params.sumaAsegurada]').setValue(sumAsegurada);
+					panelComplementos.down('[name=params.sumaGastada]').setValue(sumaConceptos);
+				},
+				failure : function () {
+					Ext.Msg.show({
+						title:'Error',
+						msg: 'Error de comunicaci&oacute;n',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.ERROR
+					});
+				}
+			});
+		}else{
+			//TODOS DIFERENTES
+			panelComplementos.down('[name=params.sumaAsegurada]').hide();
+			panelComplementos.down('[name=params.sumaGastada]').hide();
+			panelComplementos.down('[name=params.sublimite]').hide();
+			panelComplementos.down('[name=params.pagado]').hide();
+			panelComplementos.down('[name=params.disponibleCob]').hide();
+		}
+		
+		/*if(cdramo == _GMMI){
 			Ext.Ajax.request( {
 				url	 : _URL_OBTENER_SUMAASEGURADA
 				,params:{
@@ -6252,7 +6462,7 @@
 					}));
 				}
 			});
-		}
+		}*/
 	}
 	
 	//23.- Require autorizacion especial
