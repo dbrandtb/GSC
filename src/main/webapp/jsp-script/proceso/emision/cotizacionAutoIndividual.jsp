@@ -1579,7 +1579,7 @@ Ext.onReady(function()
     _p28_recuperarCotizacionDeTramite();
     
     _p28_recuperarPolizaSIGS();
-    
+	
     ////// loaders //////
 });
 
@@ -1734,9 +1734,8 @@ function _p28_cotizar(sinTarificar)
                 {
                 	if(!Ext.isEmpty(json.smap1.msnPantalla))
                 	{
-                		mensajeCorrecto('Aviso',json.smap1.msnPantalla);
+                		mensajeCorrectoTarifas('Aviso',json.smap1.msnPantalla);
                 	}
-                	
                     debug(Ext.decode(json.smap1.fields));
                     debug(Ext.decode(json.smap1.columnas));
                     debug(json.slist2);
@@ -2620,9 +2619,9 @@ function _p28_limpiar()
 
 function _p28_calculaVigencia(comp,val)
 {
-    debug('>_p28_calculaVigencia');
     var feini = _fieldByName('feini');
     var fefin = _fieldByName('fefin');
+    debug('>_p28_calculaVigencia feini:',feini,'fefin',fefin);
     
     var itemVigencia=_fieldByLabel('VIGENCIA');
     itemVigencia.hide();
@@ -2630,7 +2629,9 @@ function _p28_calculaVigencia(comp,val)
     if(feini.isValid()&&fefin.isValid())
     {
         var milisDif = Ext.Date.getElapsed(feini.getValue(),fefin.getValue());
+        debug('>_p28_calculaVigencia feini:',feini,'fefin',fefin);
         var diasDif  = (milisDif/1000/60/60/24).toFixed(0);
+        
         debug('milisDif:',milisDif,'diasDif:',diasDif);
         itemVigencia.setValue(diasDif);
     }
