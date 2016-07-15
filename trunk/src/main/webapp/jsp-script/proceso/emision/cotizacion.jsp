@@ -1171,15 +1171,26 @@ function _0_recuperarCotizacion(nmpoliza)
             
             if(_0_smap1.cdramo=='6')
             {   
-                var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
-                if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
+                if(!Ext.isEmpty(json.error))
                 {
-                    _0_recordClienteRecuperado = primerInciso;
-                    debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
+                	mensajeError(json.error); 
+                	_0_panelPri.setLoading(false);
                 }
+                else
+                {
+                	var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+
+                	if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
+                	{
+                		    _0_recordClienteRecuperado = primerInciso;
+                		    debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
+                	}
+                	
+                    llenandoCampos(json);
+                }
+                
             }
             
-            llenandoCampos(json);
         }
         ,failure : function()
         {
@@ -1492,7 +1503,6 @@ function llenandoCampos (json)
                             cargaCotiza = true;
                             sinTarificar = !maestra&&!vencida ;
                             _0_cotizar();
-                            
                         }
                 }
             };
@@ -1637,6 +1647,11 @@ function _0_cotizar(boton)
         if(_0_smap1.cdramo=='16')
         {
         	 _0_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';//Se utiliza para no retarificar 
+       		 if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')==-1)
+       		 {
+       			 _0_smap1['cdsisrol'] ='SUSCRIAUTO';
+       		 }
+       	  
         	 if(!Ext.isEmpty(cdagenteCotiza))
         	 {
         		  _0_smap1['cdusuari']    = 'A'+cdagenteCotiza;
