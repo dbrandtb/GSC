@@ -2404,7 +2404,15 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramsObtenerTvalosit.put("param5" , nmpoliza);
 				paramsObtenerTvalosit.put("param6" , cdusuari);
 				paramsObtenerTvalosit.put("param7" , cdsisrol);
-				slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
+//				slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
+//				if(slist1==null||slist1.size()==0)
+//				{
+					if((cdramo.contains("6") || cdramo.contains("16")) && cdsisrol.contains("EJECUTIVOCUENTA"))
+					{
+						paramsObtenerTvalosit.put("param7" , "SUSCRIAUTO");
+					}
+					slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
+//				}
 				if(slist1==null||slist1.size()==0)
 				{
 					throw new Exception("No se puede cargar la cotizaci\u00f3n");
