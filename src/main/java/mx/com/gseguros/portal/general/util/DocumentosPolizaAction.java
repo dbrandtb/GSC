@@ -202,7 +202,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 			}
 		}
 		
-		String proceso = smap1.get("aux");
+		String proceso = smap1.get("lista");
 		if(StringUtils.isNotBlank(proceso))
 		{
 			items = new HashMap<String,Item>();
