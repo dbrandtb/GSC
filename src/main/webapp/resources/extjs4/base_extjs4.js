@@ -312,31 +312,6 @@ function mensajeCorrecto(titulo,mensaje,funcion)
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
-function mensajeCorrectoTarifas(titulo,mensaje,funcion)
-{//VILS
-    
-    if(!Ext.isEmpty(funcion))
-    {
-        var tmpMensajeEmergente=Ext.Msg.show({
-            title    : titulo
-            ,icon: 'x-message-box-ok' 
-            ,msg     : mensaje
-            ,buttons : Ext.Msg.OK
-            ,fn      : funcion 
-        });
-    }
-    else
-    {
-        var tmpMensajeEmergente=Ext.Msg.show({
-            title    : titulo
-            ,icon: 'x-message-box-ok' 
-            ,msg     : mensaje
-            ,buttons : Ext.Msg.OK 
-        });
-    }
-    centrarVentanaTarifas(tmpMensajeEmergente);
-}
-
 /**
  * Busca todos los combos anidados que tengan la funcion heredar() y los carga
  * @param formPanel
@@ -382,16 +357,6 @@ function centrarVentanaInterna(ventana)
         var y = $(window.parent).scrollTop() + 50;
         //debug('y:',y);
         ventana.setPosition(ventana.getPosition()[0],y);    
-    } catch(e) {
-        debug(e);
-    }
-    return ventana;
-}
-
-function centrarVentanaTarifas(ventana)
-{
-    try {
-        ventana.setPosition(225,1200);
     } catch(e) {
         debug(e);
     }
