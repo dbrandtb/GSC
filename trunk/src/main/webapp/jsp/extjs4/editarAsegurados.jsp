@@ -14,7 +14,6 @@
 }
 </style>
 <script>
-
     var sucursalUsuarioSesion = '<s:property value="%{#session['USUARIO'].cdUnieco}" />';
     var inputCduniecop2= '<s:property value="map1.cdunieco" />';
     var inputCdramop2=   '<s:property value="map1.cdramo" />';
@@ -536,10 +535,11 @@
                                         cdrfc:datosContr.rfc,
                                         tpersona : datosContr.tipoper,
                                         nacional : datosContr.naciona,
-                                        cdestciv : datosContr.cdestciv,
+                                        cdestciv : recordAsegu.get('cdestciv'),
                                         numsoc   : recordAsegu.get('numsoc'),
                                         clvfam   : recordAsegu.get('clvfam'),
-                                        ocup     : recordAsegu.get('ocup')
+                                        ocup     : recordAsegu.get('ocup'),
+                                        parentesco	: recordAsegu.get('Parentesco')
                                     });
                                     /*if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
                                     {
@@ -2495,7 +2495,8 @@ debug("validarYGuardar flag:2");
                                             cdestciv :  recordAsegu.get('cdestciv'),
                                             numsoc   :  recordAsegu.get('numsoc'),
                                             clvfam   :  recordAsegu.get('clvfam'),
-                                            ocup     :  recordAsegu.get('ocup')
+                                            ocup     :  recordAsegu.get('ocup'),
+                                            parentesco	: recordAsegu.get('Parentesco')
                                         });
                                         debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
                                         var recordTmp = recordAsegu;
@@ -2524,15 +2525,26 @@ debug("validarYGuardar flag:2");
                                         segundo_nombre: recordAsegu.get('segundo_nombre'),
                                         Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
                                         Apellido_Materno: recordAsegu.get('Apellido_Materno'),
-                                        cdrfc: recordAsegu.get('cdrfc'),
-                                        tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
-                                        nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key'),
-                                        cdestciv :  recordAsegu.get('cdestciv'),
-                                        numsoc   :  recordAsegu.get('numsoc'),
-                                        clvfam   :  recordAsegu.get('clvfam'),
-                                        ocup     :  recordAsegu.get('ocup')
+                                        cdrfc		: recordAsegu.get('cdrfc'),
+                                        tpersona 	: typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
+                                        nacional 	: typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key'),
+                                        cdestciv 	:  recordAsegu.get('cdestciv'),
+                                        numsoc   	:  recordAsegu.get('numsoc'),
+                                        clvfam   	:  recordAsegu.get('clvfam'),
+                                        ocup     	:  recordAsegu.get('ocup'),
+                                        parentesco	: recordAsegu.get('Parentesco')
                                     });
                                     debug('**f6');
+                                    
+                                    debug('¬Datos en recordAsegu');
+                                    
+                                    debug('recordAsegu :',recordAsegu.get('cdestciv'),'.');
+                                    debug('recordAsegu :',recordAsegu.get('numsoc'),'.');
+                                    debug('recordAsegu :',recordAsegu.get('clvfam'),'.');
+                                    debug('recordAsegu :',recordAsegu.get('ocup'),'.');
+                                    debug('recordAsegu :',recordAsegu.get('Parentesco'),'.');
+                                    
+                                    
                                 });
                                 
                                 //tratar de hacer submit
@@ -2611,7 +2623,12 @@ debug("validarYGuardar flag:2");
                                                                             Apellido_Materno: datosContr.apmat,
                                                                             cdrfc:datosContr.rfc,
                                                                             tpersona : datosContr.tipoper,
-                                                                            nacional : datosContr.naciona
+                                                                            nacional : datosContr.naciona,
+                                                                            cdestciv :  recordAsegu.get('cdestciv'),
+									                                        numsoc   :  recordAsegu.get('numsoc'),
+									                                        clvfam   :  recordAsegu.get('clvfam'),
+									                                        ocup     :  recordAsegu.get('ocup'),
+									                                        parentesco	: recordAsegu.get('Parentesco')
                                                                         });
                                                                     }
                                                                     storePersonasp2.each(function(recordAsegu2)
@@ -2634,7 +2651,12 @@ debug("validarYGuardar flag:2");
                                                                                 Apellido_Materno: datosContr.apmat,
                                                                                 cdrfc:datosContr.rfc,
                                                                                 tpersona : datosContr.tipoper,
-                                                                                nacional : datosContr.naciona
+                                                                                nacional : datosContr.naciona,
+                                                                                cdestciv :  recordAsegu.get('cdestciv'),
+										                                        numsoc   :  recordAsegu.get('numsoc'),
+										                                        clvfam   :  recordAsegu.get('clvfam'),
+										                                        ocup     :  recordAsegu.get('ocup'),
+										                                        parentesco	: recordAsegu.get('Parentesco')
                                                                             });
                                                                         }
                                                                         incisosJson.push({
@@ -2652,7 +2674,12 @@ debug("validarYGuardar flag:2");
                                                                             Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
                                                                             cdrfc: recordAsegu2.get('cdrfc'),
                                                                             tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
-                                                                            nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
+                                                                            nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key'),
+                                                                            cdestciv :  recordAsegu.get('cdestciv'),
+									                                        numsoc   :  recordAsegu.get('numsoc'),
+									                                        clvfam   :  recordAsegu.get('clvfam'),
+									                                        ocup     :  recordAsegu.get('ocup'),
+									                                        parentesco	: recordAsegu.get('Parentesco')
                                                                         });
                                                                     });                
                                                                     Ext.getCmp('form1p2').setLoading(false);

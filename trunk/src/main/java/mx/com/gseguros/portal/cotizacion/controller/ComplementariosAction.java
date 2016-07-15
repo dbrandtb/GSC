@@ -166,6 +166,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private EndososManager endososManager;
+	
+	public static final String SUCURSAL_SALUD_NOVA = "1403";
 
 	
 	public ComplementariosAction() {
@@ -1393,16 +1395,24 @@ public class ComplementariosAction extends PrincipalCoreAction
 				String clvfam   = (String) aseg.get("clvfam");
 				String numsoc   = (String) aseg.get("numsoc");
 				String nmsituac = (String) aseg.get("nmsituac");
+				String parentesco = (String) aseg.get("parentesco");
 				
 				
 				//Número de socio y Clave Familiar, para el atributo SITUAEXT
-				try{
-					if(StringUtils.isEmpty(numsoc) || StringUtils.isEmpty(clvfam)){
-						ns = " ";
-						cf = " ";
-						
+				
+					logger.debug(Utils.log("Numero de Socio ->",numsoc));
+					logger.debug(Utils.log("Clave Familiar  ->",clvfam));
+					logger.debug(Utils.log("Estado Civil    ->",(String) aseg.get("cdestciv")));
+					logger.debug(Utils.log("Ocupacion       ->",(String) aseg.get("ocup")));
+					
+					
+					if(StringUtils.isEmpty(numsoc) && StringUtils.isEmpty(clvfam)){
 						nmsituaext = " ";
-						logger.debug(Utils.log("situaext ->"+nmsituaext));
+						String cdunieco = (String) map1.get("pv_cdunieco");
+						
+						if(StringUtils.isBlank(nmsituaext) && cdunieco.equals(SUCURSAL_SALUD_NOVA)){
+							throw new ApplicationException("Generando Situaext desde Clave familiar y Numero de Socio");
+						}
 					}else{
 						logger.debug(Utils.log("Generando Situaext..."));
 						ns = StringUtils.leftPad(numsoc, 6, "0");
@@ -1410,14 +1420,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 						//NMSITUAEXT
 						nmsituaext = ns + "-" + cf;
-						logger.debug(Utils.log("situaext ->"+nmsituaext));
+						logger.debug(Utils.log("nmsituaext ->",nmsituaext));
 					}
-						
-					
-				}catch(Exception e){
-					throw new ApplicationException("Generando Situaext desde Clave familiar y Numero de Socio");
-				}
-
 								
 				Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 				String swExiper = (String)aseg.get("swexiper");
