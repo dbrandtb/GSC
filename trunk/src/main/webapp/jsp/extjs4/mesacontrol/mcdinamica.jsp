@@ -533,8 +533,11 @@ Ext.onReady(function()
         alert('Existe una versi\u00f3n nueva de la mesa de control');
     }
 
-	// Se aumenta el timeout para todas las peticiones:
-	Ext.Ajax.timeout = 1000*60*2; // 2 minutos
+    // Se aumenta el timeout para todas las peticiones:
+    Ext.Ajax.timeout = 1000*60*60;
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 	
     /////////////////////
     ////// modelos //////
