@@ -2623,12 +2623,12 @@ debug("validarYGuardar flag:2");
                                                                             Apellido_Materno: datosContr.apmat,
                                                                             cdrfc:datosContr.rfc,
                                                                             tpersona : datosContr.tipoper,
-                                                                            nacional : datosContr.naciona,
-                                                                            cdestciv :  recordAsegu.get('cdestciv'),
-									                                        numsoc   :  recordAsegu.get('numsoc'),
-									                                        clvfam   :  recordAsegu.get('clvfam'),
-									                                        ocup     :  recordAsegu.get('ocup'),
-									                                        parentesco	: recordAsegu.get('Parentesco')
+                                                                            nacional : datosContr.naciona
+//                                                                            ,cdestciv :  recordAsegu.get('cdestciv'),
+//									                                        numsoc   :  recordAsegu.get('numsoc'),
+//									                                        clvfam   :  recordAsegu.get('clvfam'),
+//									                                        ocup     :  recordAsegu.get('ocup'),
+//									                                        parentesco	: recordAsegu.get('Parentesco')
                                                                         });
                                                                     }
                                                                     storePersonasp2.each(function(recordAsegu2)
@@ -2651,12 +2651,12 @@ debug("validarYGuardar flag:2");
                                                                                 Apellido_Materno: datosContr.apmat,
                                                                                 cdrfc:datosContr.rfc,
                                                                                 tpersona : datosContr.tipoper,
-                                                                                nacional : datosContr.naciona,
-                                                                                cdestciv :  recordAsegu.get('cdestciv'),
-										                                        numsoc   :  recordAsegu.get('numsoc'),
-										                                        clvfam   :  recordAsegu.get('clvfam'),
-										                                        ocup     :  recordAsegu.get('ocup'),
-										                                        parentesco	: recordAsegu.get('Parentesco')
+                                                                                nacional : datosContr.naciona
+//                                                                                ,cdestciv :  recordAsegu.get('cdestciv'),
+//										                                        numsoc   :  recordAsegu.get('numsoc'),
+//										                                        clvfam   :  recordAsegu.get('clvfam'),
+//										                                        ocup     :  recordAsegu.get('ocup'),
+//										                                        parentesco	: recordAsegu.get('Parentesco')
                                                                             });
                                                                         }
                                                                         incisosJson.push({
@@ -2674,12 +2674,12 @@ debug("validarYGuardar flag:2");
                                                                             Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
                                                                             cdrfc: recordAsegu2.get('cdrfc'),
                                                                             tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
-                                                                            nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key'),
-                                                                            cdestciv :  recordAsegu.get('cdestciv'),
-									                                        numsoc   :  recordAsegu.get('numsoc'),
-									                                        clvfam   :  recordAsegu.get('clvfam'),
-									                                        ocup     :  recordAsegu.get('ocup'),
-									                                        parentesco	: recordAsegu.get('Parentesco')
+                                                                            nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
+//                                                                            ,cdestciv :  recordAsegu.get('cdestciv'),
+//									                                        numsoc   :  recordAsegu.get('numsoc'),
+//									                                        clvfam   :  recordAsegu.get('clvfam'),
+//									                                        ocup     :  recordAsegu.get('ocup'),
+//									                                        parentesco	: recordAsegu.get('Parentesco')
                                                                         });
                                                                     });                
                                                                     Ext.getCmp('form1p2').setLoading(false);
@@ -2695,6 +2695,7 @@ debug("validarYGuardar flag:2");
                                                                     buttons: Ext.Msg.OK,
                                                                     icon: Ext.Msg.ERROR
                                                                 });
+                                                                formPanel.setLoading(false);
                                                             }
                                                         }
                                                         else
@@ -2705,6 +2706,7 @@ debug("validarYGuardar flag:2");
                                                                 buttons: Ext.Msg.OK,
                                                                 icon: Ext.Msg.ERROR
                                                             });
+                                                            formPanel.setLoading(false);
                                                         }
                                                     },
                                                     failure:function(response,opts)
@@ -2715,6 +2717,7 @@ debug("validarYGuardar flag:2");
                                                             buttons: Ext.Msg.OK,
                                                             icon: Ext.Msg.ERROR
                                                         });
+                                                        formPanel.setLoading(false);
                                                     }
                                                 });
                                             },(index+1)*500);
