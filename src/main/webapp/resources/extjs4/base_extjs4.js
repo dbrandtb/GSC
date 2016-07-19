@@ -2204,8 +2204,16 @@ function _procesaAccion(
                                         debug('### revision:',json);
                                         if(json.success==true)
                                         {
-                                            if(json.list.length==0)
-                                            {
+                                            var faltanDocs = false;
+                                            
+                                            for (var i = 0; i < json.list.length; i++) {
+                                                if (json.list[i].SWOBLIGA === 'S' && json.list[i].SUBIDO !== 'S') {
+                                                    faltanDocs = true;
+                                                    break;
+                                                }
+                                            }
+                                            
+                                            if (!faltanDocs) {
 	                                            if(numSalidas==1)
 	                                            {
 	                                                _procesaAccion
@@ -2255,48 +2263,97 @@ function _procesaAccion(
 	                                        }
 	                                        else
 	                                        {
-	                                            var lista = [];
-	                                            for(var i=0 ; i<json.list.length ; i++)
-	                                            {
-	                                                lista.push(json.list[i].DSDOCUME);
-	                                            }
-	                                            if(numSalidas==1)
-                                                {
-                                                    mensajeError
-                                                    (
-                                                        'FAVOR DE SUBIR LOS SIGUIENTES DOCUMENTOS:<p>'+(lista.join('<br/>'))
-                                                    );
-                                                }
-                                                else if(numSalidas==2)
-                                                {
-                                                    mensajeError
-                                                    (
-                                                        'FAVOR DE SUBIR LOS SIGUIENTES DOCUMENTOS:<p>'+(lista.join('<br/>'))
-                                                        ,function()
-                                                        {
-                                                            _procesaAccion
-                                                            (
-                                                                cdtipflu
-                                                                ,cdflujomc
-                                                                ,accError.TIPODEST
-                                                                ,accError.CLAVEDEST
-                                                                ,accError.WEBIDDEST
-                                                                ,accError.AUX
-                                                                ,ntramite
-                                                                ,status
-                                                                ,cdunieco
-                                                                ,cdramo
-                                                                ,estado
-                                                                ,nmpoliza
-                                                                ,nmsituac
-                                                                ,nmsuplem
-                                                                ,cdusuari
-                                                                ,cdsisrol
-                                                                ,callback
-                                                            );
-                                                        }
-                                                    );
-                                                }
+	                                            centrarVentanaInterna(Ext.create('Ext.window.Window', {
+	                                                title    : 'REVISI\u00D3N DE DOCUMENTOS REQUERIDOS',
+	                                                modal    : true,
+	                                                closable : false,
+	                                                border   : 0,
+	                                                defaults : {
+	                                                    style : 'margin : 5px;'
+	                                                },
+	                                                items    : [
+	                                                    {
+	                                                        xtype : 'displayfield',
+	                                                        value : 'Favor de revisar los documentos requeridos:'
+	                                                    }, {
+	                                                        xtype      : 'grid',
+	                                                        width      : 500,
+	                                                        height     : 300,
+	                                                        autoScroll : true,
+	                                                        border     : 0,
+	                                                        columns    : [
+	                                                            {
+	                                                                text      : 'DOCUMENTO',
+	                                                                dataIndex : 'DSDOCUME',
+	                                                                flex      : 1
+	                                                            }, {
+	                                                                text      : 'OBLIGATORIO',
+	                                                                dataIndex : 'SWOBLIGA',
+	                                                                width     : 100,
+	                                                                renderer  : function (v)
+	                                                                {
+	                                                                    var r = '';
+	                                                                    if (v === 'S') {
+	                                                                        r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'accept.png" />';
+	                                                                    }
+	                                                                    return r;
+	                                                                }
+                                                                }, {
+                                                                    text      : 'CARGADO',
+                                                                    dataIndex : 'SUBIDO',
+                                                                    width     : 100,
+                                                                    renderer  : function (v, md, rec)
+                                                                    {
+                                                                        var r = '';
+                                                                        if (v === 'S') {
+                                                                            r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'accept.png" />';
+                                                                        }
+                                                                        else if (rec.get('SWOBLIGA')  === 'S') {
+                                                                            r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'cancel.png" />';
+                                                                        }
+                                                                        return r;
+                                                                    }
+                                                                }
+	                                                        ], store : Ext.create('Ext.data.Store', {
+	                                                            fields : [
+	                                                                'DSDOCUME', 'SWOBLIGA', 'SUBIDO'
+	                                                            ],
+	                                                            data   : json.list
+	                                                        })
+	                                                    }
+	                                                ],
+	                                                buttonAlign : 'center',
+	                                                buttons     : [
+	                                                    {
+	                                                        text    : 'Continuar',
+	                                                        handler : function (me) {
+	                                                           me.up('window').destroy();
+	                                                           
+	                                                           if (numSalidas === 2) {
+	                                                                _procesaAccion(
+                                                                        cdtipflu
+                                                                        ,cdflujomc
+                                                                        ,accError.TIPODEST
+                                                                        ,accError.CLAVEDEST
+                                                                        ,accError.WEBIDDEST
+                                                                        ,accError.AUX
+                                                                        ,ntramite
+                                                                        ,status
+                                                                        ,cdunieco
+                                                                        ,cdramo
+                                                                        ,estado
+                                                                        ,nmpoliza
+                                                                        ,nmsituac
+                                                                        ,nmsuplem
+                                                                        ,cdusuari
+                                                                        ,cdsisrol
+                                                                        ,callback
+                                                                    );
+                                                                }
+	                                                        }
+	                                                    }
+	                                                ]
+	                                            }).show());
 	                                        }
                                         }
                                         else
