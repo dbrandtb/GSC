@@ -1,6 +1,6 @@
 Ext.onReady(function(){
 
-    _grabarEvento('SEGURIDAD','ACCLOGIN');
+    //_grabarEvento('SEGURIDAD','ACCLOGIN');
 
 	Ext.apply(Ext.form.field.VTypes, {
         
