@@ -103,39 +103,46 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         return SUCCESS;
     }
     
-    public String subirArchivo()
-    {
-    	logger.debug("smap1 "+smap1);
-        logger.debug("file "+file);
-        logger.debug("fileFileName "+fileFileName);
-        logger.debug("fileContentType "+fileContentType);
-        
+    public String subirArchivo () {
+    	logger.debug(Utils.log(
+    			"\n##########################",
+    			"\n###### subirArchivo ######",
+    			"\n###### smap1           = ", smap1,
+    			"\n###### file            = ", file,
+    			"\n###### fileFileName    = ", fileFileName,
+    			"\n###### fileContentType = ", fileContentType
+    			));
         try
         {
-        	String nombreArchivo=System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+"."+fileFileName.substring(fileFileName.indexOf(".")+1);
-        	String nuevaRuta=this.getText("ruta.documentos.poliza")+Constantes.SEPARADOR_ARCHIVO+smap1.get("ntramite")+Constantes.SEPARADOR_ARCHIVO
-                +nombreArchivo;
-        	String antiguaRuta=file.getAbsolutePath();
-        	logger.debug("se movera desde::: "+antiguaRuta);
-            logger.debug("se movera a    ::: "+nuevaRuta);
+        	this.session = ActionContext.getContext().getSession();
+        	
+            UserVO usuario = Utils.validateSession(session);
             
-            String rutaCarpeta=this.getText("ruta.documentos.poliza")+Constantes.SEPARADOR_ARCHIVO+smap1.get("ntramite");
+            Utils.validate(smap1, "No se recibieron datos");
+            
+        	String nombreArchivo = Utils.join(System.currentTimeMillis(), "_",
+        			((long)(Math.random()*10000l)), ".", fileFileName.substring(fileFileName.indexOf(".")+1)
+        			);
+        	
+        	String nuevaRuta = Utils.join(this.getText("ruta.documentos.poliza"), Constantes.SEPARADOR_ARCHIVO,
+        			smap1.get("ntramite"), Constantes.SEPARADOR_ARCHIVO, nombreArchivo);
+        	
+        	String antiguaRuta = file.getAbsolutePath();
+        	
+        	logger.debug("se movera desde {}", antiguaRuta);
+            logger.debug("se movera a {}", nuevaRuta);
+            
+            String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"), Constantes.SEPARADOR_ARCHIVO, smap1.get("ntramite"));
             File carpeta = new File(rutaCarpeta);
-            if(!carpeta.exists())
-            {
+            if (!carpeta.exists()) {
             	logger.info("no existe la carpeta::: "+rutaCarpeta);
             	carpeta.mkdir();
-            	if(carpeta.exists())
-            	{
+            	if (carpeta.exists()) {
             		logger.info("carpeta creada");
-            	}
-            	else
-            	{
+            	} else {
             		logger.info("carpeta NO creada");
             	}
-            }
-            else
-            {
+            } else {
             	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
             }
             
@@ -146,56 +153,17 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 				logger.error("archivo NO movido", e);
 			}
             
-            /*
-            if(file.renameTo(new File(nuevaRuta)))
-    		{
-    			logger.debug("archivo movido");	
-    		}
-    		else
-    		{
-    			logger.debug("archivo NO movido");
-    		}
-    		*/
+            String codidocu = smap1.get("codidocu");             //combo original de siniestros
+            String cddocume = smap1.get("cddocumeFlujo");        //combo de mesa de control de flujos
+            String cddocumeRevisi = smap1.get("cddocumeRevisi"); //sin combo, cuando se sube desde revision uno particular
             
-            /*
-            pv_cdunieco_i
-            pv_cdramo_i
-            pv_estado_i
-            pv_nmpoliza_i
-            pv_nmsuplem_i
-            pv_feinici_i
-            pv_cddocume_i
-            pv_dsdocume_i
-            */
-            //Map<String,Object>paramMovDocu=new LinkedHashMap<String,Object>(0);
-            //paramMovDocu.put("pv_cdunieco_i"  , smap1.get("cdunieco"));
-            //paramMovDocu.put("pv_cdramo_i"    , smap1.get("cdramo"));
-            //paramMovDocu.put("pv_estado_i"    , smap1.get("estado"));
-            //paramMovDocu.put("pv_nmpoliza_i"  , smap1.get("nmpoliza"));
-            //paramMovDocu.put("pv_nmsolici_i"  , smap1.get("nmsolici"));
-            //paramMovDocu.put("pv_nmsuplem_i"  , smap1.get("nmsuplem"));
-            //paramMovDocu.put("pv_ntramite_i"  , smap1.get("ntramite"));
-            //paramMovDocu.put("pv_feinici_i"   , renderFechas.parse(smap1.get("fecha")));
-            //paramMovDocu.put("pv_cddocume_i"  , nombreArchivo);
-            //paramMovDocu.put("pv_dsdocume_i"  , smap1.get("descripcion"));
-            //paramMovDocu.put("pv_tipmov_i"    , smap1.get("tipomov"));
-            //paramMovDocu.put("pv_swvisible_i" , null);
-            //paramMovDocu.put("pv_codidocu_i"  , smap1.get("codidocu"));
-            //paramMovDocu.put("pv_cdtiptra_i"  , smap1.get("cdtiptra"));
-            //kernelManager.guardarArchivo(paramMovDocu);
-            
-            String codidocu = smap1.get("codidocu");
-            String cddocume = smap1.get("cddocumeFlujo");
-            
-            String codigoDocumento = codidocu;
-            if(StringUtils.isBlank(codigoDocumento))
-            {
-            	codigoDocumento = cddocume;
+            if (StringUtils.isBlank(codidocu)) {
+            	if (StringUtils.isNotBlank(cddocume)) {
+            		codidocu = cddocume;
+            	} else if (StringUtils.isNotBlank(cddocumeRevisi)) {
+            		codidocu = cddocumeRevisi;
+            	}
             }
-            
-            this.session = ActionContext.getContext().getSession();
-            
-            UserVO usuario = Utils.validateSession(session);
             
             documentosManager.guardarDocumento(
             		smap1.get("cdunieco")
@@ -210,7 +178,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             		,smap1.get("ntramite")
             		,smap1.get("tipomov")
             		,null
-            		,codigoDocumento
+            		,codidocu
             		,smap1.get("cdtiptra")
             		,null
             		,null
@@ -218,12 +186,16 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             		,usuario.getRolActivo().getClave()
             		);
             
-        }
-        
-        catch(Exception ex)
-        {
+            exito = true;
+            
+        } catch(Exception ex) {
         	logger.error("error al mover el archivo",ex);
         }
+        logger.debug(Utils.log(
+        		"\n###### exito = ", exito,
+        		"\n###### subirArchivo ######",
+        		"\n##########################"
+        		));
         return SUCCESS;
     }
     
