@@ -1110,6 +1110,7 @@ function _datComTurnarSuscripcion()
                                             return;
                                         }
 		                                var form=Ext.getCmp('formPanel');
+		                                debug('contrato',_fieldByLabel('NUMERO DE CONTRATO'));
 		                                if(form.isValid())
 		                                {
 		                                	form.setLoading(true);
@@ -2286,6 +2287,22 @@ function _datComTurnarSuscripcion()
                             	afterrender:function(tab)
                                 {
                                     debug('afterrender tabPanelAsegurados');
+                                    
+                                    // Validaciones:
+                                    
+                                    // Validacion para NUMERO DE CONTRATO en sucursal 1403 ELP
+                                    debug('¬traeme la cdunieco',inputCdunieco);
+                                    
+                                    if(inputCdunieco == 1403 && Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO').value)){
+                                    	debug('Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
+                                    	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = false;
+                                    	debug('Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
+                                    }else{
+                                    	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = true;
+                                    }
+                                    
+                                    
+                                    //
                                     if(inputCdtipsit=='AF'){
                                     	Ext.Ajax.request({
                                   			url     : _URL_ObtieneValNumeroSerie
