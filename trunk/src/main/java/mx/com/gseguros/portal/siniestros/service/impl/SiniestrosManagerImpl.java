@@ -2420,4 +2420,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		return siniestrosDAO.actualizaDatosGeneralesConceptos(params);
 	}
 	
+	@Override
+	public String validaExisteCodigoConcepto(HashMap<String, Object> paramExiste) throws Exception {
+		try {
+			return siniestrosDAO.validaExisteCodigoConcepto(paramExiste);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
 }

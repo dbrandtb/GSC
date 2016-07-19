@@ -691,4 +691,6 @@ public interface SiniestrosManager {
 	public Map<String, Object> actualizaDatosGeneralesConceptos(String cdunieco, String cdramo, String estado, 
 			String nmpoliza, String nmsuplem, String aaapertu, String nmsinies, String cdgarant, 
 			String cdconval) throws Exception;
+	
+	public String validaExisteCodigoConcepto(HashMap<String, Object> paramExiste) throws Exception;
 }
