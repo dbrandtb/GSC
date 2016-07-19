@@ -555,4 +555,6 @@ public interface SiniestrosDAO {
 	public String validaFeocurreAsegurado(HashMap<String, Object> paramPersona) throws Exception;
 	
 	public Map<String, Object> actualizaDatosGeneralesConceptos(Map<String, Object> params) throws Exception;
+	
+	public String validaExisteCodigoConcepto(HashMap<String, Object> paramExiste) throws Exception;
 }

@@ -445,123 +445,112 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                // Empezamos a leer los campos del archivo de Excel
 		                String fechaOcurrencia = null;
 		                String aseguradoAfectado = null;
+		                String tipoConcepto = null;
+		                String codigoConcepto = null;
+		                String conversionTipoID = null;
 		                int total = 1;
+		                int totalVal = 1;
+		                int errorOcurrencia = 0;
+		                int errorConcepto = 0;
+		                String campoFechaOcurrencia = null;
+		                String campocodigoConcepto  = null;
+		                String campoCPTs = null;
+		                //logger.debug(msg);
 		                for(int i = 0; i < datosInformacionLayout.size();i++){
-		                	//logger.debug("Valor de los datos ===> "+datosInformacionLayout.get(i));
 		                	int celdaPrincipal = Integer.parseInt(datosInformacionLayout.get(i).get("CVEEXCEL").toString())-1;
 		                	auxCell = row.getCell(celdaPrincipal);
 		                	
-		                	//logger.debug("Valor ===>"+datosInformacionLayout.get(i).get("DESCEXCEL").toString());
 		                	try{
-		                		//ALFANUMERICO
-		                		if(row.getCell(celdaPrincipal).getCellType()>0){
-			                		//validamos si es una fecha
-		                			if(datosInformacionLayout.get(i).get("CVEFORMATO").toString().equalsIgnoreCase("F")){
-		                				
-		                				String dateInString = auxCell.getStringCellValue().trim();
-		                				if(datosInformacionLayout.get(i).get("FORMATFECH").toString().equalsIgnoreCase(TipoFecha.ddMMyyyy_Diagonal.getCodigo())){
-		                					SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		                					Date date = formatter.parse(dateInString);
-		                					bufferLinea.append(
-				                				auxCell!=null?renderFechas.format(date)+"|":"|"
-					                		);		                					
-		                					//logger.debug("1.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString());
-		                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
-		                						logger.debug("1.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+"  "+renderFechas.format(date));
-		                						fechaOcurrencia = renderFechas.format(date);
-		                					}
-		                				}
-		                				
-		                				if(datosInformacionLayout.get(i).get("FORMATFECH").toString().equalsIgnoreCase(TipoFecha.ddMMyyyy_Gion.getCodigo())){
-		                					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		                					Date date = formatter.parse(dateInString);
-		                					bufferLinea.append(
-				                				auxCell!=null?renderFechas.format(date)+"|":"|"
+		                		logger.debug("datosInformacionLayout.get(i) ===> :{}",datosInformacionLayout.get(i));
+		                		logger.debug("datosInformacionLayout ===> :{}",datosInformacionLayout.get(i).get("CVEFORMATO").toString());
+		                		
+		                		//1.- Validamos el tipo de datos del registro
+		                		if(datosInformacionLayout.get(i).get("CVEFORMATO").toString().equalsIgnoreCase("F")){
+		                			String conversionFechaString = obtieneValor(auxCell, CampoVO.FECHA, "dd/MM/yyyy");
+		                			
+		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
+		                				campoFechaOcurrencia =  datosInformacionLayout.get(i).get("DESCRIPC").toString();
+		                				fechaOcurrencia      = conversionFechaString;
+		                			}
+		                			
+		                			
+		                			if(datosInformacionLayout.get(i).get("SWOBLIGA").toString().equalsIgnoreCase("N") && StringUtils.isBlank(conversionFechaString)){
+	                					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+	                					Date date = formatter.parse("01/01/1900");
+	                					bufferLinea.append(
+			                				auxCell!=null?renderFechas.format(date)+"|":"|"
+				                		);
+	                				}else{
+	                					bufferLinea.append(conversionFechaString+"|");
+	                				}
+		                		}else if(datosInformacionLayout.get(i).get("CVEFORMATO").toString().equalsIgnoreCase("A")){
+		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, " ");
+		                			logger.debug("conversionString ===>:{}",conversionString);
+		                			String cadenaModificada = conversionString.trim().
+	                						replaceAll("á","a").
+	                						replaceAll("é","e").
+	                						replaceAll("í","i").
+	                						replaceAll("ó","o").
+	                						replaceAll("ú","u").
+	                						replaceAll("Á","A").
+	                						replaceAll("É","E").
+	                						replaceAll("Í","I").
+	                						replaceAll("Ó","O").
+	                						replaceAll("Ú","U").
+	                						replaceAll("\\*","");
+		                			
+		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CVE. ASEGURADO")){
+	                					HashMap<String, Object> paramPersona = new HashMap<String, Object>();
+	                					paramPersona.put("pv_cdideext_i",cadenaModificada);
+	                					
+	                					String existePersona = siniestrosManager.validaPersonaSisaSicaps(paramPersona);
+	                					if(Integer.parseInt(existePersona) > 0){
+	                						aseguradoAfectado = "G"+existePersona;
+	                						bufferLinea.append(
+				                				auxCell!=null?"G"+existePersona+"|":"|"
 					                		);
-		                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
-		                						logger.debug("2.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+"  "+renderFechas.format(date));
-		                						fechaOcurrencia = renderFechas.format(date);
-		                					}
-		                					
-		                				}
-		                				if(datosInformacionLayout.get(i).get("FORMATFECH").toString().equalsIgnoreCase(TipoFecha.yyyyMMdd_Diagonal.getCodigo())){
-		                					SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-		                					Date date = formatter.parse(dateInString);
-		                					bufferLinea.append(
-				                				auxCell!=null?renderFechas.format(date)+"|":"|"
-					                		);
-		                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
-		                						logger.debug("3.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+"  "+renderFechas.format(date));
-		                						fechaOcurrencia = renderFechas.format(date);
-		                					}
-		                				}
-		                				if(datosInformacionLayout.get(i).get("FORMATFECH").toString().equalsIgnoreCase(TipoFecha.yyyyMMdd_Gion.getCodigo())){
-		                					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		                					Date date = formatter.parse(dateInString);
-		                					bufferLinea.append(
-				                				auxCell!=null?renderFechas.format(date)+"|":"|"
-					                		);
-		                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
-		                						logger.debug("4.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+"  "+renderFechas.format(date));
-		                						fechaOcurrencia = renderFechas.format(date);
-		                					}
-		                				}
-		                				if(datosInformacionLayout.get(i).get("FORMATFECH").toString().equalsIgnoreCase(TipoFecha.ddMMyyyyhhmmss_Diagonal.getCodigo())){
-		                					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.US);
-		                					Date date = formatter.parse(dateInString);
-		                					bufferLinea.append(
-				                				auxCell!=null?renderFechas.format(date)+"|":"|"
-					                		);
-		                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
-		                						logger.debug("5.- "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+"  "+renderFechas.format(date));
-		                						fechaOcurrencia = renderFechas.format(date);
-		                					}
-		                				}
-		                			}else{
-		                				String cadenaModificada = auxCell.getStringCellValue().trim().
-		                						replaceAll("á","a").
-		                						replaceAll("é","e").
-		                						replaceAll("í","i").
-		                						replaceAll("ó","o").
-		                						replaceAll("ú","u").
-		                						replaceAll("Á","A").
-		                						replaceAll("É","E").
-		                						replaceAll("Í","I").
-		                						replaceAll("Ó","O").
-		                						replaceAll("Ú","U").
-		                						replaceAll("\\*","");
-		                				
-		                				if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CVE. ASEGURADO")){
-		                					HashMap<String, Object> paramPersona = new HashMap<String, Object>();
-		                					paramPersona.put("pv_cdideext_i",cadenaModificada);
-		                					
-		                					String existePersona = siniestrosManager.validaPersonaSisaSicaps(paramPersona);
-		                					if(Integer.parseInt(existePersona) > 0){
-		                						aseguradoAfectado = "G"+existePersona;
-		                						bufferLinea.append(
-					                				auxCell!=null?"G"+existePersona+"|":"|"
-						                		);
-		                					}else{
-		                						throw new Exception("El asegurado no se encuentra en SICAPS.");
-		                					}
+	                					}else{
+	                						throw new Exception("El asegurado no se encuentra en SICAPS.");
+	                					}
+	                				}else{
+	                					logger.debug("Entra al Else ==> cadenaModificada :{} esvacio : {}",cadenaModificada.trim(),StringUtils.isBlank(cadenaModificada.trim()));
+	                					
+	                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("COBERTURA") &&
+                							datosInformacionLayout.get(i).get("SWOBLIGA").toString().equalsIgnoreCase("N") && 
+                							StringUtils.isBlank(cadenaModificada.trim())){
+	                						bufferLinea.append("Medicamentos"+"|");
+		                				}else if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("SUBCOBERTURA") &&
+                							datosInformacionLayout.get(i).get("SWOBLIGA").toString().equalsIgnoreCase("N") && 
+                							StringUtils.isBlank(cadenaModificada.trim())){
+		                					bufferLinea.append("Medicamentos - Todos Los Medicamentos Recetados Por Los Medicos De La Red"+"|");
 		                				}else{
 		                					bufferLinea.append(
 				                				auxCell!=null?cadenaModificada.trim()+"|":"|"
 					                		);
 		                				}
-		                				
-		                				if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CLAVE ASEGURADO")){
-		                					aseguradoAfectado = cadenaModificada.trim();
-		                				}
-		                			}
-			                	}else{
-			                		//NUMERICO
-			                		DecimalFormat df = new DecimalFormat("####################.###");
-			                		bufferLinea.append(
-			                			auxCell!=null?df.format(auxCell.getNumericCellValue()).toString()+"|":"|"
-			                		);
-			                	}
+	                				}
+	                				
+	                				if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CLAVE ASEGURADO")){
+	                					aseguradoAfectado = cadenaModificada.trim();
+	                				}
+		                			
+	                				if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("ID. CONCEPTO")){ //CPT  UB HCPC
+	                					tipoConcepto = cadenaModificada.trim();
+	                				}
+		                			
+	                				if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CVE. CONCEPTO")){
+	                					codigoConcepto = cadenaModificada.trim();
+	                					campocodigoConcepto =  datosInformacionLayout.get(i).get("DESCRIPC").toString();
+	                				}
+		                			
+		                			
+		                		}else{
+		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, null);
+		                			logger.debug("Valor de conversion ==> :{}",conversionString);
+		                			bufferLinea.append(Double.parseDouble(conversionString)+"|");
+		                		}
 		                		
+		                		//Validacion de la fecha de ocurrencia
 		                		if(fechaOcurrencia!= null && aseguradoAfectado != null && total <= 1){
 		                			total = total+1;
 		                			HashMap<String, Object> paramPersona = new HashMap<String, Object>();
@@ -569,17 +558,46 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
                 					paramPersona.put("pv_cdperson_i",aseguradoAfectado.replaceAll("G", "")); 
                 					String feocurreAsegurado = siniestrosManager.validaFeocurreAsegurado(paramPersona);
                 					if(Integer.parseInt(feocurreAsegurado) == 0){
+                						errorOcurrencia = 1;
                 						throw new Exception("El rango de la fecha no se encuentra en la p&oacute;liza");
                 					}
 		                		}
+		                		//Validacion de los CPT, UB y HCPC
+		                		if(tipoConcepto!= null && codigoConcepto != null && totalVal <= 1){
+		                			totalVal = totalVal+1;
+		                			if(tipoConcepto.equalsIgnoreCase("CPT")){
+		                				conversionTipoID = "1";
+		                			}else if(tipoConcepto.equalsIgnoreCase("UB")){
+		                				conversionTipoID = "2";
+		                			}else{
+		                				conversionTipoID = "3";
+		                			}
+		                			HashMap<String, Object> paramExiste = new HashMap<String, Object>();
+		                			paramExiste.put("pv_idconcep_i",conversionTipoID);
+		                			paramExiste.put("pv_descripc_i",codigoConcepto);									
+		                			String existeCodigoConcepto = siniestrosManager.validaExisteCodigoConcepto(paramExiste);
+		                			if(existeCodigoConcepto.equalsIgnoreCase("N")){
+		                				errorConcepto = 1;
+		                				throw new Exception("Error en el concepto");
+		                			}
+		                		}
+		                		
 		                	}
 		                	catch(Exception ex){
 		                		filaBuena = false;
-		                		logger.debug("Error ===>>>> {}", ex);
-		                		if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CVE. ASEGURADO")){
-		                			bufferErroresCenso.append(Utils.join("La Clavel del Asegurado (CDIDEEXT) no se encuentra en SICAPS.\nError en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
-		                		}else{
-		                			bufferErroresCenso.append(Utils.join("Error en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
+		                		logger.debug("Valor de la excepcion ==>:{}",ex);
+		                		if(errorOcurrencia == 1){
+		                			bufferErroresCenso.append(Utils.join("La Fecha de ocurrencia no se encuentra dentro de la ocurrencia de la póliza .\nError en el campo FECHA OCURRENCIA "+campoFechaOcurrencia+" de la fila ",fila," "));
+		                		}
+		                		if(errorConcepto == 1){
+		                			bufferErroresCenso.append(Utils.join("La Clave del concepto no se encuentra dado de alta.\nError en el campo CVE. CONCEPTO "+campocodigoConcepto+" de la fila ",fila," "));
+		                		}
+		                		else{
+		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CLAVE ASEGURADO")){
+			                			bufferErroresCenso.append(Utils.join("El asegurado no existe o no se encuentra vigente.\nError en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
+			                		}else{
+			                			bufferErroresCenso.append(Utils.join("Error en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
+			                		}
 		                		}
 			                }
 			                finally{
@@ -607,20 +625,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 					
 					logger.debug("VALOR DEL EXITO ====> "+exito);
 					logger.debug("filasError ====>"+filasError);
-					
-					/*if(exito) {
-		            	boolean       sonGruposValidos = true;
-		            	StringBuilder errorGrupos      = new StringBuilder();
-		            	
-		            	if(!sonGruposValidos) {
-		            		logger.debug("Entra a !sonGruposValidos");
-		            		respuesta       = errorGrupos.append("\n").append(bufferErroresCenso.toString()).append("\nError #").append(System.currentTimeMillis()).toString();
-		            		respuestaOculta = respuesta;
-		            		logger.error(bufferErroresCenso.toString());
-		            		logger.error(respuesta);
-		            	}
-		            }*/
-					
+
 					if(exito) {
 		            	logger.debug("total Consultas: {}\nEstado Consultas: {}\nError Consultas: {}"
 			            		,totalConsultasAseg,estadoConsultas,errorConsultas);
@@ -744,6 +749,40 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		}
 		setSuccess(true);
 		return SUCCESS;
+	}
+    
+    
+	/**
+	  * Obtiene el valor de una celda
+	  * @param celda Celda que contiene el valor
+	  * @param tipoDato tipo de dato de la celda "A" Alfanumerico, "N" Numerico, "F" Fecha, "P" Porcentaje
+	  * @param dateFormat Cadena con el formato de fecha, nulo si la celda no es tipo "F"
+	  * @return valor de la celda en String
+	  * @throws Exception  si falla la obtencion del valor
+	  */
+	private String obtieneValor(Cell celda, String tipoDato, String dateFormat) throws Exception {
+		String strValor = null;
+		if(celda==null) {
+			return "";
+		}
+		if (tipoDato.equals(CampoVO.FECHA)) {
+			logger.debug("Cell type:" + celda.getCellType());
+			if (celda.getCellType() == Cell.CELL_TYPE_STRING) {
+				strValor = celda.getStringCellValue();
+			} else if (celda.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+				SimpleDateFormat df;
+				if (dateFormat == null) {
+					df = new SimpleDateFormat("dd/MM/yyyy");
+				} else {
+					df = new SimpleDateFormat(dateFormat);
+				}
+				strValor = df.format(celda.getDateCellValue());
+			}
+		} else {
+			celda.setCellType(Cell.CELL_TYPE_STRING);
+			strValor = celda.getStringCellValue();
+		}
+		return strValor;
 	}
 	
 	private String extraerStringDeCelda(Cell cell)

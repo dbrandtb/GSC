@@ -1595,19 +1595,19 @@
 								header: 'Importe a Pagar',			dataIndex: 'IMPORTETOTALPAGO',renderer  : Ext.util.Format.usMoney
 							},
 							{
-								header: 'CDTIPSIT',					dataIndex: 'CDTIPSIT',			hidden	:	true
+								header: 'CDTIPSIT',					dataIndex: 'CDTIPSIT',				hidden	:	true
 							},
 							{
-								header: 'ReqValidacion',			dataIndex: 'REQAUTESPECIAL',			hidden	:	true
+								header: 'ReqValidacion',			dataIndex: 'REQAUTESPECIAL',		hidden	:	true
 							},
 							{
-								header: 'ValidacionTotal',			dataIndex: 'VALTOTALCOB'//,renderer  : Ext.util.Format.usMoney
+								header: 'ValidacionTotal',			dataIndex: 'VALTOTALCOB',			hidden	:	true
 							},
 							{
-								header: 'Limite',					dataIndex: 'LIMITE'//,renderer  : Ext.util.Format.usMoney
+								header: 'Limite',					dataIndex: 'LIMITE',				hidden	:	true
 							},
 							{
-								header: 'TotalPagado',				dataIndex: 'IMPPAGCOB'//,renderer  : Ext.util.Format.usMoney
+								header: 'TotalPagado',				dataIndex: 'IMPPAGCOB',				hidden	:	true
 							}
 						],
 						tbar:[

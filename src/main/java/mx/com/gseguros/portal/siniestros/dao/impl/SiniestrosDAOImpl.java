@@ -5185,7 +5185,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String[] cols = new String[]{
 					"MAXREGISTRO","NMORDINA","CVEEXCEL","CVEATRI",
 					"DESCEXCEL", "CVEFORMATO", "DESCFECHA", "FORMATFECH",
-					"DESCRIPC"
+					"DESCRIPC",	 "SWOBLIGA"
 					
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -5575,4 +5575,24 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public String validaExisteCodigoConcepto(HashMap<String, Object> paramExiste) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new ValidaExisteCodigoConcepto(getDataSource()), paramExiste);
+		logger.debug( resultado.get("pv_existe_o"));
+		return (String) resultado.get("pv_existe_o");
+	}
+	
+    protected class ValidaExisteCodigoConcepto extends StoredProcedure {
+    	
+    	protected ValidaExisteCodigoConcepto(DataSource dataSource) {
+    		super(dataSource, "PKG_SINIESTRO.P_EXISTE_CPTUBHCPC");
+    		declareParameter(new SqlParameter("pv_idconcep_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_descripc_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }
