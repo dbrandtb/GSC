@@ -1406,12 +1406,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug(Utils.log("Ocupacion       ->",(String) aseg.get("ocup")));
 					
 					
-					if(StringUtils.isEmpty(numsoc) && StringUtils.isEmpty(clvfam)){
+					if(StringUtils.isBlank(numsoc) || StringUtils.isBlank(clvfam)){
 						nmsituaext = " ";
 						String cdunieco = (String) map1.get("pv_cdunieco");
 						
-						if(StringUtils.isBlank(nmsituaext) && cdunieco.equals(SUCURSAL_SALUD_NOVA)){
-							throw new ApplicationException("Generando Situaext desde Clave familiar y Numero de Socio");
+						if(StringUtils.isBlank(nmsituaext) && cdunieco.equals(SUCURSAL_SALUD_NOVA) 
+								|| StringUtils.isBlank((String) aseg.get("cdestciv")) || StringUtils.isBlank((String) aseg.get("ocup"))){
+							throw new ApplicationException("No se generando Situaext desde Clave familiar y Numero de Socio");
 						}
 					}else{
 						logger.debug(Utils.log("Generando Situaext..."));
