@@ -1169,7 +1169,7 @@ function _0_recuperarCotizacion(nmpoliza)
         {
             var json=Ext.decode(response.responseText);
             
-            if(_0_smap1.cdramo=='6')
+            if(_0_smap1.cdramo=='6' || _0_smap1.cdramo=='16')
             {   
                 if(!Ext.isEmpty(json.error))
                 {
@@ -1455,9 +1455,17 @@ function llenandoCampos (json)
                 else
                 {
                     if(!cargarXpoliza)
-                        {
-                           _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
-                        }
+                    {
+	               	    if(maestra)//SE DEJA EN BLANCO CUANDO "M" PARA GENERAR NUEVO NUMERO 
+	               		{
+	               		    _fieldByName('nmpoliza').setValue('');
+	               		    _fieldByName('FESOLICI').setValue(new Date());
+	               		}
+	               	    else
+	               	    {
+	               	        _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
+               		    }
+                    }
                     
                     _0_panelPri.setLoading(false);
                     
@@ -1632,15 +1640,24 @@ function _0_cotizar(boton)
           
             if(_0_smap1.cdramo=='16')
             {
-	            var agenteCmp=_fieldByLabel('AGENTE');
-	            if(Ext.isEmpty(agenteCmp))
-	            {
-	                smap.cdagenteAux='';
-	            }
-	            else
-	            {
-	                smap.cdagenteAux=agenteCmp.getValue();
-	            }
+               var agenteCmp=_fieldByLabel('AGENTE');
+               if(Ext.isEmpty(agenteCmp))
+               {
+                   smap.cdagenteAux='';
+               }
+               else
+               {
+                   if(!Ext.isEmpty(agenteCmp.getValue()))
+                   {
+                   smap.cdagenteAux=agenteCmp.getValue();
+                   }
+               }
+               
+               if(!Ext.isEmpty(cdagenteCotiza))
+               {
+                    _0_smap1['cdagente']    = 'A'+cdagenteCotiza;
+                    _fieldByLabel('AGENTE').setValue(cdagenteCotiza);
+               }
             }
         }
         
