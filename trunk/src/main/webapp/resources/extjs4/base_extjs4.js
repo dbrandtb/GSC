@@ -2265,6 +2265,26 @@ function _procesaAccion(
 	                                        {
 	                                            centrarVentanaInterna(Ext.create('Ext.window.Window', {
 	                                                title    : 'REVISI\u00D3N DE DOCUMENTOS REQUERIDOS',
+	                                                itemId   : 'WINDOW_REVISION_DOCUMENTOS',
+	                                                flujo    : {
+	                                                    cdtipflu  : cdtipflu,
+	                                                    cdflujomc : cdflujomc,
+	                                                    tipodest  : tipodest,
+	                                                    clavedest : clavedest,
+	                                                    webiddest : webiddest,
+	                                                    aux       : aux,
+	                                                    ntramite  : ntramite,
+	                                                    status    : status,
+	                                                    cdunieco  : cdunieco,
+	                                                    cdramo    : cdramo,
+	                                                    estado    : estado,
+	                                                    nmpoliza  : nmpoliza,
+	                                                    nmsituac  : nmsituac,
+	                                                    nmsuplem  : nmsuplem,
+	                                                    cdusuari  : cdusuari,
+	                                                    cdsisrol  : cdsisrol,
+	                                                    callback  : callback
+	                                                },
 	                                                modal    : true,
 	                                                closable : false,
 	                                                border   : 0,
@@ -2294,7 +2314,7 @@ function _procesaAccion(
 	                                                                {
 	                                                                    var r = '';
 	                                                                    if (v === 'S') {
-	                                                                        r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'accept.png" />';
+	                                                                        r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'lock.png" />';
 	                                                                    }
 	                                                                    return r;
 	                                                                }
@@ -2313,10 +2333,23 @@ function _procesaAccion(
                                                                         }
                                                                         return r;
                                                                     }
+                                                                }, {
+                                                                    width     : 30,
+                                                                    dataIndex : 'SUBIDO',
+                                                                    renderer  : function (v, md, rec, row)
+                                                                    {
+                                                                        var r = '';
+                                                                        if (v !== 'S') {
+                                                                            r = '<a href="#" onclick="subirArchivoDesdeRevision(' + row + '); return false;">' +
+                                                                                    '<img src="' + _GLOBAL_DIRECTORIO_ICONOS + 'page_add.png" ' +
+                                                                                    'data-qtip="Subir archivo" /></a>';
+                                                                        }
+                                                                        return r;
+                                                                    }
                                                                 }
 	                                                        ], store : Ext.create('Ext.data.Store', {
 	                                                            fields : [
-	                                                                'DSDOCUME', 'SWOBLIGA', 'SUBIDO'
+	                                                                'CDDOCUME', 'DSDOCUME', 'SWOBLIGA', 'SUBIDO'
 	                                                            ],
 	                                                            data   : json.list
 	                                                        })
@@ -2352,7 +2385,33 @@ function _procesaAccion(
                                                                 }
 	                                                        }
 	                                                    }
-	                                                ]
+	                                                ],
+	                                                recargar : function () {
+	                                                    debug('>WINDOW_REVISION_DOCUMENTOS recargar');
+	                                                    var me = this;
+	                                                    
+	                                                    _procesaAccion(
+                                                            me.flujo.cdtipflu
+                                                            ,me.flujo.cdflujomc
+                                                            ,me.flujo.tipodest
+                                                            ,me.flujo.clavedest
+                                                            ,me.flujo.webiddest
+                                                            ,me.flujo.aux
+                                                            ,me.flujo.ntramite
+                                                            ,me.flujo.status
+                                                            ,me.flujo.cdunieco
+                                                            ,me.flujo.cdramo
+                                                            ,me.flujo.estado
+                                                            ,me.flujo.nmpoliza
+                                                            ,me.flujo.nmsituac
+                                                            ,me.flujo.nmsuplem
+                                                            ,me.flujo.cdusuari
+                                                            ,me.flujo.cdsisrol
+                                                            ,me.flujo.callback
+                                                        );
+	                                                    
+	                                                    me.destroy();
+	                                                }
 	                                            }).show());
 	                                        }
                                         }
@@ -2809,6 +2868,46 @@ function _setValueCampoAgente(campo,cdagente)
     catch(e)
     {
         manejaException(e,ck);
+    }
+}
+
+function subirArchivoDesdeRevision (row) {
+    debug('>subirArchivoDesdeRevision args:', arguments);
+    
+    var ck = 'Invocanco ventana de documentos';
+    try {
+        var win    = _fieldById('WINDOW_REVISION_DOCUMENTOS'),
+            flujo  = win.flujo,
+            record = win.down('grid').getStore().getAt(row);
+        
+        debug('win:'    , win    , '.');
+        debug('flujo:'  , flujo  , '.');
+        debug('record:' , record , '.');
+        
+        Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES+'VentanaDocumentos');
+        new window['VentanaDocumentos']({
+            cdtipflu           : flujo.cdtipflu
+            ,cdflujomc         : flujo.cdflujomc
+            ,tipoent           : flujo.tipodest
+            ,claveent          : flujo.clavedest
+            ,webid             : flujo.webiddest
+            ,aux               : flujo.aux
+            ,ntramite          : flujo.ntramite
+            ,status            : flujo.status
+            ,cdunieco          : flujo.cdunieco
+            ,cdramo            : flujo.cdramo
+            ,estado            : flujo.estado
+            ,nmpoliza          : flujo.nmpoliza
+            ,nmsituac          : flujo.nmsituac
+            ,nmsuplem          : flujo.nmsuplem
+            ,cdusuari          : flujo.cdusuari
+            ,cdsisrol          : flujo.cdsisrol
+            ,cddocumeParasubir : record.get('CDDOCUME')
+            ,dsdocumeParasubir : record.get('DSDOCUME')
+            ,windowRevisi      : win
+       }).mostrar();
+    } catch(e) {
+        manejaException(e, ck);
     }
 }
 

@@ -556,6 +556,7 @@ Ext.onReady(function()
                             	,fieldLabel : 'Descripci&oacute;n'
                             	,name       : 'smap1.descripcion'
                            		,width      : 450
+                           		,value      : _NVL(panDocSmap1.dsdocumeParasubir)
                             }
                             ,{
                                 xtype       : 'filefield'
@@ -651,15 +652,16 @@ Ext.onReady(function()
                                         ,target        : 'panDocIframeUploadDoc'
                                         ,params        :
                                        	{
-                                        	'smap1.cdunieco'    : panDocInputCdunieco
-                                        	,'smap1.cdramo'     : panDocInputCdramo
-                                        	,'smap1.estado'     : panDocInputEstado
-                                        	,'smap1.nmsuplem'   : panDocInputNmsuplem
-                                        	,'smap1.nmpoliza'   : panDocInputNmpoliza
-                                        	,'smap1.nmsolici'   : panDocInputNmsolici
-                                        	,'smap1.tipomov'    : panDocInputTipoMov
-                                        	,'smap1.cdtiptra'   : panDocSmap1.cdtiptra
-                                        	,'smap1.callbackFn' : 'callbackDocumentoSubidoPoliza'
+                                        	'smap1.cdunieco'        : panDocInputCdunieco
+                                        	,'smap1.cdramo'         : panDocInputCdramo
+                                        	,'smap1.estado'         : panDocInputEstado
+                                        	,'smap1.nmsuplem'       : panDocInputNmsuplem
+                                        	,'smap1.nmpoliza'       : panDocInputNmpoliza
+                                        	,'smap1.nmsolici'       : panDocInputNmsolici
+                                        	,'smap1.tipomov'        : panDocInputTipoMov
+                                        	,'smap1.cdtiptra'       : panDocSmap1.cdtiptra
+                                        	,'smap1.callbackFn'     : 'callbackDocumentoSubidoPoliza'
+                                        	,'smap1.cddocumeRevisi' : _NVL(panDocSmap1.cddocumeParasubir)
                                        	}
                                     });
                                 }
@@ -690,7 +692,19 @@ Ext.onReady(function()
                             }
                         }
                     })
-                ]
+                ],
+                listeners : {
+                    destroy : function (me) {
+                        debug('VentanaDocumentos > Agregar documento > destroy!');
+                        if (!Ext.isEmpty(panDocSmap1.cddocumeParasubir))
+                        {
+                            var ventanaDocuPadre = _fieldById('_c2_instance');
+                            debug('ventanaDocuPadre:',ventanaDocuPadre,'.');
+                            ventanaDocuPadre.windowRevisi.recargar();
+                            ventanaDocuPadre.destroy();
+                        }
+                    }
+                }
             }).show();
             centrarVentanaInterna(windowAgregarDocu);
         }
@@ -1145,7 +1159,20 @@ Ext.onReady(function()
                                 });
                				}
                 		}
-                	}
+                	},
+                	afterrender : function (me) {
+                        debug('VentanaDocumentos afterrender!');
+                        if (!Ext.isEmpty(panDocSmap1.cddocumeParasubir)) {
+                            var mask = _maskLocal();
+                            setTimeout(
+                                function() {
+                                    mask.close();
+                                    me.onAddClick();
+                                },
+                                1000
+                            );
+                        }
+                    }
                 }
             });
             this.callParent();
