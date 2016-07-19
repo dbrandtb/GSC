@@ -512,7 +512,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 		params.put("pv_nmpoliza_i", poliza.getNmpoliza());
 		params.put("pv_nmsuplem_i", poliza.getNmsuplem());
 		params.put("pv_cdperson_i", poliza.getCdperson());
-		params.put("pv_nmsitaux_i",null );
+		params.put("pv_nmsitaux_i", poliza.getNmsitaux());
 		params.put("pv_nombre_i", poliza.getNombre());
 		params.put("pv_start_i", start);
 		params.put("pv_limit_i",limit);

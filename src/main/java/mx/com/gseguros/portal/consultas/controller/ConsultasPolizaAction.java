@@ -665,7 +665,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			poliza.setNmsuplem(params.get("suplemento"));
 			poliza.setIcodpoliza(params.get("icodpoliza"));
 			poliza.setCdperson(params.get("cdperson"));
-			//poliza.setNmsitaux(params.get("nmsitaux"));
+			poliza.setNmsitaux(params.get("nmsitaux"));
 			poliza.setFamilia(params.get("familia"));
 			poliza.setNombre(params.get("nombre"));
 			datosAsegurados = consultasPolizaManager.obtieneAsegurados(poliza,start,limit);

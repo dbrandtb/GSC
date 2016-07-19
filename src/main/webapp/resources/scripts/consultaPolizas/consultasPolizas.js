@@ -892,19 +892,27 @@ Ext.onReady(function() {
                 width: 220,
                 maxLength : 50
             },'-',{
-                xtype : 'textfield',
+                xtype : 'numberfield',
                 name : 'filtrarFam',
                 fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
                 labelWidth : 80,
                 width: 240
             },{
+//            },'-',{
+//                xtype : 'textfield',
+//                name : 'filtrarFam',
+//                fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
+//                labelWidth : 80,
+//                width: 240
+//            },{
 	            xtype    : 'button',
 	            text     : 'Buscar',
 	            icon     : _CONTEXT+'/resources/fam3icons/icons/zoom.png',
 	            handler : function(btn) {
 	            	debug('antes de asignar valores', storeAsegurados.getProxy().extraParams);
 		            storeAsegurados.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();
-		            storeAsegurados.getProxy().setExtraParam('params.familia', btn.up('grid').down('[name=filtrarFam]').getValue());
+//		            storeAsegurados.getProxy().setExtraParam('params.familia', btn.up('grid').down('[name=filtrarFam]').getValue());
+		            storeAsegurados.getProxy().setExtraParam('params.nmsitaux', btn.up('grid').down('[name=filtrarFam]').getValue());
 		            storeAsegurados.getProxy().setExtraParam('params.nombre', btn.up('grid').down('textfield[name=filtrarAseg]').getValue());
 		            storeAsegurados.getProxy().setExtraParam('params.cdperson', btn.up('grid').down('textfield[name=filtrarCveAseg]').getValue());
 		            debug('cdperson','params.cdperson', btn.up('grid').down('textfield[name=filtrarCveAseg]').getValue());
