@@ -2790,10 +2790,16 @@ Ext.onReady(function()
                                                 }
                                             }
                                             ,{
-                                                text       : 'OBLIGA.'
+                                                text       : 'INC.'
+                                                ,xtype     : 'checkcolumn'
+                                                ,dataIndex : 'SWLISTA'
+                                                ,width     : 50
+                                            }
+                                            ,{
+                                                text       : 'REQ.'
                                                 ,xtype     : 'checkcolumn'
                                                 ,dataIndex : 'SWOBLIGA'
-                                                ,width     : 70
+                                                ,width     : 50
                                             }
                                         ]
                                         ,store : Ext.create('Ext.data.Store',
@@ -2806,6 +2812,7 @@ Ext.onReady(function()
                                                 ,'DSDOCUME'
                                                 ,'CDTIPTRA'
                                                 ,'DSTIPTRA'
+                                                ,{ name : 'SWLISTA'   , type : 'boolean' }
                                                 ,{ name : 'SWOBLIGA'  , type : 'boolean' }
                                             ]
                                             ,proxy   :
@@ -4641,6 +4648,7 @@ function _p52_cargarDatosRevision(cdrevisi)
         var grid = _fieldById('_p52_gridRevDoc');
         grid.store.each(function(record)
         {
+            record.set('SWLISTA'  , false);
             record.set('SWOBLIGA' , false);
         });
         
@@ -4683,9 +4691,15 @@ function _p52_cargarDatosRevision(cdrevisi)
                             for(var i=0;i<json.list.length;i++)
                             {
                                 var ite = json.list[i];
-                                if(ite.CDDOCUME==record.get('CDDOCUME')&&'S'==ite.SWOBLIGA)
+                                
+                                if (ite.CDDOCUME == record.get('CDDOCUME') && 'S' == ite.SWOBLIGA)
                                 {
                                     record.set('SWOBLIGA',true);
+                                }
+                                
+                                if (ite.CDDOCUME == record.get('CDDOCUME') && 'S' == ite.SWLISTA)
+                                {
+                                    record.set('SWLISTA',true);
                                 }
                             }
                         });
@@ -5028,8 +5042,9 @@ function _p52_guardarDatosRevision(bot,callback)
         var grid = _fieldById('_p52_gridRevDoc');
         grid.store.each(function(record)
         {
-            var datos       = record.getData();
-            datos.SWOBLIGA  = record.get("SWOBLIGA") ? "S" : "N";
+            var datos      = record.getData();
+            datos.SWLISTA  = record.get("SWLISTA")  ? "S" : "N";
+            datos.SWOBLIGA = record.get("SWOBLIGA") ? "S" : "N";
             jsonData.list.push(datos);
         });
         

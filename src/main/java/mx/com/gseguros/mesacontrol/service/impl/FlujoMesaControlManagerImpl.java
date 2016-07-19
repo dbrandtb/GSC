@@ -1236,6 +1236,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,cdrevisi
 						,ite.get("CDDOCUME")
 						,ite.get("SWOBLIGA")
+						,ite.get("SWLISTA")
 						,"I"
 						);
 			}

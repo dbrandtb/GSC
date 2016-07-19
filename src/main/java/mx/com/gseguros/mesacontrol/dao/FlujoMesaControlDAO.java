@@ -455,7 +455,7 @@ public interface FlujoMesaControlDAO {
 	 * @throws Exception
 	 */
 	public void movimientoTflurevdoc(String cdtipflu, String cdflujomc,
-			String cdrevisi, String cddocume, String swobliga,
+			String cdrevisi, String cddocume, String swobliga, String swlista,
 			String accion) throws Exception;
 
 	/**
