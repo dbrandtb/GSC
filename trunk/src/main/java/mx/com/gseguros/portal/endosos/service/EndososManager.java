@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
@@ -18,7 +19,7 @@ public interface EndososManager
 {
     public List<Map<String,String>>  obtenerEndosos(Map<String,String>params)                 throws Exception;
     public Map<String,String>        guardarEndosoNombres(Map<String,Object>params)           throws Exception;
-    
+    public List<Map<String,String>>  retarificarEndosos(Map<String,String>params ) throws Exception;
     @Deprecated
     public Map<String, String>       confirmarEndosoB(Map<String, String> params)             throws Exception;
     

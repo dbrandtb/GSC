@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.endosos.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +13,9 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
+import mx.com.aon.portal.dao.CustomStoredProcedure;
+import mx.com.aon.portal.dao.WrapperResultadosGeneric;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
 import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
@@ -27,6 +32,7 @@ import oracle.jdbc.driver.OracleTypes;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -82,6 +88,47 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerEndosos(this.getDataSource()), params);
 		return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
+	}
+	protected class RetarificarEndosos extends StoredProcedure
+	{
+		String[] columnas=new String[]{
+				"NMSITUAC" 
+	            ,"PARENTESCO" 
+	            ,"ORDEN" 
+	            ,"CODIGO_GARANTIA" 
+	            ,"NOMBRE_GARANTIA" 
+	            ,"CDTIPCON" 
+	            ,"IMPORTE" 
+	     };
+
+		protected RetarificarEndosos(DataSource dataSource)
+		{ 
+			super(dataSource,"PKG_COTIZA.P_GET_DETALLE_COTI_END");
+			declareParameter(new SqlParameter   ("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter   ("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter   ("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter   ("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter   ("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_record_o"   , OracleTypes.CURSOR, new GenericMapper(columnas)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> retarificarEndosos(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************")
+				.append("\n****** PKG_COTIZA.P_GET_DETALLE_COTI_ENDO ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************")
+				.toString()
+				);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new RetarificarEndosos(this.getDataSource()), params);
+		return (List<Map<String, String>>) resultadoMap.get("pv_record_o");
 	}
 	
 	@Override

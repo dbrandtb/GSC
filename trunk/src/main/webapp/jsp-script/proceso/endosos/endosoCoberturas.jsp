@@ -23,6 +23,7 @@
     var inputCdpersonap3 = '<s:property value="smap1.CDPERSON" />';
     var inputNtramitep3  = '<s:property value="smap1.NTRAMITE" />';
     var inputAltabajap3  = '<s:property value="smap1.altabaja" />';
+   
     var columnasTatrisit = [<s:property value="columnas" escapeHtml="false" />];
     var _endcob_urlObtenerComponenteSituacionCobertura = '<s:url namespace="/endosos" action="obtenerComponenteSituacionCobertura" />';
     var urlCargarCoberturasp3     = '<s:url namespace="/" action="cargarPantallaCoberturas" />';
@@ -35,7 +36,10 @@
     var urlRecuperacionSimpleListap3 = '<s:url namespace="/emision"    action="recuperacionSimpleLista" />';
     var endcobUrlDoc              = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
     var endcobUrlGuardar          = '<s:url namespace="/endosos" action="guardarEndosoCoberturas" />';
+    var endcobUrlMuestraPreview          = '<s:url namespace="/endosos" action="EndosoCoberturasPreviewShow" />';
+    var endcobUrlGuardarPreview          = '<s:url namespace="/endosos" action="EndosoCoberturasPreviewGuarda" />';
     var urlPantallaBeneficiarios               = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
+    var url_PantallaPreview        = '<s:url namespace="/endosos"    action="includes/previewEndosos" />';
     debug('inputCduniecop3',inputCduniecop3);
     debug('inputCdramop3',inputCdramop3);
     debug('inputEstadop3',inputEstadop3);
@@ -45,7 +49,7 @@
     debug('inputAltabajap3',inputAltabajap3);
     
     var _p3_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-    
+     
     debug('_p3_flujo:',_p3_flujo);
     /*///////////////////*/
     //////variables //////
@@ -54,9 +58,319 @@
     ///////////////////////
     ////// funciones //////
     /*///////////////////*/
-    function endcobSumit(form,confirmar)
+    function endcobSumitpreview(form,confirmar)
     {
-        debug('generar endoso');
+        debug('endcobSumitpreview endoso',confirmar);
+        //var form=this.up().up();
+        if(form.isValid())
+        {
+            // Eliminamos los filtros para que enviemos todas las coberturas editadas:
+            storeCoberturasEditadas_p3.clearFilter();
+        	
+            var json={};
+            json['omap1']=form.getValues();
+            json['omap1']['pv_cdunieco_i'] = inputCduniecop3;
+            json['omap1']['pv_cdramo_i']   = inputCdramop3;
+            json['omap1']['pv_estado_i']   = inputEstadop3;
+            json['omap1']['pv_nmpoliza_i'] = inputNmpolizap3;
+            json['omap1']['pv_ntramite_i'] = inputNtramitep3;
+            var slist1=[];
+            json['slist1']=slist1;
+            storeCoberturasEditadas_p3.each(function(record)
+            {
+                slist1.push(
+                {
+                    garantia   : record.get('GARANTIA')
+                    ,cdcapita  : record.get('CDCAPITA')
+                    ,status    : record.get('status')
+                    ,ptcapita  : record.get('SUMA_ASEGURADA')
+                    ,ptreduci  : record.get('ptreduci')
+                    ,fereduci  : record.get('fereduci')
+                    ,swrevalo  : record.get('swrevalo')
+                    ,cdagrupa  : record.get('cdagrupa')
+                    ,cdtipbca  : record.get('cdtipbca')
+                    ,ptvalbas  : record.get('ptvalbas')
+                    ,swmanual  : record.get('swmanual')
+                    ,swreas    : record.get('swreas')
+                    ,cdatribu1 : record.get('cdatribu1')
+                    ,otvalor1  : record.get('otvalor1')
+                    ,cdatribu2 : record.get('cdatribu2')
+                    ,otvalor2  : record.get('otvalor2')
+                    ,cdatribu3 : record.get('cdatribu3')
+                    ,otvalor3  : record.get('otvalor3')
+                    ,nmsituac  : record.get('nmsituac')
+                    ,cdtipsit  : record.get('cdtipsit')
+                });
+            });
+            
+            _p3_smap1['cdperson']  = inputCdpersonap3;
+            _p3_smap1['altabaja']  = inputAltabajap3;
+            _p3_smap1['confirmar'] = confirmar;
+            
+            json['smap1']=_p3_smap1;
+            
+            if(!Ext.isEmpty(_p3_flujo))
+            {
+                json['flujo'] = _p3_flujo;
+            }
+            
+            debug('json***',json);
+            
+            /*if(slist1.length <= 0){
+				mensajeWarning('No se modificaron coberturas.');
+				return;
+            }*/
+            
+            _setLoading(true,form);
+            
+            Ext.Ajax.request(
+            {
+                url       : endcobUrlMuestraPreview
+                ,jsonData : json
+               // ,timeout  : 180000
+                ,success  : function(response)
+                {
+                    _setLoading(false,form);
+                    json=Ext.decode(response.responseText);
+                    debug('**json**',json);
+                    if(json.success==true)
+                    {
+                        
+                    	Ext.create('Ext.window.Window',
+						{
+							title        : 'Tarifa final'
+							,id          : 'tarifa'
+							,modal       : true
+							,buttonAlign : 'center'
+							,width       : 600
+							,height      : 400
+							,autoScroll  : true
+							,loader      :
+								{
+									url       : url_PantallaPreview
+									,params   :
+										{
+											'smap4.nmpoliza'  : inputNmpolizap3
+                                            ,'smap4.cdunieco' : inputCduniecop3
+                                            ,'smap4.cdramo'   : inputCdramop3
+                                            ,'smap4.estado'   : inputEstadop3
+                                            ,'smap4.nmsuplem' : json.nmsuplement //nuevo nmsuplem
+                                        }
+									,scripts  : true
+									,autoLoad : true
+							     }
+							,buttons:[{
+										text    : 'Confirmar endoso'
+										,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+										,handler : function(me){
+																var form=Ext.getCmp('endoso');
+																endcobSumitGuarda(form,'si');
+																me.up().up().destroy();
+																}
+									   },
+									   {
+										text    : 'Cancelar'
+										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+										,handler : function()
+														{
+															var me=this;
+															me.up().up().destroy();
+														}
+									   } ]
+					     }).show();
+                    	
+                            //////////////////////////////////
+                            ////// usa codigo del padre //////
+                            /*//////////////////////////////*/
+                            //marendNavegacion(2);
+                            /*//////////////////////////////*/
+                            ////// usa codigo del padre //////
+                            //////////////////////////////////
+                        
+                        
+                    }
+                    else
+                    {
+                        mensajeError(json.error);
+                    }
+                }
+                ,failure  : function()
+                {
+                    _setLoading(false,form);
+                    _setLoading(false,Ext.getCmp('tarifa'))
+                    Ext.Msg.show(
+                    {
+                        title   : 'Error',
+                        icon    : Ext.Msg.ERROR,
+                        msg     : 'Error de comunicaci&oacute;n',
+                        buttons : Ext.Msg.OK
+                    });
+                }
+            });
+        }
+        else
+        {
+            Ext.Msg.show(
+            {
+                title   : 'Datos imcompletos',
+                icon    : Ext.Msg.WARNING,
+                msg     : 'Favor de llenar los campos requeridos',
+                buttons : Ext.Msg.OK
+            });
+        }
+    }
+    /**/
+    function endcobSumitGuarda(form,confirmar)
+    {
+        debug('generar endoso',confirmar);
+        //var form=this.up().up();
+        if(form.isValid())
+        {
+            // Eliminamos los filtros para que enviemos todas las coberturas editadas:
+            storeCoberturasEditadas_p3.clearFilter();
+        	
+            var json={};
+            json['omap1']=form.getValues();
+            json['omap1']['pv_cdunieco_i'] = inputCduniecop3;
+            json['omap1']['pv_cdramo_i']   = inputCdramop3;
+            json['omap1']['pv_estado_i']   = inputEstadop3;
+            json['omap1']['pv_nmpoliza_i'] = inputNmpolizap3;
+            json['omap1']['pv_ntramite_i'] = inputNtramitep3;
+            var slist1=[];
+            json['slist1']=slist1;
+            storeCoberturasEditadas_p3.each(function(record)
+            {
+                slist1.push(
+                {
+                    garantia   : record.get('GARANTIA')
+                    ,cdcapita  : record.get('CDCAPITA')
+                    ,status    : record.get('status')
+                    ,ptcapita  : record.get('SUMA_ASEGURADA')
+                    ,ptreduci  : record.get('ptreduci')
+                    ,fereduci  : record.get('fereduci')
+                    ,swrevalo  : record.get('swrevalo')
+                    ,cdagrupa  : record.get('cdagrupa')
+                    ,cdtipbca  : record.get('cdtipbca')
+                    ,ptvalbas  : record.get('ptvalbas')
+                    ,swmanual  : record.get('swmanual')
+                    ,swreas    : record.get('swreas')
+                    ,cdatribu1 : record.get('cdatribu1')
+                    ,otvalor1  : record.get('otvalor1')
+                    ,cdatribu2 : record.get('cdatribu2')
+                    ,otvalor2  : record.get('otvalor2')
+                    ,cdatribu3 : record.get('cdatribu3')
+                    ,otvalor3  : record.get('otvalor3')
+                    ,nmsituac  : record.get('nmsituac')
+                    ,cdtipsit  : record.get('cdtipsit')
+                });
+            });
+            _p3_smap1['cdperson']  = inputCdpersonap3;
+            _p3_smap1['altabaja']  = inputAltabajap3;
+            _p3_smap1['confirmar'] = confirmar;
+            
+            json['smap1']=_p3_smap1;
+            
+            if(!Ext.isEmpty(_p3_flujo))
+            {
+                json['flujo'] = _p3_flujo;
+            }
+            
+            debug(json);
+            
+            if(slist1.length <= 0){
+				mensajeWarning('No se modificaron coberturas.');
+				return;
+            }
+            
+            _setLoading(true,form);
+            
+            Ext.Ajax.request(
+            {
+                url       : endcobUrlGuardarPreview
+                ,jsonData : json
+                ,timeout  : 180000
+                ,success  : function(response)
+                {
+                    _setLoading(false,form);
+                    json=Ext.decode(response.responseText);
+                    debug(json);
+                    if(json.success==true)
+                    {
+                        var callbackRemesa = function()
+                        {
+                            //////////////////////////////////
+                            ////// usa codigo del padre //////
+                            /*//////////////////////////////*/
+                            marendNavegacion(2);
+                            /*//////////////////////////////*/
+                            ////// usa codigo del padre //////
+                            //////////////////////////////////
+                        };
+                        Ext.Msg.show(
+                        {
+                            title   : 'Endoso generado',
+                            msg     : json.mensaje,
+                            buttons : Ext.Msg.OK,
+                            fn      : function()
+                            {
+                                if(confirmar=='si')
+                                {
+                                    _generarRemesaClic(
+                                        true
+                                        ,inputCduniecop3
+                                        ,inputCdramop3
+                                        ,inputEstadop3
+                                        ,inputNmpolizap3
+                                        ,callbackRemesa
+                                    );
+                                }
+                                else
+                                {
+                                    //////////////////////////////////
+                                    ////// usa codigo del padre //////
+                                    /*//////////////////////////////*/
+                                    marendNavegacion(4);
+                                    /*//////////////////////////////*/
+                                    ////// usa codigo del padre //////
+                                    //////////////////////////////////
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        mensajeError(json.error);
+                    }
+                }
+                ,failure  : function()
+                {
+                    _setLoading(false,form);
+                    _setLoading(false,Ext.getCmp('tarifa'))
+                    Ext.Msg.show(
+                    {
+                        title   : 'Error',
+                        icon    : Ext.Msg.ERROR,
+                        msg     : 'Error de comunicaci&oacute;n',
+                        buttons : Ext.Msg.OK
+                    });
+                }
+            });
+        }
+        else
+        {
+            Ext.Msg.show(
+            {
+                title   : 'Datos imcompletos',
+                icon    : Ext.Msg.WARNING,
+                msg     : 'Favor de llenar los campos requeridos',
+                buttons : Ext.Msg.OK
+            });
+        }
+    }
+    /**/
+    function endcobSumit(form,confirmar)
+    	{
+        debug('generar endoso',confirmar);
         //var form=this.up().up();
         if(form.isValid())
         {
@@ -180,6 +494,7 @@
                 ,failure  : function()
                 {
                     _setLoading(false,form);
+                    _setLoading(false,Ext.getCmp('tarifa'))
                     Ext.Msg.show(
                     {
                         title   : 'Error',
@@ -958,6 +1273,7 @@
                     ,Ext.create('Ext.form.Panel',
                     {
                         title        : 'Informaci&oacute;n del endoso'
+                        ,id          : 'endoso' 
                         ,heigth      : 200
                         ,buttonAlign : 'center'
                         ,style       : 'margin : 5px; margin-bottom : 200px;'
@@ -995,6 +1311,16 @@
                                 }
                             }
                             ,{
+                                text     : 'Vista Previa'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+                                ,handler : function(){ var form=Ext.getCmp('endoso');
+                                		                debug('endcobSumitpreview',form);
+                                						endcobSumitpreview(form,'si');
+                                						
+                                				      }
+                            
+                             }
+                             ,{
                                 text     : 'Confirmar endoso'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                                 ,handler : function(me)
@@ -1002,7 +1328,7 @@
                                     var form=me.up().up();
                                     endcobSumit(form,'si');
                                 }
-                            }
+                            }                           
                             ,{
                                 text     : 'Documentos'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'

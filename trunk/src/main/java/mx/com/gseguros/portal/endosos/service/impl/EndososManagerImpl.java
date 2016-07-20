@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.aon.portal.dao.ProcesoDAO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
@@ -120,6 +121,16 @@ public class EndososManagerImpl implements EndososManager
 		Map<String,String> mapa=endososDAO.guardarEndosoNombres(params);
 		logger.debug("EndososManager guardarEndosoNombres response map: "+mapa);
         return mapa;
+	}
+	
+	@Override
+	public List<Map<String, String>> retarificarEndosos(Map<String, String> params) throws Exception
+	{
+		logger.debug("retarificarEndosos params: "+params);
+		List<Map<String,String>> lista=endososDAO.retarificarEndosos(params);
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		logger.debug("retarificarEndosos lista size: "+lista.size());
+		return lista;
 	}
 	
 	@Deprecated
