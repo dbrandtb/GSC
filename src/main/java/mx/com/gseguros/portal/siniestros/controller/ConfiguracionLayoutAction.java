@@ -466,7 +466,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                		
 		                		//1.- Validamos el tipo de datos del registro
 		                		if(datosInformacionLayout.get(i).get("CVEFORMATO").toString().equalsIgnoreCase("F")){
-		                			String conversionFechaString = obtieneValor(auxCell, CampoVO.FECHA, "dd/MM/yyyy");
+		                			String conversionFechaString = obtieneValor(auxCell, CampoVO.FECHA,datosInformacionLayout.get(i).get("DESCFECHA").toString(),  "dd/MM/yyyy");
 		                			
 		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
 		                				campoFechaOcurrencia =  datosInformacionLayout.get(i).get("DESCRIPC").toString();
@@ -484,7 +484,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	                					bufferLinea.append(conversionFechaString+"|");
 	                				}
 		                		}else if(datosInformacionLayout.get(i).get("CVEFORMATO").toString().equalsIgnoreCase("A")){
-		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, " ");
+		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, null, null);
 		                			logger.debug("conversionString ===>:{}",conversionString);
 		                			String cadenaModificada = conversionString.trim().
 	                						replaceAll("á","a").
@@ -545,7 +545,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                			
 		                			
 		                		}else{
-		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, null);
+		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, null, null);
 		                			logger.debug("Valor de conversion ==> :{}",conversionString);
 		                			bufferLinea.append(Double.parseDouble(conversionString)+"|");
 		                		}
@@ -760,7 +760,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	  * @return valor de la celda en String
 	  * @throws Exception  si falla la obtencion del valor
 	  */
-	private String obtieneValor(Cell celda, String tipoDato, String dateFormat) throws Exception {
+	private String obtieneValor(Cell celda, String tipoDato, String dateFormatIn, String dateFormatOut) throws Exception {
 		String strValor = null;
 		if(celda==null) {
 			return "";
@@ -769,12 +769,27 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 			logger.debug("Cell type:" + celda.getCellType());
 			if (celda.getCellType() == Cell.CELL_TYPE_STRING) {
 				strValor = celda.getStringCellValue();
-			} else if (celda.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 				SimpleDateFormat df;
-				if (dateFormat == null) {
+				if (dateFormatIn == null) {
 					df = new SimpleDateFormat("dd/MM/yyyy");
 				} else {
-					df = new SimpleDateFormat(dateFormat);
+					df = new SimpleDateFormat(dateFormatIn);
+				}
+				if (dateFormatOut == null) {
+					df = new SimpleDateFormat("dd/MM/yyyy");
+				} else {
+					df = new SimpleDateFormat(dateFormatOut);
+				}
+				DateFormat formatter = new SimpleDateFormat(dateFormatIn, Locale.US);
+				Date date = formatter.parse(strValor);
+				strValor = df.format(date);
+				
+			} else if (celda.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+				SimpleDateFormat df;
+				if (dateFormatOut == null) {
+					df = new SimpleDateFormat("dd/MM/yyyy");
+				} else {
+					df = new SimpleDateFormat(dateFormatOut);
 				}
 				strValor = df.format(celda.getDateCellValue());
 			}
