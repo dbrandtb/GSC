@@ -456,6 +456,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			,String cdusuari
 			,String cdsisrol
 			,boolean test
+			,boolean esDuplex
 			)throws Exception
 	{
 		StringBuilder sb = new StringBuilder(Utils.log(
@@ -545,7 +546,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							,dsimpres
 							,Integer.parseInt(archivo.get("nmcopias")) //numCopias
 							,hoja.length()>1 ? ( "M".equals(papelDoc) ? charola2 : charola1 ) : charola1
-							);
+							,esDuplex);
 					
 					if(test)
 					{

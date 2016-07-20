@@ -20,6 +20,24 @@ public interface ExplotacionDocumentosManager
 			,List<Map<String, String>> movs
 			)throws Exception;
 	
+	
+	/**
+	 * Se imprime un lote de documentos
+	 * @param lote
+	 * @param hoja
+	 * @param peso
+	 * @param cdtipram
+	 * @param cdtipimp
+	 * @param tipolote
+	 * @param dsimpres
+	 * @param charola1
+	 * @param charola2
+	 * @param cdusuari
+	 * @param cdsisrol
+	 * @param test
+	 * @param esDuplex Indica si la impresion es a doble cara (duplex)
+	 * @throws Exception
+	 */
 	public void imprimirLote(
 			String lote
 			,String hoja
@@ -33,6 +51,7 @@ public interface ExplotacionDocumentosManager
 			,String cdusuari
 			,String cdsisrol
 			,boolean test
+			,boolean esDuplex
 			)throws Exception;
 
 	public Map<String,Item> pantallaExplotacionRecibos(String cdusuari, String cdsisrol) throws Exception;

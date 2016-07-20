@@ -42,7 +42,7 @@ public class ImpresionServiceImpl implements ImpresionService {
 
 	
 	@Override
-	public void imprimeDocumento(String documento, String nombreImpresora, int numCopias, String mediaId) throws Exception {
+	public void imprimeDocumento(String documento, String nombreImpresora, int numCopias, String mediaId, boolean esDuplex) throws Exception {
 		
 		PrintService printSrv = null;
 		
@@ -293,7 +293,7 @@ public class ImpresionServiceImpl implements ImpresionService {
         */
 		ImpresionServiceImpl imprSrvImpl = new ImpresionServiceImpl();
 		try {
-			imprSrvImpl.imprimeDocumento("/biosnet logo.png", "Microsoft XPS Document Writer", 3, null);
+			imprSrvImpl.imprimeDocumento("/biosnet logo.png", "Microsoft XPS Document Writer", 3, null, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -10,8 +10,9 @@ public interface ImpresionService {
 	 * @param nombreImpresora Nombre de la impresora a utilizar
 	 * @param numCopias Numero de copias requeridas
 	 * @param bandeja   Nombre de la bandeja de impresion, si es null se utilizara la bandeja por defecto
+	 * @param esDuplex  Indica si la impresion sera a doble cara (duplex)
 	 * @throws Exception
 	 */
-	public void imprimeDocumento(String documento, String nombreImpresora, int numCopias, String bandeja) throws Exception;
+	public void imprimeDocumento(String documento, String nombreImpresora, int numCopias, String bandeja, boolean esDuplex) throws Exception;
 	
 }
