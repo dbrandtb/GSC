@@ -199,73 +199,42 @@
           		accordion.setActiveTab(comp);
           	}
             
-            var ventanaBenef;
-            if(inputCdramo == 16)
-            {
-             Ext.Ajax.request(
-             {
-                 url     : _URL_urlCargarTvalosit
-                 ,params :
-                 {
-                     'smap1.cdunieco'  : inputCdunieco
-                     ,'smap1.cdramo'   : inputCdramo
-                     ,'smap1.estado'   : inputEstado
-                     ,'smap1.nmpoliza' : inputNmpoliza
-                     ,'smap1.nmsituac' : '1'
-                 }
-                 ,success : function(response)
-                 {
-                     var json=Ext.decode(response.responseText);
-                     debug('### tvalosit:',json);
-                     if(json.exito)
-                     {
-                             var _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
-                            
-                             if(_p29_validaSeguro == "S")
-                             {
-                                 ventanaBenef=
-                                        Ext.create('Ext.panel.Panel',
-                                                {
-                                                    itemId      : '_BeneficiarioPanel'
-                                                    ,height     : 300
-                                                    ,autoScroll : false
-                                                    ,hidden     : inputCdramo != 16
-                                                    ,loader:
-                                                    {
-                                                         url      : urlPantallaBeneficiarios
-                                                        ,params   :
-                                                        {
-                                                            'smap1.cdunieco'      : inputCdunieco
-                                                            ,'smap1.cdramo'       : inputCdramo
-                                                            ,'smap1.estado'       : inputEstado
-                                                            ,'smap1.nmpoliza'     : inputNmpoliza
-                                                            ,'smap1.nmsuplem'     : '1'
-                                                            ,'smap1.nmsituac'     : '0'
-                                                            ,'smap1.cdrolPipes'   : '3'
-                                                            ,'smap1.cdtipsup'     : '1'
-                                                            ,'smap1.ultimaImagen' : 'N'
-                                                        }
-                                                        ,autoLoad: inputCdramo == 16
-                                                        ,scripts:true
-                                                    }
-                                                    ,listeners:
-                                                    {
-                                                        afterrender:function(tab)
-                                                        {
-                                                            debug('afterrender tabPanelAsegurados');
-                                                            tab.loader.load();
-                                                        }
-                                                    }
-                                                });
-                             }
-                     }
-                     else
-                     {
-                         mensajeError(json.respuesta);
-                     }
-                 }
-             });
-            }
+function checarBenef()
+ {  
+	 if(inputCdramo == 16)
+	 { 
+	  Ext.Ajax.request(
+	  {
+	      url     : _URL_urlCargarTvalosit
+	      ,params :
+	      {
+	          'smap1.cdunieco'  : inputCdunieco
+	          ,'smap1.cdramo'   : inputCdramo
+	          ,'smap1.estado'   : inputEstado
+	          ,'smap1.nmpoliza' : inputNmpoliza
+	          ,'smap1.nmsituac' : '1'
+	      }
+	      ,success : function(response)
+	      {
+	          var json=Ext.decode(response.responseText);
+	          debug('### tvalosit:',json);
+	          if(json.exito)
+	          {
+	                  var _p29_validaSeguro = json.smap1['parametros.pv_otvalor55'];
+	                 
+	                  if(_p29_validaSeguro != "S")
+	                  {    
+	                	  Ext.getCmp('panelBeneficiarioHere').hide();
+                	  }
+	          }
+	          else
+	          {
+	              mensajeError(json.respuesta);
+	          }
+	      }
+	  });
+	 }
+}
             
 function _datComTurnarSuscripcion()
 {
@@ -406,6 +375,8 @@ function _datComTurnarSuscripcion()
 }
             
             Ext.onReady(function(){
+            	
+            	checarBenef();
             	
             	// Se aumenta el timeout para todas las peticiones:
 				Ext.Ajax.timeout = 485000; // 8 min
@@ -827,7 +798,43 @@ function _datComTurnarSuscripcion()
 		                            },
 		                            <s:property value="items" />
 		                        })//VILS
-								,ventanaBenef
+								,Ext.create('Ext.panel.Panel',
+			                                {
+			                                    id        : 'panelBeneficiarioHere'
+			                                   ,title     : 'Titulo'
+			                                   ,itemId    : '_BeneficiarioPanel'
+			                                   ,height    : 300
+			                                   ,autoScroll: false
+			                                   ,loader:
+			                                   {
+			                                        url      : urlPantallaBeneficiarios
+			                                       ,params   :
+			                                       {
+			                                           'smap1.cdunieco'      : inputCdunieco
+			                                           ,'smap1.cdramo'       : inputCdramo
+			                                           ,'smap1.estado'       : inputEstado
+			                                           ,'smap1.nmpoliza'     : inputNmpoliza
+			                                           ,'smap1.nmsuplem'     : '1'
+			                                           ,'smap1.nmsituac'     : '0'
+			                                           ,'smap1.cdrolPipes'   : '3'
+			                                           ,'smap1.cdtipsup'     : '1'
+			                                           ,'smap1.ultimaImagen' : 'N'
+			                                       }
+			                                       ,autoLoad: inputCdramo == 16
+			                                       ,scripts:true
+			                                   }
+			                                   ,listeners:
+			                                   {
+			                                       afterrender:function(tab)
+			                                       {
+			                                           debug('afterrender tabPanelAsegurados');
+			                                           tab.loader.load();
+			                                       }
+			                                   }
+			                               })
+// 			                            }
+// 			                            ,1500
+// 			                        )
 		                    ],
 		                    buttons:
 		                    [
