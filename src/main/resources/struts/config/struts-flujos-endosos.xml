@@ -13,6 +13,10 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="retarificarEndosos" class="EndososAction" method="retarificarEndosos">
+            <result name="success" type="json" />
+        </action>
+        
         <action name="pantallaEndosoCoberturas" class="EndososAction" method="pantallaEndosoCoberturas">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -149,6 +153,22 @@
         </action>
         
         <action name="guardarEndosoCoberturas" class="EndososAction" method="guardarEndosoCoberturas">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="EndosoCoberturasPreviewShow" class="EndososAction" method="EndosoCoberturasPreview">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="EndosoCoberturasPreviewGuarda" class="EndososAction" method="EndosoCoberturasPreviewGuarda">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
@@ -903,6 +923,11 @@
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
             <result name="success" type="json" />
+        </action>
+        
+        <action name="includes/previewEndosos" class="EndososAction" method="verPreviewEndoso">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoPreview.jsp</result>
         </action>
         
     </package>

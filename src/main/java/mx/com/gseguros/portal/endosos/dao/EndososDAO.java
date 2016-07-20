@@ -14,6 +14,7 @@ public interface EndososDAO
 {
     public List<Map<String,String>> obtenerEndosos(Map<String,String>params)                   throws Exception;
     public Map<String, String>      guardarEndosoNombres(Map<String, Object> params)           throws Exception;
+    public List<Map<String,String>> retarificarEndosos(Map<String,String>params)                   throws Exception;
     @Deprecated
     public Map<String, String>      confirmarEndosoB(Map<String, String> params)               throws Exception;
     public void confirmarEndosoB(
