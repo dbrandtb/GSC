@@ -30,7 +30,7 @@ public class ImpresionServiceUNIXImpl implements ImpresionService {
 		
 		ImpresionServiceUNIXImpl imprSrvImpl = new ImpresionServiceUNIXImpl();
 		try {
-			imprSrvImpl.imprimeDocumento("/biosnet logo.png", "Microsoft XPS Document Writer", 3, null);
+			imprSrvImpl.imprimeDocumento("/biosnet logo.png", "Microsoft XPS Document Writer", 3, null, false);
 		} catch (Exception e) {
 			logger.error("Error en la impresion", e);
 		}
@@ -38,7 +38,7 @@ public class ImpresionServiceUNIXImpl implements ImpresionService {
 	
 	
 	@Override
-	public void imprimeDocumento(String documento, String nombreImpresora, int numCopias, String bandeja) throws Exception
+	public void imprimeDocumento(String documento, String nombreImpresora, int numCopias, String bandeja, boolean esDuplex) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -68,6 +68,10 @@ public class ImpresionServiceUNIXImpl implements ImpresionService {
 	    // Si se especifica la bandeja de impresion, se agrega al comando:
 	    if(StringUtils.isNotBlank(bandeja)) {
 	    	sbComando.append(" -o InputSlot=").append(bandeja);
+	    }
+	    // Si se especifica impresion de ambos lados de la hoja, se agrega al comando:
+	    if(esDuplex) {
+	    	sbComando.append(" -o sides=two-sided-long-edge");
 	    }
 	    commands.add(sbComando.toString());
 

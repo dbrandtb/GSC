@@ -4,14 +4,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
-import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.general.util.TipoArchivo;
-import mx.com.gseguros.utils.Utils;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
@@ -25,6 +17,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
+
+import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.util.TipoArchivo;
+import mx.com.gseguros.utils.Utils;
 
 @Controller("explotacionDocumentosAction")
 @Scope("prototype")
@@ -200,6 +200,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			String charola1 = params.get("charola1");
 			String charola2 = params.get("charola2");
 			String test     = params.get("test");
+			String duplex   = params.get("duplex");
 			
 			Utils.validate(
 					lote      , "No se recibi\u00F3 el lote"
@@ -225,6 +226,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,cdusuari
 					,cdsisrol
 					,"S".equals(test)
+					,"S".equals(duplex)
 					);
 			
 			success = true;
