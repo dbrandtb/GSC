@@ -202,75 +202,69 @@
             var ventanaBenef;
             if(inputCdramo == 16)
             {
-            	ventanaBenef =
-            		Ext.create('Ext.panel.Panel',
-                            {
-                                itemId      : '_BeneficiarioPanel'
-                                ,height     : 300
-                                ,autoScroll : false
-                                ,hidden     : inputCdramo != 16
-                                ,loader:
-                                {
-                                    url : urlPantallaBeneficiarios
-                                    ,params   :
-                                    {
-                                        'smap1.cdunieco'      : inputCdunieco
-                                        ,'smap1.cdramo'       : inputCdramo
-                                        ,'smap1.estado'       : inputEstado
-                                        ,'smap1.nmpoliza'     : inputNmpoliza
-                                        ,'smap1.nmsuplem'     : '1'
-                                        ,'smap1.nmsituac'     : '0'
-                                        ,'smap1.cdrolPipes'   : '3'
-                                        ,'smap1.cdtipsup'     : '1'
-                                        ,'smap1.ultimaImagen' : 'N'
-                                    }
-                                    ,autoLoad: inputCdramo == 16
-                                    ,scripts:true
-                                }
-                                ,listeners:
-                                {
-                                    afterrender:function(tab)
-                                    {
-                                        debug('afterrender tabPanelAsegurados');
-                                        tab.loader.load();
-                                    }
-                                }
-                            });
-            	
-            	
-            Ext.Ajax.request(
-            	    {
-            	        url     : _URL_urlCargarTvalosit
-            	        ,params :
-            	        {
-            	            'smap1.cdunieco'  : inputCdunieco
-            	            ,'smap1.cdramo'   : inputCdramo
-            	            ,'smap1.estado'   : inputEstado
-            	            ,'smap1.nmpoliza' : inputNmpoliza
-            	            ,'smap1.nmsituac' : '1'
-            	        }
-            	        ,success : function(response)
-            	        {
-            	            var json=Ext.decode(response.responseText);
-            	            debug('### tvalosit:',json);
-            	            if(json.exito)
-            	            {
-  	                            var _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
-  	                            if(_p29_validaSeguro =="S")
-  	                            {
-  	                            	ventanaBenef.show();
-  	                            }
-  	                            else
-  	                            {
-  	                            	ventanaBenef.hide();
-  	                            }
-            	            }
-            	            else
-            	            {
-            	                mensajeError(json.respuesta);
-            	            }
-            	        }
-            	    });
+             Ext.Ajax.request(
+             {
+                 url     : _URL_urlCargarTvalosit
+                 ,params :
+                 {
+                     'smap1.cdunieco'  : inputCdunieco
+                     ,'smap1.cdramo'   : inputCdramo
+                     ,'smap1.estado'   : inputEstado
+                     ,'smap1.nmpoliza' : inputNmpoliza
+                     ,'smap1.nmsituac' : '1'
+                 }
+                 ,success : function(response)
+                 {
+                     var json=Ext.decode(response.responseText);
+                     debug('### tvalosit:',json);
+                     if(json.exito)
+                     {
+                             var _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
+                            
+                             if(_p29_validaSeguro == "S")
+                             {
+                                 ventanaBenef=
+                                        Ext.create('Ext.panel.Panel',
+                                                {
+                                                    itemId      : '_BeneficiarioPanel'
+                                                    ,height     : 300
+                                                    ,autoScroll : false
+                                                    ,hidden     : inputCdramo != 16
+                                                    ,loader:
+                                                    {
+                                                         url      : urlPantallaBeneficiarios
+                                                        ,params   :
+                                                        {
+                                                            'smap1.cdunieco'      : inputCdunieco
+                                                            ,'smap1.cdramo'       : inputCdramo
+                                                            ,'smap1.estado'       : inputEstado
+                                                            ,'smap1.nmpoliza'     : inputNmpoliza
+                                                            ,'smap1.nmsuplem'     : '1'
+                                                            ,'smap1.nmsituac'     : '0'
+                                                            ,'smap1.cdrolPipes'   : '3'
+                                                            ,'smap1.cdtipsup'     : '1'
+                                                            ,'smap1.ultimaImagen' : 'N'
+                                                        }
+                                                        ,autoLoad: inputCdramo == 16
+                                                        ,scripts:true
+                                                    }
+                                                    ,listeners:
+                                                    {
+                                                        afterrender:function(tab)
+                                                        {
+                                                            debug('afterrender tabPanelAsegurados');
+                                                            tab.loader.load();
+                                                        }
+                                                    }
+                                                });
+                             }
+                     }
+                     else
+                     {
+                         mensajeError(json.respuesta);
+                     }
+                 }
+             });
             }
             
 function _datComTurnarSuscripcion()
@@ -833,7 +827,7 @@ function _datComTurnarSuscripcion()
 		                            },
 		                            <s:property value="items" />
 		                        })//VILS
-		                        ,ventanaBenef
+								,ventanaBenef
 		                    ],
 		                    buttons:
 		                    [
@@ -2298,10 +2292,8 @@ function _datComTurnarSuscripcion()
                                     	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = false;
                                     	debug('Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
                                     }else{
-                                    	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = true;
+// ED, SI UN CAMPO NO EXISTE NO PUEDES VALIDAR SIBRE EL  >>>  _fieldByLabel('NUMERO DE CONTRATO').allowBlank = true;
                                     }
-                                    
-                                    
                                     //
                                     if(inputCdtipsit=='AF'){
                                     	Ext.Ajax.request({
