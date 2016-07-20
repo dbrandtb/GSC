@@ -546,8 +546,13 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                			
 		                		}else{
 		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, null, null);
-		                			logger.debug("Valor de conversion ==> :{}",conversionString);
-		                			bufferLinea.append(Double.parseDouble(conversionString)+"|");
+		                			
+		                			if(Double.parseDouble(conversionString) > 0){
+		                				logger.debug("Valor de conversion ==> :{}",conversionString);
+			                			bufferLinea.append(Double.parseDouble(conversionString)+"|");
+		                			}else{
+		                				throw new Exception("Error en los importes y cantidades");
+		                			}
 		                		}
 		                		
 		                		//Validacion de la fecha de ocurrencia
@@ -581,7 +586,6 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                				throw new Exception("Error en el concepto");
 		                			}
 		                		}
-		                		
 		                	}
 		                	catch(Exception ex){
 		                		filaBuena = false;
@@ -595,7 +599,12 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                		else{
 		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CLAVE ASEGURADO")){
 			                			bufferErroresCenso.append(Utils.join("El asegurado no existe o no se encuentra vigente.\nError en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
-			                		}else{
+			                		}else if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CANTIDAD CONCEPTO")){
+			                			bufferErroresCenso.append(Utils.join("La catidad tienen que ser mayor que cero.\nError en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
+			                		}else if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("PRECIO CONCEPTO")){
+			                			bufferErroresCenso.append(Utils.join("El precio tienen que ser mayor que cero.\nError en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
+			                		}
+			                		else{
 			                			bufferErroresCenso.append(Utils.join("Error en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
 			                		}
 		                		}
