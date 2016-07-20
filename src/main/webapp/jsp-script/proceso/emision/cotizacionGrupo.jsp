@@ -6063,19 +6063,34 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 		'load' :  {
                 			fn : function(store,records,successful) {
                 				debug('reseteando los datos');
-                				debug('valores',_fieldById('gridAseg').getPlugin('pagingselect').selection);
+                				var selection = _fieldById('gridAseg').getPlugin('pagingselect').selection;
+                 			    var mapselection = {};
+                 			    for (var i = 0; i < selection.length; i++){
+                 			    	debug('metiendo llave ',selection[i].data['nmsituac']);
+                 			    	mapselection[selection[i].data['NMSITUAC']] = selection[i].data; 
+                 			    	}
+                 			    debug('mapselection',mapselection);
                 				for(var s in _fieldById('gridAseg').store.data.items){
                 					var rec = _fieldById('gridAseg').store.getAt(s);
-                					for(var y in rec.data){
-                						debug('rec',rec);
-                						rec.set(y,rec.raw[y]);
-                						}
-                					rec.commit();
+                					debug('nmsituac',rec.data['NMSITUAC']);
+                					if (rec.data['NMSITUAC'] in mapselection){
+                						debug('entro al map');
+                						var obj = mapselection[rec.data['NMSITUAC']];
+                						for(var y in rec.data){
+                							rec.set(y, obj[y]);
+                							}
+                						}else{
+                							for(var y in rec.data){
+                								debug('rec',rec);
+                								rec.set(y,rec.raw[y]);
+                								}
+                							rec.commit();
+                							}
                 					}
                 				}
                 	}
-               }
-                })
+                	}
+                	})
                 ,bbar :
                 {
                     displayInfo : true

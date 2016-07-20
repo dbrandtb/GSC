@@ -4894,17 +4894,34 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                     	   'load' :  {
                     		   fn : function(store,records,successful) {
                     			   debug('reseteando los datos');
+                    			   var selection = _fieldById('gridAseg').getPlugin('pagingselect').selection;
+                    			   var mapselection = {};
+                     			   for (var i = 0; i < selection.length; i++){
+                     				debug('metiendo llave ',selection[i].data['nmsituac']);
+                     			   	mapselection[selection[i].data['nmsituac']] = selection[i].data; 
+                     			   }
+                     			   debug('mapselection',mapselection);
                     			   for(var s in _fieldById('gridAseg').store.data.items){
                     				   var rec = _fieldById('gridAseg').store.getAt(s);
-                    				   for(var y in rec.data){
-                    					   rec.set(y,rec.raw[y]);
-                    				   }
-                    				   rec.commit();
-                    				   }
+                    				   debug('nmsituac',rec.data['nmsituac']);
+                					   if (rec.data['nmsituac'] in mapselection){
+                						   debug('entro al map');
+                						   var obj = mapselection[rec.data['nmsituac']];
+                    					   for(var y in rec.data){
+	                    					   rec.set(y, obj[y]);
+                    					   }
+                					   }else{
+                						   for(var y in rec.data){
+	                    					   debug('entro al set normal ',rec.raw[y]);
+	                    					   rec.set(y,rec.raw[y]);
+                    					   }
+                    				   	   rec.commit();
+                					   }
                     			   }
+                    		  }
+                  		}
                   }
-                  }
-                  })
+                 })
                 ,bbar :
                 {
                     displayInfo : true
