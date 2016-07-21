@@ -2294,13 +2294,19 @@ function _datComTurnarSuscripcion()
                                     // Validacion para NUMERO DE CONTRATO en sucursal 1403 ELP
                                     debug('¬traeme la cdunieco',inputCdunieco);
                                     
-                                    if(inputCdunieco == 1403 && Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO').value)){
-                                    	debug('Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
-                                    	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = false;
-                                    	debug('Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
-                                    }else{
-// ED, SI UN CAMPO NO EXISTE NO PUEDES VALIDAR SIBRE EL  >>>  _fieldByLabel('NUMERO DE CONTRATO').allowBlank = true;
-                                    }
+                                    // Verifica si el campo existe en el producto utilizado ELP
+                                    if (_fieldByLabel('NUMERO DE CONTRATO',null,true) != undefined){
+                                    	
+                                    	/* Cuando es un producto valido verifica si es la sucursal correcta y esta vacio,  
+                                    	 * y modifica la obligatoriedad del campo segun la sucursal correcta.
+                                    	 */
+	                                    if (inputCdunieco == 1403 && Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO').value)){
+	                                    	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = false;
+	                                    	debug('Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
+	                                    }else{
+	                                    	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = true;
+	                                    }
+                                    }    
                                     //
                                     if(inputCdtipsit=='AF'){
                                     	Ext.Ajax.request({
