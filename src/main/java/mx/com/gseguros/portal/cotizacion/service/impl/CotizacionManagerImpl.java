@@ -1232,27 +1232,22 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public String cargarCduniecoAgenteAuto(String cdagente)throws Exception
+	public String cargarCduniecoAgenteAuto(String cdagente, String cdtipram)throws Exception
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n######################################")
-				.append("\n###### cargarCduniecoAgenteAuto ######")
-				.append("\ncdagente ")
-				.append(cdagente)
-				.toString()
-				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("cdagente",cdagente);
-		String cdunieco=cotizacionDAO.cargarCduniecoAgenteAuto(params);
-		logger.info(
-				new StringBuilder()
-				.append("\ncdunieco ")
-				.append(cdunieco)
-				.append("\n###### cargarCduniecoAgenteAuto ######")
-				.append("\n######################################")
-				.toString()
-				);
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ cargarCduniecoAgenteAuto @@@@@@",
+				"\n@@@@@@ cdagente = ", cdagente,
+				"\n@@@@@@ cdtipram = ", cdtipram
+				));
+		
+		String cdunieco = cotizacionDAO.cargarCduniecoAgenteAuto(cdagente, cdtipram);
+		
+		logger.debug(Utils.log(
+				"\n@@@@@@ cdunieco = ", cdunieco,
+				"\n@@@@@@ cargarCduniecoAgenteAuto @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 		return cdunieco;
 	}
 	
@@ -7135,7 +7130,7 @@ public class CotizacionManagerImpl implements CotizacionManager
       	            {
       	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
       	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
-      	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Automóviles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
+      	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Automï¿½viles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
       	            			planValido;
       	            	
       	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);

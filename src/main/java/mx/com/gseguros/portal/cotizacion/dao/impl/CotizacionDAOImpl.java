@@ -1408,8 +1408,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public String cargarCduniecoAgenteAuto(Map<String,String>params)throws Exception
+	public String cargarCduniecoAgenteAuto(String cdagente, String cdtipram)throws Exception
 	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdagente" , cdagente);
+		params.put("cdtipram" , cdtipram);
 		Map<String,Object>respuestaProcedure=ejecutaSP(new CargarCduniecoAgenteAuto(getDataSource()),params);
 		return (String)respuestaProcedure.get("pv_cdunieco_o");
 	}
@@ -1420,6 +1423,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_CDUNIECO_X_AGENTE_AUTO");
 			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdunieco_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

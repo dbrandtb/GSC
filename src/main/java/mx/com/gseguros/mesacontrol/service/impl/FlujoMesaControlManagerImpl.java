@@ -1749,7 +1749,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	@Override
 	public Map<String,String> recuperarPolizaUnica(
 			String cdunieco
-			,String cdramo
+			,String ramo
 			,String estado
 			,String nmpoliza
 			)throws Exception
@@ -1758,7 +1758,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarPolizaUnica @@@@@@"
 				,"\n@@@@@@ cdunieco=" , cdunieco
-				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ ramo="     , ramo
 				,"\n@@@@@@ estado="   , estado
 				,"\n@@@@@@ nmpoliza=" , nmpoliza
 				));
@@ -1768,7 +1768,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		{
 			poliza = flujoMesaControlDAO.recuperarPolizaUnica(
 					cdunieco
-					,cdramo
+					,ramo
 					,estado
 					,nmpoliza
 					);

@@ -1386,18 +1386,18 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Utils.validate(params, "No se recibieron datos");
 			
 			String cdunieco  = params.get("CDUNIECO")
-			       ,cdramo   = params.get("CDRAMO")
+			       ,ramo     = params.get("RAMO")
 			       ,estado   = params.get("ESTADO")
 			       ,nmpoliza = params.get("NMPOLIZA");
 			
 			Utils.validate(
 					cdunieco  , "No se recibi\u00f3 la sucursal"
-					,cdramo   , "No se recibi\u00f3 el producto"
+					,ramo     , "No se recibi\u00f3 el ramo"
 					,estado   , "No se recibi\u00f3 el estado"
 					,nmpoliza , "No se recibi\u00f3 la p\u00f3liza"
 					);
 			
-			params.putAll(flujoMesaControlManager.recuperarPolizaUnica(cdunieco,cdramo,estado,nmpoliza));
+			params.putAll(flujoMesaControlManager.recuperarPolizaUnica(cdunieco,ramo,estado,nmpoliza));
 			
 			success = true;
 			

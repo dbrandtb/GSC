@@ -12,6 +12,7 @@ import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
+import mx.com.gseguros.portal.general.util.TipoRamo;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
@@ -326,7 +327,7 @@ public class ServiciosAction extends PrincipalCoreAction
 					,", cdflujomc recuperado = " , cdflujomc
 					));
 			
-			cdsucadm = cotizacionManager.cargarCduniecoAgenteAuto(cdagente);
+			cdsucadm = cotizacionManager.cargarCduniecoAgenteAuto(cdagente, TipoRamo.AUTOS.getCdtipram());
 			
 			logger.debug(Utils.log("sucursal recuperada para el agente '",cdagente,"' = ",cdsucadm));
 			

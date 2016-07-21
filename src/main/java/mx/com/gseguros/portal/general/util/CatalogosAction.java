@@ -929,23 +929,23 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = catalogosManager.recuperarSucursalesPorFlujo(params.get("idPadre"));
 					break;
 				case RAMO_X_UNIECO_X_GRUPO:
-					if(params == null)
-					{
-						params = new HashMap<String,String>();
+					if (params != null && StringUtils.isNotBlank(params.get("idPadre")) && StringUtils.isNotBlank(params.get("tipogrupo"))) {
+						lista = catalogosManager.recuperarRamosPorSucursalPorTipogrupo(params.get("idPadre"),params.get("tipogrupo"));
 					}
-					lista = catalogosManager.recuperarRamosPorSucursalPorTipogrupo(params.get("idPadre"),params.get("tipogrupo"));
 					break;
 				case TIPSIT_X_RAMO_X_GRUPO:
-					if(params == null)
-					{
-						params = new HashMap<String,String>();
+					if (params != null && StringUtils.isNotBlank(params.get("idPadre")) && StringUtils.isNotBlank(params.get("tipogrupo"))) {
+						lista = catalogosManager.recuperarTipsitPorRamoPorTipogrupo(params.get("idPadre"),params.get("tipogrupo"));
 					}
-					lista = catalogosManager.recuperarTipsitPorRamoPorTipogrupo(params.get("idPadre"),params.get("tipogrupo"));
 					break;
 				case TIPOS_ENDOSO_X_CDRAMO_X_CDTIPSIT:
 					if(params != null)
 					{
-						lista = catalogosManager.recuperarTiposDeEndosoPorCdramoPorCdtipsit(params.get("cdramo"),params.get("cdtipsit"));
+						lista = catalogosManager.recuperarTiposDeEndosoPorCdramoPorCdtipsit(
+							params.get("cdramo"),
+							params.get("cdtipsit"),
+							"S".equals(params.get("vigente"))
+					    );
 					}
 					break;
 				default:

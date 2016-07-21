@@ -259,7 +259,7 @@ public interface CotizacionManager
 	@Deprecated
 	public Map<String,String>cargarTipoSituacion(String cdramo,String cdtipsit)throws Exception;
 	
-	public String cargarCduniecoAgenteAuto(String cdagente)throws Exception;
+	public String cargarCduniecoAgenteAuto(String cdagente, String cdtipram)throws Exception;
 	
 	public Map<String,String>obtenerDatosAgente(String cdagente,String cdramo)throws Exception;
 	

@@ -4794,6 +4794,7 @@ Ext.onReady(function()
     }
     
     // Se busca la imagen para mostrar en el cotizador segun el producto:
+    /*
     Ext.Ajax.request({
         url    : _0_urlObtenerParametros,
         params :{
@@ -4821,6 +4822,7 @@ Ext.onReady(function()
            }
         }
     });
+    */
     
     if(_0_smap1.ntramite&&_0_smap1.ntramite.length>0)
     {
