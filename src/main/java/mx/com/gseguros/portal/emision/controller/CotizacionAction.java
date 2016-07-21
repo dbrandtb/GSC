@@ -952,6 +952,24 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		if(success)
+		{
+			try
+			{
+				ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
+        		if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
+        		{
+        			smap1.put("PRECIO_DOLAR", rtc.getTipoCambio().getVenCam().doubleValue()+"");
+        		}
+			}
+			catch(Exception ex)
+			{
+				logger.warn("error SIN IMPACTO FUNCIONAL al obtener factor convenido o el factor no se encuentra",ex);
+				smap1.put("FACTOR_MIN","0");
+				smap1.put("FACTOR_MAX","0");
+			}
+		}
+		
 		//llamar web service
 		if(success)
 		{
@@ -10541,7 +10559,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			clavegs  = smap1.get("clavegs");
 			cdtipsit = smap1.get("cdtipsit");
 			tipoUnidad = smap1.get("tipounidad");
-			if(StringUtils.isBlank(clavegs))
+			if(StringUtils.isBlank(cdramo))
 			{
 				throw new ApplicationException("No se recibio el ramo");
 			}

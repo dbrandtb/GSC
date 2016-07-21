@@ -14,6 +14,9 @@ var _p38_urlRecuperacionSimple       = '<s:url namespace="/emision" action="recu
 var _p38_urlNadaEndoso               = '<s:url namespace="/emision" action="webServiceNadaEndosos"              />';
 var _p38_urlObtieneValNumeroSerie    = '<s:url namespace="/emision" action="obtieneValNumeroSerie"       />';
 
+var _0_urlCargarSumaAsegurada      = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"        />';
+var _0_urlCargarAutoPorClaveGS     = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"           />';
+
 ////// urls //////
 
 ////// variables //////
@@ -158,7 +161,7 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
-    if(_p38_slist1[0].CDTIPSIT != 'AF' && _p38_slist1[0].CDTIPSIT != 'PU'){
+    if(_p38_slist1[0].CDTIPSIT != 'AF' && _p38_slist1[0].CDTIPSIT != 'PU' && _p38_slist1[0].CDTIPSIT != 'MC'){
 	    _fieldLikeLabel('CLAVE').on(
 	    {
 	        select : function(me,records)
@@ -177,15 +180,56 @@ Ext.onReady(function()
 	            var cadena = record.get('value');
 	            debug('cadena:',cadena);
 	            
+	            
 	            var tok = cadena.split(' - ');
-	            marcaCmp.setValue(marcaCmp.findRecordByDisplay(tok[1]));
-	            submarcaCmp.heredar(true,function()
-	            {
-	                submarcaCmp.setValue(submarcaCmp.findRecordByDisplay(tok[2]));
-	            });
-	            modeloCmp.setValue(tok[3]);
-	            versionCmp.setValue(tok[4]);
-	            _p38_cargarSumaAseguradaRamo5();
+	            
+	            
+	            if(_p38_slist1[0].CDTIPSIT == 'AT'){
+	            	
+		            var value    = records[0].get('value');
+                    var splt     = value.split(' - ');
+                    var tipo     = splt[1];
+                    var marca    = splt[2];
+                    var submarca = splt[3];
+                    var modelo   = splt[4];
+                    var version  = splt[5];
+                    debug('tipo:',tipo);
+                    debug('marca:',marca);
+                    debug('submarca:',submarca);
+                    debug('modelo:',modelo);
+                    debug('version:',version);
+                    
+                    _fieldByLabel('TIPO DE UNIDAD').setValue(_fieldByLabel('TIPO DE UNIDAD').findRecord('value',tipo));
+                    _fieldByLabel('MARCA').heredar(true,function()
+                    {
+                        _fieldByLabel('MARCA').setValue(_fieldByLabel('MARCA').findRecord('value',marca));
+                        _fieldByLabel('SUBMARCA').heredar(true,function()
+                        {
+                            _fieldByLabel('SUBMARCA').setValue(_fieldByLabel('SUBMARCA').findRecord('value',submarca));
+                            _fieldByLabel('MODELO').heredar(true,function()
+                            {
+                                _fieldByLabel('MODELO').setValue(_fieldByLabel('MODELO').findRecord('value',modelo));
+                                _fieldLikeLabel('VERSI').heredar(true,function()
+                                {
+                                	_fieldLikeLabel('VERSI').setValue(_fieldLikeLabel('VERSI').findRecord('value',version));    
+                                    _0_obtenerSumaAseguradaRamo6(true);                        
+                                });
+                            });
+                        });
+                    });
+                    
+                    _0_cargarNumPasajerosAuto();
+	            }else{
+	            	marcaCmp.setValue(marcaCmp.findRecordByDisplay(tok[1]));
+		            submarcaCmp.heredar(true,function()
+		            {
+		                submarcaCmp.setValue(submarcaCmp.findRecordByDisplay(tok[2]));
+		            });
+		            modeloCmp.setValue(tok[3]);
+		            versionCmp.setValue(tok[4]);
+	            	_p38_cargarSumaAseguradaRamo5();
+	            }
+	            
 	        }
 	    });
 	    
@@ -276,15 +320,33 @@ Ext.onReady(function()
     
     if(_p38_slist1[0].CDTIPSIT == 'AF' || _p38_slist1[0].CDTIPSIT == 'PU')
     {
-        _38_formAuto.down('[name=OTVALOR92]').addListener('change',function()
+    	
+    	if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|') != -1){
+    		_38_formAuto.down('[name=OTVALOR92]').setReadOnly(false);
+            _38_formAuto.down('[name=OTVALOR93]').setReadOnly(false);
+            _38_formAuto.down('[name=OTVALOR94]').setReadOnly(false);
+            _38_formAuto.down('[name=OTVALOR95]').setReadOnly(false);
+    	}
+    	
+    	//Al cambiar el numero de serie limpian los campos marca modelo descripcion y valor
+        _38_formAuto.down('[name=OTVALOR91]').addListener('change',function()
         {
             debug('cleaning');
+            _38_formAuto.down('[name=OTVALOR92]').setValue('');
             _38_formAuto.down('[name=OTVALOR93]').setValue('');
+            _38_formAuto.down('[name=OTVALOR94]').setValue('');
             _38_formAuto.down('[name=OTVALOR95]').setValue('');
-            _38_formAuto.down('[name=OTVALOR96]').setValue('');
-            _38_formAuto.down('[name=OTVALOR97]').setValue('');
         });
-        _38_formAuto.down('[name=OTVALOR92]').addListener('blur',function()
+    	
+    	//Al cambiar el tipo de vehiculo se limpia el numero de serie
+
+        _38_formAuto.down('[name=OTVALOR96]').addListener('change',function()
+        {
+            debug('cleaning');
+            _38_formAuto.down('[name=OTVALOR91]').setValue('');
+        });
+        
+        _38_formAuto.down('[name=OTVALOR91]').addListener('blur',function()
         {
             var vim = this.value;
             if( (this.minLength > 0 && vim.length < this.minLength) || (vim.length < this.minLength || vim.length > this.maxLength) )
@@ -309,7 +371,7 @@ Ext.onReady(function()
                     ,'smap1.cdramo'   : _p38_slist1[0].CDRAMO
                     ,'smap1.nmpoliza' : _p38_slist1[0].NMPOLIZA
                     ,'smap1.cdtipsit' : _p38_slist1[0].CDTIPSIT
-                    ,'smap1.tipoveh'  : _38_formAuto.down('[name=OTVALOR91]').getValue()
+                    ,'smap1.tipoveh'  : _38_formAuto.down('[name=OTVALOR96]').getValue()
                     ,'smap1.nmsituac' : _p38_slist1[0].NMSITUAC
                     ,'smap1.nmsuplem' : _p38_slist1[0].NMSUPLEM
                 }
@@ -320,14 +382,14 @@ Ext.onReady(function()
                     debug('nada response:', json);
                     if(json.success)
                     {
-                        var precioDolar = 200000;/*_38_formAuto.down('[name=parametros.pv_otvalor24]').getValue()-0;
-                        debug('precioDolar:',precioDolar); */
-                        _38_formAuto.down('[name=OTVALOR93]').setValue(json.smap1.AUTO_MARCA);
-                        _38_formAuto.down('[name=OTVALOR95]').setValue(json.smap1.AUTO_ANIO);
-                        _38_formAuto.down('[name=OTVALOR96]').setValue(json.smap1.AUTO_DESCRIPCION);
-                        _38_formAuto.down('[name=OTVALOR97]').setMinValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
-                        _38_formAuto.down('[name=OTVALOR97]').setMaxValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
-                        _38_formAuto.down('[name=OTVALOR97]').setValue((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2));
+                        var precioDolar = Number(json.smap1.PRECIO_DOLAR);
+                        debug('precioDolar:',precioDolar);
+                        _38_formAuto.down('[name=OTVALOR92]').setValue(json.smap1.AUTO_MARCA);
+                        _38_formAuto.down('[name=OTVALOR93]').setValue(json.smap1.AUTO_ANIO);
+                        _38_formAuto.down('[name=OTVALOR94]').setValue(json.smap1.AUTO_DESCRIPCION);
+                        _38_formAuto.down('[name=OTVALOR95]').setMinValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
+                        _38_formAuto.down('[name=OTVALOR95]').setMaxValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
+                        _38_formAuto.down('[name=OTVALOR95]').setValue((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2));
                         debug('set min value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
                         debug('set max value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
                         
@@ -335,7 +397,7 @@ Ext.onReady(function()
             				url     : _p38_urlObtieneValNumeroSerie
             				,params :
             				{
-            					'smap1.numSerie'  :  _38_formAuto.down('[name=OTVALOR92]').getValue()
+            					'smap1.numSerie'  :  _38_formAuto.down('[name=OTVALOR91]').getValue()
             					,'smap1.feini'    :  _fieldByName('feefecto').getValue()
             				}
             				,success : function(response)
@@ -358,12 +420,12 @@ Ext.onReady(function()
                     else
                     {
                     	// Si no obtuvo datos el servicio "NADA", reseteamos valores:
-                		_38_formAuto.down('[name=OTVALOR93]').setValue();
+                		_38_formAuto.down('[name=OTVALOR92]').setValue();
+                        _38_formAuto.down('[name=OTVALOR93]').setValue();
+                        _38_formAuto.down('[name=OTVALOR94]').setValue();
                         _38_formAuto.down('[name=OTVALOR95]').setValue();
-                        _38_formAuto.down('[name=OTVALOR96]').setValue();
-                        _38_formAuto.down('[name=OTVALOR97]').setValue();
-                        _38_formAuto.down('[name=OTVALOR97]').setMinValue();
-                        _38_formAuto.down('[name=OTVALOR97]').setMaxValue();
+                        _38_formAuto.down('[name=OTVALOR95]').setMinValue();
+                        _38_formAuto.down('[name=OTVALOR95]').setMaxValue();
                     }
                 }
                 ,failure : function()
@@ -394,7 +456,7 @@ Ext.onReady(function()
                 {
                     var limiteInferior = json.smap1.P1VALOR-0;
                     var limiteSuperior = json.smap1.P2VALOR-0;
-                    _38_formAuto.down('[name=OTVALOR95]').validator=function(value)
+                    _38_formAuto.down('[name=OTVALOR93]').validator=function(value)
                     {
                         var r = true;
                         var anioActual = new Date().getFullYear();
@@ -425,6 +487,78 @@ Ext.onReady(function()
         });
         
 	}
+    
+    if(_p38_slist1[0].CDTIPSIT == 'AT'){
+    	
+        if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|') != -1){
+        	_fieldByLabel('TIPO DE UNIDAD').setReadOnly(false);
+    		_fieldByLabel('MARCA').setReadOnly(false);
+    		_fieldByLabel('SUBMARCA').setReadOnly(false);
+    		_fieldByLabel('MODELO').setReadOnly(false);
+    		_fieldLikeLabel('VERSI').setReadOnly(false);
+    		_fieldLikeLabel('PASAJEROS').setReadOnly(false);
+    		_fieldLikeLabel('VALOR').setReadOnly(false);
+    		
+    		_fieldByLabel('MODELO').on(
+    	            {
+    	                select : function()
+    	                {
+    	                    _0_obtenerClaveGSPorAuto();
+    	                    _0_obtenerSumaAseguradaRamo6(true);
+    	                }
+    	            });
+    		
+    		_fieldLikeLabel('VERSI').on(
+    	            {
+    	                'select' : function()
+    	                {
+    	                    _0_obtenerSumaAseguradaRamo6(true);
+    	                }
+    	            });
+    	}
+    }
+    
+	if(_p38_slist1[0].CDTIPSIT == 'MC'){
+		
+		alert('En inicio: ' + _p38_slist1[0].CVE_MODELO);
+		_fieldByLabel('MODELO').setValue(_p38_slist1[0].CVE_MODELO);
+		_fieldLikeLabel('VERSI').setValue(_p38_slist1[0].DES_VERSION);
+		_fieldLikeLabel('VALOR').setValue(_p38_slist1[0].CVE_VALOR_COMERCIAL);
+		
+		_fieldByLabel('MODELO').setLoading(true);
+        Ext.Ajax.request(
+        {
+            url      : _p38_urlCargarParametros
+            ,params  :
+            {
+                'smap1.parametro' : 'RANGO_ANIO_MODELO'
+                ,'smap1.cdramo'   : _p38_slist1[0].CDRAMO
+                ,'smap1.cdtipsit' : _p38_slist1[0].CDTIPSIT
+            }
+            ,success : function(response)
+            {
+                _fieldByLabel('MODELO').setLoading(false);
+                var json=Ext.decode(response.responseText);
+                debug('respuesta json obtener rango:',json);
+                if(json.exito)
+                {
+                    //_fieldByLabel('MODELO').setValue(json.smap1.P1VALOR);// valor original del auto en emision
+                    _fieldByLabel('MODELO').setMinValue(json.smap1.P2VALOR);
+                    _fieldByLabel('MODELO').setMaxValue(json.smap1.P3VALOR);
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : function()
+            {
+                _fieldByLabel('MODELO').setLoading(false);
+                errorComunicacion();
+            }
+        });
+        
+    }
     
 });
 
@@ -603,6 +737,117 @@ function _p38_cargarRangoValorRamo5()
     }
     debug('<_p38_cargarRangoValorRamo5');
 }
+
+function _0_obtenerSumaAseguradaRamo6(mostrarError,respetarValue)
+{
+    var loading_0_obtenerSumaAseguradaRamo6 = _maskLocal();
+    Ext.Ajax.request(
+    {
+        url      : _0_urlCargarSumaAsegurada
+        ,params  :
+        {
+            'smap1.modelo'    : String(_fieldByLabel('MODELO').getValue()).substr(_fieldByLabel('MODELO').getValue().length-4,4)
+            ,'smap1.version'  : _fieldLikeLabel('VERSI').getValue()
+            ,'smap1.cdsisrol' : _p38_smap1.cdsisrol
+            ,'smap1.cdramo'   : _p38_smap1.CDRAMO
+            ,'smap1.cdtipsit' : _p38_slist1[0].CDTIPSIT
+        }
+        ,success : function(response)
+        {
+
+//           _0_panelPri.setLoading(false); 
+            loading_0_obtenerSumaAseguradaRamo6.close();
+            var json=Ext.decode(response.responseText);
+            debug('### json response obtener suma asegurada:',json);
+            if(json.exito)
+            {
+                if(Ext.isEmpty(respetarValue)||respetarValue==false)
+                {
+                	_fieldLikeLabel('VALOR').setValue(json.smap1.SUMASEG);
+                }
+                else
+                {
+                    debug('SE RESPETA VALUE de VALOR COMERCIAL');
+                }
+                _fieldLikeLabel('VALOR').setMinValue((json.smap1.SUMASEG-0)*(1-(json.smap1.FACREDUC-0)));
+                _fieldLikeLabel('VALOR').setMaxValue((json.smap1.SUMASEG-0)*(1+(json.smap1.FACINCREM-0)));
+                _fieldLikeLabel('VALOR').isValid();
+            }
+            else if(mostrarError==true)
+            {
+                mensajeWarning(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+//             _0_panelPri.setLoading(false);
+            loading_0_obtenerSumaAseguradaRamo6.close();
+            errorComunicacion();
+        }
+    });
+}
+
+function _0_cargarNumPasajerosAuto()
+{
+    Ext.Ajax.request(
+    {
+        url      : _0_urlCargarAutoPorClaveGS
+        ,params  :
+        {
+            'smap1.cdramo'    : _p38_smap1.CDRAMO
+            ,'smap1.clavegs'  : _fieldLikeLabel('CLAVE').getValue()
+            ,'smap1.cdtipsit' : _p38_slist1[0].CDTIPSIT
+            ,'smap1.tipounidad' : _fieldByLabel('TIPO DE UNIDAD').getValue()
+        }
+        ,success : function(response)
+        {
+            var ijson=Ext.decode(response.responseText);
+            debug('### obtener auto por clave gs:',ijson);
+            if(ijson.exito)
+            {
+            	_fieldLikeLabel('PASAJEROS').setValue(ijson.smap1.NUMPASAJEROS);
+            	_fieldLikeLabel('PASAJEROS').setMinValue(ijson.smap1.PASAJMIN);
+            	_fieldLikeLabel('PASAJEROS').setMaxValue(ijson.smap1.PASAJMAX);
+            	_fieldLikeLabel('PASAJEROS').isValid();
+            }
+            else
+            {
+                mensajeWarning(ijson.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
+}
+
+function _0_obtenerClaveGSPorAuto()
+{
+	_fieldLikeLabel('CLAVE').getStore().load(
+    {
+        params :
+        {
+            'params.substr' : _fieldLikeLabel('VERSI').getValue()
+        }
+        ,callback : function(records)
+        {
+            debug('callback records:',records);
+            var valor=_fieldLikeLabel('VERSI').getValue()
+                +' - '+_fieldByLabel('TIPO DE UNIDAD').findRecord('key',_fieldByLabel('TIPO DE UNIDAD').getValue()).get('value')
+                +' - '+_fieldByLabel('MARCA').findRecord('key',_fieldByLabel('MARCA').getValue()).get('value')
+                +' - '+_fieldByLabel('SUBMARCA').findRecord('key',_fieldByLabel('SUBMARCA').getValue()).get('value')
+                +' - '+_fieldByLabel('MODELO').findRecord('key',_fieldByLabel('MODELO').getValue()).get('value')
+                +' - '+_fieldLikeLabel('VERSI').findRecord('key',_fieldLikeLabel('VERSI').getValue()).get('value');
+            debug('valor para el auto:',valor);
+            _fieldLikeLabel('CLAVE').setValue(
+            		_fieldLikeLabel('CLAVE').findRecord('value',valor)
+            );
+            _0_cargarNumPasajerosAuto();
+        }
+    });
+}
+
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
