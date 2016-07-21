@@ -61,12 +61,17 @@
        		    	    title  : 'Seleccione un reporte:',
        		    	    hideHeaders: true,
        		    	    collapsible : true,
-       		    	    width: 250,
+       		    	    width: 350,
        		    	    margins : '0 5 0 0',
        		    	    store : storeReportes,
 		                columns: [{
 		                    dataIndex: 'dsReporte',
-		                    flex : 1
+		                    flex : 1,
+		                    renderer : function(value, metadata, record, rowIndex, colIndex, store, view) {
+		                    	// Se agrega tooltips a la columna:
+							    metadata.tdAttr = 'data-qtip="' + value + '"';
+							    return value;
+                    		}
 		                }],
        		    	    listeners: {
        		    	    	'itemclick' : function(view, record, item, index, e, eOpts) {
