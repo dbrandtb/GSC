@@ -486,115 +486,123 @@ function _p49_impresionClic(tipoimp)
     try
     {
         debug('_p49_impresionClic timoimp:',tipoimp);
-        centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se generar\u00E1 el lote y los tr\u00E1mites de impresi\u00F3n ¿Desea continuar?', function(btn)
-        {
-            if(btn === 'yes')
-            {
-                var ck = 'Construyendo petici\u00F3n';
-                try
-                {
-                    var jsonData =
-                    {
-                        params :
-                        {
-                            cdtipimp  : tipoimp
-                            ,tipolote : 'P'
-                        }
-                        ,list  : []
-                    };
-                
-                    var grid    = _fieldById('_p49_gridPolizas');
-                    var records = grid.getSelectionModel().getSelection();
-                    debug('records:',records);
-                    
-                    jsonData.params.cdtipram = records[0].get('cdtipram');
-                    
-                    for(var i in records)
-                    {
-                        var rec  = records[i];
-                        jsonData.list.push(
-                        {
-                            cdunieco  : rec.get('cdunieco')
-                            ,cdramo   : rec.get('cdramo')
-                            ,estado   : rec.get('estado')
-                            ,nmpoliza : rec.get('nmpoliza')
-                            ,nmsuplem : rec.get('nmsuplem')
-                            ,cdagente : rec.get('cdagente')
-                            ,ntramite : rec.get('ntramite')
-                            ,orden    : rec.get('orden')
-                        });
-                    }
-                    debug('jsonData:',jsonData);
-                    
-                    _setLoading(true,grid);
-                    Ext.Ajax.request(
-                    {
-                        url       : _p49_urlGenerarLote
-                        ,jsonData : jsonData
-                        ,success  : function(response)
-                        {
-                            _setLoading(false,grid);
-                            var ck = 'Decodificando respuesta al generar lote';
-                            try
-                            {
-                                var json = Ext.decode(response.responseText);
-                                debug('### generarLote:',json);
-                                if(json.success==true)
-                                {
-                                    mensajeCorrecto(
-                                        'Lote generado'
-                                        ,'Se gener\u00F3 el lote '+json.params.lote
-                                        ,function()
-                                        {
-                                            var ck = 'Invocando ventana de impresi\u00F3n';
-                                            try
-                                            {
-                                                var venImp = Ext.create('VentanaImpresionLote',
-                                                {
-                                                    lote      : json.params.lote
-                                                    ,cdtipram : json.params.cdtipram
-                                                    ,cdtipimp : json.params.cdtipimp
-                                                    ,tipolote : 'P'
-                                                    ,callback : function(){ _fieldById('_p49_gridPolizas').getStore().removeAll(); }
-                                                });
-                                                venImp.on(
-                                                {
-                                                    close : function()
-                                                    {
-                                                        _fieldById('_p49_gridPolizas').getStore().removeAll();
-                                                    }
-                                                });
-                                                centrarVentanaInterna(venImp.show());
-                                            }
-                                            catch(e)
-                                            {
-                                                manejaException(e,ck);
-                                            }
-                                        });
-                                }
-                                else
-                                {
-                                    mensajeError(json.message);
-                                }
-                            }
-                            catch(e)
-                            {
-                                manejaException(e,ck);
-                            }
-                        }
-                        ,failure  : function()
-                        {
-                            _setLoading(false,grid);
-                            errorComunicacion(null,'Error al generar lote');
-                        }
-                    });
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-        }));
+        centrarVentanaInterna(
+        	Ext.MessageBox.confirm(
+        		'Confirmar', 
+        		'Se generar\u00E1 el lote y los tr\u00E1mites de impresi\u00F3n<br/>' +
+	        		'<strong style="color:red">Esta opci\u00F3n requiere impresoras de dos bandejas</strong><br/>' +
+	        		'¿Desea continuar?', 
+        		function(btn)
+		        {
+		            if(btn === 'yes')
+		            {
+		                var ck = 'Construyendo petici\u00F3n';
+		                try
+		                {
+		                    var jsonData =
+		                    {
+		                        params :
+		                        {
+		                            cdtipimp  : tipoimp
+		                            ,tipolote : 'P'
+		                        }
+		                        ,list  : []
+		                    };
+		                
+		                    var grid    = _fieldById('_p49_gridPolizas');
+		                    var records = grid.getSelectionModel().getSelection();
+		                    debug('records:',records);
+		                    
+		                    jsonData.params.cdtipram = records[0].get('cdtipram');
+		                    
+		                    for(var i in records)
+		                    {
+		                        var rec  = records[i];
+		                        jsonData.list.push(
+		                        {
+		                            cdunieco  : rec.get('cdunieco')
+		                            ,cdramo   : rec.get('cdramo')
+		                            ,estado   : rec.get('estado')
+		                            ,nmpoliza : rec.get('nmpoliza')
+		                            ,nmsuplem : rec.get('nmsuplem')
+		                            ,cdagente : rec.get('cdagente')
+		                            ,ntramite : rec.get('ntramite')
+		                            ,orden    : rec.get('orden')
+		                        });
+		                    }
+		                    debug('jsonData:',jsonData);
+		                    
+		                    _setLoading(true,grid);
+		                    Ext.Ajax.request(
+		                    {
+		                        url       : _p49_urlGenerarLote
+		                        ,jsonData : jsonData
+		                        ,success  : function(response)
+		                        {
+		                            _setLoading(false,grid);
+		                            var ck = 'Decodificando respuesta al generar lote';
+		                            try
+		                            {
+		                                var json = Ext.decode(response.responseText);
+		                                debug('### generarLote:',json);
+		                                if(json.success==true)
+		                                {
+		                                    mensajeCorrecto(
+		                                        'Lote generado'
+		                                        ,'Se gener\u00F3 el lote '+json.params.lote
+		                                        ,function()
+		                                        {
+		                                            var ck = 'Invocando ventana de impresi\u00F3n';
+		                                            try
+		                                            {
+		                                                var venImp = Ext.create('VentanaImpresionLote',
+		                                                {
+		                                                    lote      : json.params.lote
+		                                                    ,cdtipram : json.params.cdtipram
+		                                                    ,cdtipimp : json.params.cdtipimp
+		                                                    ,tipolote : 'P'
+		                                                    ,callback : function(){ _fieldById('_p49_gridPolizas').getStore().removeAll(); }
+		                                                });
+		                                                venImp.on(
+		                                                {
+		                                                    close : function()
+		                                                    {
+		                                                        _fieldById('_p49_gridPolizas').getStore().removeAll();
+		                                                    }
+		                                                });
+		                                                centrarVentanaInterna(venImp.show());
+		                                            }
+		                                            catch(e)
+		                                            {
+		                                                manejaException(e,ck);
+		                                            }
+		                                        });
+		                                }
+		                                else
+		                                {
+		                                    mensajeError(json.message);
+		                                }
+		                            }
+		                            catch(e)
+		                            {
+		                                manejaException(e,ck);
+		                            }
+		                        }
+		                        ,failure  : function()
+		                        {
+		                            _setLoading(false,grid);
+		                            errorComunicacion(null,'Error al generar lote');
+		                        }
+		                    });
+		                }
+		                catch(e)
+		                {
+		                    manejaException(e,ck);
+		                }
+		            }
+		        }
+		    )
+		);
     }
     catch(e)
     {
