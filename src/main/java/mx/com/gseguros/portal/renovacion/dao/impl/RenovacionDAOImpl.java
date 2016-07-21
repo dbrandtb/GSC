@@ -138,21 +138,14 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	}
 	
 	@Override
-	public List<Map<String,String>>renovarPolizas(String cdusuari,String anio,String mes,String cdtipopc)throws Exception
+	public List<Map<String,String>> renovarPolizas(String cdusuari, String anio, String mes, String cdtipopc, String cdsisrol) throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("cdusuari" , cdusuari);
 		params.put("anio"     , anio);
 		params.put("mes"      , mes);
 		params.put("cdtipopc" , cdtipopc);
-		logger.debug(
-				new StringBuilder()
-				.append("\n**************************************************")
-				.append("\n****** PKG_RENOVA.P_RENUEVA_X_LISTA_POLIZAS ******")
-				.append("\n****** params=").append(params)
-				.append("\n**************************************************")
-				.toString()
-				);
+		params.put("cdsisrol" , cdsisrol);
 		Map<String,Object>procedureResult        = ejecutaSP(new RenovarPolizas(getDataSource()),params);
 		List<Map<String,String>>polizasRenovadas = (List<Map<String,String>>)procedureResult.get("pv_registro_o");
 		if(polizasRenovadas==null||polizasRenovadas.size()==0)
@@ -172,6 +165,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("mes"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipopc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			String[] cols=new String[]
 					{
 					"cdunieco"
