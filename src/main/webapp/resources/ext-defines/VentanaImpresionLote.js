@@ -378,6 +378,11 @@ Ext.define('VentanaImpresionLote',
                                                 ,dataIndex : 'descrip'
                                                 ,flex      : 2
                                             }
+                                            ,{
+                                                text       : 'BANDEJAS'
+                                                ,width     : 100
+                                                ,dataIndex : 'num_bandejas'
+                                            }
                                         ]
                                         ,store : Ext.create('Ext.data.Store',
                                         {
@@ -386,6 +391,7 @@ Ext.define('VentanaImpresionLote',
                                                 "cdusuari"
                                                 ,"ip"
                                                 ,"nmimpres"
+                                                ,"num_bandejas"
                                                 ,"nombre"
                                                 ,"descrip"
                                                 ,"swactivo"

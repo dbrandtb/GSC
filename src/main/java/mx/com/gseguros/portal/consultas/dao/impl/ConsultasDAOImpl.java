@@ -3215,11 +3215,13 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					"cdusuari"
 					,"ip"
 					,"nmimpres"
+					,"num_bandejas"
 					,"nombre"
 					,"descrip"
 					,"swactivo"
 					,"charola1"
 					,"charola2"
+					,"swimpdpx"
             };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
