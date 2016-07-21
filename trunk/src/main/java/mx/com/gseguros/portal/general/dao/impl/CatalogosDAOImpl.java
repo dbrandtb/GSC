@@ -2016,11 +2016,12 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	}
 	
 	@Override
-	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit) throws Exception
+	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdramo"   , cdramo);
 		params.put("cdtipsit" , cdtipsit);
+		params.put("vigente"  , vigente ? "S" : "N");
 		
 		Map<String,Object> procRes = ejecutaSP(new RecuperarTiposDeEndosoPorCdramoPorCdtipsitSP(getDataSource()),params);
 		
@@ -2046,6 +2047,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			super(dataSource,"P_GET_ENDOSOS_X_RAMO_X_TIPSIT");
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("vigente"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"CDTIPSUP","DSTIPSUP"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

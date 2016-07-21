@@ -51,6 +51,7 @@ import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoRamo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
@@ -10280,38 +10281,34 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String cargarCduniecoAgenteAuto()
-	{
-		logger.debug(
-				new StringBuilder()
-				.append("\n######################################")
-				.append("\n###### cargarCduniecoAgenteAuto ######")
-				.append("\nsmap1 ")
-				.append(smap1)
-				.toString()
-				);
-		success = true;
-		exito   = true;
-		try
-		{
-			smap1.put("cdunieco",cotizacionManager.cargarCduniecoAgenteAuto(smap1.get("cdagente")));
+	public String cargarCduniecoAgenteAuto () {
+		logger.debug(Utils.log(
+				"\n######################################",
+				"\n###### cargarCduniecoAgenteAuto ######",
+				"\n###### smap1 = ", smap1
+		));
+		try {
+			
+			Utils.validate(smap1, "No se recibieron datos");
+			
+			String cdagente  = smap1.get("cdagente"),
+					cdtipram = smap1.get("cdtipram");
+			
+			if (StringUtils.isBlank(cdtipram)) {
+				cdtipram = TipoRamo.AUTOS.getCdtipram();
+			}
+			
+			smap1.put("cdunieco",cotizacionManager.cargarCduniecoAgenteAuto(cdagente, cdtipram));
+			success = true;
+			exito = true;
+		} catch(Exception ex) {
+			respuesta  = Utils.manejaExcepcion(ex);
 		}
-		catch(Exception ex)
-		{
-			long timestamp  = System.currentTimeMillis();
-			exito           = false;
-			respuesta       = "Error al obtener sucursal del agente #"+timestamp;
-			respuestaOculta = ex.getMessage();
-			logger.error(respuesta,ex);
-		}
-		logger.debug(
-				new StringBuilder()
-				.append("\nsmap1 ")
-				.append(smap1)
-				.append("\n###### cargarCduniecoAgenteAuto ######")
-				.append("\n######################################")
-				.toString()
-				);
+		logger.debug(Utils.log(
+				"\n###### smap1 = ", smap1,
+				"\n###### cargarCduniecoAgenteAuto ######",
+				"\n######################################"
+				));
 		return SUCCESS;
 	}
 	

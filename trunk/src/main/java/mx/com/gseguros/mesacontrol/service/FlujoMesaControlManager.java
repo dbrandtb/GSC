@@ -207,7 +207,7 @@ public interface FlujoMesaControlManager
 	
 	public Map<String,String> recuperarPolizaUnica(
 			String cdunieco
-			,String cdramo
+			,String ramo
 			,String estado
 			,String nmpoliza
 			)throws Exception;

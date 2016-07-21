@@ -734,7 +734,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("accion"    , accion);
 		Map<String,Object> procRes = ejecutaSP(new MovimientoTflujomcSP(getDataSource()),params);
 		
-		String cdflujomcSalida = cdtipflu;
+		String cdflujomcSalida = cdflujomc;
 		
 		if("I".equals(accion))
 		{
@@ -1672,25 +1672,25 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	@Override
 	public Map<String,String> recuperarPolizaUnica(
 			String cdunieco
-			,String cdramo
+			,String ramo
 			,String estado
 			,String nmpoliza
 			)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
-		params.put("cdramo"   , cdramo);
+		params.put("ramo"     , ramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		Map<String,Object>       procRes = ejecutaSP(new RecuperarPolizaUnicaSP(getDataSource()),params);
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
-			throw new ApplicationException(Utils.join("No existe la p\u00f3liza para la sucursal ",cdunieco," y el producto ",cdramo));
+			throw new ApplicationException(Utils.join("No existe la p\u00f3liza para la sucursal ",cdunieco," y el ramo ",ramo));
 		}
 		else if(lista.size()>1)
 		{
-			throw new ApplicationException(Utils.join("P\u00f3liza duplicada para la sucursal ",cdunieco," y el producto ",cdramo));
+			throw new ApplicationException(Utils.join("P\u00f3liza duplicada para la sucursal ",cdunieco," y el ramo ",ramo));
 		}
 		return lista.get(0);
 	}
@@ -1701,10 +1701,21 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		{
 			super(dataSource,"PKG_MESACONTROL.P_REVISA_POLIZA_PARA_TRAMITE");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ramo"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
-			String cols[]=new String[]{ "FEEFECTO", "FEEMISIO", "CONTRATANTE" , "AGENTE" , "CDAGENTE", "CDTIPSIT" };
+			String[] cols = new String[] {
+					"CDUNIECO",
+					"CDRAMO",
+					"FEEFECTO",
+					"FEEMISIO",
+					"CONTRATANTE",
+					"AGENTE",
+					"CDAGENTE",
+					"CDTIPSIT",
+					"STATUSPOL",
+					"CDAGENTE"
+			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -2328,6 +2339,9 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					,"FEEMISIO"
 					,"CONTRATANTE"
 					,"AGENTE"
+					,"CDTIPSIT"
+					,"STATUSPOL"
+					,"CDAGENTE"
 					,"CDTIPSIT"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));

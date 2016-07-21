@@ -252,29 +252,20 @@ Ext.onReady(function()
                         
                         // mostrar
                         
-                        _fieldByName('CDSUCADM',me).allowBlank = false;
-                        _show(_fieldByName('CDSUCADM',me));
-                        
-                        _fieldByName('CDSUCDOC',me).allowBlank = false;
-                        _show(_fieldByName('CDSUCDOC',me));
-                        
                         me.down('[name=CDRAMO]').allowBlank = false;
                         _show(me.down('[name=CDRAMO]'));
                         
                         me.down('[name=CDTIPSIT]').allowBlank = false;
                         _show(me.down('[name=CDTIPSIT]'));
                         
-                        me.down('[name=NMPOLIZA]').allowBlank = false;
-                        _show(me.down('[name=NMPOLIZA]'));
-                        
-                        _fieldByName('REFERENCIA',me).allowBlank = false;
-                        _show(_fieldByName('REFERENCIA',me));
-                        
                         _fieldByName('NOMBRE',me).allowBlank = false;
                         _show(_fieldByName('NOMBRE',me));
                         
                         _fieldByName('COMMENTS',me).allowBlank = false;
                         _show(_fieldByName('COMMENTS',me));
+                        
+                        _fieldByName('CDAGENTE',me).allowBlank = false;
+                        _show(_fieldByName('CDAGENTE',me));
                         
                         // ocultar
                         
@@ -289,12 +280,38 @@ Ext.onReady(function()
                         
                         me.down('[name=CDTIPSUPEND]').allowBlank = true;
                         _hide(me.down('[name=CDTIPSUPEND]'));
+                        
+                        me.down('[name=NMPOLIZA]').allowBlank = false;
+                        _hide(me.down('[name=NMPOLIZA]'));
+                        
+                        _fieldByName('REFERENCIA',me).allowBlank = false;
+                        _hide(_fieldByName('REFERENCIA',me));
+                        
+                        _fieldByName('CDAGENTEEND',me).allowBlank = true;
+                        _hide(_fieldByName('CDAGENTEEND',me));
                     }
                     else if(Number(cdtiptra) === 15 || Number(cdtiptra) === 21) // para endoso o renovacion
                     {
                         // indistinto salud y danios
                         
-                        //ocultar
+                        // mostrar
+                        
+                        _fieldByName('CDUNIEXT',me).allowBlank = false;
+                        _show(_fieldByName('CDUNIEXT',me));
+                        
+                        me.down('[name=RAMO]').allowBlank = false;
+                        _show(me.down('[name=RAMO]'));
+                        
+                        _fieldByName('CDAGENTEEND',me).allowBlank = false;
+                        _show(_fieldByName('CDAGENTEEND',me));
+                        
+                        // ocultar
+                        
+                        _fieldByName('CDRAMO',me).allowBlank = true;
+                        _hide(_fieldByName('CDRAMO',me));
+                        
+                        _fieldByName('CDTIPSIT',me).allowBlank = true;
+                        _hide(_fieldByName('CDTIPSIT',me));
                         
                         _fieldByName('REFERENCIA',me).allowBlank = true;
                         _hide(_fieldByName('REFERENCIA',me));
@@ -304,6 +321,9 @@ Ext.onReady(function()
                         
                         _fieldByName('COMMENTS',me).allowBlank = true;
                         _hide(_fieldByName('COMMENTS',me));
+                        
+                        _fieldByName('CDAGENTE',me).allowBlank = true;
+                        _hide(_fieldByName('CDAGENTE',me));
                         
                         if(Number(cdtiptra) === 15)
                         {
@@ -322,28 +342,10 @@ Ext.onReady(function()
                         {
                             // mostrar
                             
-                            _fieldByName('CDSUCADM',me).allowBlank = false;
-	                        _show(_fieldByName('CDSUCADM',me));
-	                        
-	                        _fieldByName('CDSUCDOC',me).allowBlank = false;
-	                        _show(_fieldByName('CDSUCDOC',me));
-	                        
-	                        me.down('[name=CDRAMO]').allowBlank = false;
-	                        _show(me.down('[name=CDRAMO]'));
-	                        
-	                        me.down('[name=CDTIPSIT]').allowBlank = false;
-	                        _show(me.down('[name=CDTIPSIT]'));
-	                        
-	                        me.down('[name=NMPOLIZA]').allowBlank = false;
+                            me.down('[name=NMPOLIZA]').allowBlank = false;
 	                        _show(me.down('[name=NMPOLIZA]'));
 	                        
 	                        // ocultar
-	                        
-	                        me.down('[name=CDUNIEXT]').allowBlank = true;
-	                        _hide(me.down('[name=CDUNIEXT]'));
-	                        
-	                        me.down('[name=RAMO]').allowBlank = true;
-	                        _hide(me.down('[name=RAMO]'));
 	                        
 	                        me.down('[name=NMPOLIEX]').allowBlank = true;
 	                        _hide(me.down('[name=NMPOLIEX]'));
@@ -356,117 +358,15 @@ Ext.onReady(function()
                         {
                             // mostrar
                             
-                            me.down('[name=CDUNIEXT]').allowBlank = false;
-	                        _show(me.down('[name=CDUNIEXT]'));
-	                        
-	                        // la sucursal queda abierta para los endosos de autos
-                            me.down('[name=CDUNIEXT]').setReadOnly(false);
-	                        
-	                        me.down('[name=RAMO]').allowBlank = false;
-	                        _show(me.down('[name=RAMO]'));
-	                        
-	                        me.down('[name=NMPOLIEX]').allowBlank = false;
+                            me.down('[name=NMPOLIEX]').allowBlank = false;
 	                        _show(me.down('[name=NMPOLIEX]'));
 	                        
 	                        // ocultar
 	                        
-	                        me.down('[name=CDRAMO]').allowBlank = true;
-	                        _hide(me.down('[name=CDRAMO]'));
-	                        
-	                        me.down('[name=CDTIPSIT]').allowBlank = true;
-	                        _hide(me.down('[name=CDTIPSIT]'));
-	                        
 	                        me.down('[name=NMPOLIZA]').allowBlank = true;
 	                        _hide(me.down('[name=NMPOLIZA]'));
-	                        
-	                        _hide(me.down('[name=CDSUCADM]'));
-	                        
-	                        _hide(me.down('[name=CDSUCDOC]'));
                         }
-                    }/*
-                    else if(Number(cdtiptra) === 21) // para renovacion
-                    {
-                        // indistinto salud y danios
-                        
-                        //ocultar
-                        
-                        _fieldByName('REFERENCIA',me).allowBlank = true;
-                        _hide(_fieldByName('REFERENCIA',me));
-                        
-                        _fieldByName('NOMBRE',me).allowBlank = true;
-                        _hide(_fieldByName('NOMBRE',me));
-                        
-                        _fieldByName('COMMENTS',me).allowBlank = true;
-                        _hide(_fieldByName('COMMENTS',me));
-                        
-                        // salud
-                        
-                        if(Number(cdtipram) === Number(TipoRamo.Salud)) 
-                        {
-                            // mostrar
-                            
-                            _fieldByName('CDSUCADM',me).allowBlank = false;
-                            _show(_fieldByName('CDSUCADM',me));
-                            
-                            _fieldByName('CDSUCDOC',me).allowBlank = false;
-                            _show(_fieldByName('CDSUCDOC',me));
-                            
-                            me.down('[name=CDRAMO]').allowBlank = false;
-                            _show(me.down('[name=CDRAMO]'));
-                            
-                            me.down('[name=CDTIPSIT]').allowBlank = false;
-                            _show(me.down('[name=CDTIPSIT]'));
-                            
-                            me.down('[name=NMPOLIZA]').allowBlank = false;
-                            _show(me.down('[name=NMPOLIZA]'));
-                            
-                            // ocultar
-                            
-                            me.down('[name=CDUNIEXT]').allowBlank = true;
-                            _hide(me.down('[name=CDUNIEXT]'));
-                            
-                            me.down('[name=RAMO]').allowBlank = true;
-                            _hide(me.down('[name=RAMO]'));
-                            
-                            me.down('[name=NMPOLIEX]').allowBlank = true;
-                            _hide(me.down('[name=NMPOLIEX]'));
-                            
-                        }
-                        
-                        // autos
-                        
-                        else if(Number(cdtipram) === Number(TipoRamo.Autos))
-                        {
-                            // mostrar
-                            
-                            me.down('[name=CDUNIEXT]').allowBlank = false;
-                            _show(me.down('[name=CDUNIEXT]'));
-                            
-                            // la sucursal queda abierta para los endosos de autos
-                            me.down('[name=CDUNIEXT]').setReadOnly(false);
-                            
-                            me.down('[name=RAMO]').allowBlank = false;
-                            _show(me.down('[name=RAMO]'));
-                            
-                            me.down('[name=NMPOLIEX]').allowBlank = false;
-                            _show(me.down('[name=NMPOLIEX]'));
-                            
-                            // ocultar
-                            
-                            me.down('[name=CDRAMO]').allowBlank = true;
-                            _hide(me.down('[name=CDRAMO]'));
-                            
-                            me.down('[name=CDTIPSIT]').allowBlank = true;
-                            _hide(me.down('[name=CDTIPSIT]'));
-                            
-                            me.down('[name=NMPOLIZA]').allowBlank = true;
-                            _hide(me.down('[name=NMPOLIZA]'));
-                            
-                            _hide(me.down('[name=CDSUCADM]'));
-                            
-                            _hide(me.down('[name=CDSUCDOC]'));
-                        }
-                    }*/
+                    }
                 }
             }
             catch(e)
@@ -679,37 +579,50 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
+    if (Ext.isEmpty(_p54_params.CDUNIECO)) {
+        mensajeError('No se encuentra sucursal asociada al usuario y no se pueden crear tr\u00e1mites');
+    }
+    
     var _p54_grid = _fieldById('_p54_grid');
     
-    var cdtipfluCmp = _fieldByName('CDTIPFLU' , _p54_windowNuevo)
-        ,cdtiptraCmp = _fieldByName('CDTIPTRA' , _p54_windowNuevo)
-        ,cdtipsupCmp = _fieldByName('CDTIPSUP' , _p54_windowNuevo)
-        ,nmpolizaCmp = _fieldByName('NMPOLIZA' , _p54_windowNuevo)
-        ,nmpoliexCmp = _fieldByName('NMPOLIEX' , _p54_windowNuevo)
-        ,estadoCmp   = _fieldByName('ESTADO'   , _p54_windowNuevo)
-        ,cduniextCmp = _fieldByName('CDUNIEXT' , _p54_windowNuevo)
-        ,estatusCmp  = _fieldByName('STATUS'   , _p54_windowNuevo);
+    var cdtipfluCmp    = _fieldByName('CDTIPFLU'    , _p54_windowNuevo),
+        cdflujoCmp     = _fieldByName('CDFLUJOMC'   , _p54_windowNuevo),
+        cdtiptraCmp    = _fieldByName('CDTIPTRA'    , _p54_windowNuevo),
+        cdtipsupCmp    = _fieldByName('CDTIPSUP'    , _p54_windowNuevo),
+        nmpolizaCmp    = _fieldByName('NMPOLIZA'    , _p54_windowNuevo),
+        nmpoliexCmp    = _fieldByName('NMPOLIEX'    , _p54_windowNuevo),
+        estadoCmp      = _fieldByName('ESTADO'      , _p54_windowNuevo),
+        cduniextCmp    = _fieldByName('CDUNIEXT'    , _p54_windowNuevo),
+        estatusCmp     = _fieldByName('STATUS'      , _p54_windowNuevo),
+        cdsucdocCmp    = _fieldByName('CDSUCDOC'    , _p54_windowNuevo),
+        cdramoCmp      = _fieldByName('CDRAMO'      , _p54_windowNuevo),
+        cdagenteCmp    = _fieldByName('CDAGENTE'    , _p54_windowNuevo);
     
-    cdtipfluCmp.on(
-    {
-        select : function(me,records)
-        {
-            debug('select data:',records[0].data,'.');
+    cdramoCmp.heredar = function () {
+        debug('>cdramoCmp.heredar');
+        cdramoCmp.store.load();
+    }
+    
+    cduniextCmp.heredar = function () {
+        debug('>cduniextCmp.heredar');
+        cduniextCmp.store.load();
+    }
+    
+    cdtipfluCmp.on({
+        select : function (me, records) {
+            debug('select data:', records[0].data, '.');
             
             cdtiptraCmp.setValue(records[0].get('aux'));
             
             cdtipsupCmp.setValue(records[0].get('aux2'));
             
-            if(records[0].get('aux3') === 'S')
-            {
+            if (records[0].get('aux3') === 'S') {
                 nmpolizaCmp.allowBlank      = false;
                 nmpolizaCmp.verificarPoliza = true;
                 
                 nmpoliexCmp.allowBlank      = false;
                 nmpoliexCmp.verificarPoliza = true;
-            }
-            else
-            {
+            } else {
                 nmpolizaCmp.allowBlank      = true;
                 nmpolizaCmp.verificarPoliza = false;
                 
@@ -719,168 +632,181 @@ Ext.onReady(function()
         }
     });
     
-    cdtiptraCmp.on(
-    {
-        change : function(me,val)
-        {
-            if(_p54_params.CDSISROL === 'SUSCRIPTOR')
-            {
-                if(Number(val)===1)
-                {
+    cdflujoCmp.on({
+        select : function (me, records) {
+        debug('cdflujoCmp.select! args:',arguments);
+            _p54_setearSucursalAgente();
+            var cdtipram = records[0].get('aux');
+            if (Number(cdtiptraCmp.getValue()) !== 1) { // Para endosos y renovacion
+                cduniextCmp.store.proxy.extraParams['params.idPadre'] = cdtipram;
+                cduniextCmp.heredar();
+            } else {
+                cduniextCmp.store.proxy.extraParams['params.idPadre'] = '';
+                cduniextCmp.store.removeAll();
+            }
+        }
+    });
+    
+    cdtiptraCmp.on({
+        change : function (me, val) {
+            if (_p54_params.CDSISROL === 'SUSCRIPTOR') {
+                if (Number(val) === 1) {
                     estatusCmp.setValue('2'); // para SUSCRIPTOR para EMISION el status es PENDIENTE
-                }
-                else
-                {
+                } else {
                     estatusCmp.reset();
                 }
             }
         }
     });
     
-    cdtipsupCmp.on(
-    {
-        change : function(me,val)
-        {
-            _p54_recuperaSucursalesTramiteAgente();
-        
-            if(!Ext.isEmpty(val) && Number(val) === 1) // para emision no se pueden modificar los numeros de poliza 0
-            {
+    if (!Ext.isEmpty(cdagenteCmp.store)) {
+        cdagenteCmp.on({
+            select : function (me, records) {
+                _p54_setearSucursalAgente();
+            }
+        });
+    }
+    
+    cdtipsupCmp.on({
+        change : function (me, val) {
+            if (!Ext.isEmpty(val) && Number(val) === 1) { // Para emision no se pueden modificar los numeros de poliza 0
                 nmpolizaCmp.setReadOnly(true);
                 nmpolizaCmp.setValue('0');
+                nmpolizaCmp.isValid();
                 
                 nmpoliexCmp.setReadOnly(true);
                 nmpoliexCmp.setValue('0');
-            }
-            else // para endoso se pueden modificar los numeros de poliza
-            {
+                nmpoliexCmp.isValid();
+            } else {                                      // Para endoso se pueden modificar los numeros de poliza
                 nmpolizaCmp.setReadOnly(false);
                 nmpolizaCmp.setValue('');
                 nmpolizaCmp.isValid();
                 
                 nmpoliexCmp.setReadOnly(false);
                 nmpoliexCmp.setValue('');
-                nmpoliexCmp.isValid();                
+                nmpoliexCmp.isValid();
             }
         }
     });
     
-    nmpolizaCmp.on(
-    {
-        blur : function(me)
-        {
+    cdsucdocCmp.on({
+        change : function (me, val) {
+            debug('cdsucdocCmp.change! args:', arguments);
+            
+            cdramoCmp.store.proxy.extraParams['params.idPadre'] = val;
+            cdramoCmp.heredar();
+        }
+    });
+    
+    nmpolizaCmp.on({
+        blur : function (me) {
             var val = me.getValue();
-            if(!Ext.isEmpty(me) && me.verificarPoliza === true )
-            {
-                var ck = 'Recuperando p\u00f3liza';
-                try
-                {
-                
-                    var cdunieco = _p54_windowNuevo.down('[name=CDSUCDOC]').getValue()
-                        ,cdramo  = _p54_windowNuevo.down('[name=CDRAMO]').getValue();
+            if (!Ext.isEmpty(me) && me.verificarPoliza === true) {
+                var mask, ck = 'Recuperando p\u00f3liza';
+                try {
+                    var cdunieco = _p54_windowNuevo.down('[name=CDUNIEXT]').getValue(),
+                        ramo     = _p54_windowNuevo.down('[name=RAMO]').getValue();
                     
-                    if(Ext.isEmpty(cdunieco)||Ext.isEmpty(cdramo))
-                    {
-                        throw 'Seleccione sucursal y producto antes de confirmar la p\u00f3liza';
+                    if (Ext.isEmpty(cdunieco) || Ext.isEmpty(ramo)) {
+                        throw 'Seleccione sucursal y ramo antes de confirmar la p\u00f3liza';
                     }
                 
-                    _setLoading(true,_p54_windowNuevo);
-                    Ext.Ajax.request(
-                    {
-                        url      : _p54_urlRecuperarPoliza
-                        ,params  :
-                        {
-                            'params.CDUNIECO'  : cdunieco
-                            ,'params.CDRAMO'   : cdramo
-                            ,'params.ESTADO'   : 'M'
-                            ,'params.NMPOLIZA' : val
-                        }
-                        ,success : function(response)
-                        {
-                            _setLoading(false,_p54_windowNuevo);
+                    mask = _maskLocal(ck);
+                    Ext.Ajax.request({
+                        url    : _p54_urlRecuperarPoliza,
+                        params : {
+                            'params.CDUNIECO' : cdunieco,
+                            'params.RAMO'     : ramo,
+                            'params.ESTADO'   : 'M',
+                            'params.NMPOLIZA' : val
+                        },
+                        success : function (response) {
+                            mask.close();
                             var ck = 'Decodificando respuesta al recuperar p\u00f3liza';
-                            try
-                            {
+                            try {
                                 var json = Ext.decode(response.responseText);
-                                debug('### poliza:',json);
-                                if(json.success==true)
-                                {
-                                    if(json.params.CDTIPSIT !== _fieldByName('CDTIPSIT' , _p54_windowNuevo).getValue())
-                                    {
-                                        throw 'La p\u00f3liza no corresponde al subramo seleccionado';
+                                debug('### poliza:', json);
+                                if (json.success === true) {
+                                    
+                                    // Si la recuperada no es del agente de sesion
+                                    if (!Ext.isEmpty(_p54_params.CDAGENTE) && Number(_p54_params.CDAGENTE) !== Number(json.params.CDAGENTE)) {
+                                        throw 'No tiene permisos para recuperar esta p\u00f3liza, pertenece al agente ' + json.params.CDAGENTE;
                                     }
                                     
-                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
-                                    {
-                                        title     : 'P\u00f3liza'
-                                        ,modal    : true
-                                        ,closable : false
-                                        ,width    : 400
-                                        ,border   : 0
-                                        ,defaults : { style : 'margin:5px;' }
-                                        ,items    :
-                                        [
+                                    centrarVentanaInterna(Ext.create('Ext.window.Window', {
+                                        title    : 'P\u00f3liza',
+                                        modal    : true,
+                                        closable : false,
+                                        width    : 400,
+                                        border   : 0,
+                                        defaults : { style : 'margin:5px;' },
+                                        items    : [
                                             {
                                                 xtype       : 'displayfield'
                                                 ,fieldLabel : 'SUCURSAL'
                                                 ,value      : json.params.CDUNIECO
-                                            }
-                                            ,{
+                                            }, {
+                                                xtype       : 'displayfield'
+                                                ,fieldLabel : 'RAMO'
+                                                ,value      : ramo
+                                            }, {
                                                 xtype       : 'displayfield'
                                                 ,fieldLabel : 'P\u00d3LIZA'
                                                 ,value      : json.params.NMPOLIZA
-                                            }
-                                            ,{
+                                            }, {
                                                 xtype       : 'displayfield'
                                                 ,fieldLabel : 'FECHA DE EMISI\u00d3N'
                                                 ,value      : json.params.FEEMISIO
-                                            }
-                                            ,{
+                                            }, {
                                                 xtype       : 'displayfield'
                                                 ,fieldLabel : 'INICIO DE VIGENCIA'
                                                 ,value      : json.params.FEEFECTO
-                                            }
-                                            ,{
+                                            }, {
+                                                xtype       : 'displayfield'
+                                                ,fieldLabel : 'ESTATUS'
+                                                ,value      : json.params.STATUSPOL
+                                            }, {
                                                 xtype       : 'displayfield'
                                                 ,fieldLabel : 'CONTRATANTE'
                                                 ,value      : json.params.CONTRATANTE
-                                            }
-                                            ,{
+                                            }, {
                                                 xtype       : 'displayfield'
                                                 ,fieldLabel : 'AGENTE'
                                                 ,value      : json.params.AGENTE
                                             }
-                                        ]
-                                        ,buttonAlign : 'center'
-                                        ,buttons     :
-                                        [
+                                        ],
+                                        buttonAlign : 'center',
+                                        buttons     : [
                                             {
-                                                text     : 'Aceptar'
-                                                ,icon    : '${icons}accept.png'
-                                                ,handler : function(bot)
-                                                {
+                                                text    : 'Aceptar',
+                                                icon    : '${icons}accept.png',
+                                                handler : function (bot) {
                                                     bot.up('window').destroy();
                                                     
-                                                    var agenteCmp = me.up('window').down('[name=CDAGENTE]');
+                                                    var agenteEndCmp = me.up('window').down('[name=CDAGENTEEND]');
                                                     
-                                                    _setValueCampoAgente(agenteCmp,json.params.CDAGENTE);
+                                                    _setValueCampoAgente(agenteEndCmp, json.params.CDAGENTE);
                                                     
                                                     estadoCmp.setValue('M');
                                                     
-                                                    _fieldByName('CDTIPSUPEND' , _p54_windowNuevo).getStore().load(
-                                                    {
-                                                        params :
-                                                        {
-                                                            'params.cdramo'    : json.params.CDRAMO
-                                                            ,'params.cdtipsit' : json.params.CDTIPSIT
+                                                    _fieldByName('CDTIPSUPEND' , _p54_windowNuevo).getStore().load({
+                                                        params : {
+                                                            'params.cdramo'   : json.params.CDRAMO,
+                                                            'params.cdtipsit' : json.params.CDTIPSIT,
+                                                            'params.vigente'  : json.params.STATUSPOL === 'VIGENTE'
+                                                                ? 'S'
+                                                                : 'N'
                                                         }
                                                     });
+                                                    
+                                                    _fieldByName('CDSUCDOC'    , _p54_windowNuevo).setValue(json.params.CDUNIECO);
+                                                    _fieldByName('CDRAMOEND'   , _p54_windowNuevo).setValue(json.params.CDRAMO);
+                                                    _fieldByName('CDTIPSITEND' , _p54_windowNuevo).setValue(json.params.CDTIPSIT);
                                                 }
-                                            }
-                                            ,{
-                                                text     : 'Cancelar'
-                                                ,icon    : '${icons}cancel.png'
-                                                ,handler : function(bot)
-                                                {
+                                            }, {
+                                                text    : 'Cancelar',
+                                                icon    : '${icons}cancel.png',
+                                                handler : function (bot) {
                                                     me.setValue('');
                                                     estadoCmp.reset();
                                                     me.isValid();
@@ -889,80 +815,66 @@ Ext.onReady(function()
                                             }
                                         ]
                                     }).show());
-                                }
-                                else
-                                {
+                                } else {
                                     mensajeError(json.message);
                                     me.setValue('');
                                     estadoCmp.reset();
                                     me.isValid();
                                 }
-                            }
-                            catch(e)
-                            {
+                            } catch (e) {
                                 me.setValue('');
                                 estadoCmp.reset();
                                 me.isValid();
                                 manejaException(e,ck);
                             }
                         }
-                        ,failure : function()
-                        {
-                            _setLoading(false,_p54_windowNuevo);
+                        ,failure : function () {
+                            mask.close();
                             me.setValue('');
                             estadoCmp.reset();
                             me.isValid();
-                            errorComunicacion(null,'Error Recuperando p\u00f3liza');
+                            errorComunicacion(null, 'Error Recuperando p\u00f3liza');
                         }
                     });
                 }
                 catch(e)
                 {
-                    _setLoading(false,_p54_windowNuevo);
                     me.setValue('');
                     estadoCmp.reset();
                     me.isValid();
-                    manejaException(e,ck);
+                    manejaException(e, ck, mask);
                 }
             }
         }
     });
     
-    try
-    {
-        var comboStatus = _fieldByLabel('ESTATUS',_fieldById('_p54_filtroForm'));
+    // Hacer editable el combo de status del filtro de busqueda
+    try {
+        var comboStatus = _fieldByLabel('ESTATUS', _fieldById('_p54_filtroForm'));
         
-        debug('comboStatus:',comboStatus);
+        debug('comboStatus:', comboStatus);
         
         comboStatus.store.padre = comboStatus;
-        comboStatus.store.on(
-        {
-            load : function(me)
-            {
+        comboStatus.store.on({
+            load : function (me){
                 me.padre.forceSelection = true;
                 me.padre.setEditable(true);
             }
         });
         
-        if(comboStatus.store.getCount()>0)
-        {
+        if (comboStatus.store.getCount()>0) {
             comboStatus.forceSelection = true;
             comboStatus.setEditable(true);
         }
-    }
-    catch(e)
-    {
+    } catch(e) {
         manejaException(e);
     }
     
     var ck = 'Agregando comportamiento adicional a componente de nivel de ventana emergente';
-    try
-    {
+    try {
         var cdflujoComp = _p54_windowNuevo.down('[name=CDFLUJOMC]');
-        cdflujoComp.on(
-        {
-            select : function(me,records)
-            {
+        cdflujoComp.on({
+            select : function (me,records) {
                 _p54_windowNuevo.down('[name=CDRAMO]').store.proxy.extraParams['params.tipogrupo'] = records[0].get('aux2');
                 
                 _p54_windowNuevo.down('[name=CDTIPSIT]').store.proxy.extraParams['params.tipogrupo'] = records[0].get('aux2');
@@ -974,66 +886,52 @@ Ext.onReady(function()
                 _p54_windowNuevo.onLevelChange(2);
             }
         });
-    }
-    catch(e)
-    {
+    } catch(e) {
         manejaException(e,ck);
     }
     
-    nmpoliexCmp.on(
-    {
-        blur : function(me)
-        {
+    nmpoliexCmp.on({
+        blur : function (me) {
             var val = me.getValue();
-            if(!Ext.isEmpty(val) && me.verificarPoliza === true)
-            {
-                var ck = 'Recuperando p\u00f3liza';
-                try
-                {
-                    var cduniext  = _p54_windowNuevo.down('[name=CDUNIEXT]').getValue()
-                        ,ramo     = _p54_windowNuevo.down('[name=RAMO]').getValue()
-                        ,cdtiptra = _p54_windowNuevo.down('[name=CDTIPTRA]').getValue()
-                        ,agente   = _p54_windowNuevo.down('[name=CDAGENTE]').getValue();
+            if (!Ext.isEmpty(val) && me.verificarPoliza === true) {
+                var mask, ck = 'Recuperando p\u00f3liza';
+                try {
+                    var cduniext = _p54_windowNuevo.down('[name=CDUNIEXT]').getValue(),
+                        ramo     = _p54_windowNuevo.down('[name=RAMO]').getValue(),
+                        cdtiptra = _p54_windowNuevo.down('[name=CDTIPTRA]').getValue();
                     
-                    if(Ext.isEmpty(cduniext))
-                    {
+                    if (Ext.isEmpty(cduniext)) {
                         throw 'Seleccione la sucursal antes de confirmar la p\u00f3liza';
                     }
                     
-                    if(Ext.isEmpty(ramo))
-                    {
+                    if (Ext.isEmpty(ramo)) {
                         throw 'Seleccione el ramo antes de confirmar la p\u00f3liza';
                     }
                     
-                    if(Ext.isEmpty(agente))
-                    {
-                        throw 'Seleccione el agente antes de confirmar la p\u00f3liza';
-                    }
-                    
-                    if(Number(cdtiptra) === 15) //endoso
-                    {
+                    if (Number(cdtiptra) === 15) { // Endoso
                         ck = 'Recuperando p\u00f3liza ICE';
                         
-	                    _setLoading(true,_p54_windowNuevo);
-	                    Ext.Ajax.request(
-	                    {
-	                        url      : _p54_urlRecuperarPolizaDanios
-	                        ,params  :
-	                        {
-	                            'params.CDUNIEXT'  : cduniext
-	                            ,'params.RAMO'     : ramo
-	                            ,'params.NMPOLIEX' : val
-	                        }
-	                        ,success : function(response)
-	                        {
-	                            _setLoading(false,_p54_windowNuevo);
+	                    mask = _maskLocal(ck);
+	                    Ext.Ajax.request({
+	                        url    : _p54_urlRecuperarPolizaDanios,
+	                        params : {
+	                            'params.CDUNIEXT' : cduniext,
+	                            'params.RAMO'     : ramo,
+	                            'params.NMPOLIEX' : val
+	                        },
+	                        success : function (response) {
+	                            mask.close();
 	                            var ck = 'Decodificando respuesta al recuperar p\u00f3liza';
-	                            try
-	                            {
+	                            try {
 	                                var json = Ext.decode(response.responseText);
 	                                debug('### poliza:',json);
-	                                if(json.success==true)
-	                                {
+	                                if (json.success == true) {
+	                                    
+	                                    // Si la recuperada no es del agente de sesion
+                                        if (!Ext.isEmpty(_p54_params.CDAGENTE) && Number(_p54_params.CDAGENTE) !== Number(json.params.CDAGENTE)) {
+                                            throw 'No tiene permisos para recuperar esta p\u00f3liza, pertenece al agente ' + json.params.CDAGENTE;
+                                        }
+	                                    
 	                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
 	                                    {
 	                                        title     : 'P\u00f3liza'
@@ -1069,6 +967,11 @@ Ext.onReady(function()
 	                                                ,fieldLabel : 'INICIO DE VIGENCIA'
 	                                                ,value      : json.params.FEEFECTO
 	                                            }
+                                                ,{
+                                                    xtype       : 'displayfield'
+                                                    ,fieldLabel : 'ESTATUS'
+                                                    ,value      : json.params.STATUSPOL
+                                                }
 	                                            ,{
 	                                                xtype       : 'displayfield'
 	                                                ,fieldLabel : 'CONTRATANTE'
@@ -1089,77 +992,27 @@ Ext.onReady(function()
 	                                                ,handler : function(bot)
 	                                                {
 	                                                    bot.up('window').destroy();
-	                                                    me.up('window').down('[name=CDAGENTE]').focus();
-	                                                    estadoCmp.setValue('M');
+                                                    
+                                                        var agenteEndCmp = me.up('window').down('[name=CDAGENTEEND]');
+                                                    
+                                                        _setValueCampoAgente(agenteEndCmp, json.params.CDAGENTE);
+                                                    
+                                                        estadoCmp.setValue('M');
 	                                                    
-	                                                    var setear = function(name,val,cb) // funcion que setea, simple o lanzando herencia
-	                                                    {
-	                                                        debug('setear args:',name,val,'.');
-	                                                        var comp = me.up('window').down('[name='+name+']');
-	                                                        if(typeof comp.heredar === 'function')
-	                                                        {
-	                                                            comp.heredar(
-	                                                                true
-	                                                                ,function()
-	                                                                {
-	                                                                    comp.setValue(val);
-	                                                                    cb();
-	                                                                }
-	                                                            );
-	                                                        }
-	                                                        else
-	                                                        {
-	                                                            comp.setValue(val);
-	                                                            cb();
-	                                                        }
-	                                                    };
-	                                                    
-	                                                    _mask('Recuperando propiedades...');
-	                                                    setear(
-	                                                        'CDSUCADM'
-	                                                        ,json.params.CDUNIECO
-	                                                        ,function()
-	                                                        {
-	                                                            setear(
-	                                                                'CDSUCDOC'
-	                                                                ,json.params.CDUNIECO
-	                                                                ,function()
-	                                                                {
-	                                                                    setear(
-	                                                                        'CDRAMO'
-	                                                                        ,json.params.CDRAMO
-	                                                                        ,function()
-	                                                                        {
-	                                                                            setear(
-	                                                                                'CDTIPSIT'
-	                                                                                ,json.params.CDTIPSIT
-	                                                                                ,function()
-	                                                                                {
-	                                                                                    setear(
-	                                                                                        'NMPOLIZA'
-	                                                                                        ,json.params.NMPOLIZA
-	                                                                                        ,function()
-	                                                                                        {
-	                                                                                            _fieldByName('CDTIPSUPEND' , _p54_windowNuevo).getStore().load(
-	                                                                                            {
-	                                                                                                params :
-	                                                                                                {
-	                                                                                                    'params.cdramo'    : json.params.CDRAMO
-	                                                                                                    ,'params.cdtipsit' : json.params.CDTIPSIT
-	                                                                                                }
-	                                                                                            });
-	                                                                                            _unmask();
-	                                                                                        }
-	                                                                                    );
-	                                                                                }
-	                                                                            );
-	                                                                        }
-	                                                                    );
-	                                                                }
-	                                                            );
-	                                                        }
-	                                                    );
-	                                                    
+	                                                    me.up('window').down('[name=CDSUCDOC]').setValue(json.params.CDUNIECO);
+	                                                    me.up('window').down('[name=CDRAMOEND]').setValue(json.params.CDRAMO);
+                                                        me.up('window').down('[name=CDTIPSITEND]').setValue(json.params.CDTIPSIT);
+                                                        me.up('window').down('[name=NMPOLIZA]').setValue(json.params.NMPOLIZA);
+                                                        
+                                                        _fieldByName('CDTIPSUPEND' , _p54_windowNuevo).getStore().load({
+                                                            params : {
+                                                                'params.cdramo'   : json.params.CDRAMO,
+                                                                'params.cdtipsit' : json.params.CDTIPSIT,
+                                                                'params.vigente'  : json.params.STATUSPOL === 'VIGENTE'
+                                                                    ? 'S'
+                                                                    : 'N'
+                                                            }
+                                                        });
 	                                                }
 	                                            }
 	                                            ,{
@@ -1194,7 +1047,7 @@ Ext.onReady(function()
 	                        }
 	                        ,failure : function()
 	                        {
-	                            _setLoading(false,_p54_windowNuevo);
+	                            mask.close();
 	                            me.setValue('');
 	                            estadoCmp.reset();
 	                            me.isValid();
@@ -1233,7 +1086,7 @@ Ext.onReady(function()
                         
                         debug('tipoflot:',tipoflot,'.');
                         
-                        _setLoading(true,_p54_windowNuevo);
+                        mask = _maskLocal(ck);
                         Ext.Ajax.request(
                         {
                             url      : _p54_urlRecuperarPolizaSIGS
@@ -1247,7 +1100,7 @@ Ext.onReady(function()
                             }
                             ,success : function(response)
                             {
-                                _setLoading(false,_p54_windowNuevo);
+                                mask.close();
                                 var ck = 'Decodificando respuesta al recuperar p\u00f3liza SIGS';
                                 try
                                 {
@@ -1258,6 +1111,11 @@ Ext.onReady(function()
                                         var jsonSIGS = Ext.decode(json.smap1.valoresCampos);
                                         
                                         debug('jsonSIGS:',jsonSIGS);
+                                        
+                                        // Si la recuperada no es del agente de sesion
+                                        if (!Ext.isEmpty(_p54_params.CDAGENTE) && Number(_p54_params.CDAGENTE) !== Number(jsonSIGS.smap1.cdagente)) {
+                                            throw 'No tiene permisos para recuperar esta p\u00f3liza, pertenece al agente ' + jsonSIGS.smap1.cdagente;
+                                        }
                                         
                                         centrarVentanaInterna(Ext.create('Ext.window.Window',
                                         {
@@ -1315,76 +1173,15 @@ Ext.onReady(function()
                                                     ,handler : function(bot)
                                                     {
                                                         bot.up('window').destroy();
-                                                        me.up('window').down('[name=CDAGENTE]').focus();
                                                         
-                                                        var setear = function(name,val,cb) // funcion que setea, simple o lanzando herencia
-                                                        {
-                                                            debug('setear args:',name,val,'.');
-                                                            var comp = me.up('window').down('[name='+name+']');
-                                                            if(typeof comp.heredar === 'function')
-                                                            {
-                                                                comp.heredar(
-                                                                    true
-                                                                    ,function()
-                                                                    {
-                                                                        comp.setValue(val);
-                                                                        cb();
-                                                                    }
-                                                                );
-                                                            }
-                                                            else
-                                                            {
-                                                                comp.setValue(val);
-                                                                cb();
-                                                            }
-                                                        };
+                                                        var agenteEndCmp = me.up('window').down('[name=CDAGENTEEND]');
+                                                    
+                                                        _setValueCampoAgente(agenteEndCmp, jsonSIGS.smap1.cdagente);
                                                         
-                                                        _mask('Recuperando propiedades...');
-                                                        setear(
-                                                            'CDSUCADM'
-                                                            ,me.up('window').down('[name=CDSUCADM]').getValue()
-                                                            ,function()
-                                                            {
-                                                                setear(
-                                                                    'CDSUCDOC'
-                                                                    ,me.up('window').down('[name=CDSUCDOC]').getValue()
-                                                                    ,function()
-                                                                    {
-                                                                        setear(
-                                                                            'CDRAMO'
-                                                                            ,jsonSIGS.smap1.cdramo
-                                                                            ,function()
-                                                                            {
-                                                                                setear(
-                                                                                    'CDTIPSIT'
-                                                                                    ,jsonSIGS.smap1.cdtipsit
-                                                                                    ,function()
-                                                                                    {
-                                                                                        setear(
-                                                                                            'NMPOLIZA'
-                                                                                            ,'0'
-                                                                                            ,function()
-                                                                                            {
-                                                                                                _unmask();
-                                                                                                
-                                                                                                var agente = _fieldLikeLabel('AGENTE').getValue();
-                                                                                                
-                                                                                                if(Number(agente) !== Number(jsonSIGS.smap1.cdagente) )
-                                                                                                {
-                                                                                                    _fieldByName('NMPOLIEX' , _p54_windowNuevo).reset();
-                                                                                                    mensajeError('La p\u00f3liza no pertenece al agente<br/>Por favor seleccione a '+jsonSIGS.smap1.cdagente+' - '+jsonSIGS.smap1.nombreAgente+' e intente de nuevo');
-                                                                                                }
-                                                                                            }
-                                                                                        );
-                                                                                    }
-                                                                                );
-                                                                            }
-                                                                        );
-                                                                    }
-                                                                );
-                                                            }
-                                                        );
-                                                        
+                                                        me.up('window').down('[name=CDSUCDOC]').setValue(json.smap1.cdsucursal);
+                                                        me.up('window').down('[name=CDRAMOEND]').setValue(jsonSIGS.smap1.cdramo);
+                                                        me.up('window').down('[name=CDTIPSITEND]').setValue(jsonSIGS.smap1.cdtipsit);
+                                                        me.up('window').down('[name=NMPOLIZA]').setValue('0');
                                                     }
                                                 }
                                                 ,{
@@ -1419,7 +1216,7 @@ Ext.onReady(function()
                             }
                             ,failure : function()
                             {
-                                _setLoading(false,_p54_windowNuevo);
+                                mask.close();
                                 me.setValue('');
                                 estadoCmp.reset();
                                 me.isValid();
@@ -1427,20 +1224,15 @@ Ext.onReady(function()
                             }
                         });
                     }
-                }
-                catch(e)
-                {
-                    _setLoading(false,_p54_windowNuevo);
+                } catch (e) {
                     me.setValue('');
                     estadoCmp.reset();
                     me.isValid();
-                    manejaException(e,ck);
+                    manejaException(e, ck, mask);
                 }
             }
         }
     });
-    
-    _p54_agregaListenersPromotorSuscriptor();
     ////// custom //////
     
     ////// loaders //////
@@ -1451,7 +1243,7 @@ Ext.onReady(function()
 function _p54_registrarTramite(bot)
 {
     debug('_p54_registrarTramite');
-    var ck   = 'Registrando tr\u00e1mite';
+    var mask, ck = 'Registrando tr\u00e1mite';
     var form = bot.up('form');
     try
     {
@@ -1467,16 +1259,29 @@ function _p54_registrarTramite(bot)
             values.CDTIPSUP = values.CDTIPSUPEND;
         }
         
+        // SI EL AGENTE QUE VIENE ES EL DE ENDOSO, ESE SE MANDA
+        if (Ext.isEmpty(values.CDAGENTE) && !Ext.isEmpty(values.CDAGENTEEND)) {
+            values.CDAGENTE = values.CDAGENTEEND;
+        }
+        
+        if (Ext.isEmpty(values.CDRAMO) && !Ext.isEmpty(values.CDRAMOEND)) {
+            values.CDRAMO = values.CDRAMOEND;
+        }
+        
+        if (Ext.isEmpty(values.CDTIPSIT) && !Ext.isEmpty(values.CDTIPSITEND)) {
+            values.CDTIPSIT = values.CDTIPSITEND;
+        }
+        
         debug('values:',values,'.');
         
-        _setLoading(true,form);
+        mask = _maskLocal();
         Ext.Ajax.request(
         {
             url      : _p54_urlRegistrarTramite
             ,params  : _formValuesToParams(values)
             ,success : function(response)
             {
-                _setLoading(false,form);
+                mask.close();
                 var ck = 'Decodificando respuesta al registrar tr\u00e1mite';
                 try
                 {
@@ -1502,15 +1307,14 @@ function _p54_registrarTramite(bot)
             }
             ,failure : function()
             {
-                _setLoading(false,form);
+                mask.close();
                 errorComunicacion(null,'Error al registrar tr\u00e1mite');
             }
         });
     }
     catch(e)
     {
-        _setLoading(false,form);
-        manejaException(e,ck);
+        manejaException(e, ck, mask);
     }
 }
 
@@ -1518,189 +1322,107 @@ function _p54_registrarTramite(bot)
  * Recupera la sucursal de un agente
  * ejecuta el callback enviandole ese cdunieco
  */
-function _p54_recuperarSucursalAgente(cdagente,callback)
+function _p54_recuperarSucursalAgente(cdagente, cdtipram, callback)
 {
-    debug('>_p54_recuperarSucursalAgente cdagente:',cdagente,'callback?:',!Ext.isEmpty(callback),'.');
+    debug('>_p54_recuperarSucursalAgente args:', arguments);
     var ck = 'Recuperando sucursal de agente';
-    try
-    {
-        if(Ext.isEmpty(cdagente) || Ext.isEmpty(callback))
-        {
+    try {
+        if (Ext.isEmpty(cdagente) || Ext.isEmpty(cdtipram) || Ext.isEmpty(callback)) {
             throw 'No hay par\u00e1metros completos para recuperar sucursal de agente';
         }
         
         _mask(ck);
-        Ext.Ajax.request(
-        {
-            url      : _p54_urlCargarCduniecoAgenteAuto
-            ,params  :
-            {
-                'smap1.cdagente' : cdagente
-            }
-            ,success : function(response)
-            {
+        Ext.Ajax.request({
+            url    : _p54_urlCargarCduniecoAgenteAuto,
+            params : {
+                'smap1.cdagente' : cdagente,
+                'smap1.cdtipram' : cdtipram
+            },
+            success : function (response) {
                 _unmask();
                 var ck = 'Decodificando respuesta al recuperar sucursal de agente';
-                try
-                {
+                try {
                     var json = Ext.decode(response.responseText);
                     debug('### sucursal agente:',json,'.');
-                    if(json.exito === true)
-                    {
+                    if (json.exito === true) {
                         callback(json.smap1.cdunieco);
-                    }
-                    else
-                    {
+                    } else {
                         mensajeError(json.respuesta);
                     }
-                }
-                catch(e)
-                {
+                } catch (e) {
                     manejaException(e,ck);
                 }
-            }
-            ,failure : function(response)
-            {
+            },
+            failure : function(response) {
                 _unmask();
-                errorComunicacion(null,'Error al recuperar sucursal de agente');
+                errorComunicacion(null, 'Error al recuperar sucursal de agente');
             }
         });
-    }
-    catch(e)
-    {
-        manejaException(e,ck);
+    } catch (e) {
+        manejaException(e, ck);
     }
 }
 
-function _p54_recuperaSucursalesTramiteAgente()
-{
-    debug('>_p54_recuperaSucursalesTramiteAgente');
-    var ck = 'Recuperando sucursal agente';
-    try
-    {
-        if(_p54_params.CDSISROL === RolSistema.Agente)
-        {
+function _p54_setearSucursalAgente () {
+    debug('_p54_setearSucursalAgente');
+    var ck;
+    try {
+        ck = 'Recuperando componentes';
+        
+        var agenteCmp   = _fieldByName('CDAGENTE'  , _p54_windowNuevo),
+            cdtiptraCmp = _fieldByName('CDTIPTRA'  , _p54_windowNuevo),
+            flujoCmp    = _fieldByName('CDFLUJOMC' , _p54_windowNuevo);
+        
+        debug('agenteCmp:'   , agenteCmp   , '.');
+        debug('cdtiptraCmp:' , cdtiptraCmp , '.');
+        debug('flujoCmp:'    , flujoCmp    , '.');
+        
+        var cdagente = agenteCmp.getValue(),
+            cdtiptra = cdtiptraCmp.getValue(),
+            cdtipram = flujoCmp.findRecordByValue(flujoCmp.getValue()).get('aux');
+        
+        debug('cdagente:', cdagente, '.');
+        debug('cdtiptra:', cdtiptra, '.');
+        debug('cdtipram:', cdtipram, '.');
+        
+        if (!Ext.isEmpty(cdagente) && !Ext.isEmpty(cdtiptra) && Number(cdtiptra) === 1) { // Emision
+            debug('Se recuperara sucursal de agente para emision');
             _p54_recuperarSucursalAgente(
-                _p54_params.CDAGENTE
-                ,function(cdunieco)
-                {
-                    debug('callback al cargar sucursal de agente para los combos de sucursal, cdunieco:',cdunieco,'.');
-                
-                    var sucuAdminComp = _fieldByLabel('SUCURSAL ADMINISTRATIVA',_fieldById('_p54_formNuevoTramite'),true);
-                    debug('sucuAdminComp:',sucuAdminComp,'.');
+                cdagente,
+                cdtipram,
+                function (cdunieco) {
+                    debug('callback despues de recuperar sucursal de agente para emision, cdunieco:', cdunieco, '.');
                     
-                    if(!Ext.isEmpty(sucuAdminComp))
-                    {
-                        sucuAdminComp.setValue(cdunieco);
+                    if(!Ext.isEmpty(cdunieco)) {
+                        var ck = 'Seteando sucural de agente';
+                        try {
+                            var sucuDocuComp = _fieldByName('CDSUCDOC', _p54_windowNuevo, true);
+                            debug('sucuDocuComp:',sucuDocuComp,'.');
+                            
+                            if (!Ext.isEmpty(sucuDocuComp)) {
+                                sucuDocuComp.setValue(cdunieco);
+                            }
+                            
+                            var sucuExtComp = _fieldByName('CDUNIEXT', _p54_windowNuevo, true);
+                            debug('sucuExtComp:', sucuExtComp, '.');
+                            
+                            if (!Ext.isEmpty(sucuExtComp)) {
+                                sucuExtComp.setValue(cdunieco);
+                            }
+                        } catch (e) {
+                            manejaException(e, ck);
+                        }
+                    } else {
+                        agenteCmp.setValue('');
+                        mensajeError('El agente no tiene sucursal asociada');
                     }
-                    
-                    var sucuDocuComp = _fieldByLabel('SUCURSAL DOCUMENTO',_fieldById('_p54_formNuevoTramite'),true);
-                    debug('sucuDocuComp:',sucuDocuComp,'.');
-                    
-                    if(!Ext.isEmpty(sucuDocuComp))
-                    {
-                        sucuDocuComp.setValue(cdunieco);
-                    }
-                    
-                    var sucuExtComp = _fieldByName('CDUNIEXT',_fieldById('_p54_formNuevoTramite'),true);
-                    debug('sucuExtComp:',sucuExtComp,'.');
-                    
-                    if(!Ext.isEmpty(sucuExtComp))
-                    {
-                        sucuExtComp.setValue(cdunieco);
-                    }
-                    
-                    _p54_windowNuevo.triggerHerencia();
-                    
-                    _fieldByName('NMPOLIEX',_fieldById('_p54_formNuevoTramite')).reset();
                 }
             );
+        } else {
+            debug('no se recupera sucursal de agente');
         }
-    }
-    catch(e)
-    {
-        _unmask();
-        manejaException(e,ck);
-    }
-}
-
-function _p54_agregaListenersPromotorSuscriptor()
-{
-    debug('>_p54_agregaListenersPromotorSuscriptor');
-    if(
-        [
-            RolSistema.PromotorAuto
-            ,RolSistema.SuscriptorAuto
-            ,RolSistema.TecnicoSuscripcionDanios
-            ,RolSistema.JefeSuscripcionDanios
-            ,RolSistema.GerenteSuscripcionDanios
-            ,RolSistema.EmisorSuscripcionDanios
-            ,RolSistema.SubdirectorSuscripcionDanios
-        ].indexOf(_p54_params.CDSISROL) != -1
-    )
-    {
-        var agenteComp = _fieldByLabel('AGENTE',_fieldById('_p54_formNuevoTramite'),true);
-        
-        if(!Ext.isEmpty(agenteComp))
-        {
-            _p54_windowNuevo.on(
-            {
-                show : function(me)
-                {
-                    mensajeWarning('Al seleccionar un agente se recuperar\u00e1 su sucursal');
-                }
-            });
-            
-            agenteComp.on(
-            {
-                select : function(me,records)
-                {
-                    debug('agenteComp event select me:',me,'records:',records,'.');
-                    _p54_recuperarSucursalAgente(
-                        records[0].get('key')
-                        ,function(cdunieco)
-                        {
-                            debug('callback recuperando sucursal de agente seleccionado, cdunieco:',cdunieco,'.');
-                            var ck = 'Verificando sucursal de agente';
-                            try
-                            {
-                                var sucuAdminComp = _fieldByLabel('SUCURSAL ADMINISTRATIVA',_fieldById('_p54_formNuevoTramite'),true);
-			                    debug('sucuAdminComp:',sucuAdminComp,'.');
-			                    
-			                    if(!Ext.isEmpty(sucuAdminComp))
-			                    {
-			                        sucuAdminComp.setValue(cdunieco);
-			                    }
-			                    
-			                    var sucuDocuComp = _fieldByLabel('SUCURSAL DOCUMENTO',_fieldById('_p54_formNuevoTramite'),true);
-			                    debug('sucuDocuComp:',sucuDocuComp,'.');
-			                    
-			                    if(!Ext.isEmpty(sucuDocuComp))
-			                    {
-			                        sucuDocuComp.setValue(cdunieco);
-			                    }
-                    
-                                var sucuExtComp = _fieldByName('CDUNIEXT',_fieldById('_p54_formNuevoTramite'),true);
-                                debug('sucuExtComp:',sucuExtComp,'.');
-                    
-                                if(!Ext.isEmpty(sucuExtComp))
-                                {
-                                    sucuExtComp.setValue(cdunieco);
-                                }
-			                    
-			                    _p54_windowNuevo.triggerHerencia();
-			                    
-			                    _fieldByName('NMPOLIEX',_fieldById('_p54_formNuevoTramite')).reset();
-                            }
-                            catch(e)
-                            {
-                                manejaException(e,ck);
-                            }
-                        }
-                    );
-                }
-            });
-        }
+    } catch (e) {
+        manejaException(e, ck);
     }
 }
 
