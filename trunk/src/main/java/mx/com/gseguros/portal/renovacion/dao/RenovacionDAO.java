@@ -21,7 +21,18 @@ public interface RenovacionDAO
 			,String nmsituac
 			,String cducreno)throws Exception;
 	
-	public List<Map<String,String>>renovarPolizas(String cdusuari,String anio,String mes,String cdtipopc)throws Exception;
+	
+	/**
+	 * Proceso que renueva las polizas indicadas
+	 * @param cdusuari
+	 * @param anio
+	 * @param mes
+	 * @param cdtipopc
+	 * @param cdsisrol
+	 * @return Conjunto de polizas renovadas
+	 * @throws Exception
+	 */
+	public List<Map<String,String>> renovarPolizas(String cdusuari, String anio, String mes, String cdtipopc, String cdsisrol) throws Exception;
 	
 	public void actualizaRenovacionDocumentos(
 			String anio

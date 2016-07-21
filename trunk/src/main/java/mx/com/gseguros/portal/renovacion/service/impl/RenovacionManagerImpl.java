@@ -213,6 +213,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			    		,anio
 			    		,mes
 			    		,"2"//cdtipopc
+			    		,usuario.getRolActivo().getClave()
 			    		);
 			}
 			catch(ApplicationException ax)
