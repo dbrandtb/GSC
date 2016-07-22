@@ -2877,14 +2877,19 @@ function _p28_cargarPoliza(boton)
 			              {
 			                  throw 'No se encontraron datos para renovar';
 			              }
-			              
 			              var json2=Ext.decode(json.smap1.valoresCampos);
 			              json2['success']=true;
 			              cdper     = json2.smap1.cdper;   //D00000000111005
 			              cdperson  = json2.smap1.cdperson;//530400
 			              debug("valoresCampos 2: ",json2);
-			              
-			              llenandoCampos(json2);
+			              if(!Ext.isEmpty(json2.smap1.mensajeError))
+                          {
+			            	  mensajeError(json2.smap1.mensajeError);
+                          }
+			              else
+			              {
+			            	   llenandoCampos(json2);
+			              }
 			          }
 			          catch(e)
 			          {
@@ -2916,13 +2921,10 @@ function llenandoCampos(json)
     var poliza = _fieldByName('poliza').getValue();
     
     debug('### cargar cotizacion:',json);
-//     valorRecuperadoValorVehiSigs = Number(json.slist1[0]["parametros.pv_otvalor13"]);
+//      valorRecuperadoValorVehiSigs = Number(json.slist1[0]["parametros.pv_otvalor13"]);
     if(json.success)
     {
-        if(cargarXpoliza)
-       	{
-        	_fieldByName('feini').setValue(Ext.Date.parse(json.slist1[0]["fefin"],'d/m/Y'));
-       	}
+
         var maestra  = json.slist1[0].ESTADO=='M';
         var fesolici    = Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
         var fechaHoy    = Ext.Date.clearTime(new Date());
@@ -2939,6 +2941,12 @@ function llenandoCampos(json)
         var finVig = Ext.Date.parse(json.smap1.FEPROREN,'d/m/Y').getTime();
         var milDif = finVig-iniVig;
         var diaDif = milDif/(1000*60*60*24);
+        
+        if(diaDif<0)
+       	{
+              diaDif = diaDif*-1;
+       	}
+        
         debug('diaDif:',diaDif);
       
         /*if(!maestra&&!vencida)
