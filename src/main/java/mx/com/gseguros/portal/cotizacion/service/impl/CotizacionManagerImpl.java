@@ -1960,6 +1960,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 					{
 						logger.debug(new StringBuilder("SE AGREGA PARA COLUMNA BASE ").append(iTatri).toString());
 						iTatri.setColumna("S");
+						//Se oculta para cdsisrol indicados, la columna DERECHOS DE POLIZA, para cdtipsit RC (EGS)
+						if((RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
+							&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)&&iTatri.getLabel().equals("DERECHOS DE POLIZA")){
+							iTatri.setColumna(iTatri.COLUMNA_OCULTA);
+						}
 						tatrisitColsBase.add(iTatri);
 					}
 				}
@@ -1988,6 +1993,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 					{
 						logger.debug(new StringBuilder("SE AGREGA PARA COLUMNA DE COBERTURA ").append(iTatri).toString());
 						iTatri.setColumna("S");
+						//Se oculta para cdsisrol indicados, la columna DERECHOS DE POLIZA, para cdtipsit RC (EGS)
+						if((RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
+							&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)&&iTatri.getLabel().equals("DERECHOS DE POLIZA")){
+							iTatri.setColumna(iTatri.COLUMNA_OCULTA); //EGS
+						}
 						tatrisitColsCober.add(iTatri);
 					}
 				}

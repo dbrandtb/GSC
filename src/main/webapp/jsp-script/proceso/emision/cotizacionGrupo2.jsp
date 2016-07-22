@@ -644,14 +644,21 @@ Ext.onReady(function()
         _p25_tabGruposModifiCols.push(col);
     });
     
+    //Se quita agregar botón modificar sin ninguna restricción (EGS)
     var botonesModificada =
     [
-        {
-            tooltip  : 'Editar'
-            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
-            ,handler : _p25_editarGrupoClic
-        }
     ];
+    //Restringe por cdsisrol y cdtipsit, agregar botón actualizar (EGS)
+    if(!((_p25_smap1.cdsisrol=='EJECUTIVOCUENTA' || _p25_smap1.cdsisrol=='EJECUTIVOINTERNO' || _p25_smap1.cdsisrol=='MESADECONTROL')&&_p25_smap1.cdtipsit =='RC'))
+    {
+        botonesModificada.push(
+        {
+            tooltip   : 'Editar'
+            ,icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
+            ,handler  : _p25_editarGrupoClic
+        });
+    }
+    
     if(!_p25_ntramite)
     {
         botonesModificada.push(
