@@ -1,24 +1,24 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>
 .green {
-    border-left: 2px solid green;
-    border-right: 2px solid green;
+	border-left: 2px solid green;
+	border-right: 2px solid green;
 }
 
 .red {
-    border-left: 2px solid red;
-    border-right: 2px solid red;
+	border-left: 2px solid red;
+	border-right: 2px solid red;
 }
 
 .conTimeout>tbody>tr::after {
-    content: url('${ctx}/resources/fam3icons/icons/clock.png');
-    margin-left: 5px;
+	content: url('${ctx}/resources/fam3icons/icons/clock.png');
+	margin-left: 5px;
 }
 </style>
 <script>
@@ -565,7 +565,7 @@ Ext.onReady(function()
           ,width  : 435
           ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
           ,items  : _p28_panel7Items
-          ,hidden : true
+          ,hidden : false
     }
    ,{
          xtype   : 'fieldset'
@@ -2838,7 +2838,6 @@ function _p28_cargarPoliza(boton)
     var sucursal = _fieldByName('sucursal').getValue();
     var ramo = _fieldByName('ramo').getValue();
     var poliza = _fieldByName('poliza').getValue();
-    var agt ;
     var valido   = !Ext.isEmpty(poliza);// !Ext.isEmpty(ramo) !Ext.isEmpty(sucursal);
     if(!valido)
     {
@@ -2862,7 +2861,6 @@ function _p28_cargarPoliza(boton)
 	                  'smap1.cdsucursal' : sucursal
 	                 ,'smap1.cdramo' : ramo
 	                 ,'smap1.cdpoliza' : poliza
-	                 ,'smap1.cdusuari' : _p28_smap1.cdusuari
 	                 ,'smap1.tipoflot' : 'I'
 	             }
 	             ,success : function(response)
@@ -2885,6 +2883,7 @@ function _p28_cargarPoliza(boton)
 			              cdper     = json2.smap1.cdper;   //D00000000111005
 			              cdperson  = json2.smap1.cdperson;//530400
 			              debug("valoresCampos 2: ",json2);
+			              
 			              llenandoCampos(json2);
 			          }
 			          catch(e)
@@ -2920,6 +2919,10 @@ function llenandoCampos(json)
 //     valorRecuperadoValorVehiSigs = Number(json.slist1[0]["parametros.pv_otvalor13"]);
     if(json.success)
     {
+        if(cargarXpoliza)
+       	{
+        	_fieldByName('feini').setValue(Ext.Date.parse(json.slist1[0]["fefin"],'d/m/Y'));
+       	}
         var maestra  = json.slist1[0].ESTADO=='M';
         var fesolici    = Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
         var fechaHoy    = Ext.Date.clearTime(new Date());
@@ -4984,5 +4987,7 @@ function centrarVentanaTarifas(ventana)
 ////// funciones //////
 </script>
 </head>
-<body><div id="_p28_divpri" style="height: 1700px;"></div></body>
+<body>
+	<div id="_p28_divpri" style="height: 1700px;"></div>
+</body>
 </html>
