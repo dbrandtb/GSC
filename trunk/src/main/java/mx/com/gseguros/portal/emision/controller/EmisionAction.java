@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -17,12 +16,12 @@ import org.apache.log4j.Logger;
 import com.opensymphony.xwork2.ActionContext;
 
 
+@SuppressWarnings("serial")
 public class EmisionAction extends PrincipalCoreAction
 {
 	private static Logger logger = Logger.getLogger(EmisionAction.class);
 	
 	private EmisionManager emisionManager;
-	private ConsultasDAO consultasDAO;
 	
 	private boolean                  success   = true;
 	private boolean                  exito     = false;
@@ -115,7 +114,7 @@ public class EmisionAction extends PrincipalCoreAction
 				,"\n >>> smap1=",smap1
 				));
 		
-		try {
+		try {//CHECAR PARA CAMBIOS FUTUROS
 			String login  = smap1.get("cdusuari"),
 			       params = Utils.join("login=",login),
 			       idUsu  = HttpUtil.sendPost(getText("sigs.obtenerIdususByLogin.url"), params);
@@ -141,12 +140,11 @@ public class EmisionAction extends PrincipalCoreAction
 		String cdunieco   = smap1.get("cdsucursal")
 				,cdramo   = smap1.get("cdramo")
 				,cdpoliza = smap1.get("cdpoliza")
-				,agt      = smap1.get("cdusuari")
 				,tipoflot = smap1.get("tipoflot");
 		
 		try
 		{
-			String params          = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&agt=",agt,"&tipoflot=",tipoflot)
+			String params          = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot)
 					,valoresCampos = HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
 			
 			logger.debug(Utils.log("\n Parametros Regresados\nValores de Campos: ",valoresCampos));
