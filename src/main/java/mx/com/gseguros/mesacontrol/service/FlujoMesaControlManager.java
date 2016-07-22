@@ -265,7 +265,7 @@ public interface FlujoMesaControlManager
 			,String statusNew
 			,String swagente
 			,String comments
-			,boolean cerrado
+			,boolean cerrado, String cdrazrecha
 			)throws Exception;
 	
 	/**

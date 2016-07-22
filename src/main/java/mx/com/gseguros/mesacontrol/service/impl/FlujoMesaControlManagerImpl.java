@@ -11,13 +11,17 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Utils;
+import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -39,6 +43,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Autowired
 	private MesaControlDAO mesaControlDAO;
+	
+	@Autowired
+	private ConsultasDAO consultasDAO;
+	
+	@Autowired
+	private AutosSIGSDAO autosSIGSDAO;
 	
 	@Override
 	public Map<String,Item> workflow(String cdsisrol) throws Exception
@@ -1786,7 +1796,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public String registrarTramite(
+	public String registrarTramite (
 			String cdunieco  , String cdramo   , String estado     , String nmpoliza
 			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
 			,Date ferecepc   , String cdagente , String referencia , String nombre
@@ -1795,115 +1805,157 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String cdtipflu , String cdflujomc
 			,Map<String, String> valores
 			,String cdtipsup, String cduniext, String ramo, String nmpoliex, boolean origenMesa
-			)throws Exception
-	{
+	) throws Exception {
 		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ registrarTramite @@@@@@"
-				,"\n@@@@@@ cdunieco   = " , cdunieco
-				,"\n@@@@@@ cdramo     = " , cdramo
-				,"\n@@@@@@ estado     = " , estado
-				,"\n@@@@@@ nmpoliza   = " , nmpoliza
-				,"\n@@@@@@ nmsuplem   = " , nmsuplem
-				,"\n@@@@@@ cdsucadm   = " , cdsucadm
-				,"\n@@@@@@ cdsucdoc   = " , cdsucdoc
-				,"\n@@@@@@ cdtiptra   = " , cdtiptra
-				,"\n@@@@@@ ferecepc   = " , ferecepc
-				,"\n@@@@@@ cdagente   = " , cdagente
-				,"\n@@@@@@ referencia = " , referencia
-				,"\n@@@@@@ nombre     = " , nombre
-				,"\n@@@@@@ festatus   = " , festatus
-				,"\n@@@@@@ status     = " , status
-				,"\n@@@@@@ comments   = " , comments
-				,"\n@@@@@@ nmsolici   = " , nmsolici
-				,"\n@@@@@@ cdtipsit   = " , cdtipsit
-				,"\n@@@@@@ cdusuari   = " , cdusuari
-				,"\n@@@@@@ cdsisrol   = " , cdsisrol
-				,"\n@@@@@@ swimpres   = " , swimpres
-				,"\n@@@@@@ cdtipflu   = " , cdtipflu
-				,"\n@@@@@@ cdflujomc  = " , cdflujomc
-				,"\n@@@@@@ valores    = " , valores
-				,"\n@@@@@@ cdtipsup   = " , cdtipsup
-				,"\n@@@@@@ cduniext   = " , cduniext
-				,"\n@@@@@@ ramo       = " , ramo
-				,"\n@@@@@@ nmpoliex   = " , nmpoliex
-				,"\n@@@@@@ origenMesa = " , origenMesa
-				));
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ registrarTramite @@@@@@",
+				"\n@@@@@@ cdunieco   = " , cdunieco,
+				"\n@@@@@@ cdramo     = " , cdramo,
+				"\n@@@@@@ estado     = " , estado,
+				"\n@@@@@@ nmpoliza   = " , nmpoliza,
+				"\n@@@@@@ nmsuplem   = " , nmsuplem,
+				"\n@@@@@@ cdsucadm   = " , cdsucadm,
+				"\n@@@@@@ cdsucdoc   = " , cdsucdoc,
+				"\n@@@@@@ cdtiptra   = " , cdtiptra,
+				"\n@@@@@@ ferecepc   = " , ferecepc,
+				"\n@@@@@@ cdagente   = " , cdagente,
+				"\n@@@@@@ referencia = " , referencia,
+				"\n@@@@@@ nombre     = " , nombre,
+				"\n@@@@@@ festatus   = " , festatus,
+				"\n@@@@@@ status     = " , status,
+				"\n@@@@@@ comments   = " , comments,
+				"\n@@@@@@ nmsolici   = " , nmsolici,
+				"\n@@@@@@ cdtipsit   = " , cdtipsit,
+				"\n@@@@@@ cdusuari   = " , cdusuari,
+				"\n@@@@@@ cdsisrol   = " , cdsisrol,
+				"\n@@@@@@ swimpres   = " , swimpres,
+				"\n@@@@@@ cdtipflu   = " , cdtipflu,
+				"\n@@@@@@ cdflujomc  = " , cdflujomc,
+				"\n@@@@@@ valores    = " , valores,
+				"\n@@@@@@ cdtipsup   = " , cdtipsup,
+				"\n@@@@@@ cduniext   = " , cduniext,
+				"\n@@@@@@ ramo       = " , ramo,
+				"\n@@@@@@ nmpoliex   = " , nmpoliex,
+				"\n@@@@@@ origenMesa = " , origenMesa
+		));
 		
-		String paso = "Registrando tr\u00e1mite";
-		logger.debug(paso);
-		String ntramite = null;
-		try
-		{
-			String renuniext   = null
-					,renramo   = null
-					,renpoliex = null;
+		String paso = null, ntramite = null;
+		try {
+			String renuniext  = null,
+					renramo   = null,
+					renpoliex = null;
 			
-			if("21".equals(cdtiptra)) // si es una renovacion
-			{
-				logger.debug(Utils.log("Es una renovacion: ",renuniext,", ",renramo,", ",renpoliex));
+			if ("21".equals(cdtiptra)) { // Si es una renovacion
+				logger.debug(Utils.log("Es una renovacion: ", renuniext, ", ", renramo, ", ", renpoliex));
 				renuniext = cduniext;
 				renramo   = ramo;
 				renpoliex = nmpoliex;
 			}
 			
+			paso = "Verificando si requiere validaci\u00f3n sigs";
+			logger.debug(paso);
+			
+			// Recuperamos de tparagen algo como: |EMISION|ENDOSO|RENOVACION|
+			String tramitesValidadosPorSigs = consultasDAO.recuperarTparagen(ParametroGeneral.VALIDACION_SIGS_TRAMITE);
+			
+			logger.debug("tramitesValidadosPorSigs = {}", tramitesValidadosPorSigs);
+			
+			// Recuperamos la lista de TTIPTRAMC y buscamos nuestro cdtiptra para recuperar el DSTIPTRA
+			List<Map<String,String>> tiposTramites = flujoMesaControlDAO.recuperaTtiptramc();
+			String dstiptra = null;
+			for (Map<String,String> tramite : tiposTramites) {
+				if (tramite.get("CDTIPTRA").equals(cdtiptra)) {
+					dstiptra = tramite.get("DSTIPTRA");
+					break;
+				}
+			}
+			Utils.validate(dstiptra, "No se encontr\u00f3 el tr\u00e1mite para revisar si requiere validaci\u00f3n");
+			
+			// Si hay coincidencia de |EMISION|ENDOSO|RENOVACION| que contenga |+EMISION+|
+			boolean requiereValidacion = tramitesValidadosPorSigs.indexOf(Utils.join("|", dstiptra, "|")) != -1;
+			logger.debug("Coincidencia de {} que contiene {} = {}", tramitesValidadosPorSigs, dstiptra, requiereValidacion);
+			
+			if (requiereValidacion) {
+				paso = "Ejecutando validaci\u00f3n externa";
+				logger.debug(paso);
+				
+				String cdtipend = "P"; // Poliza nueva
+				
+				if (!TipoTramite.POLIZA_NUEVA.getCdtiptra().equals(cdtiptra)
+						&& !TipoTramite.RENOVACION.getCdtiptra().equals(cdtiptra)
+				) { // Si no es emision ni renovacion buscamos por cdtipsup
+					cdtipend = consultasDAO.recuperarTtipsupl(cdtipsup).get("CDTIPEND");
+				}
+				
+				autosSIGSDAO.validarAgenteParaNuevoTramite(
+						cdagente,
+						consultasDAO.obtieneSubramoGS(cdramo, cdtipsit),
+						cdtipend
+				);
+			}
+			
+			paso = "Registrando tr\u00e1mite";
+			logger.debug(paso);
+			
 			ntramite = mesaControlDAO.movimientoMesaControl(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,nmsuplem
-					,cdsucadm
-					,cdsucdoc
-					,cdtiptra
-					,ferecepc
-					,cdagente
-					,referencia
-					,nombre
-					,festatus
-					,status
-					,comments
-					,nmsolici
-					,cdtipsit
-					,cdusuari
-					,cdsisrol
-					,swimpres
-					,cdtipflu
-					,cdflujomc
-					,valores
-					,cdtipsup
-					,renuniext
-					,renramo
-					,renpoliex
-					,origenMesa
-					);
+					cdunieco,
+					cdramo,
+					estado,
+					nmpoliza,
+					nmsuplem,
+					cdsucadm,
+					cdsucdoc,
+					cdtiptra,
+					ferecepc,
+					cdagente,
+					referencia,
+					nombre,
+					festatus,
+					status,
+					comments,
+					nmsolici,
+					cdtipsit,
+					cdusuari,
+					cdsisrol,
+					swimpres,
+					cdtipflu,
+					cdflujomc,
+					valores,
+					cdtipsup,
+					renuniext,
+					renramo,
+					renpoliex,
+					origenMesa
+			);
 			
 			mesaControlDAO.movimientoDetalleTramite(
-					ntramite
-					,new Date()
-					,null//cdclausu
-					,Utils.join("Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: "
-							,StringUtils.isBlank(comments) ? "(sin observaciones)" : comments
-							)
-					,cdusuari
-					,null//cdmotivo
-					,cdsisrol
-					,"S"
-					,null
-					,null
-					,status
-					,false
-					);
-		}
-		catch(Exception ex)
-		{
+					ntramite,
+					new Date(),
+					null, // Cdclausu
+					Utils.join(
+							"Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: ",
+							StringUtils.isBlank(comments)
+							    ? "(sin observaciones)"
+							    : comments
+					),
+					cdusuari,
+					null, // Cdmotivo
+					cdsisrol,
+					"S",
+					null,
+					null,
+					status,
+					false
+			);
+		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
+		
 		logger.debug(Utils.log(
-				 "\n@@@@@@ ntramite=",ntramite
-				,"\n@@@@@@ registrarTramite @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
+				"\n@@@@@@ ntramite = ", ntramite,
+				"\n@@@@@@ registrarTramite @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+		));
 		return ntramite;
 	}
 	
@@ -2369,21 +2421,23 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String swagente
 			,String comments
 			,boolean cerrado
+			,String cdrazrecha
 			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ turnarDesdeComp @@@@@@"
-				,"\n@@@@@@ cdusuari="  , cdusuari
-				,"\n@@@@@@ cdsisrol="  , cdsisrol
-				,"\n@@@@@@ cdtipflu="  , cdtipflu
-				,"\n@@@@@@ cdflujomc=" , cdflujomc
-				,"\n@@@@@@ ntramite="  , ntramite
-				,"\n@@@@@@ statusOld=" , statusOld
-				,"\n@@@@@@ statusNew=" , statusNew
-				,"\n@@@@@@ swagente="  , swagente
-				,"\n@@@@@@ comments="  , comments
-				,"\n@@@@@@ cerrado="   , cerrado
+				,"\n@@@@@@ cdusuari   = ", cdusuari
+				,"\n@@@@@@ cdsisrol   = ", cdsisrol
+				,"\n@@@@@@ cdtipflu   = ", cdtipflu
+				,"\n@@@@@@ cdflujomc  = ", cdflujomc
+				,"\n@@@@@@ ntramite   = ", ntramite
+				,"\n@@@@@@ statusOld  = ", statusOld
+				,"\n@@@@@@ statusNew  = ", statusNew
+				,"\n@@@@@@ swagente   = ",  swagente
+				,"\n@@@@@@ comments   = ", comments
+				,"\n@@@@@@ cerrado    = ", cerrado
+				,"\n@@@@@@ cdrazrecha = ", cdrazrecha
 				));
 		
 		String message = null
@@ -2436,6 +2490,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,cerrado
 					,swagente
 					);
+			
+			if (StringUtils.isNotBlank(cdrazrecha)) { // Marcamos el motivo de rechazo en tmesacontrol
+				flujoMesaControlDAO.guardarMotivoRechazoTramite(ntramite, cdrazrecha);
+			}
 		}
 		catch(Exception ex)
 		{

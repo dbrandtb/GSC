@@ -6,8 +6,8 @@ Ext.define('VentanaRechazo',
     ,closeAction : 'destroy'
     ,border      : 0
     ,modal       : true
-    ,width       : 600
-    ,height      : 460
+    //,width       : 600
+    //,height      : 460
     ,mostrar     : function()
     {
         var me = this;
@@ -174,9 +174,60 @@ Ext.define('VentanaRechazo',
                             ,name       : 'COMMENTSINT'
                             ,width      : 570
                             ,height     : 100
-                        }
-                        ,{
-                            xtype       : 'displayfield'
+                        }, {
+                            xtype           : 'combobox',
+                            fieldLabel      : 'Motivo de rechazo',
+                            valueField      : 'key',
+                            displayField    : 'value',
+                            editable        : true,
+                            forceSelection  : config.cdsisrol.indexOf('MED') == -1, // Es force cuando no es medico
+                            typeAhead       : true,
+                            anyMatch        : true,
+                            matchFieldWidth : false,
+                            name            : 'CDRAZRECHA',
+                            allowBlank      : false,
+                            style           : 'margin : 5px; margin-bottom : 20px;',
+                            queryMode       : 'local',
+                            readOnly        : config.cdsisrol.indexOf('MED') != -1, // Es solo lectura solo para medicos
+                            listConfig      : {
+                                maxHeight:150,
+                                minWidth:120
+                            },
+                            value           : config.cdsisrol.indexOf('MED') != -1
+                                ? '21'
+                                : '',
+                            store           : Ext.create('Ext.data.Store', {
+                                model    : 'Generic',
+                                autoLoad : true,
+                                cdsisrol : config.cdsisrol,
+                                proxy    : {
+                                    type        : 'ajax',
+                                    url         : _GLOBAL_CONTEXTO + '/catalogos/obtieneCatalogo.action',
+                                    extraParams : {
+                                        catalogo : 'MOTIVOS_RECHAZO_TRAMITE'
+                                    },
+                                    reader : {
+                                        type         : 'json',
+                                        root         : 'lista',
+                                        rootProperty : 'lista'
+                                    }
+                                },
+                                listeners : {
+                                    load : function (me, records) {
+                                        if (me.cdsisrol.indexOf('MED') == -1) { // Si no es medico
+                                            var recordRechazoMedico;
+                                            for (var i = 0; i < records.length; i++) {
+                                                if (records[i].get('key') == 21) {
+                                                    recordRechazoMedico = records[i];
+                                                }
+                                            }
+                                            if (!Ext.isEmpty(recordRechazoMedico)) {
+                                                me.remove(recordRechazoMedico);
+                                            }
+                                        }
+                                    }
+                                }
+                            })
                         }
                     ]
                 }

@@ -5,8 +5,9 @@
 <head>
 <script>
 ////// urls //////
-var _p61_urlPantallaCliente = '<s:url namespace="/catalogos" action="includes/personasLoader"  />'
-    ,_p61_urlMovimiento     = '<s:url namespace="/emision"   action="movimientoClienteTramite" />';
+var _p61_urlPantallaCliente          = '<s:url namespace="/catalogos" action="includes/personasLoader"  />',
+    _p61_urlMovimiento               = '<s:url namespace="/emision"   action="movimientoClienteTramite" />',
+    _p61_urlRecuperarNmsoliciTramite = '<s:url namespace="/emision"   action="recuperarNmsoliciTramite" />';
 ////// urls //////
 
 ////// variables //////
@@ -55,6 +56,7 @@ Ext.onReady(function()
                 [
                     {
                         text     : 'CAMBIAR CLIENTE'
+                        ,itemId  : '_p61_botonCambiarCliente'
                         ,icon    : '${icons}control_repeat_blue.png'
                         ,handler : function()
                         {
@@ -72,7 +74,7 @@ Ext.onReady(function()
                                             'smap1.cdperson'         : _p61_params.cdperson
                                             ,'smap1.polizaEnEmision' : 'S'
                                             ,'smap1.esSaludDanios'   : _p61_params.esSaludDanios
-                                            ,'smap1.modoSoloEdicion' : 'S'
+                                            //,'smap1.modoSoloEdicion' : 'S'
                                         }
                                     });
                                 }
@@ -122,7 +124,7 @@ Ext.onReady(function()
                         'smap1.cdperson'         : _p61_params.cdperson
                         ,'smap1.polizaEnEmision' : 'S'
                         ,'smap1.esSaludDanios'   : _p61_params.esSaludDanios
-                        ,'smap1.modoSoloEdicion' : 'S'
+                        //,'smap1.modoSoloEdicion' : 'S'
                     }
                 }
             }
@@ -134,6 +136,41 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    var mask, ck = 'Verificando que no exista cotizaci\u00f3n';
+    try {
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url    : _p61_urlRecuperarNmsoliciTramite,
+            params : {
+                'params.ntramite' : _p61_flujo.ntramite
+            },
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al verificar cotizaci\u00f3n';
+                try {
+                    var json = Ext.decode(response.responseText);
+                    debug('### validar cotizacion:',json,'.');
+                    if (json.success === true) {
+                        if (!Ext.isEmpty(json.params.nmsolici) && Number(json.params.nmsolici) > 0) {
+                            mensajeWarning('Este tr\u00e1mite ya fue cotizado y no permite vincular cliente');
+                            _fieldById('_p61_botonCambiarCliente').hide();
+                            _fieldById('_p61_panelCliente').hide();
+                        }
+                    } else {
+                        mensajeError(json.message);
+                    }
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al verificar existencia de cotizaci\u00f3n');
+            }
+        });
+    } catch (e) {
+        manejaException(e, ck, mask);
+    }
     ////// loaders //////
 });
 
@@ -170,7 +207,11 @@ function _p61_movimiento(ntramite,cdperson,accion,callback)
                     debug('### guardar:',json);
                     if(json.success===true)
                     {
-                        mensajeCorrecto('Datos guardados','Datos guardados',callback);
+                        if (accion === 'D') {
+                            mensajeCorrecto('Datos guardados','Se ha desvinculado el cliente del tr\u00e1mite, por favor seleccione uno nuevo',callback);
+                        } else if (accion === 'I') {
+                            mensajeCorrecto('Datos guardados','Se ha vinculado el cliente al tr\u00e1mite',callback);
+                        }
                     }
                     else
                     {

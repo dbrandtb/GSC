@@ -2,7 +2,8 @@ package mx.com.gseguros.portal.cotizacion.model;
 
 public enum ParametroGeneral
 {
-	DIRECTORIO_REPORTES("DIR-REPORTS");
+	DIRECTORIO_REPORTES("DIR-REPORTS"),
+	VALIDACION_SIGS_TRAMITE("VALITRASIGS"); // Que tramites se validan con sigs? |EMISION|ENDOSO|RENOVACION|
 	
 	private String nomparam;
 	

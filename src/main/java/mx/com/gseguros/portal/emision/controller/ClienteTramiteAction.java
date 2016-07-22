@@ -124,6 +124,45 @@ public class ClienteTramiteAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "recuperarNmsoliciTramite",
+			results = { @Result(name="success", type="json") }
+			)
+	public String recuperarNmsoliciTramite()
+	{
+		logger.debug(Utils.log(
+				 "\n######################################"
+				,"\n###### recuperarNmsoliciTramite ######"
+				,"\n###### params=", params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			String ntramite  = params.get("ntramite");
+			
+			Utils.validate(ntramite, "No se recibi\u00f3 el tr\u00e1mite");
+			
+			params.put("nmsolici", clienteTramiteManager.recuperarNmsoliciTramite(ntramite));
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success=", success				 
+				,"\n###### message=", message
+				,"\n###### recuperarNmsoliciTramite ######"
+				,"\n######################################"
+				));
+		return SUCCESS;
+	}
+	
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////

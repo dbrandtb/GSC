@@ -72,4 +72,8 @@ public interface EmisionDAO {
 	public void mostrarRecibosImpresosListaDeListas(List<DocumentoReciboParaMostrarDTO> lista)throws Exception;
 	
 	public void movimientoClienteTramite(String ntramite, String cdperson, String accion) throws Exception;
+	
+	public void validarDocumentoTramite (String ntramite, String cddocume) throws Exception;
+	
+	public String recuperarTramiteCotizacion (String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 }

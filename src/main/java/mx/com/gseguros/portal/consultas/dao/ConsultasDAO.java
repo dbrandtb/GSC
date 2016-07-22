@@ -581,4 +581,6 @@ public interface ConsultasDAO
 	public String recuperarCduniextPorLlavePoliza(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
 	
 	public Map<String,String> recuperarDatosFlujoEndoso(String cdramo, String cdtipsup) throws Exception;
+	
+	public Map<String, String> recuperarTtipsupl (String cdtipsup) throws Exception;
 }

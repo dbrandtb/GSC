@@ -2657,4 +2657,25 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		}
 	}
 	
+	@Override
+	public void guardarMotivoRechazoTramite (String ntramite, String cdrazrecha) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite"   , ntramite);
+		params.put("cdrazrecha" , cdrazrecha);
+		ejecutaSP(new GuardarMotivoRechazoTramite(getDataSource()), params);
+	}
+	
+	protected class GuardarMotivoRechazoTramite extends StoredProcedure
+	{
+		protected GuardarMotivoRechazoTramite(DataSource dataSource)
+		{
+			super(dataSource,"P_ACT_MOTIVO_RECHAZO_TRAMITE");
+			declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdrazrecha" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

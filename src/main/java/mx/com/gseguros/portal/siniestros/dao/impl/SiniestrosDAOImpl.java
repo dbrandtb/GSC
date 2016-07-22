@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1545,10 +1546,18 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
+	@Override
+	public Map<String,String> obtenerTramiteCompleto(String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("pv_ntramite_i", ntramite);
+		return this.obtenerTramiteCompleto(params);
+	}
+	
 	/**
 	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
 	 */
 	@Override
+	@Deprecated
 	public Map<String,String> obtenerTramiteCompleto(Map<String, String> params) throws Exception
 	{
 		Map<String, Object> mapResult = ejecutaSP(new ObtenerTramiteCompleto(this.getDataSource()), params);

@@ -635,6 +635,18 @@ Ext.onReady(function()
                                 {
                                     debug(button.up().up().getForm().getValues());
                                     button.setDisabled(true);
+                                    
+                                    try {
+                                        var comps = Ext.ComponentQuery.query('[name]', button.up('window'));
+                                        debug('comps:', comps, '.');
+                                        for (var i = 0; i < comps.length; i++) {
+                                            comps[i].setReadOnly(true);
+                                        }
+                                        button.up('window').down('[name=file]').hide();
+                                    } catch (e) {
+                                        debugError('error al poner readonly=true todos', e);
+                                    }
+                                    
                                     Ext.getCmp('panDocBotCanDoc').setDisabled(true);
                                     Ext.create('Ext.form.Panel').submit(
                                     {
