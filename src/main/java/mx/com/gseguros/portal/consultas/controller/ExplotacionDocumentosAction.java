@@ -200,7 +200,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			String charola1 = params.get("charola1");
 			String charola2 = params.get("charola2");
 			String test     = params.get("test");
-			String duplex   = params.get("duplex");
+			String soportaDuplex   = params.get("swimpdpx"); // Indica si la impresora soporta la opcion duplex
 			
 			Utils.validate(
 					lote      , "No se recibi\u00F3 el lote"
@@ -226,7 +226,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,cdusuari
 					,cdsisrol
 					,"S".equals(test)
-					,"S".equals(duplex)
+					,"S".equals(soportaDuplex)
 					);
 			
 			success = true;
