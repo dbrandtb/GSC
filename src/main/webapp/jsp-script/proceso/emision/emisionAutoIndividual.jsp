@@ -36,6 +36,7 @@ debug('_p29_smap1:',_p29_smap1);
 var _p29_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 debug('_p29_flujo:',_p29_flujo);
 
+var _p29_polizaLicenciaTurista  = null
 var _p29_polizaAdicionalesItems = null;
 var _p29_adicionalesItems       = null;
 var _p22_parentCallback         = false;
@@ -112,6 +113,18 @@ Ext.onReady(function()
 	////// modelos //////
 	
 	////// stores //////
+	   
+    Ext.create('Ext.data.Store', {
+                storeId:'simpsonsStore',
+                fields:['name', 'email', 'phone'],
+                data: [
+                    {"inciso":"Lisa", "licencia":"lisa@simpsons.com"},
+                    {"inciso":"Bart", "licencia":"bart@simpsons.com"},
+                    {"inciso":"Homer", "licencia":"home@simpsons.com"},
+                    {"inciso":"Marge", "licencia":"marge@simpsons.com"}
+                ]
+            });
+    
 	////// stores //////
 	
 	////// componentes //////
@@ -153,13 +166,35 @@ Ext.onReady(function()
 	    _p29_adicionalesItems = [<s:property value="imap.adicionalesItems" />];
 	</s:if>
 	
+	_p29_polizaLicenciaTurista = 
+        Ext.create('Ext.grid.Panel', {
+            store: Ext.data.StoreManager.lookup('simpsonsStore'),
+            columns: [
+                {header: 'Name',  dataIndex: 'name', editor: 'textfield'},
+                {header: 'Email', dataIndex: 'email', flex:1,
+                    editor: {
+                        xtype: 'textfield',
+                        allowBlank: false
+                    }
+                },
+            ],
+            selType: 'rowmodel',
+            plugins: [
+                Ext.create('Ext.grid.plugin.RowEditing', {
+                    clicksToEdit: 1
+                })
+            ],
+            height: 200,
+            width: 400,
+            renderTo: Ext.getBody()
+        });
+	
 	var _p29_datosGeneralesItems = [<s:property value="imap.polizaItems" />];
 	for(var i=0;i<_p29_datosGeneralesItems.length;i++)
 	{
 	    _p29_datosGeneralesItems[i].labelWidth=295;
 	}
 	////// componentes //////
-	
 	////// contenido //////
 	Ext.create('Ext.panel.Panel',
 	{
@@ -226,6 +261,11 @@ Ext.onReady(function()
 	                    ,title : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES</span>'
 	                    ,items : _p29_polizaAdicionalesItems
 	                }
+	                ,{
+	                	 xtype  : 'fieldset'
+                        ,title : '<span style="font:bold 14px Calibri;">LICENCIA TURISTA</span>'
+                        ,items : _p29_polizaLicenciaTurista
+	                } 
 	            ]
 	        })
 	        ,Ext.create('Ext.form.Panel',
@@ -557,6 +597,7 @@ function _p29_loadCallback()
         {
             try
             {
+            	debug('### obtener retroactividad:',json);
                 fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,vigen.getValue()))
             }
             catch(e)
@@ -1250,7 +1291,9 @@ function _p29_emitirFinal(me)
                 _fieldById('botonEnvioEmail').enable();
                 
                 if(Number(_fieldByName('cdperpag').getValue()) == 1)
-                {domiciliar();}
+                {
+                	domiciliar();
+                }
                 
                 _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                 _fieldById('_p29_botonNueva').setDisabled(false);
