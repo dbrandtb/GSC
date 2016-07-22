@@ -35,7 +35,7 @@ public interface ExplotacionDocumentosManager
 	 * @param cdusuari
 	 * @param cdsisrol
 	 * @param test
-	 * @param esDuplex Indica si la impresion es a doble cara (duplex)
+	 * @param esDuplex Indica si la impresora soporta la opcion duplex (doble cara)
 	 * @throws Exception
 	 */
 	public void imprimirLote(
