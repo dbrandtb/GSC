@@ -39,4 +39,10 @@ public interface EmisionManager
 			,String nmsuplem
 			,String nmsituaext
 			)throws Exception;
+	
+	@Deprecated
+	public void validarDocumentoTramite (String ntramite, String cddocume) throws Exception;
+	
+	@Deprecated
+	public String recuperarTramiteCotizacion (String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 }

@@ -2655,6 +2655,7 @@ function _datComTurnarSuscripcion()
 		                    ,'smap1.nmsolici' : ''
 		                    ,'smap1.ntramite' : inputNtramite
 		                    ,'smap1.tipomov'  : '0'
+		                    ,'smap1.lista'    : 'EMISION'
 		                }
 		            }
 		        }).showAt(500,0);

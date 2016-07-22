@@ -142,7 +142,10 @@ public interface SiniestrosDAO {
 	/**
 	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
 	 */
+	@Deprecated
 	public Map<String,String> obtenerTramiteCompleto(Map<String, String> params) throws Exception;
+	
+	public Map<String,String> obtenerTramiteCompleto(String ntramite) throws Exception;
 	
 	/**
 	 * PKG_SATELITES.P_OBT_TFACMESCTRL

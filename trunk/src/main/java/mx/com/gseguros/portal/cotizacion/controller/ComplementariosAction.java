@@ -1398,7 +1398,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				String parentesco = (String) aseg.get("parentesco");
 				
 				
-				//Número de socio y Clave Familiar, para el atributo SITUAEXT
+				//Nï¿½mero de socio y Clave Familiar, para el atributo SITUAEXT
 				
 					logger.debug(Utils.log("Numero de Socio ->",numsoc));
 					logger.debug(Utils.log("Clave Familiar  ->",clvfam));
@@ -1646,52 +1646,53 @@ public class ComplementariosAction extends PrincipalCoreAction
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String retarificar()
-	{
-		logger.debug(
-				new StringBuilder()
-				.append("\n#########################")
-				.append("\n###### retarificar ######")
-				.append("\n###### cdunieco=").append(cdunieco)
-				.append("\n###### cdramo=")  .append(cdramo)
-				.append("\n###### cdtipsit=").append(cdtipsit)
-				.append("\n###### panel1=")  .append(panel1)
-				.toString()
-				);
-		try
-		{
+	public String retarificar () {
+		logger.debug(Utils.log(
+				"\n#########################",
+				"\n###### retarificar ######",
+				"\n###### cdunieco = ", cdunieco,
+				"\n###### cdramo   = ", cdramo,
+				"\n###### cdtipsit = ", cdtipsit,
+				"\n###### panel1   = ", panel1
+		));
+		try {
+			try {
+				if (consultasManager.esProductoSalud(cdramo)) {
+					logger.debug("Revisando solicitud de emisi\u00f3n para salud");
+					emisionManager.validarDocumentoTramite(
+							emisionManager.recuperarTramiteCotizacion(cdunieco, cdramo, "W", panel1.get("nmpoliza")),
+							"1" // CDDOCUME 1 = solicitud de emision
+					);
+				}
+			} catch(Exception ex) {
+				logger.error("error surgido al validar solicitud de emision de salud", ex);
+				mensajeRespuesta = "Favor de subir la solicitud de emisi\u00f3n";
+				return SUCCESS;
+			}
+			
 			boolean notarifica = panel1!=null
 					&&StringUtils.isNotBlank(panel1.get("notarifica"))
 					&&panel1.get("notarifica").equals("si");
 			
-			try
-			{
+			try {
 				consultasManager.validarDatosCliente(cdunieco, cdramo, "W", panel1.get("nmpoliza"));
-			}
-			catch(Exception ex)
-			{
+			} catch (Exception ex) {
 				logger.error("Error al validar datos de cliente",ex);
 				mensajeRespuesta=ex.getMessage();
 				return SUCCESS;
 			}
 			
-			try
-			{
+			try {
 				consultasManager.validarDatosObligatoriosPrevex(cdunieco, cdramo, "W", panel1.get("nmpoliza"));
-			}
-			catch(Exception ex)
-			{
+			} catch(Exception ex) {
 				logger.error("error al validar datos obligatorios de prevex",ex);
 				mensajeRespuesta=ex.getMessage();
 				return SUCCESS;
 			}
 			
-			try
-			{
+			try {
 				consultasManager.validarDatosDXN(cdunieco, cdramo, "W", panel1.get("nmpoliza"), "0");
-			}
-			catch(Exception ex)
-			{
+			} catch (Exception ex) {
 				logger.error("Error al validar Datos de DxN",ex);
 				mensajeRespuesta = ex.getMessage();
 				return SUCCESS;
@@ -1701,17 +1702,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 			////// validar la extraprima //////
 			/*///////////////////////////////*/
 			List<Map<String,String>> aseguradosExtraprimadosInvalidos = null;
-			try
-			{
+			try {
 				Map<String,String>paramValExtraprima=new LinkedHashMap<String,String>(0);
 				paramValExtraprima.put("pv_cdunieco_i" , cdunieco);
 				paramValExtraprima.put("pv_cdramo_i"   , cdramo);
 				paramValExtraprima.put("pv_estado_i"   , "W");
 				paramValExtraprima.put("pv_nmpoliza_i" , panel1.get("nmpoliza"));
 				aseguradosExtraprimadosInvalidos = kernelManager.validarExtraprima(paramValExtraprima).getItemList();
-			}
-			catch(Exception ex)
-			{
+			} catch(Exception ex) {
 				logger.warn("Error sin impacto funcional al validar extraprimas: ",ex);
 			}
 			if(aseguradosExtraprimadosInvalidos != null && aseguradosExtraprimadosInvalidos.size() > 0) {
@@ -1729,37 +1727,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 			//////////////////////////////////////////
 			////// validar que tengan direccion //1548
 			List<Map<String,String>>lisUsuSinDir=null;
-			try
-			{
+			try {
 				Map<String,String>paramValidar=new LinkedHashMap<String,String>(0);
 				paramValidar.put("pv_cdunieco" , cdunieco);
 				paramValidar.put("pv_cdramo"   , cdramo);
 				paramValidar.put("pv_estado"   , "W");
 				paramValidar.put("pv_nmpoliza" , panel1.get("nmpoliza"));
 				lisUsuSinDir=kernelManager.PValInfoPersonas(paramValidar);
-			}
-			catch(Exception ex)
-			{
+			} catch(Exception ex) {
 				logger.warn("Error sin impacto funcional al validar domicilios: ",ex);
 				lisUsuSinDir=null;
 			}
 			
-			if(lisUsuSinDir!=null&&lisUsuSinDir.size()>0)
-			{
-				if(Ramo.SERVICIO_PUBLICO.getCdramo().equals(cdramo) || Ramo.AUTOS_FRONTERIZOS.getCdramo().equals(cdramo)){
+			if (lisUsuSinDir!=null&&lisUsuSinDir.size()>0) {
+				if (Ramo.SERVICIO_PUBLICO.getCdramo().equals(cdramo) || Ramo.AUTOS_FRONTERIZOS.getCdramo().equals(cdramo)) {
 					mensajeRespuesta="Favor de verificar y guardar correctamente la direcci\u00f3n y datos del contratante.";
-				}else{
+				} else {
 					mensajeRespuesta="Favor de verificar la direcci\u00f3n de los siguientes asegurados:<br/>";
 					// f a v o r
 					//0 1 2 3 4 5
-					if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
-					{
+					if (lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor")) {
 						mensajeRespuesta=lisUsuSinDir.get(0).get("nombre");
-					}
-					else
-					{
-						for(int i=0;i<lisUsuSinDir.size();i++)
-						{
+					} else {
+						for (int i = 0; i < lisUsuSinDir.size(); i++) {
 							mensajeRespuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
 						}					
 					}
@@ -1770,8 +1760,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 			
 			
-			try
-			{
+			try {
 				Map<String,String>paramValidarMenor=new LinkedHashMap<String,String>(0);
 				paramValidarMenor.put("pv_cdunieco" , cdunieco);
 				paramValidarMenor.put("pv_cdramo"   , cdramo);
@@ -1779,12 +1768,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramValidarMenor.put("pv_nmpoliza" , panel1.get("nmpoliza"));
 				String existeMenor = kernelManager.validaTitularMenorEdad(paramValidarMenor);
 				
-				if(Constantes.SI.equalsIgnoreCase(existeMenor)){
+				if (Constantes.SI.equalsIgnoreCase(existeMenor)) {
 					this.respuestaOculta = "El Titular es Menor de Edad, se requerir\u00e1 una autorizaci\u00f3n posterior.";
 				}
-			}
-			catch(Exception ex)
-			{
+			} catch(Exception ex) {
 				logger.warn("Error sin impacto funcional al validar Titular menor de edad: ",ex);
 			}
 			
@@ -1793,8 +1780,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			
 			//Validar datos de Producto de Autos para WS de Emision
-			if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo)){
-				try{
+			if (Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo)) {
+				try {
 					HashMap<String, String> paramsValidaAut = new HashMap<String, String>();
 					paramsValidaAut.put("pv_cdunieco_i", cdunieco);
 					paramsValidaAut.put("pv_cdramo_i",   cdramo);
@@ -1804,7 +1791,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsValidaAut.put("pv_nmsuplem_i", "0");
 					kernelManager.validaDatosAutos(paramsValidaAut);
 					
-				}catch(Exception e){
+				} catch (Exception e) {
 					logger.error("Error al Validar datos de Auto: " + e.getMessage(), e);
 					mensajeRespuesta = e.getMessage();
 					return SUCCESS;
@@ -1814,8 +1801,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			
-			if(!notarifica)
-			{
+			if (!notarifica) {
 				//////////////////////////
 				////// sigsvdef end //////
 				/*//////////////////////*/
@@ -1857,8 +1843,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		        ////////////////////////////////
 			}
 			
-			try
-			{
+			try {
 				String error = consultasManager.validacionesSuplemento(
 						cdunieco
 						,cdramo
@@ -1868,14 +1853,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,"0"
 						,"1"
 						);
-				if(StringUtils.isNotBlank(error))
-				{
+				if (StringUtils.isNotBlank(error)) {
 					mensajeRespuesta = error;
 					return SUCCESS;
 				}
-			}
-			catch(Exception ex)
-			{
+			} catch (Exception ex) {
 				long timestamp = System.currentTimeMillis();
 				logger.error(Utils.join("Error en validaciones #",timestamp),ex);
 				mensajeRespuesta = Utils.join("Error en validaciones #",timestamp);
@@ -1960,18 +1942,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 			////////////////////////////////
 			
 	        success=true;
-		}
-		catch(Exception ex)
-		{
+		} catch (Exception ex) {
 			logger.debug("error al retarificar",ex);
 			success=false;
 		}
-		logger.debug(
-				new StringBuilder()
-				.append("\n###### retarificar ######")
-				.append("\n#########################")
-				.toString()
-				);
+		
+		logger.debug(Utils.log(
+				"\n###### success          = ", success,
+				"\n###### mensajeRespuesta = ", mensajeRespuesta,
+				"\n###### retarificar ######",
+				"\n#########################"
+		));
 		return SUCCESS;
 	}
 	

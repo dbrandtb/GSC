@@ -49,4 +49,10 @@ public interface AutosSIGSDAO {
 
 	public Integer obtieneTipoCliWS(String codigoExterno, String compania) throws Exception;
 	
+	/**
+	 * Valida agente, ramo y cdtipend.
+	 * Si no valida bien lanza excepcion
+	 */
+	public void validarAgenteParaNuevoTramite(String cdagente, String ramo, String cdtipend) throws Exception;
+	
 }

@@ -16,7 +16,8 @@ import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -24,7 +25,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 {
-	private final static Logger logger = Logger.getLogger(EmisionDAOImpl.class);
+	private final static Logger logger = LoggerFactory.getLogger(EmisionDAOImpl.class);
 	
 	@Override
 	public EmisionVO emitir(String cdusuari, String cdunieco, String cdramo, String estado, String nmpoliza, 
@@ -286,6 +287,59 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 			declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void validarDocumentoTramite (String ntramite, String cddocume) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite", ntramite);
+		params.put("cddocume", cddocume);
+		ejecutaSP(new ValidarDocumentoTramiteSP(getDataSource()), params);
+	}
+	
+	protected class ValidarDocumentoTramiteSP extends StoredProcedure
+	{
+		protected ValidarDocumentoTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"P_VALIDA_CDDOCUME_TRAMITE");
+			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cddocume", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String recuperarTramiteCotizacion (String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco", cdunieco);
+		params.put("cdramo",   cdramo);
+		params.put("estado",   estado);
+		params.put("nmpoliza", nmpoliza);
+		Map<String, Object> procRed = ejecutaSP(new RecuperarTramiteCotizacionSP(getDataSource()), params);
+		String ntramite = (String) procRed.get("pv_ntramite_o");
+		if (StringUtils.isBlank(ntramite)) {
+			throw new ApplicationException("No se encuentra el tr\u00e1mite de cotizaci\u00f3n");
+		}
+		logger.debug("tramite de cotizacion = {}", ntramite);
+		return ntramite;
+	}
+	
+	protected class RecuperarTramiteCotizacionSP extends StoredProcedure
+	{
+		protected RecuperarTramiteCotizacionSP(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_TRAMITE_COTIZACION");
+			declareParameter(new SqlParameter("cdunieco", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
 			compile();
 		}
 	}

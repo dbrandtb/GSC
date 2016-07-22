@@ -6,6 +6,7 @@ import java.util.Map;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.service.ClienteTramiteManager;
+import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.utils.Utils;
 
 import org.slf4j.Logger;
@@ -23,6 +24,9 @@ public class ClienteTramiteManagerImpl implements ClienteTramiteManager
 	
 	@Autowired
 	private EmisionDAO emisionDAO;
+	
+	@Autowired
+	private SiniestrosDAO siniestrosDAO;
 	
 	@Override
 	public Map<String,String> pantallaContratanteTramite(String ntramite) throws Exception
@@ -67,5 +71,33 @@ public class ClienteTramiteManagerImpl implements ClienteTramiteManager
 	public void movimientoClienteTramite(String ntramite, String cdperson, String accion) throws Exception
 	{
 		emisionDAO.movimientoClienteTramite(ntramite,cdperson,accion);
+	}
+	
+	@Override
+	public String recuperarNmsoliciTramite (String ntramite) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ recuperarNmsoliciTramite @@@@@@",
+				"\n@@@@@@ ntramite = ", ntramite
+		));
+		
+		String nmsolici = null, paso = null;
+		
+		try {
+			paso = "Recuperando tr\u00e1mite";
+			logger.debug(paso);
+			Map<String, String> tramite = siniestrosDAO.obtenerTramiteCompleto(ntramite);
+			logger.debug("Tramite recuperado = {}", tramite);
+			nmsolici = tramite.get("NMSOLICI");
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				"\n@@@@@@ nmsolici = ", nmsolici,
+				"\n@@@@@@ recuperarNmsoliciTramite @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+		));
+		return nmsolici;
 	}
 }

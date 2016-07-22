@@ -9,6 +9,7 @@ import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -30,6 +31,9 @@ public class EmisionManagerImpl implements EmisionManager
 	
 	@Autowired
 	private CotizacionDAO cotizacionDAO;
+	
+	@Autowired
+	private EmisionDAO emisionDAO;
 	
 	@Override
 	public ManagerRespuestaImapVO construirPantallaClausulasPoliza() throws Exception
@@ -195,5 +199,17 @@ public class EmisionManagerImpl implements EmisionManager
 				,nmsuplem
 				,nmsituaext
 				);
+	}
+	
+	@Deprecated
+	@Override
+	public void validarDocumentoTramite (String ntramite, String cddocume) throws Exception {
+		emisionDAO.validarDocumentoTramite(ntramite, cddocume);
+	}
+	
+	@Override
+	@Deprecated
+	public String recuperarTramiteCotizacion (String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
+		return emisionDAO.recuperarTramiteCotizacion(cdunieco, cdramo, estado, nmpoliza);
 	}
 }

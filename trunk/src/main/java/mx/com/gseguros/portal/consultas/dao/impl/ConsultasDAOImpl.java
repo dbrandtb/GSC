@@ -4939,4 +4939,33 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		compile();
     	}
     }
+	
+	@Override
+	public Map<String, String> recuperarTtipsupl (String cdtipsup) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdtipsup", cdtipsup);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarTtipsuplSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size() == 0) {
+			throw new ApplicationException("No se encuentra el tipo de endoso");
+		} else if (lista.size() > 1) {
+			throw new ApplicationException("Tipo de endoso repetido");
+		}
+		return lista.get(0);
+	}
+
+	protected class RecuperarTtipsuplSP extends StoredProcedure {
+    	protected RecuperarTtipsuplSP(DataSource dataSource) {
+    		super(dataSource, "P_GET_TTIPSUPL_X_CDTIPSUP");
+            declareParameter(new SqlParameter("cdtipsup", OracleTypes.VARCHAR));
+            String[] cols = new String[] {
+            		"CDTIPSUP", "CDREGION", "CDIDIOMA", "DSTIPSUP",
+            		"SWSUPLEM", "SWTARIFI", "CDTIPDOC", "CDTIPEND"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

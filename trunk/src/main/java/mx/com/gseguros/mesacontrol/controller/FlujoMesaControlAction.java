@@ -1915,13 +1915,14 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(params, "No se recibieron datos");
 			
-			String cdtipflu   = params.get("CDTIPFLU")
-			       ,cdflujomc = params.get("CDFLUJOMC")
-			       ,ntramite  = params.get("NTRAMITE")
-			       ,statusOld = params.get("STATUSOLD")
-			       ,statusNew = params.get("STATUSNEW")
-			       ,swagente  = params.get("SWAGENTE")
-			       ,comments  = params.get("COMMENTS");
+			String cdtipflu    = params.get("CDTIPFLU")
+			       ,cdflujomc  = params.get("CDFLUJOMC")
+			       ,ntramite   = params.get("NTRAMITE")
+			       ,statusOld  = params.get("STATUSOLD")
+			       ,statusNew  = params.get("STATUSNEW")
+			       ,swagente   = params.get("SWAGENTE")
+			       ,comments   = params.get("COMMENTS")
+			       ,cdrazrecha = params.get("CDRAZRECHA");
 			
 			boolean cerrado = "S".equals(params.get("cerrado"));
 			
@@ -1944,6 +1945,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,swagente
 					,comments
 					,cerrado
+					,cdrazrecha
 					);
 			
 			success = true;

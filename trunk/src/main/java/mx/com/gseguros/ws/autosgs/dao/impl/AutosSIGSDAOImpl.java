@@ -11,11 +11,12 @@ import javax.sql.DataSource;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContextException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.SqlParameter;
@@ -24,7 +25,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO {
 
-	private static Logger logger = Logger.getLogger(AutosSIGSDAOImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(AutosSIGSDAOImpl.class);
 	
 	@Override
 	public Integer cambioDomicilioCP(Map<String, Object> params) throws Exception {
@@ -882,6 +883,83 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			
 			declareParameter(new SqlParameter("vNumCliente", Types.INTEGER));
 			declareParameter(new SqlParameter("vTipoCliente", Types.SMALLINT));
+			
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){
+				@Override  
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
+					while(rs.next()){  
+						result = rs.getInt(1);
+					}  
+					return result;  
+				}
+			}));
+			
+			compile();
+		}
+	}
+	
+	/**
+	 * Valida agente, ramo y cdtipend.
+	 * Si no valida bien lanza excepcion
+	 */
+	@Override
+	public void validarAgenteParaNuevoTramite(String cdagente, String ramo, String cdtipend) throws Exception {
+		logger.debug(Utils.log(
+				"\n*******************************************",
+				"\n****** validarAgenteParaNuevoTramite ******",
+				"\n****** cdagente = ", cdagente,
+				"\n****** ramo     = ", ramo,
+				"\n****** cdtipend = ", cdtipend
+				));
+		Integer resp = null;
+		
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("pAgente",     cdagente);
+		params.put("pRamo",       ramo);
+		params.put("pTipoEndoso", cdtipend);
+		
+		Map<String, Object> mapResult  = ejecutaSP(new ValidarAgenteParaNuevoTramiteSP(getDataSource()), params);
+		resp = (Integer) mapResult.get("rs");
+		
+		logger.debug("validarAgenteParaNuevoTramite resp = {}", resp);
+		
+		if (resp == null) {
+			throw new ApplicationException("No hay respuesta de validacion externa");
+		} else if (resp == 0) {
+			logger.debug("respuesta correcta");
+		} else if (resp == 1) {
+			throw new ApplicationException("Agente no vigente");
+		} else if (resp == 2) {
+			throw new ApplicationException("C\u00e9dula no v\u00e1lida para este tipo de tr\u00e1mite");
+		} else if (resp == 3) {
+			throw new ApplicationException("C\u00e9dula no vigente");
+		} else if (resp == 4) {
+			throw new ApplicationException("Fianza vencida");
+		} else if (resp == 5) {
+			throw new ApplicationException("El agente no existe");
+		} else if (resp == 88) {
+			throw new ApplicationException("Ramo de tr\u00e1mite no existente");
+		} else if (resp == 99) {
+			throw new ApplicationException("Tipo de endoso no v\u00e1lido");
+		} else {
+			throw new ApplicationException("La respuesta de la validaci\u00f3n externa es desconocida");
+		}
+
+		logger.debug(Utils.log(
+				"\n****** resp = ", resp,
+				"\n****** validarAgenteParaNuevoTramite ******",
+				"\n*******************************************"
+				));
+	}
+	
+	public class ValidarAgenteParaNuevoTramiteSP extends StoredProcedure {
+		protected ValidarAgenteParaNuevoTramiteSP (DataSource dataSource) {
+			super(dataSource, "spValidaAgente");
+			
+			declareParameter(new SqlParameter("pAgente",     Types.INTEGER));
+			declareParameter(new SqlParameter("pRamo",       Types.SMALLINT));
+			declareParameter(new SqlParameter("pTipoEndoso", Types.VARCHAR));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){
 				@Override  
