@@ -676,4 +676,7 @@ public interface FlujoMesaControlDAO {
 	public void modificarDetalleTramiteMC(String ntramite, String nmordina, String comments) throws Exception;
 	
 	public void guardarMotivoRechazoTramite (String ntramite, String cdrazrecha) throws Exception;
+	
+	public List<Map<String, String>> recuperarChecklistInicial (String cdtipflu, String cdflujomc,
+			String cdtiptra, String cdtipsup) throws Exception;
 }

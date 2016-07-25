@@ -1336,10 +1336,7 @@ function _datComTurnarSuscripcion()
 										                                                            	    		{
 										                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
 										                                                            	    		}
-										                                                            	    		else
-										                                                            	    		{
-										                                                            	    		    Ext.getCmp('venDocVenEmiBotNueCotiza').show();
-										                                                            	    		}
+										                                                            	    		Ext.getCmp('venDocVenEmiBotMesa').show();
 										                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
 										                                                            	    		if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
 										                                                            	    		{
@@ -1374,10 +1371,7 @@ function _datComTurnarSuscripcion()
 											                                                            	    		{
 											                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
 											                                                            	    		}
-											                                                            	    		else
-											                                                            	    		{
-											                                                            	    		    Ext.getCmp('venDocVenEmiBotNueCotiza').show();
-											                                                            	    		}
+											                                                            	    		Ext.getCmp('venDocVenEmiBotMesa').show();
 											                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
 										                                                            	    		}
 										                                                            	    		Ext.Msg.show({
@@ -1649,10 +1643,10 @@ function _datComTurnarSuscripcion()
 										                                                        }
 										                                                        ,{
 										                                                        	xtype    : 'button'
-										                                                            ,id      : 'venDocVenEmiBotNueCotiza'
+										                                                            ,id      : 'venDocVenEmiBotMesa'
 										                                                            ,text    : 'Regresar a mesa de control'
 										                                                            ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
-										                                                            ,hidden  : panDatComMap1.SITUACION=='AUTO'
+										                                                            //,hidden  : panDatComMap1.SITUACION=='AUTO'
 										                                                            ,handler : function()
 										                                                            {
 										                                                                var me=this;
@@ -1705,7 +1699,7 @@ function _datComTurnarSuscripcion()
 										                                                })
 										                                            ]
 										                                        }).showAt(50,50);
-										                                        Ext.getCmp('venDocVenEmiBotNueCotiza').hide();
+										                                        Ext.getCmp('venDocVenEmiBotMesa').hide();
 										                                        Ext.getCmp('venDocVenEmiBotIrCotiza').hide();
 										                                        
 										                                        if(!Ext.isEmpty(json.respuestaOculta)){

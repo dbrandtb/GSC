@@ -2262,6 +2262,47 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		
 		return SUCCESS;
 	}
+	
+
+	
+	@Action(value   = "recuperarChecklistInicial",
+			results = { @Result(name="success", type="json") }
+			)
+	public String recuperarChecklistInicial () {
+		logger.debug(Utils.log(
+				 "\n#######################################"
+				,"\n###### recuperarChecklistInicial ######"
+				,"\n###### params = " , params
+				));
+		try {
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu"),
+					cdflujomc = params.get("cdflujomc"),
+					cdtiptra  = params.get("cdtiptra"),
+					cdtipsup  = params.get("cdtipsup");
+			
+			Utils.validate(cdtipflu, "Falta cdtipflu",
+					cdflujomc , "Falta cdflujomc",
+					cdtiptra  , "Falta cdtiptra"
+					);
+			
+			params.putAll(flujoMesaControlManager.recuperarChecklistInicial(cdtipflu, cdflujomc, cdtiptra, cdtipsup));
+			
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log(
+				 "\n###### success = " , success
+				,"\n###### message = " , message
+				,"\n###### recuperarChecklistInicial ######"
+				,"\n#######################################"
+				));
+		return SUCCESS;
+	}
 
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
