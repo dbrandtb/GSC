@@ -595,10 +595,11 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				logger.debug(Utils.log(""," paso: ",paso));
 				
 				String lote = params.get("lote");
+				String tramite = params.get("tramite");
 				
 				Utils.validate(lote, "No se recibi\u00F3 el lote");
 				
-				Map<String,String>requeridasYEjecutadas = consultasDAO.recuperarDetalleImpresionLote(lote);
+				Map<String,String>requeridasYEjecutadas = consultasDAO.recuperarDetalleImpresionLote(lote,tramite);
 				
 				mapa.putAll(requeridasYEjecutadas);
 			}
@@ -1130,23 +1131,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						);
 				
 				lista = flujoMesaControlDAO.recuperarTflujorol(cdtipflu,cdflujomc);
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_MPOLIZAS_POR_PARAMETROS_VARIABLES)) {
-				String cdunieco = params.get("cdunieco"),
-						cdramo  = params.get("cdramo"),
-						estado  = params.get("estado"),
-						nmpoliza = params.get("nmpoliza"),
-						nmsuplem = params.get("nmsuplem"),
-						nmsolici = params.get("nmsolici"),
-						cdramant = params.get("cdramant");
-				lista = consultasDAO.cargarMpolizasPorParametrosVariables(
-						cdunieco,
-						cdramo,
-						estado,
-						nmpoliza,
-						nmsuplem, 
-						nmsolici,
-						cdramant
-				);
 			}
 		}
 		catch(Exception ex)

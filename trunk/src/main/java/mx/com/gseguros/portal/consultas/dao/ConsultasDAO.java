@@ -400,7 +400,7 @@ public interface ConsultasDAO
 			,String tipolote
 			) throws Exception;
 	
-	public Map<String,String>recuperarDetalleImpresionLote(String lote) throws Exception;
+	public Map<String,String>recuperarDetalleImpresionLote(String lote,String tramite) throws Exception;
 	
 	public List<Map<String,String>> recuperarImpresorasPorPapelYSucursal(
 			String cdusuari

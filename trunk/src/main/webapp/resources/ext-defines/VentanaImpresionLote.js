@@ -674,6 +674,7 @@ Ext.define('VentanaImpresionLote',
                 {
                     'params.consulta' : 'RECUPERAR_DETALLE_IMPRESION_LOTE'
                     ,'params.lote'    : me.lote
+                    ,'params.tramite' : me.tramite
                 }
                 ,success : function(response)
                 {
