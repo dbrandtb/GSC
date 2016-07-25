@@ -3165,7 +3165,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		Map<String,String> result = new HashMap<String,String>();
 		result.put("requeridas" , requeridas);
 		result.put("ejecutadas" , ejecutadas);
-		logger2.debug("****** PKG_CONSULTA_artur.P_GET_DET_IMP_LOTE salida: {}",result);
+		logger2.debug("****** PKG_CONSULTA.P_GET_DET_IMP_LOTE salida: {}",result);
 		return result;
 	}
 	
@@ -3173,7 +3173,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarDetalleImpresionLote(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA_artur.P_GET_DET_IMP_LOTE");
+			super(dataSource,"PKG_CONSULTA.P_GET_DET_IMP_LOTE");
 			declareParameter(new SqlParameter("pv_lote_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_permiso_o" , OracleTypes.VARCHAR));
