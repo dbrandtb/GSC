@@ -667,9 +667,9 @@ function _p34_polizas(callback)
     debug('<_p34_polizas');
 }
 
-function _p34_botonEndososPolizaClic()
+function _p34_botonEndososPolizaClic(callback)
 {
-    debug('>_p34_botonEndososPolizaClic');
+    debug('>_p34_botonEndososPolizaClic args:',arguments);
     var windowPoliza = _fieldById('_p34_gridPolizas');
     var poliza       = _fieldById('_p34_gridPolizas').getSelectionModel().getSelection()[0];
     debug('poliza:',poliza.data);
@@ -720,6 +720,10 @@ function _p34_botonEndososPolizaClic()
                 else
                 {
                     mensajeWarning('No hay endosos disponibles para la selecci&oacute;n');
+                }
+                
+                if (!Ext.isEmpty(callback) && typeof callback === 'function') {
+                    callback();
                 }
             }
             else
@@ -840,9 +844,9 @@ function _p34_gridPolizasHistorialClic(record)
     debug('<_p34_gridPolizasHistorialClic');
 }
 
-function _p34_gridPolizasIncisosClic(record,padre)
+function _p34_gridPolizasIncisosClic(record, padre, callback)
 {
-    debug('>_p34_gridPolizasIncisosClic record:',record.data,'padre:',padre);
+    debug('>_p34_gridPolizasIncisosClic args:', arguments);
     _fieldById('_p34_gridPolizas').getSelectionModel().deselectAll();
     padre.setLoading(true);
     Ext.Ajax.request(
@@ -862,7 +866,7 @@ function _p34_gridPolizasIncisosClic(record,padre)
             _fieldById('_p34_gridPolizas').getSelectionModel().select(record);
                 var cols=Ext.decode('['+json.smap1.columnas+']');
                 debug('columnas:',cols);
-                _p34_incisos('POLIZA',record,cols,padre);
+                _p34_incisos('POLIZA',record,cols,padre,callback);
             }
             else
             {
@@ -878,10 +882,9 @@ function _p34_gridPolizasIncisosClic(record,padre)
     debug('<_p34_gridPolizasIncisosClic');
 }
 
-function _p34_incisos(nivel,recordNivel,cols,padre)
+function _p34_incisos(nivel,recordNivel,cols,padre,callback)
 {
-    debug('>_p34_incisos nivel,record:' , nivel , recordNivel.data , '.');
-    debug('>_p34_incisos cols,padre:'   , cols  , padre            , '.');
+    debug('>_p34_incisos args:', arguments);
     
     var recordPoliza=_fieldById('_p34_gridPolizas').getSelectionModel().getSelection()[0];
     debug('recordPoliza:',recordPoliza.data);
@@ -1168,7 +1171,13 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nmfamili',nivel == 'POLIZA' ? null : recordNivel.get('NMSITAUX'));
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.nivel',   nivel);
 			                _p34_storeIncisos.getProxy().setExtraParam('smap1.atrPol',  (!Ext.isEmpty(recordPoliza.get('CDRAMO')) && new String(recordPoliza.get('CDRAMO')) == "6")? 'S':'N');
-			                _p34_storeIncisos.loadPage(1);
+			                if (!Ext.isEmpty(callback) && typeof callback === 'function') {
+			                    _p34_storeIncisos.loadPage(1, {
+			                        callback : callback
+			                    });
+			                } else {
+			                    _p34_storeIncisos.loadPage(1);
+			                }
 					    }
 					    else
 					    {
@@ -1188,9 +1197,9 @@ function _p34_incisos(nivel,recordNivel,cols,padre)
     debug('<_p34_incisos');
 }
 
-function _p34_botonEndososIncisosClic()
+function _p34_botonEndososIncisosClic(callback)
 {
-    debug('>_p34_botonEndososIncisosClic');
+    debug('>_p34_botonEndososIncisosClic args:', arguments);
     
     var windowIncisos = _fieldById('_p34_windowIncisos');
     var poliza        = _fieldById('_p34_gridPolizas').getSelectionModel().getSelection()[0];
@@ -1254,6 +1263,10 @@ function _p34_botonEndososIncisosClic()
                 else
                 {
                     mensajeWarning('No hay endosos disponibles para la selecci&oacute;n');
+                }
+                
+                if (!Ext.isEmpty(callback) && typeof callback === 'function') {
+                    callback();
                 }
             }
             else
@@ -2135,10 +2148,10 @@ function _p34_recuperarPolizaIncisosFlujo()
 			                function()
 			                {
 			                    debug('callback despues de cargar poliza desde flujo');
-			                    var ck = 'Recuperando incisos';
+			                    var ck = 'Seleccionando p\u00f3liza';
 			                    try
 			                    {
-			                        if(nivel === 'I' && _p34_storePolizas.getCount()==1)
+			                        /*if(nivel === 'I' && _p34_storePolizas.getCount()==1)
 			                        {
 			                            _p34_soloNivelInciso = true;
 			                            
@@ -2150,7 +2163,51 @@ function _p34_recuperarPolizaIncisosFlujo()
 			                        else if(nivel === 'P')
 			                        {
 			                            _p34_soloNivelPoliza = true;
-			                        }
+			                        }*/
+			                        
+			                        _fieldById('_p34_gridPolizas').getSelectionModel().select([_p34_storePolizas.getAt(0)]);
+			                                // ^ Seleccionamos una poliza
+			                        _p34_botonEndososPolizaClic(function () { // Abrimos los endosos de poliza
+			                            if (_p34_storeEndosos.getCount() > 0) { // Hay un endoso para poliza
+			                                var grid = _fieldById('_p34_gridEndosos');
+			                                //cellclick : function(view, td, cellIndex, record)
+			                                grid.fireEvent('cellclick', grid.getView(), null, null, _p34_storeEndosos.getAt(0));
+			                                        // ^ Abrimos ese endosos para poliza
+			                            } else { // No hay endoso para poliza, cargamos asegurados
+			                                _fieldById('_p34_windowEndosos').close(); // Cerramos los endosos de poliza
+			                                _p34_gridPolizasIncisosClic( // Cargamos asegurados
+                                                _p34_storePolizas.getAt(0),
+                                                _fieldById('_p34_gridPolizas'),
+                                                function () {
+                                                    var ck = 'Validando incisos para seleccionar incisos';
+                                                    try {
+                                                        if (_p34_storeIncisos.getCount() === 1) { // Hay un inciso
+                                                            _fieldById('_p34_gridIncisos').getSelectionModel().select([_p34_storeIncisos.getAt(0)]);
+                                                                    // ^ Seleccionamos el inciso
+                                                            _p34_botonEndososIncisosClic(function () { // Abrimos los endosos de ese inciso
+                                                                var ck = 'Buscando endosos para inciso callback';
+                                                                try {
+                                                                    if (_p34_storeEndosos.getCount() > 0) { // Hay un endoso para inciso
+                                                                        var grid = _fieldById('_p34_gridEndosos');
+                                                                        //cellclick : function(view, td, cellIndex, record)
+                                                                        grid.fireEvent('cellclick', grid.getView(), null, null, _p34_storeEndosos.getAt(0));
+                                                                                // ^ Abrimos ese endoso para inciso
+                                                                    } else {
+                                                                        _fieldById('_p34_windowEndosos').close(); // Cerramos los endosos de inciso
+                                                                        mensajeWarning('No se pudo abrir el endoso');
+                                                                    }
+                                                                } catch(e) {
+                                                                    manejaException(e, ck);
+                                                                }
+                                                            });
+                                                        }
+                                                    } catch (e) {
+                                                        manejaException(e, ck);
+                                                    }
+                                                }
+                                            );
+			                            }
+			                        });
 			                    }
 			                    catch(e)
 			                    {
