@@ -474,6 +474,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			    ,"\n@@@@@@ cdusuari=" , cdusuari
 			    ,"\n@@@@@@ cdsisrol=" , cdsisrol
 			    ,"\n@@@@@@ test="     , test
+			    ,"\n@@@@@@ swimpdpx=" , esDuplex
 				));
 		
 		String paso = "Iniciando impresi\u00F3n";
@@ -506,8 +507,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			{
 				logger.debug("archivo={} rutaDocumentosPoliza={} nmcopias={} ntramite={} cddocume={}",
 						archivo, rutaDocumentosPoliza, archivo.get("nmcopias"),
-						archivo.get("ntramite"), archivo.get("cddocume"));
-				
+						archivo.get("ntramite"), archivo.get("cddocume"), archivo.get("swimpdpx"));
 				if(!apagado)
 				{
 					String ntramite = archivo.get("ntramite");
@@ -540,6 +540,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					
 					paso = "Imprimiendo archivo";
 					sb.append("\n").append(paso);
+					
+					boolean swimpdpxArch =  archivo.get("swimpdpx").equals("S")?true:false;
+					esDuplex =swimpdpxArch!=esDuplex?false:true;
 					
 					impresionService.imprimeDocumento(
 							filePath
