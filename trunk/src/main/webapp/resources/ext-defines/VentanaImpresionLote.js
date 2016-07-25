@@ -540,6 +540,7 @@ Ext.define('VentanaImpresionLote',
                     ,'params.charola1' : printer.get('charola1')
                     ,'params.charola2' : printer.get('charola2')
                     ,'params.test'     : test
+                    ,'params.swimpdpx' : printer.get('swactivo')
                 }
                 ,success : function(response)
                 {

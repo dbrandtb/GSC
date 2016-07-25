@@ -180,6 +180,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n##########################"
 				,"\n###### imprimirLote ######"
+				,"\n###### params ######",params
 				));
 		
 		try
