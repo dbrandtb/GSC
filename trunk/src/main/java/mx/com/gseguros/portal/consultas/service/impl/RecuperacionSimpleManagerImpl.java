@@ -1130,6 +1130,23 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						);
 				
 				lista = flujoMesaControlDAO.recuperarTflujorol(cdtipflu,cdflujomc);
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_MPOLIZAS_POR_PARAMETROS_VARIABLES)) {
+				String cdunieco = params.get("cdunieco"),
+						cdramo  = params.get("cdramo"),
+						estado  = params.get("estado"),
+						nmpoliza = params.get("nmpoliza"),
+						nmsuplem = params.get("nmsuplem"),
+						nmsolici = params.get("nmsolici"),
+						cdramant = params.get("cdramant");
+				lista = consultasDAO.cargarMpolizasPorParametrosVariables(
+						cdunieco,
+						cdramo,
+						estado,
+						nmpoliza,
+						nmsuplem, 
+						nmsolici,
+						cdramant
+				);
 			}
 		}
 		catch(Exception ex)

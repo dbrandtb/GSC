@@ -555,8 +555,6 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
-    _p34_recuperarPolizaIncisosFlujo();
-    
     _p34_recuperarTipoEndosoFlujo();
     ////// loaders //////
 });
@@ -2077,14 +2075,14 @@ function _p34_recuperarPolizaIncisosFlujo()
     if(!Ext.isEmpty(_p34_flujo))
     {
         debug('Si hay flujo');
-            _p34_recuperarCduniext(
+            _p34_recuperarDatosPoliza(
                 _p34_flujo.cdunieco
                 ,_p34_flujo.cdramo
                 ,_p34_flujo.estado
                 ,_p34_flujo.nmpoliza
-                ,function(cduniext)
+                ,function(poliza)
                 {
-                    debug('callback despues de cduniext:',cduniext,'.');
+                    debug('callback despues de poliza:',poliza,'.');
                     
                     var ck = 'Decodificando auxiliar de flujo';
                     
@@ -2113,15 +2111,23 @@ function _p34_recuperarPolizaIncisosFlujo()
 			                hid[i].show();
 			            }
 			            
-			            _fieldByName('cdunieco',form).setValue( Ext.isEmpty(cduniext) ? _p34_flujo.cdunieco : cduniext );
+			            _fieldByName('cdunieco',form).setValue(Ext.isEmpty(poliza.CDUNIEXT) ? _p34_flujo.cdunieco : poliza.CDUNIEXT );
 			            
 			            _fieldByName('cdramo',form).setValue(_p34_flujo.cdramo);
 			            
 			            _fieldByName('nmpoliza',form).setValue(_p34_flujo.nmpoliza);
 			            
-			            _fieldByName('finicio',form).setValue('01/01/2000');
+			            _fieldByName('finicio',form).setValue('01/01/1900');
 			            
-			            _fieldByName('ffin',form).setValue('01/01/2100');
+			            _fieldByName('ffin',form).setValue('01/01/2500');
+			            
+			            if (Number(_p34_flujoAux.endosoSeleccionado) === 57) { // Para rehabilitacion
+			                _fieldByName('statusVig',form).forceSelection = false;
+			                _fieldByName('statusVig',form).setValue('C');
+			            }
+                        
+                        _fieldByName('ramo',form).forceSelection = false;
+                        _fieldByName('ramo',form).setValue(poliza.RAMO);
 			            
 			            form.hide();
 			            
@@ -2166,10 +2172,10 @@ function _p34_recuperarPolizaIncisosFlujo()
     }
 }
 
-//Se recupera el cduniext por cdunieco,cdramo,estado y nmpoliza. Se le envia al callback
-function _p34_recuperarCduniext(cdunieco,cdramo,estado,nmpoliza,callback)
+//Se recupera lista de polizas
+function _p34_recuperarDatosPoliza(cdunieco,cdramo,estado,nmpoliza,callback)
 {
-    debug('_p34_recuperarCduniext arguments:',arguments,'.');
+    debug('_p34_recuperarDatosPoliza arguments:',arguments,'.');
     
     var ck = 'Recuperando unidad externa';
     try
@@ -2182,7 +2188,7 @@ function _p34_recuperarCduniext(cdunieco,cdramo,estado,nmpoliza,callback)
             ||typeof callback !== 'function'
         )
         {
-            throw 'Faltan datos para recuperar unidad externa';
+            throw 'Faltan par\u00e1metros para recuperar datos de p\u00f3liza';
         }
         
         _mask(ck);
@@ -2191,7 +2197,7 @@ function _p34_recuperarCduniext(cdunieco,cdramo,estado,nmpoliza,callback)
             url      : _p34_urlRecuperacion
             ,params  :
             {
-                'params.consulta'  : 'RECUPERAR_CDUNIEXT_POR_LLAVE_POLIZA'
+                'params.consulta'  : 'RECUPERAR_MPOLIZAS_POR_PARAMETROS_VARIABLES'
                 ,'params.cdunieco' : cdunieco
                 ,'params.cdramo'   : cdramo
                 ,'params.estado'   : estado
@@ -2204,10 +2210,13 @@ function _p34_recuperarCduniext(cdunieco,cdramo,estado,nmpoliza,callback)
                 try
                 {
                     var json = Ext.decode(response.responseText);
-                    debug('### cduniext:',json);
+                    debug('### datos poliza:',json,'.');
                     if(json.success === true)
                     {
-                        callback(json.params.cduniext);
+                        if (json.list.length === 0) {
+                            throw 'No se encuentran los datos de la p\u00f3liza';
+                        }
+                        callback(json.list[0]);
                     }
                     else
                     {
@@ -2222,7 +2231,7 @@ function _p34_recuperarCduniext(cdunieco,cdramo,estado,nmpoliza,callback)
             ,failure : function()
             {
                 _unmask();
-                errorComunicacion(null,'Error al recuperar unidad externa');
+                errorComunicacion(null,'Error al recuperar datos de p\u00f3liza');
             }
         })
     }
@@ -2357,6 +2366,8 @@ function _p34_recuperarTipoEndosoFlujo()
                     _p34_flujoAux.endosoSeleccionado = json.params.otvalor;
                     
                     debug('_p34_flujoAux.endosoSeleccionado:',_p34_flujoAux.endosoSeleccionado,'.');
+                    
+                    _p34_recuperarPolizaIncisosFlujo();
                 }
                 catch(e)
                 {
