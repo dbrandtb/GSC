@@ -1396,9 +1396,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 				String numsoc   = (String) aseg.get("numsoc");
 				String nmsituac = (String) aseg.get("nmsituac");
 				String parentesco = (String) aseg.get("parentesco");
+				int rol = Integer.parseInt((String) aseg.get("cdrol"));
 				
 				
-				//Nï¿½mero de socio y Clave Familiar, para el atributo SITUAEXT
+				//Número de socio y Clave Familiar, para el atributo SITUAEXT
 				
 					logger.debug(Utils.log("Numero de Socio ->",numsoc));
 					logger.debug(Utils.log("Clave Familiar  ->",clvfam));
@@ -1406,13 +1407,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug(Utils.log("Ocupacion       ->",(String) aseg.get("ocup")));
 					
 					
-					if(StringUtils.isBlank(numsoc) || StringUtils.isBlank(clvfam)){
+					if(StringUtils.isBlank(numsoc) || StringUtils.isBlank(clvfam)
+							|| StringUtils.isBlank((String) aseg.get("cdestciv")) || StringUtils.isBlank((String) aseg.get("ocup"))){
 						nmsituaext = " ";
 						String cdunieco = (String) map1.get("pv_cdunieco");
 						
-						if(StringUtils.isBlank(nmsituaext) && cdunieco.equals(SUCURSAL_SALUD_NOVA) 
-								|| StringUtils.isBlank((String) aseg.get("cdestciv")) || StringUtils.isBlank((String) aseg.get("ocup"))){
-							throw new ApplicationException("No se generando Situaext desde Clave familiar y Numero de Socio");
+						if(rol >= 2){
+							logger.debug(Utils.log("Rol ->",rol));
+							logger.debug(Utils.log("v1"));
+							if(StringUtils.isBlank(nmsituaext) && cdunieco.equals(SUCURSAL_SALUD_NOVA)){
+								throw new ApplicationException("No se genero Situaext desde Clave familiar y Numero de Socio");
+							}
 						}
 					}else{
 						logger.debug(Utils.log("Generando Situaext..."));
@@ -1697,7 +1702,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 				mensajeRespuesta = ex.getMessage();
 				return SUCCESS;
 			}
-			
 			///////////////////////////////////
 			////// validar la extraprima //////
 			/*///////////////////////////////*/
@@ -1758,6 +1762,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				logger.debug("Se va a terminar el proceso porque faltan direcciones");
 				return SUCCESS;
 			}
+
 			
 			
 			try {
@@ -1768,7 +1773,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramValidarMenor.put("pv_nmpoliza" , panel1.get("nmpoliza"));
 				String existeMenor = kernelManager.validaTitularMenorEdad(paramValidarMenor);
 				
-				if (Constantes.SI.equalsIgnoreCase(existeMenor)) {
+				if(Constantes.SI.equalsIgnoreCase(existeMenor)){
 					this.respuestaOculta = "El Titular es Menor de Edad, se requerir\u00e1 una autorizaci\u00f3n posterior.";
 				}
 			} catch(Exception ex) {
