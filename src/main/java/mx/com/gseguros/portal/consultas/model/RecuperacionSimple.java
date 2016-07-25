@@ -80,6 +80,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_TTIPFLUROL                                    ("L" , "RECUPERAR_TTIPFLUROL")
 	,RECUPERAR_TFLUJOROL                                     ("L" , "RECUPERAR_TFLUJOROL")
 	,RECUPERAR_FLUJO_POR_DESCRIPCION                         ("M" , "RECUPERAR_FLUJO_POR_DESCRIPCION")
+	,RECUPERAR_MPOLIZAS_POR_PARAMETROS_VARIABLES             ("L" , "RECUPERAR_MPOLIZAS_POR_PARAMETROS_VARIABLES")
 	;
 	 
 	private String tipo;
