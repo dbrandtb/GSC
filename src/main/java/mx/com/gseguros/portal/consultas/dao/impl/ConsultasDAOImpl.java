@@ -3150,10 +3150,11 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	}
 	
 	@Override
-	public Map<String,String>recuperarDetalleImpresionLote(String lote) throws Exception
+	public Map<String,String>recuperarDetalleImpresionLote(String lote, String tramite) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("lote" , lote);
+		params.put("pv_lote_i" , lote);
+		params.put("pv_ntramite_i", tramite);
 		Map<String,Object> procRes    = ejecutaSP(new RecuperarDetalleImpresionLote(getDataSource()),params);
 		String             requeridas = (String)procRes.get("pv_permiso_o");
 		String             ejecutadas = (String)procRes.get("pv_suma_o");
@@ -3164,7 +3165,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		Map<String,String> result = new HashMap<String,String>();
 		result.put("requeridas" , requeridas);
 		result.put("ejecutadas" , ejecutadas);
-		logger2.debug("****** PKG_CONSULTA.P_GET_DET_IMP_LOTE salida: {}",result);
+		logger2.debug("****** PKG_CONSULTA_artur.P_GET_DET_IMP_LOTE salida: {}",result);
 		return result;
 	}
 	
@@ -3172,8 +3173,9 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarDetalleImpresionLote(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DET_IMP_LOTE");
-			declareParameter(new SqlParameter("lote" , OracleTypes.VARCHAR));
+			super(dataSource,"PKG_CONSULTA_artur.P_GET_DET_IMP_LOTE");
+			declareParameter(new SqlParameter("pv_lote_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_permiso_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_suma_o"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));

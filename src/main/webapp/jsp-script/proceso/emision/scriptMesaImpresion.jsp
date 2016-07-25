@@ -639,6 +639,7 @@ function _4_onContinuarImpresionClic(row)
                             centrarVentanaInterna(Ext.create('VentanaImpresionLote',
                             {
                                 lote        : lote
+                                ,tramite    : record.get('ntramite')
                                 ,cdtipram   : record.get('parametros.pv_otvalor03')
                                 ,cdtipimp   : record.get('parametros.pv_otvalor02')
                                 ,tipolote   : record.get('parametros.pv_otvalor06')
