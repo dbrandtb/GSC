@@ -1632,6 +1632,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					,"STATUS"   , "DSSTATUS"           , "CDUNIECO"    , "CDRAMO"    , "CDTIPSIT"
 					,"DSTIPSIT" , "ESTADO"             , "NMPOLIZA"    , "FECSTATU"  , "FERECEPC"
 					,"NMSOLICI" , "NOMBRE_CONTRATANTE" , "RESPONSABLE" , "RAMO"      , "DSTIPSUP"
+					,"CDTIPRAM" , "DSTIPRAM"           , "NMPOLIEX"    , "CDTIPTRA"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
 			declareParameter(new SqlOutParameter("pv_total_o"    , OracleTypes.VARCHAR));
@@ -2674,6 +2675,45 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdrazrecha" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarChecklistInicial (String cdtipflu, String cdflujomc,
+			String cdtiptra, String cdtipsup) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdtipflu"  , cdtipflu);
+		params.put("cdflujomc" , cdflujomc);
+		params.put("cdtiptra"  , cdtiptra);
+		params.put("cdtipsup"  , cdtipsup);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarChecklistInicialSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperarChecklistInicialSP extends StoredProcedure
+	{
+		protected RecuperarChecklistInicialSP(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_ACCION_CHECKLIST");
+			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtiptra"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup"  , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDTIPFLU",
+		            "CDFLUJOMC",
+		            "CLAVEDEST",
+		            "WEBIDDEST",
+		            "AUX"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

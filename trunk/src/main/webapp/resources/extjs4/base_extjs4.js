@@ -2133,7 +2133,9 @@ function _procesaAccion(
                             */
                             if(json.list.length==0)
                             {
-                                throw 'No hay acciones relacionadas a la revisi\u00f3n';
+                                if (aux !== 'INICIAL') { // Solo avienta exception si no es INICIAL
+                                    throw 'No hay acciones relacionadas a la revisi\u00f3n';
+                                } 
                             }
                             else if(json.list.length==1)
                             {
@@ -2170,7 +2172,9 @@ function _procesaAccion(
                             }
                             else
                             {
-                                throw 'La revisi\u00f3n tiene demasiadas acciones relacionadas';
+                                if (aux !== 'INICIAL') { // Solo avienta exception si no es INICIAL
+                                    throw 'La revisi\u00f3n tiene demasiadas acciones relacionadas';
+                                }
                             }
                             
                             ck = 'Ejecutando revisi\u00f3n';
@@ -2213,10 +2217,14 @@ function _procesaAccion(
                                                 }
                                             }
                                             
+                                            if (aux === 'INICIAL') {
+                                                faltanDocs = true;
+                                            }
+                                            
                                             if (!faltanDocs) {
 	                                            if(numSalidas==1)
 	                                            {
-	                                                _procesaAccion
+                                                    _procesaAccion
                                                     (
                                                         cdtipflu
                                                         ,cdflujomc
@@ -2239,7 +2247,7 @@ function _procesaAccion(
 	                                            }
 	                                            else if(numSalidas==2)
 	                                            {
-	                                                _procesaAccion
+                                                    _procesaAccion
                                                     (
                                                         cdtipflu
                                                         ,cdflujomc
@@ -2358,11 +2366,11 @@ function _procesaAccion(
 	                                                buttonAlign : 'center',
 	                                                buttons     : [
 	                                                    {
-	                                                        text    : 'Continuar',
+	                                                        text    : 'Aceptar',
 	                                                        handler : function (me) {
 	                                                           me.up('window').destroy();
 	                                                           
-	                                                           if (numSalidas === 2) {
+	                                                           if (numSalidas === 2 && aux != 'INICIAL') { // Cuando sean 2 salidas y no sea inicial ejecuta error
 	                                                                _procesaAccion(
                                                                         cdtipflu
                                                                         ,cdflujomc
@@ -2891,7 +2899,9 @@ function subirArchivoDesdeRevision (row) {
             ,tipoent           : flujo.tipodest
             ,claveent          : flujo.clavedest
             ,webid             : flujo.webiddest
-            ,aux               : flujo.aux
+            ,aux               : 'INICIAL' === flujo.aux
+                                     ? ''
+                                     : flujo.aux
             ,ntramite          : flujo.ntramite
             ,status            : flujo.status
             ,cdunieco          : flujo.cdunieco

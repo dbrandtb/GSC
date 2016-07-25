@@ -3,6 +3,7 @@ package mx.com.gseguros.mesacontrol.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -2750,5 +2751,39 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	public void modificarDetalleTramiteMC(String ntramite, String nmordina, String comments) throws Exception
 	{
 		flujoMesaControlDAO.modificarDetalleTramiteMC(ntramite, nmordina, comments);
+	}
+	
+	@Override
+	public Map<String, String> recuperarChecklistInicial (String cdtipflu, String cdflujomc, String cdtiptra, String cdtipsup) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ recuperarChecklistInicial @@@@@@",
+				"\n@@@@@@ cdtipflu  = " , cdtipflu,
+				"\n@@@@@@ cdflujomc = " , cdflujomc,
+				"\n@@@@@@ cdtiptra  = " , cdtiptra,
+				"\n@@@@@@ cdtipsup  = " , cdtipsup
+				));
+		String paso = null;
+		Map<String, String> mapa = null;
+		try {
+			paso = "Recuperando lista de checklist";
+			
+			List<Map<String, String>> lista = flujoMesaControlDAO.recuperarChecklistInicial(cdtipflu, cdflujomc, cdtiptra, cdtipsup);
+			
+			if (lista == null || lista.size() == 0) {
+				mapa = new LinkedHashMap<String, String>();
+			} else {
+				mapa = lista.get(0);
+			}
+			
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ mapa = ", mapa,
+				"\n@@@@@@ recuperarChecklistInicial @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return mapa;
 	}
 }

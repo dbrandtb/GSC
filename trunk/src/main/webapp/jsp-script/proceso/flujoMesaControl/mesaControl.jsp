@@ -21,7 +21,8 @@ var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" ac
     ,_p54_urlRegistrarTramite         = '<s:url namespace="/flujomesacontrol" action="registrarTramite"           />'
     ,_p54_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto"   />'
     ,_p54_urlRecuperarPolizaDanios    = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnicaDanios" />'
-    ,_p54_urlRecuperarPolizaSIGS      = '<s:url namespace="/emision"          action="cargarPoliza"               />';
+    ,_p54_urlRecuperarPolizaSIGS      = '<s:url namespace="/emision"          action="cargarPoliza"               />'
+    ,_p54_urlRecuperarChecklist       = '<s:url namespace="/flujomesacontrol" action="recuperarChecklistInicial"  />';
 ////// urls //////
 
 ////// variables //////
@@ -534,13 +535,31 @@ Ext.onReady(function()
                                     }
                                     ,{
                                         xtype       : 'displayfield'
-                                        ,fieldLabel : 'SUBRAMO'
-                                        ,value      : record.get('DSTIPSIT')
+                                        ,fieldLabel : 'RAMO'
+                                        ,value      : _NVL(record.get('RAMO')) + ' - ' + record.get('DSTIPSIT')
                                     }
                                     ,{
                                         xtype       : 'displayfield'
                                         ,fieldLabel : 'P\u00d3LIZA'
-                                        ,value      : record.get('NMPOLIZA')
+                                        ,value      : _NVL(record.get('NMPOLIZA'), 0)
+                                        ,hidden     : record.get('CDTIPRAM') == 2 // Oculto para autos
+                                    }
+                                    ,{
+                                        xtype       : 'displayfield'
+                                        ,fieldLabel : 'P\u00d3LIZA'
+                                        ,value      : _NVL(record.get('NMPOLIEX'), 0)
+                                        ,hidden     : record.get('CDTIPRAM') == 10 // Oculto para salud
+                                    }
+                                    ,{
+                                        xtype       : 'displayfield'
+                                        ,fieldLabel : 'COTIZACI\u00D3N'
+                                        ,value      : _NVL(record.get('NMSOLICI'), 0)
+                                    }
+                                    ,{
+                                        xtype       : 'displayfield'
+                                        ,fieldLabel : 'ENDOSO'
+                                        ,value      : ' - '
+                                        ,hidden     : Number(record.get('CDTIPTRA')) !== 15
                                     }
                                 ]
                                 ,buttonAlign : 'center'
@@ -730,7 +749,7 @@ Ext.onReady(function()
                                     
                                     // Si la recuperada no es del agente de sesion
                                     if (!Ext.isEmpty(_p54_params.CDAGENTE) && Number(_p54_params.CDAGENTE) !== Number(json.params.CDAGENTE)) {
-                                        throw 'No tiene permisos para recuperar esta p\u00f3liza, pertenece al agente ' + json.params.CDAGENTE;
+                                        throw 'No tiene permisos para recuperar esta p\u00f3liza';//, pertenece al agente ' + json.params.CDAGENTE;
                                     }
                                     
                                     centrarVentanaInterna(Ext.create('Ext.window.Window', {
@@ -929,7 +948,7 @@ Ext.onReady(function()
 	                                    
 	                                    // Si la recuperada no es del agente de sesion
                                         if (!Ext.isEmpty(_p54_params.CDAGENTE) && Number(_p54_params.CDAGENTE) !== Number(json.params.CDAGENTE)) {
-                                            throw 'No tiene permisos para recuperar esta p\u00f3liza, pertenece al agente ' + json.params.CDAGENTE;
+                                            throw 'No tiene permisos para recuperar esta p\u00f3liza';//, pertenece al agente ' + json.params.CDAGENTE;
                                         }
 	                                    
 	                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -1114,7 +1133,7 @@ Ext.onReady(function()
                                         
                                         // Si la recuperada no es del agente de sesion
                                         if (!Ext.isEmpty(_p54_params.CDAGENTE) && Number(_p54_params.CDAGENTE) !== Number(jsonSIGS.smap1.cdagente)) {
-                                            throw 'No tiene permisos para recuperar esta p\u00f3liza, pertenece al agente ' + jsonSIGS.smap1.cdagente;
+                                            throw 'No tiene permisos para recuperar esta p\u00f3liza';//, pertenece al agente ' + jsonSIGS.smap1.cdagente;
                                         }
                                         
                                         centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -1249,7 +1268,7 @@ function _p54_registrarTramite(bot)
     {
         if(!form.isValid())
         {
-            throw 'Favor de revisar los datos';
+            throw 'Favor de revisar los datos marcados en rojo';
         }
         
         var values = form.getValues();
@@ -1292,7 +1311,16 @@ function _p54_registrarTramite(bot)
                         mensajeCorrecto('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
                         {
                             bot.up('window').hide();
-                            _p54_store.reload();
+                            var mask = _maskLocal('Recuperando tr\u00e1mites');
+                            _p54_store.reload({
+                                callback : function (records, op, success) {
+                                    mask.close();
+                                    if (success === true) {
+                                        _p54_mostrarCheckDocumentosInicial(json.params.CDTIPFLU, json.params.CDFLUJOMC,
+                                                json.params.CDTIPTRA, json.params.CDTIPSUP, json.params.ntramite);
+                                    }
+                                }
+                            });
                         });
                     }
                     else
@@ -1423,6 +1451,75 @@ function _p54_setearSucursalAgente () {
         }
     } catch (e) {
         manejaException(e, ck);
+    }
+}
+
+function _p54_mostrarCheckDocumentosInicial (cdtipflu, cdflujomc, cdtiptra, cdtipsup, ntramite) {
+    debug('_p54_mostrarCheckDocumentosInicial args:', arguments);
+    var mask, ck = 'Verificando tr\u00e1mite en grid';
+    try {
+        var indexRecord = _p54_store.find('NTRAMITE', ntramite);
+        debug('indexRecord:', indexRecord, '.');
+        if (indexRecord !== -1) {
+            var _p54_grid = _fieldById('_p54_grid');
+            _p54_grid.getSelectionModel().deselectAll();
+            debug('select', indexRecord, '.');
+            _p54_grid.getSelectionModel().select(indexRecord);
+            
+            ck = 'Recuperando checklist de documentos';
+            mask = _maskLocal(ck);
+            Ext.Ajax.request({
+                url    : _p54_urlRecuperarChecklist,
+                params : {
+                    'params.cdtipflu'  : cdtipflu,
+                    'params.cdflujomc' : cdflujomc,
+                    'params.cdtiptra'  : cdtiptra,
+                    'params.cdtipsup'  : cdtipsup
+                },
+                success : function (response) {
+                    mask.close();
+                    var ck = 'Decodificando respuesta al recuperar checklist de documentos';
+                    try {
+                        var json = Ext.decode(response.responseText);
+                        debug('### checklist:', json, '.');
+                        if (json.success === true) {
+                            if (!Ext.isEmpty(json.params.CLAVEDEST)) {
+                                var record = _p54_store.getAt(indexRecord);
+                                _procesaAccion(
+                                        json.params.CDTIPFLU,
+                                        json.params.CDFLUJOMC,
+                                        'R',
+                                        json.params.CLAVEDEST,
+                                        json.params.WEBIDDEST,
+                                        'INICIAL',
+                                        record.get('NTRAMITE'),
+                                        record.get('STATUS'),
+                                        record.get('CDUNIECO'),
+                                        record.get('CDRAMO'),
+                                        record.get('ESTADO'),
+                                        record.get('NMPOLIZA'),
+                                        record.get('NMSITUAC'),
+                                        record.get('NMSUPLEM'),
+                                        _p54_params.CDUSUARI,
+                                        _p54_params.CDSISROL,
+                                        null//callback
+                                );
+                            }
+                        } else {
+                            mensajeError(json.message);
+                        }
+                    } catch (e) {
+                        manejaException(e, ck);
+                    }
+                },
+                failure : function () {
+                    mask.close();
+                    errorComunicacion(null, 'Error al recuperar checklist de documentos');
+                }
+            });
+        }
+    } catch (e) {
+        manejaException(e, ck, mask);
     }
 }
 
