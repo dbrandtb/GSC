@@ -565,7 +565,7 @@ Ext.onReady(function()
           ,width  : 435
           ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
           ,items  : _p28_panel7Items
-          ,hidden : true
+          ,hidden : false
     }
    ,{
          xtype   : 'fieldset'
@@ -1302,7 +1302,14 @@ Ext.onReady(function()
                                 
                                 plazoenanios = Number(json.smap1.LIMITE_SUPERIOR);
 //                              _fieldByName('FESOLICI').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR, Number(json.smap1.LIMITE_SUPERIOR)));
-                                _fieldByName('fefin').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR,plazoenanios));
+                                if(!Ext.isEmpty(_fieldByName('feini').getValue()))
+                                {
+                                    _fieldByName('fefin').setMaxValue(Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.YEAR,plazoenanios));
+                                }
+                                else
+                                {
+                                	_fieldByName('fefin').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR,plazoenanios));
+                                }
                                 if(Number(json.smap1.MULTIANUAL) != 0) {
                                     _fieldByName('fefin').validator=function(val)
                                     {
@@ -2858,10 +2865,11 @@ function _p28_cargarPoliza(boton)
 	            url      : _p28_urlCargarPoliza
 	             ,params  :
 	             {
-	                  'smap1.cdsucursal' : sucursal
-	                 ,'smap1.cdramo' : ramo
-	                 ,'smap1.cdpoliza' : poliza
-	                 ,'smap1.tipoflot' : 'I'
+	                  'smap1.cdsucursal': sucursal
+	                 ,'smap1.cdramo'    : ramo
+	                 ,'smap1.cdpoliza'  : poliza
+	                 ,'smap1.tipoflot'  : 'I'
+	                 ,'smap1.cdtipsit'  : _p28_smap1.cdtipsit
 	             }
 	             ,success : function(response)
 	             {
@@ -2885,6 +2893,11 @@ function _p28_cargarPoliza(boton)
 			              if(!Ext.isEmpty(json2.smap1.mensajeError))
                           {
 			            	  mensajeError(json2.smap1.mensajeError);
+                          }
+			              if(!Ext.isEmpty(json2.smap1.mensajeAviso))
+                          {
+			            	  mensajeInfo(json2.smap1.mensajeAviso);
+			            	  llenandoCampos(json2);
                           }
 			              else
 			              {
@@ -2953,8 +2966,15 @@ function llenandoCampos(json)
         {
             _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y'));
         }*/
+        if(!Ext.isEmpty(json.slist1[0]['feini']))
+        {
+            _fieldByName('feini').setValue(Ext.Date.parse(json.slist1[0]['feini'],'d/m/Y'));
+        }
+        else
+        {
+            _fieldByName('feini').setValue(new Date());
+        }
         
-        _fieldByName('feini').setValue(new Date());
         _fieldByName('fefin').setValue
         (
             Ext.Date.add
@@ -2964,7 +2984,7 @@ function llenandoCampos(json)
                 ,diaDif
             )
         );
-        
+    
         _fieldByName('sucursal').semaforo=true;
         _fieldByName('sucursal').setValue(sucursal);
         _fieldByName('sucursal').semaforo=false;
