@@ -11,6 +11,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
@@ -21,6 +22,7 @@ import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CancelacionAction extends PrincipalCoreAction
 {
@@ -38,6 +40,11 @@ public class CancelacionAction extends PrincipalCoreAction
 	private String                   error;
 	private String                   respuesta;
 	
+	
+	@Autowired
+	private DocumentosManager documentosManager;
+	
+
 	//////////////////////////////////
 	////// marco de cancelacion //////
 	/*//////////////////////////////*/
@@ -249,54 +256,18 @@ public class CancelacionAction extends PrincipalCoreAction
 			String estado   = smap1.get("pv_estado_i");
 			String nmpoliza = smap1.get("pv_nmpoliza_i");
 			
-			//PKG_CONSULTA.P_IMP_DOC_CANCELACION
-			//nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
-			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-			
-			for(Map<String,String> docu:listaDocu)
-			{
-				log.debug("docu iterado: "+docu);
-				String descripc = docu.get("descripc");
-				String descripl = docu.get("descripl");
-				
-				ntramite = docu.get("ntramite");
-				
-				String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
-				
-				String url=this.getText("ruta.servidor.reports")
-						+ "?destype=cache"
-						+ "&desformat=PDF"
-						+ "&userid="+this.getText("pass.servidor.reports")
-						+ "&report="+descripl
-						+ "&paramform=no"
-						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-						+ "&p_unieco="+cdunieco
-						+ "&p_ramo="+cdramo
-						+ "&p_estado="+estado
-						+ "&p_poliza="+nmpoliza
-						+ "&p_suplem="+nmsuplem
-						+ "&desname="+rutaCarpeta+"/"+descripc;
-				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
-				{
-					// C R E D E N C I A L _ X X X X X X . P D F
-					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
-				}
-				log.debug(""
-						+ "\n#################################"
-						+ "\n###### Se solicita reporte ######"
-						+ "\na "+url+""
-						+ "\n#################################");
-				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-				log.debug(""
-						+ "\n######                    ######"
-						+ "\n###### reporte solicitado ######"
-						+ "\na "+url+""
-						+ "\n################################"
-						+ "\n################################"
-						+ "");
-			}
-			
+			documentosManager.generarDocumentosParametrizados(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0" //nmsituac
+					,nmsuplem
+					,DocumentosManager.PROCESO_ENDOSO
+					,ntramite
+					,null//nmsolici
+					,null
+					);
 			
 			String sucursal = cdunieco;
 			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
