@@ -2748,9 +2748,15 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public void modificarDetalleTramiteMC(String ntramite, String nmordina, String comments) throws Exception
+	public String modificarDetalleTramiteMC(
+			String ntramite,
+			String nmordina,
+			String comments,
+			String cdusuari,
+			String cdsisrol
+			) throws Exception
 	{
-		flujoMesaControlDAO.modificarDetalleTramiteMC(ntramite, nmordina, comments);
+		return flujoMesaControlDAO.modificarDetalleTramiteMC(ntramite, nmordina, comments, cdusuari, cdsisrol, new Date());
 	}
 	
 	@Override

@@ -2230,7 +2230,9 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		
 		try
 		{
-			Utils.validateSession(session);
+			UserVO usuario = Utils.validateSession(session);
+			String cdusuari = usuario.getUser();
+			String cdsisrol = usuario.getRolActivo().getClave();
 			
 			Utils.validate(params , "No se recibieron datos");
 			
@@ -2244,7 +2246,13 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,comments , "No se recibi\u00f3 el detalle"
 					);
 			
-			flujoMesaControlManager.modificarDetalleTramiteMC(ntramite,nmordina,comments);
+			params.put("comments", flujoMesaControlManager.modificarDetalleTramiteMC(
+					ntramite,
+					nmordina,
+					comments,
+					cdusuari,
+					cdsisrol
+					));
 			
 			success = true;
 		}

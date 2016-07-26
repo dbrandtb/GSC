@@ -673,7 +673,14 @@ public interface FlujoMesaControlDAO {
 	
 	public List<Map<String, String>> recuperaTflutit(String cdtipflu, String cdflujomc, String cdtitulo) throws Exception;
 	
-	public void modificarDetalleTramiteMC(String ntramite, String nmordina, String comments) throws Exception;
+	public String modificarDetalleTramiteMC(
+			String ntramite,
+			String nmordina,
+			String comments,
+			String cdusuari,
+			String cdsisrol,
+			Date fecha
+			) throws Exception;
 	
 	public void guardarMotivoRechazoTramite (String ntramite, String cdrazrecha) throws Exception;
 	
