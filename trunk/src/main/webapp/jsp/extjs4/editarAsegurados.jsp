@@ -534,12 +534,7 @@
                                         Apellido_Materno: datosContr.apmat,
                                         cdrfc:datosContr.rfc,
                                         tpersona : datosContr.tipoper,
-                                        nacional : datosContr.naciona,
-                                        cdestciv : recordAsegu.get('cdestciv'),
-                                        numsoc   : recordAsegu.get('numsoc'),
-                                        clvfam   : recordAsegu.get('clvfam'),
-                                        ocup     : recordAsegu.get('ocup'),
-                                        parentesco	: recordAsegu.get('Parentesco')
+                                        nacional : datosContr.naciona
                                     });
                                     /*if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
                                     {
@@ -605,7 +600,8 @@
                                             cdestciv :  recordAsegu.get('cdestciv'),
                                             ocup     :  recordAsegu.get('ocup'),
                                             numsoc   :  recordAsegu.get('numsoc'),
-                                            clvfam   :  recordAsegu.get('clvfam')
+                                            clvfam   :  recordAsegu.get('clvfam'),
+                                            parentesco	: recordAsegu.get('Parentesco')
                                         });
                                         debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
                                         var recordTmp = recordAsegu;
@@ -640,7 +636,8 @@
                                         cdestciv :  recordAsegu.get('cdestciv'),
                                         clvfam   :  recordAsegu.get('clvfam'),
                                         numsoc   :  recordAsegu.get('numsoc'),
-                                        ocup     :  recordAsegu.get('ocup')
+                                        ocup     :  recordAsegu.get('ocup'),
+                                        parentesco	: recordAsegu.get('Parentesco')
                                     });
                                     debug('*f6');
                                 });
