@@ -443,37 +443,42 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                double cdgrupo	= -1d;
 
 		                // Empezamos a leer los campos del archivo de Excel
-		                String fechaOcurrencia = null;
-		                String aseguradoAfectado = null;
-		                String tipoConcepto = null;
-		                String codigoConcepto = null;
-		                String conversionTipoID = null;
-		                int total = 1;
-		                int totalVal = 1;
-		                int errorOcurrencia = 0;
-		                int errorConcepto = 0;
-		                String campoFechaOcurrencia = null;
-		                String campocodigoConcepto  = null;
-		                String campoCPTs = null;
-		                //logger.debug(msg);
+		                String fechaOcurrencia 	 		= null;
+		                String aseguradoAfectado 		= null;
+		                String coberturaAfectada 		= null;
+		                String subcoberturaAfectada		= null;
+		                String tipoConcepto 	 		= null;
+		                String codigoConcepto 	 		= null;
+		                String conversionTipoID  		= null;
+		                int total 				 		= 1;
+		                int totalVal 			 		= 1;
+		                int errorOcurrencia 	 		= 0;
+		                int errorGeneralCobSub      	= 0;
+		                int errorCobertura	 	 		= 0;
+		                int errorSubcobertura 	 		= 0;
+		                int errorConcepto 		 		= 0;
+		                String campoFechaOcurrencia 	= null;
+		                String campocodigoConcepto  	= null;
+		                String campoCPTs 				= null;
+		                String campocodigoCobertura 	= null;
+		                String campocodigoSubCobertura  = null;
+		                
+		                logger.debug("Valor de datosInformacionLayout :{} datosInformacionLayout.size:{}",datosInformacionLayout,datosInformacionLayout.size());
 		                for(int i = 0; i < datosInformacionLayout.size();i++){
 		                	int celdaPrincipal = Integer.parseInt(datosInformacionLayout.get(i).get("CVEEXCEL").toString())-1;
 		                	auxCell = row.getCell(celdaPrincipal);
 		                	
 		                	try{
-		                		logger.debug("datosInformacionLayout.get(i) ===> :{}",datosInformacionLayout.get(i));
-		                		logger.debug("datosInformacionLayout ===> :{}",datosInformacionLayout.get(i).get("CVEFORMATO").toString());
-		                		
-		                		//1.- Validamos el tipo de datos del registro
+		                		//1.- Validamos si la clave del Formato es Fecha
 		                		if(datosInformacionLayout.get(i).get("CVEFORMATO").toString().equalsIgnoreCase("F")){
 		                			String conversionFechaString = obtieneValor(auxCell, CampoVO.FECHA,datosInformacionLayout.get(i).get("DESCFECHA").toString(),  "dd/MM/yyyy");
 		                			
+		                			//Guardamos la informacion de la Fecha de Ocurrencia y el campo por si hay algun error
 		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("FECHA OCURRENCIA")){
 		                				campoFechaOcurrencia =  datosInformacionLayout.get(i).get("DESCRIPC").toString();
 		                				fechaOcurrencia      = conversionFechaString;
 		                			}
-		                			
-		                			
+		                			//Si alguna de las fecha es null o vacia le asignaremos una por default
 		                			if(datosInformacionLayout.get(i).get("SWOBLIGA").toString().equalsIgnoreCase("N") && StringUtils.isBlank(conversionFechaString)){
 	                					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 	                					Date date = formatter.parse("01/01/1900");
@@ -484,25 +489,16 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	                					bufferLinea.append(conversionFechaString+"|");
 	                				}
 		                		}else if(datosInformacionLayout.get(i).get("CVEFORMATO").toString().equalsIgnoreCase("A")){
+		                			//2.- Validamos si la clave del Formato es Alfanumerico
 		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, null, null);
-		                			logger.debug("conversionString ===>:{}",conversionString);
 		                			String cadenaModificada = conversionString.trim().
-	                						replaceAll("á","a").
-	                						replaceAll("é","e").
-	                						replaceAll("í","i").
-	                						replaceAll("ó","o").
-	                						replaceAll("ú","u").
-	                						replaceAll("Á","A").
-	                						replaceAll("É","E").
-	                						replaceAll("Í","I").
-	                						replaceAll("Ó","O").
-	                						replaceAll("Ú","U").
-	                						replaceAll("\\*","");
+	                						replaceAll("á","a").replaceAll("é","e").replaceAll("í","i").replaceAll("ó","o").
+	                						replaceAll("ú","u").replaceAll("Á","A").replaceAll("É","E").replaceAll("Í","I").
+	                						replaceAll("Ó","O").replaceAll("Ú","U").replaceAll("\\*","");
 		                			
 		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CVE. ASEGURADO")){
 	                					HashMap<String, Object> paramPersona = new HashMap<String, Object>();
 	                					paramPersona.put("pv_cdideext_i",cadenaModificada);
-	                					
 	                					String existePersona = siniestrosManager.validaPersonaSisaSicaps(paramPersona);
 	                					if(Integer.parseInt(existePersona) > 0){
 	                						aseguradoAfectado = "G"+existePersona;
@@ -513,26 +509,39 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	                						throw new Exception("El asegurado no se encuentra en SICAPS.");
 	                					}
 	                				}else{
-	                					logger.debug("Entra al Else ==> cadenaModificada :{} esvacio : {}",cadenaModificada.trim(),StringUtils.isBlank(cadenaModificada.trim()));
-	                					
-	                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("COBERTURA") &&
-                							datosInformacionLayout.get(i).get("SWOBLIGA").toString().equalsIgnoreCase("N") && 
-                							StringUtils.isBlank(cadenaModificada.trim())){
-	                						bufferLinea.append("Medicamentos"+"|");
-		                				}else if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("SUBCOBERTURA") &&
-                							datosInformacionLayout.get(i).get("SWOBLIGA").toString().equalsIgnoreCase("N") && 
-                							StringUtils.isBlank(cadenaModificada.trim())){
-		                					bufferLinea.append("Medicamentos - Todos Los Medicamentos Recetados Por Los Medicos De La Red"+"|");
-		                				}else{
-		                					bufferLinea.append(
-				                				auxCell!=null?cadenaModificada.trim()+"|":"|"
-					                		);
-		                				}
+	                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("COBERTURA")){
+	                						campocodigoCobertura =  datosInformacionLayout.get(i).get("DESCRIPC").toString();
+	                						if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("COBERTURA") &&
+	                    							datosInformacionLayout.get(i).get("SWOBLIGA").toString().equalsIgnoreCase("N") && 
+	                    							StringUtils.isBlank(cadenaModificada.trim())){
+	    	                						coberturaAfectada ="Medicamentos";
+	    	                						bufferLinea.append("Medicamentos"+"|");
+	    		                				}else{
+	    		                					coberturaAfectada =cadenaModificada.trim();
+	    		                					bufferLinea.append(auxCell!=null?cadenaModificada.trim()+"|":"|");
+	    		                				}
+	                					}else if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("SUBCOBERTURA")){
+	                						campocodigoSubCobertura =  datosInformacionLayout.get(i).get("DESCRIPC").toString();
+	                						if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("SUBCOBERTURA") &&
+	                    							datosInformacionLayout.get(i).get("SWOBLIGA").toString().equalsIgnoreCase("N") && 
+	                    							StringUtils.isBlank(cadenaModificada.trim())){
+	    		                					//Si la SUBCOBERTURA es opcional o no viene le asignamos la de MEDICAMENTOS (FARMACIAS)
+	    		                					subcoberturaAfectada ="Medicamentos - Todos Los Medicamentos Recetados Por Los Medicos De La Red";
+	    		                					bufferLinea.append("Medicamentos - Todos Los Medicamentos Recetados Por Los Medicos De La Red"+"|");
+	                						}else{
+    		                					subcoberturaAfectada =cadenaModificada.trim();
+    		                					bufferLinea.append(auxCell!=null?cadenaModificada.trim()+"|":"|");
+    		                				}
+	                					}else{
+	                						bufferLinea.append(auxCell!=null?cadenaModificada.trim()+"|":"|");
+	                					}
 	                				}
 	                				
+		                			//Hacemos la asignacion para cada una de ellas para validar que existe
 	                				if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CLAVE ASEGURADO")){
 	                					aseguradoAfectado = cadenaModificada.trim();
 	                				}
+	                				
 		                			
 	                				if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("ID. CONCEPTO")){ //CPT  UB HCPC
 	                					tipoConcepto = cadenaModificada.trim();
@@ -542,21 +551,25 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	                					codigoConcepto = cadenaModificada.trim();
 	                					campocodigoConcepto =  datosInformacionLayout.get(i).get("DESCRIPC").toString();
 	                				}
-		                			
-		                			
 		                		}else{
+		                			//3.- Validamos si la clave del Formato es Numerico o decimal
 		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, null, null);
-		                			
-		                			if(Double.parseDouble(conversionString) > 0){
+		                			logger.debug("Valor ==>>>: {}",datosInformacionLayout.get(i).get("DESCEXCEL").toString());
+		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("IVA")){
 		                				logger.debug("Valor de conversion ==> :{}",conversionString);
 			                			bufferLinea.append(Double.parseDouble(conversionString)+"|");
 		                			}else{
-		                				throw new Exception("Error en los importes y cantidades");
+		                				if(Double.parseDouble(conversionString) > 0){
+			                				logger.debug("Valor de conversion ==> :{}",conversionString);
+				                			bufferLinea.append(Double.parseDouble(conversionString)+"|");
+			                			}else{
+			                				throw new Exception("Error en los importes y cantidades");
+			                			}
 		                			}
 		                		}
 		                		
 		                		//Validacion de la fecha de ocurrencia
-		                		if(fechaOcurrencia!= null && aseguradoAfectado != null && total <= 1){
+		                		if(fechaOcurrencia!= null && aseguradoAfectado != null && coberturaAfectada != null && subcoberturaAfectada != null && total <= 1){
 		                			total = total+1;
 		                			HashMap<String, Object> paramPersona = new HashMap<String, Object>();
                 					paramPersona.put("pv_feocurre_i",renderFechas.parse(fechaOcurrencia));
@@ -565,6 +578,32 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
                 					if(Integer.parseInt(feocurreAsegurado) == 0){
                 						errorOcurrencia = 1;
                 						throw new Exception("El rango de la fecha no se encuentra en la p&oacute;liza");
+                					}else{
+                						HashMap<String, Object> paramsCausaSini = new HashMap<String, Object>();
+                						paramsCausaSini.put("pv_cdperson_i",aseguradoAfectado.replaceAll("G", ""));
+                						paramsCausaSini.put("pv_feocurre_i",renderFechas.parse(fechaOcurrencia));
+                						paramsCausaSini.put("pv_cobertura_i",coberturaAfectada);
+                						paramsCausaSini.put("pv_subcobertura_i",subcoberturaAfectada);
+                						
+                						datosInformacionAdicional = siniestrosManager.listaConsultaInfAseguradoCobSubCoberturas(paramsCausaSini);
+                						
+                						
+                						logger.debug("CDTIPSIT:{} ",datosInformacionAdicional.get(0).get("CDTIPSIT"));
+                						logger.debug("CDRAMO:{} ",datosInformacionAdicional.get(0).get("CDRAMO"));
+                						logger.debug("COBERTURA:{} ",datosInformacionAdicional.get(0).get("COBERTURA"));
+                						logger.debug("SUBCOBERTURA:{} ",datosInformacionAdicional.get(0).get("SUBCOBERTURA"));
+                						
+                						if(datosInformacionAdicional.get(0).get("COBERTURA") ==null || datosInformacionAdicional.get(0).get("COBERTURA")==""){
+                							errorGeneralCobSub = 1;
+                							errorCobertura     = 1;
+                							throw new Exception("Error en la Cobertura");
+                						}else if(datosInformacionAdicional.get(0).get("SUBCOBERTURA") ==null || datosInformacionAdicional.get(0).get("SUBCOBERTURA")==""){
+                							errorGeneralCobSub = 1;
+                							errorSubcobertura  = 1;
+                							throw new Exception("Error en la SubCobertura");
+                						}else{
+                							bufferLinea.append(datosInformacionAdicional.get(0).get("CDRAMO")+"|");
+                						}
                 					}
 		                		}
 		                		//Validacion de los CPT, UB y HCPC
@@ -596,6 +635,13 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                		if(errorConcepto == 1){
 		                			bufferErroresCenso.append(Utils.join("La Clave del concepto no se encuentra dado de alta.\nError en el campo CVE. CONCEPTO "+campocodigoConcepto+" de la fila ",fila," "));
 		                		}
+		                		if(errorGeneralCobSub ==1){
+		                			if(errorCobertura == 1){
+		                				bufferErroresCenso.append(Utils.join("La Cobertura no es correcta.\nError en el campo COBERTURA "+campocodigoCobertura+" de la fila ",fila," "));
+		                			}else{
+		                				bufferErroresCenso.append(Utils.join("La Subcobertura no es correcta.\nError en el campo SUBCOBERTURA "+campocodigoCobertura+" de la fila ",fila," "));
+		                			}
+		                		}
 		                		else{
 		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CLAVE ASEGURADO")){
 			                			bufferErroresCenso.append(Utils.join("El asegurado no existe o no se encuentra vigente.\nError en el campo "+datosInformacionLayout.get(i).get("DESCEXCEL").toString()+" "+datosInformacionLayout.get(i).get("DESCRIPC").toString()+" de la fila ",fila," "));
@@ -613,7 +659,13 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(celdaPrincipal)),"-"));
 			                }
 		                }
-		                bufferLinea.append(cdpresta+"|"+layoutTimestamp+"|");
+		                
+		                if(datosInformacionLayout.size() == 15){
+		                	bufferLinea.append(cdpresta+"|"+layoutTimestamp+"|");
+		                }else{
+		                	bufferLinea.append("|"+cdpresta+"|"+layoutTimestamp+"|");
+		                }
+		                
 		                nConsulta++;
 	                	totalConsultasAseg.put(nConsulta,"");
 	                	estadoConsultas.put(nConsulta,true);

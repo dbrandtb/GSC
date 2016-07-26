@@ -1194,15 +1194,17 @@ var msgWindow;
 			form.setLoading(true);
 			for(var i=0;i<totalTramites.length;i++) {
                 var tramite=totalTramites[i];
-                Ext.Ajax.request( {
-   					url	 : _URL_GENERAR_CALCULO
-   					,params:{
-   						'params.ntramite'  : tramite.get('ntramite')
-   					}
-   					,success : function (response){
-   						form.setLoading(false);
-   					}
-   				});
+                if(+tramite.get('parametros.pv_otvalor25') != 1){
+	                Ext.Ajax.request({
+	   					url	 : _URL_GENERAR_CALCULO
+	   					,params:{
+	   						'params.ntramite'  : tramite.get('ntramite')
+	   					}
+	   					,success : function (response){
+	   						form.setLoading(false);
+	   					}
+	   				});
+                }
             }
 			form.setLoading(false);
 			Ext.create('Ext.form.Panel').submit({
@@ -1759,7 +1761,7 @@ var msgWindow;
 	
 	function subirDocumentoParaWindow(){
         windowLoader = Ext.create('Ext.window.Window', {
-            title   : 'Cargar documento NOVA'
+            title   : 'Cargar documento Layout'
             ,closeAction : 'hide'
            	,width  : 400
             ,modal  : true

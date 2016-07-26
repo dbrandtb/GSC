@@ -1399,29 +1399,33 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	*/
 	public String guardarMsinival() {
 		logger.debug("Entra a guardarMsinival params de entrada :{} datosTabla : {}",params,datosTablas);
-		try {
+		try {			
 			Date   dFemovimi = new Date();
 			Date   dFeregist = new Date();
 			String nmanno    = Calendar.getInstance().get(Calendar.YEAR)+"";
 			//1.- Eliminamos los registros de la tabla msinival
 			try {
-				HashMap<String, Object> paramBajasinival = new HashMap<String, Object>();
-				paramBajasinival.put("pv_cdunieco_i",datosTablas.get(0).get("cdunieco"));
-				paramBajasinival.put("pv_cdramo_i",datosTablas.get(0).get("cdramo"));
-				paramBajasinival.put("pv_estado_i",datosTablas.get(0).get("estado"));
-				paramBajasinival.put("pv_nmpoliza_i",datosTablas.get(0).get("nmpoliza"));
-				paramBajasinival.put("pv_nmsuplem_i",datosTablas.get(0).get("nmsuplem"));
-				paramBajasinival.put("pv_nmsituac_i",datosTablas.get(0).get("nmsituac"));
-				paramBajasinival.put("pv_aaapertu_i",datosTablas.get(0).get("aaapertu"));
-				paramBajasinival.put("pv_status_i",datosTablas.get(0).get("status"));
-				paramBajasinival.put("pv_nmsinies_i",datosTablas.get(0).get("nmsinies"));
-				paramBajasinival.put("pv_nfactura_i",datosTablas.get(0).get("nfactura"));
-				siniestrosManager.getBajaMsinival(paramBajasinival);
+				HashMap<String, Object> datosActualizacion = new HashMap<String, Object>();
+				datosActualizacion.put("pv_cdunieco_i",datosTablas.get(0).get("cdunieco"));
+				datosActualizacion.put("pv_cdramo_i",datosTablas.get(0).get("cdramo"));
+				datosActualizacion.put("pv_estado_i",datosTablas.get(0).get("estado"));
+				datosActualizacion.put("pv_nmpoliza_i",datosTablas.get(0).get("nmpoliza"));
+				datosActualizacion.put("pv_nmsuplem_i",datosTablas.get(0).get("nmsuplem"));
+				datosActualizacion.put("pv_nmsituac_i",datosTablas.get(0).get("nmsituac"));
+				datosActualizacion.put("pv_aaapertu_i",datosTablas.get(0).get("aaapertu"));
+				datosActualizacion.put("pv_status_i",datosTablas.get(0).get("status"));
+				datosActualizacion.put("pv_nmsinies_i",datosTablas.get(0).get("nmsinies"));
+				datosActualizacion.put("pv_nfactura_i",datosTablas.get(0).get("nfactura"));
+				siniestrosManager.getBajaMsinival(datosActualizacion);
 			} catch (Exception e) {
-				logger.error("error al eliminar en TfacMesCtrl : {}", e.getMessage(), e);
+				logger.error("error al eliminar en guardarMsinival : {}", e.getMessage(), e);
 			}
 			//2.- Guardamos los registros de 
+			double importeTotal = 0d;
+			double importeIVA = 0d;
 			for(int i=0;i<datosTablas.size();i++){
+					importeTotal = importeTotal + Double.parseDouble(datosTablas.get(i).get("ptprecio"));
+					importeIVA   = importeIVA   + Double.parseDouble(datosTablas.get(i).get("ptIVA"));
 					siniestrosManager.P_MOV_MSINIVAL(
 						datosTablas.get(i).get("cdunieco"), 	datosTablas.get(i).get("cdramo"), 		datosTablas.get(i).get("estado"), 		datosTablas.get(i).get("nmpoliza"),
 						datosTablas.get(i).get("nmsuplem"),		datosTablas.get(i).get("nmsituac"), 	datosTablas.get(i).get("aaapertu"), 	datosTablas.get(i).get("status"), 
@@ -1433,6 +1437,38 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						datosTablas.get(i).get("operacion"),	datosTablas.get(i).get("ptpcioex"),		datosTablas.get(i).get("dctoimex"),		datosTablas.get(i).get("ptimpoex"),
 						datosTablas.get(i).get("mtoArancel"),	datosTablas.get(i).get("aplicaIVA"));
 			}
+			
+			logger.debug("importeTotal : {} importeIVA:{}",importeTotal,importeIVA);
+			List<MesaControlVO> listaMesaControl = siniestrosManager.getConsultaListaMesaControl(params.get("params.ntramite"));
+			if(listaMesaControl.get(0).getCdtiptramc().equalsIgnoreCase(TipoTramite.PAGO_AUTOMATICO.getCdtiptra()) && 
+			   listaMesaControl.get(0).getOtvalor25mc().equalsIgnoreCase("1")){
+				//ACTUALIZAR TIMPSINI
+				HashMap<String, Object> datosActualizacion = new HashMap<String, Object>();
+				datosActualizacion.put("pv_cdunieco_i",datosTablas.get(0).get("cdunieco"));
+				datosActualizacion.put("pv_cdramo_i",datosTablas.get(0).get("cdramo"));
+				datosActualizacion.put("pv_estado_i",datosTablas.get(0).get("estado"));
+				datosActualizacion.put("pv_nmpoliza_i",datosTablas.get(0).get("nmpoliza"));
+				datosActualizacion.put("pv_nmsuplem_i",datosTablas.get(0).get("nmsuplem"));
+				datosActualizacion.put("pv_nmsituac_i",datosTablas.get(0).get("nmsituac"));
+				datosActualizacion.put("pv_aaapertu_i",datosTablas.get(0).get("aaapertu"));
+				datosActualizacion.put("pv_status_i",datosTablas.get(0).get("status"));
+				datosActualizacion.put("pv_nmsinies_i",datosTablas.get(0).get("nmsinies"));
+				datosActualizacion.put("pv_ptimport_i",importeTotal);
+				datosActualizacion.put("pv_ptiva_i",importeIVA);
+				datosActualizacion.put("pv_ntramite_i",params.get("params.ntramite"));
+				siniestrosManager.actualizarRegistroTimpsini(datosActualizacion);
+				//ACTUALIZARTMESACONTROL 
+				HashMap<String, Object> paramsPagoDirecto = new HashMap<String, Object>();
+				paramsPagoDirecto.put("pv_ntramite_i",params.get("params.ntramite"));
+				
+				String montoTramite = siniestrosManager.obtieneMontoTramitePagoDirecto(paramsPagoDirecto);
+				logger.debug("Valor del Monto del Arancel ===>>>> "+montoTramite);
+				Map<String,Object> otvalor = new HashMap<String,Object>();
+				otvalor.put("pv_ntramite_i" , params.get("params.ntramite"));
+				otvalor.put("pv_otvalor03_i"  , montoTramite);
+				siniestrosManager.actualizaOTValorMesaControl(otvalor);
+			}
+			
 			mensaje = "Datos guardados";
 			success = true;
 		}
@@ -5627,7 +5663,22 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				HashMap<String,String> params = new HashMap<String, String>();
 				params.put("ntramite",slist1.get(i).get("NTRAMITE"));
 				this.params = params;
-				generarCalculoSiniestros();
+				
+				if(cdpresta.equalsIgnoreCase("24104") && tipoproc.equalsIgnoreCase("1")){
+					logger.debug("No entra a la generación de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
+					HashMap<String, Object> paramsPagoDirecto = new HashMap<String, Object>();
+					paramsPagoDirecto.put("pv_ntramite_i",slist1.get(i).get("NTRAMITE"));
+					String montoTramite = siniestrosManager.obtieneMontoTramitePagoDirecto(paramsPagoDirecto);
+					logger.debug("Valor del Monto del Arancel ===>>>> "+montoTramite);
+					Map<String,Object> otvalor = new HashMap<String,Object>();
+					otvalor.put("pv_ntramite_i" , slist1.get(i).get("NTRAMITE"));
+					otvalor.put("pv_otvalor03_i"  , montoTramite);
+					siniestrosManager.actualizaOTValorMesaControl(otvalor);
+					
+				}else{
+					logger.debug("entra a la generación de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
+					generarCalculoSiniestros();
+				}
 			}
 			mensaje = mensajeM;
 		}catch( Exception e){
