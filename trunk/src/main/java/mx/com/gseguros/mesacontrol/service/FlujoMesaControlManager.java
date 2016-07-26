@@ -309,7 +309,13 @@ public interface FlujoMesaControlManager
 			,String accion
 			)throws Exception;
 	
-	public void modificarDetalleTramiteMC(String ntramite, String nmordina, String comments) throws Exception;
+	public String modificarDetalleTramiteMC(
+			String ntramite,
+			String nmordina,
+			String comments,
+			String cdusuari,
+			String cdsisrol
+			) throws Exception;
 	
 	public Map<String, String> recuperarChecklistInicial (String cdtipflu, String cdflujomc, String cdtiptra, String cdtipsup) throws Exception;
 }

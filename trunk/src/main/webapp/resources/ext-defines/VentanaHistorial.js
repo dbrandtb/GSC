@@ -158,7 +158,7 @@ Ext.define('VentanaHistorial',
                                             xtype   : 'textarea'
                                             ,width  : 570
                                             ,height : 300
-                                            ,value  : record.get('COMMENTS')
+                                            //,value  : record.get('COMMENTS')
                                         }
                                     ]
                                     ,buttons     :
@@ -195,7 +195,7 @@ Ext.define('VentanaHistorial',
                                                                         ,'Detalle actualizado'
                                                                         ,function()
                                                                         {
-                                                                            record.set('COMMENTS',me.up('window').down('textarea').getValue());
+                                                                            record.set('COMMENTS',json.params.comments);
                                                                             _fieldById('_c21_inputReadDetalleHtmlVisor').setValue(record.get('COMMENTS'));
                                                                             me.up('window').destroy();
                                                                         }

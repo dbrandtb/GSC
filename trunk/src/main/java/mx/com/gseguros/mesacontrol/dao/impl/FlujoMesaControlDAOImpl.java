@@ -1632,7 +1632,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					,"STATUS"   , "DSSTATUS"           , "CDUNIECO"    , "CDRAMO"    , "CDTIPSIT"
 					,"DSTIPSIT" , "ESTADO"             , "NMPOLIZA"    , "FECSTATU"  , "FERECEPC"
 					,"NMSOLICI" , "NOMBRE_CONTRATANTE" , "RESPONSABLE" , "RAMO"      , "DSTIPSUP"
-					,"CDTIPRAM" , "DSTIPRAM"           , "NMPOLIEX"    , "CDTIPTRA"
+					,"CDTIPRAM" , "DSTIPRAM"           , "NMPOLIEX"    , "CDTIPTRA"  , "ULTIMO_MODIFICA"
+					,"NRO_ENDOSO"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
 			declareParameter(new SqlOutParameter("pv_total_o"    , OracleTypes.VARCHAR));
@@ -2635,13 +2636,28 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	}
 	
 	@Override
-	public void modificarDetalleTramiteMC(String ntramite, String nmordina, String comments) throws Exception
+	public String modificarDetalleTramiteMC(
+			String ntramite,
+			String nmordina,
+			String comments,
+			String cdusuari,
+			String cdsisrol,
+			Date fecha
+			) throws Exception
 	{
-		Map<String,String> params = new LinkedHashMap<String,String>();
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("ntramite" , ntramite);
 		params.put("nmordina" , nmordina);
 		params.put("comments" , comments);
-		ejecutaSP(new ModificarDetalleTramiteMCSP(getDataSource()),params);
+		params.put("cdusuari" , cdusuari);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("fecha"    , fecha);
+		Map<String, Object> procRes = ejecutaSP(new ModificarDetalleTramiteMCSP(getDataSource()),params);
+		String comment = (String)procRes.get("pv_comments_o");
+		if (StringUtils.isBlank(comment)) {
+			throw new ApplicationException("Comentario no regresado");
+		}
+		return comment;
 	}
 	
 	protected class ModificarDetalleTramiteMCSP extends StoredProcedure
@@ -2652,8 +2668,12 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmordina" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("comments" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fecha"    , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlOutParameter("pv_comments_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
