@@ -7412,7 +7412,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected GuardarLayoutGenerico(DataSource dataSource)
 		{
-			super(dataSource,"PKG_NOVA.P_CONF_LAYOU_SINIESTRO");
+			super(dataSource,"PKG_DESARROLLO.P_CONF_LAYOU_SINIESTRO");
+			//super(dataSource,"PKG_NOVA.P_CONF_LAYOU_SINIESTRO");
 			declareParameter(new SqlParameter("pi_filename"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));

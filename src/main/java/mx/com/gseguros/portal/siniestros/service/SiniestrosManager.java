@@ -693,4 +693,8 @@ public interface SiniestrosManager {
 			String cdconval) throws Exception;
 	
 	public String validaExisteCodigoConcepto(HashMap<String, Object> paramExiste) throws Exception;
+	
+	public List<Map<String, String>> listaConsultaInfAseguradoCobSubCoberturas(HashMap<String, Object> paramsCausaSini) throws Exception;
+	
+	public String actualizarRegistroTimpsini(HashMap<String, Object> datosActualizacion) throws Exception;
 }

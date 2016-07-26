@@ -142,6 +142,7 @@
 			var _tipoProducto    	= _11_params.CDRAMO;
 			var _cdtipsitProducto 	= _11_params.CDTIPSIT
 			var _cdtipAtencion    	= _11_params.OTVALOR26
+			var _cdtipoProceso    	= _11_params.OTVALOR25
 			var banderaConcepto 	= "0";
 			var banderaAsegurado 	= "0";
 			var recordsStoreFactura = [];
@@ -282,7 +283,7 @@
 						{type:'string',	name:'NMAPUNTE'},		{type:'string',	name:'USERREGI'},		{type:'string',	name:'FEREGIST'},
 						{type:'string',	name:'PTPCIOEX'},		{type:'string',	name:'DCTOIMEX'},		{type:'string',	name:'PTIMPOEX'},
 						{type:'string',	name:'PTMTOARA'},		{type:'string',	name:'TOTAJUSMED'},		{type:'string',	name:'SUBTAJUSTADO'},
-						{type:'string',	name:'APLICIVA'}
+						{type:'string',	name:'APLICIVA'},		{type:'string',	name:'PTIVA'}
 					]
 				});
 
@@ -1615,12 +1616,13 @@
 									text	 : 'Agregar Asegurado'
 									,icon	 : '${ctx}/resources/fam3icons/icons/user_add.png'
 									,handler : _p21_agregarAsegurado
-									,hidden  : ((_tipoPago != _TIPO_PAGO_DIRECTO) || (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO))
+									,hidden  : (_tipoPago != _TIPO_PAGO_DIRECTO)
 								},
 								{
 									text	: 'Generar Calculo'
 									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 									,handler : _p21_generarCalculo
+									,hidden  : (_cdtipoProceso  == "1")
 								}
 							],							
 						listeners: {
@@ -1877,9 +1879,9 @@
 							},
 							
 							{
-								dataIndex : 'NMORDINA',
-								width : 20,
-								hidden: true
+								dataIndex : 'NMORDINA'
+								,width : 20
+								//,hidden: true
 							},
 							{
 								header: 'Tipo Concepto', 				dataIndex: 'IDCONCEP',	width : 90		,  allowBlank: false
@@ -1999,6 +2001,15 @@
 										}
 									}
 								}
+							},
+							{
+								header: 'IVA', 				dataIndex: 'PTIVA',	width : 100,				renderer: Ext.util.Format.usMoney
+								,hidden : (_cdtipoProceso  != "1")
+								,editor : {
+									xtype: 'numberfield',
+									decimalSeparator :'.',
+									allowBlank: false
+								}
 							}
 							,
 							{
@@ -2096,7 +2107,7 @@
 									text	: 'Agregar Concepto'
 									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 									,handler : _p21_agregarConcepto
-									, hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
+									//, hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
 								},
 								{
 									text	: 'Guardar Concepto'
@@ -4953,6 +4964,8 @@
 	
 	//4.- Funcion para obtenemos los totales pagados en la Factura
 	function obtenerTotalPagos(ntramite, nfactura){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
 		Ext.Ajax.request({
 			url	 : _URL_OBTENERSINIESTROSTRAMITE
 			,params:{
@@ -5038,73 +5051,13 @@
 	    	    if(banderaValidacion == "1"){
 				    centrarVentanaInterna(mensajeWarning(resultadoTope));
 				}
-		    	
-		    	
+				
 		    	panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
 		    	panelComplementos.down('[name=params.ivaFac]').setValue(ivaFactura);
 		    	panelComplementos.down('[name=params.ivaRetFac]').setValue(ivaRetFactura);
 		    	panelComplementos.down('[name=params.isrFac]').setValue(isrFactura);
 		    	panelComplementos.down('[name=params.impCedularFac]').setValue(impCedFactura);
 		    	panelComplementos.down('[name=params.impPagarFac]').setValue(imporTotalFactura);
-		    	
-		    	/*var resultadoTope = "";
-		    	var banderaValidacion = 0;
-		    	for(var i = 0; i < aseguradosTotales.length; i++) {
-		    		
-		    		debug("Asegurados Totales ==> ",aseguradosTotales[i]);
-		    		var validaTope = aseguradosTotales[i].VALTOTALCOB; 
-		    		debug("Valor validaTope ", validaTope);
-		    		var importePagarAsegurado = aseguradosTotales[i].IMPORTETOTALPAGO;
-		    		var nmsinies = aseguradosTotales[i].NMSINIES;
-		    		if( validaTope  == '1'){
-						Ext.Ajax.request({
-							url		:	_URL_VALIDACION_CONSULTA
-							,params	:	{
-								'params.cdunieco'  : aseguradosTotales[i].CDUNIECO,
-								'params.cdramo'    : aseguradosTotales[i].CDRAMO,
-								'params.estado'    : aseguradosTotales[i].ESTADO,
-								'params.nmpoliza'  : aseguradosTotales[i].NMPOLIZA,
-								'params.nmsuplem'  : aseguradosTotales[i].NMSUPLEM,
-								'params.nmsituac'  : aseguradosTotales[i].NMSITUAC,
-								'params.cdgarant'  : aseguradosTotales[i].CDGARANT,
-								'params.cdconval'  : aseguradosTotales[i].CDCONVAL,
-								'params.nmsinies'  : aseguradosTotales[i].NMSINIES
-							}
-							,success : function (response){
-								var jsonResp = Ext.decode(response.responseText);
-								debug("Valor de Respuesta ===>",jsonResp);
-								if(jsonResp.success == true){
-									var infonavit = Ext.decode(response.responseText).datosInformacionAdicional[0];
-									var limite = infonavit.OTVALOR04;
-									var importeDisponible = (+infonavit.OTVALOR04 - +infonavit.IMPGASTADOCOB);									
-
-									if(+importeDisponible <=limite && +importePagarAsegurado < importeDisponible){
-										resultadoTope = resultadoTope + 'La Factura ' + nfactura + ' del siniestro '+ nmsinies+ ' Es éxitoso. <br/>';
-									}else{
-										resultadoTope = resultadoTope + 'La Factura ' + nfactura + ' del siniestro '+ nmsinies+ ' Sobrepasa el Límite. <br/>';
-										
-									}
-								}else{
-									maxconsultas = jsonResp.success;
-									centrarVentanaInterna(Ext.Msg.show({
-										title:'Error',
-										msg: jsonRes.mensaje,
-										buttons: Ext.Msg.OK,
-										icon: Ext.Msg.ERROR
-									}));
-								}
-							},
-							failure : function (){
-								centrarVentanaInterna(Ext.Msg.show({
-									title:'Error',
-									msg: 'Error de comunicaci&oacute;n',
-									buttons: Ext.Msg.OK,
-									icon: Ext.Msg.ERROR
-								}));
-							}
-						});
-		    		}
-		    	}*/
 			},
 			failure : function (){
 				Ext.Msg.show({
@@ -5115,6 +5068,7 @@
 				});
 			}
 		});
+		myMask.hide();
     	return true;
 	}
 	
@@ -5905,6 +5859,8 @@
 	
 	//16.- Guardar Conceptos del asegurado
 	function _guardarConceptosxFactura(){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
 		var obtener = [];
 		if(_11_params.CDRAMO != _RECUPERA){
 			storeConceptos.each(function(record) {
@@ -5970,6 +5926,7 @@
 						,ptimpoex : record.get('PTIMPOEX')
 						,mtoArancel : record.get('PTMTOARA')
 						,aplicaIVA : record.get('APLICIVA')
+						,ptIVA 	   : record.get('PTIVA')
 					});
 				});
 				submitValues['datosTablas']=datosTablas;
@@ -5984,6 +5941,21 @@
 							panelInicialPral.setLoading(false);
 							banderaConcepto = "0";
 							storeConceptos.reload();
+							
+							if(_cdtipoProceso =="1"){
+								storeAseguradoFactura.load({
+								params: {
+										'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue() ,
+										'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+									}
+								});
+								panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
+								panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
+								obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
+								myMask.hide();
+							}else{
+								myMask.hide();
+							}
 						}
 					},
 					failure:function(response,opts) {

@@ -2069,7 +2069,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"DESTOPOR"   , "DESTOIMP"     , "PTIMPORT" , "PTRECOBR"
 					,"NMANNO"     , "NMAPUNTE"     , "USERREGI" , "FEREGIST"
 					,"PTPCIOEX"   , "DCTOIMEX"     , "PTIMPOEX" , "PTMTOARA"
-					,"TOTAJUSMED" , "SUBTAJUSTADO" , "APLICIVA"
+					,"TOTAJUSMED" , "SUBTAJUSTADO" , "APLICIVA"	, "PTIVA"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -5436,7 +5436,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class ProcesaPagoAutomaticoLayout extends StoredProcedure {
 		protected ProcesaPagoAutomaticoLayout(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_SINIESTRO.P_GET_TCONLAYSIN");
+			super(dataSource, "PKG_DESARROLLO.P_GET_TCONLAYSIN");
+			//super(dataSource, "PKG_SINIESTRO.P_GET_TCONLAYSIN");
 			String[] cols = new String[]{
 					"NTRAMITE"
 			};
@@ -5604,4 +5605,59 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		compile();
     	}
     }
+    
+	@Override
+	public List<Map<String, String>> obtieneInfAseguradoCobSubCoberturas(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneInfAseguradoCobSubCoberturas(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneInfAseguradoCobSubCoberturas extends StoredProcedure {
+		protected ObtieneInfAseguradoCobSubCoberturas(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_DESARROLLO.P_OBTIENE_CDRAMO_NOVA");
+			declareParameter(new SqlParameter("pv_cdperson_i",   	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feocurre_i",  	OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cobertura_i",   	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_subcobertura_i",  OracleTypes.VARCHAR));
+			
+			String[] cols = new String[]{
+					"CDTIPSIT",		"CDRAMO",	"COBERTURA",		"SUBCOBERTURA"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String actualizaRegistroTimpsini(HashMap<String, Object> datosActualizacion) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ActualizaRegistroTimpsini(this.getDataSource()), datosActualizacion);
+		return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class ActualizaRegistroTimpsini extends StoredProcedure
+	{
+		protected ActualizaRegistroTimpsini(DataSource dataSource)
+		{
+			
+			super(dataSource, "PKG_DESARROLLO.P_UPD_TIMPSINI");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptiva_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

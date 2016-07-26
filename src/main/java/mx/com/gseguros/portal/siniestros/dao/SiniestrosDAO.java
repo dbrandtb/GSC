@@ -560,4 +560,8 @@ public interface SiniestrosDAO {
 	public Map<String, Object> actualizaDatosGeneralesConceptos(Map<String, Object> params) throws Exception;
 	
 	public String validaExisteCodigoConcepto(HashMap<String, Object> paramExiste) throws Exception;
+	
+	public List<Map<String, String>> obtieneInfAseguradoCobSubCoberturas(HashMap<String, Object> paramsInfonavit) throws Exception;
+	
+	public String actualizaRegistroTimpsini(HashMap<String, Object> datosActualizacion) throws Exception;
 }

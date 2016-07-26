@@ -2429,4 +2429,21 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		}
 	}
 	
+	@Override
+	public List<Map<String, String>> listaConsultaInfAseguradoCobSubCoberturas(HashMap<String, Object> paramsCausaSini) throws Exception {
+		try {
+			return siniestrosDAO.obtieneInfAseguradoCobSubCoberturas(paramsCausaSini);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public String actualizarRegistroTimpsini(HashMap<String, Object> datosActualizacion) throws Exception {
+		try {
+			return siniestrosDAO.actualizaRegistroTimpsini(datosActualizacion);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 }
