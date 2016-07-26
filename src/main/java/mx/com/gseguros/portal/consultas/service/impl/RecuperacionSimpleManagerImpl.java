@@ -674,6 +674,129 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	}
 	
 	@Override
+	public Map<String,String> recuperarMapaNum(
+			String cdusuari
+			,String cdsisrol
+			,RecuperacionSimple consulta
+			,Map<String,String> params
+			,UserVO usuario
+	)throws Exception
+	{
+		logger.debug(Utils.log(""
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarMapa @@@@@@"
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ consulta=" , consulta
+				,"\n@@@@@@ params="   , params
+				,"\n@@@@@@ usuario="  , usuario
+				));
+		Map<String,String> mapa = new HashMap<String,String>();
+		String             paso = "Recuperando datos";
+		try
+		{
+			if(consulta.equals(RecuperacionSimple.RECUPERAR_IMPRESIONES_DISPONIBLES))
+			{
+				paso = "Recuperando impresiones disponibles";
+				logger.debug(Utils.log(""," paso: ",paso));
+				
+				String cdtipram = params.get("cdtipram");
+				String tipolote = params.get("tipolote");
+				
+				Utils.validate(
+						cdtipram  , "No se recibi\u00F3 el tipo de ramo"
+						,tipolote , "No se recibi\u00F3 el tipo de lote"
+						);
+				
+				String impdisp = consultasDAO.recuperarImpresionesDisponiblesPorTipoRamo(cdtipram, tipolote);
+				
+				mapa.put("imprdisp" , impdisp);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_IMPRESION_LOTE))
+			{
+				paso = "Recuperando detalle de impresiones de lote";
+				logger.debug(Utils.log(""," paso: ",paso));
+				
+				String lote = params.get("lote");
+				String tramite = params.get("tramite");
+				
+				Utils.validate(lote, "No se recibi\u00F3 el lote");
+				
+				Map<String,String>requeridasYEjecutadas = consultasDAO.recuperarDetalleImpresionLote(lote,tramite);
+				
+				mapa.putAll(requeridasYEjecutadas);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_SWVISPRE_TRAMITE))
+			{
+				paso = "Recuperando estado de vista previa de tr\u00e1mite";
+				logger.debug(Utils.log(""," paso: ",paso));
+				
+				String ntramite = params.get("ntramite");
+				
+				Utils.validate(ntramite, "No se recibi\u00F3 el tr\u00e1mite");
+				
+				mapa.put("SWVISPRE" , mesaControlDAO.recuperarSwvispreTramite(ntramite));
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_DIAS_FECHA_FACTURACION))
+			{
+				paso = "Recuperando fecha de facturaci\u00f3n";
+				logger.debug(Utils.log(""," paso: ",paso));
+				String cdtipsit = params.get("cdtipsit");
+				mapa.put("dias" , consultasDAO.recuperarDiasFechaFacturacion(cdtipsit, cdsisrol));
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_PERMISO_BOTON_GENERAR_COLECTIVO))
+			{
+				paso = "Recuperando permisos de bot\u00f3n";
+				logger.debug(Utils.log(""," paso: ",paso));
+				String cdtipsit = params.get("cdtipsit");
+				mapa.put("ACTIVAR_BOTON" , consultasDAO.recuperarPermisoBotonEnviarCenso(cdsisrol));
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_ESTADO_BOTON_EMITIR))
+			{
+				paso = "Recuperando permisos de boton comprar";
+				logger.debug(Utils.log(" paso: ",paso));
+				String cdtipsit = params.get("cdtipsit");
+				Utils.validate(
+						 cdtipsit , "No se recibio el parametro cdtipsit"
+						);
+				mapa.put("ACTIVAR_BOTON_COMPRAR" , consultasDAO.recuperarPermisoBotonEmitir(cdsisrol,cdusuari,cdtipsit));
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_CDUNIEXT_POR_LLAVE_POLIZA))
+			{
+				paso = "Recuperando cduniext";
+				logger.debug(paso);
+				
+				mapa.put("cduniext" , consultasDAO.recuperarCduniextPorLlavePoliza(
+						params.get("cdunieco"),
+						params.get("cdramo"),
+						params.get("estado"),
+						params.get("nmpoliza")
+						));
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_FLUJO_POR_DESCRIPCION))
+			{
+				String descripcion = params.get("descripcion");
+				
+				paso = "Recuperando flujo por descripcion";
+				
+				logger.debug(Utils.log(paso, " descripcion = ", descripcion));
+				
+				mapa = flujoMesaControlDAO.recuperarFlujoPorDescripcion(params.get("descripcion"));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(""
+				,"\n@@@@@@ mapa=",mapa
+				,"\n@@@@@@ recuperarMapa @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return mapa;
+	}
+	
+	@Override
 	public List<Map<String,String>> recuperarLista(
 			String cdusuari
 			,String cdsisrol
@@ -1131,6 +1254,23 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						);
 				
 				lista = flujoMesaControlDAO.recuperarTflujorol(cdtipflu,cdflujomc);
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_MPOLIZAS_POR_PARAMETROS_VARIABLES)) {
+				String cdunieco = params.get("cdunieco"),
+						cdramo  = params.get("cdramo"),
+						estado  = params.get("estado"),
+						nmpoliza = params.get("nmpoliza"),
+						nmsuplem = params.get("nmsuplem"),
+						nmsolici = params.get("nmsolici"),
+						cdramant = params.get("cdramant");
+				lista = consultasDAO.cargarMpolizasPorParametrosVariables(
+						cdunieco,
+						cdramo,
+						estado,
+						nmpoliza,
+						nmsuplem, 
+						nmsolici,
+						cdramant
+				);
 			}
 		}
 		catch(Exception ex)
