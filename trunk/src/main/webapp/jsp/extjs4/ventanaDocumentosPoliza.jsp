@@ -228,6 +228,7 @@ Ext.onReady(function()
             ,'nmsituac'
             ,'nmcertif'
             ,'cdmoddoc'
+            ,'tramite_endoso'
         ]
     });
     

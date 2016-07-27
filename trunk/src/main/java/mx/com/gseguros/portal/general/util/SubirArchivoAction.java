@@ -397,10 +397,41 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 					
 					String orden = null;
 					
-					if("USUARIO".equals(tipmov) && usuariosPrimero)
-					{
-						nsuplogi = ntramite;
-						slist1.get(i).put("nsuplogi",nsuplogi);
+					if ("USUARIO".equals(tipmov)) {
+						if (usuariosPrimero) { // Si viene encendido entonces todos los de usuario van arriba
+							nsuplogi = ntramite;
+							slist1.get(i).put("nsuplogi",nsuplogi);
+						} else {
+							// Si algun endoso tiene el mismo tramite que nuestro documento de usuario, copiamos su nsuplogi 
+							boolean vinculadoConEndoso = false;
+							for (Map<String, String> documento : slist1) {
+								if (
+									ntramite.equals(documento.get("tramite_endoso"))
+									&& !"USUARIO".equals(documento.get("tipmov"))
+								) {
+									nsuplogi = documento.get("nsuplogi");
+									slist1.get(i).put("nsuplogi",nsuplogi);
+									vinculadoConEndoso = true;
+									break;
+								}
+							}
+							
+							// Si no encontramos ningun endoso al que copiar nsuplogi, el documento es de emision o es de un tramite nuevo,
+							// si encontramos un documento con tramite menor significa que el nuestro es de nuevo, y va hasta arriba
+							if (!vinculadoConEndoso) {
+								for (Map<String, String> documento : slist1) {
+									if (
+										!"USUARIO".equals(documento.get("tipmov")) // no es de usuario
+										&& StringUtils.isNotBlank(documento.get("ntramite")) // tiene tramite
+										&& Double.parseDouble(ntramite) > Double.parseDouble(documento.get("ntramite")) // tiene uno menor
+									) {
+										nsuplogi = ntramite;
+										slist1.get(i).put("nsuplogi",nsuplogi);
+										break;
+									}
+								}
+							}
+						}
 					}
 					
 					orden = Utils.join(nmsuplem,"#_#",tipmov,"#_#",nsuplogi);

@@ -2277,7 +2277,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_cdestciv_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsucemi_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdusuario_i"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_dsocupacion_i"    , OracleTypes.VARCHAR));//¬¬ 
+			declareParameter(new SqlParameter("pv_dsocupacion_i"    , OracleTypes.VARCHAR));//ï¿½ï¿½ 
 			declareParameter(new SqlParameter("pv_accion_i"      , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -3087,7 +3087,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 			String cols[] = new String[] { "nmsolici", "cddocume", "dsdocume",
 					"feinici", "ntramite", "tipmov", "nmsuplem", "nsuplogi",
-					"editable", "feinicio", "fefinal", "nmsituac", "nmcertif", "cdmoddoc", "total" };
+					"editable", "feinicio", "fefinal", "nmsituac", "nmcertif", "cdmoddoc", "total", "tramite_endoso"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{

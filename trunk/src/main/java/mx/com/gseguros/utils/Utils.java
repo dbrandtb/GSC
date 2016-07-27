@@ -586,7 +586,8 @@ public class Utils
 	
 	public static void debugProcedure(org.apache.log4j.Logger logger2,String storedProcedureName,Map<String,?>params)
     {
-		int len = storedProcedureName.length();
+		return;
+		/*int len = storedProcedureName.length();
 		logger.debug
 		(
 				Utils.log
@@ -596,12 +597,13 @@ public class Utils
 				,"\n****** params=",params
 				,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
 				)
-		);
+		);*/
     }
     
     public static void debugProcedure(org.apache.log4j.Logger logger2,String storedProcedureName,Map<String,?>params,List<?>lista)
     {
-    	int len = storedProcedureName.length();
+    	return;
+    	/*int len = storedProcedureName.length();
     	logger.debug
     	(
     			Utils.log
@@ -612,12 +614,13 @@ public class Utils
     					,"\n****** ",storedProcedureName," ******"
     					,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
     			)
-    	);
+    	);*/
     }
 	
 	public static void debugProcedure(Logger logger2,String storedProcedureName,Map<String,?>params)
     {
-		int len = storedProcedureName.length();
+		return;
+		/*int len = storedProcedureName.length();
 		logger.debug
 		(
 				Utils.log
@@ -627,12 +630,13 @@ public class Utils
 				,"\n****** params=",params
 				,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
 				)
-		);
+		);*/
     }
     
     public static void debugProcedure(Logger logger2,String storedProcedureName,Map<String,?>params,List<?>lista)
     {
-    	int len = storedProcedureName.length();
+    	return;
+    	/*int len = storedProcedureName.length();
     	logger.debug
     	(
     			Utils.log
@@ -643,7 +647,7 @@ public class Utils
     					,"\n****** ",storedProcedureName," ******"
     					,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
     			)
-    	);
+    	);*/
     }
     
     public static Date parse(String fecha) throws Exception
