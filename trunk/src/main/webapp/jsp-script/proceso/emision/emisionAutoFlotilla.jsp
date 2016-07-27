@@ -1203,6 +1203,20 @@ function _p31_mostrarVistaPrevia()
                                     ,disabled : true
                                     ,handler  : function(){ _p31_nuevaClic(); }
                                 }
+								,{
+                                    itemId   : '_p31_botonMesaControl'
+                                    ,xtype   : 'button'
+                                    ,text    : 'Mesa de control'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
+                                    ,hidden  : Ext.isEmpty(_p31_flujo)
+                                    ,handler : function(){
+                                    	_mask('Redireccionando...');
+                                    	Ext.create('Ext.form.Panel').submit({
+                                    		standardSubmit : true
+                                    		,url           : _GLOBAL_COMP_URL_MCFLUJO
+                                    		}); 	
+                                    	} 
+                                }
                             ]
                         })
                     ]
