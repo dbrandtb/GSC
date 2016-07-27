@@ -6290,9 +6290,9 @@
 						var consultasTotales = infonavit.NO_CONSULTAS;
 						var maxConsulta      = infonavit.OTVALOR07;
 						var diferenciador    = infonavit.OTVALOR15;
-						panelComplementos.down('[name=params.sublimite]').setValue(infonavit.OTVALOR04);
+						panelComplementos.down('[name=params.sublimite]').setValue(maxConsulta);
 						panelComplementos.down('[name=params.pagado]').setValue(infonavit.IMPGASTADOCOB);
-						panelComplementos.down('[name=params.disponibleCob]').setValue(+infonavit.OTVALOR04 - +infonavit.IMPGASTADOCOB);
+						panelComplementos.down('[name=params.disponibleCob]').setValue(+maxConsulta - +infonavit.IMPGASTADOCOB);
 					}else{
 						maxconsultas = jsonResp.success;
 						centrarVentanaInterna(Ext.Msg.show({
