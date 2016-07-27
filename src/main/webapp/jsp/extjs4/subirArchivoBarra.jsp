@@ -20,6 +20,12 @@
                     success:function(response,opts)
                     {
                         var jsonResp = Ext.decode(response.responseText);
+                        debug('jsonResp.respuestaOculta=', jsonResp.mensajeRespuesta);
+                        // Si ocurre un error al subir el archivo terminamos la ejecucion:
+                        if( jsonResp && !Ext.isEmpty(jsonResp.mensajeRespuesta) ) {
+                        	parent.callbackDocumentoSubidoPoliza(jsonResp.mensajeRespuesta);
+                    		return;
+                    	}
                         p.updateProgress(jsonResp.progreso,jsonResp.progresoTexto,true);
                         if(jsonResp.progreso==1)
                         {
@@ -38,8 +44,9 @@
                     renderTo:'maindiv',
                     width:450
                 });
-                if(uploadKey&&uploadKey.length>0)
+                if(uploadKey&&uploadKey.length>0) {
                 	checarProgreso();
+                }
             });
         </script>
     </head>

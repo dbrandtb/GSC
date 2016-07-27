@@ -88,6 +88,13 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             progresoTexto="Cargando ("+listener.getPercentDone()+"%)...";
         }
         progreso=(Float.parseFloat(listener.getPercentDone()+""))/100f;
+        
+        // Se asigna en sesion "SK_ERROR" cuando fallo el subir el archivo:
+        if(session != null && session.get("SK_ERROR") != null) {
+        	logger.debug("session.SK_ERROR={}", session.get("SK_ERROR"));
+        	mensajeRespuesta = (String)session.get("SK_ERROR");
+        }
+        
         return SUCCESS;
     }
     
