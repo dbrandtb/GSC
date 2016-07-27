@@ -13041,6 +13041,8 @@ public class EndososAction extends PrincipalCoreAction
 		
 		return true;
 	}
+	
+	
 /**
  * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
  * @param cdunieco
@@ -13058,6 +13060,14 @@ public class EndososAction extends PrincipalCoreAction
 	private boolean ejecutaCaratulaEndosoTarifaSigs(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem, String ntramite, String cdtipsup, String tipoGrupoInciso, EmisionAutosVO emisionWS, Map<String,String> incisosAfectados){
 		
 		boolean soloIncisosAfectados = (incisosAfectados != null && !incisosAfectados.isEmpty());
+		boolean soloUnInciso         = (soloIncisosAfectados && incisosAfectados.size() == 1);
+		
+		logger.debug(">>>>>>>>>>>  Imprimiendo Caratulas para Autos  <<<<<<<<<<<<<<");
+		
+		if(soloIncisosAfectados){
+			logger.debug(">>>>>>>>>>>  Incisos Afectados  <<<<<<<<<<<<<< :::" + incisosAfectados);
+			logger.debug(">>>>>>>>>>>  Solo un Inciso <<<<<<<<<<<<<< :::" + soloUnInciso);
+		}
 		
 		try {
 			
@@ -13338,7 +13348,7 @@ public class EndososAction extends PrincipalCoreAction
 						
 						int numeroIncisos = consultasPolizaManager.obtieneNumeroDeIncisosPoliza(cdunieco, cdramo, "M", nmpoliza, nmsuplem);
 						
-						if(numeroIncisos > 0 ){
+						if(numeroIncisos > 0 && !soloUnInciso){
 							int numeroReportes =  numeroIncisos/Integer.parseInt(numIncisosReporte);
 							int reporteSobrante = numeroIncisos % Integer.parseInt(numIncisosReporte);
 							
@@ -13406,7 +13416,7 @@ public class EndososAction extends PrincipalCoreAction
 									}
 								}else{
 									
-									//Se imprimen Todos
+									//Se imprimen Todos los reportes
 									
 									parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
 									logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
@@ -13434,6 +13444,36 @@ public class EndososAction extends PrincipalCoreAction
 								}
 							}
 							
+						}else if(soloUnInciso){
+							
+							ArrayList<String> incisos = new ArrayList<String>(incisosAfectados.values());
+							String numeroInciso = incisos.get(0);
+							
+							logger.debug("Imrpiemiendo solo una caratula a de Tarjeta de Identificacion para el inciso: " + numeroInciso);
+							
+							parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+numeroInciso;
+							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+							
+							documentosManager.guardarDocumento(
+									cdunieco
+									,cdramo
+									,estado
+									,nmpoliza
+									,nmsuplem
+									,new Date()
+									,urlTarjIdent + parametros
+									,"Tarjeta de Identificacion"+" (Endoso: "+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+"). " +numeroInciso+" - " + numeroInciso + " de "+ numeroIncisos
+									,nmpoliza
+									,ntramite
+									,cdtipsup
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,"0"
+									,Documento.EXTERNO_TARJETA_IDENTIFICACION
+									,null
+									,null
+									);
 						}
 					}
 					
