@@ -5741,6 +5741,8 @@
 	
 	//14.- Eliminar asegurado seleccionado
 	function eliminarAsegurado(grid,rowIndex){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
 		if(_tipoPago == _TIPO_PAGO_DIRECTO){
 			var record = grid.getStore().getAt(rowIndex);
 			debug('record.eliminarAsegurado:',record.raw);
@@ -5781,6 +5783,15 @@
 												'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
 											}
 										});
+										
+										if(_cdtipoProceso =="1"){
+											panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
+											panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
+											obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
+											myMask.hide();
+										}else{
+											myMask.hide();
+										}	
 									});
 								}else {
 									centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
