@@ -1444,6 +1444,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			   listaMesaControl.get(0).getOtvalor25mc().equalsIgnoreCase("1")){
 				//ACTUALIZAR TIMPSINI
 				HashMap<String, Object> datosActualizacion = new HashMap<String, Object>();
+				datosActualizacion.put("pv_accion_i",Constantes.INSERT_MODE);
 				datosActualizacion.put("pv_cdunieco_i",datosTablas.get(0).get("cdunieco"));
 				datosActualizacion.put("pv_cdramo_i",datosTablas.get(0).get("cdramo"));
 				datosActualizacion.put("pv_estado_i",datosTablas.get(0).get("estado"));
@@ -1657,6 +1658,37 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				paramsTworkSin.put("pv_nmsinies_i",params.get("nmsinies"));
 				paramsTworkSin.put("pv_accion_i",params.get("accion"));
 				siniestrosManager.eliminarAsegurado(paramsTworkSin);
+				
+				
+				List<MesaControlVO> listaMesaControl = siniestrosManager.getConsultaListaMesaControl(params.get("nmtramite"));
+				if(listaMesaControl.get(0).getCdtiptramc().equalsIgnoreCase(TipoTramite.PAGO_AUTOMATICO.getCdtiptra()) && 
+				   listaMesaControl.get(0).getOtvalor25mc().equalsIgnoreCase("1")){					
+					HashMap<String, Object> datosActualizacion = new HashMap<String, Object>();
+					datosActualizacion.put("pv_accion_i",Constantes.DELETE_MODE);
+					datosActualizacion.put("pv_cdunieco_i",params.get("cdunieco"));
+					datosActualizacion.put("pv_cdramo_i",params.get("cdramo"));
+					datosActualizacion.put("pv_estado_i",params.get("estado"));
+					datosActualizacion.put("pv_nmpoliza_i",params.get("nmpoliza"));
+					datosActualizacion.put("pv_nmsuplem_i",params.get("nmsuplem"));
+					datosActualizacion.put("pv_nmsituac_i",params.get("nmsituac"));
+					datosActualizacion.put("pv_aaapertu_i",null);
+					datosActualizacion.put("pv_status_i",null);
+					datosActualizacion.put("pv_nmsinies_i",params.get("nmsinies"));
+					datosActualizacion.put("pv_ptimport_i",null);
+					datosActualizacion.put("pv_ptiva_i",null);
+					datosActualizacion.put("pv_ntramite_i",params.get("nmtramite"));
+					siniestrosManager.actualizarRegistroTimpsini(datosActualizacion);
+					
+					HashMap<String, Object> paramsPagoDirecto = new HashMap<String, Object>();
+					paramsPagoDirecto.put("pv_ntramite_i",params.get("params.ntramite"));
+					
+					String montoTramite = siniestrosManager.obtieneMontoTramitePagoDirecto(paramsPagoDirecto);
+					logger.debug("Valor del Monto del Arancel ===>>>> "+montoTramite);
+					Map<String,Object> otvalor = new HashMap<String,Object>();
+					otvalor.put("pv_ntramite_i" , params.get("params.ntramite"));
+					otvalor.put("pv_otvalor03_i"  , montoTramite);
+					siniestrosManager.actualizaOTValorMesaControl(otvalor);
+				}	
 			mensaje = "Asegurado eliminado";
 			success = true;
 		}catch(Exception ex){
