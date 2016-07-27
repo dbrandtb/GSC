@@ -284,6 +284,7 @@ Ext.onReady(function()
                         {
                             _p49_impresionClic('I');
                         }
+                        ,hidden   : true
                     }
                 ]
             })
@@ -489,9 +490,7 @@ function _p49_impresionClic(tipoimp)
         centrarVentanaInterna(
         	Ext.MessageBox.confirm(
         		'Confirmar', 
-        		'Se generar\u00E1 el lote y los tr\u00E1mites de impresi\u00F3n<br/>' +
-	        		'<strong style="color:red">Esta opci\u00F3n requiere impresoras de dos bandejas</strong><br/>' +
-	        		'¿Desea continuar?', 
+        		'Se generar\u00E1 el lote y los tr\u00E1mites de impresi\u00F3n ¿Desea continuar?', 
         		function(btn)
 		        {
 		            if(btn === 'yes')
