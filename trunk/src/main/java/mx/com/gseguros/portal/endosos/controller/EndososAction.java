@@ -3025,7 +3025,18 @@ public class EndososAction extends PrincipalCoreAction
 							
 							String tipoGrupoInciso = smap1.get("TIPOFLOT");
 							
-							ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, tipoEndoso.getCdTipSup().toString(), tipoGrupoInciso, aux);
+							Map<String,String> incisosAfectados = new HashMap<String, String>();
+							
+							for(Map<String,String> coberturasIncisos : slist1){
+							
+								String inciso = coberturasIncisos.get("nmsituac");
+								
+								if(StringUtils.isNotBlank(inciso)){
+									incisosAfectados.put(inciso,inciso);
+								}
+							}
+							
+							ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, tipoEndoso.getCdTipSup().toString(), tipoGrupoInciso, aux,incisosAfectados);
 					    }
 						
 						mensaje = new StringBuilder("Se ha confirmado el endoso ").append(respEndCob.get("pv_nsuplogi_o")).toString();
@@ -3243,7 +3254,18 @@ public class EndososAction extends PrincipalCoreAction
 					
 					String tipoGrupoInciso = smap1.get("TIPOFLOT");
 					
-					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, tipoEndoso.getCdTipSup().toString(), tipoGrupoInciso, aux);
+					Map<String,String> incisosAfectados = new HashMap<String, String>();
+					
+					for(Map<String,String> coberturasIncisos : slist1){
+					
+						String inciso = coberturasIncisos.get("nmsituac");
+						
+						if(StringUtils.isNotBlank(inciso)){
+							incisosAfectados.put(inciso,inciso);
+						}
+					}
+					
+					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, tipoEndoso.getCdTipSup().toString(), tipoGrupoInciso, aux, incisosAfectados);
 			    }
 				
 				mensaje = new StringBuilder("Se ha confirmado el endoso ").append((String)respEndCob.get("pv_nsuplogi_o")).toString();
@@ -9890,49 +9912,18 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 				endosoConfirmado = true;
 				
-				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-			    logger.debug("documentos que se regeneran: "+listaDocu);
-			    
-			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
-			    
-				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-				for(Map<String,String> docu:listaDocu) {
-					logger.debug("docu iterado: "+docu);
-					String nmsolici = docu.get("nmsolici");
-					String descripc=docu.get("descripc");
-					String descripl=docu.get("descripl");
-					String url=this.getText("ruta.servidor.reports")
-							+ "?destype=cache"
-							+ "&desformat=PDF"
-							+ "&userid="+this.getText("pass.servidor.reports")
-							+ "&report="+descripl
-							+ "&paramform=no"
-							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-							+ "&p_unieco="+cdunieco
-							+ "&p_ramo="+cdramo
-							+ "&p_estado="+estado
-							+ "&p_poliza="+nmpoliza
-							+ "&p_suplem="+nmsuplem
-							+ "&desname="+rutaCarpeta+"/"+descripc;
-					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN")) {
-						// C R E D E N C I A L _ X X X X X X . P D F
-						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
-					}
-					logger.debug(""
-							+ "\n#################################"
-							+ "\n###### Se solicita reporte ######"
-							+ "\na "+url+""
-							+ "\n#################################");
-					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					logger.debug(""
-							+ "\n######                    ######"
-							+ "\n###### reporte solicitado ######"
-							+ "\na "+url+""
-							+ "\n################################"
-							+ "\n################################"
-							+ "");
-				}
+				documentosManager.generarDocumentosParametrizados(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,"0" //nmsituac
+						,nmsuplemCancela
+						,DocumentosManager.PROCESO_ENDOSO
+						,ntramite
+						,null//nmsolici
+						,null
+						);
 				
 				mensaje="Se ha generado la p\u00f3liza "+nmpolizaNuevaPoliza
 						+" con n\u00famero de tr\u00e1mite "+ntramiteNuevaPoliza + usuarioTramite;
@@ -10684,7 +10675,7 @@ public class EndososAction extends PrincipalCoreAction
 						
 						String tipoGrupoInciso = smap1.get("TIPOFLOT");
 						
-						ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+						ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux, null);
 					}
 					
 					mensaje="Se ha guardado el endoso "+nsuplogi;
@@ -11064,7 +11055,7 @@ public class EndososAction extends PrincipalCoreAction
 					
 					String tipoGrupoInciso = smap1.get("TIPOFLOT");
 					
-					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+					ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux, null);
 				}
 	   			
 	   			mensaje="Se ha guardado el endoso "+nsuplogi;
@@ -13050,12 +13041,23 @@ public class EndososAction extends PrincipalCoreAction
 		
 		return true;
 	}
-
-	private boolean ejecutaCaratulaEndosoTarifaSigs(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem, String ntramite, String cdtipsup, String tipoGrupoInciso, EmisionAutosVO emisionWS){
+/**
+ * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
+ * @param cdunieco
+ * @param cdramo
+ * @param estado
+ * @param nmpoliza
+ * @param nmsuplem
+ * @param ntramite
+ * @param cdtipsup
+ * @param tipoGrupoInciso
+ * @param emisionWS
+ * @param incisosAfectados
+ * @return
+ */
+	private boolean ejecutaCaratulaEndosoTarifaSigs(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem, String ntramite, String cdtipsup, String tipoGrupoInciso, EmisionAutosVO emisionWS, Map<String,String> incisosAfectados){
 		
-		/**
-		 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
-		 */
+		boolean soloIncisosAfectados = (incisosAfectados != null && !incisosAfectados.isEmpty());
 		
 		try {
 			
@@ -13296,7 +13298,6 @@ public class EndososAction extends PrincipalCoreAction
 								);
 					}
 					
-					
 					if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
 						/**
 						 * Para Incisos Flotillas
@@ -13354,6 +13355,8 @@ public class EndososAction extends PrincipalCoreAction
 							 */
 							for(int numReporte = 1; numReporte <= numeroReportes; numReporte++){
 								
+								boolean imprimirReporte =  false; // Se usa solo cuando hay una lista de incisos Afectados
+								
 								int desdeInciso = ((numReporte-1) * Integer.parseInt(numIncisosReporte))+1;
 								int hastaInciso = numReporte * Integer.parseInt(numIncisosReporte);
 								
@@ -13361,29 +13364,74 @@ public class EndososAction extends PrincipalCoreAction
 									hastaInciso = ((numReporte-1) * Integer.parseInt(numIncisosReporte)) + reporteSobrante;
 								}
 								
-								parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
-								logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+								if(soloIncisosAfectados){
+									String incisoComparar = null;
+									for(int inciso = desdeInciso; inciso <= hastaInciso ; inciso++){
+										
+										incisoComparar = Integer.toString(inciso);
+										if(incisosAfectados.containsKey(incisoComparar)){
+											imprimirReporte =  true;
+											break;
+										}
+									}
+								}
 								
-								documentosManager.guardarDocumento(
-										cdunieco
-										,cdramo
-										,estado
-										,nmpoliza
-										,nmsuplem
-										,new Date()
-										,urlTarjIdent + parametros
-										,"Tarjeta de Identificacion"+" (Endoso: "+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+"). " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos
-										,nmpoliza
-										,ntramite
-										,cdtipsup
-										,Constantes.SI
-										,null
-										,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-										,"0"
-										,Documento.EXTERNO_TARJETA_IDENTIFICACION
-										,null
-										,null
-										);
+								if(soloIncisosAfectados){
+									if(imprimirReporte){
+										parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
+										logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+										
+										documentosManager.guardarDocumento(
+												cdunieco
+												,cdramo
+												,estado
+												,nmpoliza
+												,nmsuplem
+												,new Date()
+												,urlTarjIdent + parametros
+												,"Tarjeta de Identificacion"+" (Endoso: "+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+"). " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos
+												,nmpoliza
+												,ntramite
+												,cdtipsup
+												,Constantes.SI
+												,null
+												,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+												,"0"
+												,Documento.EXTERNO_TARJETA_IDENTIFICACION
+												,null
+												,null
+												);
+									}else{
+										logger.debug("No se imprime reporte de Tarjeta de Circulacion, no aplican incisos de este reporte pare este endoso. Incisos de Reporte: " + desdeInciso + "-" + hastaInciso);
+									}
+								}else{
+									
+									//Se imprimen Todos
+									
+									parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
+									logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+									
+									documentosManager.guardarDocumento(
+											cdunieco
+											,cdramo
+											,estado
+											,nmpoliza
+											,nmsuplem
+											,new Date()
+											,urlTarjIdent + parametros
+											,"Tarjeta de Identificacion"+" (Endoso: "+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+"). " +desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos
+											,nmpoliza
+											,ntramite
+											,cdtipsup
+											,Constantes.SI
+											,null
+											,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+											,"0"
+											,Documento.EXTERNO_TARJETA_IDENTIFICACION
+											,null
+											,null
+											);
+								}
 							}
 							
 						}
