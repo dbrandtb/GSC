@@ -5507,4 +5507,53 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> obtieneIncisosAfectadosEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_INCISOS_X_SUPLEMENTO ******")
+				.append("\n****** params=").append(params)
+				.append("\n****************************************************")
+				.toString()
+				);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtieneIncisosAfectadosEndoso(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtieneIncisosAfectadosEndoso extends StoredProcedure
+	{
+		
+		protected ObtieneIncisosAfectadosEndoso(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_GET_INCISOS_X_SUPLEMENTO");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMSITUAC"  , "TOTAL"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

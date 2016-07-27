@@ -1015,7 +1015,18 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 				}
 				
-				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+				Map<String,String> incisosAfectados = new HashMap<String, String>();
+				
+				for(Map<String,String> coberturasIncisos : incisos){
+				
+					String inciso = coberturasIncisos.get("NMSITUAC");
+					
+					if(StringUtils.isNotBlank(inciso)){
+						incisosAfectados.put(inciso,inciso);
+					}
+				}
+				
+				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 			
 			}
 			
@@ -1395,7 +1406,18 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 			}
 			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			Map<String,String> incisosAfectados = new HashMap<String, String>();
+			
+			for(Map<String,String> coberturasIncisos : incisos){
+			
+				String inciso = coberturasIncisos.get("nmsituac");
+				
+				if(StringUtils.isNotBlank(inciso)){
+					incisosAfectados.put(inciso,inciso);
+				}
+			}
+			
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 		
 		}
 		catch(Exception ex)
@@ -1713,7 +1735,18 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 			}
 			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			Map<String,String> incisosAfectados = new HashMap<String, String>();
+			
+			for(Map<String,String> coberturasIncisos : incisos){
+			
+				String inciso = coberturasIncisos.get("NMSITUAC");
+				
+				if(StringUtils.isNotBlank(inciso)){
+					incisosAfectados.put(inciso,inciso);
+				}
+			}
+			
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 			
 		}
 		catch(Exception ex)
@@ -1845,7 +1878,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paso = "Ejecutando caratula";
 				logger.debug(paso);
 				
-				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, null);
 			}
 		}
 		catch(Exception ex)
@@ -3421,7 +3454,15 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 			}
 			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			Map<String,String> incisosAfectados = new HashMap<String, String>();
+			
+			String inciso = incisoAnterior.get("NMSITUAC");
+			
+			if(StringUtils.isNotBlank(inciso)){
+				incisosAfectados.put(inciso,inciso);
+			}
+			
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 		}
 		catch(Exception ex)
 		{
@@ -3541,10 +3582,31 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		return items;
 	}
 	
-	private boolean ejecutaCaratulaEndosoTarifaSigs(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem, String ntramite, String cdtipsup, String tipoGrupoInciso, EmisionAutosVO emisionWS){
-		/**
-		 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
-		 */
+	/**
+	 * Para Guardar URls de Caratula Recibos y documentos de Autos Externas
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param ntramite
+	 * @param cdtipsup
+	 * @param tipoGrupoInciso
+	 * @param emisionWS
+	 * @param incisosAfectados
+	 * @return
+	 */
+	private boolean ejecutaCaratulaEndosoTarifaSigs(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem, String ntramite, String cdtipsup, String tipoGrupoInciso, EmisionAutosVO emisionWS, Map<String,String> incisosAfectados){
+		
+		boolean soloIncisosAfectados = (incisosAfectados != null && !incisosAfectados.isEmpty());
+		boolean soloUnInciso         = (soloIncisosAfectados && incisosAfectados.size() == 1);
+		
+		logger.debug(">>>>>>>>>>>  Imprimiendo Caratulas para Autos  <<<<<<<<<<<<<<");
+		
+		if(soloIncisosAfectados){
+			logger.debug(">>>>>>>>>>>  Incisos Afectados  <<<<<<<<<<<<<< :::" + incisosAfectados);
+			logger.debug(">>>>>>>>>>>  Solo un Inciso <<<<<<<<<<<<<< :::" + soloUnInciso);
+		}
 		
 		try{
 			
@@ -3770,7 +3832,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						
 						int numeroIncisos = consultasPolizaDAO.obtieneNumeroDeIncisosPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 						
-						if(numeroIncisos > 0 ){
+						if(numeroIncisos > 0 && !soloUnInciso){
 							int numeroReportes =  numeroIncisos/Integer.parseInt(numIncisosReporte);
 							int reporteSobrante = numeroIncisos % Integer.parseInt(numIncisosReporte);
 							
@@ -3787,6 +3849,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							 */
 							for(int numReporte = 1; numReporte <= numeroReportes; numReporte++){
 								
+								boolean imprimirReporte =  false; // Se usa solo cuando hay una lista de incisos Afectados
+								
 								int desdeInciso = ((numReporte-1) * Integer.parseInt(numIncisosReporte))+1;
 								int hastaInciso = numReporte * Integer.parseInt(numIncisosReporte);
 								
@@ -3794,29 +3858,100 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 									hastaInciso = ((numReporte-1) * Integer.parseInt(numIncisosReporte)) + reporteSobrante;
 								}
 								
-								parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
-								logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+								if(soloIncisosAfectados){
+									String incisoComparar = null;
+									for(int inciso = desdeInciso; inciso <= hastaInciso ; inciso++){
+										
+										incisoComparar = Integer.toString(inciso);
+										if(incisosAfectados.containsKey(incisoComparar)){
+											imprimirReporte =  true;
+											break;
+										}
+									}
+								}
 								
-								mesaControlDAO.guardarDocumento(
-										cdunieco
-										,cdramo
-										,estado
-										,nmpoliza
-										,nmsuplem
-										,new Date()
-										,urlTarjIdent + parametros
-										,"Tarjeta de Identificacion"+" (Endoso: "+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+"). " + desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos
-										,nmpoliza
-										,ntramite
-										,cdtipsup
-										,Constantes.SI
-										,null
-										,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-										,"0"
-										,Documento.EXTERNO_TARJETA_IDENTIFICACION, null, null
-										);
+								if(soloIncisosAfectados){
+									if(imprimirReporte){
+										parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
+										logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+										
+										mesaControlDAO.guardarDocumento(
+												cdunieco
+												,cdramo
+												,estado
+												,nmpoliza
+												,nmsuplem
+												,new Date()
+												,urlTarjIdent + parametros
+												,"Tarjeta de Identificacion"+" (Endoso: "+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+"). " + desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos
+												,nmpoliza
+												,ntramite
+												,cdtipsup
+												,Constantes.SI
+												,null
+												,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+												,"0"
+												,Documento.EXTERNO_TARJETA_IDENTIFICACION, null, null
+												);
+									}else{
+										logger.debug("No se imprime reporte de Tarjeta de Circulacion, no aplican incisos de este reporte pare este endoso. Incisos de Reporte: " + desdeInciso + "-" + hastaInciso);
+									}
+								}else{
+									
+									//Se imprimen Todos los reportes
+									
+									parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
+									logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+									
+									mesaControlDAO.guardarDocumento(
+											cdunieco
+											,cdramo
+											,estado
+											,nmpoliza
+											,nmsuplem
+											,new Date()
+											,urlTarjIdent + parametros
+											,"Tarjeta de Identificacion"+" (Endoso: "+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+"). " + desdeInciso+" - " + hastaInciso + " de "+ numeroIncisos
+											,nmpoliza
+											,ntramite
+											,cdtipsup
+											,Constantes.SI
+											,null
+											,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+											,"0"
+											,Documento.EXTERNO_TARJETA_IDENTIFICACION, null, null
+											);
+								}
 							}
 							
+						}else if(soloUnInciso){
+							
+							ArrayList<String> incisos = new ArrayList<String>(incisosAfectados.values());
+							String numeroInciso = incisos.get(0);
+							
+							logger.debug("Imrpiemiendo solo una caratula a de Tarjeta de Identificacion para el inciso: " + numeroInciso);
+							
+							parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+numeroInciso;
+							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+							
+							mesaControlDAO.guardarDocumento(
+									cdunieco
+									,cdramo
+									,estado
+									,nmpoliza
+									,nmsuplem
+									,new Date()
+									,urlTarjIdent + parametros
+									,"Tarjeta de Identificacion"+" (Endoso: "+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+"). " + numeroInciso+" - " + numeroInciso + " de "+ numeroInciso
+									,nmpoliza
+									,ntramite
+									,cdtipsup
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,"0"
+									,Documento.EXTERNO_TARJETA_IDENTIFICACION, null, null
+									);
 						}
 						
 					}
@@ -4160,7 +4295,43 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 			}
 			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			
+			List<Map<String,String>> incisos = endososDAO.obtieneIncisosAfectadosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen);
+			Map<String,String> incisosAfectados = null;
+			
+			if(incisos != null && !incisos.isEmpty()){
+				
+				boolean todosLosIncisos =  true;
+				
+				try{
+					int totalAfectados = incisos.size();
+					int totalIncisos   = Integer.parseInt(incisos.get(0).get("TOTAL"));
+					
+					logger.debug(">>> Total de incisos de Poliza: " + totalIncisos);
+					logger.debug(">>> Total de incisos de Lista:  " + totalAfectados);
+					
+					if(totalAfectados < totalIncisos){
+						todosLosIncisos = false;
+					}
+					
+				}catch(Exception e){
+					logger.error("No se pudo obtener el total de los incisos para el endoso de cancelacion de endoso!!", e);
+				}
+				
+				if(!todosLosIncisos){
+					incisosAfectados = new HashMap<String, String>();
+					for(Map<String,String> coberturasIncisos : incisos){
+						
+						String inciso = coberturasIncisos.get("NMSITUAC");
+						
+						if(StringUtils.isNotBlank(inciso)){
+							incisosAfectados.put(inciso,inciso);
+						}
+					}
+				}
+					
+			}
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 			
 		}
 		catch(Exception ex)
@@ -4711,7 +4882,44 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 				}
 				
-				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+				
+				List<Map<String,String>> incisos = endososDAO.obtieneIncisosAfectadosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen);
+				Map<String,String> incisosAfectados = null;
+				
+				if(incisos != null && !incisos.isEmpty()){
+					
+					boolean todosLosIncisos =  true;
+					
+					try{
+						int totalAfectados = incisos.size();
+						int totalIncisos   = Integer.parseInt(incisos.get(0).get("TOTAL"));
+						
+						logger.debug(">>> Total de incisos de Poliza: " + totalIncisos);
+						logger.debug(">>> Total de incisos de Lista:  " + totalAfectados);
+						
+						if(totalAfectados < totalIncisos){
+							todosLosIncisos = false;
+						}
+						
+					}catch(Exception e){
+						logger.error("No se pudo obtener el total de los incisos para el endoso de cancelacion de endoso!!", e);
+					}
+					
+					if(!todosLosIncisos){
+						incisosAfectados = new HashMap<String, String>();
+						for(Map<String,String> coberturasIncisos : incisos){
+							
+							String inciso = coberturasIncisos.get("NMSITUAC");
+							
+							if(StringUtils.isNotBlank(inciso)){
+								incisosAfectados.put(inciso,inciso);
+							}
+						}
+					}
+						
+				}
+						
+				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 			}
 			
 		}
@@ -4843,7 +5051,18 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 			}
 			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			Map<String,String> incisosAfectados = new HashMap<String, String>();
+			
+			for(Map<String,String> coberturasIncisos : incisos){
+			
+				String inciso = coberturasIncisos.get("nmsituac");
+				
+				if(StringUtils.isNotBlank(inciso)){
+					incisosAfectados.put(inciso,inciso);
+				}
+			}
+			
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 		}
 		catch(Exception ex)
 		{
@@ -5095,7 +5314,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 			}
 			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, null);
 			
 		}
 		catch(Exception ex)
@@ -5442,6 +5661,17 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String ntramite = propWS.getNtramite();
 			String tipoGrupoInciso = propWS.getTipoflot();
 			
+			Map<String,String> incisosAfectados = new HashMap<String, String>();
+			
+			for(Map<String,String> coberturasIncisos : incisos){
+			
+				String inciso = coberturasIncisos.get("nmsituac");
+				
+				if(StringUtils.isNotBlank(inciso)){
+					incisosAfectados.put(inciso,inciso);
+				}
+			}
+			
 			if(TipoEndoso.CAMBIO_TIPO_SERVICIO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
 				
 				paso = "Realizando endoso en Web Service Autos";
@@ -5478,7 +5708,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					}
 					
 				}else if(aux.isExitoRecibos()){
-					ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+					
+					ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 				}else{
 					logger.error("Error al ejecutar los WS de endoso Cambio de Tipo Servicio");
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
@@ -5531,7 +5762,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 				}
 				
-				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 			
 			}
 			
@@ -5761,7 +5992,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 			}
 			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, null);
 		}
 		catch(Exception ex)
 		{
@@ -5931,7 +6162,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paso = "Ejecutando caratula";
 			logger.debug(paso);
 			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, null);
 		
 		
 		}
@@ -6069,7 +6300,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paso = "Ejecutando caratula";
 				logger.debug(paso);
 				
-				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux);
+				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, null);
 			}
 			
 			
