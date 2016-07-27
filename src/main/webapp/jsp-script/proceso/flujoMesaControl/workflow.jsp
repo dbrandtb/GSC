@@ -85,6 +85,12 @@
     height           : 50px;
     background-image : url('${flujoimg}validacion.png');
 }
+.correo .image
+{
+    width            : 50px;
+    height           : 50px;
+    background-image : url('${flujoimg}validacion.png');
+}
 .labelV
 {
     position    : absolute;
@@ -173,6 +179,14 @@
     background-image : url('${flujoimg}proceso.png');
 }
 .entidadV
+{
+    position         : absolute;
+    width            : 50px;
+    height           : 50px;
+    border           : 0px solid red;
+    background-image : url('${flujoimg}validacion.png');
+}
+.entidadM
 {
     position         : absolute;
     width            : 50px;
@@ -330,7 +344,9 @@ var _p52_urlCargarModelado         = '<s:url namespace="/flujomesacontrol" actio
 var _p52_urlCargarDatosEstado      = '<s:url namespace="/flujomesacontrol" action="cargarDatosEstado"      />';
 var _p52_urlGuardarDatosStatus     = '<s:url namespace="/flujomesacontrol" action="guardarDatosEstado"     />';
 var _p52_urlCargarDatosValidacion  = '<s:url namespace="/flujomesacontrol" action="cargarDatosValidacion"  />';
+var _p52_urlCargarDatosCorreo      = '<s:url namespace="/flujomesacontrol" action="cargarDatosCorreo"      />';
 var _p52_urlGuardarDatosValidacion = '<s:url namespace="/flujomesacontrol" action="guardarDatosValidacion" />';
+var _p52_urlGuardarDatosCorreo     = '<s:url namespace="/flujomesacontrol" action="guardarDatosCorreo"     />';
 var _p52_urlCargarDatosRevision    = '<s:url namespace="/flujomesacontrol" action="cargarDatosRevision"    />';
 var _p52_urlGuardarDatosRevision   = '<s:url namespace="/flujomesacontrol" action="guardarDatosRevision"   />';
 var _p52_urlMovimientoTdocume      = '<s:url namespace="/flujomesacontrol" action="movimientoTdocume"      />';
@@ -349,6 +365,7 @@ var componenteTpl;
 var procesoTpl;
 var validacionTpl;
 var revisionTpl;
+var correoTpl;
 
 var _p52_panelGrids;
 var _p52_gridTramites;
@@ -361,8 +378,10 @@ var _p52_catalogoPantallas;
 var _p52_catalogoComponentes;
 var _p52_catalogoProcesos;
 var _p52_catalogoValidaciones;
+var _p52_catalogoCorreos;
 var _p52_catalogoRevisiones;
 var _p52_formValidacion;
+var _p52_formCorreos;
 var _p52_panelRevision;
 var _p52_panelTitulo;
 var _p52_panelAccion;
@@ -380,6 +399,8 @@ var _p52_formComponente;
 var _p52_formPantalla;
 var _p52_formProceso;
 var _p52_formTdocume;
+var _p52_formCorreos;
+var _p52_winVarsCorreo;
 
 var _p52_cargando = false;
 
@@ -431,6 +452,14 @@ Ext.onReady(function()
         return;
     }
     ////// requires //////
+    Ext.Loader.setConfig({enabled: true});
+    Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES+'SelectorMultiple');
+	/* Ext.require(['Ext.form.Panel',
+				 'Ext.ux.form.MultiSelect',
+				 'Ext.ux.form.ItemSelector',
+				 'Ext.tip.QuickTipManager',
+				 'Ext.ux.ajax.JsonSimlet',
+				 'Ext.ux.ajax.SimManager']); */
     ////// requires //////
     
     ////// modelos //////
@@ -524,6 +553,20 @@ Ext.onReady(function()
         ,'</div>'
     ]);
     
+    correoTpl = new Ext.Template(
+    	    [
+    	         '<div id="M0" class="catEntidad correo" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dsmail}">'
+    	        ,'    <table width="90" border="0">'
+    	        ,'        <tr>'
+    	        ,'            <td align="center"><div class="image"></div></td>'
+    	        ,'        </tr>'
+    	        ,'        <tr>'
+    	        ,'            <td align="center">{dsmail}</td>'
+    	        ,'        </tr>'
+    	        ,'    </table>'
+    	        ,'</div>'
+    	    ]);
+    
     tituloTpl = new Ext.Template(
     [
          '<div id="T{cdtitulo}" class="catEntidad titulo" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dstitulo}">'
@@ -601,6 +644,13 @@ Ext.onReady(function()
         ,isTarget  : false
     };
     
+    epProps['M'] =
+    {
+        anchor     : [ 'Perimeter' , { shape : 'Rectangle' } ]
+        ,isSource  : true
+        ,isTarget  : true
+    };    
+   
     _p52_formTtipflumc = Ext.create('Ext.window.Window',
     {
         title        : 'TR\u00C1MITE'
@@ -889,7 +939,7 @@ Ext.onReady(function()
             }
         ]
     });
-    
+       
     _p52_formTflujomc = Ext.create('Ext.window.Window',
     {
         title        : 'PROCESO'
@@ -1673,6 +1723,28 @@ Ext.onReady(function()
             centrarVentanaInterna(me.show());
         }
     });
+    
+ 	_p52_winVarsCorreo = Ext.create('Ext.window.Window',{
+		title        : 'VARIABLES'
+		,modal       : true
+		,closeAction : 'hide'
+  		,items       : [
+		                new SelectorMultiple()
+		                ]
+		,buttonAlign : 'center'		                
+ 		,buttons     : [
+ 		                {
+ 		                	text  : 'Guardar',
+ 		                	icon  : _GLOBAL_DIRECTORIO_ICONOS+'disk.png',
+ 		                	handler : function(me){
+ 		                		var win = me.up('window');
+ 		                		var name = win.nameCmpVar; 		                		
+ 		                		_p52_formCorreos.down('[name='+name+']').setValue(win.down('[itemId=panVars]').getValue());
+ 		                		win.close();
+ 		                	}
+ 		                }
+ 		                ]
+	}); 
     ////// componentes //////
     
     ////// contenido //////
@@ -2078,6 +2150,18 @@ Ext.onReady(function()
                                         ]);
                                     }
                                 }]
+                            }
+                            ,{
+                                title       : 'CORREOS'
+                                ,itemId     : '_p52_catalogoCorreos'
+                                ,defaults   : { style : 'margin : 5px;' }
+                                ,autoScroll : true
+                                ,layout     :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                    ,tdAttrs : {valign:'top'}
+                                }
                             }
                             ,{
                                 title       : 'T\u00CDTULOS'
@@ -2833,6 +2917,214 @@ Ext.onReady(function()
                                     })
                                 ]
                             })
+                            ,Ext.create('Ext.form.Panel',
+                            {
+                                itemId       : '_p52_formCorreos'
+                                ,title       : 'Correos'
+                                ,defaults    : { style : 'margin:5px;' }
+                                ,buttonAlign : 'center'
+                                ,hidden      : true
+                                ,layout		 : {
+                                	type     : 'table'
+                                	,columns : 2
+                                	,tdAttrs : {valign:'middle'}
+                                	}
+                                ,tools       :
+                                [{
+                                    type     : 'help'
+                                    ,tooltip : 'Envi\u00f3 de correos'
+                                    ,handler : function()
+                                    {
+                                        _p52_ventanaTips(
+                                        [
+                                            'La estructura de los DATOS para validaci\u00f3n cliente es:'
+                                            ,'CDFLUJOMC: "12"'
+                                            ,'CDRAMO: "2"'
+                                            ,'CDSISROL: "MESADECONTROL"'
+                                            ,'CDTIPFLU: "1"'
+                                            ,'CDUNIECO: "1000"'
+                                            ,'CDUSUARI: "A100"'
+                                            ,'CLAVEENT: "27"'
+                                            ,'ESTADO: "W"'
+                                            ,'NMPOLIZA: ""'
+                                            ,'NMSITUAC: ""'
+                                            ,'NMSUPLEM: ""'
+                                            ,'NTRAMITE: "13892"'
+                                            ,'STATUS: "2"'
+                                            ,'TIPOENT: "V"'
+                                        ]);
+                                    }
+                                }]
+                                ,buttons     :
+                                [
+                                    {
+                                        text     : 'Guardar'
+                                        ,icon    : '${icons}disk.png'
+                                        //TODO
+                                        ,handler : function(me)
+                                        {
+                                            _p52_guardarDatosCorreo
+                                            (me,function(me)
+                                            {
+                                                _p52_panelCanvas.enable();
+                                                me.up('panel').hide();
+                                                _p52_actualizaLabel(
+                                                    'V'
+                                                    ,_p52_formCorreos.down('[name=WEBID]').getValue()
+                                                    ,_p52_formCorreos.down('[name=DSMAIL]').getValue()
+                                                );
+                                            });
+                                        }
+                                    }
+                                    ,{
+                                        text     : 'Cancelar'
+                                        ,icon    : '${icons}cancel.png'
+                                        ,handler : function(me)
+                                        {
+                                            _p52_panelCanvas.enable();
+                                            me.up('panel').hide();
+                                        }
+                                    }
+                                ]
+                                ,items :
+                                [
+                                    {
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_ACCION'
+                                        ,name       : 'ACCION'
+                                        ,allowBlank : false
+                                        ,hidden     : !_p52_debug
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_CDTIPFLU'
+                                        ,name       : 'CDTIPFLU'
+                                        ,allowBlank : false
+                                        ,hidden     : !_p52_debug
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_CDFLUJOMC'
+                                        ,name       : 'CDFLUJOMC'
+                                        ,allowBlank : false
+                                        ,hidden     : !_p52_debug
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_CDMAIL'
+                                        ,name       : 'CDMAIL'
+                                        ,allowBlank : false
+                                        ,hidden     : !_p52_debug
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_WEBID'
+                                        ,name       : 'WEBID'
+                                        ,allowBlank : false
+                                        ,hidden     : !_p52_debug
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_XPOS'
+                                        ,name       : 'XPOS'
+                                        ,allowBlank : false
+                                        ,hidden     : !_p52_debug
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_YPOS'
+                                        ,name       : 'YPOS'
+                                        ,allowBlank : false
+                                        ,hidden     : !_p52_debug
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_VARDESTINO'
+                                        ,name       : 'VARDESTINO'
+                                        ,itemId		: 'VARDESTINO'
+                                        ,hidden     : !_p52_debug
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_VARASUNTO'
+                                        ,name       : 'VARASUNTO'
+                                        ,hidden     : !_p52_debug
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : '_VARMENSAJE'
+                                        ,name       : 'VARMENSAJE'
+                                        ,hidden     : !_p52_debug
+                                    }
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : 'ETIQUETA'
+                                        ,labelAlign : 'top'
+                                        ,name       : 'DSMAIL'
+                                        ,allowBlank : false
+                                    }
+                                    ,{}
+                                    ,{
+                                        xtype       : 'textfield'
+                                        ,fieldLabel : 'PARA'
+                                        ,labelAlign : 'top'
+                                        ,name       : 'DSDESTINO'
+                                        ,allowBlank : false
+                                    }
+                                    ,{
+                                    	xtype: 'button'
+                                        ,text: 'Variables'
+                                        ,icon : '${icons}table_relationship.png'
+                                        ,handler: function() {
+                                        	_p52_mostrarVentanaVariablesCorreo('VARDESTINO');
+                                        }
+                                    }
+                                    ,{
+                                        xtype          : 'textfield'
+                                        ,fieldLabel    : 'ASUNTO'
+                                        ,labelAlign    : 'top'
+                                        ,name          : 'DSASUNTO'
+                                        ,allowBlank    : false
+                                        ,minLength     : 1
+                                        ,maxLength     : 300
+                                    }
+                                    ,{
+                                    	xtype: 'button'
+                                        ,text: 'Variables'
+                                        ,icon : '${icons}table_relationship.png'
+                                        ,handler: function() {
+                                        	_p52_mostrarVentanaVariablesCorreo('VARASUNTO');
+                                        }
+                                    }
+                                    ,{
+                                        xtype          : 'textarea'
+                                        ,fieldLabel    : 'MENSAJE'
+                                        ,labelAlign    : 'top'
+                                        ,name          : 'DSMENSAJE'
+                                    }
+                                    ,{
+                                    	xtype: 'button'
+                                        ,text: 'Variables'
+                                        ,icon : '${icons}table_relationship.png'
+                                        ,handler: function() {
+                                        	_p52_mostrarVentanaVariablesCorreo('VARMENSAJE');
+                                        }
+                                    }
+                                    /* , new SelectorMultiple() */
+                                    /*,{
+                                        xtype: 'itemselector',
+                                        name : 'variables'
+                                        ,imagePath: '../ux/images/'
+                                        ,store: 
+                                        ,displayField: 'DSVARMAIL',
+                                        ,valueField  : 'CDVARMAIL'
+                                        ,allowBlank  : false
+                                        ,msgTarget   : 'side'
+                                        ,fromTitle   : 'Disponibles'
+                                        ,toTitle     : 'Seleccionadas'
+                                    }*/
+                                ]
+                            })
                             ,Ext.create('Ext.panel.Panel',
                             {
                                 itemId       : '_p52_panelTitulo'
@@ -3255,9 +3547,11 @@ Ext.onReady(function()
     _p52_catalogoComponentes  = _fieldById('_p52_catalogoComponentes');
     _p52_catalogoProcesos     = _fieldById('_p52_catalogoProcesos');
     _p52_catalogoValidaciones = _fieldById('_p52_catalogoValidaciones');
+    _p52_catalogoCorreos      = _fieldById('_p52_catalogoCorreos');
     _p52_catalogoRevisiones   = _fieldById('_p52_catalogoRevisiones');
     _p52_catalogoTitulos      = _fieldById('_p52_catalogoTitulos');
     _p52_formValidacion       = _fieldById('_p52_formValidacion');
+    _p52_formCorreos          = _fieldById('_p52_formCorreos');
     _p52_panelRevision        = _fieldById('_p52_panelRevision');
     _p52_panelTitulo          = _fieldById('_p52_panelTitulo');
     _p52_panelAccion          = _fieldById('_p52_panelAccion');
@@ -3273,7 +3567,7 @@ Ext.onReady(function()
     _p52_cargarRevisiones();
     _p52_cargarTitulos();
     _p52_cargarIconos();
-    
+    _p52_cargarCorreos();
     //_p52_navega(2);
     
     jsPlumb.ready(function()
@@ -3645,6 +3939,24 @@ function _p52_cargarRevisiones()
     });
 }
 
+function _p52_cargarCorreos()
+{
+    debug('_p52_cargarCorreos');
+    _p52_catalogoCorreos.removeAll();
+    _p52_catalogoCorreos.add(
+    {
+        xtype   : 'panel'
+        ,tpl    : correoTpl
+        ,border : 0
+        ,data   :
+        {
+            cdmail  : 0
+            ,dsmail : 'Nuevo correo'
+        }
+    });
+}
+
+
 function _p52_cargarTitulos()
 {
     debug('_p52_cargarTitulos');
@@ -3812,6 +4124,14 @@ function _p52_drop(event)
             _p52_addDiv(id,tipo,clave,'',x,y);
         });
     }
+    else if(tipo=='M')
+    {
+        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
+        {
+            _p52_addDiv(id,tipo,json.params.cdentidad,'',x,y);
+            _p52_addEndpoint(id,tipo);
+        });
+    }
 }
 
 function _p52_generaId()
@@ -3837,7 +4157,7 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelRevision.hide();
         _p52_panelTitulo.hide();
         _p52_panelAccion.hide();
-        
+        _p52_formCorreos.hide();
         _p52_cargarDatosEstado(clave);
     }
     else if(tipo=='V')
@@ -3848,7 +4168,7 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelRevision.hide();
         _p52_panelTitulo.hide();
         _p52_panelAccion.hide();
-        
+        _p52_formCorreos.hide();
         _p52_cargarDatosValidacion(clave);
     }
     else if(tipo=='R')
@@ -3859,7 +4179,7 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelRevision.show();
         _p52_panelTitulo.hide();
         _p52_panelAccion.hide();
-        
+        _p52_formCorreos.hide();
         _p52_cargarDatosRevision(clave);
     }
     else if(tipo=='T')
@@ -3870,8 +4190,19 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelRevision.hide();
         _p52_panelTitulo.show();
         _p52_panelAccion.hide();
-        
+        _p52_formCorreos.hide();
         _p52_cargarDatosTitulo(id);
+    }
+    else if(tipo=='M')
+    {
+        _p52_panelCanvas.disable();
+        _p52_panelEstado.hide();
+        _p52_formValidacion.hide();
+        _p52_panelRevision.hide();
+        _p52_panelTitulo.hide();
+        _p52_panelAccion.hide();
+        _p52_formCorreos.show();
+        _p52_cargarDatosCorreo(clave);
     }
     else if(tipo=='A')
     {
@@ -3881,7 +4212,7 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelRevision.hide();
         _p52_panelTitulo.hide();
         _p52_panelAccion.show();
-        
+        _p52_formCorreos.hide();
         _p52_cargarDatosAccion(clave);
     }
 }
@@ -4429,6 +4760,12 @@ function _p52_cargarModelado()
                                     descrip = ite.DSTITULO;
                                     _p52_addDiv(id,tipo,clave,descrip,x,y,0);
                                 }
+                                else if(tipo=='M')
+                                {
+                                    clave   = ite.CDMAIL;
+                                    descrip = ite.DSMAIL;
+                                    _p52_addDiv(id,tipo,clave,descrip,x,y);
+                                }
                                 else if(tipo=='A')
                                 {
                                     _p52_cargando = true;
@@ -4510,7 +4847,10 @@ function _p52_addDiv(id,tipo,clave,descrip,x,y)
     {
         $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+clave+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelT labelT'+clave+'">'+descrip+'</div></div>');
     }
-    
+    else if(tipo=='M')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelV">'+descrip+'</div></div>');
+    }
     toolkit.draggable(id,
     {
         snapThreshold : 20
@@ -4850,6 +5190,69 @@ function _p52_cargarDatosValidacion(cdvalida)
     catch(e)
     {
         _setLoading(false,_p52_formValidacion);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_cargarDatosCorreo(cdmail)
+{
+	debug('_p52_cargarDatosCorreo cdmail:',cdmail,'.');
+    var ck = 'Borrando datos de validaci\u00f3n';
+    try
+    {
+        _p52_formCorreos.getForm().reset();
+    
+        ck = 'Recuperando datos de validaci\u00f3n';
+    
+        _setLoading(true,_p52_formCorreos);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlCargarDatosCorreo
+            ,params  :
+            {
+                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
+                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
+                ,'params.cdmail'    : cdmail
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_formCorreos);
+                var ck = 'Decodificando respuesta al recuperar datos de validaci\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### datos validacion:',json);
+                    if(json.success==true)
+                    {
+                        _p52_formCorreos.loadRecord(
+                        {
+                            getData : function()
+                            {
+                                return json.params;
+                            }
+                        });
+                        _p52_formCorreos.down('[name=ACCION]').setValue('U');
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_formCorreos);
+                errorComunicacion(null,'Error al recuperar datos de validaci\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_formCorreos);
         manejaException(e,ck);
     }
 }
@@ -5264,6 +5667,58 @@ function _p52_guardarDatosValidacion(bot,callback)
     }
 }
 
+function _p52_guardarDatosCorreo(bot,callback)
+{
+    debug('_p52_guardarDatosCorreo');
+    var ck = 'Guardando datos de correo';
+    try
+    {
+        var form  = _p52_formCorreos.getForm();
+        if(!form.isValid())
+        {
+            throw 'Favor de revisar los datos';
+        }
+        
+        _setLoading(true,_p52_formCorreos);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlGuardarDatosCorreo
+            ,params  : _formValuesToParams(form.getValues())
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_formCorreos);
+                var ck = 'Decodificando respuesta al guardar datos de validaci\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    if(json.success==true)
+                    {
+                        callback(bot);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_formCorreos);
+                errorComunicacion(null,'Error al guardar datos de validaci\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_formCorreos);
+        manejaException(e,ck);
+    }
+}
+
 function _p52_actualizaLabel(tipo,webid,label)
 {
     debug('_p52_actualizaLabel tipo,webid,label:',tipo,webid,label,'.');
@@ -5322,6 +5777,14 @@ function _p52_ventanaTips(tips)
             }
         }]
     }).show());
+}
+
+function _p52_mostrarVentanaVariablesCorreo(name){	
+	debug('_p52_mostrarVentanaVariablesCorreo',name);
+	_p52_winVarsCorreo.down('[itemId=panVars]').setValue(_p52_formCorreos.down('[name='+name+']').getValue());
+	_p52_winVarsCorreo.nameCmpVar = name;
+	_p52_winVarsCorreo.show();
+	
 }
 ////// funciones //////
 
