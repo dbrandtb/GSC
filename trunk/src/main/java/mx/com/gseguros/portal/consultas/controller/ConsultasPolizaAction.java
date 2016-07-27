@@ -668,8 +668,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 			poliza.setNmsitaux(params.get("nmsitaux"));
 			poliza.setFamilia(params.get("familia"));
 			poliza.setNombre(params.get("nombre"));
-			datosAsegurados = consultasPolizaManager.obtieneAsegurados(poliza,start,limit);
+			datosAsegurados = consultasPolizaManager.obtieneAsegurados(poliza,start,limit);			
 			if(datosAsegurados != null && datosAsegurados.size() > 0) {
+				logger.debug(Utils.log("total",datosAsegurados.get(0).getTotal()));
 				totalCount = datosAsegurados.get(0).getTotal();
 			}
 			if(datosAsegurados != null) {

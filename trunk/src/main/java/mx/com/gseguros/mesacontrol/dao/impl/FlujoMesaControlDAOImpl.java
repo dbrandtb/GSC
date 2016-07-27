@@ -1828,6 +1828,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					,"CDPROCMC"   , "WEBIDPROC"
 					,"CDVALIDA"   , "WEBIDVALIDA"
 					,"CDREVISI"   , "WEBIDREVISI"
+					,"CDMAIL"     , "WEBIDMAIL"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2679,6 +2680,142 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	}
 	
 	@Override
+	public String movimientoTmail(
+			String cdtipflu,
+			String cdflujomc,
+			String cdmail,
+			String dsmail,
+			String dsdestino,
+			String dsasunto,
+			String dsmensaje,
+			String vardestino,
+			String varasunto,
+			String varmensaje,
+			String webid,
+			String xpos,
+			String ypos,
+			String accion) throws Exception 
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdtipflu"   , cdtipflu);
+		params.put("cdflujomc"  , cdflujomc);
+		params.put("cdmail"     , cdmail);
+		params.put("dsmail"     , dsmail);
+		params.put("dsdestino"  , dsdestino);
+		params.put("dsasunto"   , dsasunto);
+		params.put("dsmensaje"  , dsmensaje);
+		params.put("vardestino" , vardestino);
+		params.put("varasunto"  , varasunto);
+		params.put("varmensaje" , varmensaje);
+		params.put("webid"      , webid);
+		params.put("xpos"       , xpos);
+		params.put("ypos"       , ypos);
+		params.put("accion"     , accion);
+		Map<String,Object> procRes = ejecutaSP(new MovimientoTflumailSP(getDataSource()),params);
+		return (String)procRes.get("cdmail");
+	}
+	
+	protected class MovimientoTflumailSP extends StoredProcedure
+	{
+		protected MovimientoTflumailSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUMAIL");
+			declareParameter(new SqlParameter     ("cdtipflu"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("cdflujomc"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlInOutParameter("cdmail"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("dsmail"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("dsdestino"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("dsasunto"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("dsmensaje"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("vardestino"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("varasunto"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("varmensaje"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("webid"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("xpos"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("ypos"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter     ("accion"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperaTflumail(String cdtipflu, String cdflujomc, String cdmail) throws Exception 
+	{
+		Map<String,String> params = new LinkedHashMap<String, String>();
+		params.put("cdtipflu"  , cdtipflu);
+		params.put("cdflujomc" , cdflujomc);
+		params.put("cdmail"    , cdmail);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperaTflumailSP(getDataSource()), params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperaTflumailSP extends StoredProcedure
+	{
+		protected RecuperaTflumailSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TFLUMAIL");
+			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmail"    , OracleTypes.VARCHAR));
+			String[] cols=new String[]{
+					"CDTIPFLU",
+                    "CDFLUJOMC",
+                    "CDMAIL",
+                    "DSMAIL",
+                    "DSDESTINO",
+                    "DSASUNTO",
+                    "DSMENSAJE",
+                    "VARDESTINO",
+                    "VARASUNTO",
+                    "VARMENSAJE",
+                    "WEBID",
+                    "XPOS",
+                    "YPOS"
+                    };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperaTvarmailSP() throws Exception 
+	{
+		Map<String,Object>       procRes = ejecutaSP(new RecuperaTvarmailSP(getDataSource()), new LinkedHashMap<String, String>());
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperaTvarmailSP extends StoredProcedure
+	{
+		protected RecuperaTvarmailSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_MESACONTROL.P_GET_TVARMAIL");
+			String[] cols=new String[]{
+					"CDVARMAIL",
+	                "DSVARMAIL",
+	                "BDFUNCTION"
+	                };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public void guardarMotivoRechazoTramite (String ntramite, String cdrazrecha) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
 		params.put("ntramite"   , ntramite);
@@ -2737,5 +2874,4 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
-	
 }
