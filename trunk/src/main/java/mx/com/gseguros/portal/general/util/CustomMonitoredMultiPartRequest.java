@@ -192,14 +192,24 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
         upload.setSizeMax(maxSize);
         //jtezva agregado para monitorear el progreso al subir archivo
         String uploadKey="SK_PROGRESS_LISTENER";
+        String errorKey = "SK_ERROR";
         log.debug("llave de sesion para subir archivo: "+uploadKey);
         servletRequest.getSession(true).setAttribute(uploadKey, new CustomProgressListener());
+        servletRequest.getSession(true).setAttribute(errorKey, null);
         CustomProgressListener pl=(CustomProgressListener) servletRequest.getSession(true).getAttribute(uploadKey);
         upload.setProgressListener(pl);
         pl.setEstado(CustomProgressListener.SUBIENDO);
         log.debug("Upload started "+System.currentTimeMillis());
         //fin modificaciones
-        return upload.parseRequest(createRequestContext(servletRequest));
+        List<FileItem> lista = new ArrayList<FileItem>();
+        try {
+        	lista = upload.parseRequest(createRequestContext(servletRequest));
+        } catch(Exception e) {
+        	log.error("Error al subir archivo:", e);
+            servletRequest.getSession(true).setAttribute(errorKey, e.getMessage());
+            throw new FileUploadException("Error al subir archivo", e);
+        }
+        return lista;
     }
 
     private DiskFileItemFactory createDiskFileItemFactory(String saveDir) {

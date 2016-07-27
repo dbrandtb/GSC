@@ -86,10 +86,18 @@ var urlComboDocumentos = '<s:url namespace="/siniestros" action="loadListaDocume
 //////////////////////////
 ////// funciones    //////
 /*//////////////////////*/
-function callbackDocumentoSubidoPoliza()
+function callbackDocumentoSubidoPoliza(mensajeRespuesta)
 {
     Ext.getCmp('panDocWinPopupAddDoc').destroy();
     panDocStoreDoc.load();
+    if( !Ext.isEmpty(mensajeRespuesta) ) {
+    	Ext.Msg.show({
+	       	title:'Error',
+		    msg: 'Error al subir el archivo::' + mensajeRespuesta,
+		    buttons: Ext.Msg.OK,
+		    icon: Ext.Msg.ERROR
+		});
+    }
 }
 
 function panDocEditarClic(row)
