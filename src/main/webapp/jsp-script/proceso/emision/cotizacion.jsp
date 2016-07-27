@@ -3022,6 +3022,45 @@ function _0_cargarPoliza(cduniext,ramo,nmpoliex,cdusuari,tipoflot)
     }
 }
 
+function _0_atributoTipoPersona(combo)
+{
+    var val = 'F';
+    
+    if(combo != 'F')
+    {
+        val = combo.getValue();
+    }
+    
+    debug('_0_atributoTipoPersona val:',val,'.');
+    
+    if(val == 'F')
+        {
+            if(!Ext.isEmpty(_fieldLikeLabel('SEGURO DE VIDA',null,true)))
+            {
+                _fieldLikeLabel('SEGURO DE VIDA').allowBlank=false;
+                _fieldLikeLabel('SEGURO DE VIDA').show();
+            }
+            
+            if(_fieldLikeLabel('SEGURO DE VIDA').getValue() == 'S')
+            {
+                _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=false;
+                _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').show();
+            }
+        }
+    else
+        {
+           if(!Ext.isEmpty(_fieldLikeLabel('SEGURO DE VIDA',null,true)))
+           {
+                _fieldLikeLabel('SEGURO DE VIDA').allowBlank=true;
+                _fieldLikeLabel('SEGURO DE VIDA').hide();
+                
+                _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=true;
+                _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').hide();
+           }
+
+        }
+}
+
 function _0_atributoNacimientoContratante(combo)
 {
     var val = 'S';
@@ -3039,6 +3078,9 @@ function _0_atributoNacimientoContratante(combo)
             {
                 _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=false;
                 _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').show();
+                
+                _fieldLikeLabel('EL CONTRATANTE PADECE').allowBlank=false;
+                _fieldLikeLabel('EL CONTRATANTE PADECE').show();
             }
         }
     else
@@ -3047,6 +3089,9 @@ function _0_atributoNacimientoContratante(combo)
            {
                 _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=true;
                 _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').hide();
+                
+                _fieldLikeLabel('EL CONTRATANTE PADECE').allowBlank=true;
+                _fieldLikeLabel('EL CONTRATANTE PADECE').hide();
            }
 
         }
@@ -4034,14 +4079,33 @@ Ext.onReady(function()
                         }
                        );
         
-        if(!Ext.isEmpty(_fieldByLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
+        if(!Ext.isEmpty(_fieldLikeLabel('EL CONTRATANTE PADECE',null,true)))
        	{
-                    _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').hide();
+                    _fieldLikeLabel('EL CONTRATANTE PADECE').hide();
        	}
         
-        if(!Ext.isEmpty(_fieldByLabel('SEGURO DE VIDA',null,true)))
+        if(!Ext.isEmpty(_fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE',null,true)))
         {
-            _fieldByLabel('SEGURO DE VIDA').on(
+                    _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').hide();
+        }
+        
+        if(!Ext.isEmpty(_fieldLikeLabel('SEGURO DE VIDA',null,true)))
+        {
+                       _fieldLikeLabel('SEGURO DE VIDA').setValue('N');
+//                     _fieldLikeLabel('SEGURO DE VIDA').hide();
+        }
+        
+        if(!Ext.isEmpty(_fieldLikeLabel('TIPO PERSONA',null,true)))
+        {
+            _fieldByLabel('TIPO PERSONA').on(
+                            {
+                                select : _0_atributoTipoPersona
+                            });
+        }
+        
+        if(!Ext.isEmpty(_fieldLikeLabel('SEGURO DE VIDA',null,true)))
+        {
+        	_fieldLikeLabel('SEGURO DE VIDA').on(
                             {
                                 select : _0_atributoNacimientoContratante
                             });
