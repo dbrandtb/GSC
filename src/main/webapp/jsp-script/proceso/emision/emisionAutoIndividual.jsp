@@ -1155,7 +1155,22 @@ function _p29_mostrarVistaPrevia()
                                      {  
                                     	 domiciliar();
                                      }
-                                 }  
+                                 }
+								,{
+                                    itemId   : '_p29_botonMesaControl'
+                                    ,xtype   : 'button'
+                                    ,text    : 'Mesa de control'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
+                                    ,hidden  : Ext.isEmpty(_p29_flujo)
+                                    ,handler : function(){
+                                    	_mask('Redireccionando...');
+                                    	Ext.create('Ext.form.Panel').submit({
+                                    		standardSubmit : true
+                                    		,url           : _GLOBAL_COMP_URL_MCFLUJO
+                                    		}); 	
+                                    	} 
+//                                  ,hidden  : _p29_habilitarBotonEmitir == 'N'
+                                }
                             
                             ]//Fin Items. Ext.form.Panel
                         })//Fin Ext.form.Panel (Fin ext.create
