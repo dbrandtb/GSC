@@ -457,6 +457,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                int errorCobertura	 	 		= 0;
 		                int errorSubcobertura 	 		= 0;
 		                int errorConcepto 		 		= 0;
+		                String leyendaConcepto 			= null;
 		                String campoFechaOcurrencia 	= null;
 		                String campocodigoConcepto  	= null;
 		                String campoCPTs 				= null;
@@ -622,6 +623,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                			String existeCodigoConcepto = siniestrosManager.validaExisteCodigoConcepto(paramExiste);
 		                			if(existeCodigoConcepto.equalsIgnoreCase("N")){
 		                				errorConcepto = 1;
+		                				leyendaConcepto = tipoConcepto+" "+codigoConcepto;
 		                				throw new Exception("Error en el concepto");
 		                			}
 		                		}
@@ -630,10 +632,10 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                		filaBuena = false;
 		                		logger.debug("Valor de la excepcion ==>:{}",ex);
 		                		if(errorOcurrencia == 1){
-		                			bufferErroresCenso.append(Utils.join("La Fecha de ocurrencia no se encuentra dentro de la ocurrencia de la póliza .\nError en el campo FECHA OCURRENCIA "+campoFechaOcurrencia+" de la fila ",fila," "));
+		                			bufferErroresCenso.append(Utils.join("La Fecha de ocurrencia no se encuentra dentro de las fechas de la póliza .\nError en el campo FECHA OCURRENCIA "+campoFechaOcurrencia+" de la fila ",fila," "));
 		                		}
 		                		if(errorConcepto == 1){
-		                			bufferErroresCenso.append(Utils.join("La Clave del concepto no se encuentra dado de alta.\nError en el campo CVE. CONCEPTO "+campocodigoConcepto+" de la fila ",fila," "));
+		                			bufferErroresCenso.append(Utils.join("El "+leyendaConcepto+" no se encuentra dado de alta.\nError en el campo CVE. CONCEPTO "+campocodigoConcepto+" de la fila ",fila," "));
 		                		}
 		                		if(errorGeneralCobSub ==1){
 		                			if(errorCobertura == 1){
