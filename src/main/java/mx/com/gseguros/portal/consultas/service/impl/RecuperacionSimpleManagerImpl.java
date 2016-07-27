@@ -596,7 +596,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				
 				String lote = params.get("lote");
 				String tramite = params.get("tramite");
-
 				
 				Utils.validate(lote, "No se recibi\u00F3 el lote");
 				
@@ -1132,7 +1131,32 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						);
 				
 				lista = flujoMesaControlDAO.recuperarTflujorol(cdtipflu,cdflujomc);
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_MPOLIZAS_POR_PARAMETROS_VARIABLES)) {
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUMAIL))
+			{
+				paso = "Recuperando permisos de proceso por rol";
+				logger.debug(paso);
+				
+				String cdtipflu  = params.get("cdtipflu"),
+					   cdflujomc = params.get("cdflujomc"),
+					   cdmail    = params.get("cdmail");
+				
+				Utils.validate(
+						cdtipflu   , "No se recibi\u00f3 el tr\u00e1mite"
+						,cdflujomc , "No se recibi\u00f3 el proceso"
+						,cdmail    , "No se recibi\u00f3 el codigo de mail"
+						);
+				
+				lista = flujoMesaControlDAO.recuperaTflumail(cdtipflu, cdflujomc, cdmail);
+			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TVARMAIL))
+			{
+				paso = "Recuperando permisos de proceso por rol";
+				logger.debug(paso);
+							
+				lista = flujoMesaControlDAO.recuperaTvarmailSP();
+			}
+			else if (consulta.equals(RecuperacionSimple.RECUPERAR_MPOLIZAS_POR_PARAMETROS_VARIABLES)) {
 				String cdunieco = params.get("cdunieco"),
 						cdramo  = params.get("cdramo"),
 						estado  = params.get("estado"),

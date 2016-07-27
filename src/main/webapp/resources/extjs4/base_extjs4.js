@@ -5,7 +5,7 @@
 ///////////////////////
 ////// FUNCIONES //////
 /*///////////////////*/
-var _ice_debug = false;
+var _ice_debug = true;
 
 function debug(a,b,c,d,e)
 {
@@ -2553,6 +2553,184 @@ function _procesaAccion(
                 {
                     _unmask();
                     errorComunicacion(null,'Error al recuperar acciones posteriores a la revisi\u00f3n');
+                }
+            });
+        }
+        else if(tipodest=='M')
+        {
+            ck = 'Recuperando valores de correo';
+            _mask(ck);
+            Ext.Ajax.request(
+            {
+                url      : _GLOBAL_URL_RECUPERACION
+                ,params  :
+                {
+                    'params.consulta'   : 'RECUPERAR_TFLUMAIL'
+                    ,'params.cdtipflu'  : cdtipflu
+                    ,'params.cdflujomc' : cdflujomc
+                    ,'params.cdmail'    : clavedest
+                }
+                ,success : function(response)
+                {
+                    _unmask();
+                    var ck = 'Decodificando respuesta al recuperar valores de correo';
+                    try
+                    {
+                        var json = Ext.decode(response.responseText);
+                        debug('### tflumail:',json);
+                        if(json.success==true)
+                        {
+                            if(json.list.length==0)
+                            {
+                                throw 'El correo no existe';
+                            }
+                            else if(json.list.length>1)
+                            {
+                                throw 'Correo duplicado';
+                            }
+                            var data = json.list[0];
+                            debug('data:',data);
+                            
+                            ck = 'Recuperando acciones posteriores a la validaci\u00f3n';
+                            _mask(ck);
+                            Ext.Ajax.request(
+                            {
+                                url      : _GLOBAL_URL_CARGAR_ACCIONES_ENTIDAD
+                                ,params  :
+                                {
+                                    'params.cdtipflu'   : cdtipflu
+                                    ,'params.cdflujomc' : cdflujomc
+                                    ,'params.tipoent'   : tipodest
+                                    ,'params.cdentidad' : clavedest
+                                    ,'params.webid'     : webiddest
+                                }
+                                ,success : function(response)
+                                {
+                                    _unmask();
+                                    var ck = 'Decodificando respuesta al recuperar acciones posteriores a la validaci\u00f3n';
+                                    try
+                                    {
+                                        var jsonAcc = Ext.decode(response.responseText);
+                                        debug('### acciones:',jsonAcc);
+                                        var numSalidas = jsonAcc.list.length
+                                            ,acciones  = jsonAcc.list;
+                                        if(jsonAcc.success==true)
+                                        {
+                                            if(jsonAcc.list.length < 2){
+												ck = 'Enviando correo';
+                                                _mask(ck);
+                                                Ext.Ajax.request(
+                                                {
+                                                    url      : _GLOBAL_URL_ENVIAR_CORREO_FLUJO
+                                                    ,params  :
+                                                    {
+                                                        'flujo.cdtipflu'     : cdtipflu
+                                                        ,'flujo.cdflujomc'   : cdflujomc
+                                                        ,'flujo.tipoent'     : tipodest
+                                                        ,'flujo.claveent'    : clavedest
+                                                        ,'flujo.webid'       : webiddest
+                                                        ,'flujo.ntramite'    : ntramite
+                                                        ,'flujo.status'      : status
+                                                        ,'flujo.cdunieco'    : cdunieco
+                                                        ,'flujo.cdramo'      : cdramo
+                                                        ,'flujo.estado'      : estado
+                                                        ,'flujo.nmpoliza'    : nmpoliza
+                                                        ,'flujo.nmsituac'    : nmsituac
+                                                        ,'flujo.nmsuplem'    : nmsuplem
+                                                        ,'flujo.aux'         : aux
+														,'params.dsdestino'  : data.DSDESTINO
+														,'params.dsasunto'   : data.DSASUNTO
+														,'params.dsmensaje'  : data.DSMENSAJE
+														,'params.vardestino' : data.VARDESTINO
+														,'params.varmensaje' : data.VARMENSAJE
+														,'params.varasunto'  : data.VARASUNTO
+                                                    }
+                                                    ,success : function(response)
+                                                    {
+                                                        _unmask();
+                                                        var ck = 'decod Enviando correo';
+                                                         try
+                                                         {
+                                                             var json = Ext.decode(response.responseText);
+                                                             debug('### validacion:',json);
+                                                             if(json.success==true)
+                                                             {
+                                                            	if(numSalidas == 0){
+                                                            		mensajeCorrecto('Correo enviado','Correo enviado');
+                                                            	}else{
+                                                            		_procesaAccion
+                                                            		(
+                                                            				cdtipflu
+		                                                                    ,cdflujomc
+		                                                                    ,acciones[0].TIPODEST
+		                                                                    ,acciones[0].CLAVEDEST
+		                                                                    ,acciones[0].WEBIDDEST
+		                                                                    ,acciones[0].AUX
+		                                                                    ,ntramite
+		                                                                    ,status
+		                                                                    ,cdunieco
+		                                                                    ,cdramo
+		                                                                    ,estado
+		                                                                    ,nmpoliza
+		                                                                    ,nmsituac
+		                                                                    ,nmsuplem
+		                                                                    ,cdusuari
+		                                                                    ,cdsisrol
+		                                                                    ,callback
+                                                            		);
+                                                            	}                                                               
+                                                             }
+                                                             else
+                                                             {
+                                                                 mensajeError(json.message);
+                                                             }
+                                                         }
+                                                         catch(e)
+                                                         {
+                                                             manejaException(e,ck);
+                                                         }
+                                                    }
+                                                    ,failure : function(response)
+                                                    {
+                                                        _unmask();
+                                                        errorComunicacion(null,'Error al enviar correo');
+                                                    }
+                                                });
+											}else{
+												throw 'Hay demasiadas acciones relacionadas al correo';
+											}
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.message);
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                                ,failure : function()
+                                {
+                                    _unmask();
+                                    errorComunicacion(null,'Error al recuperar acciones posteriores al correo');
+                                }
+                            });
+                        }
+                        else
+                        {
+                            mensajeError(json.message);
+                        }
+                    }
+                    catch(e)
+                    {
+                        manejaException(e,ck);
+                    }
+                }
+                ,failure : function()
+                {
+                    _unmask();
+                    errorComunicacion(null,'Error al recuperar valores de correo');
                 }
             });
         }

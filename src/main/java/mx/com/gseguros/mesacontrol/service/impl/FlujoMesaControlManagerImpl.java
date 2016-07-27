@@ -398,6 +398,25 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,"I"
 						);
 			}
+			else if("M".equals(tipo))
+			{
+				cdentidad = flujoMesaControlDAO.movimientoTmail(
+						cdtipflu,
+						cdflujomc,
+						null,//cdmail, 
+						null,//dsmail, 
+						null,//dsdestino, 
+						null,//dsasunto, 
+						null,//dsmensaje, 
+						null,//vardestino, 
+						null,//varasunto, 
+						null,//varmensaje,
+						webid,
+						xpos,
+						ypos,
+						"I"
+						);
+			}
 		}
 		catch(Exception ex)
 		{
@@ -529,6 +548,25 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,"D" //accion
 						);
 			}
+			else if("M".equals(tipo))
+			{
+				flujoMesaControlDAO.movimientoTmail(
+						cdtipflu
+						,cdflujomc
+						,clave //cdmail
+						,null//,dsmail 
+						,null//,dsdestino 
+						,null//,dsasunto 
+						,null//,dsmensaje 
+						,null//,vardestino 
+						,null//,varasunto 
+						,null//,varmensaje,
+						,webid
+						,null //xpos
+						,null //ypoS
+						,"D" //accion
+						);
+			}
 		}
 		catch(Exception ex)
 		{
@@ -630,6 +668,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				{
 					titulo.put("TIPO" , "T");
 					list.add(titulo);
+				}
+				
+				List<Map<String,String>> correos = flujoMesaControlDAO.recuperaTflumail(cdtipflu, cdflujomc, null);
+				
+				for(Map<String,String>correo:correos)
+				{
+					correo.put("TIPO" , "M");
+					list.add(correo);
 				}
 				
 				List<Map<String,String>> acciones = flujoMesaControlDAO.recuperaTfluacc(cdtipflu,cdflujomc);
@@ -2035,6 +2081,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					accion.put("CLAVEDEST" , accion.get("CDREVISI"));
 					accion.put("WEBIDDEST" , accion.get("WEBIDREVISI"));
 				}
+				else if(StringUtils.isNotBlank(accion.get("CDMAIL")))
+				{
+					accion.put("TIPODEST"  , "M");
+					accion.put("CLAVEDEST" , accion.get("CDMAIL"));
+					accion.put("WEBIDDEST" , accion.get("WEBIDMAIL"));
+				}
 				else
 				{
 					throw new ApplicationException("Acci\u00f3n no conectada");
@@ -2757,6 +2809,126 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			) throws Exception
 	{
 		return flujoMesaControlDAO.modificarDetalleTramiteMC(ntramite, nmordina, comments, cdusuari, cdsisrol, new Date());
+	}
+	
+	@Override
+	public void guardarDatosCorreo(
+			String cdtipflu,
+			String cdflujomc,
+			String cdmail,
+			String dsmail,
+			String dsdestino,
+			String dsasunto,
+			String dsmensaje,
+			String vardestino,
+			String varasunto,
+			String varmensaje,
+			String webid,
+			String xpos,
+			String ypos,
+			String accion)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarDatosCorreo @@@@@@@@@@"
+				,"\n@@@@@@ cdtipflu="   , cdtipflu
+				,"\n@@@@@@ cdflujomc="  , cdflujomc
+				,"\n@@@@@@ cdmail="     , cdmail
+				,"\n@@@@@@ dsmail="     , dsmail
+				,"\n@@@@@@ dsdestino="  , dsdestino
+				,"\n@@@@@@ dsasunto="   , dsasunto
+				,"\n@@@@@@ dsmensaje="  , dsmensaje
+				,"\n@@@@@@ vardestino=" , vardestino
+				,"\n@@@@@@ varasunto="  , varasunto
+				,"\n@@@@@@ varmensaje=" , varmensaje
+				,"\n@@@@@@ webid="      , webid
+				,"\n@@@@@@ xpos="       , xpos
+				,"\n@@@@@@ ypos="       , ypos
+				,"\n@@@@@@ accion="     , accion
+				));
+		
+		String paso = "Guardando datos de validaci\u00f3n";
+		logger.debug(paso);
+		
+		try
+		{
+			flujoMesaControlDAO.movimientoTmail(
+					cdtipflu,
+					cdflujomc,
+					cdmail,
+					dsmail,
+					dsdestino,
+					dsasunto,
+					dsmensaje,
+					vardestino,
+					varasunto,
+					varmensaje,
+					webid,
+					xpos,
+					ypos,
+					accion
+					);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@ guardarDatosCorreo @@@@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public Map<String,String> cargarDatosCorreo(
+			String cdtipflu
+			,String cdflujomc
+			,String cdmail
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarDatosCorreo @@@@@@"
+				,"\n@@@@@@ cdtipflu="  , cdtipflu
+				,"\n@@@@@@ cdflujomc=" , cdflujomc
+				,"\n@@@@@@ cdmail="    , cdmail
+				));
+		
+		Map<String,String> correo = null;
+		String             paso       = null;
+		
+		try
+		{
+			paso = "Recuperando correo";
+			logger.debug(paso);
+			
+			List<Map<String,String>> correos = flujoMesaControlDAO.recuperaTflumail(cdtipflu, cdflujomc, cdmail);
+			
+			for(Map<String,String> correoIte : correos)
+			{
+				if(correoIte.get("CDMAIL").equals(cdmail))
+				{
+					correo = correoIte;
+					break;
+				}
+			}
+			
+			if(correo==null)
+			{
+				throw new ApplicationException("No se encuentra el correo");
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ cargarDatosCorreo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return correo;
 	}
 	
 	@Override

@@ -16,6 +16,7 @@ import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.axis2.wsdl.databinding.CDefaultTypeMapper;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -2271,8 +2272,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-
-	
 	@Action(value   = "recuperarChecklistInicial",
 			results = { @Result(name="success", type="json") }
 			)
@@ -2311,7 +2310,171 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	@Action(value   = "guardarDatosCorreo",
+			results = { @Result(name="success", type="json") }
+			)
+	public String guardarDatosCorreo()
+	{
+		logger.debug(Utils.log(
+				 "\n################################"
+				,"\n###### guardarDatosCorreo ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu    = params.get("CDTIPFLU");
+			String cdflujomc   = params.get("CDFLUJOMC");
+			String cdmail      = params.get("CDMAIL");
+			String dsmail      = params.get("DSMAIL");
+			String dsdestino   = params.get("DSDESTINO");
+			String dsasunto    = params.get("DSASUNTO");
+			String dsmensaje   = params.get("DSMENSAJE");
+			String vardestino  = params.get("VARDESTINO");
+			String varasunto   = params.get("VARASUNTO");
+			String varmensaje  = params.get("VARMENSAJE");
+			String webid       = params.get("WEBID");
+			String xpos        = params.get("XPOS");
+			String ypos        = params.get("YPOS");
+			String accion      = params.get("ACCION");
+			
+			Utils.validate(
+					cdtipflu    , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc  , "No se recibi\u00f3 la clave de flujo"
+					,cdmail     , "No se recibi\u00f3 el codigo del mail"
+					,dsmail     , "No se recibi\u00f3 la descripcion del mail"
+					,dsdestino  , "No se recibi\u00f3 el destinatario"
+					,dsasunto   , "No se recibi\u00f3 el asunto"
+					,dsmensaje  , "No se recibi\u00f3 el mensaje"
+					,webid      , "No se recibi\u00f3 el id"
+					,xpos       , "No se recibi\u00f3 x"
+					,ypos       , "No se recibi\u00f3 y"
+					,accion     , "No se recibi\u00f3 el tipo de operaci\u00f3n"
+					);
+			
+			flujoMesaControlManager.guardarDatosCorreo(
+					cdtipflu,
+					cdflujomc,
+					cdmail,
+					dsmail,
+					dsdestino,
+					dsasunto,
+					dsmensaje,
+					vardestino,
+					varasunto,
+					varmensaje,
+					webid,
+					xpos,
+					ypos,
+					accion
+					);
+			
+			success = true;
+			
+			logger.debug(Utils.log(
+					 "\n###### guardarDatosCorreo ######"
+					,"\n################################"
+					));
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
 
+	@Action(value   = "cargarDatosCorreo",
+			results = { @Result(name="success", type="json") }
+			)
+	public String cargarDatosCorreo()
+	{
+		logger.debug(Utils.log(
+				 "\n###################################"
+				,"\n###### cargarDatosCorreo ######"
+				,"\n###### params=",params
+				));
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String cdtipflu   = params.get("cdtipflu")
+				   ,cdflujomc = params.get("cdflujomc")
+				   ,cdmail    = params.get("cdmail");
+			
+			Utils.validate(
+					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
+					,cdflujomc , "No se recibi\u00f3 la clave de flujo"
+					,cdmail    , "No se recibi\u00f3 la clave de mail"
+					);
+			
+			Map<String,String> res = flujoMesaControlManager.cargarDatosCorreo(
+					cdtipflu
+					,cdflujomc
+					,cdmail
+					);
+			
+			params.putAll(res);
+			
+			success = true;
+			
+			logger.debug(Utils.log(
+					 "\n###### cargarDatosValidacion ######"
+					,"\n###################################"
+					));
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "enviaCorreoFlujo",
+			results = { @Result(name="success", type="json") }
+			)
+	public String enviaCorreoFlujo()
+	{
+		logger.debug(Utils.log(
+				 "\n###############################"
+				,"\n###### enviaCorreoFlujo ######"
+				,"\n###### flujo="  , flujo
+				,"\n###### params=" , params
+				));
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(flujo  , "No se recibieron datos del flujo");
+			Utils.validate(params , "No se recibieron par\u00e1metros");						
+			
+//			params.put("salida" , flujoMesaControlManager.ejecutaValidacion(
+//					flujo
+//					));
+			
+			success = true;
+			
+			logger.debug(Utils.log(
+					 "\n###### params=" , params
+					,"\n###### enviaCorreoFlujo #######"
+					,"\n###############################"
+					));
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
 	                                                      //

@@ -317,5 +317,26 @@ public interface FlujoMesaControlManager
 			String cdsisrol
 			) throws Exception;
 	
+	public void guardarDatosCorreo(
+			String cdtipflu,
+			String cdflujomc,
+			String cdmail,
+			String dsmail,
+			String dsdestino,
+			String dsasunto,
+			String dsmensaje,
+			String vardestino,
+			String varasunto,
+			String varmensaje,
+			String webid,
+			String xpos,
+			String ypos,
+			String accion)throws Exception;
+	
+	public Map<String,String> cargarDatosCorreo(
+			String cdtipflu
+			,String cdflujomc
+			,String cdmail)throws Exception;
+	
 	public Map<String, String> recuperarChecklistInicial (String cdtipflu, String cdflujomc, String cdtiptra, String cdtipsup) throws Exception;
 }

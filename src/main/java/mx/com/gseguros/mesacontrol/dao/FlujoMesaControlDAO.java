@@ -682,6 +682,25 @@ public interface FlujoMesaControlDAO {
 			Date fecha
 			) throws Exception;
 	
+	public String movimientoTmail(String cdtipflu,
+			String cdflujomc,
+			String cdmail,
+			String dsmail,
+			String dsdestino,
+			String dsasunto,
+			String dsmensaje,
+			String vardestino,
+			String varasunto,
+			String varmensaje,
+			String webid,
+			String xpos,
+			String ypos,
+			String accion) throws Exception;
+	
+	public List<Map<String, String>> recuperaTflumail(String cdtipflu, String cdflujomc, String cdmail) throws Exception;
+	
+	public List<Map<String, String>> recuperaTvarmailSP() throws Exception;
+	
 	public void guardarMotivoRechazoTramite (String ntramite, String cdrazrecha) throws Exception;
 	
 	public List<Map<String, String>> recuperarChecklistInicial (String cdtipflu, String cdflujomc,
