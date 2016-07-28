@@ -557,12 +557,14 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, null, null);
 		                			logger.debug("Valor ==>>>: {}",datosInformacionLayout.get(i).get("DESCEXCEL").toString());
 		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("IVA")){
-		                				logger.debug("Valor de conversion ==> :{}",conversionString);
-			                			bufferLinea.append(Double.parseDouble(conversionString)+"|");
+		                				 DecimalFormat df = new DecimalFormat("####################.###");
+		                				 bufferLinea.append(df.format(Double.parseDouble(conversionString))+"|");
 		                			}else{
 		                				if(Double.parseDouble(conversionString) > 0){
 			                				logger.debug("Valor de conversion ==> :{}",conversionString);
-				                			bufferLinea.append(Double.parseDouble(conversionString)+"|");
+			                				DecimalFormat df = new DecimalFormat("####################.###");
+			                				bufferLinea.append(df.format(Double.parseDouble(conversionString))+"|");
+				                			//bufferLinea.append(Double.parseDouble(conversionString)+"|");
 			                			}else{
 			                				throw new Exception("Error en los importes y cantidades");
 			                			}
