@@ -9912,7 +9912,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 				endosoConfirmado = true;
 				
-				documentosManager.generarDocumentosParametrizados(
+				Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
 						cdunieco
 						,cdramo
 						,estado
@@ -9925,6 +9925,12 @@ public class EndososAction extends PrincipalCoreAction
 						,null
 						);
 				
+				if(StringUtils.isBlank(ntramite)){
+					ntramite = datosPoliza.get("ntramite");
+				}
+				
+				String nmsolici = datosPoliza.get("nmsolici");
+				
 				mensaje="Se ha generado la p\u00f3liza "+nmpolizaNuevaPoliza
 						+" con n\u00famero de tr\u00e1mite "+ntramiteNuevaPoliza + usuarioTramite;
 				
@@ -9934,7 +9940,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplemCancela, null, 
-						sucursal, "", ntramite, 
+						sucursal, nmsolici, ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				
