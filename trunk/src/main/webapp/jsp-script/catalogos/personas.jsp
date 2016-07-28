@@ -4308,7 +4308,7 @@ function checarBenef(callback)
 		                     var _p22_validaFecha = json.smap1['parametros.pv_otvalor56'];debug('Fecha de nacimiento recien capturada por el contratante: ',_p22_validaFecha);
 		                     if(_p22_validaFecha+'X' != fecnam+'X')
 		                     {    
-		                    	 mensajeWarning('La poliza no se puede Emitir por inconsistencias en los datos ingresados en la cotizacion con respecto al cliente.');;
+		                    	 mensajeWarning('No se puede continuar por inconsistencias en los datos ingresados en la cotizacion y los datos existentes del cliente.\n Favor de generar una nueva cotizacion o cargar un cliente correcto.');
 		                     }
 		                     else
 		                     {
