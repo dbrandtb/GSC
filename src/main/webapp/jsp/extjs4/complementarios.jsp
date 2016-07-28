@@ -201,6 +201,7 @@
             
 function checarBenef()
  {  
+// 	alert('DDD');
 	 if(inputCdramo == 16)
 	 { 
 	  Ext.Ajax.request(
@@ -222,9 +223,15 @@ function checarBenef()
 	          {
 	                  var _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
 	                 
-	                  if(_p29_validaSeguro != "S")
+	                  if(_p29_validaSeguro == "S")
 	                  {    
-	                	  Ext.getCmp('panelBeneficiarioHere').hide();
+	                	  var panel = Ext.getCmp('panelBeneficiarioHere');
+ 	                	  panel.on({
+ 	                		  afterrender : function(me){
+ 	                			  me.getLoader().load();
+ 	                		  }
+ 	                	  })
+	                	  panel.show();
                 	  }
 	          }
 	          else
@@ -376,7 +383,7 @@ function _datComTurnarSuscripcion()
             
             Ext.onReady(function(){
             	
-            	checarBenef();
+            	
             	
             	// Se aumenta el timeout para todas las peticiones:
 				Ext.Ajax.timeout = 485000; // 8 min
@@ -803,7 +810,7 @@ function _datComTurnarSuscripcion()
 								,Ext.create('Ext.panel.Panel',
 			                                {
 			                                    id        : 'panelBeneficiarioHere'
-// 			                                   ,title     : 'Titulo'
+			                                   ,hidden    : true
 			                                   ,itemId    : '_BeneficiarioPanel'
 			                                   ,height    : 300
 			                                   ,autoScroll: false
@@ -822,17 +829,17 @@ function _datComTurnarSuscripcion()
 			                                           ,'smap1.cdtipsup'     : '1'
 			                                           ,'smap1.ultimaImagen' : 'N'
 			                                       }
-			                                       ,autoLoad: inputCdramo == 16
+			                                       ,autoLoad: false
 			                                       ,scripts:true
 			                                   }
-			                                   ,listeners:
-			                                   {
-			                                       afterrender:function(tab)
-			                                       {
-			                                           debug('afterrender tabPanelAsegurados');
-			                                           tab.loader.load();
-			                                       }
-			                                   }
+// 			                                   ,listeners:
+// 			                                   {
+// 			                                       afterrender:function(tab)
+// 			                                       {
+// 			                                           debug('afterrender tabPanelAsegurados');
+// 			                                           tab.loader.load();
+// 			                                       }
+// 			                                   }
 			                               })
 		                    ],
 		                    buttons:
@@ -2416,6 +2423,8 @@ function _datComTurnarSuscripcion()
 			            ,accordion
                     ]
                 });
+                
+                checarBenef();
                 
                 /*
                 if(!Ext.isEmpty(panDatComFlujo))
