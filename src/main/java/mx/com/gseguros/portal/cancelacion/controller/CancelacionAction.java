@@ -244,6 +244,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			
 			String nmsuplem = null;
 			String ntramite = null;
+			String nmsolici = null;
 			
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			smap1.put("pv_usuario_i"  , usuario.getUser());
@@ -256,7 +257,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			String estado   = smap1.get("pv_estado_i");
 			String nmpoliza = smap1.get("pv_nmpoliza_i");
 			
-			documentosManager.generarDocumentosParametrizados(
+			Map<String,String> result = documentosManager.generarDocumentosParametrizados(
 					cdunieco
 					,cdramo
 					,estado
@@ -265,9 +266,12 @@ public class CancelacionAction extends PrincipalCoreAction
 					,nmsuplem
 					,DocumentosManager.PROCESO_ENDOSO
 					,ntramite
-					,null//nmsolici
+					,nmsolici
 					,null
 					);
+			
+			ntramite = result.get("ntramite");
+			nmsolici = result.get("nmsolici");
 			
 			String sucursal = cdunieco;
 			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
