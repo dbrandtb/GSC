@@ -122,6 +122,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	private transient Ice2sigsService ice2sigsService;
 	
 	@Autowired
+	private AutosSIGSDAO autosSIGSDAO;
+		
+	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
 	@Value("${caratula.impresion.autos.url}")
@@ -7058,6 +7061,32 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		logger.debug(Utils.log(
 				 "\n@@@@@@ sacaEndosoFlujo @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public void validacionSigsAgente (String cdagente, String cdramo, String cdtipsit, String cdtipend) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ validacionSigsAgente @@@@@@",
+				"\n@@@@@@ cdagente = " , cdagente,
+				"\n@@@@@@ cdramo   = " , cdramo,
+				"\n@@@@@@ cdtipsit = " , cdtipsit,
+				"\n@@@@@@ cdtipend = " , cdtipend
+				));
+		String paso = "Validando agente";
+		try {
+			autosSIGSDAO.validarAgenteParaNuevoTramite(
+					cdagente,
+					consultasDAO.obtieneSubramoGS(cdramo, cdtipsit),
+					cdtipend
+			);
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ validacionSigsAgente @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
 }

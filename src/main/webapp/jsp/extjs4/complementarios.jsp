@@ -1107,7 +1107,7 @@ function _datComTurnarSuscripcion()
                                             return;
                                         }
 		                                var form=Ext.getCmp('formPanel');
-		                                debug('contrato',_fieldByLabel('NUMERO DE CONTRATO'));
+		                                debug('contrato',_fieldByLabel('NUMERO DE CONTRATO',null,true));
 		                                if(form.isValid())
 		                                {
 		                                	form.setLoading(true);
@@ -2286,7 +2286,8 @@ function _datComTurnarSuscripcion()
                                     debug('¬traeme la cdunieco',inputCdunieco);
                                     
                                     // Verifica si el campo existe en el producto utilizado ELP
-                                    if (_fieldByLabel('NUMERO DE CONTRATO',null,true) != undefined){
+                                    if (!Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO',null,true)))
+                                    {
                                     	
                                     	/* Cuando es un producto valido verifica si es la sucursal correcta y esta vacio,  
                                     	 * y modifica la obligatoriedad del campo segun la sucursal correcta.
