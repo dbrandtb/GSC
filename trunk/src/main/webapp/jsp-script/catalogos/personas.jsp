@@ -4309,7 +4309,7 @@ function checarBenef(callback)
 		                     var _p22_validaSeguro = json.smap1['parametros.pv_seguroVida'];debug('¿Tiene seguro de vida?',_p22_validaSeguro);
 		                     if( _p22_validaSeguro=="S" && _p22_validaFecha+'X' != fecnam+'X')
 		                     {    
-		                    	 mensajeWarning('No se puede amparar el seguro de vida debido a inconsistencia en la fecha ingresada en la cotizacion '+_p22_validaFecha+' y la existente del cliente '+fecnam+'.\n Favor de generar una nueva cotizacion o cargar un cliente correcto.');
+		                    	 mensajeWarning('No se puede amparar el seguro de vida debido a inconsistencia en la fecha ingresada en la cotización '+_p22_validaFecha+' y la existente del cliente '+fecnam+'.\n Favor de generar una nueva cotización o cargar un cliente correcto.');
 		                     }
 		                     else
 		                     {
