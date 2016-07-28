@@ -4306,9 +4306,10 @@ function checarBenef(callback)
 		             if(json.exito)
 		             {
 		                     var _p22_validaFecha = json.smap1['parametros.pv_otvalor56'];debug('Fecha de nacimiento recien capturada por el contratante: ',_p22_validaFecha);
-		                     if(_p22_validaFecha+'X' != fecnam+'X')
+		                     var _p22_validaSeguro = json.smap1['parametros.pv_seguroVida'];debug('¿Tiene seguro de vida?',_p22_validaSeguro);
+		                     if( _p22_validaSeguro=="S" && _p22_validaFecha+'X' != fecnam+'X')
 		                     {    
-		                    	 mensajeWarning('No se puede continuar por inconsistencias en los datos ingresados en la cotizacion y los datos existentes del cliente.\n Favor de generar una nueva cotizacion o cargar un cliente correcto.');
+		                    	 mensajeWarning('No se puede amparar el seguro de vidar debido a inconsistencia en la fecha ingresada en la cotizacion '+_p22_validaFecha+' y la existente del cliente '+fecnam+'.\n Favor de generar una nueva cotizacion o cargar un cliente correcto.');
 		                     }
 		                     else
 		                     {
