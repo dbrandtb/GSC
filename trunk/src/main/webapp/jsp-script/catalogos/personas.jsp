@@ -953,44 +953,8 @@ var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarVal
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
 	                            ,handler : function()
 	                            {
-	                            	if(!Ext.isEmpty(inputCdramo) && inputCdramo==16)
+	                            	if(typeof inputCdramo === 'undefined')
 	                            	{
-		                            	checarBenef(function()
-		                            	{
-		                            		if(!_p22_formDatosGenerales().isValid()){
-		                                        mensajeWarning('Favor de verificar los datos generales del cliente.');
-		                                        return;
-		                                    }
-		                                    if(_RFCduplicado){
-		                                        if(_esCargaClienteNvo || !_permiteDuplicarRFC){
-		                                            if(_esCargaClienteNvo){
-		                                                mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
-		                                            }else{
-		                                                mensajeWarning('El RFC ingresado ya existe registrado para otro Cliente.');
-		                                            }
-		                                            return;
-		                                        }
-		                                        var confirm = Ext.Msg.show({
-		                                            title: 'Aviso',
-		                                            msg: 'El RFC ingresado ya existe registrado para otro Cliente. &iquest;Desea Duplicar la Persona?',
-		                                            buttons: Ext.Msg.YESNO,
-		                                            fn: function(buttonId, text, opt) {
-		                                                if(buttonId == 'yes') {
-		                                                    _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);
-		                                                }else{
-		                                                    return;
-		                                                }
-		                                            },
-		                                            icon: Ext.Msg.QUESTION
-		                                        });
-		                                    }else{
-		                                        
-		                                        _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);                                   
-		                                    }
-		                            	});
-	                            	}
-	                            	else
-                            		{
 	                            		if(!_p22_formDatosGenerales().isValid()){
                                             mensajeWarning('Favor de verificar los datos generales del cliente.');
                                             return;
@@ -1021,7 +985,83 @@ var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarVal
                                             
                                             _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);                                   
                                         }
-                            		}
+	                            	}
+	                            	
+	                            	else
+	                            	{
+	                            		if(!Ext.isEmpty(inputCdramo))
+	                            		{
+		                            		if(inputCdramo==16)
+		                            		{
+				                            	checarBenef(function()
+				                            	{
+				                            		if(!_p22_formDatosGenerales().isValid()){
+				                                        mensajeWarning('Favor de verificar los datos generales del cliente.');
+				                                        return;
+				                                    }
+				                                    if(_RFCduplicado){
+				                                        if(_esCargaClienteNvo || !_permiteDuplicarRFC){
+				                                            if(_esCargaClienteNvo){
+				                                                mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
+				                                            }else{
+				                                                mensajeWarning('El RFC ingresado ya existe registrado para otro Cliente.');
+				                                            }
+				                                            return;
+				                                        }
+				                                        var confirm = Ext.Msg.show({
+				                                            title: 'Aviso',
+				                                            msg: 'El RFC ingresado ya existe registrado para otro Cliente. &iquest;Desea Duplicar la Persona?',
+				                                            buttons: Ext.Msg.YESNO,
+				                                            fn: function(buttonId, text, opt) {
+				                                                if(buttonId == 'yes') {
+				                                                    _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);
+				                                                }else{
+				                                                    return;
+				                                                }
+				                                            },
+				                                            icon: Ext.Msg.QUESTION
+				                                        });
+				                                    }else{
+				                                        
+				                                        _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);                                   
+				                                    }
+				                            	});
+				                           }
+	                            		}
+	                            	}
+// 	                            	else
+//                             		{
+// 	                            		if(!_p22_formDatosGenerales().isValid()){
+//                                             mensajeWarning('Favor de verificar los datos generales del cliente.');
+//                                             return;
+//                                         }
+//                                         if(_RFCduplicado){
+//                                             if(_esCargaClienteNvo || !_permiteDuplicarRFC){
+//                                                 if(_esCargaClienteNvo){
+//                                                     mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
+//                                                 }else{
+//                                                     mensajeWarning('El RFC ingresado ya existe registrado para otro Cliente.');
+//                                                 }
+//                                                 return;
+//                                             }
+//                                             var confirm = Ext.Msg.show({
+//                                                 title: 'Aviso',
+//                                                 msg: 'El RFC ingresado ya existe registrado para otro Cliente. &iquest;Desea Duplicar la Persona?',
+//                                                 buttons: Ext.Msg.YESNO,
+//                                                 fn: function(buttonId, text, opt) {
+//                                                     if(buttonId == 'yes') {
+//                                                         _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);
+//                                                     }else{
+//                                                         return;
+//                                                     }
+//                                                 },
+//                                                 icon: Ext.Msg.QUESTION
+//                                             });
+//                                         }else{
+                                            
+//                                             _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);                                   
+//                                         }
+//                             		}
 	                            }
 	                    }]
                     })
@@ -1299,6 +1339,7 @@ function irModoAgregar(){
                 _p22_principalDatosAdicionales().show();
                 
 				if(_ocultaBusqueda){
+					
 					_p22_formBusqueda().hide();
 				}
 				
@@ -1561,10 +1602,10 @@ function irModoEdicion(){
 							_p22_formDomicilio().show();
 						    _p22_principalDatosAdicionales().show();
 					
-						    if(_ocultaBusqueda){
-								_p22_formBusqueda().hide();
+						    if(_ocultaBusqueda)
+						    {
+						    	_p22_formBusqueda().hide();
 							}
-							
 							
 						    try{
 								var ventanaMensaje = window.parent;
@@ -4286,7 +4327,11 @@ obtDatLoaderContratante<s:property value="smap1.idPantalla" /> = function(){
 
 function checarBenef(callback)
 {  
-    if(!Ext.isEmpty(_fieldLikeLabel('Fecha de nacimiento',null,true)) && _p22_fieldTipoPersona().getValue()=='F')
+	if(typeof inputCdramo === 'undefined')
+	{
+		callback();
+	}
+	else(!Ext.isEmpty(inputCdramo) && !Ext.isEmpty(_fieldLikeLabel('Fecha de nacimiento',null,true)) && _p22_fieldTipoPersona().getValue()=='F')
     {
 		var fecnam= _fieldLikeLabel('Fecha de nacimiento').getRawValue();debug('Fecha de nacimiento original del contratante:',fecnam);
 		     Ext.Ajax.request(
