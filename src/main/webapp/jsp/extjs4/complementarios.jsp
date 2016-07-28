@@ -805,8 +805,6 @@ function _datComTurnarSuscripcion()
 		                            },
 		                            <s:property value="items" />
 		                        })
-//                         ],    
-		                        //VILS
 								,Ext.create('Ext.panel.Panel',
 			                                {
 			                                    id        : 'panelBeneficiarioHere'
@@ -832,14 +830,6 @@ function _datComTurnarSuscripcion()
 			                                       ,autoLoad: false
 			                                       ,scripts:true
 			                                   }
-// 			                                   ,listeners:
-// 			                                   {
-// 			                                       afterrender:function(tab)
-// 			                                       {
-// 			                                           debug('afterrender tabPanelAsegurados');
-// 			                                           tab.loader.load();
-// 			                                       }
-// 			                                   }
 			                               })
 		                    ],
 		                    buttons:
