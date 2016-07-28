@@ -160,4 +160,6 @@ public interface ConsultasManager
 	
 	@Deprecated
 	public Map<String,String> recuperarDatosFlujoEndoso(String cdramo, String cdtipsup) throws Exception;
+	
+	boolean esTramiteSalud(String ntramite) throws Exception;
 }
