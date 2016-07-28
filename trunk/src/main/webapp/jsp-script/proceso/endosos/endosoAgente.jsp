@@ -33,9 +33,10 @@ var _10_fieldFechaEndoso;
 var _10_storeAgentes;
 var _10_gridAgentes;
 
-var _10_urlGuardar            = '<s:url namespace="/endosos" action="guardarEndosoAgente"       />';
-var _10_urlLoadAgentes        = '<s:url namespace="/endosos" action="cargarAgentesEndosoAgente" />';
-var _10_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"        />';
+var _10_urlGuardar              = '<s:url namespace="/endosos" action="guardarEndosoAgente"       />';
+var _10_urlLoadAgentes          = '<s:url namespace="/endosos" action="cargarAgentesEndosoAgente" />';
+var _10_urlRecuperacionSimple   = '<s:url namespace="/emision" action="recuperacionSimple"        />';
+var _10_urlValidacionSigsAgente = '<s:url namespace="/endosos" action="validacionSigsAgente"      />';
 
 debug('_10_smap1:',_10_smap1);
 debug('_10_flujo:',_10_flujo);
@@ -135,14 +136,48 @@ Ext.onReady(function()
 							                 	var comboAgente = _fieldByNameDown('NUEVOAGENTE',windowAgente);
 							                 	
 							                 	if(comboAgente.isValid() && comboAgente.getStore().find('key',comboAgente.getValue()) >= 0 ){
-								                 	recordSel.set('CDAGENTE',comboAgente.getValue());
-								                 	recordSel.set('NOMBRE',comboAgente.getRawValue());
-								                	
-								                	if(!recordSel.isModified('CDAGENTE')){
-								                		recordSel.reject();
+							                 	    var callback = function () {
+								                 	    recordSel.set('CDAGENTE',comboAgente.getValue());
+								                 	    recordSel.set('NOMBRE',comboAgente.getRawValue());
+								                	    if (!recordSel.isModified('CDAGENTE')){
+								                		    recordSel.reject();
+								                	    }
+								                	    windowAgente.close();
+								                	};
+								                	var mask, ck = 'Validando agente';
+								                	try {
+								                	    mask = _maskLocal(ck);
+								                	    Ext.Ajax.request({
+								                	        url     : _10_urlValidacionSigsAgente,
+								                	        params  : {
+								                	            'params.cdagente' : comboAgente.getValue(),
+								                	            'params.cdramo'   : _10_smap1.CDRAMO,
+								                	            'params.cdtipsit' : _10_smap1.CDTIPSIT,
+								                	            'params.cdtipend' : 'A'
+								                	        },
+								                	        success : function (response) {
+								                	            mask.close();
+								                	            var ck = 'Decodificando datos al validar agente';
+								                	            try {
+								                	                var json = Ext.decode(response.responseText);
+								                	                debug('### validar agente:', json, '.');
+								                	                if (json.success === true) {
+								                	                    callback();
+								                	                } else {
+								                	                    mensajeError(json.message);
+								                	                }
+								                	            } catch (e) {
+								                	                manejaException(e, ck);
+								                	            }
+								                	        },
+								                	        failure : function () {
+								                	            mask.close();
+								                	            errorComunicacion(null, 'Error al validar agente');
+								                	        }
+								                	    });
+								                	} catch (e) {
+								                	    manejaException(e, ck, mask);
 								                	}
-								                	
-								                	windowAgente.close();
 							                 	}else{
 							                 		comboAgente.reset();
 							                 		showMessage("Aviso","Debe seleccionar un agente.", Ext.Msg.OK, Ext.Msg.INFO);

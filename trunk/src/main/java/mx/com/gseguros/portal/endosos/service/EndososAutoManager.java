@@ -511,4 +511,6 @@ public interface EndososAutoManager
 			String urlCaratula, String telefono1, String telefono2, String telefono3, UserVO usuarioSesion)throws Exception;
 	
 	public void sacaEndosoFlujo(FlujoVO flujo) throws Exception;
+	
+	public void validacionSigsAgente (String cdagente, String cdramo, String cdtipsit, String cdtipend) throws Exception;
 }

@@ -103,6 +103,54 @@ public class NuevoEndososAction extends PrincipalCoreAction
 		return result;
 	}
 	
+	@Action(value   = "validacionSigsAgente",
+			results = { @Result(name="success", type="json") }
+			)
+	public String validacionSigsAgente()
+	{
+		logger.debug(Utils.log(
+				 "\n###################################"
+				,"\n###### validacionSigsAgente ######"
+				,"\n###### params = ", params
+				));
+		
+		try
+		{
+			Utils.validate(params, "No se recibieron datos");
+			
+			String cdagente  = params.get("cdagente"),
+					cdramo   = params.get("cdramo"),
+					cdtipsit = params.get("cdtipsit"),
+					cdtipend = params.get("cdtipend");
+			
+			Utils.validate(
+					cdagente , "Falta cdagente",
+					cdramo   , "Falta cdramo",
+					cdtipsit , "Falta cdtipsit",
+					cdtipend , "Falta cdtipend"
+					);
+			
+			if (!"B".equals(cdtipend)) {
+				endososAutoManager.validacionSigsAgente(cdagente, cdramo, cdtipsit, cdtipend);
+			} else {
+				logger.debug("No aplica validacion de agente para tipo B");
+			}
+			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log(
+				"\n###### success = ", success,
+				"\n###### message = ", message,
+				"\n###### validacionSigsAgente ######",
+				"\n##################################"
+				));
+		return SUCCESS;
+	}
+	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////// GETTERS Y SETTERS //////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////

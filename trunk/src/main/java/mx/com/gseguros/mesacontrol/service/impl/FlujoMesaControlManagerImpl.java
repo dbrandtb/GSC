@@ -1934,11 +1934,15 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					cdtipend = consultasDAO.recuperarTtipsupl(cdtipsup).get("CDTIPEND");
 				}
 				
-				autosSIGSDAO.validarAgenteParaNuevoTramite(
+				if (!"B".equals(cdtipend)) {
+					autosSIGSDAO.validarAgenteParaNuevoTramite(
 						cdagente,
 						consultasDAO.obtieneSubramoGS(cdramo, cdtipsit),
 						cdtipend
-				);
+					);
+				} else {
+					logger.debug("Para tipo B no se valida agente");
+				}
 			}
 			
 			paso = "Registrando tr\u00e1mite";
