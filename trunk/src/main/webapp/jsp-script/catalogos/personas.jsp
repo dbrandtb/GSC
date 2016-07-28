@@ -953,7 +953,7 @@ var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarVal
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
 	                            ,handler : function()
 	                            {
-	                            	if(inputCdramo==16)
+	                            	if(!Ext.isEmpty(inputCdramo) && inputCdramo==16)
 	                            	{
 		                            	checarBenef(function()
 		                            	{
