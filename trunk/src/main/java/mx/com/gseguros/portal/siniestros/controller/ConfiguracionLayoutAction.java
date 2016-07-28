@@ -509,7 +509,20 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	                					}else{
 	                						throw new Exception("El asegurado no se encuentra en SICAPS.");
 	                					}
-	                				}else{
+	                				}else if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CLAVE ASEGURADO")){
+	                					HashMap<String, Object> paramPersona = new HashMap<String, Object>();
+	                					paramPersona.put("pv_cdideext_i",cadenaModificada.replaceAll("G", "") );
+	                					String existePersona = siniestrosManager.validaPersonaSisaSicaps(paramPersona);
+	                					if(Integer.parseInt(existePersona) > 0){
+	                						aseguradoAfectado = "G"+existePersona;
+	                						bufferLinea.append(
+				                				auxCell!=null?"G"+existePersona+"|":"|"
+					                		);
+	                					}else{
+	                						throw new Exception("El asegurado no se encuentra en SICAPS.");
+	                					}
+	                				}
+		                			else{
 	                					if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("COBERTURA")){
 	                						campocodigoCobertura =  datosInformacionLayout.get(i).get("DESCRIPC").toString();
 	                						if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("COBERTURA") &&
