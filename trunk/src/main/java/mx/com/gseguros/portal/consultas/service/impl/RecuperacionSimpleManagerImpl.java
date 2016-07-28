@@ -659,6 +659,18 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				logger.debug(Utils.log(paso, " descripcion = ", descripcion));
 				
 				mapa = flujoMesaControlDAO.recuperarFlujoPorDescripcion(params.get("descripcion"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_SI_ES_CDRAMO_DE_SALUD)) {
+				String cdramo = params.get("cdramo");
+				if (StringUtils.isNotBlank(cdramo)) {
+					mapa.put(
+						"salud",
+						consultasDAO.esProductoSalud(cdramo)
+							? "S"
+							: "N"
+					);
+				} else {
+					mapa.put("salud", "N");
+				}
 			}
 		}
 		catch(Exception ex)

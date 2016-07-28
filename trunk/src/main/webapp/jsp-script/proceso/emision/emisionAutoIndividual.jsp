@@ -307,6 +307,7 @@ Ext.onReady(function()
 	                ,{
 	                    text     : 'Nueva'
 	                    ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+	                    ,hidden  : !Ext.isEmpty(_p29_flujo)
 	                    ,handler : _p29_nuevaClic
 	                }
 	            ]
@@ -325,6 +326,7 @@ Ext.onReady(function()
 	    ,titleCollapse  : true
 	    ,startCollapsed : true
 	    ,resizable      : false
+	    ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
 	    ,loader         :
 	    {
 	        scripts   : true
@@ -1083,6 +1085,7 @@ function _p29_mostrarVistaPrevia()
                                                 ,width       : 600
                                                 ,height      : 400
                                                 ,autoScroll  : true
+                                                ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                                                 ,loader      :
                                                 {
                                                     url       : _p29_urlDocumentosPoliza
@@ -1128,6 +1131,7 @@ function _p29_mostrarVistaPrevia()
                                     ,itemId   : '_p29_botonNueva'
                                     ,disabled : true
                                     ,text     : 'Nueva'
+                                    ,hidden   : !Ext.isEmpty(_p29_flujo)
                                     ,icon     : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                                     ,handler  : function()
                                     {

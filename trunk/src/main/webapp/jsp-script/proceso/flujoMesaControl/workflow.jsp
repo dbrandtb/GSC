@@ -87,9 +87,9 @@
 }
 .correo .image
 {
-    width            : 50px;
+    width            : 60px;
     height           : 50px;
-    background-image : url('${flujoimg}validacion.png');
+    background-image : url('${flujoimg}correo.png');
 }
 .labelV
 {
@@ -189,10 +189,10 @@
 .entidadM
 {
     position         : absolute;
-    width            : 50px;
+    width            : 60px;
     height           : 50px;
     border           : 0px solid red;
-    background-image : url('${flujoimg}validacion.png');
+    background-image : url('${flujoimg}correo.png');
 }
 .entidadR
 {
@@ -3063,7 +3063,9 @@ Ext.onReady(function()
                                         ,name       : 'DSMAIL'
                                         ,allowBlank : false
                                     }
-                                    ,{}
+                                    ,{
+                                        border : 0
+                                    }
                                     ,{
                                         xtype       : 'textfield'
                                         ,fieldLabel : 'PARA'

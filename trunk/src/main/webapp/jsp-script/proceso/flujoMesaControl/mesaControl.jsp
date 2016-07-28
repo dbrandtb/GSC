@@ -531,7 +531,9 @@ Ext.onReady(function()
                                     ,{
                                         xtype       : 'displayfield'
                                         ,fieldLabel : 'SUCURSAL'
-                                        ,value      : record.get('CDUNIECO')
+                                        ,value      : record.get('CDTIPRAM') == 2 && !Ext.isEmpty(record.get('CDUNIEXT'))
+                                                          ? record.get('CDUNIEXT')
+                                                          : record.get('CDUNIECO')
                                     }
                                     ,{
                                         xtype       : 'displayfield'
@@ -929,7 +931,7 @@ Ext.onReady(function()
                     }
                     
                     if (Number(cdtiptra) === 15) { // Endoso
-                        ck = 'Recuperando p\u00f3liza ICE';
+                        ck = 'Recuperando p\u00f3liza SICAPS';
                         
 	                    mask = _maskLocal(ck);
 	                    Ext.Ajax.request({

@@ -115,6 +115,7 @@ var msgWindow;
 	        width       : 600,
 	        height      : 400,
 	        autoScroll  : true,
+	        cls         : 'VENTANA_DOCUMENTOS_CLASS',
 	        loader      : {
 	            url     : _UrlDocumentosPoliza,
 	            params  : {

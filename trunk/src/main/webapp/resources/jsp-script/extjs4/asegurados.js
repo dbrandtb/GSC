@@ -3293,6 +3293,7 @@ Ext
 					titleCollapse : true,
 					startCollapsed : true,
 					resizable : false,
+					cls         : 'VENTANA_DOCUMENTOS_CLASS',
 					loader : {
 						scripts : true,
 						autoLoad : true,

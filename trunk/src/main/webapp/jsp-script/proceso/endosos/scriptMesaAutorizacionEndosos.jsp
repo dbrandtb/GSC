@@ -34,6 +34,7 @@ function _4_authEndosoDocumentos(grid,rowIndex,colIndex)
         ,width       : 600
         ,height      : 400
         ,autoScroll  : true
+        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
         ,loader      :
         {
             url       : _4_authEndUrlDoc

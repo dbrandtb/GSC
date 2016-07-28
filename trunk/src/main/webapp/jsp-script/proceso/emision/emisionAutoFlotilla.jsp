@@ -451,6 +451,7 @@ Ext.onReady(function()
                 ,{
                     text     : 'Nueva'
                     ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                    ,hidden  : !Ext.isEmpty(_p31_flujo)
                     ,handler : _p31_nuevaClic
                 }
             ]
@@ -479,6 +480,7 @@ Ext.onReady(function()
         ,titleCollapse  : true
         ,startCollapsed : true
         ,resizable      : false
+        ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
         ,loader         :
         {
             scripts   : true
@@ -1155,6 +1157,7 @@ function _p31_mostrarVistaPrevia()
 	                                            ,width       : 600
 	                                            ,height      : 400
 	                                            ,autoScroll  : true
+	                                            ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
 	                                            ,loader      :
 	                                            {
 	                                                url       : _p31_urlDocumentosPoliza
@@ -1201,6 +1204,7 @@ function _p31_mostrarVistaPrevia()
                                     ,text     : 'Nueva'
                                     ,icon     : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                                     ,disabled : true
+                                    ,hidden   : !Ext.isEmpty(_p31_flujo)
                                     ,handler  : function(){ _p31_nuevaClic(); }
                                 }
 								,{

@@ -1943,5 +1943,30 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		return lista;
 	}
 	
-	
+	@Override
+	public List<GenericVO> recuperarMotivosRechazo () throws Exception {
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarMotivosRechazo @@@@@@"
+				));
+		
+		String paso = "Recuperando motivos de rechazo";
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		
+		try
+		{
+			lista = catalogosDAO.recuperarMotivosRechazo();
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ lista = " , lista
+				,"\n@@@@@@ recuperarMotivosRechazo @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return lista;
+	}
 }
