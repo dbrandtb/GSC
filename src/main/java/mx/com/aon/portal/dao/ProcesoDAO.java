@@ -1724,6 +1724,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		r.put("CONDUCTO"          , rs.getString("CONDUCTO"));
     		r.put("PTCUMUPR"          , rs.getString("PTCUMUPR"));
     		r.put("RESIDENCIA"        , rs.getString("RESIDENCIA"));
+    		r.put("cdestciv",           rs.getString("cdestciv"));
+    		r.put("ocup",               rs.getString("dsocupacion"));
+    		r.put("numsoc",             rs.getString("numsoc"));
+    		r.put("clvfam",             rs.getString("clvfam"));
     		return r;
     	}
     }
