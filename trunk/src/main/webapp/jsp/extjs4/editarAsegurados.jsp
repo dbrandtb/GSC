@@ -1774,7 +1774,7 @@ debug("validarYGuardar flag:2");
                                         recordI.set('cdideper','');
                                         recordI.set('cdideext','');
                                         recordI.set('swexiper','N');
-                                        recordI.set('cdestciv','1');
+                                        recordI.set('cdestciv','');
                                         recordI.set('clvfam','');
                                         recordI.set('numsoc','');
                                         recordI.set('ocup'  ,'');

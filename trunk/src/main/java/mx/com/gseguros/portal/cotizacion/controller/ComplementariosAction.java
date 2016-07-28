@@ -748,6 +748,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "swexiper")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdideper")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdideext")));
+			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdestciv")));//Estado Civil del asegurado
+			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "numsoc")));//Numero de socio
+			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "clvfam")));//Clave familiar
+			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "ocup")));//Ocupacion del asegurado
+			
 			logger.debug("Modelo armado para persona: "+item1.toString());
 			/*
 			nmsituac
@@ -1395,7 +1400,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 				String clvfam   = (String) aseg.get("clvfam");
 				String numsoc   = (String) aseg.get("numsoc");
 				String nmsituac = (String) aseg.get("nmsituac");
-				String parentesco = (String) aseg.get("parentesco");
 				int rol = Integer.parseInt((String) aseg.get("cdrol"));
 				
 				
@@ -1408,13 +1412,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 					
 					
 					if(StringUtils.isBlank(numsoc) || StringUtils.isBlank(clvfam)
-							|| StringUtils.isBlank((String) aseg.get("cdestciv")) || StringUtils.isBlank((String) aseg.get("ocup"))){
+							&& StringUtils.isBlank((String) aseg.get("cdestciv")) && StringUtils.isBlank((String) aseg.get("ocup"))){
 						nmsituaext = " ";
 						String cdunieco = (String) map1.get("pv_cdunieco");
 						
+						logger.debug(Utils.log("Rol ->",rol));
+						
 						if(rol >= 2){
-							logger.debug(Utils.log("Rol ->",rol));
-							logger.debug(Utils.log("v1"));
+							logger.debug(Utils.log("¬v3"));
 							if(StringUtils.isBlank(nmsituaext) && cdunieco.equals(SUCURSAL_SALUD_NOVA)){
 								throw new ApplicationException("No se genero Situaext desde Clave familiar y Numero de Socio");
 							}
