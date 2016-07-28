@@ -93,7 +93,7 @@ function callbackDocumentoSubidoPoliza(mensajeRespuesta)
     if( !Ext.isEmpty(mensajeRespuesta) ) {
     	Ext.Msg.show({
 	       	title:'Error',
-		    msg: 'Error al subir el archivo::' + mensajeRespuesta,
+		    msg: 'Error al subir el archivo: ' + mensajeRespuesta,
 		    buttons: Ext.Msg.OK,
 		    icon: Ext.Msg.ERROR
 		});

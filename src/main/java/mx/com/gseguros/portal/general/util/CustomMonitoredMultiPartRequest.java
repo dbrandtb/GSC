@@ -206,7 +206,7 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
         	lista = upload.parseRequest(createRequestContext(servletRequest));
         } catch(Exception e) {
         	log.error("Error al subir archivo:", e);
-            servletRequest.getSession(true).setAttribute(errorKey, e.getMessage());
+            servletRequest.getSession(true).setAttribute(errorKey, "El tama\u00F1o m\u00E1ximo del archivo es de 10 MB");
             throw new FileUploadException("Error al subir archivo", e);
         }
         return lista;
