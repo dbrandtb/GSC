@@ -165,7 +165,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ORDEN_IMPRESION:
 				case CONFLAYOUT:
 				case TIPO_RECIBOS_IMPRESION:
-				case MOTIVOS_RECHAZO_TRAMITE:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case CVECOLUMNA:
@@ -948,6 +947,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 							"S".equals(params.get("vigente"))
 					    );
 					}
+					break;
+				case MOTIVOS_RECHAZO_TRAMITE:
+					lista = catalogosManager.recuperarMotivosRechazo();
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);

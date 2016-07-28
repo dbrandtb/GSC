@@ -43,6 +43,7 @@ function _4_onFolderClick(rowIndex)
         ,width       : 600
         ,height      : 400
         ,autoScroll  : true
+        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
         ,loader      :
         {
             url       : mesConUrlDocu

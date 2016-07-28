@@ -774,6 +774,7 @@ function _p34_mostrarVentanaDocumentos(params,recordPoliza)
         ,height      : 400
         ,autoScroll  : true
         ,closeAction : 'destroy'
+        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
         ,loader      :
         {
             url       : _p34_urlVentanaDocumentos

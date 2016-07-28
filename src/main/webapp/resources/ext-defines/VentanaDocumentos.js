@@ -7,6 +7,7 @@ Ext.define('VentanaDocumentos',
     ,width       : 700
     ,height      : 400
     ,autoScroll  : true
+    ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
     ,mostrar     : function()
     {
         var me = this;

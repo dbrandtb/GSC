@@ -1216,7 +1216,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	parMesCon.put("cdsisrol"        , cdsisrol);
 	            	WrapperResultados mesaContWr = kernelManagerSustituto.PMovMesacontrol(parMesCon);*/
 	            	
-            		Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(comprarCdramo,"I");
+            		String tipoProcesoParaRecuperarFlujo = "I";
+            		if (StringUtils.isNotBlank(tipoflot)) {
+            			tipoProcesoParaRecuperarFlujo = tipoflot;
+            		}
+            		
+            		Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(comprarCdramo,tipoProcesoParaRecuperarFlujo);
             		
 	            	ntramite = mesaControlManager.movimientoTramite(
 	            			comprarCdunieco

@@ -129,6 +129,7 @@ function _p16_verDocumentos(grid,rowIndex,colIndex)
         ,width       : 600
         ,height      : 400
         ,autoScroll  : true
+        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
         ,loader      :
         {
             url       : _p16_urlDocumentos

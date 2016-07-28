@@ -99,9 +99,6 @@ Ext.define('VentanaRechazo',
                                 maxHeight:150,
                                 minWidth:120
                             },
-                            value           : config.cdsisrol.indexOf('MED') != -1
-                                ? '21'
-                                : '',
                             store           : Ext.create('Ext.data.Store', {
                                 model    : 'Generic',
                                 autoLoad : true,
@@ -120,7 +117,7 @@ Ext.define('VentanaRechazo',
                                 },
                                 listeners : {
                                     load : function (me, records) {
-                                        if (me.cdsisrol.indexOf('MED') == -1) { // Si no es medico
+                                        if (me.cdsisrol.indexOf('MED') == -1) { // Cuando no es medico quitamos rechazo medico
                                             var recordRechazoMedico;
                                             for (var i = 0; i < records.length; i++) {
                                                 if (records[i].get('key') == 21) {
@@ -133,7 +130,19 @@ Ext.define('VentanaRechazo',
                                         }
                                     }
                                 }
-                            })
+                            }),
+                            seleccionaMedico : function () { // Selecciona rechazo medico y dispara select
+                                debug('>CDRAZRECHA.seleccionaMedico args:', arguments);
+                                var combo  = this;
+                                var store  = combo.getStore();
+                                var recMed = store.getAt(store.find('key','21'));
+                                combo.setValue(recMed);
+                                combo.fireEvent('select', combo, [recMed]);
+                            },
+                            onSelect : function (me, records) { // Hereda texto al textfield
+                                debug('>CDRAZRECHA.onSelect args:', arguments);
+                                me.up('form').down('[name=COMMENTSEXT]').setValue(records[0].get('aux'));
+                            }
                         }, {
                             xtype       : 'textarea'
                             ,fieldLabel : 'Comentarios de rechazo'
@@ -154,13 +163,15 @@ Ext.define('VentanaRechazo',
                                             url      : _GLOBAL_COMP_URL_CONS_CLAU
                                             ,params  :
                                             {
-                                                'params.cdclausu'  : ''
-                                                ,'params.dsclausu' : config.cdsisrol=='MEDICO' ? 'CARTA RECHAZO MEDICO' : 'CARTA RECHAZO ADMINISTRATIVA'
+                                                'params.cdclausu'     : ''
+                                                ,'params.dsclausu'    : config.cdsisrol.indexOf('MED') != -1
+                                                    ? 'CARTA RECHAZO MEDICO'
+                                                    : 'CARTA RECHAZO ADMINISTRATIVA'
                                             }
                                             ,success : function(response)
                                             {
                                                 _setLoading(false,me);
-                                                var ck = 'Decodificando respuesta al recuperar detalle de cl00e1usula';
+                                                var ck = 'Decodificando respuesta al recuperar detalle de cl\u00e1usula';
                                                 try
                                                 {
                                                     var json = Ext.decode(response.responseText);
@@ -186,7 +197,57 @@ Ext.define('VentanaRechazo',
                                                             {
                                                                 var json2 = Ext.decode(response.responseText);
                                                                 debug('### detalle:',json2);
-                                                                me.setValue(json2.msgResult);
+                                                                
+                                                                ck = 'Recuperando tipo de ramo';
+                                                                var mask = _maskLocal(ck);
+                                                                Ext.Ajax.request({
+                                                                    url    : _GLOBAL_URL_RECUPERACION,
+                                                                    params : {
+                                                                        'params.consulta' : 'RECUPERAR_SI_ES_CDRAMO_DE_SALUD',
+                                                                        'params.cdramo'   : me.up('window').cdramo
+                                                                    },
+                                                                    success : function (response) {
+                                                                        mask.close();
+                                                                        var ck = 'Decodificando respuesta al recuperar si es de salud';
+                                                                        try {
+                                                                            var json3 = Ext.decode(response.responseText);
+                                                                            debug('### es salud:', json3);
+                                                                            if (json3.success === true) {
+                                                                                var combo = me.up('form').down('[name=CDRAZRECHA]');
+                                                                                if (json3.params.salud === 'S') { // Salud
+                                                                                    // Para salud si es medico aplica carta medica, si es
+                                                                                    // otro aplica carta administrativa, que ya se recupero
+                                                                                    me.setValue(json2.msgResult);
+                                                                                } else { // Danios
+                                                                                    // Para auto se toma el texto del combo
+                                                                                    combo.on({
+                                                                                        select : combo.onSelect
+                                                                                    });
+                                                                                }
+                                                                                if (config.cdsisrol.indexOf('MED') != -1) { // Si es medico
+                                                                                    if (combo.getStore().getCount() > 0) {
+                                                                                        combo.seleccionaMedico();
+                                                                                    } else {
+                                                                                        combo.getStore().padre = combo;
+                                                                                        combo.getStore().on({
+                                                                                            load : function (me) {
+                                                                                                me.padre.seleccionaMedico();
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                }
+                                                                            } else {
+                                                                                mensajeError(json3.message);
+                                                                            }
+                                                                        } catch (e) {
+                                                                            manejaException(e, ck);
+                                                                        }
+                                                                    },
+                                                                    failure : function () {
+                                                                        mask.close();
+                                                                        errorComunicacion(null, 'Error al recuperar si es de salud');
+                                                                    }
+                                                                });
                                                             }
                                                             catch(e)
                                                             {

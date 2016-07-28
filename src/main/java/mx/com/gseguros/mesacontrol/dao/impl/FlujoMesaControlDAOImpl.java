@@ -1628,12 +1628,12 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("start"           , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("limit"           , OracleTypes.VARCHAR));
 			String cols[]=new String[]{
-					"NTRAMITE"  , "CDTIPFLU"           , "DSTIPFLU"    , "CDFLUJOMC" , "DSFLUJOMC"
-					,"STATUS"   , "DSSTATUS"           , "CDUNIECO"    , "CDRAMO"    , "CDTIPSIT"
-					,"DSTIPSIT" , "ESTADO"             , "NMPOLIZA"    , "FECSTATU"  , "FERECEPC"
-					,"NMSOLICI" , "NOMBRE_CONTRATANTE" , "RESPONSABLE" , "RAMO"      , "DSTIPSUP"
-					,"CDTIPRAM" , "DSTIPRAM"           , "NMPOLIEX"    , "CDTIPTRA"  , "ULTIMO_MODIFICA"
-					,"NRO_ENDOSO"
+					"NTRAMITE"    , "CDTIPFLU"           , "DSTIPFLU"    , "CDFLUJOMC" , "DSFLUJOMC"
+					,"STATUS"     , "DSSTATUS"           , "CDUNIECO"    , "CDRAMO"    , "CDTIPSIT"
+					,"DSTIPSIT"   , "ESTADO"             , "NMPOLIZA"    , "FECSTATU"  , "FERECEPC"
+					,"NMSOLICI"   , "NOMBRE_CONTRATANTE" , "RESPONSABLE" , "RAMO"      , "DSTIPSUP"
+					,"CDTIPRAM"   , "DSTIPRAM"           , "NMPOLIEX"    , "CDTIPTRA"  , "ULTIMO_MODIFICA"
+					,"NRO_ENDOSO" , "CDUNIEXT"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
 			declareParameter(new SqlOutParameter("pv_total_o"    , OracleTypes.VARCHAR));

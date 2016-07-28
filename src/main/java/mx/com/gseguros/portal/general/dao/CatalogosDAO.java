@@ -156,4 +156,6 @@ public interface CatalogosDAO {
 	public List<GenericVO> recuperarTipsitPorRamoPorTipogrupo(String cdramo, String tipogrupo) throws Exception;
 	
 	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception;
+	
+	public List<GenericVO> recuperarMotivosRechazo () throws Exception;
 }

@@ -68,6 +68,7 @@ itemsGrid.push({xtype : 'actioncolumn'
                                     	        ,width       : 600
                                     	        ,height      : 400
                                     	        ,autoScroll  : true
+                                    	        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                                     	        ,loader      :
                                     	        {
                                     	            url       : mesConUrlDocu
@@ -494,6 +495,7 @@ itemsGrid.push(
 																											,width       : 600
 																											,height      : 400
 																											,autoScroll  : true
+																											,cls         : 'VENTANA_DOCUMENTOS_CLASS'
 																											,loader      :
 																											{
 																												url       : mesConUrlDocu

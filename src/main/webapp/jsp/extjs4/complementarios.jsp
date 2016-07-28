@@ -1338,7 +1338,7 @@ function _datComTurnarSuscripcion()
                                 	    																				Ext.getCmp('botonEnvioEmail').hide();
                                 	    																			}
 										                                                            	    		
-										                                                            	    		if(panDatComMap1.SITUACION=='AUTO')
+										                                                            	    		if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
 										                                                            	    		{
 										                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
 										                                                            	    		}
@@ -1373,7 +1373,7 @@ function _datComTurnarSuscripcion()
 											                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
 											                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 											                                                            	    		
-											                                                            	    		if(panDatComMap1.SITUACION=='AUTO')
+											                                                            	    		if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
 											                                                            	    		{
 											                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
 											                                                            	    		}
@@ -1580,6 +1580,7 @@ function _datComTurnarSuscripcion()
 									                                                                            ,width       : 600
 									                                                                            ,height      : 400
 									                                                                            ,autoScroll  : true
+									                                                                            ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
 									                                                                            ,loader      :
 									                                                                            {
 									                                                                                url       : panDatComUrlDoc2
@@ -2642,6 +2643,7 @@ function _datComTurnarSuscripcion()
 		            ,titleCollapse  : true
 		            ,startCollapsed : true
 		            ,resizable      : false
+		            ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
 		            ,loader         :
 		            {
 		                scripts   : true
