@@ -6,14 +6,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
+import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,9 @@ public class ConsultasManagerImpl implements ConsultasManager
 	
 	@Autowired
 	private RenovacionDAO renovacionDAO;
+	
+	@Autowired
+	private SiniestrosDAO siniestrosDAO;
 	
 	@Override
 	public List<Map<String,String>> consultaDinamica(ObjetoBD objetoBD,LinkedHashMap<String,Object>params) throws Exception
@@ -406,5 +412,34 @@ public class ConsultasManagerImpl implements ConsultasManager
 	public Map<String,String> recuperarDatosFlujoEndoso(String cdramo, String cdtipsup) throws Exception
 	{
 		return consultasDAO.recuperarDatosFlujoEndoso(cdramo, cdtipsup);
+	}
+	
+	@Override
+	public boolean esTramiteSalud (String ntramite) throws Exception {
+		logger.debug(Utils.log(
+			"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+			"\n@@@@@@ esTramiteSalud @@@@@@",
+			"\n@@@@@@ ntramite = ", ntramite
+		));
+		boolean esSalud = false;
+		String paso = null;
+		try {
+			paso = "Recuperando datos tr\u00e1mite";
+			logger.debug(paso);
+			Map<String, String> tramite = siniestrosDAO.obtenerTramiteCompleto(ntramite);
+			String cdramo = tramite.get("CDRAMO");
+			if (StringUtils.isBlank(cdramo)) {
+				throw new ApplicationException("El tr\u00e1mite no tiene producto");
+			}
+			esSalud = this.esProductoSalud(cdramo);
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+			"\n@@@@@@ esSalud = ", esSalud,
+			"\n@@@@@@ esTramiteSalud @@@@@@",
+			"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+		));
+		return esSalud;
 	}
 }

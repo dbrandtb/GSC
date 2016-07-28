@@ -20,6 +20,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
@@ -70,6 +71,9 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     
     @Autowired
     private DocumentosManager documentosManager;
+    
+    @Autowired
+    private ConsultasManager consultasManager;
     
     public String mostrarPanel()
     {
@@ -474,20 +478,18 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 	/*////////////////////////////////////////////*/
 	public String generarContrarecibo()
 	{
-		logger.debug(""
-				+ "\n#################################"
-				+ "\n#################################"
-				+ "\n###### generarContrarecibo ######"
-				+ "\n######                     ######"
-				);
-		logger.debug("smap1: "+smap1);
+		logger.debug(Utils.log(
+				"\n#################################",
+				"\n###### generarContrarecibo ######",
+				"\n###### smap1 = ", smap1
+				));
 		
 		SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	    Calendar calendarHoy=Calendar.getInstance();
 		
 		try
 		{
-			UserVO usu=(UserVO)session.get("USUARIO");
+			UserVO usu = Utils.validateSession(session);
 			
 			long timestamp=System.currentTimeMillis();
 			String random=((long)(Math.random()*10000l))+"";
@@ -498,18 +500,36 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 				docu.put("pv_cdconrec_i",claveReciboTabla);
 				kernelManager.preparaContrarecibo(docu);
 			}*/
-			String filePath=this.getText("ruta.documentos.poliza")+Constantes.SEPARADOR_ARCHIVO+smap1.get("ntramite")+Constantes.SEPARADOR_ARCHIVO+"contrarecibo_"+timestamp+"_"+random+".pdf";
-			String requestUrl=this.getText("ruta.servidor.reports")
-					+ "?destype=cache"
-					+ "&desformat=PDF"
-					+ "&userid="+this.getText("pass.servidor.reports")
-					+ "&report=CONTRA_RECIBO.rdf"
-					+ "&paramform=no"
-					+ "&ACCESSIBLE=YES"
-					+ "&p_fecha="+renderFechas.format(calendarHoy.getTime())
-					+ "&p_tramite="+smap1.get("ntramite")
-					+ "&p_usuario="+usu.getUser()
-					+ "&desname="+filePath;
+			String filePath = Utils.join(
+				this.getText("ruta.documentos.poliza"),
+				Constantes.SEPARADOR_ARCHIVO,
+				smap1.get("ntramite"),
+				Constantes.SEPARADOR_ARCHIVO,
+				"contrarecibo_", timestamp, "_", random, ".pdf"
+			);
+			
+			String nombreRdf = this.getText("rdf.contrarecibo.danios.nombre");
+			
+			if (consultasManager.esTramiteSalud(smap1.get("ntramite"))) {
+				logger.debug("Es salud");
+				nombreRdf = this.getText("rdf.contrarecibo.salud.nombre");
+			} else {
+				logger.debug("No es salud");
+			}
+			
+			String requestUrl = Utils.join(
+				this.getText("ruta.servidor.reports"),
+				"?destype=cache",
+				"&desformat=PDF",
+				"&paramform=no",
+				"&ACCESSIBLE=YES",
+				"&userid="    , this.getText("pass.servidor.reports"),
+				"&report="    , nombreRdf,
+				"&p_fecha="   , renderFechas.format(calendarHoy.getTime()),
+				"&p_tramite=" , smap1.get("ntramite"),
+				"&p_usuario=" , usu.getUser(),
+				"&desname="   , filePath
+			);
 			logger.debug("se pide el contrarecibo a: "+requestUrl);
 			logger.debug("se guardara el contrarecibo en: "+filePath);
 			HttpUtil.generaArchivo(requestUrl, filePath);
@@ -524,12 +544,11 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			logger.error("error al generar contrarecibo",ex);
 			success=false;
 		}
-		logger.debug(""
-				+ "\n######                     ######"
-				+ "\n###### generarContrarecibo ######"
-				+ "\n#################################"
-				+ "\n#################################"
-				);
+		logger.debug(Utils.log(
+				"\n###### success = ", success,
+				"\n###### generarContrarecibo ######",
+				"\n#################################"
+				));
 		return SUCCESS;
 	}
 

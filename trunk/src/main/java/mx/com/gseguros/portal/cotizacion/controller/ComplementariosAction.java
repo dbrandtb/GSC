@@ -176,7 +176,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String mostrarPantalla()
 	{
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n###################################################")
 				.append("\n###### ComplementariosAction mostrarPantalla ######")
@@ -456,7 +456,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			result = ERROR;
 		}
 		
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\nresult: ").append(result)
 				.append("\n###### ComplementariosAction mostrarPantalla ######")
@@ -688,10 +688,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 	}
 
 	public String pantallaAsegurados() {
-		logger.info(""
-				+ "\n################################"
-				+ "\n###### pantallaAsegurados ######"
-				);
+		logger.debug(Utils.log(
+				 "\n################################"
+				,"\n###### pantallaAsegurados ######"
+				));
 		logger.debug("map1: "+map1);
 		if(map1!=null)
 		{
@@ -1178,21 +1178,16 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String pantallaAseguradosAuto()
 	{
-		logger.info(""
-				+ "\n####################################"
-				+ "\n###### pantallaAseguradosAuto ######"
-				);
-		logger.info("map1: "+map1);
+		logger.debug(Utils.log(
+				 "\n####################################"
+				,"\n###### pantallaAseguradosAuto ######"
+				,"\n###### map1 = ", map1
+				));
 		String cdunieco = map1.get("cdunieco");
 		String cdramo   = map1.get("cdramo");
 		String cdtipsit = map1.get("cdtipsit");
 		String estado   = map1.get("estado");
 		String nmpoliza = map1.get("nmpoliza");
-		logger.info("cdunieco: " + cdunieco);
-		logger.info("cdramo: "   + cdramo);
-		logger.info("cdtipsit: " + cdtipsit);
-		logger.info("estado: "   + estado);
-		logger.info("nmpoliza: " + nmpoliza);
 		
 		GeneradorCampos gc;
 		
@@ -1253,10 +1248,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(""
-				+ "\n###### pantallaAseguradosAuto ######"
-				+ "\n####################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### pantallaAseguradosAuto ######"
+				,"\n####################################"
+				));
 		return SUCCESS;
 	}
 	
@@ -1296,10 +1291,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String guardarPantallaAsegurados()
 	{
-		logger.info(""
-				+ "\n############################################"
-				+ "\n###### guardarPantallaAseguradosSalud ######"
-				);
+		logger.debug(Utils.log(
+				 "\n############################################"
+				,"\n###### guardarPantallaAseguradosSalud ######"
+				));
 		logger.debug(Utils.log("map1="  , map1));
 		logger.debug(Utils.log("list1=" , list1));
 		try
@@ -1403,7 +1398,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				int rol = Integer.parseInt((String) aseg.get("cdrol"));
 				
 				
-				//Número de socio y Clave Familiar, para el atributo SITUAEXT
+				//Nï¿½mero de socio y Clave Familiar, para el atributo SITUAEXT
 				
 					logger.debug(Utils.log("Numero de Socio ->",numsoc));
 					logger.debug(Utils.log("Clave Familiar  ->",clvfam));
@@ -1419,7 +1414,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug(Utils.log("Rol ->",rol));
 						
 						if(rol >= 2){
-							logger.debug(Utils.log("¬v3"));
+							logger.debug(Utils.log("ï¿½v3"));
 							if(StringUtils.isBlank(nmsituaext) && cdunieco.equals(SUCURSAL_SALUD_NOVA)){
 								throw new ApplicationException("No se genero Situaext desde Clave familiar y Numero de Socio");
 							}
@@ -1602,10 +1597,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 			success=false;
 		}
 		
-		logger.info(""
-				+ "\n###### pantallaAseguradosSalud ######"
-				+ "\n####################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### pantallaAseguradosSalud ######"
+				,"\n#####################################"
+				));
 		
 		return SUCCESS;
 	}
@@ -2681,15 +2676,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
 					}
-					logger.debug(""
-							+ "\n#################################"
-							+ "\n###### Se solicita reporte ######"
+					logger.debug(Utils.log(
+							 "\n#################################"
+							,"\n###### Se solicita reporte ######"
 							+ "\na "+url);
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					logger.debug(""
-							+ "\n######                    ######"
-							+ "\n###### reporte solicitado ######"
-							+ "\n################################"
+					logger.debug(Utils.log(
+							,"\n######                    ######"
+							,"\n###### reporte solicitado ######"
+							 "\n################################"
 							+ "");
 				}
 				*/
@@ -3568,14 +3563,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
 					}
-					logger.debug(""
-							+ "\n#################################"
-							+ "\n###### Se solicita reporte ######"
+					logger.debug(Utils.log(
+							 "\n#################################"
+							,"\n###### Se solicita reporte ######"
 							+ "\na "+url);
 					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					logger.debug(""
-							+ "\n###### reporte solicitado ######"
-							+ "\n################################"
+					logger.debug(Utils.log(
+							,"\n###### reporte solicitado ######"
+							 "\n################################"
 							+ "");
 				}
 				*/
@@ -3687,10 +3682,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		message = mensajeRespuesta;
 		
-		logger.debug(""
-				+ "\n###### autorizaEmision ######"
-				+ "\n#############################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### autorizaEmision ######"
+				,"\n#############################"
+				));
 		return SUCCESS;
 	}
 	
@@ -3919,15 +3914,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 							//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 							url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
 						}
-						logger.debug(""
-								+ "\n#################################"
-								+ "\n###### Se solicita reporte ######"
+						logger.debug(Utils.log(
+								 "\n#################################"
+								,"\n###### Se solicita reporte ######"
 								+ "\na "+url);
 						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-						logger.debug(""
-								+ "\n######                    ######"
-								+ "\n###### reporte solicitado ######"
-								+ "\n################################"
+						logger.debug(Utils.log(
+								,"\n######                    ######"
+								,"\n###### reporte solicitado ######"
+								 "\n################################"
 								+ "");
 					}
 					*/
@@ -4583,13 +4578,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String buscarPersonasRepetidas()
 	{
-		logger.debug(""
-				+ "#######################################\n"
-				+ "#######################################\n"
-				+ "###### buscar personas repetidas ######\n"
-				+ "######                           ######"
-				);
-		logger.debug("map1: "+map1);
+		logger.debug(Utils.log(
+				 "\n#######################################"
+				,"\n###### buscar personas repetidas ######"
+				,"\n###### map1 = ", map1
+				));
 		clienteWS = false;
 		
 		try
@@ -4603,7 +4596,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		    	soloBD = true;
 		    }
 		    
-		    logger.info("Busqueda de cliente solo BD: " + soloBD);
+		    logger.debug("Busqueda de cliente solo BD: " + soloBD);
 		    
 		    /**
 		     * Si no se encuentra el RFC en la BD se consulta a un WS de personas
@@ -4739,12 +4732,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.error("Error al buscar RFC",ex);
 			success=false;
 		}
-		logger.debug(""
-				+ "######                           ######\n"
-				+ "###### buscar personas repetidas ######\n"
-				+ "#######################################\n"
-				+ "#######################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### buscar personas repetidas ######"
+				,"\n#######################################"
+				));
 		return SUCCESS;
 	}
 	
@@ -4941,24 +4932,22 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String pantallaJavaExterno()
 	{
-		logger.info(""
-				+ "\n#################################"
-				+ "\n###### pantallaJavaExterno ######"
-				);
-		logger.info(""
-				+ "\n###### pantallaJavaExterno ######"
-				+ "\n#################################"
-				);
+		logger.debug(Utils.log(
+				 "\n#################################"
+				,"\n###### pantallaJavaExterno ######"
+				,"\n###### pantallaJavaExterno ######"
+				,"\n#################################"
+				));
 		return SUCCESS;
 	}
 	
 	public String operacionJavaExterno()
 	{
-		logger.info(""
-				+ "\n##################################"
-				+ "\n###### operacionJavaExterno ######"
-				);
-		logger.info("panel1: "+panel1);
+		logger.debug(Utils.log(
+				 "\n##################################"
+				,"\n###### operacionJavaExterno ######"
+				,"\n###### panel1 = ", panel1
+				));
 		String a = panel1.get("a");
 		String b = panel1.get("b");
 		String c = null;
@@ -4984,40 +4973,36 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			logger.error("error:",ex);
 		}
-		logger.info(""
-				+ "\n###### operacionJavaExterno ######"
-				+ "\n##################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### operacionJavaExterno ######"
+				,"\n##################################"
+				));
 		return SUCCESS;
 	}
 	
 	public String pantallaCompiladora()
 	{
-		logger.info(""
-				+ "\n#################################"
-				+ "\n###### pantallaCompiladora ######"
-				);
-		logger.info(""
-				+ "\n###### pantallaCompiladora ######"
-				+ "\n#################################"
-				);
+		logger.debug(Utils.log(
+				 "\n#################################"
+				,"\n###### pantallaCompiladora ######"
+				,"\n###### pantallaCompiladora ######"
+				,"\n#################################"
+				));
 		return SUCCESS;
 	}
 	
 	public String compilarProceso()
 	{
-		logger.info(""
-				+ "\n#############################"
-				+ "\n###### compilarProceso ######"
-				);
+		logger.debug(Utils.log(
+				 "\n#############################"
+				,"\n###### compilarProceso ######"
+				,"\n###### map1 = ", map1
+				));
 		//ENTRADA
-		logger.info("map1: "+map1);
 		
 		//VARIABLES DE ENTRADA OBTENIDAS DEL MAPA
 		String archivo = map1.get("archivo");
 		String codigo  = map1.get("codigo");
-		logger.info("archivo: "+archivo);
-		logger.info("codigo: "+codigo);
 		
 		//PROPIEDAD PARA EL SUBMIT DE EXT
 		success = true;
@@ -5050,7 +5035,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				esWindows = true;
 			}
-			logger.info("es windows: "+esWindows);
+			logger.debug("es windows: "+esWindows);
 		}
 		
 		//COMPILAR
@@ -5123,100 +5108,123 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
-		logger.info(""
-				+ "\n###### compilarProceso ######"
-				+ "\n#############################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### compilarProceso ######"
+				,"\n#############################"
+				));
 		return SUCCESS;
 	}
 	
 	public String redireccion()
 	{
-		logger.info(""
-				+ "\n#########################"
-				+ "\n###### redireccion ######"
-				);
-		logger.info("map1: "+map1);
-		logger.info(""
-				+ "\n###### redireccion ######"
-				+ "\n#########################"
-				);
+		logger.debug(Utils.log(
+				 "\n#########################"
+				,"\n###### redireccion ######"
+				,"\n###### map1 = ", map1
+				,"\n###### redireccion ######"
+				,"\n#########################"
+				));
 		return SUCCESS;
 	}
 
 	public String guardarCartaRechazo()
 	{
-		logger.info(""
-				+ "\n#################################"
-				+ "\n###### guardarCartaRechazo ######"
-				);
-		logger.info("map1: "+map1);
-		logger.debug("####VALOR DE ENTRADA######");
+		logger.debug(Utils.log(
+				 "\n#################################"
+				,"\n###### guardarCartaRechazo ######"
+				,"\n###### map1 = ", map1
+				));
 		
-		String ntramite    = map1.get("ntramite");
-		String comments    = map1.get("comments");
-		logger.debug(comments);
-		// Se reemplazan acentos y otros caracteres:
-		String commentsM   = comments.
-				replaceAll("\u00E1", "_a_").
-				replaceAll("\u00C1", "_A_").
-				replaceAll("\u00E9", "_e_").
-				replaceAll("\u00C9", "_E_").
-				replaceAll("\u00ED", "_i_").
-				replaceAll("\u00CD", "_I_").
-				replaceAll("\u00F3", "_o_").
-				replaceAll("\u00D3", "_O_").
-				replaceAll("\u00FA", "_u_").
-				replaceAll("\u00DA", "_U_").
-				replaceAll("\u00F1", "_n_").
-				replaceAll("\u00D1", "_N_").
-				replaceAll("\n"    , "_s_");
-		String cdsisrol    = map1.get("cdsisrol");
-		String cdunieco    = map1.get("cdunieco");
-		String cdramo      = map1.get("cdramo");
-		String estado      = map1.get("estado");
-		String nmpoliza    = map1.get("nmpoliza");
-		
-		if("R".equals(nmpoliza))
-		{
-			FlujoVO flujo = new FlujoVO();
-			flujo.setNtramite(ntramite);
-			try
-			{
-				Map<String,Object> datosValidacionJS = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
-				nmpoliza = ((Map<String,String>)datosValidacionJS.get("TRAMITE")).get("NMSOLICI");
-			}
-			catch(Exception ex)
-			{
-				logger.error("Error al obtener datos de poliza desde flujo",ex);
-				return SUCCESS;
-			}
-		}
-		
-		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
-		String url         = this.getText("ruta.servidor.reports")
-				+ "?destype=cache"
-				+ "&desformat=PDF"
-				+ "&userid="+this.getText("pass.servidor.reports")
-				+ "&report="+(cdsisrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())?
-						this.getText("rdf.emision.rechazo.medico.nombre"):
-							this.getText("rdf.emision.rechazo.admin.nombre"))
-				+ "&paramform=no"
-				+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-				+ "&p_ntramite="+ntramite
-				+ "&p_comments="+commentsM;
-		logger.debug(""
-				+ "\n#################################"
-				+ "\n###### Se solicita reporte ######"
-				+ "\n###### "+url
-				);
-		HttpUtil.generaArchivo(url,rutaCarpeta+"/"+this.getText("pdf.emision.rechazo.nombre"));
-		logger.debug(""
-				+ "\n###### Se solicita reporte ######"
-				+ "\n#################################"
-				);
 		try
 		{
+			String cdsisrol = Utils.validateSession(session).getRolActivo().getClave();
+			
+			String ntramite    = map1.get("ntramite");
+			String comments    = map1.get("comments");
+			logger.debug(comments);
+			// Se reemplazan acentos y otros caracteres:
+			String commentsM   = comments.
+					replaceAll("\u00E1", "_a_").
+					replaceAll("\u00C1", "_A_").
+					replaceAll("\u00E9", "_e_").
+					replaceAll("\u00C9", "_E_").
+					replaceAll("\u00ED", "_i_").
+					replaceAll("\u00CD", "_I_").
+					replaceAll("\u00F3", "_o_").
+					replaceAll("\u00D3", "_O_").
+					replaceAll("\u00FA", "_u_").
+					replaceAll("\u00DA", "_U_").
+					replaceAll("\u00F1", "_n_").
+					replaceAll("\u00D1", "_N_").
+					replaceAll("\n"    , "_s_");
+			//String cdsisrol    = map1.get("cdsisrol");
+			String cdunieco    = map1.get("cdunieco");
+			String cdramo      = map1.get("cdramo");
+			String estado      = map1.get("estado");
+			String nmpoliza    = map1.get("nmpoliza");
+			
+			if("R".equals(nmpoliza))
+			{
+				FlujoVO flujo = new FlujoVO();
+				flujo.setNtramite(ntramite);
+				try
+				{
+					Map<String,Object> datosValidacionJS = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
+					nmpoliza = ((Map<String,String>)datosValidacionJS.get("TRAMITE")).get("NMSOLICI");
+				}
+				catch(Exception ex)
+				{
+					logger.error("Error al obtener datos de poliza desde flujo",ex);
+					return SUCCESS;
+				}
+			}
+			
+			String nombreRdf = getText("rdf.emision.rechazo.danios.nombre"); // RDF de carta rechazo danios
+			
+			if (consultasManager.esProductoSalud(cdramo)) {
+				logger.debug("Es salud");
+				if(
+					cdsisrol.equals(RolSistema.COORDINADOR_MEDICO.getCdsisrol())
+					||cdsisrol.equals(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
+					||cdsisrol.equals(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol())
+					||cdsisrol.equals(RolSistema.MEDICO.getCdsisrol())
+					||cdsisrol.equals(RolSistema.MEDICO_AJUSTADOR.getCdsisrol())
+				) {
+					logger.debug("Es medico");
+					nombreRdf = this.getText("rdf.emision.rechazo.medico.nombre");
+				} else {
+					logger.debug("No es medico");
+					nombreRdf = this.getText("rdf.emision.rechazo.admin.nombre");
+				}
+			} else {
+				logger.debug("No es salud");
+			}
+			
+			logger.debug("nombreRdf = {}", nombreRdf);
+			
+			String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"), "/", ntramite);
+			
+			String url = Utils.join(
+					this.getText("ruta.servidor.reports"),
+					"?destype=cache",
+					"&desformat=PDF",
+					"&paramform=no",
+					"&ACCESSIBLE=YES", //parametro que habilita salida en PDF
+					"&userid=", this.getText("pass.servidor.reports"),
+					"&report=", nombreRdf,
+					"&p_ntramite=", ntramite,
+					"&p_comments=", commentsM
+			);
+			logger.debug(Utils.log(
+					 "\n#################################"
+					,"\n###### Se solicita reporte ######"
+					,"\n###### ",url
+					));
+			HttpUtil.generaArchivo(url,Utils.join(rutaCarpeta, "/", this.getText("pdf.emision.rechazo.nombre")));
+			logger.debug(Utils.log(
+					 "\n###### Se solicita reporte ######"
+					,"\n#################################"
+					));
 			//HashMap<String, Object> paramsR = new HashMap<String, Object>();
 			//paramsR.put("pv_cdunieco_i"  , cdunieco);
 			//paramsR.put("pv_cdramo_i"    , cdramo);
@@ -5258,10 +5266,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.error("error al crear la carta rechazo",ex);
 		}
 	
-		logger.info(""
-				+ "\n###### guardarCartaRechazo ######"
-				+ "\n#################################"
-				);
+		logger.debug(Utils.log(
+				 "\n###### guardarCartaRechazo ######"
+				,"\n#################################"
+				));
 		return SUCCESS;
 	}
 	
