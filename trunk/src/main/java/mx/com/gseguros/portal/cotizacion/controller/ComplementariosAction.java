@@ -1407,7 +1407,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					
 					
 					if(StringUtils.isBlank(numsoc) || StringUtils.isBlank(clvfam)
-							&& StringUtils.isBlank((String) aseg.get("cdestciv")) && StringUtils.isBlank((String) aseg.get("ocup"))){
+							|| StringUtils.isBlank((String) aseg.get("cdestciv")) || StringUtils.isBlank((String) aseg.get("ocup"))){
 						nmsituaext = " ";
 						String cdunieco = (String) map1.get("pv_cdunieco");
 						
