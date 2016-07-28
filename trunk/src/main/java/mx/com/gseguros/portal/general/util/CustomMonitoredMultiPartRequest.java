@@ -95,6 +95,14 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
             setLocale(request);
             processUpload(request, saveDir);
         } catch (FileUploadBase.SizeLimitExceededException e) {
+        	
+        	log.error("Error al subir archivo=", e);
+        	String errorKey = "SK_ERROR";
+        	request.getSession(true).setAttribute(errorKey, new StringBuilder()
+        			.append("El tama\u00F1o m\u00E1ximo del archivo es de ")
+        			.append(maxSize/1024/1024)
+        			.append(" MB.").toString());
+        	
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Request exceeded size limit!", e);
             }
@@ -201,15 +209,7 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
         pl.setEstado(CustomProgressListener.SUBIENDO);
         log.debug("Upload started "+System.currentTimeMillis());
         //fin modificaciones
-        List<FileItem> lista = new ArrayList<FileItem>();
-        try {
-        	lista = upload.parseRequest(createRequestContext(servletRequest));
-        } catch(Exception e) {
-        	log.error("Error al subir archivo:", e);
-            servletRequest.getSession(true).setAttribute(errorKey, "El tama\u00F1o m\u00E1ximo del archivo es de 10 MB");
-            throw new FileUploadException("Error al subir archivo", e);
-        }
-        return lista;
+        return upload.parseRequest(createRequestContext(servletRequest));
     }
 
     private DiskFileItemFactory createDiskFileItemFactory(String saveDir) {
