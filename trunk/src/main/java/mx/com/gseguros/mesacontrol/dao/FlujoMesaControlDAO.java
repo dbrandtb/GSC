@@ -705,4 +705,9 @@ public interface FlujoMesaControlDAO {
 	
 	public List<Map<String, String>> recuperarChecklistInicial (String cdtipflu, String cdflujomc,
 			String cdtiptra, String cdtipsup) throws Exception;
+	
+	public String ejecutaProcedureFlujoCorreo(String nomproc, String ntramite) throws Exception;
+	
+	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite) throws Exception;
+	
 }

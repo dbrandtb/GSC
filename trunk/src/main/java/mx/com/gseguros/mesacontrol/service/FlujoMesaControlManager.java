@@ -339,4 +339,8 @@ public interface FlujoMesaControlManager
 			,String cdmail)throws Exception;
 	
 	public Map<String, String> recuperarChecklistInicial (String cdtipflu, String cdflujomc, String cdtiptra, String cdtipsup) throws Exception;
+	
+	public Map<String, String> enviaCorreoFlujo(FlujoVO flujo, Map<String, String> params) throws Exception;
+	
+	public void mandarCorreosStatusTramite(String ntramite) throws Exception;
 }

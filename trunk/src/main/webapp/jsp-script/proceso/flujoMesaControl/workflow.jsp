@@ -1738,8 +1738,15 @@ Ext.onReady(function()
  		                	icon  : _GLOBAL_DIRECTORIO_ICONOS+'disk.png',
  		                	handler : function(me){
  		                		var win = me.up('window');
- 		                		var name = win.nameCmpVar; 		                		
- 		                		_p52_formCorreos.down('[name='+name+']').setValue(win.down('[itemId=panVars]').getValue());
+ 		                		var nameVar   = win.nameCmpVar;
+ 		                		var name      = win.nameCmp;
+ 		                		var vars      = win.down('[itemId=panVars]').getValue().split(',');
+ 		                		var numvars   = _p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name='+name+']').getValue());
+ 		                		if (numvars != vars.length){
+ 		                			mensajeError('El numero de variables seleccionadas no coinciden con las llaves del texto');
+ 		                			return;
+ 		                		}
+ 		                		_p52_formCorreos.down('[name='+nameVar+']').setValue(win.down('[itemId=panVars]').getValue());
  		                		win.close();
  		                	}
  		                }
@@ -2966,6 +2973,46 @@ Ext.onReady(function()
                                             _p52_guardarDatosCorreo
                                             (me,function(me)
                                             {
+                                            	////////////INICIA VALIDACION VARIABLES////////////
+                                            	//var win            = me.up('window');
+                                            	//Para obtener la longitud de variables
+                                            	var varsdestino    = _p52_formCorreos.down('[name=VARDESTINO]').getValue().split(',');
+                                            	var varsasunto     = _p52_formCorreos.down('[name=VARASUNTO]').getValue().split(',');
+                                            	var varsmensaje    = _p52_formCorreos.down('[name=VARMENSAJE]').getValue().split(',');
+                                            	debug('varsdestino ',varsdestino.length,' varsasunto ',varsasunto.length,' varsmensaje ',varsmensaje.length);
+                                            	//Para revisar que contenga {}
+                                            	var vdsdestino     = _p52_formCorreos.down('[name=DSDESTINO]').getValue();
+                                            	var vdsasunto      = _p52_formCorreos.down('[name=DSASUNTO]').getValue();
+                                            	var vdsmensaje     = _p52_formCorreos.down('[name=DSMENSAJE]').getValue();
+                                            	debug('vdsdestino ',vdsdestino,' vdsasunto ',vdsasunto,' vdsmensaje ',vdsmensaje);
+                                            	//Obtiene las coincidencias de {} en las variables
+ 		                						var numvarsdestino = _p52_numberContainsSubstrInStr('{}',vdsdestino);
+ 		                						var numvarsasunto  = _p52_numberContainsSubstrInStr('{}',vdsasunto);
+ 		                						var numvarsmensaje = _p52_numberContainsSubstrInStr('{}',vdsmensaje);
+ 		                						
+ 		                						debug('numvarsdestino ',numvarsdestino,' numvarsasunto ',numvarsasunto,' numvarsmensaje ',numvarsmensaje);
+ 		                						
+ 		                						if(_p52_formCorreos.down('[name=VARDESTINO]').getValue().indexOf(',') != -1){
+ 		                							if (numvarsdestino != varsdestino.length){
+ 		                								mensajeError('El numero de variables seleccionadas en el destinatario no coinciden con las llaves del texto');
+ 		                								return;
+ 		                							}	
+ 		                						}
+ 		                						
+ 		                						if(_p52_formCorreos.down('[name=VARASUNTO]').getValue().indexOf(',') != -1){
+ 		                							if (numvarsasunto != varsasunto.length){
+ 		                								mensajeError('El numero de variables seleccionadas en el asunto no coinciden con las llaves del texto');
+ 		                								return;
+ 		                							}
+ 		                						}
+ 		                						
+ 		                						if(_p52_formCorreos.down('[name=VARMENSAJE]').getValue().indexOf(',') != -1){
+ 		                							if (numvarsmensaje != varsmensaje.length){
+ 		                								mensajeError('El numero de variables seleccionadas en el mensaje no coinciden con las llaves del texto');
+ 		                								return;
+ 		                							}
+ 		                						}
+ 		                						////////////TERMINA VALIDACION VARIABLES////////////
                                                 _p52_panelCanvas.enable();
                                                 me.up('panel').hide();
                                                 _p52_actualizaLabel(
@@ -3078,7 +3125,11 @@ Ext.onReady(function()
                                         ,text: 'Variables'
                                         ,icon : '${icons}table_relationship.png'
                                         ,handler: function() {
-                                        	_p52_mostrarVentanaVariablesCorreo('VARDESTINO');
+                                        	if(_p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSDESTINO]').getValue()) == 0){
+                                        		mensajeError('El texto no contiene sintaxis para agregar variables');
+                                        	}else{
+                                        		_p52_mostrarVentanaVariablesCorreo('VARDESTINO','DSDESTINO');
+                                        	}
                                         }
                                     }
                                     ,{
@@ -3095,7 +3146,11 @@ Ext.onReady(function()
                                         ,text: 'Variables'
                                         ,icon : '${icons}table_relationship.png'
                                         ,handler: function() {
-                                        	_p52_mostrarVentanaVariablesCorreo('VARASUNTO');
+                                        	if(_p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSASUNTO]').getValue()) == 0){
+                                        		mensajeError('El texto no contiene sintaxis para agregar variables');
+                                        	}else{
+                                        		_p52_mostrarVentanaVariablesCorreo('VARASUNTO','DSASUNTO');
+                                        	}
                                         }
                                     }
                                     ,{
@@ -3109,7 +3164,11 @@ Ext.onReady(function()
                                         ,text: 'Variables'
                                         ,icon : '${icons}table_relationship.png'
                                         ,handler: function() {
-                                        	_p52_mostrarVentanaVariablesCorreo('VARMENSAJE');
+                                        	if(_p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSMENSAJE]').getValue()) == 0){
+                                        		mensajeError('El texto no contiene sintaxis para agregar variables');
+                                        	}else{
+                                        		_p52_mostrarVentanaVariablesCorreo('VARMENSAJE','DSMENSAJE');
+                                        	}
                                         }
                                     }
                                     /* , new SelectorMultiple() */
@@ -5781,12 +5840,26 @@ function _p52_ventanaTips(tips)
     }).show());
 }
 
-function _p52_mostrarVentanaVariablesCorreo(name){	
+function _p52_mostrarVentanaVariablesCorreo(nameVar, name){	
 	debug('_p52_mostrarVentanaVariablesCorreo',name);
-	_p52_winVarsCorreo.down('[itemId=panVars]').setValue(_p52_formCorreos.down('[name='+name+']').getValue());
-	_p52_winVarsCorreo.nameCmpVar = name;
+	_p52_winVarsCorreo.down('[itemId=panVars]').setValue(_p52_formCorreos.down('[name='+nameVar+']').getValue());
+	_p52_winVarsCorreo.nameCmpVar = nameVar;
+	_p52_winVarsCorreo.nameCmp    = name;
 	_p52_winVarsCorreo.show();
 	
+}
+
+function _p52_numberContainsSubstrInStr(subStr, str){
+	var lastIndex = 0,
+ 		count     = 0;
+ 	while(lastIndex != -1){
+ 		lastIndex = str.indexOf(subStr,lastIndex);
+ 		if(lastIndex != -1){
+        	count ++;
+        	lastIndex += subStr.length;
+    	}
+ 	}
+ 	return count;
 }
 ////// funciones //////
 
