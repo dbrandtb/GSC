@@ -986,7 +986,6 @@ var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarVal
                                             _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);                                   
                                         }
 	                            	}
-	                            	
 	                            	else
 	                            	{
 	                            		if(!Ext.isEmpty(inputCdramo))
@@ -1027,41 +1026,41 @@ var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarVal
 				                                    }
 				                            	});
 				                           }
-	                            		}
+		                            		else
+		                            		{
+		                            			if(!_p22_formDatosGenerales().isValid()){
+	                                                mensajeWarning('Favor de verificar los datos generales del cliente.');
+	                                                return;
+	                                            }
+	                                            if(_RFCduplicado){
+	                                                if(_esCargaClienteNvo || !_permiteDuplicarRFC){
+	                                                    if(_esCargaClienteNvo){
+	                                                        mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
+	                                                    }else{
+	                                                        mensajeWarning('El RFC ingresado ya existe registrado para otro Cliente.');
+	                                                    }
+	                                                    return;
+	                                                }
+	                                                var confirm = Ext.Msg.show({
+	                                                    title: 'Aviso',
+	                                                    msg: 'El RFC ingresado ya existe registrado para otro Cliente. &iquest;Desea Duplicar la Persona?',
+	                                                    buttons: Ext.Msg.YESNO,
+	                                                    fn: function(buttonId, text, opt) {
+	                                                        if(buttonId == 'yes') {
+	                                                            _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);
+	                                                        }else{
+	                                                            return;
+	                                                        }
+	                                                    },
+	                                                    icon: Ext.Msg.QUESTION
+	                                                });
+	                                            }else{
+	                                                
+	                                                _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);                                   
+	                                            }
+		                            		}
+	                            		}	
 	                            	}
-// 	                            	else
-//                             		{
-// 	                            		if(!_p22_formDatosGenerales().isValid()){
-//                                             mensajeWarning('Favor de verificar los datos generales del cliente.');
-//                                             return;
-//                                         }
-//                                         if(_RFCduplicado){
-//                                             if(_esCargaClienteNvo || !_permiteDuplicarRFC){
-//                                                 if(_esCargaClienteNvo){
-//                                                     mensajeWarning('La persona para el RFC ingresado ya existe como cliente. Favor de volver a realizar la cotizaci&oacute;n como cliente existente.');
-//                                                 }else{
-//                                                     mensajeWarning('El RFC ingresado ya existe registrado para otro Cliente.');
-//                                                 }
-//                                                 return;
-//                                             }
-//                                             var confirm = Ext.Msg.show({
-//                                                 title: 'Aviso',
-//                                                 msg: 'El RFC ingresado ya existe registrado para otro Cliente. &iquest;Desea Duplicar la Persona?',
-//                                                 buttons: Ext.Msg.YESNO,
-//                                                 fn: function(buttonId, text, opt) {
-//                                                     if(buttonId == 'yes') {
-//                                                         _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);
-//                                                     }else{
-//                                                         return;
-//                                                     }
-//                                                 },
-//                                                 icon: Ext.Msg.QUESTION
-//                                             });
-//                                         }else{
-                                            
-//                                             _p22_guardarClic(_p22_guardarDatosAdicionalesClic,false);                                   
-//                                         }
-//                             		}
 	                            }
 	                    }]
                     })
