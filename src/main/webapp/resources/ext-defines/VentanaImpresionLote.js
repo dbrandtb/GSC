@@ -25,7 +25,7 @@ Ext.define('VentanaImpresionLote',
                     xtype    : 'displayfield'
                     ,value   : 'Papeler\u00EDa completa: incluye car\u00E1tulas, endosos, remesas y recibos'
                     ,hoja    : 'BM'
-                    ,tipoimp : 'I'
+                    ,tipoimp : 'GI'
                     ,suma    : 2
                     ,sumaHab : 2
                 }
@@ -34,7 +34,7 @@ Ext.define('VentanaImpresionLote',
                     ,text    : 'Imprimir papeler\u00EDa completa'
                     ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'page_lightning.png'
                     ,hoja    : 'BM'
-                    ,tipoimp : 'I'
+                    ,tipoimp : 'GI'
                     ,suma    : 2
                     ,sumaHab : 2
                     ,peso    : 11
@@ -43,7 +43,7 @@ Ext.define('VentanaImpresionLote',
                     xtype    : 'image'
                     ,src     : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
                     ,hoja    : 'BM'
-                    ,tipoimp : 'I' 
+                    ,tipoimp : 'GI' 
                     ,suma    : 2
                     ,sumaHab : 2
                 }
@@ -51,27 +51,30 @@ Ext.define('VentanaImpresionLote',
                     xtype    : 'displayfield'
                     ,value   : 'Papeler\u00EDa: incluye car\u00E1tulas, endosos y remesas'
                     ,hoja    : 'B'
-                    ,tipoimp : 'G'
+                    ,tipoimp : 'X'
                     ,suma    : 1
                     ,sumaHab : 1
+                    ,hidden  : true
                 }
                 ,{
                     xtype    : 'button'
                     ,text    : 'Imprimir papeler\u00EDa'
                     ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'page_go.png'
                     ,hoja    : 'B'
-                    ,tipoimp : 'G'
+                    ,tipoimp : 'X'
                     ,suma    : 1
                     ,sumaHab : 1
                     ,peso    : 1
+                    ,hidden  : false
                 }
                 ,{
                     xtype    : 'image'
                     ,src     : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
                     ,hoja    : 'B'
-                    ,tipoimp : 'G' 
+                    ,tipoimp : 'X' 
                     ,suma    : 1
                     ,sumaHab : 1
+                    ,hidden  : false
                 }
                 ,{
                     xtype    : 'displayfield'
@@ -103,27 +106,30 @@ Ext.define('VentanaImpresionLote',
                     xtype    : 'displayfield'
                     ,value   : 'Recibos: impresi\u00F3n de recibos de pago'
                     ,hoja    : 'M'
-                    ,tipoimp : 'G'
+                    ,tipoimp : 'X'
                     ,suma    : 1
                     ,sumaHab : 1
+                    ,hidden  : false
                 }
                 ,{
                     xtype    : 'button'
                     ,text    : 'Imprimir recibos'
                     ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'coins.png'
                     ,hoja    : 'M'
-                    ,tipoimp : 'G'
+                    ,tipoimp : 'X'
                     ,suma    : 1
                     ,sumaHab : 1
                     ,peso    : 10
+                    ,hidden  : false
                 }
                 ,{
                     xtype    : 'image'
                     ,src     : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
                     ,hoja    : 'M'
-                    ,tipoimp : 'G'
+                    ,tipoimp : 'X'
                     ,suma    : 1
                     ,sumaHab : 1
+                    ,hidden  : false
                 }
             ]
         }
