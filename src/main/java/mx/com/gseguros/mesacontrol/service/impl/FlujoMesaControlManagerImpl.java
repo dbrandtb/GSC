@@ -17,7 +17,9 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.MailAction;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -50,6 +52,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Autowired
 	private AutosSIGSDAO autosSIGSDAO;
+	
+	@Autowired
+	private MailService mailService;
 	
 	@Override
 	public Map<String,Item> workflow(String cdsisrol) throws Exception
@@ -2549,8 +2554,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					);
 			
 			if (StringUtils.isNotBlank(cdrazrecha)) { // Marcamos el motivo de rechazo en tmesacontrol
+				paso = "Marcando motivo de rechazo";
+				logger.debug(paso);
 				flujoMesaControlDAO.guardarMotivoRechazoTramite(ntramite, cdrazrecha);
 			}
+			
+			paso = "Enviando correos de status nuevo";
+			logger.debug(paso);
+			mandarCorreosStatusTramite(ntramite);
 		}
 		catch(Exception ex)
 		{
@@ -2967,5 +2978,106 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return mapa;
+	}
+	
+	@Override
+	public Map<String, String> enviaCorreoFlujo(FlujoVO flujo, Map<String, String> params) throws Exception {		
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ enviaCorreoFlujo @@@@@@",
+				"\n@@@@@@ flujo  = " , flujo,
+				"\n@@@@@@ params = " , params
+				));
+		String paso = null;
+		Map<String, String> mapa = null;
+		try{
+			paso = "Recuperando funciones";
+			List<Map<String, String>> funciones = flujoMesaControlDAO.recuperaTvarmailSP();
+			Map<Integer, Map<String, String>> mapFunciones   = new HashMap<Integer, Map<String, String>>();
+			for(Map<String, String> map:funciones){
+				mapFunciones.put(Integer.parseInt(map.get("CDVARMAIL")), map);
+			}
+			params.put("dsdestino", cambiarTextoCorreo(flujo.getNtramite(), params.get("dsdestino"), params.get("vardestino"), mapFunciones));
+			params.put("dsasunto" , cambiarTextoCorreo(flujo.getNtramite(), params.get("dsasunto") , params.get("varasunto") , mapFunciones));
+			params.put("dsmensaje", cambiarTextoCorreo(flujo.getNtramite(), params.get("dsmensaje"), params.get("varmensaje"), mapFunciones));
+			paso = "Antes de enviar el correo";
+			boolean enviado = mailService.enviaCorreo(StringUtils.split(params.get("dsdestino"),";"), 
+													  new String[]{}, 
+													  new String[]{}, 
+													  params.get("dsasunto"), 
+													  params.get("dsmensaje"), 
+													  new String[]{}, 
+													  false);
+			if(!enviado){
+				throw new ApplicationException("No se pudo enviar el correo a "+params.get("dsdestino"));
+			}
+		}catch(Exception ex){
+			Utils.generaExcepcion(ex, paso);
+		}
+		return params;
+	}
+	/**
+	 * Sustituye llaves en texto por variables
+	 * @param nmtramite  tramite de mesa de control
+	 * @param texto	     texto con llaver
+	 * @param variables	 variables separados por coma
+	 * @param funciones	 catalogo de funciones para traer valores de BD
+	 * @return texto con valores sustituidos
+	 */
+	private String cambiarTextoCorreo(String nmtramite, String texto, String variables, Map<Integer, Map<String, String>> funciones) throws Exception{
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ cambiarTextoCorreo @@@@@@@@@@@@@",
+				"\n@@@@@@ nmtramite  = " , nmtramite,
+				"\n@@@@@@ texto      = " , texto,
+				"\n@@@@@@ variables  = " , variables,
+				"\n@@@@@@ funciones  = " , funciones
+				));
+		String paso    = null;
+		String mensaje = null;
+		try{
+			Utils.validate(nmtramite,"No se recibio el numero de tramite",
+						   texto    ,"No se recibio el mensaje a cambiar");
+			Utils.validate(funciones,"No se recibieron funciones");
+			paso = "empieza a cambiar texto";
+			ArrayList<String> resultados = new ArrayList<String>();
+			if(StringUtils.isNotBlank(variables)){
+				mensaje = texto;
+				String[] arrVars = variables.split(",");
+				for(String s:arrVars){
+//					resultados.add(flujoMesaControlDAO.ejecutaProcedureFlujoCorreo(funciones.get(Integer.parseInt(s)).get("BDFUNCTION"),nmtramite));
+					mensaje = StringUtils.replaceOnce(mensaje, "{}", flujoMesaControlDAO.ejecutaProcedureFlujoCorreo(funciones.get(Integer.parseInt(s)).get("BDFUNCTION"),nmtramite));
+				}
+//				logger.debug(Utils.log("\n@@@@@@ resultados",
+//									   "\n",resultados));
+				logger.debug(Utils.log("\n@@@@@@ mensaje",
+						   "\n",mensaje));
+				
+			}else{
+				mensaje = texto;
+			}
+		}catch(Exception ex){
+			Utils.generaExcepcion(ex, paso);
+		}
+		return mensaje;
+	}
+	
+	@Override
+	public void mandarCorreosStatusTramite(String ntramite) throws Exception{
+		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+							   "\n@@@@@@@@@ mandarCorreosStatusTramite @@@@@@@@@",
+							   "\n ntramite ",ntramite
+				));
+		String paso = "";
+		try{
+			FlujoVO flujo = new FlujoVO();
+			flujo.setNtramite(ntramite);
+			List<Map<String, String>> correos = flujoMesaControlDAO.obtenerCorreosStatusTramite(ntramite);
+			for(Map<String, String> params:correos){
+				enviaCorreoFlujo(flujo, params);
+			}
+		}catch(Exception ex){
+			Utils.generaExcepcion(ex, paso);
+		}
 	}
 }

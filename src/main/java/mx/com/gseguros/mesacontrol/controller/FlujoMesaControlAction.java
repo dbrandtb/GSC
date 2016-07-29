@@ -1,6 +1,7 @@
 package mx.com.gseguros.mesacontrol.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -2456,6 +2457,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Utils.validate(flujo  , "No se recibieron datos del flujo");
 			Utils.validate(params , "No se recibieron par\u00e1metros");						
 			
+			Map<String, String> res = flujoMesaControlManager.enviaCorreoFlujo(flujo, params);			
+			
 //			params.put("salida" , flujoMesaControlManager.ejecutaValidacion(
 //					flujo
 //					));
@@ -2472,6 +2475,15 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		{
 			message = Utils.manejaExcepcion(ex);
 		}
+		return SUCCESS;
+	}
+	
+	@Action(value   = "testCorreoStatusTramite",
+			results = { @Result(name="success", type="json") }
+			)
+	public String testCorreoStatusTramite() throws Exception
+	{
+		flujoMesaControlManager.mandarCorreosStatusTramite("20353");
 		return SUCCESS;
 	}
 	

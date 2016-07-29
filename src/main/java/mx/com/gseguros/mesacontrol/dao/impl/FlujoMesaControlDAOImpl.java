@@ -2874,4 +2874,59 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	public String ejecutaProcedureFlujoCorreo(String nomproc, String ntramite) throws Exception{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		Map<String,Object> procRes = ejecutaSP(new EjecutaProcedureFlujoCorreo(getDataSource(), nomproc),params);		
+		String resultado = (String)procRes.get("pv_result_o");
+		return resultado;
+	}
+	
+	protected class EjecutaProcedureFlujoCorreo extends StoredProcedure
+	{
+		protected EjecutaProcedureFlujoCorreo(DataSource dataSource, String nomproc)
+		{
+			super(dataSource,nomproc);
+			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_result_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite) throws Exception{
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite"  , ntramite);
+		Map<String, Object> procRes = ejecutaSP(new ObtenerCorreosStatusTramite(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		return lista;
+	}
+	
+	protected class ObtenerCorreosStatusTramite extends StoredProcedure
+	{
+		protected ObtenerCorreosStatusTramite(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_MAIL_STATUS_TRAMITE");
+			declareParameter(new SqlParameter("ntramite"  , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"dsmail",
+					"dsdestino",
+					"dsasunto", 
+					"dsmensaje", 
+					"vardestino", 
+					"varasunto", 
+					"varmensaje"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

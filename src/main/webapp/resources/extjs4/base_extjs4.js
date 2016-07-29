@@ -2817,6 +2817,25 @@ function _unmask()
     }
 }
 
+/**
+ * Regresa el numero que se repite un substring en un string 
+ * Ej. Str(strasdstr) Substr(str) resul = 2
+ * @param subStr substring
+ * @param str	 string	
+ * @returns {Number} numero que se repite en la cadena
+ */
+function _numberContainsSubstrInStr(subStr, str){
+	var lastIndex = 0,
+ 		count     = 0;
+ 	while(lastIndex != -1){
+ 		lastIndex = str.indexOf(subStr,lastIndex);
+ 		if(lastIndex != -1){
+        	count ++;
+        	lastIndex += subStr.length;
+    	}
+ 	}
+ 	return count;
+}
 
 /**
  * Prueba de timeout
