@@ -5436,8 +5436,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class ProcesaPagoAutomaticoLayout extends StoredProcedure {
 		protected ProcesaPagoAutomaticoLayout(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_DESARROLLO.P_GET_TCONLAYSIN");
-			//super(dataSource, "PKG_SINIESTRO.P_GET_TCONLAYSIN");
+			super(dataSource, "PKG_SINIESTRO.P_GET_TCONLAYSIN");
 			String[] cols = new String[]{
 					"NTRAMITE"
 			};
@@ -5615,7 +5614,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class ObtieneInfAseguradoCobSubCoberturas extends StoredProcedure {
 		protected ObtieneInfAseguradoCobSubCoberturas(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_DESARROLLO.P_OBTIENE_CDRAMO_NOVA");
+			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_CDRAMO_NOVA");
+			//super(dataSource, "PKG_DESARROLLO.P_OBTIENE_CDRAMO_NOVA");
 			declareParameter(new SqlParameter("pv_cdperson_i",   	OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feocurre_i",  	OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_cobertura_i",   	OracleTypes.VARCHAR));
@@ -5642,7 +5642,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		protected ActualizaRegistroTimpsini(DataSource dataSource)
 		{
 			
-			super(dataSource, "PKG_DESARROLLO.P_UPD_TIMPSINI");
+			super(dataSource, "PKG_SINIESTRO.P_UPD_TIMPSINI");
+			//super(dataSource, "PKG_DESARROLLO.P_UPD_TIMPSINI");
 			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
