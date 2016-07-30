@@ -2976,41 +2976,50 @@ Ext.onReady(function()
                                             	////////////INICIA VALIDACION VARIABLES////////////
                                             	//var win            = me.up('window');
                                             	//Para obtener la longitud de variables
-                                            	var varsdestino    = _p52_formCorreos.down('[name=VARDESTINO]').getValue().split(',');
-                                            	var varsasunto     = _p52_formCorreos.down('[name=VARASUNTO]').getValue().split(',');
-                                            	var varsmensaje    = _p52_formCorreos.down('[name=VARMENSAJE]').getValue().split(',');
-                                            	debug('varsdestino ',varsdestino.length,' varsasunto ',varsasunto.length,' varsmensaje ',varsmensaje.length);
-                                            	//Para revisar que contenga {}
-                                            	var vdsdestino     = _p52_formCorreos.down('[name=DSDESTINO]').getValue();
-                                            	var vdsasunto      = _p52_formCorreos.down('[name=DSASUNTO]').getValue();
-                                            	var vdsmensaje     = _p52_formCorreos.down('[name=DSMENSAJE]').getValue();
-                                            	debug('vdsdestino ',vdsdestino,' vdsasunto ',vdsasunto,' vdsmensaje ',vdsmensaje);
+                                            	var vdestino    = _p52_formCorreos.down('[name=VARDESTINO]').getValue();
+                                            	var vasunto     = _p52_formCorreos.down('[name=VARASUNTO]').getValue();
+                                            	var vmensaje    = _p52_formCorreos.down('[name=VARMENSAJE]').getValue();
+                                            	
+                                            	//Se genera esta condicion para evitar que se almacene longitud 1 cuando la cadena esta vacia
+                                            	var varsdestino = 0;
+                                            	if(vdestino.indexOf(',') == -1 && vdestino.length == 0){
+                                            		varsdestino = 0;
+                                            	}else{
+                                            		varsdestino = vdestino.split(',').length;
+                                            	}
+                                            	
+                                            	var varsasunto     = 0;
+                                            	if(vasunto.indexOf(',') == -1 && vasunto.length == 0){
+                                            		varsasunto = 0;
+                                            	}else{
+                                            		varsasunto = vasunto.split(',').length;
+                                            	}
+                                            	
+                                            	var varsmensaje    = 0;
+												if(vmensaje.indexOf(',') == -1 && vmensaje.length == 0){
+                                            		varsmensaje = 0;
+                                            	}else{
+                                            		varsmensaje = vmensaje.split(',').length;
+                                            	}
+                                            	
                                             	//Obtiene las coincidencias de {} en las variables
- 		                						var numvarsdestino = _p52_numberContainsSubstrInStr('{}',vdsdestino);
- 		                						var numvarsasunto  = _p52_numberContainsSubstrInStr('{}',vdsasunto);
- 		                						var numvarsmensaje = _p52_numberContainsSubstrInStr('{}',vdsmensaje);
+ 		                						var numvarsdestino = _p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSDESTINO]').getValue());
+ 		                						var numvarsasunto  = _p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSASUNTO]').getValue());
+ 		                						var numvarsmensaje = _p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSMENSAJE]').getValue());
  		                						
- 		                						debug('numvarsdestino ',numvarsdestino,' numvarsasunto ',numvarsasunto,' numvarsmensaje ',numvarsmensaje);
- 		                						
- 		                						if(_p52_formCorreos.down('[name=VARDESTINO]').getValue().indexOf(',') != -1){
- 		                							if (numvarsdestino != varsdestino.length){
- 		                								mensajeError('El numero de variables seleccionadas en el destinatario no coinciden con las llaves del texto');
- 		                								return;
- 		                							}	
+ 		                						if(varsdestino != numvarsdestino){
+ 		                							mensajeError('El numero de variables seleccionadas en el destinatario no coincide con las llaves del texto');
+ 		                							return;
  		                						}
  		                						
- 		                						if(_p52_formCorreos.down('[name=VARASUNTO]').getValue().indexOf(',') != -1){
- 		                							if (numvarsasunto != varsasunto.length){
- 		                								mensajeError('El numero de variables seleccionadas en el asunto no coinciden con las llaves del texto');
- 		                								return;
- 		                							}
+ 		                						if(varsasunto != numvarsasunto){
+ 		                							mensajeError('El numero de variables seleccionadas en el asunto no coincide con las llaves del texto');
+ 		                							return;
  		                						}
  		                						
- 		                						if(_p52_formCorreos.down('[name=VARMENSAJE]').getValue().indexOf(',') != -1){
- 		                							if (numvarsmensaje != varsmensaje.length){
- 		                								mensajeError('El numero de variables seleccionadas en el mensaje no coinciden con las llaves del texto');
- 		                								return;
- 		                							}
+ 		                						if(varsmensaje != numvarsmensaje){
+ 		                							mensajeError('El numero de variables seleccionadas en el mensaje no coincide con las llaves del texto');
+ 		                							return;
  		                						}
  		                						////////////TERMINA VALIDACION VARIABLES////////////
                                                 _p52_panelCanvas.enable();
