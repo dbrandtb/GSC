@@ -199,6 +199,7 @@
           		accordion.setActiveTab(comp);
           	}
             
+var _p29_validaSeguro;
 function checarBenef()
  {  
 // 	alert('DDD');
@@ -232,6 +233,8 @@ function checarBenef()
  	                		  }
  	                	  })
 	                	  panel.show();
+ 	                	  
+ 	                	  
                 	  }
 	          }
 	          else
@@ -242,7 +245,8 @@ function checarBenef()
 	  });
 	 }
 }
-            
+
+
 function _datComTurnarSuscripcion()
 {
     centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -380,7 +384,719 @@ function _datComTurnarSuscripcion()
         ]
     }).show());
 }
+
+function _p29_guardarComplementario()
+{
+    var form=Ext.getCmp('formPanel');
+    //console.log(form.getValues());
+    if(form.isValid())//Modificación para advertir que no se han llegnado los campos
+    {
+        form.setLoading(true);
+        form.submit({
+            params:{
+                'map1.pv_cdunieco' :  inputCdunieco,
+                'map1.pv_cdramo' :    inputCdramo,
+                'map1.pv_estado' :    inputEstado,
+                'map1.pv_nmpoliza' :  inputNmpoliza
+            },
+            success:function(){
+                form.setLoading(false);
+                centrarVentanaInterna(Ext.Msg.show({
+                    title    : 'Cambios guardados'
+                    ,msg     : 'Sus cambios han sido guardados'
+                    ,buttons : Ext.Msg.OK
+                    ,fn      : function()
+                    {
+                    	
+                        /*
+                        if(!Ext.isEmpty(panDatComFlujo))
+                        {
+                            var botones = Ext.ComponentQuery.query('[xtype=button][clase=botonFlujo]');
+                            debug('botones:',botones);
+                            for(var i in botones)
+                            {
+                                botones[i].show();
+                            }
+                        }
+                        */
+                    }
+                }));
+            },
+            failure:function(){
+                form.setLoading(false);
+                Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
+        });
+    }
+    else
+    {
+        Ext.Msg.show({
+            title:'Datos incompletos',
+            msg: 'Favor de introducir todos los campos requeridos',
+            buttons: Ext.Msg.OK,
+            icon: Ext.Msg.WARNING
+        });
+    }
+}
+
+
+function emitirComplementarios(callback)
+{  
+// alert('DDD');
+   
+   
+}
+
+
+function _p29_emitirClicComplementarios(me)
+{
+    if(!Ext.isEmpty(me.mensajeInvalido))
+    {
+        mensajeWarning(me.mensajeInvalido);
+        expande(2);
+        return;
+    }
+    var form=Ext.getCmp('formPanel');
+    debug('contrato',_fieldByLabel('NUMERO DE CONTRATO',null,true));
+    if(form.isValid())
+    {
+        form.setLoading(true);
+        form.submit({
+            params:{
+                'map1.pv_cdunieco' :  inputCdunieco,
+                'map1.pv_cdramo' :    inputCdramo,
+                'map1.pv_estado' :    inputEstado,
+                'map1.pv_nmpoliza' :  inputNmpoliza
+            },
+            success:function(){
+                 //--
+                 Ext.Ajax.request(
+                                {
+                                    url     : urlRecotizar
+                                    ,params :
+                                    {
+                                        'panel1.nmpoliza'    : inputNmpoliza
+                                        ,cdunieco            : inputCdunieco
+                                        ,cdramo              : inputCdramo
+                                        ,cdtipsit            : inputCdtipsit
+                                        ,'panel1.notarifica' : ( Number(inputCdramo)==16 || Number(inputCdramo)==6 || Number(inputCdramo)==5 ) ? 'si' : ''
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        form.setLoading(false);
+                                        var json=Ext.decode(response.responseText);
+                                        //console.log(json);
+                                        /**/
+                                        if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
+                                        {
+                                            centrarVentanaInterna(Ext.Msg.show({
+                                                title:'Verificar datos',
+                                                msg: json.mensajeRespuesta,
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.WARNING
+                                            }));
+                                        }
+                                        else
+                                        {
+                                            
+                                            var orden=0;
+                                            var parentescoAnterior='werty';
+                                            for(var i=0;i<json.slist1.length;i++)
+                                            {
+                                                if(json.slist1[i].parentesco!=parentescoAnterior)
+                                                {
+                                                    orden++;
+                                                    parentescoAnterior=json.slist1[i].parentesco;
+                                                }
+                                                json.slist1[i].orden_parentesco=orden+'_'+json.slist1[i].parentesco;
+                                            }
+                                            try
+                                            {
+                                                _fieldById('panDatComVentanaTarifaFinal',true).destroy();
+                                            }
+                                            catch(e)
+                                            {
+                                                debugError(e);
+                                            }
+                                            Ext.create('Ext.window.Window',
+                                            {
+                                                title: 'Tarifa final',
+                                                itemId: 'panDatComVentanaTarifaFinal',
+                                                //maxHeight: 400,
+                                                autoScroll:true,
+                                                width: 660,
+                                                height: 400,
+                                                defaults: {
+                                                    width: 650
+                                                },
+                                                modal:false,
+                                                closable:false,
+                                                collapsible:true,
+                                                titleCollapse:true,
+                                                items:[  // Let's put an empty grid in just to illustrate fit layout
+                                                    Ext.create('Ext.grid.Panel',{
+                                                    width : 600
+                                                        ,store:Ext.create('Ext.data.Store',{
+                                                            model:'ModeloDetalleCotizacion',
+                                                            groupField: 'orden_parentesco',
+                                                            sorters: [{
+                                                                sorterFn: function(o1, o2){
+                                                                    if (o1.get('orden') === o2.get('orden'))
+                                                                    {
+                                                                        return 0;
+                                                                    }
+                                                                    return o1.get('orden') < o2.get('orden') ? -1 : 1;
+                                                                }
+                                                            }],
+                                                            proxy: {
+                                                                type: 'memory',
+                                                                reader: 'json'
+                                                            },
+                                                            data:json.slist1
+                                                        }),
+                                                        columns:
+                                                        [
+                                                            {
+                                                                header    : 'Nombre de la cobertura',
+                                                                dataIndex : 'Nombre_garantia',
+                                                                flex      : 2,
+                                                                summaryType: 'count',
+                                                                summaryRenderer: function(value){
+                                                                    return Ext.String.format('Total de {0} cobertura{1}', value, value !== 1 ? 's' : '');
+                                                                }
+                                                            },
+                                                            {
+                                                                header      : 'Importe por cobertura',
+                                                                dataIndex   : 'Importe',
+                                                                flex        : 1,
+                                                                renderer    : Ext.util.Format.usMoney,
+                                                                align       : 'right',
+                                                                summaryType : 'sum'
+                                                            }
+                                                        ],
+                                                        features: [{
+                                                            groupHeaderTpl:
+                                                                [
+                                                                    '{name:this.formatName}',
+                                                                    {
+                                                                        formatName:function(name)
+                                                                        {
+                                                                            return name.split("_")[1];
+                                                                        }
+                                                                    }
+                                                                ],
+                                                            ftype:'groupingsummary',
+                                                            startCollapsed :true
+                                                        }]
+                                                    })
+                                                    ,Ext.create('Ext.toolbar.Toolbar',{
+                                                        buttonAlign:'right'
+                                                        ,items:
+                                                        [
+                                                            '->'
+                                                            ,Ext.create('Ext.form.Label',
+                                                            {
+                                                                style:'color:white;'
+                                                                ,initComponent:function()
+                                                                {
+                                                                    var sum=0;
+                                                                    for(var i=0;i<json.slist1.length;i++)
+                                                                    {
+                                                                        sum+=parseFloat(json.slist1[i].Importe);
+                                                                    }
+                                                                    this.setText('Total: '+Ext.util.Format.usMoney(sum));
+                                                                    this.callParent();
+                                                                }
+                                                            })
+                                                        ]
+                                                    })
+                                                    ,Ext.create('Ext.form.Panel',
+                                                    {
+                                                        layout:
+                                                        {
+                                                            type    : 'table',
+                                                            columns : 5
+                                                        }
+                                                        ,defaults:
+                                                        {
+                                                            style : 'margin:5px;'
+                                                        }
+                                                        ,items:
+                                                        [
+                                                            {
+                                                                xtype : 'textfield'
+                                                                ,id   : 'numerofinalpoliza'
+                                                                ,fieldLabel : 'N&uacute;mero de poliza'
+                                                                ,readOnly   : true
+                                                            }
+                                                            ,{
+                                                                id     : 'botonEmitirPolizaFinal'
+                                                                ,xtype : 'button'
+                                                                ,text  : 'Emitir'
+                                                                ,icon  : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
+                                                                //,disabled : true
+                                                                ,handler:function()
+                                                                {
+                                                                    var me=this;
+                                                                    me.up().up().setLoading(true);
+                                                                    Ext.Ajax.request(
+                                                                    {
+                                                                        url     : urlEmitir
+                                                                        ,params :
+                                                                        {
+                                                                            'panel1.pv_nmpoliza'  : inputNmpoliza
+                                                                            ,'panel1.pv_ntramite' : inputNtramite
+                                                                            ,'panel2.pv_cdramo'   : inputCdramo
+                                                                            ,'panel2.pv_cdunieco' : inputCdunieco
+                                                                            ,'panel2.pv_estado'   : inputEstado
+                                                                            ,'panel2.pv_nmpoliza' : inputNmpoliza
+                                                                            ,'panel2.pv_cdtipsit' : inputCdtipsit
+                                                                        }
+                                                                        ,success:function(response)
+                                                                        {
+                                                                            me.up().up().setLoading(false);
+                                                                            var json=Ext.decode(response.responseText);
+                                                                            debug(json);
+                                                                            if(json.success==true)
+                                                                            {
+                                                                                datComPolizaMaestra=json.panel2.nmpoliza;
+                                                                                debug("datComPolizaMaestra",datComPolizaMaestra);
+                                                                                Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
+                                                                                _numeroPolizaExt = json.panel2.nmpoliex;
+                                                                                Ext.getCmp('botonEmitirPolizaFinal').hide();
+                                                                                Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
+                                                                                Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
+                                                                                Ext.getCmp('botonPagar').setDisabled(false);
+                                                                                
+                                                                                Ext.getCmp('botonReenvioWS').hide();
+                                                                                
+                                                                                if(panDatComMap1.SITUACION == 'AUTO'){
+                                                                                    _mensajeEmail = json.mensajeEmail;
+                                                                                    //debug("Mensaje Mail: " + _mensajeEmail);
+                                                                                    Ext.getCmp('botonEnvioEmail').enable();
+                                                                                }else {
+                                                                                    Ext.getCmp('botonEnvioEmail').hide();
+                                                                                }
+                                                                                
+                                                                                if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
+                                                                                {
+                                                                                    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
+                                                                                }
+                                                                                Ext.getCmp('venDocVenEmiBotMesa').show();
+                                                                                Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
+                                                                                if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
+                                                                                {
+                                                                                    var ventanaTmp = Ext.Msg.show({
+                                                                                        title:'Aviso del sistema',
+                                                                                        msg: json.mensajeRespuesta,
+                                                                                        buttons: Ext.Msg.OK,
+                                                                                        icon: Ext.Msg.WARNING,
+                                                                                        fn: function(){
+                                                                                            if(!Ext.isEmpty(json.nmpolAlt)){
+                                                                                                mensajeCorrecto("Aviso","P&oacute;liza Emitida: " + json.nmpolAlt);
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                                    centrarVentanaInterna(ventanaTmp);
+                                                                                }else { 
+                                                                                    if(!Ext.isEmpty(json.nmpolAlt)){
+                                                                                        mensajeCorrecto("Aviso","P&oacute;liza Emitida: " + json.nmpolAlt);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if(json.retryWS){
+                                                                                    datComPolizaMaestra=json.panel2.nmpoliza;
+                                                                                    debug("datComPolizaMaestra",datComPolizaMaestra);
+                                                                                    
+                                                                                    Ext.getCmp('botonEmitirPolizaFinal').hide();
+                                                                                    Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
+                                                                                    
+                                                                                    if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
+                                                                                    {
+                                                                                        Ext.getCmp('venDocVenEmiBotIrCotiza').show();
+                                                                                    }
+                                                                                    Ext.getCmp('venDocVenEmiBotMesa').show();
+                                                                                    Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
+                                                                                }
+                                                                                Ext.Msg.show({
+                                                                                    title    :'Aviso'
+                                                                                    ,msg     : json.mensajeRespuesta
+                                                                                    ,buttons : Ext.Msg.OK
+                                                                                    ,icon    : Ext.Msg.WARNING
+                                                                                    ,fn      : function(){
+                                                                                        if(''+json.panel1.necesitaAutorizacion=='S')
+                                                                                        {
+                                                                                            Ext.create('Ext.form.Panel').submit(
+                                                                                            {
+                                                                                                url     : datComUrlMC
+                                                                                                ,params :
+                                                                                                {
+                                                                                                    'smap1.gridTitle'     : 'Tareas',
+                                                                                                    'smap2.pv_cdtiptra_i' : 1,
+                                                                                                    'smap1.editable'      : 1
+                                                                                                }
+                                                                                                ,standardSubmit : true
+                                                                                            });
+                                                                                        }
+                                                                                        if(json.retryWS){
+                                                                                            var paramsWS = {
+                                                                                                    'panel1.pv_nmpoliza'  : inputNmpoliza
+                                                                                                    ,'panel1.pv_ntramite' : inputNtramite
+                                                                                                    ,'panel2.pv_cdramo'   : inputCdramo
+                                                                                                    ,'panel2.pv_cdunieco' : inputCdunieco
+                                                                                                    ,'panel2.pv_estado'   : inputEstado
+                                                                                                    ,'panel2.pv_nmpoliza' : inputNmpoliza
+                                                                                                    ,'panel2.pv_cdtipsit' : inputCdtipsit
+                                                                                                    ,'nmpoliza'           : json.nmpoliza
+                                                                                                    ,'nmsuplem'           : json.nmsuplem
+                                                                                                    ,'cdIdeper'           : json.cdIdeper
+                                                                                                };
+                                                                                            reintentarWSAuto(me.up().up(), paramsWS);
+                                                                                        }
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        }
+                                                                        ,failure:function()
+                                                                        {
+                                                                            me.up().up().setLoading(false);
+                                                                            Ext.Msg.show({
+                                                                                title:'Error',
+                                                                                msg: 'Error de comunicaci&oacute;n',
+                                                                                buttons: Ext.Msg.OK,
+                                                                                icon: Ext.Msg.ERROR
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                            ,{
+                                                                id     : 'botonEnvioEmail'
+                                                                ,xtype : 'button'
+                                                                ,text  : 'Enviar Email'
+                                                                ,icon  : contexto+'/resources/fam3icons/icons/email.png'
+                                                                ,disabled: true
+                                                                ,hidden: (panDatComMap1.SITUACION != 'AUTO') ? true: false
+                                                                ,handler:function()
+                                                                {
+                                                                    Ext.Msg.prompt('Envio de Email', 'Escriba los correos que recibir&aacute;n la documentaci&oacute;n (separados por ;)', 
+                                                                    function(buttonId, text){
+                                                                        if(buttonId == "ok" && !Ext.isEmpty(text)){
+                                                                            
+                                                                            if(Ext.isEmpty(_mensajeEmail)){
+                                                                                mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
+                                                                                return;
+                                                                            }
+                                                                            
+                                                                            Ext.Ajax.request(
+                                                                                    {
+                                                                                        url : _urlEnviarCorreo,
+                                                                                        params :
+                                                                                        {
+                                                                                            to     : text,
+                                                                                            asunto : 'Documentación de póliza de Autos',
+                                                                                            mensaje: _mensajeEmail,
+                                                                                            html   : true
+                                                                                        },
+                                                                                        callback : function(options,success,response)
+                                                                                        {
+                                                                                            if (success)
+                                                                                            {
+                                                                                                var json = Ext.decode(response.responseText);
+                                                                                                if (json.success == true)
+                                                                                                {
+                                                                                                    Ext.Msg.show(
+                                                                                                    {
+                                                                                                        title    : 'Correo enviado'
+                                                                                                        ,msg     : 'El correo ha sido enviado'
+                                                                                                        ,buttons : Ext.Msg.OK
+                                                                                                        ,fn      : function()
+                                                                                                        {
+                                                                                                            _generarRemesaClic(
+                                                                                                                false
+                                                                                                                ,inputCdunieco
+                                                                                                                ,inputCdramo
+                                                                                                                ,'M'
+                                                                                                                ,datComPolizaMaestra
+                                                                                                                ,function(){}
+                                                                                                                ,'S'
+                                                                                                                );
+                                                                                                        }
+                                                                                                    });
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    mensajeError('Error al enviar el correo');
+                                                                                                }
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                errorComunicacion();
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                        
+                                                                        }else {
+                                                                            mensajeWarning('Introduzca al menos una direcci&oacute;n de email');    
+                                                                        }
+                                                                    })
+                                                                }
+                                                            }
+                                                            ,{
+                                                                id     : 'botonReenvioWS'
+                                                                ,xtype : 'button'
+                                                                ,text  : 'Reintentar Emisi&oacute;n'
+                                                                ,icon  : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
+                                                                ,disabled: true
+                                                                ,hidden: (panDatComMap1.SITUACION != 'AUTO') ? true: false
+                                                                ,handler:function()
+                                                                {
+                                                                    var me=this;
+                                                                    reintentarWSAuto(me.up().up(), _paramsRetryWS);
+                                                                }
+                                                            }
+                                                            ,{
+                                                                xtype    : 'button'
+                                                                ,id      : 'botonEmitirPolizaFinalPreview'
+                                                                ,text    : 'Vista previa'
+                                                                ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                                                                ,hidden  : inputCdramo=='6'
+                                                                ,handler : function()
+                                                                {
+                                                                    var me=this;
+                                                                    var urlRequestImpCotiza=urlServidorReports
+                                                                    +'?destype=cache'
+                                                                    +"&desformat=PDF"
+                                                                    +"&report="+_NOMBRE_REPORTE_CARATULA
+                                                                    +"&paramform=no"
+                                                                    +"&userid="+complerepSrvUsr
+                                                                    +"&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+                                                                    +'&p_unieco='+inputCdunieco
+                                                                    +'&p_estado=W'
+                                                                    +'&p_ramo='+inputCdramo
+                                                                    +'&p_poliza='+inputNmpoliza
+                                                                    debug(urlRequestImpCotiza);
+                                                                    var numRand=Math.floor((Math.random()*100000)+1);
+                                                                    debug(numRand);
+                                                                    var windowVerDocu=Ext.create('Ext.window.Window',
+                                                                    {
+                                                                        title          : 'Vista previa'
+                                                                        ,width         : 700
+                                                                        ,height        : 500
+                                                                        ,collapsible   : true
+                                                                        ,titleCollapse : true
+                                                                        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+                                                                                         +'src="'+compleUrlViewDoc+"?contentType=application/pdf&url="+encodeURIComponent(urlRequestImpCotiza)+"\">"
+                                                                                         +'</iframe>'
+                                                                        ,listeners     :
+                                                                        {
+                                                                            resize : function(win,width,height,opt){
+                                                                                debug(width,height);
+                                                                                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+                                                                            }
+                                                                        }
+                                                                    }).show();
+                                                                    windowVerDocu.center();
+                                                                }
+                                                            }
+                                                            ,{
+                                                                xtype     : 'button'
+                                                                ,id       : 'botonImprimirPolizaFinal'
+                                                                ,text     : 'Imprimir'
+                                                                ,icon     : contexto+'/resources/fam3icons/icons/printer.png'
+                                                                ,disabled : true
+                                                                ,handler  : function(me)
+                                                                {
+                                                                    var callbackRemesa = function()
+                                                                    {
+                                                                        venDocuTramite.destroy();
+                                                                        Ext.create('Ext.window.Window',
+                                                                        {
+                                                                            title        : 'Documentos del tr&aacute;mite '+inputNtramite
+                                                                            ,modal       : true
+                                                                            ,buttonAlign : 'center'
+                                                                            ,width       : 600
+                                                                            ,height      : 400
+                                                                            ,autoScroll  : true
+                                                                            ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
+                                                                            ,loader      :
+                                                                            {
+                                                                                url       : panDatComUrlDoc2
+                                                                                ,params   :
+                                                                                {
+                                                                                    'smap1.nmpoliza'  : datComPolizaMaestra
+                                                                                    ,'smap1.cdunieco' : inputCdunieco
+                                                                                    ,'smap1.cdramo'   : inputCdramo
+                                                                                    ,'smap1.estado'   : 'M'
+                                                                                    ,'smap1.nmsuplem' : '0'
+                                                                                    ,'smap1.ntramite' : inputNtramite
+                                                                                    ,'smap1.nmsolici' : inputNmpoliza
+                                                                                    ,'smap1.tipomov'  : '0'
+                                                                                }
+                                                                                ,scripts  : true
+                                                                                ,autoLoad : true
+                                                                            }
+                                                                        }).show();
+                                                                    };
+                                                                    _generarRemesaClic(
+                                                                        false
+                                                                        ,inputCdunieco
+                                                                        ,inputCdramo
+                                                                        ,'M'
+                                                                        ,datComPolizaMaestra
+                                                                        ,callbackRemesa
+                                                                        );
+                                                                }
+                                                            }
+                                                            ,{
+                                                                xtype     : 'button'
+                                                                ,id       : 'botonPagar'
+                                                                ,text     : 'Pagar'
+                                                                ,icon     : contexto+'/resources/fam3icons/icons/money.png'
+                                                                ,disabled : true
+                                                                ,hidden  : true//TODO: Reemplazar obtDatLoaderContratante por obtieneDatosClienteContratante //inputCdramo!='2'
+                                                                ,handler  : function()
+                                                                {
+                                                                    if(Ext.isEmpty(_numeroPolizaExt)){
+                                                                        mensajeWarning('Error al cargar el n&uacute;mero de p&oacute;liza.');
+                                                                        return;
+                                                                    }
+                                                                        
+                                                                    var nombreCompCont = '';
+                                                                    try{
+                                                                        var datosCont = obtDatLoaderContratante();
+                                                                        debug(datosCont);
+                                                                        nombreCompCont = datosCont.nombre +" "+ datosCont.snombre +" "+ datosCont.appat +" "+ datosCont.apmat;
+                                                                    }
+                                                                    catch(e){
+                                                                        debug('Sin datos de contratante.');
+                                                                        nombreCompCont = '';
+                                                                    }
+                                                                    
+                                                                    var IDventana = window.open("http://www.biosnettcs.com/", "IDventana", "width=610,height=725,top=0,left=190");
+                                                                        var parametrosPago = {
+                                                                                'etiqueta': 'USERADM1',
+                                                                                'etiquetaSys': 'lorant',
+                                                                                'mensajeExito': '16168',
+                                                                                'asegPago' : '906',//qualitas
+                                                                                'contratante' : nombreCompCont,//qualitas
+                                                                                'polext' : _numeroPolizaExt
+                                                                        };
+                                                                        
+                                                                        creaWindowPay("http://www.ibseguros.com/securepayment/Validate.action", parametrosPago, "IDventana");
+                                                                }
+                                                            }
+                                                            ,{
+                                                                xtype    : 'button'
+                                                                ,id      : 'venDocVenEmiBotMesa'
+                                                                ,text    : 'Regresar a mesa de control'
+                                                                ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
+                                                                //,hidden  : panDatComMap1.SITUACION=='AUTO'
+                                                                ,handler : function()
+                                                                {
+                                                                    var me=this;
+                                                                    Ext.create('Ext.form.Panel').submit(
+                                                                    {
+                                                                        standardSubmit : true
+                                                                        ,url           : datComUrlMC
+                                                                        ,params        :
+                                                                        {
+                                                                            'smap1.gridTitle':'Tareas',
+                                                                            'smap2.pv_cdtiptra_i':1,
+                                                                            'smap1.editable':1
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                            ,{
+                                                                xtype    : 'button'
+                                                                ,id      : 'venDocVenEmiBotIrCotiza'
+                                                                ,text    : 'Nueva cotizaci&oacute;n'
+                                                                ,icon    : '${ctx}/resources/fam3icons/icons/book_open.png'
+                                                                ,hidden  : panDatComMap1.SITUACION!='AUTO'
+                                                                ,handler : function()
+                                                                {
+                                                                    var me=this;
+                                                                    Ext.create('Ext.form.Panel').submit(
+                                                                    {
+                                                                        standardSubmit : true
+                                                                        ,url           : compleUrlCotizacion
+                                                                        ,params        :
+                                                                        {
+                                                                            'smap1.cdramo'    : inputCdramo
+                                                                            ,'smap1.cdtipsit' : inputCdtipsit
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                            ,{
+                                                                xtype    : 'button'
+                                                                ,id      : 'venDocVenEmiBotCancelar'
+                                                                ,text    : 'Cancelar'
+                                                                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                                                                ,handler : function()
+                                                                {
+                                                                    var me=this;
+                                                                    me.up().up().destroy();
+                                                                }
+                                                            }
+                                                        ]
+                                                    })
+                                                ]
+                                            }).showAt(50,50);
+                                            Ext.getCmp('venDocVenEmiBotMesa').hide();
+                                            Ext.getCmp('venDocVenEmiBotIrCotiza').hide();
+                                            
+                                            if(!Ext.isEmpty(json.respuestaOculta)){
+                                                mensajeWarning(json.respuestaOculta);
+                                            }
+                                            
+                                            /**/
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        form.setLoading(false);
+                                        Ext.Msg.show({
+                                            title:'Error',
+                                            msg: 'Error de comunicaci&oacute;n',
+                                            buttons: Ext.Msg.OK,
+                                            icon: Ext.Msg.ERROR
+                                        });
+                                    }
+                                });
+                                //--
+                
+            },
+            failure:function(){
+                form.setLoading(false);
+                Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
             
+        });
+   
+    
+    
+    }
+    else
+    {
+        datosIncompletos();
+    }
+}
+
+		            
             Ext.onReady(function(){
             	
             	
@@ -837,63 +1553,7 @@ function _datComTurnarSuscripcion()
 		                        {
 		                            text:'Guardar',
 		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
-		                            handler:function()
-		                            {
-		                                var form=Ext.getCmp('formPanel');
-		                                //console.log(form.getValues());
-		                                if(form.isValid())//Modificación para advertir que no se han llegnado los campos
-		                                {
-		                                    form.setLoading(true);
-		                                    form.submit({
-		                                        params:{
-		                                            'map1.pv_cdunieco' :  inputCdunieco,
-		                                            'map1.pv_cdramo' :    inputCdramo,
-		                                            'map1.pv_estado' :    inputEstado,
-		                                            'map1.pv_nmpoliza' :  inputNmpoliza
-		                                        },
-		                                        success:function(){
-		                                            form.setLoading(false);
-		                                            centrarVentanaInterna(Ext.Msg.show({
-		                                                title    : 'Cambios guardados'
-		                                                ,msg     : 'Sus cambios han sido guardados'
-		                                                ,buttons : Ext.Msg.OK
-		                                                ,fn      : function()
-		                                                {
-		                                                    /*
-		                                                    if(!Ext.isEmpty(panDatComFlujo))
-		                                                    {
-		                                                        var botones = Ext.ComponentQuery.query('[xtype=button][clase=botonFlujo]');
-		                                                        debug('botones:',botones);
-		                                                        for(var i in botones)
-		                                                        {
-		                                                            botones[i].show();
-		                                                        }
-		                                                    }
-		                                                    */
-		                                                }
-		                                            }));
-		                                        },
-		                                        failure:function(){
-		                                            form.setLoading(false);
-		                                            Ext.Msg.show({
-		                                                title:'Error',
-		                                                msg: 'Error de comunicaci&oacute;n',
-		                                                buttons: Ext.Msg.OK,
-		                                                icon: Ext.Msg.ERROR
-		                                            });
-		                                        }
-		                                    });
-		                                }
-		                                else
-		                                {
-		                                    Ext.Msg.show({
-		                                        title:'Datos incompletos',
-		                                        msg: 'Favor de introducir todos los campos requeridos',
-		                                        buttons: Ext.Msg.OK,
-		                                        icon: Ext.Msg.WARNING
-		                                    });
-		                                }
-		                            }
+		                            handler: function(){ _p29_guardarComplementario();}	
 		                        },
 		                        {
 		                            text     : 'Turnar a suscripci&oacute;n',
@@ -1098,649 +1758,62 @@ function _datComTurnarSuscripcion()
                                     ,itemId  : 'panDatComBotonRetarificar'
                                     ,icon    : contexto+'/resources/fam3icons/icons/key.png'
                                     ,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
-                                    ,handler : function(me)
-                                    {
-                                        if(!Ext.isEmpty(me.mensajeInvalido))
-                                        {
-                                            mensajeWarning(me.mensajeInvalido);
-                                            expande(2);
-                                            return;
-                                        }
-		                                var form=Ext.getCmp('formPanel');
-		                                debug('contrato',_fieldByLabel('NUMERO DE CONTRATO',null,true));
-		                                if(form.isValid())
-		                                {
-		                                	form.setLoading(true);
-		                                    form.submit({
-		                                        params:{
-		                                            'map1.pv_cdunieco' :  inputCdunieco,
-		                                            'map1.pv_cdramo' :    inputCdramo,
-		                                            'map1.pv_estado' :    inputEstado,
-		                                            'map1.pv_nmpoliza' :  inputNmpoliza
-		                                        },
-		                                        success:function(){
-		                                        	 //--
-		                                        	 Ext.Ajax.request(
-									                                {
-									                                    url     : urlRecotizar
-									                                    ,params :
-									                                    {
-									                                        'panel1.nmpoliza'    : inputNmpoliza
-									                                        ,cdunieco            : inputCdunieco
-									                                        ,cdramo              : inputCdramo
-									                                        ,cdtipsit            : inputCdtipsit
-									                                        ,'panel1.notarifica' : ( Number(inputCdramo)==16 || Number(inputCdramo)==6 || Number(inputCdramo)==5 ) ? 'si' : ''
-									                                    }
-									                                    ,success : function(response)
-									                                    {
-									                                        form.setLoading(false);
-									                                        var json=Ext.decode(response.responseText);
-									                                        //console.log(json);
-									                                        /**/
-									                                        if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
-									                                        {
-									                                        	centrarVentanaInterna(Ext.Msg.show({
-							                                                        title:'Verificar datos',
-							                                                        msg: json.mensajeRespuesta,
-							                                                        buttons: Ext.Msg.OK,
-							                                                        icon: Ext.Msg.WARNING
-							                                                    }));
-									                                        }
-									                                        else
-									                                        {
-									                                        	
-										                                        var orden=0;
-															                    var parentescoAnterior='werty';
-															                    for(var i=0;i<json.slist1.length;i++)
-															                    {
-															                        if(json.slist1[i].parentesco!=parentescoAnterior)
-															                        {
-															                            orden++;
-															                            parentescoAnterior=json.slist1[i].parentesco;
-															                        }
-															                        json.slist1[i].orden_parentesco=orden+'_'+json.slist1[i].parentesco;
-															                    }
-															                    try
-															                    {
-															                        _fieldById('panDatComVentanaTarifaFinal',true).destroy();
-															                    }
-															                    catch(e)
-															                    {
-															                        debugError(e);
-															                    }
-										                                        Ext.create('Ext.window.Window',
-										                                        {
-										                                            title: 'Tarifa final',
-										                                            itemId: 'panDatComVentanaTarifaFinal',
-										                                            //maxHeight: 400,
-										                                            autoScroll:true,
-										                                            width: 660,
-										                                            height: 400,
-										                                            defaults: {
-										                                            	width: 650
-										                                            },
-										                                            modal:false,
-										                                            closable:false,
-										                                            collapsible:true,
-										                                            titleCollapse:true,
-										                                            items:[  // Let's put an empty grid in just to illustrate fit layout
-										                                                Ext.create('Ext.grid.Panel',{
-										                                                width : 600
-										                                                    ,store:Ext.create('Ext.data.Store',{
-										                                                        model:'ModeloDetalleCotizacion',
-										                                                        groupField: 'orden_parentesco',
-										                                                        sorters: [{
-										                                                            sorterFn: function(o1, o2){
-										                                                                if (o1.get('orden') === o2.get('orden'))
-										                                                                {
-										                                                                    return 0;
-										                                                                }
-										                                                                return o1.get('orden') < o2.get('orden') ? -1 : 1;
-										                                                            }
-										                                                        }],
-										                                                        proxy: {
-										                                                            type: 'memory',
-										                                                            reader: 'json'
-										                                                        },
-										                                                        data:json.slist1
-										                                                    }),
-										                                                    columns:
-										                                                    [
-										                                                        {
-										                                                            header    : 'Nombre de la cobertura',
-										                                                            dataIndex : 'Nombre_garantia',
-										                                                            flex      : 2,
-										                                                            summaryType: 'count',
-										                                                            summaryRenderer: function(value){
-										                                                                return Ext.String.format('Total de {0} cobertura{1}', value, value !== 1 ? 's' : '');
-										                                                            }
-										                                                        },
-										                                                        {
-										                                                            header      : 'Importe por cobertura',
-										                                                            dataIndex   : 'Importe',
-										                                                            flex        : 1,
-										                                                            renderer    : Ext.util.Format.usMoney,
-										                                                            align       : 'right',
-										                                                            summaryType : 'sum'
-										                                                        }
-										                                                    ],
-										                                                    features: [{
-										                                                    	groupHeaderTpl:
-										                                                            [
-										                                                                '{name:this.formatName}',
-										                                                                {
-										                                                                    formatName:function(name)
-										                                                                    {
-										                                                                        return name.split("_")[1];
-										                                                                    }
-										                                                                }
-										                                                            ],
-										                                                        ftype:'groupingsummary',
-										                                                        startCollapsed :true
-										                                                    }]
-										                                                })
-										                                                ,Ext.create('Ext.toolbar.Toolbar',{
-										                                                    buttonAlign:'right'
-										                                                    ,items:
-										                                                    [
-										                                                        '->'
-										                                                        ,Ext.create('Ext.form.Label',
-										                                                        {
-										                                                            style:'color:white;'
-										                                                            ,initComponent:function()
-										                                                            {
-										                                                                var sum=0;
-										                                                                for(var i=0;i<json.slist1.length;i++)
-										                                                                {
-										                                                                    sum+=parseFloat(json.slist1[i].Importe);
-										                                                                }
-										                                                                this.setText('Total: '+Ext.util.Format.usMoney(sum));
-										                                                                this.callParent();
-										                                                            }
-										                                                        })
-										                                                    ]
-										                                                })
-										                                                ,Ext.create('Ext.form.Panel',
-										                                                {
-										                                                    layout:
-										                                                    {
-										                                                        type    : 'table',
-										                                                        columns : 5
-										                                                    }
-										                                                    ,defaults:
-										                                                    {
-										                                                        style : 'margin:5px;'
-										                                                    }
-										                                                    ,items:
-										                                                    [
-										                                                        {
-										                                                            xtype : 'textfield'
-										                                                            ,id   : 'numerofinalpoliza'
-										                                                            ,fieldLabel : 'N&uacute;mero de poliza'
-										                                                            ,readOnly   : true
-										                                                        }
-										                                                        ,{
-										                                                        	id     : 'botonEmitirPolizaFinal'
-										                                                            ,xtype : 'button'
-										                                                            ,text  : 'Emitir'
-										                                                            ,icon  : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
-										                                                            //,disabled : true
-										                                                            ,handler:function()
-										                                                            {
-										                                                            	var me=this;
-										                                                            	me.up().up().setLoading(true);
-										                                                            	Ext.Ajax.request(
-										                                                            	{
-										                                                            		url     : urlEmitir
-										                                                            		,params :
-										                                                            		{
-										                                                                        'panel1.pv_nmpoliza'  : inputNmpoliza
-										                                                                        ,'panel1.pv_ntramite' : inputNtramite
-										                                                                        ,'panel2.pv_cdramo'   : inputCdramo
-										                                                                        ,'panel2.pv_cdunieco' : inputCdunieco
-										                                                                        ,'panel2.pv_estado'   : inputEstado
-										                                                                        ,'panel2.pv_nmpoliza' : inputNmpoliza
-										                                                                        ,'panel2.pv_cdtipsit' : inputCdtipsit
-										                                                            		}
-										                                                            	    ,success:function(response)
-										                                                            	    {
-										                                                            	    	me.up().up().setLoading(false);
-										                                                            	    	var json=Ext.decode(response.responseText);
-										                                                            	    	debug(json);
-										                                                            	    	if(json.success==true)
-										                                                            	    	{
-										                                                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
-										                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
-										                                                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
-										                                                            	    		_numeroPolizaExt = json.panel2.nmpoliex;
-										                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
-										                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
-										                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
-										                                                            	    		Ext.getCmp('botonPagar').setDisabled(false);
-										                                                            	    		
-                                	    																			Ext.getCmp('botonReenvioWS').hide();
-                                	    																			
-                                	    																			if(panDatComMap1.SITUACION == 'AUTO'){
-                                	    																				_mensajeEmail = json.mensajeEmail;
-                                	    																				//debug("Mensaje Mail: " + _mensajeEmail);
-                                	    																				Ext.getCmp('botonEnvioEmail').enable();
-                                	    																			}else {
-                                	    																				Ext.getCmp('botonEnvioEmail').hide();
-                                	    																			}
-										                                                            	    		
-										                                                            	    		if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
-										                                                            	    		{
-										                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
-										                                                            	    		}
-										                                                            	    		Ext.getCmp('venDocVenEmiBotMesa').show();
-										                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
-										                                                            	    		if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
-										                                                            	    		{
-										                                                            	    			var ventanaTmp = Ext.Msg.show({
-									                                                                                        title:'Aviso del sistema',
-									                                                                                        msg: json.mensajeRespuesta,
-									                                                                                        buttons: Ext.Msg.OK,
-									                                                                                        icon: Ext.Msg.WARNING,
-									                                                                                        fn: function(){
-									                                                                                        	if(!Ext.isEmpty(json.nmpolAlt)){
-									                                                                                        		mensajeCorrecto("Aviso","P&oacute;liza Emitida: " + json.nmpolAlt);
-									                                                                                        	}
-									                                                                                        }
-									                                                                                    });
-										                                                            	    			centrarVentanaInterna(ventanaTmp);
-										                                                            	    		}else { 
-										                                                            	    			if(!Ext.isEmpty(json.nmpolAlt)){
-							                                                                                        		mensajeCorrecto("Aviso","P&oacute;liza Emitida: " + json.nmpolAlt);
-							                                                                                        	}
-										                                                            	    		}
-										                                                            	    	}
-										                                                            	    	else
-										                                                            	    	{
-										                                                            	    		if(json.retryWS){
-										                                                            	    			datComPolizaMaestra=json.panel2.nmpoliza;
-											                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
-											                                                            	    		
-											                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
-											                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
-											                                                            	    		
-											                                                            	    		if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
-											                                                            	    		{
-											                                                            	    		    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
-											                                                            	    		}
-											                                                            	    		Ext.getCmp('venDocVenEmiBotMesa').show();
-											                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
-										                                                            	    		}
-										                                                            	    		Ext.Msg.show({
-									                                                                                    title    :'Aviso'
-									                                                                                    ,msg     : json.mensajeRespuesta
-									                                                                                    ,buttons : Ext.Msg.OK
-									                                                                                    ,icon    : Ext.Msg.WARNING
-									                                                                                    ,fn      : function(){
-									                                                                                        if(''+json.panel1.necesitaAutorizacion=='S')
-									                                                                                        {
-									                                                                                            Ext.create('Ext.form.Panel').submit(
-									                                                                                            {
-									                                                                                                url     : datComUrlMC
-									                                                                                                ,params :
-									                                                                                                {
-									                                                                                                    'smap1.gridTitle'     : 'Tareas',
-									                                                                                                    'smap2.pv_cdtiptra_i' : 1,
-									                                                                                                    'smap1.editable'      : 1
-									                                                                                                }
-									                                                                                                ,standardSubmit : true
-									                                                                                            });
-									                                                                                        }
-									                                                                                    	if(json.retryWS){
-									                                                                                    		var paramsWS = {
-																                                                                        'panel1.pv_nmpoliza'  : inputNmpoliza
-																                                                                        ,'panel1.pv_ntramite' : inputNtramite
-																                                                                        ,'panel2.pv_cdramo'   : inputCdramo
-																                                                                        ,'panel2.pv_cdunieco' : inputCdunieco
-																                                                                        ,'panel2.pv_estado'   : inputEstado
-																                                                                        ,'panel2.pv_nmpoliza' : inputNmpoliza
-																                                                                        ,'panel2.pv_cdtipsit' : inputCdtipsit
-																                                                                        ,'nmpoliza'           : json.nmpoliza
-																                                                                        ,'nmsuplem'           : json.nmsuplem
-																                                                                        ,'cdIdeper'           : json.cdIdeper
-																                                                            		};
-									                                                                                    		reintentarWSAuto(me.up().up(), paramsWS);
-									                                                                                    	}
-									                                                                                    }
-									                                                                                });
-										                                                            	    	}
-										                                                            	    }
-										                                                            	    ,failure:function()
-										                                                            	    {
-										                                                            	    	me.up().up().setLoading(false);
-										                                                            	    	Ext.Msg.show({
-										                                                                            title:'Error',
-										                                                                            msg: 'Error de comunicaci&oacute;n',
-										                                                                            buttons: Ext.Msg.OK,
-										                                                                            icon: Ext.Msg.ERROR
-										                                                                        });
-										                                                            	    }
-										                                                            	});
-										                                                            }
-										                                                        }
-										                                                        ,{
-										                                                        	id     : 'botonEnvioEmail'
-										                                                            ,xtype : 'button'
-										                                                            ,text  : 'Enviar Email'
-										                                                            ,icon  : contexto+'/resources/fam3icons/icons/email.png'
-										                                                            ,disabled: true
-										                                                            ,hidden: (panDatComMap1.SITUACION != 'AUTO') ? true: false
-										                                                            ,handler:function()
-										                                                            {
-										                                                            	Ext.Msg.prompt('Envio de Email', 'Escriba los correos que recibir&aacute;n la documentaci&oacute;n (separados por ;)', 
-										                                                            	function(buttonId, text){
-										                                                            		if(buttonId == "ok" && !Ext.isEmpty(text)){
-										                                                            			
-										                                                            			if(Ext.isEmpty(_mensajeEmail)){
-										                                                            				mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
-										                                                            				return;
-										                                                            			}
-										                                                            			
-										                                                            			Ext.Ajax.request(
-										                                                        		    			{
-										                                                        		    				url : _urlEnviarCorreo,
-										                                                        		    				params :
-										                                                        		    				{
-										                                                        		    					to     : text,
-										                                                        		    					asunto : 'Documentación de póliza de Autos',
-										                                                        		    					mensaje: _mensajeEmail,
-										                                                        		    					html   : true
-										                                                        		    			    },
-										                                                        		    			    callback : function(options,success,response)
-										                                                        		    			    {
-										                                                        		    			    	if (success)
-										                                                        		    			    	{
-										                                                        		    			    		var json = Ext.decode(response.responseText);
-										                                                        		    			    		if (json.success == true)
-										                                                        		    			    		{
-										                                                        		    			    			Ext.Msg.show(
-										                                                        		    			    			{
-										                                                        		    			    				title    : 'Correo enviado'
-										                                                        		    			    				,msg     : 'El correo ha sido enviado'
-										                                                        		    			    				,buttons : Ext.Msg.OK
-										                                                        		    			    				,fn      : function()
-										                                                        		    			    				{
-										                                                        		    			    				    _generarRemesaClic(
-										                                                        		    			    				        false
-										                                                        		    			    				        ,inputCdunieco
-										                                                        		    			    				        ,inputCdramo
-										                                                        		    			    				        ,'M'
-										                                                        		    			    				        ,datComPolizaMaestra
-										                                                        		    			    				        ,function(){}
-										                                                        		    			    				        ,'S'
-										                                                        		    			    				        );
-										                                                        		    			    				}
-										                                                        		    			    			});
-										                                                        		    			    		}
-										                                                        		    			    		else
-										                                                        		    			    		{
-										                                                        		    			    			mensajeError('Error al enviar el correo');
-										                                                        		    			    		}
-										                                                        		    			    	}
-										                                                        		    			    	else
-										                                                        		    			    	{
-										                                                        		    			    		errorComunicacion();
-										                                                        		    			    	}
-										                                                        		    			    }
-										                                                        		    			});
-										                                                            		
-										                                                            		}else {
-										                                                            			mensajeWarning('Introduzca al menos una direcci&oacute;n de email');	
-										                                                            		}
-										                                                            	})
-										                                                            }
-										                                                        }
-										                                                        ,{
-										                                                        	id     : 'botonReenvioWS'
-										                                                            ,xtype : 'button'
-										                                                            ,text  : 'Reintentar Emisi&oacute;n'
-										                                                            ,icon  : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
-										                                                            ,disabled: true
-										                                                            ,hidden: (panDatComMap1.SITUACION != 'AUTO') ? true: false
-										                                                            ,handler:function()
-										                                                            {
-										                                                            	var me=this;
-										                                                            	reintentarWSAuto(me.up().up(), _paramsRetryWS);
-										                                                            }
-										                                                        }
-										                                                        ,{
-										                                                        	xtype    : 'button'
-										                                                        	,id      : 'botonEmitirPolizaFinalPreview'
-										                                                        	,text    : 'Vista previa'
-										                                                        	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-										                                                        	,hidden  : inputCdramo=='6'
-										                                                        	,handler : function()
-										                                                            {
-										                                                                var me=this;
-										                                                                var urlRequestImpCotiza=urlServidorReports
-										                                                                +'?destype=cache'
-										                                                                +"&desformat=PDF"
-										                                                                +"&report="+_NOMBRE_REPORTE_CARATULA
-										                                                                +"&paramform=no"
-										                                                                +"&userid="+complerepSrvUsr
-										                                                                +"&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-										                                                                +'&p_unieco='+inputCdunieco
-										                                                                +'&p_estado=W'
-										                                                                +'&p_ramo='+inputCdramo
-										                                                                +'&p_poliza='+inputNmpoliza
-										                                                                debug(urlRequestImpCotiza);
-										                                                                var numRand=Math.floor((Math.random()*100000)+1);
-										                                                                debug(numRand);
-										                                                                var windowVerDocu=Ext.create('Ext.window.Window',
-										                                                                {
-										                                                                    title          : 'Vista previa'
-										                                                                    ,width         : 700
-										                                                                    ,height        : 500
-										                                                                    ,collapsible   : true
-										                                                                    ,titleCollapse : true
-										                                                                    ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-										                                                                                     +'src="'+compleUrlViewDoc+"?contentType=application/pdf&url="+encodeURIComponent(urlRequestImpCotiza)+"\">"
-										                                                                                     +'</iframe>'
-										                                                                    ,listeners     :
-										                                                                    {
-										                                                                        resize : function(win,width,height,opt){
-										                                                                            debug(width,height);
-										                                                                            $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-										                                                                        }
-										                                                                    }
-										                                                                }).show();
-										                                                                windowVerDocu.center();
-										                                                            }
-										                                                        }
-										                                                        ,{
-										                                                            xtype     : 'button'
-										                                                            ,id       : 'botonImprimirPolizaFinal'
-										                                                            ,text     : 'Imprimir'
-										                                                            ,icon     : contexto+'/resources/fam3icons/icons/printer.png'
-										                                                            ,disabled : true
-										                                                            ,handler  : function(me)
-										                                                            {
-										                                                                var callbackRemesa = function()
-										                                                                {
-											                                                            	venDocuTramite.destroy();
-											                                                            	Ext.create('Ext.window.Window',
-									                                                                        {
-									                                                                            title        : 'Documentos del tr&aacute;mite '+inputNtramite
-									                                                                            ,modal       : true
-									                                                                            ,buttonAlign : 'center'
-									                                                                            ,width       : 600
-									                                                                            ,height      : 400
-									                                                                            ,autoScroll  : true
-									                                                                            ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
-									                                                                            ,loader      :
-									                                                                            {
-									                                                                                url       : panDatComUrlDoc2
-									                                                                                ,params   :
-									                                                                                {
-									                                                                                	'smap1.nmpoliza'  : datComPolizaMaestra
-									                                                                                    ,'smap1.cdunieco' : inputCdunieco
-									                                                                                    ,'smap1.cdramo'   : inputCdramo
-									                                                                                    ,'smap1.estado'   : 'M'
-									                                                                                    ,'smap1.nmsuplem' : '0'
-									                                                                                    ,'smap1.ntramite' : inputNtramite
-									                                                                                    ,'smap1.nmsolici' : inputNmpoliza
-									                                                                                    ,'smap1.tipomov'  : '0'
-									                                                                                }
-									                                                                                ,scripts  : true
-									                                                                                ,autoLoad : true
-									                                                                            }
-									                                                                        }).show();
-								                                                                        };
-								                                                                        _generarRemesaClic(
-								                                                                            false
-								                                                                            ,inputCdunieco
-								                                                                            ,inputCdramo
-								                                                                            ,'M'
-								                                                                            ,datComPolizaMaestra
-								                                                                            ,callbackRemesa
-								                                                                            );
-										                                                            }
-										                                                        }
-										                                                        ,{
-										                                                            xtype     : 'button'
-										                                                            ,id       : 'botonPagar'
-										                                                            ,text     : 'Pagar'
-										                                                            ,icon     : contexto+'/resources/fam3icons/icons/money.png'
-										                                                            ,disabled : true
-										                                                            ,hidden  : true//TODO: Reemplazar obtDatLoaderContratante por obtieneDatosClienteContratante //inputCdramo!='2'
-										                                                            ,handler  : function()
-										                                                            {
-										                                                            	if(Ext.isEmpty(_numeroPolizaExt)){
-											                                                            	mensajeWarning('Error al cargar el n&uacute;mero de p&oacute;liza.');
-											                                                            	return;
-										                                                            	}
-										                                                            		
-										                                                            	var nombreCompCont = '';
-										                                                            	try{
-											                                                            	var datosCont = obtDatLoaderContratante();
-											                                                            	debug(datosCont);
-											                                                            	nombreCompCont = datosCont.nombre +" "+ datosCont.snombre +" "+ datosCont.appat +" "+ datosCont.apmat;
-										                                                            	}
-										                                                            	catch(e){
-										                                                            		debug('Sin datos de contratante.');
-										                                                            		nombreCompCont = '';
-										                                                            	}
-										                                                            	
-										                                                            	var IDventana = window.open("http://www.biosnettcs.com/", "IDventana", "width=610,height=725,top=0,left=190");
-																			        	    			    var parametrosPago = {
-																			        	    			    		'etiqueta': 'USERADM1',
-																			        	    			    		'etiquetaSys': 'lorant',
-																			        	    			    		'mensajeExito': '16168',
-																			        	    			    		'asegPago' : '906',//qualitas
-																			        	    			    		'contratante' : nombreCompCont,//qualitas
-																			        	    			    		'polext' : _numeroPolizaExt
-																			        	    			    };
-																			        	    			    
-																			        	    				creaWindowPay("http://www.ibseguros.com/securepayment/Validate.action", parametrosPago, "IDventana");
-										                                                            }
-										                                                        }
-										                                                        ,{
-										                                                        	xtype    : 'button'
-										                                                            ,id      : 'venDocVenEmiBotMesa'
-										                                                            ,text    : 'Regresar a mesa de control'
-										                                                            ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
-										                                                            //,hidden  : panDatComMap1.SITUACION=='AUTO'
-										                                                            ,handler : function()
-										                                                            {
-										                                                                var me=this;
-										                                                                Ext.create('Ext.form.Panel').submit(
-										                                                                {
-										                                                                    standardSubmit : true
-										                                                                    ,url           : datComUrlMC
-										                                                                    ,params        :
-						                                                                                    {
-						                                                                                        'smap1.gridTitle':'Tareas',
-						                                                                                        'smap2.pv_cdtiptra_i':1,
-						                                                                                        'smap1.editable':1
-						                                                                                    }
-										                                                                });
-										                                                            }
-										                                                        }
-										                                                        ,{
-										                                                            xtype    : 'button'
-                                                                                                    ,id      : 'venDocVenEmiBotIrCotiza'
-                                                                                                    ,text    : 'Nueva cotizaci&oacute;n'
-                                                                                                    ,icon    : '${ctx}/resources/fam3icons/icons/book_open.png'
-                                                                                                    ,hidden  : panDatComMap1.SITUACION!='AUTO'
-                                                                                                    ,handler : function()
-                                                                                                    {
-                                                                                                        var me=this;
-                                                                                                        Ext.create('Ext.form.Panel').submit(
-                                                                                                        {
-                                                                                                            standardSubmit : true
-                                                                                                            ,url           : compleUrlCotizacion
-                                                                                                            ,params        :
-                                                                                                            {
-                                                                                                                'smap1.cdramo'    : inputCdramo
-                                                                                                                ,'smap1.cdtipsit' : inputCdtipsit
-                                                                                                            }
-                                                                                                        });
-                                                                                                    }
-										                                                        }
-										                                                        ,{
-										                                                        	xtype    : 'button'
-									                                                                ,id      : 'venDocVenEmiBotCancelar'
-										                                                            ,text    : 'Cancelar'
-										                                                            ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-										                                                            ,handler : function()
-										                                                            {
-										                                                                var me=this;
-										                                                                me.up().up().destroy();
-										                                                            }
-										                                                        }
-										                                                    ]
-										                                                })
-										                                            ]
-										                                        }).showAt(50,50);
-										                                        Ext.getCmp('venDocVenEmiBotMesa').hide();
-										                                        Ext.getCmp('venDocVenEmiBotIrCotiza').hide();
-										                                        
-										                                        if(!Ext.isEmpty(json.respuestaOculta)){
-									                                        		mensajeWarning(json.respuestaOculta);
-									                                        	}
-									                                        	
-										                                        /**/
-									                                        }
-									                                    }
-									                                    ,failure : function()
-									                                    {
-									                                        form.setLoading(false);
-									                                        Ext.Msg.show({
-									                                            title:'Error',
-									                                            msg: 'Error de comunicaci&oacute;n',
-									                                            buttons: Ext.Msg.OK,
-									                                            icon: Ext.Msg.ERROR
-									                                        });
-									                                    }
-									                                });
-									                                //--
-		                                            
-		                                        },
-		                                        failure:function(){
-		                                            form.setLoading(false);
-		                                            Ext.Msg.show({
-		                                                title:'Error',
-		                                                msg: 'Error de comunicaci&oacute;n',
-		                                                buttons: Ext.Msg.OK,
-		                                                icon: Ext.Msg.ERROR
-		                                            });
-		                                        }
-		                                        
-		                                    });
-		                               
-		                                
-		                                
-		                                }
-		                                else
-		                        	    {
-		                                	datosIncompletos();
-		                        	    }
-		                            }
-		                        }
+                                    ,handler : function(me){
+                                    	
+                                    	  Ext.Ajax.request(
+                                    			     {
+                                    			         url     : _URL_urlCargarTvalosit
+                                    			         ,params :
+                                    			         {
+                                    			             'smap1.cdunieco'  : inputCdunieco
+                                    			             ,'smap1.cdramo'   : inputCdramo
+                                    			             ,'smap1.estado'   : inputEstado
+                                    			             ,'smap1.nmpoliza' : inputNmpoliza
+                                    			             ,'smap1.nmsituac' : '1'
+                                    			         }
+                                    			         ,success : function(response)
+                                    			         {
+                                    			             var json=Ext.decode(response.responseText);
+                                    			             if(json.exito)
+                                    			             {
+                                    			                     var _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
+                                    			                    
+                                    			                                debug('fn:', _p29_validaSeguro);
+                                    			                     if(_p29_validaSeguro == "S")
+                                    			                     {    
+                                    			                         var suma=0;
+                                    			                         _p32_store.each(function(record)
+                                    			                         {
+                                    			                             if(record.get('mov')+'x'!='-x')
+                                    			                             {
+                                    			                                 suma=suma+(record.get('PORBENEF')-0);
+                                    			                             }
+                                    			                         });
+                                    			                         if(suma!=100)
+                                    			                         {  
+                                    			                             mensajeError('La suma de porcentajes de beneficiarios activos es '+suma+', en lugar de 100');
+                                    			                             return
+                                    			                         }
+                                    			                         else
+                                    			                         {
+                                    			                        	 _p29_emitirClicComplementarios(me);
+                                    			                         }
+
+                                    			                     }
+                                    			                     else
+                                    			                     {
+                                    			                    	 _p29_emitirClicComplementarios(me);
+                                    			                     }
+                                    			                 
+                                    			             }
+                                    			             else
+                                    			             {
+                                    			                 mensajeError(json.respuesta);
+                                    			             }
+                                    			         }
+                                    			     });
+                                                   }
+                                  }
 		                        ,{
                                     text     : 'Guardar y dar Vo. Bo.'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
