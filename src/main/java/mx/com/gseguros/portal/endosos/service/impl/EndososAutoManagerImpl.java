@@ -3608,7 +3608,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		if(soloIncisosAfectados){
 			logger.debug(">>>>>>>>>>>  Incisos Afectados  <<<<<<<<<<<<<< :::" + incisosAfectados);
-			logger.debug(">>>>>>>>>>>  Solo un Inciso <<<<<<<<<<<<<< :::" + soloUnInciso);
+			logger.debug(">>>>>>>>>>>  Solo un Inciso? <<<<<<<<<<<<<< :::" + soloUnInciso);
 		}
 		
 		try{
@@ -3932,7 +3932,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							ArrayList<String> incisos = new ArrayList<String>(incisosAfectados.values());
 							String numeroInciso = incisos.get(0);
 							
-							logger.debug("Imrpiemiendo solo una caratula a de Tarjeta de Identificacion para el inciso: " + numeroInciso);
+							logger.debug("Imprimiendo solo una caratula a de Tarjeta de Identificacion para el inciso: " + numeroInciso);
 							
 							parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+numeroInciso;
 							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
