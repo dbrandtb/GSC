@@ -186,28 +186,33 @@
                 };
             }
             
+            var mantener;
             function expande(indice)
             {
             	try
             	{
-	            	if(inputCdramo == 16)
-	                {
-	            	    debug('No cambia de pestañas automaticamente');
-	                }
-	            	else
-	            	{
 		            	var comp;
-		            	if(indice==1)
+		            	if(indice==1 && !mantener)
 		           		{
+                            mantener= true;
 		            		comp=Ext.getCmp('formPanel');
 		           		}
-		            	else if(indice==2)
+		            	
+		            	else if(indice==2 && !mantener)
 		           		{
+		           	        mantener= false;
 		            	    comp=Ext.getCmp('tabPanelAsegurados');
 		           		}
+		            	
+		            	else if(indice==2 && mantener)
+                        {
+		            		mantener= false;
+		            		comp=Ext.getCmp('formPanel');
+                        }
+		            	
+		            	debug('mantener: '+mantener+' e indice: '+ indice)
 		           		window.parent.scrollTo(0,0);
 		          		accordion.setActiveTab(comp);
-	            	}
             	}
             	catch(e)
                 {
@@ -981,9 +986,14 @@ function _p29_emitirClicComplementarios()
 	                                                                {
 	                                                                    var callbackRemesa = function()
 	                                                                    {
-	                                                                    	if(!Ext.isEmpty(venDocuTramite)) {
-	                                                                        	venDocuTramite.destroy();
+	                                                                    	try
+	                                                                    	{
+		                                                                        _fieldById('IdvenDocuTramite', true).destroy();
 	                                                                    	}
+	                                                                    	catch(e){
+	                                                                            debugError(e, 'venDocuTramite');
+	                                                                        }
+	                                                                    	
 	                                                                        Ext.create('Ext.window.Window',
 	                                                                        {
 	                                                                            title        : 'Documentos del tr&aacute;mite '+inputNtramite
@@ -2786,7 +2796,8 @@ function _p29_emitirClicComplementarios()
                 //para ver documentos en vivo
                 var venDocuTramite=Ext.create('Ext.window.Window',
 		        {
-		            title           : 'Documentos del tr&aacute;mite '+inputNtramite
+                	itemId          : 'IdvenDocuTramite'
+		            ,title          : 'Documentos del tr&aacute;mite '+inputNtramite
 		            ,closable       : false
 		            ,width          : 500
 		            ,height         : 300
