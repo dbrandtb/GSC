@@ -1,10 +1,11 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <%--<style>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<%--<style>
         div.claseTitulo>div.x-panel-header>div.x-header-body>div.x-box-inner>div.x-box-target>div.x-panel-header-text-container>span.x-header-text
         {
             font-size:16px;
@@ -12,16 +13,16 @@
             text-transform: uppercase;
         }
         </style>--%>
-        <%--////////////////////////////////////
+<%--////////////////////////////////////
         ////// para el parser de archivos //////
         ////////////////////////////////////--%
         <script>var urlFrameArchivo='<s:url namespace="/" action="subirArchivoMostrarPanel" />';</script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/jQuerySubirArchivosParser.js"></script>
         <%--////////////////////////////////--%>
-        <!--// para el parser de archivos //////
+<!--// para el parser de archivos //////
         /////////////////////////////////////-->
-        <!--<script src="${ctx}/resources/jsp-script/extjs4/complementarios.js"></script>-->
-        <script>
+<!--<script src="${ctx}/resources/jsp-script/extjs4/complementarios.js"></script>-->
+<script>
             var contexto='${ctx}';
             
             
@@ -428,7 +429,10 @@ function _p29_guardarComplementario(callback)
                     ,buttons : Ext.Msg.OK
                     ,fn      : function()
                     {
-                        callback();                    	
+                    	 if(!Ext.isEmpty(callback))
+                         {
+                             callback();
+                         }
                         /*
                         if(!Ext.isEmpty(panDatComFlujo))
                         {
@@ -1632,7 +1636,7 @@ function _p29_emitirClicComplementarios()
 		                        {
 		                            text:'Guardar',
 		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
-		                            handler: function(){ _p29_guardarComplementario();}	
+		                            handler: function(){ _p29_guardarComplementario(null);}	
 		                        },
 		                        {
 		                            text     : 'Turnar a suscripci&oacute;n',
@@ -1841,7 +1845,7 @@ function _p29_emitirClicComplementarios()
                                     {
                                     	try
                                     	{
-	                                    	_p29_guardarComplementario
+                                    		_p32_guardarClic
 	                                    	(
 	                                    	  function()
 	                                    	  {
@@ -2955,15 +2959,15 @@ function _p29_emitirClicComplementarios()
             });
         <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
         </script>
-    </head>
-    <body>
-        <div id="maindiv" style="height:1300px;"></div>
-        <%--////////////////////////////////////
+</head>
+<body>
+	<div id="maindiv" style="height: 1300px;"></div>
+	<%--////////////////////////////////////
         ////// para el parser de archivos //////
         ////////////////////////////////////--%
         <script>Ext.onReady(afterExtReady);</script>
         <%--////////////////////////////////--%>
-        <!--// para el parser de archivos //////
+	<!--// para el parser de archivos //////
         /////////////////////////////////////-->
-    </body>
+</body>
 </html>
