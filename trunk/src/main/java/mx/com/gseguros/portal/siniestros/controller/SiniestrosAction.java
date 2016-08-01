@@ -1423,9 +1423,17 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			//2.- Guardamos los registros de 
 			double importeTotal = 0d;
 			double importeIVA = 0d;
+			double modIVA = 0d;
+			double modImporte= 0d;
 			for(int i=0;i<datosTablas.size();i++){
-					importeTotal = importeTotal + Double.parseDouble(datosTablas.get(i).get("ptprecio"));
-					importeIVA   = importeIVA   + Double.parseDouble(datosTablas.get(i).get("ptIVA"));
+				
+					logger.debug("Datos : {}",		datosTablas.get(i).get("ptIVA").length());
+					logger.debug(" IVA ==> {}",		datosTablas.get(i).get("ptIVA"));
+					logger.debug(" ptprecio ==> {}",datosTablas.get(i).get("ptprecio"));
+					
+					importeTotal = importeTotal + modImporte;
+					importeIVA   = importeIVA   + modIVA ;
+					
 					siniestrosManager.P_MOV_MSINIVAL(
 						datosTablas.get(i).get("cdunieco"), 	datosTablas.get(i).get("cdramo"), 		datosTablas.get(i).get("estado"), 		datosTablas.get(i).get("nmpoliza"),
 						datosTablas.get(i).get("nmsuplem"),		datosTablas.get(i).get("nmsituac"), 	datosTablas.get(i).get("aaapertu"), 	datosTablas.get(i).get("status"), 
@@ -1438,7 +1446,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						datosTablas.get(i).get("mtoArancel"),	datosTablas.get(i).get("aplicaIVA"));
 			}
 			
+			
 			logger.debug("importeTotal : {} importeIVA:{}",importeTotal,importeIVA);
+			
 			List<MesaControlVO> listaMesaControl = siniestrosManager.getConsultaListaMesaControl(params.get("params.ntramite"));
 			if(listaMesaControl.get(0).getCdtiptramc().equalsIgnoreCase(TipoTramite.PAGO_AUTOMATICO.getCdtiptra()) && 
 			   listaMesaControl.get(0).getOtvalor25mc().equalsIgnoreCase("1")){
