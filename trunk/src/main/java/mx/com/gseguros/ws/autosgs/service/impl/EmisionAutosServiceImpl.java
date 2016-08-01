@@ -131,6 +131,13 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 					if(cdramo.equalsIgnoreCase(Ramo.AUTOS_FRONTERIZOS.getCdramo())){
 						
 						lista = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_AUTO.getNombre(), params, null);
+						
+						try {
+							listaBeneficiarios = consultasDAO.obtieneBeneficiariosPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+						} catch (Exception e2) {
+							logger.error("Error al obtener lista de beneficiarios para WS de autos.",e2);
+							return null;
+						}
 					}else if(cdramo.equalsIgnoreCase(Ramo.SERVICIO_PUBLICO.getCdramo())){
 						
 						lista = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
