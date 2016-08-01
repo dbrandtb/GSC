@@ -5848,8 +5848,8 @@
 								DCTOIMEX : '0.00',
 								PTIMPOEX : '0.00',
 								CDGARANT : recordFactura.get('CDGARANT'),
-								CDCONVAL : recordFactura.get('CDCONVAL'),
-								CANTIDAD : '1'
+								CDCONVAL : recordFactura.get('CDCONVAL')//,
+								//CANTIDAD : '1'
 							}));
 							
 					}else{
@@ -5905,6 +5905,8 @@
 				submitValues['params']=formulario;
 				var datosTablas = [];
 				var _11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+				//if(record.get('PTIVA'))
+				
 				storeConceptos.each(function(record,index){
 					datosTablas.push({
 						cdunieco  : record.get('CDUNIECO')
@@ -5938,7 +5940,7 @@
 						,ptimpoex : record.get('PTIMPOEX')
 						,mtoArancel : record.get('PTMTOARA')
 						,aplicaIVA : record.get('APLICIVA')
-						,ptIVA 	   : record.get('PTIVA')
+						,ptIVA 	   : '0'
 					});
 				});
 				submitValues['datosTablas']=datosTablas;
