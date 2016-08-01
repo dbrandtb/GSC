@@ -908,7 +908,9 @@ function _p29_emitirClicComplementarios(me)
                                                                 {
                                                                     var callbackRemesa = function()
                                                                     {
-                                                                        venDocuTramite.destroy();
+                                                                    	if(!Ext.isEmpty(venDocuTramite)) {
+                                                                        	venDocuTramite.destroy();
+                                                                    	}
                                                                         Ext.create('Ext.window.Window',
                                                                         {
                                                                             title        : 'Documentos del tr&aacute;mite '+inputNtramite
