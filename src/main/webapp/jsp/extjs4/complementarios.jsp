@@ -676,17 +676,69 @@ function _p29_emitirClicComplementarios()
 	                                                                            var json=Ext.decode(response.responseText);
 	                                                                            debug(json);
 	                                                                            if(json.success==true)
-	                                                                            {
-	                                                                                datComPolizaMaestra=json.panel2.nmpoliza;
-	                                                                                debug("datComPolizaMaestra",datComPolizaMaestra);
-	                                                                                Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
-	                                                                                _numeroPolizaExt = json.panel2.nmpoliex;
-	                                                                                Ext.getCmp('botonEmitirPolizaFinal').hide();
-	                                                                                Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
-	                                                                                Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
-	                                                                                Ext.getCmp('botonPagar').setDisabled(false);
-	                                                                                
-	                                                                                Ext.getCmp('botonReenvioWS').hide();
+		                                                            	    	{
+		                                                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
+		                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
+		                                                            	    		
+		                                                            	    		_numeroPolizaExt = json.panel2.nmpoliex;
+		                                                            	    		if(json.retryRec){
+		                                                            	    			
+		                                                            	    			alert('recibos');
+		                                                            	    			Ext.getCmp('botonEmitirPolizaFinal').hide();
+			                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
+			                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
+			                                                            	    		Ext.getCmp('botonPagar').setDisabled(false);
+			                                                            	    		
+			                                                            	    		Ext.Msg.show({
+		                                                                                    title    :'Aviso'
+		                                                                                    ,msg     : 'Error en la emisi&oacute;n. No se pudo emitir la p&oacute;liza.'
+		                                                                                    ,buttons : Ext.Msg.OK
+		                                                                                    ,icon    : Ext.Msg.WARNING
+		                                                                                    ,fn      : function(){
+		                                                                                        if(''+json.panel1.necesitaAutorizacion=='S')
+		                                                                                        {
+		                                                                                            Ext.create('Ext.form.Panel').submit(
+		                                                                                            {
+		                                                                                                url     : datComUrlMC
+		                                                                                                ,params :
+		                                                                                                {
+		                                                                                                    'smap1.gridTitle'     : 'Tareas',
+		                                                                                                    'smap2.pv_cdtiptra_i' : 1,
+		                                                                                                    'smap1.editable'      : 1
+		                                                                                                }
+		                                                                                                ,standardSubmit : true
+		                                                                                            });
+		                                                                                        }
+	                                                                                    		var paramsWS = {
+								                                                                        'panel1.pv_nmpoliza'  : inputNmpoliza
+								                                                                        ,'panel1.pv_ntramite' : inputNtramite
+								                                                                        ,'panel2.pv_cdramo'   : inputCdramo
+								                                                                        ,'panel2.pv_cdunieco' : inputCdunieco
+								                                                                        ,'panel2.pv_estado'   : inputEstado
+								                                                                        ,'panel2.pv_nmpoliza' : inputNmpoliza
+								                                                                        ,'panel2.pv_cdtipsit' : inputCdtipsit
+								                                                                        ,'nmpoliza'           : json.nmpoliza
+								                                                                        ,'nmsuplem'           : json.nmsuplem
+								                                                                        ,'cdIdeper'           : json.cdIdeper
+								                                                                        ,'nmpolAlt'           : json.nmpolAlt
+								                                    	                                ,'sucursalGS'         : json.sucursalGS
+								                                    	                                ,'cdRamoGS'           : json.cdRamoGS
+								                                    	                                ,'retryRec'           : json.retryRec
+								                                                            		};
+	                                                                                    		reintentarWSAuto(me.up().up(), paramsWS);
+		                                                                                    }
+		                                                                                });
+			                                                            	    		return;
+		                                                            	    		}
+		                                                            	    		
+		                                                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
+		                                                            	    		
+		                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
+		                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
+		                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
+		                                                            	    		Ext.getCmp('botonPagar').setDisabled(false);
+		                                                            	    		
+	    																			Ext.getCmp('botonReenvioWS').hide();
 	                                                                                
 	                                                                                if(panDatComMap1.SITUACION == 'AUTO'){
 	                                                                                    _mensajeEmail = json.mensajeEmail;
