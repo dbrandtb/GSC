@@ -188,17 +188,31 @@
             
             function expande(indice)
             {
-            	var comp;
-            	if(indice==1)
-           		{
-            		comp=Ext.getCmp('formPanel');
-           		}
-            	else if(indice==2)
-           		{
-            	    comp=Ext.getCmp('tabPanelAsegurados');
-           		}
-           		window.parent.scrollTo(0,0);
-          		accordion.setActiveTab(comp);
+            	try
+            	{
+	            	if(inputCdramo == 16)
+	                {
+	            	    debug('No cambia de pestañas automaticamente');
+	                }
+	            	else
+	            	{
+		            	var comp;
+		            	if(indice==1)
+		           		{
+		            		comp=Ext.getCmp('formPanel');
+		           		}
+		            	else if(indice==2)
+		           		{
+		            	    comp=Ext.getCmp('tabPanelAsegurados');
+		           		}
+		           		window.parent.scrollTo(0,0);
+		          		accordion.setActiveTab(comp);
+	            	}
+            	}
+            	catch(e)
+                {
+                    debugError(e, 'expande');
+                }
           	}
             
 var _p29_validaSeguro;
