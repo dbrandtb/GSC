@@ -1944,10 +1944,11 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> recuperarMotivosRechazo () throws Exception {
+	public List<GenericVO> recuperarMotivosRechazo (String ntramite) throws Exception {
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ recuperarMotivosRechazo @@@@@@"
+				,"\n@@@@@@ ntramite = ", ntramite
 				));
 		
 		String paso = "Recuperando motivos de rechazo";
@@ -1955,7 +1956,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		
 		try
 		{
-			lista = catalogosDAO.recuperarMotivosRechazo();
+			lista = catalogosDAO.recuperarMotivosRechazo(ntramite);
 		}
 		catch(Exception ex)
 		{

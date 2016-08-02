@@ -2056,8 +2056,10 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	}
 	
 	@Override
-	public List<GenericVO> recuperarMotivosRechazo () throws Exception {
-		Map<String,Object> procRes = ejecutaSP(new RecuperarMotivosRechazoSP(getDataSource()),new LinkedHashMap<String,String>());
+	public List<GenericVO> recuperarMotivosRechazo (String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite", ntramite);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarMotivosRechazoSP(getDataSource()),params);
 		List<Map<String,String>> lista = (List<Map<String,String>>) procRes.get("pv_registro_o");
 		List<GenericVO> lista2 = new ArrayList<GenericVO>();
 		if(lista!=null)
@@ -2075,6 +2077,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		protected RecuperarMotivosRechazoSP(DataSource dataSource)
 		{
 			super(dataSource,"P_GET_MOTIVOS_RECHAZO_TRA");
+			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{
 					"CDRAZRECHA", "DSRAZRECHA", "TEXTORECHA"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

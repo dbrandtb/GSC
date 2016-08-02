@@ -949,7 +949,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					break;
 				case MOTIVOS_RECHAZO_TRAMITE:
-					lista = catalogosManager.recuperarMotivosRechazo();
+					String ntramite = null;
+					if (params != null) {
+						ntramite = params.get("ntramite");
+					}
+					lista = catalogosManager.recuperarMotivosRechazo(ntramite);
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
