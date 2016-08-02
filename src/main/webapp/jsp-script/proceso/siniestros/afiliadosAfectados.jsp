@@ -3915,8 +3915,7 @@
 								'params.cdunieco': _11_params.CDUNIECO,
 								'params.cdramo': _tipoProducto,
 								'params.estado': _11_params.ESTADO,
-								'params.nmpoliza': _11_params.NMPOLIZA,
-								'params.cdperson': _11_params.OTVALOR04
+								'params.nmpoliza': _11_params.NMPOLIZA
 							}
 						});
 						
