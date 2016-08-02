@@ -694,7 +694,6 @@ function _p29_emitirClicComplementarios()
 		                                                            	    		_numeroPolizaExt = json.panel2.nmpoliex;
 		                                                            	    		if(json.retryRec){
 		                                                            	    			
-		                                                            	    			alert('recibos');
 		                                                            	    			Ext.getCmp('botonEmitirPolizaFinal').hide();
 			                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 			                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
