@@ -3045,14 +3045,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				mensaje = texto;
 				String[] arrVars = variables.split(",");
 				for(String s:arrVars){
-//					resultados.add(flujoMesaControlDAO.ejecutaProcedureFlujoCorreo(funciones.get(Integer.parseInt(s)).get("BDFUNCTION"),nmtramite));
-					mensaje = StringUtils.replaceOnce(mensaje, "{}", flujoMesaControlDAO.ejecutaProcedureFlujoCorreo(funciones.get(Integer.parseInt(s)).get("BDFUNCTION"),nmtramite));
+					String result = flujoMesaControlDAO.ejecutaProcedureFlujoCorreo(funciones.get(Integer.parseInt(s)).get("BDFUNCTION"),nmtramite);
+					if (null == result || !StringUtils.isNotBlank(result)){
+						result = "()";
+					}
+					mensaje = StringUtils.replaceOnce(mensaje, "{}", result);
 				}
-//				logger.debug(Utils.log("\n@@@@@@ resultados",
-//									   "\n",resultados));
 				logger.debug(Utils.log("\n@@@@@@ mensaje",
 						   "\n",mensaje));
-				
 			}else{
 				mensaje = texto;
 			}
