@@ -710,7 +710,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																			 null,
 																			 null, 
 																			 "N", 
-																			 timestamp);					
+																			 timestamp, false);					
 					if (res.containsKey("NOMBRE") && StringUtils.isNotBlank((String) res.get("NOMBRE"))) {
 						usuarioTramite = " fue asignado a: " + (String) res.get("NOMBRE");
 					}
@@ -733,7 +733,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																			 null,
 																			 null, 
 																			 "N", 
-																			 timestamp);					
+																			 timestamp, false);					
 					logger.debug(Utils.log("*****************Resultado de asignacion******************"));
 					logger.debug(Utils.log(res));
 					setMensaje("Se gener&oacute; el tr&aacute;mite "
@@ -956,7 +956,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																		 null,
 																		 null, 
 																		 "N", 
-																		 timestamp);
+																		 timestamp, false);
 				if (res.containsKey("NOMBRE") && StringUtils.isNotBlank((String) res.get("NOMBRE"))) {
 					usuarioTramite = " fue asignado a: " + (String) res.get("NOMBRE");
 				}
@@ -978,7 +978,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																		 null,
 																		 null, 
 																		 "N", 
-																		 timestamp);
+																		 timestamp, false);
 				logger.debug(Utils.log("*****************Resultado de asignacion******************"));
 				logger.debug(Utils.log(res));
 				setMensaje("Se gener&oacute; el tr&aacute;mite "

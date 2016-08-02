@@ -4210,6 +4210,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		{
 			try
 			{
+				logger.debug("@@@@@@@@@@lanzatarAsincrono1 ",lanzatarAsincrono);
 				if(lanzatarAsincrono)
 				{
 					new EjecutaTarificacionConcurrente(
@@ -4221,6 +4222,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,"0" //nmsituac
 							,"1" //tipotari
 							,cdperpag
+							,cdusuari
+							,cdsisrol
 							).start();
 				}
 				else
@@ -4245,6 +4248,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,"1" //tipotari
 							,cdperpag
 							);
+					logger.debug("##############GRABANDO EVENTO DE COTIZACION 1##############");
+					cotizacionDAO.grabarEvento(new StringBuilder(), "COTIZACION", "COTIZA", new Date(), cdusuari, cdsisrol, ntramite, cdunieco, cdramo, "W", nmpoliza, nmpoliza, cdagente, "", "", null);
 				}
 			}
 			catch(Exception ex)
@@ -4273,6 +4278,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,LINEA_EXTENDIDA
 					,grupos
 					,cdtipsit
+					,cdusuari
+					,cdsisrol
 					);
 		}
 		
@@ -7850,6 +7857,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmsituac
 			,String tipotari
 			,String cdperpag
+			,String cdusuari
+			,String cdsisrol
 			)throws Exception
 	{
     	logger.debug(Utils.log(
@@ -7863,8 +7872,11 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,"\n@@@@@@ nmsituac=" , nmsituac
     			,"\n@@@@@@ tipotari=" , tipotari
     			,"\n@@@@@@ cdperpag=" , cdperpag
+    			,"\n@@@@@@ cdusuari=" , cdusuari
+    			,"\n@@@@@@ cdsisrol=" , cdsisrol
     			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     			));
+    	logger.debug("@@@@@@@@@@@@@@@ lanzatarAsincrono2 ",lanzatarAsincrono);
     	if(lanzatarAsincrono)
     	{
 	    	new EjecutaTarificacionConcurrente(
@@ -7876,6 +7888,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	    			,nmsituac
 	    			,tipotari
 	    			,cdperpag
+	    			,cdusuari
+	    			,cdsisrol
 	    			).start();
     	}
     	else
@@ -7900,6 +7914,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	    			,tipotari
 	    			,cdperpag
 	    			);
+    		logger.debug("@@@@@@@@@@@@@@@@@GRABANDO EVENTO DE COTIZACION 2@@@@@@@@@@@@@@@@@");
+    		cotizacionDAO.grabarEvento(new StringBuilder(), "COTIZACION", "COTIZA", new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
     	}
 	}
     
@@ -8117,7 +8133,9 @@ public class CotizacionManagerImpl implements CotizacionManager
     	               ,nmsuplem
     	               ,nmsituac
     	               ,tipotari
-    	               ,cdperpag;
+    	               ,cdperpag
+    	               ,cdusuari
+    	               ,cdsisrol;
     	
     	public EjecutaTarificacionConcurrente(
     			String cdunieco
@@ -8128,6 +8146,8 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,String nmsituac
     			,String tipotari
     			,String cdperpag
+    			,String cdusuari
+    			,String cdsisrol
     			)
     	{
 			this.cdunieco = cdunieco;
@@ -8138,6 +8158,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			this.nmsituac = nmsituac;
 			this.tipotari = tipotari;
 			this.cdperpag = cdperpag;
+			this.cdusuari = cdusuari;
+			this.cdsisrol = cdsisrol;
     	}
     	
     	@Override
@@ -8165,6 +8187,8 @@ public class CotizacionManagerImpl implements CotizacionManager
         			,tipotari
         			,cdperpag
         			);
+    		    logger.debug("@@@@@@@@@@@@@@@@@GRABANDO EVENTO DE COTIZACION 3@@@@@@@@@@@@@@@@@");
+    		    cotizacionDAO.grabarEvento(new StringBuilder(), "COTIZACION", "COTIZA", new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
     		}
     		catch(Exception ex)
     		{
@@ -9442,6 +9466,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String LINEA_EXTENDIDA
 			,List<Map<String,Object>> olist1
 			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
 			)
 	{
 		logger.debug(Utils.log(
@@ -9475,6 +9501,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,LINEA_EXTENDIDA
 				,olist1
 				,cdtipsit
+				,cdusuari
+				,cdsisrol
 				).start();
 	}
 	
@@ -9495,6 +9523,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		               ,LINEA
 		               ,LINEA_EXTENDIDA
 		               ,cdtipsit
+		               ,cdusuari
+		               ,cdsisrol
 		               ;
 		
 		private List<Map<String,Object>> olist1;
@@ -9513,6 +9543,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,String LINEA_EXTENDIDA
 				,List<Map<String,Object>> olist1
 				,String cdtipsit
+				,String cdusuari
+				,String cdsisrol
 				)
 		{
 			this.hayTramite      = hayTramite;
@@ -9528,6 +9560,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			this.LINEA_EXTENDIDA = LINEA_EXTENDIDA;
 			this.olist1          = olist1;
 			this.cdtipsit        = cdtipsit;
+			this.cdusuari        = cdusuari;
+			this.cdsisrol        = cdsisrol;
 		}
 		
 		@Override
@@ -9714,6 +9748,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            		,"0"
 	            		,"1"
 	            		,cdperpag
+	            		,cdusuari
+	            		,cdsisrol
 	            		);
 			}
 			catch(Exception ex)
@@ -9743,6 +9779,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String LINEA_EXTENDIDA
 			,List<Map<String,Object>> grupos
 			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
 			)
 	{
 		logger.debug(Utils.log(
@@ -9760,7 +9798,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ LINEA="           , LINEA
 				,"\n@@@@@@ LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
 				,"\n@@@@@@ grupos="          , grupos
-				,"\n@@@@@@ cdtipsit="        , cdtipsit
+				,"\n@@@@@@ cdusuari="        , cdusuari
+				,"\n@@@@@@ cdsisrol="        , cdsisrol
 				));
 		new ProcesoColectivoAsincrono2(
 				hayTramite
@@ -9776,6 +9815,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,LINEA_EXTENDIDA
 				,grupos
 				,cdtipsit
+				,cdusuari
+				,cdsisrol
 				).start();
 	}
 	
@@ -9796,6 +9837,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		               ,LINEA
 		               ,LINEA_EXTENDIDA
 		               ,cdtipsit
+		               ,cdusuari
+		               ,cdsisrol
 		               ;
 		
 		private List<Map<String,Object>> grupos;
@@ -9814,6 +9857,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,String LINEA_EXTENDIDA
 				,List<Map<String,Object>> grupos
 				,String cdtipsit
+				,String cdusuari
+				,String cdsisrol
 				)
 		{
 			this.hayTramite      = hayTramite;
@@ -9829,6 +9874,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			this.LINEA_EXTENDIDA = LINEA_EXTENDIDA;
 			this.grupos          = grupos;
 			this.cdtipsit        = cdtipsit;
+			this.cdusuari        = cdusuari;
+			this.cdsisrol        = cdsisrol;
 		}
 		
 		@Override
@@ -9853,6 +9900,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,"\n&&&&&& LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
 					,"\n&&&&&& grupos="          , grupos
 					,"\n&&&&&& cdtipsit="        , cdtipsit
+					,"\n&&&&&& cdusuari="        , cdusuari
+					,"\n&&&&&& cdsisrol="        , cdsisrol
 					));
 			try
 			{
@@ -9959,6 +10008,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,"1" //tipotari
 						,cdperpag
 						);
+				logger.debug("@@@@@@@@@@@@@@@@@GRABANDO EVENTO DE COTIZACION 4@@@@@@@@@@@@@@@@@");
+				cotizacionDAO.grabarEvento(new StringBuilder(), "COTIZACION", "COTIZA", new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
 			}
 			catch(Exception ex)
 			{

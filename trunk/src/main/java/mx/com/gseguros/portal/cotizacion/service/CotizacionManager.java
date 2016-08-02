@@ -686,6 +686,8 @@ public interface CotizacionManager
 			,String nmsituac
 			,String tipotari
 			,String cdperpag
+			,String cdusuari
+			,String cdsisrol
 			)throws Exception;
 	
 	@Deprecated
@@ -808,6 +810,8 @@ public interface CotizacionManager
 			,String LINEA_EXTENDIDA
 			,List<Map<String,Object>> olist1
 			,String cdtipsit
+			,String cdusuari
+			,String cdsisrol
 			);
 	
 	/**

@@ -4857,6 +4857,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		if(exito)
 		{
+			logger.debug(Utils.log("########################user ",user));
 			tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject aux=this.tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolEndoso(
 					clasif    , LINEA      , LINEA_EXTENDIDA
 					,cdunieco , cdramo     , nmpoliza
@@ -7235,7 +7236,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					return SUCCESS;
 				}
-				
+				logger.debug(Utils.log("########################user 2 ",user));
 				tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject aux = this.tvalositSigsvdefTvalogarContratanteTramiteSigsvalipol(
 							clasif    , LINEA         , LINEA_EXTENDIDA
 							,cdunieco , cdramo        , nmpoliza
@@ -7334,7 +7335,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				,"\n## asincrono="            , asincrono
 				,"\n## censoCompleto="        , censoCompleto
 				));
-		
 		tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject resp =
 				new tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject();
 		resp.exito = true;
@@ -7921,7 +7921,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{
 				//cotizacionManager.movimientoTbloqueo(cdunieco, cdramo, "W", nmpoliza, "-8", Constantes.DELETE_MODE);
-				
+				logger.debug(Utils.log("cdusuari", cdusuari, "cdsisrol", cdsisrol));
 				logger.debug("50.- cotizacionManager.ejecutaTarificacionConcurrente");
 				cotizacionManager.ejecutaTarificacionConcurrente(
 	            		cdunieco
@@ -7932,6 +7932,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		,"0"
 	            		,"1"
 	            		,cdperpag
+	            		,cdusuari
+	            		,cdsisrol
 	            		);
 			}
 			catch(Exception ex)
@@ -7962,6 +7964,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					,LINEA_EXTENDIDA
 					,olist1
 					,cdtipsit
+					,cdusuari
+					,cdsisrol
 					);
 		}
 		
@@ -8031,7 +8035,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n## asincrono: ")           .append(asincrono)
 				.toString()
 				);
-		
 		tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject resp =
 				new tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject();
 		resp.exito = true;
@@ -8807,6 +8810,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					,LINEA_EXTENDIDA
 					,olist1
 					,cdtipsit
+					,cdusuari
+					,cdsisrol
 					);
 		}
 		
@@ -12036,6 +12041,7 @@ public class CotizacionAction extends PrincipalCoreAction
     			
     			try
     			{
+    				logger.debug(Utils.log("########################user 5",user));
     				tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject aux=cotAction.tvalositSigsvdefTvalogarContratanteTramiteSigsvalipol(
     						clasif    , LINEA      , LINEA_EXTENDIDA
     						,cdunieco , cdramo     , nmpoliza

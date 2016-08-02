@@ -7,8 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
@@ -33,10 +38,6 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class SiniestrosManagerImpl implements SiniestrosManager
 {
 	private static Logger logger = Logger.getLogger(SiniestrosManagerImpl.class);
@@ -51,6 +52,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	
 	@Autowired
 	private MesaControlDAO mesaControlDAO;
+	
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
 	
 	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(SiniestrosManagerImpl.class);
 	
@@ -1382,7 +1386,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			,String cdmotivo
 			,String cdclausu
 			,String swagente
-			,Long stamp
+			,Long stamp, boolean enviarCorreos
 			) throws Exception
 	{
 		if(stamp==null)
@@ -1405,6 +1409,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 				,"\n@@@@@@ cdmotivo="        , cdmotivo
 				,"\n@@@@@@ cdclausu="        , cdclausu
 				,"\n@@@@@@ swagente="        , swagente
+				,"\n@@@@@@ enviarCorreos="   ,  enviarCorreos
 				));
 		
 		int bloqueos = consultasDAO.recuperarConteoTbloqueoTramite(ntramite);
@@ -1430,7 +1435,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 					,cdclausu
 					,swagente
 					);
-			
+			if(enviarCorreos){
+				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite);
+			}
 			try
 	        {
 				cotizacionDAO.grabarEvento(new StringBuilder("\nTurnar tramite")
@@ -1587,7 +1594,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 					,cdmotivo
 					,cdclausu
 					,swagente
-					,stamp
+					,stamp, true
 					);
 			}
 			catch(Exception ex)

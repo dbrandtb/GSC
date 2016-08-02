@@ -9888,7 +9888,7 @@ public class EndososAction extends PrincipalCoreAction
 				 */
 				if(actualizarGrupos){
 					Map<String, Object> res =  siniestrosManager.moverTramite(ntramiteNuevaPoliza, EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(), "Se Reexpide Poliza del tramite original: "+ ntramite , usuario.getUser(), usuario.getRolActivo().getClave(), 
-							null, RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol(), null, null, "N", timestamp);
+							null, RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol(), null, null, "N", timestamp, false);
 					
 					if(res.containsKey("NOMBRE") && StringUtils.isNotBlank((String)res.get("NOMBRE"))){
 						usuarioTramite = " asignado a: "+(String)res.get("NOMBRE");
@@ -9897,7 +9897,7 @@ public class EndososAction extends PrincipalCoreAction
 					usuarioTramite+=" en suscripci\u00F3n t\u00e9cnica para su recotizaci\u00f3n";
 				}else{
 					Map<String, Object> res =  siniestrosManager.moverTramite(ntramiteNuevaPoliza, EstatusTramite.TRAMITE_COMPLETO.getCodigo(), "Se Reexpide Poliza del tramite original: "+ ntramite , usuario.getUser(), usuario.getRolActivo().getClave(), 
-							null, RolSistema.SUSCRIPTOR.getCdsisrol(), null, null, "N", timestamp);
+							null, RolSistema.SUSCRIPTOR.getCdsisrol(), null, null, "N", timestamp, false);
 					
 					if(res.containsKey("NOMBRE") && StringUtils.isNotBlank((String)res.get("NOMBRE"))){
 						usuarioTramite = " asignado a: "+(String)res.get("NOMBRE");
