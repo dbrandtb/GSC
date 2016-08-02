@@ -1375,7 +1375,7 @@ var msgWindow;
 					centrarVentanaInterna(mensajeWarning(json.msgResult));
 				}else{
 					myMask.hide();
-					_11_mostrarSolicitudPago(grid,rowIndex,colIndex);
+					mostrarSolicitudPago(grid,rowIndex,colIndex);
 				}
 			},
 			failure : function (){
@@ -1457,8 +1457,7 @@ var msgWindow;
 							'params.cdunieco': record.raw.cdunieco,
 							'params.cdramo': record.raw.cdramo,
 							'params.estado': record.raw.estado,
-							'params.nmpoliza': record.raw.nmpoliza,
-							'params.cdperson': record.raw.otvalor04
+							'params.nmpoliza': record.raw.nmpoliza
 						}
 					});
 	        		
