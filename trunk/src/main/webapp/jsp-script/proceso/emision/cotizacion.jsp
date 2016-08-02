@@ -1630,6 +1630,8 @@ function _0_cotizar(boton)
     debug('_0_cotizar');
     if(_0_validarBase())//
     {
+    	var smap = _0_smap1;
+    	
         if(!Ext.isEmpty(_0_recordClienteRecuperado))
         {
             debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
@@ -1683,8 +1685,6 @@ function _0_cotizar(boton)
                   _0_smap1['cdagente']    = 'A'+cdagenteCotiza;
              }
         }
-        
-        var smap = _0_smap1;
         
         var json=
         {
