@@ -237,5 +237,5 @@ public interface CatalogosManager {
     
     public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception;
     
-    public List<GenericVO> recuperarMotivosRechazo () throws Exception;
+    public List<GenericVO> recuperarMotivosRechazo (String ntramite) throws Exception;
 }

@@ -290,6 +290,14 @@ Ext.onReady(function()
                         
                         _fieldByName('CDAGENTEEND',me).allowBlank = true;
                         _hide(_fieldByName('CDAGENTEEND',me));
+                        
+                        if (Number(cdtipram) === Number(TipoRamo.Salud)) { // Para salud
+                            _fieldByName('CDSUCDOC',me).forceSelection = true;
+                            _show(_fieldByName('CDSUCDOC',me));
+                        } else { // Para danios
+                            _fieldByName('CDSUCDOC',me).forceSelection = false;
+                            _hide(_fieldByName('CDSUCDOC',me));
+                        }
                     }
                     else if(Number(cdtiptra) === 15 || Number(cdtiptra) === 21) // para endoso o renovacion
                     {
@@ -307,6 +315,9 @@ Ext.onReady(function()
                         _show(_fieldByName('CDAGENTEEND',me));
                         
                         // ocultar
+                        
+                        _fieldByName('CDSUCDOC',me).forceSelection = false;
+                        _hide(_fieldByName('CDSUCDOC',me));
                         
                         _fieldByName('CDRAMO',me).allowBlank = true;
                         _hide(_fieldByName('CDRAMO',me));
@@ -607,18 +618,24 @@ Ext.onReady(function()
     
     var _p54_grid = _fieldById('_p54_grid');
     
-    var cdtipfluCmp    = _fieldByName('CDTIPFLU'    , _p54_windowNuevo),
-        cdflujoCmp     = _fieldByName('CDFLUJOMC'   , _p54_windowNuevo),
-        cdtiptraCmp    = _fieldByName('CDTIPTRA'    , _p54_windowNuevo),
-        cdtipsupCmp    = _fieldByName('CDTIPSUP'    , _p54_windowNuevo),
-        nmpolizaCmp    = _fieldByName('NMPOLIZA'    , _p54_windowNuevo),
-        nmpoliexCmp    = _fieldByName('NMPOLIEX'    , _p54_windowNuevo),
-        estadoCmp      = _fieldByName('ESTADO'      , _p54_windowNuevo),
-        cduniextCmp    = _fieldByName('CDUNIEXT'    , _p54_windowNuevo),
-        estatusCmp     = _fieldByName('STATUS'      , _p54_windowNuevo),
-        cdsucdocCmp    = _fieldByName('CDSUCDOC'    , _p54_windowNuevo),
-        cdramoCmp      = _fieldByName('CDRAMO'      , _p54_windowNuevo),
-        cdagenteCmp    = _fieldByName('CDAGENTE'    , _p54_windowNuevo);
+    var cdtipfluCmp    = _fieldByName('CDTIPFLU'  , _p54_windowNuevo),
+        cdflujoCmp     = _fieldByName('CDFLUJOMC' , _p54_windowNuevo),
+        cdtiptraCmp    = _fieldByName('CDTIPTRA'  , _p54_windowNuevo),
+        cdtipsupCmp    = _fieldByName('CDTIPSUP'  , _p54_windowNuevo),
+        nmpolizaCmp    = _fieldByName('NMPOLIZA'  , _p54_windowNuevo),
+        nmpoliexCmp    = _fieldByName('NMPOLIEX'  , _p54_windowNuevo),
+        estadoCmp      = _fieldByName('ESTADO'    , _p54_windowNuevo),
+        cduniextCmp    = _fieldByName('CDUNIEXT'  , _p54_windowNuevo),
+        estatusCmp     = _fieldByName('STATUS'    , _p54_windowNuevo),
+        cdsucdocCmp    = _fieldByName('CDSUCDOC'  , _p54_windowNuevo),
+        cdramoCmp      = _fieldByName('CDRAMO'    , _p54_windowNuevo),
+        cdagenteCmp    = _fieldByName('CDAGENTE'  , _p54_windowNuevo),
+        cdsucdocCmp    = _fieldByName('CDSUCDOC'  , _p54_windowNuevo);
+    
+    cdsucdocCmp.heredar = function() {
+        debug('>cdsucdocCmp.heredar');
+        cdsucdocCmp.getStore().load();
+    }
     
     cdramoCmp.heredar = function () {
         debug('>cdramoCmp.heredar');
@@ -657,8 +674,11 @@ Ext.onReady(function()
     cdflujoCmp.on({
         select : function (me, records) {
         debug('cdflujoCmp.select! args:',arguments);
+            var cdtipram  = records[0].get('aux'),
+                cdflujomc = records[0].get('key');
+            cdsucdocCmp.store.proxy.extraParams['params.idPadre'] = cdflujomc;
+            cdsucdocCmp.heredar();
             _p54_setearSucursalAgente();
-            var cdtipram = records[0].get('aux');
             if (Number(cdtiptraCmp.getValue()) !== 1) { // Para endosos y renovacion
                 cduniextCmp.store.proxy.extraParams['params.idPadre'] = cdtipram;
                 cduniextCmp.heredar();

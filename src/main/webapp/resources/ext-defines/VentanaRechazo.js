@@ -107,7 +107,8 @@ Ext.define('VentanaRechazo',
                                     type        : 'ajax',
                                     url         : _GLOBAL_CONTEXTO + '/catalogos/obtieneCatalogo.action',
                                     extraParams : {
-                                        catalogo : 'MOTIVOS_RECHAZO_TRAMITE'
+                                        catalogo          : 'MOTIVOS_RECHAZO_TRAMITE',
+                                        'params.ntramite' : config.ntramite
                                     },
                                     reader : {
                                         type         : 'json',
@@ -127,6 +128,8 @@ Ext.define('VentanaRechazo',
                                             if (!Ext.isEmpty(recordRechazoMedico)) {
                                                 me.remove(recordRechazoMedico);
                                             }
+                                        } else { // Cuando es medico
+                                            _fieldById('_c22_instance').down('[name=CDRAZRECHA]').seleccionaMedico();
                                         }
                                     }
                                 }
@@ -139,9 +142,15 @@ Ext.define('VentanaRechazo',
                                 combo.setValue(recMed);
                                 combo.fireEvent('select', combo, [recMed]);
                             },
-                            onSelect : function (me, records) { // Hereda texto al textfield
+                            /*onSelect : function (me, records) { // Hereda texto al textfield
                                 debug('>CDRAZRECHA.onSelect args:', arguments);
                                 me.up('form').down('[name=COMMENTSEXT]').setValue(records[0].get('aux'));
+                            },*/
+                            listeners : {
+                                select : function (me, records) {
+                                    debug('>CDRAZRECHA.select!');
+                                    me.up('form').down('[name=COMMENTSEXT]').setValue(records[0].get('aux'));
+                                }
                             }
                         }, {
                             xtype       : 'textarea'
@@ -150,7 +159,7 @@ Ext.define('VentanaRechazo',
                             ,name       : 'COMMENTSEXT'
                             ,width      : 570
                             ,height     : 200
-                            ,listeners  :
+                            /*,listeners  :
                             {
                                 afterrender : function(me)
                                 {
@@ -278,7 +287,7 @@ Ext.define('VentanaRechazo',
                                         manejaException(e,ck);
                                     }
                                 }
-                            }
+                            }*/
                         }
                         ,{
                             xtype       : 'textarea'
