@@ -249,11 +249,13 @@ function checarBenef()
 	                  if(_p29_validaSeguro == "S")
 	                  {    
 	                	  var panel = Ext.getCmp('panelBeneficiarioHere');
- 	                	  panel.on({
+ 	                	  /*
+	                	  panel.on({
  	                		  afterrender : function(me){
  	                			  me.getLoader().load();
  	                		  }
- 	                	  })
+ 	                	  });
+ 	                	  */
 	                	  panel.show();
  	                	  
  	                	  
@@ -1629,7 +1631,15 @@ function _p29_emitirClicComplementarios()
 			                                       ,autoLoad: false
 			                                       ,scripts:true
 			                                   }
-			                               })
+							                   ,listeners: {
+	                                               afterrender:function(me)
+	                                               {
+	                                                   debug('afterrender panel beneficiarios');
+	                                                   me.loader.load();
+	                                               }
+	                                           }
+			                               }
+			                               )
 		                    ],
 		                    buttons:
 		                    [
@@ -1845,70 +1855,67 @@ function _p29_emitirClicComplementarios()
                                     {
                                     	try
                                     	{
-                                    		_p32_guardarClic
-	                                    	(
-	                                    	  function()
-	                                    	  {
-	                                    			if(inputCdramo == 16)
-	                                                {
-	                                                  Ext.Ajax.request(
-	                                                             {
-	                                                                 url     : _URL_urlCargarTvalosit
-	                                                                 ,params :
-	                                                                 {
-	                                                                     'smap1.cdunieco'  : inputCdunieco
-	                                                                     ,'smap1.cdramo'   : inputCdramo
-	                                                                     ,'smap1.estado'   : inputEstado
-	                                                                     ,'smap1.nmpoliza' : inputNmpoliza
-	                                                                     ,'smap1.nmsituac' : '1'
-	                                                                 }
-	                                                                 ,success : function(response)
-	                                                                 {
-	                                                                     var json=Ext.decode(response.responseText);
-	                                                                     if(json.exito)
-	                                                                     {
-	                                                                             var _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
-	                                                                            
-	                                                                                        debug('fn:', _p29_validaSeguro);
-	                                                                             if(_p29_validaSeguro == "S")
-	                                                                             {    
-	                                                                                 var suma=0;
-	                                                                                 _p32_store.each(function(record)
-	                                                                                 {
-	                                                                                     if(record.get('mov')+'x'!='-x')
-	                                                                                     {
-	                                                                                         suma=suma+(record.get('PORBENEF')-0);
-	                                                                                     }
-	                                                                                 });
-	                                                                                 if(suma!=100)
-	                                                                                 {  
-	                                                                                     mensajeError('La suma de porcentajes de beneficiarios activos es '+suma+', en lugar de 100');
-	                                                                                     return
-	                                                                                 }
-	                                                                                 else
-	                                                                                 {
-	                                                                                     _p29_emitirClicComplementarios();
-	                                                                                 }
-	
-	                                                                             }
-	                                                                             else
-	                                                                             {
-	                                                                                 _p29_emitirClicComplementarios();
-	                                                                             }
-	                                                                     }
-	                                                                     else
-	                                                                     {
-	                                                                         mensajeError(json.respuesta);
-	                                                                     }
-	                                                                 }
-	                                                             });
-	                                                }
-	                                                else
-	                                                {
-	                                                    _p29_emitirClicComplementarios();
-	                                                }
-	                                    	  }
-	                                    	);
+                                    		if(inputCdramo == 16)
+                                            {
+	                                    		_p32_guardarClic
+		                                    	(
+                                                 Ext.Ajax.request(
+                                                            {
+                                                                url     : _URL_urlCargarTvalosit
+                                                                ,params :
+                                                                {
+                                                                    'smap1.cdunieco'  : inputCdunieco
+                                                                    ,'smap1.cdramo'   : inputCdramo
+                                                                    ,'smap1.estado'   : inputEstado
+                                                                    ,'smap1.nmpoliza' : inputNmpoliza
+                                                                    ,'smap1.nmsituac' : '1'
+                                                                }
+                                                                ,success : function(response)
+                                                                {
+                                                                    var json=Ext.decode(response.responseText);
+                                                                    if(json.exito)
+                                                                    {
+                                                                            var _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];
+                                                                           
+                                                                                       debug('fn:', _p29_validaSeguro);
+                                                                            if(_p29_validaSeguro == "S")
+                                                                            {    
+                                                                                var suma=0;
+                                                                                _p32_store.each(function(record)
+                                                                                {
+                                                                                    if(record.get('mov')+'x'!='-x')
+                                                                                    {
+                                                                                        suma=suma+(record.get('PORBENEF')-0);
+                                                                                    }
+                                                                                });
+                                                                                if(suma!=100)
+                                                                                {  
+                                                                                    mensajeError('La suma de porcentajes de beneficiarios activos es '+suma+', en lugar de 100');
+                                                                                    return
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    _p29_emitirClicComplementarios();
+                                                                                }
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                _p29_emitirClicComplementarios();
+                                                                            }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        mensajeError(json.respuesta);
+                                                                    }
+                                                                }
+                                                            })
+			                                    );
+			                                }
+	                                        else
+	                                        {
+	                                            _p29_emitirClicComplementarios();
+	                                        }
                                     	}
                                     	catch(e)
                                         {
