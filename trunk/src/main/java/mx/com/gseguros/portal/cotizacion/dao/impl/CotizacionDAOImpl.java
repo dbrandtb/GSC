@@ -7849,6 +7849,49 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 	}
 	
+	@Override
+	public void actualizaDatosMpersona(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdestciv
+			,String ocup
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco", cdunieco);
+		params.put("cdramo", cdramo);
+		params.put("estado"  , estado);
+		params.put("nmpoliza", nmpoliza);
+		params.put("nmsituac", nmsituac);
+		params.put("nmsuplem", nmsuplem);
+		params.put("cdestciv", cdestciv);
+		params.put("ocup"    , ocup);
+		ejecutaSP(new ActualizaDatosMpersonaSP(getDataSource()),params);
+	}
+	
+	protected class ActualizaDatosMpersonaSP extends StoredProcedure
+	{
+		protected ActualizaDatosMpersonaSP(DataSource dataSource)
+		{
+			super(dataSource,"P_ACT_DAT_MPERSONA");
+			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"	    , OracleTypes.VARCHAR));	
+			declareParameter(new SqlParameter("nmpoliza"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdestciv"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ocup"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 	public String validandoCoberturasPLan(
 			  String cdunieco
      		 ,String cdramo

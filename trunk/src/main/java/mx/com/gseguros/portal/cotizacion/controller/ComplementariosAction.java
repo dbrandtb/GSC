@@ -1392,43 +1392,34 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				
 				String nmsituaext = null, ns =null, cf =null;
-				String clvfam   = (String) aseg.get("clvfam");
-				String numsoc   = (String) aseg.get("numsoc");
-				String nmsituac = (String) aseg.get("nmsituac");
-				int rol = Integer.parseInt((String) aseg.get("cdrol"));
+				String clvfam    = (String) aseg.get("clvfam");
+				String numsoc    = (String) aseg.get("numsoc");
+				String nmsituac  = (String) aseg.get("nmsituac");
+				Boolean estomador = (Boolean) aseg.get("estomador");
 				
 				
 				//N�mero de socio y Clave Familiar, para el atributo SITUAEXT
 				
-					logger.debug(Utils.log("Numero de Socio ->",numsoc));
-					logger.debug(Utils.log("Clave Familiar  ->",clvfam));
-					logger.debug(Utils.log("Estado Civil    ->",(String) aseg.get("cdestciv")));
-					logger.debug(Utils.log("Ocupacion       ->",(String) aseg.get("ocup")));
+				logger.debug(Utils.log("Numero de Socio ->",numsoc));
+				logger.debug(Utils.log("Clave Familiar  ->",clvfam));
+				logger.debug(Utils.log("Estado Civil    ->",(String) aseg.get("cdestciv")));
+				logger.debug(Utils.log("Ocupacion       ->",(String) aseg.get("ocup")));
+				logger.debug(Utils.log("Nmsituac        ->",(String) aseg.get("nmsituac")));
+				logger.debug(Utils.log("Estomador       ->",estomador));
+				
+				if(StringUtils.isBlank(numsoc) || StringUtils.isBlank(clvfam)){
+					nmsituaext = "";
+				}else{
+					logger.debug(Utils.log("Generando Situaext..."));
+					ns = StringUtils.leftPad(numsoc, 6, "0");
+					cf = StringUtils.leftPad(clvfam, 2, "0");
 					
-					
-					if(StringUtils.isBlank(numsoc) || StringUtils.isBlank(clvfam)
-							|| StringUtils.isBlank((String) aseg.get("cdestciv")) || StringUtils.isBlank((String) aseg.get("ocup"))){
-						nmsituaext = " ";
-						String cdunieco = (String) map1.get("pv_cdunieco");
+					//NMSITUAEXT
+					nmsituaext = ns + "-" + cf;
+					logger.debug(Utils.log("nmsituaext ->",nmsituaext));
+				}
 						
-						logger.debug(Utils.log("Rol ->",rol));
 						
-						if(rol >= 2){
-							logger.debug(Utils.log("�v3"));
-							if(StringUtils.isBlank(nmsituaext) && cdunieco.equals(SUCURSAL_SALUD_NOVA)){
-								throw new ApplicationException("No se genero Situaext desde Clave familiar y Numero de Socio");
-							}
-						}
-					}else{
-						logger.debug(Utils.log("Generando Situaext..."));
-						ns = StringUtils.leftPad(numsoc, 6, "0");
-						cf = StringUtils.leftPad(clvfam, 2, "0");
-						
-						//NMSITUAEXT
-						nmsituaext = ns + "-" + cf;
-						logger.debug(Utils.log("nmsituaext ->",nmsituaext));
-					}
-								
 				Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 				String swExiper = (String)aseg.get("swexiper");
 				logger.debug(Utils.log("swexiper ->"+swExiper));
@@ -1468,6 +1459,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					
 					
 				}
+				
 				
 				//se actualiza situaext
 				emisionManager.actualizaNmsituaextMpolisit(
@@ -1511,6 +1503,34 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 				
 				kernelManager.movMpoliper(parametros);
+				
+				if(swExiper.equalsIgnoreCase("S") && !nmsituac.equals("0") 
+						&& estomador){ 
+					logger.debug(Utils.log("Es un tomador...."));
+					//Se actualizan los datos de un contratante en MPERSONA
+					emisionManager.actualizaDatosMpersona(
+							map1.get("pv_cdunieco")
+							,map1.get("pv_cdramo")
+							,map1.get("pv_estado")
+							,map1.get("pv_nmpoliza")
+							,nmsituac
+							,"0"
+							,(String)aseg.get("cdestciv")
+							,(String)aseg.get("ocup")
+							);
+				}else if(swExiper.equalsIgnoreCase("S") && !nmsituac.equals("0")){
+					//Se actualizan los datos de un asegurado en MPERSONA
+					emisionManager.actualizaDatosMpersona(
+							map1.get("pv_cdunieco")
+							,map1.get("pv_cdramo")
+							,map1.get("pv_estado")
+							,map1.get("pv_nmpoliza")
+							,nmsituac
+							,"0"
+							,(String)aseg.get("cdestciv")
+							,(String)aseg.get("ocup")
+							);
+				}
 				
 				//////////////////////////
 				//para que cambie tvalosit
