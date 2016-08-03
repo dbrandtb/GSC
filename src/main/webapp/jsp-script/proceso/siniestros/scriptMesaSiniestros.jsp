@@ -1360,10 +1360,11 @@ var msgWindow;
 	
 	//Validamos si existe las Validaciones 
 	function _11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex){
-		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
-		myMask.show();
-		var record = grid.getStore().getAt(rowIndex);
-		Ext.Ajax.request({
+		//var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		//myMask.show();
+		//var record = grid.getStore().getAt(rowIndex);
+		mostrarSolicitudPago(grid,rowIndex,colIndex);
+		/*Ext.Ajax.request({
 			url     : _URL_VALIDA_COBASEGURADOS
 			,params:{
 				'params.ntramite'  : record.get('ntramite')
@@ -1386,7 +1387,7 @@ var msgWindow;
 					icon: Ext.Msg.ERROR
 				}));
 			}
-		});
+		});*/
 	}
 	
 	
@@ -2149,7 +2150,7 @@ Ext.onReady(function()
 		{
 		    
 			// Se aumenta el timeout para todas las peticiones:
-			Ext.Ajax.timeout = 1000*60*60;
+			Ext.Ajax.timeout = 1000*60*120;
 		    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
 		    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
 		    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });

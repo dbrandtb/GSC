@@ -3866,9 +3866,10 @@
 	
 	//Validamos si existe las Validaciones 
 	function _11_validaAseguroLimiteCoberturas(){
-		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
-		myMask.show();
-		Ext.Ajax.request({
+		//var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		//myMask.show();
+		_11_mostrarSolicitudPago();
+		/*Ext.Ajax.request({
 			url     : _URL_VALIDA_COBASEGURADOS
 			,params:{
 				'params.ntramite'  : _11_params.NTRAMITE
@@ -3891,7 +3892,7 @@
 					icon: Ext.Msg.ERROR
 				}));
 			}
-		});
+		});*/
 	}
 	
 	// Mostrar solicitud de pago 
@@ -6301,11 +6302,12 @@
 					if(jsonResp.success == true){
 						var infonavit = Ext.decode(response.responseText).datosInformacionAdicional[0];
 						var consultasTotales = infonavit.NO_CONSULTAS;
+						var limiteTotal      = infonavit.OTVALOR04;
 						var maxConsulta      = infonavit.OTVALOR07;
 						var diferenciador    = infonavit.OTVALOR15;
-						panelComplementos.down('[name=params.sublimite]').setValue(maxConsulta);
+						panelComplementos.down('[name=params.sublimite]').setValue(limiteTotal);
 						panelComplementos.down('[name=params.pagado]').setValue(infonavit.IMPGASTADOCOB);
-						panelComplementos.down('[name=params.disponibleCob]').setValue(+maxConsulta - +infonavit.IMPGASTADOCOB);
+						panelComplementos.down('[name=params.disponibleCob]').setValue(+limiteTotal - +infonavit.IMPGASTADOCOB);
 					}else{
 						maxconsultas = jsonResp.success;
 						centrarVentanaInterna(Ext.Msg.show({

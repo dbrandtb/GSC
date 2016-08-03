@@ -5724,7 +5724,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			}
 			mensaje = mensajeM;
 		}catch( Exception e){
-			logger.error("Error en procesarTramiteLayout : {}", e.getMessage(), e);
+			logger.error("Error en procesarTramiteLayout : ", e);
 			success =  false;
 			mensaje = "Error al procesar el tr\u00e1mite al momento de procesar.";
 			return SUCCESS;
