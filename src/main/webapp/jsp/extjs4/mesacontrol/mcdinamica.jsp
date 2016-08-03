@@ -10,6 +10,24 @@
 }
 </style>
 <script type="text/javascript">
+
+//Se repara que combos con 'forceSelection' dejen pasar cadena mientras se carga su lista'
+Ext.define('ComboBox', {
+    override: 'Ext.form.ComboBox',
+    
+    validator: function(val) {
+
+        var me = this;
+        var valido= true;
+            
+        if (me.forceSelection === true) {
+        	valido = (me.findRecord('value',val)!== false);
+        }
+        debug(me.name+' - '+me.forceSelection+' - '+val+ '-' +valido)
+        return valido || 'No se encuentra el registro';
+    }
+});
+
 ///////////////////////
 ////// variables //////
 /*///////////////////*/
