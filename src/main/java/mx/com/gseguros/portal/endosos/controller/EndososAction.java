@@ -5851,11 +5851,11 @@ public class EndososAction extends PrincipalCoreAction
 							,cdunieco
 							,cdunieco
 							,TipoTramite.EMISION_EN_ESPERA.getCdtiptra()
-							,fechaEndosoD
+							,fechaHoy
 							,null
 							,null
 							,null
-							,fechaEndosoD
+							,fechaHoy
 							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
 							,mensajeRespuesta
 							,null
@@ -6941,11 +6941,11 @@ public class EndososAction extends PrincipalCoreAction
 							,cdunieco
 							,cdunieco
 							,TipoTramite.ENDOSO.getCdtiptra()
-							,fechaEndoso
+							,fechaHoy
 							,null
 							,null
 							,null
-							,fechaEndoso
+							,fechaHoy
 							,estatusTramite
 							,dscoment
 							,null
@@ -7151,6 +7151,8 @@ public class EndososAction extends PrincipalCoreAction
 					cdtipflu  = datosFlujoEndoso.get("cdtipflu");
 					cdflujomc = datosFlujoEndoso.get("cdflujomc");
 					
+					Date fechaHoy = new Date();
+					
 					String ntramiteGenerado = mesaControlManager.movimientoTramite(
 							cdunieco
 							,cdramo
@@ -7160,11 +7162,11 @@ public class EndososAction extends PrincipalCoreAction
 							,cdunieco
 							,cdunieco
 							,TipoTramite.ENDOSO.getCdtiptra()
-							,fechaEndoso
+							,fechaHoy
 							,null
 							,null
 							,null
-							,fechaEndoso
+							,fechaHoy
 							,estatusTramite
 							,dscoment
 							,null

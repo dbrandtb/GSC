@@ -4075,11 +4075,11 @@ public class EndososManagerImpl implements EndososManager
 							,cdunieco
 							,cdunieco
 							,TipoTramite.ENDOSO.getCdtiptra()
-							,fechaEndoso
+							,fechaHoy
 							,null
 							,null
 							,null
-							,fechaEndoso
+							,fechaHoy
 							,estatusTramite
 							,dscoment
 							,null
@@ -4279,6 +4279,8 @@ public class EndososManagerImpl implements EndososManager
 					cdtipflu  = datosFlujoEndoso.get("cdtipflu");
 					cdflujomc = datosFlujoEndoso.get("cdflujomc");
 					
+					Date fechaHoy = new Date();
+					
 					String ntramiteGenerado = mesaControlDAO.movimientoMesaControl(
 							cdunieco
 							,cdramo
@@ -4288,11 +4290,11 @@ public class EndososManagerImpl implements EndososManager
 							,cdunieco
 							,cdunieco
 							,TipoTramite.ENDOSO.getCdtiptra()
-							,fechaEndoso
+							,fechaHoy
 							,null
 							,null
 							,null
-							,fechaEndoso
+							,fechaHoy
 							,estatusTramite
 							,dscoment
 							,null
