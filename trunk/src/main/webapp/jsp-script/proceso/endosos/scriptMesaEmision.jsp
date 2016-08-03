@@ -379,7 +379,7 @@ function _4_onComplementariosAbiertoClick(rowIndex)
                     cdunieco  : record.get('cdunieco')
                     ,cdramo   : record.get('cdramo')
                     ,estado   : record.get('estado')
-                    ,nmpoliza : record.get(' nmpoliza')
+                    ,nmpoliza : record.get('nmpoliza')
                     ,'map1.ntramite' : record.get('ntramite')
                     ,cdtipsit : record.get('cdtipsit')
                 }
