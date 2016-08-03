@@ -5,7 +5,7 @@
 ///////////////////////
 ////// FUNCIONES //////
 /*///////////////////*/
-var _ice_debug = false;
+var _ice_debug = true;
 
 function debug(a,b,c,d,e)
 {
