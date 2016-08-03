@@ -48,7 +48,7 @@ Ext.define('ComboBox', {
         var me = this;
         var valido= true;
             
-        if (me.forceSelection === true) {
+        if (me.forceSelection === true && me.allowBlank === false) {
             valido = (me.findRecord('value',val)!== false);
         }
         debug(me.name+' - '+me.forceSelection+' - '+val+ '-' +valido)
