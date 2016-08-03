@@ -427,6 +427,7 @@
     	for (var i = 0; i < gridColumns.length; i++) {
     	  if (gridColumns[i].dataIndex == "numsoc" && cdunieco == 1403) {
 	    		gridColumns[i].editor.allowBlank = false;
+	    		gridColumns[i].editor.regex = /^\d+$/;
 	    		debug(gridColumns[i].editor);
 	    		break;
     	  }
@@ -436,10 +437,53 @@
     	for (var i = 0; i < gridColumns.length; i++) {
     	  if (gridColumns[i].dataIndex == "clvfam" && cdunieco == 1403) {
 	    		gridColumns[i].editor.allowBlank = false;
+	    		gridColumns[i].editor.regex = /^\d+$/;
 	    		debug(gridColumns[i].editor);
 	    		break;
     	  }
     	}
+    }
+    
+    //Valida que los datos sean validos y no se encuentren vacios
+    function validaDatosAseg(grid,cdunieco){
+    	var size = grid.getView().dataSource.data.items.length;
+		var arrErrores = [];
+		var err;
+		
+		for (var i=0; i < size; i++){
+		
+		        if(Ext.isEmpty(grid.getView().dataSource.data.items[i].data.cdestciv)){
+		            arrErrores.push('Estado Civil\n');
+		            grid.getStore().getAt(i).set('cdestciv',null);
+		
+		        }
+		
+		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.numsoc)){
+		            arrErrores.push('Numero de socio\n');
+		            grid.getStore().getAt(i).set('numsoc',null);
+		        }
+		
+		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.clvfam)){
+		            arrErrores.push('Clave Familiar\n');
+		            grid.getStore().getAt(i).set('clvfam',null);
+		         }   
+		
+		        if(Ext.isEmpty(grid.getView().dataSource.data.items[i].data.ocup)){
+		            arrErrores.push('Ocupacion\n');
+		            grid.getStore().getAt(i).set('ocup',null);
+		        }
+		
+		}
+		
+		if(!Ext.isEmpty(arrErrores)){
+			err = 'Los campos : ';
+			for(var i=0; i < arrErrores.length;i++){
+				err += arrErrores[i];
+			}
+		}
+		 
+		
+		return err;
     }
     
     //guardador
@@ -596,12 +640,7 @@
                                             Apellido_Materno: datosContr.apmat,
                                             cdrfc:datosContr.rfc,
                                             tpersona : datosContr.tipoper,
-                                            nacional : datosContr.naciona,
-                                            cdestciv :  recordAsegu.get('cdestciv'),
-                                            ocup     :  recordAsegu.get('ocup'),
-                                            numsoc   :  recordAsegu.get('numsoc'),
-                                            clvfam   :  recordAsegu.get('clvfam'),
-                                            parentesco	: recordAsegu.get('Parentesco')
+                                            nacional : datosContr.naciona
                                         });
                                         debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
                                         var recordTmp = recordAsegu;
@@ -633,11 +672,6 @@
                                         cdrfc: recordAsegu.get('cdrfc'),
                                         tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
                                         nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key'),
-                                        cdestciv :  recordAsegu.get('cdestciv'),
-                                        clvfam   :  recordAsegu.get('clvfam'),
-                                        numsoc   :  recordAsegu.get('numsoc'),
-                                        ocup     :  recordAsegu.get('ocup'),
-                                        parentesco	: recordAsegu.get('Parentesco')
                                     });
                                     debug('*f6');
                                 });
@@ -2360,6 +2394,13 @@ debug("validarYGuardar flag:2");
                                     return false;
                                 }
                                 
+                                //Validacion de campos en el grid de asegurados
+                                var mensajeError = validaDatosAseg(gridPersonasp2,inputCduniecop2);
+                                if(!Ext.isEmpty(mensajeError)){
+								    mensajeWarning(mensajeError+' no son validos.');
+								    return false;
+								}
+                                
                                 //ver si el contratante es aparte
                                 var hayContApart=true;
                                 storePersonasp2.each(function(record,index)
@@ -2426,7 +2467,7 @@ debug("validarYGuardar flag:2");
                                         Apellido_Materno: datosContr.apmat,
                                         cdrfc:datosContr.rfc,
                                         tpersona : datosContr.tipoper,
-                                        nacional : datosContr.naciona 
+                                        nacional : datosContr.naciona
                                     });
                                     /*if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
                                     {
@@ -2473,6 +2514,7 @@ debug("validarYGuardar flag:2");
                                     if((!hayContApart)&&recordAsegu.get('estomador'))
                                     {
                                         debug('se manda como contratante',recordAsegu);
+                                        debug('estomador',recordAsegu.get('estomador'));
                                         incisosJson.push({
                                             nmsituac:'0',
                                             cdrol:'1',
@@ -2487,13 +2529,14 @@ debug("validarYGuardar flag:2");
                                             Apellido_Paterno: datosContr.appat,
                                             Apellido_Materno: datosContr.apmat,
                                             cdrfc:datosContr.rfc,
-                                            tpersona : datosContr.tipoper,
-                                            nacional : datosContr.naciona,
-                                            cdestciv :  recordAsegu.get('cdestciv'),
-                                            numsoc   :  recordAsegu.get('numsoc'),
-                                            clvfam   :  recordAsegu.get('clvfam'),
-                                            ocup     :  recordAsegu.get('ocup'),
-                                            parentesco	: recordAsegu.get('Parentesco')
+                                            tpersona    : datosContr.tipoper,
+                                            nacional    : datosContr.naciona,
+                                            cdestciv    :  recordAsegu.get('cdestciv'),
+                                            numsoc      :  recordAsegu.get('numsoc'),
+                                            clvfam      :  recordAsegu.get('clvfam'),
+                                            ocup        :  recordAsegu.get('ocup'),
+                                            parentesco	:  recordAsegu.get('Parentesco'),
+                                            estomador   :  recordAsegu.get('estomador')
                                         });
                                         debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
                                         var recordTmp = recordAsegu;
@@ -2529,17 +2572,19 @@ debug("validarYGuardar flag:2");
                                         numsoc   	:  recordAsegu.get('numsoc'),
                                         clvfam   	:  recordAsegu.get('clvfam'),
                                         ocup     	:  recordAsegu.get('ocup'),
-                                        parentesco	: recordAsegu.get('Parentesco')
+                                        parentesco	: recordAsegu.get('Parentesco'),
+                                        estomador   : recordAsegu.get('estomador')
                                     });
                                     debug('**f6');
                                     
-                                    debug('¬Datos en recordAsegu');
+                                    debug('¬Datos en recordAsegu',recordAsegu);
                                     
                                     debug('recordAsegu :',recordAsegu.get('cdestciv'),'.');
                                     debug('recordAsegu :',recordAsegu.get('numsoc'),'.');
                                     debug('recordAsegu :',recordAsegu.get('clvfam'),'.');
                                     debug('recordAsegu :',recordAsegu.get('ocup'),'.');
                                     debug('recordAsegu :',recordAsegu.get('Parentesco'),'.');
+                                    debug('recordAsegu :',recordAsegu.get('estomador'),'.');
                                     
                                     
                                 });
@@ -2620,12 +2665,7 @@ debug("validarYGuardar flag:2");
                                                                             Apellido_Materno: datosContr.apmat,
                                                                             cdrfc:datosContr.rfc,
                                                                             tpersona : datosContr.tipoper,
-                                                                            nacional : datosContr.naciona
-//                                                                            ,cdestciv :  recordAsegu.get('cdestciv'),
-//									                                        numsoc   :  recordAsegu.get('numsoc'),
-//									                                        clvfam   :  recordAsegu.get('clvfam'),
-//									                                        ocup     :  recordAsegu.get('ocup'),
-//									                                        parentesco	: recordAsegu.get('Parentesco')
+                                                                            nacional : datosContr.naciona									                                        
                                                                         });
                                                                     }
                                                                     storePersonasp2.each(function(recordAsegu2)
@@ -2648,12 +2688,12 @@ debug("validarYGuardar flag:2");
                                                                                 Apellido_Materno: datosContr.apmat,
                                                                                 cdrfc:datosContr.rfc,
                                                                                 tpersona : datosContr.tipoper,
-                                                                                nacional : datosContr.naciona
-//                                                                                ,cdestciv :  recordAsegu.get('cdestciv'),
-//										                                        numsoc   :  recordAsegu.get('numsoc'),
-//										                                        clvfam   :  recordAsegu.get('clvfam'),
-//										                                        ocup     :  recordAsegu.get('ocup'),
-//										                                        parentesco	: recordAsegu.get('Parentesco')
+                                                                                nacional : datosContr.naciona,
+                                                                                cdestciv :  recordAsegu2.get('cdestciv'),
+										                                        clvfam   :  recordAsegu2.get('clvfam'),
+										                                        numsoc   :  recordAsegu2.get('numsoc'),
+										                                        ocup     :  recordAsegu2.get('ocup'),
+										                                        parentesco	: recordAsegu2.get('Parentesco')
                                                                             });
                                                                         }
                                                                         incisosJson.push({
@@ -2672,11 +2712,12 @@ debug("validarYGuardar flag:2");
                                                                             cdrfc: recordAsegu2.get('cdrfc'),
                                                                             tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
                                                                             nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
-//                                                                            ,cdestciv :  recordAsegu.get('cdestciv'),
-//									                                        numsoc   :  recordAsegu.get('numsoc'),
-//									                                        clvfam   :  recordAsegu.get('clvfam'),
-//									                                        ocup     :  recordAsegu.get('ocup'),
-//									                                        parentesco	: recordAsegu.get('Parentesco')
+                                                                           ,cdestciv :  recordAsegu2.get('cdestciv'),
+									                                        numsoc   :  recordAsegu2.get('numsoc'),
+									                                        clvfam   :  recordAsegu2.get('clvfam'),
+									                                        ocup     :  recordAsegu2.get('ocup'),
+									                                        parentesco	: recordAsegu2.get('Parentesco'),
+									                                        estomador   : recordAsegu2.get('estomador')
                                                                         });
                                                                     });                
                                                                     Ext.getCmp('form1p2').setLoading(false);

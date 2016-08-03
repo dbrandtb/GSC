@@ -778,6 +778,17 @@ public interface CotizacionDAO {
 			,String nmsituaext
 			)throws Exception;
 	
+	public void actualizaDatosMpersona(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdestciv
+			,String ocup
+			)throws Exception;
+	
 	public String validandoCoberturasPLan(
 			String cdunieco
 			,String cdramo

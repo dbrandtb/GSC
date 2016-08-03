@@ -201,6 +201,30 @@ public class EmisionManagerImpl implements EmisionManager
 				);
 	}
 	
+	@Override
+	@Deprecated
+	public void actualizaDatosMpersona(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdestciv
+			,String ocup
+			)throws Exception
+	{
+		cotizacionDAO.actualizaDatosMpersona(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsituac
+				,nmsuplem
+				,cdestciv
+				,ocup);
+	}
+	
 	@Deprecated
 	@Override
 	public void validarDocumentoTramite (String ntramite, String cddocume) throws Exception {

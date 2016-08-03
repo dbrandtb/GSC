@@ -41,6 +41,18 @@ public interface EmisionManager
 			)throws Exception;
 	
 	@Deprecated
+	public void actualizaDatosMpersona(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdestciv
+			,String ocup
+			)throws Exception;
+	
+	@Deprecated
 	public void validarDocumentoTramite (String ntramite, String cddocume) throws Exception;
 	
 	@Deprecated
