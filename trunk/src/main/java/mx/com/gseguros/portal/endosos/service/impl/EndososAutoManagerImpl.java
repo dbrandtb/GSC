@@ -1360,6 +1360,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			valores.put("otvalor04" , nsuplogi);
 			valores.put("otvalor05" , cdusuari);
 			
+			Date fechaHoy = new Date();
+			
 			mesaControlDAO.movimientoMesaControl(
 					cdunieco
 					,cdramo
@@ -1369,11 +1371,11 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,cdunieco
 					,cdunieco
 					,TipoTramite.ENDOSO.getCdtiptra()
-					,fechaEfecto
+					,fechaHoy
 					,null //cdagente
 					,null //referencia
 					,null //nombre
-					,fechaEfecto
+					,fechaHoy
 					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
 					,null //comments
 					,null //nmsolici
@@ -6892,6 +6894,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				valores.put("otvalor04" , nsuplogi);
 				valores.put("otvalor05" , cdusuari);
 				
+				Date fechaHoy = new Date();
+				
 				mesaControlDAO.movimientoMesaControl(
 						cdunieco
 						,cdramo
@@ -6901,11 +6905,11 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						,cdunieco
 						,cdunieco
 						,TipoTramite.ENDOSO.getCdtiptra()
-						,dFechaEndoso
+						,fechaHoy
 						,null //cdagente
 						,null //referencia
 						,null //nombre
-						,dFechaEndoso
+						,fechaHoy
 						,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
 						,dscoment
 						,null //nmsolici
