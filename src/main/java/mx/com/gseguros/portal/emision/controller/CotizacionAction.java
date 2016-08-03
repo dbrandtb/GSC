@@ -10070,9 +10070,10 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						);
 				
-				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit MSC:
+				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit MSC y TMS:
 				if (Ramo.MULTISALUD.getCdramo().equals(cdramo)
-						&& !TipoSituacion.MULTISALUD_COLECTIVO.getCdtipsit().equals(cdtipsit))
+						&& !TipoSituacion.MULTISALUD_COLECTIVO.getCdtipsit().equals(cdtipsit)
+						&& !TipoSituacion.TRADICIONALES_MEGASALUD.getCdtipsit().equals(cdtipsit))
 				{
 					//excel resumen
 					Map<String,String> paramsResumen = new LinkedHashMap<String,String>();
