@@ -78,7 +78,7 @@ Ext.define('VentanaRechazo',
                         ,{
                             xtype       : 'textfield'
                             ,name       : 'CDCLAUSU'
-                            ,allowBlank : false
+                            ,allowBlank : true
                             ,readOnly   : true
                             ,hidden     : true
                         }, {
