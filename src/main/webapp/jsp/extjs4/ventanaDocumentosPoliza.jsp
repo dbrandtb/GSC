@@ -913,7 +913,7 @@ Ext.onReady(function()
 	                        }
 	                    ],
 	                ftype:'groupingsummary',
-	                startCollapsed : panDocSmap1.usuariosPrimero === 'S'
+	                startCollapsed : true
 	            }]
                 ,dockedItems :
                 [
