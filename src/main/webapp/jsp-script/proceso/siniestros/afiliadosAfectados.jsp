@@ -3866,10 +3866,9 @@
 	
 	//Validamos si existe las Validaciones 
 	function _11_validaAseguroLimiteCoberturas(){
-		//var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
-		//myMask.show();
-		_11_mostrarSolicitudPago();
-		/*Ext.Ajax.request({
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
+		Ext.Ajax.request({
 			url     : _URL_VALIDA_COBASEGURADOS
 			,params:{
 				'params.ntramite'  : _11_params.NTRAMITE
@@ -3892,7 +3891,7 @@
 					icon: Ext.Msg.ERROR
 				}));
 			}
-		});*/
+		});
 	}
 	
 	// Mostrar solicitud de pago 
@@ -6722,7 +6721,7 @@
 		<script>
 			Ext.onReady(function(){
 				//Ext.Ajax.timeout = 1000*60*1000;
-				Ext.Ajax.timeout = 1000*60*10; // 3 minutos
+				Ext.Ajax.timeout = 1000*60*120; // 3 minutos
 			    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
 			    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
 			    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
