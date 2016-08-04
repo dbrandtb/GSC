@@ -708,6 +708,6 @@ public interface FlujoMesaControlDAO {
 	
 	public String ejecutaProcedureFlujoCorreo(String nomproc, String ntramite) throws Exception;
 	
-	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite) throws Exception;
+	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite, String cdsisrol) throws Exception;
 	
 }

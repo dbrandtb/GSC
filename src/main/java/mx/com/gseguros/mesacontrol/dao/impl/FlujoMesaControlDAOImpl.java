@@ -2897,9 +2897,10 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	}
 	
 	@Override
-	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite) throws Exception{
+	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite, String cdsisrol) throws Exception{
 		Map<String, String> params = new LinkedHashMap<String, String>();
 		params.put("ntramite"  , ntramite);
+		params.put("cdsisrol"  , cdsisrol);
 		Map<String, Object> procRes = ejecutaSP(new ObtenerCorreosStatusTramite(getDataSource()), params);
 		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
 		if (lista == null) {
@@ -2914,6 +2915,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		{
 			super(dataSource,"P_GET_MAIL_STATUS_TRAMITE");
 			declareParameter(new SqlParameter("ntramite"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"dsmail",
 					"dsdestino",

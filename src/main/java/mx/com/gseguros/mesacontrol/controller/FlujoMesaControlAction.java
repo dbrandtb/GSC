@@ -2350,7 +2350,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdmail     , "No se recibi\u00f3 el codigo del mail"
 					,dsmail     , "No se recibi\u00f3 la descripcion del mail"
 					,dsdestino  , "No se recibi\u00f3 el destinatario"
-					,dsasunto   , "No se recibi\u00f3 el asunto"
+//					,dsasunto   , "No se recibi\u00f3 el asunto"
 					,dsmensaje  , "No se recibi\u00f3 el mensaje"
 					,webid      , "No se recibi\u00f3 el id"
 					,xpos       , "No se recibi\u00f3 x"
@@ -2478,14 +2478,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	@Action(value   = "testCorreoStatusTramite",
-			results = { @Result(name="success", type="json") }
-			)
-	public String testCorreoStatusTramite() throws Exception
-	{
-		flujoMesaControlManager.mandarCorreosStatusTramite("20353");
-		return SUCCESS;
-	}
 	
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //

@@ -342,5 +342,5 @@ public interface FlujoMesaControlManager
 	
 	public Map<String, String> enviaCorreoFlujo(FlujoVO flujo, Map<String, String> params) throws Exception;
 	
-	public void mandarCorreosStatusTramite(String ntramite) throws Exception;
+	public void mandarCorreosStatusTramite(String ntramite, String cdsisrol) throws Exception;
 }

@@ -2561,7 +2561,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			paso = "Enviando correos de status nuevo";
 			logger.debug(paso);
-			mandarCorreosStatusTramite(ntramite);
+			mandarCorreosStatusTramite(ntramite, cdsisrol);
 		}
 		catch(Exception ex)
 		{
@@ -3001,16 +3001,21 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			params.put("dsasunto" , cambiarTextoCorreo(flujo.getNtramite(), params.get("dsasunto") , params.get("varasunto") , mapFunciones));
 			params.put("dsmensaje", cambiarTextoCorreo(flujo.getNtramite(), params.get("dsmensaje"), params.get("varmensaje"), mapFunciones));
 			paso = "Antes de enviar el correo";
-			boolean enviado = mailService.enviaCorreo(StringUtils.split(params.get("dsdestino"),";"), 
-													  new String[]{}, 
-													  new String[]{}, 
-													  params.get("dsasunto"), 
-													  params.get("dsmensaje"), 
-													  new String[]{}, 
-													  false);
-			if(!enviado){
-				throw new ApplicationException("No se pudo enviar el correo a "+params.get("dsdestino"));
+			if(!params.get("dsdestino").contains("()")){
+				boolean enviado = mailService.enviaCorreo(StringUtils.split(params.get("dsdestino"),";"), 
+						  new String[]{}, 
+						  new String[]{}, 
+						  params.get("dsasunto"), 
+						  params.get("dsmensaje"), 
+						  new String[]{}, 
+						  false);
+				if(!enviado){
+					throw new ApplicationException("No se pudo enviar el correo a "+params.get("dsdestino"));
+				}
 			}
+			//TODO
+			//AGREGAR ELSE PARA REGISTRO DE BITACORA DE ERROR DE CORREO
+			
 		}catch(Exception ex){
 			Utils.generaExcepcion(ex, paso);
 		}
@@ -3063,16 +3068,17 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public void mandarCorreosStatusTramite(String ntramite) throws Exception{
+	public void mandarCorreosStatusTramite(String ntramite, String cdsisrol) throws Exception{
 		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 							   "\n@@@@@@@@@ mandarCorreosStatusTramite @@@@@@@@@",
-							   "\n ntramite ",ntramite
+							   "\n ntramite ",ntramite,
+							   "\n cdsisrol ",cdsisrol
 				));
 		String paso = "";
 		try{
 			FlujoVO flujo = new FlujoVO();
 			flujo.setNtramite(ntramite);
-			List<Map<String, String>> correos = flujoMesaControlDAO.obtenerCorreosStatusTramite(ntramite);
+			List<Map<String, String>> correos = flujoMesaControlDAO.obtenerCorreosStatusTramite(ntramite, cdsisrol);
 			for(Map<String, String> params:correos){
 				enviaCorreoFlujo(flujo, params);
 			}
