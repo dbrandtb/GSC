@@ -708,6 +708,14 @@
             <result type="json" />
         </action>
         
+        <action name="previewEndosoAltaIncisoAuto" class="endososAutoAction" method="previewEndosoAltaIncisoAuto">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
+        
         <action name="includes/endosoBajaIncisos" class="endososAutoAction" method="endosoBajaIncisos">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>

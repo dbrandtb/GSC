@@ -28,12 +28,15 @@ var _p30_urlCargarObligatorioCamionRamo5      = '<s:url namespace="/emision"    
 var _p30_urlViewDoc                           = '<s:url namespace="/documentos"      action="descargaDocInline"                   />';
 var _p30_urlEnviarCorreo                      = '<s:url namespace="/general"         action="enviaCorreo"                         />';
 var _p30_urlCargarDatosEndoso                 = '<s:url namespace="/emision"         action="recuperarDatosEndosoAltaIncisoAuto"  />';
-var _p30_urlConfirmarEndoso                   = '<s:url namespace="/endosos"         action="confirmarEndosoAltaIncisoAuto"       />';
+var _p30_urlPreviewEndoso                     = '<s:url namespace="/endosos"         action="previewEndosoAltaIncisoAuto"         />';
 var _p30_urlObtencionReporteExcel             = '<s:url namespace="/reportes"        action="procesoObtencionReporte"             />';
 var _p30_urlObtencionReporteExcel2            = '<s:url namespace="/reportes"        action="procesoObtencionReporte2"            />';
 var _p30_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"     action="movimientoDetalleTramite"            />';
 var _p30_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"         action="actualizarOtvalorTramitePorDsatribu" />';
 var _p30_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"         action="recuperarOtvalorTramitePorDsatribu"  />';
+var url_PantallaPreview                       = '<s:url namespace="/endosos"         action="includes/previewEndosos"             />';
+var _p48_urlMovimientos                       = '<s:url namespace="/movimientos"     action="ejecutar"                            />';
+var _p30_urlConfirmarEndoso                   = '<s:url namespace="/endosos"         action="confirmarEndosoAltaIncisoAuto"       />';
 
 var MontoMaximo = 0;
 var MontoMinimo = 0;
@@ -1540,7 +1543,7 @@ Ext.onReady(function()
                 }
                 ,{
                     itemId   : '_p30_endosoButton'
-                    ,text    : 'Confirmar'
+                    ,text    : 'Vista Previa'
                     ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                     ,handler : function(){_p30_confirmarEndoso();}
                     ,hidden  : !_p30_endoso
@@ -6745,28 +6748,144 @@ function _p30_confirmarEndoso()
         boton.setDisabled(true);
         Ext.Ajax.request(
         {
-            url       : _p30_urlConfirmarEndoso
+            url       : _p30_urlPreviewEndoso
             ,jsonData : json
             ,success  : function(response)
             {
-                boton.setText('Confirmar');
+                boton.setText('Vista Previa');
                 boton.setDisabled(false);
                 var json2 = Ext.decode(response.responseText);
                 debug('### confirmar endoso:',json2);
                 if(json2.success)
                 {
-                    var callbackRemesa = function() { marendNavegacion(2); };
-                    mensajeCorrecto('Endoso generado',json2.respuesta,function()
-                    {
-                        _generarRemesaClic(
-                            true
-                            ,_p30_smap1.CDUNIECO
-                            ,_p30_smap1.CDRAMO
-                            ,_p30_smap1.ESTADO
-                            ,_p30_smap1.NMPOLIZA
-                            ,callbackRemesa
-                        );
-                    });
+                	Ext.create('Ext.window.Window',
+						{
+							title        : 'Tarifa final'
+							,id          : 'tarifa'
+							,autoScroll  : true
+							,modal       : true
+							,buttonAlign : 'center'
+							,width       : 600
+							,height      : 550
+							,defaults    : { width: 650 }
+							,closable    : false
+							,autoScroll  : true
+							,loader      :
+								{
+									url       : url_PantallaPreview
+									,params   :
+										{
+											'smap4.nmpoliza'  : _p30_smap1.NMPOLIZA
+                                            ,'smap4.cdunieco' : _p30_smap1.CDUNIECO
+                                            ,'smap4.cdramo'   : _p30_smap1.CDRAMO
+                                            ,'smap4.estado'   : _p30_smap1.ESTADO
+                                            ,'smap4.nmsuplem' : json2.nmsuplem 
+                                        }
+									,scripts  : true
+									,autoLoad : true
+							     }
+							,buttons:[{
+										text    : 'Confirmar endoso'
+										,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+										,handler : 
+											function (){
+												Ext.Ajax.request(
+											        {
+											            url       : _p30_urlConfirmarEndoso
+											           ,jsonData : json2
+												       ,success  : function(response)
+												            {
+												            	boton.setText('Cargando...');
+												                boton.setDisabled(true);
+												                var json3 = Ext.decode(response.responseText);
+												                var callbackRemesa = function() { marendNavegacion(2); };
+												                debug('### confirmar json3:',json3);
+                
+												                
+							
+												       			mensajeCorrecto('Endoso generado',json3.respuesta,function(){
+																	_generarRemesaClic(
+																	true
+																	,_p30_smap1.CDUNIECO
+																	,_p30_smap1.CDRAMO
+																	,_p30_smap1.ESTADO
+																	,_p30_smap1.NMPOLIZA
+																	,callbackRemesa
+																);
+															});
+														
+														}
+											            ,failure  : function()
+											            {
+											                errorComunicacion();
+											            }
+											        });
+											        var me=this;
+															me.up().up().destroy();
+											        }
+																			                    
+									   },
+									   {
+										text    : 'Cancelar'
+										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+										,handler : function ()
+																	{
+																	    Ext.MessageBox.confirm('Confirmar', '¿Desea cancelar y borrar los cambios del endoso?', function(btn)
+																	    {
+																	        if(btn === 'yes')
+																	        {
+																	          //  _setLoading(true,'_p48_panelpri');
+																	            Ext.Ajax.request(
+																	            {
+																	                url      : _p48_urlMovimientos
+																	                ,params  :
+																	                {
+																	                    'params.movimiento' : 'SACAENDOSO'
+																	                    ,'params.cdunieco'  : _p30_smap1.CDUNIECO
+																	                    ,'params.cdramo'    : _p30_smap1.CDRAMO
+																	                    ,'params.estado'    : 'M'
+																	                    ,'params.nmpoliza'  : _p30_smap1.NMPOLIZA
+																	                    ,'params.nsuplogi'  : json2.nsuplogi 
+																	                    ,'params.nmsuplem'  : json2.nmsuplem 
+																	                }
+																	                ,success : function(response)
+																	                {
+																	                   // _setLoading(false,'_p48_panelpri');
+																	                    var ck = 'Decodificando respuesta de cancelar endoso';
+																	                    try
+																	                    {
+																	                        var json = Ext.decode(response.responseText);
+																	                        debug('### cancelar:',json);
+																	                        if(json.success==true)
+																	                        {
+																	                            mensajeCorrecto('Endoso revertido','Endoso revertido');
+																	                           // _setLoading(true,'_p48_panelpri');
+																	                            marendNavegacion(2);
+																	                        }
+																	                        else
+																	                        {
+																	                            mensajeError(json.message);
+																	                        }
+																	                    }
+																	                    catch(e)
+																	                    {
+																	                        manejaException(e,ck);
+																	                    }
+																	                }
+																	                ,failure : function()
+																	                {
+																	                    //_setLoading(false,'_p48_panelpri');
+																	                    errorComunicacion(null,'Error al cancelar endoso');
+																	                }
+																	            });
+																	        }
+																	    });
+																	
+															var me=this;
+															me.up().up().destroy();
+														}
+									 } ]
+					     }).show();
                 }
                 else
                 {
@@ -6775,11 +6894,12 @@ function _p30_confirmarEndoso()
             }
             ,failure  : function()
             {
-                boton.setText('Confirmar');
+                boton.setText('Vista Previa');
                 boton.setDisabled(false);
                 errorComunicacion();
             }
         });
+        
     }
     
     debug('<_p30_confirmarEndoso');

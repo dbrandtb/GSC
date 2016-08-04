@@ -1186,6 +1186,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			,String cdsisrol
 			,FlujoVO flujo
+			,String nmsuplem
+			,String nsuplogi
+			,String ntramite
+			,String tipoflot
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -1203,8 +1207,141 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ usuarioSesion = " , usuarioSesion
 				,"\n@@@@@@ cdsisrol      = " , cdsisrol
 				,"\n@@@@@@ flujo         = " , flujo
+				,"\n@@@@@@ nmsuplem      = " , nmsuplem
+				,"\n@@@@@@ nsuplogi      = " , nsuplogi
+				,"\n@@@@@@ ntramite      = " , ntramite
+				,"\n@@@@@@ ntramite      = " , ntramite
 				));
 		
+		String paso = null;
+		
+		try
+		{
+			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
+			String ntramiteEmi = datosPoliza.get("ntramite");
+			
+			Map<String,String> valores = new HashMap<String,String>();
+			valores.put("otvalor01" , ntramiteEmi);
+			valores.put("otvalor02" , cdtipsup);
+			valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
+			valores.put("otvalor04" , nsuplogi);
+			valores.put("otvalor05" , cdusuari);
+			
+			Date fechaHoy = new Date();
+			
+			mesaControlDAO.movimientoMesaControl(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdunieco
+					,cdunieco
+					,TipoTramite.ENDOSO.getCdtiptra()
+					,fechaHoy
+					,null //cdagente
+					,null //referencia
+					,null //nombre
+					,fechaHoy
+					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+					,null //comments
+					,null //nmsolici
+					,null //cdtipsit
+					,cdusuari
+					,usuarioSesion.getRolActivo().getClave()
+					,null
+					,null
+					,null
+					,valores, null, null, null, null, false
+					);
+			
+			paso = "Realizando endoso en Web Service Autos";
+			logger.debug(paso);
+			
+			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
+			if(aux == null || !aux.isExitoRecibos()){
+				logger.error("Error al ejecutar los WS de endoso para la Alta de inciso");
+				
+				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
+				
+				if(aux!=null && aux.isEndosoSinRetarif()){
+		    		throw new ApplicationException("Endoso sin Tarifa. "+(endosoRevertido?"Endoso revertido exitosamente.":"Error al revertir el endoso"));
+		    	}
+				
+				if(endosoRevertido){
+					logger.error("Endoso revertido exitosamente.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
+				}else{
+					logger.error("Error al revertir el endoso");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+				}
+				
+			}
+			
+			Map<String,String> incisosAfectados = new HashMap<String, String>();
+			
+			for(Map<String,String> coberturasIncisos : incisos){
+			
+				String inciso = coberturasIncisos.get("nmsituac");
+				
+				if(StringUtils.isNotBlank(inciso)){
+					incisosAfectados.put(inciso,inciso);
+				}
+			}
+			
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoflot, aux, incisosAfectados);
+		
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		
+		logger.debug(Utils.log(
+
+
+
+				 "\n@@@@@@ confirmarEndosoAltaIncisoAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+
+	}
+	
+	@Override
+	public Map<String, Object> previewEndosoAltaIncisoAuto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,List<Map<String,String>> incisos
+			,String cdusuari
+			,String cdelemen
+			,String cdtipsup
+			,String fecha
+			,UserVO usuarioSesion
+			,String cdsisrol
+			,FlujoVO flujo
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ previewEndosoAltaIncisoAuto @@@@@@"
+				,"\n@@@@@@ cdunieco      = "  , cdunieco
+				,"\n@@@@@@ cdramo        = " , cdramo
+				,"\n@@@@@@ estado        = " , estado
+				,"\n@@@@@@ nmpoliza      = " , nmpoliza
+				,"\n@@@@@@ incisos       = " , incisos
+				,"\n@@@@@@ cdusuari      = " , cdusuari
+				,"\n@@@@@@ cdelemen      = " , cdelemen
+				,"\n@@@@@@ cdtipsup      = " , cdtipsup
+				,"\n@@@@@@ fecha         = " , fecha
+				,"\n@@@@@@ usuarioSesion = " , usuarioSesion
+				,"\n@@@@@@ cdsisrol      = " , cdsisrol
+				,"\n@@@@@@ flujo         = " , flujo
+				));
+		
+		Map<String, Object> items = new HashMap<String, Object>();
 		String paso = null;
 		
 		try
@@ -1333,7 +1470,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			logger.debug(paso);
 			
 			
-			Map<String,Object> resParams = endososDAO.confirmarEndosoAltaIncisoAuto(
+			items = endososDAO.confirmarEndosoAltaIncisoAuto(
 					cdunieco
 					,cdramo
 					,estado
@@ -1345,95 +1482,18 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,fechaEfecto
 					);
 			
-			String nmsuplem        = (String) resParams.get("pv_nmsuplem_o");
-			String ntramite        = (String) resParams.get("pv_ntramite_o");
-			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
-			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
-			
-			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
-			String ntramiteEmi = datosPoliza.get("ntramite");
-			
-			Map<String,String> valores = new HashMap<String,String>();
-			valores.put("otvalor01" , ntramiteEmi);
-			valores.put("otvalor02" , cdtipsup);
-			valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
-			valores.put("otvalor04" , nsuplogi);
-			valores.put("otvalor05" , cdusuari);
-			
-			Date fechaHoy = new Date();
-			
-			mesaControlDAO.movimientoMesaControl(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,nmsuplem
-					,cdunieco
-					,cdunieco
-					,TipoTramite.ENDOSO.getCdtiptra()
-					,fechaHoy
-					,null //cdagente
-					,null //referencia
-					,null //nombre
-					,fechaHoy
-					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
-					,null //comments
-					,null //nmsolici
-					,null //cdtipsit
-					,cdusuari
-					,usuarioSesion.getRolActivo().getClave()
-					,null
-					,null
-					,null
-					,valores, null, null, null, null, false
-					);
-			
-			paso = "Realizando endoso en Web Service Autos";
-			logger.debug(paso);
-			
-			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, null, usuarioSesion);
-			if(aux == null || !aux.isExitoRecibos()){
-				logger.error("Error al ejecutar los WS de endoso para la Alta de inciso");
-				
-				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
-				
-				if(aux!=null && aux.isEndosoSinRetarif()){
-		    		throw new ApplicationException("Endoso sin Tarifa. "+(endosoRevertido?"Endoso revertido exitosamente.":"Error al revertir el endoso"));
-		    	}
-				
-				if(endosoRevertido){
-					logger.error("Endoso revertido exitosamente.");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
-				}else{
-					logger.error("Error al revertir el endoso");
-					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
-				}
-				
-			}
-			
-			Map<String,String> incisosAfectados = new HashMap<String, String>();
-			
-			for(Map<String,String> coberturasIncisos : incisos){
-			
-				String inciso = coberturasIncisos.get("nmsituac");
-				
-				if(StringUtils.isNotBlank(inciso)){
-					incisosAfectados.put(inciso,inciso);
-				}
-			}
-			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
-		
 		}
 		catch(Exception ex)
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
-		
+		 
 		logger.debug(Utils.log(
-				 "\n@@@@@@ confirmarEndosoAltaIncisoAuto @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				 "\n@@@@@@ items=" , items
+				 ,"\n@@@@@@ previewEndosoAltaIncisoAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+		return items;
 	}
 	
 	@Override
