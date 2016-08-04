@@ -39,6 +39,12 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private String                   respuesta;
 	private Map<String,String>       smap1;
 	private Map<String,String>       smap2;
+	private Map<String,Object>       smap3;
+	private Map<String,String>       smap4;
+	private String                   nmsuplem;
+	private String 				     ntramite;
+	private String                   tipoflot;
+	private String                   nsuplogi;
 	private Map<String,Item>         imap;
 	private List<Map<String,String>> slist1;
 	
@@ -421,6 +427,84 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n###########################################"
 				,"\n###### confirmarEndosoAltaIncisoAuto ######"
+				,"\n###### smap3  = " , smap3
+				,"\n###### smap1  = " , smap1
+				,"\n###### slist1 = " , slist1
+				));
+		
+		try
+		{
+			UserVO usuarioSesion = Utils.validateSession(session);
+			
+			String cdusuari   = usuarioSesion.getUser()
+					,cdelemen = usuarioSesion.getEmpresa().getElementoId();
+					
+			Utils.validate(smap1, "No se recibieron datos de poliza");
+			
+			Utils.validate(slist1, "No se recibieron incisos");
+			
+			String cdunieco      = smap1.get("cdunieco")
+					,cdramo      = smap1.get("cdramo")
+					,estado      = smap1.get("estado")
+					,nmpoliza    = smap1.get("nmpoliza")
+					,cdtipsup    = smap1.get("cdtipsup")
+					,fechaEndoso = smap1.get("fechaEndoso")
+					,nmsuplem    = (String) smap3.get("pv_nmsuplem_o")
+					,nsuplogi    = (String)smap3.get("pv_nsuplogi_o")
+					,ntramite    = (String)smap3.get("pv_ntramite_o")
+					,tipoflot    = (String)smap3.get("pv_tipoflot_o");
+			
+			Utils.validate(
+					cdunieco     , "No se recibio la sucursal"
+					,cdramo      , "No se recibio la sucursal"
+					,estado      , "No se recibio el estado de la poliza"
+					,nmpoliza    , "No se recibio el numero de poliza"
+					,cdtipsup    , "No se recibio el codigo de endoso"
+					,fechaEndoso , "No se recibio la fecha de efecto" );
+			
+			endososAutoManager.confirmarEndosoAltaIncisoAuto(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,slist1
+					,cdusuari
+					,cdelemen
+					,cdtipsup
+					,fechaEndoso
+					,usuarioSesion
+					,usuarioSesion.getRolActivo().getClave()
+					,flujo
+					,nmsuplem
+					,nsuplogi
+					,ntramite
+					,tipoflot
+					);
+			
+			
+			respuesta = "Endoso generado correctamente";
+			success   = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success   = " , success
+				,"\n###### respuesta = " , respuesta
+				,"\n###### confirmarEndosoAltaIncisoAuto ######"
+				,"\n###########################################"
+				));
+		
+		return SUCCESS;
+	}
+	
+	public String previewEndosoAltaIncisoAuto()
+	{
+		logger.debug(Utils.log(
+				 "\n###########################################"
+				,"\n###### PreviewEndosoAltaIncisoAuto ######"
 				,"\n###### smap1  = " , smap1
 				,"\n###### slist1 = " , slist1
 				,"\n###### flujo  = " , flujo
@@ -453,7 +537,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,fechaEndoso , "No se recibio la fecha de efecto"
 					);
 			
-			endososAutoManager.confirmarEndosoAltaIncisoAuto(
+			smap3=endososAutoManager.previewEndosoAltaIncisoAuto(
 					cdunieco
 					,cdramo
 					,estado
@@ -467,6 +551,11 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,usuarioSesion.getRolActivo().getClave()
 					,flujo
 					);
+			String paso = null;
+			nmsuplem = (String)smap3.get("pv_nmsuplem_o");
+			nsuplogi = (String)smap3.get("pv_nsuplogi_o"); 
+			ntramite = (String)smap3.get("pv_ntramite_o");
+			tipoflot = (String)smap3.get("pv_tipoflot_o");
 			
 			respuesta = "Endoso generado correctamente";
 			success   = true;
@@ -479,7 +568,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n###### success   = " , success
 				,"\n###### respuesta = " , respuesta
-				,"\n###### confirmarEndosoAltaIncisoAuto ######"
+				,"\n###### nmsuplem  = " , nmsuplem
+				,"\n###### slist1    = " , slist1
+				,"\n###### PreviewEndosoAltaIncisoAuto ######"
 				,"\n###########################################"
 				));
 		
@@ -2719,6 +2810,54 @@ public class EndososAutoAction extends PrincipalCoreAction
 
 	public void setSmap2(Map<String, String> smap2) {
 		this.smap2 = smap2;
+	}
+	
+	public Map<String, Object> getSmap3() {
+		return smap3;
+	}
+
+	public void setSmap3(Map<String, Object> smap3) {
+		this.smap3 = smap3;
+	}
+	
+	public Map<String, String> getSmap4() {
+		return smap4;
+	}
+
+	public void setSmap4(Map<String, String> smap4) {
+		this.smap4 = smap4;
+	}
+
+	public String getNmsuplem() {
+		return nmsuplem;
+	}
+
+	public void setNmsuplem(String nmsuplem) {
+		this.nmsuplem = nmsuplem;
+	}
+
+	public String getNsuplogi() {
+		return nsuplogi;
+	}
+
+	public void setNsuplogi(String nsuplogi) {
+		this.nsuplogi = nsuplogi;
+	}
+	
+	public String getNtramite() {
+		return ntramite;
+	}
+
+	public void setNtramite(String ntramite) {
+		this.ntramite = ntramite;
+	}
+
+	public String getTipoflot() {
+		return tipoflot;
+	}
+
+	public void setTipoflot(String tipoflot) {
+		this.tipoflot = tipoflot;
 	}
 
 	public FlujoVO getFlujo() {

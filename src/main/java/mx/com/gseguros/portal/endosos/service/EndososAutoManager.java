@@ -112,6 +112,25 @@ public interface EndososAutoManager
 			,UserVO usuarioSesion
 			,String cdsisrol
 			,FlujoVO flujo
+			,String nmsuplem
+			,String nsuplogi
+			,String tramite
+			,String tipoflot
+			)throws Exception;
+	
+	public Map<String, Object> previewEndosoAltaIncisoAuto(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,List<Map<String,String>>incisos
+			,String cdusuari
+			,String cdelemen
+			,String cdtipsup
+			,String fecha
+			,UserVO usuarioSesion
+			,String cdsisrol
+			,FlujoVO flujo
 			
 			)throws Exception;
 	

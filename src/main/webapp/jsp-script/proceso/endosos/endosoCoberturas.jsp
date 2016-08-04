@@ -24,22 +24,22 @@
     var inputNtramitep3  = '<s:property value="smap1.NTRAMITE" />';
     var inputAltabajap3  = '<s:property value="smap1.altabaja" />';
    
-    var columnasTatrisit = [<s:property value="columnas" escapeHtml="false" />];
-    var _endcob_urlObtenerComponenteSituacionCobertura = '<s:url namespace="/endosos" action="obtenerComponenteSituacionCobertura" />';
-    var urlCargarCoberturasp3     = '<s:url namespace="/" action="cargarPantallaCoberturas" />';
-    var urlCargarCoberturasDispp3 = '<s:url namespace="/endosos" action="obtenerCoberturasDisponibles" />';
-    var urlGuardarCoberturasp3    = '<s:url namespace="/" action="guardarCoberturasUsuario" />';
-    var urlTatrip3                = '<s:url namespace="/" action="obtenerCamposTatrigar" />';
-    var urlLoadTatrip3            = '<s:url namespace="/" action="obtenerValoresTatrigar" />';
-    var urlSaveTatrip3            = '<s:url namespace="/" action="guardarValoresTatrigar" />';
-    var urlRecuperacionSimplep3      = '<s:url namespace="/emision"    action="recuperacionSimple"      />';
-    var urlRecuperacionSimpleListap3 = '<s:url namespace="/emision"    action="recuperacionSimpleLista" />';
-    var endcobUrlDoc              = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
-    var endcobUrlGuardar          = '<s:url namespace="/endosos" action="guardarEndosoCoberturas" />';
-    var endcobUrlMuestraPreview          = '<s:url namespace="/endosos" action="EndosoCoberturasPreviewShow" />';
-    var endcobUrlGuardarPreview          = '<s:url namespace="/endosos" action="EndosoCoberturasPreviewGuarda" />';
-    var urlPantallaBeneficiarios               = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
-    var url_PantallaPreview        = '<s:url namespace="/endosos"    action="includes/previewEndosos" />';
+    var columnasTatrisit                               = [<s:property value="columnas" escapeHtml="false" />];
+    var _endcob_urlObtenerComponenteSituacionCobertura = '<s:url namespace="/endosos"    action="obtenerComponenteSituacionCobertura"  />';
+    var urlCargarCoberturasp3                          = '<s:url namespace="/"           action="cargarPantallaCoberturas"             />';
+    var urlCargarCoberturasDispp3                      = '<s:url namespace="/endosos"    action="obtenerCoberturasDisponibles"         />';
+    var urlGuardarCoberturasp3                         = '<s:url namespace="/"           action="guardarCoberturasUsuario"             />';
+    var urlTatrip3                                     = '<s:url namespace="/"           action="obtenerCamposTatrigar"                />';
+    var urlLoadTatrip3                                 = '<s:url namespace="/"           action="obtenerValoresTatrigar"               />';
+    var urlRecuperacionSimplep3                        = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
+    var urlRecuperacionSimpleListap3                   = '<s:url namespace="/emision"    action="recuperacionSimpleLista"              />';
+    var endcobUrlDoc                                   = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
+    var endcobUrlGuardar                               = '<s:url namespace="/endosos"    action="guardarEndosoCoberturas"              />';
+    var endcobUrlMuestraPreview                        = '<s:url namespace="/endosos"    action="EndosoCoberturasPreviewShow"          />';
+    var endcobUrlGuardarPreview                        = '<s:url namespace="/endosos"    action="EndosoCoberturasPreviewGuarda"        />';
+    var urlPantallaBeneficiarios                       = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
+    var url_PantallaPreview                            = '<s:url namespace="/endosos"    action="includes/previewEndosos"              />';
+    var _p48_urlMovimientos                            = '<s:url namespace="/movimientos"  action="ejecutar"                          />';
     debug('inputCduniecop3',inputCduniecop3);
     debug('inputCdramop3',inputCdramop3);
     debug('inputEstadop3',inputEstadop3);
@@ -140,10 +140,13 @@
 						{
 							title        : 'Tarifa final'
 							,id          : 'tarifa'
+							,autoScroll  : true
 							,modal       : true
 							,buttonAlign : 'center'
 							,width       : 600
-							,height      : 400
+							,height      : 550
+							,defaults    : { width: 650 }
+							,closable    : false
 							,autoScroll  : true
 							,loader      :
 								{
@@ -171,8 +174,59 @@
 									   {
 										text    : 'Cancelar'
 										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-										,handler : function()
-														{
+										,handler : function ()
+																	{
+																	    Ext.MessageBox.confirm('Confirmar', '¿Desea cancelar y borrar los cambios del endoso?', function(btn)
+																	    {
+																	        if(btn === 'yes')
+																	        {
+																	          //  _setLoading(true,'_p48_panelpri');
+																	            Ext.Ajax.request(
+																	            {
+																	                url      : _p48_urlMovimientos
+																	                ,params  :
+																	                {
+																	                    'params.movimiento' : 'SACAENDOSO'
+																	                    ,'params.cdunieco'  : inputCduniecop3
+																	                    ,'params.cdramo'    : inputCdramop3
+																	                    ,'params.estado'    : 'M'
+																	                    ,'params.nmpoliza'  : inputNmpolizap3
+																	                    ,'params.nsuplogi'  : json.nsuplogi
+																	                    ,'params.nmsuplem'  : json.nmsuplement
+																	                }
+																	                ,success : function(response)
+																	                {
+																	                   // _setLoading(false,'_p48_panelpri');
+																	                    var ck = 'Decodificando respuesta de cancelar endoso';
+																	                    try
+																	                    {
+																	                        var json = Ext.decode(response.responseText);
+																	                        debug('### cancelar:',json);
+																	                        if(json.success==true)
+																	                        {
+																	                            mensajeCorrecto('Endoso revertido','Endoso revertido');
+																	                           // _setLoading(true,'_p48_panelpri');
+																	                            marendNavegacion(2);
+																	                        }
+																	                        else
+																	                        {
+																	                            mensajeError(json.message);
+																	                        }
+																	                    }
+																	                    catch(e)
+																	                    {
+																	                        manejaException(e,ck);
+																	                    }
+																	                }
+																	                ,failure : function()
+																	                {
+																	                    //_setLoading(false,'_p48_panelpri');
+																	                    errorComunicacion(null,'Error al cancelar endoso');
+																	                }
+																	            });
+																	        }
+																	    });
+																	
 															var me=this;
 															me.up().up().destroy();
 														}
@@ -1320,7 +1374,7 @@
                                 				      }
                             
                              }
-                             ,{
+                            /* ,{
                                 text     : 'Confirmar endoso'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                                 ,handler : function(me)
@@ -1328,7 +1382,7 @@
                                     var form=me.up().up();
                                     endcobSumit(form,'si');
                                 }
-                            }                           
+                            }*/                           
                             ,{
                                 text     : 'Documentos'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'

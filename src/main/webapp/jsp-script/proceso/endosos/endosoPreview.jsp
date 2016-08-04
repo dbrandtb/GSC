@@ -40,23 +40,21 @@ Ext.onReady(function()
 	
 	////// modelos //////
 	Ext.define('ModeloDetalleCotizacion',
-    {
-        extend : 'Ext.data.Model'
-        ,fields :
-        [
-            'Codigo_Garantia'
-            ,{
-                name : 'IMPORTE'
-                ,type : 'float'
-            }
-            ,'NOMBRE_GARANTIA'
-            ,'CDTIPCON'
-            ,'NMSITUAC'
-            ,'ORDEN'
-            ,'PARENTESCO'
-            ,'ORDEN_PARANTESCO'
-        ]
-    });
+	{
+	    extend  : 'Ext.data.Model'
+	    ,fields :
+	    [
+	        {name  : 'Codigo_Garantia'}
+	        ,{name : 'IMPORTE',type : 'float'}
+	        ,{name : 'NOMBRE_GARANTIA'}
+	        ,{name : 'cdtipcon'}
+	        ,{name : 'nmsituac'}
+	        ,{name : 'orden'}
+	        ,{name : 'PARENTESCO'}
+	        ,{name : 'ORDEN_PARENTESCO'}
+	    ]
+	});
+	
 	////// modelos //////
 	////// stores //////
 	
@@ -66,26 +64,6 @@ Ext.onReady(function()
 	////// componentes //////
 	
 	////// contenido //////
-	
-	  /*
-		Ext.create('Ext.panel.Panel',
-            {
-                    itemId    : '_p29_panelpri'
-        			,renderTo : '_p29_divpri'
-                    
-                    ,autoScroll    : true
-                    
-                    
-                    
-                    ,modal         : true
-                    ,closable      : false
-                    ,collapsible   : true
-                    ,titleCollapse : true
-                    ,items         :
-                    [
-                */    
-	
-	
 	
 	Ext.Ajax.request(
     {
@@ -127,25 +105,14 @@ Ext.onReady(function()
                 var parentescoAnterior='qwerty';
                 for(var i=0;i<json.slist1.length;i++)
                 {
-                    if(json.slist1[i].parentesco!=parentescoAnterior)
+                    if(json.slist1[i].PARENTESCO!=parentescoAnterior)
                     {
                         orden++;
-                        parentescoAnterior=json.slist1[i].parentesco;
+                        parentescoAnterior=json.slist1[i].PARENTESCO;
                     }
-                    json.slist1[i].orden_parentesco=orden+'_'+json.slist1[i].parentesco;
+                    json.slist1[i].ORDEN_PARENTESCO=orden+'_'+json.slist1[i].PARENTESCO;
                 }
-                /*
-                centrarVentanaInterna(Ext.create('Ext.window.Window',
-                {
-                    title          : 'Tarifa final'
-                    ,autoScroll    : true
-                    ,modal         : true
-                    ,closable      : false
-                    ,collapsible   : true
-                    ,titleCollapse : true
-                    ,items         :
-                    [*/
-                        Ext.create('Ext.grid.Panel',
+                Ext.create('Ext.grid.Panel',
                         {
                         	renderTo: '_p29_divpri'
                             ,store : Ext.create('Ext.data.Store',
@@ -207,20 +174,33 @@ Ext.onReady(function()
                                         }
                                     ]
                                     ,ftype          : 'groupingsummary'
-                                    ,startCollapsed : CD_ROL_ACTUAL!='SUSCRIAUTO'
-                                    ,listeners      :
-                                    {
-                                        groupexpand : function(view,node,group)
-                                        {
-                                            if(CD_ROL_ACTUAL!='SUSCRIAUTO')
-                                            {
-                                                this.collapseAll();
-                                            }
-                                        }
-                                    }
+                                    ,startCollapsed : false
+                                    
                                 }
                             ]
-                        })
+                        ,bbar: Ext.create('Ext.toolbar.Toolbar',
+                        {
+                            buttonAlign : 'right'
+                            ,items      :
+                            [
+                                '->'
+                                ,Ext.create('Ext.form.Label',
+                                {
+                                    style          : 'color:white;'
+                                    ,initComponent : function()
+                                    {
+                                        var sum=0;
+                                        for(var i=0;i<json.slist1.length;i++)
+                                        {
+                                            sum+=parseFloat(json.slist1[i].IMPORTE);
+                                        }
+                                        this.setText('Total: '+Ext.util.Format.usMoney(sum));
+                                        this.callParent();
+                                    }
+                                })
+                            ]
+                        })})
+                        
             }
         }
         
@@ -230,5 +210,5 @@ Ext.onReady(function()
 
 </script>
 </head>
-<body><div id="_p29_divpri" style="height:1500px;"></div></body>
+<body><div id="_p29_divpri" style="height:700px;"></div></body>
 </html>
