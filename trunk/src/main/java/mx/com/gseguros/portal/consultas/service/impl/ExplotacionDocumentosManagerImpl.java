@@ -505,7 +505,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			for(Map<String,String>archivo:listaArchivos)
 			{
-				logger.debug("archivo={} rutaDocumentosPoliza={} nmcopias={} ntramite={} cddocume={}",
+				logger.debug("archivo={} rutaDocumentosPoliza={} nmcopias={} ntramite={} cddocume={} swimpdpx{}",
 						archivo, rutaDocumentosPoliza, archivo.get("nmcopias"),
 						archivo.get("ntramite"), archivo.get("cddocume"), archivo.get("swimpdpx"));
 				if(!apagado)
@@ -541,15 +541,18 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					paso = "Imprimiendo archivo";
 					sb.append("\n").append(paso);
 					
-					boolean swimpdpxArch =  archivo.get("swimpdpx").equals("S")?true:false;
-					esDuplex =swimpdpxArch!=esDuplex?false:true;
+					boolean swImpDpxArchivo = "S".equalsIgnoreCase(archivo.get("swimpdpx")) ? true : false;
+					
+					logger.debug("swImpDpxArchivo={}", swImpDpxArchivo);
+					
+					logger.debug("Se imprimira duplex? {}", (esDuplex && swImpDpxArchivo));
 					
 					impresionService.imprimeDocumento(
 							filePath
 							,dsimpres
 							,Integer.parseInt(archivo.get("nmcopias")) //numCopias
 							,hoja.length()>1 ? ( "M".equals(papelDoc) ? charola2 : charola1 ) : charola1
-							,esDuplex);
+							,(esDuplex && swImpDpxArchivo));
 					
 					if(test)
 					{
