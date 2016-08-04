@@ -1360,11 +1360,10 @@ var msgWindow;
 	
 	//Validamos si existe las Validaciones 
 	function _11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex){
-		//var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
-		//myMask.show();
-		//var record = grid.getStore().getAt(rowIndex);
-		mostrarSolicitudPago(grid,rowIndex,colIndex);
-		/*Ext.Ajax.request({
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
+		var record = grid.getStore().getAt(rowIndex);
+		Ext.Ajax.request({
 			url     : _URL_VALIDA_COBASEGURADOS
 			,params:{
 				'params.ntramite'  : record.get('ntramite')
@@ -1387,7 +1386,7 @@ var msgWindow;
 					icon: Ext.Msg.ERROR
 				}));
 			}
-		});*/
+		});
 	}
 	
 	

@@ -832,8 +832,7 @@ var msgWindow;
 	
 	//Validamos si existe las Validaciones 
 	function _11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex,procesaPago){
-		mostrarSolicitudPago(grid,rowIndex,colIndex);
-		/*var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
 		myMask.show();
 		var record = grid.getStore().getAt(rowIndex);
 		Ext.Ajax.request({
@@ -861,7 +860,7 @@ var msgWindow;
 					icon: Ext.Msg.ERROR
 				}));
 			}
-		});*/
+		});
 	}
 	
 	function mostrarSolicitudPago(grid,rowIndex,colIndex){
