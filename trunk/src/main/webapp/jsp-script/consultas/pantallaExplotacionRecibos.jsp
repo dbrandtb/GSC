@@ -279,6 +279,7 @@ Ext.onReady(function()
                         {
                             _p50_impresionClic('I');
                         }
+                        ,hidden   : true
                     }
                 ]
             })
