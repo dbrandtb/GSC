@@ -866,6 +866,24 @@ Ext.onReady(function() {
                     siniestralidad(null, null,record.get('cdperson'),null,"0");//cdunieco,cdramo, cdperson, nmpoliza
                 }
             },
+            {
+                xtype        : 'actioncolumn',
+                icon         : _CONTEXT+'/resources/fam3icons/icons/page_white_acrobat.png',
+                tooltip      : 'Estado de cuenta',
+                width        : 20,
+                handler      : function(grid,rowIndex)
+                {
+                    var record = grid.getStore().getAt(rowIndex);
+//                    debug('record cdperson ==> :',record,record.get('cdperson'));
+                    var values = panelBusqueda.down('form').getForm().getValues();
+                    
+                    values['params.nmsituac']=record.get('nmsituac');
+                    
+                    _reporteEdoCta(values);//cdunieco,cdramo, cdperson, nmpoliza
+                }
+                	
+                
+            },
             {text:'Plan',dataIndex:'dsplan',width:90 , align:'left'},
             {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:80 , align:'left'},
             {text:'Clave <br/>Asegurado',dataIndex:'cdperson',width:80,align:'left'},
@@ -1823,6 +1841,61 @@ Ext.onReady(function() {
 		}).show();
 		centrarVentana(windowHistSinies);
     }
+    
+//Genera reporte de Siniestros
+    function _reporteEdoCta(values)
+    {
+    	debug('iniciando reporte...');
+    	debug(_reporteEdoCtaSin);
+    	debug(values);
+        var me = this;
+        var urlRequestViewRep = _urlViewReport 
+                + '?destype=cache'
+                + '&p_unieco='      + values['params.cdunieco']
+                + '&p_ramo='        + values['params.cdramo']   
+                + '&p_estado='      + values['params.estado']   
+                + '&p_poliza='      + values['params.nmpoliza']
+                + '&p_situac='      + values['params.nmsituac']
+                + '&p_suplem='      + values['params.suplemento']
+        		+ "&desformat=PDF"
+        		+ "&userid="        + _reportsServerUser
+        		+ "&report="        + _reporteEdoCtaSin
+        		+ "&paramform=no";                                             
+
+        debug(urlRequestViewRep);
+        var numRand = Math.floor((Math.random() * 100000) + 1);
+        debug(numRand);
+        var windowVerRep = Ext.create('Ext.window.Window',
+        {
+            title          : 'Estado de Cuenta'
+            ,width         : 800
+            ,height        : 550
+            ,collapsible   : true
+            ,titleCollapse : true
+            ,html : '<iframe innerframe="'
+                    + numRand
+                    + '" frameborder="0" width="100" height="100"'
+                    + 'src="'
+                    + _urlViewDoc 
+                    + "?contentType=application/pdf&url="
+                    + encodeURIComponent(urlRequestViewRep)
+                    + "\">"
+                    + '</iframe>'
+            ,listeners :
+            {
+                resize : function(win,width,height,opt)
+                {
+                    debug(width,height);
+                    $('[innerframe="'+ numRand+ '"]').attr(
+                    {
+                        'width'   : width - 11
+                        ,'height' : height 
+                    });
+                }
+            }
+        }).show();
+        windowVerRep.center();
+    }   
     
     
 });
