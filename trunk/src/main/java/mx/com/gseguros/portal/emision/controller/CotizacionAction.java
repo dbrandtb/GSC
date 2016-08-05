@@ -10070,9 +10070,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						);
 				
-				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit MSC y TMS:
+				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit TMS:
 				if (Ramo.MULTISALUD.getCdramo().equals(cdramo)
-						&& !TipoSituacion.MULTISALUD_COLECTIVO.getCdtipsit().equals(cdtipsit)
 						&& !TipoSituacion.TRADICIONALES_MEGASALUD.getCdtipsit().equals(cdtipsit))
 				{
 					//excel resumen
