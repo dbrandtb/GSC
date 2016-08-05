@@ -104,6 +104,7 @@ public class EndososAction extends PrincipalCoreAction
 	
 	private String message;
 	private String nmsuplement;
+	private String nsuplogi;
 	
 	@Autowired
 	private ConsultasPolizaManager   consultasPolizaManager;
@@ -3562,6 +3563,8 @@ public class EndososAction extends PrincipalCoreAction
 				endososManager.calcularValorEndoso(paramCalcValorEndoso);
 				
 				nmsuplement = respEndCob.get("pv_nmsuplem_o") ;
+				nsuplogi = respEndCob.get("pv_nsuplogi_o") ;
+				
 				success = true;
 			}
 			catch(Exception ex)
@@ -3579,6 +3582,7 @@ public class EndososAction extends PrincipalCoreAction
 				,"\n###### mensaje     = " , mensaje
 				,"\n###### error       = " , error
 				,"\n###### nmsuplement = " , nmsuplement
+				,"\n###### nsuplogi    = " , nsuplogi
 				,"\n###### EndosoCoberturasPreview ######"
 				,"\n#####################################"
 				));
@@ -6941,11 +6945,13 @@ public class EndososAction extends PrincipalCoreAction
 							,cdunieco
 							,cdunieco
 							,TipoTramite.ENDOSO.getCdtiptra()
-							,fechaHoy
+							,fechaEndoso
+
 							,null
 							,null
 							,null
-							,fechaHoy
+							,fechaEndoso
+
 							,estatusTramite
 							,dscoment
 							,null
@@ -7152,7 +7158,7 @@ public class EndososAction extends PrincipalCoreAction
 					cdflujomc = datosFlujoEndoso.get("cdflujomc");
 					
 					Date fechaHoy = new Date();
-					
+
 					String ntramiteGenerado = mesaControlManager.movimientoTramite(
 							cdunieco
 							,cdramo
@@ -7162,11 +7168,13 @@ public class EndososAction extends PrincipalCoreAction
 							,cdunieco
 							,cdunieco
 							,TipoTramite.ENDOSO.getCdtiptra()
-							,fechaHoy
+							,fechaEndoso
+
 							,null
 							,null
 							,null
-							,fechaHoy
+							,fechaEndoso
+
 							,estatusTramite
 							,dscoment
 							,null
@@ -14317,6 +14325,16 @@ public class EndososAction extends PrincipalCoreAction
 	public void setNmsuplement(String nmsuplement) {
 		this.nmsuplement = nmsuplement;
 	}
+
+	public String getNsuplogi() {
+		return nsuplogi;
+	}
+
+	public void setNsuplogi(String nsuplogi) {
+		this.nsuplogi = nsuplogi;
+	}
+	
+	
 	
 	
 }
