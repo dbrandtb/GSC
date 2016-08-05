@@ -12,13 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-
-import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.exception.ValidationDataException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -28,6 +26,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.ValidationDataException;
 
 /**
  * Utiler&iacute;as para validar datos de la aplicacion
@@ -394,6 +396,20 @@ public class Utils
 			return false;
 		}
 		return true;
+	}
+	
+	
+	/**
+	 * Indica si un email tiene formato valido
+	 * @param email email a validar
+	 * @return true si es valido, false si no
+	 */
+	public static boolean esEmailValido(String email){
+		
+		String emailRegExp = "(([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5}){1,25})";
+        Pattern pattern = Pattern.compile(emailRegExp);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
 	}
 
 	public static void main(String[] args)
