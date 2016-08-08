@@ -158,6 +158,7 @@
                                             ,'smap4.cdramo'   : inputCdramop3
                                             ,'smap4.estado'   : inputEstadop3
                                             ,'smap4.nmsuplem' : json.nmsuplement //nuevo nmsuplem
+                                            ,'smap4.cdsisrol' : CD_ROL_ACTUAL
                                         }
 									,scripts  : true
 									,autoLoad : true
@@ -174,62 +175,33 @@
 									   {
 										text    : 'Cancelar'
 										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-										,handler : function ()
-																	{
-																	    Ext.MessageBox.confirm('Confirmar', '¿Desea cancelar y borrar los cambios del endoso?', function(btn)
-																	    {
-																	        if(btn === 'yes')
-																	        {
-																	          //  _setLoading(true,'_p48_panelpri');
-																	            Ext.Ajax.request(
-																	            {
-																	                url      : _p48_urlMovimientos
-																	                ,params  :
-																	                {
-																	                    'params.movimiento' : 'SACAENDOSO'
-																	                    ,'params.cdunieco'  : inputCduniecop3
-																	                    ,'params.cdramo'    : inputCdramop3
-																	                    ,'params.estado'    : 'M'
-																	                    ,'params.nmpoliza'  : inputNmpolizap3
-																	                    ,'params.nsuplogi'  : json.nsuplogi
-																	                    ,'params.nmsuplem'  : json.nmsuplement
-																	                }
-																	                ,success : function(response)
-																	                {
-																	                   // _setLoading(false,'_p48_panelpri');
-																	                    var ck = 'Decodificando respuesta de cancelar endoso';
-																	                    try
-																	                    {
-																	                        var json = Ext.decode(response.responseText);
-																	                        debug('### cancelar:',json);
-																	                        if(json.success==true)
-																	                        {
-																	                            mensajeCorrecto('Endoso revertido','Endoso revertido');
-																	                           // _setLoading(true,'_p48_panelpri');
-																	                            marendNavegacion(2);
-																	                        }
-																	                        else
-																	                        {
-																	                            mensajeError(json.message);
-																	                        }
-																	                    }
-																	                    catch(e)
-																	                    {
-																	                        manejaException(e,ck);
-																	                    }
-																	                }
-																	                ,failure : function()
-																	                {
-																	                    //_setLoading(false,'_p48_panelpri');
-																	                    errorComunicacion(null,'Error al cancelar endoso');
-																	                }
-																	            });
-																	        }
-																	    });
-																	
-															var me=this;
-															me.up().up().destroy();
-														}
+										,handler : function (me){
+														me.up('window').destroy();
+														Ext.Ajax.request(
+												            {
+												                url      : _p48_urlMovimientos
+												                ,params  :
+												                {
+												                    'params.movimiento' : 'SACAENDOSO'
+												                    ,'params.cdunieco'  : inputCduniecop3
+												                    ,'params.cdramo'    : inputCdramop3
+												                    ,'params.estado'    : 'M'
+												                    ,'params.nmpoliza'  : inputNmpolizap3
+												                    ,'params.nsuplogi'  : json.nsuplogi
+												                    ,'params.nmsuplem'  : json.nmsuplement
+												                }
+												                ,success : function(response)
+												                {
+												                	marendNavegacion(2);
+												                	
+												                }
+												                ,failure : function()
+												                {
+												                    //_setLoading(false,'_p48_panelpri');
+												                    errorComunicacion(null,'Error al cancelar endoso');
+												                }
+												            });
+										}
 									   } ]
 					     }).show();
                     	

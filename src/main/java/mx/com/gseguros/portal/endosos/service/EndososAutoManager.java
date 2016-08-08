@@ -432,6 +432,21 @@ public interface EndososAutoManager
 			,String nmpoliza
 			)throws Exception;
 	
+	public Map<String, Object> previewEndosoValositFormsAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdtipsup
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date feinival
+			,List<Map<String,String>> incisos
+			,UserVO usuarioSesion
+			,FlujoVO flujo
+			)throws Exception;
+	
 	public void confirmarEndosoValositFormsAuto(
 			String cdusuari
 			,String cdsisrol
@@ -445,6 +460,7 @@ public interface EndososAutoManager
 			,List<Map<String,String>> incisos
 			,UserVO usuarioSesion
 			,FlujoVO flujo
+			,Map<String,Object> smap4
 			)throws Exception;
 	
 	public Map<String,Item> confirmarEndosoRehabilitacionPolAuto(String cdsisrol, String cdramo) throws Exception;
