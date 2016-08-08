@@ -823,6 +823,14 @@
             <result name="success">/jsp-script/proceso/endosos/endosoValositFormsAuto.jsp</result>
         </action>
         
+        <action name="previewEndosoValositFormsAuto" class="endososAutoAction" method="previewEndosoValositFormsAuto">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
+        
         <action name="confirmarEndosoValositFormsAuto" class="endososAutoAction" method="confirmarEndosoValositFormsAuto">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>

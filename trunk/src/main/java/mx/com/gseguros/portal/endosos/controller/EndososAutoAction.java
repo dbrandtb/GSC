@@ -40,7 +40,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private Map<String,String>       smap1;
 	private Map<String,String>       smap2;
 	private Map<String,Object>       smap3;
-	private Map<String,String>       smap4;
+	private Map<String,Object>       smap4;
 	private String                   nmsuplem;
 	private String 				     ntramite;
 	private String                   tipoflot;
@@ -2216,14 +2216,93 @@ public class EndososAutoAction extends PrincipalCoreAction
 		return result;
 	}
 	
+	public String previewEndosoValositFormsAuto()
+	{
+		logger.debug(Utils.log(
+				 "\n#############################################"
+				,"\n###### previewEndosoValositFormsAuto ########"
+				,"\n###### smap1  = " , smap1
+				,"\n###### slist1 = " , slist1
+				,"\n###### flujo  = " , flujo
+				));
+		
+		try
+		{
+			UserVO user = Utils.validateSession(session);
+			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
+			
+			Utils.validate(smap1  , "No se recibieron datos de poliza");
+			Utils.validate(slist1 , "No se recibieron incisos");
+			
+			String cdtipsup = smap1.get("cdtipsup");
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String feinival = smap1.get("feinival");
+			
+			Utils.validate(cdtipsup  , "No se recibio el codigo de endoso"
+					       ,cdunieco , "No se recibio la sucursal"
+					       ,cdramo   , "No se recibio el producto"
+					       ,estado   , "No se recibio el estado de la poliza"
+					       ,nmpoliza , "No se recibio el numero de poliza"
+					       ,feinival , "No se recibio la fecha de endoso"
+					       );
+			
+			 smap3 = endososAutoManager.previewEndosoValositFormsAuto(
+					user.getUser()
+					,user.getRolActivo().getClave()
+					,user.getEmpresa().getElementoId()
+					,cdtipsup
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,renderFechas.parse(feinival)
+					,slist1
+					,usuarioSesion
+					,flujo
+					);
+			 logger.debug(Utils.log(
+					 "\n#############################################"
+					,"\n###### previewEndosoValositFormsAuto ########"
+					,"\n###### smap3  = " , smap3
+					,"\n#############################################"));
+			 /*{pv_nsuplogi_o=18, pv_nmsuplem_o=245760612500000005, pv_tipoflot_o=P, pv_ntramite_o=21519}*/
+			 nsuplogi = (String) smap3.get("pv_nsuplogi_o");
+			 nmsuplem = (String) smap3.get("pv_nmsuplem_o");
+			 tipoflot = (String) smap3.get("pv_tipoflot_o");
+			 ntramite = (String) smap3.get("pv_ntramite_o");
+			 			
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success   = " , success
+				,"\n###### respuesta = " , respuesta
+				,"\n###### previewEndosoValositFormsAuto ########"
+				,"\n#############################################"
+				));
+		return SUCCESS;
+	}
+	
 	public String confirmarEndosoValositFormsAuto()
 	{
 		logger.debug(Utils.log(
 				 "\n#############################################"
 				,"\n###### confirmarEndosoValositFormsAuto ######"
-				,"\n###### smap1  = " , smap1
-				,"\n###### slist1 = " , slist1
-				,"\n###### flujo  = " , flujo
+				,"\n###### smap1     = " , smap1
+				,"\n###### smap3     = " , smap3
+				,"\n###### slist1    = " , slist1
+				,"\n###### flujo     = " , flujo
+				,"\n###### nmsuplem  = " , nmsuplem
+				,"\n###### nsuplogi  = " , nsuplogi
+				,"\n###### tipoflot  = " , tipoflot
+				,"\n###### ntramite  = " , tipoflot
 				));
 		
 		try
@@ -2262,6 +2341,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,slist1
 					,usuarioSesion
 					,flujo
+					,smap3
 					);
 			
 			success = true;
@@ -2820,11 +2900,11 @@ public class EndososAutoAction extends PrincipalCoreAction
 		this.smap3 = smap3;
 	}
 	
-	public Map<String, String> getSmap4() {
+	public Map<String, Object> getSmap4() {
 		return smap4;
 	}
 
-	public void setSmap4(Map<String, String> smap4) {
+	public void setSmap4(Map<String, Object> smap4) {
 		this.smap4 = smap4;
 	}
 

@@ -5495,7 +5495,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	}
 	
 	@Override
-	public void confirmarEndosoValositFormsAuto(
+	public Map<String, Object> previewEndosoValositFormsAuto(
 			String cdusuari
 			,String cdsisrol
 			,String cdelemen
@@ -5512,7 +5512,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ confirmarEndosoValositFormsAuto @@@@@@"
+				,"\n@@@@@@ previewEndosoValositFormsAuto @@@@@@"
 				,"\n@@@@@@ cdusuari      = " , cdusuari
 				,"\n@@@@@@ cdsisrol      = " , cdsisrol
 				,"\n@@@@@@ cdelemen      = " , cdelemen
@@ -5528,6 +5528,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				));
 		
 		String paso = null;
+		PropiedadesDeEndosoParaWS items = null ;
+		Map<String, Object> item = new HashMap<String, Object>();
 		try
 		{
 			String tstamp = Utils.generaTimestamp();
@@ -5663,7 +5665,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,feinival
 					,tstamp
 					);
-			
 			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
 			String ntramiteEmi = datosPoliza.get("ntramite");
 			
@@ -5684,47 +5685,72 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,false //confirmar
 					);
 			
-			/*
-			Map<String,String> valores = new HashMap<String,String>();
-			valores.put("otvalor01" , ntramiteEmi);
-			valores.put("otvalor02" , cdtipsup);
-			valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
-			valores.put("otvalor04" , propWS.getNsuplogi());
-			valores.put("otvalor05" , cdusuari);
+			item.put("pv_tipoflot_o", propWS.getTipoflot());
+			item.put("pv_ntramite_o", propWS.getNtramite());
+			item.put("pv_nmsuplem_o", propWS.getNmsuplem());
+			item.put("pv_nsuplogi_o", propWS.getNsuplogi());
 			
-			mesaControlDAO.movimientoMesaControl(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,propWS.getNmsuplem()
-					,cdunieco
-					,cdunieco
-					,TipoTramite.ENDOSO.getCdtiptra()
-					,feinival
-					,null //cdagente
-					,null //referencia
-					,null //nombre
-					,feinival
-					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
-					,null //comments
-					,null //nmsolici
-					,null //cdtipsit
-					,cdusuari
-					,cdsisrol
-					,null
-					,null
-					,null
-					,valores, null
-					);
-			*/
+				
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ items=" , item
+				,"\n@@@@@@ previewEndosoValositFormsAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return item;
+	}
+	
+	@Override
+	public void confirmarEndosoValositFormsAuto(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdtipsup
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,Date feinival
+			,List<Map<String,String>> incisos
+			,UserVO usuarioSesion
+			,FlujoVO flujo
+			,Map<String,Object> smap4
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ confirmarEndosoValositFormsAuto @@@@@@"
+				,"\n@@@@@@ cdusuari      = " , cdusuari
+				,"\n@@@@@@ cdsisrol      = " , cdsisrol
+				,"\n@@@@@@ cdelemen      = " , cdelemen
+				,"\n@@@@@@ cdtipsup      = " , cdtipsup
+				,"\n@@@@@@ cdunieco      = " , cdunieco
+				,"\n@@@@@@ cdramo        = " , cdramo
+				,"\n@@@@@@ estado        = " , estado
+				,"\n@@@@@@ nmpoliza      = " , nmpoliza
+				,"\n@@@@@@ feinival      = " , feinival
+				,"\n@@@@@@ incisos       = " , incisos
+				,"\n@@@@@@ usuarioSesion = " , usuarioSesion
+				,"\n@@@@@@ flujo         = " , flujo
+				,"\n@@@@@@ smap4         = " , smap4
+				
+				));
+		
+		String paso = null;
+		try
+		{
 			
 			/**
 			 * PARA LLAMAR WS SEGUN TIPO DE ENDOSO
 			 */
-			String nmsuplemGen = propWS.getNmsuplem();
-			String ntramite = propWS.getNtramite();
-			String tipoGrupoInciso = propWS.getTipoflot();
+			String nmsuplemGen     = (String) smap4.get("pv_nmsuplem_o");
+			String ntramite        = (String) smap4.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String) smap4.get("pv_tipoflot_o");
 			
 			Map<String,String> incisosAfectados = new HashMap<String, String>();
 			

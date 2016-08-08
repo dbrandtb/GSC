@@ -6,8 +6,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p44_urlConfirmar          = '<s:url namespace="/endosos" action="confirmarEndosoValositFormsAuto" />';
-var _p44_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"              />';
+
+var _p44_urlPreview            = '<s:url namespace="/endosos"      action="previewEndosoValositFormsAuto"   />';
+var url_PantallaPreview        = '<s:url namespace="/endosos"      action="includes/previewEndosos"         />';
+var _p44_urlConfirmar          = '<s:url namespace="/endosos"      action="confirmarEndosoValositFormsAuto" />';
+var _p48_urlMovimientos        = '<s:url namespace="/movimientos"  action="ejecutar"                        />';
+var _p44_urlRecuperacionSimple = '<s:url namespace="/emision"      action="recuperacionSimple"              />';
 ////// urls //////
 
 ////// variables //////
@@ -19,6 +23,9 @@ debug('_p44_slist1:',_p44_slist1);
 
 var _p44_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 debug('_p44_flujo:',_p44_flujo);
+
+var CD_ROL_ACTUAL           = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
+debug('CD_ROL_ACTUAL:',CD_ROL_ACTUAL);
 ////// variables //////
 
 ////// overrides //////
@@ -94,7 +101,7 @@ Ext.onReady(function()
                     }
                     ,{
                         xtype : 'button'
-                        ,text     : 'Confirmar'
+                        ,text     : 'Vista Previa'
 		                ,itemId  : '_p44_botonConfirmar'
 		                ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
 		                ,handler : function(me)
@@ -170,44 +177,138 @@ Ext.onReady(function()
 		                    me.setText('Cargando...');
 		                    Ext.Ajax.request(
 		                    {
-		                        url       : _p44_urlConfirmar
+		                        url       : _p44_urlPreview
 		                        ,jsonData : json
 		                        ,success  : function(response)
 		                        {
-		                            me.setText('Confirmar');
-		                            me.enable();
-		                            var json2 = Ext.decode(response.responseText);
-		                            debug('### confirmar:',json2);
-		                            if(json2.success)
-		                            {
-		                                var callbackRemesa = function()
-		                                {
-		                                    marendNavegacion(2);
-		                                };
-		                                mensajeCorrecto('Endoso generado','Endoso generado',function()
-		                                {
-		                                    _generarRemesaClic(
-		                                        true
-		                                        ,_p44_smap1.CDUNIECO
-		                                        ,_p44_smap1.CDRAMO
-		                                        ,_p44_smap1.ESTADO
-		                                        ,_p44_smap1.NMPOLIZA
-		                                        ,callbackRemesa
-		                                    );
-		                                });
-		                            }
-		                            else
-		                            {
-		                                mensajeError(json2.respuesta);
-		                            }
-		                        }
+		                        	var json2 = Ext.decode(response.responseText);
+		                        	debug('### response: ',response);
+		                        	debug('### json2: ',json2);
+									var win = Ext.create('Ext.window.Window',
+								{
+									title        : 'Tarifa final'
+									,id          : 'tarifa'
+									,autoScroll  : true
+									,modal       : true
+									,buttonAlign : 'center'
+									,width       : 600
+									,height      : 550
+									,defaults    : { width: 650 }
+									,closable    : false
+									,autoScroll  : true
+									,loader      :
+										{
+											url       : url_PantallaPreview
+											,params   :
+												{
+													'smap4.nmpoliza'  : _p44_smap1.NMPOLIZA
+		                                            ,'smap4.cdunieco' : _p44_smap1.CDUNIECO
+		                                            ,'smap4.cdramo'   : _p44_smap1.CDRAMO
+		                                            ,'smap4.estado'   : _p44_smap1.ESTADO
+		                                            ,'smap4.nmsuplem' : json2.nmsuplem 
+		                                            ,'smap4.cdsisrol' : CD_ROL_ACTUAL
+		                                        }
+											,scripts  : true
+											,autoLoad : true
+									     }
+									,buttons:[{
+												text    : 'Confirmar endoso'
+												,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+												,handler : 
+													function (me){
+														me.up('window').destroy();
+																				
+														Ext.Ajax.request(
+										                    {
+										                        url       : _p44_urlConfirmar
+										                        ,jsonData : json2
+										                        ,success  : function(response)
+										                        {
+										                           // me.setText('Confirmar');
+										                           // me.enable();
+										                            var json3 = Ext.decode(response.responseText);
+										                            debug('### confirmar:',json3);
+										                            if(json3.success)
+										                            {
+										                                var callbackRemesa = function()
+										                                {
+										                                    marendNavegacion(2);
+										                                };
+										                                mensajeCorrecto('Endoso generado','Endoso generado',function()
+										                                {
+										                                    _generarRemesaClic(
+										                                        true
+										                                        ,_p44_smap1.CDUNIECO
+										                                        ,_p44_smap1.CDRAMO
+										                                        ,_p44_smap1.ESTADO
+										                                        ,_p44_smap1.NMPOLIZA
+										                                        ,callbackRemesa
+										                                    );
+										                                });
+										                            }
+										                            else
+										                            {
+										                                mensajeError(json3.respuesta);
+										                            }
+										                        }
+										                        ,failure  : function()
+										                        {
+										                            //me.setText('Confirmar');
+										                            //me.enable();
+										                            errorComunicacion();
+										                        }
+										                    })
+										           }
+										           
+											   },
+											   {
+												text    : 'Cancelar'
+												,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+												,handler : function (me)
+															{
+																me.up('window').destroy();
+																Ext.Ajax.request(
+															            {
+															                url      : _p48_urlMovimientos
+															                ,params  :
+															                {
+															                    'params.movimiento' : 'SACAENDOSO'
+															                    ,'params.cdunieco'  : _p44_smap1.CDUNIECO
+															                    ,'params.cdramo'    : _p44_smap1.CDRAMO
+															                    ,'params.estado'    : _p44_smap1.ESTADO
+															                    ,'params.nmpoliza'  : _p44_smap1.NMPOLIZA
+															                    ,'params.nsuplogi'  : json2.nsuplogi 
+															                    ,'params.nmsuplem'  : json2.nmsuplem 
+															                }
+															                ,success : function(response)
+															                {
+															                	marendNavegacion(2);
+															                   
+															                }
+															                ,failure : function()
+															                {
+															                    //_setLoading(false,'_p48_panelpri');
+															                    errorComunicacion(null,'Error al cancelar endoso');
+															                }
+															            });
+															    
+																}
+											 } ]
+							     });
+							     win.show();
+							     
+							     								
+								}
 		                        ,failure  : function()
 		                        {
 		                            me.setText('Confirmar');
 		                            me.enable();
 		                            errorComunicacion();
 		                        }
-		                    });
+		                        
+		                    }); 
+		                    /**/
+		                   
 		                }
                     }
                 ]

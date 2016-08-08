@@ -30,6 +30,7 @@ Ext.onReady(function()
 	var cdramo   = '<s:property value="smap4.cdramo"   />';	
 	var estado   = '<s:property value="smap4.estado"   />';
 	var nmsuplem = '<s:property value="smap4.nmsuplem" />';
+	var cdsisrol = '<s:property value="smap4.cdsisrol" />';
 	
 	debug('***** smap4.nmpoliza=', nmpoliza);
 	debug('***** smap4.cdunieco=', cdunieco);
@@ -174,8 +175,17 @@ Ext.onReady(function()
                                         }
                                     ]
                                     ,ftype          : 'groupingsummary'
-                                    ,startCollapsed : false
-                                    
+                                    ,startCollapsed :cdsisrol!='SUSCRIAUTO'
+                                    ,listeners      :
+                                    {
+                                        groupexpand : function(view,node,group)
+                                        {
+                                            if(cdsisrol!='SUSCRIAUTO')
+                                        	{
+                                                this.collapseAll();
+                                            }
+                                        }
+                                    }
                                 }
                             ]
                         ,bbar: Ext.create('Ext.toolbar.Toolbar',
