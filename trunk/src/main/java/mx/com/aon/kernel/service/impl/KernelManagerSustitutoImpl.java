@@ -23,6 +23,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -870,18 +871,9 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		{
 			parameters.put("pv_cdsisrol_i" , ((UserVO)ActionContext.getContext().getSession().get("USUARIO")).getRolActivo().getClave());
 		}
-		log.debug("### kernel sustituto obtenerDocumentosPoliza parameters: "+parameters);
-		log.debug(
-				new StringBuilder()
-				.append("\n*******************************************")
-				.append("\n****** PKG_CONSULTA.P_Get_documentos ******")
-				.append("\n****** params=").append(parameters)
-				.append("\n*******************************************")
-				.toString()
-				);
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_DOCUMENTOS_POLIZA);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-        log.debug("### kernel sustituto obtenerDocumentosPoliza lista size: "+lista.size());
+        log.debug(Utils.log("### kernel sustituto obtenerDocumentosPoliza lista : ", lista));
         return lista;
 	}
 	
