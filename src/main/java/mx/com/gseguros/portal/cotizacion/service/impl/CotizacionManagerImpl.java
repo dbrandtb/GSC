@@ -7543,11 +7543,49 @@ public class CotizacionManagerImpl implements CotizacionManager
         		
     		} else { //se genera un tramite
     			
-    			paso = "Generando el tr�mite";
+    			paso = "Recuperando datos de flujo de emisi\u00f3n";
+    			logger.debug(paso);
     			
-            	ntramite = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo,"W", "0", "0", 
-            			null, null, "1", new Date(), cdagente, null, "", new Date(), EstatusTramite.PENDIENTE.getCodigo(),
-            			"", nmpoliza, cdtipsit, cdusuari, cdsisrol, null, null, null, null, null, null, null, null, false);
+    			String tipoProcesoParaRecuperarFlujo = "I";
+        		if (StringUtils.isNotBlank(tipoflot)) {
+        			tipoProcesoParaRecuperarFlujo = tipoflot;
+        		}
+        		
+        		Map<String,String> datosFlujo = consultasDAO.recuperarDatosFlujoEmision(cdramo,tipoProcesoParaRecuperarFlujo);
+    			
+    			paso = "Generando el tr\u00e1mite";
+    			logger.debug(paso);
+    			
+            	ntramite = mesaControlDAO.movimientoMesaControl(
+            			cdunieco,
+            			cdramo,
+            			"W",
+            			"0",
+            			"0", 
+            			null,
+            			null,
+            			"1",
+            			new Date(),
+            			cdagente,
+            			null,
+            			"", 
+            			new Date(),
+            			EstatusTramite.PENDIENTE.getCodigo(),
+            			"",
+            			nmpoliza,
+            			cdtipsit,
+            			cdusuari,
+            			cdsisrol,
+            			null,
+            			datosFlujo.get("cdtipflu"),
+            			datosFlujo.get("cdflujomc"),
+            			null,
+            			TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
+            			null,
+            			null,
+            			null,
+            			false
+            	);
             	
             	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
             			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
