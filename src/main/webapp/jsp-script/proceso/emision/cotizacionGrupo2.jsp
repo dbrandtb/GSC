@@ -4979,6 +4979,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                         ,handler : function()
                         {
                             _p25_guardarExtraprimas(record.get('letra'));
+                            _p21_setActiveResumen();
                             _fieldById('gridAseg'+record.get('letra')).store.commitChanges();
                             debug('aun guardados', records.lenght());
                         }
