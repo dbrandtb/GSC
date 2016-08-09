@@ -4947,6 +4947,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 				}
 				
+				paso = "Obteniendo incisos afectados para impresi\u00f3n.";
+				logger.debug(paso);
 				
 				List<Map<String,String>> incisos = endososDAO.obtieneIncisosAfectadosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen);
 				Map<String,String> incisosAfectados = null;
@@ -4983,6 +4985,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					}
 						
 				}
+				
+				paso = "Generando caratulas de incisos afectados.";
+				logger.debug(paso);
 						
 				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 			}
