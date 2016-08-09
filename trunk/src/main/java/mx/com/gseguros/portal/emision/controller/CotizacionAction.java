@@ -7787,7 +7787,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,cdsisrol
 							,"S"
-							,EstatusTramite.PENDIENTE.getCodigo()
+							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
 							,false
 							);
 					
@@ -7800,7 +7800,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,cdsisrol
 							,"S"
-							,EstatusTramite.PENDIENTE.getCodigo()
+							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
 							,false
 							);
 	            	
