@@ -4499,7 +4499,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			String nmpoliza,
 			String nmsuplem,
 			String cdtipsit,
-			String valor)
+			String valor,
+			String cdgrupo)
 	{
 		logger.info(
 				new StringBuilder()
@@ -4512,6 +4513,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
 				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
 				.append("\n@@@@@@ valor=").append(valor)
+				.append("\n@@@@@@ cdgrupo=").append(cdgrupo)
 				.toString()
 				);
 		
@@ -4520,7 +4522,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		try{
 			//listaCobExt = ...
 			String paso = Utils.join("antes de entrar a actualizaValoresSituacionTitulares");
-		    List<Map<String, String>> situaciones = cotizacionDAO.actualizaValoresSituacionTitulares(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsit, valor);
+		    List<Map<String, String>> situaciones = cotizacionDAO.actualizaValoresSituacionTitulares(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsit, valor, cdgrupo);
 		    if(situaciones.size() > 0 || !situaciones.isEmpty()){
 		    	valoresDefectoExtraprima(cdunieco,cdramo,estado,nmpoliza,situaciones,nmsuplem,cdtipsit,"4EXO");
 		    }

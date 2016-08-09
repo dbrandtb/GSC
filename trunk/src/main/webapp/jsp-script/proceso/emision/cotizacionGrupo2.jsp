@@ -4753,15 +4753,17 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
         ,extraprimaLetraGrupo : record.get('letra')
         ,defaults             : { style : 'margin:5px;' }
         ,border               : 0
+        ,cdgrupo              : record.get('letra')
         ,items                :
         [
             Ext.create('Ext.grid.Panel',
             {
-                id			 :	'gridAseg'
+                itemId			 :	'gridAseg'+record.get('letra')
                 ,selModel     : Ext.create('Ext.selection.CheckboxModel', 
                 		{
-                	mode: 				'MULTI',
-                	showHeaderCheckbox: false
+                	mode              : 'MULTI',
+                	showHeaderCheckbox: false,
+                	cdgrupo           : record.get('letra')
                 	})
             	,columns     :
                 [
@@ -4789,6 +4791,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                             	   clicksToEdit  : 1
                             	   ,errorSummary : true
                             	   ,pluginId     : 'rowedit'
+                            	   ,cdgrupo      : me.cdgrupo
                             	   ,listeners: {
                             		   edit: checkEdit
                             		   }
@@ -4863,6 +4866,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                         xtype    : 'button'
                         ,text    : 'Aplicar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/bell_link.png'
+                        ,grupo   : record.get('letra')
                         ,handler : _p25_guardarExtraprimasTitulares                        
                     }
                     </s:if>
@@ -4874,6 +4878,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                 	,autoLoad   : false
                     ,pageSize   : 10
                     ,storeId    : '_p25_storeExtraprimas'+record.get('letra')
+                    ,cdgrupo    : record.get('letra')
                     ,proxy      :
                     {
                     	type         : 'ajax'
@@ -4902,15 +4907,15 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                     	   'load' :  {
                     		   fn : function(store,records,successful) {
                     			   debug('reseteando los datos');
-                    			   var selection = _fieldById('gridAseg').getPlugin('pagingselect').selection;
+                    			   var selection = _fieldById('gridAseg'+store.cdgrupo).getPlugin('pagingselect').selection;
                     			   var mapselection = {};
                      			   for (var i = 0; i < selection.length; i++){
                      				debug('metiendo llave ',selection[i].data['nmsituac']);
                      			   	mapselection[selection[i].data['nmsituac']] = selection[i].data; 
                      			   }
                      			   debug('mapselection',mapselection);
-                    			   for(var s in _fieldById('gridAseg').store.data.items){
-                    				   var rec = _fieldById('gridAseg').store.getAt(s);
+                    			   for(var s in _fieldById('gridAseg'+store.cdgrupo).store.data.items){
+                    				   var rec = _fieldById('gridAseg'+store.cdgrupo).store.getAt(s);
                     				   debug('nmsituac',rec.data['nmsituac']);
                 					   if (rec.data['nmsituac'] in mapselection){
                 						   debug('entro al map');
@@ -4974,7 +4979,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                         ,handler : function()
                         {
                             _p25_guardarExtraprimas(record.get('letra'));
-                            _fieldById('gridAseg').store.commitChanges();
+                            _fieldById('gridAseg'+record.get('letra')).store.commitChanges();
                             debug('aun guardados', records.lenght());
                         }
                     }
@@ -4982,7 +4987,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
             })
         ]
     });
-    _fieldById('gridAseg').store.loadPage(1);
+    _fieldById('gridAseg'+record.get('letra')).store.loadPage(1);
     debug('sale de <_p25_revisarAseguradosClic');
 }
 
@@ -5763,7 +5768,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
         [
             Ext.create('Ext.grid.Panel',
             {
-            	id			: 'gridAsegurados'
+            	itemId			: 'gridAsegurados'+record.get('letra')
             	,columns    : columnas
                 ,width      : 980
                 ,height     : 500
@@ -5932,7 +5937,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
             })
         ]
     });
-    _fieldById('gridAsegurados').store.loadPage(1);
+    _fieldById('gridAsegurados'+record.get('letra')).store.loadPage(1);
     debug('<_cotcol_aseguradosClic');
 }
 
