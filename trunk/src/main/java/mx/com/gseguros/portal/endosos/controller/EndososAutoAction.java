@@ -39,12 +39,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private String                   respuesta;
 	private Map<String,String>       smap1;
 	private Map<String,String>       smap2;
-	private Map<String,Object>       smap3;
-	private Map<String,Object>       smap4;
-	private String                   nmsuplem;
-	private String 				     ntramite;
-	private String                   tipoflot;
-	private String                   nsuplogi;
+	private Map<String,Object>       omap1;
 	private Map<String,Item>         imap;
 	private List<Map<String,String>> slist1;
 	
@@ -427,7 +422,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n###########################################"
 				,"\n###### confirmarEndosoAltaIncisoAuto ######"
-				,"\n###### smap3  = " , smap3
 				,"\n###### smap1  = " , smap1
 				,"\n###### slist1 = " , slist1
 				));
@@ -448,11 +442,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,estado      = smap1.get("estado")
 					,nmpoliza    = smap1.get("nmpoliza")
 					,cdtipsup    = smap1.get("cdtipsup")
-					,fechaEndoso = smap1.get("fechaEndoso")
-					,nmsuplem    = (String) smap3.get("pv_nmsuplem_o")
-					,nsuplogi    = (String)smap3.get("pv_nsuplogi_o")
-					,ntramite    = (String)smap3.get("pv_ntramite_o")
-					,tipoflot    = (String)smap3.get("pv_tipoflot_o");
+					,fechaEndoso = smap1.get("fechaEndoso");
 			
 			Utils.validate(
 					cdunieco     , "No se recibio la sucursal"
@@ -475,10 +465,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,usuarioSesion
 					,usuarioSesion.getRolActivo().getClave()
 					,flujo
-					,nmsuplem
-					,nsuplogi
-					,ntramite
-					,tipoflot
 					);
 			
 			
@@ -537,7 +523,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,fechaEndoso , "No se recibio la fecha de efecto"
 					);
 			
-			smap3=endososAutoManager.previewEndosoAltaIncisoAuto(
+			omap1=endososAutoManager.previewEndosoAltaIncisoAuto(
 					cdunieco
 					,cdramo
 					,estado
@@ -552,10 +538,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,flujo
 					);
 			String paso = null;
-			nmsuplem = (String)smap3.get("pv_nmsuplem_o");
-			nsuplogi = (String)smap3.get("pv_nsuplogi_o"); 
-			ntramite = (String)smap3.get("pv_ntramite_o");
-			tipoflot = (String)smap3.get("pv_tipoflot_o");
 			
 			respuesta = "Endoso generado correctamente";
 			success   = true;
@@ -568,7 +550,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n###### success   = " , success
 				,"\n###### respuesta = " , respuesta
-				,"\n###### nmsuplem  = " , nmsuplem
+				,"\n###### omap1     = " , omap1
 				,"\n###### slist1    = " , slist1
 				,"\n###### PreviewEndosoAltaIncisoAuto ######"
 				,"\n###########################################"
@@ -2249,7 +2231,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					       ,feinival , "No se recibio la fecha de endoso"
 					       );
 			
-			 smap3 = endososAutoManager.previewEndosoValositFormsAuto(
+			 smap2 = endososAutoManager.previewEndosoValositFormsAuto(
 					user.getUser()
 					,user.getRolActivo().getClave()
 					,user.getEmpresa().getElementoId()
@@ -2263,17 +2245,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,usuarioSesion
 					,flujo
 					);
-			 logger.debug(Utils.log(
-					 "\n#############################################"
-					,"\n###### previewEndosoValositFormsAuto ########"
-					,"\n###### smap3  = " , smap3
-					,"\n#############################################"));
-			 /*{pv_nsuplogi_o=18, pv_nmsuplem_o=245760612500000005, pv_tipoflot_o=P, pv_ntramite_o=21519}*/
-			 nsuplogi = (String) smap3.get("pv_nsuplogi_o");
-			 nmsuplem = (String) smap3.get("pv_nmsuplem_o");
-			 tipoflot = (String) smap3.get("pv_tipoflot_o");
-			 ntramite = (String) smap3.get("pv_ntramite_o");
-			 			
+			 			 			
 			success = true;
 		}
 		catch(Exception ex)
@@ -2283,7 +2255,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		
 		logger.debug(Utils.log(
 				 "\n###### success   = " , success
-				,"\n###### respuesta = " , respuesta
+				,"\n###### smap2     = " , smap2
 				,"\n###### previewEndosoValositFormsAuto ########"
 				,"\n#############################################"
 				));
@@ -2296,13 +2268,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 				 "\n#############################################"
 				,"\n###### confirmarEndosoValositFormsAuto ######"
 				,"\n###### smap1     = " , smap1
-				,"\n###### smap3     = " , smap3
+				,"\n###### smap2     = " , smap2
 				,"\n###### slist1    = " , slist1
 				,"\n###### flujo     = " , flujo
-				,"\n###### nmsuplem  = " , nmsuplem
-				,"\n###### nsuplogi  = " , nsuplogi
-				,"\n###### tipoflot  = " , tipoflot
-				,"\n###### ntramite  = " , tipoflot
 				));
 		
 		try
@@ -2341,7 +2309,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,slist1
 					,usuarioSesion
 					,flujo
-					,smap3
 					);
 			
 			success = true;
@@ -2867,6 +2834,14 @@ public class EndososAutoAction extends PrincipalCoreAction
 	public void setSmap1(Map<String, String> smap1) {
 		this.smap1 = smap1;
 	}
+	
+	public Map<String, Object> getOmap1() {
+		return omap1;
+	}
+
+	public void setOmap1(Map<String, Object> omap1) {
+		this.omap1 = omap1;
+	}
 
 	public List<Map<String, String>> getSlist1() {
 		return slist1;
@@ -2892,54 +2867,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 		this.smap2 = smap2;
 	}
 	
-	public Map<String, Object> getSmap3() {
-		return smap3;
-	}
-
-	public void setSmap3(Map<String, Object> smap3) {
-		this.smap3 = smap3;
-	}
-	
-	public Map<String, Object> getSmap4() {
-		return smap4;
-	}
-
-	public void setSmap4(Map<String, Object> smap4) {
-		this.smap4 = smap4;
-	}
-
-	public String getNmsuplem() {
-		return nmsuplem;
-	}
-
-	public void setNmsuplem(String nmsuplem) {
-		this.nmsuplem = nmsuplem;
-	}
-
-	public String getNsuplogi() {
-		return nsuplogi;
-	}
-
-	public void setNsuplogi(String nsuplogi) {
-		this.nsuplogi = nsuplogi;
-	}
-	
-	public String getNtramite() {
-		return ntramite;
-	}
-
-	public void setNtramite(String ntramite) {
-		this.ntramite = ntramite;
-	}
-
-	public String getTipoflot() {
-		return tipoflot;
-	}
-
-	public void setTipoflot(String tipoflot) {
-		this.tipoflot = tipoflot;
-	}
-
 	public FlujoVO getFlujo() {
 		return flujo;
 	}

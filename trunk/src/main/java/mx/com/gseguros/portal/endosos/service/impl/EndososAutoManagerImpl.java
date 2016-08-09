@@ -1186,10 +1186,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			,String cdsisrol
 			,FlujoVO flujo
-			,String nmsuplem
-			,String nsuplogi
-			,String ntramite
-			,String tipoflot
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -1207,16 +1203,153 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ usuarioSesion = " , usuarioSesion
 				,"\n@@@@@@ cdsisrol      = " , cdsisrol
 				,"\n@@@@@@ flujo         = " , flujo
-				,"\n@@@@@@ nmsuplem      = " , nmsuplem
-				,"\n@@@@@@ nsuplogi      = " , nsuplogi
-				,"\n@@@@@@ ntramite      = " , ntramite
-				,"\n@@@@@@ ntramite      = " , ntramite
 				));
 		
 		String paso = null;
 		
 		try
 		{
+			Date fechaEfecto = renderFechas.parse(fecha);
+			
+			String tstamp = Utils.generaTimestamp();
+			
+			paso = "Guardando situaciones temporales";
+			logger.debug(paso);
+			for(Map<String,String>inciso : incisos)
+			{
+				endososDAO.guardarTvalositEndoso(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,inciso.get("nmsituac")
+						,"0"
+						,"V"
+						,inciso.get("cdtipsit")
+						,inciso.get("parametros.pv_otvalor01")
+						,inciso.get("parametros.pv_otvalor02")
+						,inciso.get("parametros.pv_otvalor03")
+						,inciso.get("parametros.pv_otvalor04")
+						,inciso.get("parametros.pv_otvalor05")
+						,inciso.get("parametros.pv_otvalor06")
+						,inciso.get("parametros.pv_otvalor07")
+						,inciso.get("parametros.pv_otvalor08")
+						,inciso.get("parametros.pv_otvalor09")
+						,inciso.get("parametros.pv_otvalor10")
+						,inciso.get("parametros.pv_otvalor11")
+						,inciso.get("parametros.pv_otvalor12")
+						,inciso.get("parametros.pv_otvalor13")
+						,inciso.get("parametros.pv_otvalor14")
+						,inciso.get("parametros.pv_otvalor15")
+						,inciso.get("parametros.pv_otvalor16")
+						,inciso.get("parametros.pv_otvalor17")
+						,inciso.get("parametros.pv_otvalor18")
+						,inciso.get("parametros.pv_otvalor19")
+						,inciso.get("parametros.pv_otvalor20")
+						,inciso.get("parametros.pv_otvalor21")
+						,inciso.get("parametros.pv_otvalor22")
+						,inciso.get("parametros.pv_otvalor23")
+						,inciso.get("parametros.pv_otvalor24")
+						,inciso.get("parametros.pv_otvalor25")
+						,inciso.get("parametros.pv_otvalor26")
+						,inciso.get("parametros.pv_otvalor27")
+						,inciso.get("parametros.pv_otvalor28")
+						,inciso.get("parametros.pv_otvalor29")
+						,inciso.get("parametros.pv_otvalor30")
+						,inciso.get("parametros.pv_otvalor31")
+						,inciso.get("parametros.pv_otvalor32")
+						,inciso.get("parametros.pv_otvalor33")
+						,inciso.get("parametros.pv_otvalor34")
+						,inciso.get("parametros.pv_otvalor35")
+						,inciso.get("parametros.pv_otvalor36")
+						,inciso.get("parametros.pv_otvalor37")
+						,inciso.get("parametros.pv_otvalor38")
+						,inciso.get("parametros.pv_otvalor39")
+						,inciso.get("parametros.pv_otvalor40")
+						,inciso.get("parametros.pv_otvalor41")
+						,inciso.get("parametros.pv_otvalor42")
+						,inciso.get("parametros.pv_otvalor43")
+						,inciso.get("parametros.pv_otvalor44")
+						,inciso.get("parametros.pv_otvalor45")
+						,inciso.get("parametros.pv_otvalor46")
+						,inciso.get("parametros.pv_otvalor47")
+						,inciso.get("parametros.pv_otvalor48")
+						,inciso.get("parametros.pv_otvalor49")
+						,inciso.get("parametros.pv_otvalor50")
+						,inciso.get("parametros.pv_otvalor51")
+						,inciso.get("parametros.pv_otvalor52")
+						,inciso.get("parametros.pv_otvalor53")
+						,inciso.get("parametros.pv_otvalor54")
+						,inciso.get("parametros.pv_otvalor55")
+						,inciso.get("parametros.pv_otvalor56")
+						,inciso.get("parametros.pv_otvalor57")
+						,inciso.get("parametros.pv_otvalor58")
+						,inciso.get("parametros.pv_otvalor59")
+						,inciso.get("parametros.pv_otvalor60")
+						,inciso.get("parametros.pv_otvalor61")
+						,inciso.get("parametros.pv_otvalor62")
+						,inciso.get("parametros.pv_otvalor63")
+						,inciso.get("parametros.pv_otvalor64")
+						,inciso.get("parametros.pv_otvalor65")
+						,inciso.get("parametros.pv_otvalor66")
+						,inciso.get("parametros.pv_otvalor67")
+						,inciso.get("parametros.pv_otvalor68")
+						,inciso.get("parametros.pv_otvalor69")
+						,inciso.get("parametros.pv_otvalor70")
+						,inciso.get("parametros.pv_otvalor71")
+						,inciso.get("parametros.pv_otvalor72")
+						,inciso.get("parametros.pv_otvalor73")
+						,inciso.get("parametros.pv_otvalor74")
+						,inciso.get("parametros.pv_otvalor75")
+						,inciso.get("parametros.pv_otvalor76")
+						,inciso.get("parametros.pv_otvalor77")
+						,inciso.get("parametros.pv_otvalor78")
+						,inciso.get("parametros.pv_otvalor79")
+						,inciso.get("parametros.pv_otvalor80")
+						,inciso.get("parametros.pv_otvalor81")
+						,inciso.get("parametros.pv_otvalor82")
+						,inciso.get("parametros.pv_otvalor83")
+						,inciso.get("parametros.pv_otvalor84")
+						,inciso.get("parametros.pv_otvalor85")
+						,inciso.get("parametros.pv_otvalor86")
+						,inciso.get("parametros.pv_otvalor87")
+						,inciso.get("parametros.pv_otvalor88")
+						,inciso.get("parametros.pv_otvalor89")
+						,inciso.get("parametros.pv_otvalor90")
+						,inciso.get("parametros.pv_otvalor91")
+						,inciso.get("parametros.pv_otvalor92")
+						,inciso.get("parametros.pv_otvalor93")
+						,inciso.get("parametros.pv_otvalor94")
+						,inciso.get("parametros.pv_otvalor95")
+						,inciso.get("parametros.pv_otvalor96")
+						,inciso.get("parametros.pv_otvalor97")
+						,inciso.get("parametros.pv_otvalor98")
+						,inciso.get("cdplan")
+						,tstamp
+						);
+			}
+			
+			paso="Confirmando endoso";
+			logger.debug(paso);
+			
+			
+			Map<String,Object> resParams = endososDAO.confirmarEndosoAltaIncisoAuto(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,tstamp
+					,cdusuari
+					,cdelemen
+					,cdtipsup
+					,fechaEfecto
+					);
+			
+			String nmsuplem        = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String) resParams.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
+			
 			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
 			String ntramiteEmi = datosPoliza.get("ntramite");
 			
@@ -1289,23 +1422,18 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				}
 			}
 			
-			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoflot, aux, incisosAfectados);
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 		
 		}
 		catch(Exception ex)
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
-
 		
 		logger.debug(Utils.log(
-
-
-
 				 "\n@@@@@@ confirmarEndosoAltaIncisoAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
-
 	}
 	
 	@Override
@@ -5500,7 +5628,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	}
 	
 	@Override
-	public Map<String, Object> previewEndosoValositFormsAuto(
+	public Map<String, String> previewEndosoValositFormsAuto(
 			String cdusuari
 			,String cdsisrol
 			,String cdelemen
@@ -5534,7 +5662,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		String paso = null;
 		PropiedadesDeEndosoParaWS items = null ;
-		Map<String, Object> item = new HashMap<String, Object>();
+		Map<String, String> item = new HashMap<String, String>();
 		try
 		{
 			String tstamp = Utils.generaTimestamp();
@@ -5724,7 +5852,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,List<Map<String,String>> incisos
 			,UserVO usuarioSesion
 			,FlujoVO flujo
-			,Map<String,Object> smap4
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -5742,20 +5869,206 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ incisos       = " , incisos
 				,"\n@@@@@@ usuarioSesion = " , usuarioSesion
 				,"\n@@@@@@ flujo         = " , flujo
-				,"\n@@@@@@ smap4         = " , smap4
-				
 				));
 		
 		String paso = null;
 		try
 		{
+			String tstamp = Utils.generaTimestamp();
+			
+			paso = "Insertando situaciones temporales";
+			logger.debug(paso);
+			
+			for(Map<String,String>inciso : incisos)
+			{
+				endososDAO.guardarTvalositEndoso(
+						inciso.get("cdunieco")
+						,inciso.get("cdramo")
+						,inciso.get("estado")
+						,inciso.get("nmpoliza")
+						,inciso.get("nmsituac")
+						,inciso.get("nmsuplem")
+						,"V"
+						,inciso.get("cdtipsit")
+						,inciso.get("OTVALOR01")
+						,inciso.get("OTVALOR02")
+						,inciso.get("OTVALOR03")
+						,inciso.get("OTVALOR04")
+						,inciso.get("OTVALOR05")
+						,inciso.get("OTVALOR06")
+						,inciso.get("OTVALOR07")
+						,inciso.get("OTVALOR08")
+						,inciso.get("OTVALOR09")
+						,inciso.get("OTVALOR10")
+						,inciso.get("OTVALOR11")
+						,inciso.get("OTVALOR12")
+						,inciso.get("OTVALOR13")
+						,inciso.get("OTVALOR14")
+						,inciso.get("OTVALOR15")
+						,inciso.get("OTVALOR16")
+						,inciso.get("OTVALOR17")
+						,inciso.get("OTVALOR18")
+						,inciso.get("OTVALOR19")
+						,inciso.get("OTVALOR20")
+						,inciso.get("OTVALOR21")
+						,inciso.get("OTVALOR22")
+						,inciso.get("OTVALOR23")
+						,inciso.get("OTVALOR24")
+						,inciso.get("OTVALOR25")
+						,inciso.get("OTVALOR26")
+						,inciso.get("OTVALOR27")
+						,inciso.get("OTVALOR28")
+						,inciso.get("OTVALOR29")
+						,inciso.get("OTVALOR30")
+						,inciso.get("OTVALOR31")
+						,inciso.get("OTVALOR32")
+						,inciso.get("OTVALOR33")
+						,inciso.get("OTVALOR34")
+						,inciso.get("OTVALOR35")
+						,inciso.get("OTVALOR36")
+						,inciso.get("OTVALOR37")
+						,inciso.get("OTVALOR38")
+						,inciso.get("OTVALOR39")
+						,inciso.get("OTVALOR40")
+						,inciso.get("OTVALOR41")
+						,inciso.get("OTVALOR42")
+						,inciso.get("OTVALOR43")
+						,inciso.get("OTVALOR44")
+						,inciso.get("OTVALOR45")
+						,inciso.get("OTVALOR46")
+						,inciso.get("OTVALOR47")
+						,inciso.get("OTVALOR48")
+						,inciso.get("OTVALOR49")
+						,inciso.get("OTVALOR50")
+						,inciso.get("OTVALOR51")
+						,inciso.get("OTVALOR52")
+						,inciso.get("OTVALOR53")
+						,inciso.get("OTVALOR54")
+						,inciso.get("OTVALOR55")
+						,inciso.get("OTVALOR56")
+						,inciso.get("OTVALOR57")
+						,inciso.get("OTVALOR58")
+						,inciso.get("OTVALOR59")
+						,inciso.get("OTVALOR60")
+						,inciso.get("OTVALOR61")
+						,inciso.get("OTVALOR62")
+						,inciso.get("OTVALOR63")
+						,inciso.get("OTVALOR64")
+						,inciso.get("OTVALOR65")
+						,inciso.get("OTVALOR66")
+						,inciso.get("OTVALOR67")
+						,inciso.get("OTVALOR68")
+						,inciso.get("OTVALOR69")
+						,inciso.get("OTVALOR70")
+						,inciso.get("OTVALOR71")
+						,inciso.get("OTVALOR72")
+						,inciso.get("OTVALOR73")
+						,inciso.get("OTVALOR74")
+						,inciso.get("OTVALOR75")
+						,inciso.get("OTVALOR76")
+						,inciso.get("OTVALOR77")
+						,inciso.get("OTVALOR78")
+						,inciso.get("OTVALOR79")
+						,inciso.get("OTVALOR80")
+						,inciso.get("OTVALOR81")
+						,inciso.get("OTVALOR82")
+						,inciso.get("OTVALOR83")
+						,inciso.get("OTVALOR84")
+						,inciso.get("OTVALOR85")
+						,inciso.get("OTVALOR86")
+						,inciso.get("OTVALOR87")
+						,inciso.get("OTVALOR88")
+						,inciso.get("OTVALOR89")
+						,inciso.get("OTVALOR90")
+						,inciso.get("OTVALOR91")
+						,inciso.get("OTVALOR92")
+						,inciso.get("OTVALOR93")
+						,inciso.get("OTVALOR94")
+						,inciso.get("OTVALOR95")
+						,inciso.get("OTVALOR96")
+						,inciso.get("OTVALOR97")
+						,inciso.get("OTVALOR98")
+						,inciso.get("OTVALOR99")
+						,tstamp
+						);
+			}
+			
+			paso = "Confirmando endoso";
+			logger.debug(paso);
+			PropiedadesDeEndosoParaWS propWS = endososDAO.confirmarEndosoValositFormsAuto(
+					cdusuari
+					,cdsisrol
+					,cdelemen
+					,cdtipsup
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,feinival
+					,tstamp
+					);
+			
+			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
+			String ntramiteEmi = datosPoliza.get("ntramite");
+			
+			this.confirmarGuardandoDetallesTramiteEndoso(
+					ntramiteEmi
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,propWS.getNmsuplem()
+					,cdtipsup
+					,propWS.getNsuplogi() //nsuplogi
+					,null //dscoment
+					,feinival
+					,flujo
+					,cdusuari
+					,cdsisrol
+					,false //confirmar
+					);
+			
+			/*
+			Map<String,String> valores = new HashMap<String,String>();
+			valores.put("otvalor01" , ntramiteEmi);
+			valores.put("otvalor02" , cdtipsup);
+			valores.put("otvalor03" , consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup));
+			valores.put("otvalor04" , propWS.getNsuplogi());
+			valores.put("otvalor05" , cdusuari);
+			
+			mesaControlDAO.movimientoMesaControl(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,propWS.getNmsuplem()
+					,cdunieco
+					,cdunieco
+					,TipoTramite.ENDOSO.getCdtiptra()
+					,feinival
+					,null //cdagente
+					,null //referencia
+					,null //nombre
+					,feinival
+					,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
+					,null //comments
+					,null //nmsolici
+					,null //cdtipsit
+					,cdusuari
+					,cdsisrol
+					,null
+					,null
+					,null
+					,valores, null
+					);
+			*/
 			
 			/**
 			 * PARA LLAMAR WS SEGUN TIPO DE ENDOSO
 			 */
-			String nmsuplemGen     = (String) smap4.get("pv_nmsuplem_o");
-			String ntramite        = (String) smap4.get("pv_ntramite_o");
-			String tipoGrupoInciso = (String) smap4.get("pv_tipoflot_o");
+			String nmsuplemGen = propWS.getNmsuplem();
+			String ntramite = propWS.getNtramite();
+			String tipoGrupoInciso = propWS.getTipoflot();
 			
 			Map<String,String> incisosAfectados = new HashMap<String, String>();
 			

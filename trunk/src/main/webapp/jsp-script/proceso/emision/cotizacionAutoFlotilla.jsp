@@ -7,8 +7,6 @@
 <script>
 ////// overrides //////
 ////// overrides //////
-var CD_ROL_ACTUAL           = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
-
 ////// urls //////
 var _p30_urlCargarSumaAseguradaRamo5          = '<s:url namespace="/emision"         action="cargarSumaAseguradaRamo5"            />';
 var _p30_urlCargarCduniecoAgenteAuto          = '<s:url namespace="/emision"         action="cargarCduniecoAgenteAuto"            />';
@@ -6780,8 +6778,8 @@ function _p30_confirmarEndoso()
                                             ,'smap4.cdunieco' : _p30_smap1.CDUNIECO
                                             ,'smap4.cdramo'   : _p30_smap1.CDRAMO
                                             ,'smap4.estado'   : _p30_smap1.ESTADO
-                                            ,'smap4.nmsuplem' : json2.nmsuplem 
-                                            ,'smap4.cdsisrol' : CD_ROL_ACTUAL
+                                            ,'smap4.nmsuplem' : json2.omap1.pv_nmsuplem_o 
+                                            ,'smap4.nsuplogi' : json2.omap1.pv_nsuplogi_o
                                         }
 									,scripts  : true
 									,autoLoad : true
@@ -6802,11 +6800,8 @@ function _p30_confirmarEndoso()
 												                boton.setDisabled(true);
 												                var json3 = Ext.decode(response.responseText);
 												                var callbackRemesa = function() { marendNavegacion(2); };
-												                debug('### confirmar json3:',json3);
-                
 												                
-							
-												       			mensajeCorrecto('Endoso generado',json3.respuesta,function(){
+												                mensajeCorrecto('Endoso generado',json3.respuesta,function(){
 																	_generarRemesaClic(
 																	true
 																	,_p30_smap1.CDUNIECO
@@ -6823,9 +6818,7 @@ function _p30_confirmarEndoso()
 											                errorComunicacion();
 											            }
 											        });
-											        var me=this;
-															me.up().up().destroy();
-											        }
+											       }
 																			                    
 									   },
 									   {

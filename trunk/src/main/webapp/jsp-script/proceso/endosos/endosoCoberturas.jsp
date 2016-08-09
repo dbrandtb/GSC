@@ -39,7 +39,7 @@
     var endcobUrlGuardarPreview                        = '<s:url namespace="/endosos"    action="EndosoCoberturasPreviewGuarda"        />';
     var urlPantallaBeneficiarios                       = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
     var url_PantallaPreview                            = '<s:url namespace="/endosos"    action="includes/previewEndosos"              />';
-    var _p48_urlMovimientos                            = '<s:url namespace="/movimientos"  action="ejecutar"                          />';
+   
     debug('inputCduniecop3',inputCduniecop3);
     debug('inputCdramop3',inputCdramop3);
     debug('inputEstadop3',inputEstadop3);
@@ -157,8 +157,8 @@
                                             ,'smap4.cdunieco' : inputCduniecop3
                                             ,'smap4.cdramo'   : inputCdramop3
                                             ,'smap4.estado'   : inputEstadop3
-                                            ,'smap4.nmsuplem' : json.nmsuplement //nuevo nmsuplem
-                                            ,'smap4.cdsisrol' : CD_ROL_ACTUAL
+                                            ,'smap4.nmsuplem' : json.smap2.pv_nmsuplem_o
+                                            ,'smap4.nsuplogi' : json.smap2.pv_nsuplogi_o
                                         }
 									,scripts  : true
 									,autoLoad : true
@@ -168,39 +168,17 @@
 										,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
 										,handler : function(me){
 																var form=Ext.getCmp('endoso');
-																endcobSumitGuarda(form,'si');
-																me.up().up().destroy();
+																endcobSumit(form,'si');
+																me.up('window').destroy();
 																}
 									   },
 									   {
 										text    : 'Cancelar'
 										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
 										,handler : function (me){
+														marendNavegacion(2);
 														me.up('window').destroy();
-														Ext.Ajax.request(
-												            {
-												                url      : _p48_urlMovimientos
-												                ,params  :
-												                {
-												                    'params.movimiento' : 'SACAENDOSO'
-												                    ,'params.cdunieco'  : inputCduniecop3
-												                    ,'params.cdramo'    : inputCdramop3
-												                    ,'params.estado'    : 'M'
-												                    ,'params.nmpoliza'  : inputNmpolizap3
-												                    ,'params.nsuplogi'  : json.nsuplogi
-												                    ,'params.nmsuplem'  : json.nmsuplement
-												                }
-												                ,success : function(response)
-												                {
-												                	marendNavegacion(2);
-												                	
-												                }
-												                ,failure : function()
-												                {
-												                    //_setLoading(false,'_p48_panelpri');
-												                    errorComunicacion(null,'Error al cancelar endoso');
-												                }
-												            });
+														
 										}
 									   } ]
 					     }).show();
@@ -245,155 +223,7 @@
             });
         }
     }
-    /**/
-    function endcobSumitGuarda(form,confirmar)
-    {
-        debug('generar endoso',confirmar);
-        //var form=this.up().up();
-        if(form.isValid())
-        {
-            // Eliminamos los filtros para que enviemos todas las coberturas editadas:
-            storeCoberturasEditadas_p3.clearFilter();
-        	
-            var json={};
-            json['omap1']=form.getValues();
-            json['omap1']['pv_cdunieco_i'] = inputCduniecop3;
-            json['omap1']['pv_cdramo_i']   = inputCdramop3;
-            json['omap1']['pv_estado_i']   = inputEstadop3;
-            json['omap1']['pv_nmpoliza_i'] = inputNmpolizap3;
-            json['omap1']['pv_ntramite_i'] = inputNtramitep3;
-            var slist1=[];
-            json['slist1']=slist1;
-            storeCoberturasEditadas_p3.each(function(record)
-            {
-                slist1.push(
-                {
-                    garantia   : record.get('GARANTIA')
-                    ,cdcapita  : record.get('CDCAPITA')
-                    ,status    : record.get('status')
-                    ,ptcapita  : record.get('SUMA_ASEGURADA')
-                    ,ptreduci  : record.get('ptreduci')
-                    ,fereduci  : record.get('fereduci')
-                    ,swrevalo  : record.get('swrevalo')
-                    ,cdagrupa  : record.get('cdagrupa')
-                    ,cdtipbca  : record.get('cdtipbca')
-                    ,ptvalbas  : record.get('ptvalbas')
-                    ,swmanual  : record.get('swmanual')
-                    ,swreas    : record.get('swreas')
-                    ,cdatribu1 : record.get('cdatribu1')
-                    ,otvalor1  : record.get('otvalor1')
-                    ,cdatribu2 : record.get('cdatribu2')
-                    ,otvalor2  : record.get('otvalor2')
-                    ,cdatribu3 : record.get('cdatribu3')
-                    ,otvalor3  : record.get('otvalor3')
-                    ,nmsituac  : record.get('nmsituac')
-                    ,cdtipsit  : record.get('cdtipsit')
-                });
-            });
-            _p3_smap1['cdperson']  = inputCdpersonap3;
-            _p3_smap1['altabaja']  = inputAltabajap3;
-            _p3_smap1['confirmar'] = confirmar;
-            
-            json['smap1']=_p3_smap1;
-            
-            if(!Ext.isEmpty(_p3_flujo))
-            {
-                json['flujo'] = _p3_flujo;
-            }
-            
-            debug(json);
-            
-            if(slist1.length <= 0){
-				mensajeWarning('No se modificaron coberturas.');
-				return;
-            }
-            
-            _setLoading(true,form);
-            
-            Ext.Ajax.request(
-            {
-                url       : endcobUrlGuardarPreview
-                ,jsonData : json
-                ,timeout  : 180000
-                ,success  : function(response)
-                {
-                    _setLoading(false,form);
-                    json=Ext.decode(response.responseText);
-                    debug(json);
-                    if(json.success==true)
-                    {
-                        var callbackRemesa = function()
-                        {
-                            //////////////////////////////////
-                            ////// usa codigo del padre //////
-                            /*//////////////////////////////*/
-                            marendNavegacion(2);
-                            /*//////////////////////////////*/
-                            ////// usa codigo del padre //////
-                            //////////////////////////////////
-                        };
-                        Ext.Msg.show(
-                        {
-                            title   : 'Endoso generado',
-                            msg     : json.mensaje,
-                            buttons : Ext.Msg.OK,
-                            fn      : function()
-                            {
-                                if(confirmar=='si')
-                                {
-                                    _generarRemesaClic(
-                                        true
-                                        ,inputCduniecop3
-                                        ,inputCdramop3
-                                        ,inputEstadop3
-                                        ,inputNmpolizap3
-                                        ,callbackRemesa
-                                    );
-                                }
-                                else
-                                {
-                                    //////////////////////////////////
-                                    ////// usa codigo del padre //////
-                                    /*//////////////////////////////*/
-                                    marendNavegacion(4);
-                                    /*//////////////////////////////*/
-                                    ////// usa codigo del padre //////
-                                    //////////////////////////////////
-                                }
-                            }
-                        });
-                    }
-                    else
-                    {
-                        mensajeError(json.error);
-                    }
-                }
-                ,failure  : function()
-                {
-                    _setLoading(false,form);
-                    _setLoading(false,Ext.getCmp('tarifa'))
-                    Ext.Msg.show(
-                    {
-                        title   : 'Error',
-                        icon    : Ext.Msg.ERROR,
-                        msg     : 'Error de comunicaci&oacute;n',
-                        buttons : Ext.Msg.OK
-                    });
-                }
-            });
-        }
-        else
-        {
-            Ext.Msg.show(
-            {
-                title   : 'Datos imcompletos',
-                icon    : Ext.Msg.WARNING,
-                msg     : 'Favor de llenar los campos requeridos',
-                buttons : Ext.Msg.OK
-            });
-        }
-    }
-    /**/
+   
     function endcobSumit(form,confirmar)
     	{
         debug('generar endoso',confirmar);
