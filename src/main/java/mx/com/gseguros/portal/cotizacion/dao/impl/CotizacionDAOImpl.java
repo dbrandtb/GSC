@@ -7756,7 +7756,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			String nmpoliza,
 			String nmsuplem,
 			String cdtipsit,
-			String valor)throws Exception{
+			String valor,
+			String cdgrupo)throws Exception{
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************************")
@@ -7768,17 +7769,19 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 				.append("\n****** nmsuplem=").append(nmsuplem)
 				.append("\n****** cdtipsit=").append(cdtipsit)
 				.append("\n****** valor=").append(valor)
+				.append("\n****** cdgrupo=").append(cdgrupo)
 				.append("\n******************************************************")
 				.toString()
 				);
 		Map<String,Object> params = new LinkedHashMap<String,Object>();		
 		params.put("cdunieco", cdunieco);
-		params.put("cdramo",   cdramo);
-		params.put("estado",   estado);
+		params.put("cdramo"  , cdramo);
+		params.put("estado"  , estado);
 		params.put("nmpoliza", nmpoliza);
 		params.put("nmsuplem", nmsuplem);
 		params.put("cdtipsit", cdtipsit);
-		params.put("valor",    Integer.parseInt(valor));
+		params.put("valor"   , Integer.parseInt(valor));
+		params.put("cdgrupo" , cdgrupo);
 		Map<String,Object>     procResult = ejecutaSP(new ActualizaValoresSituacionTitulares(getDataSource()), params);
 		List<Map<String,String>> listaDatos = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		logger.debug(Utils.log("listaDatos",listaDatos));
@@ -7801,6 +7804,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("nmsuplem"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("valor"     , OracleTypes.NUMBER));
+			declareParameter(new SqlParameter("cdgrupo"   , OracleTypes.VARCHAR));
 			String[] cols = new String[]{"NMSITUAC"};
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));

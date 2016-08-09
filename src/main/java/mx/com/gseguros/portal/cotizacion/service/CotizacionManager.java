@@ -462,6 +462,7 @@ public interface CotizacionManager
 	 * @param nmsuplem
 	 * @param cdtipsit
 	 * @param valor
+	 * @param cdgrupo
 	 * @return
 	 */
 	public ManagerRespuestaVoidVO guardarValoresSituacionesTitular(
@@ -471,7 +472,8 @@ public interface CotizacionManager
 			String nmpoliza,
 			String nmsuplem,
 			String cdtipsit,
-			String valor);
+			String valor,
+			String cdgrupo);
 	
 	public ManagerRespuestaSmapVO subirCensoCompleto(
 			String cdunieco

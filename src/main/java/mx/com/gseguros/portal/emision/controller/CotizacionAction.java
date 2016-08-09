@@ -11363,6 +11363,14 @@ public class CotizacionAction extends PrincipalCoreAction
 		success = true;		
 		try{
 			Utils.validate(params, "No se recibieron parametros");
+			Utils.validate(params.get("cdunieco"), "No se recibio oficina",
+						   params.get("cdramo")	 , "No se recibio el producto",
+						   params.get("estado")	 , "No se recibio el estado",
+						   params.get("nmpoliza"), "No se recibio el numero de poliza",
+						   params.get("nmsuplem"), "No se recibio el suplemento",
+						   params.get("cdtipsit"), "No se recibio el tipo de situacion",
+						   params.get("valor")	 , "No se recibio el valor",
+						   params.get("cdgrupo") , "No se recibio el grupo");
 			String cdunieco = params.get("cdunieco");
 			String cdramo 	= params.get("cdramo");
 			String estado	= params.get("estado");
@@ -11370,8 +11378,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			String nmsuplem = params.get("nmsuplem");
 			String cdtipsit = params.get("cdtipsit");
 			String valor 	= params.get("valor");
+			String cdgrupo 	= params.get("cdgrupo");
 		//proceso
-			ManagerRespuestaVoidVO resp = cotizacionManager.guardarValoresSituacionesTitular(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsit, valor);
+			ManagerRespuestaVoidVO resp = cotizacionManager.guardarValoresSituacionesTitular(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsit, valor, cdgrupo);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();

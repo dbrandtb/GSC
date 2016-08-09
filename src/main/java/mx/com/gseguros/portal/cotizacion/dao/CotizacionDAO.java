@@ -756,6 +756,7 @@ public interface CotizacionDAO {
 	 * @param nmsuplem
 	 * @param cdtipsit
 	 * @param valor
+	 * @param cdgrupo
 	 * @return
 	 * @throws Exception
 	 */
@@ -766,7 +767,8 @@ public interface CotizacionDAO {
 			String nmpoliza,
 			String nmsuplem,
 			String cdtipsit,
-			String valor)throws Exception;
+			String valor,
+			String cdgrupo)throws Exception;
 	
 	public void actualizaNmsituaextMpolisit(
 			String cdunieco

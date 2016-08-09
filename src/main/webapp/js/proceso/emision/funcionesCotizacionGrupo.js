@@ -1080,7 +1080,7 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
 function  checkEdit(editor, context, eOpts) {
 	debug('entrando a checkEdit');
 	debug('context',context.newValues);
-	var gras = _fieldById('gridAseg');
+	var gras = _fieldById('gridAseg'+editor.cdgrupo);
 	gras.getSelectionModel().select(context.record, false);
 	if(!compareObjects(context.newValues, context.originalValues)){
 		gras.getSelectionModel().select(context.record, true);
@@ -1099,7 +1099,7 @@ function  checkEdit(editor, context, eOpts) {
  */
 function  beforedesel(sm, record) {
 	debug('entrando a beforedesel');
-	return !_fieldById('gridAseg').getPlugin('rowedit');
+	return !_fieldById('gridAseg'+sm.cdgrupo).getPlugin('rowedit');
 }
 
 function beforeed(editor, context) {
@@ -1167,20 +1167,23 @@ function _p25_guardarExtraprimasTitulares(){
             	,nmpoliza  : _p25_smap1.nmpoliza
             	,nmsuplem  : '0'
             	,cdtipsit  : _p25_smap1.cdtipsit
-            	,valor	   : document.getElementsByName("extrtitu")[0].value
+            	,valor	   : this.up('grid').down('[name=extrtitu]').value
+            	,cdgrupo   : this.grupo
             	}
     	}
     	,success  : function(response){
     		var json=Ext.decode(response.responseText);
             debug('respuesta del guardado de extraprimas:',json);
             if(json.exito){
-            	_fieldById('gridAseg').getStore().reload();
+            	_fieldById('gridAseg'+json.params.cdgrupo).getStore().reload();
                 mensajeCorrecto('Datos guardados',json.respuesta);
                 _unmask();
+                _mask('Actualizando pantalla');
+                window.location.reload();
             }
             else{
                 mensajeError(json.respuesta);
-                _umask();
+                _unmask();
             }
         }
         ,failure  : function(){
@@ -1205,20 +1208,23 @@ function _p21_guardarExtraprimasTitulares(){
             	,nmpoliza  : _p21_smap1.nmpoliza
             	,nmsuplem  : '0'
             	,cdtipsit  : _p21_smap1.cdtipsit
-            	,valor	   : document.getElementsByName("extrtitu")[0].value
+            	,cdgrupo   : this.grupo
+            	,valor	   : this.up('grid').down('[name=extrtitu]').value
             	}
     	}
     	,success  : function(response){
     		var json=Ext.decode(response.responseText);
             debug('respuesta del guardado de extraprimas:',json);
             if(json.exito){
-            	_fieldById('gridAseg').getStore().reload();
+            	_fieldById('gridAseg'+json.params.cdgrupo).getStore().reload();
                 mensajeCorrecto('Datos guardados',json.respuesta);
                 _unmask();
+                _mask('Actualizando pantalla');
+                window.location.reload();                
             }
             else{
                 mensajeError(json.respuesta);
-                _umask();
+                _unmask();
             }
         }
         ,failure  : function(){
@@ -1233,9 +1239,9 @@ function _p25_guardarExtraprimas(letra)
     debug('>_p25_guardarExtraprimas:',letra);
     _mask('Guardando...');
     var records = [];
-    var store = _fieldById('gridAseg').getStore();
-    for(var i in _fieldById('gridAseg').getPlugin('pagingselect').selection){
-    	records.push(_fieldById('gridAseg').getPlugin('pagingselect').selection[i].data);
+    var store = _fieldById('gridAseg'+letra).getStore();
+    for(var i in _fieldById('gridAseg'+letra).getPlugin('pagingselect').selection){
+    	records.push(_fieldById('gridAseg'+letra).getPlugin('pagingselect').selection[i].data);
     }
     debug('records',records);
     if(records.length==0)
@@ -1319,9 +1325,9 @@ function _p21_guardarExtraprimas(letra)
 //    debug('grid a guardar:',grid);
 //    var store=grid.getStore();
     var records = [];
-    var store = _fieldById('gridAseg').getStore();
-    for(var i in _fieldById('gridAseg').getPlugin('pagingselect').selection){
-    	records.push(_fieldById('gridAseg').getPlugin('pagingselect').selection[i].data);
+    var store = _fieldById('gridAseg'+letra).getStore();
+    for(var i in _fieldById('gridAseg'+letra).getPlugin('pagingselect').selection){
+    	records.push(_fieldById('gridAseg'+letra).getPlugin('pagingselect').selection[i].data);
     }
     debug('store a guardar:',store);
     

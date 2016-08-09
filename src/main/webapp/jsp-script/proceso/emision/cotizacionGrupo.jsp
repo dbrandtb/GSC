@@ -5924,6 +5924,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
 {
     var record=grid.getStore().getAt(rowIndex);
     debug('>_p21_revisarAseguradosClic record:',record);
+    var cdgrupo = record.get('letra')-0;
     _p21_quitarTabExtraprima(record.get('letra'));
     var plugins = [];
     plugins.push({
@@ -5935,6 +5936,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
     		clicksToEdit  : 1
     		,errorSummary : true
     		,pluginId     : 'rowedit'
+    		,cdgrupo      : cdgrupo
     		,listeners: {
     			edit: checkEdit
     			}
@@ -5951,11 +5953,12 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
         [
             Ext.create('Ext.grid.Panel',
             {
-                id			 :	'gridAseg'
+                itemId		  :	'gridAseg'+cdgrupo
                 ,selModel     : Ext.create('Ext.selection.CheckboxModel', 
                 		{
                 	mode: 				'MULTI',
-                	showHeaderCheckbox: false
+                	showHeaderCheckbox: false,
+                	cdgrupo           : cdgrupo
                 	})
 				,columns     : [ <s:property value='%{getImap().containsKey("extraprimasColumns")?getImap().get("extraprimasColumns").toString():""}' escapeHtml='false' /> ]
                 ,width      : 980
@@ -6024,10 +6027,11 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                     }
                     ,{
                         xtype    : 'button'
-                        ,text    : 'Aplicar'
+                        ,text    : 'Aplicar '+cdgrupo
                         ,icon    : '${ctx}/resources/fam3icons/icons/bell_link.png'
-                        ,grupo   : record.get('letra')
+                        ,grupo   : cdgrupo
                         ,handler : _p21_guardarExtraprimasTitulares
+                        ,listeners : { afterrender : function(me){ debug('boton afterrender cdgrupo', me.grupo) }}
                     }
                 ]
                 ,store      : Ext.create('Ext.data.Store',
@@ -6065,15 +6069,15 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 		'load' :  {
                 			fn : function(store,records,successful) {
                 				debug('reseteando los datos');
-                				var selection = _fieldById('gridAseg').getPlugin('pagingselect').selection;
+                				var selection = _fieldById('gridAseg'+cdgrupo).getPlugin('pagingselect').selection;
                  			    var mapselection = {};
                  			    for (var i = 0; i < selection.length; i++){
                  			    	debug('metiendo llave ',selection[i].data['nmsituac']);
                  			    	mapselection[selection[i].data['NMSITUAC']] = selection[i].data; 
                  			    	}
                  			    debug('mapselection',mapselection);
-                				for(var s in _fieldById('gridAseg').store.data.items){
-                					var rec = _fieldById('gridAseg').store.getAt(s);
+                				for(var s in _fieldById('gridAseg'+cdgrupo).store.data.items){
+                					var rec = _fieldById('gridAseg'+cdgrupo).store.getAt(s);
                 					debug('nmsituac',rec.data['NMSITUAC']);
                 					if (rec.data['NMSITUAC'] in mapselection){
                 						debug('entro al map');
@@ -6158,7 +6162,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                     {
                         Ext.getStore('_p21_storeExtraprimas'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
-					,beforedeselect: beforedesel
+					,beforedeselect : beforedesel
                 	,beforeedit	    : beforeed
                 }
                 ,buttonAlign : 'center'
@@ -6171,7 +6175,8 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                         ,handler : function()
                         {
                             _p21_guardarExtraprimas(record.get('letra'));
-                            _fieldById('gridAseg').store.commitChanges();
+                            _p21_setActiveResumen();
+                            _fieldById('gridAseg'+cdgrupo).store.commitChanges();
                             debug('aun guardados', records.lenght());
                         }
                     }
@@ -6179,7 +6184,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
             })
         ]
     });
-    _fieldById('gridAseg').store.loadPage(1);
+    _fieldById('gridAseg'+cdgrupo).store.loadPage(1);
     debug('<_p21_revisarAseguradosClic');
 }
 
@@ -6250,7 +6255,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     	        [
     	            Ext.create('Ext.grid.Panel',
     	            {
-    	            	id			: 'gridAsegurados'
+    	            	itemId		: 'gridAsegurados'+record.get('letra')
     	            	,columns    : columnas
     	                ,width      : 980
     	                ,height     : 500
@@ -6402,7 +6407,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     	            })
     	        ]
     	    });
-    _fieldById('gridAsegurados').store.loadPage(1);
+    _fieldById('gridAsegurados'+record.get('letra')).store.loadPage(1);
     debug('<_cotcol_aseguradosClic');
 }
 
