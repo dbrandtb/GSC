@@ -23,9 +23,6 @@ debug('_p44_slist1:',_p44_slist1);
 
 var _p44_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 debug('_p44_flujo:',_p44_flujo);
-
-var CD_ROL_ACTUAL           = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
-debug('CD_ROL_ACTUAL:',CD_ROL_ACTUAL);
 ////// variables //////
 
 ////// overrides //////
@@ -205,8 +202,8 @@ Ext.onReady(function()
 		                                            ,'smap4.cdunieco' : _p44_smap1.CDUNIECO
 		                                            ,'smap4.cdramo'   : _p44_smap1.CDRAMO
 		                                            ,'smap4.estado'   : _p44_smap1.ESTADO
-		                                            ,'smap4.nmsuplem' : json2.nmsuplem 
-		                                            ,'smap4.cdsisrol' : CD_ROL_ACTUAL
+		                                            ,'smap4.nmsuplem' : json2.smap2.pv_nmsuplem_o
+		                                            ,'smap4.nsuplogi' : json2.smap2.pv_nsuplogi_o
 		                                        }
 											,scripts  : true
 											,autoLoad : true
@@ -266,33 +263,9 @@ Ext.onReady(function()
 												,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
 												,handler : function (me)
 															{
+																marendNavegacion(2);
 																me.up('window').destroy();
-																Ext.Ajax.request(
-															            {
-															                url      : _p48_urlMovimientos
-															                ,params  :
-															                {
-															                    'params.movimiento' : 'SACAENDOSO'
-															                    ,'params.cdunieco'  : _p44_smap1.CDUNIECO
-															                    ,'params.cdramo'    : _p44_smap1.CDRAMO
-															                    ,'params.estado'    : _p44_smap1.ESTADO
-															                    ,'params.nmpoliza'  : _p44_smap1.NMPOLIZA
-															                    ,'params.nsuplogi'  : json2.nsuplogi 
-															                    ,'params.nmsuplem'  : json2.nmsuplem 
-															                }
-															                ,success : function(response)
-															                {
-															                	marendNavegacion(2);
-															                   
-															                }
-															                ,failure : function()
-															                {
-															                    //_setLoading(false,'_p48_panelpri');
-															                    errorComunicacion(null,'Error al cancelar endoso');
-															                }
-															            });
-															    
-																}
+															}
 											 } ]
 							     });
 							     win.show();

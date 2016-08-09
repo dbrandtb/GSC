@@ -9,6 +9,7 @@
 
 
 var _p29_urlRecotizar                      = '<s:url namespace="/endosos"           action="retarificarEndosos" />';
+var _p48_urlMovimientos                    = '<s:url namespace="/movimientos"       action="ejecutar"           />';
 
 
 ////// urls //////
@@ -30,14 +31,7 @@ Ext.onReady(function()
 	var cdramo   = '<s:property value="smap4.cdramo"   />';	
 	var estado   = '<s:property value="smap4.estado"   />';
 	var nmsuplem = '<s:property value="smap4.nmsuplem" />';
-	var cdsisrol = '<s:property value="smap4.cdsisrol" />';
-	
-	debug('***** smap4.nmpoliza=', nmpoliza);
-	debug('***** smap4.cdunieco=', cdunieco);
-	debug('***** smap4.cdramo=', cdramo);
-	debug('***** smap4.estado=', estado);
-	debug('***** smap4.nmsuplem=', nmsuplem);
-	
+	var nsuplogi = '<s:property value="smap4.nsuplogi" />';
 	
 	////// modelos //////
 	Ext.define('ModeloDetalleCotizacion',
@@ -175,12 +169,12 @@ Ext.onReady(function()
                                         }
                                     ]
                                     ,ftype          : 'groupingsummary'
-                                    ,startCollapsed :cdsisrol!='SUSCRIAUTO'
+                                    ,startCollapsed : _GLOBAL_CDSISROL != RolSistema.SuscriptorAuto
                                     ,listeners      :
                                     {
                                         groupexpand : function(view,node,group)
                                         {
-                                            if(cdsisrol!='SUSCRIAUTO')
+                                            if(_GLOBAL_CDSISROL != RolSistema.SuscriptorAuto)
                                         	{
                                                 this.collapseAll();
                                             }
@@ -210,6 +204,30 @@ Ext.onReady(function()
                                 })
                             ]
                         })})
+                        Ext.Ajax.request(
+		                {
+		                    url      : _p48_urlMovimientos
+    		                ,params  :
+    		                {
+    		                    'params.movimiento' : 'SACAENDOSO'
+    		                    ,'params.cdunieco'  : cdunieco
+    		                    ,'params.cdramo'    : cdramo
+    		                    ,'params.estado'    : estado
+    		                    ,'params.nmpoliza'  : nmpoliza
+    		                    ,'params.nsuplogi'  : nsuplogi
+    		                    ,'params.nmsuplem'  : nmsuplem
+    		                }
+    		                ,success : function(response)
+    		                {
+    		                	//marendNavegacion(2);
+    		                	
+    		                }
+    		                ,failure : function()
+    		                {
+    		                    //_setLoading(false,'_p48_panelpri');
+    		                    errorComunicacion(null,'Error al cancelar endoso');
+    		                }
+    		            });
                         
             }
         }
