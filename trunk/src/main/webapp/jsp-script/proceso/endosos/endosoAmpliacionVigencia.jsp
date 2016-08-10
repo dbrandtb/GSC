@@ -4,6 +4,9 @@
 
 var _CONTEXT = '${ctx}';
 	var paramsEntrada          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+	
+	paramsEntrada.FEPROREN_ORIG = paramsEntrada.FEPROREN; 
+		
 	var guarda_Vigencia_Poliza = '<s:url namespace="/endosos" action=" guardarEndosoAmpliacionVigencia"       />';
 	
 	var endAmpVigFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
@@ -74,6 +77,7 @@ var _CONTEXT = '${ctx}';
 						var feProren = new Date(panelInicialPral.down('[name="feFin"]').getValue());
 						paramsEntrada.FEINIVAL = Ext.Date.format(panelInicialPral.down('[name="feIngreso"]').getValue(),'d/m/Y');
 						paramsEntrada.FEPROREN = Ext.Date.format(panelInicialPral.down('[name="feAmpliacion"]').getValue(),'d/m/Y');
+						
 						if(feAmpli > feProren){
 						    //Exito
 							var submitValues={};

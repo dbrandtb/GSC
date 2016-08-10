@@ -6429,6 +6429,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,Date dFechaEndoso
 			,String feefecto
 			,String feproren
+			,Date   feprorenOriginal
 			,String nmsuplemOriginal
 			,UserVO usuarioSesion
 			,String tipoGrupoInciso
@@ -6450,6 +6451,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ dFechaEndoso     = " , dFechaEndoso
 				,"\n@@@@@@ feefecto         = " , feefecto
 				,"\n@@@@@@ feproren         = " , feproren
+				,"\n@@@@@@ feprorenOriginal = " , feprorenOriginal
 				,"\n@@@@@@ nmsuplemOriginal = " , nmsuplemOriginal
 				,"\n@@@@@@ cdsisrol         = " , cdsisrol
 				,"\n@@@@@@ flujo            = " , flujo
@@ -6467,7 +6469,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,cdramo
 					,estado
 					,nmpoliza
-					,dFechaEndoso
+					,feprorenOriginal
 					,cdelemen
 					,cdusuari
 					,"END"
