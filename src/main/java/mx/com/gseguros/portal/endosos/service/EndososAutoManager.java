@@ -495,6 +495,7 @@ public interface EndososAutoManager
 			,Date dFechaEndoso
 			,String feefecto
 			,String feproren
+			,Date   feprorenOriginal
 			,String nmsuplemOriginal
 			,UserVO usuarioSesion
 			,String tipoGrupoInciso

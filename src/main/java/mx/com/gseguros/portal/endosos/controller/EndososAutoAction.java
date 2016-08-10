@@ -1163,6 +1163,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String status   = smap1.get("STATUS");
 			String feefecto = smap1.get("FEEFECTO");
 			String feproren = smap1.get("FEPROREN");
+			String feprorenOriginal = smap1.get("FEPROREN_ORIG");
 			String ntramite = smap1.get("NTRAMITE");
 			String nmsuplemOriginal = smap1.get("NMSUPLEM");
 			
@@ -1171,7 +1172,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(estado   , "No se recibio el estado de la poliza");
 			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
 			Utils.validate(status   , "No se recibio el status");
-			Utils.validate(feefecto , "No se recibio la fecha feproren");
+			Utils.validate(feefecto , "No se recibio la fecha feefecto");
+			Utils.validate(feprorenOriginal , "No se recibio la fecha feefecto original");
 			Utils.validate(feproren , "No se recibio la fecha feproren");
 			
 			
@@ -1186,6 +1188,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String cdtipsup      = TipoEndoso.AMPLIACION_DE_VIGENCIA.getCdTipSup().toString();
 			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
+			Date   dFeprorenOrig  = renderFechas.parse(feprorenOriginal);
 			
 			String tipoGrupoInciso = smap1.get("TIPOFLOT");
 			
@@ -1203,6 +1206,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					dFechaEndoso,
 					feefecto,
 					feproren,
+					dFeprorenOrig,
 					nmsuplemOriginal,
 					usuarioSesion,
 					tipoGrupoInciso,
