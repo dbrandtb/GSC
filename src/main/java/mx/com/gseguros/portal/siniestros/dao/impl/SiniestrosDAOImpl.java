@@ -1456,7 +1456,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"DSICD2"
 					,"DESCPORC"
 					,"DESCNUME"
-					,"COPAGO"
+							,"COPAGO"
 					,"PTIMPORT"
 					,"AUTRECLA"
 					,"NMRECLAMO"
@@ -1502,7 +1502,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"IMPORTEASEG",		"PTIVAASEG",		"PTIVARETASEG",		"PTISRASEG"
 					,"PTIMPCEDASEG",	"DEDUCIBLE",		"IMPORTETOTALPAGO",	"COMPLEMENTO"
 					,"REQAUTES",		"NMAUTESP", 		"REQAUTESPECIAL",	"VALTOTALCOB"
-					,"LIMITE",			"IMPPAGCOB"
+					,"LIMITE",			"IMPPAGCOB",		"NMCALLCENTER"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2548,7 +2548,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String status,
 			String nmsinies,
 			String nfactura,
-			String cdtipsit) throws Exception
+			String cdtipsit,
+			String ntramite) throws Exception
 	{
 		Map<String,Object>p=new HashMap<String,Object>();
 		p.put("pv_cdunieco_i" , cdunieco);
@@ -2562,6 +2563,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		p.put("pv_nmsinies_i" , nmsinies);
 		p.put("pv_nfactura_i" , nfactura);
 		p.put("pv_cdtipsit_i" , cdtipsit);
+		p.put("pv_ntramite_i" , ntramite);
 		logger.debug("P_GET_CONCEPTOS_FACTURA params: "+p);
 		Map<String, Object> mapResult = ejecutaSP(new PGETCONCEPTOSFACTURA(this.getDataSource()), p);
 		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
@@ -2583,6 +2585,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDUNIECO"
 					,"CDRAMO"
@@ -2605,8 +2608,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"PTPCIOEX"
 					,"DCTOIMEX"
 					,"PTIMPOEX"
-					,"DEDUCIBLE"
-					,"COPAGO"
+						,"DEDUCIBLE"
+						,"COPAGO"
 					/*,"AUTMEDIC"
 					,"COMMENME"
 					,"AUTRECLA"
@@ -5662,4 +5665,35 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String, Object> actualizaDatosGeneralesCopago(Map<String, Object> params) throws Exception {
+		return ejecutaSP(new ActualizaDatosGeneralesCopago(this.getDataSource()), params);
+	}
+	
+	protected class ActualizaDatosGeneralesCopago extends StoredProcedure {
+		protected ActualizaDatosGeneralesCopago(DataSource dataSource) {
+			super(dataSource, "PKG_DESARROLLO.P_MOV_TCOPASIN");
+            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdgarant_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdconval_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_deducible_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_copago_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmautser_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_swautori_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_accion_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+    
 }

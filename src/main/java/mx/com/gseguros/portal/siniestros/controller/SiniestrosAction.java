@@ -178,78 +178,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			// 1.- Guardar en TMESACONTROL 
 			this.session=ActionContext.getContext().getSession();
 			UserVO usuario=(UserVO) session.get("USUARIO");
-			/*HashMap<String, Object> parMesCon = new HashMap<String, Object>();
-			parMesCon.put("pv_cdunieco_i",		params.get("cdunieco"));
-			parMesCon.put("pv_cdunieco_i", 		listaMesaControl.get(0).getCduniecomc());
-			parMesCon.put("pv_cdramo_i", 		listaMesaControl.get(0).getCdramomc());
-			parMesCon.put("pv_estado_i", 		listaMesaControl.get(0).getEstadomc());
-			parMesCon.put("pv_nmpoliza_i", 		listaMesaControl.get(0).getNmpolizamc());
-			parMesCon.put("pv_nmsuplem_i", 		listaMesaControl.get(0).getNmsuplemmc());
-			parMesCon.put("pv_cdsucadm_i", 		listaMesaControl.get(0).getCdsucadmmc());
-			parMesCon.put("pv_cdsucdoc_i", 		listaMesaControl.get(0).getCdsucdocmc());
-			parMesCon.put("pv_cdtiptra_i", 		listaMesaControl.get(0).getCdtiptramc());
-			parMesCon.put("pv_ferecepc_i", 		getDate(listaMesaControl.get(0).getFerecepcmc()));
-			parMesCon.put("pv_cdagente_i", 		listaMesaControl.get(0).getCdagentemc());
-			parMesCon.put("pv_referencia_i", 	listaMesaControl.get(0).getReferenciamc());
-			parMesCon.put("pv_nombre_i", 		listaMesaControl.get(0).getNombremc());
-			parMesCon.put("pv_festatus_i",      getDate(listaMesaControl.get(0).getFecstatumc()));
-			parMesCon.put("pv_status_i",        EstatusTramite.EN_CAPTURA.getCodigo());
-			parMesCon.put("pv_comments_i",      listaMesaControl.get(0).getCommentsmc());
-			parMesCon.put("pv_nmsolici_i",      listaMesaControl.get(0).getNmsolicimc());
-			parMesCon.put("pv_cdtipsit_i",      listaMesaControl.get(0).getCdtipsitmc());
-			parMesCon.put("pv_otvalor01"    , 	listaMesaControl.get(0).getOtvalor01mc());
-			parMesCon.put("pv_otvalor02"    , 	listaMesaControl.get(0).getOtvalor02mc());
-			parMesCon.put("pv_otvalor03"    , 	listaMesaControl.get(0).getOtvalor03mc());
-			parMesCon.put("pv_otvalor04"    , 	listaMesaControl.get(0).getOtvalor04mc());
-			parMesCon.put("pv_otvalor05"    , 	listaMesaControl.get(0).getOtvalor05mc());
-			parMesCon.put("pv_otvalor06"    , 	listaMesaControl.get(0).getOtvalor06mc());
-			parMesCon.put("pv_otvalor07"    , 	listaMesaControl.get(0).getOtvalor07mc());
-			parMesCon.put("pv_otvalor08"    , 	listaMesaControl.get(0).getOtvalor08mc());
-			parMesCon.put("pv_otvalor09"    , 	listaMesaControl.get(0).getOtvalor09mc());
-			parMesCon.put("pv_otvalor10"    , 	listaMesaControl.get(0).getOtvalor10mc());
-			parMesCon.put("pv_otvalor11"    , 	listaMesaControl.get(0).getOtvalor11mc());
-			parMesCon.put("pv_otvalor12"    , 	listaMesaControl.get(0).getOtvalor12mc());
-			parMesCon.put("pv_otvalor13"    , 	listaMesaControl.get(0).getOtvalor13mc());
-			parMesCon.put("pv_otvalor14"    , 	listaMesaControl.get(0).getOtvalor14mc());
-			parMesCon.put("pv_otvalor15"    , 	listaMesaControl.get(0).getOtvalor15mc());
-			parMesCon.put("pv_otvalor16"    , 	listaMesaControl.get(0).getOtvalor16mc());
-			parMesCon.put("pv_otvalor17"    , 	listaMesaControl.get(0).getOtvalor17mc());
-			parMesCon.put("pv_otvalor18"    , 	listaMesaControl.get(0).getOtvalor18mc());
-			parMesCon.put("pv_otvalor19"    , 	listaMesaControl.get(0).getOtvalor19mc());
-			parMesCon.put("pv_otvalor20"    , 	listaMesaControl.get(0).getOtvalor20mc());
-			parMesCon.put("pv_otvalor21"    , 	listaMesaControl.get(0).getOtvalor21mc());
-			parMesCon.put("pv_otvalor22"    , 	listaMesaControl.get(0).getOtvalor22mc());
-			parMesCon.put("pv_otvalor23"    , 	listaMesaControl.get(0).getOtvalor23mc());
-			parMesCon.put("pv_otvalor24"    , 	listaMesaControl.get(0).getOtvalor24mc());
-			parMesCon.put("pv_otvalor25"    , 	listaMesaControl.get(0).getOtvalor25mc());
-			parMesCon.put("pv_otvalor26"    , 	listaMesaControl.get(0).getOtvalor26mc());
-			parMesCon.put("pv_otvalor27"    , 	listaMesaControl.get(0).getOtvalor27mc());
-			parMesCon.put("pv_otvalor28"    , 	listaMesaControl.get(0).getOtvalor28mc());
-			parMesCon.put("pv_otvalor29"    , 	listaMesaControl.get(0).getOtvalor29mc());
-			parMesCon.put("pv_otvalor30"    , 	listaMesaControl.get(0).getOtvalor30mc());
-			parMesCon.put("pv_otvalor31"    , 	listaMesaControl.get(0).getOtvalor31mc());
-			parMesCon.put("pv_otvalor32"    , 	listaMesaControl.get(0).getOtvalor32mc());
-			parMesCon.put("pv_otvalor33"    , 	listaMesaControl.get(0).getOtvalor33mc());
-			parMesCon.put("pv_otvalor34"    , 	listaMesaControl.get(0).getOtvalor34mc());
-			parMesCon.put("pv_otvalor35"    , 	listaMesaControl.get(0).getOtvalor35mc());
-			parMesCon.put("pv_otvalor36"    , 	listaMesaControl.get(0).getOtvalor36mc());
-			parMesCon.put("pv_otvalor37"    , 	listaMesaControl.get(0).getOtvalor37mc());
-			parMesCon.put("pv_otvalor38"    , 	listaMesaControl.get(0).getOtvalor38mc());
-			parMesCon.put("pv_otvalor39"    , 	listaMesaControl.get(0).getOtvalor39mc());
-			parMesCon.put("pv_otvalor40"    , 	listaMesaControl.get(0).getOtvalor40mc());
-			parMesCon.put("pv_otvalor41"    , 	listaMesaControl.get(0).getOtvalor41mc());
-			parMesCon.put("pv_otvalor42"    , 	listaMesaControl.get(0).getOtvalor42mc());
-			parMesCon.put("pv_otvalor43"    , 	listaMesaControl.get(0).getOtvalor43mc());
-			parMesCon.put("pv_otvalor44"    , 	listaMesaControl.get(0).getOtvalor44mc());
-			parMesCon.put("pv_otvalor45"    , 	listaMesaControl.get(0).getOtvalor45mc());
-			parMesCon.put("pv_otvalor46"    , 	listaMesaControl.get(0).getOtvalor46mc());
-			parMesCon.put("pv_otvalor47"    , 	listaMesaControl.get(0).getOtvalor47mc());
-			parMesCon.put("pv_otvalor48"    , 	listaMesaControl.get(0).getOtvalor48mc());
-			parMesCon.put("pv_otvalor49"    , 	listaMesaControl.get(0).getOtvalor49mc());
-			parMesCon.put("pv_otvalor50"    , 	listaMesaControl.get(0).getOtvalor50mc());
-			parMesCon.put("cdusuari"        , usuario.getUser());
-			parMesCon.put("cdsisrol"        , usuario.getRolActivo().getClave());
-			WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);*/
 			
 			Map<String,String> valores = new LinkedHashMap<String,String>();
 			valores.put("otvalor01" , listaMesaControl.get(0).getOtvalor01mc());
@@ -1653,6 +1581,16 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String eliminarAsegurado(){
 		logger.debug("Entra a eliminarAsegurado params de entrada :{}",params);
 		try{
+			siniestrosManager.actualizaDatosGeneralesCopago(
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("nmsuplem"),params.get("nmsituac"),
+					params.get("nmsinies"), params.get("nmtramite"),
+					params.get("nfactura"),null,
+					null,null,
+					null,null,
+					null,Constantes.DELETE_MODE);
+			
 			HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
 				paramsTworkSin.put("pv_nmtramite_i",params.get("nmtramite"));
 				paramsTworkSin.put("pv_nfactura_i",params.get("nfactura"));
@@ -2062,7 +2000,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					
 					// Obtenemos los conceptos de la factura
 					conceptos = siniestrosManager.P_GET_CONCEPTOS_FACTURA(null, tramite.get("CDRAMO"), null, null, null, null, null, 
-							null, null, factura.get("NFACTURA"),tramite.get("CDTIPSIT"));
+							null, null, factura.get("NFACTURA"),tramite.get("CDTIPSIT"), tramite.get("NTRAMITE"));
 					logger.debug("Paso 9.- Obtenemos la informacion de los conceptos de la factura : {}", conceptos);
 					
 					// Recorremos el arreglo de asegurados
@@ -2119,7 +2057,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									facturaObj.put("COMMENAR"+nmsinies,autorizacionesFactura.get("COMMENAR"));
 									logger.debug("Paso 11.- Autorizacion de la informacion de la factura : {}", autorizacionesFactura);
 									
-							
+									
 							// Obtenemos los datos generales del siniestro
 							List<Map<String,String>> informacionGral = siniestrosManager.obtieneDatosGeneralesSiniestro(cdunieco, cdramo,
 									estado, nmpoliza,nmsituac, nmsuplem, status, aaapertu, nmsinies, factura.get("NTRAMITE"));
@@ -2798,7 +2736,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						siniestro.get("STATUS"),
 						siniestro.get("NMSINIES"),
 						null,
-						siniestro.get("CDTIPSIT"));
+						siniestro.get("CDTIPSIT"),
+						ntramite);
 				logger.debug("Paso 7.- Obtenemos los Conceptos de la Factura : {} ",conceptos);
 				slist1     = facturasAux;
 				
@@ -3721,7 +3660,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					logger.debug("Paso 8.- Obtenemos los Asegurados (MSINIEST) : {}",siniestros);
 					
 					conceptos = siniestrosManager.P_GET_CONCEPTOS_FACTURA(null, tramite.get("CDRAMO"), null, null, null, null, null, 
-										null, null, factura.get("NFACTURA"),tramite.get("CDTIPSIT"));
+										null, null, factura.get("NFACTURA"),tramite.get("CDTIPSIT"),tramite.get("NTRAMITE"));
 					logger.debug("Paso 9.- Obtenemos la informacion de los conceptos de la factura : {}", conceptos);
 
 					for( int j= 0; j < siniestros.size();j++){
@@ -4433,7 +4372,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					siniestro.get("STATUS"),
 					siniestro.get("NMSINIES"),
 					null,
-					siniestro.get("CDTIPSIT"));
+					siniestro.get("CDTIPSIT"),
+					ntramite
+				);
 				logger.debug("Paso 7.- Obtenemos los Conceptos de la Factura : {} ",conceptos);
 				slist1     = facturasAux;
 

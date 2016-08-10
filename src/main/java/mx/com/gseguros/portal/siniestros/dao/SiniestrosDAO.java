@@ -300,7 +300,8 @@ public interface SiniestrosDAO {
 			String status,
 			String nmsinies,
 			String nfactura,
-			String cdtipsit) throws Exception;
+			String cdtipsit,
+			String ntramite) throws Exception;
 	
 	public Map<String,String>obtenerCopagoDeducible(
 			String ntramite,
@@ -564,4 +565,6 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneInfAseguradoCobSubCoberturas(HashMap<String, Object> paramsInfonavit) throws Exception;
 	
 	public String actualizaRegistroTimpsini(HashMap<String, Object> datosActualizacion) throws Exception;
+	
+	public Map<String, Object> actualizaDatosGeneralesCopago(Map<String, Object> params) throws Exception;
 }

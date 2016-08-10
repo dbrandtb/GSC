@@ -110,6 +110,8 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			if(!params.get("nmautser").toString().equalsIgnoreCase("N/A")){
 				valor = params.get("nmautser");
 			}
+			
+			//1.- Actualizamos la informacion de MSINIEST
 			siniestrosManager.actualizaDatosGeneralesSiniestro(
 				params.get("cdunieco"), params.get("cdramo"),
 				params.get("estado"), params.get("nmpoliza"),
@@ -120,14 +122,23 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				params.get("cdgarant"), params.get("cdconval"),
 				valor, params.get("cdperson"), params.get("tipoProceso"),
 				params.get("complemento"));
-			
+			//2.- Actualizamos la informacion de MSINIVAL
 			siniestrosManager.actualizaDatosGeneralesConceptos(
 					params.get("cdunieco"), params.get("cdramo"),
 					params.get("estado"), params.get("nmpoliza"),
 					params.get("nmsuplem"),params.get("aaapertu"),
 					params.get("nmsinies"), params.get("cdgarant"), 
 					params.get("cdconval"));
-			
+			//3.- Actualizamos la informacion del la tabla de TCOPASIN
+			siniestrosManager.actualizaDatosGeneralesCopago(
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("nmsuplem"),params.get("nmsituac"),
+					params.get("nmsinies"), params.get("ntramite"),
+					params.get("nfactura"),params.get("cdgarant"),
+					params.get("cdconval"),params.get("deducible"),
+					params.get("copago"),params.get("nmcallcenter"),
+					null,Constantes.INSERT_MODE);
 			String formatoFeEgreso;
 			if(params.get("feegreso").length() > 0){
 				formatoFeEgreso = params.get("feegreso").toString().substring(8,10)+"/"+params.get("feegreso").toString().substring(5,7)+"/"+params.get("feegreso").toString().substring(0,4);
