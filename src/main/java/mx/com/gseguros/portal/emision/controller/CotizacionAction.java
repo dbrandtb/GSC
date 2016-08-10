@@ -299,7 +299,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            }
 	            else
 	            {
-	            	throw new Exception("No se ha parametrizado la situacion en ttipram");
+	            	throw new ApplicationException("No se ha parametrizado la situacion en ttipram");
 	            }
 	        }
 	        catch(Exception ex)
@@ -643,7 +643,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				else
 				{
-					throw new Exception(
+					throw new ApplicationException(
 							new StringBuilder()
 							.append("No se han definido las validaciones en VALIDACIONES_COTIZA>")
 							.append(gc.isEsMovil()?"MOVIL":"DESKTOP")
@@ -716,7 +716,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				else
 				{
-					throw new Exception("No se han definido atributos en COTIZACION_CUSTOM>CDATRIBU_DERECHO");
+					throw new ApplicationException("No se han definido atributos en COTIZACION_CUSTOM>CDATRIBU_DERECHO");
 				}
 			}
 			catch(Exception ex)
@@ -2333,11 +2333,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarCotizacion()
 	{
-		logger.debug(""
-				+ "\n##############################"
-				+ "\n###### cargarCotizacion ######"
-				);
-		logger.debug("smap1: "+smap1);
+		logger.debug(Utils.log(
+				"\n##############################",
+				"\n###### cargarCotizacion ######",
+				"\n###### smap1 = ", smap1
+				));
 		success = true;
 		
 		String cdunieco = smap1.get("cdunieco");
@@ -2345,9 +2345,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		String estado   = "W";
 		String cdtipsit = smap1.get("cdtipsit");
 		String nmpoliza = smap1.get("nmpoliza");
-		logger.debug("cdramo: "+cdramo);
-		logger.debug("cdtipsit: "+cdtipsit);
-		logger.debug("nmpoliza: "+nmpoliza);
+		
+		String ntramiteIn = smap1.get("ntramiteIn");
 		
 		UserVO usuario  = (UserVO)session.get("USUARIO");
 		String cdusuari = usuario.getUser();
@@ -2372,13 +2371,24 @@ public class CotizacionAction extends PrincipalCoreAction
 				if(tipoSituacion.get("SITUACION").equals("PERSONA")
 						&&datosParaComplementar.containsKey("NTRAMITE"))
 				{
-					throw new Exception("La cotizaci\u00f3n ya se encuentra en tr\u00e1mite de emisi\u00f3n");
+					throw new ApplicationException("La cotizaci\u00f3n ya se encuentra en tr\u00e1mite de emisi\u00f3n");
 				}
 				/*
 				 * cuando se encuentra cdunieco y ntramite y es auto, se mandara a datos complementarios
 				 */
 				else
 				{
+					/*
+					 * 
+					 * 
+					 * JTEZVA MIERCOLES 10 AGOSTO 2016
+					 * ESTE BLOQUE DEBE TENER LA MISMA LOGICA QUE EL BLOQUE FINAL EN
+					 * CotizacionAutoManagerImpl.cargarCotizacionAutoFlotilla()
+					 * 
+					 * EL BLOQUE COMPLETO DE ELSE IF
+					 * 
+					 * 
+					 */
 					if(datosParaComplementar.containsKey("ESTADO")
 							&&datosParaComplementar.containsKey("NMPOLIZA")
 							)//para clonar emitidas
@@ -2389,6 +2399,15 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 					else if(datosParaComplementar.containsKey("CDUNIECO_RECUPERADO"))//para normales
 					{
+						if (
+							"S".equals(datosParaComplementar.get("LIGADA")) &&
+							(
+								StringUtils.isBlank(ntramiteIn) ||
+								!ntramiteIn.equals(datosParaComplementar.get("NTRAMITE_LIGADO"))
+							)
+						) { // Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
+							throw new ApplicationException("La cotizaci\u00f3n no pertenece a este tr\u00e1mite");
+						}
 						cdunieco = datosParaComplementar.get("CDUNIECO_RECUPERADO");
 						smap1.put("CDUNIECO" , cdunieco);
 					}
@@ -2396,6 +2415,12 @@ public class CotizacionAction extends PrincipalCoreAction
 							&&datosParaComplementar.containsKey("CDUNIECO")
 							)//para complementar/clonar tramite
 					{
+						if ("S".equals(datosParaComplementar.get("SWORIGENMESA"))) {
+							throw new ApplicationException("No se puede complementar un tr\u00e1mite de origen de mesa de control");
+						}
+						if (StringUtils.isNotBlank(ntramiteIn)) {
+							throw new ApplicationException("La cotizaci\u00f3n se encuentra confirmada en otro tr\u00e1mite");
+						}
 						cdunieco = datosParaComplementar.get("CDUNIECO");
 					}
 					smap1.putAll(datosParaComplementar);
@@ -2434,7 +2459,7 @@ public class CotizacionAction extends PrincipalCoreAction
 //				}
 				if(slist1==null||slist1.size()==0)
 				{
-					throw new Exception("No se puede cargar la cotizaci\u00f3n");
+					throw new ApplicationException("No se puede cargar la cotizaci\u00f3n");
 				}
 				for(Map<String,String>iInciso:slist1)
 				{
@@ -4523,11 +4548,11 @@ public class CotizacionAction extends PrincipalCoreAction
 		                			bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
 		                		}else{
 		                			//mandamos excepcion
-			                		throw new Exception("No es numero");
+			                		throw new ApplicationException("No es numero");
 		                		}		                		
 		                	}else{
 		                		//mandamos excepcion
-		                		throw new Exception("La identidad no puede ser null");
+		                		throw new ApplicationException("La identidad no puede ser null");
 		                	}
 		                }else{
 		                	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
@@ -8936,7 +8961,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			if(smap1==null)
 			{
-				throw new Exception("No se recibieron datos");
+				throw new ApplicationException("No se recibieron datos");
 			}
 			cdunieco = smap1.get("cdunieco");
 			cdramo   = smap1.get("cdramo");
@@ -9070,7 +9095,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			if(smap1==null)
 			{
-				throw new Exception("No se recibieron datos");
+				throw new ApplicationException("No se recibieron datos");
 			}
 			cdunieco = smap1.get("cdunieco");
 			cdramo   = smap1.get("cdramo");
@@ -9155,7 +9180,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			if(smap1==null)
 			{
-				throw new Exception("No se recibieron datos");
+				throw new ApplicationException("No se recibieron datos");
 			}
 			cdunieco = smap1.get("cdunieco");
 			cdramo   = smap1.get("cdramo");
@@ -10319,7 +10344,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				EmAdmfolId agente = agentePorFolioService.obtieneAgentePorFolioSucursal(folio,cdunieco,cdramo,cdsisrol,cdusuari,idusu,cdtipsit);
 				if(agente==null)
 				{
-					throw new Exception("No existe el agente");
+					throw new ApplicationException("No existe el agente");
 				}
 				smap1.put("cdagente",String.valueOf(agente.getNumAge()));
 			}
@@ -10374,15 +10399,15 @@ public class CotizacionAction extends PrincipalCoreAction
 				clave5     = smap1.get("clave5");
 				if(StringUtils.isBlank(sParametro))
 				{
-					throw new Exception("No se especifica el parametro");
+					throw new ApplicationException("No se especifica el parametro");
 				}
 				if(StringUtils.isBlank(cdramo))
 				{
-					throw new Exception("No se especifica el ramo");
+					throw new ApplicationException("No se especifica el ramo");
 				}
 				if(StringUtils.isBlank(cdtipsit))
 				{
-					throw new Exception("No se especifica la situacion");
+					throw new ApplicationException("No se especifica la situacion");
 				}
 			}
 			catch(Exception ex)
@@ -10403,7 +10428,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				parametro = ParametroCotizacion.valueOf(sParametro);
 				if(parametro==null)
 				{
-					throw new Exception("El parametro no se encuentra en el enum");
+					throw new ApplicationException("El parametro no se encuentra en el enum");
 				}
 			}
 			catch(Exception ex)
@@ -10580,11 +10605,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			modelo = smap1.get("modelo");
 			if(StringUtils.isBlank(cdramo))
 			{
-				throw new Exception("No se recibio el ramo");
+				throw new ApplicationException("No se recibio el ramo");
 			}
 			if(StringUtils.isBlank(modelo))
 			{
-				throw new Exception("No se recibio el modelo");
+				throw new ApplicationException("No se recibio el modelo");
 			}
 		}
 		catch(Exception ex)
@@ -10661,23 +10686,23 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdtipsit = smap1.get("cdtipsit");
 			if(StringUtils.isBlank(cdsisrol))
 			{
-				throw new Exception("No se recibio el rol");
+				throw new ApplicationException("No se recibio el rol");
 			}
 			if(StringUtils.isBlank(modelo)||modelo.length()!=4)
 			{
-				throw new Exception("No se recibio el modelo");
+				throw new ApplicationException("No se recibio el modelo");
 			}
 			if(StringUtils.isBlank(version))
 			{
-				throw new Exception("No se recibio la version");
+				throw new ApplicationException("No se recibio la version");
 			}
 			if(StringUtils.isBlank(cdramo))
 			{
-				throw new Exception("No se recibio el ramo");
+				throw new ApplicationException("No se recibio el ramo");
 			}
 			if(StringUtils.isBlank(cdtipsit))
 			{
-				throw new Exception("No se recibio la situacion");
+				throw new ApplicationException("No se recibio la situacion");
 			}
 		}
 		catch(Exception ex)
@@ -10766,7 +10791,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					||StringUtils.isBlank(icd)
 					)
 			{
-				throw new Exception("Dato requerido no encontrado");
+				throw new ApplicationException("Dato requerido no encontrado");
 			}
 		}
 		catch(Exception ex)
@@ -10854,7 +10879,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					||StringUtils.isBlank(nmsuplem)
 					)
 			{
-				throw new Exception("Dato requerido no encontrado");
+				throw new ApplicationException("Dato requerido no encontrado");
 			}
 		}
 		catch(Exception ex)
@@ -10950,7 +10975,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					||StringUtils.isBlank(icd)
 					)
 			{
-				throw new Exception("Dato requerido no encontrado");
+				throw new ApplicationException("Dato requerido no encontrado");
 			}
 		}
 		catch(Exception ex)

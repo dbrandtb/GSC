@@ -2820,10 +2820,11 @@ function _p28_cargar(boton)
             url      : _p28_urlCargar
             ,params  :
             {
-                'smap1.nmpoliza'  : nmpoliza
-                ,'smap1.cdramo'   : _p28_smap1.cdramo
-                ,'smap1.cdunieco' : _p28_smap1.cdunieco
-                ,'smap1.cdtipsit' : _p28_smap1.cdtipsit
+                'smap1.nmpoliza'    : nmpoliza
+                ,'smap1.cdramo'     : _p28_smap1.cdramo
+                ,'smap1.cdunieco'   : _p28_smap1.cdunieco
+                ,'smap1.cdtipsit'   : _p28_smap1.cdtipsit
+                ,'smap1.ntramiteIn' : _NVL(_p28_smap1.ntramite)
             }
             ,success : function(response)
             {

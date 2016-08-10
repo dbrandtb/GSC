@@ -2415,7 +2415,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
   	            	logger.debug("Amis Y Modelo con Irregularidades en coberturas: "+planValido);
   	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
   	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
-  	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Automóviles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
+  	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Automï¿½viles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
   	            			planValido;
   	            	
   	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
@@ -3442,15 +3442,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String nmpoliza
 			,String cdusuari
 			,String cdsisrol
+			,String ntramiteIn
 			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cargarCotizacionAutoFlotilla @@@@@@"
-				,"\n@@@@@@ cdramo="   , cdramo
-				,"\n@@@@@@ nmpoliza=" , nmpoliza
-				,"\n@@@@@@ cdusuari=" , cdusuari
-				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdramo     = " , cdramo
+				,"\n@@@@@@ nmpoliza   = " , nmpoliza
+				,"\n@@@@@@ cdusuari   = " , cdusuari
+				,"\n@@@@@@ cdsisrol   = " , cdsisrol
+				,"\n@@@@@@ ntramiteIn = " , ntramiteIn
 				));
 		
 		ManagerRespuestaSlist2SmapVO resp = new ManagerRespuestaSlist2SmapVO(true);
@@ -3492,14 +3494,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					,cdsisrol
 					);
 			
-			String cdunieco = cotizacionEmision.get("cdunieco");
-			String estado   = cotizacionEmision.get("estado");
-			       nmpoliza = cotizacionEmision.get("nmpoliza");
-			String nmsuplem = cotizacionEmision.get("nmsuplem");
-			String tipoflot = cotizacionEmision.get("tipoflot");
-			String fesolici = cotizacionEmision.get("fesolici");
-			String feini    = cotizacionEmision.get("feini");
-			String fefin    = cotizacionEmision.get("fefin");
+			String cdunieco       = cotizacionEmision.get("cdunieco");
+			String estado         = cotizacionEmision.get("estado");
+			       nmpoliza       = cotizacionEmision.get("nmpoliza");
+			String nmsuplem       = cotizacionEmision.get("nmsuplem");
+			String tipoflot       = cotizacionEmision.get("tipoflot");
+			String fesolici       = cotizacionEmision.get("fesolici");
+			String feini          = cotizacionEmision.get("feini");
+			String fefin          = cotizacionEmision.get("fefin");
+			String ntramiteLigado = cotizacionEmision.get("ntramiteLigado");
 			
 			boolean maestra = "M".equals(estado);
 			
@@ -3556,9 +3559,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			paso = "Recuperando datos generales";
 			resp.getSmap().putAll(incisoPoliza);
 			
-			String cdperson = "";
-			String cdideper = "";
-			String ntramite = "";
+			String cdperson     = "";
+			String cdideper     = "";
+			String ntramite     = "";
+			String sworigenmesa = "";
 			if(!maestra||true)
 			{
 				paso = "Recuperando relacion poliza-contratante";
@@ -3580,7 +3584,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				
 				paso = "Recuperando tramite";
-				List<Map<String,String>>tramites=mesaControlDAO.cargarTramitesPorParametrosVariables(
+				List<Map<String,String>>tramites = mesaControlDAO.cargarTramitesPorParametrosVariables(
 						TipoTramite.POLIZA_NUEVA.getCdtiptra()
 						,null     //ntramite
 						,cdunieco
@@ -3596,7 +3600,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				if(tramites.size()==1)
 				{
-					ntramite=tramites.get(0).get("NTRAMITE");
+					ntramite     = tramites.get(0).get("NTRAMITE");
+					sworigenmesa = tramites.get(0).get("SWORIGENMESA");
 				}
 				
 			}
@@ -3633,7 +3638,38 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getSmap().put(Utils.join("aux.",en.getKey().substring("parametros.pv_".length())),en.getValue());
 			}
 			
-			
+			/*
+			 * 
+			 * 
+			 * JTEZVA MIERCOLES 10 AGOSTO 2016
+			 * ESTE BLOQUE DEBE TENER LA MISMA LOGICA QUE EL BLOQUE INICIAL EN
+			 * CotizacionAction.cargarCotizacion()
+			 * 
+			 * EL BLOQUE COMPLETO DE ELSE IF
+			 * 
+			 * 
+			 */
+			if ("M".equals(estado)) { // Emitidas para clonar
+				// Estas pasan bien
+			} else if (StringUtils.isBlank(ntramite)) { // Normales sin tramite
+				if (
+					StringUtils.isNotBlank(ntramiteLigado) &&
+					!"0".equals(ntramiteLigado) &&
+					(
+						StringUtils.isBlank(ntramiteIn) ||
+						!ntramiteIn.equals(ntramiteLigado)
+					)
+				) { // Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
+					throw new ApplicationException("La cotizaci\u00f3n no pertenece a este tr\u00e1mite");
+				}
+			} else { // Ya en emision para complementar o clonar
+				if ("S".equals(sworigenmesa)) {
+					throw new ApplicationException("No se puede complementar un tr\u00e1mite de origen de mesa de control");
+				}
+				if (StringUtils.isNotBlank(ntramiteIn)) {
+					throw new ApplicationException("La cotizaci\u00f3n se encuentra confirmada en otro tr\u00e1mite");
+				}
+			}
 		}
 		catch(Exception ex)
 		{
