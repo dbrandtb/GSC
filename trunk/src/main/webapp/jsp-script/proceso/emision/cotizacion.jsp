@@ -1160,16 +1160,17 @@ function _0_recuperarCotizacion(nmpoliza)
         url      : _0_urlLoad
         ,params  :
         {
-            'smap1.nmpoliza'  : nmpoliza
-            ,'smap1.cdramo'   : _0_smap1.cdramo
-            ,'smap1.cdunieco' : _0_smap1.cdunieco
-            ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+            'smap1.nmpoliza'    : nmpoliza
+            ,'smap1.cdramo'     : _0_smap1.cdramo
+            ,'smap1.cdunieco'   : _0_smap1.cdunieco
+            ,'smap1.cdtipsit'   : _0_smap1.cdtipsit
+            ,'smap1.ntramiteIn' : _NVL(_0_smap1.ntramite)
         }
         ,success : function(response)
         {
             var json=Ext.decode(response.responseText);
             
-            if(_0_smap1.cdramo=='6' || _0_smap1.cdramo=='16')
+            if(_0_smap1.cdramo=='6' || _0_smap1.cdramo=='16' || true)
             {   
                 if(!Ext.isEmpty(json.error))
                 {

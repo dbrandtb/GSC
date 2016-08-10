@@ -154,6 +154,7 @@ public interface CotizacionAutoManager
 			,String nmpoliza
 			,String cdusuari
 			,String cdsisrol
+			,String ntramiteIn
 			)throws Exception;
 	public ManagerRespuestaImapSmapVO emisionAutoFlotilla(
 			String cdunieco

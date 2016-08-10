@@ -2269,7 +2269,7 @@ Ext.onReady(function()
                         'smap1.parametro' : 'RANGO_ANIO_MODELO'
                         ,'smap1.cdramo'   : _p30_smap1.cdramo
                         ,'smap1.cdtipsit' : cdtipsit
-                        ,'smap1.clave4'   : _GLOBAL_CDSISROL
+                        ,'smap1.clave4'   : _p30_smap1.cdsisrol
                     }
                     ,success : function(response)
                     {
@@ -4981,8 +4981,9 @@ function _p30_cargarClic()
             url     : _p30_urlCargar
             ,params :
             {
-                'smap1.cdramo'    : _p30_smap1.cdramo
-                ,'smap1.nmpoliza' : nmpoliza
+                'smap1.cdramo'      : _p30_smap1.cdramo
+                ,'smap1.nmpoliza'   : nmpoliza
+                ,'smap1.ntramiteIn' : _p30_smap1.ntramite
             }
             ,success : function(response)
             {

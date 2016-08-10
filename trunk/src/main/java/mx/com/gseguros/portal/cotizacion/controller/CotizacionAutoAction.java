@@ -1175,8 +1175,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			Utils.validate(smap1, "No se recibieron datos");
 			
-			String cdramo    = smap1.get("cdramo")
-			       ,nmpoliza = smap1.get("nmpoliza");
+			String cdramo      = smap1.get("cdramo")
+			       ,nmpoliza   = smap1.get("nmpoliza")
+			       ,ntramiteIn = smap1.get("ntramiteIn");
 			
 			Utils.validate(
 					cdramo    , "No se recibi\u00f3 el producto"
@@ -1187,7 +1188,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String cdusuari  = usuario.getUser()
 			       ,cdsisrol = usuario.getRolActivo().getClave();
 			
-			ManagerRespuestaSlist2SmapVO resp = cotizacionAutoManager.cargarCotizacionAutoFlotilla(cdramo,nmpoliza,cdusuari,cdsisrol);
+			ManagerRespuestaSlist2SmapVO resp = cotizacionAutoManager.cargarCotizacionAutoFlotilla(cdramo,nmpoliza,cdusuari,cdsisrol,ntramiteIn);
 			
 			exito     = resp.isExito();
 			respuesta = resp.getRespuesta();
