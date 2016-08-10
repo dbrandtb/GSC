@@ -23,6 +23,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -88,6 +89,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		{
 			UserVO usuario = Utils.validateSession(session);
 			
+			boolean renovacion = false;
+			
 			if(flujo!=null)
 			{
 				logger.debug(Utils.log("", "se va a crear el smap1 porque se entra desde flujo=", smap1));
@@ -107,6 +110,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
 				
 				logger.debug(Utils.log("", "smap1 creado=", smap1));
+				
+				renovacion = TipoTramite.RENOVACION.getCdtiptra().equals(tramite.get("CDTIPTRA"));
+				logger.debug("Es renovacion = {}", renovacion);
 			}
 			
 			String cdusuari  = usuario.getUser()
@@ -135,6 +141,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,cdusuari
 					,cdsisrol
 					,flujo
+					,renovacion
 					);
 			
 			smap1.putAll((Map<String,String>)resp.get("smap"));
@@ -817,6 +824,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String cdusuari  = usuario.getUser()
 			       ,cdsisrol = usuario.getRolActivo().getClave();
 			
+			boolean renovacion = false;
+			
 			if(flujo!=null
 				&&
 				(
@@ -839,6 +848,14 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				smap1.put("tipoflot" , flujo.getAux().split(",")[0].split(":")[1]); //primer split= tipoflot:P onComprar:16', segundo split tipoflot P
 				
 				logger.debug(Utils.log("", "el mapa creado desde flujo es=", smap1));
+				
+				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
+				
+				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+				logger.debug(Utils.log("", "tramite=", tramite));
+				
+				renovacion = TipoTramite.RENOVACION.getCdtiptra().equals(tramite.get("CDTIPTRA"));
+				logger.debug("Es renovacion = {}", renovacion);
 			}
 			else
 			{
@@ -883,6 +900,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,tipoflot
 					,"S".equals(endoso)
 					,flujo
+					,renovacion
 					);
 			
 			exito     = resp.isExito();
