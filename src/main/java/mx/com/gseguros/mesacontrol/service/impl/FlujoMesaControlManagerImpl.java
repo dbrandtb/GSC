@@ -3000,7 +3000,22 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			params.put("dsdestino", cambiarTextoCorreo(flujo.getNtramite(), params.get("dsdestino"), params.get("vardestino"), mapFunciones));
 			params.put("dsasunto" , cambiarTextoCorreo(flujo.getNtramite(), params.get("dsasunto") , params.get("varasunto") , mapFunciones));
 			params.put("dsmensaje", cambiarTextoCorreo(flujo.getNtramite(), params.get("dsmensaje"), params.get("varmensaje"), mapFunciones));
+			
+			if (StringUtils.isNotBlank(params.get("dsmensaje"))) {
+				params.put("dsmensaje", params.get("dsmensaje").replace("\n", "<br/>"));
+			}
+			
 			paso = "Antes de enviar el correo";
+			logger.debug(Utils.log(
+					"\n|||||||||||||||||||||||||||||||||||||||",
+					"\n||||||      ENVIANDO CORREO      ||||||",
+					"\n|||||| a       = ", params.get("dsdestino"),
+					"\n|||||| asunto  = ", params.get("dsasunto"),
+					"\n|||||| mensaje = ", params.get("dsmensaje"),
+					"\n||||||      ENVIANDO CORREO      ||||||",
+					"\n|||||||||||||||||||||||||||||||||||||||"
+			));
+			
 			if(!params.get("dsdestino").contains("()")){
 				boolean enviado = mailService.enviaCorreo(StringUtils.split(params.get("dsdestino"),";"), 
 						  new String[]{}, 
@@ -3008,7 +3023,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						  params.get("dsasunto"), 
 						  params.get("dsmensaje"), 
 						  new String[]{}, 
-						  false);
+						  true);
 				if(!enviado){
 					throw new ApplicationException("No se pudo enviar el correo a "+params.get("dsdestino"));
 				}
@@ -3085,5 +3100,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		}catch(Exception ex){
 			Utils.generaExcepcion(ex, paso);
 		}
+	}
+	
+	@Deprecated
+	@Override
+	public void guardarMensajeCorreoEmision(String ntramite, String mensajeCorreoEmision) throws Exception {
+		flujoMesaControlDAO.guardarMensajeCorreoEmision(ntramite, mensajeCorreoEmision);
 	}
 }

@@ -3801,7 +3801,10 @@ Ext.onReady(function()
     {
         text     : _0_smap1.ntramite?'Precaptura':'Cotizar'
         ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
-        ,handler : _0_cotizar
+        ,handler : function (me) {
+            sinTarificar = false;
+            _0_cotizar(me);
+        }
     });
     
     _0_botCargar=Ext.create('Ext.Button',

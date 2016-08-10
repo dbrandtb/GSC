@@ -2931,4 +2931,25 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	@Override
+	public void guardarMensajeCorreoEmision(String ntramite, String mensajeCorreoEmision) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite" , ntramite);
+		params.put("mail"     , mensajeCorreoEmision);
+		ejecutaSP(new GuardarMensajeCorreoEmisionSP(getDataSource()), params);
+	}
+	
+	protected class GuardarMensajeCorreoEmisionSP extends StoredProcedure
+	{
+		protected GuardarMensajeCorreoEmisionSP(DataSource dataSource)
+		{
+			super(dataSource,"P_INS_CORREO_EMISION_TRAMITE");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("mail"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

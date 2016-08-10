@@ -710,4 +710,6 @@ public interface FlujoMesaControlDAO {
 	
 	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite, String cdsisrol) throws Exception;
 	
+	public void guardarMensajeCorreoEmision(String ntramite, String mensajeCorreoEmision) throws Exception;
+	
 }

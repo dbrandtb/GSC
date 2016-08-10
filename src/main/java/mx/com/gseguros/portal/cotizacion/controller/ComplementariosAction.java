@@ -3217,6 +3217,20 @@ public class ComplementariosAction extends PrincipalCoreAction
 										 "General de Seguros<br/>"+
 										 "</span>";
 					
+					flujoMesaControlManager.guardarMensajeCorreoEmision(
+							ntramite,
+							mensajeEmail
+								.replace("\u00e1", "_a_")
+								.replace("\u00e9", "_e_")
+								.replace("\u00ed", "_i_")
+								.replace("\u00f3", "_o_")
+								.replace("\u00fa", "_u_")
+								.replace("\u00c1", "_A_")
+								.replace("\u00c9", "_E_")
+								.replace("\u00cd", "_I_")
+								.replace("\u00d3", "_O_")
+								.replace("\u00da", "_U_")
+					);
 				}
 			}
 			catch(Exception ex)
@@ -3260,6 +3274,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 				logger.error("error al insertar detalle de emision",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
+			}
+		}
+		
+		if (success) {
+			try {
+				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol);
+			} catch (Exception ex) {
+				logger.error("Error al enviar correos de emision", ex);
 			}
 		}
 		
@@ -3309,6 +3331,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String tipoMov          = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		String rutaCarpeta      = null;
 		String swagente         = "N";
+		String cdsisrol         = null;
 		
 		boolean procesoFlujo = false;
 		
@@ -3331,6 +3354,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				
 				cdusuari     = us.getUser();
 				cdelemen     = us.getEmpresa().getElementoId();
+				cdsisrol     = us.getRolActivo().getClave();
 				
 				cdtipsit = endososManager.recuperarCdtipsitInciso1(cdunieco, cdramo, estado, nmpoliza);
 				
@@ -3697,6 +3721,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 				logger.error("error al guardar detalle de emision",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
+			}
+		}
+		
+		if (success) {
+			try {
+				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol);
+			} catch (Exception ex) {
+				logger.error("Error al enviar correos de emision", ex);
 			}
 		}
 		
