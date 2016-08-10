@@ -418,10 +418,20 @@
         });
     }
     
-    //
+    //Pone el atributo allowBlank a los campos nuevos para una sucursal 1403 ELP
     function editarCamposPorCdunieco(grid,cdunieco){
+    	debug('>editarCamposPorCdunieco');
     	//Obtiene las columnas del grid
     	var gridColumns = grid.headerCt.getGridColumns();
+    	
+    	//Sucursal 1403 para el campo Estado Civil
+    	for (var i = 0; i < gridColumns.length; i++) {
+    	  if (gridColumns[i].dataIndex == "cdestciv" && cdunieco == 1403) {
+	    		gridColumns[i].editor.allowBlank = false;
+	    		debug(gridColumns[i].editor);
+	    		break;
+    	  }
+    	}
     	
     	//Sucursal 1403 para el campo No. de Socio
     	for (var i = 0; i < gridColumns.length; i++) {
@@ -442,22 +452,117 @@
 	    		break;
     	  }
     	}
+    	
+    	//Sucursal 1403 para el campo Ocupacion
+    	for (var i = 0; i < gridColumns.length; i++) {
+    	  if (gridColumns[i].dataIndex == "ocup" && cdunieco == 1403) {
+	    		gridColumns[i].editor.allowBlank = false;
+	    		debug(gridColumns[i].editor);
+	    		break;
+    	  }
+    	}
+    	
+    	debug('<editarCamposPorCdunieco');
+    }
+ 
+    //Valida que para sucursales diferentes de la 1403, los campos Edo civil y Ocupacion sean obligatorios solo para el titular. ELP
+    function validaCamposTitular(grid,cdunieco){
+    	debug('>validaCamposTitular');
+    	
+    	var gridSource  = grid.getView().dataSource.data;
+    	var gridColumns = grid.headerCt.getGridColumns();
+    	
+    	
+    	for(var i=0; i < gridSource.length; i++){
+			if(gridSource.items[i].data.Parentesco !== "T" && cdunieco !== 1403){
+				for (var j = 0; j < gridColumns.length; j++) {
+		    	  		if (gridColumns[j].dataIndex === "cdestciv"){
+		    	  			gridColumns[j].editor.allowBlank = true;
+		    	  			debug('*Cuando no es tomador, lo pone no obligatorio',gridColumns[j].editor.allowBlank,'.');
+		    	  		}
+				}
+			}
+		}
+		
+		for(var i=0; i < gridSource.length; i++){
+			if(gridSource.items[i].data.Parentesco !== "T" && cdunieco !== 1403){
+				for (var j = 0; j < gridColumns.length; j++) {
+		    	  		if (gridColumns[j].dataIndex === "ocup"){
+		    	  			gridColumns[j].editor.allowBlank = true;
+		    	  			debug('**Cuando no es tomador, lo pone no obligatorio',gridColumns[j].editor.allowBlank,'.');
+		    	  		}
+				}
+			}	
+		}
+		
+		debug('<validaCamposTitular');
     }
     
-    //Valida que los datos sean validos y no se encuentren vacios
-    function validaDatosAseg(grid,cdunieco){
+    //Valida que los datos sean validos y no se encuentren vacios solo para el registro de parentesco Titular. ELP
+    function validaDatosAseguradosTitular(grid,cdunieco){
+    	debug('>validaDatosAseguradosTitular');
+    	
     	var size = grid.getView().dataSource.data.items.length;
-		var arrErrores = [];
+		var errTitular = [];
 		var err;
+		
 		
 		for (var i=0; i < size; i++){
 		
-		        if(Ext.isEmpty(grid.getView().dataSource.data.items[i].data.cdestciv)){
-		            arrErrores.push('Estado Civil\n');
+
+		        if((grid.getView().dataSource.data.items[i].data.Parentesco == "T") 
+		        	&& (Ext.isEmpty(grid.getView().dataSource.data.items[i].data.cdestciv)) && cdunieco != 1403){
+		        	
+		            errTitular.push('Estado Civil ');
 		            grid.getStore().getAt(i).set('cdestciv',null);
-		
+		        	
 		        }
 		
+		        if(cdunieco != 1403 && grid.getView().dataSource.data.items[i].data.Parentesco == "T"
+		        	&& Ext.isEmpty(grid.getView().dataSource.data.items[i].data.ocup)){
+		           	
+	        		errTitular.push('Ocupacion');
+		        	grid.getStore().getAt(i).set('ocup',null);
+		        	
+		        }
+				
+		}
+		
+			
+			if(!Ext.isEmpty(errTitular)){
+				err = '\nEl titular tiene como obligatorios los campos '
+				for(var i=0; i < errTitular.length;i++){
+					err += errTitular[i];
+				}
+			}
+		
+		debug(err);
+		
+		debug('<validaDatosAseguradosTitular');
+		
+		return err;
+		
+    }
+    
+    //Valida que los datos sean validos y no se encuentren vacios solo para el registro de la sucursal 1403. ELP
+    function validaDatosAsegurados(grid,cdunieco){
+    	debug('>validaDatosAsegurados');
+    	
+    	var size = grid.getView().dataSource.data.items.length;
+		var arrErrores = [];
+		var err;
+				
+		for (var i=0; i < size; i++){
+		
+			debug('edociv ',grid.getView().dataSource.data.items[i].data.cdestciv);
+			debug('ocup ',grid.getView().dataSource.data.items[i].data.ocup);
+			
+				if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.cdestciv)){
+		            arrErrores.push('Estado Civil\n');
+		            grid.getStore().getAt(i).set('cdestciv',null);
+		        }
+			
+			
 		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.numsoc)){
 		            arrErrores.push('Numero de socio\n');
 		            grid.getStore().getAt(i).set('numsoc',null);
@@ -466,9 +571,9 @@
 		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.clvfam)){
 		            arrErrores.push('Clave Familiar\n');
 		            grid.getStore().getAt(i).set('clvfam',null);
-		         }   
-		
-		        if(Ext.isEmpty(grid.getView().dataSource.data.items[i].data.ocup)){
+		         }
+		         
+		         if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.ocup)){
 		            arrErrores.push('Ocupacion\n');
 		            grid.getStore().getAt(i).set('ocup',null);
 		        }
@@ -480,10 +585,13 @@
 			for(var i=0; i < arrErrores.length;i++){
 				err += arrErrores[i];
 			}
+			err +=' no son validos.';	
 		}
-		 
 		
-		return err;
+
+		debug('<validaDatosAsegurados');
+		
+		return err;    	
     }
     
     //guardador
@@ -1135,9 +1243,13 @@ debug("validarYGuardar flag:2");
                          _contratanteSaved = false;
                     }
                     debug("load isCopiadop2:"+(isCopiadop2?'true':'false'));
+                    
+                    //Valida los titulares diferentes a la sucursal 1403 ELP
+	                validaCamposTitular(gridPersonasp2,inputCduniecop2);
                 }
             }               
         });
+        
         
         storeTomadorp2 =new Ext.data.Store(
         {
@@ -1817,7 +1929,7 @@ debug("validarYGuardar flag:2");
                               });
                               
                               gridPersonasp2.getView().headerCt.child("[dataIndex=estomador]").enable();
-                            
+                              
                         }
                     }],
                     /*tbar: [{
@@ -1836,7 +1948,9 @@ debug("validarYGuardar flag:2");
                             var view = grid.getView();
                             
                             //Validacion para La sucursal 1403
+                            debug('editarCamposCdunieco');
                             editarCamposPorCdunieco(gridPersonasp2,inputCduniecop2);
+                            
                             
                          // validation on record level through "itemupdate" event
                             view.on('itemupdate', function (record, y, node, options) {
@@ -1917,7 +2031,7 @@ debug("validarYGuardar flag:2");
                         beforecellclick: function( vwTable, td, cellIndex, record, tr, rowIndex, e, eOpts ){
                             if(record.get("estomador"))return true; //Deja editar cuando un conrtratante es agregado.
                         }*/
-                    }/*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/
+                   }/*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/
 
                 });
 
@@ -2311,9 +2425,9 @@ debug("validarYGuardar flag:2");
                     recordContr.set('cdideper', datosContr.cdideper);
                     recordContr.set('cdideext', datosContr.cdideext);
                     recordContr.set('swexiper', 'S');
-                    recordContr.set('cdestciv', datosContr.cdestciv);
-                }
                     
+                }
+                
             }
         });
         
@@ -2394,10 +2508,17 @@ debug("validarYGuardar flag:2");
                                     return false;
                                 }
                                 
-                                //Validacion de campos en el grid de asegurados
-                                var mensajeError = validaDatosAseg(gridPersonasp2,inputCduniecop2);
+                                //Validacion de campos en el grid de asegurados. ELP
+                                var mensajeError;
+                                
+                                if(inputCduniecop2 == 1403){
+                                	mensajeError = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
+                                }else{
+                                	mensajeError = validaDatosAseguradosTitular(gridPersonasp2,inputCduniecop2);
+                                }
+                                	
                                 if(!Ext.isEmpty(mensajeError)){
-								    mensajeWarning(mensajeError+' no son validos.');
+								    mensajeWarning(mensajeError);
 								    return false;
 								}
                                 
