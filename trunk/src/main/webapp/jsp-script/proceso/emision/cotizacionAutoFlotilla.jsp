@@ -2269,7 +2269,7 @@ Ext.onReady(function()
                         'smap1.parametro' : 'RANGO_ANIO_MODELO'
                         ,'smap1.cdramo'   : _p30_smap1.cdramo
                         ,'smap1.cdtipsit' : cdtipsit
-                        ,'smap1.clave4'   : CD_ROL_ACTUAL
+                        ,'smap1.clave4'   : _GLOBAL_CDSISROL
                     }
                     ,success : function(response)
                     {
