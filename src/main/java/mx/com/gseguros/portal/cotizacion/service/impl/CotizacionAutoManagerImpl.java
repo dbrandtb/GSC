@@ -125,18 +125,20 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String cdusuari
 			,String cdsisrol
 			,FlujoVO flujo
+			,boolean mostrarCamposComplementarios
 			)throws Exception
 	{
 		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ cotizacionAutoIndividual @@@@@@"
-				,"\n@@@@@@ ntramite=" , ntramite
-				,"\n@@@@@@ cdunieco=" , cdunieco
-				,"\n@@@@@@ cdramo="   , cdramo
-				,"\n@@@@@@ cdtipsit=" , cdtipsit
-				,"\n@@@@@@ cdusuari=" , cdusuari
-				,"\n@@@@@@ cdsisrol=" , cdsisrol
-				,"\n@@@@@@ flujo="    , flujo
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ cotizacionAutoIndividual @@@@@@",
+				"\n@@@@@@ ntramite                     = " , ntramite,
+				"\n@@@@@@ cdunieco                     = " , cdunieco,
+				"\n@@@@@@ cdramo                       = " , cdramo,
+				"\n@@@@@@ cdtipsit                     = " , cdtipsit,
+				"\n@@@@@@ cdusuari                     = " , cdusuari,
+				"\n@@@@@@ cdsisrol                     = " , cdsisrol,
+				"\n@@@@@@ flujo                        = " , flujo,
+				"\n@@@@@@ mostrarCamposComplementarios = " , mostrarCamposComplementarios
 				));
 		
 		Map<String,Object> resp  = new LinkedHashMap<String,Object>();
@@ -234,10 +236,22 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			//obtener los que se muestran
 			for(ComponenteVO tatri:tatrisit)
 			{
-				if(tatri.getSwpresen().equals("S"))
-				{
+				if (tatri.getSwpresen().equals("S")) {
+					logger.debug("Se agrega como campo de cotizacion = {}", tatri.getNameCdatribu());
 					tatri.setComboVacio(true);
 					aux.add(tatri);
+				} else if ( // Mostramos campos complementarios, la condicion es la misma que dentro
+						    // del metodo CotizacionAutoManagerImpl.emisionAutoIndividual
+						    // y del metodo CotizacionAction.pantallaCotizacion
+						    // deben mantenerse iguales
+					mostrarCamposComplementarios &&
+					(StringUtils.isBlank(tatri.getSwtarifi())||tatri.getSwtarifi().equalsIgnoreCase("N"))
+				) {
+					logger.debug("Se agrega como campo de complementarios = {}", tatri.getNameCdatribu());
+					tatri.setComboVacio(true);
+					aux.add(tatri);
+				} else {
+					logger.debug("No se agrega = {}", tatri.getNameCdatribu());
 				}
 			}
 			
@@ -602,6 +616,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
 			for(ComponenteVO tatri:tatrisit)
 			{
+				/*
+				 * Esta condicion esta repetida en cotizacion para mostrar campos de emision:
+				 * CotizacionAutoManagerImpl.cotizacionAutoIndividual
+				 * tambien en CotizacionAction.pantallaCotizacion
+				 * deben mantenerse igual
+				 */
 				if(StringUtils.isBlank(tatri.getSwtarifi())||tatri.getSwtarifi().equalsIgnoreCase("N"))
 				{
 					aux.add(tatri);
@@ -1284,19 +1304,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String tipoflot
 			,boolean endoso
 			,FlujoVO flujo
+			,boolean renovacion
 			)throws Exception
 	{
 		logger.info(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ cotizacionAutoFlotilla @@@@@@"
-				,"\n@@@@@@ cdusuari=" , cdusuari
-				,"\n@@@@@@ cdsisrol=" , cdsisrol
-				,"\n@@@@@@ cdunieco=" , cdunieco
-				,"\n@@@@@@ cdramo="   , cdramo
-				,"\n@@@@@@ cdtipsit=" , cdtipsit
-				,"\n@@@@@@ ntramite=" , ntramite
-				,"\n@@@@@@ endoso="   , endoso
-				,"\n@@@@@@ flujo="    , flujo
+				,"\n@@@@@@ cdusuari   = " , cdusuari
+				,"\n@@@@@@ cdsisrol   = " , cdsisrol
+				,"\n@@@@@@ cdunieco   = " , cdunieco
+				,"\n@@@@@@ cdramo     = " , cdramo
+				,"\n@@@@@@ cdtipsit   = " , cdtipsit
+				,"\n@@@@@@ ntramite   = " , ntramite
+				,"\n@@@@@@ endoso     = " , endoso
+				,"\n@@@@@@ flujo      = " , flujo
+				,"\n@@@@@@ renovacion = " , renovacion
 				));
 		
 		ManagerRespuestaImapSmapVO resp = new ManagerRespuestaImapSmapVO(true);
@@ -1635,9 +1657,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					{
 						tatrisitSitIteParcial.add(tatri);
 					}
-					else if(endoso&&StringUtils.isNotBlank(tatri.getSwCompFlot())
-								&&tatri.getSwCompFlot().equals("S"))
-					{
+					else if(
+					    (endoso || renovacion)
+					    && StringUtils.isNotBlank(tatri.getSwCompFlot())
+					    && tatri.getSwCompFlot().equals("S")
+					) {
 						tatrisitSitIteParcial.add(tatri);
 					}
 				}

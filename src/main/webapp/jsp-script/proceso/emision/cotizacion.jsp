@@ -1511,6 +1511,18 @@ function llenandoCampos (json)
                             _0_panelPri.setLoading(true);
                             cargaCotiza = true;
                             sinTarificar = !maestra&&!vencida ;
+                            
+                            if (cargarXpoliza === true) { // Cuando es una renovacion importada de SIGS
+                                sinTarificar = false;
+                                
+                                var fesoliciCmp = _fieldByName('FESOLICI', null, true);
+                                if (!Ext.isEmpty(fesoliciCmp)
+                                    && Ext.isEmpty(fesoliciCmp.getSubmitValue())
+                                ) {
+                                    fesoliciCmp.setValue(new Date());
+                                }
+                            }
+                            
                             _0_cotizar();
                         }
                 }
@@ -5053,5 +5065,5 @@ Ext.onReady(function()
 });
 </script>
 </head>
-<body><div id="_0_divPri" style="height: 1200px;border:1px solid #CCCCCC;"></div></body>
+<body><div id="_0_divPri" style="height: 1400px;border:1px solid #CCCCCC;"></div></body>
 </html>

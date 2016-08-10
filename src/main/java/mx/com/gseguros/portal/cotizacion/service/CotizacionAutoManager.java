@@ -26,6 +26,7 @@ public interface CotizacionAutoManager
 			,String cdusuari
 			,String cdsisrol
 			,FlujoVO flujo
+			,boolean mostrarCamposComplementarios
 			)throws Exception;
 	public ManagerRespuestaSmapVO cargarRetroactividadSuplemento(
 			String cdunieco
@@ -123,6 +124,7 @@ public interface CotizacionAutoManager
 			,String tipoflot
 			,boolean endoso
 			,FlujoVO flujo
+			,boolean renovacion
 			)throws Exception;
 	public ManagerRespuestaSlistSmapVO cotizarAutosFlotilla(
 			String cdusuari

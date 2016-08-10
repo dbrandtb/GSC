@@ -181,6 +181,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdusuari    = null;
 		String cdsisrol    = null;
 		
+		boolean renovacion = false;
+		
 		if(flujo!=null)
 		{
 			try
@@ -207,6 +209,9 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.put("cdtipsit" , cdtipsit);
 				
 				logger.debug(Utils.log("\nsmap1 recuperado de flujo=",smap1));
+				
+				renovacion = TipoTramite.RENOVACION.getCdtiptra().equals(tramite.get("CDTIPTRA"));
+				logger.debug("Es renovacion = {}", renovacion);
 			}
 			catch(Exception ex)
 			{
@@ -345,6 +350,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		        	//para presentar en pantalla
 		        	if(tatriIte.getSwpresen().equalsIgnoreCase("S"))
 		        	{
+		        		logger.debug("Se agrega como campo de cotizacion = {}", tatriIte.getNameCdatribu());
 		        		temp.add(tatriIte);
 		        	}
 		        	//cuanto no van en pantalla
@@ -359,6 +365,19 @@ public class CotizacionAction extends PrincipalCoreAction
 		        				tatriIte.setOculto(true);
 		        				temp.add(tatriIte);
 		        			}
+		        		}
+		        		
+		        		if ( // Mostramos campos complementarios, la condicion es la misma que dentro
+							        // del metodo CotizacionAutoManagerImpl.emisionAutoIndividual
+		        				    // y del metodo CotizacionAutoManagerImpl.cotizacionAutoIndividual
+							        // deben mantenerse iguales
+		        				renovacion &&
+		        				(StringUtils.isBlank(tatriIte.getSwtarifi())||tatriIte.getSwtarifi().equalsIgnoreCase("N"))
+		        		) {
+		        			logger.debug("Se agrega como campo de complementarios = {}", tatriIte.getNameCdatribu());
+		        			temp.add(tatriIte);
+		        		} else {
+		        			logger.debug("No se agrega = {}", tatriIte.getNameCdatribu());
 		        		}
 		        	}
 		        	
