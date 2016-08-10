@@ -427,7 +427,8 @@ public interface SiniestrosManager {
 			String status,
 			String nmsinies,
 			String nfactura,
-			String cdtipsit) throws Exception;
+			String cdtipsit,
+			String ntramite) throws Exception;
 	
 	public Map<String,String> obtenerDatosProveedor(String cdpresta) throws Exception;
 	
@@ -697,4 +698,8 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> listaConsultaInfAseguradoCobSubCoberturas(HashMap<String, Object> paramsCausaSini) throws Exception;
 	
 	public String actualizarRegistroTimpsini(HashMap<String, Object> datosActualizacion) throws Exception;
+
+	public Map<String, Object> actualizaDatosGeneralesCopago(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem, String nmsituac, String nmsinies, String ntramite, String nfactura, String cdgarant,
+			String cdconval, String deducible, String copago, String nmcallcenter,String aplicaCambio, String accion) throws Exception;
 }

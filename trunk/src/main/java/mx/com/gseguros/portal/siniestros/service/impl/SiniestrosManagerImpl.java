@@ -1100,10 +1100,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			String status,
 			String nmsinies,
 			String nfactura,
-			String cdtipsit) throws Exception
+			String cdtipsit,
+			String ntramite) throws Exception
 	{
 		List<Map<String,String>>lista=siniestrosDAO.P_GET_CONCEPTOS_FACTURA(
-				cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,cdtipsit);
+				cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,cdtipsit, ntramite);
 		if(lista==null)
 		{
 			lista = new ArrayList<Map<String,String>>();
@@ -2453,4 +2454,31 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public Map<String, Object> actualizaDatosGeneralesCopago(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem, String nmsituac, String nmsinies, String ntramite, String nfactura, String cdgarant,
+			String cdconval, String deducible, String copago, String nmcallcenter,String aplicaCambio, String accion) throws Exception {
+
+		HashMap<String,Object> params=new HashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i",   cdramo);
+		params.put("pv_estado_i",   estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_nmsituac_i", nmsituac);
+		params.put("pv_nmsinies_i", nmsinies);
+		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_nfactura_i", nfactura);
+		params.put("pv_cdgarant_i", cdgarant);
+		params.put("pv_cdconval_i", cdconval);
+		params.put("pv_deducible_i",deducible);
+		params.put("pv_copago_i", 	copago);
+		params.put("pv_nmautser_i", nmcallcenter);
+		params.put("pv_swautori_i", aplicaCambio);
+		params.put("pv_accion_i", accion);
+		log.debug("actualizaDatosGeneralesSiniestro params: "+params);
+		return siniestrosDAO.actualizaDatosGeneralesCopago(params);
+	}
+    
 }

@@ -263,7 +263,7 @@
 						{type:'string',	name:'COMPLEMENTO'},	{type:'string',	name:'REQAUTES'},
 						{type:'string',	name:'NMAUTESP'},		{type:'string',	name:'REQAUTESPECIAL'},
 						{type:'string',	name:'VALTOTALCOB'},	{type:'string',	name:'LIMITE'},
-						{type:'string',	name:'IMPPAGCOB'}
+						{type:'string',	name:'IMPPAGCOB'},		{type:'string',	name:'NMCALLCENTER'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -1334,11 +1334,11 @@
 								header: 'Id<br/>Sini.',				dataIndex: 'NMSINIES',			width: 50 
 							},
 							{
-								header: 'Req. Aut Especial',		dataIndex: 'REQAUTES',			width: 50, 		hidden : true
+								header: '#<br/>Call Center',		dataIndex: 'NMCALLCENTER',		width: 70
+								,editor: {
+									xtype: 'numberfield'
+								}
 							},
-							{
-								header: 'No. Aut',					dataIndex: 'NMAUTESP',			width: 50, 		hidden : true
-							},							
 							{
 								header: '# Auto.',					dataIndex: 'NMAUTSER',			width: 70
 								,editor: {
@@ -1609,6 +1609,12 @@
 							},
 							{
 								header: 'TotalPagado',				dataIndex: 'IMPPAGCOB',				hidden	:	true
+							},
+							{
+								header: 'Req. Aut Especial',		dataIndex: 'REQAUTES',			width: 50, 		hidden : true
+							},
+							{
+								header: 'No. Aut',					dataIndex: 'NMAUTESP',			width: 50, 		hidden : true
 							}
 						],
 						tbar:[
@@ -5521,6 +5527,8 @@
 	
 	//12.-Guardamos los datos complementarios del Asegurado
 	function guardaDatosComplementariosAsegurado(record, banderaAsegurado){
+		debug("VALOR DEL RECORD ==> ",record);
+		
 		var cdramo     = record.data.CDRAMO;
 		var idICD      = record.data.CDICD;
 		var idCdgarant = record.data.CDGARANT;
@@ -5545,6 +5553,7 @@
 				}
 				,success : function (response){
 					var datosExtras = Ext.decode(response.responseText);
+					
 					if(Ext.decode(response.responseText).datosInformacionAdicional != null){
 						var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
 						debug("cveCauSini.REQVALIDACION ==>",cveCauSini.REQVALIDACION,"cveCauSini.REQCONSULTAS ===>",cveCauSini.REQCONSULTAS);
@@ -5597,6 +5606,7 @@
 										}
 										
 										if(maxconsultas  == true){
+											//1.-
 											_11_guardarDatosComplementario(record.data.CDUNIECO,
 												record.data.CDRAMO,
 												record.data.ESTADO,
@@ -5615,7 +5625,11 @@
 												record.data.CDPERSON,
 												valorRegistro,
 												record.data.COMPLEMENTO,
-												"0"
+												record.data.NMSITUAC,
+												record.data.DEDUCIBLE,
+												record.data.COPAGO,
+												record.data.NMCALLCENTER,
+												"0"												
 											);
 										}
 									}else{
@@ -5638,6 +5652,7 @@
 								}
 							});
 						}else{
+							//2.-
 							_11_guardarDatosComplementario(record.data.CDUNIECO,
 								record.data.CDRAMO,
 								record.data.ESTADO,
@@ -5656,6 +5671,10 @@
 								record.data.CDPERSON,
 								valorRegistro,
 								record.data.COMPLEMENTO,
+								record.data.NMSITUAC,
+								record.data.DEDUCIBLE,
+								record.data.COPAGO,
+								record.data.NMCALLCENTER,
 								"0"
 							);
 						}
@@ -5676,10 +5695,18 @@
 	}
 	
 	//13.- Guardar datos complementarios
+	//3.-
 	function _11_guardarDatosComplementario(cdunieco,cdramo, estado, nmpoliza, nmsuplem,
 										aaapertu, nmsinies,feocurre, nmreclamo, cdicd,
 										cdicd2,cdcausa, cdgarant,cdconval, nmautser,
-										cdperson, tipoProceso, complemento, actMisiniper){
+										cdperson, tipoProceso, complemento,nmsituac,deducible, copago,nmcallcenter, actMisiniper){
+		
+		debug("Datos de guardado 1 ===> ","cdunieco :"+cdunieco,"cdramo :"+cdramo, "estado :"+estado, "nmpoliza :"+nmpoliza);
+		debug("Datos de guardado 2 ===> ","nmsuplem :"+nmsuplem,"aaapertu :"+aaapertu, "nmsinies :"+nmsinies,"feocurre :"+feocurre);
+		debug("Datos de guardado 3 ===> ","nmreclamo :"+nmreclamo, "cdicd:"+cdicd,"cdicd2:"+cdicd2,"cdcausa:"+cdcausa);
+		debug("Datos de guardado 4 ===> ","cdgarant :"+cdgarant,"cdconval :"+cdconval, "nmautser :"+nmautser,"cdperson :"+cdperson);
+		debug("Datos de guardado 5 ===> ","tipoProceso :"+tipoProceso, "complemento :"+complemento,"nmsituac :"+nmsituac);
+		debug("Datos de guardado 6 ===> ","deducible :"+deducible, "copago :"+copago,"nmcallcenter :"+nmcallcenter, "actMisiniper :"+actMisiniper);
 		Ext.Ajax.request( {
 			url	 : _URL_ACTUALIZA_INFO_GRAL_SIN
 			,params:{
@@ -5716,7 +5743,11 @@
 				'params.cdperson' 	  	: cdperson,
 				'params.tipoProceso'  	: tipoProceso,
 				'params.complemento'  	: complemento,
-				'params.actMisiniper'	: actMisiniper
+				'params.actMisiniper'	: actMisiniper,
+				'params.nmsituac'	    : nmsituac,
+				'params.deducible'	    : deducible,
+				'params.copago'		    : copago,
+				'params.nmcallcenter'   : nmcallcenter
 			}
 			,success : function (response) {
 				banderaAsegurado = 0;
@@ -6236,6 +6267,7 @@
 			,success : function (response) {
 				var jsonAutServ = Ext.decode(response.responseText).datosAutorizacionEsp;
 				debug("VALOR DE RESPUESTA :: ",jsonAutServ);
+				//4.- 
 				_11_guardarDatosComplementario(record.data.CDUNIECO,
 					record.data.CDRAMO,
 					record.data.ESTADO,
@@ -6254,6 +6286,8 @@
 					record.data.CDPERSON,
 					tipoProceso,
 					record.data.COMPLEMENTO,
+					record.data.NMSITUAC,
+					record.data.NMCALLCENTER,
 					actMisiniper
 				);
 				gridFacturaDirecto.setLoading(false);
