@@ -4746,6 +4746,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
 	var record = grid.getStore().getAt(rowIndex);
     _p25_quitarTabExtraprima(record.get('letra'));
     var timestamp = new Date().getTime();
+    var cdgrupo   = record.get('letra');
     _p25_agregarTab(
     {
         title                 : 'EXTRAPRIMAS DE SUBGRUPO '+record.get('letra')
@@ -4758,12 +4759,13 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
         [
             Ext.create('Ext.grid.Panel',
             {
-                itemId			 :	'gridAseg'+record.get('letra')
+                itemId		  :	'gridAseg'+record.get('letra')
+                ,cdgrupo      : record.get('letra')
                 ,selModel     : Ext.create('Ext.selection.CheckboxModel', 
                 		{
                 	mode              : 'MULTI',
                 	showHeaderCheckbox: false,
-                	cdgrupo           : record.get('letra')
+                	cdgrupo           : cdgrupo
                 	})
             	,columns     :
                 [
@@ -4791,7 +4793,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                             	   clicksToEdit  : 1
                             	   ,errorSummary : true
                             	   ,pluginId     : 'rowedit'
-                            	   ,cdgrupo      : me.cdgrupo
+                            	   ,cdgrupo      : cdgrupo
                             	   ,listeners: {
                             		   edit: checkEdit
                             		   }
@@ -4974,14 +4976,14 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                 [
                     {
                         text     : 'Guardar'
+                        ,itemId  : 'btnguardar'+cdgrupo
                         ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                         ,hidden  : _p25_smap1.EXTRAPRIMAS_EDITAR=='N'
                         ,handler : function()
                         {
-                            _p25_guardarExtraprimas(record.get('letra'));
-                            _p21_setActiveResumen();
-                            _fieldById('gridAseg'+record.get('letra')).store.commitChanges();
-                            debug('aun guardados', records.lenght());
+                            _p25_guardarExtraprimas(cdgrupo);
+                            _p25_setActiveResumen();
+                            _fieldById('gridAseg'+cdgrupo).store.commitChanges();
                         }
                     }
                 ]
