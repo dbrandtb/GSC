@@ -957,6 +957,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	    		super(dataSource, "PKG_LISTAS.P_GET_CAUSAS_MOT_RECHAZO");
 	    		
 	    		declareParameter(new SqlParameter("pv_cdmotivo_i", OracleTypes.VARCHAR));
+	    		declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
 	    		String[] cols = new String[]{
 	    				"CDCAUMOT","DSCAUMOT"
 	    		};
@@ -2698,8 +2699,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"OTCLAVE2"
 					,"CDCAPITA"
 					,"LUC"
-					,"DEDUCIBLE"
-					,"COPAGO"
+						,"DEDUCIBLE"
+						,"COPAGO"
 					,"BENEFMAX"
 					,"ICD"
 					,"CPT"

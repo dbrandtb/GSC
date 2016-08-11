@@ -67,7 +67,8 @@ Ext.onReady(function() {
     	        		storeIncisosRechazos.removeAll();
     	        		storeIncisosRechazos.load({
     	        			 params: {
-    	        				'params.pv_cdmotivo_i' : records[0].get('key')
+    	        				'params.pv_cdmotivo_i' : records[0].get('key'),
+    	        				'params.pv_cdramo_i'   : _cdramo
     	        			 }
     	        		 });
     	        	}
