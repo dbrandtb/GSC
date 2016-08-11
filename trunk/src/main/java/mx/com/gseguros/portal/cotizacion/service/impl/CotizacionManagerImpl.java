@@ -7558,11 +7558,14 @@ public class CotizacionManagerImpl implements CotizacionManager
         		}
         		
         		Map<String,String> datosFlujo = null;
+        		String cdtiptra = null;
         		
         		if ("S".equals(swrenovacion)) {
         			datosFlujo = consultasDAO.recuperarDatosFlujoRenovacion(cdramo,tipoProcesoParaRecuperarFlujo);
+        			cdtiptra   = TipoTramite.RENOVACION.getCdtiptra();
         		} else { // es emision
         			datosFlujo = consultasDAO.recuperarDatosFlujoEmision(cdramo,tipoProcesoParaRecuperarFlujo);
+        			cdtiptra   = TipoTramite.POLIZA_NUEVA.getCdtiptra();
         		}
     			
     			paso = "Generando el tr\u00e1mite";
@@ -7592,7 +7595,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             			datosFlujo.get("cdtipflu"),
             			datosFlujo.get("cdflujomc"),
             			null,
-            			TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
+            			cdtiptra,
             			sucursal,
             			ramo,
             			poliza,
