@@ -343,4 +343,29 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public void bloquearProceso (String cdproceso, boolean bloquear, String cdusuari, String cdsisrol) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdproceso" , cdproceso);
+		params.put("bloquear"  , bloquear ? "S" : "N");
+		params.put("cdusuari"  , cdusuari);
+		params.put("cdsisrol"  , cdsisrol);
+		ejecutaSP(new BloquearProcesoSP(getDataSource()), params);
+	}
+	
+	protected class BloquearProcesoSP extends StoredProcedure
+	{
+		protected BloquearProcesoSP(DataSource dataSource)
+		{
+			super(dataSource,"P_BLOQUEAR_PROCESO");
+			declareParameter(new SqlParameter("cdproceso" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("bloquear"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

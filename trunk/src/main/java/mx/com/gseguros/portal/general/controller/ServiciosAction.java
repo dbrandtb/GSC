@@ -381,6 +381,108 @@ public class ServiciosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "generarFlagsTramites",
+		    results = {
+		        @Result(name="success" , location="/jsp-script/servicios/respuesta.jsp")
+		    })
+	public String generarFlagsTramites () {
+		logger.debug(Utils.join(
+			"\n##################################",
+			"\n###### generarFlagsTramites ######"
+		));
+		try
+		{
+			respuesta = Utils.join("Flags generadas: ",serviciosManager.generarFlagsTramites());
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log(
+			"\n###### respuesta = ", respuesta,
+			"\n###### generarFlagsTramites ######",
+			"\n##################################"
+		));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "actualizarFlagsTramites",
+		    results = {
+		        @Result(name="success" , location="/jsp-script/servicios/respuesta.jsp")
+		    })
+	public String actualizarFlagsTramites () {
+		logger.debug(Utils.join(
+			"\n#####################################",
+			"\n###### actualizarFlagsTramites ######"
+		));
+		try
+		{
+			respuesta = Utils.join("Flags actualizadas: ",serviciosManager.actualizarFlagsTramites());
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log(
+			"\n###### respuesta = ", respuesta,
+			"\n###### actualizarFlagsTramites ######",
+			"\n#####################################"
+		));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "procesarFlagsTramites",
+		    results = {
+		        @Result(name="success" , location="/jsp-script/servicios/respuesta.jsp")
+		    })
+	public String procesarFlagsTramites () {
+		logger.debug(Utils.join(
+			"\n###################################",
+			"\n###### procesarFlagsTramites ######"
+		));
+		
+		/*
+		 * bandera que nos dice si esta peticion bloqueo el proceso de FLAGS
+		 */
+		boolean seBloqueaFLAGS = false;
+		
+		try
+		{
+			/*
+			 * Si no da exception, es porque se bloquea correctamente, marcamos
+			 * la bandera como true porque esta peticion hizo el bloqueo.
+			 * Si da exception es porque ya estaba bloqueado anteriormente y no llega al = true
+			 */
+			serviciosManager.bloquearProceso("FLAGS", true, "SISTEMA", "SISTEMA");
+			seBloqueaFLAGS = true;
+			
+			respuesta = Utils.join(
+					"Flags generadas: "    , serviciosManager.generarFlagsTramites(),
+					", flags actualizadas: " , serviciosManager.actualizarFlagsTramites()
+					);
+		} catch(Exception ex) {
+			respuesta = Utils.manejaExcepcion(ex);
+		} finally {
+			/*
+			 * Solo si esta peticion hizo el bloqueo del proceso, mandamos
+			 * desbloquear al final
+			 */
+			if (seBloqueaFLAGS) {
+				try {
+					serviciosManager.bloquearProceso("FLAGS", false, "SISTEMA", "SISTEMA");
+				} catch (Exception ex) {
+					logger.debug("Error al desbloquear proceso FLAGS", ex);
+				}
+			}
+		}
+		logger.debug(Utils.log(
+			"\n###### respuesta = ", respuesta,
+			"\n###### procesarFlagsTramites ######",
+			"\n###################################"
+		));
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
