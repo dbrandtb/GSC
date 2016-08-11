@@ -7268,6 +7268,20 @@ public class EndososAction extends PrincipalCoreAction
 			case CAMBIO_AGENTE:
 			case CANCELACION_POR_REEXPEDICION:
 			case CAMBIO_CONTRATANTE:
+			case DESPAGO:
+			case COASEGURO_INCREMENTO:
+			case COASEGURO_DECREMENTO:
+			case SUMA_ASEGURADA_INCREMENTO:
+			case SUMA_ASEGURADA_DECREMENTO:
+			case REHABILITACION:
+			case REHABILITACION_ENDOSO:
+			case CIRCULO_HOSPITALARIO_COASEGURO_INCREMENTO:
+			case CIRCULO_HOSPITALARIO_COASEGURO_DECREMENTO:
+			case AMPLIACION_DE_VIGENCIA:
+			case VIGENCIA_POLIZA:
+			case REHABILITACION_DESPAGO:
+			case CANCELACION_UNICA:
+			case CANCELACION_MASIVA:
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
 						rutaCarpeta, sucursal, nmsolici, ntramiteEmi, true, cdtipsup, 
