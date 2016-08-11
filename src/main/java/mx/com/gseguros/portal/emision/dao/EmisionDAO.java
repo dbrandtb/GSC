@@ -76,4 +76,6 @@ public interface EmisionDAO {
 	public void validarDocumentoTramite (String ntramite, String cddocume) throws Exception;
 	
 	public String recuperarTramiteCotizacion (String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+	
+	public void bloquearProceso (String cdproceso, boolean bloquear, String cdusuari, String cdsisrol) throws Exception;
 }

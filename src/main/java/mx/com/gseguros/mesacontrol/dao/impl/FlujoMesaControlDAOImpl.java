@@ -316,7 +316,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					"CDTIPFLU"   , "CDFLUJOMC" , "CDESTADOMC"
 					,"WEBID"     , "XPOS"      , "YPOS"
 					,"TIMEMAX"   , "TIMEWRN1"  , "TIMEWRN2"
-					,"CDTIPASIG" , "DSESTADOMC"
+					,"CDTIPASIG" , "DSESTADOMC" , "STATUSOUT"
+					,"SWFINNODE"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -804,6 +805,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String timewrn1
 			,String timewrn2
 			,String cdtipasig
+			,String statusout
+			,String swfinnode
 			,String accion
 			) throws Exception
 	{
@@ -818,6 +821,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("timewrn1"   , timewrn1);
 		params.put("timewrn2"   , timewrn2);
 		params.put("cdtipasig"  , cdtipasig);
+		params.put("statusout"  , statusout);
+		params.put("swfinnode"  , swfinnode);
 		params.put("accion"     , accion);
 		ejecutaSP(new MovimientoTfluestSP(getDataSource()),params);
 	}
@@ -836,7 +841,9 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("timemax"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("timewrn1"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("timewrn2"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipasig"  , OracleTypes.VARCHAR));	
+			declareParameter(new SqlParameter("cdtipasig"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("statusout"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swfinnode"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -1633,7 +1640,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					,"DSTIPSIT"   , "ESTADO"             , "NMPOLIZA"    , "FECSTATU"  , "FERECEPC"
 					,"NMSOLICI"   , "NOMBRE_CONTRATANTE" , "RESPONSABLE" , "RAMO"      , "DSTIPSUP"
 					,"CDTIPRAM"   , "DSTIPRAM"           , "NMPOLIEX"    , "CDTIPTRA"  , "ULTIMO_MODIFICA"
-					,"NRO_ENDOSO" , "CDUNIEXT"           , "CDSUCADM"
+					,"NRO_ENDOSO" , "CDUNIEXT"           , "CDSUCADM"    , "FLAG"      , "VENCIMIENTO"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
 			declareParameter(new SqlOutParameter("pv_total_o"    , OracleTypes.VARCHAR));
@@ -2897,10 +2904,11 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	}
 	
 	@Override
-	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite, String cdsisrol) throws Exception{
+	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite, String cdsisrol, String porEscalamiento) throws Exception{
 		Map<String, String> params = new LinkedHashMap<String, String>();
-		params.put("ntramite"  , ntramite);
-		params.put("cdsisrol"  , cdsisrol);
+		params.put("ntramite" , ntramite);
+		params.put("cdsisrol" , cdsisrol);
+		params.put("swescala" , porEscalamiento);
 		Map<String, Object> procRes = ejecutaSP(new ObtenerCorreosStatusTramite(getDataSource()), params);
 		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
 		if (lista == null) {
@@ -2914,8 +2922,9 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		protected ObtenerCorreosStatusTramite(DataSource dataSource)
 		{
 			super(dataSource,"P_GET_MAIL_STATUS_TRAMITE");
-			declareParameter(new SqlParameter("ntramite"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swescala" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"dsmail",
 					"dsdestino",
@@ -2949,6 +2958,212 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("mail"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarTramitesSinFlag () throws Exception {
+		Map<String, Object> procRes = ejecutaSP(new RecuperarTramitesSinFlagSP(getDataSource()), new HashMap<String, String>());
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("Lista de tramites sin flag = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarTramitesSinFlagSP extends StoredProcedure
+	{
+		protected RecuperarTramitesSinFlagSP(DataSource dataSource)
+		{
+			super(dataSource,"P_FLAG_GET_TRA_SIN_FLAG");
+			String[] cols = new String[] {
+					"NTRAMITE",
+					"CDTIPFLU",
+					"CDFLUJOMC", 
+					"FECSTATU", 
+					"STATUS", 
+					"TIMEMAX", 
+					"TIMEWRN1", 
+					"TIMEWRN2"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols, true)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void insertarFlagTramite (
+		String ntramite,
+		Date fecstatu,
+		String flag,
+		Date fechaAmarilla,
+		Date fechaRoja,
+		Date fechaMaxima
+	) throws Exception {
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("ntramite"   , ntramite);
+		params.put("fecstatu"   , fecstatu);
+		params.put("flag"       , flag);
+		params.put("feamarilla" , fechaAmarilla);
+		params.put("feroja"     , fechaRoja);
+		params.put("fevencim"   , fechaMaxima);
+		ejecutaSP(new InsertarFlagTramiteSP(getDataSource()), params);
+	}
+	
+	protected class InsertarFlagTramiteSP extends StoredProcedure
+	{
+		protected InsertarFlagTramiteSP(DataSource dataSource)
+		{
+			super(dataSource,"P_FLAG_INSERTA_FLAG");
+			declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fecstatu"   , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("flag"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feamarilla" , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("feroja"     , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("fevencim"   , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarTramitesConFlagVencida () throws Exception {
+		Map<String, Object> procRes = ejecutaSP(new RecuperarTramitesConFlagVencidaSP(getDataSource()), new HashMap<String, String>());
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("Lista de tramites con flag vencida = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarTramitesConFlagVencidaSP extends StoredProcedure
+	{
+		protected RecuperarTramitesConFlagVencidaSP(DataSource dataSource)
+		{
+			super(dataSource,"P_FLAG_GET_FLAGS_VENCIDAS");
+			String[] cols = new String[] {
+					"NTRAMITE",
+					"FECSTATU",
+					"FLAG",
+					"FEAMARILLA",
+					"FEROJA",
+					"FEVENCIM",
+					"NUEVAFLAG",
+					"CDUNIECO",
+					"CDRAMO",
+					"ESTADO",
+					"NMPOLIZA",
+					"NMSUPLEM",
+					"STATUS",
+					"CDTIPFLU",
+					"CDFLUJOMC",
+					"STATUSOUT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols, true)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, String> recuperarEstatusAnteriorVencido (String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite", ntramite);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarEstatusAnteriorVencidoSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size () == 0) {
+			throw new ApplicationException("No se encuentra el estatus anterior al vencimiento");
+		}
+		return lista.get(0);
+	}
+	
+	protected class RecuperarEstatusAnteriorVencidoSP extends StoredProcedure
+	{
+		protected RecuperarEstatusAnteriorVencidoSP(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_STATUS_ANTES_VENCIM");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			String[] cols = new String[] {
+				"CDSTATUS",
+				"DSSTATUS",
+				"CDTIPFLU",
+				"CDFLUJOMC"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols, false)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarRolesPermisoRegresarVencido(String ntramite, String status) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite" , ntramite);
+		params.put("status"   , status);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarRolesPermisoRegresarVencidoSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		return lista;
+	}
+	
+	protected class RecuperarRolesPermisoRegresarVencidoSP extends StoredProcedure
+	{
+		protected RecuperarRolesPermisoRegresarVencidoSP(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_ROLES_PERM_VENCIDO");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			String[] cols = new String[] {
+				"CDSISROL",
+				"DSSISROL"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols, false)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, String> recuperarDatosVencimiento (String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite", ntramite);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarDatosVencimientoSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size () == 0) {
+			throw new ApplicationException("No se encuentran los datos del vencimiento");
+		}
+		return lista.get(0);
+	}
+	
+	protected class RecuperarDatosVencimientoSP extends StoredProcedure
+	{
+		protected RecuperarDatosVencimientoSP(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_DATOS_VENCIMIENTO");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			String[] cols = new String[] {
+				"FECSTATU",
+				"FLAG",
+				"FEAMARILLA",
+				"FEROJA",
+				"FEVENCIM",
+				"NMORDINA",
+				"FEREGISTRO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols, true)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

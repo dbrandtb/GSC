@@ -1,7 +1,6 @@
 package mx.com.gseguros.mesacontrol.controller;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +16,6 @@ import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.axis2.wsdl.databinding.CDefaultTypeMapper;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -639,6 +637,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,timewrn2m  = params.get("TIMEWRN2M")
 			       ,cdtipasig  = params.get("CDTIPASIG")
 			       ,swescala   = params.get("SWESCALA")
+			       ,statusout  = params.get("STATUSOUT")
+			       ,swfinnode  = params.get("SWFINNODE")
 			       ;
 			
 			Utils.validate(
@@ -675,6 +675,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdtipasig
 					,swescala
 					,list
+					,statusout
+					,"S".equals(swfinnode)
 					);
 			
 			success = true;
@@ -2478,6 +2480,37 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "regresarTramiteVencido",
+	        results = { @Result(name="success", type="json") }
+	)
+	public String regresarTramiteVencido () {
+		logger.debug(Utils.log(
+			"\n####################################",
+			"\n###### regresarTramiteVencido ######",
+			"\n###### params = " , params
+		));
+		try {
+			UserVO usuario = Utils.validateSession(session);
+			String cdusuari = usuario.getUser();
+			String cdsisrol = usuario.getRolActivo().getClave();
+			Utils.validate(params , "No se recibieron par\u00e1metros");
+			String ntramite = params.get("ntramite");
+			Utils.validate(ntramite, "Falta ntramite");
+			boolean soloRevisar = "S".equals(params.get("soloRevisar"));
+			params.putAll(flujoMesaControlManager.regresarTramiteVencido(ntramite, soloRevisar, cdusuari, cdsisrol));
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log(
+			"\n###### params  = " , params,
+			"\n###### success = " , success,
+			"\n###### message = " , message,
+			"\n###### regresarTramiteVencido #######",
+			"\n#####################################"
+		));
+		return SUCCESS;
+	}
 	
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //

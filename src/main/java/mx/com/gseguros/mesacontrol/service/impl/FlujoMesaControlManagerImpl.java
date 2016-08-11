@@ -13,13 +13,13 @@ import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
-import mx.com.gseguros.portal.general.util.MailAction;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -55,6 +55,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Autowired
 	private MailService mailService;
+	
+	@Autowired
+	private CotizacionDAO cotizacionDAO;
 	
 	@Override
 	public Map<String,Item> workflow(String cdsisrol) throws Exception
@@ -319,10 +322,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,webid
 						,xpos
 						,ypos
-						,null //timemax
-						,null //timewrn1
-						,null //timewrn2
-						,"1"  //cdtipasig
+						,null  //timemax
+						,null  //timewrn1
+						,null  //timewrn2
+						,"1"   //cdtipasig
+						,"999" //statusout
+						,"N"   //swfinnode
 						,"I"
 						);
 			}
@@ -473,6 +478,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,null //timewrn1
 						,null //timewrn2
 						,null //cdtipasig
+						,null //statusout
+						,null //swfinnode
 						,"D"
 						);
 			}
@@ -834,6 +841,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String cdtipasig
 			,String swescala
 			,List<Map<String,String>>list
+			,String statusout
+			,boolean swfinnode
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -854,6 +863,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ timewrn2m="  , timewrn2m
 				,"\n@@@@@@ cdtipasig="  , cdtipasig
 				,"\n@@@@@@ swescala="   , swescala
+				,"\n@@@@@@ statusout="  , statusout
+				,"\n@@@@@@ swfinnode="  , swfinnode
 				,"\n@@@@@@ list="       , list
 				));
 		
@@ -874,6 +885,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,new Long((Long.valueOf(timewrn1m))+(Long.valueOf(timewrn1h)*60)).toString() //timewrn1
 					,new Long((Long.valueOf(timewrn2m))+(Long.valueOf(timewrn2h)*60)).toString() //timewrn2
 					,cdtipasig
+					,statusout
+					,swfinnode ? "S" : "N"
 					,accion
 					);
 			
@@ -2561,7 +2574,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			paso = "Enviando correos de status nuevo";
 			logger.debug(paso);
-			mandarCorreosStatusTramite(ntramite, cdsisrol);
+			mandarCorreosStatusTramite(ntramite, cdsisrol, false);
 		}
 		catch(Exception ex)
 		{
@@ -3083,28 +3096,142 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public void mandarCorreosStatusTramite(String ntramite, String cdsisrol) throws Exception{
-		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-							   "\n@@@@@@@@@ mandarCorreosStatusTramite @@@@@@@@@",
-							   "\n ntramite ",ntramite,
-							   "\n cdsisrol ",cdsisrol
+	public void mandarCorreosStatusTramite(String ntramite, String cdsisrol, boolean porEscalamiento) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ mandarCorreosStatusTramite @@@@@@",
+				"\n@@@@@@ ntramite        = " , ntramite,
+				"\n@@@@@@ cdsisrol        = " , cdsisrol,
+				"\n@@@@@@ porEscalamiento = " , porEscalamiento
 				));
-		String paso = "";
-		try{
+		String paso = "Recuperando correos de estatus";
+		logger.debug(paso);
+		try {
 			FlujoVO flujo = new FlujoVO();
 			flujo.setNtramite(ntramite);
-			List<Map<String, String>> correos = flujoMesaControlDAO.obtenerCorreosStatusTramite(ntramite, cdsisrol);
-			for(Map<String, String> params:correos){
+			List<Map<String, String>> correos = flujoMesaControlDAO.obtenerCorreosStatusTramite(ntramite, cdsisrol, porEscalamiento ? "S" : "N");
+			
+			paso = "Enviando correos de estatus";
+			logger.debug(paso);
+			
+			for (Map<String, String> params:correos) {
 				enviaCorreoFlujo(flujo, params);
 			}
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
+
+		logger.debug(Utils.log(
+				"\n@@@@@@ mandarCorreosStatusTramite @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
 	}
 	
 	@Deprecated
 	@Override
 	public void guardarMensajeCorreoEmision(String ntramite, String mensajeCorreoEmision) throws Exception {
 		flujoMesaControlDAO.guardarMensajeCorreoEmision(ntramite, mensajeCorreoEmision);
+	}
+	
+	@Override
+	public Map<String, String> regresarTramiteVencido (String ntramite, boolean soloRevisar, String cdusuari, String cdsisrol) throws Exception {
+		logger.debug(Utils.log(
+			"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+			"\n@@@@@@ regresarTramiteVencido @@@@@@",
+			"\n@@@@@@ ntramite    = " , ntramite,
+			"\n@@@@@@ soloRevisar = " , soloRevisar));
+		String paso = null;
+		Map<String, String> result = new HashMap<String, String>();
+		try {
+			paso = "Recuperando estatus anterior al vencimiento";
+			logger.debug(paso);
+			Map<String, String> estatusAnterior = flujoMesaControlDAO.recuperarEstatusAnteriorVencido(ntramite);
+			result.putAll(estatusAnterior);
+			String cdstatus  = estatusAnterior.get("CDSTATUS"),
+				   dsstatus  = estatusAnterior.get("DSSTATUS"),
+				   cdtipflu  = estatusAnterior.get("CDTIPFLU"),
+				   cdflujomc = estatusAnterior.get("CDFLUJOMC");
+			
+			paso = "Recuperando roles que pueden regresar";
+			logger.debug(paso);
+			List<Map<String, String>> roles = flujoMesaControlDAO.recuperarRolesPermisoRegresarVencido(ntramite, cdstatus);
+			String rolesCadena = "No hay roles definidos";
+			boolean rolSesionPermiso = false;
+			if (roles.size() > 0) {
+				StringBuilder rolesBuilder = new StringBuilder();
+				for (Map<String, String> rol : roles) {
+					rolesBuilder.append(rol.get("DSSISROL")).append("<br/>");
+					if(cdsisrol.equals(rol.get("CDSISROL"))) {
+						rolSesionPermiso = true;
+					}
+				}
+				rolesCadena = rolesBuilder.toString();
+			}
+			result.put("rolesCadena" , rolesCadena);
+			result.put("permiso"     , rolSesionPermiso ? "S" : "N");
+			
+			paso = "Recuperando datos del vencimiento";
+			logger.debug(paso);
+			result.putAll(flujoMesaControlDAO.recuperarDatosVencimiento(ntramite));
+			
+			if (!soloRevisar) {
+				if (!rolSesionPermiso) {
+					throw new ApplicationException("No tiene permisos para regresar");
+				}
+				
+				flujoMesaControlDAO.actualizarStatusTramite(
+					ntramite,
+					cdstatus,
+					new Date(),
+					null //cdusuari (con null le deja el mismo)
+					);
+				
+				mesaControlDAO.movimientoDetalleTramite(
+					ntramite,
+					new Date(),
+					null, // cdclausu
+					Utils.join("Se regresa el tr\u00e1mite desde vencido"),
+					cdusuari,
+					null, // cdmotivo
+					cdsisrol,
+					"N", // swagente
+					null, // cdusuariDest
+					null, // cdsisrolDest
+					cdstatus,
+					false //cerrado
+					);
+				
+				try {
+					cotizacionDAO.grabarEvento(
+						new StringBuilder()
+						,"FLAGS"
+						,"REGRESAR"
+						,new Date()
+						,cdusuari
+						,cdsisrol
+						,ntramite
+						,null //cdunieco
+						,null //cdramo
+						,null //estado
+						,null //nmpoliza
+						,null //nmsolici
+						,null //cdagente
+						,null //cdusuariDes
+						,null //cdsisrolDes
+						,cdstatus
+					);
+					Thread.sleep(1000l);
+				} catch (Exception ex) {
+					logger.debug("Error al grabar evento", ex);
+				}
+			}
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+			"\n@@@@@@ result = ", result,
+			"\n@@@@@@ regresarTramiteVencido @@@@@@",
+			"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return result;
 	}
 }

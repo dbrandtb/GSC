@@ -18,6 +18,10 @@ import java.util.regex.Pattern;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.ValidationDataException;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -26,10 +30,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.exception.ValidationDataException;
 
 /**
  * Utiler&iacute;as para validar datos de la aplicacion
@@ -41,6 +41,7 @@ public class Utils
 	
 	private static Logger           logger              = LoggerFactory.getLogger(Utils.class);
 	private static SimpleDateFormat renderFechas        = new SimpleDateFormat("dd/MM/yyyy");
+	private static SimpleDateFormat renderFechasConHora = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	private static String           stringDateFormat    = "dd/MM/yyyy";
 	private static String           TIMEZONE_DEFAULT_ID = "GMT0"; //Se manda TimeZone a 0 para los WS de ice2sigs, pues se movia un dia.
 	
@@ -676,6 +677,11 @@ public class Utils
     	return renderFechas.format(fecha);
     }
     
+    public static String formatConHora(Date fecha) throws Exception
+    {
+    	return renderFechasConHora.format(fecha);
+    }
+    
     public static String[][] convierteMapasEnArreglos(List<Map<String,String>>lista)
     {
     	String[][] arreglos = new String[lista.size()][];
@@ -798,9 +804,14 @@ public class Utils
     			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     			));
     	
-    	logger.debug(sb.toString());
+    	//logger.debug(sb.toString());
     	
     	return fin;
+    }
+    
+    public static Date parseConHora(String fecha) throws Exception
+    {
+    	return renderFechasConHora.parse(fecha);
     }
     
 }

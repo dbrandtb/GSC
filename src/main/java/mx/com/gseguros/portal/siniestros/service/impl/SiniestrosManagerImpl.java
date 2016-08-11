@@ -1437,7 +1437,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 					,swagente
 					);
 			if(enviarCorreos){
-				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSesion);
+				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSesion, false);
 			}
 			try
 	        {

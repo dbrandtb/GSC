@@ -257,7 +257,7 @@ public interface FlujoMesaControlDAO {
 	public void movimientoTfluest(String cdtipflu, String cdflujomc,
 			String cdestadomc, String webid, String xpos, String ypos,
 			String timemax, String timewrn1, String timewrn2,
-			String cdtipasig, String accion)
+			String cdtipasig, String statusout, String swfinnode, String accion)
 			throws Exception;
 
 	/**
@@ -708,8 +708,26 @@ public interface FlujoMesaControlDAO {
 	
 	public String ejecutaProcedureFlujoCorreo(String nomproc, String ntramite) throws Exception;
 	
-	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite, String cdsisrol) throws Exception;
+	public List<Map<String, String>> obtenerCorreosStatusTramite(String ntramite, String cdsisrol, String porEscalamiento) throws Exception;
 	
 	public void guardarMensajeCorreoEmision(String ntramite, String mensajeCorreoEmision) throws Exception;
+
+	public List<Map<String, String>> recuperarTramitesSinFlag () throws Exception;
 	
+	public void insertarFlagTramite (
+		String ntramite,
+		Date fecstatu,
+		String flag,
+		Date fechaAmarilla,
+		Date fechaRoja,
+		Date fechaMaxima
+	) throws Exception;
+
+	public List<Map<String, String>> recuperarTramitesConFlagVencida () throws Exception;
+	
+	public Map<String, String> recuperarEstatusAnteriorVencido (String ntramite) throws Exception;
+	
+	public List<Map<String, String>> recuperarRolesPermisoRegresarVencido(String ntramite, String status) throws Exception;
+	
+	public Map<String, String> recuperarDatosVencimiento (String ntramite) throws Exception;
 }

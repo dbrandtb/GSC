@@ -2241,6 +2241,10 @@ Ext.onReady(function()
                                         xtype     : 'form'
                                         ,defaults : { style : 'margin:5px;' }
                                         ,border   : 0
+                                        ,layout   : {
+                                            type     : 'table'
+                                            ,columns : 2
+                                        }
                                         ,items    :
                                         [
                                             {
@@ -2293,63 +2297,89 @@ Ext.onReady(function()
                                                 ,hidden     : !_p52_debug
                                             }
                                             ,{
-                                                xtype       : 'slider'
-                                                ,fieldLabel : 'Tiempo m\u00e1ximo en horas'
-                                                ,minValue   : 0
-                                                ,maxValue   : 40
-                                                ,increment  : 1
-                                                ,name       : 'TIMEMAXH'
-                                                ,labelAlign : 'top'
-                                            }
-                                            ,{
-                                                xtype       : 'slider'
-                                                ,fieldLabel : 'Tiempo m\u00e1ximo en minutos'
-                                                ,minValue   : 0
-                                                ,maxValue   : 55
-                                                ,increment  : 5
-                                                ,name       : 'TIMEMAXM'
-                                                ,labelAlign : 'top'
-                                            }
-                                            ,{
-                                                xtype       : 'slider'
-                                                ,fieldLabel : 'Tiempo primer alerta en horas'
+                                                xtype       : 'numberfield'
+                                                ,fieldLabel : 'Alerta 1 horas'
                                                 ,minValue   : 0
                                                 ,maxValue   : 40
                                                 ,increment  : 1
                                                 ,name       : 'TIMEWRN1H'
-                                                ,labelAlign : 'top'
+                                                ,allowBlank : false
                                             }
                                             ,{
-                                                xtype       : 'slider'
-                                                ,fieldLabel : 'Tiempo primer alerta en minutos'
+                                                xtype : 'image'
+                                                ,src  : '${icons}flag_yellow.png'
+                                            }
+                                            ,{
+                                                xtype       : 'numberfield'
+                                                ,fieldLabel : 'Alerta 1 minutos'
                                                 ,minValue   : 0
                                                 ,maxValue   : 55
                                                 ,increment  : 5
                                                 ,name       : 'TIMEWRN1M'
-                                                ,labelAlign : 'top'
+                                                ,allowBlank : false
                                             }
                                             ,{
-                                                xtype       : 'slider'
-                                                ,fieldLabel : 'Tiempo segunda alerta en horas'
+                                                xtype : 'image'
+                                                ,src  : '${icons}flag_yellow.png'
+                                            }
+                                            ,{
+                                                xtype       : 'numberfield'
+                                                ,fieldLabel : 'Alerta 2 horas'
                                                 ,minValue   : 0
                                                 ,maxValue   : 40
                                                 ,increment  : 1
                                                 ,name       : 'TIMEWRN2H'
-                                                ,labelAlign : 'top'
+                                                ,allowBlank : false
                                             }
                                             ,{
-                                                xtype       : 'slider'
-                                                ,fieldLabel : 'Tiempo segunda alerta en minutos'
+                                                xtype : 'image'
+                                                ,src  : '${icons}flag_red.png'
+                                            }
+                                            ,{
+                                                xtype       : 'numberfield'
+                                                ,fieldLabel : 'Alerta 2 minutos'
                                                 ,minValue   : 00
                                                 ,maxValue   : 55
                                                 ,increment  : 5
                                                 ,name       : 'TIMEWRN2M'
-                                                ,labelAlign : 'top'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype : 'image'
+                                                ,src  : '${icons}flag_red.png'
+                                            }
+                                            ,{
+                                                xtype       : 'numberfield'
+                                                ,fieldLabel : 'Tiempo m\u00e1ximo horas'
+                                                ,minValue   : 0
+                                                ,maxValue   : 40
+                                                ,increment  : 1
+                                                ,name       : 'TIMEMAXH'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype : 'image'
+                                                ,src  : '${icons}clock_red.png'
+                                            }
+                                            ,{
+                                                xtype       : 'numberfield'
+                                                ,fieldLabel : 'Tiempo m\u00e1ximo minutos'
+                                                ,minValue   : 0
+                                                ,maxValue   : 55
+                                                ,increment  : 5
+                                                ,name       : 'TIMEMAXM'
+                                                ,allowBlank : false
+                                            }
+                                            ,{
+                                                xtype : 'image'
+                                                ,src  : '${icons}clock_red.png'
                                             }
                                             ,{
                                                 xtype        : 'fieldcontainer'
                                                 ,fieldLabel  : 'Tipo de asignaci\u00f3n'
                                                 ,labelAlign  : 'top'
+                                                ,colspan     : 2
+                                                ,width       : 200
                                                 ,defaultType : 'radiofield'
                                                 ,defaults    : { flex : 1 }
                                                 ,layout      : 'hbox'
@@ -2369,6 +2399,51 @@ Ext.onReady(function()
                                                         boxLabel    : 'Carga'
                                                         ,name       : 'CDTIPASIG'
                                                         ,inputValue : '4'
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                xtype            : 'combo'
+                                                ,fieldLabel      : 'Estatus al vencer'
+                                                ,allowBlank      : false
+                                                ,colspan         : 2
+                                                ,valueField      : 'key'
+                                                ,name            : 'STATUSOUT'
+                                                ,displayField    : 'value'
+                                                ,matchFieldWidth : false
+                                                ,forceSelection  : true
+                                                ,listConfig      : {
+                                                    maxHeight : 150
+                                                    ,minWidth : 120
+                                                }
+                                                ,queryMode       : 'local'
+                                                ,store           : Ext.create('Ext.data.Store', {
+                                                    model : 'Generic',
+                                                    data  : [
+                                                        {
+                                                            key   : '-1',
+                                                            value : 'NINGUNO'
+                                                        }, {
+                                                            key   : '999',
+                                                            value : 'VENCIDO'
+                                                        }, {
+                                                            key   : '4',
+                                                            value : 'RECHAZADO'
+                                                        }
+                                                    ]
+                                                })
+                                            }
+                                            ,{
+                                                xtype       : 'fieldcontainer'
+                                                ,fieldLabel : 'Propiedades'
+                                                ,colspan    : 2
+                                                ,items      :
+                                                [
+                                                    {
+                                                        xtype       : 'checkbox'
+                                                        ,boxLabel   : 'Estado final'
+                                                        ,name       : 'SWFINNODE'
+                                                        ,inputValue : 'S'
                                                     }
                                                 ]
                                             }
@@ -2452,6 +2527,7 @@ Ext.onReady(function()
                                         itemId   : '_p52_gridEstAvi'
                                         ,title   : 'AVISOS'
                                         ,height  : 180
+                                        ,hidden  : true
                                         ,plugins :
                                         [
                                             Ext.create('Ext.grid.plugin.CellEditing',

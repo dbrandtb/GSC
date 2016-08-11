@@ -3279,7 +3279,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		if (success) {
 			try {
-				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol);
+				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
 			} catch (Exception ex) {
 				logger.error("Error al enviar correos de emision", ex);
 			}
@@ -3726,7 +3726,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		if (success) {
 			try {
-				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol);
+				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
 			} catch (Exception ex) {
 				logger.error("Error al enviar correos de emision", ex);
 			}

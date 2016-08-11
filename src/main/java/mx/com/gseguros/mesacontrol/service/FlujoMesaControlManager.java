@@ -86,6 +86,8 @@ public interface FlujoMesaControlManager
 			,String cdtipasig
 			,String swescala
 			,List<Map<String,String>>list
+			,String statusout
+			,boolean swfinnode
 			)throws Exception;
 	
 	public String registrarConnection(
@@ -342,8 +344,10 @@ public interface FlujoMesaControlManager
 	
 	public Map<String, String> enviaCorreoFlujo(FlujoVO flujo, Map<String, String> params) throws Exception;
 	
-	public void mandarCorreosStatusTramite(String ntramite, String cdsisrol) throws Exception;
+	public void mandarCorreosStatusTramite(String ntramite, String cdsisrol, boolean porEscalamiento) throws Exception;
 	
 	@Deprecated
 	public void guardarMensajeCorreoEmision(String ntramite, String mensajeCorreoEmision) throws Exception;
+	
+	public Map<String, String> regresarTramiteVencido (String ntramite, boolean soloRevisar, String cdusuari, String cdsisrol) throws Exception;
 }
