@@ -437,6 +437,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		{
 			datos=listaDatos.get(0);
 		}
+		logger.debug(Utils.log("PKG_CONSULTA.P_GET_DATOS_COTIZACION_ENDOSO registro=",datos));
 		return datos;
 	}
 	
@@ -8012,6 +8013,42 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile(); 	 	
+		}
+	}
+	
+	@Override
+	public String obtenSumaAseguradosMedicamentos(
+			String cdramo,
+			String cdtipsit,
+			String cdgarant
+			) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdramo", cdramo);
+		params.put("cdtipsit", cdtipsit);
+		params.put("cdgarant", cdgarant);
+		
+		Map<String,Object> obtReg = ejecutaSP(new obtenSumaAseguradaMedicamentos(getDataSource()), params);
+		
+		String sumaAseguradaMed = (String) obtReg.get("pv_sadefault_o");
+		
+		logger.debug(Utils.log(sumaAseguradaMed));
+		
+		return sumaAseguradaMed;
+	}
+	
+	
+	protected class obtenSumaAseguradaMedicamentos extends StoredProcedure
+	{
+		protected obtenSumaAseguradaMedicamentos(DataSource dataSource){
+			super(dataSource,"P_SUMA_ASEG_DEFECTO");
+			declareParameter(new SqlParameter("cdramo"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgarant"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_sadefault_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile(); 
 		}
 	}
 	

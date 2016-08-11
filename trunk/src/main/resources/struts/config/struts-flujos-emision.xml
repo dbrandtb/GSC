@@ -67,6 +67,10 @@
            <result type="json" />
        </action>
        
+       <action name="obtenSumaAseguradosMedicamentos" class="CotizacionAction" method="obtenSumaAseguradosMedicamentos">
+           <result type="json" />
+       </action>
+       
        <action name="obtenerTatrigarCoberturas" class="CotizacionAction" method="obtenerTatrigarCoberturas">
            <result type="json" />
        </action>

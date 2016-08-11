@@ -122,6 +122,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private String start;
 	private String limit;
 	private String total;
+	private String saMed;
 	
 	@Autowired
 	private EmisionManager emisionManager;
@@ -4390,10 +4391,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	                //FECHA NACIMIENTO
 	                try {
 		                auxDate=row.getCell(8).getDateCellValue();
+		                logger.debug(Utils.log("¬auxDate: ",auxDate));
 		                if(auxDate!=null) {
 		                	Calendar cal = Calendar.getInstance();
 		                	cal.setTime(auxDate);
-		                	if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900) {
+		                	if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900) { //ELP
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
@@ -12149,6 +12151,34 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String obtenSumaAseguradosMedicamentos()
+	{
+		logger.debug(""
+				+ "\n#############################################"
+				+ "\n###### obtenSumaAseguradosMedicamentos ######"
+				+ "\nsmap1: "+smap1
+				);
+		try
+		{
+			success = true;
+			exito   = true;
+			saMed =  cotizacionManager.obtenSumaAseguradosMedicamentos(smap1.get("cdramo"),smap1.get("cdtipsit"),"4MED");
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error(timestamp+" error al obtener la suma asegurada pr defecto", ex);
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+			exito           = false;
+		}
+		logger.debug(""
+				+ "\n###### obtenSumaAseguradosMedicamentos ######"
+				+ "\n#############################################"
+				);
+		return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
@@ -12345,4 +12375,12 @@ public class CotizacionAction extends PrincipalCoreAction
 		this.total = total;
 	}
 
+	public String getSaMed() {
+		return saMed;
+	}
+
+	public void setSaMed(String saMed) {
+		this.saMed = saMed;
+	}
+	
 }

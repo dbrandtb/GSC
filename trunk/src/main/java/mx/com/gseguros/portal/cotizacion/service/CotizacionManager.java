@@ -1033,4 +1033,11 @@ public interface CotizacionManager
 			,String limit
 			)throws Exception;
 	
+	public String obtenSumaAseguradosMedicamentos(
+			String cdramo,
+			String cdtipsit,
+			String cdgarant
+			)throws Exception;
+	
+	
 }

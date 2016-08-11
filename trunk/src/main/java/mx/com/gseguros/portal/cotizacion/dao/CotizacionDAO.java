@@ -801,4 +801,10 @@ public interface CotizacionDAO {
 	public String[] obtenerCorreosReportarIncidenciasPorTipoSituacion(
 			String cdtipsit
 			)throws Exception,Exception;
+	
+	public String obtenSumaAseguradosMedicamentos(
+			String cdramo,
+			String cdtipsit,
+			String cdgarant
+			)throws Exception;
 }

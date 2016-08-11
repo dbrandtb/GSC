@@ -2462,16 +2462,19 @@ function _p29_emitirClicComplementarios()
                                     // Validacion para NUMERO DE CONTRATO en sucursal 1403 ELP
                                     debug('¬traeme la cdunieco',inputCdunieco);
                                     
+                                    debug('¬encontrado? ',_fieldByLabel('NUMERO DE CONTRATO',null,true));
                                     // Verifica si el campo existe en el producto utilizado ELP
                                     if (!Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO',null,true)))
                                     {
+                                    	debug('¬encontrado? ',_fieldByLabel('NUMERO DE CONTRATO',null,true));
                                     	
                                     	/* Cuando es un producto valido verifica si es la sucursal correcta y esta vacio,  
                                     	 * y modifica la obligatoriedad del campo segun la sucursal correcta.
                                     	 */
 	                                    if (inputCdunieco == 1403 && Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO').value)){
 	                                    	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = false;
-	                                    	debug('Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
+	                                    	debug('¬Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
+	                                    	debug('¬Valor en Numero de contrato',_fieldByLabel('NUMERO DE CONTRATO').value);
 	                                    }else{
 	                                    	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = true;
 	                                    }
