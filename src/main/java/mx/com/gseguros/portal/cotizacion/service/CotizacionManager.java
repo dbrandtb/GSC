@@ -838,10 +838,11 @@ public interface CotizacionManager
 	 * @param cdideperCli
 	 * @param nombreReporteCotizacion
 	 * @param nombreReporteCotizacionFlot
+	 * @param swdesdesigs TODO
 	 * @return ntramite Numero de tramite creado
 	 * @throws Exception
 	 */
-	public String procesoComprarCotizacion(
+	public String procesoComprarCotizacion (
 			String comprarCdunieco,
 			String comprarCdramo,
 			String comprarNmpoliza,
@@ -862,7 +863,12 @@ public interface CotizacionManager
 			String cdideperCli,
 			String nombreReporteCotizacion,
 			String nombreReporteCotizacionFlot,
-			UserVO usuarioSesion) throws Exception;
+			UserVO usuarioSesion,
+			String swrenovacion,
+			String sucursal,
+			String ramo,
+			String poliza
+	) throws Exception;
 	
 	@Deprecated
 	public List<Map<String,String>> recuperarListaDocumentosParametrizados(

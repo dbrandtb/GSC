@@ -4973,4 +4973,32 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		compile();
     	}
     }
+	
+	@Override
+	public Map<String,String> recuperarDatosFlujoRenovacion(String cdramo, String tipoflot) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		params.put("tipoflot" , tipoflot);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarDatosFlujoRenovacionSP(getDataSource()),params);
+		Map<String,String> result  = new HashMap<String,String>();
+		result.put("cdtipflu"  , (String)procRes.get("pv_cdtipflu_o"));
+		result.put("cdflujomc" , (String)procRes.get("pv_cdflujomc_o"));
+		return result;
+	}
+	
+	protected class RecuperarDatosFlujoRenovacionSP extends StoredProcedure
+	{
+		protected RecuperarDatosFlujoRenovacionSP(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_DATOS_FLUJO_RENOVA");
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("tipoflot" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdtipflu_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_cdflujomc_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

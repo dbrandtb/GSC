@@ -7458,7 +7458,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			String fechaInicio, String fechaFin, String ntramite, String cdagenteExt, String cdciaaguradora,
 			String cdplan, String cdperpag, String cdusuari, String cdsisrol, String cdelemen,
 			boolean esFlotilla, String tipoflot, String cdpersonCli, String cdideperCli,
-			String nombreReporteCotizacion, String nombreReporteCotizacionFlot, UserVO usuarioSesion) throws Exception {
+			String nombreReporteCotizacion, String nombreReporteCotizacionFlot, UserVO usuarioSesion,
+			String swrenovacion, String sucursal, String ramo, String poliza) throws Exception {
     	
     	String paso = null;
     	
@@ -7553,7 +7554,13 @@ public class CotizacionManagerImpl implements CotizacionManager
         			tipoProcesoParaRecuperarFlujo = tipoflot;
         		}
         		
-        		Map<String,String> datosFlujo = consultasDAO.recuperarDatosFlujoEmision(cdramo,tipoProcesoParaRecuperarFlujo);
+        		Map<String,String> datosFlujo = null;
+        		
+        		if ("S".equals(swrenovacion)) {
+        			datosFlujo = consultasDAO.recuperarDatosFlujoRenovacion(cdramo,tipoProcesoParaRecuperarFlujo);
+        		} else { // es emision
+        			datosFlujo = consultasDAO.recuperarDatosFlujoEmision(cdramo,tipoProcesoParaRecuperarFlujo);
+        		}
     			
     			paso = "Generando el tr\u00e1mite";
     			logger.debug(paso);
@@ -7583,9 +7590,9 @@ public class CotizacionManagerImpl implements CotizacionManager
             			datosFlujo.get("cdflujomc"),
             			null,
             			TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
-            			null,
-            			null,
-            			null,
+            			sucursal,
+            			ramo,
+            			poliza,
             			false
             	);
             	

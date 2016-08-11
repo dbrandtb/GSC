@@ -181,6 +181,11 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
         	Utils.validate(params.get("fechaInicio"),   "No existe el par\u00E1metro params.fechaInicio");
         	Utils.validate(params.get("fechaFin"),      "No existe el par\u00E1metro params.fechaFin");
         	Utils.validate(params.get("cdagenteExt"),   "No existe el par\u00E1metro params.cdagenteExt");
+        	Utils.validate(params.get("sucursal"),      "No exsite el par\u00E1metro params.sucursal");
+        	Utils.validate(params.get("ramo"),          "No exsite el par\u00E1metro params.ramo");
+        	Utils.validate(params.get("poliza"),        "No exsite el par\u00E1metro params.poliza");
+        	
+        	String swrenovacion = "S".equals(params.get("swrenovacion")) ? "S" : "N";
         	
         	// Se llenan datos:
     		boolean esFlotilla  = StringUtils.isNotBlank(params.get("flotilla"))&&params.get("flotilla").equalsIgnoreCase("si");
@@ -195,7 +200,9 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     				params.get("cdusuari"), params.get("cdsisrol"), params.get("cdelemento"),
     				esFlotilla, tipoflot, params.get("cdpersonCli"), params.get("cdideperCli"),
     				getText("rdf.cotizacion.nombre."+params.get("cdtipsit")),
-    				getText("rdf.cotizacion.flot.nombre."+params.get("cdtipsit")), userVO);
+    				getText("rdf.cotizacion.flot.nombre."+params.get("cdtipsit")), userVO,
+    				swrenovacion, params.get("sucursal"), params.get("ramo"), params.get("poliza")
+    				);
     		
     		params.put("ntramite", ntramite);
     		
