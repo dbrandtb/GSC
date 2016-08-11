@@ -5954,6 +5954,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
             Ext.create('Ext.grid.Panel',
             {
                 itemId		  :	'gridAseg'+cdgrupo
+                ,cdgrupo      : cdgrupo
                 ,selModel     : Ext.create('Ext.selection.CheckboxModel', 
                 		{
                 	mode: 				'MULTI',
@@ -6170,6 +6171,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 [
                     {
                         text     : 'Guardar'
+                        ,itemId  : 'btnguardar'+record.get('letra')
                         ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                         ,hidden  : _p21_smap1.EXTRAPRIMAS_EDITAR=='N'
                         ,handler : function()
@@ -6177,7 +6179,6 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                             _p21_guardarExtraprimas(record.get('letra'));
                             _p21_setActiveResumen();
                             _fieldById('gridAseg'+cdgrupo).store.commitChanges();
-                            debug('aun guardados', records.lenght());
                         }
                     }
                 ] 

@@ -1085,6 +1085,7 @@ function  checkEdit(editor, context, eOpts) {
 	if(!compareObjects(context.newValues, context.originalValues)){
 		gras.getSelectionModel().select(context.record, true);
 	}
+	_fieldById('btnguardar'+this.cdgrupo).enable();
 //	else{
 //		gras.getSelectionModel().select(context.record, false);	
 //	}
@@ -1104,6 +1105,7 @@ function  beforedesel(sm, record) {
 
 function beforeed(editor, context) {
 	debug('entrando a beforeed');
+	_fieldById('btnguardar'+this.cdgrupo).disable();
     return context.colIdx !== 0;
 }
 /* terminan funciones para pagingselectpersist
@@ -1319,26 +1321,12 @@ function _p25_guardarExtraprimas(letra)
 function _p21_guardarExtraprimas(letra)
 {
     debug('>_p21_guardarExtraprimas:',letra);
-//    var tab=Ext.ComponentQuery.query('[extraprimaLetraGrupo='+letra+']')[0];
-//    debug('tab a guardar:',tab);
-//    var grid=tab.down('[xtype=grid]');
-//    debug('grid a guardar:',grid);
-//    var store=grid.getStore();
     var records = [];
     var store = _fieldById('gridAseg'+letra).getStore();
     for(var i in _fieldById('gridAseg'+letra).getPlugin('pagingselect').selection){
     	records.push(_fieldById('gridAseg'+letra).getPlugin('pagingselect').selection[i].data);
     }
     debug('store a guardar:',store);
-    
-//    for(var i in store.datos)
-//    {
-//        var record = store.datos[i];
-//        if(record.dirty)
-//        {
-//            records.push(record);
-//        }
-//    }
     debug('records a guardar:',records);
     if(records.length==0)
     {
@@ -1362,7 +1350,7 @@ function _p21_guardarExtraprimas(letra)
             };
             asegurados.push(asegurado);
         });
-//        tab.setLoading(true);
+        debug('asegurados ',asegurados);
         Ext.Ajax.request(
         {
             url       : _p21_urlGuardarExtraprimas
@@ -1382,13 +1370,11 @@ function _p21_guardarExtraprimas(letra)
             }
             ,success  : function(response)
             {
-//                tab.setLoading(false);
                 var json=Ext.decode(response.responseText);
                 debug('respuesta del guardado de extraprimas:',json);
                 if(json.exito)
                 {
                     mensajeCorrecto('Datos guardados',json.respuesta);
-//                    _p21_setActiveResumen();
                 }
                 else
                 {
@@ -1397,7 +1383,6 @@ function _p21_guardarExtraprimas(letra)
             }
             ,failure  : function()
             {
-//                tab.setLoading(false);
                 errorComunicacion();
             }
         });
