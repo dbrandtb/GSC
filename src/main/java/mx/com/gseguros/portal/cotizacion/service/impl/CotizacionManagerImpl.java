@@ -425,6 +425,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 		params.put("nmpoliza" , nmpoliza);
 		params.put("ntramite" , ntramite);
 		Map<String,String>datos=cotizacionDAO.cargarDatosCotizacionGrupoEndoso(params);
+		
+		logger.info("datos"+datos);
+		
 		if(datos==null)
 		{
 			datos=new HashMap<String,String>();
@@ -10527,6 +10530,36 @@ public class CotizacionManagerImpl implements CotizacionManager
 				));
 		
 		return lista;
+	}
+	
+	@Override
+	public String obtenSumaAseguradosMedicamentos(
+			String cdramo,
+			String cdtipsit,
+			String cdgarant
+			)throws Exception
+	{
+		logger.info(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtenSumaAseguradosMedicamentos @@@@@@"
+				,"\n@@@@@@ cdramo   ="   , cdramo
+				,"\n@@@@@@ cdtipsit ="   , cdtipsit
+				,"\n@@@@@@ cdgarant ="   , cdgarant
+				));
+		
+		String sumaAseguradosMed = cotizacionDAO.obtenSumaAseguradosMedicamentos(cdramo, cdtipsit, cdgarant);
+		
+		
+		
+		logger.info(Utils.log(
+				 "\n@@@@@@ sumaAseguradosMed=" , sumaAseguradosMed
+				,"\n@@@@@@ obtenSumaAseguradosMedicamentos @@@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return sumaAseguradosMed;
+		
+		
 	}
 	
 	/////////////////////////////////////////////////////
