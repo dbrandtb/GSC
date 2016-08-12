@@ -49,6 +49,7 @@ Ext.override(Ext.form.NumberField,
 ////// variables //////
 var _p21_urlObtenerCoberturas            = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"            />';
 var _p21_urlObtenerCoberturasColec       = '<s:url namespace="/emision"         action="obtenerCoberturasPlanColec"       />';
+var _p21_urlObtenerSumaAseguradaDefault  = '<s:url namespace="/emision"         action="obtenSumaAseguradosMedicamentos"  />';
 var _p21_urlObtenerHijosCobertura        = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"        />';
 var _p21_urlSubirCenso                   = '<s:url namespace="/emision"         action="subirCenso"                       />';
 var _p21_urlSubirCensoCompleto           = '<s:url namespace="/emision"         action="subirCensoCompleto"               />';
@@ -4815,163 +4816,232 @@ function _p21_estiloEditores(cdplan)
         ,success : function(response)
         {
             var json=Ext.decode(response.responseText);
+            debug('*json',json);
+            debug('params',_p21_smap1.cdramo, _p21_smap1.cdtipsit);
+            
+            var cobertura;
+            
+            Ext.Array.each(json.slist1,function(name,index,lista){
+            		if(name.CDGARANT == "4MED"){
+            			cobertura = name.CDGARANT;
+            			debug('*cobertura',cobertura);
+            			return false;
+            		}
+            });
+            
             if(json.exito)
             {
-                var _4HOS = false;
-                var _4AYM = false;
-                var _4AIV = false;
-                var _4EE  = false;
-                var _4MAT = false;
-                var _4MS  = false;
-                $.each(json.slist1,function(i,cob)
-                {
-                    debug('iterando:',cob.CDGARANT);
-                    if(cob.CDGARANT=='4HOS')
-                    {
-                        debug('_4HOS found');
-                        _4HOS=true;
-                    }
-                    if(cob.CDGARANT=='4AYM')
-                    {
-                        debug('_4AYM found');
-                        _4AYM=true;
-                        if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&_p21_clasif==_p21_TARIFA_LINEA)
-                        {
-                            _4AYM=false;
-                        }
-                    }
-                    if(cob.CDGARANT=='4MED')
-                    {
-                        debug('_4AIV found');
-                        _4AIV=true;
-                    }
-                    if(cob.CDGARANT=='4EE')
-                    {
-                        debug('_4EE found');
-                        _4EE=true;
-                    }
-                    if(cob.CDGARANT=='4MAT')
-                    {
-                        debug('_4MAT found');
-                        _4MAT=true;
-                    }
-                    if(cob.CDGARANT=='4MS')
-                    {
-                        debug('_4MS found');
-                        _4MS=true;
-                    }
-                });
-                if(!_4HOS)
-                {
-                    _p21_editorDeducible.setValue('0');
-                    _p21_editorDeducible.addCls('_p21_editorLectura');
-                }
-                else
-                {
-                    _p21_editorDeducible.removeCls('_p21_editorLectura');
-                }
-                _p21_editorDeducible.setReadOnly(!_4HOS);
-                if(_p21_smap1.cdsisrol!='COTIZADOR')
-                {
-                    if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))
-                    {
-                        _p21_editorAyudaMater.setValue('0');
-                        _p21_editorAyudaMater.addCls('_p21_editorLectura');
-                    }
-                    else
-                    {
-                        //if(!_4AYM||!_4HOS||_4MAT)
-                        if(_4MAT || _4HOS)
-                        {
-                            _p21_editorAyudaMater.setValue('0');
-                             debug('>~Oculto Ayuda Maternidad');
-                            _p21_editorAyudaMater.addCls('_p21_editorLectura');
-                             
-                        }
-                        //else if(_4AYM&&_4HOS&&!_4MAT)
-                        else if(!_4MAT)
-                        {
-                        	if(!_4HOS)
-                            {
-                            	_p21_editorAyudaMater.setValue('0');
-                            	_p21_editorAyudaMater.addCls('_p21_editorLectura');
-                            }else if(cdplan!='E'){
-                            	_p21_editorAyudaMater.removeCls('_p21_editorLectura');
-                            }
-                            
-                        }
-                    }
-                    //_p21_editorAyudaMater.setReadOnly(!_4AYM);
-                }
-                if(_p21_smap1.cdsisrol!='COTIZADOR')
-                {
-                    if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))
-                    {
-                    	if(cdplan == 'PA'){
-                    		//Se selecciona el segundo elemento, es decir, el siguiente depues de cero:
-                            _p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(1).data.key); 
-                            _p21_editorAsisInter.addCls('_p21_editorLectura');
-                    	}else{
-                    		_p21_editorAsisInter.setValue('0'); 
-                            _p21_editorAsisInter.addCls('_p21_editorLectura');
-                    	}
-                    }
-                    else
-                    {
-                        //if(!_4AIV||!_4MS)
-                    	_4MS=false;
-                        if(!_4MS)
-                        {
-                        	debug('Era 0 _4MS');
-                        	if(cdplan == 'PA'){
-                        		//Se selecciona el segundo elemento, es decir, el siguiente depues de cero:
-	                            _p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(1).data.key); 
-	                            _p21_editorAsisInter.addCls('_p21_editorLectura');
-                        	}else{
-                        		_p21_editorAsisInter.setValue('0'); 
-	                            _p21_editorAsisInter.addCls('_p21_editorLectura');
-                        	}
-                        }
-                        //else if(_4AIV&&_4MS)
-                        else if(_4MS)
-                        {
-                        	if(!_4HOS)
-                            {
-                            	debug('No encontro 4HOS');
-                            	_p21_editorEmerextr.setValue('0');
-                            	_p21_editorEmerextr.addCls('_p21_editorLectura');
-                            	_p21_editorAsisInter.setValue('0'); //Era 0
-                                _p21_editorAsisInter.addCls('_p21_editorLectura');
-                            }else {
-	                            	_p21_editorAsisInter.removeCls('_p21_editorLectura');
-	                            	_p21_editorEmerextr.removeCls('_p21_editorLectura');
-                            }
-                        }
-                    }
-                }
-                //_p21_editorAsisInter.setReadOnly(!_4AIV);
-                if(_p21_smap1.cdsisrol!='COTIZADOR')
-                {
-                    if(!_4EE||cdplan=='PR'||!_4HOS)
-                    {
-                        _p21_editorEmerextr.setValue('N');
-                        _p21_editorEmerextr.addCls('_p21_editorLectura');
-                    }
-                    else if(_4EE&&cdplan!='PR'&&_4HOS)
-                    {
-                        _p21_editorEmerextr.removeCls('_p21_editorLectura');
-                    }
-                    //_p21_editorEmerextr.setReadOnly(!_4EE);
-                }
-                
-                /* pidieron que no se pueda ver EE si el plan es primario para los agentes */
-                if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&_p21_clasif==_p21_TARIFA_LINEA&&(cdplan=='PR'||cdplan=='PA'))
-                {
-                    _p21_editorEmerextr.setValue('N');
-                    _p21_editorEmerextr.addCls('_p21_editorLectura');
-                }
-                /* pidieron que no se pueda ver EE si el plan es primario para los agentes */
-                
+            	debug('*Exito');
+            	
+            	//Peticion que devuelve la suma asegurada por default para la cobertura de Medicamentos en 10 a 49 Asegurados. ELP
+            	Ext.Ajax.request(
+				{
+					url     : _p21_urlObtenerSumaAseguradaDefault
+					,params :
+					{
+						'smap1.cdramo'     : _p21_smap1.cdramo
+		                 ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+		                 ,'smap1.cdgarant' : cobertura
+					}
+					,success : function (response)
+					{
+						var json2=Ext.decode(response.responseText);
+						debug('**json2',json2);
+						if(json.exito){
+							var key = 0;
+							var size = _p21_editorAsisInter.getStore().data.items.length;
+							
+							debug('**size',size);
+							
+							debug('**saMed',Ext.decode(response.responseText).saMed);
+							
+							for(var i=0; i < size; i++){
+								if(_p21_editorAsisInter.getStore().getAt(i).data.key === Ext.decode(response.responseText).saMed){
+									key = _p21_editorAsisInter.getStore().getAt(i).index;
+									debug('**key',key);
+									break;
+								}
+							}
+							
+							var _4HOS = false;
+			                var _4AYM = false;
+			                var _4AIV = false;
+			                var _4EE  = false;
+			                var _4MAT = false;
+			                var _4MS  = false;
+			                
+			                debug(json.slist1);
+			                
+			                $.each(json.slist1,function(i,cob)
+			                {
+			                    debug('iterando:',cob.CDGARANT);
+			                    if(cob.CDGARANT=='4HOS')
+			                    {
+			                        debug('_4HOS found');
+			                        _4HOS=true;
+			                    }
+			                    if(cob.CDGARANT=='4AYM')
+			                    {
+			                        debug('_4AYM found');
+			                        _4AYM=true;
+			                        if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&_p21_clasif==_p21_TARIFA_LINEA)
+			                        {
+			                            _4AYM=false;
+			                        }
+			                    }
+			                    if(cob.CDGARANT=='4MED')
+			                    {
+			                        debug('_4AIV found');
+			                        _4AIV=true;
+			                    }
+			                    if(cob.CDGARANT=='4EE')
+			                    {
+			                        debug('_4EE found');
+			                        _4EE=true;
+			                    }
+			                    if(cob.CDGARANT=='4MAT')
+			                    {
+			                        debug('_4MAT found');
+			                        _4MAT=true;
+			                    }
+			                    if(cob.CDGARANT=='4MS')
+			                    {
+			                        debug('_4MS found');
+			                        _4MS=true;
+			                    }
+			                });
+			                if(!_4HOS)
+			                {
+			                    _p21_editorDeducible.setValue('0');
+			                    _p21_editorDeducible.addCls('_p21_editorLectura');
+			                }
+			                else
+			                {
+			                    _p21_editorDeducible.removeCls('_p21_editorLectura');
+			                }
+			                _p21_editorDeducible.setReadOnly(!_4HOS);
+			                if(_p21_smap1.cdsisrol!='COTIZADOR')
+			                {
+			                    if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))	
+			                    {
+			                        _p21_editorAyudaMater.setValue('0');
+			                        _p21_editorAyudaMater.addCls('_p21_editorLectura');
+			                    }
+			                    else
+			                    {
+			                        //if(!_4AYM||!_4HOS||_4MAT)
+			                        if(_4MAT || _4HOS)
+			                        {
+			                            _p21_editorAyudaMater.setValue('0');
+			                             debug('>~Oculto Ayuda Maternidad');
+			                            _p21_editorAyudaMater.addCls('_p21_editorLectura');
+			                             
+			                        }
+			                        //else if(_4AYM&&_4HOS&&!_4MAT)
+			                        else if(!_4MAT)
+			                        {
+			                        	if(!_4HOS)
+			                            {
+			                            	_p21_editorAyudaMater.setValue('0');
+			                            	_p21_editorAyudaMater.addCls('_p21_editorLectura');
+			                            }else if(cdplan!='E'){
+			                            	_p21_editorAyudaMater.removeCls('_p21_editorLectura');
+			                            }
+			                            
+			                        }
+			                    }
+			                    //_p21_editorAyudaMater.setReadOnly(!_4AYM);
+			                }
+			                if(_p21_smap1.cdsisrol!='COTIZADOR')
+			                {
+			                    if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))
+			                    {
+			                    	if(cdplan == 'PA'){
+			                    		//Se selecciona el segundo elemento, es decir, el siguiente depues de cero:
+			                    		if(!Ext.isEmpty(key)){
+			                    			_p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(key).data.key); 
+			                            	_p21_editorAsisInter.addCls('_p21_editorLectura');                    			
+			                    		}
+			                    	}else{
+			                    		if(!Ext.isEmpty(key)){
+			                    			_p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(key).data.key); 
+			                            	_p21_editorAsisInter.addCls('_p21_editorLectura');
+			                    		}
+			                    	}
+			                    }
+			                    else
+			                    {
+			                    	debug('!ejecutivo de cuenta');
+			                        //if(!_4AIV||!_4MS)
+			                    	_4MS=false;
+			                        if(!_4MS)
+			                        {
+			                        	debug('Era 0 _4MS');
+			                        	if(cdplan == 'PA'){
+			                        		//Se selecciona el segundo elemento, es decir, el siguiente depues de cero:
+			                        		if(!Ext.isEmpty(key)){
+				                            	_p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(key).data.key); 
+				                            	_p21_editorAsisInter.addCls('_p21_editorLectura');
+			                        		}
+			                        	}else{
+			                        		_p21_editorAsisInter.setValue('0'); 
+				                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+			                        	}
+			                        }
+			                        //else if(_4AIV&&_4MS)
+			                        else if(_4MS)
+			                        {
+			                        	if(!_4HOS)
+			                            {
+			                            	debug('No encontro 4HOS');
+			                            	_p21_editorEmerextr.setValue('0');
+			                            	_p21_editorEmerextr.addCls('_p21_editorLectura');
+			                            	if(!Ext.isEmpty(key)){
+			                            		_p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(key).data.key); //Era 0
+			                                	_p21_editorAsisInter.addCls('_p21_editorLectura');
+			                            	}
+			                            }else {
+				                            	_p21_editorAsisInter.removeCls('_p21_editorLectura');
+				                            	_p21_editorEmerextr.removeCls('_p21_editorLectura');
+			                            }
+			                        }
+			                    }
+			                }
+			                //_p21_editorAsisInter.setReadOnly(!_4AIV);
+			                if(_p21_smap1.cdsisrol!='COTIZADOR')
+			                {
+			                    if(!_4EE||cdplan=='PR'||!_4HOS)
+			                    {
+			                        _p21_editorEmerextr.setValue('N');
+			                        _p21_editorEmerextr.addCls('_p21_editorLectura');
+			                    }
+			                    else if(_4EE&&cdplan!='PR'&&_4HOS)
+			                    {
+			                        _p21_editorEmerextr.removeCls('_p21_editorLectura');
+			                    }
+			                    //_p21_editorEmerextr.setReadOnly(!_4EE);
+			                }
+			                
+			                /* pidieron que no se pueda ver EE si el plan es primario para los agentes */
+			                if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&_p21_clasif==_p21_TARIFA_LINEA&&(cdplan=='PR'||cdplan=='PA'))
+			                {
+			                    _p21_editorEmerextr.setValue('N');
+			                    _p21_editorEmerextr.addCls('_p21_editorLectura');
+			                }
+			                /* pidieron que no se pueda ver EE si el plan es primario para los agentes */
+						}else{
+							debug('**fallo');
+							debug('**json',json);
+							mensajeError(json.respuesta);
+						}
+					}
+					,failure : function(response){
+						debug('**fallo');
+						debug('**response',response);
+					}
+					//errorComunicacion
+				});
+            	debug('termina request key'); 
             }
             else
             {
@@ -5954,7 +6024,6 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
             Ext.create('Ext.grid.Panel',
             {
                 itemId		  :	'gridAseg'+cdgrupo
-                ,cdgrupo      : cdgrupo
                 ,selModel     : Ext.create('Ext.selection.CheckboxModel', 
                 		{
                 	mode: 				'MULTI',
@@ -6171,7 +6240,6 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 [
                     {
                         text     : 'Guardar'
-                        ,itemId  : 'btnguardar'+record.get('letra')
                         ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                         ,hidden  : _p21_smap1.EXTRAPRIMAS_EDITAR=='N'
                         ,handler : function()
@@ -6179,6 +6247,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                             _p21_guardarExtraprimas(record.get('letra'));
                             _p21_setActiveResumen();
                             _fieldById('gridAseg'+cdgrupo).store.commitChanges();
+                            debug('aun guardados', records.lenght());
                         }
                     }
                 ] 
