@@ -16,6 +16,7 @@
             var _nmpoliza= '<s:property value="params.nmpoliza" />';
             var _nmsuplem= '<s:property value="params.nmsuplem" />';
             var _nmsolici= '<s:property value="params.nmsolici" />';
+            var _cdtipsit= '<s:property value="params.cdtipsit" />';
             
             var _URL_ListaRechazos =      '<s:url namespace="/siniestros" action="loadListaRechazos" />';
             var _URL_ListaIncisosRechazos =      '<s:url namespace="/siniestros" action="loadListaIncisosRechazos" />';
