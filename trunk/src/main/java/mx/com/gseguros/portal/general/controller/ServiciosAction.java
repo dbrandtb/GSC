@@ -254,7 +254,7 @@ public class ServiciosAction extends PrincipalCoreAction
 			Utils.validate(params , "No se recibieron datos");
 			
 			String cdtiptra     = "21" //RENOVACION
-					,cdtipsup   = "0"  //emision
+					,cdtipsup   = "1"  //emision
 					,nmpoliza   = "0"
 					,referencia = "1"
 					,nombre     = null

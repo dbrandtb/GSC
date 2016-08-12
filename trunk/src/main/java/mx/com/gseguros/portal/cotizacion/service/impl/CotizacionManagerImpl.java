@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,7 +33,6 @@ import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.MailService;
-import mx.com.gseguros.portal.general.service.MailServiceForSms;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
@@ -7579,7 +7577,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             			"0", 
             			null,
             			null,
-            			"1",
+            			cdtiptra,
             			new Date(),
             			cdagente,
             			null,
@@ -7595,7 +7593,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             			datosFlujo.get("cdtipflu"),
             			datosFlujo.get("cdflujomc"),
             			null,
-            			cdtiptra,
+            			TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
             			sucursal,
             			ramo,
             			poliza,
