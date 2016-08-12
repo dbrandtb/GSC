@@ -84,14 +84,15 @@ var msgWindow;
 	        loader      : {
 	            url     : _UrlRechazarTramiteWindwow,
 	            params  : {
-	            	'params.cdunieco' : record.get('cdunieco'),
-		    		'params.cdramo'   : record.get('cdramo'),
-		    		'params.estado'   : record.get('estado'),
-		    		'params.nmpoliza' : record.get('nmpoliza'),
-		    		'params.nmsuplem' : record.get('nmsuplem'),
-		    		'params.nmsolici' : record.get('nmsolici'),
-	                'params.nmTramite'  : record.get('ntramite'),
-	                'params.tipopago'   : record.get('parametros.pv_otvalor02')
+	            	'params.cdunieco'  : record.get('cdunieco'),
+		    		'params.cdramo'    : record.get('cdramo'),
+		    		'params.estado'    : record.get('estado'),
+		    		'params.nmpoliza'  : record.get('nmpoliza'),
+		    		'params.nmsuplem'  : record.get('nmsuplem'),
+		    		'params.nmsolici'  : record.get('nmsolici'),
+	                'params.nmTramite' : record.get('ntramite'),
+	                'params.tipopago'  : record.get('parametros.pv_otvalor02'),
+	                'params.cdtipsit'  : record.get('cdtipsit')
 	            },
 	            scripts  : true,
 	            loadMask : true,

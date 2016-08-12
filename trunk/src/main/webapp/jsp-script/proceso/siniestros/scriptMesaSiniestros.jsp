@@ -171,7 +171,8 @@ var msgWindow;
 		    		'params.nmsuplem' : record.get('nmsuplem'),
 		    		'params.nmsolici' : record.get('nmsolici'),
 	                'params.nmTramite'  : record.get('ntramite'),
-	                'params.tipopago'   : record.get('parametros.pv_otvalor02')
+	                'params.tipopago'   : record.get('parametros.pv_otvalor02'),
+	                'params.cdtipsit'  : record.get('cdtipsit')
 	            },
 	            scripts  : true,
 	            loadMask : true,
