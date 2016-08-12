@@ -36,6 +36,7 @@ debug('_p29_smap1:',_p29_smap1);
 var _p29_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 debug('_p29_flujo:',_p29_flujo);
 
+var _p29_polizaLicenciaTurista  = null
 var _p29_polizaAdicionalesItems = null;
 var _p29_adicionalesItems       = null;
 var _p22_parentCallback         = false;
@@ -293,7 +294,7 @@ Ext.onReady(function()
 	            [
 	                {
 	                    itemId   : '_p29_botonEmitir'
-	                    ,text    : 'Emitir'
+	                    ,text    : 'Emitir'//vils
 	                    ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
 	                    ,handler :  _p29_emitirClic
                         ,hidden  :  (_p29_habilitarBotonEmitir == 'N')
@@ -505,7 +506,9 @@ Ext.onReady(function()
 						var json=Ext.decode(response.responseText);
 	        	    	if(json.exito!=true)
 	        	    	{
-	        	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){
+// 	        	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO')
+	                        if(_p29_smap1.cdsisrol!='EJECUTIVOCUENTA' || _p29_smap1.cdsisrol!='PROMOTORAUTO')
+	        	    		{
 	        	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
 	        					_fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
 	        				}else{
@@ -559,6 +562,7 @@ function _p29_loadCallback()
         {
             try
             {
+            	debug('### obtener retroactividad:',json);
                 fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,vigen.getValue()))
             }
             catch(e)
