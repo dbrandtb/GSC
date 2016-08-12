@@ -3443,7 +3443,8 @@
                     storeIncisosRechazos.load({
                         params: {
                             'params.pv_cdmotivo_i' : records[0].get('key'),
-                            'params.pv_cdramo_i'   : '7'//_11_params.CDRAMO
+                            'params.pv_cdramo_i'   : _11_params.CDRAMO,
+                            'params.pv_cdtipsit_i' : _11_params.CDTIPSIT
                         }
                     });
                 }
