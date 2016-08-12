@@ -151,6 +151,11 @@ Ext.onReady(function()
                 ,totalProperty : 'total'
             }
         }
+        ,listeners : {
+            load : function (me) {
+                me.sort('ORDENFLAG','ASC');
+            }
+        }
     });
     ////// stores //////
     
@@ -1204,12 +1209,12 @@ Ext.onReady(function()
                                                 ,{
                                                     xtype       : 'displayfield'
                                                     ,fieldLabel : 'FECHA DE EMISI\u00d3N'
-                                                    ,value      : jsonSIGS.smap1.FESOLICI
+                                                    ,value      : jsonSIGS.smap1.fesolici
                                                 }
                                                 ,{
                                                     xtype       : 'displayfield'
                                                     ,fieldLabel : 'INICIO DE VIGENCIA'
-                                                    ,value      : jsonSIGS.smap1.FEEFECTO
+                                                    ,value      : jsonSIGS.smap1.feefecto
                                                 }
                                                 ,{
                                                     xtype       : 'displayfield'
