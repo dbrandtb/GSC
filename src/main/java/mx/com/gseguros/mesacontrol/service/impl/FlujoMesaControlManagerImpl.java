@@ -326,7 +326,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,null  //timewrn1
 						,null  //timewrn2
 						,"1"   //cdtipasig
-						,"999" //statusout
+						,"-1" //statusout
 						,"N"   //swfinnode
 						,"I"
 						);
