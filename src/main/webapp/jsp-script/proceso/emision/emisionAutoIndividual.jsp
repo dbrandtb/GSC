@@ -604,7 +604,9 @@ function _p29_loadCallback()
            		      	    	debug(json);
            		      	    	if(json.exito!=true)
            		      	    	{
-           		      	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO'){
+//            		      	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO')
+	                                if(_p29_smap1.cdsisrol!='EJECUTIVOCUENTA' || _p29_smap1.cdsisrol!='PROMOTORAUTO')
+           		      	    		{
            		      	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
            		      	    	        _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
            		      				}else{
