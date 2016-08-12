@@ -1607,6 +1607,21 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		{
 			total = 0;
 		}
+		String flag = null;
+		for (Map<String, String> tra : lista) {
+			flag = tra.get("FLAG");
+			String ordenFlag = "5";
+			if ("X".equals(flag)) {
+				ordenFlag = "1";
+			} else if ("R".equals(flag)) {
+				ordenFlag = "2";
+			} else if ("A".equals(flag)) {
+				ordenFlag = "3";
+			} else if ("V".equals(flag)) {
+				ordenFlag = "4";
+			}
+			tra.put("ORDENFLAG", ordenFlag);
+		}
 		logger.debug(Utils.log("\n******lista=",lista,"\n******total=",total));
 		result.put("lista" , lista);
 		result.put("total" , total);
