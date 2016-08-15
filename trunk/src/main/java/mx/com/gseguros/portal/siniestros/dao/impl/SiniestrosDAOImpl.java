@@ -2610,8 +2610,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"PTPCIOEX"
 					,"DCTOIMEX"
 					,"PTIMPOEX"
-						,"DEDUCIBLE"
-						,"COPAGO"
+					,"DEDUCIBLE"
+					,"COPAGO"
 					/*,"AUTMEDIC"
 					,"COMMENME"
 					,"AUTRECLA"
@@ -5698,4 +5698,38 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
     
+	@Override
+	public String actualizaDeducibleCopagoConceptos(HashMap<String, Object> datosActualizacion) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ActualizaDeducibleCopagoConceptos(this.getDataSource()), datosActualizacion);
+		return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class ActualizaDeducibleCopagoConceptos extends StoredProcedure
+	{
+		protected ActualizaDeducibleCopagoConceptos(DataSource dataSource)
+		{
+			super(dataSource, "PKG_DESARROLLO.P_UPD_COPAGODEDCONCEP");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_msinies_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconval_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconcep_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_idconcep_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptprecio_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cantidad_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_deducible_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_copago_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

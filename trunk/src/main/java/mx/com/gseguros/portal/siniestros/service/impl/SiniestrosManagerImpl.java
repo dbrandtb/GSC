@@ -2480,5 +2480,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		log.debug("actualizaDatosGeneralesSiniestro params: "+params);
 		return siniestrosDAO.actualizaDatosGeneralesCopago(params);
 	}
+	
+	@Override
+	public String actualizarDeducibleCopagoConceptos(HashMap<String, Object> datosActualizacion) throws Exception {
+		try {
+			return siniestrosDAO.actualizaDeducibleCopagoConceptos(datosActualizacion);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
     
 }
