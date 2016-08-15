@@ -520,6 +520,17 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 						paramsTworkSin.put("pv_nmsinies_i",aseguradosFactura.get(a).get("NMSINIES"));
 						paramsTworkSin.put("pv_accion_i","1");
 						siniestrosManager.eliminarAsegurado(paramsTworkSin);
+						
+						siniestrosManager.actualizaDatosGeneralesCopago(
+							aseguradosFactura.get(a).get("CDUNIECO"), aseguradosFactura.get(a).get("CDRAMO"),
+							aseguradosFactura.get(a).get("ESTADO"),   aseguradosFactura.get(a).get("NMPOLIZA"),
+							aseguradosFactura.get(a).get("NMSUPLEM"), aseguradosFactura.get(a).get("NMSITUAC"),
+							aseguradosFactura.get(a).get("NMSINIES"), params.get("ntramite"),
+							params.get("nfactura"),null,
+							null,null,
+							null,null,
+							null,Constantes.DELETE_MODE
+						);
 					}
 					actualizaMesaControlSiniestro(params.get("ntramite"));
 					success=true;
