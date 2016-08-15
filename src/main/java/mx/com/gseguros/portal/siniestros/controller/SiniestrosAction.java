@@ -2000,6 +2000,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			}
 			logger.debug("Paso 4.- Es pago Directo : {} ",esPagoDirecto);
 			
+			
 			/***************************** 		P A G O		D I R E C T O  		*************************/
 			if(TipoPago.DIRECTO.getCodigo().equals(tramite.get("OTVALOR02"))) {
 				logger.debug("Paso 5.- EL PROCESO DE PAGO ES DIRECTO ");
@@ -2471,6 +2472,29 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											}
 										}
 										row.put("COPAGOAPLICA",copagoAplicado+"");
+										
+										//Realizamos la actualizacion del Concepto
+										HashMap<String, Object> actDeducibleCopagoConcepto = new HashMap<String, Object>();
+										actDeducibleCopagoConcepto.put("pv_cdunieco_i",concepto.get("CDUNIECO"));
+										actDeducibleCopagoConcepto.put("pv_cdramo_i",concepto.get("CDRAMO"));
+										actDeducibleCopagoConcepto.put("pv_estado_i",concepto.get("ESTADO"));
+										actDeducibleCopagoConcepto.put("pv_nmpoliza_i",concepto.get("NMPOLIZA"));
+										actDeducibleCopagoConcepto.put("pv_nmsuplem_i",concepto.get("NMSUPLEM"));
+										actDeducibleCopagoConcepto.put("pv_nmsituac_i",concepto.get("NMSITUAC"));
+										actDeducibleCopagoConcepto.put("pv_aaapertu_i",concepto.get("AAAPERTU"));
+										actDeducibleCopagoConcepto.put("pv_status_i",concepto.get("STATUS"));
+										actDeducibleCopagoConcepto.put("pv_msinies_i",concepto.get("NMSINIES"));
+										actDeducibleCopagoConcepto.put("pv_nfactura_i",concepto.get("NFACTURA"));
+										actDeducibleCopagoConcepto.put("pv_cdgarant_i",concepto.get("CDGARANT"));
+										actDeducibleCopagoConcepto.put("pv_cdconval_i",concepto.get("CDCONVAL"));
+										actDeducibleCopagoConcepto.put("pv_cdconcep_i",concepto.get("CDCONCEP"));
+										actDeducibleCopagoConcepto.put("pv_idconcep_i",concepto.get("IDCONCEP"));
+										actDeducibleCopagoConcepto.put("pv_ptprecio_i",concepto.get("PTPRECIO"));
+										actDeducibleCopagoConcepto.put("pv_cantidad_i",concepto.get("CANTIDAD"));
+										actDeducibleCopagoConcepto.put("pv_deducible_i","0.00");
+										actDeducibleCopagoConcepto.put("pv_copago_i",copagoAplicado+"");
+										siniestrosManager.actualizarDeducibleCopagoConceptos(actDeducibleCopagoConcepto);
+										
 										double subtotalCopago    = subtotalDescuento - copagoAplicado;//++
 										row.put("SUBTTCOPAGO",subtotalCopago+"");
 										
@@ -2728,6 +2752,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						facturaObj.put("siniestroPD", aseguradosxSiniestro);
 				}
 			}/***************************** 		P A G O		R E E M B O L S O 		*************************/
+			
+			
+			
+			
+			
+			
 			else if(TipoPago.REEMBOLSO.getCodigo().equals(tramite.get("OTVALOR02"))){//TIPO DE PAGO POR REEMBOLSO
 				logger.debug("Paso 5.- EL PROCESO DE PAGO REEMBOLSO ");
 				double importeSiniestroUnico 	= 0d;
@@ -3097,6 +3127,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							//verificamos la causa del siniestro
 							if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 								//Diferente de accidente
+								
+								logger.debug("Valor 1 ==>:{}",Double.parseDouble(penalizacionT[1].toString()));
+								logger.debug("Valor 2 ==>:{}",(totalFactura * ( Double.parseDouble(penalizacionT[0].toString()) / 100d )));
+								
+								
 								copagoAplicadoFacturaIte = Double.parseDouble(penalizacionT[1].toString()) + (totalFactura * ( Double.parseDouble(penalizacionT[0].toString()) / 100d ));
 							}else{
 								copagoAplicadoFacturaIte = 0d;
@@ -3118,6 +3153,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							logger.debug("<<<<<<<<--- DIFERENTE DE HOSPITALIZACION Y AYUDA DE MATERNIDAD");
 						}
 					}
+					
+					logger.debug("Valor copagoAplicadoFacturaIte ==>>>>:{}",copagoAplicadoFacturaIte);
+					
 					totalFactura -= copagoAplicadoFacturaIte;
 					facturaObj.put("TOTALFACTURAIND",totalFactura+"");
 					logger.debug("total copago (final) : {} ",totalFactura);
@@ -3135,7 +3173,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				logger.debug("mapa WS siniestro unico : {} ",importesWSSiniestroUnico);
 				logger.debug("<<WS del siniestro unico");
 				
-			}else{
+			}
+			
+			
+			
+			else{
 				/***************************** 		P A G O		I N D E M N I Z A C I O N 		*************************/
 				logger.debug("Paso 5.- EL PROCESO DE PAGO DE INDEMNIZACION");
 				
@@ -3276,6 +3318,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				logger.debug("<<WS del siniestro unico");
 			}
 			
+			
+			
+			
 			if(conceptos!=null&&conceptos.size()>0){
 				logger.debug("conceptos[0] :{}",conceptos);
 			}
@@ -3362,6 +3407,38 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	* Funcion para guardar la cobertura  x factura
