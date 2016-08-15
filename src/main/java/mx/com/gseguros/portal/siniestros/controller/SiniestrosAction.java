@@ -353,6 +353,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											siniestrosAnterior.get(r).get("NMSUPLEM"), siniestrosAnterior.get(r).get("NMSITUAC"),
 											siniestrosAnterior.get(r).get("AAAPERTU"), siniestrosAnterior.get(r).get("STATUS"), 
 											siniestrosAnterior.get(r).get("NMSINIES"), facturas.get(ii).get("NFACTURA"));
+									
+									//Actualizamos la informacion de TCOPASIN
+									siniestrosManager.actualizaDatosGeneralesCopago(
+											siniestrosNuevo.get(q).get("CDUNIECO"), siniestrosNuevo.get(q).get("CDRAMO"),
+											siniestrosNuevo.get(q).get("ESTADO"),   siniestrosNuevo.get(q).get("NMPOLIZA"),
+											siniestrosNuevo.get(q).get("NMSUPLEM"), siniestrosNuevo.get(r).get("NMSITUAC"),
+											siniestrosNuevo.get(q).get("NMSINIES"), params.get("pv_ntramite_i"),
+											facturas.get(ii).get("NFACTURA"),       siniestrosAnterior.get(r).get("CDGARANT"),
+											siniestrosAnterior.get(r).get("CDCONVAL"), null,
+											null, null,//callcenter validar???
+											null, Constantes.INSERT_MODE);
+									
+									
 									loadList = new ArrayList<HashMap<String,String>>();
 									for(Map<String,String>map:lista) {
 										loadList.add((HashMap<String,String>)map);
@@ -474,6 +487,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							siniestros.get(0).get("AAAPERTU"), siniestros.get(0).get("STATUS"), 
 							siniestros.get(0).get("NMSINIES"), facturas.get(i).get("NFACTURA"));
 						
+						
+						//Actualizamos la informacion de TCOPASIN
+						siniestrosManager.actualizaDatosGeneralesCopago(
+								siniestroNuevo.get(0).get("CDUNIECO"), siniestroNuevo.get(0).get("CDRAMO"),
+								siniestroNuevo.get(0).get("ESTADO"),   siniestroNuevo.get(0).get("NMPOLIZA"),
+								siniestroNuevo.get(0).get("NMSUPLEM"), siniestroNuevo.get(0).get("NMSITUAC"),
+								siniestroNuevo.get(0).get("NMSINIES"), msgResult,
+								facturas.get(i).get("NFACTURA"),       siniestros.get(0).get("CDGARANT"),
+								siniestros.get(0).get("CDCONVAL"), null,
+								null, null,//callcenter validar???
+								null, Constantes.INSERT_MODE);
+						
+						
 						loadList = new ArrayList<HashMap<String,String>>();
 						for(Map<String,String>map:lista) {
 							loadList.add((HashMap<String,String>)map);
@@ -494,6 +520,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								nmanno,									loadList.get(j).get("NMAPUNTE"),		loadList.get(j).get("USERREGI"),			dFeregist,
 								"I",									loadList.get(j).get("PTIMPOEX"),		loadList.get(j).get("DCTOIMEX"),			loadList.get(j).get("PTIMPOEX"),	
 								loadList.get(j).get("PTMTOARA"),		loadList.get(j).get("APLICIVA"));
+							
+							
+							
 							
 							//7.- Obtenemos los valores de TDSINIVAL para ver si tiene Ajuste Medico
 							List<Map<String,String>> ajusteMedico = siniestrosManager.P_GET_TDSINIVAL(
