@@ -44,7 +44,6 @@
             <result name="success">/jsp-script/proceso/endosos/endosoDomicilioAuto.jsp    </result>
         </action>
 
-        
         <action name="pantallaEndosoDomicilioSimple" class="EndososAction" method="pantallaEndosoDomicilioSimple">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -113,6 +112,14 @@
         </action>
 
         <action name="guardarEndosoAmpliacionVigencia" class="endososAutoAction" method="guardarEndosoAmpliacionVigencia">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
+		<action name="previewEndosoAmpliacionVigencia" class="endososAutoAction" method="previewEndosoAmpliacionVigencia">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
@@ -760,6 +767,14 @@
         </action>
         
         <action name="guardarEndosoDevolucionPrimas" class="endososAutoAction" method="guardarEndosoDevolucionPrimas">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
+        
+        <action name="previewEndosoDevolucionPrimas" class="endososAutoAction" method="previewEndosoDevolucionPrimas">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
