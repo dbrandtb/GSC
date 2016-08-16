@@ -84,7 +84,8 @@ var Ramo = {
 	AutosFronterizos : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@AUTOS_FRONTERIZOS.cdramo"/>',
     Multisalud       : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo"/>',
     SaludVital       : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo"/>',
-    Recupera         : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo"/>'
+    servicioPublico  : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SERVICIO_PUBLICO.cdramo"/>',
+    autosResidentes  : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@AUTOS_RESIDENTES.cdramo"/>'
 };
 
 

@@ -92,13 +92,15 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	protected class RetarificarEndosos extends StoredProcedure
 	{
 		String[] columnas=new String[]{
-				"NMSITUAC" 
-	            ,"PARENTESCO" 
-	            ,"ORDEN" 
-	            ,"CODIGO_GARANTIA" 
-	            ,"NOMBRE_GARANTIA" 
-	            ,"CDTIPCON" 
-	            ,"IMPORTE" 
+				"CDUNIECO" 
+	            ,"CDRAMO" 
+	            ,"ESTADO" 
+	            ,"NMPOLIZA" 
+	            ,"NMSITUAC" 
+	            ,"PRIMA" 
+	            ,"COBERTURA"
+	            ,"TITULO"
+	            ,"ORDEN"
 	     };
 
 		protected RetarificarEndosos(DataSource dataSource)

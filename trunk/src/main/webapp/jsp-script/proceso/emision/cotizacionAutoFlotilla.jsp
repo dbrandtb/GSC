@@ -49,6 +49,8 @@ var cargarXpoliza = false;
 
 ////// variables //////
 
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+
         Ext.util.Format.thousandSeparator=",";
         Ext.define("Ext.override.ThousandSeparatorNumberField", {
         override: "Ext.form.field.Number",
@@ -1542,7 +1544,7 @@ Ext.onReady(function()
                 }
                 ,{
                     itemId   : '_p30_endosoButton'
-                    ,text    : 'Vista Previa'
+                    ,text    : 'Emitir'
                     ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                     ,handler : function(){_p30_confirmarEndoso();}
                     ,hidden  : !_p30_endoso
@@ -6747,13 +6749,15 @@ function _p30_confirmarEndoso()
         var boton=_fieldById('_p30_endosoButton');
         boton.setText('Cargando...');
         boton.setDisabled(true);
+        myMask.show();
         Ext.Ajax.request(
         {
             url       : _p30_urlPreviewEndoso
             ,jsonData : json
             ,success  : function(response)
             {
-                boton.setText('Vista Previa');
+            	myMask.hide();
+                boton.setText('Emitir');
                 boton.setDisabled(false);
                 var json2 = Ext.decode(response.responseText);
                 debug('### confirmar endoso:',json2);
@@ -6828,30 +6832,6 @@ function _p30_confirmarEndoso()
 										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
 										,handler : function (me){
 														me.up('window').destroy();
-														Ext.Ajax.request(
-													            {
-													                url      : _p48_urlMovimientos
-													                ,params  :
-													                {
-													                    'params.movimiento' : 'SACAENDOSO'
-													                    ,'params.cdunieco'  : _p30_smap1.CDUNIECO
-													                    ,'params.cdramo'    : _p30_smap1.CDRAMO
-													                    ,'params.estado'    : 'M'
-													                    ,'params.nmpoliza'  : _p30_smap1.NMPOLIZA
-													                    ,'params.nsuplogi'  : json2.nsuplogi 
-													                    ,'params.nmsuplem'  : json2.nmsuplem 
-													                }
-													                ,success : function(response)
-													                {
-													                	marendNavegacion(2);
-													                       
-													                }
-													                ,failure : function()
-													                {
-													                    //_setLoading(false,'_p48_panelpri');
-													                    errorComunicacion(null,'Error al cancelar endoso');
-													                }
-													            });
 														}
 									 } ]
 					     }).show();
@@ -6863,7 +6843,7 @@ function _p30_confirmarEndoso()
             }
             ,failure  : function()
             {
-                boton.setText('Vista Previa');
+                boton.setText('Emitir');
                 boton.setDisabled(false);
                 errorComunicacion();
             }

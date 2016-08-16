@@ -65,6 +65,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class EndososAutoManagerImpl implements EndososAutoManager
 {
+	private Map<String, String> iniciarEndosoResp = null;
+	private Map<String, Object> resParams         = null;
 	private static Logger           logger       = LoggerFactory.getLogger(EndososAutoManagerImpl.class);
 	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
@@ -5273,6 +5275,112 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				));
 	}
 	
+	public Map<String, Object> previewEndosoDevolucionPrimas(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String tstamp
+			,Date   feefecto
+			,List<Map<String,String>> incisos
+			,UserVO usuarioSesion
+			,FlujoVO flujo
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ previewEndosoDevolucionPrimas @@@@@@"
+				,"\n@@@@@@ cdusuari      = " , cdusuari
+				,"\n@@@@@@ cdsisrol      = " , cdsisrol
+				,"\n@@@@@@ cdelemen      = " , cdelemen
+				,"\n@@@@@@ cdunieco      = " , cdunieco
+				,"\n@@@@@@ cdramo        = " , cdramo
+				,"\n@@@@@@ estado        = " , estado
+				,"\n@@@@@@ nmpoliza      = " , nmpoliza
+				,"\n@@@@@@ cdtipsup      = " , cdtipsup
+				,"\n@@@@@@ tstamp        = " , tstamp
+				,"\n@@@@@@ feefecto      = " , feefecto
+				,"\n@@@@@@ incisos       = " , incisos
+				,"\n@@@@@@ usuarioSesion = " , usuarioSesion
+				,"\n@@@@@@ flujo         = " , flujo
+				));
+		
+		String paso = null;
+		try
+		{
+			paso = "Guardando incisos temporales";
+			logger.debug(paso);
+			for(Map<String,String> inciso : incisos)
+			{
+				endososDAO.guardarTvalositEndoso(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,inciso.get("nmsituac")
+						,inciso.get("nmsuplem")
+						,inciso.get("status")
+						,inciso.get("cdtipsit")
+						,"BAJA"  , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null , null
+						,null    , null , null , null , null , null , null , null , null
+						,tstamp
+						);
+			}
+			
+			// Se genera el endoso, se confirma y se genera el tramite:
+			paso = "Confirmando endoso";
+			logger.debug(paso);
+			resParams = endososDAO.guardarEndosoDevolucionPrimas(cdusuari, cdsisrol, cdelemen,
+					cdunieco, cdramo, estado, nmpoliza, cdtipsup, tstamp, feefecto);
+			
+			String nmsuplemGen     = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String) resParams.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
+			
+			this.confirmarGuardandoDetallesTramiteEndoso(
+					ntramite
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplemGen
+					,cdtipsup
+					,nsuplogi
+					,null //dscoment
+					,feefecto
+					,flujo
+					,cdusuari
+					,cdsisrol
+					,false //confirmar
+					);
+			
+			}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ resParams--> ",resParams
+				,"\n@@@@@@ previewEndosoDevolucionPrimas @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resParams;
+	}
+	
 	@Override
 	public Map<String,Item> endosoCancelacionPolAuto(String cdsisrol, String cdramo) throws Exception
 	{
@@ -6586,6 +6694,150 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				 "\n@@@@@@ guardarEndosoBeneficiarios @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+	}
+	
+	@Override
+	public Map<String,String> previewEndosoAmpliacionVigencia(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String ntramite
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,String feefecto
+			,String feproren
+			,Date   feprorenOriginal
+			,String nmsuplemOriginal
+			,UserVO usuarioSesion
+			,String tipoGrupoInciso
+			,FlujoVO flujo
+			,String cdsisrol
+		)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ previewEndosoAmpliacionVigencia @@@@@@"
+				,"\n@@@@@@ cdunieco         = " , cdunieco
+				,"\n@@@@@@ cdramo           = " , cdramo
+				,"\n@@@@@@ estado           = " , estado
+				,"\n@@@@@@ nmpoliza         = " , nmpoliza
+				,"\n@@@@@@ cdelemen         = " , cdelemen
+				,"\n@@@@@@ cdusuari         = " , cdusuari
+				,"\n@@@@@@ cdtipsup         = " , cdtipsup
+				,"\n@@@@@@ fechaEndoso      = " , fechaEndoso
+				,"\n@@@@@@ dFechaEndoso     = " , dFechaEndoso
+				,"\n@@@@@@ feefecto         = " , feefecto
+				,"\n@@@@@@ feproren         = " , feproren
+				,"\n@@@@@@ feprorenOriginal = " , feprorenOriginal
+				,"\n@@@@@@ nmsuplemOriginal = " , nmsuplemOriginal
+				,"\n@@@@@@ cdsisrol         = " , cdsisrol
+				,"\n@@@@@@ flujo            = " , flujo
+				));
+		
+		String paso = "";
+		
+		try
+		{
+			paso = "Iniciando endoso";
+			logger.debug(paso);
+			
+			iniciarEndosoResp=endososDAO.iniciarEndoso(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,feprorenOriginal
+					,cdelemen
+					,cdusuari
+					,"END"
+					,cdtipsup);
+			String nmsuplem = iniciarEndosoResp.get("pv_nmsuplem_o");
+			String nsuplogi = iniciarEndosoResp.get("pv_nsuplogi_o");
+			
+			paso = "Registra los valores en mpolizas";
+			logger.debug(paso);
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("pv_cdunieco_i"  , cdunieco);
+			params.put("pv_cdramo_i"    , cdramo);
+			params.put("pv_estado_i"    , estado);
+			params.put("pv_nmpoliza_i"  , nmpoliza);
+			params.put("pv_nmsuplem_i"  , nmsuplem);
+			params.put("pv_feefecto_i"  , feefecto);
+			params.put("pv_feproren_i"  , feproren);
+			logger.debug("EndososManager actualizaDeducibleValosit params: "+params);
+			endososDAO.actualizaVigenciaPoliza(params);
+			
+			paso = "Registra los valores en tworksup";
+			logger.debug(paso);
+			Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+			mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+			mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+			mapaTworksupEnd.put("pv_estado_i"   , estado);
+			mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+			mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
+			mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+			endososDAO.insertarTworksupSitTodas(mapaTworksupEnd);
+			
+			paso = "Registra los valores de tarificacion sigsvalipolEnd";
+			logger.debug(paso);
+			endososDAO.sigsvalipolEnd(
+					cdusuari
+					,cdelemen
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,"0"
+					,nmsuplem
+					,cdtipsup
+					);
+			
+			paso = "Se calcula los valores de Endoso";
+			logger.debug(paso);
+			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+			mapaValorEndoso.put("pv_estado_i"   , estado);
+			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			mapaValorEndoso.put("pv_nmsituac_i" , "1");
+			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+			mapaValorEndoso.put("pv_feinival_i" , dFechaEndoso);
+			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
+			endososDAO.calcularValorEndoso(mapaValorEndoso);
+			
+			/*this.confirmarGuardandoDetallesTramiteEndoso(
+					ntramite
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdtipsup
+					,nsuplogi
+					,null //dscoment
+					,dFechaEndoso
+					,flujo
+					,cdusuari
+					,cdsisrol
+					,true
+					);*/
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ previewEndosoAmpliacionVigencia @@@@@@"
+				,"\n@@@@ iniciarEndosoResp--> ",iniciarEndosoResp
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return iniciarEndosoResp;
 	}
 	
 	@Override

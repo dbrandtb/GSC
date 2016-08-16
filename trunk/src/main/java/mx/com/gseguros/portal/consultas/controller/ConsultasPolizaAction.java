@@ -27,6 +27,7 @@ import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.SituacionVO;
 import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -82,6 +83,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
+	private ConsultasManager       consultasManager;
 
 	@Autowired
 	private KernelManagerSustituto kernelManager;
