@@ -143,6 +143,36 @@ var RolSistema = {
     ,Parametrizador				  : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@PARAMETRIZADOR.cdsisrol" />'
     ,ParametrizadorAreaTecnica	  : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@PARAMETRIZADOR_AREA_TECNICA.cdsisrol" />'
     ,ParametrizadorSistemas  	  : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@PARAMETRIZADOR_SISTEMAS.cdsisrol" />'
+    ,
+    
+    
+    /**
+     * Indica si un rol puede suscribir Autos
+     * 
+     * @param {String} cdsisrol Rol del sistema a verificar
+     * @return {Boolean} true si el rol puede suscribir autos, false si no
+     */
+	puedeSuscribirAutos : function(cdsisrol) {
+		
+		// Roles que pueden suscribir Autos:
+		var roles = [
+			this.EmisorSuscripcionDanios,
+			this.GerenteSuscripcionDanios,
+			this.JefeSuscripcionDanios,
+			this.SubdirectorSuscripcionDanios,
+			this.SuscriptorAuto,
+			this.TecnicoSuscripcionDanios
+		];
+		
+		for (var i in roles) {
+			//debug('i=', i, ' val:', roles[i]);
+			//debug('roles=', roles);
+			if (roles.hasOwnProperty(i) && roles[i] === cdsisrol) {
+				return true;
+			}
+		}
+		return false;
+	}
 };
 
 
