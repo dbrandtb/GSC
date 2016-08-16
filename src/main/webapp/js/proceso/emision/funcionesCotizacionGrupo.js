@@ -1089,18 +1089,18 @@ function  checkEdit(editor, context, eOpts) {
 //	else{
 //		gras.getSelectionModel().select(context.record, false);	
 //	}
-//	for(var i in gras.getPlugin('pagingselect').selected){
+//	for(var i in gras.getPlugin('pagingselect'+letra).selected){
 //		debug('i',i);
 //	}
-//	debug('selecteds',gras.getPlugin('pagingselect').selected);
+//	debug('selecteds',gras.getPlugin('pagingselect'+letra).selected);
 }
 /* se agregan listener para que el plugin
  * pagingselectpersist y ROWEDITING funcionen
  * juntos
  */
 function  beforedesel(sm, record) {
-	debug('entrando a beforedesel');
-	return !_fieldById('gridAseg'+sm.cdgrupo).getPlugin('rowedit');
+	debug('entrando a beforedesel ');
+	return !_fieldById('gridAseg'+sm.cdgrupo).getPlugin('rowedit'+sm.cdgrupo);
 }
 
 function beforeed(editor, context) {
@@ -1242,8 +1242,8 @@ function _p25_guardarExtraprimas(letra)
     _mask('Guardando...');
     var records = [];
     var store = _fieldById('gridAseg'+letra).getStore();
-    for(var i in _fieldById('gridAseg'+letra).getPlugin('pagingselect').selection){
-    	records.push(_fieldById('gridAseg'+letra).getPlugin('pagingselect').selection[i].data);
+    for(var i in _fieldById('gridAseg'+letra).getPlugin('pagingselect'+letra).selection){
+    	records.push(_fieldById('gridAseg'+letra).getPlugin('pagingselect'+letra).selection[i].data);
     }
     debug('records',records);
     if(records.length==0)
@@ -1323,8 +1323,8 @@ function _p21_guardarExtraprimas(letra)
     debug('>_p21_guardarExtraprimas:',letra);
     var records = [];
     var store = _fieldById('gridAseg'+letra).getStore();
-    for(var i in _fieldById('gridAseg'+letra).getPlugin('pagingselect').selection){
-    	records.push(_fieldById('gridAseg'+letra).getPlugin('pagingselect').selection[i].data);
+    for(var i in _fieldById('gridAseg'+letra).getPlugin('pagingselect'+letra).selection){
+    	records.push(_fieldById('gridAseg'+letra).getPlugin('pagingselect'+letra).selection[i].data);
     }
     debug('store a guardar:',store);
     debug('records a guardar:',records);
@@ -1388,4 +1388,27 @@ function _p21_guardarExtraprimas(letra)
         });
     }
     debug('<_p21_guardarExtraprimas');
+}
+
+function _cotcol_confirmarTurnado(callback)
+{
+    debug('>_cotcol_confirmarTurnado:');
+    
+    centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'No se guardar\u00e1n los cambios ni se generar\u00e1 tarifa <br>¿Desea continuar?', function(btn)
+    {
+        if(btn === 'yes')
+        {
+            var ck = 'Ejecutando turnado';
+            try
+            {
+                callback();
+            }
+            catch(e)
+            {
+                manejaException(e,ck);
+            }
+        }
+    }));
+    
+    debug('<_cotcol_quitarAsegurado');
 }

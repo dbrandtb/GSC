@@ -5999,13 +5999,13 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
     var plugins = [];
     plugins.push({
     	ptype       : 'pagingselectpersist'
-    	,pluginId   : 'pagingselect'
+    	,pluginId   : 'pagingselect'+cdgrupo
     	});
     if (_p21_smap1.EXTRAPRIMAS_EDITAR =='S'){
     	plugins.push(Ext.create('Ext.grid.plugin.RowEditing',{
     		clicksToEdit  : 1
     		,errorSummary : true
-    		,pluginId     : 'rowedit'
+    		,pluginId     : 'rowedit'+cdgrupo
     		,cdgrupo      : cdgrupo
     		,listeners: {
     			edit: checkEdit
@@ -6140,7 +6140,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 		'load' :  {
                 			fn : function(store,records,successful) {
                 				debug('reseteando los datos');
-                				var selection = _fieldById('gridAseg'+cdgrupo).getPlugin('pagingselect').selection;
+                				var selection = _fieldById('gridAseg'+cdgrupo).getPlugin('pagingselect'+cdgrupo).selection;
                  			    var mapselection = {};
                  			    for (var i = 0; i < selection.length; i++){
                  			    	debug('metiendo llave ',selection[i].data['nmsituac']);
@@ -6339,7 +6339,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     						,
     						{
     							ptype       : 'pagingselectpersist'
-    							,pluginId   : 'pagingselectasegurados'
+    							,pluginId   : 'pagingselectasegurados'+record.get('letra')
     						}
     					]
     	                ,tbar       :
