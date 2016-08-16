@@ -27,7 +27,7 @@ debug('_p38_smap1:'  , _p38_smap1);
 debug('_p38_slist1:' , _p38_slist1);
 debug('_p38_flujo:'  , _p38_flujo);
 
-var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
+// var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 
 ////// variables //////
 
@@ -321,7 +321,9 @@ Ext.onReady(function()
     if(_p38_slist1[0].CDTIPSIT == 'AF' || _p38_slist1[0].CDTIPSIT == 'PU')
     {
     	
-    	if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|') != -1){
+//     	if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|') != -1)
+	    if(RolSistema.puedeSuscribirAutos(_p38_smap1.cdsisrol))
+    	{
     		_38_formAuto.down('[name=OTVALOR92]').setReadOnly(false);
             _38_formAuto.down('[name=OTVALOR93]').setReadOnly(false);
             _38_formAuto.down('[name=OTVALOR94]').setReadOnly(false);
@@ -406,7 +408,8 @@ Ext.onReady(function()
             					debug(json);
                     	    	if(json.exito!=true)
                     	    	{
-                                    if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|')==-1)                    	    			
+//                                     if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|')==-1)   
+	                                if(!RolSistema.puedeSuscribirAutos(_p38_smap1.cdsisrol))
                     	    		{
                     	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
                     				}else{
@@ -490,7 +493,9 @@ Ext.onReady(function()
     
     if(_p38_slist1[0].CDTIPSIT == 'AT'){
     	
-        if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|') != -1){
+//         if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|') != -1)
+	    RolSistema.puedeSuscribirAutos(_p38_smap1.cdsisrol)
+        {
         	_fieldByLabel('TIPO DE UNIDAD').setReadOnly(false);
     		_fieldByLabel('MARCA').setReadOnly(false);
     		_fieldByLabel('SUBMARCA').setReadOnly(false);
