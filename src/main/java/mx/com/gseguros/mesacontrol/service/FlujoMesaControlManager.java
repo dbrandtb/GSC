@@ -88,6 +88,7 @@ public interface FlujoMesaControlManager
 			,List<Map<String,String>>list
 			,String statusout
 			,boolean swfinnode
+			,String cdetapa
 			)throws Exception;
 	
 	public String registrarConnection(

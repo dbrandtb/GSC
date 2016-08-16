@@ -257,7 +257,8 @@ public interface FlujoMesaControlDAO {
 	public void movimientoTfluest(String cdtipflu, String cdflujomc,
 			String cdestadomc, String webid, String xpos, String ypos,
 			String timemax, String timewrn1, String timewrn2,
-			String cdtipasig, String statusout, String swfinnode, String accion)
+			String cdtipasig, String statusout, String swfinnode, String cdetapa,
+			String accion)
 			throws Exception;
 
 	/**
