@@ -278,8 +278,7 @@ public class ServiciosAction extends PrincipalCoreAction
 					,cdsisrol   = params.get("cdsisrol")
 					,commentsIn = params.get("comments")
 					,comments   = Utils.join(
-							"Tr\u00e1mite registrado desde m\u00f3dulo de renovaci\u00f3n autom\u00e1tica",
-							" con las siguientes observaciones: ",
+							"Registrado desde m\u00f3dulo de renovaci\u00f3n autom\u00e1tica: ",
 							StringUtils.isBlank(commentsIn)
 								? "(sin observaciones)"
 								: commentsIn
