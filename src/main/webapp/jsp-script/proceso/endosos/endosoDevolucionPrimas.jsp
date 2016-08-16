@@ -9,6 +9,9 @@
 var _p39_urlRecuperacionSimpleLista = '<s:url namespace="/emision" action="recuperacionSimpleLista"       />';
 var _p39_urlGuardarTvalositEndoso   = '<s:url namespace="/endosos" action="guardarTvalositEndoso"         />';
 var _p39_urlConfirmarEndoso         = '<s:url namespace="/endosos" action="guardarEndosoDevolucionPrimas" />';
+var _p39_urlPreviewEndoso           = '<s:url namespace="/endosos" action="previewEndosoDevolucionPrimas" />';
+var url_PantallaPreview             = '<s:url namespace="/endosos" action="includes/previewEndosos"       />';
+var _p48_urlMovimientos             = '<s:url namespace="/movimientos"           action="ejecutar"        />';
 var _p39_urlRecuperacionSimple      = '<s:url namespace="/emision" action="recuperacionSimple"            />';
 ////// urls //////
 
@@ -290,7 +293,7 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                         text     : 'Confirmar'
+                         text     : 'Emitir'
                         ,itemId  : '_p39_botonConfirmar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                         ,handler : function(me)
@@ -335,7 +338,7 @@ Ext.onReady(function()
                             
                             Ext.Ajax.request(
                             {
-                                url       : _p39_urlConfirmarEndoso
+                                url       : _p39_urlPreviewEndoso
                                 ,jsonData : jsonData
                                 ,success  : function(response)
                                 {
@@ -345,21 +348,90 @@ Ext.onReady(function()
                                     debug('### confirmar:',json);
                                     if(json.success)
                                     {
-                                        var callbackRemesa = function()
-                                        {
-                                            marendNavegacion(2);
-                                        };
-                                        mensajeCorrecto('Endoso generado','Endoso generado',function()
-                                        {
-                                            _generarRemesaClic(
-                                                true
-                                                ,_p39_smap1.CDUNIECO
-                                                ,_p39_smap1.CDRAMO
-                                                ,_p39_smap1.ESTADO
-                                                ,_p39_smap1.NMPOLIZA
-                                                ,callbackRemesa
-                                            );
-                                        });
+                                      Ext.create('Ext.window.Window',
+											{
+												title        : 'Tarifa final'
+												,id          : 'tarifa'
+												,autoScroll  : true
+												,modal       : true
+												,buttonAlign : 'center'
+												,width       : 600
+												,height      : 550
+												,defaults    : { width: 650 }
+												,closable    : false
+												,autoScroll  : true
+												,loader      :
+													{
+														url       : url_PantallaPreview
+														,params   :
+															{
+																'smap4.nmpoliza'  : _p39_smap1.NMPOLIZA
+					                                            ,'smap4.cdunieco' : _p39_smap1.CDUNIECO
+					                                            ,'smap4.cdramo'   : _p39_smap1.CDRAMO
+					                                            ,'smap4.estado'   : _p39_smap1.ESTADO
+					                                            ,'smap4.nmsuplem' : json.omap1.pv_nmsuplem_o 
+					                                            ,'smap4.nsuplogi' : json.omap1.pv_nsuplogi_o 
+					                                        }
+														,scripts  : true
+														,autoLoad : true
+												     }
+												,buttons:[{
+															text    : 'Confirmar endoso'
+															,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+															,handler : function(me){
+																					me.up('window').destroy();
+																					Ext.Ajax.request(
+																						{
+																							url       : _p39_urlConfirmarEndoso
+																							,jsonData : jsonData
+																							,success  : function(response)
+																							{
+																								me.setDisabled(false);
+																								me.setText('Confirmar');
+																								var json=Ext.decode(response.responseText);
+																								debug('### confirmar:',json);
+																								if(json.success)
+																								{
+																									var callbackRemesa = function()
+																									{
+																										marendNavegacion(2);
+																									};
+																									mensajeCorrecto('Endoso generado','Endoso generado',function()
+																									{
+																										_generarRemesaClic(
+																											true
+																											,_p39_smap1.CDUNIECO
+																											,_p39_smap1.CDRAMO
+																											,_p39_smap1.ESTADO
+																											,_p39_smap1.NMPOLIZA
+																											,callbackRemesa
+																										);
+																									});
+																								}
+																								else
+																								{
+																									mensajeError(json.respuesta);
+																								}
+																							}
+																							,failure  : function()
+																							{
+																								me.setDisabled(false);
+																								me.setText('Confirmar');
+																								errorComunicacion();
+																							}
+																						});
+																					
+																				   }
+														   },
+														   {
+															text    : 'Cancelar'
+															,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+															,handler : function (me){
+																			me.up('window').destroy();
+																			
+															}
+														   } ]
+										     }).show();  
                                     }
                                     else
                                     {

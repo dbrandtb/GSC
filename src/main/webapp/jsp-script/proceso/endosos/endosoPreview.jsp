@@ -33,32 +33,28 @@ Ext.onReady(function()
 	var nmsuplem = '<s:property value="smap4.nmsuplem" />';
 	var nsuplogi = '<s:property value="smap4.nsuplogi" />';
 	
-	////// modelos //////
-	Ext.define('ModeloDetalleCotizacion',
-	{
-	    extend  : 'Ext.data.Model'
-	    ,fields :
-	    [
-	        {name  : 'Codigo_Garantia'}
-	        ,{name : 'IMPORTE',type : 'float'}
-	        ,{name : 'NOMBRE_GARANTIA'}
-	        ,{name : 'cdtipcon'}
-	        ,{name : 'nmsituac'}
-	        ,{name : 'orden'}
-	        ,{name : 'PARENTESCO'}
-	        ,{name : 'ORDEN_PARENTESCO'}
-	    ]
-	});
+	
+	debug('### nmpoliza: ',nmpoliza);
+	debug('### cdunieco: ',cdunieco);
+	debug('### cdramo:   ',cdramo);
+	debug('### estado:   ',estado);
+	debug('### nmsuplem: ',nmsuplem);
+	debug('### nsuplogi: ',nsuplogi);
 	
 	////// modelos //////
-	////// stores //////
-	
-	////// stores //////
-	////// componentes //////
-	
-	////// componentes //////
-	
-	////// contenido //////
+	Ext.define('_p31_modeloDetalleCotizacion',
+    {
+        extend : 'Ext.data.Model'
+        ,fields :
+        [
+            'COBERTURA'
+            ,{
+                name : 'PRIMA'
+                ,type : 'float'
+            }
+            ,'TITULO'
+        ]
+    });
 	
 	Ext.Ajax.request(
     {
@@ -73,87 +69,68 @@ Ext.onReady(function()
         }
         ,success : function(response)
         {
-            var json = Ext.decode(response.responseText);
-            debug('### retarificar:',json);
-            if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
-            {
-            	debug('if', json);
-                centrarVentanaInterna(Ext.Msg.show(
-                {
-                    title    :'Verificar datos'
-                    ,msg     : json.mensajeRespuesta
-                    ,buttons : Ext.Msg.OK
-                    ,icon    : Ext.Msg.WARNING
-                }));
-            } else if(Ext.isEmpty(json.slist1)) {
-            	debug('else if', json);
+            var jsonpreview = Ext.decode(response.responseText);
+            debug('### jsonpreview:',jsonpreview);
+             if(Ext.isEmpty(jsonpreview.slist1)) {
             	Ext.Msg.show(
                 {
                     title    :'Error no hay datos'
-                    ,msg     : json.mensajeRespuesta
+                    ,msg     : jsonpreview.mensajeRespuesta
                     ,buttons : Ext.Msg.OK
                     ,icon    : Ext.Msg.WARNING
                 });
-            } else {
-            	debug('else', json);
-                var orden=0;
-                var parentescoAnterior='qwerty';
-                for(var i=0;i<json.slist1.length;i++)
-                {
-                    if(json.slist1[i].PARENTESCO!=parentescoAnterior)
-                    {
-                        orden++;
-                        parentescoAnterior=json.slist1[i].PARENTESCO;
-                    }
-                    json.slist1[i].ORDEN_PARENTESCO=orden+'_'+json.slist1[i].PARENTESCO;
-                }
+            }else{
+            	
                 Ext.create('Ext.grid.Panel',
                         {
                         	renderTo: '_p29_divpri'
-                            ,store : Ext.create('Ext.data.Store',
+                            ,store    : Ext.create('Ext.data.Store',
                             {
-                                model       : 'ModeloDetalleCotizacion'
-                                ,groupField : 'ORDEN_PARENTESCO'
+                                model       : '_p31_modeloDetalleCotizacion'
+                                ,groupField : 'TITULO'
                                 ,sorters    :
                                 [
                                     {
-                                        sorterFn: function(o1, o2)
+                                        sorterFn : function(o1,o2)
                                         {
-                                            if (o1.get('orden') === o2.get('orden'))
+                                            debug('sorting:',o1,o2);
+                                            if (o1.get('COBERTURA') == o2.get('COBERTURA'))
                                             {
                                                 return 0;
                                             }
-                                            return o1.get('orden') < o2.get('orden') ? -1 : 1;
+                                            return o1.get('COBERTURA') < o2.get('COBERTURA') ? -1 : 1;
                                         }
                                     }
                                 ]
-                                ,proxy :
+                                ,proxy      :
                                 {
                                     type    : 'memory'
                                     ,reader : 'json'
                                 }
-                                ,data:json.slist1
+                                ,data : jsonpreview.slist1
                             })
                             ,columns :
                             [
                                 {
                                     header           : 'Nombre de la cobertura'
-                                    ,dataIndex       : 'NOMBRE_GARANTIA'
-                                    ,flex            : 2
+                                    ,dataIndex       : 'COBERTURA'
+                                    //,width           : 480
+                                     ,flex            : 2
                                     ,summaryType     : 'count'
                                     ,summaryRenderer : function(value)
                                     {
-                                        return Ext.String.format('Total de {0} cobertura{1}', value, value !== 1 ? 's' : '');
+                                        return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
                                     }
                                 }
                                 ,{
                                     header       : 'Importe por cobertura'
-                                    ,dataIndex   : 'IMPORTE'
-                                    ,flex        : 1
+                                    ,dataIndex   : 'PRIMA'
+                                    //,width       : 150
+                                     ,flex       : 1
                                     ,renderer    : Ext.util.Format.usMoney
                                     ,align       : 'right'
                                     ,summaryType : 'sum'
-                                }
+                                } 
                             ]
                             ,features :
                             [
@@ -162,7 +139,7 @@ Ext.onReady(function()
                                     [
                                         '{name:this.formatName}'
                                         ,{
-                                            formatName:function(name)
+                                            formatName : function(name)
                                             {
                                                 return name.split("_")[1];
                                             }
@@ -175,36 +152,37 @@ Ext.onReady(function()
                                         groupexpand : function(view,node,group)
                                         {
                                             if(_GLOBAL_CDSISROL != RolSistema.SuscriptorAuto)
-                                        	{
+                                            {
                                                 this.collapseAll();
                                             }
                                         }
-                                    }
+                                    }                                    
                                 }
                             ]
-                        ,bbar: Ext.create('Ext.toolbar.Toolbar',
-                        {
-                            buttonAlign : 'right'
-                            ,items      :
-                            [
-                                '->'
-                                ,Ext.create('Ext.form.Label',
-                                {
-                                    style          : 'color:white;'
-                                    ,initComponent : function()
-                                    {
-                                        var sum=0;
-                                        for(var i=0;i<json.slist1.length;i++)
-                                        {
-                                            sum+=parseFloat(json.slist1[i].IMPORTE);
-                                        }
-                                        this.setText('Total: '+Ext.util.Format.usMoney(sum));
-                                        this.callParent();
-                                    }
-                                })
-                            ]
-                        })})
-                        Ext.Ajax.request(
+							,bbar: Ext.create('Ext.toolbar.Toolbar',
+									{
+										buttonAlign : 'right'
+										,items      :
+										[
+											'->'
+											,Ext.create('Ext.form.Label',
+											{
+												style          : 'color:white;'
+												,initComponent : function()
+												{
+													var sum = 0;
+													for ( var i = 0; i < jsonpreview.slist1.length; i++)
+													{
+														sum += parseFloat(jsonpreview.slist1[i].PRIMA);
+													}
+													this.setText('Total: '+ Ext.util.Format.usMoney(sum));
+													this.callParent();
+												}
+											})
+										]
+									})
+                        })
+                       Ext.Ajax.request(
 		                {
 		                    url      : _p48_urlMovimientos
     		                ,params  :
@@ -229,10 +207,14 @@ Ext.onReady(function()
     		                }
     		            });
                         
-            }
+            
+        }
         }
         
     })
+	
+		
+	
 })
 
 

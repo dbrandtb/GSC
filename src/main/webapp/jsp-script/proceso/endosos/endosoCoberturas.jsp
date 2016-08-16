@@ -1167,11 +1167,21 @@
                                 }
                             }
                             ,{
-                                text     : 'Vista Previa'
+                                text     : 'Emitir'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                                 ,handler : function(){ var form=Ext.getCmp('endoso');
                                 		                debug('endcobSumitpreview',form);
-                                						endcobSumitpreview(form,'si');
+                                		                if(   inputCdramop3 == Ramo.AutosFronterizos
+												           || inputCdramop3 == Ramo.servicioPublico
+												           || inputCdramop3 == Ramo.autosResidentes)
+												           	{
+												           		endcobSumitpreview(form,'si');
+												           	}else
+												           		{
+												           			endcobSumit(form,'si');
+												           		}
+                                		                
+                                						
                                 						
                                 				      }
                             

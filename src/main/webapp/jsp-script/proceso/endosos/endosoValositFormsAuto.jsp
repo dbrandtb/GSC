@@ -98,7 +98,7 @@ Ext.onReady(function()
                     }
                     ,{
                         xtype : 'button'
-                        ,text     : 'Vista Previa'
+                        ,text     : 'Emitir'
 		                ,itemId  : '_p44_botonConfirmar'
 		                ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
 		                ,handler : function(me)

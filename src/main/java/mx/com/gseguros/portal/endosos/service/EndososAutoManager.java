@@ -394,6 +394,22 @@ public interface EndososAutoManager
 			,FlujoVO flujo
 			)throws Exception;
 	
+	public Map<String,Object> previewEndosoDevolucionPrimas(
+			String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String tstamp
+			,Date   feefecto
+			,List<Map<String,String>> incisos
+			,UserVO usuarioSesion
+			,FlujoVO flujo
+			)throws Exception;
+	
 	public Map<String,Item> endosoCancelacionPolAuto(String cdsisrol, String cdramo) throws Exception;
 	
 	public Map<String,String> marcarPolizaCancelarPorEndoso(String cdunieco,String cdramo,String nmpoliza)throws Exception;
@@ -482,6 +498,28 @@ public interface EndososAutoManager
 			) throws Exception;
 	
 	public void guardarEndosoAmpliacionVigencia(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String ntramite
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,String feefecto
+			,String feproren
+			,Date   feprorenOriginal
+			,String nmsuplemOriginal
+			,UserVO usuarioSesion
+			,String tipoGrupoInciso
+			,FlujoVO flujo
+			,String cdsisrol
+			)throws Exception;
+	
+	public Map<String,String> previewEndosoAmpliacionVigencia(
 			String cdunieco
 			,String cdramo
 			,String estado

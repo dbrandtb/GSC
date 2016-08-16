@@ -34,6 +34,8 @@ var _9_panelPri;
 var _9_panelEndoso;
 var _9_fieldFechaEndoso;
 
+var url_PantallaPreview      = '<s:url namespace="/endosos"         action="includes/previewEndosos"/>';
+var _9_urlPreviewGuardar     = '<s:url namespace="/endosos"         action="previewEndosoFormaPago" />';
 var _9_urlGuardar            = '<s:url namespace="/endosos"         action="guardarEndosoFormaPago" />';
 var _9_urlLoaderLectura      = '<s:url namespace="/consultasPoliza" action="consultaDatosPoliza"    />';
 var _9_urlRecuperacionSimple = '<s:url namespace="/emision"         action="recuperacionSimple"     />';
@@ -165,7 +167,7 @@ Ext.onReady(function()
         ,buttons     :
         [
             {
-                text     : 'Confirmar endoso'
+                text     : 'Emitir'
                 ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                 ,handler : _9_confirmar
             }
@@ -304,58 +306,120 @@ function _9_confirmar()
         
         var panelMask = new Ext.LoadMask('_9_divPri', {msg:"Confirmando..."});
 		panelMask.show();
-        
+        if(   _9_smap1.CDRAMO == Ramo.AutosFronterizos
+           || _9_smap1.CDRAMO == Ramo.servicioPublico
+           || _9_smap1.CDRAMO == Ramo.autosResidentes){
         Ext.Ajax.request(
         {
-            url       : _9_urlGuardar
+            url       : _9_urlPreviewGuardar
             ,jsonData : json
             ,success  : function(response)
             {
-                panelMask.hide();
-                json=Ext.decode(response.responseText);
-                debug('datos recibidos:',json);
-                if(json.success==true)
-                {
-                    var callbackRemesa = function()
-                    {
-                        //////////////////////////////////
-                        ////// usa codigo del padre //////
-                        /*//////////////////////////////*/
-                        marendNavegacion(2);
-                        /*//////////////////////////////*/
-                        ////// usa codigo del padre //////
-                        //////////////////////////////////
-                    };
-                    
-                    mensajeCorrecto('Endoso generado',json.mensaje,function()
-                    {
-                        var cadena= json.mensaje;
-                        var palabra="guardado";
-                    	if (cadena.indexOf(palabra)==-1){
-                    		_generarRemesaClic2(
-                                    false
-                                    ,_9_smap1.CDUNIECO
-                                    ,_9_smap1.CDRAMO
-                                    ,_9_smap1.ESTADO
-                                    ,_9_smap1.NMPOLIZA
-                                    ,callbackRemesa
-                                );
-                    	}else{
-                    		_generarRemesaClic(
-                                    true
-                                    ,_9_smap1.CDUNIECO
-                                    ,_9_smap1.CDRAMO
-                                    ,_9_smap1.ESTADO
-                                    ,_9_smap1.NMPOLIZA
-                                    ,callbackRemesa
-                                );
-                    	}
-                    });
-                }
-                else
-                {
-                    mensajeError(json.error);
-                }
+            	json1=Ext.decode(response.responseText);
+				debug('datosjson1windowsa:',json1);
+            	Ext.create('Ext.window.Window',
+						{
+							title        : 'Tarifa final'
+							,id          : 'tarifa'
+							,autoScroll  : true
+							,modal       : true
+							,buttonAlign : 'center'
+							,width       : 600
+							,height      : 550
+							,defaults    : { width: 650 }
+							,closable    : false
+							,autoScroll  : true
+							,loader      :
+								{
+									url       : url_PantallaPreview
+									,params   :
+										{
+											'smap4.nmpoliza'  : _9_smap1.NMPOLIZA
+                                            ,'smap4.cdunieco' : _9_smap1.CDUNIECO
+                                            ,'smap4.cdramo'   : _9_smap1.CDRAMO
+                                            ,'smap4.estado'   : _9_smap1.ESTADO
+                                            ,'smap4.nmsuplem' : json1.smap3.pv_nmsuplem_o 
+                                            ,'smap4.nsuplogi' : json1.smap3.pv_nsuplogi_o 
+                                        }
+									,scripts  : true
+									,autoLoad : true
+							     }
+							,buttons:[{
+										text    : 'Confirmar endoso'
+										,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+										,handler : function(me){
+																me.up('window').destroy();
+																Ext.Ajax.request(
+																	        {
+																	            url       : _9_urlGuardar
+																	            ,jsonData : json
+																	            ,success  : function(response)
+																	            {
+																	                panelMask.hide();
+																	                json=Ext.decode(response.responseText);
+																	                debug('datos recibidos:',json);
+																	                if(json.success==true)
+																	                {
+																	                    var callbackRemesa = function()
+																	                    {
+																	                        //////////////////////////////////
+																	                        ////// usa codigo del padre //////
+																	                        /*//////////////////////////////*/
+																	                        marendNavegacion(2);
+																	                        /*//////////////////////////////*/
+																	                        ////// usa codigo del padre //////
+																	                        //////////////////////////////////
+																	                    };
+																	                    
+																	                    mensajeCorrecto('Endoso generado',json.mensaje,function()
+																	                    {
+																	                        var cadena= json.mensaje;
+																	                        var palabra="guardado";
+																	                    	if (cadena.indexOf(palabra)==-1){
+																	                    		_generarRemesaClic2(
+																	                                    false
+																	                                    ,_9_smap1.CDUNIECO
+																	                                    ,_9_smap1.CDRAMO
+																	                                    ,_9_smap1.ESTADO
+																	                                    ,_9_smap1.NMPOLIZA
+																	                                    ,callbackRemesa
+																	                                );
+																	                    	}else{
+																	                    		_generarRemesaClic(
+																	                                    true
+																	                                    ,_9_smap1.CDUNIECO
+																	                                    ,_9_smap1.CDRAMO
+																	                                    ,_9_smap1.ESTADO
+																	                                    ,_9_smap1.NMPOLIZA
+																	                                    ,callbackRemesa
+																	                                );
+																	                    	}
+																	                    });
+																	                }
+																	                else
+																	                {
+																	                    mensajeError(json.error);
+																	                }
+																	            }
+																	            ,failure  : function()
+																	            {
+																	                panelMask.hide();
+																	                errorComunicacion();
+																	            }
+																	        });
+																
+															   }
+									   },
+									   {
+										text    : 'Cancelar'
+										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+										,handler : function (me){
+														me.up('window').destroy();
+														
+														}
+									   } ]
+					     }).show();
+            
             }
             ,failure  : function()
             {
@@ -363,6 +427,68 @@ function _9_confirmar()
                 errorComunicacion();
             }
         });
+    }else{
+	    Ext.Ajax.request(
+	        {
+	            url       : _9_urlGuardar
+	            ,jsonData : json
+	            ,success  : function(response)
+	            {
+	                panelMask.hide();
+	                json=Ext.decode(response.responseText);
+	                debug('datos recibidos:',json);
+	                if(json.success==true)
+	                {
+	                    var callbackRemesa = function()
+	                    {
+	                        //////////////////////////////////
+	                        ////// usa codigo del padre //////
+	                        /*//////////////////////////////*/
+	                        marendNavegacion(2);
+	                        /*//////////////////////////////*/
+	                        ////// usa codigo del padre //////
+	                        //////////////////////////////////
+	                    };
+	                    
+	                    mensajeCorrecto('Endoso generado',json.mensaje,function()
+	                    {
+	                        var cadena= json.mensaje;
+	                        var palabra="guardado";
+	                    	if (cadena.indexOf(palabra)==-1){
+	                    		_generarRemesaClic2(
+	                                    false
+	                                    ,_9_smap1.CDUNIECO
+	                                    ,_9_smap1.CDRAMO
+	                                    ,_9_smap1.ESTADO
+	                                    ,_9_smap1.NMPOLIZA
+	                                    ,callbackRemesa
+	                                );
+	                    	}else{
+	                    		_generarRemesaClic(
+	                                    true
+	                                    ,_9_smap1.CDUNIECO
+	                                    ,_9_smap1.CDRAMO
+	                                    ,_9_smap1.ESTADO
+	                                    ,_9_smap1.NMPOLIZA
+	                                    ,callbackRemesa
+	                                );
+	                    	}
+	                    });
+	                }
+	                else
+	                {
+	                    mensajeError(json.error);
+	                }
+	            }
+	            ,failure  : function()
+	            {
+	                panelMask.hide();
+	                errorComunicacion();
+	            }
+	        });
+        }
+    
+    
     }
 };
 ////// funciones //////

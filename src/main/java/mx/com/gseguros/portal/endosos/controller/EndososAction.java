@@ -10380,10 +10380,11 @@ public class EndososAction extends PrincipalCoreAction
 				logger.debug(paso);
 				
 				//PKG_ENDOSOS.P_ENDOSO_INICIA
-				Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
+				//Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
+				smap3=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
 				
-				String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
-				String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
+				String nmsuplem = smap3.get("pv_nmsuplem_o");
+				String nsuplogi = smap3.get("pv_nsuplogi_o");
 				
 				paso = "Insertando forma de pago";
 				logger.debug(paso);
@@ -10445,6 +10446,7 @@ public class EndososAction extends PrincipalCoreAction
 				 "\n###### success = " , success
 				,"\n###### mensaje = " , mensaje
 				,"\n###### error   = " , error
+				,"\n###### smap3   = " , smap3
 				,"\n###### previewEndosoFormaPago ######"
 				,"\n####################################"
 				));
@@ -10462,15 +10464,11 @@ public class EndososAction extends PrincipalCoreAction
 				,"\n###### smap1 = " , smap1
 				,"\n###### smap2 = " , smap2
 				,"\n###### smap3 = " , smap3
-				,"\n###### smap4 = " , smap4
 				,"\n###### flujo = " , flujo
 				));
 		
 		try
 		{
-			
-			String nmsuplem       = (String) smap4.get("pv_nmsumplem");
-			String nmtramite      = (String) smap4.get("pv_tramite");
 			UserVO usuario        = (UserVO)session.get("USUARIO");
 			String cdtipsit       = smap1.get("CDTIPSIT");
 			String cdunieco       = smap1.get("CDUNIECO");
@@ -10496,8 +10494,60 @@ public class EndososAction extends PrincipalCoreAction
 			
 				boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
 				
+				paso = "Validando endosos pagados";
+				logger.debug(paso);
+				
+				endososAutoManager.validarEndosoPagados(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+				
+				paso = "Iniciando endoso";
+				logger.debug(paso);
+				
+				//PKG_ENDOSOS.P_ENDOSO_INICIA
+				Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
+				
+				String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
+				String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
+				
+				paso = "Insertando forma de pago";
+				logger.debug(paso);
+				
+				//PKG_ENDOSOS.P_INS_MPOLIZAS_CDPERPAG
+				endososManager.insertarPolizaCdperpag(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdperpag);
+				
+				paso = "Calculando recibos";
+				logger.debug(paso);
+				
+				//P_CALC_RECIBOS_SUB_ENDOSO_FP
+				endososManager.calcularRecibosEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+				
+				paso = "Calculando comisiones";
+				logger.debug(paso);
+				
+				//P_CALCULA_COMISION_BASE
+				endososManager.calcularComisionBase(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+				
+				paso = "Confirmando endoso";
+				logger.debug(paso);
+				
+				// Se confirma el endoso si cumple la validacion de fechas: 
+				RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsuplem
+						,nsuplogi
+						,cdtipsup
+						,""
+						,dFecha
+						,cdtipsit
+						,flujo
+						,cdusuari
+						,cdsisrol
+						);
+				
 				// Si el endoso fue confirmado:
-				if(("true").equals(smap4.get("pv_Confirmado")))
+				if(respConfirmacionEndoso.isConfirmado())
 				{
 					endosoConfirmado = true;
 					
@@ -10559,7 +10609,7 @@ public class EndososAction extends PrincipalCoreAction
 				} else {
 					mensaje="El endoso "+nsuplogi
 							+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
-							+ "con n\u00famero de tr\u00e1mite " + nmtramite;
+							+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 				}
 				
 				success=true;
