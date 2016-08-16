@@ -15,6 +15,7 @@ import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.TipoRamo;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -259,7 +260,6 @@ public class ServiciosAction extends PrincipalCoreAction
 					,referencia = "1"
 					,nombre     = null
 					,status     = "43" // SOLICITUD DE RENOVACION
-					,comments   = "Tr\u00e1mite registrado desde m\u00f3dulo de renovaci\u00f3n autom\u00e1tica"
 					,estado     = "W"
 					//recuperados de BD:
 					,cdtipflu   = null //recuperar
@@ -275,7 +275,15 @@ public class ServiciosAction extends PrincipalCoreAction
 					,cdtipsit   = params.get("cdtipsit")
 					,tipoflot   = params.get("tipoflot")
 					,cdusuari   = params.get("cdusuari")
-					,cdsisrol   = params.get("cdsisrol");
+					,cdsisrol   = params.get("cdsisrol")
+					,commentsIn = params.get("comments")
+					,comments   = Utils.join(
+							"Tr\u00e1mite registrado desde m\u00f3dulo de renovaci\u00f3n autom\u00e1tica",
+							" con las siguientes observaciones: ",
+							StringUtils.isBlank(commentsIn)
+								? "(sin observaciones)"
+								: commentsIn
+					);
 			
 			Date fechaRecep    = new Date()
 			     ,fechaEstatus = new Date();
