@@ -134,7 +134,7 @@ var valorRecuperadoValorVehiSigs = null;
 var cdper                        = null;
 var cdperson                     = null;
 
-var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
+// var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 var plazoenanios;
 ////// variables //////
 
@@ -588,7 +588,8 @@ Ext.onReady(function()
         ,hidden : _p28_smap1.cdramo+'x'=='5x'
                   ?(
                         (_p28_smap1.cdtipsit+'x'!='CRx' && _p28_smap1.cdtipsit+'x'!='TVx' && _p28_smap1.cdtipsit+'x'!='TLx' ) || 
-                        (rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
+//                      (rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
+                        !RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) 
                         //_p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
                    )
                   :false
@@ -842,7 +843,11 @@ Ext.onReady(function()
             agente.setReadOnly(true);
             _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
         }
-        else (('|PROMOTORAUTO'+rolesSuscriptores).lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
+        else (
+        		'|PROMOTORAUTO'.lastIndexOf(_p28_smap1.cdsisrol)!=-1
+        		&&
+        		RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) 
+        	 )
             /* if(_p28_smap1.cdsisrol=='PROMOTORAUTO'||_p28_smap1.cdsisrol=='SUSCRIAUTO') */
         {
             agente.on(
@@ -1970,7 +1975,7 @@ function _p28_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
                                         ,disabled : true
                                         ,handler  : _p28_detalles
-                                        ,hidden   : (rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
+                                        ,hidden   : !RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) //(rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
                                                     //_p28_smap1.cdsisrol!='SUSCRIAUTO'
                                     }
                                     ,{
@@ -3203,12 +3208,12 @@ function llenandoCampos(json)
             }
         };
         panelpri.setLoading(true);
-        if(_p28_smap1.cdramo+'x'=='5x'
+        if( _p28_smap1.cdramo+'x'=='5x'
             &&
-            (
-                (('|PROMOTORAUTO'+rolesSuscriptores).lastIndexOf('|'+_p28_smap1.cdsisrol+'|')!=-1)
-                //_p28_smap1.cdsisrol=='SUSCRIAUTO'||_p28_smap1.cdsisrol=='PROMOTORAUTO'
-            ))
+           'PROMOTORAUTO'.lastIndexOf(_p28_smap1.cdsisrol)!=-1
+            &&
+            RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) 
+          )            
         {
             var agente  = _fieldByName('parametros.pv_otvalor01');
             var negocio = _fieldByLabel('NEGOCIO');

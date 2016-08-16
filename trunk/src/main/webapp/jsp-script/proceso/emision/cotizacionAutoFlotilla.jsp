@@ -229,7 +229,7 @@ var _p30_endoso = _p30_smap1.endoso+'x'=='Sx';
 
 var _p30_bufferAutos = [];
 
-var rolesSuscriptores ='|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
+// var rolesSuscriptores ='|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 ////// variables //////
 
 ////// dinamicos //////
@@ -1037,7 +1037,7 @@ Ext.onReady(function()
             ,itemId : '_p30_fieldsetTatripol'
             ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES DE P&Oacute;LIZA</span>'
             ,width  : 290
-            ,hidden : ('|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|'.lastIndexOf('|'+_p30_smap1.cdsisrol+'|'))==-1
+            ,hidden : !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)//(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|'))==-1
             ,items  : itemsTatripol
         });
     }
@@ -1631,7 +1631,7 @@ Ext.onReady(function()
             _fieldByLabel('AGENTE',_fieldById('_p30_form')).setReadOnly(true);
             _p30_ramo5AgenteSelect(_fieldByLabel('AGENTE',_fieldById('_p30_form')),_p30_smap1.cdagente);
         }
-        else if('|PROMOTORAUTO'+rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+        else if('PROMOTORAUTO'.lastIndexOf(_p30_smap1.cdsisrol)!=-1 && RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol))
         {
             _fieldByLabel('AGENTE',_fieldById('_p30_form')).on(
             {
@@ -3180,7 +3180,8 @@ Ext.onReady(function()
                                 	if(
                                 	    ('|AF|PU|'.lastIndexOf('|'+cdtipsit+'|')!=-1) 
                                          && 
-                                        (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+//                                         (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+                                           RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
                                       ){
                                 		    _fieldByName('parametros.pv_otvalor04',formaAuto).setReadOnly(false);
                                             _fieldByName('parametros.pv_otvalor05',formaAuto).setReadOnly(false);
@@ -3474,7 +3475,8 @@ function _p30_configuracionPanelDinClic(cdtipsit,titulo)
     {
         var panel    = _p30_paneles[cdtipsit];
         var itemDesc = panel.down('[fieldLabel*=DESCUENTO]');
-        if((rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+        if( RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+//         	(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
             &&!Ext.isEmpty(itemDesc)
             && 'TL'.lastIndexOf(cdtipsit)==-1
           )
@@ -3598,7 +3600,8 @@ function _p30_gridBotonConfigClic(view,row,col,item,e,record)
         debug('cdtipsit:',cdtipsit,'cdtipsitPanel:',cdtipsitPanel);
         var panel    = _p30_paneles[cdtipsitPanel];
         var itemDesc = panel.down('[fieldLabel*=DESCUENTO]');
-        if((rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+        if( RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+//         	(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
             &&!Ext.isEmpty(itemDesc))
         {
             Ext.Ajax.request(
@@ -4064,7 +4067,8 @@ function _p30_cotizar(sinTarificar)
     
     if(valido)
     {
-    	if(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+    	if(RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol))
+//     	(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
         {
             valido = _p30_store.getCount()>=1;
             if(!valido)
@@ -4124,7 +4128,11 @@ function _p30_cotizar(sinTarificar)
     if(valido)
     {
     	if(_p30_smap1.tipoflot=='P' 
-    	   &&(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)){
+    	   &&
+    	   !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+//     	   (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
+    	   )
+    	{
     		
     		var ncamiones = 0;
             var ntractocamiones = 0;
@@ -4759,7 +4767,7 @@ function _p30_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
                                         ,disabled : true
                                         ,handler  : _p30_detalles
-                                       ,hidden    : (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
+                                       ,hidden    : !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)//(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
                                     }
                                     ,{
                                         itemId    : '_p30_botonCoberturas'
@@ -6899,7 +6907,10 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                 if(mapeo=='DIRECTO')
                 {
                     debug('directo');
-                    if(_p30_smap1.cdramo+'x'=='5x'&& (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1))
+                    if(_p30_smap1.cdramo+'x'=='5x'&& 
+//                     		(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+                       RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+                      )
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
@@ -6923,7 +6934,10 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                     }
                     
                     if(_p30_smap1.cdramo+'x'=='5x'
-                       &&(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1))
+                       &&
+//                      (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+                        RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+                       )
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         agenteCmp.getStore().load(
@@ -7010,7 +7024,9 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                     
                     debug('recordMapeado:',recordMapeado.data);
                     if(_p30_smap1.cdramo+'x'=='5x'&& 
-                    (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1))
+//                     (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+                        RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+                      )
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
@@ -7035,7 +7051,9 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
                     }
                     
                     if(_p30_smap1.cdramo+'x'=='5x'&& 
-                       (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1))
+//                        (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+                          RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+                       )
                     {
                         var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         agenteCmp.getStore().load(

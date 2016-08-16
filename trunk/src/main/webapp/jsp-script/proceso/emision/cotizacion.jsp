@@ -124,7 +124,7 @@ var cduniecocotiza;
 var _0_validacion_custom;
 
 var _parentescoTitular = 'T';
-var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
+// var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 var plazoenanios;
 
 debug('_0_smap1: ',_0_smap1);
@@ -138,9 +138,9 @@ var _CONTEXT = "${ctx}";
 //parche para RAMO 16 (FRONTERIZOS) con rol distinto de SUSCRIPTOR AUTO, se oculta el botón Detalle:
 var ocultarDetalleCotizacion = false; 
 if(_0_smap1.cdramo == Ramo.AutosFronterizos && 
-		//_0_smap1.cdsisrol != 'SUSCRIAUTO'
-		(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')==-1)
-		) {
+   !RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol)
+  )
+{
     ocultarDetalleCotizacion = true;
 }
 
@@ -1490,7 +1490,8 @@ function llenandoCampos (json)
                         
                         if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
                             
-                        	if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+//                         	if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+                        	if(RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol))
                             {
                         		cdagenteCotiza = primerInciso.get('parametros.pv_otvalor32');
                         		cduniecocotiza = primerInciso.raw.CDUNIECO;
@@ -1679,7 +1680,8 @@ function _0_cotizar(boton)
         if(_0_smap1.cdramo=='16')
         {
         	 _0_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';//Se utiliza para no retarificar 
-       		 if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')==-1)
+//     		 if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')==-1)
+	         if(!RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol))
        		 {
        			 _0_smap1['cdsisrol'] ='SUSCRIAUTO';
        		 }
@@ -1768,6 +1770,7 @@ function _0_cotizar(boton)
         }
         debug('json para cotizar:',json);
         _0_panelPri.setLoading(true);
+//         alert('Va');
         Ext.Ajax.request(
         {
             url       : _0_smap1['externo']=='si'?_0_urlCotizarExterno:_0_urlCotizar
@@ -1779,9 +1782,10 @@ function _0_cotizar(boton)
                 json=Ext.decode(response.responseText);
                 if(json.success==true)
                 {
+//                 	alert('Regresa');
                     debug(Ext.decode(json.smap1.fields));
                     debug(Ext.decode(json.smap1.columnas));
-                    debug(json.slist2);
+                    debug('VILS >> ',json.slist2);
                     
                     _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
                                     
@@ -2124,7 +2128,7 @@ function _0_recuperarDescuento()
                 'smap1.procedimiento' : 'RECUPERAR_DESCUENTO_RECARGO_RAMO_5'
                 ,'smap1.cdtipsit'     : _0_smap1.cdtipsit
                 ,'smap1.cdagente'     : _fieldByLabel('AGENTE').getValue()
-                ,'smap1.negocio'      : (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1) ? '999999' : '0' //_0_smap1.cdsisrol == 'SUSCRIAUTO'
+                ,'smap1.negocio'      : RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol) ? '999999' : '0' //_0_smap1.cdsisrol == 'SUSCRIAUTO'
                 ,'smap1.tipocot'      : 'I'
                 ,'smap1.cdsisrol'     : _0_smap1.cdsisrol
                 ,'smap1.cdusuari'     : _0_smap1.cdusuari
@@ -2263,7 +2267,8 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta)
 */
 function asignarAgente(agente)
 {
-     if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+//   if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+	if(RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol))
      {
          _fieldByLabel('AGENTE').getStore().load(
          {
@@ -2373,7 +2378,7 @@ function obtienefechafinplazo()
             url     : _0_urlCargarDetalleNegocioRamo5
             ,params :
             {
-                'smap1.negocio' : (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1) ? '999999' : '0', //_0_smap1.cdsisrol == 'SUSCRIAUTO',
+                'smap1.negocio' : RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol) ? '999999' : '0', //_0_smap1.cdsisrol == 'SUSCRIAUTO',
                 'smap1.cdramo'  : _0_smap1.cdramo,
                 'smap1.cdtipsit': _0_smap1.cdtipsit
             }
@@ -2605,7 +2610,7 @@ function _0_cargarParametrizacionCoberturas(callback)
         {
             'smap1.cdtipsit'      : _0_smap1.cdtipsit
             ,'smap1.cdsisrol'     : _0_smap1.cdsisrol
-            ,'smap1.negocio'      : (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1) ? '999999' : '0' //_0_smap1.cdsisrol == 'SUSCRIAUTO'
+            ,'smap1.negocio'      : RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol) ? '999999' : '0' //_0_smap1.cdsisrol == 'SUSCRIAUTO'
             ,'smap1.tipoServicio' : (_f1_tipoServicio=='P') ? '01' : '03' 
             ,'smap1.modelo'       : _f1_modelo
             ,'smap1.tipoPersona'  : 'F'
@@ -3916,7 +3921,8 @@ Ext.onReady(function()
                     	    	if(json.exito!=true)
                     	    	{
                     	    		//if(_0_smap1.cdsisrol!='SUSCRIAUTO')
-                                    if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')==-1)                    	    			
+//                                  if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')==-1)        
+	                                if(!RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol))
                     	    		{
                     	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
                     				}else{
@@ -3932,7 +3938,8 @@ Ext.onReady(function()
                     	//parche para RAMO 16 (FRONTERIZOS) con rol SUSCRIPTOR AUTO, no se lanza la validación:
                     	if(_0_smap1.cdramo == Ramo.AutosFronterizos && 
                     			//_0_smap1.cdsisrol == 'SUSCRIAUTO'
-                    			rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1   
+//                     			rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1  
+                    			RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol)
                     			) {
                     	    // Si no obtuvo datos el servicio "NADA", reseteamos valores:
                     		_0_formAgrupados.down('[name=parametros.pv_otvalor04]').setValue();
@@ -3962,7 +3969,8 @@ Ext.onReady(function()
         {
             debug('>comboTipoValor change');
             //if(_0_smap1.cdsisrol!='SUSCRIAUTO')
-            if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')==-1)
+//          if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')==-1)
+	        if(!RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol))
             {
             	itemSumaAsegu.setValue('');
                 itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='2x');
@@ -4174,7 +4182,8 @@ Ext.onReady(function()
     //parche para AUTOS FRONTERIZOS Y PICKUP Fronterizos con rol SUSCRIPTOR AUTO:
     if((_0_smap1.cdtipsit == TipoSituacion.AutosFronterizos || _0_smap1.cdtipsit == TipoSituacion.AutosPickUp) 
         && 
-        (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+//         (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+        RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol)
         ) 
     {
         _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setReadOnly(false);
@@ -4395,7 +4404,8 @@ Ext.onReady(function()
         if((_0_smap1.cdsisrol=='PROMOTORAUTO'
             ||
             //_0_smap1.cdsisrol=='SUSCRIAUTO'
-            (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+//           (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
+             RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol)
             )
             &&Ext.isEmpty(_0_smap1.ntramite)
             )
