@@ -2756,6 +2756,7 @@ function _mask(text)
         ,border      : 0
         ,style       : 'padding:5px;'
         ,closeAction : 'destroy'
+        ,closable    : false
         ,items       :
         [{
             xtype  : 'displayfield'
