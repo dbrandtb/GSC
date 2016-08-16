@@ -495,7 +495,7 @@ Ext.onReady(function()
             {
                 title        : 'Tareas'
                 ,itemId      : '_p54_grid'
-                ,height      : 420
+                ,height      : 470
                 ,tbar        : _p54_gridButtons
                 ,columns     : [ <s:property value="items.gridColumns" escapeHtml="false" /> ]
                 ,store       : _p54_store
@@ -1593,6 +1593,6 @@ function _show(comp)
 </script>
 </head>
 <body>
-<div id="_p54_divpri" style="height:900px;border:0px solid #CCCCCC;"></div>
+<div id="_p54_divpri" style="height:800px;border:0px solid #CCCCCC;"></div>
 </body>
 </html>

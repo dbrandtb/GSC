@@ -639,6 +639,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,swescala   = params.get("SWESCALA")
 			       ,statusout  = params.get("STATUSOUT")
 			       ,swfinnode  = params.get("SWFINNODE")
+			       ,cdetapa    = params.get("CDETAPA")
 			       ;
 			
 			Utils.validate(
@@ -656,6 +657,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,timewrn2h  , "No se recibi\u00f3 horas max alerta 2"
 					,timewrn2m  , "No se recibi\u00f3 minutos max alerta 2"
 					,cdtipasig  , "No se recibi\u00f3 tipo de asignaci\u00f3n"
+					,cdetapa    , "No se recibi\u00f3 el indicador"
 					);
 			
 			flujoMesaControlManager.guardarDatosEstado(
@@ -677,6 +679,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,list
 					,statusout
 					,"S".equals(swfinnode)
+					,cdetapa
 					);
 			
 			success = true;

@@ -317,7 +317,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					,"WEBID"     , "XPOS"      , "YPOS"
 					,"TIMEMAX"   , "TIMEWRN1"  , "TIMEWRN2"
 					,"CDTIPASIG" , "DSESTADOMC" , "STATUSOUT"
-					,"SWFINNODE"
+					,"SWFINNODE" , "CDETAPA"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -807,6 +807,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String cdtipasig
 			,String statusout
 			,String swfinnode
+			,String cdetapa
 			,String accion
 			) throws Exception
 	{
@@ -823,6 +824,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("cdtipasig"  , cdtipasig);
 		params.put("statusout"  , statusout);
 		params.put("swfinnode"  , swfinnode);
+		params.put("cdetapa"    , cdetapa);
 		params.put("accion"     , accion);
 		ejecutaSP(new MovimientoTfluestSP(getDataSource()),params);
 	}
@@ -844,6 +846,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdtipasig"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("statusout"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swfinnode"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdetapa"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));

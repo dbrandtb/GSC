@@ -258,8 +258,8 @@ public class ServiciosAction extends PrincipalCoreAction
 					,nmpoliza   = "0"
 					,referencia = "1"
 					,nombre     = null
-					,status     = "13" // EN SUSCRIPCION
-					,comments   = "Tr\u00e1mite importado de sistema externo"
+					,status     = "43" // SOLICITUD DE RENOVACION
+					,comments   = "Tr\u00e1mite registrado desde m\u00f3dulo de renovaci\u00f3n autom\u00e1tica"
 					,estado     = "W"
 					//recuperados de BD:
 					,cdtipflu   = null //recuperar

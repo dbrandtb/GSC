@@ -2433,6 +2433,8 @@ Ext.onReady(function()
                                                     ]
                                                 })
                                             }
+                                            ,<s:property value="items.comboEtapa" escapeHtml="false" />
+                                            ,{border : 0}
                                             ,{
                                                 xtype       : 'fieldcontainer'
                                                 ,fieldLabel : 'Propiedades'

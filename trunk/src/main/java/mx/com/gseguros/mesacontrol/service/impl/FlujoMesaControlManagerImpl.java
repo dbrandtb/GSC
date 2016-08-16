@@ -93,6 +93,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			items.put("comboCdtipram" , gc.getItems());
 			
+			List<ComponenteVO> comboEtapa = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "COMBO_ETAPA", null);
+			gc.generaComponentes(comboEtapa, true, false, true, false, false, false);
+			
+			items.put("comboEtapa" , gc.getItems());
+			
 		}
 		catch(Exception ex)
 		{
@@ -326,8 +331,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,null  //timewrn1
 						,null  //timewrn2
 						,"1"   //cdtipasig
-						,"-1" //statusout
+						,"-1"  //statusout
 						,"N"   //swfinnode
+						,"1"   //EN REGISTRO
 						,"I"
 						);
 			}
@@ -480,6 +486,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,null //cdtipasig
 						,null //statusout
 						,null //swfinnode
+						,null //cdetapa
 						,"D"
 						);
 			}
@@ -843,6 +850,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,List<Map<String,String>>list
 			,String statusout
 			,boolean swfinnode
+			,String cdetapa
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -865,6 +873,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ swescala="   , swescala
 				,"\n@@@@@@ statusout="  , statusout
 				,"\n@@@@@@ swfinnode="  , swfinnode
+				,"\n@@@@@@ cdetapa="    , cdetapa
 				,"\n@@@@@@ list="       , list
 				));
 		
@@ -887,6 +896,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,cdtipasig
 					,statusout
 					,swfinnode ? "S" : "N"
+					,cdetapa
 					,accion
 					);
 			
