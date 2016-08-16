@@ -4792,7 +4792,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                             		   {
                             	   clicksToEdit  : 1
                             	   ,errorSummary : true
-                            	   ,pluginId     : 'rowedit'
+                            	   ,pluginId     : 'rowedit'+cdgrupo
                             	   ,cdgrupo      : cdgrupo
                             	   ,listeners: {
                             		   edit: checkEdit
@@ -4800,7 +4800,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                                }) : null
                                ,{
                             	   ptype       : 'pagingselectpersist'
-                            	   ,pluginId   : 'pagingselect'
+                            	   ,pluginId   : 'pagingselect'+cdgrupo
                             	   }
                                ]
                 ,tbar       :
@@ -4909,7 +4909,7 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                     	   'load' :  {
                     		   fn : function(store,records,successful) {
                     			   debug('reseteando los datos');
-                    			   var selection = _fieldById('gridAseg'+store.cdgrupo).getPlugin('pagingselect').selection;
+                    			   var selection = _fieldById('gridAseg'+store.cdgrupo).getPlugin('pagingselect'+store.cdgrupo).selection;
                     			   var mapselection = {};
                      			   for (var i = 0; i < selection.length; i++){
                      				debug('metiendo llave ',selection[i].data['nmsituac']);
@@ -5782,7 +5782,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                             	   }) : null
                             	   ,{
                             		   ptype       : 'pagingselectpersist'
-                            		   ,pluginId   : 'pagingselectasegurados'
+                            		   ,pluginId   : 'pagingselectasegurados'+record.get('letra')
             						}
                             	   ]
                 ,tbar       :
