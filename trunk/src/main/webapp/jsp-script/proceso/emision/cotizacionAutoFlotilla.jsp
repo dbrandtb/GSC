@@ -49,8 +49,6 @@ var cargarXpoliza = false;
 
 ////// variables //////
 
-		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
-
         Ext.util.Format.thousandSeparator=",";
         Ext.define("Ext.override.ThousandSeparatorNumberField", {
         override: "Ext.form.field.Number",
@@ -6757,14 +6755,14 @@ function _p30_confirmarEndoso()
         var boton=_fieldById('_p30_endosoButton');
         boton.setText('Cargando...');
         boton.setDisabled(true);
-        myMask.show();
+        var myMask = _maskLocal();
         Ext.Ajax.request(
         {
             url       : _p30_urlPreviewEndoso
             ,jsonData : json
             ,success  : function(response)
             {
-            	myMask.hide();
+            	myMask.close();
                 boton.setText('Emitir');
                 boton.setDisabled(false);
                 var json2 = Ext.decode(response.responseText);
@@ -6851,6 +6849,7 @@ function _p30_confirmarEndoso()
             }
             ,failure  : function()
             {
+            	myMask.close();
                 boton.setText('Emitir');
                 boton.setDisabled(false);
                 errorComunicacion();
