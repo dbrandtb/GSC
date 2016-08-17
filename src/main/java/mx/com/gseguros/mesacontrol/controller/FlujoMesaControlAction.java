@@ -1,6 +1,7 @@
 package mx.com.gseguros.mesacontrol.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1785,7 +1786,15 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(flujo  , "No se recibieron datos del flujo");
 			
-			list = flujoMesaControlManager.ejecutaRevision(flujo);
+			Map<String, Object> result = flujoMesaControlManager.ejecutaRevision(flujo);
+			
+			list = (List<Map<String, String>>) result.get("lista");
+			
+			if (params == null) {
+				params = new HashMap<String, String>();
+			}
+			
+			params.put("swconfirm", (String) result.get("swconfirm"));
 			
 			success = true;
 			
@@ -2512,6 +2521,140 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			"\n###### regresarTramiteVencido #######",
 			"\n#####################################"
 		));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "movimientoTrequisi",
+			results = { @Result(name="success", type="json") }
+			)
+	public String movimientoTrequisi()
+	{
+		logger.debug(Utils.log(
+				 "\n################################"
+				,"\n###### movimientoTrequisi ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String accion     = params.get("ACCION")
+			       ,cdrequisi = params.get("CDREQUISI")
+			       ,dsrequisi = params.get("DSREQUISI")
+			       ,cdtiptra  = params.get("CDTIPTRA");
+			
+			Utils.validate(
+					accion     , "No se recibi\u00f3 la acci\u00f3n"
+					,dsrequisi , "No se recibi\u00f3 el nombre"
+					,cdtiptra  , "No se recibi\u00f3 el tipo de tr\u00e1mite"
+					);
+			
+			flujoMesaControlManager.movimientoTrequisi(
+					accion
+					,cdrequisi
+					,dsrequisi
+					,cdtiptra
+					);
+			
+			success = true;
+			
+			logger.debug(Utils.log(
+					 "\n###### movimientoTrequisi ######"
+					,"\n################################"
+					));
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "marcarRequisitoRevision",
+			results = { @Result(name="success", type="json") }
+			)
+	public String marcarRequisitoRevision () {
+		logger.debug(Utils.log(
+				"\n#####################################",
+				"\n###### marcarRequisitoRevision ######",
+				"\n###### params = ", params));
+		try {
+			UserVO usuario = Utils.validateSession(session);
+			Utils.validate(params , "No se recibieron datos");
+			String cdtipflu  = params.get("cdtipflu"),
+				   cdflujomc = params.get("cdflujomc"),
+				   ntramite  = params.get("ntramite"),
+				   cdrequisi = params.get("cdrequisi"),
+				   swactivo  = params.get("swactivo");
+			Utils.validate(
+					cdtipflu  , "Falta cdtipflu",
+					cdflujomc , "Falta cdflujomc",
+					ntramite  , "Falta ntramite",
+					cdrequisi , "Falta cdrequisi",
+					swactivo  , "Falta swactivo");
+			flujoMesaControlManager.marcarRequisitoRevision(
+					cdtipflu,
+					cdflujomc,
+					ntramite,
+					cdrequisi,
+					"S".equals(swactivo),
+					usuario.getUser(),
+					usuario.getRolActivo().getClave());
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}		
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### marcarRequisitoRevision ######",
+				"\n#####################################"));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "marcarRevisionConfirmada",
+			results = { @Result(name="success", type="json") }
+			)
+	public String marcarRevisionConfirmada () {
+		logger.debug(Utils.log(
+				"\n######################################",
+				"\n###### marcarRevisionConfirmada ######",
+				"\n###### params = ", params));
+		try {
+			UserVO usuario = Utils.validateSession(session);
+			Utils.validate(params , "No se recibieron datos");
+			String cdtipflu  = params.get("cdtipflu"),
+				   cdflujomc = params.get("cdflujomc"),
+				   ntramite  = params.get("ntramite"),
+				   cdrevisi  = params.get("cdrevisi"),
+				   swconfirm = params.get("swconfirm");
+			Utils.validate(
+					cdtipflu  , "Falta cdtipflu",
+					cdflujomc , "Falta cdflujomc",
+					ntramite  , "Falta ntramite",
+					cdrevisi  , "Falta cdrevisi",
+					swconfirm , "Falta swconfirm");
+			flujoMesaControlManager.marcarRevisionConfirmada(
+					cdtipflu,
+					cdflujomc,
+					ntramite,
+					cdrevisi,
+					"S".equals(swconfirm),
+					usuario.getUser(),
+					usuario.getRolActivo().getClave());
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}		
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### marcarRevisionConfirmada ######",
+				"\n######################################"));
 		return SUCCESS;
 	}
 	

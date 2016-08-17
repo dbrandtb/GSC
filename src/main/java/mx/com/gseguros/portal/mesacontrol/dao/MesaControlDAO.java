@@ -159,13 +159,14 @@ public interface MesaControlDAO
 	 * @param cdorddoc TODO
 	 * @param cdusuari TODO
 	 * @param cdsisrol TODO
+	 * @param sustituir TODO
 	 * @param cdmoddoc TODO
 	 * @throws Exception
 	 */
 	public void guardarDocumento(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
-			String swvisible, String codidocu, String cdtiptra, String cdorddoc, Documento documento, String cdusuari, String cdsisrol) throws Exception;
+			String swvisible, String codidocu, String cdtiptra, String cdorddoc, Documento documento, String cdusuari, String cdsisrol, boolean sustituir) throws Exception;
 	
 	public String turnaPorCargaTrabajo(
 			String ntramite

@@ -2787,7 +2787,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,"0"
 							,Documento.EXTERNO_CARATULA
 							,null
-							,null
+							,null, false
 							);
 					
 					
@@ -2843,7 +2843,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,"0"
 									,Documento.RECIBO
 									,null
-									,null
+									,null, false
 									);
 						}
 					}
@@ -2899,7 +2899,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,"0"
 								,Documento.EXTERNO_AP
 								,null
-								,null
+								,null, false
 								);
 					}
 					
@@ -2934,7 +2934,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,"0"
 								,Documento.EXTERNO_CAIC
 								,null
-								,null
+								,null, false
 								);
 					}
 
@@ -2964,7 +2964,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,"0"
 								,Documento.EXTERNO_AEUA
 								,null
-								,null
+								,null, false
 								);
 					}
 					
@@ -2999,7 +2999,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,"0"
 								,Documento.EXTERNO_INCISOS_FLOTILLAS
 								,null
-								,null
+								,null, false
 								);
 						
 						/**
@@ -3054,7 +3054,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 										,"0"
 										,Documento.EXTERNO_TARJETA_IDENTIFICACION
 										,null
-										,null
+										,null, false
 										);
 							}
 							
@@ -3105,7 +3105,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,"0"
 								,Documento.EXTERNO_REDUCE_GS
 								,null
-								,null
+								,null, false
 								);
 					}
 					if(gestoria){
@@ -3133,7 +3133,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,"0"
 								,Documento.EXTERNO_GESTORIA_GS
 								,null
-								,null
+								,null, false
 								);
 					}
 					
@@ -3186,7 +3186,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,"0"
 								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
 								,null
-								,null
+								,null, false
 								);
 
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.condgralescobsegvida")+"\">Condiciones Generales Seguro de Vida</a>";
@@ -3209,7 +3209,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,"0"
 								,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
 								,null
-								,null
+								,null, false
 								);
 					}
 					
@@ -4057,7 +4057,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,"0"
 								,Documento.EXTERNO_CARATULA
 								,null
-								,null
+								,null, false
 								);
 						
 						
@@ -4113,7 +4113,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 										,"0"
 										,Documento.RECIBO
 										,null
-										,null
+										,null, false
 										);
 							}
 						}
@@ -4167,7 +4167,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,"0"
 									,Documento.EXTERNO_AP
 									,null
-									,null
+									,null, false
 									);
 						}
 						
@@ -4202,7 +4202,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,"0"
 									,Documento.EXTERNO_CAIC
 									,null
-									,null
+									,null, false
 									);
 						}
 
@@ -4232,7 +4232,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,"0"
 									,Documento.EXTERNO_AEUA
 									,null
-									,null
+									,null, false
 									);
 						}
 						
@@ -4268,7 +4268,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,"0"
 									,Documento.EXTERNO_INCISOS_FLOTILLAS
 									,null
-									,null
+									,null, false
 									);
 							
 							
@@ -4325,7 +4325,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 											,"0"
 											,Documento.EXTERNO_TARJETA_IDENTIFICACION
 											,null
-											,null
+											,null, false
 											);
 								}
 								
@@ -4376,7 +4376,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,"0"
 									,Documento.EXTERNO_REDUCE_GS
 									,null
-									,null
+									,null, false
 									);
 						}
 						if(gestoria){
@@ -4404,7 +4404,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,"0"
 									,Documento.EXTERNO_GESTORIA_GS
 									,null
-									,null
+									,null, false
 									);
 						}
 						
@@ -4456,7 +4456,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,"0"
 									,Documento.EXTERNO_ESPECIF_SEGURO_VIDA
 									,null
-									,null
+									,null, false
 									);
 
 							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.condgralescobsegvida")+"\">Condiciones Generales Seguro de Vida</a>";
@@ -4479,7 +4479,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,"0"
 									,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
 									,null
-									,null
+									,null, false
 									);
 						}
 
@@ -5310,7 +5310,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					,null
 					,null
 					,null
-					,null
+					,null, false
 					);
 	    }
 		catch(Exception ex)

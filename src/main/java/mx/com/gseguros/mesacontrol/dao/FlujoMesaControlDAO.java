@@ -54,6 +54,8 @@ public interface FlujoMesaControlDAO {
 	 * @throws Exception
 	 */
 	public List<Map<String, String>> recuperaTdocume() throws Exception;
+	
+	public List<Map<String, String>> recuperaTrequisi() throws Exception;
 
 	/**
 	 * 
@@ -569,7 +571,7 @@ public interface FlujoMesaControlDAO {
 			,String cdsisrol
 			)throws Exception;
 	
-	public List<Map<String,String>> recuperarDocumentosRevisionFaltantes(
+	public Map<String, Object> recuperarDocumentosRevisionFaltantes(
 			String cdtipflu
 			,String cdflujomc
 			,String cdrevisi
@@ -731,4 +733,36 @@ public interface FlujoMesaControlDAO {
 	public List<Map<String, String>> recuperarRolesPermisoRegresarVencido(String ntramite, String status) throws Exception;
 	
 	public Map<String, String> recuperarDatosVencimiento (String ntramite) throws Exception;
+	
+	public void movimientoTrequisi (String cdrequisi, String dsrequisi, String cdtiptra, String accion) throws Exception;
+	
+	public void movimientoTflurevreq (
+			String cdtipflu, 
+			String cdflujomc,
+			String cdrevisi,
+			String cdrequisi,
+			String swobliga,
+			String swlista,
+			String accion
+			) throws Exception;
+	
+	public List<Map<String, String>> recuperaTflurevreq (String cdtipflu, String cdflujomc, String cdrevisi) throws Exception;
+	
+	public void marcarRequisitoRevision (
+			String cdtipflu,
+			String cdflujomc,
+			String ntramite,
+			String cdrequisi,
+			boolean activo,
+			String cdusuari,
+			String cdsisrol) throws Exception;
+	
+	public void marcarRevisionConfirmada (
+			String cdtipflu,
+			String cdflujomc,
+			String ntramite,
+			String cdrevisi,
+			boolean confirmada,
+			String cdusuari,
+			String cdsisrol) throws Exception;
 }

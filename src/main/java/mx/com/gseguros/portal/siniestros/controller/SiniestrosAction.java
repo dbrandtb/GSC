@@ -828,7 +828,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					,null
 					,null
 					,null
-					,null
+					,null, false
 					);
 			
 		}catch( Exception e){
@@ -1296,7 +1296,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							,null
 							,null
 							,null
-							,null
+							,null, false
 							);
 					
 				}
@@ -5478,7 +5478,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							
 						}else{
 							banderaValidacion = "1";
-							mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el Límite permitido. <br/>";							
+							mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el Lï¿½mite permitido. <br/>";							
 						}
 					}
 				}
@@ -5754,7 +5754,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				this.params = params;
 				
 				if(cdpresta.equalsIgnoreCase("24104") && tipoproc.equalsIgnoreCase("1")){
-					logger.debug("No entra a la generación de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
+					logger.debug("No entra a la generaciï¿½n de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
 					HashMap<String, Object> paramsPagoDirecto = new HashMap<String, Object>();
 					paramsPagoDirecto.put("pv_ntramite_i",slist1.get(i).get("NTRAMITE"));
 					String montoTramite = siniestrosManager.obtieneMontoTramitePagoDirecto(paramsPagoDirecto);
@@ -5765,7 +5765,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					siniestrosManager.actualizaOTValorMesaControl(otvalor);
 					
 				}else{
-					logger.debug("entra a la generación de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
+					logger.debug("entra a la generaciï¿½n de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
 					generarCalculoSiniestros();
 				}
 			}

@@ -168,11 +168,14 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             String cddocume = smap1.get("cddocumeFlujo");        //combo de mesa de control de flujos
             String cddocumeRevisi = smap1.get("cddocumeRevisi"); //sin combo, cuando se sube desde revision uno particular
             
+            boolean sustituir = false;
+            
             if (StringUtils.isBlank(codidocu)) {
             	if (StringUtils.isNotBlank(cddocume)) {
             		codidocu = cddocume;
             	} else if (StringUtils.isNotBlank(cddocumeRevisi)) {
             		codidocu = cddocumeRevisi;
+            		sustituir = true;
             	}
             }
             
@@ -195,6 +198,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             		,null
             		,usuario.getUser()
             		,usuario.getRolActivo().getClave()
+            		,sustituir
             		);
             
             exito = true;

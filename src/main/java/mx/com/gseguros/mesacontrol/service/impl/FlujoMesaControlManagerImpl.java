@@ -88,6 +88,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			items.put("tdocumeFormItems" , gc.getItems());
 			
+			List<ComponenteVO> trequisiCmp = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "TREQUISI", null);
+			gc.generaComponentes(trequisiCmp, true, false, true, false, false, false);
+			
+			items.put("trequisiFormItems" , gc.getItems());
+			
 			List<ComponenteVO> comboCdtipram = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "COMBO_CDTIPRAM", null);
 			gc.generaComponentes(comboCdtipram, true, false, true, false, false, false);
 			
@@ -1244,7 +1249,20 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			paso = "Recuperando documentos";
 			logger.debug(paso);
 			
-			List<Map<String,String>> permisos = flujoMesaControlDAO.recuperaTflurevdoc(cdtipflu, cdflujomc, cdrevisi);
+			List<Map<String,String>> documentos = flujoMesaControlDAO.recuperaTflurevdoc(cdtipflu, cdflujomc, cdrevisi);
+			List<Map<String,String>> requisitos = flujoMesaControlDAO.recuperaTflurevreq(cdtipflu, cdflujomc, cdrevisi);
+			
+			List<Map<String, String>> permisos = new ArrayList<Map<String, String>>();
+			
+			for (Map<String, String> documento : documentos ) {
+				documento.put("TIPO", "DOC");
+				permisos.add(documento);
+			}
+			
+			for (Map<String, String> requisito : requisitos) {
+				requisito.put("TIPO", "REQ");
+				permisos.add(requisito);
+			}
 			
 			logger.debug(Utils.log(
 					 "\nmapa="  , revision
@@ -1315,15 +1333,30 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			for(Map<String,String>ite : list)
 			{
-				flujoMesaControlDAO.movimientoTflurevdoc(
-						cdtipflu
-						,cdflujomc
-						,cdrevisi
-						,ite.get("CDDOCUME")
-						,ite.get("SWOBLIGA")
-						,ite.get("SWLISTA")
-						,"I"
-						);
+				String tipo = ite.get("TIPO");
+				if ("DOC".equals(tipo)) {
+					flujoMesaControlDAO.movimientoTflurevdoc(
+							cdtipflu
+							,cdflujomc
+							,cdrevisi
+							,ite.get("CDDOCUME")
+							,ite.get("SWOBLIGA")
+							,ite.get("SWLISTA")
+							,"I"
+							);
+				} else if ("REQ".equals(tipo)) {
+					flujoMesaControlDAO.movimientoTflurevreq(
+							cdtipflu
+							,cdflujomc
+							,cdrevisi
+							,ite.get("CDREQUISI")
+							,ite.get("SWOBLIGA")
+							,ite.get("SWLISTA")
+							,"I"
+							);
+				} else {
+					throw new ApplicationException("El dato en la lista de datos de revisi\u00f3n no tiene un tipo v\u00e1lido");
+				}
 			}
 		}
 		catch(Exception ex)
@@ -1349,7 +1382,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ movimientoTdocume @@@@@@"
 				,"\n@@@@@@ accion="   , accion
-				,"\n@@@@@@ dsdocume=" , dsdocume
+				,"\n@@@@@@ cddocume=" , cddocume
 				,"\n@@@@@@ dsdocume=" , dsdocume
 				,"\n@@@@@@ cdtiptra=" , cdtiptra
 				));
@@ -2192,7 +2225,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public List<Map<String,String>> ejecutaRevision(FlujoVO flujo)throws Exception
+	public Map<String, Object> ejecutaRevision(FlujoVO flujo)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2200,8 +2233,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ flujo=",flujo
 				));
 		
-		List<Map<String,String>> docsFaltan = null;
-		String                   paso       = null;
+		Map<String, Object> docsFaltan = null;
+		String             paso       = null;
 		
 		try
 		{
@@ -3243,5 +3276,103 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			"\n@@@@@@ regresarTramiteVencido @@@@@@",
 			"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 		return result;
+	}
+	
+	@Override
+	public void movimientoTrequisi(
+			String accion
+			,String cdrequisi
+			,String dsrequisi
+			,String cdtiptra
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ movimientoTrequisi @@@@@@"
+				,"\n@@@@@@ accion="    , accion
+				,"\n@@@@@@ cdrequisi=" , cdrequisi
+				,"\n@@@@@@ dsrequisi=" , dsrequisi
+				,"\n@@@@@@ cdtiptra="  , cdtiptra
+				));
+		
+		String paso = "Guardando documento";
+		logger.debug(paso);
+		
+		try
+		{
+			flujoMesaControlDAO.movimientoTrequisi(cdrequisi, dsrequisi, cdtiptra, accion);
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				 "\n@@@@@@ movimientoTrequisi @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public void marcarRequisitoRevision (
+			String cdtipflu,
+			String cdflujomc,
+			String ntramite,
+			String cdrequisi,
+			boolean activo,
+			String cdusuari,
+			String cdsisrol) throws Exception {
+		logger.debug(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ marcarRequisitoRevision @@@@@@",
+				"\n@@@@@@ cdtipflu  = " , cdtipflu,
+				"\n@@@@@@ cdflujomc = " , cdflujomc,
+				"\n@@@@@@ ntramite  = " , ntramite,
+				"\n@@@@@@ cdrequisi = " , cdrequisi,
+				"\n@@@@@@ activo    = " , activo,
+				"\n@@@@@@ cdusuari  = " , cdusuari,
+				"\n@@@@@@ cdsisrol  = " , cdsisrol);
+		String paso = null;
+		try {
+			paso = "Marcando requisito de revisi\u00f3n";
+			logger.debug(paso);
+			flujoMesaControlDAO.marcarRequisitoRevision(cdtipflu, cdflujomc, ntramite, cdrequisi, activo, cdusuari, cdsisrol);
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(
+				"\n@@@@@@ marcarRequisitoRevision @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+	}
+	
+	@Override
+	public void marcarRevisionConfirmada (
+			String cdtipflu,
+			String cdflujomc,
+			String ntramite,
+			String cdrevisi,
+			boolean confirmada,
+			String cdusuari,
+			String cdsisrol) throws Exception {
+		logger.debug(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ marcarRevisionConfirmada @@@@@@",
+				"\n@@@@@@ cdtipflu  = " , cdtipflu,
+				"\n@@@@@@ cdflujomc = " , cdflujomc,
+				"\n@@@@@@ ntramite  = " , ntramite,
+				"\n@@@@@@ cdrequisi = " , cdrevisi,
+				"\n@@@@@@ activo    = " , confirmada,
+				"\n@@@@@@ cdusuari  = " , cdusuari,
+				"\n@@@@@@ cdsisrol  = " , cdsisrol);
+		String paso = null;
+		try {
+			paso = "Marcando requisito de revisi\u00f3n";
+			logger.debug(paso);
+			flujoMesaControlDAO.marcarRevisionConfirmada(cdtipflu, cdflujomc, ntramite, cdrevisi, confirmada, cdusuari, cdsisrol);
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(
+				"\n@@@@@@ marcarRevisionConfirmada @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 	}
 }

@@ -1410,7 +1410,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            		,null
 	            		,null
 	            		,null
-	            		,null
+	            		,null, false
 	            		);
             }
     		catch(Exception ex)
@@ -1480,7 +1480,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 						,null
 						,null
 						,null
-						,null
+						,null, false
 						);
 	    		
 	    		//guardar excel 2
@@ -1537,7 +1537,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 						,null
 						,null
 						,null
-						,null
+						,null, false
 						);
     		}
     		catch(Exception ex)

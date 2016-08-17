@@ -1039,7 +1039,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
-							,Documento.RECIBO, null, null
+							,Documento.RECIBO, null, null, false
 							);
 				//}
 			}catch(Exception e){
