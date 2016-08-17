@@ -31,6 +31,8 @@
     var _GLOBAL_URL_TURNAR                  = '<s:url namespace="/flujomesacontrol" action="turnarTramite"                          />';
     var _GLOBAL_URL_ENVIAR_CORREO_FLUJO     = '<s:url namespace="/flujomesacontrol" action="enviaCorreoFlujo"						/>';
     var _GLOBAL_URL_REGRESAR_TRAM_VENCIDO   = '<s:url namespace="/flujomesacontrol" action="regresarTramiteVencido"                 />';
+    var _GLOBAL_URL_MARCAR_REQUISITO        = '<s:url namespace="/flujomesacontrol" action="marcarRequisitoRevision"                />';
+    var _GLOBAL_URL_CONFIRMAR_REVISION      = '<s:url namespace="/flujomesacontrol" action="marcarRevisionConfirmada"               />';
     
     var _GLOBAL_COMP_URL_VENTANA_DOCS               = '<s:url namespace="/documentos"       action="ventanaDocumentosPoliza"   />'
         ,_GLOBAL_COMP_URL_GET_HISTORIAL             = '<s:url namespace="/mesacontrol"      action="obtenerDetallesTramite"    />'

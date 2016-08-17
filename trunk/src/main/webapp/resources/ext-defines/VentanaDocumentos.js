@@ -11,7 +11,7 @@ Ext.define('VentanaDocumentos',
     ,mostrar     : function()
     {
         var me = this;
-        centrarVentanaInterna(me.show());
+        return centrarVentanaInterna(me.show());
     }
     ,constructor : function(config)
     {

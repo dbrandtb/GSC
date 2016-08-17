@@ -4391,7 +4391,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                //FECHA NACIMIENTO
 	                try {
 		                auxDate=row.getCell(8).getDateCellValue();
-		                logger.debug(Utils.log("¬auxDate: ",auxDate));
+		                logger.debug(Utils.log("ï¿½auxDate: ",auxDate));
 		                if(auxDate!=null) {
 		                	Calendar cal = Calendar.getInstance();
 		                	cal.setTime(auxDate);
@@ -10063,7 +10063,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						,null
 						,null
-						,null
+						,null, false
 						);
 				
 				String urlReporteCotizacion2=Utils.join(
@@ -10113,7 +10113,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						,null
 						,null
-						,null
+						,null, false
 						);
 				
 				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit TMS:
@@ -10159,7 +10159,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,null
 							,null
-							,null
+							,null, false
 							
 							);
 					
@@ -10208,7 +10208,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,null
 							,null
-							,null
+							,null, false
 							);
 					
 					//exceles grupos
@@ -10253,7 +10253,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								,null
 								,null
 								,null
-								,null
+								,null, false
 								);
 					}
 				}

@@ -957,6 +957,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			{
 				lista = flujoMesaControlDAO.recuperaTdocume();
 			}
+			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TREQUISI))
+			{
+				lista = flujoMesaControlDAO.recuperaTrequisi();
+			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TICONOS))
 			{
 				lista = flujoMesaControlDAO.recuperaTiconos();

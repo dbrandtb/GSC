@@ -381,7 +381,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null         //codidocu
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,"0"
-						,Documento.REMESA_IMPRESION_LOTE, null, null
+						,Documento.REMESA_IMPRESION_LOTE, null, null, false
 						);
 				
 				paso = "Generando remesa excel";
@@ -420,7 +420,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,null           //cdorddoc
 						,null           //cdmoddoc
-, null, null
+, null, null, false
 						);
 				
 			}

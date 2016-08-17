@@ -241,7 +241,7 @@ public interface FlujoMesaControlManager
 			,String cdsisrol
 			)throws Exception;
 	
-	public List<Map<String,String>> ejecutaRevision(FlujoVO flujo)throws Exception;
+	public Map<String, Object> ejecutaRevision(FlujoVO flujo)throws Exception;
 	
 	public String turnarTramite(
 			String ntramite
@@ -351,4 +351,29 @@ public interface FlujoMesaControlManager
 	public void guardarMensajeCorreoEmision(String ntramite, String mensajeCorreoEmision) throws Exception;
 	
 	public Map<String, String> regresarTramiteVencido (String ntramite, boolean soloRevisar, String cdusuari, String cdsisrol) throws Exception;
+	
+	public void movimientoTrequisi(
+			String accion
+			,String cdrequisi
+			,String dsrequisi
+			,String cdtiptra
+			)throws Exception;
+	
+	public void marcarRequisitoRevision (
+			String cdtipflu,
+			String cdflujomc,
+			String ntramite,
+			String cdrequisi,
+			boolean activo,
+			String cdusuari,
+			String cdsisrol) throws Exception;
+	
+	public void marcarRevisionConfirmada (
+			String cdtipflu,
+			String cdflujomc,
+			String ntramite,
+			String cdrevisi,
+			boolean confirmada,
+			String cdusuari,
+			String cdsisrol) throws Exception;
 }

@@ -350,6 +350,7 @@ var _p52_urlGuardarDatosCorreo     = '<s:url namespace="/flujomesacontrol" actio
 var _p52_urlCargarDatosRevision    = '<s:url namespace="/flujomesacontrol" action="cargarDatosRevision"    />';
 var _p52_urlGuardarDatosRevision   = '<s:url namespace="/flujomesacontrol" action="guardarDatosRevision"   />';
 var _p52_urlMovimientoTdocume      = '<s:url namespace="/flujomesacontrol" action="movimientoTdocume"      />';
+var _p52_urlMovimientoTrequisi     = '<s:url namespace="/flujomesacontrol" action="movimientoTrequisi"     />';
 var _p52_urlCargarDatosAccion      = '<s:url namespace="/flujomesacontrol" action="cargarDatosAccion"      />';
 var _p52_urlGuardarDatosAccion     = '<s:url namespace="/flujomesacontrol" action="guardarDatosAccion"     />';
 var _p52_urlGuardarTtipflurol      = '<s:url namespace="/flujomesacontrol" action="guardarTtipflurol"      />';
@@ -399,6 +400,7 @@ var _p52_formComponente;
 var _p52_formPantalla;
 var _p52_formProceso;
 var _p52_formTdocume;
+var _p52_formTrequisi;
 var _p52_formCorreos;
 var _p52_winVarsCorreo;
 
@@ -1724,6 +1726,102 @@ Ext.onReady(function()
         }
     });
     
+    _p52_formTrequisi = Ext.create('Ext.window.Window',
+    {
+        title        : 'REQUISITO'
+        ,modal       : true
+        ,closeAction : 'hide'
+        ,items       :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                defaults : { style : 'margin:5px;' }
+                ,border  : 0
+                ,items   :
+                [
+                    <s:property value="items.trequisiFormItems" escapeHtml="false" />
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Guardar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            var ck = 'Guardando';
+                            try
+                            {
+                                var win  = me.up('window');
+                                var form = me.up('form').getForm();
+                                if(!form.isValid())
+                                {
+                                    throw 'Favor de revisar los datos';
+                                }
+                                
+                                _setLoading(true,win);
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p52_urlMovimientoTrequisi
+                                    ,params  : _formValuesToParams(form.getValues())
+                                    ,success : function(response)
+                                    {
+                                        _setLoading(false,win);
+                                        var ck = 'Decodificando respuesta al guardar requisito';
+                                        try
+                                        {
+                                            var json = Ext.decode(response.responseText);
+                                            debug('### mov trequisi:',json);
+                                            if(json.success==true)
+                                            {
+                                                win.hide();
+                                                _p52_panelRevision.hide();
+                                                _p52_panelCanvas.enable();
+                                                _fieldById('_p52_gridRevReq').store.reload();
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.message);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _setLoading(false,win);
+                                        errorComunicacion(null,'Error guardando requisito');
+                                    }
+                                });
+                            }
+                            catch(e)
+                            {
+                                _setLoading(false,win);
+                                manejaException(e,ck);
+                            }
+                        }
+                    }
+                ]
+            })
+        ]
+        ,showNew : function()
+        {
+            var me = this;
+            me.down('form').getForm().reset();
+            me.down('[name=ACCION]').setValue('I');
+            centrarVentanaInterna(me.show());
+        }
+        ,showEdit : function(record)
+        {
+            var me = this;
+            me.down('form').getForm().loadRecord(record);
+            me.down('[name=ACCION]').setValue('U');
+            centrarVentanaInterna(me.show());
+        }
+    });
+    
  	_p52_winVarsCorreo = Ext.create('Ext.window.Window',{
 		title        : 'VARIABLES'
 		,modal       : true
@@ -1779,7 +1877,7 @@ Ext.onReady(function()
                     xtype    : 'button'
                     ,text    : 'Recargar'
                     ,icon    : '${icons}control_repeat_blue.png'
-                    ,handler : function(){ location.reload(); }
+                    ,handler : function(){ _mask('Cargando...'); location.reload(); }
                 }
             ]
         }
@@ -2799,6 +2897,7 @@ Ext.onReady(function()
                                 ,title       : 'REVISI\u00D3N'
                                 ,hidden      : true
                                 ,buttonAlign : 'center'
+                                ,border      : 0
                                 ,buttons     :
                                 [
                                     {
@@ -2888,7 +2987,7 @@ Ext.onReady(function()
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : 'Nombre'
-                                                ,labelAlign : 'top'
+                                                //,labelAlign : 'top'
                                                 ,name       : 'DSREVISI'
                                                 ,allowBlank : false
                                             }
@@ -2896,9 +2995,116 @@ Ext.onReady(function()
                                     }
                                     ,Ext.create('Ext.grid.Panel',
                                     {
+                                        itemId    : '_p52_gridRevReq'
+                                        ,title    : 'REQUISITOS'
+                                        ,height   : 250
+                                        ,tools    :
+                                        [{
+                                            type     : 'plus'
+                                            ,tooltip : 'Agregar'
+                                            ,handler : function()
+                                            {
+                                                centrarVentanaInterna(
+                                                    Ext.MessageBox.confirm(
+                                                        'Confirmar'
+                                                        ,'Se perder\u00e1n los cambios no guardados en la revisi\u00f3n<br>¿Desea continuar?'
+                                                        ,function(btn)
+                                                        {
+                                                            if(btn === 'yes')
+                                                            {
+                                                                _p52_formTrequisi.showNew();
+                                                            }
+                                                        }
+                                                    )
+                                                );
+                                            }
+                                        }]
+                                        ,features :
+                                        [{
+                                            ftype           : 'groupingsummary'
+                                            ,startCollapsed : true
+                                            ,groupHeaderTpl :
+                                            [
+                                                '{name}'
+                                            ]
+                                        }]
+                                        ,columns :
+                                        [
+                                            {
+                                                text       : 'REQUISITO'
+                                                ,dataIndex : 'DSREQUISI'
+                                                ,flex      : 1
+                                            }
+                                            ,{
+                                                xtype    : 'actioncolumn'
+                                                ,tooltip : 'Editar'
+                                                ,icon    : '${icons}pencil.png'
+                                                ,width   : 30
+                                                ,handler : function(me,row,col,item,e,record)
+                                                {
+                                                    centrarVentanaInterna(
+                                                        Ext.MessageBox.confirm(
+                                                            'Confirmar'
+                                                            ,'Se perder\u00e1n los cambios no guardados en la revisi\u00f3n<br>¿Desea continuar?'
+                                                            ,function(btn)
+                                                            {
+                                                                if(btn === 'yes')
+                                                                {
+                                                                    _p52_formTrequisi.showEdit(record);
+                                                                }
+                                                            }
+                                                        )
+                                                    );
+                                                }
+                                            }
+                                            ,{
+                                                text       : 'INC.'
+                                                ,xtype     : 'checkcolumn'
+                                                ,dataIndex : 'SWLISTA'
+                                                ,width     : 50
+                                            }
+                                            ,{
+                                                text       : 'REQ.'
+                                                ,xtype     : 'checkcolumn'
+                                                ,dataIndex : 'SWOBLIGA'
+                                                ,width     : 50
+                                            }
+                                        ]
+                                        ,store : Ext.create('Ext.data.Store',
+                                        {
+                                            autoLoad    : true
+                                            ,groupField : 'DSTIPTRA'
+                                            ,fields     :
+                                            [
+                                                'CDREQUISI'
+                                                ,'DSREQUISI'
+                                                ,'CDTIPTRA'
+                                                ,'DSTIPTRA'
+                                                ,{ name : 'SWLISTA'   , type : 'boolean' }
+                                                ,{ name : 'SWOBLIGA'  , type : 'boolean' }
+                                            ]
+                                            ,proxy   :
+                                            {
+                                                type         : 'ajax'
+                                                ,url         : _p52_urlRecuperacion
+                                                ,extraParams :
+                                                {
+                                                    'params.consulta' : 'RECUPERAR_TREQUISI'
+                                                }
+                                                ,reader      :
+                                                {
+                                                    type  : 'json'
+                                                    ,root : 'list'
+                                                }
+                                            }
+                                        })
+                                    })
+                                    ,Ext.create('Ext.grid.Panel',
+                                    {
                                         itemId    : '_p52_gridRevDoc'
                                         ,title    : 'DOCUMENTOS'
-                                        ,height   : 320
+                                        ,height   : 250
+                                        ,border   : 0
                                         ,tools    :
                                         [{
                                             type     : 'plus'
@@ -3045,7 +3251,6 @@ Ext.onReady(function()
                                     {
                                         text     : 'Guardar'
                                         ,icon    : '${icons}disk.png'
-                                        //TODO
                                         ,handler : function(me)
                                         {
                                             _p52_guardarDatosCorreo
@@ -5140,6 +5345,13 @@ function _p52_cargarDatosRevision(cdrevisi)
             record.set('SWOBLIGA' , false);
         });
         
+        grid = _fieldById('_p52_gridRevReq');
+        grid.store.each(function(record)
+        {
+            record.set('SWLISTA'  , false);
+            record.set('SWOBLIGA' , false);
+        });
+        
         _p52_panelRevision.down('form').getForm().reset();
     
         ck = 'Recuperando datos de revisi\u00f3n';
@@ -5180,12 +5392,31 @@ function _p52_cargarDatosRevision(cdrevisi)
                             {
                                 var ite = json.list[i];
                                 
-                                if (ite.CDDOCUME == record.get('CDDOCUME') && 'S' == ite.SWOBLIGA)
+                                if (ite.TIPO === 'DOC' && ite.CDDOCUME == record.get('CDDOCUME') && 'S' == ite.SWOBLIGA)
                                 {
                                     record.set('SWOBLIGA',true);
                                 }
                                 
-                                if (ite.CDDOCUME == record.get('CDDOCUME') && 'S' == ite.SWLISTA)
+                                if (ite.TIPO === 'DOC' && ite.CDDOCUME == record.get('CDDOCUME') && 'S' == ite.SWLISTA)
+                                {
+                                    record.set('SWLISTA',true);
+                                }
+                            }
+                        });
+                        
+                        grid = _fieldById('_p52_gridRevReq');
+                        grid.store.each(function(record)
+                        {
+                            for(var i=0;i<json.list.length;i++)
+                            {
+                                var ite = json.list[i];
+                                
+                                if (ite.TIPO === 'REQ' && ite.CDREQUISI == record.get('CDREQUISI') && 'S' == ite.SWOBLIGA)
+                                {
+                                    record.set('SWOBLIGA',true);
+                                }
+                                
+                                if (ite.TIPO === 'REQ' && ite.CDREQUISI == record.get('CDREQUISI') && 'S' == ite.SWLISTA)
                                 {
                                     record.set('SWLISTA',true);
                                 }
@@ -5594,6 +5825,17 @@ function _p52_guardarDatosRevision(bot,callback)
         grid.store.each(function(record)
         {
             var datos      = record.getData();
+            datos.TIPO     = 'DOC';
+            datos.SWLISTA  = record.get("SWLISTA")  ? "S" : "N";
+            datos.SWOBLIGA = record.get("SWOBLIGA") ? "S" : "N";
+            jsonData.list.push(datos);
+        });
+        
+        grid = _fieldById('_p52_gridRevReq');
+        grid.store.each(function(record)
+        {
+            var datos      = record.getData();
+            datos.TIPO     = 'REQ';
             datos.SWLISTA  = record.get("SWLISTA")  ? "S" : "N";
             datos.SWOBLIGA = record.get("SWOBLIGA") ? "S" : "N";
             jsonData.list.push(datos);

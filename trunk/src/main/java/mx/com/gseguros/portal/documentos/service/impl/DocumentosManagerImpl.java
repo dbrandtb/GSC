@@ -219,7 +219,7 @@ public class DocumentosManagerImpl implements DocumentosManager
 			,String cdorddoc
 			,Documento documento
 			,String cdusuari
-			,String cdsisrol
+			,String cdsisrol, boolean sustituir
 			)throws Exception
 	{
 		mesaControlDAO.guardarDocumento(
@@ -240,7 +240,7 @@ public class DocumentosManagerImpl implements DocumentosManager
 				,cdorddoc
 				,documento
 				,cdusuari
-				,cdsisrol
+				,cdsisrol, sustituir
 				);
 	}
 	

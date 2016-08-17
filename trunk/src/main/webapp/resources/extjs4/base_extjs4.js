@@ -2133,15 +2133,20 @@ function _procesaAccion(
                             */
                             if(json.list.length==0)
                             {
+                                /* jtezva 16 agosto 2016
+                                 * se comenta porque ya no es requerida una accion posterior
                                 if (aux !== 'INICIAL') { // Solo avienta exception si no es INICIAL
                                     throw 'No hay acciones relacionadas a la revisi\u00f3n';
-                                } 
+                                }
+                                 */
                             }
                             else if(json.list.length==1)
                             {
                                 numSalidas = 1;
                                 accion1    = json.list[0];
                             }
+                            /*
+                             * jtezva 16 agosto 2016 ya no permite doble accion
                             else if(json.list.length==2)
                             {
                                 numSalidas = 2;
@@ -2169,12 +2174,18 @@ function _procesaAccion(
                                 {
                                     throw 'Las acciones relacionadas a la revisi\u00f3n no tienen el valor EXITO/ERROR adecuado';
                                 }
-                            }
+                            }*/
                             else
                             {
+                                /*
+                                 * jtezva 16 agosto 2016
+                                 * si tiene mas de dos entonces es error
                                 if (aux !== 'INICIAL') { // Solo avienta exception si no es INICIAL
+                                 */
                                     throw 'La revisi\u00f3n tiene demasiadas acciones relacionadas';
+                                /*
                                 }
+                                 */
                             }
                             
                             ck = 'Ejecutando revisi\u00f3n';
@@ -2211,17 +2222,19 @@ function _procesaAccion(
                                             var faltanDocs = false;
                                             
                                             for (var i = 0; i < json.list.length; i++) {
-                                                if (json.list[i].SWOBLIGA === 'S' && json.list[i].SUBIDO !== 'S') {
+                                                if (json.list[i].SWOBLIGA === 'S' && json.list[i].SWACTIVO !== 'S') {
                                                     faltanDocs = true;
                                                     break;
                                                 }
                                             }
                                             
+                                            /* jtezva 16 agosto 2016
                                             if (aux === 'INICIAL') {
                                                 faltanDocs = true;
                                             }
+                                            */
                                             
-                                            if (!faltanDocs) {
+                                            if (!faltanDocs && false) { // jtezva 16 agosto 2016 no se va a ir solo
 	                                            if(numSalidas==1)
 	                                            {
                                                     _procesaAccion
@@ -2271,8 +2284,28 @@ function _procesaAccion(
 	                                        }
 	                                        else
 	                                        {
+	                                            var listaDocs = [],
+	                                                listaReqs = [];
+	                                            
+	                                            for (var i = 0; i < json.list.length ; i++) {
+	                                                if (json.list[i].TIPO === 'DOC') {
+	                                                    listaDocs.push(json.list[i]);
+	                                                } else if (json.list[i].TIPO === 'REQ') {
+	                                                    json.list[i].CHECK = json.list[i].SWACTIVO === 'S';
+	                                                    listaReqs.push(json.list[i]);
+	                                                } else {
+	                                                    mensajeError('Tipo de doc/req inv\u00e1lido');
+	                                                }
+	                                            }
+	                                            
+	                                            debug('listaDocs:', listaDocs, '.');
+	                                            debug('listaReqs;', listaReqs, '.');
+	                                            
 	                                            centrarVentanaInterna(Ext.create('Ext.window.Window', {
-	                                                title    : 'REVISI\u00D3N DE DOCUMENTOS REQUERIDOS',
+	                                                title    : 'REVISI\u00D3N DE REQUISITOS Y DOCUMENTOS'
+	                                                           + (aux === 'LECTURA'
+	                                                               ? ' (SOLO LECTURA)'
+	                                                               : ''),
 	                                                itemId   : 'WINDOW_REVISION_DOCUMENTOS',
 	                                                flujo    : {
 	                                                    cdtipflu  : cdtipflu,
@@ -2294,7 +2327,7 @@ function _procesaAccion(
 	                                                    callback  : callback
 	                                                },
 	                                                modal    : true,
-	                                                closable : false,
+	                                                //closable : false,
 	                                                border   : 0,
 	                                                defaults : {
 	                                                    style : 'margin : 5px;'
@@ -2302,17 +2335,18 @@ function _procesaAccion(
 	                                                items    : [
 	                                                    {
 	                                                        xtype : 'displayfield',
-	                                                        value : 'Favor de revisar los documentos requeridos:'
+	                                                        value : 'Favor de revisar los requisitos y documentos obligatorios:'
 	                                                    }, {
 	                                                        xtype      : 'grid',
-	                                                        width      : 500,
-	                                                        height     : 300,
+	                                                        width      : 600,
+	                                                        height     : 200,
 	                                                        autoScroll : true,
+	                                                        tipo       : 'REQ',
 	                                                        border     : 0,
 	                                                        columns    : [
 	                                                            {
-	                                                                text      : 'DOCUMENTO',
-	                                                                dataIndex : 'DSDOCUME',
+	                                                                text      : 'REQUISITO',
+	                                                                dataIndex : 'DESCRIP',
 	                                                                flex      : 1
 	                                                            }, {
 	                                                                text      : 'OBLIGATORIO',
@@ -2327,8 +2361,50 @@ function _procesaAccion(
 	                                                                    return r;
 	                                                                }
                                                                 }, {
+                                                                    text      : 'ESTADO',
+                                                                    xtype     : 'checkcolumn',
+                                                                    dataIndex : 'CHECK',
+                                                                    disabled  : json.params.swconfirm === 'S',
+                                                                    width     : 80,
+                                                                    listeners : {
+                                                                        checkchange : function (me, row, checked) {
+                                                                            marcarRequisitoDesdeRevision(row, checked);
+                                                                        }
+                                                                    }
+                                                                }
+	                                                        ], store : Ext.create('Ext.data.Store', {
+	                                                            fields : [
+	                                                                'CLAVE', 'DESCRIP', 'SWOBLIGA', 'SWACTIVO', 'CHECK'
+	                                                            ],
+	                                                            data   : listaReqs
+	                                                        })
+	                                                    }, {
+                                                            xtype      : 'grid',
+                                                            width      : 600,
+                                                            height     : 200,
+                                                            autoScroll : true,
+                                                            tipo       : 'DOC',
+                                                            border     : 0,
+                                                            columns    : [
+                                                                {
+                                                                    text      : 'DOCUMENTO',
+                                                                    dataIndex : 'DESCRIP',
+                                                                    flex      : 1
+                                                                }, {
+                                                                    text      : 'OBLIGATORIO',
+                                                                    dataIndex : 'SWOBLIGA',
+                                                                    width     : 100,
+                                                                    renderer  : function (v)
+                                                                    {
+                                                                        var r = '';
+                                                                        if (v === 'S') {
+                                                                            r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'lock.png" />';
+                                                                        }
+                                                                        return r;
+                                                                    }
+                                                                }, {
                                                                     text      : 'CARGADO',
-                                                                    dataIndex : 'SUBIDO',
+                                                                    dataIndex : 'SWACTIVO',
                                                                     width     : 100,
                                                                     renderer  : function (v, md, rec)
                                                                     {
@@ -2343,11 +2419,12 @@ function _procesaAccion(
                                                                     }
                                                                 }, {
                                                                     width     : 30,
-                                                                    dataIndex : 'SUBIDO',
+                                                                    dataIndex : 'SWACTIVO',
                                                                     renderer  : function (v, md, rec, row)
                                                                     {
                                                                         var r = '';
-                                                                        if (v !== 'S') {
+                                                                        //if (v !== 'S' || true) {
+                                                                        if (json.params.swconfirm !== 'S') {
                                                                             r = '<a href="#" onclick="subirArchivoDesdeRevision(' + row + '); return false;">' +
                                                                                     '<img src="' + _GLOBAL_DIRECTORIO_ICONOS + 'page_add.png" ' +
                                                                                     'data-qtip="Subir archivo" /></a>';
@@ -2355,16 +2432,17 @@ function _procesaAccion(
                                                                         return r;
                                                                     }
                                                                 }
-	                                                        ], store : Ext.create('Ext.data.Store', {
-	                                                            fields : [
-	                                                                'CDDOCUME', 'DSDOCUME', 'SWOBLIGA', 'SUBIDO'
-	                                                            ],
-	                                                            data   : json.list
-	                                                        })
-	                                                    }
+                                                            ], store : Ext.create('Ext.data.Store', {
+                                                                fields : [
+                                                                    'CLAVE', 'DESCRIP', 'SWOBLIGA', 'SWACTIVO'
+                                                                ],
+                                                                data   : listaDocs
+                                                            })
+                                                        }
 	                                                ],
 	                                                buttonAlign : 'center',
 	                                                buttons     : [
+	                                                    /* jtezva 16 agosto 2016 ya no se usa
 	                                                    {
 	                                                        text    : 'Aceptar',
 	                                                        handler : function (me) {
@@ -2391,6 +2469,111 @@ function _procesaAccion(
                                                                         ,callback
                                                                     );
                                                                 }
+	                                                        }
+	                                                    }*/
+	                                                    {
+	                                                        text    : 'CONFIRMAR Y CONTINUAR',
+	                                                        icon    : _GLOBAL_DIRECTORIO_ICONOS + 'control_fastforward_blue.png',
+	                                                        hidden  : numSalidas === 0 || faltanDocs === true || aux === 'LECTURA' || aux === 'INICIAL',
+	                                                        handler : function (me) {
+	                                                            centrarVentanaInterna(Ext.MessageBox.confirm(
+	                                                                'Confirmar',
+	                                                                'La revisi\u00f3n no se podr\u00e1 modificar posteriormente ¿Desea continuar?',
+	                                                                function(btn)
+                                                                    {
+                                                                        if(btn === 'yes')
+                                                                        {
+            	                                                            var mask, ck = 'Confirmando revisi\u00f3n';
+            	                                                            try {
+            	                                                                mask = _maskLocal(ck);
+            	                                                                Ext.Ajax.request({
+            	                                                                    url     : _GLOBAL_URL_CONFIRMAR_REVISION,
+            	                                                                    params  : {
+            	                                                                        'params.cdtipflu'  : cdtipflu,
+            	                                                                        'params.cdflujomc' : cdflujomc,
+            	                                                                        'params.ntramite'  : ntramite,
+            	                                                                        'params.cdrevisi'  : clavedest,
+            	                                                                        'params.swconfirm' : 'S'
+            	                                                                    },
+            	                                                                    success : function (response) {
+            	                                                                        mask.close();
+            	                                                                        var ck = 'Decodificando respuesta al confirmar revisi\u00f3n';
+            	                                                                        try {
+            	                                                                            var json = Ext.decode(response.responseText);
+            	                                                                            debug('### confirmar revision:', json);
+            	                                                                            if (json.success === true) {
+            	                                                                                var win = me.up('window');
+                                                                                                _procesaAccion
+                                                                                                (
+                                                                                                    cdtipflu
+                                                                                                    ,cdflujomc
+                                                                                                    ,accion1.TIPODEST
+                                                                                                    ,accion1.CLAVEDEST
+                                                                                                    ,accion1.WEBIDDEST
+                                                                                                    ,accion1.AUX
+                                                                                                    ,ntramite
+                                                                                                    ,status
+                                                                                                    ,cdunieco
+                                                                                                    ,cdramo
+                                                                                                    ,estado
+                                                                                                    ,nmpoliza
+                                                                                                    ,nmsituac
+                                                                                                    ,nmsuplem
+                                                                                                    ,cdusuari
+                                                                                                    ,cdsisrol
+                                                                                                    ,callback
+                                                                                                );
+                                                                                                win.destroy();
+            	                                                                            } else {
+            	                                                                                mensajeError(json.message);
+            	                                                                            }
+            	                                                                        } catch (e) {
+            	                                                                            manejaException(e, ck);
+            	                                                                        }
+            	                                                                    },
+            	                                                                    failure : function () {
+            	                                                                        mask.close();
+            	                                                                        errorComunicacion(null, 'Error al confirmar revisi\u00f3n');
+            	                                                                    }
+            	                                                                });
+            	                                                            } catch (e) {
+            	                                                                manejaException(e, ck, mask);
+            	                                                            }
+                                                                        }
+                                                                    }
+                                                                ));
+	                                                        }
+	                                                    }, {
+	                                                        text    : 'DOCUMENTOS',
+	                                                        icon    : _GLOBAL_DIRECTORIO_ICONOS + 'printer.png',
+	                                                        handler : function (me) {
+	                                                            var win = me.up('window');
+	                                                            Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES+'VentanaDocumentos');
+                                                                var winDoc = new window['VentanaDocumentos']({
+                                                                    cdtipflu   : cdtipflu
+                                                                    ,cdflujomc : cdflujomc
+                                                                    ,tipoent   : tipodest
+                                                                    ,claveent  : clavedest
+                                                                    ,webid     : webiddest
+                                                                    ,aux       : ''/*'INICIAL' === flujo.aux || 'LECTURA' === flujo.aux 
+                                                                                             ? ''
+                                                                                             : flujo.aux*/
+                                                                    ,ntramite  : ntramite
+                                                                    ,status    : status
+                                                                    ,cdunieco  : cdunieco
+                                                                    ,cdramo    : cdramo
+                                                                    ,estado    : estado
+                                                                    ,nmpoliza  : nmpoliza
+                                                                    ,nmsituac  : nmsituac
+                                                                    ,nmsuplem  : nmsuplem
+                                                                    ,cdusuari  : cdusuari
+                                                                    ,cdsisrol  : cdsisrol
+                                                               }).mostrar();
+                                                               winDoc.on({
+                                                                   destroy : function() {
+                                                                       win.recargar();
+                                                                   }
+                                                               });
 	                                                        }
 	                                                    }
 	                                                ],
@@ -3084,7 +3267,7 @@ function subirArchivoDesdeRevision (row) {
     try {
         var win    = _fieldById('WINDOW_REVISION_DOCUMENTOS'),
             flujo  = win.flujo,
-            record = win.down('grid').getStore().getAt(row);
+            record = win.down('grid[tipo=DOC]').getStore().getAt(row);
         
         debug('win:'    , win    , '.');
         debug('flujo:'  , flujo  , '.');
@@ -3097,7 +3280,7 @@ function subirArchivoDesdeRevision (row) {
             ,tipoent           : flujo.tipodest
             ,claveent          : flujo.clavedest
             ,webid             : flujo.webiddest
-            ,aux               : 'INICIAL' === flujo.aux
+            ,aux               : 'INICIAL' === flujo.aux || 'LECTURA' === flujo.aux 
                                      ? ''
                                      : flujo.aux
             ,ntramite          : flujo.ntramite
@@ -3110,12 +3293,55 @@ function subirArchivoDesdeRevision (row) {
             ,nmsuplem          : flujo.nmsuplem
             ,cdusuari          : flujo.cdusuari
             ,cdsisrol          : flujo.cdsisrol
-            ,cddocumeParasubir : record.get('CDDOCUME')
-            ,dsdocumeParasubir : record.get('DSDOCUME')
+            ,cddocumeParasubir : record.get('CLAVE')
+            ,dsdocumeParasubir : record.get('DESCRIP')
             ,windowRevisi      : win
        }).mostrar();
     } catch(e) {
         manejaException(e, ck);
+    }
+}
+
+function marcarRequisitoDesdeRevision (row, checked) {
+    debug('>marcarRequisitoDesdeRevision args:', arguments);
+    
+    var mask, ck = 'Marcando requisito desde revisi\u00f3n';
+    try {
+        var win    = _fieldById('WINDOW_REVISION_DOCUMENTOS'),
+            flujo  = win.flujo,
+            record = win.down('grid[tipo=REQ]').getStore().getAt(row);
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url     : _GLOBAL_URL_MARCAR_REQUISITO,
+            params  : {
+                'params.cdtipflu'  : flujo.cdtipflu,
+                'params.cdflujomc' : flujo.cdflujomc,
+                'params.ntramite'  : flujo.ntramite,
+                'params.cdrequisi' : record.get('CLAVE'),
+                'params.swactivo'  : checked === true ? 'S' : 'N'
+            },
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al marcar requisito';
+                try {
+                    var json = Ext.decode(response.responseText);
+                    debug('### marcar requisito:', json);
+                    if (json.success === true) {
+                        win.recargar();
+                    } else {
+                        mensajeError(json.message);
+                    }
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al marcar requisito');
+            }
+        });
+    } catch(e) {
+        manejaException(e, ck, mask);
     }
 }
 

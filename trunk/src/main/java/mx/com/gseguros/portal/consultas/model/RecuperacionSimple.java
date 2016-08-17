@@ -54,6 +54,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_TCOMPMC										 ("L" , "RECUPERAR_TCOMPMC")    // MC
 	,RECUPERAR_TPROCMC 									 	 ("L" , "RECUPERAR_TPROCMC")    // MC
 	,RECUPERAR_TDOCUME                                       ("L" , "RECUPERAR_TDOCUME")    // MC
+	,RECUPERAR_TREQUISI                                      ("L" , "RECUPERAR_TREQUISI")   // MC
 	,RECUPERAR_TICONOS                                       ("L" , "RECUPERAR_TICONOS")    // MC
 	,RECUPERAR_TFLUJOMC                                      ("L" , "RECUPERAR_TFLUJOMC")   // MC
 	,RECUPERAR_TFLUEST 									 	 ("L" , "RECUPERAR_TFLUEST")    // MC
