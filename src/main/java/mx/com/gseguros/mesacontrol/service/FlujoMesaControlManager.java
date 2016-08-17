@@ -376,4 +376,7 @@ public interface FlujoMesaControlManager
 			boolean confirmada,
 			String cdusuari,
 			String cdsisrol) throws Exception;
+	
+	@Deprecated
+	public List<Map<String, String>> recuperarRequisitosDocumentosObligatoriosFaltantes (String ntramite) throws Exception;
 }

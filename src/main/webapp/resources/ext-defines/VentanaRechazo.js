@@ -370,13 +370,14 @@ Ext.define('VentanaRechazo',
                                                 url      : _GLOBAL_COMP_URL_GUARDA_CARTA_RECHAZO
                                                 ,params  :
                                                 {
-                                                    'map1.ntramite'  : config.ntramite
-                                                    ,'map1.comments' : me.up('window').down('[name=COMMENTSEXT]').getValue()
-                                                    ,'map1.cdsisrol' : config.cdsisrol
-                                                    ,'map1.cdunieco' : config.cdunieco
-                                                    ,'map1.cdramo'   : config.cdramo
-                                                    ,'map1.estado'   : config.estado
-                                                    ,'map1.nmpoliza' : 'R'
+                                                    'map1.ntramite'    : config.ntramite
+                                                    ,'map1.comments'   : me.up('window').down('[name=COMMENTSEXT]').getValue()
+                                                    ,'map1.cdsisrol'   : config.cdsisrol
+                                                    ,'map1.cdunieco'   : config.cdunieco
+                                                    ,'map1.cdramo'     : config.cdramo
+                                                    ,'map1.estado'     : config.estado
+                                                    ,'map1.nmpoliza'   : 'R'
+                                                    ,'map1.cdrazrecha' : json.params.CDRAZRECHA
                                                 }
                                                 ,success : function()
                                                 {

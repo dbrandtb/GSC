@@ -3396,4 +3396,29 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String, String>> recuperarRequisitosDocumentosObligatoriosFaltantes (String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite", ntramite);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarRequisitosDocumentosObligatoriosFaltantesSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarRequisitosDocumentosObligatoriosFaltantes lista = ",lista));
+		return lista;
+	}
+	
+	protected class RecuperarRequisitosDocumentosObligatoriosFaltantesSP extends StoredProcedure {
+		protected RecuperarRequisitosDocumentosObligatoriosFaltantesSP (DataSource dataSource) {
+			super(dataSource,"P_GET_LISTA_REQ_REV_FALTAN");
+			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
+			String[] cols = new String[]{ "TIPO", "DESCRIP"};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
