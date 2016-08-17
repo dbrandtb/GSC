@@ -3375,4 +3375,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				"\n@@@@@@ marcarRevisionConfirmada @@@@@@",
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 	}
+	
+	@Deprecated
+	@Override
+	public List<Map<String, String>> recuperarRequisitosDocumentosObligatoriosFaltantes (String ntramite) throws Exception {
+		return flujoMesaControlDAO.recuperarRequisitosDocumentosObligatoriosFaltantes(ntramite);
+	}
 }

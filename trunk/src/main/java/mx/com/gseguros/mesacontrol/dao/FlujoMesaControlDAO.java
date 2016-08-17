@@ -765,4 +765,6 @@ public interface FlujoMesaControlDAO {
 			boolean confirmada,
 			String cdusuari,
 			String cdsisrol) throws Exception;
+	
+	public List<Map<String, String>> recuperarRequisitosDocumentosObligatoriosFaltantes (String ntramite) throws Exception;
 }

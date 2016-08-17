@@ -5191,9 +5191,59 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			String cdsisrol = Utils.validateSession(session).getRolActivo().getClave();
 			
-			String ntramite    = map1.get("ntramite");
-			String comments    = map1.get("comments");
-			logger.debug(comments);
+			String ntramite   = map1.get("ntramite");
+			String comments   = map1.get("comments");
+			String cdrazrecha = map1.get("cdrazrecha");
+			
+			// Cuando es por falta de informacion se meten en la carta los reqs y docs obligatorios faltantes
+			if ("5".equals(cdrazrecha)) {
+				logger.debug("Se agregan los reqs y docs faltantes por ser cdrazrecha 5");
+				List<Map<String, String>> reqsDocsFaltan = flujoMesaControlManager.recuperarRequisitosDocumentosObligatoriosFaltantes(ntramite);
+				List<Map<String, String>> docsFaltan = new ArrayList<Map<String, String>>();
+				List<Map<String, String>> reqsFaltan = new ArrayList<Map<String, String>>();
+				for (Map<String, String> faltante : reqsDocsFaltan) {
+					if ("REQ".equals(faltante.get("TIPO"))) {
+						reqsFaltan.add(faltante);
+					} else if ("DOC".equals(faltante.get("TIPO"))) {
+						docsFaltan.add(faltante);
+					}
+				}
+				
+				if (docsFaltan.size() + reqsFaltan.size() > 0) {
+					logger.debug("Si hay reqs y/o docs faltantes");
+					StringBuilder sb = new StringBuilder(StringUtils.isBlank(comments)
+						? ""
+						: comments);
+					
+					sb.append("\n");
+					
+					if (reqsFaltan.size() > 0) {
+						sb.append("\nREQUISITOS OBLIGATORIOS FALTANTES:\n");
+						int i = 1;
+						for (Map<String, String> req : reqsFaltan) {
+							sb.append(Utils.join(
+									i++, ". ", req.get("DESCRIP"), "\n"
+									));
+						}
+					}
+					
+					if (docsFaltan.size() > 0) {
+						sb.append("\nDOCUMENTOS OBLIGATORIOS FALTANTES:\n");
+						int i = 1;
+						for (Map<String, String> doc : docsFaltan) {
+							sb.append(Utils.join(
+									i++, ". ", doc.get("DESCRIP"), "\n"
+									));
+						}
+					}
+					
+					comments = sb.toString();
+				} else {
+					logger.debug("No hay reqs y/o docs faltantes");
+				}
+			}
+			
+			logger.debug(Utils.log("comments = ", comments));
 			// Se reemplazan acentos y otros caracteres:
 			String commentsM   = comments.
 					replaceAll("\u00E1", "_a_").
@@ -5208,7 +5258,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					replaceAll("\u00DA", "_U_").
 					replaceAll("\u00F1", "_n_").
 					replaceAll("\u00D1", "_N_").
-					replaceAll("\n"    , "_s_");
+					replaceAll("\n"    , "_s_").
+					replaceAll("\""    , "");
 			//String cdsisrol    = map1.get("cdsisrol");
 			String cdunieco    = map1.get("cdunieco");
 			String cdramo      = map1.get("cdramo");
