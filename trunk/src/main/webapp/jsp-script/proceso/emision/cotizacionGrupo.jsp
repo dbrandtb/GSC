@@ -782,6 +782,7 @@ Ext.onReady(function()
                                 xtype   : 'fieldset'
                                 ,title  : '<span style="font:bold 14px Calibri;">DATOS DEL CONTRATANTE</span>'
                                 ,hidden: (_p21_smap1.cdsisrol=='SUSCRIPTOR'&& (_p21_smap1.status-0==19 || _p21_smap1.status-0==21 || _p21_smap1.status-0==23) ) ? true :false
+                                ,disabled : ( !Ext.isEmpty(_p21_smap1.estado) && _p21_smap1.estado == 'M' )   
                                 ,layout :
                                 {
                                     type     : 'table'
