@@ -155,6 +155,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TESTADOS:
 				case TZONAS:
 				case TEDOCIVIL:
+				case OCUPACION:
 				case TFORMATOS:
 				case STATUSINIESTROS:
 				case STATUS_VIGENCIA_POL:
