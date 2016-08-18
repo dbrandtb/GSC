@@ -1740,6 +1740,19 @@ Ext.onReady(function()
                 ,items   :
                 [
                     <s:property value="items.trequisiFormItems" escapeHtml="false" />
+                    ,{
+                        xtype       : 'fieldcontainer'
+                        ,fieldLabel : 'PROPIEDADES'
+                        ,items      :
+                        [
+                            {
+                                xtype       : 'checkbox'
+                                ,boxLabel   : 'CAPTURAR DATO'
+                                ,name       : 'SWPIDEDATO'
+                                ,inputValue : 'S'
+                            }
+                        ]
+                    }
                 ]
                 ,buttonAlign : 'center'
                 ,buttons     :
@@ -3082,6 +3095,7 @@ Ext.onReady(function()
                                                 ,'DSTIPTRA'
                                                 ,{ name : 'SWLISTA'   , type : 'boolean' }
                                                 ,{ name : 'SWOBLIGA'  , type : 'boolean' }
+                                                ,'SWPIDEDATO'
                                             ]
                                             ,proxy   :
                                             {

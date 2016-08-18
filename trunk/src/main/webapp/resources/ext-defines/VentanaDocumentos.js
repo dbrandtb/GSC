@@ -3,10 +3,11 @@ Ext.define('VentanaDocumentos',
     extend       : 'Ext.window.Window'
     ,itemId      : '_c2_instance'
     ,closeAction : 'destroy'
-    ,modal       : true
     ,width       : 700
     ,height      : 400
     ,autoScroll  : true
+    ,collapsible   : true
+    ,titleCollapse : true
     ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
     ,mostrar     : function()
     {

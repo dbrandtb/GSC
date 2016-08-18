@@ -242,7 +242,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	protected class RecuperaTrequisiSP extends StoredProcedure {
 		protected RecuperaTrequisiSP(DataSource dataSource) {
 			super(dataSource,"PKG_MESACONTROL.P_GET_TREQUISI");
-			String[] cols=new String[]{ "CDREQUISI","DSREQUISI","CDTIPTRA","DSTIPTRA" };
+			String[] cols=new String[]{ "CDREQUISI","DSREQUISI","CDTIPTRA","DSTIPTRA","SWPIDEDATO" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -1924,7 +1924,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdrevisi"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("ntramite"  , OracleTypes.VARCHAR));
 			String cols[]=new String[]{
-					"TIPO", "CLAVE" , "DESCRIP", "SWLISTA", "SWOBLIGA", "SWACTIVO"
+					"TIPO", "CLAVE" , "DESCRIP", "SWLISTA", "SWOBLIGA", "SWACTIVO", "SWPIDEDATO", "DSDATO"
 			};
 			declareParameter(new SqlOutParameter("pv_swconfirm_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o"  , OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -3222,14 +3222,16 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			String cdrequisi
 			,String dsrequisi
 			,String cdtiptra
+			,boolean pideDato
 			,String accion
 			) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("cdrequisi" , cdrequisi);
-		params.put("dsrequisi" , dsrequisi);
-		params.put("cdtiptra"  , cdtiptra);
-		params.put("accion"    , accion);
+		params.put("cdrequisi"  , cdrequisi);
+		params.put("dsrequisi"  , dsrequisi);
+		params.put("cdtiptra"   , cdtiptra);
+		params.put("swpidedato" , pideDato ? "S" : "N");
+		params.put("accion"     , accion);
 		ejecutaSP(new MovimientoTrequisiSP(getDataSource()),params);
 	}
 	
@@ -3238,10 +3240,11 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		protected MovimientoTrequisiSP(DataSource dataSource)
 		{
 			super(dataSource,"PKG_MESACONTROL.P_MOV_TREQUISI");
-			declareParameter(new SqlParameter("cdrequisi" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("dsrequisi" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtiptra"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("accion"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdrequisi"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("dsrequisi"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtiptra"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swpidedato" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -3328,6 +3331,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			String ntramite,
 			String cdrequisi,
 			boolean activo,
+			String dsdato,
 			String cdusuari,
 			String cdsisrol) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
@@ -3336,6 +3340,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("ntramite"  , ntramite);
 		params.put("cdrequisi" , cdrequisi);
 		params.put("activo"    , activo ? "S" : "N");
+		params.put("dsdato"    , dsdato);
 		params.put("cdusuari"  , cdusuari);
 		params.put("cdsisrol"  , cdsisrol);
 		ejecutaSP(new MarcarRequisitoRevisionSP(getDataSource()), params);
@@ -3351,6 +3356,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("ntramite"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdrequisi" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("activo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("dsdato"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
@@ -3415,6 +3421,34 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			super(dataSource,"P_GET_LISTA_REQ_REV_FALTAN");
 			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
 			String[] cols = new String[]{ "TIPO", "DESCRIP"};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarRequisitosDatosTramite (String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite", ntramite);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarRequisitosDatosTramiteSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarRequisitosDatosTramite lista = ",lista));
+		return lista;
+	}
+	
+	protected class RecuperarRequisitosDatosTramiteSP extends StoredProcedure {
+		protected RecuperarRequisitosDatosTramiteSP (DataSource dataSource) {
+			super(dataSource,"P_GET_REQUISITOS_DATOS_TRAMITE");
+			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
+			String[] cols = new String[] {
+					"CDREQUISI" , "DSREQUISI" , "CDUSUARI" , "DSUSUARI",
+                    "CDSISROL"  , "DSSISROL"  , "FEFECHA"  , "DSDATO", "SWACTIVO"
+					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

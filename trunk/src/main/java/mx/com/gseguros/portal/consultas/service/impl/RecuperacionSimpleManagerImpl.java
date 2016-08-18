@@ -1189,6 +1189,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 						nmsolici,
 						cdramant
 				);
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_REQUISITOS_DATOS_TRAMITE)) {
+				lista = flujoMesaControlDAO.recuperarRequisitosDatosTramite(params.get("ntramite"));
 			}
 		}
 		catch(Exception ex)

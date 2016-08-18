@@ -3284,6 +3284,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String cdrequisi
 			,String dsrequisi
 			,String cdtiptra
+			,boolean pideDato
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -3293,6 +3294,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ cdrequisi=" , cdrequisi
 				,"\n@@@@@@ dsrequisi=" , dsrequisi
 				,"\n@@@@@@ cdtiptra="  , cdtiptra
+				,"\n@@@@@@ pideDato="  , pideDato
 				));
 		
 		String paso = "Guardando documento";
@@ -3300,7 +3302,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		
 		try
 		{
-			flujoMesaControlDAO.movimientoTrequisi(cdrequisi, dsrequisi, cdtiptra, accion);
+			flujoMesaControlDAO.movimientoTrequisi(cdrequisi, dsrequisi, cdtiptra, pideDato, accion);
 		}
 		catch(Exception ex)
 		{
@@ -3319,6 +3321,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			String ntramite,
 			String cdrequisi,
 			boolean activo,
+			String dsdato,
 			String cdusuari,
 			String cdsisrol) throws Exception {
 		logger.debug(
@@ -3329,13 +3332,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				"\n@@@@@@ ntramite  = " , ntramite,
 				"\n@@@@@@ cdrequisi = " , cdrequisi,
 				"\n@@@@@@ activo    = " , activo,
+				"\n@@@@@@ dsdato    = " , dsdato,
 				"\n@@@@@@ cdusuari  = " , cdusuari,
 				"\n@@@@@@ cdsisrol  = " , cdsisrol);
 		String paso = null;
 		try {
 			paso = "Marcando requisito de revisi\u00f3n";
 			logger.debug(paso);
-			flujoMesaControlDAO.marcarRequisitoRevision(cdtipflu, cdflujomc, ntramite, cdrequisi, activo, cdusuari, cdsisrol);
+			flujoMesaControlDAO.marcarRequisitoRevision(cdtipflu, cdflujomc, ntramite, cdrequisi, activo, dsdato, cdusuari, cdsisrol);
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}

@@ -2338,11 +2338,29 @@ function _procesaAccion(
 	                                                        value : 'Favor de revisar los requisitos y documentos obligatorios:'
 	                                                    }, {
 	                                                        xtype      : 'grid',
-	                                                        width      : 600,
+	                                                        width      : 700,
 	                                                        height     : 200,
 	                                                        autoScroll : true,
 	                                                        tipo       : 'REQ',
 	                                                        border     : 0,
+	                                                        selType    : 'cellmodel',
+                                                            plugins    : [
+                                                                Ext.create('Ext.grid.plugin.CellEditing', {
+                                                                    clicksToEdit : 1,
+                                                                    listeners : {
+                                                                        beforeedit : function (me, event) {
+                                                                            debug('DSDATO.editor.beforeedit! args:', arguments);
+                                                                            if ('S' !== event.record.get('SWPIDEDATO') || json.params.swconfirm === 'S') {
+                                                                                return false;
+                                                                            }
+                                                                        },
+                                                                        edit : function(me, event) {
+                                                                            var checked = !Ext.isEmpty(event.value) && !Ext.isEmpty(event.value.trim());
+                                                                            marcarRequisitoDesdeRevision(event.rowIdx, checked, event.value.trim());
+                                                                        }
+                                                                    }
+                                                                })
+                                                            ],
 	                                                        columns    : [
 	                                                            {
 	                                                                text      : 'REQUISITO',
@@ -2365,22 +2383,57 @@ function _procesaAccion(
                                                                     xtype     : 'checkcolumn',
                                                                     dataIndex : 'CHECK',
                                                                     disabled  : json.params.swconfirm === 'S',
-                                                                    width     : 80,
+                                                                    width     : 60,
                                                                     listeners : {
+                                                                        beforecheckchange : function (me, row, checked, eOpts) {
+                                                                            var win = _fieldById('WINDOW_REVISION_DOCUMENTOS'),
+                                                                                rec = win.down('grid[tipo=REQ]').getStore().getAt(row);
+                                                                            if ('S' === rec.get('SWPIDEDATO')) {
+                                                                                if (true === checked) {
+                                                                                    mensajeWarning('Para activar esta casilla por favor capture el valor en la columna VALOR');
+                                                                                } else {
+                                                                                    mensajeWarning('Para desactivar esta casilla por favor borre el valor en la columna VALOR');
+                                                                                }
+                                                                                return false;
+                                                                            }
+                                                                        },
                                                                         checkchange : function (me, row, checked) {
                                                                             marcarRequisitoDesdeRevision(row, checked);
                                                                         }
                                                                     }
+                                                                }, {
+                                                                    text      : 'SWPIDEDATO',
+                                                                    dataIndex : 'SWPIDEDATO',
+                                                                    width     : 100,
+                                                                    hidden    : true
+                                                                }, {
+                                                                    text      : 'VALOR',
+                                                                    dataIndex : 'DSDATO',
+                                                                    width     : 200,
+                                                                    renderer  : function (v, md, rec) {
+                                                                        if ('S' !== rec.get('SWPIDEDATO')) {
+                                                                            return '<span style="font-style : italic;">(N/A)</span>';
+                                                                        } else if (Ext.isEmpty(v) || Ext.isEmpty(v.trim())) {
+                                                                            return '<span style="font-style : italic;">HAGA CLIC PARA CAPTURAR...</span>';
+                                                                        }
+                                                                        return v;
+                                                                    },
+                                                                    editor    : {
+                                                                        xtype      : 'textfield',
+                                                                        itemId     : 'editorRevisiDsdato',
+                                                                        minLength  : 1,
+                                                                        maxLength  : 100
+                                                                    }
                                                                 }
 	                                                        ], store : Ext.create('Ext.data.Store', {
 	                                                            fields : [
-	                                                                'CLAVE', 'DESCRIP', 'SWOBLIGA', 'SWACTIVO', 'CHECK'
+	                                                                'CLAVE', 'DESCRIP', 'SWOBLIGA', 'SWACTIVO', 'CHECK', 'SWPIDEDATO', 'DSDATO'
 	                                                            ],
 	                                                            data   : listaReqs
 	                                                        })
 	                                                    }, {
                                                             xtype      : 'grid',
-                                                            width      : 600,
+                                                            width      : 700,
                                                             height     : 200,
                                                             autoScroll : true,
                                                             tipo       : 'DOC',
@@ -2478,7 +2531,7 @@ function _procesaAccion(
 	                                                        handler : function (me) {
 	                                                            centrarVentanaInterna(Ext.MessageBox.confirm(
 	                                                                'Confirmar',
-	                                                                'La revisi\u00f3n no se podr\u00e1 modificar posteriormente ¿Desea continuar?',
+	                                                                'La revisi\u00f3n de requisitos no se podr\u00e1 modificar posteriormente ¿Desea continuar?',
 	                                                                function(btn)
                                                                     {
                                                                         if(btn === 'yes')
@@ -3302,7 +3355,7 @@ function subirArchivoDesdeRevision (row) {
     }
 }
 
-function marcarRequisitoDesdeRevision (row, checked) {
+function marcarRequisitoDesdeRevision (row, checked, dsdato) {
     debug('>marcarRequisitoDesdeRevision args:', arguments);
     
     var mask, ck = 'Marcando requisito desde revisi\u00f3n';
@@ -3318,7 +3371,8 @@ function marcarRequisitoDesdeRevision (row, checked) {
                 'params.cdflujomc' : flujo.cdflujomc,
                 'params.ntramite'  : flujo.ntramite,
                 'params.cdrequisi' : record.get('CLAVE'),
-                'params.swactivo'  : checked === true ? 'S' : 'N'
+                'params.swactivo'  : checked === true ? 'S' : 'N',
+                'params.dsdato'    : dsdato
             },
             success : function (response) {
                 mask.close();
