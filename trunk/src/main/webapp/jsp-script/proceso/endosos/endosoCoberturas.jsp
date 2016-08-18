@@ -176,10 +176,9 @@
 										text    : 'Cancelar'
 										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
 										,handler : function (me){
-														marendNavegacion(2);
 														me.up('window').destroy();
-														
-										}
+														marendNavegacion(2);
+														}
 									   } ]
 					     }).show();
                     	

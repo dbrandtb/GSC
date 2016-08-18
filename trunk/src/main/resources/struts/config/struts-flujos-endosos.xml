@@ -103,6 +103,14 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="previewEndosoVigenciaPoliza" class="endososAutoAction" method="previewEndosoVigenciaPoliza">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
         <action name="guardarEndosoCambioVigencia" class="EndososAction" method="guardarEndosoCambioVigencia">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -707,6 +715,14 @@
             <result type="json" />
         </action>
         
+        <action name="previewEndosoTvalositAuto" class="endososAutoAction" method="previewEndosoTvalositAuto">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
+        
         <action name="confirmarEndosoAltaIncisoAuto" class="endososAutoAction" method="confirmarEndosoAltaIncisoAuto">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -827,6 +843,10 @@
         
         <action name="confirmarEndosoCancelacionPolAuto" class="endososAutoAction" method="confirmarEndosoCancelacionPolAuto">
             <result type="json" />
+        </action>
+        
+        <action name="previewEndosoCancelacionPolAuto" class="endososAutoAction" method="previewEndosoCancelacionPolAuto">
+             <result type="json" />
         </action>
         
         <action name="includes/endosoValositFormsAuto" class="endososAutoAction" method="endosoValositFormsAuto">

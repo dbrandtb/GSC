@@ -428,8 +428,8 @@ Ext.onReady(function()
 															,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
 															,handler : function (me){
 																			me.up('window').destroy();
-																			
-															}
+																			marendNavegacion(2);
+																			}
 														   } ]
 										     }).show();  
                                     }

@@ -6,18 +6,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-
-
 var _p29_urlRecotizar                      = '<s:url namespace="/endosos"           action="retarificarEndosos" />';
 var _p48_urlMovimientos                    = '<s:url namespace="/movimientos"       action="ejecutar"           />';
-
-
 ////// urls //////
 
 ////// variables //////
 
 
 ////// variables //////
+
 Ext.onReady(function()
 {	
 	// Se aumenta el timeout para todas las peticiones:
@@ -55,6 +52,34 @@ Ext.onReady(function()
             ,'TITULO'
         ]
     });
+    //////Funciones///////
+function sacaEndoso(){
+	Ext.Ajax.request(
+	    {
+	        url      : _p48_urlMovimientos
+	        ,params  :
+	        {
+	            'params.movimiento' : 'SACAENDOSO'
+	            ,'params.cdunieco'  : cdunieco
+	            ,'params.cdramo'    : cdramo
+	            ,'params.estado'    : estado
+	            ,'params.nmpoliza'  : nmpoliza
+	            ,'params.nsuplogi'  : nsuplogi
+	            ,'params.nmsuplem'  : nmsuplem
+	        }
+	        ,success : function(response)
+	        {
+	        	//marendNavegacion(2);
+	        	
+	        }
+	        ,failure : function()
+	        {
+	            //_setLoading(false,'_p48_panelpri');
+	            errorComunicacion(null,'Error al cancelar endoso');
+	        }
+	    });
+	}
+/////Funnciones//////
 	
 	Ext.Ajax.request(
     {
@@ -72,12 +97,14 @@ Ext.onReady(function()
             var jsonpreview = Ext.decode(response.responseText);
             debug('### jsonpreview:',jsonpreview);
              if(Ext.isEmpty(jsonpreview.slist1)) {
+             	sacaEndoso();
             	Ext.Msg.show(
                 {
-                    title    :'Error no hay datos'
-                    ,msg     : jsonpreview.mensajeRespuesta
-                    ,buttons : Ext.Msg.OK
-                    ,icon    : Ext.Msg.WARNING
+                	
+                    title    : 'Error no hay datos'
+                    ,msg     : 'No hay Informacion por mostrar...  '
+                    ,buttons: Ext.Msg.OK
+					,icon: Ext.Msg.ERROR
                 });
             }else{
             	
@@ -182,34 +209,15 @@ Ext.onReady(function()
 										]
 									})
                         })
-                       Ext.Ajax.request(
-		                {
-		                    url      : _p48_urlMovimientos
-    		                ,params  :
-    		                {
-    		                    'params.movimiento' : 'SACAENDOSO'
-    		                    ,'params.cdunieco'  : cdunieco
-    		                    ,'params.cdramo'    : cdramo
-    		                    ,'params.estado'    : estado
-    		                    ,'params.nmpoliza'  : nmpoliza
-    		                    ,'params.nsuplogi'  : nsuplogi
-    		                    ,'params.nmsuplem'  : nmsuplem
-    		                }
-    		                ,success : function(response)
-    		                {
-    		                	//marendNavegacion(2);
-    		                	
-    		                }
-    		                ,failure : function()
-    		                {
-    		                    //_setLoading(false,'_p48_panelpri');
-    		                    errorComunicacion(null,'Error al cancelar endoso');
-    		                }
-    		            });
-                        
-            
+                        sacaEndoso();
+         }
         }
-        }
+        ,failure : function()
+	        {
+	            sacaEndoso();
+	            errorComunicacion(null,'Error al cancelar endoso');
+	        }
+        
         
     })
 	
