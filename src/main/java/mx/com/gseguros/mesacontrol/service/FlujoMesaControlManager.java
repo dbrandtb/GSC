@@ -357,6 +357,7 @@ public interface FlujoMesaControlManager
 			,String cdrequisi
 			,String dsrequisi
 			,String cdtiptra
+			,boolean pideDato
 			)throws Exception;
 	
 	public void marcarRequisitoRevision (
@@ -365,6 +366,7 @@ public interface FlujoMesaControlManager
 			String ntramite,
 			String cdrequisi,
 			boolean activo,
+			String dsdato,
 			String cdusuari,
 			String cdsisrol) throws Exception;
 	

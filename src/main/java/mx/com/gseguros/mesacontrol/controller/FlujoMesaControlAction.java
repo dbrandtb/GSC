@@ -2541,10 +2541,11 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(params , "No se recibieron datos");
 			
-			String accion     = params.get("ACCION")
-			       ,cdrequisi = params.get("CDREQUISI")
-			       ,dsrequisi = params.get("DSREQUISI")
-			       ,cdtiptra  = params.get("CDTIPTRA");
+			String accion      = params.get("ACCION")
+			       ,cdrequisi  = params.get("CDREQUISI")
+			       ,dsrequisi  = params.get("DSREQUISI")
+			       ,cdtiptra   = params.get("CDTIPTRA")
+			       ,swpidedato = params.get("SWPIDEDATO");
 			
 			Utils.validate(
 					accion     , "No se recibi\u00f3 la acci\u00f3n"
@@ -2557,6 +2558,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdrequisi
 					,dsrequisi
 					,cdtiptra
+					,"S".equals(swpidedato)
 					);
 			
 			success = true;
@@ -2589,7 +2591,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				   cdflujomc = params.get("cdflujomc"),
 				   ntramite  = params.get("ntramite"),
 				   cdrequisi = params.get("cdrequisi"),
-				   swactivo  = params.get("swactivo");
+				   swactivo  = params.get("swactivo"),
+				   dsdato    = params.get("dsdato");
 			Utils.validate(
 					cdtipflu  , "Falta cdtipflu",
 					cdflujomc , "Falta cdflujomc",
@@ -2602,6 +2605,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					ntramite,
 					cdrequisi,
 					"S".equals(swactivo),
+					dsdato,
 					usuario.getUser(),
 					usuario.getRolActivo().getClave());
 			success = true;

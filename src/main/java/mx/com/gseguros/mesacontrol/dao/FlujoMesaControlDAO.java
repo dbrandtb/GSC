@@ -734,7 +734,7 @@ public interface FlujoMesaControlDAO {
 	
 	public Map<String, String> recuperarDatosVencimiento (String ntramite) throws Exception;
 	
-	public void movimientoTrequisi (String cdrequisi, String dsrequisi, String cdtiptra, String accion) throws Exception;
+	public void movimientoTrequisi (String cdrequisi, String dsrequisi, String cdtiptra, boolean pideDato, String accion) throws Exception;
 	
 	public void movimientoTflurevreq (
 			String cdtipflu, 
@@ -754,6 +754,7 @@ public interface FlujoMesaControlDAO {
 			String ntramite,
 			String cdrequisi,
 			boolean activo,
+			String dsdato,
 			String cdusuari,
 			String cdsisrol) throws Exception;
 	
@@ -767,4 +768,6 @@ public interface FlujoMesaControlDAO {
 			String cdsisrol) throws Exception;
 	
 	public List<Map<String, String>> recuperarRequisitosDocumentosObligatoriosFaltantes (String ntramite) throws Exception;
+	
+	public List<Map<String, String>> recuperarRequisitosDatosTramite (String ntramite) throws Exception;
 }
