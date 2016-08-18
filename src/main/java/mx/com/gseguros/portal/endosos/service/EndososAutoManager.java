@@ -84,6 +84,22 @@ public interface EndososAutoManager
 			,FlujoVO flujo
 			)throws Exception;
 	
+	public Map<String,Object> previewEndosoTvalositAuto(
+			String cdtipsup
+			,String tstamp
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String feefecto
+			,String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,UserVO usuarioSesion
+			,List<Map<String,String>> incisos
+			,FlujoVO flujo
+			)throws Exception;
+	
 	/**
 	 * @return incisoPoliza => Map String String,
 	 *         tvalopol     => Map String String,
@@ -196,6 +212,25 @@ public interface EndososAutoManager
 			)throws Exception;
 	
 	public void guardarEndosoVigenciaPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String ntramite
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,String feefecto
+			,String feproren
+			,String nmsuplemOriginal
+			,String cdsisrol
+			,FlujoVO flujo
+			)throws Exception;
+	
+	public Map<String, String> previewEndosoVigenciaPoliza(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -415,6 +450,22 @@ public interface EndososAutoManager
 	public Map<String,String> marcarPolizaCancelarPorEndoso(String cdunieco,String cdramo,String nmpoliza)throws Exception;
 	
 	public void confirmarEndosoCancelacionPolAuto(
+			String cdusuari
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdrazon
+			,Date feefecto
+			,Date fevencim
+			,Date fecancel
+			,String cdtipsup
+			,UserVO usuarioSesion
+			,String cdsisrol
+			,FlujoVO flujo
+			)throws Exception;
+	
+	public Map<String, Object> previewEndosoCancelacionPolAuto(
 			String cdusuari
 			,String cdunieco
 			,String cdramo

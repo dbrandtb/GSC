@@ -7,7 +7,9 @@ var _CONTEXT = '${ctx}';
 	
 	paramsEntrada.FEPROREN_ORIG = paramsEntrada.FEPROREN; 
 		
-	var guarda_Vigencia_Poliza = '<s:url namespace="/endosos" action=" guardarEndosoAmpliacionVigencia"       />';
+	var guarda_Vigencia_Poliza   = '<s:url namespace="/endosos"      action="guardarEndosoAmpliacionVigencia"       />';
+	var preview_Vigencia_Poliza  = '<s:url namespace="/endosos"      action="previewEndosoAmpliacionVigencia"       />';
+	var url_PantallaPreview      = '<s:url namespace="/endosos"      action="includes/previewEndosos"                />';
 	
 	var endAmpVigFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 	
@@ -63,7 +65,7 @@ var _CONTEXT = '${ctx}';
 	    	]
 			,buttonAlign:'center'
 			,buttons: [{
-				text: 'Confirmar endoso'
+				text: 'Emitir'
 				,icon:_CONTEXT+'/resources/fam3icons/icons/key.png'
 				,buttonAlign : 'center',
 				handler: function() {
@@ -89,28 +91,92 @@ var _CONTEXT = '${ctx}';
 	        				}
 	        				
 	        				Ext.Ajax.request( {
-	   						    url: guarda_Vigencia_Poliza,
+	   						    url: preview_Vigencia_Poliza,
 	   						    jsonData: Ext.encode(submitValues),
 	   						    success:function(response,opts){
 	   						    	 myMask.hide();
-	   						         var jsonResp = Ext.decode(response.responseText);
+	   						         var jsonResp1 = Ext.decode(response.responseText);
 	   						         
-	   						         var callbackRemesa = function()
-	   						         {
-	   						             marendNavegacion(2);
-	   						         };
-	   						         
-	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
-	   						      	 {
-	   						      	     _generarRemesaClic(
-	   						      	         true
-	   						      	         ,paramsEntrada.CDUNIECO
-	   						      	         ,paramsEntrada.CDRAMO
-	   						      	         ,paramsEntrada.ESTADO
-	   						      	         ,paramsEntrada.NMPOLIZA
-	   						      	         ,callbackRemesa
-	   						      	     );
-	   						      	 });
+	   						         Ext.create('Ext.window.Window',
+											{
+												title        : 'Tarifa final'
+												,id          : 'tarifa'
+												,autoScroll  : true
+												,modal       : true
+												,buttonAlign : 'center'
+												,width       : 600
+												,height      : 550
+												,defaults    : { width: 650 }
+												,closable    : false
+												,autoScroll  : true
+												,loader      :
+													{
+														url       : url_PantallaPreview
+														,params   :
+															{
+												   				'smap4.nmpoliza'  : paramsEntrada.NMPOLIZA
+					                                            ,'smap4.cdunieco' : paramsEntrada.CDUNIECO
+					                                            ,'smap4.cdramo'   : paramsEntrada.CDRAMO
+					                                            ,'smap4.estado'   : paramsEntrada.ESTADO
+					                                            ,'smap4.nmsuplem' : jsonResp1.smap2.pv_nmsuplem_o
+					                                            ,'smap4.nsuplogi' : jsonResp1.smap2.pv_nsuplogi_o
+					                                        }
+														,scripts  : true
+														,autoLoad : true
+												     }
+												,buttons:[{
+															text    : 'Confirmar endoso'
+															,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+															,handler : 
+																function (me){
+																	me.up('window').destroy();
+																	Ext.Ajax.request(
+																		{
+												   						    url: guarda_Vigencia_Poliza,
+												   						    jsonData: Ext.encode(submitValues),
+												   						    success:function(response,opts){
+												   						    	 myMask.hide();
+												   						         var jsonResp = Ext.decode(response.responseText);
+												   						         
+												   						         var callbackRemesa = function()
+												   						         {
+												   						             marendNavegacion(2);
+												   						         };
+												   						         
+												   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
+												   						      	 {
+												   						      	     _generarRemesaClic(
+												   						      	         true
+												   						      	         ,paramsEntrada.CDUNIECO
+												   						      	         ,paramsEntrada.CDRAMO
+												   						      	         ,paramsEntrada.ESTADO
+												   						      	         ,paramsEntrada.NMPOLIZA
+												   						      	         ,callbackRemesa
+												   						      	     );
+												   						      	 });
+												   						    },
+												   						    failure:function(response,opts){
+												   						        myMask.hide();
+												   						        Ext.Msg.show({
+												   						            title:'Error',
+												   						            msg: 'Error de comunicaci&oacute;n',
+												   						            buttons: Ext.Msg.OK,
+												   						            icon: Ext.Msg.ERROR
+												   						        });
+												   						    }
+												   						});
+													           }
+													           
+														   },
+														   {
+															text    : 'Cancelar'
+															,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+															,handler : function (me){
+																			me.up('window').destroy();
+																			marendNavegacion(2);
+																			}
+														 } ]
+										     }).show();
 	   						    },
 	   						    failure:function(response,opts){
 	   						        myMask.hide();

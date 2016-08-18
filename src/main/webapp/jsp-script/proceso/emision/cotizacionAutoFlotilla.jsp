@@ -6801,7 +6801,8 @@ function _p30_confirmarEndoso()
 										,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
 										,handler : 
 											function (me){
-												me.up('window').destroy();
+												boton.setText('Cargando...');
+        										boton.setDisabled(true);
 												Ext.Ajax.request(
 											        {
 											            url       : _p30_urlConfirmarEndoso
@@ -6830,6 +6831,8 @@ function _p30_confirmarEndoso()
 											                errorComunicacion();
 											            }
 											        });
+											        me.up('window').destroy();
+											        
 											       }
 																			                    
 									   },
@@ -6838,10 +6841,11 @@ function _p30_confirmarEndoso()
 										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
 										,handler : function (me){
 														me.up('window').destroy();
+														marendNavegacion(2);
 														}
 									 } ]
 					     }).show();
-                }
+				}
                 else
                 {
                     mensajeError(json2.respuesta);
@@ -6856,7 +6860,7 @@ function _p30_confirmarEndoso()
             }
         });
         
-    }
+     }
     
     debug('<_p30_confirmarEndoso');
 }

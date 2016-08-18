@@ -1048,6 +1048,218 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	}
 	
 	@Override
+	public Map<String,Object> previewEndosoTvalositAuto(
+			String cdtipsup
+			,String tstamp
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String feefecto
+			,String cdusuari
+			,String cdsisrol
+			,String cdelemen
+			,UserVO usuarioSesion
+			,List<Map<String,String>> incisos
+			,FlujoVO flujo
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ previewEndosoTvalositAuto @@@@@@"
+				,"\n@@@@@@ cdtipsup=" , cdtipsup
+				,"\n@@@@@@ tstamp="   , tstamp
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ feefecto=" , feefecto
+				,"\n@@@@@@ cdusuari=" , cdusuari
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				,"\n@@@@@@ cdelemen=" , cdelemen
+				,"\n@@@@@@ incisos="  , incisos
+				,"\n@@@@@@ flujo="    , flujo
+				));
+		
+		String paso = "Guardando datos temporales";
+		logger.debug(paso);
+		
+		try
+		{
+			Date fechaEndoso = renderFechas.parse(feefecto);
+			
+			for(Map<String,String>inciso:incisos)
+			{
+				endososDAO.guardarTvalositEndoso(
+						cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,inciso.get("NMSITUAC")
+						,inciso.get("NMSUPLEM")
+						,inciso.get("STATUS")
+						,inciso.get("CDTIPSIT")
+						,inciso.get("OTVALOR01")
+						,inciso.get("OTVALOR02")
+						,inciso.get("OTVALOR03")
+						,inciso.get("OTVALOR04")
+						,inciso.get("OTVALOR05")
+						,inciso.get("OTVALOR06")
+						,inciso.get("OTVALOR07")
+						,inciso.get("OTVALOR08")
+						,inciso.get("OTVALOR09")
+						,inciso.get("OTVALOR10")
+						,inciso.get("OTVALOR11")
+						,inciso.get("OTVALOR12")
+						,inciso.get("OTVALOR13")
+						,inciso.get("OTVALOR14")
+						,inciso.get("OTVALOR15")
+						,inciso.get("OTVALOR16")
+						,inciso.get("OTVALOR17")
+						,inciso.get("OTVALOR18")
+						,inciso.get("OTVALOR19")
+						,inciso.get("OTVALOR20")
+						,inciso.get("OTVALOR21")
+						,inciso.get("OTVALOR22")
+						,inciso.get("OTVALOR23")
+						,inciso.get("OTVALOR24")
+						,inciso.get("OTVALOR25")
+						,inciso.get("OTVALOR26")
+						,inciso.get("OTVALOR27")
+						,inciso.get("OTVALOR28")
+						,inciso.get("OTVALOR29")
+						,inciso.get("OTVALOR30")
+						,inciso.get("OTVALOR31")
+						,inciso.get("OTVALOR32")
+						,inciso.get("OTVALOR33")
+						,inciso.get("OTVALOR34")
+						,inciso.get("OTVALOR35")
+						,inciso.get("OTVALOR36")
+						,inciso.get("OTVALOR37")
+						,inciso.get("OTVALOR38")
+						,inciso.get("OTVALOR39")
+						,inciso.get("OTVALOR40")
+						,inciso.get("OTVALOR41")
+						,inciso.get("OTVALOR42")
+						,inciso.get("OTVALOR43")
+						,inciso.get("OTVALOR44")
+						,inciso.get("OTVALOR45")
+						,inciso.get("OTVALOR46")
+						,inciso.get("OTVALOR47")
+						,inciso.get("OTVALOR48")
+						,inciso.get("OTVALOR49")
+						,inciso.get("OTVALOR50")
+						,inciso.get("OTVALOR51")
+						,inciso.get("OTVALOR52")
+						,inciso.get("OTVALOR53")
+						,inciso.get("OTVALOR54")
+						,inciso.get("OTVALOR55")
+						,inciso.get("OTVALOR56")
+						,inciso.get("OTVALOR57")
+						,inciso.get("OTVALOR58")
+						,inciso.get("OTVALOR59")
+						,inciso.get("OTVALOR60")
+						,inciso.get("OTVALOR61")
+						,inciso.get("OTVALOR62")
+						,inciso.get("OTVALOR63")
+						,inciso.get("OTVALOR64")
+						,inciso.get("OTVALOR65")
+						,inciso.get("OTVALOR66")
+						,inciso.get("OTVALOR67")
+						,inciso.get("OTVALOR68")
+						,inciso.get("OTVALOR69")
+						,inciso.get("OTVALOR70")
+						,inciso.get("OTVALOR71")
+						,inciso.get("OTVALOR72")
+						,inciso.get("OTVALOR73")
+						,inciso.get("OTVALOR74")
+						,inciso.get("OTVALOR75")
+						,inciso.get("OTVALOR76")
+						,inciso.get("OTVALOR77")
+						,inciso.get("OTVALOR78")
+						,inciso.get("OTVALOR79")
+						,inciso.get("OTVALOR80")
+						,inciso.get("OTVALOR81")
+						,inciso.get("OTVALOR82")
+						,inciso.get("OTVALOR83")
+						,inciso.get("OTVALOR84")
+						,inciso.get("OTVALOR85")
+						,inciso.get("OTVALOR86")
+						,inciso.get("OTVALOR87")
+						,inciso.get("OTVALOR88")
+						,inciso.get("OTVALOR89")
+						,inciso.get("OTVALOR90")
+						,inciso.get("OTVALOR91")
+						,inciso.get("OTVALOR92")
+						,inciso.get("OTVALOR93")
+						,inciso.get("OTVALOR94")
+						,inciso.get("OTVALOR95")
+						,inciso.get("OTVALOR96")
+						,inciso.get("OTVALOR97")
+						,inciso.get("OTVALOR98")
+						,inciso.get("OTVALOR99")
+						,tstamp
+						);
+			}
+			
+			paso = "Confirmando endoso";
+			logger.debug(paso);
+			
+			resParams = endososDAO.confirmarEndosoTvalositAuto(
+					cdtipsup
+					,tstamp
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,fechaEndoso
+					,cdusuari
+					,cdsisrol
+					,cdelemen
+					);
+			
+			String nmsuplem        = (String)resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String)resParams.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String)resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String)resParams.get("pv_nsuplogi_o");
+			
+			paso = "Recuperando tr\u00e1mite de emisi\u00f3n";
+			logger.debug(paso);
+			
+			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
+			String ntramiteEmi = datosPoliza.get("ntramite");
+			
+			this.confirmarGuardandoDetallesTramiteEndoso(
+					ntramiteEmi
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdtipsup
+					,nsuplogi
+					,null //dscoment
+					,fechaEndoso
+					,flujo
+					,cdusuari
+					,cdsisrol
+					,false //confirmar
+					);
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ previewEndosoTvalositAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resParams;
+	}
+	
+	@Override
 	public Map<String,Object> recuperarDatosEndosoAltaIncisoAuto(
 			String cdunieco
 			,String cdramo
@@ -3210,7 +3422,143 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
-
+	
+	@Override
+	public Map<String, String> previewEndosoVigenciaPoliza(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String ntramite
+			,String cdelemen
+			,String cdusuari
+			,String cdtipsup
+			,String status
+			,String fechaEndoso
+			,Date dFechaEndoso
+			,String feefecto
+			,String feproren
+			,String nmsuplemOriginal
+			,String cdsisrol
+			,FlujoVO flujo
+		)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ previewEndosoVigenciaPoliza @@@@@@"
+				,"\n@@@@@@ cdunieco         = " , cdunieco
+				,"\n@@@@@@ cdramo           = " , cdramo
+				,"\n@@@@@@ estado           = " , estado
+				,"\n@@@@@@ nmpoliza         = " , nmpoliza
+				,"\n@@@@@@ cdelemen         = " , cdelemen
+				,"\n@@@@@@ cdusuari         = " , cdusuari
+				,"\n@@@@@@ cdtipsup         = " , cdtipsup
+				,"\n@@@@@@ fechaEndoso      = " , fechaEndoso
+				,"\n@@@@@@ dFechaEndoso     = " , dFechaEndoso
+				,"\n@@@@@@ feefecto         = " , feefecto
+				,"\n@@@@@@ feproren         = " , feproren
+				,"\n@@@@@@ nmsuplemOriginal = " , nmsuplemOriginal
+				,"\n@@@@@@ cdsisrol         = " , cdsisrol
+				,"\n@@@@@@ flujo            = " , flujo
+				));
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Se actualiza FEFECSIT con el inicio de la nueva vigencia de la poliza";
+			logger.debug(paso);
+			
+			endososDAO.actualizaMpolisitNuevaVigencia(cdunieco, cdramo, estado, nmpoliza, nmsuplemOriginal, feefecto);
+			
+			paso = "Modificar nmsuplem";
+			logger.debug(paso);
+			
+			endososDAO.modificarNmsuplemSatelites(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplemOriginal
+				,renderFechas.parse(feefecto)
+				,renderFechas.parse(feproren)
+			);
+			
+			paso = "Iniciando endoso";
+			logger.debug(paso);
+			
+			iniciarEndosoResp=endososDAO.iniciarEndoso(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,dFechaEndoso
+					,cdelemen
+					,cdusuari
+					,"END"
+					,cdtipsup);
+			
+			String nmsuplem = iniciarEndosoResp.get("pv_nmsuplem_o");
+			String nsuplogi = iniciarEndosoResp.get("pv_nsuplogi_o");
+			
+			paso = "Registrando valores variables de p\u00f3liza";
+			logger.debug(paso);
+			
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("pv_cdunieco_i"  , cdunieco);
+			params.put("pv_cdramo_i"    , cdramo);
+			params.put("pv_estado_i"    , estado);
+			params.put("pv_nmpoliza_i"  , nmpoliza);
+			params.put("pv_nmsuplem_i"  , nmsuplem);
+			params.put("pv_feefecto_i"  , feefecto);
+			params.put("pv_feproren_i"  , feproren);
+			logger.debug("EndososManager actualizaDeducibleValosit params: "+params);
+			endososDAO.actualizaVigenciaPoliza(params);
+			
+			paso = "Registrando recibos de nueva vigencia";
+			logger.debug(paso);
+			
+			endososDAO.insertaRecibosNvaVigencia(params);
+			
+			paso = "Recuperando tr\u00e1mite de emisi\u00f3n";
+			logger.debug(paso);
+			
+			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
+			String ntramiteEmi = datosPoliza.get("ntramite");
+			
+			/*this.confirmarGuardandoDetallesTramiteEndoso(
+					ntramiteEmi
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdtipsup
+					,nsuplogi
+					,null //dscoment
+					,dFechaEndoso
+					,flujo
+					,cdusuari
+					,cdsisrol
+					,true //confirmar
+					);
+			*/
+			
+		
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ previewEndosoVigenciaPoliza @@@@@@"
+				,"\n@@@@@@ iniciarEndosoResp: ", iniciarEndosoResp
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return iniciarEndosoResp;
+	}
+	
 	@Override
 	public void guardarEndosoTextoLibre(
 			String cdunieco
@@ -5632,6 +5980,105 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				 "\n@@@@@@ confirmarEndosoCancelacionPolAuto @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
+	}
+	
+	@Override
+	public Map<String, Object> previewEndosoCancelacionPolAuto(
+			String cdusuari
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdrazon
+			,Date feefecto
+			,Date fevencim
+			,Date fecancel
+			,String cdtipsup
+			,UserVO usuarioSesion
+			,String cdsisrol
+			,FlujoVO flujo
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ confirmarEndosoCancelacionPolAuto @@@@@@"
+				,"\n@@@@@@ cdusuari = " , cdusuari
+				,"\n@@@@@@ cdunieco = " , cdunieco
+				,"\n@@@@@@ cdramo   = " , cdramo
+				,"\n@@@@@@ estado   = " , estado
+				,"\n@@@@@@ nmpoliza = " , nmpoliza
+				,"\n@@@@@@ cdrazon  = " , cdrazon
+				,"\n@@@@@@ feefecto = " , feefecto
+				,"\n@@@@@@ fevencim = " , fevencim
+				,"\n@@@@@@ fecancel = " , fecancel
+				,"\n@@@@@@ cdtipsup = " , cdtipsup
+				,"\n@@@@@@ cdsisrol = " , cdsisrol
+				,"\n@@@@@@ flujo    = " , flujo
+				));
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Cancelando poliza";
+			logger.debug(paso);
+			
+			resParams = cancelacionDAO.cancelaPoliza(
+					cdunieco
+					,cdramo
+					,cdunieco //cduniage
+					,estado
+					,nmpoliza
+					,null     //nmsituac
+					,cdrazon
+					,null     //comenta
+					,feefecto
+					,fevencim
+					,fecancel
+					,cdusuari
+					,cdtipsup
+					,usuarioSesion.getRolActivo().getClave()
+					);
+			
+			String nmsuplemGen     = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String) resParams.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
+			
+			this.confirmarGuardandoDetallesTramiteEndoso(
+					ntramite
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplemGen
+					,cdtipsup
+					,nsuplogi
+					,null //dscoment
+					,fecancel
+					,flujo
+					,cdusuari
+					,cdsisrol
+					,false //confirmar
+					);
+			
+			logger.debug(">>>nmsuplemGen retornado de cancelacion: " +nmsuplemGen);
+			logger.debug(">>>ntramite retornado de cancelacion: " +ntramite);
+			logger.debug(">>>tipoGrupoInciso retornado de cancelacion: " +tipoGrupoInciso);
+			
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ resParams--> ",resParams
+				,"\n@@@@@@ confirmarEndosoCancelacionPolAuto @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resParams;
 	}
 	
 	@Override

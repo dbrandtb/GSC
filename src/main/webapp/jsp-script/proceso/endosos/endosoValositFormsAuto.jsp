@@ -10,7 +10,6 @@
 var _p44_urlPreview            = '<s:url namespace="/endosos"      action="previewEndosoValositFormsAuto"   />';
 var url_PantallaPreview        = '<s:url namespace="/endosos"      action="includes/previewEndosos"         />';
 var _p44_urlConfirmar          = '<s:url namespace="/endosos"      action="confirmarEndosoValositFormsAuto" />';
-var _p48_urlMovimientos        = '<s:url namespace="/movimientos"  action="ejecutar"                        />';
 var _p44_urlRecuperacionSimple = '<s:url namespace="/emision"      action="recuperacionSimple"              />';
 ////// urls //////
 
@@ -261,11 +260,10 @@ Ext.onReady(function()
 											   {
 												text    : 'Cancelar'
 												,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-												,handler : function (me)
-															{
-																marendNavegacion(2);
+												,handler : function (me){
 																me.up('window').destroy();
-															}
+																marendNavegacion(2);
+																}
 											 } ]
 							     });
 							     win.show();
