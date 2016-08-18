@@ -973,13 +973,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(new Item("width", 120))
 					.add(Item.crear("editor","editorRFCBp2").setQuotes(""))
 					);
-			item2.add(Item.crear(null, null, Item.OBJ)
+			item2.add(Item.crear(null, null, Item.OBJ) //ELP
 					.add(new Item("header", "Estado Civil"))
 					.add(new Item("dataIndex", "cdestciv"))
 					.add(new Item("width", 100))
 					.add(Item.crear("renderer","rendererEstcivp2").setQuotes(""))
-					.add(Item.crear("editor","editorEstcivp2").setQuotes("")
-						)	
+					.add(Item.crear("editor","editorEstcivp2").setQuotes(""))	
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "No. de Socio"))
@@ -1007,11 +1006,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(new Item("header", "Ocupaci\u00f3n"))
 					.add(new Item("dataIndex", "ocup"))
 					.add(new Item("width", 100))
-					.add(Item.crear("editor",null,Item.OBJ)
-							.add("xtype","textfield")
-							.add("name","ocup")
-							.add("allowBlank",false)
-						)
+					.add(Item.crear("renderer","rendererOcupp2").setQuotes(""))
+					.add(Item.crear("editor","editorOcupp2").setQuotes(""))
 					);
 			
 			/*xtype: 'actioncolumn',
@@ -1398,7 +1394,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				Boolean estomador = (Boolean) aseg.get("estomador");
 				
 				
-				//N�mero de socio y Clave Familiar, para el atributo SITUAEXT
+				//N�mero de socio y Clave Familiar, para el atributo SITUAEXT ELP
 				
 				logger.debug(Utils.log("Numero de Socio ->",numsoc));
 				logger.debug(Utils.log("Clave Familiar  ->",clvfam));
@@ -1412,6 +1408,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}else{
 					logger.debug(Utils.log("Generando Situaext..."));
 					ns = StringUtils.leftPad(numsoc, 6, "0");
+					
+					if(clvfam.length() < 2){
+						cf = clvfam;
+					}
+					
 					cf = StringUtils.leftPad(clvfam, 2, "0");
 					
 					//NMSITUAEXT

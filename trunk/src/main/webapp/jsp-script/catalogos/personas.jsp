@@ -4286,6 +4286,7 @@ obtieneDatosClienteContratante<s:property value="smap1.idPantalla" /> = function
 		rfc:      _p22_fieldRFC().getValue(),
 		cdideper: _fieldByName('CDIDEPER',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(),
 		cdideext: _fieldByName('CDIDEEXT',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(),
+		cdestciv: _fieldByLabel('Estado Civil',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).getValue(),
 		codpos:   (_tomarUnDomicilio&&_numDomicilioTomado)?_numDomicilioTomado.get('CODPOSTAL') : '',
 		cdedo:    (_tomarUnDomicilio&&_numDomicilioTomado)?_numDomicilioTomado.get('CDEDO') : '',
 		cdmunici: (_tomarUnDomicilio&&_numDomicilioTomado)?_numDomicilioTomado.get('CDMUNICI') : '',
