@@ -151,11 +151,6 @@ Ext.onReady(function()
                 ,totalProperty : 'total'
             }
         }
-        ,listeners : {
-            load : function (me) {
-                me.sort('ORDENFLAG','ASC');
-            }
-        }
     });
     ////// stores //////
     
@@ -1356,16 +1351,21 @@ function _p54_registrarTramite(bot)
                         mensajeCorrecto('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
                         {
                             bot.up('window').hide();
-                            var mask = _maskLocal('Recuperando tr\u00e1mites');
-                            _p54_store.reload({
-                                callback : function (records, op, success) {
-                                    mask.close();
-                                    if (success === true) {
-                                        _p54_mostrarCheckDocumentosInicial(json.params.CDTIPFLU, json.params.CDFLUJOMC,
-                                                json.params.CDTIPTRA, json.params.CDTIPSUP, json.params.ntramite);
-                                    }
-                                }
+                            var form  = _fieldById('_p54_filtroForm');
+                            var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
+                            form.getForm().reset();
+                            form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
+                            form.down('[name=STATUS]').setValue('0');
+                            _fieldById('_p54_filtroCmp').reset();
+                            var callbackCheck = function(store, records, success) {
+                                store.removeListener('load', callbackCheck);
+                                _p54_mostrarCheckDocumentosInicial(json.params.CDTIPFLU, json.params.CDFLUJOMC,
+                                        json.params.CDTIPTRA, json.params.CDTIPSUP, json.params.ntramite);
+                            };
+                            _p54_store.on({
+                                load : callbackCheck
                             });
+                            boton.handler(boton);
                         });
                     }
                     else
