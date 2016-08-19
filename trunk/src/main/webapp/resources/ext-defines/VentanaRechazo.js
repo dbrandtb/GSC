@@ -5,7 +5,7 @@ Ext.define('VentanaRechazo',
     ,itemId      : '_c22_instance'
     ,closeAction : 'destroy'
     ,border      : 0
-    ,modal       : true
+    //,modal       : true
     //,width       : 600
     //,height      : 460
     ,mostrar     : function()
