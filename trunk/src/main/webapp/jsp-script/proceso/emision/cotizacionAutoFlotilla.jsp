@@ -2547,8 +2547,9 @@ Ext.onReady(function()
                                             	try {
                                             		debug('json.smap1.P1VALOR=', Number(json.smap1.P1VALOR));
                                             		debug('json.smap1.P2VALOR=', Number(json.smap1.P2VALOR));
-                                            		var valormin = Number(me.valorCargado)*(1+Number(json.smap1.P1VALOR));
-                                                    var valormax = Number(me.valorCargado)*(1+Number(json.smap1.P2VALOR));
+                                            		// http://stackoverflow.com/questions/11832914/round-to-at-most-2-decimal-places-in-javascript
+                                            		var valormin = Math.round((Number(me.valorCargado) * (1 + Number(json.smap1.P1VALOR))) * 100) / 100;
+                                                    var valormax = Math.round((Number(me.valorCargado) * (1 + Number(json.smap1.P2VALOR))) * 100) / 100;
                                                     MontoMaximo = valormax;
 													MontoMinimo = valormin;
 													
