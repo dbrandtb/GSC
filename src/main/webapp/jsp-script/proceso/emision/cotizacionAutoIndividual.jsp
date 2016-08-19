@@ -3280,8 +3280,9 @@ function _p28_cargarRangoValorRamo5(callback)
                 {
                     valor.validator=function(value){
                         var r = true;
-                        valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
-                        valormax = valorCargado*(1+(json.smap1.P2VALOR-0));
+                        // http://stackoverflow.com/questions/11832914/round-to-at-most-2-decimal-places-in-javascript
+                        valormin = Math.round((valorCargado * (1 + (json.smap1.P1VALOR-0))) * 100) / 100;
+                        valormax = Math.round((valorCargado * (1 + (json.smap1.P2VALOR-0))) * 100) / 100;
                         debug('valormin:',valormin);
                         debug('valormax:',valormax);
 

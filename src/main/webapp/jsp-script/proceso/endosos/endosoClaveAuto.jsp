@@ -719,8 +719,9 @@ function _p38_cargarRangoValorRamo5()
                 debug('### obtener rango valor:',json);
                 if(json.exito)
                 {
-                    valormin = valorCargado*(1+(json.smap1.P1VALOR-0));
-                    valormax = valorCargado*(1+(json.smap1.P2VALOR-0));
+                    // http://stackoverflow.com/questions/11832914/round-to-at-most-2-decimal-places-in-javascript
+                    valormin = Math.round((valorCargado*(1+(json.smap1.P1VALOR-0))) * 100) / 100;
+                    valormax = Math.round((valorCargado*(1+(json.smap1.P2VALOR-0))) * 100) / 100;
                     valor.setMinValue(valormin);
                     valor.setMaxValue(valormax);
                     valor.isValid();
