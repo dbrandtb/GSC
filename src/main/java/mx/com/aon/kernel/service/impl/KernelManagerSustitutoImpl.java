@@ -877,31 +877,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return lista;
 	}
 	
-	/*
-	public List<Map<String, String>> obtenerListaDocumentos(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String nmsuplem
-			,String ntramite
-			) throws ApplicationException
-	{
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("pv_cdunieco_i" , cdunieco);
-		params.put("pv_cdramo_i"   , cdramo);
-		params.put("pv_estado_i"   , estado);
-		params.put("pv_nmpoliza_i" , nmpoliza);
-		params.put("pv_nmsuplem_i" , nmsuplem);
-		params.put("pv_ntramite_i" , ntramite);
-		log.debug("### kernel sustituto obtenerListaDocumentos parameters: "+params);
-        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.OBTENER_LISTA_DOC_POLIZA_NUEVA);
-        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-        log.info("### kernel sustituto obtenerListaDocumentos lista: "+lista);
-        return lista;
-	}
-	*/
-	
 	public WrapperResultados insertaMaestroHistoricoPoliza(Map<String, Object> param) throws ApplicationException
 	{
 		log.debug("### kernel sustituto insertaMaestroHistoricoPoliza map: "+param);
