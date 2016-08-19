@@ -588,9 +588,9 @@ Ext.onReady(function()
         ,hidden : _p28_smap1.cdramo+'x'=='5x'
                   ?(
                         (_p28_smap1.cdtipsit+'x'!='CRx' && _p28_smap1.cdtipsit+'x'!='TVx' && _p28_smap1.cdtipsit+'x'!='TLx' ) || 
-//                      (rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
                         !RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) 
-                        //_p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
+//                      (rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
+//                      _p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
                    )
                   :false
         ,items  : tatripolItems
@@ -3210,7 +3210,7 @@ function llenandoCampos(json)
         panelpri.setLoading(true);
         if( _p28_smap1.cdramo+'x'=='5x'
             &&
-           'PROMOTORAUTO'.lastIndexOf(_p28_smap1.cdsisrol)!=-1
+           'PROMOTORAUTO'.lastIndexOf(_p28_smap1.cdsisrol)==-1
             &&
             RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) 
           )            
