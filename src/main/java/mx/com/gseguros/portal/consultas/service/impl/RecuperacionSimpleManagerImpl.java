@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
@@ -16,21 +21,15 @@ import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2VO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
+import mx.com.gseguros.portal.general.dao.IndicadoresDAO;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
-{
-	private Map<String,Object>session;
+public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager {
 	
-	private final static Logger logger=LoggerFactory.getLogger(RecuperacionSimpleManagerImpl.class);
+	private final static Logger logger = LoggerFactory.getLogger(RecuperacionSimpleManagerImpl.class);
 	
 	private ConsultasDAO  consultasDAO;
 	private CotizacionDAO cotizacionDAO;
@@ -42,6 +41,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 	@Autowired
 	private MesaControlDAO mesaControlDAO;
 	
+	@Autowired
+	private IndicadoresDAO indicadoresDAO;
+	
+	@Deprecated
 	@Override
 	public ManagerRespuestaSmapVO recuperacionSimple(
 			RecuperacionSimple proc
@@ -254,6 +257,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 		return resp;
 	}
 	
+	@Deprecated
 	@Override
 	public ManagerRespuestaSlist2VO recuperacionSimpleLista(
 			RecuperacionSimple proc
@@ -625,6 +629,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 			{
 				paso = "Recuperando permisos de bot\u00f3n";
 				logger.debug(Utils.log(""," paso: ",paso));
+				@SuppressWarnings("unused")
 				String cdtipsit = params.get("cdtipsit");
 				mapa.put("ACTIVAR_BOTON" , consultasDAO.recuperarPermisoBotonEnviarCenso(cdsisrol));
 			}
@@ -671,6 +676,20 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				} else {
 					mapa.put("salud", "N");
 				}
+			} else if(consulta.equals(RecuperacionSimple.RECUPERAR_TABLERO_INDICADORES)) {
+				paso = "Recuperando tablero de indicadores";
+				logger.debug(paso);
+				
+				Map<String, String> res = indicadoresDAO.obtieneDashInicial(params.get("cdunieco"),
+						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"),
+						params.get("cdagente"));
+				
+				Map<String, String> res2 = indicadoresDAO.obtieneDashPendientes(params.get("cdunieco"),
+						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"),
+						params.get("cdagente"));
+				
+				mapa.putAll(res);
+				mapa.putAll(res2);
 			}
 		}
 		catch(Exception ex)
@@ -1191,6 +1210,42 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
 				);
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_REQUISITOS_DATOS_TRAMITE)) {
 				lista = flujoMesaControlDAO.recuperarRequisitosDatosTramite(params.get("ntramite"));
+			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_POR_LINEA_NEGOCIO) ) {
+				
+				lista = indicadoresDAO.obtieneTramitesPorLineaNegocio(params.get("cdetapa"), params.get("cdunieco"),
+						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+				
+			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_LINEANEGOCIO_POR_RAMO) ) {
+				
+				lista = indicadoresDAO.obtieneTramitesLineaNegocioPorRamo(params.get("cdetapa"), params.get("cdunieco"),
+						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+				
+			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_LINEA_NEGOCIO) ) {
+				
+				lista = indicadoresDAO.obtieneDetalleLineaNegocio(params.get("cdetapa"), params.get("cdunieco"),
+						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+				
+			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_SUCURSAL) ) {
+				
+				lista = indicadoresDAO.obtieneLineaNegocioPorSucursal(params.get("cdetapa"), params.get("cdunieco"),
+						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+				
+			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_USUARIO) ) {
+				
+				lista = indicadoresDAO.obtieneLineaNegocioPorUsuario(params.get("cdetapa"), params.get("cdunieco"),
+						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+				
+			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_POR_TIPO) ) {
+				
+				lista = indicadoresDAO.obtieneTramitesPorTipo(params.get("cdetapa"), params.get("cdunieco"),
+						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+				
+			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS) ) {
+				
+				lista = indicadoresDAO.obtieneTramitesPendientesPorDia(params.get("cdunieco"),
+						params.get("lineaNegocio"), params.get("cdramo"), params.get("tipotramite"),
+						params.get("cdagente"), params.get("numdias"));
+				
 			}
 		}
 		catch(Exception ex)

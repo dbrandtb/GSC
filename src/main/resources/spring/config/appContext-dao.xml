@@ -81,4 +81,6 @@
     
     <bean id="clienteDAOSIGSImpl" class="mx.com.gseguros.portal.catalogos.dao.impl.ClienteDAOSIGSImpl" parent="abstractManagerDAOSIGS"/>
     
+    <bean id="indicadoresDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.IndicadoresDAOImpl" parent="abstractManagerDAO"/>
+    
 </beans>
