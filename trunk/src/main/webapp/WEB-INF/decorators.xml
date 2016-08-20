@@ -181,6 +181,9 @@
         <pattern>/estadisticas/*.action</pattern>
         <pattern>/jsp-script/proceso/estadisticas/*.jsp</pattern>
         
+        <pattern>/indicadores/*.action</pattern>
+        <pattern>/jsp-script/proceso/indicadores/*.jsp</pattern>
+        
         <pattern>/persona/*.action*</pattern>
         
         <pattern>/jsp-script/consultas/*.jsp</pattern>
