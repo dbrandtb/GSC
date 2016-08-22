@@ -307,4 +307,15 @@ public interface ConsultasPolizaDAO {
      * @throws Exception
      */
     public String obtieneNmsituacContratantePoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza) throws Exception;
+    
+    /**
+     * Actuzliza el numero de tramite al enviarlo a MC 
+     * @param cdunieco
+     * @param cdramo
+     * @param cdestado
+     * @param nmpoliza
+     * @return
+     * @throws Exception
+     */
+     public void actualizaTramiteMC(PolizaVO poliza) throws Exception;
 }
