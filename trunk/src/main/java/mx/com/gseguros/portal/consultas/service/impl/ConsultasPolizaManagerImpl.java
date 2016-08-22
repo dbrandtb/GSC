@@ -480,5 +480,9 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		return consultasPolizaDAOICE.obtieneNmsituacContratantePoliza(cdunieco, cdramo, cdestado, nmpoliza);
 	}
 
+	@Override
+	public void actualizaTramiteMC(PolizaVO poliza) throws Exception{
+		consultasPolizaDAOICE.actualizaTramiteMC(poliza);
+	}
 
 }

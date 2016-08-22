@@ -836,8 +836,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
-		Map<String, Object> mapResult = ejecutaSP(new ConsultaRecibosAgenteSP(
-				getDataSource()), params);
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaRecibosAgenteSP(getDataSource()), params);
 		return (List<ReciboAgenteVO>) mapResult.get("rs");
 	}
 
@@ -866,7 +865,25 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 			return reciboAgenteVO;
 		}
 	}
-
+	
+	//actualizaMCsigs.
+	@Override
+	public void actualizaTramiteMC(PolizaVO poliza) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("inNumsuc ", poliza.getCdunieco());
+		params.put("inNumram ", poliza.getCdramo());
+		params.put("inNumpol ", poliza.getNmpoliza());
+		params.put("inNumtra ", poliza.getEstado());
+		ejecutaSP(new ActualizaTramiteMCSP(getDataSource()),params);
+		}
+	
+	protected class ActualizaTramiteMCSP extends StoredProcedure{
+		protected ActualizaTramiteMCSP(DataSource dataSource){
+			super(dataSource, "informix.spInsertaTramiteRenovacion");
+			compile();
+		}
+	}
+	
 	@Override
 	public String obtieneMensajeAgente(PolizaVO poliza) throws Exception {
 		// TODO Auto-generated method stub
@@ -926,5 +943,4 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

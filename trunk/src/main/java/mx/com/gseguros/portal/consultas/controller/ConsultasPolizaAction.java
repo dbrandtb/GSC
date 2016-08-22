@@ -1046,6 +1046,29 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	}
 	
+	/**
+	 * Obtiene las polizas del asegurado por rfc
+	 * 
+	 * @return String result
+	 * @throws Exception 
+	 */
+	public String actualizaEstatusTramiteMCsigs() throws Exception {
+		
+		String cdunieco  = params.get("cdunieco");
+		String cdramo  = params.get("cdramo");
+		String nmpoliza = params.get("nmpoliza");
+		String estado  = params.get("ntramite");
+		
+		logger.debug(" **** Entrando a actualizaTramiteMC ****");
+
+		consultasPolizaManager.actualizaTramiteMC(new PolizaVO(cdunieco,
+															    cdramo, 
+															    nmpoliza, 
+															    estado));
+		success = true;
+		return SUCCESS;
+	}
+	
 	// Getters and setters:
 
 	public List<AseguradoVO> getDatosAsegurados() {

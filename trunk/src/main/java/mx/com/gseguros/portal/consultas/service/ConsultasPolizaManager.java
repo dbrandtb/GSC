@@ -286,4 +286,14 @@ public interface ConsultasPolizaManager {
      * @throws Exception
      */
     public String obtieneNmsituacContratantePoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza) throws Exception;
+
+    /**
+     * Obtiene el numero de nmsituac del contratate de una poliza 
+     * @param cdunieco
+     * @param cdramo
+     * @param nmpoliza
+     * @param numtra
+     * @throws Exception
+     */
+	public void actualizaTramiteMC(PolizaVO poliza) throws Exception;
 }

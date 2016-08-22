@@ -14,15 +14,17 @@
     border-right: 2px solid red;
 }
 </style>
+
 <script>
 ////// urls //////
-var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"          />'
-    ,_p54_urlRecuperarPoliza          = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnica"       />'
-    ,_p54_urlRegistrarTramite         = '<s:url namespace="/flujomesacontrol" action="registrarTramite"           />'
-    ,_p54_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto"   />'
-    ,_p54_urlRecuperarPolizaDanios    = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnicaDanios" />'
-    ,_p54_urlRecuperarPolizaSIGS      = '<s:url namespace="/emision"          action="cargarPoliza"               />'
-    ,_p54_urlRecuperarChecklist       = '<s:url namespace="/flujomesacontrol" action="recuperarChecklistInicial"  />';
+var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"            />'
+    ,_p54_urlRecuperarPoliza          = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnica"         />'
+    ,_p54_urlRegistrarTramite         = '<s:url namespace="/flujomesacontrol" action="registrarTramite"             />'
+    ,_p54_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto"     />'
+    ,_p54_urlRecuperarPolizaDanios    = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnicaDanios"   />'
+    ,_p54_urlRecuperarPolizaSIGS      = '<s:url namespace="/emision"          action="cargarPoliza"                 />'
+    ,_p54_urlRecuperarChecklist       = '<s:url namespace="/flujomesacontrol" action="recuperarChecklistInicial"    />'
+    ,_p54_urlactulizaNumFolioMcSigs   = '<s:url namespace="/consultasPoliza"  action="actualizaEstatusTramiteMCsigs"/>';
 ////// urls //////
 
 ////// variables //////
@@ -1348,9 +1350,13 @@ function _p54_registrarTramite(bot)
                     debug('### +tramite:',json);
                     if(json.success == true)
                     {
+                    	/*Se implementa el SP que actualiza mc del sigs
+                    	actuzalizarMCSigs(values, json.params.ntramite);
+                    	*/
+                    	
                         mensajeCorrecto('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
                         {
-                            bot.up('window').hide();
+                        	bot.up('window').hide();
                             var form  = _fieldById('_p54_filtroForm');
                             var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
                             form.getForm().reset();
@@ -1591,6 +1597,9 @@ function _show(comp)
 }
 ////// funciones //////
 </script>
+
+<script type="text/javascript" src="${ctx}/jsp-script/proceso/flujoMesaControl/mesaControlScripts.js?now=${now}"></script>
+
 </head>
 <body>
 <div id="_p54_divpri" style="height:800px;border:0px solid #CCCCCC;"></div>
