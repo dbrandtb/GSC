@@ -1598,7 +1598,7 @@ function _show(comp)
 ////// funciones //////
 </script>
 
-<script type="text/javascript" src="${ctx}/jsp-script/proceso/flujoMesaControl/mesaControlScripts.js?now=${now}"></script>
+<script type="text/javascript" src="${ctx}/js/proceso/flujoMesaControl/mesaControlScripts.js?now=${now}"></script>
 
 </head>
 <body>

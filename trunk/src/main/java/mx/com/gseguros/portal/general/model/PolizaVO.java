@@ -69,11 +69,14 @@ public class PolizaVO implements Serializable {
 	 */
 	
 	private String nmpolant;
-	 
 	
+	/*
+	 * Se agrega nmpolant
+	 */
 	
+	private String ntramite;
+
 	//Constructors:
-	
 	
 	public String getFamilia() {
 		return familia;
@@ -109,6 +112,7 @@ public class PolizaVO implements Serializable {
 		this.cdramo = cdramo;
 		this.estado = estado;
 		this.nmpoliza = nmpoliza;
+		this.ntramite= estado;
 	}
 
 	public PolizaVO(String cdunieco, String cdramo, String estado,
@@ -138,7 +142,6 @@ public class PolizaVO implements Serializable {
 		this.nmsitaux=nmsitaux;
 		this.nombre=nombre;
 	}
-	
 	
 	//Getters and setters:
 	public String getCdunieco() {
@@ -227,6 +230,14 @@ public class PolizaVO implements Serializable {
 	
 	public void setNombre(String nombre){
 		this.nombre=nombre;
+	}
+	
+	public String getNtramite() {
+		return ntramite;
+	}
+
+	public void setNtramite(String ntramite) {
+		this.ntramite = ntramite;
 	}
 
 	@Override
