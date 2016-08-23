@@ -264,14 +264,6 @@
                 </param>
 			</result>
 		</action>
-		
-		<action name="actualizaEstatusTramiteMCsigs" class="ConsultasPolizaAction" method="actualizaEstatusTramiteMCsigs">
-             <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="params">
-                </param>
-            </result>
-        </action>
 
 	</package>
 

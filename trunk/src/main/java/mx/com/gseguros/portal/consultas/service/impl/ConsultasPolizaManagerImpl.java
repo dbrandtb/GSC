@@ -481,6 +481,7 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 
 	@Deprecated
+	@Override
 	public void actualizaTramiteMC(PolizaVO poliza) throws Exception{
 		consultasPolizaDAOICE.actualizaTramiteMC(poliza);
 	}

@@ -1046,13 +1046,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	 * 
 	 * @return string
 	 * @throws Exception 
-	 
-		@Action(value   = "actualizaEstatusTramiteMCsigs",
-				results = { @Result(name="success", type="json") }
-				)
-	 
 	 */
 	@SuppressWarnings("deprecation")
+	@Action(
+			value   = "actualizaEstatusTramiteMCsigs",
+			results = { @Result(name="success", type="json") }
+			)
 	public String actualizaEstatusTramiteMCsigs(){
 		
 		logger.debug(Utils.log(
