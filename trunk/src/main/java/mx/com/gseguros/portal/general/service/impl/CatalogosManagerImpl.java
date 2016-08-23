@@ -63,14 +63,6 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu,
-			String cdTipSit, String idPadre) throws Exception {
-		
-		String otValor = StringUtils.isNotBlank(idPadre) ? idPadre : null; 
-		return catalogosDAO.obtieneAtributosSituacion(cdAtribu, cdTipSit, otValor);
-	}
-	
-	@Override
 	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre, String cdSisRol) throws Exception{
 		String otValor = StringUtils.isNotBlank(idPadre) ? idPadre : null;
 		return catalogosDAO.obtieneAtributosSituacion(cdAtribu, cdTipSit, otValor, cdSisRol);

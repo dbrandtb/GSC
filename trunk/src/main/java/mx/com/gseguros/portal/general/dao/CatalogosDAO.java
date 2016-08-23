@@ -15,8 +15,6 @@ public interface CatalogosDAO {
 	
 	public List<GenericVO> obtieneAgentes(String claveONombre) throws Exception;
 	
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit ,String otValor) throws Exception;
-	
 	/**
 	 * Obtiene los atributos de situacion restringidos por rol del sistema (EGS)
 	 * @param cdAtribu  Numero o posicion del atributo

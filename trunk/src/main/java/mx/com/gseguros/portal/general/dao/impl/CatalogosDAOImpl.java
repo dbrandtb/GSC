@@ -181,49 +181,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     	}
     }
 
-
-	@Override
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor) throws Exception {
-		try {
-    		HashMap<String,Object> params = new LinkedHashMap<String,Object>();
-            params.put("pv_cdatribu_i",cdAtribu);
-            params.put("pv_cdtipsit_i",cdTipSit);
-            params.put("pv_otvalor_i",otValor);
-    		logger.debug(
-    				new StringBuilder()
-    				.append("\n********************************************")
-    				.append("\n****** PKG_LISTAS.P_GET_ATRIBUTOS_SIT ******")
-    				.append("\n****** params=").append(params)
-    				.append("\n********************************************")
-    				.toString()
-    				);
-    		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosSit(getDataSource()), params);
-    		return (List<GenericVO>) resultado.get("pv_registro_o");
-		} catch (Exception e) {
-			throw new Exception(e.getMessage(), e);
-		}
-	}
-	
-	protected class ObtieneAtributosSit extends StoredProcedure {
-
-        protected ObtieneAtributosSit(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_SIT");
-            declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosSitMapper()));
-            declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-
-    protected class ObtieneAtributosSitMapper implements RowMapper {
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
-        }
-    }
     
 	@Override
     public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor, String cdSisRol) throws Exception{
@@ -233,17 +190,17 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			params.put("pv_cdatribu_i", cdAtribu);
 			params.put("pv_otvalor_i", otValor);
 			params.put("pv_cdsisrol_i", cdSisRol);
-			Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosSitRol(getDataSource()), params);
+			Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosSitSP(getDataSource()), params);
 			return (List<GenericVO>) resultado.get("pv_registro_o");
 		}catch (Exception e){
 			throw new Exception(e.getMessage(),e);
 		}
 	}
 	
-	protected class ObtieneAtributosSitRol extends StoredProcedure {
+	protected class ObtieneAtributosSitSP extends StoredProcedure {
 
-        protected ObtieneAtributosSitRol(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_SIT_X_ROL");
+        protected ObtieneAtributosSitSP(DataSource dataSource) {
+            super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_SIT");
             declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
@@ -254,6 +211,12 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
             compile();
+        }
+    }
+	
+    protected class ObtieneAtributosSitMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
         }
     }
 	

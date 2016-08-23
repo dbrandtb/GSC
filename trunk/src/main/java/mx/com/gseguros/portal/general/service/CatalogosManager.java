@@ -20,9 +20,6 @@ public interface CatalogosManager {
 	public List<GenericVO> obtieneZonasPorModalidad(String cdtipsit) throws Exception;
 	
 	public List<GenericVO> obtieneAgentes(String claveONombre) throws Exception;
-
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre) throws Exception;
-	
 	
 	/**
 	 * Obtiene los atributos de situacion restringidos por rol del sistema (EGS)
