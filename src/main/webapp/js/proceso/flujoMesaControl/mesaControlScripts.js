@@ -17,6 +17,8 @@ function actualizarMCSigs (cduniext,ramo,nmpoliex,ntramite,callback)
              },
             success : function (response) 
             {
+            	mask.close();
+            	var ck = 'Actuzalizando Mesa de Control';
             	try
             	{
                 	var json = Ext.decode(response.responseText);
@@ -25,7 +27,7 @@ function actualizarMCSigs (cduniext,ramo,nmpoliex,ntramite,callback)
                         mask.close();
                         if(!Ext.isEmpty(callback))
                         {
-                            callback();
+                            callback(true);
                         }
                 	}
                 	else
@@ -34,7 +36,7 @@ function actualizarMCSigs (cduniext,ramo,nmpoliex,ntramite,callback)
                 	   mensajeError('Error cambiando el estatus de tramite de la poliza');
                 	   if(!Ext.isEmpty(callback))
                 	   {
-                	       callback();
+                	       callback(false);
                 	   }
                 	}
             	}
