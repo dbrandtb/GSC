@@ -310,7 +310,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						for(int a=0; a< siniesxfactura.size();a++){
 							siniestrosManager.getAltaSiniestroSinAutorizacion(msgResult,siniesxfactura.get(a).get("CDUNIECO"),siniesxfactura.get(a).get("CDRAMO"),
 									siniesxfactura.get(a).get("ESTADO"),siniesxfactura.get(a).get("NMPOLIZA"),siniesxfactura.get(a).get("NMSUPLEM"),siniesxfactura.get(a).get("NMSITUAC"),
-									siniesxfactura.get(a).get("CDTIPSIT"),renderFechas.parse(siniesxfactura.get(a).get("FEOCURRE")),facturas.get(i).get("NFACTURA"));
+									siniesxfactura.get(a).get("CDTIPSIT"),renderFechas.parse(siniesxfactura.get(a).get("FEOCURRE")),facturas.get(i).get("NFACTURA"), siniesxfactura.get(a).get("SECTWORKSIN"));
 						}
 					}
 					
@@ -332,6 +332,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										siniestrosAnterior.get(r).get("CDPERSON").equalsIgnoreCase(siniestrosNuevo.get(q).get("CDPERSON")) &&
 										siniestrosAnterior.get(r).get("FEOCURRE").equalsIgnoreCase(siniestrosNuevo.get(q).get("FEOCURRE")) &&
 										siniestrosAnterior.get(r).get("CDUNIECO").equalsIgnoreCase(siniestrosNuevo.get(q).get("CDUNIECO")) &&
+										siniestrosAnterior.get(r).get("SECTWORKSIN").equalsIgnoreCase(siniestrosNuevo.get(q).get("SECTWORKSIN")) &&
 										siniestrosAnterior.get(r).get("STATUS").equalsIgnoreCase(siniestrosNuevo.get(q).get("STATUS"))
 										
 								){
@@ -359,7 +360,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											siniestrosNuevo.get(q).get("CDUNIECO"), siniestrosNuevo.get(q).get("CDRAMO"),
 											siniestrosNuevo.get(q).get("ESTADO"),   siniestrosNuevo.get(q).get("NMPOLIZA"),
 											siniestrosNuevo.get(q).get("NMSUPLEM"), siniestrosNuevo.get(r).get("NMSITUAC"),
-											siniestrosNuevo.get(q).get("NMSINIES"), params.get("pv_ntramite_i"),
+											siniestrosNuevo.get(q).get("NMSINIES"), msgResult,//params.get("pv_ntramite_i"),
 											facturas.get(ii).get("NFACTURA"),       siniestrosAnterior.get(r).get("CDGARANT"),
 											siniestrosAnterior.get(r).get("CDCONVAL"), null,
 											null, null,//callcenter validar???
@@ -1104,7 +1105,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			Date   dFeOcurrencia   = renderFechas.parse(fechaOcurrencia);
 			
 			siniestrosManager.getAltaSiniestroSinAutorizacion(params.get("ntramite"),params.get("cdunieco"),params.get("cdramo"),params.get("estado"),
-				  params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdtipsit"),dFeOcurrencia, params.get("nfactura"));
+				  params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdtipsit"),dFeOcurrencia, params.get("nfactura"),
+				  params.get("secAsegurado"));
 			mensaje = "Se ha generado el siniestro";
 			success=true;
 		}
@@ -1135,10 +1137,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			String ntramite = params.get("ntramite");
 			String nfactura = params.get("nfactura");
 			Date feocurrencia = renderFechas.parse(params.get("feocurrencia"));
-
+			String secAsegurado =params.get("secAsegurado");
 			//CUANDO SE PIDE EL NUMERO DE AUTORIZACION DE SERVICIO EN PANTALLA
 			//INSERTA EL NUMERO DE AUTORIZACION EN TWORKSIN
-			siniestrosManager.actualizarAutorizacionTworksin(ntramite,nmpoliza,cdperson,nmautser,nfactura,feocurrencia);
+			siniestrosManager.actualizarAutorizacionTworksin(ntramite,nmpoliza,cdperson,nmautser,nfactura,feocurrencia,secAsegurado);
 			//CREA UN MSINIEST A PARTIR DE TWORKSIN
 			siniestrosManager.getAltaSiniestroAutServicio(nmautser,nfactura);
 			
@@ -2752,12 +2754,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						facturaObj.put("siniestroPD", aseguradosxSiniestro);
 				}
 			}/***************************** 		P A G O		R E E M B O L S O 		*************************/
-			
-			
-			
-			
-			
-			
 			else if(TipoPago.REEMBOLSO.getCodigo().equals(tramite.get("OTVALOR02"))){//TIPO DE PAGO POR REEMBOLSO
 				logger.debug("Paso 5.- EL PROCESO DE PAGO REEMBOLSO ");
 				double importeSiniestroUnico 	= 0d;
@@ -3173,11 +3169,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				logger.debug("mapa WS siniestro unico : {} ",importesWSSiniestroUnico);
 				logger.debug("<<WS del siniestro unico");
 				
-			}
-			
-			
-			
-			else{
+			}else{
 				/***************************** 		P A G O		I N D E M N I Z A C I O N 		*************************/
 				logger.debug("Paso 5.- EL PROCESO DE PAGO DE INDEMNIZACION");
 				
@@ -3318,9 +3310,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				logger.debug("<<WS del siniestro unico");
 			}
 			
-			
-			
-			
 			if(conceptos!=null&&conceptos.size()>0){
 				logger.debug("conceptos[0] :{}",conceptos);
 			}
@@ -3407,37 +3396,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	/**
@@ -5478,7 +5436,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							
 						}else{
 							banderaValidacion = "1";
-							mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el Lï¿½mite permitido. <br/>";							
+							mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el Límite permitido. <br/>";							
 						}
 					}
 				}
@@ -5754,7 +5712,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				this.params = params;
 				
 				if(cdpresta.equalsIgnoreCase("24104") && tipoproc.equalsIgnoreCase("1")){
-					logger.debug("No entra a la generaciï¿½n de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
+					logger.debug("No entra a la generación de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
 					HashMap<String, Object> paramsPagoDirecto = new HashMap<String, Object>();
 					paramsPagoDirecto.put("pv_ntramite_i",slist1.get(i).get("NTRAMITE"));
 					String montoTramite = siniestrosManager.obtieneMontoTramitePagoDirecto(paramsPagoDirecto);
@@ -5765,7 +5723,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					siniestrosManager.actualizaOTValorMesaControl(otvalor);
 					
 				}else{
-					logger.debug("entra a la generaciï¿½n de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
+					logger.debug("entra a la generación de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
 					generarCalculoSiniestros();
 				}
 			}

@@ -1433,42 +1433,19 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_autoServ_i", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"NMSINIES"
-					,"NMAUTSER"
-					,"CDPERSON"
-					,"NOMBRE"
-					,"FEOCURRE"
-					,"CDUNIECO"
-					,"DSUNIECO"
-					,"AAAPERTU"
-					,"ESTADO"
-					,"NMSITUAC"
-					,"NMSUPLEM"
-					,"CDRAMO"
-					,"DSRAMO"
-					,"CDTIPSIT"
-					,"DSTIPSIT"
-					,"STATUS"
-					,"ESTADO"
-					,"NMPOLIZA"
-					,"VOBOAUTO"
-					,"CDICD"
-					,"DSICD"
-					,"CDICD2"
-					,"DSICD2"
-					,"DESCPORC"
-					,"DESCNUME"
+					"NMSINIES",				"NMAUTSER",				"CDPERSON"
+					,"NOMBRE",				"FEOCURRE",				"CDUNIECO"
+					,"DSUNIECO",			"AAAPERTU",				"ESTADO"
+					,"NMSITUAC",			"NMSUPLEM",				"CDRAMO"
+					,"DSRAMO",				"CDTIPSIT",				"DSTIPSIT"
+					,"STATUS",				"ESTADO",				"NMPOLIZA"
+					,"VOBOAUTO",			"CDICD",				"DSICD"
+					,"CDICD2",				"DSICD2",				"DESCPORC"
+					,"DESCNUME",			"PTIMPORT",				"AUTRECLA"
+					,"NMRECLAMO",			"COMMENAR",				"COMMENME"
+					,"AUTMEDIC",			"CDCAUSA",				"CDGARANT"
+					,"CDCONVAL",			"NMSINREF",				"SECTWORKSIN"
 					//,"COPAGO"
-					,"PTIMPORT"
-					,"AUTRECLA"
-					,"NMRECLAMO"
-					,"COMMENAR"
-					,"COMMENME"
-					,"AUTMEDIC"
-					,"CDCAUSA"
-					,"CDGARANT"
-					,"CDCONVAL"
-					,"NMSINREF"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1504,7 +1481,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"IMPORTEASEG",		"PTIVAASEG",		"PTIVARETASEG",		"PTISRASEG"
 					,"PTIMPCEDASEG",	"DEDUCIBLE",		"IMPORTETOTALPAGO",	"COMPLEMENTO"
 					,"REQAUTES",		"NMAUTESP", 		"REQAUTESPECIAL",	"VALTOTALCOB"
-					,"LIMITE",			"IMPPAGCOB",		"NMCALLCENTER"
+					,"LIMITE",			"IMPPAGCOB",		"NMCALLCENTER",		"SECTWORKSIN"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1700,6 +1677,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feocurrencia_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_secAsegurado_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -3662,7 +3640,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 	@Override
 	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura)throws Exception {
+			  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura, String secAsegurado)throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_ntramite_i", ntramite);
 		params.put("pv_cdunieco_i", cdunieco);
@@ -3674,6 +3652,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		params.put("pv_cdtipsit_i", cdtipsit);
 		params.put("pv_fechaOcurrencia_i", fechaOcurrencia);
 		params.put("pv_nfactura_i", nfactura);
+		params.put("pv_secAsegurado_i", secAsegurado);
 		
 		Map<String, Object> mapResult = ejecutaSP(new GuardaAltaSiniestroSinAutorizacion(this.getDataSource()), params);
 		java.math.BigDecimal msgId = (java.math.BigDecimal)mapResult.get("pv_msg_id_o"); 
@@ -3695,6 +3674,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_fechaOcurrencia_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_secAsegurado_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

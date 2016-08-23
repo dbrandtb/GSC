@@ -197,7 +197,8 @@ public interface SiniestrosManager {
 	public String getAltaSiniestroAltaTramite(String ntramite) throws Exception;
 
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  									  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura) throws Exception;
+			  									  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura,
+			  									  String secAsegurado) throws Exception;
 	
 	public List<ListaFacturasVO> getConsultaListaFacturas(HashMap<String, Object> paramFact) throws Exception;
 
@@ -276,7 +277,8 @@ public interface SiniestrosManager {
 	 * PKG_PRESINIESTRO.P_UPD_NMAUTSER_TWORKSIN
 	 */
 	
-	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,String nfactura,Date feocurrencia) throws Exception;
+	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,
+			String nfactura,Date feocurrenci, String secAsegurado) throws Exception;
 	
 	public void actualizaMsinies(
 			String cdunieco,
