@@ -64,7 +64,31 @@ Ext.define('VentanaCorreoEmision', {
                                                 'Correo enviado',
                                                 'Correo enviado',
                                                 function () {
-                                                    _fieldById('_c6_instance').destroy();
+                                                    var win = _fieldById('_c6_instance');
+                                                    debug('_c6_instance:', win, '.');
+                                                    var callbackRemesa = function () {
+                                                        _fieldById('_c6_instance').destroy();
+                                                        _mask('Redireccionando...');
+                                                        Ext.create('Ext.form.Panel').submit(
+                                                        {
+                                                            url             : _GLOBAL_COMP_URL_MCFLUJO
+                                                            ,standardSubmit : true
+                                                        });
+                                                    };
+                                                    if (Number(win.status) === 3) {
+                                                        _generarRemesaClic(
+                                                            false,
+                                                            win.cdunieco,
+                                                            win.cdramo,
+                                                            win.estado,
+                                                            win.nmpoliza,
+                                                            callbackRemesa,
+                                                            null,
+                                                            win.ntramite
+                                                        );
+                                                    } else {
+                                                        win.destroy();
+                                                    }
                                                 }
                                             );
                                         } else {

@@ -3399,6 +3399,106 @@ function marcarRequisitoDesdeRevision (row, checked, dsdato) {
     }
 }
 
+function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar,ntramite)
+{
+    debug('_generarRemesaClic args:', arguments);
+    var ck = 'Revisando impresi\u00f3n';
+    try
+    {
+        var ven = centrarVentanaInterna(Ext.create('Ext.window.Window',
+        {
+            title     : 'Verificando impresi\u00f3n'
+            ,html     : '<span style="padding:5px;">Verificando impresi\u00f3n</span>'
+            ,width    : 200
+            ,height   : 100
+            ,modal    : true
+            ,closable : false
+        }).show());
+        
+        _setLoading(true,ven);
+        
+        Ext.Ajax.request(
+        {
+            url      : _GLOBAL_URL_MARCAR_IMPRESION
+            ,params  :
+            {
+                'params.cdunieco'    : cdunieco
+                ,'params.cdramo'     : cdramo
+                ,'params.estado'     : estado
+                ,'params.nmpoliza'   : nmpoliza
+                ,'params.marcar'     : marcar
+                ,'params.ntramiteIn' : _NVL(ntramite)
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,ven);
+                ven.destroy();
+                var ck = 'Decodificando respuesta al marcar impresi\u00f3n';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### marcar impresion:',json);
+                    if(json.success==true)
+                    {
+                        if(json.params.preguntar=='S')
+                        {
+                            centrarVentanaInterna(Ext.MessageBox.confirm(
+                                'Confirmar'
+                                ,'¿Desea marcar el tr\u00e1mite como impreso y entregado?'
+                                ,function(btn)
+                                {
+                                    if(btn === 'yes')
+                                    {
+                                        _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,'S',ntramite);
+                                    }
+                                    else
+                                    {
+                                        debug('no quiso marcar');
+                                        callback();
+                                    }
+                                }
+                            ));
+                        }
+                        else if(json.params.marcado=='S')
+                        {
+                            debug('marcado');
+                            mensajeCorrecto('Aviso','La emisi\u00f3n/endoso se marc\u00f3 como impresa',function(){ callback(); });
+                        }
+                        else
+                        {
+                            debug('no preguntar');
+                            callback();
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,ven);
+                ven.destroy();
+                errorComunicacion(null,'Error marcando impresi\u00f3n');
+            }
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}
+
+function _generarRemesaClic2(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar,ntramite)
+{
+    callback();
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

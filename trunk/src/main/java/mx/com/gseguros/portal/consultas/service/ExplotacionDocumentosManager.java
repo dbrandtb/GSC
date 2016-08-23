@@ -95,6 +95,7 @@ public interface ExplotacionDocumentosManager
 			,String estado
 			,String nmpoliza
 			,String marcar
+			,String ntramiteIn
 			)throws Exception;
 	
 	public String recuperarColumnasGridPol(

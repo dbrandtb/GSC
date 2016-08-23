@@ -1255,18 +1255,20 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			,String estado
 			,String nmpoliza
 			,String marcar
+			,String ntramiteIn
 			)throws Exception
 	{
 		StringBuilder sb = new StringBuilder(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ marcarImpresionOperacion @@@@@@"
-				,"\n@@@@@@ cdusuari=" , cdusuari
-				,"\n@@@@@@ cdsisrol=" , cdsisrol
-				,"\n@@@@@@ cdunieco=" , cdunieco
-				,"\n@@@@@@ cdramo="   , cdramo
-				,"\n@@@@@@ estado="   , estado
-				,"\n@@@@@@ nmpoliza=" , nmpoliza
-				,"\n@@@@@@ marcar="   , marcar
+				,"\n@@@@@@ cdusuari="   , cdusuari
+				,"\n@@@@@@ cdsisrol="   , cdsisrol
+				,"\n@@@@@@ cdunieco="   , cdunieco
+				,"\n@@@@@@ cdramo="     , cdramo
+				,"\n@@@@@@ estado="     , estado
+				,"\n@@@@@@ nmpoliza="   , nmpoliza
+				,"\n@@@@@@ marcar="     , marcar
+				,"\n@@@@@@ ntramiteIn=" , ntramiteIn
 				));
 		
 		Map<String,String> result = new HashMap<String,String>();
@@ -1279,10 +1281,15 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			String nmsuplem = consultasDAO.recuperarUltimoNmsuplem(cdunieco,cdramo,estado,nmpoliza);
 			
-			paso = "Recuperando tr\u00e1mite";
-			sb.append("\n").append(paso);
 			
-			String ntramite = consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			String ntramite = ntramiteIn;
+			
+			if (StringUtils.isBlank(ntramite)) {
+				paso = "Recuperando tr\u00e1mite";
+				sb.append("\n").append(paso);
+				
+				ntramite = consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+			}
 			
 			paso = "Marcando tr\u00e1mite";
 			sb.append("\n").append(paso);

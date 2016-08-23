@@ -494,11 +494,12 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			
 			Utils.validate(params , "No se recibieron datos");
 			
-			String cdunieco = params.get("cdunieco");
-			String cdramo   = params.get("cdramo");
-			String estado   = params.get("estado");
-			String nmpoliza = params.get("nmpoliza");
-			String marcar   = params.get("marcar");
+			String cdunieco   = params.get("cdunieco");
+			String cdramo     = params.get("cdramo");
+			String estado     = params.get("estado");
+			String nmpoliza   = params.get("nmpoliza");
+			String marcar     = params.get("marcar");
+			String ntramiteIn = params.get("ntramiteIn");
 			
 			Utils.validate(
 					cdunieco  , "No se recibi\u00F3 la sucursal"
@@ -515,6 +516,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,estado
 					,nmpoliza
 					,marcar
+					,ntramiteIn
 					);
 			
 			params.putAll(preguntarMarcado);
