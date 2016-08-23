@@ -295,5 +295,6 @@ public interface ConsultasPolizaManager {
      * @param numtra
      * @throws Exception
      */
+    @Deprecated
 	public void actualizaTramiteMC(PolizaVO poliza) throws Exception;
 }

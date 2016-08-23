@@ -111,7 +111,7 @@ public class PolizaVO implements Serializable {
 		this.cdunieco = cdunieco;
 		this.cdramo = cdramo;
 		this.estado = estado;
-		this.ntramite = ntramite;
+		this.nmpoliza = nmpoliza;
 		this.ntramite = ntramite;
 	}
 	
