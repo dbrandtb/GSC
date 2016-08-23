@@ -873,7 +873,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		params.put("inNumsuc ", poliza.getCdunieco());
 		params.put("inNumram ", poliza.getCdramo());
 		params.put("inNumpol ", poliza.getNmpoliza());
-		params.put("inNumtra ", poliza.getEstado());
+		params.put("inNumtra ", poliza.getNtramite());
 		ejecutaSP(new ActualizaTramiteMCSP(getDataSource()),params);
 		}
 	

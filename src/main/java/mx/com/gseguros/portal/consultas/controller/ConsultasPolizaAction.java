@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.consultas.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.SituacionVO;
 import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
-import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -39,7 +37,6 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.axis2.clustering.LoadBalanceEventHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
@@ -83,8 +80,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
-	private ConsultasManager       consultasManager;
-
 	@Autowired
 	private KernelManagerSustituto kernelManager;
 
@@ -1047,24 +1042,57 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 	
 	/**
-	 * Obtiene las polizas del asegurado por rfc
+	 * Actualiza estatus de tramite en BD sigs
 	 * 
-	 * @return String result
+	 * @return string
 	 * @throws Exception 
+	 
+		@Action(value   = "actualizaEstatusTramiteMCsigs",
+				results = { @Result(name="success", type="json") }
+				)
+	 
 	 */
 	public String actualizaEstatusTramiteMCsigs() throws Exception {
 		
-		String cdunieco  = params.get("cdunieco");
-		String cdramo  = params.get("cdramo");
-		String nmpoliza = params.get("nmpoliza");
-		String estado  = params.get("ntramite");
+		logger.debug(Utils.log(
+				 "\n###########################################"
+				,"\n###### actualizaEstatusTramiteMCsigs ######"
+				,"\n###### params=",params
+				));
 		
-		logger.debug(" **** Entrando a actualizaTramiteMC ****");
+		mensajeRes = "";
+		try {	
+				Utils.validate(params,"No se recibieron datos");
+	
+				String cdunieco = params.get("cdunieco")
+				      ,cdramo   = params.get("cdramo")
+				      ,nmpoliza = params.get("nmpoliza")
+				      ,ntramite = params.get("ntramite");
+					
+				Utils.validate(
+						 cdunieco, "No se recibi\u00f3 la sucursal"
+						,cdramo  , "No se recibi\u00f3 el ramo"
+						,nmpoliza, "No se recibi\u00f3 la poliza"
+						,ntramite, "No se recibi\u00f3 el numero de tramite"
+						);
+					
+				consultasPolizaManager.actualizaTramiteMC(new PolizaVO(cdunieco,
+																	    cdramo, 
+																	    nmpoliza, 
+																	    ntramite));
+				logger.debug(Utils.log(
+						 "\n###### actualizaEstatusTramiteMCsigs ######"
+						,"\n###########################################"
+						));
+		    }
+	  catch (Exception e) 
+	       {
+			logger.error("Error al actulizar estatus de tramite Mc", datosSuplemento, e);
+			mensajeRes = Utils.manejaExcepcion(e);
+			success = false;
+			return SUCCESS;
+		  }
 
-		consultasPolizaManager.actualizaTramiteMC(new PolizaVO(cdunieco,
-															    cdramo, 
-															    nmpoliza, 
-															    estado));
 		success = true;
 		return SUCCESS;
 	}
