@@ -94,6 +94,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_LINEANEGOCIO_POR_USUARIO                      ("L")
 	,RECUPERAR_TRAMITES_POR_TIPO                             ("L")
 	,RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS                  ("L")
+	,RECUPERAR_CORREO_EMISION_TRAMITE                        ("M")
 	;
 	 
 	private String tipo;

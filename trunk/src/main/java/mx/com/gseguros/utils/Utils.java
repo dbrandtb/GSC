@@ -814,4 +814,45 @@ public class Utils
     	return renderFechasConHora.parse(fecha);
     }
     
+    public static String cambiaAcentosUnicodePorGuionesBajos(String texto) {
+    	return texto
+    			.replace("\u00e1", "_a_")
+    			.replace("\u00e9", "_e_")
+				.replace("\u00ed", "_i_")
+				.replace("\u00f3", "_o_")
+				.replace("\u00fa", "_u_")
+				.replace("\u00c1", "_A_")
+				.replace("\u00c9", "_E_")
+				.replace("\u00cd", "_I_")
+				.replace("\u00d3", "_O_")
+				.replace("\u00da", "_U_");
+    }
+    
+    public static String cambiaGuionesBajosPorAcentosUnicode(String texto) {
+    	return texto
+    			.replace("_a_", "\u00e1")
+    			.replace("_e_", "\u00e9")
+				.replace("_i_", "\u00ed")
+				.replace("_o_", "\u00f3")
+				.replace("_u_", "\u00fa")
+				.replace("_A_", "\u00c1")
+				.replace("_E_", "\u00c9")
+				.replace("_I_", "\u00cd")
+				.replace("_O_", "\u00d3")
+				.replace("_U_", "\u00da");
+    }
+    
+    public static String cambiaGuionesBajosPorAcentosHtml(String texto) {
+    	return texto
+    			.replace("_a_", "&aacute;")
+    			.replace("_e_", "&eacute;")
+				.replace("_i_", "&iacute;")
+				.replace("_o_", "&oacute;")
+				.replace("_u_", "&uacute;")
+				.replace("_A_", "&Aacute;")
+				.replace("_E_", "&Eacute;")
+				.replace("_I_", "&Iacute;")
+				.replace("_O_", "&Oacute;")
+				.replace("_U_", "&Uacute;");
+    }
 }

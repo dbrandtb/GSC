@@ -585,4 +585,6 @@ public interface ConsultasDAO
 	public Map<String, String> recuperarTtipsupl (String cdtipsup) throws Exception;
 	
 	public Map<String,String> recuperarDatosFlujoRenovacion (String cdramo, String tipoflot) throws Exception;
+	
+	public String recuperarCorreoEmisionTramite (String ntramite) throws Exception;
 }

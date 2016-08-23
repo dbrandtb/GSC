@@ -5001,4 +5001,29 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public String recuperarCorreoEmisionTramite (String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite", ntramite);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarCorreoEmisionTramiteSP(getDataSource()), params);
+		String correo = (String) procRes.get("pv_correo_o");
+		if (StringUtils.isBlank(correo)) {
+			correo = "";
+		}
+		return correo;
+	}
+	
+	protected class RecuperarCorreoEmisionTramiteSP extends StoredProcedure
+	{
+		protected RecuperarCorreoEmisionTramiteSP(DataSource dataSource)
+		{
+			super(dataSource, "P_GET_CORREO_EMISION_TRAMITE");
+            declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_correo_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

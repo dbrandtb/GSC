@@ -3220,17 +3220,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					
 					flujoMesaControlManager.guardarMensajeCorreoEmision(
 							ntramite,
-							mensajeEmail
-								.replace("\u00e1", "_a_")
-								.replace("\u00e9", "_e_")
-								.replace("\u00ed", "_i_")
-								.replace("\u00f3", "_o_")
-								.replace("\u00fa", "_u_")
-								.replace("\u00c1", "_A_")
-								.replace("\u00c9", "_E_")
-								.replace("\u00cd", "_I_")
-								.replace("\u00d3", "_O_")
-								.replace("\u00da", "_U_")
+							Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail)
 					);
 				}
 			}
