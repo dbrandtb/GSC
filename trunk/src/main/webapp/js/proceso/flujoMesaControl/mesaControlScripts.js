@@ -1,5 +1,5 @@
 
-function actuzalizarMCSigs (callback)
+function actualizarMCSigs (CDUNIEXT,RAMO,NMPOLIEX,ntramite,callback)
 {	
 	var mask, ck = 'Actuzalizando Mesa de Control';
     try 
@@ -10,10 +10,10 @@ function actuzalizarMCSigs (callback)
               url      : _p54_urlactulizaNumFolioMcSigs
              ,params : 
              {
-                'params.cdunieco' : values.CDUNIEXT,
-                'params.cdramo'   : values.RAMO,
-                'params.nmpoliza' : values.NMPOLIEX,
-                'params.numtra'   : json.params.ntramite
+                'params.cdunieco' : CDUNIEXT,
+                'params.cdramo'   : RAMO,
+                'params.nmpoliza' : NMPOLIEX,
+                'params.numtra'   : ntramite
              },
             success : function (response) 
             {
@@ -21,12 +21,19 @@ function actuzalizarMCSigs (callback)
             	if (json.success === true) 
             	{
                     mask.close();
-                    callback();
+                    if(!Ext.isEmpty(callback))
+                    {
+                        callback();
+                    }
             	}
             	else
             	{
+            	   mask.close()
             	   mensajeError('Error cambiando el estatus de tramite de la poliza');
-            	   callback();
+            	   if(!Ext.isEmpty(callback))
+            	   {
+            	       callback();
+            	   }
             	}
             }
             ,failure : function()
