@@ -43,7 +43,7 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	@Qualifier("consultasDAOICEImpl")
 	private ConsultasPolizaDAO consultasPolizaDAOICE;
 	
-//	@Autowired
+//	@Autowire
 //	@Qualifier("consultasDAOSISAImpl")
 //	private ConsultasPolizaDAO consultasPolizaDAOSISA;
 	

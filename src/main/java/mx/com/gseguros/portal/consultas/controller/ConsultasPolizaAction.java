@@ -1052,7 +1052,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 				)
 	 
 	 */
-	public String actualizaEstatusTramiteMCsigs() throws Exception {
+	public String actualizaEstatusTramiteMCsigs(){
 		
 		logger.debug(Utils.log(
 				 "\n###########################################"
@@ -1076,24 +1076,22 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 						,ntramite, "No se recibi\u00f3 el numero de tramite"
 						);
 					
-				consultasPolizaManager.actualizaTramiteMC(new PolizaVO(cdunieco,
-																	    cdramo, 
-																	    nmpoliza, 
-																	    ntramite));
+				consultasPolizaManager.actualizaTramiteMC(new PolizaVO( cdunieco
+																	    ,cdramo 
+																	    ,null
+																	    ,nmpoliza
+																	    ,ntramite));
 				logger.debug(Utils.log(
 						 "\n###### actualizaEstatusTramiteMCsigs ######"
 						,"\n###########################################"
 						));
+				success = true;
 		    }
 	  catch (Exception e) 
 	       {
 			logger.error("Error al actulizar estatus de tramite Mc", datosSuplemento, e);
 			mensajeRes = Utils.manejaExcepcion(e);
-			success = false;
-			return SUCCESS;
 		  }
-
-		success = true;
 		return SUCCESS;
 	}
 	

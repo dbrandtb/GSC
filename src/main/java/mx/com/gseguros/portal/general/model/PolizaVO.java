@@ -106,13 +106,21 @@ public class PolizaVO implements Serializable {
 		super();
 	}
 
+	public PolizaVO(String cdunieco, String cdramo, String estado, String nmpoliza, String ntramite) {
+		super();
+		this.cdunieco = cdunieco;
+		this.cdramo = cdramo;
+		this.estado = estado;
+		this.ntramite = ntramite;
+		this.ntramite = ntramite;
+	}
+	
 	public PolizaVO(String cdunieco, String cdramo, String estado, String nmpoliza) {
 		super();
 		this.cdunieco = cdunieco;
 		this.cdramo = cdramo;
 		this.estado = estado;
 		this.nmpoliza = nmpoliza;
-		this.ntramite= estado;
 	}
 
 	public PolizaVO(String cdunieco, String cdramo, String estado,
