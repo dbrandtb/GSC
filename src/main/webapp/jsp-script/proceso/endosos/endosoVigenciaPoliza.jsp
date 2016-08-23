@@ -2,11 +2,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script>
 	var _CONTEXT = '${ctx}';
-	var asegAlterno          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
-	var guarda_Aseg_alterno  = '<s:url namespace="/endosos" action="guardarEndosoAseguradoAlterno"       />';
-	var guarda_Vigencia_Poliza = '<s:url namespace="/endosos" action="guardarEndosoVigenciaPoliza"       />';
-	
-	var endVigPolFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
+	var asegAlterno              = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false"               />;
+	var guarda_Aseg_alterno      = '<s:url namespace="/endosos"      action="guardarEndosoAseguradoAlterno"       />';
+	var guarda_Vigencia_Poliza   = '<s:url namespace="/endosos"      action="guardarEndosoVigenciaPoliza"         />';
+	var preview_Vigencia_Poliza  = '<s:url namespace="/endosos"      action="previewEndosoVigenciaPoliza"         />';
+	var url_PantallaPreview      = '<s:url namespace="/endosos"      action="includes/previewEndosos"             />';
+	var endVigPolFlujo           = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false"               />;
 	
 	debug('asegAlterno  -->:',asegAlterno);
 	
@@ -64,7 +65,7 @@
 	    	]
 			,buttonAlign:'center'
 			,buttons: [{
-				text: 'Confirmar endoso'
+				text: 'Emitir'
 				,icon:_CONTEXT+'/resources/fam3icons/icons/key.png'
 				,buttonAlign : 'center',
 				handler: function() {
@@ -83,30 +84,97 @@
 	        				}
 	        				
 	        				Ext.Ajax.request( {
-	   						    url: guarda_Vigencia_Poliza,
+	   						    url: preview_Vigencia_Poliza,
 	   						    jsonData: Ext.encode(submitValues),
 	   						    success:function(response,opts){
 	   						    	 myMask.hide();
 	   						    	 panelInicialPral.setLoading(false);
-	   						         var jsonResp = Ext.decode(response.responseText);
+	   						         var jsonResp1 = Ext.decode(response.responseText);
+	   						         
+	   						         var win = Ext.create('Ext.window.Window',
+													{
+														title        : 'Tarifa final'
+														,id          : 'tarifa'
+														,autoScroll  : true
+														,modal       : true
+														,buttonAlign : 'center'
+														,width       : 600
+														,height      : 550
+														,defaults    : { width: 650 }
+														,closable    : false
+														,autoScroll  : true
+														,loader      :
+															{
+																url       : url_PantallaPreview
+																,params   :
+																	{
+																		'smap4.nmpoliza'  : asegAlterno.NMPOLIZA
+							                                            ,'smap4.cdunieco' : asegAlterno.CDUNIECO
+							                                            ,'smap4.cdramo'   : asegAlterno.CDRAMO
+							                                            ,'smap4.estado'   : asegAlterno.ESTADO
+							                                            ,'smap4.nmsuplem' : jsonResp1.smap2.pv_nmsuplem_o
+							                                            ,'smap4.nsuplogi' : jsonResp1.smap2.pv_nsuplogi_o
+							                                        }
+																,scripts  : true
+																,autoLoad : true
+														     }
+														,buttons:[{
+																	text    : 'Confirmar endoso'
+																	,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+																	,handler : function (me)
+																					{
+																					me.up('window').destroy();
+																					Ext.Ajax.request( {
+																   						    url: guarda_Vigencia_Poliza,
+																   						    jsonData: Ext.encode(submitValues),
+																   						    success:function(response,opts){
+																   						    	 myMask.hide();
+																   						    	 panelInicialPral.setLoading(false);
+																   						         var jsonResp = Ext.decode(response.responseText);
+																   						      	 
+																   						      	 var callbackRemesa = function()
+																   						      	 {
+																   						      	     //usa codigo del marcoEndososAuto.jsp
+																   						      	     marendNavegacion(2);
+																   						      	 };
+																   						      	 
+																   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
+																   						      	 {
+																   						      	     _generarRemesaClic(
+																   						      	         true
+																   						      	         ,asegAlterno.CDUNIECO
+																   						      	         ,asegAlterno.CDRAMO
+																   						      	         ,asegAlterno.ESTADO
+																   						      	         ,asegAlterno.NMPOLIZA
+																   						      	         ,callbackRemesa
+																   						      	     );
+																   						      	 });
+																   						    },
+																   						    failure:function(response,opts){
+																   						    	myMask.hide();
+																   						    	Ext.Msg.show({
+																   						            title:'Error',
+																   						            msg: 'Error de comunicaci&oacute;n',
+																   						            buttons: Ext.Msg.OK,
+																   						            icon: Ext.Msg.ERROR
+																   						        });
+																   						    }
+																   						});				
+																			
+															           				}
+															           
+																   },
+																   {
+																	text    : 'Cancelar'
+																	,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+																	,handler : function (me){
+																					me.up('window').destroy();
+																					marendNavegacion(2);
+																					}
+																 } ]
+												     });
+							     					 win.show();
 	   						      	 
-	   						      	 var callbackRemesa = function()
-	   						      	 {
-	   						      	     //usa codigo del marcoEndososAuto.jsp
-	   						      	     marendNavegacion(2);
-	   						      	 };
-	   						      	 
-	   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
-	   						      	 {
-	   						      	     _generarRemesaClic(
-	   						      	         true
-	   						      	         ,asegAlterno.CDUNIECO
-	   						      	         ,asegAlterno.CDRAMO
-	   						      	         ,asegAlterno.ESTADO
-	   						      	         ,asegAlterno.NMPOLIZA
-	   						      	         ,callbackRemesa
-	   						      	     );
-	   						      	 });
 	   						    },
 	   						    failure:function(response,opts){
 	   						    	myMask.hide();

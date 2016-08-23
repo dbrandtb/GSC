@@ -69,6 +69,7 @@ var _CONTEXT = '${ctx}';
 				,icon:_CONTEXT+'/resources/fam3icons/icons/key.png'
 				,buttonAlign : 'center',
 				handler: function() {
+					var myMask1 = _maskLocal();
 					var formPanel = this.up().up();
 					myMask.show();
 					
@@ -95,8 +96,8 @@ var _CONTEXT = '${ctx}';
 	   						    jsonData: Ext.encode(submitValues),
 	   						    success:function(response,opts){
 	   						    	 myMask.hide();
-	   						         var jsonResp1 = Ext.decode(response.responseText);
-	   						         
+	   						    	 myMask1.close();
+					                 var jsonResp1 = Ext.decode(response.responseText);
 	   						         Ext.create('Ext.window.Window',
 											{
 												title        : 'Tarifa final'
@@ -129,13 +130,15 @@ var _CONTEXT = '${ctx}';
 															,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
 															,handler : 
 																function (me){
+																	var myMask1 = _maskLocal();
 																	me.up('window').destroy();
+																	myMask.show();
 																	Ext.Ajax.request(
 																		{
 												   						    url: guarda_Vigencia_Poliza,
 												   						    jsonData: Ext.encode(submitValues),
 												   						    success:function(response,opts){
-												   						    	 myMask.hide();
+												   						    	 //myMask.hide();
 												   						         var jsonResp = Ext.decode(response.responseText);
 												   						         
 												   						         var callbackRemesa = function()
@@ -165,7 +168,8 @@ var _CONTEXT = '${ctx}';
 												   						        });
 												   						    }
 												   						});
-													           }
+												   						myMask1.close();
+												   				}
 													           
 														   },
 														   {
@@ -177,6 +181,7 @@ var _CONTEXT = '${ctx}';
 																			}
 														 } ]
 										     }).show();
+										     
 	   						    },
 	   						    failure:function(response,opts){
 	   						        myMask.hide();

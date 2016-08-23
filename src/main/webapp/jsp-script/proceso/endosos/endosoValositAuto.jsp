@@ -6,8 +6,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p36_urlConfirmarEndoso    = '<s:url namespace="/endosos" action="confirmarEndosoTvalositAuto" />';
-var _p36_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"          />';
+var _p36_urlConfirmarEndoso        = '<s:url namespace="/endosos" action="confirmarEndosoTvalositAuto" />';
+var _p36_previewConfirmarEndoso    = '<s:url namespace="/endosos" action="previewEndosoTvalositAuto" />';
+var _p36_urlRecuperacionSimple     = '<s:url namespace="/emision" action="recuperacionSimple"          />';
 ////// urls //////
 
 ////// variables //////
@@ -306,21 +307,8 @@ Ext.onReady(function()
 		                                        debug('### confirmar endoso:',json);
 		                                        if(json.success)
 		                                        {
-		                                            var callbackRemesa = function()
-		                                            {
-		                                                marendNavegacion(2);
-		                                            };
-		                                            mensajeCorrecto('Endoso generado','Endoso generado',function()
-		                                            {
-		                                                _generarRemesaClic(
-		                                                    true
-		                                                    ,_p36_smap1.CDUNIECO
-		                                                    ,_p36_smap1.CDRAMO
-		                                                    ,_p36_smap1.ESTADO
-		                                                    ,_p36_smap1.NMPOLIZA
-		                                                    ,callbackRemesa
-		                                                );
-		                                            });
+		                                        	
+
 		                                        }
 		                                        else
 		                                        {
