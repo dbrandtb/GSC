@@ -1,5 +1,5 @@
 
-function actualizarMCSigs (CDUNIEXT,RAMO,NMPOLIEX,ntramite,callback)
+function actualizarMCSigs (cduniext,ramo,nmpoliex,ntramite,callback)
 {	
 	var mask, ck = 'Actuzalizando Mesa de Control';
     try 
@@ -10,31 +10,38 @@ function actualizarMCSigs (CDUNIEXT,RAMO,NMPOLIEX,ntramite,callback)
               url      : _p54_urlactulizaNumFolioMcSigs
              ,params : 
              {
-                'params.cdunieco' : CDUNIEXT,
-                'params.cdramo'   : RAMO,
-                'params.nmpoliza' : NMPOLIEX,
+                'params.cdunieco' : cduniext,
+                'params.cdramo'   : ramo,
+                'params.nmpoliza' : nmpoliex,
                 'params.numtra'   : ntramite
              },
             success : function (response) 
             {
-            	var json = Ext.decode(response.responseText);
-            	if (json.success === true) 
+            	try
             	{
-                    mask.close();
-                    if(!Ext.isEmpty(callback))
-                    {
-                        callback();
-                    }
+                	var json = Ext.decode(response.responseText);
+                	if (json.success === true) 
+                	{
+                        mask.close();
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback();
+                        }
+                	}
+                	else
+                	{
+                	   mask.close()
+                	   mensajeError('Error cambiando el estatus de tramite de la poliza');
+                	   if(!Ext.isEmpty(callback))
+                	   {
+                	       callback();
+                	   }
+                	}
             	}
-            	else
-            	{
-            	   mask.close()
-            	   mensajeError('Error cambiando el estatus de tramite de la poliza');
-            	   if(!Ext.isEmpty(callback))
-            	   {
-            	       callback();
-            	   }
-            	}
+            	catch (e) 
+                {
+                    manejaException(e, ck);
+                }
             }
             ,failure : function()
             {
