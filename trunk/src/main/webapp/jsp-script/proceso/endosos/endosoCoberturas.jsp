@@ -166,6 +166,7 @@
 							,buttons:[{
 										text    : 'Confirmar endoso'
 										,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+										,disable : true
 										,handler : function(me){
 																var form=Ext.getCmp('endoso');
 																endcobSumit(form,'si');
