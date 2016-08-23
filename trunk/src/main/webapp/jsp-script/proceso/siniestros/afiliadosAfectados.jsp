@@ -263,7 +263,8 @@
 						{type:'string',	name:'COMPLEMENTO'},	{type:'string',	name:'REQAUTES'},
 						{type:'string',	name:'NMAUTESP'},		{type:'string',	name:'REQAUTESPECIAL'},
 						{type:'string',	name:'VALTOTALCOB'},	{type:'string',	name:'LIMITE'},
-						{type:'string',	name:'IMPPAGCOB'},		{type:'string',	name:'NMCALLCENTER'}
+						{type:'string',	name:'IMPPAGCOB'},		{type:'string',	name:'NMCALLCENTER'},
+						{type:'string',	name:'SECTWORKSIN'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -1615,6 +1616,9 @@
 							},
 							{
 								header: 'No. Aut',					dataIndex: 'NMAUTESP',			width: 50, 		hidden : true
+							},
+							{
+								header: 'Sec. tworksin',			dataIndex: 'SECTWORKSIN',		width: 50//, 		hidden : true
 							}
 						],
 						tbar:[
@@ -5358,7 +5362,8 @@
 									'params.nmsituac' 		: record.raw.NMSITUAC,
 									'params.cdtipsit' 		: record.raw.CDTIPSIT,
 									'params.dateOcurrencia' : record.raw.FEOCURRE,
-									'params.nfactura' 		: panelInicialPral.down('[name=params.nfactura]').getValue()
+									'params.nfactura' 		: panelInicialPral.down('[name=params.nfactura]').getValue(),
+									'params.secAsegurado'   : record.raw.SECTWORKSIN
 								};
 								Ext.Ajax.request( {
 									url	  : _11_URL_INICIARSINIESTROSINAUTSERV
@@ -6162,7 +6167,8 @@
 				,'params.cdunieco' : _11_recordActivo.get('CDUNIECO')
 				,'params.cdramo' : _11_recordActivo.get('CDRAMO')
 				,'params.estado' : _11_recordActivo.get('ESTADO')
-				,'params.cdpresta' : panelInicialPral.down('combo[name=params.cdpresta]').getValue()
+				,'params.cdpresta' : panelInicialPral.down('combo[name=params.cdpresta]').getValue(),
+				'params.secAsegurado'  : _11_recordActivo.get('SECTWORKSIN')
 			};
 			
 			gridFacturaDirecto.setLoading(true);

@@ -92,7 +92,7 @@ public interface SiniestrosDAO {
 	public String guardaAltaSiniestroAltaTramite(String ntramite) throws Exception;
 	
 	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-			  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura) throws Exception;
+			  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura, String secAsegurado) throws Exception;
 	
 	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws Exception;
 

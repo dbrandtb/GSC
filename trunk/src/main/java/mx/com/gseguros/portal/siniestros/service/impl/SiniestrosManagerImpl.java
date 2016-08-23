@@ -514,11 +514,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	
 	@Override
 	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
-												  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura) throws Exception {
+												  String nmsuplem,String nmsituac, String cdtipsit, Date fechaOcurrencia,String nfactura,
+												  String secAsegurado) throws Exception {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.guardaAltaSiniestroSinAutorizacion(ntramite, cdunieco, cdramo, estado, nmpoliza,
-					  												nmsuplem, nmsituac, cdtipsit, fechaOcurrencia, nfactura);
+					  												nmsuplem, nmsituac, cdtipsit, fechaOcurrencia, nfactura,secAsegurado);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -746,7 +747,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}*/
 	
 	@Override
-	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,String nfactura,Date feocurrencia) throws Exception
+	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser,
+			String nfactura,Date feocurrencia, String secAsegurado) throws Exception
 	{
 		//Map<String,String> params = new HashMap<String,String>();
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -756,6 +758,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		params.put("pv_nmautser_i",nmautser);
 		params.put("pv_nfactura_i",nfactura);
 		params.put("pv_feocurrencia_i",feocurrencia);
+		params.put("pv_secAsegurado_i",secAsegurado);
 		log.debug("actualizarAutorizacionTworksin params: "+params);
 		siniestrosDAO.actualizarAutorizacionTworksin(params);
 		log.debug("actualizarAutorizacionTworksin end");
