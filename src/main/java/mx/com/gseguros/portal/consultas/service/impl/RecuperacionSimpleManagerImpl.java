@@ -690,6 +690,15 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				
 				mapa.putAll(res);
 				mapa.putAll(res2);
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_CORREO_EMISION_TRAMITE)) {
+				paso = "Recuperando correo de emisi\u00f3n";
+				logger.debug(paso);
+				String ntramite = params.get("ntramite");
+				if (StringUtils.isNotBlank(ntramite)) {
+					mapa.put("correo", Utils.cambiaGuionesBajosPorAcentosHtml(consultasDAO.recuperarCorreoEmisionTramite(ntramite)));
+				} else {
+					mapa.put("correo", "");
+				}
 			}
 		}
 		catch(Exception ex)
