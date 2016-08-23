@@ -1052,6 +1052,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 				)
 	 
 	 */
+	@SuppressWarnings("deprecation")
 	public String actualizaEstatusTramiteMCsigs(){
 		
 		logger.debug(Utils.log(
