@@ -1349,30 +1349,46 @@ function _p54_registrarTramite(bot)
                     var json = Ext.decode(response.responseText);
                     debug('### +tramite:',json);
                     if(json.success == true)
-                    {
-                    	/*Se implementa el SP que actualiza mc del sigs
-                    	actualizarMCSigs(values, json.params.ntramite);
-                    	*/
-                    	
-                        mensajeCorrecto('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
+                    {                    	
+                    	var callbackRegistar = function(bandera) 
                         {
-                        	bot.up('window').hide();
-                            var form  = _fieldById('_p54_filtroForm');
-                            var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
-                            form.getForm().reset();
-                            form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
-                            form.down('[name=STATUS]').setValue('0');
-                            _fieldById('_p54_filtroCmp').reset();
-                            var callbackCheck = function(store, records, success) {
-                                store.removeListener('load', callbackCheck);
-                                _p54_mostrarCheckDocumentosInicial(json.params.CDTIPFLU, json.params.CDFLUJOMC,
-                                        json.params.CDTIPTRA, json.params.CDTIPSUP, json.params.ntramite);
-                            };
-                            _p54_store.on({
-                                load : callbackCheck
-                            });
-                            boton.handler(boton);
-                        });
+                    		if (bandera==false)
+                    		{
+                    			mensajeError('No se pudo grabar numero de tr\u00e1mite en sistema sigs');
+                    		}
+                    		
+                            mensajeCorrecto
+                            ('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
+                             {
+                                 bot.up('window').hide();
+                                 var form  = _fieldById('_p54_filtroForm');
+                                 var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
+                                 form.getForm().reset();
+                                 form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
+                                 form.down('[name=STATUS]').setValue('0');
+                                 _fieldById('_p54_filtroCmp').reset();
+                                 
+                                 var callbackCheck = function(store, records, success) {
+                                     store.removeListener('load', callbackCheck);
+                                     _p54_mostrarCheckDocumentosInicial(json.params.CDTIPFLU, json.params.CDFLUJOMC,
+                                             json.params.CDTIPTRA, json.params.CDTIPSUP, json.params.ntramite);
+                                 };
+                                 
+                                 _p54_store.on({
+                                     load : callbackCheck
+                                 });
+                                 boton.handler(boton);
+                             }
+                            );
+                        }
+                    	
+                    	if(json.params.CDTIPTRA == 21)
+                    	{
+	                    	actualizarMCSigs (values.CDUNIEXT,values.RAMO,values.NMPOLIEX,json.params.ntramite,callbackRegistar)
+	                    	
+                       }else{
+                    	   callbackRegistar;
+                       }
                     }
                     else
                     {
