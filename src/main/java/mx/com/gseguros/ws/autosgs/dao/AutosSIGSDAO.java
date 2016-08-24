@@ -2,6 +2,8 @@ package mx.com.gseguros.ws.autosgs.dao;
 
 import java.util.Map;
 
+import mx.com.gseguros.portal.general.model.PolizaVO;
+
 
 public interface AutosSIGSDAO {
 		
@@ -54,5 +56,7 @@ public interface AutosSIGSDAO {
 	 * Si no valida bien lanza excepcion
 	 */
 	public void validarAgenteParaNuevoTramite(String cdagente, String ramo, String cdtipend) throws Exception;
+	
+	public void actualizaTramiteMC(PolizaVO poliza) throws Exception;
 	
 }

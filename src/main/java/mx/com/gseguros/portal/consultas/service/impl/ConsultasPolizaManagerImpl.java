@@ -29,6 +29,7 @@ import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
+import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,13 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	@Qualifier("consultasDAOSISAImpl")
 	private ConsultasPolizaDAO consultasPolizaDAOSISA;
 
+//	@Autowired
+//	@Qualifier("consultasAseguradoDAOSIGSImpl")
+//	private IConsultasAseguradoDAO consultasAseguradoDAOSIGS;
+	
 	@Autowired
-	@Qualifier("consultasAseguradoDAOSIGSImpl")
-	private IConsultasAseguradoDAO consultasAseguradoDAOSIGS;
+	private AutosSIGSDAO autosDAOSIGS;
+	
 	
 	
 	@Override
@@ -489,7 +494,6 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	@Deprecated
 	@Override
 	public void actualizaTramiteMC(PolizaVO poliza) throws Exception{
-		consultasAseguradoDAOSIGS.actualizaTramiteMC(poliza);
+	autosDAOSIGS.actualizaTramiteMC(poliza);
 	}
-
 }
