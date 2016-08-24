@@ -266,21 +266,4 @@ public class ConsultasAseguradoDAOSIGSImpl extends AbstractManagerDAO implements
 			return solicitudesCXP;
 		}
 	}
-	
-	@Override
-	public void actualizaTramiteMC(PolizaVO poliza) throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("inNumsuc ", poliza.getCdunieco());
-		params.put("inNumram ", poliza.getCdramo());
-		params.put("inNumpol ", poliza.getNmpoliza());
-		params.put("inNumtra ", poliza.getNtramite());
-		ejecutaSP(new ActualizaTramiteMCSP(getDataSource()),params);
-		}
-	
-	protected class ActualizaTramiteMCSP extends StoredProcedure{
-		protected ActualizaTramiteMCSP(DataSource dataSource){
-			super(dataSource, "spInsertaTramiteRenovacion");
-			compile();
-		}
-	}
 }

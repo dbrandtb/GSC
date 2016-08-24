@@ -4,6 +4,7 @@ package mx.com.gseguros.ws.autosgs.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import javax.sql.DataSource;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 
@@ -955,7 +957,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class ValidarAgenteParaNuevoTramiteSP extends StoredProcedure {
 		protected ValidarAgenteParaNuevoTramiteSP (DataSource dataSource) {
-			super(dataSource, "spValidaAgente");
+			super(dataSource, "spvalidaagente");
 			
 			declareParameter(new SqlParameter("pAgente",     Types.INTEGER));
 			declareParameter(new SqlParameter("pRamo",       Types.SMALLINT));
@@ -972,6 +974,27 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 				}
 			}));
 			
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizaTramiteMC(PolizaVO poliza) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("inNumsuc", poliza.getCdunieco());
+		params.put("inNumram", poliza.getCdramo());
+		params.put("inNumpol", poliza.getNmpoliza());
+		params.put("inNumtra", poliza.getNtramite());
+		ejecutaSP(new ActualizaTramiteMCSP(getDataSource()),params);
+		}
+	
+	protected class ActualizaTramiteMCSP extends StoredProcedure{
+		protected ActualizaTramiteMCSP(DataSource dataSource){
+			super(dataSource, "spInsertaTramiteRenovacion");
+			declareParameter(new SqlParameter("inNumsuc", Types.SMALLINT));
+			declareParameter(new SqlParameter("inNumram", Types.SMALLINT));
+			declareParameter(new SqlParameter("inNumpol", Types.INTEGER));
+			declareParameter(new SqlParameter("inNumtra", Types.INTEGER));
 			compile();
 		}
 	}
