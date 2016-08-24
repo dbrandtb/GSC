@@ -1355,7 +1355,7 @@ function _p54_registrarTramite(bot)
                         {
                     		if (bandera==false)
                     		{
-                    			mensajeError('No se pudo grabar numero de tr\u00e1mite en sistema sigs',callbackRegistar(true));
+                    			mensajeError('No se pudo grabar numero de tr\u00e1mite en sistema sigs',function(){callbackRegistar(true)});
                     		}
                     		else
                     		{
