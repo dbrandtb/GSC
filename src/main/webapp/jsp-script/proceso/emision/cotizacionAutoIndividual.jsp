@@ -1954,7 +1954,7 @@ function _p28_cotizar(sinTarificar)
                                     select       : _p28_tarifaSelect
                                     ,afterrender : function(me)
                                     {
-                                        if(!Ext.isEmpty(_p28_flujo) && !sinTarificar===true)
+                                        if(!Ext.isEmpty(_p28_flujo)) // && sinTarificar !== true)
                                         {
                                             _p28_actualizarCotizacionTramite(_p28_actualizarSwexiperTramite);
                                         }
