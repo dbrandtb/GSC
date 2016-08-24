@@ -1349,8 +1349,7 @@ function _p54_registrarTramite(bot)
                     var json = Ext.decode(response.responseText);
                     debug('### +tramite:',json);
                     if(json.success == true)
-                    {   
-                    	var bandera = true;                	
+                    {                  	
                     	var callbackRegistar = function(bandera) 
                         {
                     		if (bandera==false)
