@@ -32,11 +32,6 @@ import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
-import mx.com.gseguros.portal.reclamoExpress.dao.impl.ReclamoExpressDAOSIGSImpl.ConsultaReclamoExpressSP;
-import mx.com.gseguros.portal.reclamoExpress.dao.impl.ReclamoExpressDAOSIGSImpl.ReclamoExpressMapper;
-import mx.com.gseguros.portal.reclamoExpress.model.ReclamoExpressVO;
-import mx.com.gseguros.ws.autosgs.dao.impl.AutosSIGSDAOImpl;
-
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -272,5 +267,20 @@ public class ConsultasAseguradoDAOSIGSImpl extends AbstractManagerDAO implements
 		}
 	}
 	
+	@Override
+	public void actualizaTramiteMC(PolizaVO poliza) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("inNumsuc ", poliza.getCdunieco());
+		params.put("inNumram ", poliza.getCdramo());
+		params.put("inNumpol ", poliza.getNmpoliza());
+		params.put("inNumtra ", poliza.getNtramite());
+		ejecutaSP(new ActualizaTramiteMCSP(getDataSource()),params);
+		}
 	
+	protected class ActualizaTramiteMCSP extends StoredProcedure{
+		protected ActualizaTramiteMCSP(DataSource dataSource){
+			super(dataSource, "spInsertaTramiteRenovacion");
+			compile();
+		}
+	}
 }

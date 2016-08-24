@@ -203,4 +203,6 @@ public interface IConsultasAseguradoDAO {
 
 	public List<SolicitudCxPVO> obtieneListadoSolicitudesCxp() throws Exception;
 	
+	public void actualizaTramiteMC(PolizaVO poliza) throws Exception;
+	
 }

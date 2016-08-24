@@ -937,25 +937,6 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     	}
     }
     
-    @Override
-    public void actualizaTramiteMC(PolizaVO poliza) throws Exception{
-    	
-    	HashMap<String, Object> params = new HashMap<String, Object>();
-    	params.put("inNumsuc ", poliza.getCdunieco());
-		params.put("inNumram ", poliza.getCdramo());
-		params.put("inNumpol ", poliza.getNmpoliza());
-		params.put("inNumtra ", poliza.getNtramite());
-    	ejecutaSP(new ActualizaTramiteMCSP(getDataSource()), params);
-    }
-    
-    protected class ActualizaTramiteMCSP extends StoredProcedure{
-		protected ActualizaTramiteMCSP(DataSource dataSource){
-			super(dataSource, "informix.spInsertaTramiteRenovacion");
-			compile();
-		}
-    }
-    
-    
 	@Override
 	public List<AseguradoDetalleVO> obtieneAseguradoDetalle(
 			AseguradoVO asegurado) throws Exception {
