@@ -952,5 +952,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public void actualizaTramiteMC(PolizaVO poliza) throws Exception{}
 
 }

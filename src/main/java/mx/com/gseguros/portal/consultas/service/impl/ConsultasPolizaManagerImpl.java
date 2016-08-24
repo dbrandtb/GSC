@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
@@ -43,9 +44,14 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	@Qualifier("consultasDAOICEImpl")
 	private ConsultasPolizaDAO consultasPolizaDAOICE;
 	
-//	@Autowire
-//	@Qualifier("consultasDAOSISAImpl")
-//	private ConsultasPolizaDAO consultasPolizaDAOSISA;
+	@Autowired
+	@Qualifier("consultasDAOSISAImpl")
+	private ConsultasPolizaDAO consultasPolizaDAOSISA;
+
+	@Autowired
+	@Qualifier("consultasAseguradoDAOSIGSImpl")
+	private IConsultasAseguradoDAO consultasAseguradoDAOSIGS;
+	
 	
 	@Override
 	public List<PolizaAseguradoVO> obtienePolizasAsegPromotor(String user,
@@ -483,7 +489,7 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	@Deprecated
 	@Override
 	public void actualizaTramiteMC(PolizaVO poliza) throws Exception{
-		consultasPolizaDAOICE.actualizaTramiteMC(poliza);
+		consultasAseguradoDAOSIGS.actualizaTramiteMC(poliza);
 	}
 
 }

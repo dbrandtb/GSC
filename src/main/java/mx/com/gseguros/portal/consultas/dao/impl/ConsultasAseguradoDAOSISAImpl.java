@@ -956,4 +956,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 			return null;
 		}
 		
+		@Override
+		public void actualizaTramiteMC(PolizaVO poliza) throws Exception{}
+		
 }

@@ -1067,7 +1067,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 				String cdunieco = params.get("cdunieco")
 				      ,cdramo   = params.get("cdramo")
 				      ,nmpoliza = params.get("nmpoliza")
-				      ,ntramite = params.get("ntramite");
+				      ,ntramite = params.get("numtra");
 					
 				Utils.validate(
 						 cdunieco, "No se recibi\u00f3 la sucursal"
@@ -1075,7 +1075,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 						,nmpoliza, "No se recibi\u00f3 la poliza"
 						,ntramite, "No se recibi\u00f3 el numero de tramite"
 						);
-					
+				
 				consultasPolizaManager.actualizaTramiteMC(new PolizaVO( cdunieco
 																	    ,cdramo 
 																	    ,null

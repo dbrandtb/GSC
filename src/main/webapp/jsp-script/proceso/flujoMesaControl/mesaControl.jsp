@@ -1351,7 +1351,7 @@ function _p54_registrarTramite(bot)
                     if(json.success == true)
                     {
                     	/*Se implementa el SP que actualiza mc del sigs
-                    	actuzalizarMCSigs(values, json.params.ntramite);
+                    	actualizarMCSigs(values, json.params.ntramite);
                     	*/
                     	
                         mensajeCorrecto('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
