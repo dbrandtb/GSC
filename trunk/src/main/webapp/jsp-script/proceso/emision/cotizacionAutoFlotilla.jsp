@@ -4750,7 +4750,7 @@ function _p30_cotizar(sinTarificar)
                                     select       : _p30_tarifaSelect
                                     ,afterrender : function(me)
                                     {
-                                        if(!Ext.isEmpty(_p30_flujo) && !sinTarificar===true)
+                                        if(!Ext.isEmpty(_p30_flujo)) // && !sinTarificar===true)
                                         {
                                             _p30_actualizarCotizacionTramite(_p30_actualizarSwexiperTramite);
                                         }
