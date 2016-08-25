@@ -855,4 +855,18 @@ public class Utils
 				.replace("_O_", "&Oacute;")
 				.replace("_U_", "&Uacute;");
     }
+    
+    public static String cambiaAcentosUnicodePorAcentosHtml(String texto) {
+    	return texto
+    			.replace("\u00e1", "&aacute;")
+    			.replace("\u00e9", "&eacute;")
+				.replace("\u00ed", "&iacute;")
+				.replace("\u00f3", "&oacute;")
+				.replace("\u00fa", "&uacute;")
+				.replace("\u00c1", "&Aacute;")
+				.replace("\u00c9", "&Eacute;")
+				.replace("\u00cd", "&Iacute;")
+				.replace("\u00d3", "&Oacute;")
+				.replace("\u00da", "&Uacute;");
+    }
 }

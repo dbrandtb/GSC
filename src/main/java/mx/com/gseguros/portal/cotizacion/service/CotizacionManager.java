@@ -1039,5 +1039,6 @@ public interface CotizacionManager
 			String cdgarant
 			)throws Exception;
 	
-	
+	public String recuperarDescripcionEstatusTramite (String status) throws Exception;
+
 }

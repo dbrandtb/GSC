@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -96,6 +97,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	
 	@Autowired
     private MailService mailService;
+	
+	@Autowired
+	private FlujoMesaControlDAO flujoMesaControlDAO;
 	    
 	@Override
 	public void movimientoTvalogarGrupo(
@@ -10561,6 +10565,38 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return sumaAseguradosMed;
 		
 		
+	}
+	
+	@Override
+	public String recuperarDescripcionEstatusTramite (String status) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ recuperarDescripcionEstatusTramite @@@@@@",
+				"\n@@@@@@ status = ", status));
+		String dsstatus = null;
+		String paso = "Recuperando descripci\u00f3n de status";
+		try {
+			List<Map<String, String>> lista = flujoMesaControlDAO.recuperaTestadomc(status);
+			if (lista == null || lista.size() == 0) {
+				throw new ApplicationException(Utils.join("No hay descripciones para el estatus '", status,"'"));
+			}
+			for (Map<String, String> estado : lista) {
+				if (status.equals(estado.get("CDESTADOMC"))) {
+					dsstatus = estado.get("DSESTADOMC");
+					break;
+				}
+			}
+			if (StringUtils.isBlank(dsstatus)) {
+				throw new ApplicationException(Utils.join("No hay descripci\u00f3n para el estatus '", status,"'"));
+			}
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ dsstatus = ", dsstatus,
+				"\n@@@@@@ recuperarDescripcionEstatusTramite @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return dsstatus;
 	}
 	
 	/////////////////////////////////////////////////////

@@ -2431,11 +2431,15 @@ public class CotizacionAction extends PrincipalCoreAction
 							
 							Map<String, String> tramite = siniestrosManager.obtenerTramiteCompleto(datosParaComplementar.get("NTRAMITE_LIGADO"));
 							String status = tramite.get("STATUS");
+							
+							String dsstatus = cotizacionManager.recuperarDescripcionEstatusTramite(status);
+							error = Utils.join(error, " (estatus: '", dsstatus, "')");
+							
 							logger.debug(Utils.log("cotizacion ligada al tramite ", datosParaComplementar.get("NTRAMITE_LIGADO"),
 									", status ", status, "."));
 							
 							if (EstatusTramite.RECHAZADO.getCodigo().equals(status)) {
-								error = Utils.join(error, " por favor generar un nuevo tr\u00e1mite");
+								error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite");
 							} else {
 								error = Utils.join(error, ", favor de acceder desde mesa de control");
 							}
@@ -2453,10 +2457,14 @@ public class CotizacionAction extends PrincipalCoreAction
 						Map<String, String> tramiteCot = siniestrosManager.obtenerTramiteCompleto(ntramiteCot);
 						String statusTramiteCot = tramiteCot.get("STATUS");
 						
+						String dsstatusTramiteCot = cotizacionManager.recuperarDescripcionEstatusTramite(statusTramiteCot);
+						
 						if (StringUtils.isBlank(ntramiteIn)) { // entran desde cotizacion abierta
 							if ("S".equals(datosParaComplementar.get("SWORIGENMESA"))) { // intentar recuperar uno de tramite creado en mesa
-								String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ", ntramiteCot);
-								
+								String error = Utils.join(
+										"Esta cotizaci\u00f3n pertenece al tr\u00e1mite ",
+										ntramiteCot,
+										" (estatus: '", dsstatusTramiteCot, "')");
 								if (EstatusTramite.RECHAZADO.getCodigo().equals(statusTramiteCot)) {
 									error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite");
 								} else {
@@ -2468,10 +2476,11 @@ public class CotizacionAction extends PrincipalCoreAction
 						} else { // entran desde un tramite
 							if (ntramiteIn.equals(ntramiteCot)) { // es del mismo tramite
 								String error = Utils.join("Esta cotizaci\u00f3n se encuentra confirmada para este tr\u00e1mite (", ntramiteCot
-										,"), favor de acceder desde mesa de control para complementarla");
+										,", estatus: '", dsstatusTramiteCot,"'), favor de acceder desde mesa de control para complementarla");
 								throw new ApplicationException(error);
 							} else { // intentan recuperar de otro tramite
-								String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ", ntramiteCot);
+								String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ", ntramiteCot,
+										" (estatus: '", dsstatusTramiteCot, "')");
 								
 								if (EstatusTramite.RECHAZADO.getCodigo().equals(statusTramiteCot)) {
 									error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite"); // de otro que esta cancelado
