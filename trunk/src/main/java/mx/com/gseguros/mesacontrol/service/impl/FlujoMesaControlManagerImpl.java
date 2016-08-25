@@ -3059,6 +3059,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			if (StringUtils.isNotBlank(params.get("dsmensaje"))) {
 				params.put("dsmensaje", params.get("dsmensaje").replace("\n", "<br/>"));
+				params.put("dsmensaje", Utils.cambiaAcentosUnicodePorAcentosHtml(params.get("dsmensaje")));
 			}
 			
 			paso = "Antes de enviar el correo";
