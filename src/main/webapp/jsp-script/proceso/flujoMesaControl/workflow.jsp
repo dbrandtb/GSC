@@ -21,7 +21,23 @@
     height           : 50px;
     background-image : url('${flujoimg}estado.png');
 }
+.sucursal .image
+{
+    width            : 50px;
+    height           : 50px;
+    background-image : url('${flujoimg}estado.png');
+}
 .estado .CDESTADOMC, .labelE
+{
+    position    : absolute;
+    left        : 50%;
+    margin-left : -100px;
+    border      : 0px solid red;
+    top         : 20px;
+    width       : 200px;
+    text-align  : center;
+}
+.sucursal .CDUNIECO, .labelS
 {
     position    : absolute;
     left        : 50%;
@@ -147,6 +163,14 @@
     border : 0px solid blue;
 }
 .entidadE
+{
+    position         : absolute;
+    width            : 50px;
+    height           : 50px;
+    border           : 0px solid red;
+    background-image : url('${flujoimg}estado.png');
+}
+.entidadS
 {
     position         : absolute;
     width            : 50px;
@@ -280,6 +304,11 @@
     top : -15px;
     font-weight: bold;
 }
+.entidad:hover .labelS
+{
+    top : -15px;
+    font-weight: bold;
+}
 .entidad:hover .labelP
 {
     top : -15px;
@@ -361,6 +390,7 @@ var _p52_urlGuardarDatosTitulo     = '<s:url namespace="/flujomesacontrol" actio
 
 ////// variables //////
 var estadoTpl;
+var sucursalTpl;
 var pantallaTpl;
 var componenteTpl;
 var procesoTpl;
@@ -374,6 +404,7 @@ var _p52_gridProcesos;
 var _p52_panelDibujo;
 var _p52_panelCanvas;
 var _p52_catalogoEstados;
+var _p52_catalogoSucursales;
 var _p52_panelEstado;
 var _p52_catalogoPantallas;
 var _p52_catalogoComponentes;
@@ -407,6 +438,11 @@ var _p52_winVarsCorreo;
 var _p52_cargando = false;
 
 var _p52_debug = false;
+
+var _p52_params = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+debug('_p52_params:', _p52_params, '.');
+
+var _p52_tituloPrincipal;
 ////// variables //////
 
 ////// overrides //////
@@ -480,6 +516,20 @@ Ext.onReady(function()
         ,'        </tr>'
         ,'        <tr>'
         ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'E\',\'E{CDESTADOMC}\'); return false;" ><img src="${icons}pencil.png" /></a>{DSESTADOMC}</td>'
+        ,'        </tr>'
+        ,'    </table>'
+        ,'</div>'
+    ]);
+    
+    sucursalTpl = new Ext.Template(
+    [
+         '<div id="S{CDUNIECO}" class="catEntidad sucursal" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{DSUNIECO}">'
+        ,'    <table width="90" border="0">'
+        ,'        <tr>'
+        ,'            <td align="center"><div class="image"></div><div class="CDUNIECO">{CDUNIECO}</div></td>'
+        ,'        </tr>'
+        ,'        <tr>'
+        ,'            <td align="center">{DSUNIECO}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -598,6 +648,13 @@ Ext.onReady(function()
     ]);
     
     epProps['E'] =
+    {
+        anchor     : [ 'Perimeter' , { shape : 'Circle' } ]
+        ,isSource  : true
+        ,isTarget  : true
+    };
+    
+    epProps['S'] =
     {
         anchor     : [ 'Perimeter' , { shape : 'Circle' } ]
         ,isSource  : true
@@ -739,6 +796,7 @@ Ext.onReady(function()
             var me = this;
             me.down('form').getForm().reset();
             me.down('[name=ACCION]').setValue('I');
+            me.down('[name=CDTIPMOD]').setValue(_p52_params.cdtipmod);
             me.down('grid').getStore().each(function(r)
             {
                 r.set('SWACTIVO',false);
@@ -1863,6 +1921,15 @@ Ext.onReady(function()
  		                }
  		                ]
 	}); 
+	
+	if (Number(_p52_params.cdtipmod) === 1) {
+	    _p52_tituloPrincipal = 'C O N F I G U R A D O R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P R O C E S O S';
+	} else if (Number(_p52_params.cdtipmod) === 2) {
+        _p52_tituloPrincipal = 'C O N F I G U R A D O R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S U C U R S A L E S';
+    } else {
+        _p52_tituloPrincipal = '- E R R O R -';
+    }
+	
     ////// componentes //////
     
     ////// contenido //////
@@ -1870,7 +1937,7 @@ Ext.onReady(function()
     {
         renderTo : '_p52_divpri'
         ,itemId  : '_p52_panelpri'
-        ,title   : 'C O N F I G U R A D O R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P R O C E S O S'
+        ,title   : _p52_tituloPrincipal
         ,height  : 730
         ,border  : 0
         ,layout  : 'border'
@@ -1921,6 +1988,7 @@ Ext.onReady(function()
                                 xtype    : 'button'
                                 ,text    : 'Agregar'
                                 ,icon    : '${icons}add.png'
+                                ,hidden  : Number(_p52_params.cdtipmod) !== 1
                                 ,handler : function(){ _p52_formTtipflumc.showNew(); }
                             }]
                         }
@@ -1936,6 +2004,7 @@ Ext.onReady(function()
                                 ,width   : 30
                                 ,icon    : '${icons}pencil.png'
                                 ,tooltip : 'Editar'
+                                ,hidden  : Number(_p52_params.cdtipmod) !== 1
                                 ,handler : function(me,row,col,item,e,record)
                                 {
                                     _p52_formTtipflumc.showEdit(record);
@@ -1953,6 +2022,7 @@ Ext.onReady(function()
                                 ,'CDTIPSUP'
                                 ,'SWMULTIPOL'
                                 ,'SWREQPOL'
+                                ,'CDTIPMOD'
                             ]
                             ,proxy   :
                             {
@@ -1960,7 +2030,8 @@ Ext.onReady(function()
                                 ,type        : 'ajax'
                                 ,extraParams :
                                 {
-                                    'params.consulta' : 'RECUPERAR_TTIPFLUMC'
+                                    'params.consulta' : 'RECUPERAR_TTIPFLUMC',
+                                    'params.cdtipmod' : _p52_params.cdtipmod
                                 }
                                 ,reader      :
                                 {
@@ -1997,6 +2068,7 @@ Ext.onReady(function()
                                 xtype    : 'button'
                                 ,text    : 'Agregar'
                                 ,icon    : '${icons}add.png'
+                                ,hidden  : Number(_p52_params.cdtipmod) !== 1
                                 ,handler : function(me){ _p52_formTflujomc.showNew(); }
                             }]
                         }
@@ -2008,9 +2080,10 @@ Ext.onReady(function()
                                 ,flex     : 1
                             }
                             ,{
-                                xtype    : 'actioncolumn'
-                                ,width   : 50
-                                ,items   :
+                                xtype   : 'actioncolumn'
+                                ,width  : 30
+                                ,hidden : Number(_p52_params.cdtipmod) !== 1
+                                ,items  :
                                 [
                                     {
                                         icon    : '${icons}pencil.png'
@@ -2020,7 +2093,14 @@ Ext.onReady(function()
                                             _p52_formTflujomc.showEdit(record);
                                         }
                                     }
-                                    ,{
+                                ]
+                            }
+                            ,{
+                                xtype  : 'actioncolumn'
+                                ,width : 30
+                                ,items :
+                                [
+                                    {
                                         icon     : '${icons}chart_line.png'
                                         ,tooltip : 'Modelar'
                                         ,handler : function(view,row,col,item,e,record)
@@ -2108,8 +2188,9 @@ Ext.onReady(function()
                         ,items :
                         [
                             {
-                                title       : 'STATUS'
+                                title       : 'ESTATUS'
                                 ,itemId     : '_p52_catalogoEstados'
+                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2143,6 +2224,7 @@ Ext.onReady(function()
                             ,{
                                 title       : 'PANTALLAS'
                                 ,itemId     : '_p52_catalogoPantallas'
+                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2164,6 +2246,7 @@ Ext.onReady(function()
                             ,{
                                 title       : 'COMPONENTES'
                                 ,itemId     : '_p52_catalogoComponentes'
+                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2185,6 +2268,7 @@ Ext.onReady(function()
                             ,{
                                 title       : 'PROCESOS'
                                 ,itemId     : '_p52_catalogoProcesos'
+                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2221,6 +2305,7 @@ Ext.onReady(function()
                             ,{
                                 title       : 'VALIDACIONES'
                                 ,itemId     : '_p52_catalogoValidaciones'
+                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2246,6 +2331,7 @@ Ext.onReady(function()
                             ,{
                                 title       : 'REVISIONES'
                                 ,itemId     : '_p52_catalogoRevisiones'
+                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2272,6 +2358,7 @@ Ext.onReady(function()
                             ,{
                                 title       : 'CORREOS'
                                 ,itemId     : '_p52_catalogoCorreos'
+                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2279,6 +2366,19 @@ Ext.onReady(function()
                                     type     : 'table'
                                     ,columns : 2
                                     ,tdAttrs : {valign:'top'}
+                                }
+                            }
+                            ,{
+                                title       : 'SUCURSALES'
+                                ,itemId     : '_p52_catalogoSucursales'
+                                ,hidden     : Number(_p52_params.cdtipmod) !== 2
+                                ,defaults   : { style : 'margin : 5px;' }
+                                ,autoScroll : true
+                                ,layout     :
+                                {
+                                    type     : 'table'
+                                    ,columns : 2
+                                    ,tdAttrs : { valign : 'top' }
                                 }
                             }
                             ,{
@@ -3908,6 +4008,7 @@ Ext.onReady(function()
     _p52_gridProcesos         = _fieldById('_p52_gridProcesos');
     _p52_panelDibujo          = _fieldById('_p52_panelDibujo');
     _p52_catalogoEstados      = _fieldById('_p52_catalogoEstados');
+    _p52_catalogoSucursales   = _fieldById('_p52_catalogoSucursales');
     _p52_panelCanvas          = _fieldById('_p52_panelCanvas');
     _p52_panelEstado          = _fieldById('_p52_panelEstado');
     _p52_catalogoPantallas    = _fieldById('_p52_catalogoPantallas');
@@ -3926,16 +4027,19 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
-    _p52_cargarEstados();
-    _p52_cargarPantallas();
-    _p52_cargarComponentes();
-    _p52_cargarProcesos();
-    _p52_cargarValidaciones();
-    _p52_cargarRevisiones();
+    if (1 === Number(_p52_params.cdtipmod)) {
+        _p52_cargarEstados();
+        _p52_cargarPantallas();
+        _p52_cargarComponentes();
+        _p52_cargarProcesos();
+        _p52_cargarValidaciones();
+        _p52_cargarRevisiones();
+        _p52_cargarCorreos();
+        _p52_cargarIconos();
+    } else if (2 === Number(_p52_params.cdtipmod)) {
+        _p52_cargarSucursales();
+    }
     _p52_cargarTitulos();
-    _p52_cargarIconos();
-    _p52_cargarCorreos();
-    //_p52_navega(2);
     
     jsPlumb.ready(function()
     {
@@ -4076,6 +4180,70 @@ function _p52_cargarEstados()
     catch(e)
     {
         _setLoading(false,_p52_catalogoEstados);
+        manejaException(e,ck);
+    }
+}
+
+function _p52_cargarSucursales()
+{
+    debug('_p52_cargarSucursales');
+    
+    var ck = 'Cargando sucursales';
+    try
+    {
+        _setLoading(true,_p52_catalogoSucursales);
+        Ext.Ajax.request(
+        {
+            url      : _p52_urlRecuperacion
+            ,params  :
+            {
+                'params.consulta' : 'RECUPERAR_TODAS_SUCURSALES'
+            }
+            ,success : function(response)
+            {
+                _setLoading(false,_p52_catalogoSucursales);
+                var ck = 'Decodificando respuesta al cargar las sucursales';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### load sucursales:',json);
+                    if(json.success==true)
+                    {
+                        _p52_catalogoSucursales.removeAll();
+                        var sucursales = [];
+                        for(var i=0;i<json.list.length;i++)
+                        {
+                            sucursales.push(
+                            {
+                                xtype   : 'panel'
+                                ,tpl    : sucursalTpl
+                                ,border : 0
+                                ,itemId : 'S'+json.list[i].CDUNIECO
+                                ,data   : json.list[i]
+                            });
+                        }
+                        _p52_catalogoSucursales.add(sucursales);
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _setLoading(false,_p52_catalogoSucursales);
+                errorComunicacion(null,'Error al cargar las sucursales');
+            }
+        });
+    }
+    catch(e)
+    {
+        _setLoading(false,_p52_catalogoSucursales);
         manejaException(e,ck);
     }
 }
@@ -4437,6 +4605,14 @@ function _p52_drop(event)
     var y       = event.layerY;
     
     if(tipo=='E')
+    {
+        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
+        {
+            _p52_addDiv(id,tipo,clave,descrip,x,y);
+            _p52_addEndpoint(id,tipo);
+        });
+    }
+    else if(tipo=='S')
     {
         _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
         {
@@ -5189,6 +5365,10 @@ function _p52_addDiv(id,tipo,clave,descrip,x,y)
     if(tipo=='E')
     {
         $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelE">'+clave+' - '+descrip+'</div></div>');
+    }
+    else if(tipo=='S')
+    {
+        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelS">'+clave+' - '+descrip+'</div></div>');
     }
     else if(tipo=='P')
     {

@@ -22,6 +22,7 @@ public interface FlujoMesaControlManager
 			,String swreqpol
 			,String swmultipol
 			,String cdtipsup
+			,String cdtipmod
 			)throws Exception;
 	
 	public String movimientoTflujomc(

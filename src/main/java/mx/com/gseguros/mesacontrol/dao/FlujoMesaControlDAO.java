@@ -18,7 +18,7 @@ public interface FlujoMesaControlDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, String>> recuperaTtipflumc(String agrupamc) throws Exception;
+	public List<Map<String, String>> recuperaTtipflumc(String agrupamc, String cdtipmod) throws Exception;
 
 	/**
 	 * 
@@ -207,7 +207,7 @@ public interface FlujoMesaControlDAO {
 	 * @throws Exception
 	 */
 	public String movimientoTtipflumc(String cdtipflu, String dstipflu, String cdtiptra,
-			String swmultipol, String swreqpol, String cdtipsup, String accion) throws Exception;
+			String swmultipol, String swreqpol, String cdtipsup, String cdtipmod, String accion) throws Exception;
 
 	/**
 	 * 
@@ -770,4 +770,17 @@ public interface FlujoMesaControlDAO {
 	public List<Map<String, String>> recuperarRequisitosDocumentosObligatoriosFaltantes (String ntramite) throws Exception;
 	
 	public List<Map<String, String>> recuperarRequisitosDatosTramite (String ntramite) throws Exception;
+	
+	public List<Map<String, String>> recuperarTodasSucursales () throws Exception;
+	
+	public void movimientoTflusuc(
+		String cdtipflu,
+		String cdflujomc,
+		String cdunieco,
+		String webid,
+		String xpos,
+		String ypos,
+		String nivel,
+		String capacidad,
+		String accion) throws Exception;
 }

@@ -942,12 +942,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TTIPFLUMC))
 			{	
-				String agrupamc = null;
 				if(params!=null)
 				{
-					agrupamc = params.get("agrupamc");
+					lista = flujoMesaControlDAO.recuperaTtipflumc(params.get("agrupamc"), params.get("cdtipmod"));
 				}
-				lista = flujoMesaControlDAO.recuperaTtipflumc(agrupamc);
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TESTADOMC))
 			{	
@@ -1255,6 +1253,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 						params.get("lineaNegocio"), params.get("cdramo"), params.get("tipotramite"),
 						params.get("cdagente"), params.get("numdias"));
 				
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_TODAS_SUCURSALES)) {
+				lista = flujoMesaControlDAO.recuperarTodasSucursales();
 			}
 		}
 		catch(Exception ex)

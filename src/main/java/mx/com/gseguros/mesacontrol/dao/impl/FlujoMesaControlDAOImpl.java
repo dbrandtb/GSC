@@ -57,10 +57,11 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	
 	// SP 2
 	@Override
-	public List<Map<String,String>> recuperaTtipflumc(String agrupamc) throws Exception
+	public List<Map<String,String>> recuperaTtipflumc(String agrupamc, String cdtipmod) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("agrupamc" , agrupamc);
+		params.put("cdtipmod" , cdtipmod);
 		Map<String,Object>       procRes = ejecutaSP(new RecuperaTtipflumcSP(getDataSource()),params);
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null)
@@ -76,7 +77,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		{
 			super(dataSource,"PKG_MESACONTROL.P_GET_TTIPFLUMC");
 			declareParameter(new SqlParameter("agrupamc" , OracleTypes.VARCHAR));
-			String[] cols=new String[]{ "CDTIPFLU" , "DSTIPFLU", "CDTIPTRA","SWMULTIPOL","SWREQPOL","CDTIPSUP" };
+			declareParameter(new SqlParameter("cdtipmod" , OracleTypes.VARCHAR));
+			String[] cols=new String[]{ "CDTIPFLU" , "DSTIPFLU", "CDTIPTRA","SWMULTIPOL","SWREQPOL","CDTIPSUP", "CDTIPMOD" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -692,6 +694,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String swmultipol
 			,String swreqpol
 			,String cdtipsup
+			,String cdtipmod
 			,String accion
 			)throws Exception
 	{
@@ -702,6 +705,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("swmultipol" , swmultipol);
 		params.put("swreqpol"   , swreqpol);
 		params.put("cdtipsup"   , cdtipsup);
+		params.put("cdtipmod"   , cdtipmod);
 		params.put("accion"     , accion);
 		Map<String,Object> procRes = ejecutaSP(new MovimientoTtipflumcSP(getDataSource()),params);
 		
@@ -727,6 +731,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("swmultipol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swreqpol"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipmod"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdtipflu_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -3454,5 +3459,41 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarTodasSucursales () throws Exception {
+		Map<String, Object> procRes = ejecutaSP(new RecuperarTodasSucursalesSP(getDataSource()), new HashMap<String, String>());
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarTodasSucursales lista = ",lista));
+		return lista;
+	}
+	
+	protected class RecuperarTodasSucursalesSP extends StoredProcedure {
+		protected RecuperarTodasSucursalesSP (DataSource dataSource) {
+			super(dataSource,"PKG_MESACONTROL.P_GET_TODAS_SUCURSALES");
+			String[] cols = new String[] { "CDUNIECO" , "DSUNIECO" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movimientoTflusuc(
+			String cdtipflu,
+			String cdflujomc,
+			String cdunieco,
+			String webid,
+			String xpos,
+			String ypos,
+			String nivel,
+			String capacidad,
+			String accion) throws Exception {
+		throw new UnsupportedOperationException();
 	}
 }
