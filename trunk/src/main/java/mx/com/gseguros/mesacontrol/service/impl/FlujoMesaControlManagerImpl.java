@@ -125,6 +125,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String swreqpol
 			,String swmultipol
 			,String cdtipsup
+			,String cdtipmod
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -137,6 +138,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ swreqpol="   , swreqpol
 				,"\n@@@@@@ swmultipol=" , swmultipol
 				,"\n@@@@@@ cdtipsup="   , cdtipsup
+				,"\n@@@@@@ cdtipmod="   , cdtipmod
 				));
 		
 		String paso = "Guardando tr\u00E1mite";
@@ -153,6 +155,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,"S".equals(swmultipol) ? "S" : "N"
 					,"S".equals(swreqpol) ? "S" : "N"
 					,cdtipsup
+					,cdtipmod
 					,accion
 					);
 		}
@@ -339,6 +342,20 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,"-1"  //statusout
 						,"N"   //swfinnode
 						,"1"   //EN REGISTRO
+						,"I"
+						);
+			}
+			else if("S".equals(tipo))
+			{
+				flujoMesaControlDAO.movimientoTflusuc(
+						cdtipflu
+						,cdflujomc
+						,clave //cdestadomc
+						,webid
+						,xpos
+						,ypos
+						,"1"  // nivel: sucursal primaria
+						,"100" // capacidad: 10
 						,"I"
 						);
 			}

@@ -2,6 +2,7 @@ package mx.com.gseguros.mesacontrol.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,34 +79,29 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
                 @Result(name="success" , location="/jsp-script/proceso/flujoMesaControl/workflow.jsp")
             }
 	)
-	public String workflow()
-	{
+	public String workflow () {
 		logger.debug(Utils.log(
-				 "\n######################"
-				,"\n###### workflow ######"
-				));
-		
+				"\n######################",
+				"\n###### workflow ######",
+				"\n###### params = ", params));
 		String result = ERROR;
-		
-		try
-		{
+		try {
 			UserVO usuario = Utils.validateSession(session);
-			
 			items = flujoMesaControlManager.workflow(usuario.getRolActivo().getClave());
-			
+			if (params == null) {
+				params = new LinkedHashMap<String, String>();
+			}
+			if (!params.containsKey("cdtipmod")) {
+				params.put("cdtipmod", "1");
+			}
 			result = SUCCESS;
-			
-			logger.debug(Utils.log(
-					 "\n###### result=",result
-					,"\n###### workflow ######"
-					,"\n######################"
-					));
-		}
-		catch(Exception ex)
-		{
+		} catch (Exception ex) {
 			message = Utils.manejaExcepcion(ex);
 		}
-		
+		logger.debug(Utils.log(
+				"\n###### result = ", result,
+				"\n###### workflow ######",
+				"\n######################"));
 		return result;
 	}
 	
@@ -365,12 +361,14 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,cdtiptra   = params.get("CDTIPTRA")
 			       ,swreqpol   = params.get("SWREQPOL")
 			       ,swmultipol = params.get("SWMULTIPOL")
-			       ,cdtipsup   = params.get("CDTIPSUP");
+			       ,cdtipsup   = params.get("CDTIPSUP")
+			       ,cdtipmod   = params.get("CDTIPMOD");
 			
 			Utils.validate(
 					accion     , "No se recibi\u00f3 la acci\u00f3n"
 					,dstipflu  , "No se recibi\u00f3 el nombre"
 					,cdtiptra  , "No se recibi\u00f3 el tipo de tr\u00e1mite"
+					,cdtipmod  , "No se recibi\u00f3 el tipo de modelado"
 					);
 			
 			cdtipflu = flujoMesaControlManager.movimientoTtipflumc(
@@ -381,6 +379,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,swreqpol
 					,swmultipol
 					,cdtipsup
+					,cdtipmod
 					);
 			
 			params.put("CDTIPFLU",cdtipflu);
