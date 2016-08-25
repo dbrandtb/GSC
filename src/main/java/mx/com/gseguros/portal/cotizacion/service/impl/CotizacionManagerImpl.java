@@ -4528,9 +4528,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			//listaCobExt = ...
 			String paso = Utils.join("antes de entrar a actualizaValoresSituacionTitulares");
 		    List<Map<String, String>> situaciones = cotizacionDAO.actualizaValoresSituacionTitulares(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsit, valor, cdgrupo);
-		    if(situaciones.size() > 0 || !situaciones.isEmpty()){
-		    	valoresDefectoExtraprima(cdunieco,cdramo,estado,nmpoliza,situaciones,nmsuplem,cdtipsit,"4EXO");
-		    }
 		    paso = Utils.join("despues de pasar a actualizaValoresSituacionTitulares");
 			resp.setRespuesta("Se guardaron todos los datos");
 		}
@@ -4550,92 +4547,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.toString()
 				);
 		return resp;
-	}
-	
-	public void valoresDefectoExtraprima(
-			String cdunieco,
-			String cdramo,
-			String estado,
-			String nmpoliza,
-			List<Map<String, String>> situaciones,
-			String nmsuplem,
-			String cdtipsit,
-			String cdgarant) throws Exception{		
-		String paso = "llamando hilos de extraprima";		
-		logger.debug(paso);
-		new valoresDefectoExtraprima(cdunieco, 
-				cdramo,
-				estado, 
-				nmpoliza, 
-				situaciones, 
-				nmsuplem, 
-				cdtipsit, 
-				cdgarant).start();
-	}
-	
-	private class valoresDefectoExtraprima extends Thread{
-		private String cdunieco;
-		private String cdramo;
-		private String estado;
-		private String nmpoliza;
-		private List<Map<String, String>> situaciones;
-		private String nmsuplem;
-		private String cdtipsit;
-		private String cdgarant;
-		
-		public valoresDefectoExtraprima(
-				String cdunieco,
-				String cdramo,
-				String estado,
-				String nmpoliza,
-				List<Map<String,String>> situaciones,
-				String nmsuplem,
-				String cdtipsit,
-				String cdgarant){
-			this.cdunieco  = cdunieco;
-			this.cdramo    = cdramo;
-			this.estado    = estado;
-			this.nmpoliza  = nmpoliza;
-			this.situaciones = situaciones;
-			this.nmsuplem = nmsuplem;
-			this.cdtipsit  = cdtipsit;
-			this.cdgarant = cdgarant;
-		}
-		
-		@Override
-		public void run(){
-			try{
-				cotizacionDAO.movimientoTbloqueo(
-						cdunieco, 
-						cdramo, 
-						estado, 
-						nmpoliza, 
-						"0", 
-						"I");
-//				for(Map<String,String> situacion:situaciones){
-					cotizacionDAO.valoresPorDefecto(
-							cdunieco
-							,cdramo
-							,estado
-							,nmpoliza
-//							,situacion.get("NMSITUAC")
-							,"0"
-							,nmsuplem
-							,cdgarant
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-							);
-//				}
-				cotizacionDAO.movimientoTbloqueo(
-						cdunieco, 
-						cdramo, 
-						estado, 
-						nmpoliza, 
-						"0", 
-						"D");
-			}catch(Exception ex){
-				logger.error("error lanzando valores po defecto extraprima: ",ex);
-			}
-		}
 	}
 	
 	@Override

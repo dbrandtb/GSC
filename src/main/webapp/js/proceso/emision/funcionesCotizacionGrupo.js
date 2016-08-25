@@ -1180,8 +1180,8 @@ function _p25_guardarExtraprimasTitulares(){
             	_fieldById('gridAseg'+json.params.cdgrupo).getStore().reload();
                 mensajeCorrecto('Datos guardados',json.respuesta);
                 _unmask();
-                _mask('Actualizando pantalla');
-                window.location.reload();
+                //_mask('Actualizando pantalla');
+                //window.location.reload();
             }
             else{
                 mensajeError(json.respuesta);
@@ -1221,8 +1221,8 @@ function _p21_guardarExtraprimasTitulares(){
             	_fieldById('gridAseg'+json.params.cdgrupo).getStore().reload();
                 mensajeCorrecto('Datos guardados',json.respuesta);
                 _unmask();
-                _mask('Actualizando pantalla');
-                window.location.reload();                
+                //_mask('Actualizando pantalla');
+                //window.location.reload();
             }
             else{
                 mensajeError(json.respuesta);
@@ -1249,6 +1249,7 @@ function _p25_guardarExtraprimas(letra)
     if(records.length==0)
     {
         mensajeWarning('No hay cambios');
+        _unmask();
         _p25_setActiveResumen();
     }
     else
@@ -1331,6 +1332,7 @@ function _p21_guardarExtraprimas(letra)
     if(records.length==0)
     {
         mensajeWarning('No hay cambios');
+        _unmask();
         _p21_setActiveResumen();
     }
     else
