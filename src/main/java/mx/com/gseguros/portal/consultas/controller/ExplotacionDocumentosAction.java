@@ -42,6 +42,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 	private InputStream              fileInputStream;
 	private String                   filename;
 	private String                   contentType;
+	private List<String>			 tramites;
 	
 	@Autowired
 	private ExplotacionDocumentosManager explotacionDocumentosManager;
@@ -382,6 +383,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 				 "\n####################################"
 				,"\n###### actualizarStatusRemesa ######"
 				,"\n###### params=",params
+				,"\n###### tramites=",tramites
 				));
 		
 		try
@@ -391,16 +393,15 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			String cdsisrol = usuario.getRolActivo().getClave();
 			
 			Utils.validate(params , "No se recibieron datos");
+			Utils.validate(tramites , "No se recibieron tramites");
 			
-			String ntramite = params.get("ntramite");
 			String status   = params.get("status");
 			
 			Utils.validate(
-					ntramite , "No se recibi\u00F3 la remesa"
-					,status  , "No se recibi\u00F3 el status"
+					status  , "No se recibi\u00F3 el status"
 					);
 			
-			explotacionDocumentosManager.actualizarStatusRemesa(ntramite,status,cdusuari,cdsisrol);
+			explotacionDocumentosManager.actualizarStatusRemesa(tramites,status,cdusuari,cdsisrol);
 			
 			success = true;
 		}
@@ -414,7 +415,11 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 				,"\n####################################"
 				));
 		return SUCCESS;
+		
 	}
+	
+	
+	
 	
 	/*Action(value   = "generarRemesaEmisionEndoso",
 			results = { @Result(name="success", type="json") }
@@ -760,7 +765,15 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
                                                                   //
 	public void setContentType(String contentType) {              //
 		this.contentType = contentType;                           //
-	}                                                             //
+	} 
+	
+	public List<String> getTramites() {
+		return tramites;
+	}
+
+	public void setTramites(List<String> tramites) {
+		this.tramites = tramites;
+	}//
                                                                   //
     ////////////////////////////////////////////////////////////////
 }

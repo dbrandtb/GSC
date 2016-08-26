@@ -868,7 +868,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	
 	@Override
 	public void actualizarStatusRemesa(
-			String ntramite
+			 List<String> tramites
 			,String status
 			,String cdusuari
 			,String cdsisrol
@@ -877,71 +877,85 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ actualizarStatusRemesa @@@@@@"
-				,"\n@@@@@@ ntramite=" , ntramite
+				,"\n@@@@@@ tramites=" , tramites
 				,"\n@@@@@@ status="   , status
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				));
 		
 		String paso = null;
-		try
-		{
-			paso = "Actualizando status de remesa";
-			logger.debug("@@@@@@ paso: {}",paso);
-			
-			mesaControlDAO.actualizarStatusRemesa(ntramite,status);
-			
-			paso = "Actualizando status de hijos de remesa";
-			logger.debug("@@@@@@ paso: {}",paso);
-			
-			mesaControlDAO.actualizarHijosRemesa(null, ntramite, status);
-			
-			paso = "Recuperando status";
-			logger.debug("@@@@@@ paso: {}",paso);
-			
-			List<GenericVO> statuses = catalogosDAO.obtieneTmanteni(Catalogos.MC_ESTATUS_TRAMITE.getCdTabla());
-			String          dsStatus = null;
-			for(GenericVO statusIte : statuses)
+		String mensaje="";
+		
+		for(String ntramite: tramites){
+			try
 			{
-				if(statusIte.getKey().equals(status))
+				paso = "Actualizando status de remesa";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				mesaControlDAO.actualizarStatusRemesa(ntramite,status);
+				
+				paso = "Actualizando status de hijos de remesa";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				mesaControlDAO.actualizarHijosRemesa(null, ntramite, status);
+				
+				paso = "Recuperando status";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				List<GenericVO> statuses = catalogosDAO.obtieneTmanteni(Catalogos.MC_ESTATUS_TRAMITE.getCdTabla());
+				String          dsStatus = null;
+				for(GenericVO statusIte : statuses)
 				{
-					dsStatus = statusIte.getValue();
-					break;
+					if(statusIte.getKey().equals(status))
+					{
+						dsStatus = statusIte.getValue();
+						break;
+					}
+				}
+				if(StringUtils.isBlank(dsStatus))
+				{
+					throw new ApplicationException("No se encuentra el status");
+				}
+				
+				paso = "Guardando detalle";
+				logger.debug("@@@@@@ paso: {}",paso);
+				
+				mesaControlDAO.movimientoDetalleTramite(
+						ntramite
+						,new Date() //feinicio
+						,null       //cdclausu
+						,Utils.join("Remesa actualizada a status '",dsStatus,"'")
+						,cdusuari
+						,null       //cdmotivo
+						,cdsisrol
+						,"S"
+						,null
+						,null
+						,status
+						,true
+						);
+			}
+			catch(Exception ex)
+			{
+				if(ex instanceof ApplicationException){
+					
+					mensaje=Utils.join(mensaje,"Remesa <b>",ntramite,"</b>: ",ex.getMessage(),"<br>");
+					
+				}else{
+					Utils.generaExcepcion(ex, paso);
 				}
 			}
-			if(StringUtils.isBlank(dsStatus))
-			{
-				throw new ApplicationException("No se encuentra el status");
-			}
-			
-			paso = "Guardando detalle";
-			logger.debug("@@@@@@ paso: {}",paso);
-			
-			mesaControlDAO.movimientoDetalleTramite(
-					ntramite
-					,new Date() //feinicio
-					,null       //cdclausu
-					,Utils.join("Remesa actualizada a status '",dsStatus,"'")
-					,cdusuari
-					,null       //cdmotivo
-					,cdsisrol
-					,"S"
-					,null
-					,null
-					,status
-					,true
-					);
-		}
-		catch(Exception ex)
-		{
-			Utils.generaExcepcion(ex, paso);
 		}
 		
+		if(!"".equals(mensaje)){
+			throw new ApplicationException(mensaje);
+		}
 		logger.debug(Utils.log(
 				 "\n@@@@@@ actualizarStatusRemesa @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
 	
 	/**
 	 * Se comenta porque ya no se usa, aunque está funcional

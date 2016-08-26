@@ -151,13 +151,54 @@ function _4_actualizarRemesaClic(bot)
                 xtype       : 'numberfield'
                 ,fieldLabel : 'Remesa'
                 ,status     : 36
+                ,listeners:{
+                    scope:this,
+                    specialkey: function(f,e){
+                        if(e.getKey()==e.ENTER){  
+                        	agregarRemesa(f);
+                        	f.reset();
+                        	
+                        }
+                    }
+                }
           	},{
                 xtype    : 'button'
                 ,icon    : '${icons}sitemap_color.png'
                 ,text    : 'Marcar como armada'
+                ,width   : 200
                 ,status  : 36
-                ,handler : _4_marcarRemesaClic
-            }]
+                //,handler : _4_marcarRemesaClic
+                ,handler : marcarRemesaClicGrupo
+            },{
+            	 xtype		 : 'gridpanel' 
+                ,status     : 36
+                ,itemId      : 'colleccionRemesaArmada'
+                ,width       : 255
+                ,height      : 80
+                ,hideHeaders : true
+                ,rowspan     : 2
+                ,store       : Ext.create('Ext.data.Store',
+                {
+                    model : 'Generic'
+                    ,data : []
+                })
+                ,columns :
+                [
+                    {
+                        dataIndex : 'value'
+                        ,flex     : 1
+                    }
+                    ,{
+                        xtype    : 'actioncolumn'
+                        ,width   : 30
+                        ,icon    : '${icons}delete.png'
+                        ,handler : function(view,row,col,item,e,record){ _fieldById('colleccionRemesaArmada').getStore().remove(record); }
+                    }
+                ]
+            }
+            
+            
+            ]
 		},{
         	layout : 'hbox',
         	defaults    : { style : 'margin:5px;'},
@@ -165,13 +206,52 @@ function _4_actualizarRemesaClic(bot)
                 xtype       : 'numberfield'
                 ,fieldLabel : 'Remesa'
                 ,status     : 37
+                ,listeners:{
+                    scope:this,
+                    specialkey: function(f,e){
+                        if(e.getKey()==e.ENTER){                	
+                        	
+                        	agregarRemesa(f);
+                        	f.reset();
+                        	
+                        }
+                    }
+                }
             },{
                 xtype    : 'button'
                 ,icon    : '${icons}user_comment.png'
                 ,text    : 'Marcar como entrega f\u00EDsica'
+                ,width   : 200
                 ,status  : 37
-                ,handler : _4_marcarRemesaClic
-            }]
+                ,handler : marcarRemesaClicGrupo
+            },{
+           	 	  xtype		  : 'gridpanel' 
+           	     ,status      : 37
+                 ,itemId      : 'colleccionRemesaEntregFisica'
+                 ,width       : 255
+                 ,height      : 80
+                 ,hideHeaders : true
+                 ,rowspan     : 2
+                 ,store       : Ext.create('Ext.data.Store',
+                 {
+                     model : 'Generic'
+                     ,data : []
+                 })
+                 ,columns :
+                 [
+                     {
+                         dataIndex : 'value'
+                         ,flex     : 1
+                     }
+                     ,{
+                         xtype    : 'actioncolumn'
+                         ,width   : 30
+                         ,icon    : '${icons}delete.png'
+                         ,handler : function(view,row,col,item,e,record){ _fieldById('colleccionRemesaEntregFisica').getStore().remove(record); }
+                     }
+                 ]
+             }
+            ]
         },{
         	layout : 'hbox',
         	hidden  : cdSisRolActivo == _ROL_MC_AUTOS || cdSisRolActivo == _ROL_MC_SALUD ? true : false,
@@ -180,45 +260,101 @@ function _4_actualizarRemesaClic(bot)
                 xtype       : 'numberfield'
                 ,fieldLabel : 'Remesa'
                 ,status     : 38
+                ,listeners:{
+                    scope:this,
+                    specialkey: function(f,e){
+                        if(e.getKey()==e.ENTER){                	
+                        	
+                        	agregarRemesa(f);
+                        	f.reset();
+                        	
+                        }
+                    }
+                }
             },{
                 xtype    : 'button'
                 ,icon    : '${icons}package.png'
                 ,text    : 'Marcar como entraga paqueter\u00EDa'
+                ,width   : 200
                 ,status  : 38
-                ,handler : _4_marcarRemesaClic
-            }]
+                ,handler : marcarRemesaClicGrupo
+            },{
+         	 	  xtype		  : 'gridpanel' 
+         	 	 ,status      : 38
+                 ,itemId      : 'colleccionRemesaEntregPaqueteria'
+                 ,width       : 255
+                 ,height      : 80
+                 ,hideHeaders : true
+                 ,rowspan     : 2
+                 ,store       : Ext.create('Ext.data.Store',
+                 {
+                     model : 'Generic'
+                     ,data : []
+                 })
+                 ,columns :
+                      [
+                          {
+                              dataIndex : 'value'
+                              ,flex     : 1
+                          }
+                          ,{
+                              xtype    : 'actioncolumn'
+                              ,width   : 30
+                              ,icon    : '${icons}delete.png'
+                              ,handler : function(view,row,col,item,e,record){ _fieldById('colleccionRemesaEntregPaqueteria').getStore().remove(record); }
+                          }
+                      ]
+               }
+            ]
         }]
     }).show());
 }
-
-function _4_marcarRemesaClic(bot)
+function marcarRemesaClicGrupo(bot)
 {
-    debug('_4_marcarRemesaClic');
-    var ck = 'Solicitando cambio de status de remesa';
-    
-    try
-    {
-	    var textfield = Ext.ComponentQuery.query('[xtype=numberfield][status='+bot.status+']')[0];
-	    if(Ext.isEmpty(textfield.getValue()))
+	 var ck = 'Solicitando cambio de status de remesa';
+	 debug('marcarRemesaClicGrupo');
+	 try{
+		    var gridpanel = Ext.ComponentQuery.query('[xtype=gridpanel][status='+bot.status+']')[0];
+		    var store=gridpanel.getStore();
+		    
+		    if(store.count()==0)
 	    {
 	        throw 'Favor de introducir remesa';
 	    }
-	    
+		    
+		    
+		    listaTramites="";
+			store .each(function(rec){
+		    	listaTramites+=rec.getData().value+",  ";
+		    });
+			listaTramites=listaTramites.trim().substr(0,listaTramites.length-3);
+			centrarVentanaInterna(
+					Ext.Msg.confirm("Confirmación"
+									,"Las siguientes remesas se actualizarán:<br><br>"+listaTramites+"<br><br>¿Estás seguro?"
+									,function(opt){
+										if(opt=="yes"){
+											
+											   
 	    var win = bot.up('window');
 	    _setLoading(true,win);
+												    
+												    var tramites=new Array();
+												    store .each(function(rec){
+												    	tramites.push(rec.getData().value);
+												    });
 	    Ext.Ajax.request(
 	    {
 	        url      : _4_urlActualizarStatusRemesa
 	        ,params  :
 	        {
-	            'params.ntramite' : textfield.getValue()
-	            ,'params.status'  : bot.status
+												             'params.status'    : bot.status
+												            ,'tramites'  		: tramites
 	        }
 	        ,success : function(response)
 	        {
 	            _setLoading(false,win);
 	            
-	            var vk = 'Decodificando respuesta al cambiar status de remesa';
+												            var ck = 'Decodificando respuesta al cambiar status de remesa';
 	            try
 	            {
 	                var json = Ext.decode(response.responseText);
@@ -227,7 +363,7 @@ function _4_marcarRemesaClic(bot)
 	                {
 	                    mensajeCorrecto(
 	                        'Remesa actualizada'
-	                        ,'La remesa ha sido actualizada'
+												                        ,'Las remesas han sido actualizadas'
 	                        ,function()
 	                        {
 	                            win.destroy();
@@ -251,6 +387,9 @@ function _4_marcarRemesaClic(bot)
 	            errorComunicacion(null,'Error al solicitar cambio de status de remesa');
 	        }
 	    });
+												
+										}
+			}));
 	}
 	catch(e)
 	{
@@ -763,6 +902,30 @@ function _4_onVerDetalleLoteClic(row)
     {
         manejaException(e,ck);
     }
+}
+
+function agregarRemesa(txtField){
+	
+	var store= Ext.ComponentQuery.query('[xtype=gridpanel][status='+txtField.status+']')[0];
+	store=store.getStore();
+	debug('agregarRemesaArmada');
+    var ck = 'Verificar que han introducido una remesa';
+    
+    try
+    {
+	   
+		var remesa={"value":txtField.getValue()};
+		
+		if(store.find('value',remesa.value)==-1 && !Ext.isEmpty(txtField.getValue())){
+			store.add(remesa);
+		}
+    }catch(e)
+	{
+	    manejaException(e,ck);
+	}
+	
+	
+	
 }
 
 function _4_onVerDetalleRemesaClic(row)
