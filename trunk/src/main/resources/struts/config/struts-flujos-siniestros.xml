@@ -1222,6 +1222,16 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="consultaDatosAutEspecial" class="siniestrosAction" method="consultaDatosAutEspecial">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

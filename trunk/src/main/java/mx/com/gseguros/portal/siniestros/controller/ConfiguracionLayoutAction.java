@@ -161,12 +161,12 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	}
 	
 	public String validaExisteConfiguracionProv(){
-		logger.debug("Entra a validaAutorizacionEspecial  Params: {}", params);
+		logger.debug("Entra a validaExisteConfiguracionProv  Params: {}", params);
 		try {
 			validacionGeneral = siniestrosManager.validaExisteConfiguracionProv(params.get("cdpresta"), params.get("tipoLayout"));
 			logger.debug("validacionGeneral : {}", validacionGeneral);
 		}catch( Exception e){
-			logger.error("Error validaAutorizacionEspecial : {}", e.getMessage(), e);
+			logger.error("Error validaExisteConfiguracionProv : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;

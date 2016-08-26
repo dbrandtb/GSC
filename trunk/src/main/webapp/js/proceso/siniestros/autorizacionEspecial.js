@@ -6,23 +6,82 @@ Ext.onReady(function() {
 		allowDeselect: true
 	});
 	//Declaracion de los modelos 
-	
-	Ext.define('modelListadoPoliza',{
-		extend: 'Ext.data.Model',
-		fields: [	{type:'string',		name:'cdramo'},				{type:'string',		name:'cdunieco'},				{type:'string',		name:'estado'},
-					{type:'string',		name:'nmpoliza'},			{type:'string',		name:'nmsituac'},				{type:'string',		name:'mtoBase'},
-					{type:'string',		name:'feinicio'},			{type:'string',		name:'fefinal'},				{type:'string',		name:'dssucursal'},
-					{type:'string',		name:'dsramo'},				{type:'string',		name:'estatus'},				{type:'string',		name:'dsestatus'},
-					{type:'string',		name:'nmsolici'},			{type:'string',		name:'nmsuplem'},				{type:'string',		name:'cdtipsit'},
-					{type:'string',		name:'dsestatus'},			{type:'string',		name:'vigenciaPoliza'},			{type:'string',		name:'faltaAsegurado'},
-					{type:'string',		name:'fcancelacionAfiliado'},{type:'string',	name:'desEstatusCliente'},		{type:'string',		name:'numPoliza'},
-					{type:'string',		name:'nombAsegurado'},		{type:'string',		name:'telefono'},				{type:'string',		name:'email'}
-		]
+	Ext.define('modeloAutEspecial',{
+		extend:'Ext.data.Model',
+		fields:[
+			{type:'string',		name:'CDUNIECO'},			{type:'string',		name:'DESCDUNIECO'},
+			{type:'string',		name:'CDRAMO'},				{type:'string',		name:'DSRAMO'},
+			{type:'string',		name:'DSTATUS'},			{type:'string',		name:'ESTADO'},
+			{type:'string',		name:'NMPOLIZA'},			{type:'string',		name:'NMSUPLEM'},
+			{type:'string',		name:'NMSITUAC'},			{type:'string',		name:'NMSINIES'},
+			{type:'string',		name:'CDPERSON'},			{type:'string',		name:'DESCDPERSON'},
+			{type:'string',		name:'NTRAMITE'},			{type:'string',		name:'TIPOPAGO'},
+			{type:'string',		name:'DESTIPOPAGO'},		{type:'string',		name:'CDTIPSIT'},
+			{type:'string',		name:'NUMPOLIZA'},			{type:'string',		name:'NFACTURA'},
+			{type:'string',		name:'VIGENCIA'}, 			{type:'string',		name:'NMSINIES'},
+			{type:'string',		name:'NMAUTESP'}, 			{type:'string',		name:'VALRANGO'},
+			{type:'string',		name:'VALCOBER'}, 			{type:'string',		name:'CDGARANT'},
+			{type:'string',		name:'COMMENTS'}
+        ]
 	});
 	
 	Ext.define('modelListadoCobertura',{
 		extend: 'Ext.data.Model',
 		fields: [	{type:'string',    name:'cdgarant'},			{type:'string',    name:'dsgarant'},              	{type:'string',    name:'ptcapita'}		]
+	});
+	
+	//Declaracion de los stores
+	var storeGridAutEspecial = new Ext.data.Store({
+		pageSize	: 10
+		,model		: 'modeloAutEspecial'
+		,autoLoad	: false
+		,proxy		: {
+			enablePaging	:	true,
+			reader			:	'json',
+			type			:	'memory',
+			data			:	[]
+		}
+	});
+	
+	storeRamos = Ext.create('Ext.data.Store', {
+		model:'Generic',
+		autoLoad:true,
+		proxy: {
+			type: 'ajax',
+			url:_UR_LISTA_RAMO_SALUD,
+			reader:	{
+				type: 'json',
+				root: 'listadoRamosSalud'
+			}
+		}
+	});
+	storeRamos.load();
+	
+	storeTipoPago = Ext.create('Ext.data.JsonStore', {
+        model:'Generic',
+        proxy: {
+            type: 'ajax',
+            url: _URL_CATALOGOS,
+            extraParams : {catalogo:_CATALOGO_TipoPago},
+            reader: {
+                type: 'json',
+                root: 'lista'
+            }
+        }
+    });
+    storeTipoPago.load();
+    
+	storeAsegurados = Ext.create('Ext.data.Store', {
+		model:'Generic',
+		autoLoad:false,
+		proxy: {
+			type: 'ajax',
+			url : _URL_LISTADO_ASEGURADO,
+			reader: {
+				type: 'json',
+				root: 'listaAsegurado'
+			}
+		}
 	});
 	
 	var storeCobertura = Ext.create('Ext.data.Store', {
@@ -38,318 +97,181 @@ Ext.onReady(function() {
 		}
 	});
 	
-	var storeListadoPoliza = new Ext.data.Store({
-		pageSize	: 5
-		,model		: 'modelListadoPoliza'
-		,autoLoad	: false
-		,proxy		: {
-			enablePaging	: true,
-			reader			: 'json',
-			type			: 'memory',
-			data			: []
-		}
+	
+    contraRecibo = new Ext.form.NumberField({
+		fieldLabel	: 'ContraRecibo',		name : 'txtContrarecibo'
 	});
 	
-	storeRamos = Ext.create('Ext.data.Store', {
-		model:'Generic',
-		autoLoad:true,
-		proxy: {
-			type: 'ajax',
-			url: _URL_CATALOGOS,
-			extraParams : {catalogo:_CAT_RAMO_SALUD},
-			reader: {
-				type: 'json',
-				root: 'lista'
-			}
-		}
-	});
-	storeRamos.load();
-	
-	var storeContraRecibo = Ext.create('Ext.data.Store', {
-		model:'Generic',
-		autoLoad:false,
-		proxy: {
-			type: 'ajax',
-			url : _URL_LISTADO_CONTRARECIBO,
-			reader: {
-				type: 'json',
-				root: 'datosValidacionGral'  
-			}
-		}
-	});
-	
-	var storeFacturaCR = Ext.create('Ext.data.Store', {
-		model:'Generic',
-		autoLoad:false,
-		proxy: {
-			type: 'ajax',
-			url : _URL_LISTADO_FACTNTRAMITE,
-			reader: {
-				type: 'json',
-				root: 'datosValidacionGral'  
-			}
-		}
-	});
-	
-	var storeAsegurados2 = Ext.create('Ext.data.Store', {
-		model:'Generic',
-		autoLoad:false,
-		proxy: {
-			type: 'ajax',
-			url : _URL_LISTADO_ASEGURADO_ESP,
-			reader: {
-				type: 'json',
-				root: 'listaAsegurado'
-			}
-		}
+    factura = new Ext.form.TextField({
+		fieldLabel	: 'Factura',			name : 'txtFactura'
 	});
 	
 	cmbRamos = Ext.create('Ext.form.field.ComboBox',{
-		fieldLabel   : 'Producto',			allowBlank     : false,			editable: false,
-		displayField : 'value',				valueField: 'key',				forceSelection : false,
-		width		 : 300,					queryMode :'local',				name           :'cmbRamos'
-		,store : storeRamos,
-		listeners : {
-			'select' : function(combo, record) {
-				storeFacturaCR.removeAll();
-				storeAsegurados2.removeAll();
-				storeListadoPoliza.removeAll();
-				ramoSeleccionado = this.getValue();
-				storeContraRecibo.load({
-					params:{
-						'params.cdramo'	:	ramoSeleccionado,
-						'params.ntramite':	null
-					}
-				});
-			}
-		}
+		fieldLabel : 'Producto',	id             : 'cmbRamos',		editable : false,		displayField : 'value',
+		valueField : 'key',			forceSelection : false,      		queryMode:'local',		name         :'cmbRamos',
+		store : storeRamos,
+        listeners : {
+            'select':function(e){
+                storeTipoPago.load({
+                    params:{
+                        'params.cdramo':panelInicialPral.down('combo[name=cmbRamos]').getValue()
+                    }
+                });
+            }
+        }
 	});
 	
-	aseguradoAfectado  = Ext.create('Ext.form.ComboBox',{
-		name:'cmbAsegurado',			fieldLabel: 'Asegurado',			queryMode: 'local',			displayField: 'value',
-		valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
-		queryParam: 'params.cdperson',	minChars  : 2, 						store : storeAsegurados2,	triggerAction: 'all',
-		width		 : 300,				allowBlank:false,
-		listeners : {
-			'select' : function(combo, record) {
-				obtieneCDPerson = this.getValue();
-				var params = {
-						'params.cdperson'	:	obtieneCDPerson,
-						'params.cdramo'		:	panelInicialPral.down('combo[name=cmbRamos]').getValue()
-				};
-				cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
-					if(success){
-						var jsonResponse = Ext.decode(response.responseText);
-						if(jsonResponse.listaPoliza == null) {
-							Ext.Msg.show({
-								title: 'Aviso',
-								msg: 'No existen p&oacute;lizas para el asegurado elegido.',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.WARNING
-							});
-						}
-					}else{
-						Ext.Msg.show({
-							title: 'Aviso',
-							msg: 'Error al obtener los datos.',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						});
-					}
-				});
-			}
-		}
+    tipoPago = Ext.create('Ext.form.ComboBox',{
+        name:'cmbTipoPago',                     fieldLabel: 'Tipo pago',            allowBlank:false,           editable:false,
+        displayField: 'value',                  valueField: 'key',                  queryMode:'local',          emptyText:'Seleccione...',
+        store: storeTipoPago
+    });
+	
+    asegurado = Ext.create('Ext.form.field.ComboBox',{
+				fieldLabel 	: 'Asegurado',		allowBlank		: false,		displayField 	: 'value'
+				,name			: 'idCodigoAsegurado'
+				,valueField   	: 'key',							forceSelection 	: true,			matchFieldWidth	: false
+				,minChars  	: 2,									queryMode 		:'remote',		queryParam		: 'params.cdperson'
+				,store 		: storeAsegurados,						hideTrigger		:true,			triggerAction	: 'all'
 	});
 	
-	contraRecibos = Ext.create('Ext.form.ComboBox',{
-		name:'txtContraRecibo',			fieldLabel: 'Contrarecibo',			queryMode: 'local',			displayField: 'value',
-		valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
-		queryParam: 'params.ntramite',	minChars  : 2, 						store : storeContraRecibo,	triggerAction: 'all',
-		width		 : 300,				allowBlank:false,
-		listeners : {
-			'select' : function(combo, record) {
-				contraReciboDato = this.getValue();
-				storeFacturaCR.removeAll();
-				storeAsegurados2.removeAll();
-				storeListadoPoliza.removeAll();
-				storeFacturaCR.load({
-					params:{
-						'params.ntramite':	contraReciboDato,
-						'params.nfactura':	null
-					}
-				});
-				
-				storeAsegurados2.load({
-					params:{
-						'params.ntramite': contraReciboDato,
-						'params.nfactura':   null
-					}
-				});
-			}
-		}
-	});
-	
-	facturaCr = Ext.create('Ext.form.ComboBox',{
-		name:'txtFactura',				fieldLabel: 'Factura',				queryMode: 'local',			displayField: 'value',
-		valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
-		queryParam: 'params.nfactura',	minChars  : 2, 						store : storeFacturaCR,		triggerAction: 'all',
-		width		 : 300,				allowBlank:false,
-		listeners : {
-			'select' : function(combo, record) {
-				debug("Entra <<<<<>>>>>>>");
-				facturaSeleccionada = this.getValue();
-				storeAsegurados2.removeAll();
-				storeListadoPoliza.removeAll();
-				storeAsegurados2.load({
-					params:{
-						'params.ntramite': panelInicialPral.down('combo[name="txtContraRecibo"]').getValue(),
-						'params.nfactura':   facturaSeleccionada
-					}
-				});
-			}
-		}
-	});
 	coberturaAfectada = Ext.create('Ext.form.field.ComboBox',{
 		colspan:2,
-		displayField : 'dsgarant',		id:'idCobAfectada',		name:'cdgarant',
-		valueField   : 'cdgarant',	forceSelection : true,			matchFieldWidth: false,
-		queryMode :'local',					store : storeCobertura,		triggerAction: 'all',			editable:false
-	});
-
-	gridPolizasAsegurado= Ext.create('Ext.grid.Panel', {
-		id			:	'polizaGridAltaTramite',
-		store		:	storeListadoPoliza,
-		selType		:	'checkboxmodel',
-		width		:	800,
-		height		:	300,
-		columns		:
-		[
-			{	header		: 'N&uacute;mero de P&oacute;liza',											dataIndex : 'numPoliza',		width		: 200		},
-			{	header		: 'Estatus p&oacute;liza ',													dataIndex : 'dsestatus',		width	 	: 100		},
-			{	header		: 'Vigencia p&oacute;liza <br/> Fecha inicio \t\t  |  \t\t Fecha fin  ',	dataIndex : 'vigenciaPoliza',	width	    : 200		},
-			{	header		: 'Fecha alta <br/> asegurado',												dataIndex : 'faltaAsegurado',	width	    : 100		},
-			{	header		: 'Fecha cancelaci&oacute;n <br/> asegurado',								dataIndex : 'fcancelacionAfiliado',	width	: 150		},
-			{	header		: 'Estatus<br/> asegurado',													dataIndex : 'desEstatusCliente',width	    : 100		},
-			{	header		: 'Producto',																dataIndex : 'dsramo',			width       : 150		},
-			{	header		: 'Sucursal',																dataIndex : 'dssucursal',		width       : 150		},
-			{	header		: 'Estado',																	dataIndex : 'estado',			width	    : 100		},
-			{	header		: 'N&uacute;mero de Situaci&oacute;n',										dataIndex : 'nmsituac',			width	    : 150		}
-		],
-		bbar : {
-			displayInfo	: true,
-			store		: storeListadoPoliza,
-			xtype		: 'pagingtoolbar'
-		},
-		listeners: {
-			itemclick: function(dv, record, item, index, e){
-				//1.- Validamos que el asegurado este vigente
-				debug("Valor del Record", record);
-				panelInicialPral.down('[name="cdunieco"]').setValue(record.get('cdunieco'));
-				panelInicialPral.down('[name="estado"]').setValue(record.get('estado'));
-				panelInicialPral.down('[name="cdramo"]').setValue(record.get('cdramo'));
-				panelInicialPral.down('[name="nmsituac"]').setValue(record.get('nmsituac'));
-				panelInicialPral.down('[name="polizaAfectada"]').setValue(record.get('nmpoliza'));
-				panelInicialPral.down('[name="idNmsolici"]').setValue(record.get('nmsolici'));
-				panelInicialPral.down('[name="idNmsuplem"]').setValue(record.get('nmsuplem'));
-				panelInicialPral.down('[name="idCdtipsit"]').setValue(record.get('cdtipsit'));
-				panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.get('numPoliza'));
-				
-				storeCobertura.load({
-					params:{
-						'params.cdunieco':record.get('cdunieco'),
-						'params.cdramo':record.get('cdramo'),
-						'params.estado':record.get('estado'),
-						'params.nmpoliza':record.get('nmpoliza'),
-						'params.nmsituac':record.get('nmsituac'),
-						'params.nmsuplem':record.get('nmsuplem'),
-						'params.cdtipsit':record.get('cdtipsit')
-					}
-				});
-				
-				//validamos si no tiene autorizaciones anteriores 
-				Ext.Ajax.request({
-					url     : _URL_CONF_AUTESPECIAL
-					,params:{
-						'params.ntramite' : panelInicialPral.down('[name="txtContraRecibo"]').getValue(),
-						'params.nfactura' : panelInicialPral.down('[name="txtFactura"]').getValue(),
-						'params.cdperson' : panelInicialPral.down('combo[name=cmbAsegurado]').getValue(),
-						'params.cdunieco' : record.get('cdunieco'),
-						'params.cdramo'   : record.get('cdramo'),
-						'params.estado'   : record.get('estado'),
-						'params.nmpoliza' : record.get('nmpoliza'),
-						'params.nmsuplem' : record.get('nmsuplem'),
-						'params.nmsituac' : record.get('nmsituac'),
-						'params.cdtipsit' : record.get('cdtipsit')
-					}
-					,success : function (response) {
-						if(Ext.decode(response.responseText).datosValidacion != null){
-							var json =Ext.decode(response.responseText).datosValidacion;
-							if(json.length > 0){
-								panelInicialPral.down('[name="comments"]').setValue(json[0].COMMENTS);
-								panelInicialPral.down('[name="nmautespecial"]').setValue(json[0].NMAUTESP);
-								if(json[0].VALRANGO > 0){
-									panelInicialPral.down('[name="valRango"]').setValue("1");
-									Ext.getCmp('genCheckboxA').setValue(true);
-								}else{
-									panelInicialPral.down('[name="valRango"]').setValue("0");
-									Ext.getCmp('genCheckboxA').setValue(false);
-								}
-								
-								if(json[0].VALCOBER > 0){
-									Ext.getCmp('genCheckboxB').setValue(true);
-									panelInicialPral.down('[name="valGarant"]').setValue("1");
-									panelInicialPral.down('combo[name=cdgarant]').setValue(json[0].CDGARANT);
-								}else{
-									panelInicialPral.down('[name="valGarant"]').setValue("0");
-									Ext.getCmp('genCheckboxB').setValue(false);
-								}
-							}else{
-								panelInicialPral.down('[name="valRango"]').setValue("0");
-								panelInicialPral.down('[name="valGarant"]').setValue("0");
-								panelInicialPral.down('[name="nmautespecial"]').setValue("0");
-								Ext.getCmp('genCheckboxA').setValue(false);
-								Ext.getCmp('genCheckboxB').setValue(false);
-								panelInicialPral.down('[name="comments"]').setValue("");
-							}
-						}else{
-							panelInicialPral.down('[name="nmautespecial"]').setValue("0");
-							Ext.getCmp('genCheckboxA').setValue(false);
-							Ext.getCmp('genCheckboxB').setValue(false);
-							panelInicialPral.down('[name="comments"]').setValue("");
-						}
-					},
-					failure : function (){
-						me.up().up().setLoading(false);
-						centrarVentanaInterna(Ext.Msg.show({
-							title:'Error',
-							msg: 'Error de comunicaci&oacute;n',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						}));
-					}
-				});
-				
-			}
-		}
-	});
-	gridPolizasAsegurado.store.sort([
-		{
-			property    : 'nmpoliza',			direction   : 'DESC'
-		}
-	]);
-
-	comentarios = Ext.create('Ext.form.field.TextArea', {
-		colspan:2,fieldLabel: 'Comentarios',			/*labelWidth: 150,*/			width: 700
-		,name:'comments',					height: 70,				allowBlank: false
+		displayField : 'dsgarant',		id             :'idCobAfectada',			name:'cdgarant',
+		valueField   : 'cdgarant',		forceSelection : true,						matchFieldWidth: false,
+		queryMode :'local',				store          : storeCobertura,			triggerAction: 'all',			editable:false
 	});
 	
-	var panelInicialPral= Ext.create('Ext.form.Panel',
-    {
+	comentarios = Ext.create('Ext.form.field.TextArea', {
+		colspan:2,fieldLabel: 'Comentarios',	width: 400,
+		name:'comments',						height: 70,				allowBlank: false
+	});
+	
+	var panelInicialPral= Ext.create('Ext.panel.Panel',{
+		border    : 0
+		,renderTo : 'div_clau'
+		,items    : [
+			Ext.create('Ext.panel.Panel',{
+				border  : 0
+				,title: 'Filtro de b&uacute;squeda'
+				,style         : 'margin:5px'
+				,layout : {
+					type     : 'table'
+					,columns : 3
+				}
+				,defaults : {
+					style : 'margin:5px;'
+				}
+				,items : [
+					cmbRamos
+					,tipoPago
+					,contraRecibo
+					,factura
+					,asegurado
+				]
+				,buttonAlign: 'center'
+				,buttons : [{
+					text: "Buscar"
+					,icon:_CONTEXT+'/resources/fam3icons/icons/magnifier.png'
+					,handler: function(){
+						cargarPaginacion();
+					}	
+				},{
+					text: "Limpiar"
+					,icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png'
+					,handler: function(){
+						panelInicialPral.down('combo[name=cmbRamos]').reset();
+						panelInicialPral.down('combo[name=cmbTipoPago]').reset();
+						panelInicialPral.down('[name=txtContrarecibo]').setValue('');
+						panelInicialPral.down('[name=txtFactura]').setValue('');
+						panelInicialPral.down('combo[name=idCodigoAsegurado]').reset();
+						storeGridAutEspecial.removeAll();
+					}	
+				}] 
+			})
+			,Ext.create('Ext.grid.Panel',{
+				id             : 'clausulasGridId'
+				,title         : 'Autorizaciones Especiales'
+				,store         :  storeGridAutEspecial
+				,titleCollapse : true
+				,style         : 'margin:5px'
+				,height        : 400
+				,columns       : [
+					{   xtype: 'actioncolumn',      width: 40,          sortable: false,            menuDisabled: true,
+	                    items: [{
+	                        icon: _CONTEXT+'/resources/fam3icons/icons/application_edit.png',
+	                        tooltip: 'Editar Proveedor',
+	                        scope: this,
+	                        handler: _11_editar
+	                    }]
+	                 },
+					{	header     : 'Cdunieco',			dataIndex : 'CDUNIECO',		flex : 1, 	hidden   : true	},
+					{	header     : 'Cdramo',				dataIndex : 'CDRAMO',		flex : 1, 	hidden   : true	},
+					{	header     : 'Estado',				dataIndex : 'ESTADO',		flex : 1, 	hidden   : true	},
+					{	header     : 'Nmpoliza',			dataIndex : 'NMPOLIZA',		flex : 1, 	hidden   : true	},
+					{	header     : 'Nmsuplem',			dataIndex : 'NMSUPLEM',		flex : 1, 	hidden   : true	},
+					{	header     : 'Nmsituac',			dataIndex : 'NMSITUAC',		flex : 1, 	hidden   : true	},
+					{	header     : 'Cdperson',			dataIndex : 'CDPERSON',		flex : 1, 	hidden   : true	},
+					{	header     : 'TipoPago',			dataIndex : 'TIPOPAGO',		flex : 1, 	hidden   : true	},
+					{	header     : 'Cdtipsit',			dataIndex : 'CDTIPSIT',		flex : 1, 	hidden   : true	},
+					{	header     : 'Val Rango',			dataIndex : 'VALRANGO',		flex : 1, 	hidden   : true	},
+					{	header     : 'Val Cobertura',		dataIndex : 'VALCOBER',		flex : 1, 	hidden   : true	},
+					{	header     : 'Cobertura',			dataIndex : 'CDGARANT',		flex : 1, 	hidden   : true	},
+					{	header     : 'Comentarios',			dataIndex : 'COMMENTS',		flex : 1, 	hidden   : true	},
+					{	header     : 'Tr&aacute;mite',		dataIndex : 'NTRAMITE',		width : 80				},
+					{	header     : 'Factura',				dataIndex : 'NFACTURA',		width : 100				},
+					{	header     : 'Tipo Pago',			dataIndex : 'DESTIPOPAGO',	width : 130				},
+					{	header     : 'Asegurado',			dataIndex : 'DESCDPERSON',	width : 200 			},
+					{	header     : 'Siniestro',			dataIndex : 'NMSINIES',		width : 80				},
+					{	header     : 'Autorizaci&oacute;n<br/>Especial',	dataIndex : 'NMAUTESP',	width : 80	},
+					{	header     : 'Sucursal',			dataIndex : 'DESCDUNIECO',	width : 150				},
+					{	header     : 'Producto',			dataIndex : 'DSRAMO',		width : 120				},
+					{	header     : 'Poliza',				dataIndex : 'NUMPOLIZA',	width : 150				},
+					{	header     : 'Estatus <br/>P&oacute;liza',	dataIndex : 'DSTATUS',		width : 100		},
+					{	header     : 'Vigencia P&oacute;liza',		dataIndex : 'VIGENCIA',		width : 200		}
+					
+				],
+				bbar     :{
+				displayInfo : true,
+					store		: storeGridAutEspecial,
+					xtype		: 'pagingtoolbar'
+				}
+			})
+		]
+	});
+	cargarPaginacion();
+	
+	function cargarPaginacion(){
+		storeGridAutEspecial.removeAll();
+		var params = {
+			'params.cdramo'   :panelInicialPral.down('combo[name=cmbRamos]').getValue()
+			,'params.tipoPago' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+			,'params.ntramite' : panelInicialPral.down('[name=txtContrarecibo]').getValue()
+			,'params.nfactura' : panelInicialPral.down('[name=txtFactura]').getValue()
+			,'params.cdperson' : panelInicialPral.down('combo[name=idCodigoAsegurado]').getValue()
+		};
+		cargaStorePaginadoLocal(storeGridAutEspecial, _URL_CONSULTA_AUTESPECIAL, 'datosValidacion', params, function(options, success, response){
+			if(success){
+				var jsonResponse = Ext.decode(response.responseText);
+				if(jsonResponse.datosValidacion &&jsonResponse.datosValidacion.length == 0) {
+					if(null == null){
+						centrarVentanaInterna(showMessage("Aviso", "No existe tr&aacute;mites.", Ext.Msg.OK, Ext.Msg.INFO));
+					}
+					return;
+				}
+			}else{
+				centrarVentanaInterna(showMessage('Error', 'Error al obtener los datos',Ext.Msg.OK, Ext.Msg.ERROR));
+			}
+		});
+	}
+	
+	
+	panelConfiguracion= Ext.create('Ext.form.Panel', {
         border      : 0,
-        id          : 'panelInicialPral',
-        renderTo    : 'div_clau',
+        id          : 'panelConfiguracion',
+        //renderTo    : 'div_clau',
         bodyPadding : 5,
-        //width       : 758,
+        width       : 500,
         layout      : {
 			type    : 'table'
 			,columns: 2
@@ -358,54 +280,19 @@ Ext.onReady(function() {
 			style   : 'margin:5px;'
 		},
 		items       :[
-			{    xtype       : 'textfield',			fieldLabel : 'Unieco'				,name       : 'cdunieco'
-			    ,labelWidth: 170,					hidden:true
-			},
-			{    xtype       : 'textfield',			fieldLabel : 'Ramo'					,name       : 'cdramo'
-			    ,labelWidth: 170,					hidden:true
-			},
-			{    xtype       : 'textfield',			fieldLabel : 'estado'				,name       : 'estado'			
-			    ,labelWidth: 170,					hidden:true
-			},
-			{    xtype       : 'textfield',			fieldLabel : 'nmsituac'				,name       : 'nmsituac'
-			    ,labelWidth: 170,					hidden:true
-			},
-			{   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'
-			   ,labelWidth: 170,					name:'polizaAfectada',	readOnly   : true,	hidden:true
-			},
-			{    xtype       : 'textfield',			fieldLabel : 'nmsolici'				,name       : 'idNmsolici'
-			    ,labelWidth: 170,					hidden:true
-			},
-			{    xtype       : 'textfield',			fieldLabel : 'nmsuplem'				,name       : 'idNmsuplem'
-			    ,labelWidth: 170,					hidden:true
-			},
-			{    xtype       : 'textfield',			fieldLabel : 'cdtipsit'				,name       : 'idCdtipsit'
-			    ,labelWidth: 170,					hidden:true
-			},
-			{    xtype       : 'textfield',			fieldLabel : 'numPolizaInt'			,name       : 'idNumPolizaInt'
-			    ,labelWidth: 170,					hidden:true
-			},
-			{    xtype       : 'textfield',			fieldLabel : 'valRango'				,name       : 'valRango'
-			    ,labelWidth: 170,					value:'0'							,hidden:true
-			},
-			{    xtype       : 'textfield',			fieldLabel : 'valGarant'			,name       : 'valGarant'
-			    ,labelWidth: 170,					value:'0'							,hidden:true
-			},
-			{    xtype       : 'textfield',			fieldLabel : 'No. autorizacion'		,name       : 'nmautespecial'
-			    ,labelWidth: 170,					value:'0'							,hidden:true
-			},
-            cmbRamos,
-            contraRecibos,
-            facturaCr
-			,aseguradoAfectado
-			,{	colspan:2
-		 		,border: false
-		 		,items    :
-		 			[
-		 			 	gridPolizasAsegurado 
-	 			 	]
-		 	}
-			,
+			{    xtype : 'textfield',		fieldLabel : 'ntramite',		name : 'txtntramite' ,		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'nfactura',		name : 'txtnfactura' ,		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'cdunieco',		name : 'txtcdunieco',		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'cdramo',			name : 'txtcdramo',			hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'estado',			name : 'txtestado',			hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'nmpoliza',		name : 'txtnmpoliza',		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'nmsuplem',		name : 'txtnmsuplem',		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'nmsituac',		name : 'txtnmsituac',		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'nmsinies',		name : 'txtnmsinies',		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'tipoPago',		name : 'txttipoPago'},//,		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'valRango',		name : 'valRango',				value:'0',		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'valGarant',		name : 'valGarant',				value:'0',		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'No. autorizacion',name : 'nmautespecial',			value:'0',		hidden:true		},
 			{
 				xtype: 'fieldcontainer',
 				colspan:2,
@@ -423,9 +310,9 @@ Ext.onReady(function() {
 				        	listeners: {
 				        	    change: function() {
 				        	    	if (Ext.getCmp('genCheckboxA').getValue() == true) {
-				        	    		panelInicialPral.down('[name="valRango"]').setValue("1");   
+				        	    		panelConfiguracion.down('[name="valRango"]').setValue("1");   
 			                        }else{
-			                        	panelInicialPral.down('[name="valRango"]').setValue("0");
+			                        	panelConfiguracion.down('[name="valRango"]').setValue("0");
 			                        }
 				        	    }
 				        	}
@@ -434,13 +321,13 @@ Ext.onReady(function() {
 				        	listeners: {
 				        	    change: function() {
 				        	    	 if (Ext.getCmp('genCheckboxB').getValue() == true) {
-				        	    		 panelInicialPral.down('combo[name=cdgarant]').allowBlank = false;
-				        	    		 panelInicialPral.down('[name="valGarant"]').setValue("1");
-				        	    		 panelInicialPral.down('combo[name=cdgarant]').setDisabled(false);
+				        	    		 panelConfiguracion.down('combo[name=cdgarant]').allowBlank = false;
+				        	    		 panelConfiguracion.down('[name="valGarant"]').setValue("1");
+				        	    		 panelConfiguracion.down('combo[name=cdgarant]').setDisabled(false);
 				                        }else{
-				                        	panelInicialPral.down('combo[name=cdgarant]').allowBlank = true;
-				                        	panelInicialPral.down('[name="valGarant"]').setValue("0");
-				                        	panelInicialPral.down('combo[name=cdgarant]').setDisabled(true);
+				                        	panelConfiguracion.down('combo[name=cdgarant]').allowBlank = true;
+				                        	panelConfiguracion.down('[name="valGarant"]').setValue("0");
+				                        	panelConfiguracion.down('combo[name=cdgarant]').setDisabled(true);
 				                        }
 				        	    }
 				        	}
@@ -461,30 +348,32 @@ Ext.onReady(function() {
     				if(Ext.getCmp('genCheckboxA').getValue() == false && Ext.getCmp('genCheckboxB').getValue() == false){
         				Ext.Msg.show({
 	                    	title:'Datos incompletos',
-	                    	msg: 'Seleccione al menos un motivo para la autorizaci&oacute;n especial.',
+	                    	msg: 'Seleccione al menos un motivo para la confirmaci&oacute;n de autorizaci&oacute;n especial.',
 	                    	buttons: Ext.Msg.OK,
 	                    	icon: Ext.Msg.WARNING
 	                	})
         			}else{
         				var submitValues={};
-        				var formulario=panelInicialPral.form.getValues();
+        				var formulario=panelConfiguracion.form.getValues();
         				submitValues['params']=formulario;
         				debug(submitValues);
-        				Ext.Ajax.request(
-						{
+        				Ext.Ajax.request( {
 							url: _URL_GUARDA_AUT_ESPECIAL,
-							jsonData:Ext.encode(submitValues), // convierte a estructura JSON
+							jsonData:Ext.encode(submitValues),
 							success:function(response,opts){
-								panelInicialPral.setLoading(false);
+								panelConfiguracion.setLoading(false);
 								var jsonResp = Ext.decode(response.responseText);
 								debug("Valor de respuesta ",jsonResp);
 								if(jsonResp.success==true){
-									if(panelInicialPral.down('[name="nmautespecial"]').getValue() > 0){
+									if(panelConfiguracion.down('[name="nmautespecial"]').getValue() > 0){
 										mensajeCorrecto('Aviso',"Se actualizo la autorizaci&oacute;n especial con el n&uacute;mero : "+Ext.decode(response.responseText).msgResult);
+										
 									}else{
-										panelInicialPral.down('[name="nmautespecial"]').setValue(Ext.decode(response.responseText).msgResult);
+										panelConfiguracion.down('[name="nmautespecial"]').setValue(Ext.decode(response.responseText).msgResult);
     									mensajeCorrecto('Aviso',"Se registro la autorizaci&oacute;n especial con el n&uacute;mero : "+Ext.decode(response.responseText).msgResult);
 									}
+									modPolizasAltaTramite.close();
+									cargarPaginacion();
 								}
 								else{
 									Ext.Msg.show({
@@ -497,7 +386,7 @@ Ext.onReady(function() {
 								}
 							},
 							failure:function(response,opts){
-								panelInicialPrincipal.setLoading(false);
+								panelConfiguracion.setLoading(false);
 								Ext.Msg.show({
 									title:'Error',
 									msg: 'Error de comunicaci&oacute;n',
@@ -506,7 +395,7 @@ Ext.onReady(function() {
 								});
 							}
 						});
-        			}                				
+        			}               				
     			}
     			else {
     				Ext.Msg.show({
@@ -516,22 +405,77 @@ Ext.onReady(function() {
                     	icon: Ext.Msg.WARNING
                 	});
 				}
-			}
-        }
+			}            
+        }       
     ]
     });
-	
-	function TotalRegistros(storeRecibido){
-		debug("Valor Recibido ===>",storeRecibido);
-		var arr = [];
-		var totalRegistro = 0;
-		var valorBase=0;
-		storeRecibido.each(function(record) {
-			arr.push(record.data);
-		});
-		for(var i = 0; i < arr.length; i++){
-			totalRegistro = i;
+    	    
+    	    
+	var modPolizasAltaTramite = Ext.create('Ext.window.Window', {
+		title		: 'Detalle Factura'
+		,modal	   : true
+		,resizable   : false
+		,buttonAlign : 'center'
+		,closable	: true
+		,closeAction: 'hide'
+		,defaults 	:
+		{
+			style : 'margin:5px;'
 		}
-		return totalRegistro;
+		,items	   : 
+		[
+			panelConfiguracion
+		]
+	});
+
+	function _11_editar(grid,rowindex){
+		_11_recordActivo = grid.getStore().getAt(rowindex);
+		
+		debug("_11_recordActivo ==>",_11_recordActivo);
+		panelConfiguracion.getForm().reset();
+		panelConfiguracion.down('[name=txtntramite]').setValue(_11_recordActivo.get('NTRAMITE'));
+		panelConfiguracion.down('[name=txtnfactura]').setValue(_11_recordActivo.get('NFACTURA'));
+		panelConfiguracion.down('[name=txtcdunieco]').setValue(_11_recordActivo.get('CDUNIECO'));
+		panelConfiguracion.down('[name=txtcdramo]').setValue(_11_recordActivo.get('CDRAMO'));
+		panelConfiguracion.down('[name=txtestado]').setValue(_11_recordActivo.get('ESTADO'));
+		panelConfiguracion.down('[name=txtnmpoliza]').setValue(_11_recordActivo.get('NMPOLIZA'));
+		panelConfiguracion.down('[name=txtnmsuplem]').setValue(_11_recordActivo.get('NMSUPLEM'));
+		panelConfiguracion.down('[name=txtnmsituac]').setValue(_11_recordActivo.get('NMSITUAC'));
+		panelConfiguracion.down('[name=txtnmsinies]').setValue(_11_recordActivo.get('NMSINIES'));
+		panelConfiguracion.down('[name=txttipoPago]').setValue(_11_recordActivo.get('TIPOPAGO'));
+		storeCobertura.load({
+			params:{
+				'params.cdunieco': _11_recordActivo.get('CDUNIECO'),
+				'params.cdramo'  : _11_recordActivo.get('CDRAMO'),
+				'params.estado'  : _11_recordActivo.get('ESTADO'),
+				'params.nmpoliza': _11_recordActivo.get('NMPOLIZA'),
+				'params.nmsituac': _11_recordActivo.get('NMSITUAC'),
+				'params.nmsuplem': _11_recordActivo.get('NMSUPLEM'),
+				'params.cdtipsit': _11_recordActivo.get('CDTIPSIT')
+			}
+		});
+		
+		panelConfiguracion.down('[name=comments]').setValue(_11_recordActivo.get('COMMENTS'));
+		panelConfiguracion.down('[name=nmautespecial]').setValue(_11_recordActivo.get('NMAUTESP'));
+		
+		
+	  	if(_11_recordActivo.get('VALRANGO') > 0){
+	        panelConfiguracion.down('[name="valRango"]').setValue("1");
+	        Ext.getCmp('genCheckboxA').setValue(true);
+	    }else{
+	        panelConfiguracion.down('[name="valRango"]').setValue("0");
+	        Ext.getCmp('genCheckboxA').setValue(false);
+	    }
+	    
+	    if(_11_recordActivo.get('VALCOBER') > 0){
+	        Ext.getCmp('genCheckboxB').setValue(true);
+	        panelConfiguracion.down('[name="valGarant"]').setValue("1");
+	        panelConfiguracion.down('combo[name=cdgarant]').setValue(_11_recordActivo.get('CDGARANT'));
+	    }else{
+	        panelConfiguracion.down('[name="valGarant"]').setValue("0");
+	        Ext.getCmp('genCheckboxB').setValue(false);
+	    }
+		modPolizasAltaTramite.show();
+		centrarVentanaInterna(modPolizasAltaTramite);
 	}
 });

@@ -2493,4 +2493,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		}
 	}
     
+	@Override
+	public List<Map<String, String>> getConsultaDatosAutEspecial(String cdramo, String tipoPago, String ntramite, 
+			String nfactura, String cdperson) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_tipoPago_i", tipoPago);
+		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_nfactura_i", nfactura);
+		params.put("pv_cdperson_i", cdperson);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneListaDatosAutEspecial(params);
+	}
 }
