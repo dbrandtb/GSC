@@ -69,7 +69,7 @@ public interface ExplotacionDocumentosManager
 			)throws Exception;
 	
 	public void actualizarStatusRemesa(
-			String ntramite
+			List<String> ntramite
 			,String status
 			,String cdusuari
 			,String cdsisrol
