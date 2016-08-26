@@ -10,11 +10,17 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 @Controller("EncoderURLAction")
 @Scope("prototype")
+@ParentPackage(value="default")
+@Namespace("/encoderURL")
 public class EncoderURLAction extends PrincipalCoreAction {
 	
 	private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EnvironmentAction.class);
@@ -45,12 +51,29 @@ public class EncoderURLAction extends PrincipalCoreAction {
 	
 	private Map<String,Item> items;
 	
+	
 	/**
 	 * Obtiene los datos de
 	 * @return
 	 * @throws Exception
 	 */
-	public String codificaReporte() {
+	@Action
+	(
+		value   = "redireccionaReporte",
+		results = 
+	    {
+				@Result(name="success", 
+						type="stream", 
+						params = {
+							"contentType"       ,"${contentType}",
+							"inputName"         ,"fileInputStream",
+							"contentDisposition","attachment; filename=\"${filename}\"",
+							"bufferSize"        ,"4096"
+						}
+				)
+		}
+	)
+	public String redireccionaReporte() {
 		try 
 		{
 			StringBuilder url = new StringBuilder()
