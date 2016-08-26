@@ -20,7 +20,7 @@ import org.springframework.stereotype.Controller;
 @Controller("EncoderURLAction")
 @Scope("prototype")
 @ParentPackage(value="default")
-@Namespace("/encoderURL")
+@Namespace("/seguridad")
 public class EncoderURLAction extends PrincipalCoreAction {
 	
 	private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EnvironmentAction.class);
@@ -56,7 +56,6 @@ public class EncoderURLAction extends PrincipalCoreAction {
 	 * Obtiene los datos de
 	 * @return
 	 * @throws Exception
-	 */
 	@Action
 	(
 		value   = "redireccionaReporte",
@@ -73,7 +72,8 @@ public class EncoderURLAction extends PrincipalCoreAction {
 				)
 		}
 	)
-	public String redireccionaReporte() {
+	 */
+	public String codificaReporte() {
 		try 
 		{
 			StringBuilder url = new StringBuilder()
