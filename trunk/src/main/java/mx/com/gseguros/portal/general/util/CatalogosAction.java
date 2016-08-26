@@ -206,7 +206,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 			        lista = catalogosManager.obtieneAtributosPoliza(params.get("cdatribu"), params.get("cdramo"), params.get("idPadre"));
 					break;
 				case TATRIGAR:
-					lista = catalogosManager.obtieneAtributosGarantia(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdgarant"));
+					//lista = catalogosManager.obtieneAtributosGarantia(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdgarant"));
+					// se agrega parámetro cdSisrol para considerar restricciones por rol (EGS)
+					lista = catalogosManager.obtieneAtributosGarantia(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdgarant"),((UserVO) session.get("USUARIO")).getRolActivo().getClave());
 					break;
 				case TATRIPER:
 			        lista = catalogosManager.obtieneAtributosRol(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdrol"));
