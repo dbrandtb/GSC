@@ -30,14 +30,11 @@ public class EncoderURLAction extends PrincipalCoreAction {
 	private Map<String, String> params;
 	
 	private InputStream fileInputStream;
-	
-	protected boolean success;
 	protected String contentType;
 	
 	/**
-	 * param no requerido, descargar archivo: "contentDisposition","attachment; filename=\"${filename}\"",
-	 * Obtiene los datos de
-	 * @return
+	 * Obtiene el flujo de bytes de un reporte
+	 * @return 
 	 * @throws Exception
 	 */
 	@Action
@@ -51,6 +48,7 @@ public class EncoderURLAction extends PrincipalCoreAction {
 							"contentType"       ,"${contentType}",
 							"inputName"         ,"fileInputStream",
 							"bufferSize"        ,"4096"
+							// opcional "contentDisposition", "attachment; filename=\"${filename}\""
 						}
 				)
 		}
@@ -93,6 +91,8 @@ public class EncoderURLAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
+//Getters & setters
+
 	public Map<String, String> getParams() {
 		return params;
 	}
@@ -108,17 +108,4 @@ public class EncoderURLAction extends PrincipalCoreAction {
 	public void setFileInputStream(InputStream fileInputStream) {
 		this.fileInputStream = fileInputStream;
 	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-	
-//Getters & setters
-	
-	
-	
 }
