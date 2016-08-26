@@ -87,11 +87,11 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	
 	@Override
 	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu,
-			String cdTipSit, String cdRamo, String idPadre, String cdGarant)
+			String cdTipSit, String cdRamo, String idPadre, String cdGarant, String cdSisrol) // se agrega parámetro cdSisrol para considerar restricciones por rol (EGS)
 			throws Exception {
 		
 		String valAnt = StringUtils.isNotBlank(idPadre) ? idPadre : null;
-		return catalogosDAO.obtieneAtributosGarantia(cdAtribu, cdTipSit, cdRamo, valAnt, cdGarant);
+		return catalogosDAO.obtieneAtributosGarantia(cdAtribu, cdTipSit, cdRamo, valAnt, cdGarant, cdSisrol);
 	}
 	
 	

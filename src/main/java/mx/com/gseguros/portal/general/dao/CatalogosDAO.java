@@ -30,7 +30,7 @@ public interface CatalogosDAO {
 	
 	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String otValor) throws Exception;
 
-	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String valAnt, String cdGarant) throws Exception;
+	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String valAnt, String cdGarant, String cdSisrol) throws Exception; // se agrega parámetro cdSisrol para considerar restricciones por rol (EGS)
 	
 	public List<GenericVO> obtieneAtributosRol(String cdAtribu, String cdTipSit ,String cdRamo, String valAnt, String cdRol) throws Exception;
 	

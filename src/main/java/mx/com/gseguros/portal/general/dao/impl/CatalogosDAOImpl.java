@@ -296,7 +296,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	
 
 	@Override
-	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String valAnt, String cdGarant)
+	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String valAnt, String cdGarant, String cdSisrol)
 			throws Exception {
 		try {
 			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
@@ -305,6 +305,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			params.put("pv_cdgarant_i",cdGarant);
 			params.put("pv_cdatribu_i",cdAtribu);
 			params.put("pv_otvalor_i" ,valAnt);
+			params.put("pv_cdsisrol_i", cdSisrol); // se agrega parámetro para considerar restricciones por rol (EGS)
     		
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosGar(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
@@ -314,7 +315,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	}
 	
 	protected class ObtieneAtributosGar extends StoredProcedure {
-
+		
 		protected ObtieneAtributosGar(DataSource dataSource) {
 			super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_GAR");
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -322,6 +323,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR)); // se agrega parámetro para considerar restricciones por rol (ESG)
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosGarMapper()));
 			declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
