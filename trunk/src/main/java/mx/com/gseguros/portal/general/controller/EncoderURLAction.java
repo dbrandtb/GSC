@@ -4,14 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.utils.HttpUtil;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+@Controller("EncoderURLAction")
+@Scope("prototype")
 public class EncoderURLAction extends PrincipalCoreAction {
 	
 	private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EnvironmentAction.class);
@@ -58,7 +61,7 @@ public class EncoderURLAction extends PrincipalCoreAction {
             .append("&ACCESSIBLE=YES")
             .append("&paramform=no");
 			
-			if(StringUtils.isNotBlank(params.get("reporte")))
+			if(StringUtils.isNotBlank(params.get("report")))
 			{
 				for(Entry<String,String>en:params.entrySet())
 	            {
@@ -67,7 +70,7 @@ public class EncoderURLAction extends PrincipalCoreAction {
 	            	
 	            	if(StringUtils.isNotBlank(value))
 	            	{
-	            		url.append("&").append(key).append("=").append(value);
+	            		url.append("&").append(key).append("=").append(value.trim());
 	            	}
 	            }
 				logger.debug(url.toString());
