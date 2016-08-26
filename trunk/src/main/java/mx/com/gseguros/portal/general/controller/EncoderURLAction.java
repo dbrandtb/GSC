@@ -19,7 +19,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller("EncoderURLAction")
 @Scope("prototype")
-@ParentPackage(value="default")
+@ParentPackage(value="struts-default, json-default")
 @Namespace("/seguridad")
 public class EncoderURLAction extends PrincipalCoreAction {
 	
@@ -53,9 +53,11 @@ public class EncoderURLAction extends PrincipalCoreAction {
 	
 	
 	/**
+	 * param no requerido, descargar archivo: "contentDisposition","attachment; filename=\"${filename}\"",
 	 * Obtiene los datos de
 	 * @return
 	 * @throws Exception
+	 */
 	@Action
 	(
 		value   = "redireccionaReporte",
@@ -66,13 +68,11 @@ public class EncoderURLAction extends PrincipalCoreAction {
 						params = {
 							"contentType"       ,"${contentType}",
 							"inputName"         ,"fileInputStream",
-							"contentDisposition","attachment; filename=\"${filename}\"",
 							"bufferSize"        ,"4096"
 						}
 				)
 		}
 	)
-	 */
 	public String codificaReporte() {
 		try 
 		{
