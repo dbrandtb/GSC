@@ -19,7 +19,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller("EncoderURLAction")
 @Scope("prototype")
-@ParentPackage(value="struts-default, json-default")
+@ParentPackage(value="struts-default")
 @Namespace("/seguridad")
 public class EncoderURLAction extends PrincipalCoreAction {
 	
