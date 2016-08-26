@@ -4,18 +4,34 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Autorizaci&oacute;n Especial</title>
+		<title>Consulta Clausulas</title>
 			<script type="text/javascript">
-				var	_CONTEXT = '${ctx}';
-				var _CAT_RAMO_SALUD					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOSALUD"/>';
-				var _URL_CATALOGOS					= '<s:url namespace="/catalogos" 		action="obtieneCatalogo" />';
-				var _URL_CONSULTA_LISTADO_POLIZA	= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
-				var _URL_LISTADO_ASEGURADO_ESP		= '<s:url namespace="/siniestros"       action="consultaListaAsegAutEspecial" />';
-				var _URL_LISTA_COBERTURA 			= '<s:url namespace="/siniestros"  		action="consultaListaCoberturaProducto" />';
-				var _URL_GUARDA_AUT_ESPECIAL     	= '<s:url namespace="/siniestros"       action="guardaAutorizacionEspecial" />';
-				var _URL_CONF_AUTESPECIAL    		= '<s:url namespace="/siniestros"       action="obtenerConfiguracionAutEspecial" />';
-				var _URL_LISTADO_CONTRARECIBO    	= '<s:url namespace="/siniestros"       action="consultaListaContrareciboAutEsp" />';
-				var _URL_LISTADO_FACTNTRAMITE    	= '<s:url namespace="/siniestros"       action="consultaListaFacturaTramite" />';
+				var _CONTEXT = '${ctx}';
+				var _URL_CATALOGOS 			=	'<s:url namespace="/catalogos" 	action="obtieneCatalogo" />';
+				var _CATALOGO_PROVEEDORES	=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
+				var _SINO					=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SINO" />';
+				var _SECUENCIA				=	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SECUENCIA_IVA" />';
+				var _CATALOGO_ConfLayout	= 	'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONFLAYOUT"/>';
+				
+				
+				var _URL_CONSULTA_AUTESPECIAL=	'<s:url namespace="/siniestros" action="consultaDatosAutEspecial" />';
+				var _URL_MOV_PROVEEDOR		 =	'<s:url namespace="/siniestros" action="guardarConfiguracionProveedor" />';
+				
+				
+				var _VER_CONFIG_LAYOUT 		=   '<s:url namespace="/siniestros"	action="includes/configuracionLayout" />';
+				
+				//CAMBIOS
+				var _URL_CONSULTA_LAYOUT	=	'<s:url namespace="/siniestros" action="consultaLayoutConfigurados" />';
+				
+				
+				var _UR_LISTA_RAMO_SALUD    = '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';
+				var _CATALOGO_TipoPago      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TTIPOPAGO"/>';
+				var _URL_LISTADO_ASEGURADO  = '<s:url namespace="/siniestros"  action="consultaListaAsegurado" />';
+				
+				var _URL_LISTA_COBERTURA 	= '<s:url namespace="/siniestros"  		action="consultaListaCoberturaProducto" />';
+				var _URL_GUARDA_AUT_ESPECIAL= '<s:url namespace="/siniestros"       action="guardaAutorizacionEspecial" />';
+				
+				
 			</script>
 			<script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionEspecial.js"></script>
 	</head>

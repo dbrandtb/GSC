@@ -706,4 +706,7 @@ public interface SiniestrosManager {
 			String cdconval, String deducible, String copago, String nmcallcenter,String aplicaCambio, String accion) throws Exception;
 	
 	public String actualizarDeducibleCopagoConceptos(HashMap<String, Object> datosActualizacion) throws Exception;
+	
+	public List<Map<String, String>> getConsultaDatosAutEspecial(String cdramo, String tipoPago, String ntramite, String nfactura, String cdperson)throws Exception;
+	
 }

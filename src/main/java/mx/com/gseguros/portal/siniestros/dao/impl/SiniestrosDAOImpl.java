@@ -5018,8 +5018,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i", OracleTypes.VARCHAR));
+			//declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			//declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_valrango_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_valcober_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
@@ -5047,14 +5048,15 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_DATOS_TSINAUSP");
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			//declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i", OracleTypes.VARCHAR));
+			//declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"VALRANGO", "VALCOBER", "CDGARANT", "COMMENTS", "NMAUTESP"
 			};
@@ -5087,8 +5089,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		declareParameter(new SqlParameter("pv_nmsituac_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmautesp_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmsinies_i",   OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_cdtipsit_i",   OracleTypes.VARCHAR));
+    		//declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));
+    		//declareParameter(new SqlParameter("pv_cdtipsit_i",   OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_mensaje_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -5707,6 +5709,37 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cantidad_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_deducible_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_copago_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaDatosAutEspecial(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneListaDatosAutEspecial(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListaDatosAutEspecial extends StoredProcedure {
+		protected ObtieneListaDatosAutEspecial(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_AUTESPECIAL_TRAMITE");
+			declareParameter(new SqlParameter("pv_cdramo_i",   	 OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipoPago_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDUNIECO",			"DESCDUNIECO",			"CDRAMO",			"DSRAMO",	
+					"DSTATUS",			"ESTADO",				"NMPOLIZA",			"NMSUPLEM",
+					"NMSITUAC",			"NMSINIES",				"CDPERSON",			"DESCDPERSON",
+					"NTRAMITE",			"TIPOPAGO",				"DESTIPOPAGO", 		"NFACTURA",
+					"CDTIPSIT",			"NUMPOLIZA", 			"VIGENCIA", 		"NMSINIES",
+					"NMAUTESP",			"VALRANGO",				"VALCOBER",			"CDGARANT",
+					"COMMENTS"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

@@ -6533,9 +6533,9 @@
 												'params.nmsuplem'  : nmsuplem,
 												'params.nmsituac'  : nmsituac,
 												'params.nmautesp'  : datos.txtAutEspecial,
-												'params.nmsinies'  : nmsinies,
-												'params.cdperson'  : cdperson,
-												'params.cdtipsit'  : cdtipsit
+												'params.nmsinies'  : nmsinies
+												//'params.cdperson'  : cdperson,
+												//'params.cdtipsit'  : cdtipsit
 											}
 											,success : function (response){
 												if(Ext.decode(response.responseText).validacionGeneral =="1"){

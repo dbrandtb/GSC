@@ -569,4 +569,6 @@ public interface SiniestrosDAO {
 	public Map<String, Object> actualizaDatosGeneralesCopago(Map<String, Object> params) throws Exception;
 	
 	public String actualizaDeducibleCopagoConceptos(HashMap<String, Object> datosActualizacion) throws Exception;
+	
+	public List<Map<String, String>> obtieneListaDatosAutEspecial(HashMap<String, Object> params) throws Exception;
 }

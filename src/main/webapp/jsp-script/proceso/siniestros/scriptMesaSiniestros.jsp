@@ -589,13 +589,6 @@ var msgWindow;
 					debug('conCoberYSubcober:',conCoberYSubcober ? 'si' : 'no');
 					var urlDestino;
 					
-					
-					
-					
-					
-					
-					
-					
 					if(esPagoDirecto){
 						urlDestino = _UrlDetalleSiniestroDirecto;
 						debug('urlDestino_1 :',urlDestino);
@@ -646,9 +639,9 @@ var msgWindow;
 																'params.nmsuplem'  : json.NMSUPLEM,
 																'params.nmsituac'  : json.NMSITUAC,
 																'params.nmautesp'  : datos.txtAutEspecial,
-																'params.nmsinies'  : json.NMSINIES,
-																'params.cdperson'  : json.CDPERSON,
-																'params.cdtipsit'  : json.CDTIPSIT
+																'params.nmsinies'  : json.NMSINIES
+																//'params.cdperson'  : json.CDPERSON,
+																//'params.cdtipsit'  : json.CDTIPSIT
 															}
 															,success : function (response){
 																debug("Valor Ext.decode(response.responseText).validacionGeneral ====>",Ext.decode(response.responseText).validacionGeneral);

@@ -5286,16 +5286,15 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			
 			HashMap<String, Object> paramsAutoriEspecial = new HashMap<String, Object>();
 			paramsAutoriEspecial.put("pv_nmautesp_i",params.get("nmautespecial"));
-			paramsAutoriEspecial.put("pv_ntramite_i",params.get("txtContraRecibo"));
-			paramsAutoriEspecial.put("pv_nfactura_i",params.get("txtFactura"));
-			paramsAutoriEspecial.put("pv_cdunieco_i",params.get("cdunieco"));
-			paramsAutoriEspecial.put("pv_cdramo_i",params.get("cdramo"));
-			paramsAutoriEspecial.put("pv_estado_i",params.get("estado"));
-			paramsAutoriEspecial.put("pv_nmpoliza_i",params.get("polizaAfectada"));
-			paramsAutoriEspecial.put("pv_nmsuplem_i",params.get("idNmsuplem"));
-			paramsAutoriEspecial.put("pv_nmsituac_i",params.get("nmsituac"));
-			paramsAutoriEspecial.put("pv_cdperson_i",params.get("cmbAsegurado"));
-			paramsAutoriEspecial.put("pv_cdtipsit_i",params.get("idCdtipsit"));
+			paramsAutoriEspecial.put("pv_ntramite_i",params.get("txtntramite"));
+			paramsAutoriEspecial.put("pv_nfactura_i",params.get("txtnfactura"));
+			paramsAutoriEspecial.put("pv_cdunieco_i",params.get("txtcdunieco"));
+			paramsAutoriEspecial.put("pv_cdramo_i",  params.get("txtcdramo"));
+			paramsAutoriEspecial.put("pv_estado_i",  params.get("txtestado"));
+			paramsAutoriEspecial.put("pv_nmpoliza_i",params.get("txtnmpoliza"));
+			paramsAutoriEspecial.put("pv_nmsuplem_i",params.get("txtnmsuplem"));
+			paramsAutoriEspecial.put("pv_nmsituac_i",params.get("txtnmsituac"));
+			paramsAutoriEspecial.put("pv_nmsinies_i",params.get("txtnmsinies"));
 			paramsAutoriEspecial.put("pv_valrango_i",params.get("valRango"));
 			paramsAutoriEspecial.put("pv_valcober_i",params.get("valGarant"));
 			paramsAutoriEspecial.put("pv_cdgarant_i",params.get("cdgarant"));
@@ -5304,6 +5303,21 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			paramsAutoriEspecial.put("pv_ferecepc_i",fechaProcesamiento);
 			msgResult = siniestrosManager.guardaListaAutorizacionEspecial(paramsAutoriEspecial);
 			logger.debug("Valor de Respuesta --->"+msgResult);
+			
+			HashMap<String, Object> paramAutEspecial = new HashMap<String, Object>();
+			paramAutEspecial.put("pv_ntramite_i",params.get("txtntramite"));
+			paramAutEspecial.put("pv_tipoPago_i",params.get("txttipoPago"));
+			paramAutEspecial.put("pv_nfactura_i",params.get("txtnfactura"));
+			paramAutEspecial.put("pv_cdunieco_i",params.get("txtcdunieco"));
+			paramAutEspecial.put("pv_cdramo_i",  params.get("txtcdramo"));
+			paramAutEspecial.put("pv_estado_i",  params.get("txtestado"));
+			paramAutEspecial.put("pv_nmpoliza_i",params.get("txtnmpoliza"));
+			paramAutEspecial.put("pv_nmsuplem_i",params.get("txtnmsuplem"));
+			paramAutEspecial.put("pv_nmsituac_i",params.get("txtnmsituac"));
+			paramAutEspecial.put("pv_nmautesp_i",msgResult);
+			paramAutEspecial.put("pv_nmsinies_i",params.get("txtnmsinies"));
+			validacionGeneral = siniestrosManager.asociarAutorizacionEspecial(paramAutEspecial);
+			
 		}catch( Exception e){
 			logger.error("Error en el guardado de autorizacion especiales : {}", e.getMessage(), e);
 			return SUCCESS;
@@ -5318,14 +5332,15 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			HashMap<String, Object> paramsAutoriEspecial = new HashMap<String, Object>();
 			paramsAutoriEspecial.put("pv_nfactura_i",params.get("nfactura"));
 			paramsAutoriEspecial.put("pv_ntramite_i",params.get("ntramite"));
-			paramsAutoriEspecial.put("pv_cdperson_i",params.get("cdperson"));
+			//paramsAutoriEspecial.put("pv_cdperson_i",params.get("cdperson"));
 			paramsAutoriEspecial.put("pv_cdunieco_i",params.get("cdunieco"));
 			paramsAutoriEspecial.put("pv_cdramo_i",params.get("cdramo"));
 			paramsAutoriEspecial.put("pv_estado_i",params.get("estado"));
 			paramsAutoriEspecial.put("pv_nmpoliza_i",params.get("nmpoliza"));
 			paramsAutoriEspecial.put("pv_nmsuplem_i",params.get("nmsuplem"));
 			paramsAutoriEspecial.put("pv_nmsituac_i",params.get("nmsituac"));
-			paramsAutoriEspecial.put("pv_cdtipsit_i",params.get("cdtipsit"));
+			paramsAutoriEspecial.put("pv_nmsinies_i",params.get("nmsinies"));
+			//paramsAutoriEspecial.put("pv_cdtipsit_i",params.get("cdtipsit"));
 			datosValidacion = siniestrosManager.obtenerConfiguracionAutEspecial(paramsAutoriEspecial);
 			logger.debug("Valor a enviar ===> :{}",datosValidacion);
 			success=true;
@@ -5353,8 +5368,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			paramAutEspecial.put("pv_nmsituac_i",params.get("nmsituac"));
 			paramAutEspecial.put("pv_nmautesp_i",params.get("nmautesp"));
 			paramAutEspecial.put("pv_nmsinies_i",params.get("nmsinies"));
-			paramAutEspecial.put("pv_cdperson_i",params.get("cdperson"));
-			paramAutEspecial.put("pv_cdtipsit_i",params.get("cdtipsit"));
+			//paramAutEspecial.put("pv_cdperson_i",params.get("cdperson"));
+			//paramAutEspecial.put("pv_cdtipsit_i",params.get("cdtipsit"));
 			validacionGeneral = siniestrosManager.asociarAutorizacionEspecial(paramAutEspecial);
 			logger.debug("validacionGeneral : {}", validacionGeneral);
 		}catch( Exception e){
@@ -5759,6 +5774,20 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
+	
+	public String consultaDatosAutEspecial(){
+		logger.debug("Entra a consultaDatosAutEspecial params de entrada :{} ",params);
+		try {
+			datosValidacion = siniestrosManager.getConsultaDatosAutEspecial(params.get("cdramo"),params.get("tipoPago"),params.get("ntramite"),params.get("nfactura"),params.get("cdperson"));
+			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
+		}catch( Exception e){
+			logger.error("Error al obtener consultaDatosAutEspecial : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		setSuccess(true);
+		return SUCCESS;
+	}
+	
 	
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
