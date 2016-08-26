@@ -43,7 +43,7 @@ var _0_urlDetalleCobertura         = '<s:url namespace="/flujocotizacion" action
 var _0_urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"                    />';
 var _0_urlViewDoc                  = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
 
-var _0_urlEncrpParam               = '<s:url namespace ="/seguridad"     action="redireccionaReporte"            />';
+var _0_urlEncrpParam               = '<s:url namespace ="/encoderURL"     action="redireccionaReporte"            />';
 
 var _0_urlComprar                  = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
 var _0_urlVentanaDocumentos        = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"        />';
