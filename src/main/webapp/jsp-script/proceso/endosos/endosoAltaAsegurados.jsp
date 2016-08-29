@@ -8,9 +8,8 @@
 ////// urls //////
 
 ////// variables //////
-var _p59_storeAseguradosActuales
-    ,_p59_storeAseguradosNuevos
-    ,_p59_windowAsegurado;
+var _p59_storeAseguradosNuevos,
+    _p59_windowAsegurado;
 ////// variables //////
 
 ////// overrides //////
@@ -25,65 +24,6 @@ Ext.onReady(function()
     ////// modelos //////
     
     ////// stores //////
-    _p59_storeAseguradosActuales = Ext.create('Ext.data.Store',
-    {
-        type    : 'memory'
-        ,data   : []
-        ,fields :
-        [
-            'NMSITUAC', 'DSPARENT', 'DSNOMBRE', 'DSSEXO', { type : 'date', name : 'FENACIMI', dateFormat : 'd/m/Y' }
-        ]
-        ,cargar : function()
-        {
-            var me = this;
-            me.removeAll();
-            me.add(
-            {
-                NMSITUAC  : '1'
-                ,DSPARENT : 'TITULAR'
-                ,DSNOMBRE : 'TEST '+(new Date()).getTime()
-                ,DSSEXO   : 'HOMBRE'
-                ,FENACIMI : '17/08/1990'
-            });
-            
-            if(Math.random()>0.5)
-            {
-                me.add(
-                {
-                    NMSITUAC  : '2'
-                    ,DSPARENT : 'CONYUGE'
-                    ,DSNOMBRE : 'TEST '+(new Date()).getTime()
-                    ,DSSEXO   : 'MUJER'
-                    ,FENACIMI : '06/11/1989'
-                });
-            }
-            
-            if(Math.random()>0.5)
-            {
-                me.add(
-                {
-                    NMSITUAC  : '3'
-                    ,DSPARENT : 'DEPENDIENTE'
-                    ,DSNOMBRE : 'TEST '+(new Date()).getTime()
-                    ,DSSEXO   : 'HOMBRE'
-                    ,FENACIMI : '01/01/2000'
-                });
-            }
-            
-            if(Math.random()>0.5)
-            {
-                me.add(
-                {
-                    NMSITUAC  : '4'
-                    ,DSPARENT : 'DEPENDIENTE'
-                    ,DSNOMBRE : 'TEST '+(new Date()).getTime()
-                    ,DSSEXO   : 'MUJER'
-                    ,FENACIMI : '02/02/2010'
-                });
-            }
-        }
-    });
-    
     _p59_storeAseguradosNuevos = Ext.create('Ext.data.Store',
     {
         type    : 'memory'
@@ -169,49 +109,6 @@ Ext.onReady(function()
                         ,itemId  : '_p59_botonConfirmarFecha'
                         ,icon    : '${icons}accept.png'
                         ,handler : _p59_confirmarClic
-                    }
-                ]
-            }
-            ,{
-                xtype          : 'grid'
-                ,title         : 'ASEGURADOS A LA FECHA DE EFECTO'
-                ,itemId        : '_p59_gridAseguradosActuales'
-                ,collapsible   : true
-                ,titleCollapse : true
-                ,width         : 800
-                ,height        : 300
-                ,autoScroll    : true
-                ,store         : _p59_storeAseguradosActuales
-                ,columns       :
-                [
-                    {
-                        text          : 'NO.'
-                        ,dataIndex    : 'NMSITUAC'
-                        ,width        : 50
-                        ,menuDisabled : true
-                        ,sortable     : false
-                    }
-                    ,{
-                        text       : 'PARENTESCO'
-                        ,dataIndex : 'DSPARENT'
-                        ,width     : 100
-                    }
-                    ,{
-                        text       : 'NOMBRE'
-                        ,dataIndex : 'DSNOMBRE'
-                        ,width     : 300
-                    }
-                    ,{
-                        text       : 'SEXO'
-                        ,dataIndex : 'DSSEXO'
-                        ,width     : 100
-                    }
-                    ,{
-                        xtype       : 'datecolumn'
-                        ,text       : 'FECHA DE<br/>NACIMIENTO'
-                        ,dataIndex  : 'FENACIMI'
-                        ,width      : 100
-                        ,format     : 'd/m/Y'
                     }
                 ]
             }
@@ -456,14 +353,6 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
-    _fieldByName('FEEFECTO').on(
-    {
-        change : function(me,val)
-        {
-            debug('FEEFECTO.change args:',arguments);
-            _p59_storeAseguradosActuales.cargar();
-        }
-    });
     ////// custom //////
     
     ////// loaders //////
@@ -489,7 +378,6 @@ function _p59_bloquearFecha()
     debug('_p59_bloquearFecha');
     
     _fieldByName('FEEFECTO').setReadOnly(true);
-    _fieldById('_p59_gridAseguradosActuales').collapse();
     _fieldById('_p59_botonConfirmarFecha').hide();
     _fieldById('_p59_gridAseguradosNuevos').show();
 }
