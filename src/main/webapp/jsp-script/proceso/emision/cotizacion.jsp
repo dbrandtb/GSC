@@ -3060,6 +3060,7 @@ function _0_cargarPoliza(cduniext,ramo,nmpoliex,cdusuari,tipoflot)
                 ,'smap1.cdpoliza'   : nmpoliex
                 ,'smap1.cdusuari'   : cdusuari
                 ,'smap1.tipoflot'   : tipoflot
+                ,'smap1.cargaCotiza': 'S'
             }
             ,success : function(response)
             {
