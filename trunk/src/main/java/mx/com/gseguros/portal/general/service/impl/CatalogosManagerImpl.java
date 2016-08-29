@@ -12,6 +12,7 @@ import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.Catalogos;
 import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoModelado;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Utils;
@@ -87,7 +88,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	
 	@Override
 	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu,
-			String cdTipSit, String cdRamo, String idPadre, String cdGarant, String cdSisrol) // se agrega parámetro cdSisrol para considerar restricciones por rol (EGS)
+			String cdTipSit, String cdRamo, String idPadre, String cdGarant, String cdSisrol) // se agrega parï¿½metro cdSisrol para considerar restricciones por rol (EGS)
 			throws Exception {
 		
 		String valAnt = StringUtils.isNotBlank(idPadre) ? idPadre : null;
@@ -1394,7 +1395,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		
 		List<GenericVO> lista = new ArrayList<GenericVO>();
-		List<Map<String,String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc(agrupamc);
+		List<Map<String,String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc(agrupamc, String.valueOf(TipoModelado.FLUJOS_PROCESOS.getCdtipmod()));
 		for(Map<String,String>tipoFlujo:tiposFlujo)
 		{
 			lista.add(new GenericVO(
