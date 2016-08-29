@@ -14,7 +14,6 @@
     border-right: 2px solid red;
 }
 </style>
-
 <script>
 ////// urls //////
 var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"            />'
@@ -124,12 +123,6 @@ Ext.onReady(function()
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 
-    ////// requires //////
-    ////// requires //////
-    
-    ////// modelos //////
-    ////// modelos //////
-    
     ////// stores //////
     _p54_store = Ext.create('Ext.data.Store',
     {
@@ -269,7 +262,6 @@ Ext.onReady(function()
                     if(Number(cdtiptra) === 1) // para emision
                     {
                         // indistinto salud y danios
-                        
                         // mostrar
                         
                         me.down('[name=CDRAMO]').allowBlank = false;
@@ -1174,10 +1166,13 @@ Ext.onReady(function()
                                         var jsonSIGS = Ext.decode(json.smap1.valoresCampos);
                                         
                                         debug('jsonSIGS:',jsonSIGS);
-                                        
                                         // Si la recuperada no es del agente de sesion
                                         if (!Ext.isEmpty(_p54_params.CDAGENTE) && Number(_p54_params.CDAGENTE) !== Number(jsonSIGS.smap1.cdagente)) {
                                             throw 'No tiene permisos para recuperar esta p\u00f3liza';//, pertenece al agente ' + jsonSIGS.smap1.cdagente;
+                                        }
+                                        //Si la recuperada ya fue registrada previamente o presenta errores en el proceso de registro
+                                        if (!Ext.isEmpty(jsonSIGS.smap1.mensajeError)){
+                                            throw jsonSIGS.smap1.mensajeError;
                                         }
                                         
                                         centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -1354,12 +1349,10 @@ function _p54_registrarTramite(bot)
                     {                  	
                     	var callbackRegistar = function(bandera) 
                         {
-                    		if (bandera==false)
-                    		{
+                    		if (bandera==false)	{
                     			mensajeError('No se pudo grabar numero de tr\u00e1mite en sistema sigs',function(){callbackRegistar(true)});
-                    		}
-                    		else
-                    		{
+                    		}else{
+                    			
 	                            mensajeCorrecto
 	                            ('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
 	                             {
