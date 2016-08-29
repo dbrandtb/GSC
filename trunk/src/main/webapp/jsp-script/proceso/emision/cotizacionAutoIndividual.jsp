@@ -2871,11 +2871,12 @@ function _p28_cargarPoliza(boton)
 	            url      : _p28_urlCargarPoliza
 	             ,params  :
 	             {
-	                  'smap1.cdsucursal': sucursal
-	                 ,'smap1.cdramo'    : ramo
-	                 ,'smap1.cdpoliza'  : poliza
-	                 ,'smap1.tipoflot'  : 'I'
-	                 ,'smap1.cdtipsit'  : _p28_smap1.cdtipsit
+	                  'smap1.cdsucursal' : sucursal
+	                 ,'smap1.cdramo'     : ramo
+	                 ,'smap1.cdpoliza'   : poliza
+	                 ,'smap1.tipoflot'   : 'I'
+	                 ,'smap1.cdtipsit'   : _p28_smap1.cdtipsit
+	                 ,'smap1.cargaCotiza': 'S'
 	             }
 	             ,success : function(response)
 	             {
