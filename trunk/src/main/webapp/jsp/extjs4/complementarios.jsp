@@ -659,10 +659,11 @@ function _p29_emitirClicComplementarios()
 	                                                                ,readOnly   : true
 	                                                            }
 	                                                            ,{
-	                                                                id     : 'botonEmitirPolizaFinal'
-	                                                                ,xtype : 'button'
-	                                                                ,text  : 'Emitir'
-	                                                                ,icon  : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
+	                                                                id      : 'botonEmitirPolizaFinal'
+	                                                                ,xtype  : 'button'
+	                                                                ,text   : 'Emitir'
+	                                                                ,hidden : panDatComMap1.SITUACION !== 'AUTO' && ('SUSCRIPTOR' !== sesionDsrol)
+	                                                                ,icon   : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
 	                                                                //,disabled : true
 	                                                                ,handler:function()
 	                                                                {
@@ -1835,10 +1836,13 @@ function _p29_emitirClicComplementarios()
                                      }
                                 }
 		                        ,{
-		                            text     : 'Emitir'
+		                            text     : sesionDsrol === 'COTIZADOR'
+		                                           ? 'Cotizar'
+		                                           : 'Emitir'
                                     ,itemId  : 'panDatComBotonRetarificar'
                                     ,icon    : contexto+'/resources/fam3icons/icons/key.png'
-                                    ,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
+                                    //,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
+                                    ,hidden  : panDatComMap1.SITUACION !== 'AUTO' && (['SUSCRIPTOR', 'COTIZADOR'].indexOf(sesionDsrol) === -1)
                                     ,handler : function(me)
                                     {
                                     	try

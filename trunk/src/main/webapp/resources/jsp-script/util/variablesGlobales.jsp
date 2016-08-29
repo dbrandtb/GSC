@@ -49,7 +49,7 @@
         ,_GLOBAL_COMP_URL_ACTUALIZAR_STATUS_TRAMITE = '<s:url namespace="/mesacontrol"      action="actualizarStatusTramite"   />'
         ,_GLOBAL_COMP_URL_AUTORIZAR_ENDOSO          = '<s:url namespace="/endosos"          action="autorizarEndoso"           />';
     
-    <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo" includeParams="get">
+    <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo">
         <s:param name="params.AGRUPAMC" value="%{'PRINCIPAL'}" />
     </s:url>
     

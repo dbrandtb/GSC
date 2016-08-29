@@ -3496,4 +3496,53 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			String accion) throws Exception {
 		throw new UnsupportedOperationException();
 	}
+	
+	@Override
+	@Deprecated
+	public String recuperarEstatusDefectoRol (String cdsisrol) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdsisrol", cdsisrol);
+		Map<String,Object> procRes = ejecutaSP(new RecuperarEstatusDefectoRolSP(getDataSource()), params);
+		String estatus = (String) procRes.get("pv_status_o");
+		logger.debug("P_GET_STATUS_NUEVO_TRA_X_ROL Estatus por defecto para el rol {}: {}", cdsisrol, estatus);
+		return estatus;
+	}
+	
+	protected class RecuperarEstatusDefectoRolSP extends StoredProcedure {
+		protected RecuperarEstatusDefectoRolSP (DataSource dataSource) {
+			super(dataSource,"P_GET_STATUS_NUEVO_TRA_X_ROL");
+			declareParameter(new SqlParameter("cdsisrol", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_status_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarValidacionPorCdvalidafk(String ntramite, String clave) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite" , ntramite);
+		params.put("clave"    , clave);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarValidacionPorCdvalidafkSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarValidacionPorCdvalidafk lista = ",lista));
+		return lista;
+	}
+	
+	protected class RecuperarValidacionPorCdvalidafkSP extends StoredProcedure {
+		protected RecuperarValidacionPorCdvalidafkSP (DataSource dataSource) {
+			super(dataSource,"P_GET_ACC_VALIDAC_FLOTANTE");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("clave"    , OracleTypes.VARCHAR));
+			String[] cols = new String[] { "CDTIPFLU" , "CDFLUJOMC", "TIPOENT", "CDENTIDAD", "WEBID", "STATUS" };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

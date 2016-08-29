@@ -3403,4 +3403,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	public List<Map<String, String>> recuperarRequisitosDocumentosObligatoriosFaltantes (String ntramite) throws Exception {
 		return flujoMesaControlDAO.recuperarRequisitosDocumentosObligatoriosFaltantes(ntramite);
 	}
+	
+	@Override
+	@Deprecated
+	public String recuperarEstatusDefectoRol (String cdsisrol) throws Exception {
+		return flujoMesaControlDAO.recuperarEstatusDefectoRol(cdsisrol);
+	}
 }
