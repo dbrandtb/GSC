@@ -173,6 +173,8 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 			smap1.put("cdtiptra","1");
 		}
 		
+		smap1.put("random", String.format("%.0f", Math.random()*10000d));
+		
 		if(smap1.containsKey("ntramite")
 				&&"1".equals(smap1.get("cdtiptra"))
 				&&session!=null
