@@ -506,16 +506,88 @@ function _0_comprar()
                     }
                     else
                     {
-                        var msg = Ext.Msg.show(
-                        {
-                            title    : 'Solicitud enviada'
-                            ,msg     : 'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '
-                                        + json.smap1.ntramite
-                                        + ', ahora puede subir los documentos del trámite'
-                            ,buttons : Ext.Msg.OK
-                            ,y       : 50
-                        });
-                        msg.setY(50);
+                        var callbackNormal = function (callback) {
+                            mensajeCorrecto(
+                                'Tr\u00e1mite generado',
+                                'Se ha generado el tr\u00e1mite ' + json.smap1.ntramite +
+                                    ', favor de revisar los requisitos y subir sus documentos antes de turnar a SUSCRIPCI\u00d3N',
+                                callback
+                            );
+                        };
+                        var mask, ck = 'Recuperando lista de requisitos';
+                        try {
+                            var ntramite = json.smap1.ntramite;
+                            ck = 'Recuperando validaci\u00f3n ligada a requisitos';
+                            mask = _maskLocal(ck);
+                            Ext.Ajax.request({
+                                url     : _GLOBAL_URL_RECUPERACION,
+                                params  : {
+                                    'params.consulta' : 'RECUPERAR_VALIDACION_POR_CDVALIDAFK',
+                                    'params.ntramite' : json.smap1.ntramite,
+                                    'params.clave'    : '_CONFCOT'
+                                },
+                                success : function (response) {
+                                    mask.close();
+                                    var ck = 'Decodificando respuesta al recuperar validaci\u00f3n ligada a requisitos';
+                                    try {
+                                        var valida = Ext.decode(response.responseText);
+                                        debug('### validacion ligada a checklist:', valida);
+                                        if (valida.success === true) {
+                                            if (valida.list.length > 0) {
+                                                _cargarAccionesEntidad(
+                                                    valida.list[0].CDTIPFLU,
+                                                    valida.list[0].CDFLUJOMC,
+                                                    valida.list[0].TIPOENT,
+                                                    valida.list[0].CDENTIDAD,
+                                                    valida.list[0].WEBID,
+                                                    function (acciones) {
+                                                        if (acciones.length > 0) {
+                                                            debug('acciones:', acciones);
+                                                            callbackNormal(function () {
+                                                                _procesaAccion(
+                                                                    acciones[0].CDTIPFLU,
+                                                                    acciones[0].CDFLUJOMC,
+                                                                    acciones[0].TIPODEST,
+                                                                    acciones[0].CLAVEDEST,
+                                                                    acciones[0].WEBIDDEST,
+                                                                    acciones[0].AUX,
+                                                                    valida.params.ntramite,
+                                                                    valida.list[0].STATUS,
+                                                                    null, //cdunieco
+                                                                    null, //cdramo
+                                                                    null, //estado
+                                                                    null, //nmpoliza
+                                                                    null, //nmsituac
+                                                                    null, //nmsuplem
+                                                                    valida.list[0].cdusuari,
+                                                                    valida.list[0].cdsisrol,
+                                                                    null // callback
+                                                                );
+                                                            });
+                                                        } else {
+                                                            callbackNormal();
+                                                        }
+                                                    }
+                                                );
+                                            } else {
+                                                callbackNormal();
+                                            }
+                                        } else {
+                                            mensajeError(json.message);
+                                        }
+                                    } catch (e) {
+                                        manejaException(e, ck);
+                                    }
+                                },
+                                failure : function () {
+                                    mask.close();
+                                    errorComunicacion(null, 'Error al recuperar validaci\u00f3n ligada a requisitos');
+                                }
+                            });
+                        } catch (e) {
+                            manejaException(e, ck, mask);
+                            callbackNormal();
+                        }
                     }
                 }
                 else
