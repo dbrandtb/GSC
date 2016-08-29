@@ -24,6 +24,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
@@ -174,11 +175,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     @Autowired
     private ServiciosManager serviciosManager;
-
-	private Map<String, String> qwe;
 	
 	@Autowired
 	private ConsultasManager consultasManager;
+	
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
     
 	private FlujoVO flujo;
 	
@@ -1223,6 +1225,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             		
             		Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(comprarCdramo,tipoProcesoParaRecuperarFlujo);
             		
+            		String estatus = EstatusTramite.PENDIENTE.getCodigo();
+            		try {
+            			estatus = flujoMesaControlManager.recuperarEstatusDefectoRol(usuario.getRolActivo().getClave());
+            		} catch (Exception ex) {
+            			logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
+            		}
+            		
 	            	ntramite = mesaControlManager.movimientoTramite(
 	            			comprarCdunieco
 	            			,comprarCdramo
@@ -1237,7 +1246,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,null
 	            			,""
 	            			,new Date()
-	            			,"2"
+	            			,estatus
 	            			,""
 	            			,comprarNmpoliza
 	            			,cdtipsit
@@ -1271,7 +1280,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,null//cdmotivo
 	            			,cdsisrol
 	            			,"S"//swagente
-	            			,EstatusTramite.PENDIENTE.getCodigo()
+	            			,estatus
 	            			,false
 	            			);
 	            	
@@ -1284,7 +1293,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,null//cdmotivo
 	            			,cdsisrol
 	            			,"S"//swagente
-	            			,EstatusTramite.PENDIENTE.getCodigo()
+	            			,estatus
 	            			,false
 	            			);
 	            	

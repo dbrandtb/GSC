@@ -382,4 +382,10 @@ public interface FlujoMesaControlManager
 	
 	@Deprecated
 	public List<Map<String, String>> recuperarRequisitosDocumentosObligatoriosFaltantes (String ntramite) throws Exception;
+	
+	@Deprecated
+	/**
+	 * Recupera el estatus por defecto para tramites nuevos
+	 */
+	public String recuperarEstatusDefectoRol (String cdsisrol) throws Exception;
 }

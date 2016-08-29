@@ -1255,6 +1255,12 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_TODAS_SUCURSALES)) {
 				lista = flujoMesaControlDAO.recuperarTodasSucursales();
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_VALIDACION_POR_CDVALIDAFK)) {
+				lista = flujoMesaControlDAO.recuperarValidacionPorCdvalidafk(params.get("ntramite"), params.get("clave"));
+				for (Map<String, String> i : lista) {
+					i.put("cdusuari", cdusuari);
+					i.put("cdsisrol", cdsisrol);
+				}
 			}
 		}
 		catch(Exception ex)

@@ -783,4 +783,11 @@ public interface FlujoMesaControlDAO {
 		String nivel,
 		String capacidad,
 		String accion) throws Exception;
+	
+	/**
+	 * Recupera el estatus por defecto para tramites nuevos
+	 */
+	public String recuperarEstatusDefectoRol (String cdsisrol) throws Exception;
+	
+	public List<Map<String, String>> recuperarValidacionPorCdvalidafk(String ntramite, String clave) throws Exception;
 }
