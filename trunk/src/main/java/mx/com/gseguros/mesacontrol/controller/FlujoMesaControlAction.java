@@ -15,6 +15,7 @@ import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
+import mx.com.gseguros.portal.general.util.TipoModelado;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Utils;
 
@@ -92,7 +93,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				params = new LinkedHashMap<String, String>();
 			}
 			if (!params.containsKey("cdtipmod")) {
-				params.put("cdtipmod", "1");
+				params.put("cdtipmod", String.valueOf(TipoModelado.FLUJOS_PROCESOS.getCdtipmod()));
 			}
 			result = SUCCESS;
 		} catch (Exception ex) {
