@@ -1836,13 +1836,13 @@ function _p29_emitirClicComplementarios()
                                      }
                                 }
 		                        ,{
-		                            text     : sesionDsrol === 'COTIZADOR'
+		                            text     : ['COTIZADOR', 'SUPTECSALUD'].indexOf(sesionDsrol) != -1
 		                                           ? 'Cotizar'
 		                                           : 'Emitir'
                                     ,itemId  : 'panDatComBotonRetarificar'
                                     ,icon    : contexto+'/resources/fam3icons/icons/key.png'
                                     //,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
-                                    ,hidden  : panDatComMap1.SITUACION !== 'AUTO' && (['SUSCRIPTOR', 'COTIZADOR'].indexOf(sesionDsrol) === -1)
+                                    ,hidden  : panDatComMap1.SITUACION !== 'AUTO' && (['SUSCRIPTOR', 'COTIZADOR', 'SUPTECSALUD'].indexOf(sesionDsrol) === -1)
                                     ,handler : function(me)
                                     {
                                     	try
