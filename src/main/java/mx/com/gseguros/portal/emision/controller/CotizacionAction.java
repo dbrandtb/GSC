@@ -6795,8 +6795,9 @@ public class CotizacionAction extends PrincipalCoreAction
 					                if(auxDate!=null)
 					                {
 					                	Calendar cal = Calendar.getInstance();
+					                	Calendar anio = Calendar.getInstance();
 					                	cal.setTime(auxDate);
-					                	if(cal.get(Calendar.YEAR)>2100
+					                	if(anio.before(cal)
 					                			||cal.get(Calendar.YEAR)<1900
 					                			)
 					                	{
