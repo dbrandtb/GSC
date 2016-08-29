@@ -7452,11 +7452,12 @@ function _p30_cargarPolizaSIGS(sucursal, ramo, poliza)
         Ext.Ajax.request({
             url: _p30_urlCargarPolizaSIGS,
             params: {
-                'smap1.cdsucursal': sucursal,
-                'smap1.cdramo': ramo,
-                'smap1.cdpoliza': poliza,
-                'smap1.tipoflot': _p30_smap1.tipoflot,
-                'smap1.cdtipsit': 'AR'
+                'smap1.cdsucursal'  : sucursal
+                ,'smap1.cdramo'     : ramo
+                ,'smap1.cdpoliza'   : poliza
+                ,'smap1.tipoflot'   : _p30_smap1.tipoflot
+                ,'smap1.cdtipsit'   : 'AR'
+                ,'smap1.cargaCotiza': 'S'
             },
             success: function (response) {
                 mask.close();
