@@ -708,6 +708,7 @@ Ext.onReady(function()
         }
     });
     
+    /*
     cdtiptraCmp.on({
         change : function (me, val) {
             if (_p54_params.CDSISROL === 'SUSCRIPTOR') {
@@ -719,6 +720,7 @@ Ext.onReady(function()
             }
         }
     });
+    */
     
     if (!Ext.isEmpty(cdagenteCmp.store)) {
         cdagenteCmp.on({
