@@ -1332,7 +1332,7 @@ Ext.onReady(function()
     ////// contenido    //////
     /*//////////////////////*/
     panDocGridDocu=new PanDocGridDocu();
-    panDocGridDocu.render('pan_doc_maindiv');
+    panDocGridDocu.render('pan_doc_maindiv<s:property value="smap1.random" />');
     //Ext.getCmp('venDocMenuSupBotGenConrec').hide();
     /*//////////////////////*/
     ////// contenido    //////
@@ -1346,4 +1346,4 @@ Ext.onReady(function()
     //////////////////////////
 });
 </script>
-<div id="pan_doc_maindiv" style="height:1000px;border:1px solid #999999;"></div>
+<div id="pan_doc_maindiv<s:property value="smap1.random" />" style="height:1000px;border:1px solid #999999;"></div>
