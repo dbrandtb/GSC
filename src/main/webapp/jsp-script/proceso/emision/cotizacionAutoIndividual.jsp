@@ -3289,8 +3289,13 @@ function _p28_cargarRangoValorRamo5(callback)
 
                         if(valorRecuperadoValorVehiSigs>valormax)
                             {valorRecuperadoValorVehiSigs=valormax;}
-                        if(valorRecuperadoValorVehiSigs>valormin)
+                        else(valorRecuperadoValorVehiSigs<valormin)
                             {valorRecuperadoValorVehiSigs=valormin;}
+                        
+                        if(valor.lastValue>valormax)
+                         {_fieldLikeLabel('VALOR VEH').setValue(valormax);}
+                        else(valor.lastValue<valormin)
+                         {_fieldLikeLabel('VALOR VEH').setValue(valormin);}
                         
                         if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA')
                         {
@@ -3317,6 +3322,7 @@ function _p28_cargarRangoValorRamo5(callback)
                             valor.setMinValue(valormin);
                             valor.setMaxValue(valormax);
                         }
+                       valor.isValid();
                        return r;
                     }
                     valor.isValid();
