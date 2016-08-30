@@ -2628,6 +2628,12 @@ function _procesaAccion(
                                                                    }
                                                                });
 	                                                        }
+	                                                    }, {
+	                                                        text    : 'CERRAR',
+	                                                        icon    : _GLOBAL_DIRECTORIO_ICONOS + 'delete.png',
+	                                                        handler : function (me) {
+	                                                            me.up('window').close();
+	                                                        }
 	                                                    }
 	                                                ],
 	                                                recargar : function () {
