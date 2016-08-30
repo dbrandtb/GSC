@@ -31,7 +31,8 @@ Ext.onReady(function() {
 				{type:'string',    name:'descMoneda'		},				{type:'string',    name:'tasaCambio'		},
 				{type:'string',    name:'ptimporta'			},				{type:'string',    name:'dctoNuex'			},
 				{type:'string',    name:'feegreso'          },				{type:'string',    name:'diasdedu'			},
-				{type:'string',    name:'contraRecibo'      },				{type:'string',    name:'totalpagar'		}
+				{type:'string',    name:'contraRecibo'      },				{type:'string',    name:'totalpagar'		},
+				{type:'string',    name:'swisr'      		},				{type:'string',    name:'swice'				}
 			]
 	});
 

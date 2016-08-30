@@ -709,4 +709,6 @@ public interface SiniestrosManager {
 	
 	public List<Map<String, String>> getConsultaDatosAutEspecial(String cdramo, String tipoPago, String ntramite, String nfactura, String cdperson)throws Exception;
 	
+	public String actualizarValImpuestoProv(HashMap<String, Object> datosActualizacion) throws Exception;
+	
 }

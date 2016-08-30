@@ -1621,6 +1621,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"DESCPORC"      , "DESCNUME"        , "CDCONVAL"  , "DSSUBGAR" , "CDMONEDA"
 					,"DESTIPOMONEDA" , "TASACAMB"        , "PTIMPORTA" , "DCTONUEX" , "CODRECLAM"
 					,"FEEGRESO" 	 , "DIASDEDU"        , "NOMBPROV"  , "CONTRARECIBO", "TOTALPAGAR"
+					,"SWISR"		 , "SWICE"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -5742,6 +5743,27 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	public String actualizaValImpuestoProv(HashMap<String, Object> datosActualizacion) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ActualizaValImpuestoProv(this.getDataSource()), datosActualizacion);
+		return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class ActualizaValImpuestoProv extends StoredProcedure
+	{
+		protected ActualizaValImpuestoProv(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_UPD_IMPUESTOPROV");
+			declareParameter(new SqlParameter("pv_accion_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swisr_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swice_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",	OracleTypes.VARCHAR));
 			compile();
 		}
 	}

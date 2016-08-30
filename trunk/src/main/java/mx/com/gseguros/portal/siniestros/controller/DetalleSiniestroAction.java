@@ -177,11 +177,30 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			}else{
 				feegreso = renderFechas.parse(params.get("fefactura"));
 			}
+			
+			HashMap<String, Object> datosActualizacion = new HashMap<String, Object>();
+			datosActualizacion.put("pv_accion_i",Constantes.DELETE_MODE);
+			datosActualizacion.put("pv_ntramite_i",params.get("ntramite"));
+			datosActualizacion.put("pv_nfactura_i",params.get("nfactura"));
+			datosActualizacion.put("pv_swisr_i",null);
+			datosActualizacion.put("pv_swice_i",null);
+			siniestrosManager.actualizarValImpuestoProv(datosActualizacion);
+			
 			//Actualizamos la informacion del la factura
 			siniestrosManager.guardaListaFacturaSiniestro(params.get("ntramite"), params.get("nfactura"), renderFechas.parse(params.get("fefactura")), 
 					params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), 
 					params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),
 					params.get("dctonuex"),feegreso,params.get("diasdedu"),null,null, params.get("nfacturaOrig"));
+			
+			
+			HashMap<String, Object> datosInsercion = new HashMap<String, Object>();
+			datosInsercion.put("pv_accion_i",Constantes.INSERT_MODE);
+			datosInsercion.put("pv_ntramite_i",params.get("ntramite"));
+			datosInsercion.put("pv_nfactura_i",params.get("nfactura"));
+			datosInsercion.put("pv_swisr_i",params.get("swAplicaisr"));
+			datosInsercion.put("pv_swice_i",params.get("swAplicaice"));
+			siniestrosManager.actualizarValImpuestoProv(datosInsercion);
+			
 			
 			//Pago Normal
 			if(params.get("cdtiptra").equalsIgnoreCase(TipoTramite.SINIESTRO.getCdtiptra())){
