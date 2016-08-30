@@ -26,7 +26,6 @@ import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
@@ -2187,7 +2186,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							
 							// jtezva: 2015-12-29 B
 							//,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")"
-							,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n"
+							,mensajeRespuesta.replaceAll("<br/>", "\n").replaceAll("&ntilde;", "\u00f1")
 							// jtezva: 2015-12-29 B
 							
 							,cdusuari
@@ -2305,7 +2304,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							
 							// jtezva: 2015-12-29 B
 							//,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")"
-							,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n"
+							,mensajeRespuesta
 							// jtezva: 2015-12-29 B
 							
 							,cdusuari
@@ -3691,7 +3690,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 						ntramite
 						,fechaDia
 						,null//cdclausu
-						,"La emisi\u00f3n del tr\u00e1mite se autoriz\u00f3 con las siguientes observaciones:<br/>"+comentarios
+						,Utils.join("La emisi\u00f3n del tr\u00e1mite se autoriz\u00f3 con las siguientes observaciones: ", 
+						    (StringUtils.isBlank(comentarios)
+						        ? "(sin observaciones)"
+						        : Utils.join("\n", comentarios)
+						    )
+						)
 						,us.getUser()
 						,null
 						,us.getRolActivo().getClave()
