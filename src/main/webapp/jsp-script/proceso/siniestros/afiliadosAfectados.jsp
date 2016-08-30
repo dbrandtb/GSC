@@ -175,6 +175,8 @@
 					,diasdedu:		'<s:property value='%{getSlist2().get(#contadorFactura).get("DIASDEDU")}'			escapeHtml="false" />'
 					,contraRecibo:	'<s:property value='%{getSlist2().get(#contadorFactura).get("CONTRARECIBO")}'		escapeHtml="false" />'
 					,totalpagar:	'<s:property value='%{getSlist2().get(#contadorFactura).get("TOTALPAGAR")}'			escapeHtml="false" />'
+					,swisr:			'<s:property value='%{getSlist2().get(#contadorFactura).get("SWISR")}'				escapeHtml="false" />'
+					,swice:			'<s:property value='%{getSlist2().get(#contadorFactura).get("SWICE")}'				escapeHtml="false" />'
 				});
 				<s:set name="contadorFactura" value="#contadorFactura+1" />
 			</s:iterator>
@@ -230,6 +232,10 @@
 					text	:'Fecha Egreso',			dataIndex	:'feegreso'
 				},{
 					text	:'Dias Deducible',			dataIndex	:'diasdedu'	,		hidden : _tipoPago != _TIPO_PAGO_INDEMNIZACION
+				},{
+					text	:'swisr',					dataIndex	:'swisr',		hidden : true
+				},{
+					text	:'swice',					dataIndex	:'swice',		hidden : true
 				}
 			];
 
@@ -954,21 +960,51 @@
 						}
 					}
 				});
+				
+				storeAplicaISR = Ext.create('Ext.data.Store', {
+					model:'Generic',
+					autoLoad:true,
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_SINO},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					}
+				});
+				storeAplicaISR.load();
+			
+			    storeAplicaICE = Ext.create('Ext.data.Store', {
+					model:'Generic',
+					autoLoad:true,
+					proxy: {
+						type: 'ajax',
+						url: _URL_CATALOGOS,
+						extraParams : {catalogo:_SINO},
+						reader: {
+							type: 'json',
+							root: 'lista'
+						}
+					}
+				});
+				storeAplicaICE.load();
 				/*############################		DECLARACION DE COMBOX Y LABEL		########################################*/
 				var comboTipoAte= Ext.create('Ext.form.ComboBox',
 				{
-					name:'params.cdtipser',			fieldLabel: 'Tipo atenci&oacute;n',		allowBlank : false,		editable:true,
+					name:'params.cdtipser',			fieldLabel: 'TIPO ATENCI&Oacute;N',		allowBlank : false,		editable:true,
 					displayField: 'value',			emptyText:'Seleccione...',				valueField: 'key',		forceSelection : true,
 					queryMode:'local',				store: storeTipoAtencion
 				});
 				
 				var cmbProveedor = Ext.create('Ext.form.field.ComboBox',
 				{
-					fieldLabel : 'Proveedor',			displayField : 'nombre',			name:'params.cdpresta',
+					fieldLabel : 'PROVEEDOR',			displayField : 'nombre',			name:'params.cdpresta',
 					valueField   : 'cdpresta',			forceSelection : true,
 					matchFieldWidth: false,				queryMode :'remote',				queryParam: 'params.cdpresta',
 					minChars  : 2,						store : storeProveedor,				triggerAction: 'all',
-					hideTrigger:true,					allowBlank:false
+					hideTrigger:true,					allowBlank:false					
 				});
 				var comboICDPrimario = Ext.create('Ext.form.field.ComboBox',
 				{
@@ -1011,8 +1047,8 @@
 				});
 
 				var cmbTipoMoneda = Ext.create('Ext.form.ComboBox', {
-					name:'params.tipoMoneda',		fieldLabel	: 'Moneda',		store: storeTipoMoneda,			queryMode:'local',  
-					displayField: 'value',		valueField: 'key',			editable:false,					allowBlank:false,
+					name:'params.tipoMoneda',		fieldLabel	: 'MONEDA',		store: storeTipoMoneda,			queryMode:'local',  
+					displayField: 'value',			valueField: 'key',			editable:false,					allowBlank:false,
 					listeners : {
 						select:function(e){
 							if(e.getValue() == "001"){
@@ -1245,6 +1281,20 @@
 					}
 				});
 				
+				var aplicaISR = Ext.create('Ext.form.field.ComboBox',{
+					fieldLabel   : 'APLICA ISR',	id		  : 'swAplicaisr',			allowBlank		: false,
+					editable   : false,			displayField : 'value',				valueField:'key',			    		forceSelection  : true,
+					queryMode    :'local',				editable  :false,						name			:'params.swAplicaisr',
+					store : storeAplicaISR
+				});
+			    
+			    var aplicaICE = Ext.create('Ext.form.field.ComboBox',{
+					fieldLabel   : 'APLICA ICE',	id		  : 'swAplicaice',			allowBlank		: false,
+					editable   : false,			displayField : 'value',				valueField:'key',			    		forceSelection  : true,
+					queryMode    :'local',				editable  :false,						name			:'params.swAplicaice',
+					store : storeAplicaICE
+				});
+							
 				/////////////////////////////////////////////////////////////////////////////////////
 				Ext.define('EditorFacturaDirecto', {
 					extend: 'Ext.grid.Panel',
@@ -2632,33 +2682,34 @@
 					}
 					,defaults 	:
 					{
-						style : 'margin:5px;'
+						//style : 'margin:5px;',
+						bodyStyle:'padding: 10px'
 					}
 					,items	:
 					[
 						{
-							xtype		: 'textfield',			fieldLabel	: 'No. Tr&aacute;mite',		name	: 'params.ntramite', readOnly   : true, hidden: true
+							xtype		: 'textfield',			fieldLabel	: 'NO. TR&Aacute;MITE',		name	: 'params.ntramite', readOnly   : true, hidden: true
 						},
                         {
-							xtype		: 'textfield',			fieldLabel	: 'CdTiptra',			name	: 'params.cdtiptra', value   : _11_params.CDTIPTRA, hidden: true
+							xtype		: 'textfield',			fieldLabel	: 'CDTIPTRA',				name	: 'params.cdtiptra', value   : _11_params.CDTIPTRA, hidden: true
 						},
 						{
-							xtype		: 'textfield',			fieldLabel	: 'ContraRecibo',			name	: 'params.contrarecibo', readOnly   : true
+							xtype		: 'textfield',			fieldLabel	: 'CONTRARECIBO',			name	: 'params.contrarecibo', readOnly   : true
 						},
 						{
-							xtype		: 'textfield',			fieldLabel	: 'No. Factura Original',	name	: 'params.nfacturaOrig', readOnly   : true, hidden: true 
+							xtype		: 'textfield',			fieldLabel	: 'NO. FACTURA ORIGINAL',	name	: 'params.nfacturaOrig', readOnly   : true, hidden: true 
 						},
 						{
-							xtype		: 'textfield',			fieldLabel	: 'No. Factura',			name	: 'params.nfactura', readOnly   : (_11_params.CDTIPTRA != _TIPO_PAGO_AUTOMATICO)
+							xtype		: 'textfield',			fieldLabel	: 'NO. FACTURA',			name	: 'params.nfactura', readOnly   : (_11_params.CDTIPTRA != _TIPO_PAGO_AUTOMATICO)
 						},
 						{
-							xtype		: 'datefield',			fieldLabel	: 'Fecha Factura',			name	: 'params.fefactura',	format	: 'd/m/Y'
+							xtype		: 'datefield',			fieldLabel	: 'FECHA FACTURA',			name	: 'params.fefactura',	format	: 'd/m/Y'
 						},
 						{
-							xtype		: 'datefield',			fieldLabel	: 'Fecha Egreso',			name	: 'params.feegreso',	format	: 'd/m/Y',		allowBlank : false
+							xtype		: 'datefield',			fieldLabel	: 'FECHA EGRESO',			name	: 'params.feegreso',	format	: 'd/m/Y',		allowBlank : false
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Deducible (D&iacute;as)',		name	: 'params.diasdedu',		allowBlank : false
+							xtype		: 'numberfield',		fieldLabel 	: 'DEDUCIBLE (D&Iacute;AS)',name	: 'params.diasdedu',		allowBlank : false
 						},
 						cmbProveedor,
 						comboTipoAte,
@@ -2666,7 +2717,7 @@
 						subCobertura,
 						cmbTipoMoneda,
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Tasa Cambio',			name	: 'params.tasacamb',
+							xtype		: 'numberfield',		fieldLabel 	: 'TASA CAMBIO',			name	: 'params.tasacamb',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.',
 							listeners : {
 								'change':function(e){
@@ -2681,7 +2732,7 @@
 							}
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Importe Factura',		name	: 'params.ptimporta',
+							xtype		: 'numberfield',		fieldLabel 	: 'IMPORTE FACTURA',		name	: 'params.ptimporta',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.',
 							listeners : {
 								'change':function(e){
@@ -2696,17 +2747,19 @@
 							}
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Importe Mxn',			name	: 'params.ptimport',
+							xtype		: 'numberfield',		fieldLabel 	: 'IMPORTE MXN',			name	: 'params.ptimport',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Descuento %',			name	: 'params.descporc',
+							xtype		: 'numberfield',		fieldLabel 	: 'DESCUENTO %',			name	: 'params.descporc',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
 						},
 						{
-							xtype		: 'numberfield',		fieldLabel 	: 'Descuento $',			name	: 'params.descnume',
+							xtype		: 'numberfield',		fieldLabel 	: 'DESCUENTO $',			name	: 'params.descnume',
 							allowBlank	: false,				allowDecimals :true	,					decimalSeparator :'.'
 						},
+						aplicaISR,
+						aplicaICE,
 						<s:property value='%{"," + imap.tatrisinItems}' />
 						<s:property value='%{"," + imap.itemsEdicion}' />
 					]
@@ -4969,6 +5022,8 @@
 	//3.- Editar Factura
 	function _11_editar(grid,rowindex){
 		_11_recordActivo = grid.getStore().getAt(rowindex);
+		debug("Valor de respuesta _11_recordActivo :) ====>>>> ",_11_recordActivo);
+		
 		_11_llenaFormulario();
 		modPolizasAltaTramite.show();
 		centrarVentanaInterna(modPolizasAltaTramite);
@@ -5096,6 +5151,8 @@
 			panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide(); 	// Aplica IVA oculto
 			panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();	// Sec. de IVA oculto
 			panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();	// Aplica IVA Retenido oculto
+			panelInicialPral.down('combo[name=params.swAplicaisr]').hide();
+			panelInicialPral.down('combo[name=params.swAplicaice]').hide();
 			if(_11_params.CDRAMO == _RECUPERA){
 				gridEditorCoberturaRecupera.show();								// Grid De los conceptos  Recupera visibles
 				panelInicialPral.down('[name=params.diasdedu]').hide();			// Dias deducible oculto
@@ -5112,6 +5169,8 @@
 			panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();	// Sec. de IVA oculto
 			panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();	// Aplica IVA Retenido oculto
 			panelInicialPral.down('[name=params.diasdedu]').hide();				// Dias deducible oculto
+			panelInicialPral.down('combo[name=params.swAplicaisr]').hide();
+			panelInicialPral.down('combo[name=params.swAplicaice]').hide();
 			valorRequerido = true;
 		}else{
 			gridEditorConceptos.show();											// Grid De los conceptos  visible
@@ -5120,6 +5179,8 @@
 			panelInicialPral.down('[name="parametros.pv_otvalor02"]').show();	// Sec. de IVA
 			panelInicialPral.down('[name="parametros.pv_otvalor03"]').show();	// Aplica IVA Retenido
 			panelInicialPral.down('[name=params.diasdedu]').hide();				// Dias deducible oculto
+			panelInicialPral.down('combo[name=params.swAplicaisr]').show();
+			panelInicialPral.down('combo[name=params.swAplicaice]').show();
 			valorRequerido = true;
 		}
 		
@@ -5134,6 +5195,10 @@
 		//Proveedor
 		storeProveedor.load();
 		panelInicialPral.down('combo[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
+		
+		panelInicialPral.down('combo[name=params.swAplicaisr]').setValue(_11_recordActivo.get('swisr'));
+		panelInicialPral.down('combo[name=params.swAplicaice]').setValue(_11_recordActivo.get('swice'));
+		
 		storeTipoAtencion.load({
 			params:{
 				'params.cdramo':_11_params.CDRAMO,

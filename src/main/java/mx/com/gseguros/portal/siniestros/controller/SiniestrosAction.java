@@ -2009,12 +2009,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				smap.put("PAGODIRECTO","S");
 				smap2     = facturasAux.get(0);
 				// Obtenemos los datos del proveedor de acuerdo del CDPRESTA
-				proveedor = siniestrosManager.obtenerDatosProveedor(facturasAux.get(0).get("CDPRESTA"));
+				/*proveedor = siniestrosManager.obtenerDatosProveedor(facturasAux.get(0).get("CDPRESTA"));
 				logger.debug("Paso 6.- Datos del Proveedor : {}",proveedor);
 				smap3     = proveedor;
 				double ivaprov = Double.parseDouble(proveedor.get("IVA")); 
 				double cedprov = Double.parseDouble(proveedor.get("CEDULAR"));
-				double isrprov = Double.parseDouble(proveedor.get("ISR"));
+				double isrprov = Double.parseDouble(proveedor.get("ISR"));*/
 				
 				// Recorremos las facturas
 				for(int i = 0; i < facturasAux.size(); i++){
@@ -2025,6 +2025,22 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					Map<String,Object>facturaObj = new HashMap<String,Object>();
 					facturaObj.putAll(factura);
 					this.facturasxSiniestro.add(facturaObj);
+					
+					
+					proveedor = siniestrosManager.obtenerDatosProveedor(factura.get("CDPRESTA"));
+					logger.debug("Paso 6.- Datos del Proveedor : {}",proveedor);
+					smap3     = proveedor;
+					double ivaprov = Double.parseDouble(proveedor.get("IVA"));
+					double cedprov = 0d;
+					double isrprov = 0d;
+					
+					if(factura.get("SWISR").equalsIgnoreCase("S")){
+						isrprov = Double.parseDouble(proveedor.get("ISR"));
+					}
+					
+					if(factura.get("SWICE").equalsIgnoreCase("S")){
+						cedprov = Double.parseDouble(proveedor.get("CEDULAR"));
+					}
 					
 					// Obtenemos los ASEGURADOS por medio del numero de tramite y factura
 					List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosMsiniesTramite(ntramite,factura.get("NFACTURA"),null);
@@ -3704,18 +3720,33 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				logger.debug("Paso 5.- EL PROCESO DE PAGO ES DIRECTO ");
 				smap.put("PAGODIRECTO","S");
 				smap2     = facturasAux.get(0);
-				proveedor = siniestrosManager.obtenerDatosProveedor(facturasAux.get(0).get("CDPRESTA"));
+				/*proveedor = siniestrosManager.obtenerDatosProveedor(facturasAux.get(0).get("CDPRESTA"));
 				logger.debug("Paso 6.- Datos del Proveedor : {}",proveedor);
 				smap3     = proveedor;
 				double ivaprov = Double.parseDouble(proveedor.get("IVA")); 
 				double cedprov = Double.parseDouble(proveedor.get("CEDULAR"));
-				double isrprov = Double.parseDouble(proveedor.get("ISR"));
+				double isrprov = Double.parseDouble(proveedor.get("ISR"))*/
 				
 				for(int i = 0; i < facturasAux.size(); i++){
 					this.aseguradosxSiniestro = new ArrayList<Map<String,Object>>();
 					factura = facturasAux.get(i);
 					logger.debug("Paso 7.- Recorremos las Facturas  - El proceso i : {} de la factura : {}",i,factura.get("NFACTURA"));
 
+					proveedor = siniestrosManager.obtenerDatosProveedor(factura.get("CDPRESTA"));
+					logger.debug("Paso 6.- Datos del Proveedor : {}",proveedor);
+					smap3     = proveedor;
+					double ivaprov = Double.parseDouble(proveedor.get("IVA"));
+					double cedprov = 0d;
+					double isrprov = 0d;
+					
+					if(factura.get("SWISR").equalsIgnoreCase("S")){
+						isrprov = Double.parseDouble(proveedor.get("ISR"));
+					}
+					
+					if(factura.get("SWICE").equalsIgnoreCase("S")){
+						cedprov = Double.parseDouble(proveedor.get("CEDULAR"));
+					}
+					
 					Map<String,Object>facturaObj = new HashMap<String,Object>();
 					facturaObj.putAll(factura);
 					this.facturasxSiniestro.add(facturaObj);

@@ -2505,4 +2505,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneListaDatosAutEspecial(params);
 	}
+	
+	@Override
+	public String actualizarValImpuestoProv(HashMap<String, Object> datosActualizacion) throws Exception {
+		try {
+			return siniestrosDAO.actualizaValImpuestoProv(datosActualizacion);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 }
