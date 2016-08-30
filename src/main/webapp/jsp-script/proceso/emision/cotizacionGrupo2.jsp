@@ -249,7 +249,7 @@ var listaSinPadre = [];
 
 Ext.onReady(function()
 {
-
+	debug('si entra a la vista');
     _grabarEvento('COTIZACION','ACCCOTIZA'
                   ,_p25_ntramiteVacio?_p25_ntramiteVacio:(_p25_ntramite?_p25_ntramite:''),_p25_smap1.cdunieco,_p25_smap1.cdramo);
 
@@ -367,6 +367,7 @@ Ext.onReady(function()
         ,'titular'
         ,'parentesco'
         ,'agrupador'
+        ,'cdatexoc'
         <s:if test='%{getImap().containsKey("extraprimasFields")&&getImap().get("extraprimasFields")!=null}'>
             ,<s:property value="imap.extraprimasFields" escapeHtml="false" />
         </s:if>
@@ -1123,6 +1124,7 @@ Ext.onReady(function()
                                         {
                                             change : function(me)
                                             {
+                                                alert('1');
                                                 var indexofPeriod = me.getValue().lastIndexOf("."),
                                                 uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                                 if (!Ext.Array.contains(this.cAccept, uploadedExtension))
@@ -2907,7 +2909,9 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                {
                                                                    if(me.getValue()+'x'!='x')
                                                                    {
+                                                                   	   alert('2');
                                                                        var val=me.getValue().toLowerCase().replace(/s/g,'');
+                                                                       alert('3');
                                                                        if(item.fieldLabel.toLowerCase().replace(/s/g,'').lastIndexOf(val)!=-1)
                                                                        {
                                                                            //item.show();
@@ -4971,6 +4975,9 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                     }
                 	,beforedeselect: beforedesel
                 	,beforeedit	   : beforeed
+                	,canceledit		: function(me){
+                		_fieldById('btnguardar'+record.get('letra')).enable();
+                	}
                 }
                 ,buttonAlign : 'center'
                 ,buttons     :
@@ -5086,6 +5093,7 @@ function _p25_subirDetallePersonas()
                                         {
                                             change : function(me)
                                             {
+                                                alert('4');
                                                 var indexofPeriod = me.getValue().lastIndexOf("."),
                                                 uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                                 if (!Ext.Array.contains(this.cAccept, uploadedExtension))
@@ -6587,6 +6595,7 @@ function _p25_mostrarVentanaComplementoCotizacion(complemento,callback)
                         {
                             change : function(me)
                             {
+                                alert('5');
                                 var indexofPeriod = me.getValue().lastIndexOf("."),
                                 uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                 if (!Ext.Array.contains(this.cAccept, uploadedExtension))

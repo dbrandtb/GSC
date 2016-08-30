@@ -7681,7 +7681,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"otvalor61","otvalor62","otvalor63","otvalor64","otvalor65","otvalor66","otvalor67","otvalor68","otvalor69","otvalor70"
 					,"otvalor71","otvalor72","otvalor73","otvalor74","otvalor75","otvalor76","otvalor77","otvalor78","otvalor79","otvalor80"
 					,"otvalor81","otvalor82","otvalor83","otvalor84","otvalor85","otvalor86","otvalor87","otvalor88","otvalor89","otvalor90"
-					,"otvalor91","otvalor92","otvalor93","otvalor94","otvalor95","otvalor96","otvalor97","otvalor98","otvalor99"
+					,"otvalor91","otvalor92","otvalor93","otvalor94","otvalor95","otvalor96","otvalor97","otvalor98","otvalor99","cdatexoc"
 					};
 			declareParameter(new SqlOutParameter("pv_num_o"   	 , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
