@@ -3060,12 +3060,11 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.put("status"   , flujo.getStatus());
 					smap1.put("sincenso" , tramite.get("OTVALOR02"));
 					
-					if(Integer.parseInt(nmsolici)>0)
-					{
+					if ("M".equals(flujo.getEstado())) {
+						smap1.put("nmpoliza" , flujo.getNmpoliza());
+					} else if(Integer.parseInt(nmsolici) > 0) {
 						smap1.put("nmpoliza" , nmsolici);
-					}
-					else
-					{
+					} else {
 						smap1.put("nmpoliza" , "");
 						smap1.put("ntramite" , "");
 						smap1.put("ntramiteVacio" , flujo.getNtramite());
@@ -3214,12 +3213,11 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.put("status"   , flujo.getStatus());
 					smap1.put("sincenso" , tramite.get("OTVALOR02"));
 					
-					if(Integer.parseInt(nmsolici)>0)
-					{
+					if ("M".equals(flujo.getEstado())) {
+						smap1.put("nmpoliza" , flujo.getNmpoliza());
+					} else if (Integer.parseInt(nmsolici) > 0) {
 						smap1.put("nmpoliza" , nmsolici);
-					}
-					else
-					{
+					} else {
 						smap1.put("nmpoliza" , "");
 						smap1.put("ntramite" , "");
 						smap1.put("ntramiteVacio" , flujo.getNtramite());
