@@ -1118,11 +1118,12 @@ function beforeed(editor, context) {
 function compareObjects(obj1, obj2){
 	console.log('entrando a compareObjects');
 	var keys1 = [],
-	keys2   = [],
-	isEqual = true;
+	keys2     = [],
+	isEqual   = true;
 	//Se obtienen keys de objetos
 	for(var k in obj1){
-		//Se excluyen los campos que contengan check		
+		//Se excluyen los campos que contengan check
+		debug('llave obj1',k);		
 		if(!k.includes('displayfield')){
 			keys1.push(k);
 		}
@@ -1157,6 +1158,14 @@ function compareObjects(obj1, obj2){
 function _p25_guardarExtraprimasTitulares(){
     debug('>_p25_guardarExtraprimas:');
  	_mask('Actualizado valores');
+ 	var selection = _fieldById('gridAseg'+this.grupo).getPlugin('pagingselect'+this.grupo).selection;
+    for (var i = 0; i < selection.length; i++){
+    	if (selection[i].data['parentesco'] === 'TITULAR'){
+    		//debug('metiendo llave ',selection[i].data['parametros.pv_otvalor'+selection[i].data['parametros.cdatexoc']);
+    		selection[i].data['parametros.pv_otvalor'+selection[i].data['cdatexoc']] = this.up('grid').down('[name=extrtitu]').value;
+    		debug('metiendo llave ',selection[i].data);
+    	}
+    }
     Ext.Ajax.request(
     		{
     	url       : _p25_urlGuardarSituacionesTitulares
@@ -1198,6 +1207,14 @@ function _p25_guardarExtraprimasTitulares(){
 function _p21_guardarExtraprimasTitulares(){
     debug('>_p21_guardarExtraprimas:');
  	_mask('Actualizado valores');
+ 	var selection = _fieldById('gridAseg'+this.grupo).getPlugin('pagingselect'+this.grupo).selection;
+    var mapselection = {};
+    for (var i = 0; i < selection.length; i++){
+    	if (selection[i].data['PARENTESCO'] === 'T'){
+    		selection[i].data['EXTPRI_OCUPACION'] = this.up('grid').down('[name=extrtitu]').value;
+    		debug('metiendo llave ',selection[i].data);	
+    	}
+    }
     Ext.Ajax.request(
     		{
     	url       : _p21_urlGuardarSituacionesTitulares
@@ -1233,7 +1250,7 @@ function _p21_guardarExtraprimasTitulares(){
             errorComunicacion();
             _unmask();
         }
-    		});
+    });
 }
 
 function _p25_guardarExtraprimas(letra)

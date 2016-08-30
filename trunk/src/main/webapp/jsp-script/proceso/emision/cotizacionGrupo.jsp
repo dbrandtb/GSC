@@ -1128,9 +1128,7 @@ Ext.onReady(function()
                     {
                         var records = grid.getStore().getModifiedRecords();
                         debug('modificados:',records.length);
-                        if(
-                            grid.up('panel').title!='RESUMEN SUBGRUPOS'
-                            &&records.length>0)
+                        if(grid.up('panel').title != 'RESUMEN SUBGRUPOS' && records.length > 0)
                         {
                             conCambios = true;
                             debug('cambios:',records);
@@ -6099,7 +6097,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                     }
                     ,{
                         xtype    : 'button'
-                        ,text    : 'Aplicar '+cdgrupo
+                        ,text    : 'Aplicar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/bell_link.png'
                         ,grupo   : cdgrupo
                         ,handler : _p21_guardarExtraprimasTitulares
@@ -6146,7 +6144,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                  			    for (var i = 0; i < selection.length; i++){
                  			    	debug('metiendo llave ',selection[i].data['nmsituac']);
                  			    	mapselection[selection[i].data['NMSITUAC']] = selection[i].data; 
-                 			    	}
+                 			    }
                  			    debug('mapselection',mapselection);
                 				for(var s in _fieldById('gridAseg'+cdgrupo).store.data.items){
                 					var rec = _fieldById('gridAseg'+cdgrupo).store.getAt(s);
@@ -6156,17 +6154,17 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 						var obj = mapselection[rec.data['NMSITUAC']];
                 						for(var y in rec.data){
                 							rec.set(y, obj[y]);
-                							}
-                						}else{
-                							for(var y in rec.data){
-                								debug('rec',rec);
-                								rec.set(y,rec.raw[y]);
-                								}
-                							rec.commit();
-                							}
+                						}
+                					}else{
+                						for(var y in rec.data){
+                							debug('rec',rec);
+                							rec.set(y,rec.raw[y]);
+                						}
+                						rec.commit();
                 					}
                 				}
-                	}
+                			}
+                		}
                 	}
                 	})
                 ,bbar :
@@ -6236,6 +6234,9 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                     }
 					,beforedeselect : beforedesel
                 	,beforeedit	    : beforeed
+                	,canceledit		: function(me){
+                		_fieldById('btnguardar'+record.get('letra')).enable();
+                	}
                 }
                 ,buttonAlign : 'center'
                 ,buttons     :
