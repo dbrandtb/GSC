@@ -1208,11 +1208,9 @@ function _p21_guardarExtraprimasTitulares(){
     debug('>_p21_guardarExtraprimas:');
  	_mask('Actualizado valores');
  	var selection = _fieldById('gridAseg'+this.grupo).getPlugin('pagingselect'+this.grupo).selection;
-    var mapselection = {};
     for (var i = 0; i < selection.length; i++){
     	if (selection[i].data['PARENTESCO'] === 'T'){
     		selection[i].data['EXTPRI_OCUPACION'] = this.up('grid').down('[name=extrtitu]').value;
-    		debug('metiendo llave ',selection[i].data);	
     	}
     }
     Ext.Ajax.request(
@@ -1257,6 +1255,15 @@ function _p25_guardarExtraprimas(letra)
 {
     debug('>_p25_guardarExtraprimas:',letra);
     _mask('Guardando...');
+    var selection = _fieldById('gridAseg'+letra).getPlugin('pagingselect'+letra).selection;
+    for (var i = 0; i < selection.length; i++){
+	    for(var j = 0; j < _fieldById('gridAseg'+letra).getStore().data.items.length; j++){
+	       if(_fieldById('gridAseg'+letra).getStore().data.items[j].data['nmsituac'] === selection[i].data['nmsituac']){
+	       		selection[i].data = _fieldById('gridAseg'+letra).getStore().data.items[j].data;
+	       		debug('metiendo llave ',selection[i].data);
+	       }
+	    }
+	}
     var records = [];
     var store = _fieldById('gridAseg'+letra).getStore();
     for(var i in _fieldById('gridAseg'+letra).getPlugin('pagingselect'+letra).selection){
@@ -1339,9 +1346,21 @@ function _p25_guardarExtraprimas(letra)
 function _p21_guardarExtraprimas(letra)
 {
     debug('>_p21_guardarExtraprimas:',letra);
+    var selection = _fieldById('gridAseg'+letra).getPlugin('pagingselect'+letra).selection;
+    for (var i = 0; i < selection.length; i++){
+	    //debug('metiendo llave ',selection[i].data['NMSITUAC']);
+	    for(var j = 0; j < _fieldById('gridAseg'+letra).getStore().data.items.length; j++){
+	       //debug('metiendo llave ',_fieldById('gridAseg'+letra).getStore().data.items[j].data['NMSITUAC']);
+	       if(_fieldById('gridAseg'+letra).getStore().data.items[j].data['NMSITUAC'] === selection[i].data['NMSITUAC']){
+	       		selection[i].data = _fieldById('gridAseg'+letra).getStore().data.items[j].data;
+	       		debug('metiendo llave ',selection[i].data['NMSITUAC']);
+	       }
+	    }
+	}
     var records = [];
     var store = _fieldById('gridAseg'+letra).getStore();
     for(var i in _fieldById('gridAseg'+letra).getPlugin('pagingselect'+letra).selection){
+    	
     	records.push(_fieldById('gridAseg'+letra).getPlugin('pagingselect'+letra).selection[i].data);
     }
     debug('store a guardar:',store);
