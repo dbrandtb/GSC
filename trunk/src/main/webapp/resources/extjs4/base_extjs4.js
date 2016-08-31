@@ -1527,6 +1527,7 @@ function _procesaAccion(
                                                     ,'flujo.nmpoliza'  : nmpoliza
                                                     ,'flujo.nmsituac'  : nmsituac
                                                     ,'flujo.nmsuplem'  : nmsuplem
+                                                    ,'flujo.aux'       : aux
                                                 }
                                                 ,success : function(response)
                                                 {
@@ -1544,12 +1545,13 @@ function _procesaAccion(
                                                             }
                                                             else if(numSalidas==1)
                                                             {
+                                                                /* JTEZVA 2016 08 30 YA NO QUIERO AVISOS, QUE CONTINUE
                                                                 mensajeCorrecto
                                                                 (
                                                                     'AVISO'
                                                                     ,json.message
                                                                     ,function()
-                                                                    {
+                                                                    {*/
                                                                         _procesaAccion
                                                                         (
                                                                             cdtipflu
@@ -1569,18 +1571,19 @@ function _procesaAccion(
                                                                             ,cdusuari
                                                                             ,cdsisrol
                                                                             ,callback
-                                                                        );
+                                                                        );/*
                                                                     }
-                                                                );
+                                                                );*/
                                                             }
                                                             else if(numSalidas==2)
                                                             {
+                                                                /* JTEZVA 2016 08 30 YA NO QUIERO AVISOS, QUE CONTINUE
                                                                 mensajeCorrecto
                                                                 (
                                                                     'AVISO'
                                                                     ,json.message
                                                                     ,function()
-                                                                    {
+                                                                    {*/
                                                                         _procesaAccion
                                                                         (
                                                                             cdtipflu
@@ -1600,9 +1603,9 @@ function _procesaAccion(
                                                                             ,cdusuari
                                                                             ,cdsisrol
                                                                             ,callback
-                                                                        );
+                                                                        );/*
                                                                     }
-                                                                );
+                                                                );*/
                                                             }
                                                         }
                                                         else

@@ -174,6 +174,14 @@ var _p21_arrayNombresExtrreno =
 ];
 
 var _p21_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
+
+// JTEZVA 2016 08 30 CUANDO ENTRO CON ESOS ROLES EN 17 ES PORQUE VOY A MODIFICAR
+if ([RolSistema.Agente, RolSistema.EjecutivoVenta, RolSistema.MesaControl].indexOf(_p21_smap1.cdsisrol) != -1
+    && Number(_p21_smap1.status) === 17
+) {
+    _p21_smap1.status = '24'; // DEVOLUCION
+}
+
 debug('_p21_smap1:',_p21_smap1);
 
 //se declara el mapa como cotcol para el archivo comun funcionesCotizacionGrupo.js

@@ -3409,4 +3409,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	public String recuperarEstatusDefectoRol (String cdsisrol) throws Exception {
 		return flujoMesaControlDAO.recuperarEstatusDefectoRol(cdsisrol);
 	}
+	
+	@Override
+	@Deprecated
+	public void actualizaStatusMesaControl(String ntramite, String status) throws Exception {
+		mesaControlDAO.actualizaStatusMesaControl(ntramite, status);
+	}
 }

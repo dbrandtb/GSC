@@ -108,6 +108,14 @@ var _p25_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p25_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
+
+// JTEZVA 2016 08 30 CUANDO ENTRO CON ESOS ROLES EN 17 ES PORQUE VOY A MODIFICAR
+if ([RolSistema.Agente, RolSistema.EjecutivoVenta, RolSistema.MesaControl].indexOf(_p25_smap1.cdsisrol) != -1
+    && Number(_p25_smap1.status) === 17
+) {
+    _p25_smap1.status = '24'; // DEVOLUCION
+}
+
 debug('_p25_smap1:',_p25_smap1);
 
 var posicionExtraprimaOcup;
@@ -1124,7 +1132,7 @@ Ext.onReady(function()
                                         {
                                             change : function(me)
                                             {
-                                                alert('1');
+                                                //alert('1');
                                                 var indexofPeriod = me.getValue().lastIndexOf("."),
                                                 uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                                 if (!Ext.Array.contains(this.cAccept, uploadedExtension))
@@ -2909,9 +2917,9 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                {
                                                                    if(me.getValue()+'x'!='x')
                                                                    {
-                                                                   	   alert('2');
+                                                                   	   //alert('2');
                                                                        var val=me.getValue().toLowerCase().replace(/s/g,'');
-                                                                       alert('3');
+                                                                       //alert('3');
                                                                        if(item.fieldLabel.toLowerCase().replace(/s/g,'').lastIndexOf(val)!=-1)
                                                                        {
                                                                            //item.show();
@@ -5093,7 +5101,7 @@ function _p25_subirDetallePersonas()
                                         {
                                             change : function(me)
                                             {
-                                                alert('4');
+                                                //alert('4');
                                                 var indexofPeriod = me.getValue().lastIndexOf("."),
                                                 uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                                 if (!Ext.Array.contains(this.cAccept, uploadedExtension))
@@ -6595,7 +6603,7 @@ function _p25_mostrarVentanaComplementoCotizacion(complemento,callback)
                         {
                             change : function(me)
                             {
-                                alert('5');
+                                //alert('5');
                                 var indexofPeriod = me.getValue().lastIndexOf("."),
                                 uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                 if (!Ext.Array.contains(this.cAccept, uploadedExtension))
