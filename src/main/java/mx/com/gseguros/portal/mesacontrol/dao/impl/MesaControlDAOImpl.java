@@ -733,10 +733,10 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		protected ActualizaStatusMesaControlSP(DataSource dataSource) {
 			
 			super(dataSource,"PKG_SATELITES.P_UPDATE_STATUS_MC");
-    		declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
-    		declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
     		compile();
 		}
 	}

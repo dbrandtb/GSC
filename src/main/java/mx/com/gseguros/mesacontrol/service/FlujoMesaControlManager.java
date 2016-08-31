@@ -388,4 +388,7 @@ public interface FlujoMesaControlManager
 	 * Recupera el estatus por defecto para tramites nuevos
 	 */
 	public String recuperarEstatusDefectoRol (String cdsisrol) throws Exception;
+	
+	@Deprecated
+	public void actualizaStatusMesaControl(String ntramite, String status) throws Exception;
 }

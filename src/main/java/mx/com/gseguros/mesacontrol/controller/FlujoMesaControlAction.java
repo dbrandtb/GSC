@@ -2662,6 +2662,34 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "actualizaStatusMesaControl",
+			results = { @Result(name="success", type="json") }
+			)
+	public String actualizaStatusMesaControl () {
+		logger.debug(Utils.log(
+				"\n########################################",
+				"\n###### actualizaStatusMesaControl ######",
+				"\n###### flujo = ", flujo));
+		try {
+			Utils.validateSession(session);
+			Utils.validate(flujo, "No hay flujo");
+			String ntramite = flujo.getNtramite(),
+			       status   = flujo.getAux();
+			Utils.validate(ntramite, "No hay ntramite",
+				status, "No hay status");
+			flujoMesaControlManager.actualizaStatusMesaControl(ntramite, status);
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log(
+				"\n###### success = ", success,
+				"\n###### message = ", message,
+				"\n###### actualizaStatusMesaControl ######",
+				"\n########################################"));
+		return SUCCESS;
+	}
+	
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
 	                                                      //
