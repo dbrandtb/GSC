@@ -503,11 +503,31 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				usuario = userVO.getUser();
 			}
 			
+/**
+ * PROBABLEMETE SE USE:
+ */
+//			int usuarioCap = 0;
+//			String usuarioCaptura = null;
+//			try{
+//				if(StringUtils.isNotBlank(userVO.getClaveUsuarioCaptura())){
+//					usuarioCaptura = userVO.getClaveUsuarioCaptura();
+//				}else{
+//					usuarioCaptura = userVO.getCodigoPersona();
+//				}
+//				usuarioCap =  Integer.parseInt(usuarioCaptura);
+//				
+//			}catch(Exception e){
+//				logger.error("<<<<>>>> Error Al obtener el Usuario de Captura <<<<>>>>, se envia 0, usuarioCaptura:" +  usuarioCaptura, e);
+//			}
+//			
+//			cliente.setUsucapCli(usuarioCap);
+			
 			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave Compania: " + cliente.getClaveCia());
 			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave Externa: " + cliente.getNumeroExterno());
 			logger.debug(">>>>>>> Ejecutando WS Cliente General RFC: " + cliente.getRfcCli());
 			
-			logger.debug("Fuera de la clase de mapeo numero de cliente cdperson: "+ cliente.getClaveCli());
+			logger.debug("Clave de cliente cdperson: "+ cliente.getClaveCli());
+			logger.debug("Clave de usuarioCaptura: "  + cliente.getUsucapCli());
 			
 			try{
 				
