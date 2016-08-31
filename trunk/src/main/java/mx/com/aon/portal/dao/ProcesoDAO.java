@@ -4048,7 +4048,12 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     			logger.error("No se pudo mapear el codigo de usuario captura, se envia 0 por default, claveCli: "+rs.getInt("claveCli"),e);
     		}
     		
-    		cliente.setUsuautCli(rs.getInt("usuautCli"));
+    		try{
+    			cliente.setUsuautCli(rs.getInt("usuautCli"));
+			}
+			catch(Exception e){
+				logger.error("No se pudo mapear el codigo de usuario Autoriza actualiza, se envia 0 por default, claveCli: "+rs.getInt("claveCli"),e);
+			}
     		
     		cliente.setStatusCli(rs.getString("STATUSCLI"));
     		
