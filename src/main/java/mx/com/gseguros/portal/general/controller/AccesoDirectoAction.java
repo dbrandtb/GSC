@@ -107,7 +107,12 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 
 			logger.debug(">>>> usuario name: {}", usuario.getName());
 			logger.debug(">>>> usuario user: {}", usuario.getUser());
+			
+			// Se setea el cdperson:
+			UserVO userVO = loginManager.obtenerDatosUsuario(usuario.getUser());
+			usuario.setCodigoPersona(userVO.getCodigoPersona());
 			logger.debug(">>>> usuario codigopersona: {}", usuario.getCodigoPersona());
+			
 			logger.debug(">>>> usuario claveUsuarioCaptura: {}", usuario.getClaveUsuarioCaptura());
 			if (usuario != null && usuario.getEmpresa() != null) {
 				logger.debug(">>>> usuario empresa cdelemento id: {}", usuario.getEmpresa().getElementoId());
