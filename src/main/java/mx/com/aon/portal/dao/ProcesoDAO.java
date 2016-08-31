@@ -3967,9 +3967,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 //    			claveCli = Integer.parseInt(llaveCli.substring(llaveCli.length()-10));
 //    		}
     		
-    		logger.debug("VARLOR DE LA CLAVE CLI PARA ws DE ART 140: " + rs.getInt("claveCli"));
-    		logger.debug("VARLOR DE LA CLAVE CLI PARA WS DE ART 140 MAYUS: " + rs.getInt("CLAVECLI"));
-    		
     		cliente.setAgrupaCli(rs.getInt("agrupaCli"));
     		cliente.setApellidomCli(rs.getString("apellidomCli"));
     		cliente.setApellidopCli(rs.getString("apellidopCli"));
@@ -4043,7 +4040,14 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setAdmconCli(rs.getString("admconCli"));
     		cliente.setApodeCli(rs.getString("apodeCli"));
     		cliente.setPasaporteCli(rs.getString("pasaporteCli"));
-    		cliente.setUsucapCli(rs.getInt("usucapCli"));
+    		
+    		try{
+    			cliente.setUsucapCli(rs.getInt("usucapCli"));
+    		}
+    		catch(Exception e){
+    			logger.error("No se pudo mapear el codigo de usuario captura, se envia 0 por default, claveCli: "+rs.getInt("claveCli"),e);
+    		}
+    		
     		cliente.setUsuautCli(rs.getInt("usuautCli"));
     		
     		cliente.setStatusCli(rs.getString("STATUSCLI"));
