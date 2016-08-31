@@ -55,6 +55,7 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
@@ -78,6 +79,7 @@ import com.opensymphony.xwork2.ActionContext;
  * 
  * @author Jair
  */
+@SuppressWarnings("deprecation")
 public class ComplementariosAction extends PrincipalCoreAction
 {
 
@@ -166,6 +168,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	@Autowired
 	private EndososManager endososManager;
 	
+	@Autowired
+	private SiniestrosManager  siniestrosManager;
+	
 	public static final String SUCURSAL_SALUD_NOVA = "1403";
 
 	
@@ -173,6 +178,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		this.session=ActionContext.getContext().getSession();
 	}
 	
+	@SuppressWarnings("deprecation")
 	public String mostrarPantalla()
 	{
 		logger.debug(
@@ -470,6 +476,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	 * 
 	 * @out success
 	 */
+	@SuppressWarnings("rawtypes")
 	public String cargar() {
 		UserVO usuarioSesion = (UserVO) session.get("USUARIO");
 		panel1 = new HashMap<String, String>(0);
@@ -1981,6 +1988,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public String emitir()
 	{
 		logger.debug(
@@ -2058,7 +2066,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				DatosUsuario datUs = kernelManager.obtenerDatosUsuario(us.getUser(),cdtipsit);
 				cdpersonSesion = datUs.getCdperson();
-				cdusuari       = us.getUser();
+				cdusuari       = us.getUser(); 
 				cdelemen       = us.getEmpresa().getElementoId();
 				cdsisrol       = us.getRolActivo().getClave();
 			}
@@ -2618,7 +2626,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,DocumentosManager.PROCESO_EMISION //proceso
 						,ntramite
 						,nmpoliza //nmsolici
-, null
+						,null
 						);
 				
 				/*
@@ -3272,6 +3280,29 @@ public class ComplementariosAction extends PrincipalCoreAction
 				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
 			} catch (Exception ex) {
 				logger.error("Error al enviar correos de emision", ex);
+			}
+		}
+		
+		//Se actualiza valores en sigs de poliza original y emitida
+		if (success) 
+		{
+			try 
+			{
+				Map<String,String>parame = siniestrosManager.obtenerTramiteCompleto(ntramite);
+				if(!parame.isEmpty() && parame.size()>0)
+				{
+					logger.debug(Utils.log(
+							 "\nPoliza extraida del sigs"
+							,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
+							,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolAlt
+							,"\n usuario registrado=", params
+							));
+					consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), cdunieco, cdramo, nmpolAlt, us.getUser());
+				}
+			} 
+			catch (Exception ex) 
+			{
+				logger.error("Error actualizando segrenovaciones_renovada", ex);
 			}
 		}
 		

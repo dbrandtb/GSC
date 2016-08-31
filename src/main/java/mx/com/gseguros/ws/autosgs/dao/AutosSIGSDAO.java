@@ -59,4 +59,5 @@ public interface AutosSIGSDAO {
 	
 	public void actualizaTramiteMC(PolizaVO poliza) throws Exception;
 	
+	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception;
 }

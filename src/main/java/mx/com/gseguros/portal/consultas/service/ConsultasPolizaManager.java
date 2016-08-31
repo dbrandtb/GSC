@@ -297,4 +297,15 @@ public interface ConsultasPolizaManager {
      */
     @Deprecated
 	public void actualizaTramiteMC(PolizaVO poliza) throws Exception;
+    
+    /**
+     * Obtiene el numero de nmsituac del contratate de una poliza 
+     * @param cdunieco
+     * @param cdramo
+     * @param nmpoliza
+     * @param numtra
+     * @throws Exception
+     */
+    @Deprecated
+	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception;
 }

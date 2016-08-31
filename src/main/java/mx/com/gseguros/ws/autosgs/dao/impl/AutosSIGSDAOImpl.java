@@ -998,4 +998,31 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("inNumsuc" , inNumsuc);
+		params.put("inNumram" , inNumram);
+		params.put("inNumpol" , inNumpol);
+		params.put("inRensuc" , inRensuc);
+		params.put("inRenram" , inRenram);
+		params.put("inRenpol" , inRenpol);
+		params.put("inUsuario", inUsuario);
+		ejecutaSP(new ActualizaTramiteEmisionMCSP(getDataSource()),params);
+		}
+	
+	protected class ActualizaTramiteEmisionMCSP extends StoredProcedure{
+		protected ActualizaTramiteEmisionMCSP(DataSource dataSource){
+			super(dataSource, "spSegrenovacionesRenovada");
+			declareParameter(new SqlParameter("inNumsuc" , Types.SMALLINT));
+			declareParameter(new SqlParameter("inNumram" , Types.SMALLINT));
+			declareParameter(new SqlParameter("inNumpol" , Types.INTEGER));
+			declareParameter(new SqlParameter("inRensuc" , Types.SMALLINT));
+			declareParameter(new SqlParameter("inRenram" , Types.SMALLINT));
+			declareParameter(new SqlParameter("inRenpol" , Types.INTEGER));
+			declareParameter(new SqlParameter("inUsuario", Types.VARCHAR));
+			compile();
+		}
+	}
 }
