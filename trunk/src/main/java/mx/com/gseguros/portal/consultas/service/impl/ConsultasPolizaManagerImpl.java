@@ -1,13 +1,10 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
-import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
@@ -30,8 +27,6 @@ import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -55,8 +50,6 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	
 	@Autowired
 	private AutosSIGSDAO autosDAOSIGS;
-	
-	
 	
 	@Override
 	public List<PolizaAseguradoVO> obtienePolizasAsegPromotor(String user,
@@ -495,5 +488,11 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	@Override
 	public void actualizaTramiteMC(PolizaVO poliza) throws Exception{
 	autosDAOSIGS.actualizaTramiteMC(poliza);
+	}
+	
+	@Deprecated
+	@Override
+	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception{
+	autosDAOSIGS.actualizaTramiteEmisionMC(inNumsuc,inNumram,inNumpol,inRensuc,inRenram,inRenpol,inUsuario);
 	}
 }
