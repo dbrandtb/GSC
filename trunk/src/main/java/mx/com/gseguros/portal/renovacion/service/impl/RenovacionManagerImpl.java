@@ -20,6 +20,7 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
@@ -434,6 +435,72 @@ public class RenovacionManagerImpl implements RenovacionManager
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaImapVO pantallaRenovacionIndividual(String cdsisrol)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ pantallaRenovacionIndividual @@@@@@")
+				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
+				.toString());
+		ManagerRespuestaImapVO resp = new ManagerRespuestaImapVO(true);
+		
+		//obtener componentes
+		try
+		{
+			List<ComponenteVO>componentesBusqueda=pantallasDAO.obtenerComponentes(
+					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","BUSQUEDA",null);
+			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaComponentes(componentesBusqueda, true, false, true, false, false, false);
+			
+			Map<String,Item> imap = new HashMap<String,Item>();
+			resp.setImap(imap);			
+			imap.put("busquedaItems" , gc.getItems());
+			
+			List<ComponenteVO> componentesGrid=pantallasDAO.obtenerComponentes(
+					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_POLIZAS_RENOVAR",null);			
+			gc.generaComponentes(componentesGrid, true, true, false, true, true, false);			
+			imap.put("gridFields"  , gc.getFields());
+			imap.put("gridColumns" , gc.getColumns());
+			
+			List<ComponenteVO> itemsFormularioContratante=pantallasDAO.obtenerComponentes(
+					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_CONTRATANTE",null);
+			logger.info(Utils.log("itemsFormularioContratante",itemsFormularioContratante));
+			gc.generaComponentes(itemsFormularioContratante, true, false, true, false, false, false);		
+			imap.put("itemsFormularioContratante"  , gc.getItems());
+			
+			List<ComponenteVO> itemsFormularioPoliza = pantallasDAO.obtenerComponentes(
+					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_POLIZAS",null);			
+			gc.generaComponentes(itemsFormularioPoliza, true, true, false, true, true, false);			
+			imap.put("itemsFormularioPolizaFields"  , gc.getFields());
+			imap.put("itemsFormularioPolizaColumns" , gc.getColumns());
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error al obtener componentes de busqueda #")
+					.append(timestamp)
+					.toString()
+					);
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ pantallaRenovacionIndividual @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString());
 		return resp;
 	}
 
