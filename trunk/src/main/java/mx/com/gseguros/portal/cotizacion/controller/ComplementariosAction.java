@@ -3289,7 +3289,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			try 
 			{
 				Map<String,String>parame = siniestrosManager.obtenerTramiteCompleto(ntramite);
-				if(!parame.isEmpty() && parame.size()>0)
+				if(!parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null )
 				{
 					logger.debug(Utils.log(
 							 "\nPoliza extraida del sigs"

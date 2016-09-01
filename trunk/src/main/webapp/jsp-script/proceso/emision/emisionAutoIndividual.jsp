@@ -506,11 +506,10 @@ Ext.onReady(function()
 						var json=Ext.decode(response.responseText);
 	        	    	if(json.exito!=true)
 	        	    	{
-// 	        	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO')
-	                        if(_p29_smap1.cdsisrol!='EJECUTIVOCUENTA' || _p29_smap1.cdsisrol!='PROMOTORAUTO')
+	                        if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
 	        	    		{
 	        	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-	        					_fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+	        	    			_fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
 	        				}else{
 	        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
 	        					_fieldById('_p29_botonEmitir').setDisabled(false);
@@ -604,11 +603,11 @@ function _p29_loadCallback()
            		      	    	debug(json);
            		      	    	if(json.exito!=true)
            		      	    	{
-//            		      	    		if(_p29_smap1.cdsisrol!='SUSCRIAUTO')
-	                                if(_p29_smap1.cdsisrol!='EJECUTIVOCUENTA' || _p29_smap1.cdsisrol!='PROMOTORAUTO')
+	                                if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
            		      	    		{
            		      	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-           		      	    	        _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+           		      	    	         alert('Se bloquea boton 2: '+_p29_smap1.cdsisrol);
+           		      	    			_fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
            		      				}else{
            		      					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
            		      				    _fieldById('_p29_botonEmitir').setDisabled(false);
