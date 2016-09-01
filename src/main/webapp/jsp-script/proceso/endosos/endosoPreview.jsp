@@ -7,7 +7,6 @@
 <script>
 ////// urls //////
 var _p29_urlRecotizar                      = '<s:url namespace="/endosos"           action="retarificarEndosos" />';
-var _p48_urlMovimientos                    = '<s:url namespace="/movimientos"       action="ejecutar"           />';
 ////// urls //////
 
 ////// variables //////
@@ -52,33 +51,8 @@ Ext.onReady(function()
             ,'TITULO'
         ]
     });
-    //////Funciones///////
-function sacaEndoso(){
-	Ext.Ajax.request(
-	    {
-	        url      : _p48_urlMovimientos
-	        ,params  :
-	        {
-	            'params.movimiento' : 'SACAENDOSO'
-	            ,'params.cdunieco'  : cdunieco
-	            ,'params.cdramo'    : cdramo
-	            ,'params.estado'    : estado
-	            ,'params.nmpoliza'  : nmpoliza
-	            ,'params.nsuplogi'  : nsuplogi
-	            ,'params.nmsuplem'  : nmsuplem
-	        }
-	        ,success : function(response)
-	        {
-	        	//marendNavegacion(2);
-	        	
-	        }
-	        ,failure : function()
-	        {
-	            //_setLoading(false,'_p48_panelpri');
-	            errorComunicacion(null,'Error al cancelar endoso');
-	        }
-	    });
-	}
+//////Funciones///////
+
 /////Funnciones//////
 	
 	Ext.Ajax.request(
@@ -91,14 +65,14 @@ function sacaEndoso(){
             ,'smap4.estado'           : estado
             ,'smap4.nmpoliza'         : nmpoliza
             ,'smap4.nmsuplem'         : nmsuplem
+            ,'smap4.nsuplogi'         : nsuplogi
         }
         ,success : function(response)
         {
             var jsonpreview = Ext.decode(response.responseText);
             debug('### jsonpreview:',jsonpreview);
              if(Ext.isEmpty(jsonpreview.slist1)) {
-             	sacaEndoso();
-            	Ext.Msg.show(
+             	Ext.Msg.show(
                 {
                 	
                     title    : 'Error no hay datos'
@@ -209,12 +183,10 @@ function sacaEndoso(){
 										]
 									})
                         })
-                        sacaEndoso();
          }
         }
         ,failure : function()
 	        {
-	            sacaEndoso();
 	            errorComunicacion(null,'Error al cancelar endoso');
 	        }
         

@@ -363,78 +363,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String previewEndosoTvalositAuto()
-	{
-		logger.debug(Utils.log(
-				 "\n#########################################"
-				,"\n###### previewEndosoTvalositAuto ######"
-				,"\n###### smap1="  , smap1
-				,"\n###### slist1=" , slist1
-				,"\n###### flujo="  , flujo
-				));
-		
-		try
-		{
-			Utils.validate(session                , "No hay sesion");
-			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
-			
-			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
-			
-			Utils.validate(smap1  , "No se recibieron datos");
-			Utils.validate(slist1 , "No se recibieron datos de inciso");
-			
-			String cdtipsup = smap1.get("cdtipsup");
-			String tstamp   = smap1.get("tstamp");
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String estado   = smap1.get("estado");
-			String nmpoliza = smap1.get("nmpoliza");
-			String feefecto = smap1.get("feefecto");
-			
-			Utils.validate(cdtipsup  , "No se recibio el tipo de endoso");
-			Utils.validate(tstamp    , "No se recibio el id de proceso");
-			Utils.validate(cdunieco  , "No se recibio la sucursal");
-			Utils.validate(cdramo    , "No se recibio el producto");
-			Utils.validate(estado    , "No se recibio el estado");
-			Utils.validate(nmpoliza  , "No se recibio el numero de poliza");
-			Utils.validate(feefecto  , "No se recibio la fecha de efecto");
-			
-			omap1 = endososAutoManager.previewEndosoTvalositAuto(
-					cdtipsup
-					,tstamp
-					,cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,feefecto
-					,cdusuari
-					,cdsisrol
-					,cdelemen
-					,usuarioSesion
-					,slist1
-					,flujo
-					);
-			
-			success = true;
-		}
-		catch(Exception ex)
-		{
-			respuesta = Utils.manejaExcepcion(ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n###### success   ="   , success
-				,"\n###### respuesta =" , respuesta 
-				,"\n###### omap1     =" , omap1
-				,"\n###### previewEndosoTvalositAuto ######"
-				,"\n#########################################"
-				));
-		return SUCCESS;
-	}
-	
 	public String recuperarDatosEndosoAltaIncisoAuto()
 	{
 		logger.debug(Utils.log(
@@ -514,7 +442,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,estado      = smap1.get("estado")
 					,nmpoliza    = smap1.get("nmpoliza")
 					,cdtipsup    = smap1.get("cdtipsup")
-					,fechaEndoso = smap1.get("fechaEndoso");
+					,fechaEndoso = smap1.get("fechaEndoso")
+					,comfirmar   = smap1.get("confirmar");
 			
 			Utils.validate(
 					cdunieco     , "No se recibio la sucursal"
@@ -524,7 +453,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,cdtipsup    , "No se recibio el codigo de endoso"
 					,fechaEndoso , "No se recibio la fecha de efecto" );
 			
-			endososAutoManager.confirmarEndosoAltaIncisoAuto(
+			omap1 = endososAutoManager.confirmarEndosoAltaIncisoAuto(
 					cdunieco
 					,cdramo
 					,estado
@@ -537,79 +466,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,usuarioSesion
 					,usuarioSesion.getRolActivo().getClave()
 					,flujo
+					,comfirmar
 					);
 			
-			
-			respuesta = "Endoso generado correctamente";
-			success   = true;
-		}
-		catch(Exception ex)
-		{
-			respuesta = Utils.manejaExcepcion(ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n###### success   = " , success
-				,"\n###### respuesta = " , respuesta
-				,"\n###### confirmarEndosoAltaIncisoAuto ######"
-				,"\n###########################################"
-				));
-		
-		return SUCCESS;
-	}
-	
-	public String previewEndosoAltaIncisoAuto()
-	{
-		logger.debug(Utils.log(
-				 "\n###########################################"
-				,"\n###### PreviewEndosoAltaIncisoAuto ######"
-				,"\n###### smap1  = " , smap1
-				,"\n###### slist1 = " , slist1
-				,"\n###### flujo  = " , flujo
-				));
-		
-		try
-		{
-			UserVO usuarioSesion = Utils.validateSession(session);
-			
-			String cdusuari   = usuarioSesion.getUser()
-					,cdelemen = usuarioSesion.getEmpresa().getElementoId();
-					
-			Utils.validate(smap1, "No se recibieron datos de poliza");
-			
-			Utils.validate(slist1, "No se recibieron incisos");
-			
-			String cdunieco      = smap1.get("cdunieco")
-					,cdramo      = smap1.get("cdramo")
-					,estado      = smap1.get("estado")
-					,nmpoliza    = smap1.get("nmpoliza")
-					,cdtipsup    = smap1.get("cdtipsup")
-					,fechaEndoso = smap1.get("fechaEndoso");
-			
-			Utils.validate(
-					cdunieco     , "No se recibio la sucursal"
-					,cdramo      , "No se recibio la sucursal"
-					,estado      , "No se recibio el estado de la poliza"
-					,nmpoliza    , "No se recibio el numero de poliza"
-					,cdtipsup    , "No se recibio el codigo de endoso"
-					,fechaEndoso , "No se recibio la fecha de efecto"
-					);
-			
-			omap1=endososAutoManager.previewEndosoAltaIncisoAuto(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,slist1
-					,cdusuari
-					,cdelemen
-					,cdtipsup
-					,fechaEndoso
-					,usuarioSesion
-					,usuarioSesion.getRolActivo().getClave()
-					,flujo
-					);
-			String paso = null;
 			
 			respuesta = "Endoso generado correctamente";
 			success   = true;
@@ -624,7 +483,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 				,"\n###### respuesta = " , respuesta
 				,"\n###### omap1     = " , omap1
 				,"\n###### slist1    = " , slist1
-				,"\n###### PreviewEndosoAltaIncisoAuto ######"
+				,"\n###### confirmarEndosoAltaIncisoAuto ######"
 				,"\n###########################################"
 				));
 		
@@ -969,8 +828,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				"\n###########################################"
 				,"\n###########################################"
-				,"\n###### 		endosoAmpliacionVigencia 	 ######"
-				,"\n###### smap1="  , smap1
+				,"\n###### endosoAmpliacionVigencia 	 ######"
+				,"\n###### smap1  = "  , smap1
+				,"\n###### smap2  = "  , smap2
 				,"\n######                               ######"));
 		try {
 			String cdunieco = smap1.get("CDUNIECO");
@@ -1215,91 +1075,13 @@ public class EndososAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String previewEndosoVigenciaPoliza()
-	{
-		logger.debug(Utils.log(
-				 "\n#########################################"
-				,"\n###### previewEndosoVigenciaPoliza ######"
-				,"\n###### smap1 = " , smap1
-				,"\n###### flujo = " , flujo
-				));
-		try
-		{
-			logger.debug("Validando datos de entrada");
-			Utils.validate(smap1, "No se recibieron datos");
-			
-			String cdunieco = smap1.get("CDUNIECO");
-			String cdramo   = smap1.get("CDRAMO");
-			String estado   = smap1.get("ESTADO");
-			String nmpoliza = smap1.get("NMPOLIZA");
-			String status   = smap1.get("STATUS");
-			String feefecto = smap1.get("FEEFECTO");
-			String feproren = smap1.get("FEPROREN");
-			String ntramite = smap1.get("NTRAMITE");
-			String nmsuplemOriginal = smap1.get("NMSUPLEM");
-			
-			Utils.validate(cdunieco , "No se recibio la sucursal");
-			Utils.validate(cdramo   , "No se recibio el producto");
-			Utils.validate(estado   , "No se recibio el estado de la poliza");
-			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
-			Utils.validate(status   , "No se recibio el status");
-			Utils.validate(feefecto , "No se recibio la fecha feproren");
-			Utils.validate(feproren , "No se recibio la fecha feproren");
-			
-			Utils.validate(session                , "No hay sesion");
-			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
-			
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
-			
-			String cdtipsup      = TipoEndoso.VIGENCIA_POLIZA.getCdTipSup().toString();
-			String fechaEndoso   = smap1.get("FEEFECTO");
-			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
-			
-			smap2 = endososAutoManager.previewEndosoVigenciaPoliza(
-					cdunieco,
-					cdramo,
-					estado,
-					nmpoliza,
-					ntramite,
-					cdelemen,
-					cdusuari,
-					cdtipsup,
-					status,
-					fechaEndoso,
-					dFechaEndoso,
-					feefecto,
-					feproren,
-					nmsuplemOriginal,
-					cdsisrol,
-					flujo
-					);
-			
-			respuesta = "Endoso generado correctamente";
-			success   = true;
-		}
-		catch(Exception ex)
-		{
-			respuesta = Utils.manejaExcepcion(ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n###### success  = " , success
-				,"\n###### repuesta = " , respuesta 
-				,"\n###### smap2    = " , smap2 
-				,"\n###### previewEndosoVigenciaPoliza ######"
-				,"\n#########################################"
-				));
-		return SUCCESS;
-	}
-	
 	public String guardarEndosoAmpliacionVigencia() {
 		
 		logger.debug(Utils.log(
 				 "\n#############################################"
 				,"\n###### guardarEndosoAmpliacionVigencia ######"
 				,"\n###### smap1 = " , smap1
+				,"\n###### smap2 = " , smap2
 				,"\n###### flujo = " , flujo
 				));
 		try
@@ -1317,6 +1099,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String feprorenOriginal = smap1.get("FEPROREN_ORIG");
 			String ntramite = smap1.get("NTRAMITE");
 			String nmsuplemOriginal = smap1.get("NMSUPLEM");
+			String confirmar        = smap1.get("confirmar");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -1343,7 +1126,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			
 			String tipoGrupoInciso = smap1.get("TIPOFLOT");
 			
-			endososAutoManager.guardarEndosoAmpliacionVigencia(
+			smap2 = endososAutoManager.guardarEndosoAmpliacionVigencia(
 					cdunieco,
 					cdramo,
 					estado,
@@ -1362,95 +1145,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					usuarioSesion,
 					tipoGrupoInciso,
 					flujo,
-					cdsisrol
-					);
-			
-			respuesta = "Endoso generado correctamente";
-			success   = true;
-		}
-		catch(Exception ex)
-		{
-			respuesta = Utils.manejaExcepcion(ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n###### success   = " , success
-				,"\n###### respuesta = " , respuesta
-				,"\n###### guardarEndosoAmpliacionVigencia ######"
-				,"\n#############################################"
-				));
-		return SUCCESS;
-	}
-	
-	public String previewEndosoAmpliacionVigencia() {
-		
-		logger.debug(Utils.log(
-				 "\n#############################################"
-				,"\n###### previewEndosoAmpliacionVigencia ######"
-				,"\n###### smap1 = " , smap1
-				,"\n###### flujo = " , flujo
-				));
-		try
-		{
-			logger.debug("Validando datos de entrada");
-			Utils.validate(smap1, "No se recibieron datos");
-			
-			String cdunieco = smap1.get("CDUNIECO");
-			String cdramo   = smap1.get("CDRAMO");
-			String estado   = smap1.get("ESTADO");
-			String nmpoliza = smap1.get("NMPOLIZA");
-			String status   = smap1.get("STATUS");
-			String feefecto = smap1.get("FEEFECTO");
-			String feproren = smap1.get("FEPROREN");
-			String feprorenOriginal = smap1.get("FEPROREN_ORIG");
-			String ntramite = smap1.get("NTRAMITE");
-			String nmsuplemOriginal = smap1.get("NMSUPLEM");
-			
-			Utils.validate(cdunieco , "No se recibio la sucursal");
-			Utils.validate(cdramo   , "No se recibio el producto");
-			Utils.validate(estado   , "No se recibio el estado de la poliza");
-			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
-			Utils.validate(status   , "No se recibio el status");
-			Utils.validate(feefecto , "No se recibio la fecha feefecto");
-			Utils.validate(feprorenOriginal , "No se recibio la fecha feefecto original");
-			Utils.validate(feproren , "No se recibio la fecha feproren");
-			
-			
-			Utils.validate(session                , "No hay sesion");
-			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
-			
-			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
-			
-			String cdtipsup      = TipoEndoso.AMPLIACION_DE_VIGENCIA.getCdTipSup().toString();
-			String fechaEndoso   = smap1.get("FEINIVAL");
-			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
-			Date   dFeprorenOrig  = renderFechas.parse(feprorenOriginal);
-			
-			String tipoGrupoInciso = smap1.get("TIPOFLOT");
-			
-			smap2 = endososAutoManager.previewEndosoAmpliacionVigencia(
-					cdunieco,
-					cdramo,
-					estado,
-					nmpoliza,
-					ntramite,
-					cdelemen,
-					cdusuari,
-					cdtipsup,
-					status,
-					fechaEndoso,
-					dFechaEndoso,
-					feefecto,
-					feproren,
-					dFeprorenOrig,
-					nmsuplemOriginal,
-					usuarioSesion,
-					tipoGrupoInciso,
-					flujo,
-					cdsisrol
+					cdsisrol,
+					confirmar
 					);
 			
 			respuesta = "Endoso generado correctamente";
@@ -1465,7 +1161,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 				 "\n###### success   = " , success
 				,"\n###### respuesta = " , respuesta
 				,"\n###### smap2     = " , smap2
-				,"\n###### previewEndosoAmpliacionVigencia ######"
+				,"\n###### guardarEndosoAmpliacionVigencia ######"
 				,"\n#############################################"
 				));
 		return SUCCESS;
@@ -1709,6 +1405,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String estado   = smap1.get("ESTADO");
 			String nmpoliza = smap1.get("NMPOLIZA");
 			String feefecto = smap2.get("feefecto");
+			String confirmar= smap1.get("confirmar");
 			
 			Utils.validate(cdtipsup , "No se recibio el tipo de endoso");
 			Utils.validate(cdunieco , "No se recibio la sucursal");
@@ -1717,7 +1414,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
 			Utils.validate(feefecto , "No se recibio la fecha de efecto");
 			
-			endososAutoManager.guardarEndosoClaveAuto(
+			omap1 = endososAutoManager.guardarEndosoClaveAuto(
 					cdtipsup
 					,cdusuari
 					,cdsisrol
@@ -1731,6 +1428,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,slist1.get(0)
 					,usuarioSesion
 					,flujo
+					,confirmar
 					);
 			
 			success = true;
@@ -1742,6 +1440,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		
 		logger.debug(Utils.log(
 				 "\n###### guardarEndosoClaveAuto ######"
+				,"\n###### omap1==> ",omap1
 				,"\n####################################"
 				));
 		return SUCCESS;
@@ -1813,7 +1512,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,nmpoliza = smap1.get("NMPOLIZA")
 					,cdtipsup = smap1.get("cdtipsup")
 					,tstamp   = smap1.get("tstamp")
-					,fechaEnd = smap2.get("feefecto");
+					,fechaEnd = smap2.get("feefecto")
+					,confirmar=smap1.get("confirmar");
 			
 			Utils.validate(
 					cdunieco  , "No se recibio la sucursal"
@@ -1825,7 +1525,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,fechaEnd , "No se recibio la fecha de efecto"
 					);
 			
-			endososAutoManager.guardarEndosoDevolucionPrimas(
+			omap1 = endososAutoManager.guardarEndosoDevolucionPrimas(
 					user.getUser()
 					,user.getRolActivo().getClave()
 					,user.getEmpresa().getElementoId()
@@ -1839,76 +1539,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,slist1
 					,user
 					,flujo
-					);
-			
-			success = true;
-		}
-		catch(Exception ex)
-		{
-			respuesta = Utils.manejaExcepcion(ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n###### success = " , success
-				,"\n###### respuesta = " , respuesta
-				,"\n###### guardarEndosoDevolucionPrimas ######"
-				,"\n###########################################"
-				));
-		return SUCCESS;
-	}
-	
-	public String previewEndosoDevolucionPrimas()
-	{
-		logger.debug(Utils.log(
-				 "\n###########################################"
-				,"\n###### previewEndosoDevolucionPrimas ######"
-				,"\n###### smap1  = " , smap1
-				,"\n###### smap2  = " , smap2
-				,"\n###### slist1 = " , slist1
-				,"\n###### flujo  = " , flujo
-				));
-		
-		try
-		{
-			UserVO user = Utils.validateSession(session);
-			
-			Utils.validate(smap1  , "No se recibieron datos de poliza");
-			Utils.validate(smap2  , "No se recibieron datos de endoso");
-			Utils.validate(slist1 , "No se recibieron incisos");
-			
-			
-			String cdunieco = smap1.get("CDUNIECO")
-					,cdramo   = smap1.get("CDRAMO")
-					,estado   = smap1.get("ESTADO")
-					,nmpoliza = smap1.get("NMPOLIZA")
-					,cdtipsup = smap1.get("cdtipsup")
-					,tstamp   = smap1.get("tstamp")
-					,fechaEnd = smap2.get("feefecto");
-			
-			Utils.validate(
-					cdunieco  , "No se recibio la sucursal"
-					,cdramo   , "No se recibio el producto"
-					,estado   , "No se recibio el estado de la poliza"
-					,nmpoliza , "No se recibio el numero de poliza"
-					,cdtipsup , "No se recibio el codigo de endoso"
-					,tstamp   , "No se recibio el ID de proceso"
-					,fechaEnd , "No se recibio la fecha de efecto"
-					);
-			
-			omap1=endososAutoManager.previewEndosoDevolucionPrimas(
-					user.getUser()
-					,user.getRolActivo().getClave()
-					,user.getEmpresa().getElementoId()
-					,cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,cdtipsup
-					,tstamp
-					,renderFechas.parse(fechaEnd)
-					,slist1
-					,user
-					,flujo
+					,confirmar
 					);
 			
 			success = true;
@@ -1922,7 +1553,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 				 "\n###### success   = " , success
 				,"\n###### respuesta = " , respuesta
 				,"\n###### omap1     = " , omap1
-				,"\n###### previewEndosoDevolucionPrimas ######"
+				,"\n###### guardarEndosoDevolucionPrimas ######"
 				,"\n###########################################"
 				));
 		return SUCCESS;
@@ -2426,6 +2057,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String fevencim = smap1.get("fevencim");
 			String fecancel = smap1.get("fecancel");
 			String cdtipsup = smap1.get("cdtipsup");
+			String confirmar= smap1.get("confirmar");
 			
 			Utils.validate(cdunieco  , "No se recibio la sucursal"
 					       ,cdramo   , "No se recibio el producto"
@@ -2437,7 +2069,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					       ,fecancel , "No se recibio la fecha de cancelacion"
 					       ,cdtipsup , "NO se recibio la clave de endoso");
 			
-			endososAutoManager.confirmarEndosoCancelacionPolAuto(
+			omap1 = endososAutoManager.confirmarEndosoCancelacionPolAuto(
 					cdusuari
 					,cdunieco
 					,cdramo
@@ -2451,6 +2083,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,usuarioSesion
 					,cdsisrol
 					,flujo
+					,confirmar
 					);
 			
 			success = true;
@@ -2464,78 +2097,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 				 "\n###### success   = " , success
 				,"\n###### respuesta = " , respuesta
 				,"\n###### confirmarEndosoCancelacionPolAuto ######"
-				,"\n###############################################"
-				));
-		return SUCCESS;
-	}
-	
-	public String previewEndosoCancelacionPolAuto()
-	{
-		logger.debug(Utils.log(
-				 "\n###############################################"
-				,"\n###### previewEndosoCancelacionPolAuto ########"
-				,"\n###### smap1 = " , smap1
-				,"\n###### flujo = " , flujo
-				));
-		
-		try
-		{
-			
-			UserVO usuarioSesion = Utils.validateSession(session); 
-			
-			String cdusuari = usuarioSesion.getUser();
-			String cdsisrol = usuarioSesion.getRolActivo().getClave();
-			
-			Utils.validate(smap1 , "No se recibieron datos");
-			
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String estado   = smap1.get("estado");
-			String nmpoliza = smap1.get("nmpoliza");
-			String cdrazon  = smap1.get("cdrazon");
-			String feefecto = smap1.get("feefecto");
-			String fevencim = smap1.get("fevencim");
-			String fecancel = smap1.get("fecancel");
-			String cdtipsup = smap1.get("cdtipsup");
-			
-			Utils.validate(cdunieco  , "No se recibio la sucursal"
-					       ,cdramo   , "No se recibio el producto"
-					       ,estado   , "No se recibio el estado de la poliza"
-					       ,nmpoliza , "No se recibio el numero de poliza"
-					       ,cdrazon  , "No se recibio el motivo de cancelacion"
-					       ,feefecto , "No se recibio la fecha de inicio de vigencia"
-					       ,fevencim , "No se recibio la fecha de fin de vigencia"
-					       ,fecancel , "No se recibio la fecha de cancelacion"
-					       ,cdtipsup , "NO se recibio la clave de endoso");
-			
-			omap1 = endososAutoManager.previewEndosoCancelacionPolAuto(
-					cdusuari
-					,cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,cdrazon
-					,renderFechas.parse(feefecto)
-					,renderFechas.parse(fevencim)
-					,renderFechas.parse(fecancel)
-					,cdtipsup
-					,usuarioSesion
-					,cdsisrol
-					,flujo
-					);
-			
-			success = true;
-		}
-		catch(Exception ex)
-		{
-			respuesta = Utils.manejaExcepcion(ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n###### success   = " , success
-				,"\n###### respuesta = " , respuesta
-				,"\n###### omap1     = " , omap1
-				,"\n###### previewEndosoCancelacionPolAuto ########"
 				,"\n###############################################"
 				));
 		return SUCCESS;
@@ -2585,77 +2146,12 @@ public class EndososAutoAction extends PrincipalCoreAction
 		return result;
 	}
 	
-	public String previewEndosoValositFormsAuto()
-	{
-		logger.debug(Utils.log(
-				 "\n#############################################"
-				,"\n###### previewEndosoValositFormsAuto ########"
-				,"\n###### smap1  = " , smap1
-				,"\n###### slist1 = " , slist1
-				,"\n###### flujo  = " , flujo
-				));
-		
-		try
-		{
-			UserVO user = Utils.validateSession(session);
-			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
-			
-			Utils.validate(smap1  , "No se recibieron datos de poliza");
-			Utils.validate(slist1 , "No se recibieron incisos");
-			
-			String cdtipsup = smap1.get("cdtipsup");
-			String cdunieco = smap1.get("CDUNIECO");
-			String cdramo   = smap1.get("CDRAMO");
-			String estado   = smap1.get("ESTADO");
-			String nmpoliza = smap1.get("NMPOLIZA");
-			String feinival = smap1.get("feinival");
-			
-			Utils.validate(cdtipsup  , "No se recibio el codigo de endoso"
-					       ,cdunieco , "No se recibio la sucursal"
-					       ,cdramo   , "No se recibio el producto"
-					       ,estado   , "No se recibio el estado de la poliza"
-					       ,nmpoliza , "No se recibio el numero de poliza"
-					       ,feinival , "No se recibio la fecha de endoso"
-					       );
-			
-			 smap2 = endososAutoManager.previewEndosoValositFormsAuto(
-					user.getUser()
-					,user.getRolActivo().getClave()
-					,user.getEmpresa().getElementoId()
-					,cdtipsup
-					,cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,renderFechas.parse(feinival)
-					,slist1
-					,usuarioSesion
-					,flujo
-					);
-			 			 			
-			success = true;
-		}
-		catch(Exception ex)
-		{
-			respuesta = Utils.manejaExcepcion(ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n###### success   = " , success
-				,"\n###### smap2     = " , smap2
-				,"\n###### previewEndosoValositFormsAuto ########"
-				,"\n#############################################"
-				));
-		return SUCCESS;
-	}
-	
 	public String confirmarEndosoValositFormsAuto()
 	{
 		logger.debug(Utils.log(
 				 "\n#############################################"
 				,"\n###### confirmarEndosoValositFormsAuto ######"
 				,"\n###### smap1     = " , smap1
-				,"\n###### smap2     = " , smap2
 				,"\n###### slist1    = " , slist1
 				,"\n###### flujo     = " , flujo
 				));
@@ -2674,6 +2170,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String estado   = smap1.get("ESTADO");
 			String nmpoliza = smap1.get("NMPOLIZA");
 			String feinival = smap1.get("feinival");
+			String confirmar= smap1.get("confirmar");
 			
 			Utils.validate(cdtipsup  , "No se recibio el codigo de endoso"
 					       ,cdunieco , "No se recibio la sucursal"
@@ -2683,7 +2180,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					       ,feinival , "No se recibio la fecha de endoso"
 					       );
 			
-			endososAutoManager.confirmarEndosoValositFormsAuto(
+			smap2 = endososAutoManager.confirmarEndosoValositFormsAuto(
 					user.getUser()
 					,user.getRolActivo().getClave()
 					,user.getEmpresa().getElementoId()
@@ -2696,6 +2193,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,slist1
 					,usuarioSesion
 					,flujo
+					,confirmar
 					);
 			
 			success = true;
@@ -2708,6 +2206,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n###### success   = " , success
 				,"\n###### respuesta = " , respuesta
+				,"\n###### smap2     = " , smap2
 				,"\n###### confirmarEndosoValositFormsAuto ######"
 				,"\n#############################################"
 				));

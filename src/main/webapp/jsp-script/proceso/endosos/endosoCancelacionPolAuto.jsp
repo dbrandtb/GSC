@@ -8,7 +8,6 @@
 ////// urls //////
 var _p43_urlMarcarPolizaCancelar   = '<s:url namespace="/endosos"     action="marcarPolizaCancelarPorEndoso"        />';
 var _p43_urlConfirmar              = '<s:url namespace="/endosos"     action="confirmarEndosoCancelacionPolAuto"    />';
-var _p43_previewConfirmar          = '<s:url namespace="/endosos"     action="previewEndosoCancelacionPolAuto"      />';
 var _p43_urlValidaRazonCancelacion = '<s:url namespace="/cancelacion" action="validaRazonCancelacion"               />';
 var url_PantallaPreview            = '<s:url namespace="/endosos"     action="includes/previewEndosos"              />';
 ////// urls //////
@@ -129,6 +128,7 @@ Ext.onReady(function()
                                                     ,'smap1.fevencim' : _p43_smap1.FEVENCIM
                                                     ,'smap1.fecancel' : Ext.Date.format(_fieldByName('fecancel').getValue(),'d/m/Y')
                                                     ,'smap1.cdtipsup' : _p43_smap1.cdtipsup
+                                                    ,'smap1.confirmar': 'no'
                                                 };
                                                 
                                                 if(!Ext.isEmpty(_p43_flujo))
@@ -152,7 +152,7 @@ Ext.onReady(function()
                                                 _setLoading(true,form);
                                                 Ext.Ajax.request(
 					                            {
-					                                url      : _p43_previewConfirmar
+					                                url      : _p43_urlConfirmar
 					                                ,params  : paramsConfirmar
 					                                ,success : function(response)
 					                                {
@@ -192,6 +192,9 @@ Ext.onReady(function()
 																				,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
 																				,handler : 
 																					function (me){
+																						 debug('paramsConfirmar--> ',paramsConfirmar);
+																						paramsConfirmar['smap1.confirmar']= 'si';
+																						 debug('paramsConfirmar--> ',paramsConfirmar);
 																						var myMask = _maskLocal();
 																						me.up('window').destroy();
 																						Ext.Ajax.request(

@@ -103,14 +103,6 @@
             <result name="success" type="json" />
         </action>
         
-        <action name="previewEndosoVigenciaPoliza" class="endososAutoAction" method="previewEndosoVigenciaPoliza">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="success" type="json" />
-        </action>
-        
         <action name="guardarEndosoCambioVigencia" class="EndososAction" method="guardarEndosoCambioVigencia">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -127,15 +119,7 @@
             <result name="success" type="json" />
         </action>
         
-		<action name="previewEndosoAmpliacionVigencia" class="endososAutoAction" method="previewEndosoAmpliacionVigencia">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="success" type="json" />
-        </action>
-
-        <action name="guardarEndosoDespago" class="endososAutoAction" method="guardarEndosoDespago">
+		<action name="guardarEndosoDespago" class="endososAutoAction" method="guardarEndosoDespago">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
@@ -168,14 +152,6 @@
         </action>
         
         <action name="guardarEndosoCoberturas" class="EndososAction" method="guardarEndosoCoberturas">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="success" type="json" />
-        </action>
-        
-        <action name="EndosoCoberturasPreviewShow" class="EndososAction" method="EndosoCoberturasPreview">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
@@ -474,14 +450,6 @@
             <result name="success">/jsp-script/proceso/endosos/endosoFormaPago.jsp </result>
         </action>
         
-        <action name="previewEndosoFormaPago" class="EndososAction" method="previewEndosoFormaPago">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="success" type="json" />
-        </action>
-        
         <action name="guardarEndosoFormaPago" class="EndososAction" method="guardarEndosoFormaPago">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -715,23 +683,7 @@
             <result type="json" />
         </action>
         
-        <action name="previewEndosoTvalositAuto" class="endososAutoAction" method="previewEndosoTvalositAuto">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result type="json" />
-        </action>
-        
-        <action name="confirmarEndosoAltaIncisoAuto" class="endososAutoAction" method="confirmarEndosoAltaIncisoAuto">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result type="json" />
-        </action>
-        
-        <action name="previewEndosoAltaIncisoAuto" class="endososAutoAction" method="previewEndosoAltaIncisoAuto">
+       <action name="confirmarEndosoAltaIncisoAuto" class="endososAutoAction" method="confirmarEndosoAltaIncisoAuto">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
@@ -790,14 +742,6 @@
             <result type="json" />
         </action>
         
-        <action name="previewEndosoDevolucionPrimas" class="endososAutoAction" method="previewEndosoDevolucionPrimas">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result type="json" />
-        </action>
-        
         <action name="includes/endosoRehabilitacionAuto" class="endososAutoAction" method="endosoRehabilitacionAuto">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -845,10 +789,6 @@
             <result type="json" />
         </action>
         
-        <action name="previewEndosoCancelacionPolAuto" class="endososAutoAction" method="previewEndosoCancelacionPolAuto">
-             <result type="json" />
-        </action>
-        
         <action name="includes/endosoValositFormsAuto" class="endososAutoAction" method="endosoValositFormsAuto">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -856,14 +796,6 @@
             </interceptor-ref>
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoValositFormsAuto.jsp</result>
-        </action>
-        
-        <action name="previewEndosoValositFormsAuto" class="endososAutoAction" method="previewEndosoValositFormsAuto">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result type="json" />
         </action>
         
         <action name="confirmarEndosoValositFormsAuto" class="endososAutoAction" method="confirmarEndosoValositFormsAuto">
