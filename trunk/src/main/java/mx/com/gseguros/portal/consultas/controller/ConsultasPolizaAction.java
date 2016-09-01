@@ -1080,7 +1080,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 																	    ,cdramo 
 																	    ,null
 																	    ,nmpoliza
-																	    ,ntramite));
+																	    ,ntramite)
+																		,"1");//En proceso
 				logger.debug(Utils.log(
 						 "\n###### actualizaEstatusTramiteMCsigs ######"
 						,"\n###########################################"
