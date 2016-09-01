@@ -79,6 +79,7 @@ Ext.onReady(function()
 	
     ////// requires //////
     Ext.require('${defines}VentanaImpresionLote');
+    Ext.require('${defines}VentanaDescargaLote');
     ////// requires //////
 
     ////// modelos //////
@@ -239,6 +240,8 @@ Ext.onReady(function()
 	                    {
 	                        _fieldById('_p49_botonImprimir1').setDisabled(selected.length==0);
 	                        _fieldById('_p49_botonImprimir2').setDisabled(selected.length==0);
+	                        
+	                        _fieldById('_descargar_pdf').setDisabled(selected.length==0);
 	                    }
                     }
                 }
@@ -273,6 +276,17 @@ Ext.onReady(function()
                         ,handler  : function(me)
                         {
                             _p49_impresionClic('G');
+                        }
+                    }
+                    ,
+                    {
+                         text      : 'Descargar PDF'
+                        ,icon     : '${icons}printer.png'
+                        ,itemId   : '_descargar_pdf'
+                     	,disabled : true
+                        ,handler  : function(me)
+                        {
+                            descargarPDF('G');
                         }
                     }
                     ,{
@@ -554,6 +568,7 @@ function _p49_impresionClic(tipoimp)
 		                                            var ck = 'Invocando ventana de impresi\u00F3n';
 		                                            try
 		                                            {
+		                                            
 		                                                var venImp = Ext.create('VentanaImpresionLote',
 		                                                {
 		                                                    lote      : json.params.lote
@@ -608,6 +623,200 @@ function _p49_impresionClic(tipoimp)
         manejaException(e,ck);
     }
 }
+
+function descargarPDF(tipoimp){
+	
+	
+    var ck = 'Generando tr\u00E1mite';
+    try
+    {
+        debug('descargarPDF timoimp:',tipoimp);
+        centrarVentanaInterna(
+        	Ext.MessageBox.confirm(
+        		'Confirmar', 
+        		'Se generar\u00E1 el lote y los tr\u00E1mites de impresi\u00F3n ¿Desea continuar?', 
+        		function(btn)
+		        {
+		            if(btn === 'yes')
+		            {
+		                var ck = 'Construyendo petici\u00F3n';
+		                try
+		                {
+		                    var jsonData =
+		                    {
+		                        params :
+		                        {
+		                            cdtipimp  : tipoimp
+		                            ,tipolote : 'P'
+		                        }
+		                        ,list  : []
+		                    };
+		                
+		                    var grid    = _fieldById('_p49_gridPolizas');
+		                    var records = grid.getSelectionModel().getSelection();
+		                    debug('records:',records);
+		                    
+		                    jsonData.params.cdtipram = records[0].get('cdtipram');
+		                    
+		                    for(var i in records)
+		                    {
+		                        var rec  = records[i];
+		                        jsonData.list.push(
+		                        {
+		                            cdunieco  : rec.get('cdunieco')
+		                            ,cdramo   : rec.get('cdramo')
+		                            ,estado   : rec.get('estado')
+		                            ,nmpoliza : rec.get('nmpoliza')
+		                            ,nmsuplem : rec.get('nmsuplem')
+		                            ,cdagente : rec.get('cdagente')
+		                            ,ntramite : rec.get('ntramite')
+		                            ,orden    : rec.get('orden')
+		                        });
+		                    }
+		                    debug('jsonData:',jsonData);
+		                    
+		                    _setLoading(true,grid);
+		                    Ext.Ajax.request(
+		                    {
+		                        url       : _p49_urlGenerarLote
+		                        ,jsonData : jsonData
+		                        ,success  : function(response)
+		                        {
+		                            _setLoading(false,grid);
+		                            var ck = 'Decodificando respuesta al generar lote';
+		                            try
+		                            {
+		                                var json = Ext.decode(response.responseText);
+		                                debug('### generarLote:',json);
+		                                if(json.success==true)
+		                                {
+		                                    mensajeCorrecto(
+		                                        'Lote generado'
+		                                        ,'Se gener\u00F3 el lote '+json.params.lote
+		                                        ,function()
+		                                        {
+		                                            var ck = 'Invocando ventana de impresi\u00F3n';
+		                                            try
+		                                            {
+		                                                
+		                                            	////////////////////////////////////////////////////////////////
+		                                            	
+		                                            		
+		                                                var venImp = Ext.create('VentanaDescargaLote',
+		                                                {
+		                                                    lote      : json.params.lote
+		                                                    ,cdtipram : json.params.cdtipram
+		                                                    ,cdtipimp : json.params.cdtipimp
+		                                                    ,tipolote : 'P'
+		                                                    ,callback : function(){ _fieldById('_p49_gridPolizas').getStore().removeAll(); }
+		                                                });
+		                                                venImp.on(
+		                                                {
+		                                                    close : function()
+		                                                    {
+		                                                        _fieldById('_p49_gridPolizas').getStore().removeAll();
+		                                                    }
+		                                                });
+		                                                centrarVentanaInterna(venImp.show());
+		                                            	///////////////////////////////////////////////////////////////////////
+		                                            	
+		                                            	
+		                                            	
+		                                            	
+		                                              /*  venImp.on(
+		                                                {
+		                                                    close : function()
+		                                                    {
+		                                                        _fieldById('_p49_gridPolizas').getStore().removeAll();
+		                                                    }
+		                                                });
+		                                                centrarVentanaInterna(venImp.show());*/
+		                                            }
+		                                            catch(e)
+		                                            {
+		                                                manejaException(e,ck);
+		                                            }
+		                                        });
+		                                }
+		                                else
+		                                {
+		                                    mensajeError(json.message);
+		                                }
+		                            }
+		                            catch(e)
+		                            {
+		                                manejaException(e,ck);
+		                            }
+		                        }
+		                        ,failure  : function()
+		                        {
+		                            _setLoading(false,grid);
+		                            errorComunicacion(null,'Error al generar lote');
+		                        }
+		                    });
+		                }
+		                catch(e)
+		                {
+		                    manejaException(e,ck);
+		                }
+		            }
+		        }
+		    )
+		);
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+	
+	
+    	
+	
+	/*
+	 Ext.Ajax.request(
+             {
+                 url       : urlGenerarLotePDF
+                 ,jsonData : {
+         			params :
+                    {
+                   	 cdtipimp  : 232
+                     ,tipolote : 'P'
+                    }
+                    ,list  : []
+                }
+                 ,success  : function(response)
+                 {
+                     
+                     var ck = 'Decodificando respuesta al generar lote';
+                     try
+                     {
+                         var json = Ext.decode(response.responseText);
+                         debug('### generarLote:',json);
+                         if(json.success==true)
+                         {
+                            
+                         }
+                         else
+                         {
+                             mensajeError(json.message);
+                         }
+                     }
+                     catch(e)
+                     {
+                         manejaException(e,ck);
+                     }
+                 }
+                 ,failure  : function()
+                 {
+                    
+                     errorComunicacion(null,'Error al generar lote');
+                 }
+             });
+	*/
+	
+}
+
+
 ////// funciones //////
 </script>
 </head>

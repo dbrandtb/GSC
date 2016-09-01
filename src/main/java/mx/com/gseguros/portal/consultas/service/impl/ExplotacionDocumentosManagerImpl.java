@@ -1467,7 +1467,11 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					,hoja
 					,tipolote
 					);
-			
+			if(!"C".equals(hoja)){
+				listaArchivos=armaJuegosDeImpresiones(listaArchivos);
+			}
+				
+					
 			sb.append(Utils.log("\nlista=",listaArchivos));
 			
 			paso = "Fusionando archivos";
