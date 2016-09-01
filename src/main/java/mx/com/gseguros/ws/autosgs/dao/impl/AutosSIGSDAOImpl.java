@@ -979,8 +979,9 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	}
 	
 	@Override
-	public void actualizaTramiteMC(PolizaVO poliza) throws Exception {
+	public void actualizaTramiteMC(PolizaVO poliza, String estra) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("inEsttra", estra);
 		params.put("inNumsuc", poliza.getCdunieco());
 		params.put("inNumram", poliza.getCdramo());
 		params.put("inNumpol", poliza.getNmpoliza());
@@ -995,6 +996,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("inNumram", Types.SMALLINT));
 			declareParameter(new SqlParameter("inNumpol", Types.INTEGER));
 			declareParameter(new SqlParameter("inNumtra", Types.INTEGER));
+			declareParameter(new SqlParameter("inEsttra", Types.VARCHAR));
 			compile();
 		}
 	}

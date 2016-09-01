@@ -486,8 +486,8 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 
 	@Deprecated
 	@Override
-	public void actualizaTramiteMC(PolizaVO poliza) throws Exception{
-	autosDAOSIGS.actualizaTramiteMC(poliza);
+	public void actualizaTramiteMC(PolizaVO poliza,String estra) throws Exception{
+	autosDAOSIGS.actualizaTramiteMC(poliza,estra);
 	}
 	
 	@Deprecated

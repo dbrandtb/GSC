@@ -296,7 +296,7 @@ public interface ConsultasPolizaManager {
      * @throws Exception
      */
     @Deprecated
-	public void actualizaTramiteMC(PolizaVO poliza) throws Exception;
+	public void actualizaTramiteMC(PolizaVO poliza, String estra) throws Exception;
     
     /**
      * Obtiene el numero de nmsituac del contratate de una poliza 

@@ -13,16 +13,19 @@ import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 
@@ -58,6 +61,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Autowired
 	private CotizacionDAO cotizacionDAO;
+	
+	@Autowired
+	private SiniestrosManager  siniestrosManager;
+	
+	@Autowired
+	private ConsultasPolizaManager consultasPolizaManager;
 	
 	@Override
 	public Map<String,Item> workflow(String cdsisrol) throws Exception
@@ -2279,6 +2288,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		return docsFaltan;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public String turnarTramite(
 			 String ntramite
@@ -2309,6 +2319,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		String paso     = "Iniciando turnado"
 		       ,message = null;
+		
 		try
 		{
 			Map<String,String> usuarioDestino = new HashMap<String,String>();
@@ -2496,6 +2507,41 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
+		
+		if(statusNew.trim().equals("4"))// 4= rechazado
+		{
+		    try 
+			{	
+				paso = "actualizaEstatusTramiteMCsigs";
+				Map<String,String>parame = siniestrosManager.obtenerTramiteCompleto(ntramite);
+				if(!parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null )
+				{
+					logger.debug(Utils.log(
+							"\n###########################################"
+							,"\n###### actualizaEstatusTramiteMCsigs ######"
+							,"\nPoliza extraida del sigs: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
+							));
+					
+					consultasPolizaManager.actualizaTramiteMC(new PolizaVO(	 parame.get("RENUNIEXT")
+																			,parame.get("RENRAMO") 
+																			,null
+																			,parame.get("RENPOLIEX")
+																			,ntramite),
+																			"0");//0 para que aparezaca como posible a renovar
+					
+					logger.debug(Utils.log(
+							"\n###### actualizaEstatusTramiteMCsigs ######"
+							,"\n###########################################"
+							));
+				}
+		    }
+		    catch (Exception e) 
+	        {
+			    logger.error("Error al actulizar estatus de tramite Mc", e);
+			    paso = Utils.manejaExcepcion(e);
+		    }
+		}
+		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ message=",message
 				,"\n@@@@@@ turnarTramite @@@@@@"
