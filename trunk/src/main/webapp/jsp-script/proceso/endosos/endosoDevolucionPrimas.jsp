@@ -9,7 +9,6 @@
 var _p39_urlRecuperacionSimpleLista = '<s:url namespace="/emision" action="recuperacionSimpleLista"       />';
 var _p39_urlGuardarTvalositEndoso   = '<s:url namespace="/endosos" action="guardarTvalositEndoso"         />';
 var _p39_urlConfirmarEndoso         = '<s:url namespace="/endosos" action="guardarEndosoDevolucionPrimas" />';
-var _p39_urlPreviewEndoso           = '<s:url namespace="/endosos" action="previewEndosoDevolucionPrimas" />';
 var url_PantallaPreview             = '<s:url namespace="/endosos" action="includes/previewEndosos"       />';
 var _p48_urlMovimientos             = '<s:url namespace="/movimientos"           action="ejecutar"        />';
 var _p39_urlRecuperacionSimple      = '<s:url namespace="/emision" action="recuperacionSimple"            />';
@@ -335,15 +334,13 @@ Ext.onReady(function()
                             {
                                 jsonData.flujo = _p39_flujo;
                             }
-                            
+                            jsonData.smap1['confirmar'] = 'no';
                             Ext.Ajax.request(
                             {
-                                url       : _p39_urlPreviewEndoso
+                                url       : _p39_urlConfirmarEndoso
                                 ,jsonData : jsonData
                                 ,success  : function(response)
                                 {
-                                    me.setDisabled(false);
-                                    me.setText('Confirmar');
                                     var json=Ext.decode(response.responseText);
                                     debug('### confirmar:',json);
                                     if(json.success)
@@ -379,15 +376,15 @@ Ext.onReady(function()
 															text    : 'Confirmar endoso'
 															,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
 															,handler : function(me){
+																					_mask();
 																					me.up('window').destroy();
+																					jsonData.smap1['confirmar'] = 'si';
 																					Ext.Ajax.request(
 																						{
 																							url       : _p39_urlConfirmarEndoso
 																							,jsonData : jsonData
 																							,success  : function(response)
 																							{
-																								me.setDisabled(false);
-																								me.setText('Confirmar');
 																								var json=Ext.decode(response.responseText);
 																								debug('### confirmar:',json);
 																								if(json.success)
@@ -420,7 +417,7 @@ Ext.onReady(function()
 																								errorComunicacion();
 																							}
 																						});
-																					
+																						_unmask();
 																				   }
 														   },
 														   {

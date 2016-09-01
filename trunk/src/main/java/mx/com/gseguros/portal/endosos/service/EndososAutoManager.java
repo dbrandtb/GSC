@@ -84,22 +84,6 @@ public interface EndososAutoManager
 			,FlujoVO flujo
 			)throws Exception;
 	
-	public Map<String,Object> previewEndosoTvalositAuto(
-			String cdtipsup
-			,String tstamp
-			,String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String feefecto
-			,String cdusuari
-			,String cdsisrol
-			,String cdelemen
-			,UserVO usuarioSesion
-			,List<Map<String,String>> incisos
-			,FlujoVO flujo
-			)throws Exception;
-	
 	/**
 	 * @return incisoPoliza => Map String String,
 	 *         tvalopol     => Map String String,
@@ -115,7 +99,7 @@ public interface EndososAutoManager
 			,String nmsuplem
 			)throws Exception;
 	
-	public void confirmarEndosoAltaIncisoAuto(
+	public Map<String, Object> confirmarEndosoAltaIncisoAuto(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -128,22 +112,7 @@ public interface EndososAutoManager
 			,UserVO usuarioSesion
 			,String cdsisrol
 			,FlujoVO flujo
-			)throws Exception;
-	
-	public Map<String, Object> previewEndosoAltaIncisoAuto(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,List<Map<String,String>>incisos
-			,String cdusuari
-			,String cdelemen
-			,String cdtipsup
-			,String fecha
-			,UserVO usuarioSesion
-			,String cdsisrol
-			,FlujoVO flujo
-			
+			,String confirmar
 			)throws Exception;
 	
 	public Map<String,Item> endosoBajaIncisos(
@@ -230,25 +199,6 @@ public interface EndososAutoManager
 			,FlujoVO flujo
 			)throws Exception;
 	
-	public Map<String, String> previewEndosoVigenciaPoliza(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String ntramite
-			,String cdelemen
-			,String cdusuari
-			,String cdtipsup
-			,String status
-			,String fechaEndoso
-			,Date dFechaEndoso
-			,String feefecto
-			,String feproren
-			,String nmsuplemOriginal
-			,String cdsisrol
-			,FlujoVO flujo
-			)throws Exception;
-
 	public void guardarEndosoTextoLibre(
 			String cdunieco
 			,String cdramo
@@ -291,7 +241,7 @@ public interface EndososAutoManager
 			,String cdtipsit
 			)throws Exception;
 	
-	public void guardarEndosoClaveAuto(
+	public Map<String,Object> guardarEndosoClaveAuto(
 			String cdtipsup
 			,String cdusuari
 			,String cdsisrol
@@ -305,6 +255,7 @@ public interface EndososAutoManager
 			,Map<String,String> incisoAnterior
 			,UserVO usuarioSesion
 			,FlujoVO flujo
+			,String confirmar
 			)throws Exception;
 	
 	public List<Map<String,String>> obtenerRetroactividad(
@@ -413,7 +364,7 @@ public interface EndososAutoManager
 			,FlujoVO flujo
 			)throws Exception;
 	
-	public void guardarEndosoDevolucionPrimas(
+	public Map<String,Object> guardarEndosoDevolucionPrimas(
 			String cdusuari
 			,String cdsisrol
 			,String cdelemen
@@ -427,29 +378,14 @@ public interface EndososAutoManager
 			,List<Map<String,String>> incisos
 			,UserVO usuarioSesion
 			,FlujoVO flujo
-			)throws Exception;
-	
-	public Map<String,Object> previewEndosoDevolucionPrimas(
-			String cdusuari
-			,String cdsisrol
-			,String cdelemen
-			,String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String cdtipsup
-			,String tstamp
-			,Date   feefecto
-			,List<Map<String,String>> incisos
-			,UserVO usuarioSesion
-			,FlujoVO flujo
+			,String confirmar
 			)throws Exception;
 	
 	public Map<String,Item> endosoCancelacionPolAuto(String cdsisrol, String cdramo) throws Exception;
 	
 	public Map<String,String> marcarPolizaCancelarPorEndoso(String cdunieco,String cdramo,String nmpoliza)throws Exception;
 	
-	public void confirmarEndosoCancelacionPolAuto(
+	public Map<String,Object> confirmarEndosoCancelacionPolAuto(
 			String cdusuari
 			,String cdunieco
 			,String cdramo
@@ -463,22 +399,7 @@ public interface EndososAutoManager
 			,UserVO usuarioSesion
 			,String cdsisrol
 			,FlujoVO flujo
-			)throws Exception;
-	
-	public Map<String, Object> previewEndosoCancelacionPolAuto(
-			String cdusuari
-			,String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String cdrazon
-			,Date feefecto
-			,Date fevencim
-			,Date fecancel
-			,String cdtipsup
-			,UserVO usuarioSesion
-			,String cdsisrol
-			,FlujoVO flujo
+			,String confirmar
 			)throws Exception;
 	
 	public Map<String,Item> endosoValositFormsAuto(
@@ -495,7 +416,7 @@ public interface EndososAutoManager
 			,String nmpoliza
 			)throws Exception;
 	
-	public Map<String, String> previewEndosoValositFormsAuto(
+	public Map<String, String> confirmarEndosoValositFormsAuto(
 			String cdusuari
 			,String cdsisrol
 			,String cdelemen
@@ -508,21 +429,7 @@ public interface EndososAutoManager
 			,List<Map<String,String>> incisos
 			,UserVO usuarioSesion
 			,FlujoVO flujo
-			)throws Exception;
-	
-	public void confirmarEndosoValositFormsAuto(
-			String cdusuari
-			,String cdsisrol
-			,String cdelemen
-			,String cdtipsup
-			,String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,Date feinival
-			,List<Map<String,String>> incisos
-			,UserVO usuarioSesion
-			,FlujoVO flujo
+			,String confirmar
 			)throws Exception;
 	
 	public Map<String,Item> confirmarEndosoRehabilitacionPolAuto(String cdsisrol, String cdramo) throws Exception;
@@ -548,7 +455,7 @@ public interface EndososAutoManager
 			,UserVO usuarioSesion
 			) throws Exception;
 	
-	public void guardarEndosoAmpliacionVigencia(
+	public Map<String,String> guardarEndosoAmpliacionVigencia(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -568,28 +475,7 @@ public interface EndososAutoManager
 			,String tipoGrupoInciso
 			,FlujoVO flujo
 			,String cdsisrol
-			)throws Exception;
-	
-	public Map<String,String> previewEndosoAmpliacionVigencia(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String ntramite
-			,String cdelemen
-			,String cdusuari
-			,String cdtipsup
-			,String status
-			,String fechaEndoso
-			,Date dFechaEndoso
-			,String feefecto
-			,String feproren
-			,Date   feprorenOriginal
-			,String nmsuplemOriginal
-			,UserVO usuarioSesion
-			,String tipoGrupoInciso
-			,FlujoVO flujo
-			,String cdsisrol
+			,String confirmar
 			)throws Exception;
 	
 	public List<Map<String,String>> obtieneRecibosDespagados(

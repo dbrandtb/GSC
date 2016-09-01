@@ -27,7 +27,6 @@ var _p30_urlCargarObligatorioCamionRamo5      = '<s:url namespace="/emision"    
 var _p30_urlViewDoc                           = '<s:url namespace="/documentos"      action="descargaDocInline"                   />';
 var _p30_urlEnviarCorreo                      = '<s:url namespace="/general"         action="enviaCorreo"                         />';
 var _p30_urlCargarDatosEndoso                 = '<s:url namespace="/emision"         action="recuperarDatosEndosoAltaIncisoAuto"  />';
-var _p30_urlPreviewEndoso                     = '<s:url namespace="/endosos"         action="previewEndosoAltaIncisoAuto"         />';
 var _p30_urlObtencionReporteExcel             = '<s:url namespace="/reportes"        action="procesoObtencionReporte"             />';
 var _p30_urlObtencionReporteExcel2            = '<s:url namespace="/reportes"        action="procesoObtencionReporte2"            />';
 var _p30_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"     action="movimientoDetalleTramite"            />';
@@ -6587,6 +6586,7 @@ function _p30_confirmarEndoso()
                 ,nmpoliza    : _p30_smap1.NMPOLIZA
                 ,cdtipsup    : _p30_smap1.cdtipsup
                 ,fechaEndoso : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
+                ,confirmar   : 'no'
             }
             ,slist1 : []
             ,slist2 : []
@@ -6646,7 +6646,7 @@ function _p30_confirmarEndoso()
         var myMask = _maskLocal();
         Ext.Ajax.request(
         {
-            url       : _p30_urlPreviewEndoso
+            url       : _p30_urlConfirmarEndoso
             ,jsonData : json
             ,success  : function(response)
             {
@@ -6691,15 +6691,33 @@ function _p30_confirmarEndoso()
 											function (me){
                                                 boton.setText('Cargando...');
                                                 boton.setDisabled(true);
+                                                var json2 =
+												        {
+												            smap1 :
+												            {
+												                cdunieco     : _p30_smap1.CDUNIECO
+												                ,cdramo      : _p30_smap1.CDRAMO
+												                ,estado      : _p30_smap1.ESTADO
+												                ,nmpoliza    : _p30_smap1.NMPOLIZA
+												                ,cdtipsup    : _p30_smap1.cdtipsup
+												                ,fechaEndoso : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
+												                ,confirmar   : 'si'
+												            }
+												            ,slist1 : []
+												            ,slist2 : []
+												            ,slist3 : []
+												        };
+												storeTvalosit.each(function(record)
+												        {
+												            json2.slist1.push(record.data);
+												        });
                                                 Ext.Ajax.request(
 											        {
 											            url       : _p30_urlConfirmarEndoso
 											           ,jsonData : json2
 												       ,success  : function(response)
 												            {
-												            	boton.setText('Cargando...');
-												                boton.setDisabled(true);
-												                var json3 = Ext.decode(response.responseText);
+												            	var json3 = Ext.decode(response.responseText);
 												                var callbackRemesa = function() { marendNavegacion(2); };
 												                
 												                mensajeCorrecto('Endoso generado',json3.respuesta,function(){

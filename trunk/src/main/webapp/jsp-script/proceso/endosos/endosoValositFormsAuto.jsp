@@ -6,8 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-
-var _p44_urlPreview            = '<s:url namespace="/endosos"      action="previewEndosoValositFormsAuto"   />';
 var url_PantallaPreview        = '<s:url namespace="/endosos"      action="includes/previewEndosos"         />';
 var _p44_urlConfirmar          = '<s:url namespace="/endosos"      action="confirmarEndosoValositFormsAuto" />';
 var _p44_urlRecuperacionSimple = '<s:url namespace="/emision"      action="recuperacionSimple"              />';
@@ -171,9 +169,10 @@ Ext.onReady(function()
 		                    
 		                    me.disable();
 		                    me.setText('Cargando...');
+		                    json.smap1['confirmar'] = 'no';
 		                    Ext.Ajax.request(
 		                    {
-		                        url       : _p44_urlPreview
+		                        url       : _p44_urlConfirmar
 		                        ,jsonData : json
 		                        ,success  : function(response)
 		                        {
@@ -213,11 +212,11 @@ Ext.onReady(function()
 												,handler : 
 													function (me){
 														me.up('window').destroy();
-																				
+													    json.smap1['confirmar'] = 'si';						
 														Ext.Ajax.request(
 										                    {
 										                        url       : _p44_urlConfirmar
-										                        ,jsonData : json2
+										                        ,jsonData : json
 										                        ,success  : function(response)
 										                        {
 										                           // me.setText('Confirmar');

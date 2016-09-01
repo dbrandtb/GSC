@@ -8,7 +8,6 @@ var _CONTEXT = '${ctx}';
 	paramsEntrada.FEPROREN_ORIG = paramsEntrada.FEPROREN; 
 		
 	var guarda_Vigencia_Poliza   = '<s:url namespace="/endosos"      action="guardarEndosoAmpliacionVigencia"       />';
-	var preview_Vigencia_Poliza  = '<s:url namespace="/endosos"      action="previewEndosoAmpliacionVigencia"       />';
 	var url_PantallaPreview      = '<s:url namespace="/endosos"      action="includes/previewEndosos"                />';
 	
 	var endAmpVigFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
@@ -85,6 +84,7 @@ var _CONTEXT = '${ctx}';
 						    //Exito
 							var submitValues={};
 	        				submitValues['smap1']= paramsEntrada;
+	        				submitValues['smap1.confirmar']='no' ;
 	        				
 	        				if(!Ext.isEmpty(endAmpVigFlujo))
 	        				{
@@ -92,9 +92,9 @@ var _CONTEXT = '${ctx}';
 	        				}
 	        				
 	        				Ext.Ajax.request( {
-	   						    url: preview_Vigencia_Poliza,
-	   						    jsonData: Ext.encode(submitValues),
-	   						    success:function(response,opts){
+	   						    url: guarda_Vigencia_Poliza,
+	   						    jsonData:  Ext.encode(submitValues)
+	   						    ,success:function(response,opts){
 	   						    	 myMask.hide();
 	   						    	 myMask1.close();
 					                 var jsonResp1 = Ext.decode(response.responseText);
@@ -133,11 +133,12 @@ var _CONTEXT = '${ctx}';
 																	var myMask1 = _maskLocal();
 																	me.up('window').destroy();
 																	myMask.show();
+																	submitValues['smap1.confirmar']='si' ;
 																	Ext.Ajax.request(
 																		{
 												   						    url: guarda_Vigencia_Poliza,
-												   						    jsonData: Ext.encode(submitValues),
-												   						    success:function(response,opts){
+												   						    jsonData: Ext.encode(submitValues)
+												   						    ,success:function(response,opts){
 												   						    	 //myMask.hide();
 												   						         var jsonResp = Ext.decode(response.responseText);
 												   						         

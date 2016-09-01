@@ -35,8 +35,6 @@
     var urlRecuperacionSimpleListap3                   = '<s:url namespace="/emision"    action="recuperacionSimpleLista"              />';
     var endcobUrlDoc                                   = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
     var endcobUrlGuardar                               = '<s:url namespace="/endosos"    action="guardarEndosoCoberturas"              />';
-    var endcobUrlMuestraPreview                        = '<s:url namespace="/endosos"    action="EndosoCoberturasPreviewShow"          />';
-    var endcobUrlGuardarPreview                        = '<s:url namespace="/endosos"    action="EndosoCoberturasPreviewGuarda"        />';
     var urlPantallaBeneficiarios                       = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
     var url_PantallaPreview                            = '<s:url namespace="/endosos"    action="includes/previewEndosos"              />';
    
@@ -125,7 +123,7 @@
             
             Ext.Ajax.request(
             {
-                url       : endcobUrlMuestraPreview
+                url       : endcobUrlGuardar
                 ,jsonData : json
                // ,timeout  : 180000
                 ,success  : function(response)
@@ -1175,7 +1173,7 @@
 												           || inputCdramop3 == Ramo.servicioPublico
 												           || inputCdramop3 == Ramo.autosResidentes)
 												           	{
-												           		endcobSumitpreview(form,'si');
+												           		endcobSumitpreview(form,'no');
 												           	}else
 												           		{
 												           			endcobSumit(form,'si');

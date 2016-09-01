@@ -11,11 +11,12 @@ var _p38_urlCargarParametros         = '<s:url namespace="/emision" action="obte
 var _p38_urlConfirmarEndoso          = '<s:url namespace="/endosos" action="guardarEndosoClaveAuto"      />';
 var _p38_urlRecuperacionSimple       = '<s:url namespace="/emision" action="recuperacionSimple"          />';
 
-var _p38_urlNadaEndoso               = '<s:url namespace="/emision" action="webServiceNadaEndosos"              />';
-var _p38_urlObtieneValNumeroSerie    = '<s:url namespace="/emision" action="obtieneValNumeroSerie"       />';
+var _p38_urlNadaEndoso             = '<s:url namespace="/emision" action="webServiceNadaEndosos"       />';
+var _p38_urlObtieneValNumeroSerie  = '<s:url namespace="/emision" action="obtieneValNumeroSerie"       />';
 
-var _0_urlCargarSumaAsegurada      = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"        />';
-var _0_urlCargarAutoPorClaveGS     = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"           />';
+var _0_urlCargarSumaAsegurada      = '<s:url namespace="/emision"         action="cargarSumaAseguradaAuto"  />';
+var _0_urlCargarAutoPorClaveGS     = '<s:url namespace="/emision"         action="cargarAutoPorClaveGS"     />';
+var url_PantallaPreview            = '<s:url namespace="/endosos"         action="includes/previewEndosos"  />';
 
 ////// urls //////
 
@@ -87,10 +88,11 @@ Ext.onReady(function()
         [
             {
                 itemId   : '_p38_botonConfirmar'
-                ,text    : 'Confirmar'
+                ,text    : 'Emitir'
                 ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                 ,handler : function(me)
                 {
+                	_mask();
                     if(!me.up('form').getForm().isValid())
                     {
                         datosIncompletos();
@@ -111,7 +113,7 @@ Ext.onReady(function()
                     {
                         jsonConfirmar.flujo = _p38_flujo;
                     }
-                    
+                    jsonConfirmar.smap1['confirmar'] = 'no';
                     debug('jsonConfirmar:',jsonConfirmar);
                     
                     Ext.Ajax.request(
@@ -120,32 +122,99 @@ Ext.onReady(function()
                         ,jsonData : jsonConfirmar
                         ,success  : function(response)
                         {
-                            me.setText('Confirmar');
+                        	_unmask();
+                            me.setText('Emitir');
                             me.setDisabled(false);
-                            var json = Ext.decode(response.responseText);
-                            debug('### confirmar:',json);
-                            if(json.success)
-                            {
-                                var callbackRemesa = function()
-                                {
-                                    marendNavegacion(2);
-                                };
-                                mensajeCorrecto('Endoso generado','Endoso generado',function()
-                                {
-                                    _generarRemesaClic(
-                                        true
-                                        ,_p38_smap1.CDUNIECO
-                                        ,_p38_smap1.CDRAMO
-                                        ,_p38_smap1.ESTADO
-                                        ,_p38_smap1.NMPOLIZA
-                                        ,callbackRemesa
-                                    );
-                                });
-                            }
-                            else
-                            {
-                                mensajeError(json.respuesta);
-                            }
+                            var jsonResp1 = Ext.decode(response.responseText);
+                            debug('***jsonResp1==>> ', jsonResp1);
+                            Ext.create('Ext.window.Window',
+													{
+														title        : 'Tarifa final'
+														,id          : 'tarifa'
+														,autoScroll  : true
+														,modal       : true
+														,buttonAlign : 'center'
+														,width       : 600
+														,height      : 550
+														,defaults    : { width: 650 }
+														,closable    : false
+														,autoScroll  : true
+														,loader      :
+															{
+																url       : url_PantallaPreview
+																,params   :
+																	{
+																		'smap4.nmpoliza'  : _p38_smap1.NMPOLIZA
+							                                            ,'smap4.cdunieco' : _p38_smap1.CDUNIECO
+							                                            ,'smap4.cdramo'   : _p38_smap1.CDRAMO
+							                                            ,'smap4.estado'   : _p38_smap1.ESTADO
+							                                            ,'smap4.nmsuplem' : jsonResp1.omap1.pv_nmsuplem_o
+							                                            ,'smap4.nsuplogi' : jsonResp1.omap1.pv_nsuplogi_o
+							                                        }
+																,scripts  : true
+																,autoLoad : true
+														     }
+														,buttons:[{
+																	text    : 'Confirmar endoso'
+																	,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+																	,handler : function (me)
+																					{
+																						_mask();
+																						me.up('window').destroy();
+																						jsonConfirmar.smap1['confirmar'] = 'si';
+																						 Ext.Ajax.request(
+																			                    {
+																			                        url       : _p38_urlConfirmarEndoso
+																			                        ,jsonData : jsonConfirmar
+																			                        ,success  : function(response)
+																			                        {
+																			                            var json = Ext.decode(response.responseText);
+																			                            debug('### confirmar:',json);
+																			                            if(json.success)
+																			                            {
+																			                                var callbackRemesa = function()
+																			                                {
+																			                                    marendNavegacion(2);
+																			                                };
+																			                                mensajeCorrecto('Endoso generado','Endoso generado',function()
+																			                                {
+																			                                    _generarRemesaClic(
+																			                                        true
+																			                                        ,_p38_smap1.CDUNIECO
+																			                                        ,_p38_smap1.CDRAMO
+																			                                        ,_p38_smap1.ESTADO
+																			                                        ,_p38_smap1.NMPOLIZA
+																			                                        ,callbackRemesa
+																			                                    );
+																			                                });
+																			                                _unmask();
+																			                            }
+																			                            else
+																			                            {
+																			                                mensajeError(json.respuesta);
+																			                            }
+																			                        }
+																			                        ,failure  : function()
+																			                        {
+																			                            me.setText('Confirmar');
+																			                            me.setDisabled(false);
+																			                            errorComunicacion();
+																			                            _unmask();
+																			                        }
+																			                    });	
+																			            
+																					}
+															           
+																   },
+																   {
+																	text    : 'Cancelar'
+																	,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+																	,handler : function (me){
+																					me.up('window').destroy();
+																					marendNavegacion(2);
+																					}
+																 } ]
+												     }).show();
                         }
                         ,failure  : function()
                         {

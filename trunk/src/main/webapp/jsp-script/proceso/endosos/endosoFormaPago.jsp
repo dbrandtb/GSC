@@ -35,7 +35,6 @@ var _9_panelEndoso;
 var _9_fieldFechaEndoso;
 
 var url_PantallaPreview      = '<s:url namespace="/endosos"         action="includes/previewEndosos"/>';
-var _9_urlPreviewGuardar     = '<s:url namespace="/endosos"         action="previewEndosoFormaPago" />';
 var _9_urlGuardar            = '<s:url namespace="/endosos"         action="guardarEndosoFormaPago" />';
 var _9_urlLoaderLectura      = '<s:url namespace="/consultasPoliza" action="consultaDatosPoliza"    />';
 var _9_urlRecuperacionSimple = '<s:url namespace="/emision"         action="recuperacionSimple"     />';
@@ -294,6 +293,7 @@ function _9_confirmar()
             {
                 fecha_endoso : Ext.Date.format(_9_fieldFechaEndoso.getValue(),'d/m/Y')
                 ,cdperpag    : _9_formFormaPago.items.items[1].getValue()
+                ,confirmar   : 'no'
             }
         }
         
@@ -311,7 +311,7 @@ function _9_confirmar()
            || _9_smap1.CDRAMO == Ramo.autosResidentes){
         Ext.Ajax.request(
         {
-            url       : _9_urlPreviewGuardar
+            url       : _9_urlGuardar
             ,jsonData : json
             ,success  : function(response)
             {
@@ -349,13 +349,24 @@ function _9_confirmar()
 										,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
 										,handler : function(me){
 																me.up('window').destroy();
+															    
+																 var json1=
+																        {
+																            smap1  : _9_smap1
+																            ,smap2 :
+																            {
+																                fecha_endoso : Ext.Date.format(_9_fieldFechaEndoso.getValue(),'d/m/Y')
+																                ,cdperpag    : _9_formFormaPago.items.items[1].getValue()
+																                ,confirmar   : 'si'
+																            }
+																        }
 																Ext.Ajax.request(
 																	        {
 																	            url       : _9_urlGuardar
-																	            ,jsonData : json
+																	            ,jsonData : json1
 																	            ,success  : function(response)
 																	            {
-																	                panelMask.hide();
+																	                
 																	                json=Ext.decode(response.responseText);
 																	                debug('datos recibidos:',json);
 																	                if(json.success==true)
@@ -370,7 +381,7 @@ function _9_confirmar()
 																	                        ////// usa codigo del padre //////
 																	                        //////////////////////////////////
 																	                    };
-																	                    
+																	                    panelMask.hide();
 																	                    mensajeCorrecto('Endoso generado',json.mensaje,function()
 																	                    {
 																	                        var cadena= json.mensaje;
@@ -429,10 +440,20 @@ function _9_confirmar()
             }
         });
     }else{
+    	 var json1=
+	        {
+	            smap1  : _9_smap1
+	            ,smap2 :
+	            {
+	                fecha_endoso : Ext.Date.format(_9_fieldFechaEndoso.getValue(),'d/m/Y')
+	                ,cdperpag    : _9_formFormaPago.items.items[1].getValue()
+	                ,confirmar   : 'si'
+	            }
+	        }
 	    Ext.Ajax.request(
 	        {
 	            url       : _9_urlGuardar
-	            ,jsonData : json
+	            ,jsonData : json1
 	            ,success  : function(response)
 	            {
 	                panelMask.hide();
