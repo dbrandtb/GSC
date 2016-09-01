@@ -22,4 +22,5 @@ public interface RenovacionManager
 			,String passServidorReports
 			,UserVO usuario
 			);
+	public ManagerRespuestaImapVO pantallaRenovacionIndividual(String cdsisrol);
 }

@@ -167,6 +167,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case CONFLAYOUT:
 				case TIPO_RECIBOS_IMPRESION:
 				case ETAPAS_ESTADO_FLUJO:
+				case TIPO_BUSQUEDA_RENOVACION_INDIVIDUAL:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case CVECOLUMNA:

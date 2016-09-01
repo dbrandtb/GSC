@@ -16,5 +16,9 @@
             </interceptor-ref>
             <result type="json" />
         </action>
+        <action name="renovacionIndividual" class="renovacionAction" method="renovacionIndividual">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/renovacion/pantallaRenovacionIndividual.jsp</result>
+        </action>
     </package>
 </struts>

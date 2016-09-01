@@ -11,6 +11,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -291,6 +292,52 @@ public class RenovacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
+	public String renovacionIndividual()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#####################################")
+				.append("\n###### renovacionIndividual ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		
+		String cdsisrol = null;
+		
+		//datos completos
+		try
+		{
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			cdsisrol = usuario.getRolActivo().getClave();
+			ManagerRespuestaImapVO managerResponse = renovacionManager.pantallaRenovacionIndividual(cdsisrol);
+			exito           = managerResponse.isExito();
+			respuesta       = managerResponse.getRespuesta();
+			respuestaOculta = managerResponse.getRespuestaOculta();
+			if(exito)
+			{
+				imap = managerResponse.getImap();
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			success         = false;
+			respuesta       = new StringBuilder("Error al obtener atributos de pantalla #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n###### slist1=").append(slist1)
+				.append("\n###### renovacionIndividual ######")
+				.append("\n#####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	//Getters y setters
 	public boolean isSuccess() {
 		return success;
