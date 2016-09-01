@@ -3,17 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-.green {
-    border-left: 2px solid green;
-    border-right: 2px solid green;
-}
-
-.red {
-    border-left: 2px solid red;
-    border-right: 2px solid red;
-}
-</style>
 <script>
 ////// urls //////
 var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"            />'

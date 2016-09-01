@@ -24,7 +24,8 @@ public enum EstatusTramite {
 	IMPRESION_PENDIENTE("34"),
 	IMPRESO("37"),
 	EN_TARIFA("98"),
-	EN_DOCUMENTACION("99");
+	EN_DOCUMENTACION("99"),
+	TRAMITE_AGENTE("100");
 
 	private String codigo;
 

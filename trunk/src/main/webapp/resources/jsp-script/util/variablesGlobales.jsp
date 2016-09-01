@@ -47,7 +47,8 @@
         ,_GLOBAL_COMP_URL_AUTORIZAR_EMISION         = '<s:url namespace="/"                 action="autorizaEmisionSinSMD"     />'
         ,_GLOBAL_COMP_URL_RECUPERACION_SIMPLE_LISTA = '<s:url namespace="/emision"          action="recuperacionSimpleLista"   />'
         ,_GLOBAL_COMP_URL_ACTUALIZAR_STATUS_TRAMITE = '<s:url namespace="/mesacontrol"      action="actualizarStatusTramite"   />'
-        ,_GLOBAL_COMP_URL_AUTORIZAR_ENDOSO          = '<s:url namespace="/endosos"          action="autorizarEndoso"           />';
+        ,_GLOBAL_COMP_URL_AUTORIZAR_ENDOSO          = '<s:url namespace="/endosos"          action="autorizarEndoso"           />'
+        ,_GLOBAL_COMP_RECUPERAR_COTI_COLEC          = '<s:url namespace="/flujomesacontrol" action="recuperarCotiColec"        />';
     
     <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo">
         <s:param name="params.AGRUPAMC" value="%{'PRINCIPAL'}" />

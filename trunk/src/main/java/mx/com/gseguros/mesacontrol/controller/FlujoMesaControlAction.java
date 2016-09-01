@@ -2690,6 +2690,36 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "recuperarCotiColec",
+			results = { @Result(name="success", type="json") }
+			)
+	public String recuperarCotiColec () {
+		logger.debug(Utils.log(
+				"\n################################",
+				"\n###### recuperarCotiColec ######",
+				"\n###### params = ", params));
+		try {
+			UserVO usuario = Utils.validateSession(session);
+			Utils.validate(params, "No hay datos");
+			String ntramite = params.get("ntramite"),
+			       nmsolici = params.get("nmsolici"),
+			       status   = params.get("status");
+			Utils.validate(ntramite , "Falta ntramite",
+					       nmsolici , "Falta nmsolici",
+					       status   , "Falta status");
+			flujoMesaControlManager.recuperarCotiColec(usuario.getUser(), usuario.getRolActivo().getClave(), ntramite, nmsolici, status);
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log(
+				"\n###### success = ", success,
+				"\n###### message = ", message,
+				"\n###### recuperarCotiColec ######",
+				"\n################################"));
+		return SUCCESS;
+	}
+	
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
 	                                                      //

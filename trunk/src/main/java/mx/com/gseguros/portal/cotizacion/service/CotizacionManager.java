@@ -411,6 +411,7 @@ public interface CotizacionManager
 			,String nmpolant
 			,String nmrenova
 			,UserVO usuarioSesion
+			,boolean duplicar
 			);
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();
@@ -814,6 +815,7 @@ public interface CotizacionManager
 			,String cdtipsit
 			,String cdusuari
 			,String cdsisrol
+			,boolean duplicar
 			);
 	
 	/**

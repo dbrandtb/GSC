@@ -111,5 +111,8 @@ public interface MesaControlManager
 	public void regeneraReverso(String ntramite, String cdsisrol, String cdusuari) throws Exception;
 	
 	public void borrarNmsoliciTramite(String ntramite) throws Exception;
+	
+	@Deprecated
+	public void concatenarAlInicioDelUltimoDetalle(String ntramite, String comentario, String cdmodulo, String cdevento) throws Exception;
 	 
 }
