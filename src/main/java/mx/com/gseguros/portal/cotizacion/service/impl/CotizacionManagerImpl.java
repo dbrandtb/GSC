@@ -2490,6 +2490,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmpolant
 			,String nmrenova
 			,UserVO usuarioSesion
+			,boolean duplicar
 			)
 	{
 		logger.info(
@@ -2541,6 +2542,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ cdideext_=")              .append(cdideext_)
 				.append("\n@@@@@@ nmpolant=")               .append(nmpolant)
 				.append("\n@@@@@@ nmrenova=")               .append(nmrenova)
+				.append("\n@@@@@@ duplicar=")               .append(duplicar)
+				.append("\n@@@@@@ usuarioSesion=")          .append(usuarioSesion.toString())
 				.toString()
 				);
 		
@@ -2556,7 +2559,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//nmpoliza
-		if(resp.isExito()&&StringUtils.isBlank(nmpoliza))
+		if(resp.isExito()&&(StringUtils.isBlank(nmpoliza) || duplicar))
 		{
 			try
 			{
@@ -2760,7 +2763,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		String  nombreCenso     = nombreCensoConfirmado;
 		
 		//enviar censo
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			FileInputStream input       = null;
 			Workbook        workbook    = null;
@@ -3584,7 +3587,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//pl censo
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar))
 		{
 			String nombreProcedureCenso = null;
 			String tipoCensoParam       = "AGRUPADO";
@@ -3667,7 +3670,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			}
 		}
 		
-		if((resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
+		if((resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar))
 				&&StringUtils.isBlank(nombreCensoConfirmado)
 		)
 		{
@@ -3716,6 +3719,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdideext_
 					,usuarioSesion
 					,false
+					,duplicar
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3773,6 +3777,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdideext_
 			,UserVO usuarioSesion
 			,boolean censoCompleto
+			,boolean duplicar
 			)
 	{
 		logger.info(Utils.log(
@@ -3812,6 +3817,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ cdideper_="            , cdideper_
 				,"\n@@@@@@ cdideext_="            , cdideext_
 				,"\n@@@@@@ censoCompleto="        , censoCompleto
+				,"\n@@@@@@ duplicar="             , duplicar
 				));
 		
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
@@ -3884,7 +3890,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		if(resp.isExito()
-				&&(!hayTramite||hayTramiteVacio)
+				&&(!hayTramite||hayTramiteVacio||duplicar)
 				&&
 				(
 					RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)
@@ -3898,7 +3904,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//sigsvdef
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto)&&asincrono==false)
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto||duplicar)&&asincrono==false)
 		{
 			try
 			{
@@ -4039,7 +4045,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//tramite
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||duplicar))
 		{
 			try
 			{
@@ -4090,7 +4096,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,"S"
 							,null
 							,null
-							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							,EstatusTramite.TRAMITE_AGENTE.getCodigo()
 							,false
 							);
 					
@@ -4157,6 +4163,27 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,null    //cdsucdoc
 							,null    //comments
 							,valoresTramite);
+					
+					if (duplicar) {
+						mesaControlDAO.movimientoDetalleTramite(
+								ntramiteActualiza,
+								new Date(),
+								null, // cdclausu
+								Utils.join("Se duplica la cotizaci\u00f3n para generar la nueva solicitud ", nmpoliza),
+								cdusuari,
+								null, // cdmotivo
+								cdsisrol,
+								"S", // swagente
+								null, // cdusuariDest
+								null, // cdsisrolDest
+								EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
+								false //cerrado
+								);
+						
+						resp.getSmap().put("nombreUsuarioDestino"
+								,mesaControlDAO.turnaPorCargaTrabajo(ntramiteActualiza,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
+						);
+					}
 				}
 			}
 			catch(Exception ex)
@@ -4170,7 +4197,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//mpoliage
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||duplicar))
 		{
 			try
 			{
@@ -4285,6 +4312,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdtipsit
 					,cdusuari
 					,cdsisrol
+					,duplicar
 					);
 		}
 		
@@ -8069,6 +8097,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     						,cdideext_
     						,usuarioSesion
     						,true
+    						,false // duplicar
     						);
     			}
 	            catch(Exception ex)
@@ -9434,6 +9463,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdtipsit
 			,String cdusuari
 			,String cdsisrol
+			,boolean duplicar
 			)
 	{
 		logger.debug(Utils.log(
@@ -9452,6 +9482,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
 				,"\n@@@@@@ olist1="          , olist1
 				,"\n@@@@@@ cdtipsit="        , cdtipsit
+				,"\n@@@@@@ cdusuari="        , cdusuari
+				,"\n@@@@@@ cdsisrol="        , cdsisrol
+				,"\n@@@@@@ duplicar="        , duplicar
 				));
 		new ProcesoColectivoAsincrono(
 				hayTramite
@@ -9469,6 +9502,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,cdtipsit
 				,cdusuari
 				,cdsisrol
+				,duplicar
 				).start();
 	}
 	
@@ -9479,6 +9513,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                ,censoAtrasado
 		                ,resubirCenso
 		                ,complemento
+		                ,duplicar
 		                ;
 		
 		private String cdunieco
@@ -9511,6 +9546,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,String cdtipsit
 				,String cdusuari
 				,String cdsisrol
+				,boolean duplicar
 				)
 		{
 			this.hayTramite      = hayTramite;
@@ -9528,6 +9564,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			this.cdtipsit        = cdtipsit;
 			this.cdusuari        = cdusuari;
 			this.cdsisrol        = cdsisrol;
+			this.duplicar        = duplicar;
 		}
 		
 		@Override
@@ -9552,10 +9589,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,"\n&&&&&& LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
 					,"\n&&&&&& olist1="          , olist1
 					,"\n&&&&&& cdtipsit="        , cdtipsit
+					,"\n&&&&&& cdusuari="        , cdusuari
+					,"\n&&&&&& cdsisrol="        , cdsisrol
+					,"\n&&&&&& duplicar="        , duplicar
 					));
 			try
 			{
-				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento)
+				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||duplicar)
 				{
 					logger.debug(Utils.log("\n&&&&&& ejecutaValoresDefectoConcurrente [id=",timestamp,"] &&&&&&"));		
 					cotizacionDAO.ejecutaValoresDefectoConcurrente(
@@ -9585,6 +9625,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 						
 						//ASISTENCIA INTERNACIONAL VIAJES --AHORA MEDICAMENTOS
 						String asisinte = (String)iGrupo.get("asisinte");
+						if (StringUtils.isBlank(asisinte)) {
+							asisinte = "0";
+						}
 						cdgarant = "4MED";
 						if(Integer.parseInt(asisinte)>0)
 						{
@@ -9747,6 +9790,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdtipsit
 			,String cdusuari
 			,String cdsisrol
+			,boolean duplicar
 			)
 	{
 		logger.debug(Utils.log(
@@ -9766,6 +9810,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ grupos="          , grupos
 				,"\n@@@@@@ cdusuari="        , cdusuari
 				,"\n@@@@@@ cdsisrol="        , cdsisrol
+				,"\n@@@@@@ duplicar="        , duplicar
 				));
 		new ProcesoColectivoAsincrono2(
 				hayTramite
@@ -9783,6 +9828,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,cdtipsit
 				,cdusuari
 				,cdsisrol
+				,duplicar
 				).start();
 	}
 	
@@ -9793,6 +9839,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                ,censoAtrasado
 		                ,resubirCenso
 		                ,complemento
+		                ,duplicar
 		                ;
 		
 		private String cdunieco
@@ -9825,6 +9872,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,String cdtipsit
 				,String cdusuari
 				,String cdsisrol
+				,boolean duplicar
 				)
 		{
 			this.hayTramite      = hayTramite;
@@ -9842,6 +9890,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			this.cdtipsit        = cdtipsit;
 			this.cdusuari        = cdusuari;
 			this.cdsisrol        = cdsisrol;
+			this.duplicar        = duplicar;
 		}
 		
 		@Override
@@ -9868,10 +9917,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,"\n&&&&&& cdtipsit="        , cdtipsit
 					,"\n&&&&&& cdusuari="        , cdusuari
 					,"\n&&&&&& cdsisrol="        , cdsisrol
+					,"\n&&&&&& duplicar="        , duplicar
 					));
 			try
 			{
-				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento)
+				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||duplicar)
 				{
 					logger.debug(Utils.log("\n&&&&&& ejecutaValoresDefectoConcurrente [id=",timestamp,"] &&&&&&"));
 					cotizacionDAO.ejecutaValoresDefectoConcurrente(

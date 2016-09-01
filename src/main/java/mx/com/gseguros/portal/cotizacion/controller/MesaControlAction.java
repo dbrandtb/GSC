@@ -16,6 +16,8 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
@@ -73,6 +75,9 @@ public class MesaControlAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ServiciosManager serviciosManager;
+	
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
 	
 	public String principal()
 	{
@@ -459,6 +464,49 @@ public class MesaControlAction extends PrincipalCoreAction
 			if(escalado)
 			{
 				smap1.put("status" , statusEsc);
+			} else {
+				// JTEZVA 2016-09-01
+				// SI APROBAMOS GUARDAMOS EL EVENTO [MESADECONTROL - APROBCOTCOL] CON NUMERO DE COTIZACION
+				if (EstatusTramite.COTIZACION_APROBADA.getCodigo().equals(statusNuevo)) {
+					logger.debug("Recuperando tramite");
+					FlujoVO flujo = new FlujoVO();
+					flujo.setNtramite(ntramite);
+					Map<String,Object> datosTramite = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
+					Map<String,String> tramite = (Map<String,String>)datosTramite.get("TRAMITE");
+					logger.debug(Utils.log("Tramite recuperado: ", tramite));
+					String cdunieco = tramite.get("CDUNIECO"),
+					       cdramo   = tramite.get("CDRAMO"),
+					       estado   = tramite.get("ESTADO"),
+					       nmsolici = tramite.get("NMSOLICI"),
+					       cdagente = tramite.get("CDAGENTE"),
+					       cdmodulo = "MESADECONTROL",
+					       cdevento = "APROBCOTCOL";
+					StringBuilder sb = new StringBuilder("\nSe confirma una cotizacion colectiva");
+					serviciosManager.grabarEvento(
+						sb,
+	            	    cdmodulo,
+	            	    cdevento,
+	            	    new Date(),
+	            	    cdusuariSesion,
+	            	    cdsisrolSesion,
+	            	    ntramite,
+	            	    cdunieco,
+	            	    cdramo,
+	            	    estado,
+	            	    nmsolici,
+	            	    nmsolici,
+	            	    cdagente,
+	            	    null,
+	            	    null
+	            	);
+					logger.debug(Utils.log(sb.toString()));
+					mesaControlManager.concatenarAlInicioDelUltimoDetalle(
+							ntramite,
+							Utils.join("Se aprob\u00f3 la cotizaci\u00f3n ",nmsolici," con las siguientes observaciones: "),
+							cdmodulo,
+							cdevento
+							);
+				}
 			}
 			
 			/*

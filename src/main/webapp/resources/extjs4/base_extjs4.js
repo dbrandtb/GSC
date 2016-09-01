@@ -3508,6 +3508,27 @@ function _generarRemesaClic2(required,cdunieco,cdramo,estado,nmpoliza,callback,m
     callback();
 }
 
+function _iceMostrar() {
+    var hid = Ext.ComponentQuery.query('[hidden=true]');
+    for (var i = 0; i < hid.length; i++) {
+        var cmp = hid[i];
+        if (['grid', 'form', 'panel', 'window', 'button'].indexOf(cmp.xtype) != -1) {
+            try {
+                cmp.addCls('red');
+                cmp.show();
+            } catch (e) {}
+        }
+    }
+    hid = Ext.ComponentQuery.query('[name][hidden=true]');
+    for (var i = 0; i < hid.length; i++) {
+        var cmp = hid[i];
+        try {
+            cmp.addCls('red');
+            cmp.show();
+        } catch (e) {}
+    }
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

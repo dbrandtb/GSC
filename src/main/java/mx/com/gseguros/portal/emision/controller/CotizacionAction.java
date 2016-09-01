@@ -3113,6 +3113,14 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.put("cdsisrol" , cdsisrol);
 				smap1.put("cdusuari" , cdusuari);
 				
+				if ((RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)
+						||RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol)
+						||RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
+						&& "17".equals(status)) {
+					status = "24"; // devolucion
+					smap1.put("status", status);
+				}
+				
 				paso = "Invocando proceso";
 				logger.debug(Utils.log("", "paso=", paso));
 				
@@ -3263,6 +3271,14 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				smap1.put("cdsisrol" , cdsisrol);
 				smap1.put("cdusuari" , cdusuari);
+				
+				if ((RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)
+						||RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol)
+						||RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
+						&& "17".equals(status)) {
+					status = "24"; // devolucion
+					smap1.put("status", status);
+				}
 				
 				//si entran por agente
 				paso = "Recuperando datos del agente";
@@ -6278,6 +6294,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		boolean resubirCenso  = false;
 		boolean complemento   = false;
 		boolean asincrono     = false;
+		boolean duplicar      = false;
 		
 		//datos de entrada
 		try
@@ -6347,6 +6364,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
 			asincrono = StringUtils.isNotBlank(smap1.get("asincrono"))&&smap1.get("asincrono").equalsIgnoreCase("si");
+			
+			duplicar = "S".equals(smap1.get("duplicar"));
 		}
 		catch(ApplicationException ax)
 		{
@@ -6416,6 +6435,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,nmpolant
 					,StringUtils.isBlank(nmrenova) ? "0" : nmrenova
 					,usuarioSesion
+					,duplicar
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -6503,6 +6523,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			String nmpolant  = smap1.get("nmpolant")
 			       ,nmrenova = smap1.get("nmrenova");
 			
+			boolean duplicar = "S".equals(smap1.get("duplicar"));
+			
 			logger.debug(Utils.log(
 					"\ninTimestamp: " , inTimestamp
 					,"\nclasif: "     , clasif
@@ -6512,7 +6534,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{
 				//nmpoliza
-				if(StringUtils.isBlank(nmpoliza))
+				if(StringUtils.isBlank(nmpoliza) || duplicar)
 				{
 					paso = "Generando n\u00f1mero de p\u00f3liza";
 					logger.debug(paso);
@@ -6656,7 +6678,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				logger.debug("35.-VALOR DE SWEXIPER : "+ exiper);
 				
 				//enviar archivo
-				if((!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
+				if((!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
 				{
 					paso = "Procesando censo";
 					logger.debug(paso);
@@ -7261,7 +7283,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				
 				//pl censo
-				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)
+				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar)
 				{
 					paso = "Ejecutando procedimiento de censo";
 					logger.debug(paso);
@@ -7317,7 +7339,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 				}
 				
-				if((!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)
+				if((!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar)
 						&&StringUtils.isBlank(nombreCensoConfirmado)
 				)
 				{
@@ -7340,7 +7362,8 @@ public class CotizacionAction extends PrincipalCoreAction
 							,false    , ntramite      , cdagente
 							,sincenso , censoAtrasado , resubirCenso
 							,cdperpag , cdsisrol      , complemento
-							,asincrono,cdmunici,cdedo,codpostal,false //censoCompleto
+							,asincrono,cdmunici,cdedo,codpostal,false, //censoCompleto
+							duplicar
 							);
 				if(!aux.exito)
 				{
@@ -7401,6 +7424,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String cdedo
 			,String codpostal
 			,boolean censoCompleto
+			,boolean duplicar
 			)
 	{
 		logger.debug(Utils.log(
@@ -7429,6 +7453,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				,"\n## complemento="          , complemento
 				,"\n## asincrono="            , asincrono
 				,"\n## censoCompleto="        , censoCompleto
+				,"\n## duplicar="             , duplicar
 				));
 		tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject resp =
 				new tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject();
@@ -7581,7 +7606,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		logger.debug("8.- Valor de resp.exito : {} hayTramite:{} hayTramiteVacio:{}",resp.exito,hayTramite,hayTramiteVacio);
 		if(resp.exito
-				&&(!hayTramite||hayTramiteVacio)
+				&&(!hayTramite||hayTramiteVacio||duplicar)
 				&&
 				(
 					RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)
@@ -7599,7 +7624,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.debug("10.- resp.exito : {} hayTramite: {} hayTramiteVacio: {} censoAtrasado: {} resubirCenso: {} complemento:{} asincrono:{} ",resp.exito, 
 				hayTramite,hayTramiteVacio,censoAtrasado,resubirCenso,complemento,asincrono);
 		
-		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto)&&asincrono==false)
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto||duplicar)&&asincrono==false)
 		{
 			try
 			{
@@ -7683,6 +7708,9 @@ public class CotizacionAction extends PrincipalCoreAction
 						
 						//ASISTENCIA INTERNACIONAL VIAJES --AHORA MEDICAMENTOS
 						String asisinte = (String)iGrupo.get("asisinte");
+						if (StringUtils.isBlank(asisinte)) {
+							asisinte = "0";
+						}
 						cdgarant = "4MED";
 						logger.debug("16.- Asistente :{}",Integer.parseInt(asisinte));
 						if(Integer.parseInt(asisinte)>0)
@@ -7818,7 +7846,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		//tramite
 		logger.debug("38.- resp.exito:{} hayTramite:{} hayTramiteVacio: {} censoAtrasado: {}",resp.exito,hayTramite,hayTramiteVacio,censoAtrasado);
-		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado))
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||duplicar))
 		{
 			try
 			{
@@ -7882,7 +7910,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,cdsisrol
 							,"S"
-							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							,EstatusTramite.TRAMITE_AGENTE.getCodigo()
 							,false
 							);
 					
@@ -7943,6 +7971,25 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("pv_otvalor02_i" , sincenso ? "S" : "N");
 					logger.debug("46.- siniestrosManager.actualizaOTValorMesaControl");
 					siniestrosManager.actualizaOTValorMesaControl(params);
+					
+					if (duplicar) {
+						mesaControlManager.movimientoDetalleTramite(
+								ntramiteActualiza,
+								new Date(),
+								null, // cdclausu
+								Utils.join("Se duplica la cotizaci\u00f3n para generar la nueva solicitud ", nmpoliza),
+								cdusuari,
+								null, // cdmotivo
+								cdsisrol,
+								"S", // swagente
+								EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
+								false // cerrado
+								);
+						
+						smap1.put("nombreUsuarioDestino"
+		            			,cotizacionManager.turnaPorCargaTrabajo(ntramiteActualiza,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
+		            			);
+					}
 				}
 			}
 			catch(Exception ex)
@@ -7957,7 +8004,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		//mpoliage
 		logger.debug("47.- resp.exito: {} hayTramite:{} hayTramiteVacio:{} ",resp.exito,hayTramite,hayTramiteVacio);
-		if(resp.exito&&(!hayTramite||hayTramiteVacio))
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||duplicar))
 		{
 			try
 			{
@@ -8061,6 +8108,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdtipsit
 					,cdusuari
 					,cdsisrol
+					,duplicar
 					);
 		}
 		
@@ -8383,6 +8431,9 @@ public class CotizacionAction extends PrincipalCoreAction
 						
 						//ASISTENCIA INTERNACIONAL VIAJES --AHORA MEDICAMENTOS
 						String asisinte = (String)iGrupo.get("asisinte");
+						if (StringUtils.isBlank(asisinte)) {
+							asisinte = "0";
+						}
 						cdgarant = "4MED";
 						logger.debug("16.- Asistente :{}",Integer.parseInt(asisinte));
 						if(Integer.parseInt(asisinte)>0)
@@ -8907,6 +8958,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdtipsit
 					,cdusuari
 					,cdsisrol
+					,false // duplicar
 					);
 		}
 		
@@ -10083,7 +10135,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                    , "&paramform=no"
 	                    );
 				
-				String nombreArchivoCotizacion = "cotizacion.pdf"
+				String nombreArchivoCotizacion = Utils.join("cotizacion_",nmpoliza,".pdf")
 				       ,pathArchivoCotizacion  = Utils.join(
 				    		   getText("ruta.documentos.poliza")
 				    		   ,"/" , ntramite
@@ -10102,7 +10154,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,"0"
 						,new Date()
 						,nombreArchivoCotizacion
-						,"COTIZACI\u00d3N EN RESUMEN"
+						,Utils.join("COTIZACI\u00d3N EN RESUMEN (",nmpoliza,")")
 						,nmpoliza
 						,ntramite
 						,"1"
@@ -10133,7 +10185,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						, "&paramform=no"
 	                  );
 				
-				String nombreArchivoCotizacion2 = "cotizacion2.pdf"
+				String nombreArchivoCotizacion2 = Utils.join("cotizacion2_",nmpoliza,".pdf")
 				       ,pathArchivoCotizacion2  = Utils.join(
 				    		   getText("ruta.documentos.poliza")
 				    		   ,"/" , ntramite
@@ -10152,7 +10204,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,"0"
 						,new Date()
 						,nombreArchivoCotizacion2
-						,"COTIZACI\u00d3N A DETALLE"
+						,Utils.join("COTIZACI\u00d3N A DETALLE (",nmpoliza,")")
 						,nmpoliza
 						,ntramite
 						,"1"
@@ -10184,7 +10236,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,paramsResumen
 							);
 					
-					String nombreResumen = Utils.join("RESUMEN_COTIZACION",TipoArchivo.XLS.getExtension());
+					String nombreResumen = Utils.join("RESUMEN_COTIZACION_",nmpoliza,TipoArchivo.XLS.getExtension());
 					
 					FileUtils.copyInputStreamToFile(excel, new File(Utils.join(
 									getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreResumen
@@ -10198,7 +10250,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,"0"
 							,new Date()
 							,nombreResumen
-							,"RESUMEN DE COTIZACI\u00d3N (EXCEL)"
+							,Utils.join("RESUMEN DE COTIZACI\u00d3N (EXCEL) (",nmpoliza,")")
 							,nmpoliza
 							,ntramite
 							,"1"
@@ -10230,7 +10282,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                    , "&paramform=no"
 		                    );
 					
-					String nombreArchivoResumenCotizacion = "resumen_cotizacion_col.pdf"
+					String nombreArchivoResumenCotizacion = Utils.join("resumen_cotizacion_col_",nmpoliza,".pdf")
 					       ,pathArchivoResumenCotizacion  = Utils.join(
 					    		   getText("ruta.documentos.poliza")
 					    		   ,"/" , ntramite
@@ -10247,7 +10299,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,"0"
 							,new Date()
 							,nombreArchivoResumenCotizacion
-							,"RESUMEN DE COTIZACI\u00d3N (PDF)"
+							,Utils.join("RESUMEN DE COTIZACI\u00d3N (PDF) (",nmpoliza,")")
 							,nmpoliza
 							,ntramite
 							,"1"
@@ -10278,7 +10330,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								,paramsGrupo
 								);
 						
-						String nombreCotGrupo = Utils.join("COTIZACION_GRUPO_",i,TipoArchivo.XLS.getExtension());
+						String nombreCotGrupo = Utils.join("COTIZACION_GRUPO_",i,"_",nmpoliza,TipoArchivo.XLS.getExtension());
 						
 						FileUtils.copyInputStreamToFile(excelGrupo, new File(Utils.join(
 										getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreCotGrupo
@@ -10292,7 +10344,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								,"0"
 								,new Date()
 								,nombreCotGrupo
-								,Utils.join("COTIZACI\u00d3N GRUPO ",i)
+								,Utils.join("COTIZACI\u00d3N GRUPO ",i, " (",nmpoliza,")")
 								,nmpoliza
 								,ntramite
 								,"1"
@@ -12163,6 +12215,7 @@ public class CotizacionAction extends PrincipalCoreAction
     						,null
     						,null
     						,true //censoCompleto
+    						,false // duplicar
     						);
     				exito           = aux.exito;
     				respuesta       = aux.respuesta;

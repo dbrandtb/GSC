@@ -6,16 +6,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>
-.green {
-	border-left: 2px solid green;
-	border-right: 2px solid green;
-}
-
-.red {
-	border-left: 2px solid red;
-	border-right: 2px solid red;
-}
-
 .conTimeout>tbody>tr::after {
 	content: url('${ctx}/resources/fam3icons/icons/clock.png');
 	margin-left: 5px;

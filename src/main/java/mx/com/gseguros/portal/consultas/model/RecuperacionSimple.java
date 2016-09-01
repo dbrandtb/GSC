@@ -97,6 +97,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_CORREO_EMISION_TRAMITE                        ("M")
 	,RECUPERAR_TODAS_SUCURSALES                              ("L")
 	,RECUPERAR_VALIDACION_POR_CDVALIDAFK                     ("L")
+	,RECUPERAR_COTIZACIONES_COLECTIVAS_APROBADAS             ("L")
 	;
 	 
 	private String tipo;

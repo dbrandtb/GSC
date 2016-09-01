@@ -3461,4 +3461,43 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	public void actualizaStatusMesaControl(String ntramite, String status) throws Exception {
 		mesaControlDAO.actualizaStatusMesaControl(ntramite, status);
 	}
+	
+	@Override
+	public void recuperarCotiColec(String cdusuari, String cdsisrol, String ntramite, String nmsolici, String status) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ recuperarCotiColec @@@@@@",
+				"\n@@@@@@ cdusuari = ", cdusuari,
+				"\n@@@@@@ cdsisrol = ", cdsisrol,
+				"\n@@@@@@ ntramite = ", ntramite,
+				"\n@@@@@@ nmsolici = ", nmsolici,
+				"\n@@@@@@ status   = ", status));
+		String paso = null;
+		try {
+			paso = "Actualizando solicitud";
+			logger.debug(paso);
+			mesaControlDAO.actualizarNmsoliciTramite(ntramite, nmsolici);
+			paso = "Guardando detalle";
+			logger.debug(paso);
+			mesaControlDAO.movimientoDetalleTramite(
+					ntramite,
+					new Date(),
+					null, //cdclausu
+					Utils.join("Se recuper\u00f3 la cotizaci\u00f3n ",nmsolici),
+					cdusuari,
+					null, //cdmotivo
+					cdsisrol,
+					"S", // swagente
+					null, // cdusuariDest
+					null, // cdsisrolDest
+					status,
+					false //cerrado
+					);
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ recuperarCotiColec @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+	}
 }

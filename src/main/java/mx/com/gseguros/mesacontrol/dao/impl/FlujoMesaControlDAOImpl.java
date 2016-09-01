@@ -3545,4 +3545,35 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String, String>> recuperarCotizacionesColectivasAprobadas(String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite", ntramite);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarCotizacionesColectivasAprobadasSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarCotizacionesColectivasAprobadas lista = ",lista));
+		return lista;
+	}
+	
+	protected class RecuperarCotizacionesColectivasAprobadasSP extends StoredProcedure {
+		protected RecuperarCotizacionesColectivasAprobadasSP (DataSource dataSource) {
+			super(dataSource,"P_GET_COTI_COLEC_APROBADAS");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			String[] cols = new String[] {
+					"CDUNIECO",
+					"CDRAMO",
+					"ESTADO",
+					"NMPOLIZA",
+					"PRIMA"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

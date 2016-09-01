@@ -1261,6 +1261,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 					i.put("cdusuari", cdusuari);
 					i.put("cdsisrol", cdsisrol);
 				}
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COTIZACIONES_COLECTIVAS_APROBADAS)) {
+				lista = flujoMesaControlDAO.recuperarCotizacionesColectivasAprobadas(params.get("ntramite"));
 			}
 		}
 		catch(Exception ex)

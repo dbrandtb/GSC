@@ -790,4 +790,6 @@ public interface FlujoMesaControlDAO {
 	public String recuperarEstatusDefectoRol (String cdsisrol) throws Exception;
 	
 	public List<Map<String, String>> recuperarValidacionPorCdvalidafk(String ntramite, String clave) throws Exception;
+	
+	public List<Map<String, String>> recuperarCotizacionesColectivasAprobadas(String ntramite) throws Exception;
 }

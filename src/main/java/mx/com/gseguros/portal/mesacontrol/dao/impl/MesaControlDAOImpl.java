@@ -1268,4 +1268,29 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
+	
+	@Override
+	public void concatenarAlInicioDelUltimoDetalle(String ntramite, String comentario, String cdmodulo, String cdevento) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite"   , ntramite);
+		params.put("comentario" , comentario);
+		params.put("cdmodulo"   , cdmodulo);
+		params.put("cdevento"   , cdevento);
+		ejecutaSP(new ConcatenarAlInicioDelUltimoDetalleSP(getDataSource()), params);
+	}
+	
+	protected class ConcatenarAlInicioDelUltimoDetalleSP extends StoredProcedure
+	{
+		protected ConcatenarAlInicioDelUltimoDetalleSP(DataSource dataSource)
+		{
+			super(dataSource,"P_ACT_DETALLE_MC_AL_INICIO");
+			declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("comentario" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmodulo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdevento"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

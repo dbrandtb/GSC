@@ -357,4 +357,10 @@ public class MesaControlManagerImpl implements MesaControlManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
+	
+	@Override
+	@Deprecated
+	public void concatenarAlInicioDelUltimoDetalle(String ntramite, String comentario, String cdmodulo, String cdevento) throws Exception {
+		mesaControlDAO.concatenarAlInicioDelUltimoDetalle(ntramite, comentario, cdmodulo, cdevento);
+	}
 }

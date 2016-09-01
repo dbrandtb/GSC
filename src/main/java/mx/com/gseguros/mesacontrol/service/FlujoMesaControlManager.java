@@ -391,4 +391,6 @@ public interface FlujoMesaControlManager
 	
 	@Deprecated
 	public void actualizaStatusMesaControl(String ntramite, String status) throws Exception;
+	
+	public void recuperarCotiColec(String cdusuari, String cdsisrol, String ntramite, String nmsolici, String status) throws Exception;
 }
