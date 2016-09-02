@@ -2785,8 +2785,12 @@
 									var valido =  autorizaRecla =='S' &&  autorizaMedic!='N' ;
 									if(!valido) {
 										mensajeWarning(
-												'El tr&aacute;mite de pago directo ser&aacute; cancelado debido a que no ha sido autorizado alguno de los siniestros'
-												,function(){_11_windowRechazoSiniestro.show();centrarVentanaInterna(_11_windowRechazoSiniestro);}
+												'El tr&aacute;mite ser&aacute; cancelado debido a que no ha sido autorizado alguno de los siniestros'
+												,function(){
+													//_11_windowRechazoSiniestro.show();
+													//centrarVentanaInterna(_11_windowRechazoSiniestro);
+													_11_rechazarTramiteSiniestro();
+												}
 										);
 									}else{
 										//Guardamos la información de la factura
@@ -3186,7 +3190,7 @@
 					,initComponent : function() {
 						debug('_11_WindowRechazoSiniestro initComponent');
 						Ext.apply(this, {
-							title		: 'Rechazo de tr&aacute;mite'
+							title		: 'Rechazo de tr&aacute;mite ==> '
 							,width	   : 600
 							,height	  : 350
 							,autoScroll  : true
