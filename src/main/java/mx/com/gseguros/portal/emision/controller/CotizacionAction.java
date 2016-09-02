@@ -6757,7 +6757,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                {
 				                auxCell=row.getCell(0);
 				                logger.debug("NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-				                bufferLinea.append(Utils.join(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+				                bufferLinea.append(Utils.join(auxCell!=null?auxCell.getStringCellValue().trim()+"|":"|"));
 				                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():""," ");
 			                }
 			                catch(Exception ex)
@@ -6774,7 +6774,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                {
 				                auxCell=row.getCell(1);
 				                logger.debug("APELLIDO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue().trim()+"|":"|");
 				                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():""," ");
 			                }
 			                catch(Exception ex)
@@ -6791,7 +6791,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	{
 				                auxCell=row.getCell(2);
 				                logger.debug("APELLIDO 2: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue().trim()+"|":"|");
 				                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
 			                }
 			                catch(Exception ex)
@@ -6859,7 +6859,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	
 		                	try
 		                	{
-		                		String sexo = row.getCell(5).getStringCellValue();
+		                		String sexo = row.getCell(5).getStringCellValue().trim();
 		                		if(StringUtils.isBlank(sexo)
 		                				||(!sexo.equals("H")&&!sexo.equals("M")))
 		                		{
@@ -6880,7 +6880,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                
 			                try
 		                	{
-		                		String parentesco = row.getCell(6).getStringCellValue();
+		                		String parentesco = row.getCell(6).getStringCellValue().trim();
 		                		if(StringUtils.isBlank(parentesco)
 		                				||(!parentesco.equals("T")
 		                						&&!parentesco.equals("H")
@@ -6928,7 +6928,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	{
 				                auxCell=row.getCell(7);
 				                logger.debug("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+				                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue().trim()+"|":"|");
 			                }
 			                catch(Exception ex)
 			                {
