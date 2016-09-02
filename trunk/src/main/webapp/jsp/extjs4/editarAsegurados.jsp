@@ -2592,20 +2592,25 @@ debug("validarYGuardar flag:2");
 								var gridSource = gridPersonasp2.getView().dataSource.data;
 								
 								var hayConyuge = false;
+								var titularCasado =  false;
+								
 								for(var j=0;j < gridSource.length;j++){
 									if(gridSource.getAt(j).data.Parentesco == "C"){
 										hayConyuge = true;
-						    		}	
+						    		}
+									if(gridSource.getAt(j).data.Parentesco == "T" && gridSource.getAt(j).data.cdestciv == 2){
+										titularCasado = true;
+									}
 								}
 								
 								for(var j=0;j < gridSource.length;j++){
-									if(gridSource.getAt(j).data.Parentesco == "C" && gridSource.getAt(j).data.cdestciv != 2){
+									if(gridSource.getAt(j).data.Parentesco == "C" && titularCasado && gridSource.getAt(j).data.cdestciv != 2){
 						    			mensajeWarning('El parentesco del conyuge debe ser Casado(a).');
 						    			return false;
-						    		}else if(gridSource.getAt(j).data.cdestciv != 2 && gridSource.getAt(j).data.Parentesco == "T" && hayConyuge){
+						    		}/*else if(gridSource.getAt(j).data.Parentesco == "T" && gridSource.getAt(j).data.cdestciv != 2 && hayConyuge){
 										mensajeWarning('El parentesco del titular debe ser Casado(a), puesto que existe un conyuge.');
 										return false;
-						    		}	
+						    		}*/	
 								}
 								
                                 //ver si el contratante es aparte
