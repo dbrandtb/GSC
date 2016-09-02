@@ -2850,7 +2850,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerDomicilioGeneral(DataSource dataSource)
 		{
-			super(dataSource,"PKG_COTIZA.P_GET_MDOMICIL_ART140");
+			super(dataSource,"PKG_CONSULTA.P_GET_MDOMICIL_ART140");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
