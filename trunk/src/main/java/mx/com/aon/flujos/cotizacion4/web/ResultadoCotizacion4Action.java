@@ -1378,7 +1378,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                .append("&ACCESSIBLE=YES")
 	                .append("&paramform=no");
 	            
-	            String nombreArchivoCotizacion="cotizacion.pdf";
+	            String nombreArchivoCotizacion = Utils.join("cotizacion_", comprarNmpoliza, ".pdf");
 	            String pathArchivoCotizacion=new StringBuilder()
             					.append(getText("ruta.documentos.poliza"))
             					.append("/").append(ntramite)
@@ -1409,7 +1409,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            		,"0"
 	            		,new Date()
 	            		,nombreArchivoCotizacion
-	            		,"COTIZACI\u00D3N"
+	            		,Utils.join("COTIZACI\u00D3N (", comprarNmpoliza, ")")
 	            		,comprarNmpoliza
 	            		,ntramite
 	            		,"1"
