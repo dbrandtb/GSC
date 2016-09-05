@@ -7860,6 +7860,13 @@ public class CotizacionAction extends PrincipalCoreAction
 					logger.debug("40.- consultasManager.recuperarDatosFlujoEmision");
 					Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(cdramo,"C");
 
+					String estatus = EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo();
+					try {
+            			estatus = flujoMesaControlManager.recuperarEstatusDefectoRol(cdsisrol);
+            		} catch (Exception ex) {
+            			logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
+            		}
+					
 					//logger.debug("");
 					logger.debug("41.- mesaControlManager.movimientoTramite");
 					String ntramiteNew = mesaControlManager.movimientoTramite(
@@ -7876,7 +7883,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,null
 							,new Date()
-							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							,estatus
 							,null
 							,nmpoliza
 							,cdtipsit
@@ -7910,7 +7917,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,cdsisrol
 							,"S"
-							,EstatusTramite.TRAMITE_AGENTE.getCodigo()
+							,estatus
 							,false
 							);
 					
@@ -7923,13 +7930,14 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,cdsisrol
 							,"S"
-							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							,estatus
 							,false
 							);
 	            	
-	            	smap1.put("nombreUsuarioDestino"
+	            	/* ya no turna, solo lo crea y ya JTEZVA 2016 09 02
+	            	 * smap1.put("nombreUsuarioDestino"
 	            			,cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
-	            			);
+	            			);*/
 	            	
 	            	try
 		            {

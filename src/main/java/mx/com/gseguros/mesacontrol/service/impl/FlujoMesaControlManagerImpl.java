@@ -2495,11 +2495,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			if(destinoSimple)
 			{
-				message = "El tr\u00e1mite ha sido turnado con \u00e9xito";
+				message = Utils.join("El tr\u00e1mite ", ntramite, " ha sido turnado con \u00e9xito");
 			}
 			else
 			{
-				message = Utils.join("El tr\u00e1mite ha sido turnado a ",usuarioDestino.get("dsusuari"));
+				message = Utils.join("El tr\u00e1mite ", ntramite, " ha sido turnado a ",usuarioDestino.get("dsusuari"));
 			}
 			
 		}

@@ -145,6 +145,10 @@ var RolSistema = {
     ,ParametrizadorSistemas  	  : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@PARAMETRIZADOR_SISTEMAS.cdsisrol"     />'
     ,EjecutivoVenta               : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@EJECUTIVO_INTERNO.cdsisrol"           />'
     ,MesaControl                  : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MESA_DE_CONTROL.cdsisrol"             />'
+    ,SuscriptorTecnico            : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR_TECNICO.cdsisrol"          />'
+    ,SupervisorTecnico            : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUPERVISOR_TECNICO_SALUD.cdsisrol"    />'
+    ,SubdirectorSalud             : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUBDIRECTOR_SALUD.cdsisrol"           />'
+    ,DirectorSalud                : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@DIRECTOR_SALUD.cdsisrol"              />'
     ,
     
     

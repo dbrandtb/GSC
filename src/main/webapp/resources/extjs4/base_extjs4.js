@@ -2528,10 +2528,10 @@ function _procesaAccion(
 	                                                        }
 	                                                    }*/
 	                                                    {
-	                                                        text    : 'CONFIRMAR Y CONTINUAR',
-	                                                        icon    : _GLOBAL_DIRECTORIO_ICONOS + 'control_fastforward_blue.png',
-	                                                        hidden  : numSalidas === 0 || faltanDocs === true || aux === 'LECTURA' || aux === 'INICIAL',
-	                                                        handler : function (me) {
+	                                                        text     : 'CONFIRMAR Y CONTINUAR',
+	                                                        icon     : _GLOBAL_DIRECTORIO_ICONOS + 'control_fastforward_blue.png',
+	                                                        disabled : numSalidas === 0 || faltanDocs === true || aux === 'LECTURA' || aux === 'INICIAL',
+	                                                        handler  : function (me) {
 	                                                            centrarVentanaInterna(Ext.MessageBox.confirm(
 	                                                                'Confirmar',
 	                                                                'La revisi\u00f3n de requisitos no se podr\u00e1 modificar posteriormente ¿Desea continuar?',
@@ -2632,8 +2632,9 @@ function _procesaAccion(
                                                                });
 	                                                        }
 	                                                    }, {
-	                                                        text    : 'CERRAR',
-	                                                        icon    : _GLOBAL_DIRECTORIO_ICONOS + 'delete.png',
+	                                                        text    : 'CONTINUAR',
+	                                                        icon    : _GLOBAL_DIRECTORIO_ICONOS + 'accept.png',
+	                                                        hidden  : !(numSalidas === 0 || faltanDocs === true || aux === 'LECTURA' || aux === 'INICIAL'),
 	                                                        handler : function (me) {
 	                                                            me.up('window').close();
 	                                                        }
