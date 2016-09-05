@@ -2514,4 +2514,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	//String tipoConcepto, String idProveedor, String idConceptoTipo
+	public String obtieneValidacionAsegurado(String cdperson, Date feocurre, String nmpoliza ) throws Exception {
+		try {
+			return siniestrosDAO.obtieneValidacionAsegurado(cdperson, feocurre, nmpoliza );
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 }

@@ -836,6 +836,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	
 	protected class DatosListaPoliza  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	logger.debug("Valor de RS "+rs);
         	PolizaVigenteVO consulta = new PolizaVigenteVO();
         	consulta.setCdunieco(rs.getString("CDUNIECO"));
         	consulta.setCdramo(rs.getString("CDRAMO"));
@@ -860,7 +861,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         		consulta.setDesEstatusCliente("Cancelado");
         	}
         	
-        	consulta.setFcancelacionAfiliado(rs.getString("FCANCEL_AFILIADO"));
+        	consulta.setFcancelacionAfiliado(Utils.formateaFecha(rs.getString("FCANCEL_AFILIADO")));
         	consulta.setFaltaAsegurado(Utils.formateaFecha(rs.getString("FALTA_ASEGURADO")));
         	consulta.setMtoBeneficioMax(rs.getString("BENEFICIO_MAXIMO"));
         	consulta.setZonaContratada(rs.getString("ZONA_CONTRATADA"));
@@ -5768,4 +5769,31 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public String obtieneValidacionAsegurado(String cdperson, Date feocurre, String nmpoliza) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdperson_i", cdperson);
+		params.put("pv_feocurre_i", feocurre);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		
+		Map<String, Object> resultado = ejecutaSP(new ObtieneValidacionAsegurado(getDataSource()), params);
+		logger.debug( resultado.get("pv_status_o"));
+		return (String) resultado.get("pv_status_o");
+	}
+	
+    protected class ObtieneValidacionAsegurado extends StoredProcedure {
+    	
+    	protected ObtieneValidacionAsegurado(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_DESARROLLO.P_VALIDA_STATUS_ASEG");
+    		declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));		// Id. del proveedor
+    		declareParameter(new SqlParameter("pv_feocurre_i", OracleTypes.DATE));		// Id. del concepto
+    		declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_status_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

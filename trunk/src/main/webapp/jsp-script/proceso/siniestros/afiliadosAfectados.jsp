@@ -124,7 +124,7 @@
 			var _URL_VALIDADOCCARGADOS					= '<s:url namespace="/siniestros" 		action="validaDocumentosCargados"/>';
             var _UrlGenerarContrarecibo     			= '<s:url namespace="/siniestros" 		action="generarContrarecibo"       />';
 			var _URL_VALIDA_COBASEGURADOS				= '<s:url namespace="/siniestros" 		action="validaLimiteCoberturaAsegurados"/>';
-			
+			var _URL_VALIDA_STATUSASEG			        = '<s:url namespace="/siniestros" 	   	action="validaStatusAseguradoSeleccionado" />';
 			
 			var _11_itemsForm	= [
 				<s:property value="imap.itemsForm" />
@@ -2941,42 +2941,72 @@
 									var valorFechaInicial = new Date(record.get('feinicio').substring(6,10)+"/"+record.get('feinicio').substring(3,5)+"/"+record.get('feinicio').substring(0,2));
 									var valorFechaFinal =   new Date(record.get('fefinal').substring(6,10)+"/"+record.get('fefinal').substring(3,5)+"/"+record.get('fefinal').substring(0,2));
 									var valorFechaAltaAsegurado = new Date(record.get('faltaAsegurado').substring(6,10)+"/"+record.get('faltaAsegurado').substring(3,5)+"/"+record.get('faltaAsegurado').substring(0,2));
-									
-									if( (valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
-										if( valorFechaOcurrencia >= valorFechaAltaAsegurado ) {
-												panelListadoAsegurado.down('[name="cdUniecoAsegurado"]').setValue(record.get('cdunieco'));
-												panelListadoAsegurado.down('[name="cdRamoAsegurado"]').setValue(record.get('cdramo'));
-												panelListadoAsegurado.down('[name="estadoAsegurado"]').setValue(record.get('estado'));
-												panelListadoAsegurado.down('[name="nmPolizaAsegurado"]').setValue(record.get('nmpoliza'));
-												panelListadoAsegurado.down('[name="nmSoliciAsegurado"]').setValue(record.get('nmsolici'));
-												panelListadoAsegurado.down('[name="nmSuplemAsegurado"]').setValue(record.get('nmsuplem'));
-												panelListadoAsegurado.down('[name="nmSituacAsegurado"]').setValue(record.get('nmsituac'));
-												panelListadoAsegurado.down('[name="cdTipsitAsegurado"]').setValue(record.get('cdtipsit'));
+					                Ext.Ajax.request({
+					                    url     : _URL_VALIDA_STATUSASEG
+					                    ,params:{
+					                        'params.cdperson'  : panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').getValue(),
+					                        'params.feoocurre' : valorFechaOcurrencia,
+					                        'params.nmpoliza'  : record.get('nmpoliza')
+					                    }
+					                    ,success : function (response) {
+					                        json = Ext.decode(response.responseText);
+					                         if(Ext.decode(response.responseText).validacionGeneral =="V"){
+												if((valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
+													if( valorFechaOcurrencia >= valorFechaAltaAsegurado ) {
+															panelListadoAsegurado.down('[name="cdUniecoAsegurado"]').setValue(record.get('cdunieco'));
+															panelListadoAsegurado.down('[name="cdRamoAsegurado"]').setValue(record.get('cdramo'));
+															panelListadoAsegurado.down('[name="estadoAsegurado"]').setValue(record.get('estado'));
+															panelListadoAsegurado.down('[name="nmPolizaAsegurado"]').setValue(record.get('nmpoliza'));
+															panelListadoAsegurado.down('[name="nmSoliciAsegurado"]').setValue(record.get('nmsolici'));
+															panelListadoAsegurado.down('[name="nmSuplemAsegurado"]').setValue(record.get('nmsuplem'));
+															panelListadoAsegurado.down('[name="nmSituacAsegurado"]').setValue(record.get('nmsituac'));
+															panelListadoAsegurado.down('[name="cdTipsitAsegurado"]').setValue(record.get('cdtipsit'));
+															modPolizasAsegurado.hide();
+													}else{
+														// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
+														Ext.Msg.show({
+															title:'Error',
+															msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',
+															buttons: Ext.Msg.OK,
+															icon: Ext.Msg.ERROR
+														});
+														panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
+														modPolizasAsegurado.hide();
+														//limpiarRegistros();
+													}
+												}else{
+													// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
+													centrarVentanaInterna(Ext.Msg.show({
+														title:'Error',
+														msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
+														buttons: Ext.Msg.OK,
+														icon: Ext.Msg.ERROR
+													}));
+													panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
+													modPolizasAsegurado.hide();
+												}
+				                             }else{
+												// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
+												centrarVentanaInterna(Ext.Msg.show({
+													title:'Error',
+													msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.ERROR
+												}));
+												panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
 												modPolizasAsegurado.hide();
-										}else{
-											// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
-											Ext.Msg.show({
-												title:'Error',
-												msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',
-												buttons: Ext.Msg.OK,
-												icon: Ext.Msg.ERROR
-											});
-											panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
-											modPolizasAsegurado.hide();
-											//limpiarRegistros();
-										}
-									}else{
-										// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
-										centrarVentanaInterna(Ext.Msg.show({
-											title:'Error',
-											msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
-											buttons: Ext.Msg.OK,
-											icon: Ext.Msg.ERROR
-										}));
-										panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
-										modPolizasAsegurado.hide();
-										//limpiarRegistros();
-									}
+				                             }
+					                    },
+					                    failure : function (){
+					                        me.up().up().setLoading(false);
+					                        centrarVentanaInterna(Ext.Msg.show({
+					                            title:'Error',
+					                            msg: 'Error de comunicaci&oacute;n',
+					                            buttons: Ext.Msg.OK,
+					                            icon: Ext.Msg.ERROR
+					                        }));
+					                    }
+					                });
 								}else{
 									// El asegurado no se encuentra vigente
 									centrarVentanaInterna(Ext.Msg.show({

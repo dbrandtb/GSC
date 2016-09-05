@@ -5819,6 +5819,21 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String validaStatusAseguradoSeleccionado(){
+		logger.debug("Entra a validaStatusAseguradoSeleccionado params de entrada :{}",params);
+		try {
+			String feocurre= params.get("feoocurre").substring(8,10)+"/"+params.get("feoocurre").substring(5,7)+"/"+params.get("feoocurre").substring(0,4);
+			validacionGeneral = siniestrosManager.obtieneValidacionAsegurado(params.get("cdperson") ,renderFechas.parse(feocurre),params.get("nmpoliza"));
+			logger.debug("validacionGeneral ==>: {} ",validacionGeneral);
+			
+		}catch( Exception e){
+			logger.error("Error al obtener el monto del arancel : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+
 	
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {

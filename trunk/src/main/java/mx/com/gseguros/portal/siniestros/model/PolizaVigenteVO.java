@@ -115,16 +115,6 @@ public class PolizaVigenteVO implements Serializable {
 	}
 
 
-	public String getFcancelacionAfiliado() {
-		return fcancelacionAfiliado;
-	}
-
-
-	public void setFcancelacionAfiliado(String fcancelacionAfiliado) {
-		this.fcancelacionAfiliado = fcancelacionAfiliado;
-	}
-
-
 	public String getMtoBeneficioMax() {
 		return mtoBeneficioMax;
 	}
@@ -385,6 +375,16 @@ public class PolizaVigenteVO implements Serializable {
 
 	public void setDsTipsit(String dsTipsit) {
 		this.dsTipsit = dsTipsit;
+	}
+
+
+	public String getFcancelacionAfiliado() {
+		return fcancelacionAfiliado;
+	}
+
+
+	public void setFcancelacionAfiliado(String fcancelacionAfiliado) {
+		this.fcancelacionAfiliado = fcancelacionAfiliado;
 	}
 	
 }
