@@ -711,4 +711,5 @@ public interface SiniestrosManager {
 	
 	public String actualizarValImpuestoProv(HashMap<String, Object> datosActualizacion) throws Exception;
 	
+	public String obtieneValidacionAsegurado(String cdperson, Date feocurre, String nmpoliza)throws Exception;
 }

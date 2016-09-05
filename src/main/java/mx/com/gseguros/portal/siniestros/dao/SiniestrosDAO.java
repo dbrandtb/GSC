@@ -573,4 +573,6 @@ public interface SiniestrosDAO {
 	public List<Map<String, String>> obtieneListaDatosAutEspecial(HashMap<String, Object> params) throws Exception;
 	
 	public String actualizaValImpuestoProv(HashMap<String, Object> datosActualizacion) throws Exception;
+	
+	public String obtieneValidacionAsegurado(String cdperson, Date feocurre, String nmpoliza) throws Exception;
 }

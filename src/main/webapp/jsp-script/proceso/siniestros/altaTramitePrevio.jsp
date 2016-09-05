@@ -21,6 +21,7 @@
             var _MULTISALUD			   = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
             var _GMMI				   = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
             var _RECUPERA			   = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
+			var _CAT_MODALIDADES 	   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT"/>';
 			debug("TIPO_PAGO");
 			debug(_TIPO_PAGO_DIRECTO);
 			var _URL_CATALOGOS 						= '<s:url namespace="/catalogos" 		action="obtieneCatalogo" />';
@@ -36,8 +37,8 @@
 			var _p12_urlMesaControl                 = '<s:url namespace="/mesacontrol" 		action="mcdinamica"               />';
 			//var _UR_LISTA_RAMO_SALUD					= '<s:url namespace="/siniestros"  		action="consultaRamosSalud"/>';
 			var _URL_CONSULTA_BENEFICIARIO          = '<s:url namespace="/siniestros"       action="consultaDatosBeneficiario" />';
-			var _CAT_MODALIDADES 					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT"/>';
-			var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	   action="consultaInfCausaSiniestroProducto" />';
+			var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	    action="consultaInfCausaSiniestroProducto" />';
+			var _URL_VALIDA_STATUSASEG			    = '<s:url namespace="/siniestros" 	   	action="validaStatusAseguradoSeleccionado" />';
 			
 			var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
 		</script>
