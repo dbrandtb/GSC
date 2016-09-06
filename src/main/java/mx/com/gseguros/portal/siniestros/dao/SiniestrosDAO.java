@@ -575,4 +575,6 @@ public interface SiniestrosDAO {
 	public String actualizaValImpuestoProv(HashMap<String, Object> datosActualizacion) throws Exception;
 	
 	public String obtieneValidacionAsegurado(String cdperson, Date feocurre, String nmpoliza) throws Exception;
+	
+	public List<Map<String,String>> obtieneInfImporteAsegTramiteAseg(Map<String, String> params) throws Exception;
 }

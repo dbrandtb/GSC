@@ -125,7 +125,8 @@
             var _UrlGenerarContrarecibo     			= '<s:url namespace="/siniestros" 		action="generarContrarecibo"       />';
 			var _URL_VALIDA_COBASEGURADOS				= '<s:url namespace="/siniestros" 		action="validaLimiteCoberturaAsegurados"/>';
 			var _URL_VALIDA_STATUSASEG			        = '<s:url namespace="/siniestros" 	   	action="validaStatusAseguradoSeleccionado" />';
-			
+			var _URL_VALIDA_IMP_ASEGSINIESTRO			= '<s:url namespace="/siniestros" 	   	action="validaImporteAsegTramiteAseg" />';
+			var _URL_VALIDA_IMPASEGURADOSINIESTRO		= '<s:url namespace="/siniestros" 		action="validaImporteTramiteAsegurados"/>';
 			var _11_itemsForm	= [
 				<s:property value="imap.itemsForm" />
 				,{
@@ -3865,7 +3866,6 @@
 					var resultCobertura= "";
 					if(valCobertura.length > 0){
 						//Mostramos el mensaje de Error y no podra continuar
-						debug("Valor de Respuesta ===>",valCobertura.length);
 						for(var i = 0; i < valCobertura.length; i++){
 							banderaExisteCobertura = "1";
 							resultCobertura = resultCobertura + 'La Factura ' + valCobertura[i].NFACTURA + ' del siniestro '+ valCobertura[i].NMSINIES+ ' requiere actualizar la cobertura no amparada. <br/>';
@@ -3979,7 +3979,7 @@
 					centrarVentanaInterna(mensajeWarning(json.msgResult));
 				}else{
 					myMask.hide();
-					_11_mostrarSolicitudPago();
+					_11_validaImporteAseguradoTramite();
 				}
 			},
 			failure : function (){
@@ -3993,6 +3993,36 @@
 		});
 	}
 	
+	//Validamos si existe las Validaciones 
+	function _11_validaImporteAseguradoTramite(){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
+		Ext.Ajax.request({
+			url     : _URL_VALIDA_IMPASEGURADOSINIESTRO
+			,params:{
+				'params.ntramite'  : _11_params.NTRAMITE,
+				'params.tipopago'  : _tipoPago
+			}
+			,success : function (response) {
+				json = Ext.decode(response.responseText);
+				if(json.success==false){
+					myMask.hide();
+					centrarVentanaInterna(mensajeWarning(json.msgResult));
+				}else{
+					myMask.hide();
+					//_11_mostrarSolicitudPago();
+				}
+			},
+			failure : function (){
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
+		});
+	}
 	// Mostrar solicitud de pago 
 	function _11_mostrarSolicitudPago(){
 		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
@@ -5402,17 +5432,51 @@
 				'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue()
 			}
 			,success : function (response) {
-				gridFacturaDirecto.setLoading(false);
-				storeAseguradoFactura.load({
-					params: {
-						'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue() ,
-						'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+				
+				Ext.Ajax.request({
+					url	 : _URL_VALIDA_IMP_ASEGSINIESTRO
+					,params:{
+						'params.tipopago'  : _tipoPago,
+		                'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
+		                'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue()
+					}
+					,success : function (response) {
+		                var validacionMensaje = Ext.decode(response.responseText).datosValidacion;
+		                var resultMsj= "";
+		                var banderaresultMsj = 0;
+		                if(validacionMensaje.length > 0){
+		                	for(var i = 0; i < validacionMensaje.length; i++){
+								banderaresultMsj = "1";
+								resultMsj = resultMsj + 'El siniestro '+ validacionMensaje[i].SINIESTRO+' de la Factura '+validacionMensaje[i].FACTURA+ ' el importe es negativo. <br/>';
+							}
+							resultMsj = resultMsj+'Favor de corregir el importe para poder continuar.<br/>';
+							
+							if(banderaresultMsj == "1"){
+								centrarVentanaInterna(mensajeWarning(resultMsj));
+							}
+		                }		                
+		                gridFacturaDirecto.setLoading(false);
+					 	storeAseguradoFactura.load({
+							params: {
+								'smap.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue() ,
+								'smap.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue()
+							}
+						});
+						
+						panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
+						panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
+						obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
+					},
+					failure : function () {
+						gridFacturaDirecto.setLoading(false);
+						Ext.Msg.show({
+							title:'Error',
+							msg: 'Error de comunicaci&oacute;n',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						});
 					}
 				});
-				
-				panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
-				panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
-				obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
 			},
 			failure : function () {
 				gridFacturaDirecto.setLoading(false);

@@ -5834,6 +5834,53 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
+	public String validaImporteAsegTramiteAseg(){
+		logger.debug("Entra a validaImporteAsegTramiteAseg params de entrada :{}",params);
+		try {
+			datosValidacion = siniestrosManager.obtenerInfImporteAsegTramiteAseg(params.get("tipopago"),params.get("ntramite"),params.get("nfactura"));
+			logger.debug("Respuesta datosValidacion : {}", datosValidacion);
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de la validacion del Siniestro : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String validaImporteTramiteAsegurados(){
+		logger.debug("Entra a validaImporteTramiteAsegurados params de entrada :{}",params);
+		
+		try {
+			Map<String,String> factura        = null;
+			Map<String,String> siniestroIte   = null;
+			List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(params.get("ntramite"));
+			String banderaValidacion = "0";
+			String mensaje = "";
+			for(int i = 0; i < facturasAux.size(); i++){
+				factura = facturasAux.get(i);
+				List<Map<String,String>> siniesxfactura = siniestrosManager.obtenerInfImporteAsegTramiteAseg(params.get("tipopago"),params.get("ntramite"),factura.get("NFACTURA"));
+				for( int j= 0; j < siniesxfactura.size();j++){
+					siniestroIte    = siniesxfactura.get(j);
+					if(Double.parseDouble(siniestroIte.get("IMPORTE"+"")) < 0d){
+						banderaValidacion = "1";
+						mensaje = mensaje + "El Siniestro "+siniestroIte.get("SINIESTRO")+" de la Factura " + siniestroIte.get("FACTURA") + " el importe es negativo. <br/>";
+					}
+				}
+			}
+			if(banderaValidacion.equalsIgnoreCase("1")){
+				logger.debug("entra la validacion banderaValidacion" );
+				success = false;
+				msgResult = mensaje+"Favor de corregir el importe para poder continuar.<br/>";
+			}else{
+				success = true;
+				msgResult = "";
+			}
+		}catch( Exception e){
+			logger.error("Error al consultar validaImporteTramiteAsegurados : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		return SUCCESS;
+	}
 	
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {

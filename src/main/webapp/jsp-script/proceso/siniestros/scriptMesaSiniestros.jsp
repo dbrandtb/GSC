@@ -71,6 +71,7 @@ var _URL_MESACONTROL					= '<s:url namespace="/mesacontrol" 	action="mcdinamica"
 var _URL_EXISTE_COBERTURA				= '<s:url namespace="/siniestros" 	action="consultaExisteCoberturaTramite" />';
 var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	action="consultaInfCausaSiniestroProducto" />';
 var _URL_VALIDA_COBASEGURADOS			= '<s:url namespace="/siniestros" 	action="validaLimiteCoberturaAsegurados"/>';
+var _URL_VALIDA_IMPASEGURADOSINIESTRO	= '<s:url namespace="/siniestros" 	action="validaImporteTramiteAsegurados"/>';
 var windowLoader;
 var msgWindow;
 
@@ -1361,6 +1362,38 @@ var msgWindow;
 			url     : _URL_VALIDA_COBASEGURADOS
 			,params:{
 				'params.ntramite'  : record.get('ntramite')
+			}
+			,success : function (response) {
+				json = Ext.decode(response.responseText);
+				if(json.success==false){
+					myMask.hide();
+					centrarVentanaInterna(mensajeWarning(json.msgResult));
+				}else{
+					myMask.hide();
+					_11_validaImporteAseguradoTramite(grid,rowIndex,colIndex);
+				}
+			},
+			failure : function (){
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
+		});
+	}
+	
+	//Validamos si existe las Validaciones 
+	function _11_validaImporteAseguradoTramite(grid,rowIndex,colIndex){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
+		var record = grid.getStore().getAt(rowIndex);
+		Ext.Ajax.request({
+			url     : _URL_VALIDA_IMPASEGURADOSINIESTRO
+			,params:{
+				'params.ntramite'  : record.get('ntramite'),
+				'params.tipopago'  : record.get('parametros.pv_otvalor02')
 			}
 			,success : function (response) {
 				json = Ext.decode(response.responseText);

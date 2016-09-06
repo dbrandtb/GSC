@@ -712,4 +712,6 @@ public interface SiniestrosManager {
 	public String actualizarValImpuestoProv(HashMap<String, Object> datosActualizacion) throws Exception;
 	
 	public String obtieneValidacionAsegurado(String cdperson, Date feocurre, String nmpoliza)throws Exception;
+	
+	public List<Map<String,String>> obtenerInfImporteAsegTramiteAseg(String tipopago,String ntramite, String nfactura) throws Exception;
 }

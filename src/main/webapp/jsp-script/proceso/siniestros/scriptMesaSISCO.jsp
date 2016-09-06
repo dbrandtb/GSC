@@ -56,7 +56,7 @@ var _URL_ValidaLayoutFormatoExcel       	= '<s:url namespace="/siniestros"   act
 var _URL_ValidaLayoutConfigExcel        	= '<s:url namespace="/siniestros"   action="validaLayoutConfiguracionExcel"   />';
 var _URL_VALIDA_COBASEGURADOS				= '<s:url namespace="/siniestros" 	action="validaLimiteCoberturaAsegurados"/>';
 var _URL_VALIDA_COBASEGURADOSCR				= '<s:url namespace="/siniestros" 	action="validarMultiplesCRSISCO"/>';
-
+var _URL_VALIDA_IMPASEGURADOSINIESTRO		= '<s:url namespace="/siniestros" 	action="validaImporteTramiteAsegurados"/>';
 
 
 var windowLoader;
@@ -849,8 +849,41 @@ var msgWindow;
 				}else{
 					myMask.hide();
 					if(procesaPago =="0"){
-						mostrarSolicitudPago(grid,rowIndex,colIndex);
+						_11_validaImporteAseguradoTramite(grid,rowIndex,colIndex);
 					}
+				}
+			},
+			failure : function (){
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
+		});
+	}
+	
+	
+		//Validamos si existe las Validaciones 
+	function _11_validaImporteAseguradoTramite(grid,rowIndex,colIndex){
+		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+		myMask.show();
+		var record = grid.getStore().getAt(rowIndex);
+		Ext.Ajax.request({
+			url     : _URL_VALIDA_IMPASEGURADOSINIESTRO
+			,params:{
+				'params.ntramite'  : record.get('ntramite'),
+				'params.tipopago'  : record.get('parametros.pv_otvalor02')
+			}
+			,success : function (response) {
+				json = Ext.decode(response.responseText);
+				if(json.success==false){
+					myMask.hide();
+					centrarVentanaInterna(mensajeWarning(json.msgResult));
+				}else{
+					myMask.hide();
+					//mostrarSolicitudPago(grid,rowIndex,colIndex);
 				}
 			},
 			failure : function (){
