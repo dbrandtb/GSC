@@ -52,6 +52,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	public static final String ACCESO_ENDOSO_POLIZAS_NO_SICAPS = "endosoPolizasNoSICAPS";
 	public static final String ACCESO_ENDOSO_DOMPOLIZAS_NO_SICAPS = "endosoDomicilioNOSICAPS";  
 	public static final String ENDOSOS_AUTOS = "endososAutos";
+	public static final String FLUJO_MESA_CONTROL = "flujoMesaControl";
 	public static final String MENU_PRINCIPAL = "menuPrincipal";
 	public static final String MESA_CONTROL_AGENTES = "mesaControlAgentes";
 
@@ -152,6 +153,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| MESA_CONTROL_AGENTES.equals(acceso)
 				|| ACCESO_ENDOSO_POLIZAS_NO_SICAPS.equals(acceso)
 				|| ACCESO_ENDOSO_DOMPOLIZAS_NO_SICAPS.equals(acceso)
+				|| FLUJO_MESA_CONTROL.equals(acceso)
 				) {
 			
 			// Patch para traducir el rol, ya que el portal manda un codigo: 

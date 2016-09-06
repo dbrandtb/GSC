@@ -181,6 +181,11 @@
                 <param name="smap1.cdtres">${params.cdtipsit}</param>        <!-- SL -->
                 <param name="smap1.cdsiete">${params.mc}</param>             <!-- MCAGENTES -->
             </result>
+            <result name="flujoMesaControl" type="redirectAction">
+                <param name="namespace">/flujomesacontrol</param>
+                <param name="actionName">mesaControl</param>
+                <param name="params.AGRUPAMC">${params.agrupamc}</param>
+            </result>
         </action>
         
 	</package>
