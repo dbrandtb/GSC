@@ -1242,6 +1242,26 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="validaImporteAsegTramiteAseg" class="siniestrosAction" method="validaImporteAsegTramiteAseg">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="validaImporteTramiteAsegurados" class="siniestrosAction" method="validaImporteTramiteAsegurados">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

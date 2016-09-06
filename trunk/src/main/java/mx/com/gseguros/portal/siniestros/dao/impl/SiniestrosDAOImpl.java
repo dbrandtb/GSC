@@ -5794,4 +5794,30 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		compile();
     	}
     }
+    
+	@Override
+	public List<Map<String,String>> obtieneInfImporteAsegTramiteAseg(Map<String, String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneInfImporteAsegTramiteAseg(this.getDataSource()), params);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtieneInfImporteAsegTramiteAseg extends StoredProcedure
+	{
+		protected ObtieneInfImporteAsegTramiteAseg(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_VALIDA_IMP_ASEGSIN");
+			declareParameter(new SqlParameter("pv_tipopago_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CONTRARECIBO",		"FACTURA",		"SINIESTRO",		"IMPORTE"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
 }

@@ -2524,4 +2524,22 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> obtenerInfImporteAsegTramiteAseg(String tipopago,String ntramite, String nfactura) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_tipopago_i" , tipopago);
+		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_nfactura_i" , nfactura);
+		log.debug("obtenerInfImporteAsegTramiteAseg params: "+params);
+		List<Map<String,String>> lista = siniestrosDAO.obtieneInfImporteAsegTramiteAseg(params);
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("lista: "+lista);
+		log.debug("obtenerFacturasTramite lista size: "+lista.size());
+		return lista;
+	}
 }
