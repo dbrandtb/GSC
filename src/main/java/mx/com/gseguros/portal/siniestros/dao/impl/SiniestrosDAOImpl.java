@@ -5605,7 +5605,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		protected ObtieneInfAseguradoCobSubCoberturas(DataSource dataSource) {
 			// TODO: Terminar cuando este listo el SP
 			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_CDRAMO_NOVA");
-			//super(dataSource, "PKG_DESARROLLO.P_OBTIENE_CDRAMO_NOVA");
 			declareParameter(new SqlParameter("pv_cdperson_i",   	OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feocurre_i",  	OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_cobertura_i",   	OracleTypes.VARCHAR));
@@ -5633,7 +5632,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		{
 			
 			super(dataSource, "PKG_SINIESTRO.P_UPD_TIMPSINI");
-			//super(dataSource, "PKG_DESARROLLO.P_UPD_TIMPSINI");
 			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -5660,7 +5658,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	
 	protected class ActualizaDatosGeneralesCopago extends StoredProcedure {
 		protected ActualizaDatosGeneralesCopago(DataSource dataSource) {
-			super(dataSource, "PKG_DESARROLLO.P_MOV_TCOPASIN");
+			super(dataSource, "PKG_SINIESTRO.P_MOV_TCOPASIN");
             declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
@@ -5693,7 +5691,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected ActualizaDeducibleCopagoConceptos(DataSource dataSource)
 		{
-			super(dataSource, "PKG_DESARROLLO.P_UPD_COPAGODEDCONCEP");
+			super(dataSource, "PKG_SINIESTRO.P_UPD_COPAGODEDCONCEP");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -5786,7 +5784,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	
     	protected ObtieneValidacionAsegurado(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_DESARROLLO.P_VALIDA_STATUS_ASEG");
+    		super(dataSource, "PKG_SINIESTRO.P_VALIDA_STATUS_ASEG");
     		declareParameter(new SqlParameter("pv_cdperson_i",   OracleTypes.VARCHAR));		// Id. del proveedor
     		declareParameter(new SqlParameter("pv_feocurre_i", OracleTypes.DATE));		// Id. del concepto
     		declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
