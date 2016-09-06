@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
+import com.lowagie.text.RectangleReadOnly;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfImportedPage;
@@ -67,7 +68,7 @@ public class DocumentosUtils
 	    }
 	    else
 	    {
-	    	document = new Document();
+	    	document = new Document(new RectangleReadOnly(625,842));
 	    }
 	    
 	    try {
