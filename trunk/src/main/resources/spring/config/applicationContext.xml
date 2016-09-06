@@ -28,6 +28,7 @@
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
         <property name="url" value="jdbc:oracle:thin:@10.1.1.133:6521:GSEGUROS"/>
+        <!-- <property name="url" value="jdbc:oracle:thin:@10.1.1.170X:1521:GSEGUROS1X"/>-->
         <property name="username" value="ice"/>
         <property name="password" value="ice"/>
         <!--
@@ -47,7 +48,7 @@
     
     <bean id="dataSourceSIGS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.informix.jdbc.IfxDriver"/>
-        <property name="url" value="jdbc:informix-sqli://10.1.1.167:1001/dbsigs:INFORMIXSERVER=infdss"/>
+        <property name="url" value="jdbc:informix-sqli://10.101.1.167:1001/dbsigs:INFORMIXSERVER=infdss"/>
         <property name="username" value="sadgdl"/>
         <property name="password" value="1salud"/>
     </bean>
