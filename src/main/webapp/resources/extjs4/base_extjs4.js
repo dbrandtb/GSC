@@ -2534,7 +2534,7 @@ function _procesaAccion(
 	                                                        handler  : function (me) {
 	                                                            centrarVentanaInterna(Ext.MessageBox.confirm(
 	                                                                'Confirmar',
-	                                                                'La revisi\u00f3n de requisitos no se podr\u00e1 modificar posteriormente ¿Desea continuar?',
+	                                                                'La revisi\u00f3n de requisitos no se podr\u00e1 modificar posteriormente\u0020\u00BFDesea continuar?',
 	                                                                function(btn)
                                                                     {
                                                                         if(btn === 'yes')

@@ -3515,7 +3515,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					if(clasif.equals("1")&&nSituac>49)
 					{
 						long timestamp  = System.currentTimeMillis();
-						//se condiciona por rol la asignación de valores, para que guarde las coberturas sin necesidad de editar subgrupo, para RC y roles restringidos (EGS)
+						//se condiciona por rol la asignaciï¿½n de valores, para que guarde las coberturas sin necesidad de editar subgrupo, para RC y roles restringidos (EGS)
 						if(!(RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
 								&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)){
 							resp.setExito(false);
@@ -4113,6 +4113,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,false
 							);
 					
+					/* JTEZVA 7 sep 2016
+					 * el tramite no se turna por lo que no lleva doble detalle
 					mesaControlDAO.movimientoDetalleTramite(
 							ntramite
 							,new Date()
@@ -4127,6 +4129,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,estatus
 							,false
 							);
+					*/
 					
 					/* ya no turna, solo lo crea y ya JTEZVA 2016 09 02
 					 * resp.getSmap().put("nombreUsuarioDestino"

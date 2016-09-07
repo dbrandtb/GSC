@@ -15,6 +15,7 @@ import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
+import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoModelado;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Utils;
@@ -88,6 +89,9 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		String result = ERROR;
 		try {
 			UserVO usuario = Utils.validateSession(session);
+			if (!"ICE".equals(usuario.getUser()) || !RolSistema.PARAMETRIZADOR_SISTEMAS.getCdsisrol().equals(usuario.getRolActivo().getClave())) {
+				throw new ApplicationException("Usuario sin permisos");
+			}
 			items = flujoMesaControlManager.workflow(usuario.getRolActivo().getClave());
 			if (params == null) {
 				params = new LinkedHashMap<String, String>();
