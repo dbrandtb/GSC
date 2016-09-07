@@ -3016,6 +3016,7 @@
 										buttons: Ext.Msg.OK,
 										icon: Ext.Msg.ERROR
 									}));
+									panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
 									modPolizasAsegurado.hide();
 									//limpiarRegistros();
 								}
