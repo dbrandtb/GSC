@@ -7925,6 +7925,8 @@ public class CotizacionAction extends PrincipalCoreAction
 							,false
 							);
 					
+					/* JTEZVA 7 sep 2016
+					 * el tramite no se turna por lo que no lleva doble detalle
 					mesaControlManager.movimientoDetalleTramite(
 							ntramiteNew
 							,new Date()
@@ -7937,6 +7939,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,estatus
 							,false
 							);
+					*/
 	            	
 	            	/* ya no turna, solo lo crea y ya JTEZVA 2016 09 02
 	            	 * smap1.put("nombreUsuarioDestino"

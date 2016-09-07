@@ -208,6 +208,7 @@
         
         <action name="editorPantallas" class="EndososAction" method="editorPantallas">
             <result name="success">/jsp-script/proceso/endosos/editorPantallas.jsp</result>
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
         </action>
         
         <action name="obtenerParametrosPantalla" class="EndososAction" method="obtenerParametrosPantalla">

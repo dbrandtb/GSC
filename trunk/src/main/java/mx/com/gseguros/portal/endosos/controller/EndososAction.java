@@ -4136,8 +4136,13 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n###### editorPantallas ######"
 				+ "\n######                 ######"
 				);
+		String result = ERROR;
 		try
 		{
+			UserVO usuario = Utils.validateSession(session);
+			if (!"ICE".equals(usuario.getUser()) || !RolSistema.PARAMETRIZADOR_SISTEMAS.getCdsisrol().equals(usuario.getRolActivo().getClave())) {
+				throw new ApplicationException("Usuario sin permisos");
+			}
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
 			imap1=new LinkedHashMap<String,Item>(0);
@@ -4156,10 +4161,12 @@ public class EndososAction extends PrincipalCoreAction
 			imap1.put("columnsModelo" , gc.getColumns());
 			
 			imap1.put("storeArbol",pantallasManager.obtenerArbol());
+			result = SUCCESS;
 		}
 		catch(Exception ex)
 		{
-			logger.error("error al cargar la pantalla de alvaro",ex);
+			logger.error("error al cargar el editor de pantallas",ex);
+			message = Utils.manejaExcepcion(ex);
 		}
 		logger.debug(""
 				+ "\n######                 ######"
@@ -4167,7 +4174,7 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n#############################"
 				+ "\n#############################"
 				);
-		return SUCCESS;
+		return result;
 	}
 	/*/////////////////////////////*/
 	////// editor de pantallas //////
