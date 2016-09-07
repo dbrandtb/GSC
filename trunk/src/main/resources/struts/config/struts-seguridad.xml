@@ -186,6 +186,14 @@
                 <param name="actionName">mesaControl</param>
                 <param name="params.AGRUPAMC">${params.agrupamc}</param>
             </result>
+            <result name="impresionDocumentos" type="redirectAction">
+                <param name="namespace">/consultas</param>
+                <param name="actionName">pantallaExplotacionDocumentos</param>
+            </result>
+            <result name="impresionRecibos" type="redirectAction">
+                <param name="namespace">/consultas</param>
+                <param name="actionName">pantallaExplotacionRecibos</param>
+            </result>
         </action>
         
 	</package>
