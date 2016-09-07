@@ -21,6 +21,7 @@
 	var _GLOBAL_URL_RECUPERACION          = '<s:url namespace="/recuperacion" action="recuperar"           />';
 	var _GLOBAL_URL_IMPRIMIR_LOTE         = '<s:url namespace="/consultas"    action="imprimirLote"        />';
 	var _GLOBAL_URL_DESCARGAR_LOTE        = '<s:url namespace="/consultas"    action="descargarLote"       />';
+	var _GLOBAL_URL_DESCARGAR_LOTE_DPLX   = '<s:url namespace="/consultas"    action="descargarLoteDplx"   />';
 	var _GLOBAL_URL_ESPERAR_DESCARGA_LOTE = '<s:url namespace="/consultas"    action="esperarDescargaLote" />';
 	
 	var _GLOBAL_URL_CARGAR_ACCIONES_ENTIDAD = '<s:url namespace="/flujomesacontrol" action="cargarAccionesEntidad"                  />';

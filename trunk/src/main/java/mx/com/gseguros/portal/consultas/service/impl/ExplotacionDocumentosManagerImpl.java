@@ -1503,12 +1503,250 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							);
 					
 					File local = new File(filePath);
-					
-					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
+					cddocume=cddocume.replace("http://201.151.228.153:9080", "http://192.168.2.153:9080").replace("https","http").replace("HTTPS","HTTP");
+
+					InputStream remoto = HttpUtil.obtenInputStream(cddocume);
 					FileUtils.copyInputStreamToFile(remoto, local);
 				}
 				
 				files.add(new File(filePath));
+			}
+			
+			File fusionado = DocumentosUtils.fusionarDocumentosPDF(
+					files
+					,new File(Utils.join(
+							rutaDocumentosTemporal
+							,"/lote_"         , lote
+							,"_fusion_papel_" , hoja
+							,"_t_"            , System.currentTimeMillis()
+							,".pdf"
+					        )
+					)
+					,"C".equals(hoja)
+			);
+			
+			if(fusionado==null || !fusionado.exists())
+			{
+				throw new ApplicationException("El archivo no fue creado");
+			}
+			
+			inputStream = new FileInputStream(fusionado);
+			
+			paso = "Actualizando remesas, emisiones y endosos";
+			sb.append("\n").append(paso);
+			
+			/*
+			 * en este procedimiento se actualizan las sumas,
+			 * y si estan completas: se marcan las remesas como impresas, y tambien los hijos cuando son emisiones/endosos
+			 */
+			boolean impresos = emisionDAO.sumarImpresiones(lote,tipolote,peso);
+			
+			if("R".equals(tipolote))
+			{
+				paso = "Actualizando recibos";
+				sb.append("\n").append(paso);
+				
+				List<DocumentoReciboParaMostrarDTO> listaRecibos = new ArrayList<DocumentoReciboParaMostrarDTO>();
+				for(Map<String,String> archivo : listaArchivos)
+				{
+					listaRecibos.add(new DocumentoReciboParaMostrarDTO(archivo.get("ntramite"),archivo.get("cddocume")));
+				}
+				
+				emisionDAO.mostrarRecibosImpresosListaDeListas(listaRecibos);
+			}
+			
+			paso = "Recuperando remesas del lote";
+			sb.append("\n").append(paso);
+			
+			List<Map<String,String>> remesas = mesaControlDAO.recuperarTramites(
+					null  //cdunieco
+					,null //ntramite
+					,null //cdramo
+					,null //nmpoliza
+					,null //estado
+					,null //cdagente
+					,"0"  //status
+					,null //cdtipsit
+					,null //fedesde
+					,null //fehasta
+					,cdsisrol
+					,TipoTramite.IMPRESION.getCdtiptra()
+					,null //contrarecibo
+					,null //tipoPago
+					,null //nfactura
+					,null //cdpresta
+					,null //cdusuari
+					,null //cdtipram
+					,lote
+					,null //tipolote
+					,null //tipoimpr
+					,null //cdusuari_busq
+					);
+			
+			for(Map<String,String> remesa : remesas)
+			{
+				paso = "Guardando detalle de remesa";
+				sb.append("\n").append(paso);
+				
+				mesaControlDAO.movimientoDetalleTramite(
+						remesa.get("ntramite")
+						,new Date() //feinicio
+						,null       //cdclausu
+						,Utils.join(
+								impresos ?
+										"Se realiz\u00F3 la impresi\u00F3n final de la remesa ("
+										: "Se realiz\u00F3 una impresi\u00F3n de la remesa ("
+								,"B".equals(hoja) ?
+										("papeler\u00EDa")
+										:(
+												"M".equals(hoja) ?
+														("recibos")
+														:(
+																"C".equals(hoja) ?
+																		("credenciales")
+																		: ("papeler\u00EDa y recibos")
+														)
+										)
+								,")"
+								)
+						,cdusuari
+						,null       //cdmotivo
+						,cdsisrol
+						,"S"
+						,null
+						,null
+						,remesa.get("status")
+						,impresos
+						);
+			}
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso, sb.toString());
+		}
+		
+		sb.append(Utils.log(
+				 "\n@@@@@@ inputStream=",inputStream
+			    ,"\n@@@@@@ descargarLote @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		logger.debug(sb.toString());
+		
+		return inputStream;
+	}
+	
+	
+	
+	@Override
+	public InputStream descargarLoteDplx(
+			String lote
+			,String hoja
+			,String peso
+			,String cdtipram
+			,String cdtipimp
+			,String tipolote
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception
+	{
+
+		StringBuilder sb = new StringBuilder(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+			    ,"\n@@@@@@ descargarLote @@@@@@"
+			    ,"\n@@@@@@ lote="     , lote
+			    ,"\n@@@@@@ hoja="     , hoja
+			    ,"\n@@@@@@ peso="     , peso
+			    ,"\n@@@@@@ cdtipram=" , cdtipram
+			    ,"\n@@@@@@ cdtipimp=" , cdtipimp
+			    ,"\n@@@@@@ tipolote=" , tipolote
+			    ,"\n@@@@@@ cdusuari=" , cdusuari
+			    ,"\n@@@@@@ cdsisrol=" , cdsisrol
+				));
+		
+		InputStream inputStream = null;
+		
+		String paso = "Iniciando descarga";
+		sb.append("\n").append(paso);
+		
+		try
+		{
+			//TODO si el papel es multiple hay que mandar por charola especifica (B por la 1, M por la 2)
+			if(hoja.length()>1)
+			{
+				throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
+			}
+			
+			paso = "Recuperando archivos";
+			sb.append("\n").append(paso);
+			
+			List<Map<String,String>> listaArchivos = consultasDAO.recuperarArchivosParaImprimirLote(
+					lote
+					,hoja
+					,tipolote
+					);
+			if(!"C".equals(hoja)){
+				listaArchivos=armaJuegosDeImpresiones(listaArchivos);
+			}
+				
+					
+			sb.append(Utils.log("\nlista=",listaArchivos));
+			
+			paso = "Fusionando archivos";
+			sb.append("\n").append(paso);
+			
+			List<File>files = new ArrayList<File>();
+			
+			for(Map<String,String>archivo:listaArchivos)
+			{
+				String ntramite = archivo.get("ntramite");
+				String cddocume = archivo.get("cddocume");
+				String swimpdpx = archivo.get("swimpdpx");
+				String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
+				
+				sb.append(Utils.log("\ntramite,archivo=",ntramite,",",cddocume));
+				
+				if(cddocume.toLowerCase().indexOf("://")!=-1)
+				{
+					
+					 paso = "Descargando archivo remoto";
+					sb.append("\n").append(paso);
+					long timestamp = System.currentTimeMillis();
+					long rand      = new Double(1000d*Math.random()).longValue();
+					filePath       = Utils.join(
+							rutaDocumentosTemporal
+							,"/lote_"    , lote
+							,"_remesa_"  , archivo.get("remesa")
+							,"_tramite_" , ntramite
+							,"_t_"       , timestamp , "_" , rand
+							,".pdf"
+							);
+					
+					File local = new File(filePath);
+					
+					cddocume=cddocume.replace("http://201.151.228.153:9080", "http://192.168.2.153:9080").replace("https","http").replace("HTTPS","HTTP");
+					sb.append("Cambiando url: "+cddocume);
+					InputStream remoto = HttpUtil.obtenInputStream(cddocume);
+					FileUtils.copyInputStreamToFile(remoto, local);
+					
+				}
+				
+				files.add(new File(filePath));
+				if("N".equalsIgnoreCase(swimpdpx.trim())){
+					paso="Añadiendo hoja en blanco";
+					long timestamp = System.currentTimeMillis();
+					long rand      = new Double(1000d*Math.random()).longValue();
+					files.add(DocumentosUtils.pdfBlanco(
+							new File(
+									Utils.join(
+											rutaDocumentosTemporal
+											,"/blanco"    , lote
+											,"_t_"       , timestamp , "_" , rand
+											,".pdf"
+											))
+							));
+				}
 			}
 			
 			File fusionado = DocumentosUtils.fusionarDocumentosPDF(
