@@ -7239,7 +7239,11 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					if(clasif.equals(LINEA)&&nSituac>49)
 					{
-						throw new ApplicationException("No se permiten m\u00e1s de 49 asegurados");
+						//se condiciona por rol lanzar la excepcion, para que guarde las coberturas sin necesidad de editar subgrupo, para roles restringidos (EGS)
+						if(!(RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
+								&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)){
+							throw new ApplicationException("No se permiten m\u00e1s de 49 asegurados");
+						}
 					}
 					else if(!clasif.equals(LINEA)&&nSituac<50)
 					{
