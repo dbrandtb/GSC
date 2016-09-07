@@ -273,6 +273,7 @@ Ext.onReady(function()
                         ,icon     : '${icons}printer.png'
                         ,itemId   : '_p49_botonImprimir1'
                         ,disabled : true
+                        ,hidden	  : (_GLOBAL_CDSISROL==RolSistema.Agente || _GLOBAL_CDSISROL==RolSistema.PromotorAuto)
                         ,handler  : function(me)
                         {
                             _p49_impresionClic('G');

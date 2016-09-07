@@ -1076,10 +1076,59 @@ function _4_onVerDetalleRemesaClic(row)
         manejaException(e,ck);
     }
 }
+
+function _4_onContinuarDescargaClic(row){
+	 debug('>_4_onContinuarImpresionClic row:',row,'.');
+	    var ck = 'Preparando ventana de impresi\u00F3n';
+	    try
+	    {
+	        var record = mcdinStore.getAt(row);
+	        debug('record:',record);
+	        var lote = record.get('parametros.pv_otvalor01');
+	        centrarVentanaInterna(
+	            Ext.MessageBox.confirm(
+	                'Confirmar'
+	                ,'¿Desea continuar la impresi\u00F3n del lote '+lote+'?'
+	                ,function(btn)
+	                {
+	                    if(btn === 'yes')
+	                    {
+	                        var ck = 'Invocando ventana de impresi\u00F3n';
+	                        try
+	                        {
+	                            centrarVentanaInterna(Ext.create('VentanaDescargaLote',
+	                            {
+	                                lote        : lote
+	                                ,tramite    : record.get('ntramite')
+	                                ,cdtipram   : record.get('parametros.pv_otvalor03')
+	                                ,cdtipimp   : record.get('parametros.pv_otvalor02')
+	                                ,tipolote   : record.get('parametros.pv_otvalor06')
+	                                ,callback   : function(){ mcdinStore.removeAll(); }
+	                                ,closable   : false
+	                                ,cancelable : true
+	                            }).show());
+	                        }
+	                        catch(e)
+	                        {
+	                            manejaException(e,ck);
+	                        }
+	                    }
+	                }
+	            )
+	        );  
+	    }
+	    catch(e)
+	    {
+	        manejaException(e,ck);
+	    }
+}
 ////// funciones //////
 <s:if test="false">
 </script>
 </s:if>
 </script>
-<script type="text/javascript" src="${defines}VentanaImpresionLote.js?n=${now}"></script>
+<script type="text/javascript"
+	src="${defines}VentanaImpresionLote.js?n=${now}"></script>
+	<script type="text/javascript"
+	src="${defines}VentanaDescargaLote.js?n=${now}"></script>
 <script>

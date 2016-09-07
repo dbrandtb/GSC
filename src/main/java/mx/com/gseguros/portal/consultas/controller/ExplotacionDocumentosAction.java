@@ -654,6 +654,67 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String descargarLoteDplx()
+	{
+		logger.debug(Utils.log(
+				 "\n###########################"
+				,"\n###### descargarLote ######"
+				));
+		
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			String cdusuari = usuario.getUser();
+			String cdsisrol = usuario.getRolActivo().getClave();
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String lote     = params.get("lote");
+			String hoja     = params.get("hoja");
+			String peso     = params.get("peso");
+			String cdtipram = params.get("cdtipram");
+			String cdtipimp = params.get("cdtipimp");
+			String tipolote = params.get("tipolote");
+			
+			Utils.validate(
+					lote      , "No se recibi\u00F3 el lote"
+					,hoja     , "No se recibi\u00F3 el tipo de hoja"
+					,peso     , "No se recibi\u00F3 el peso"
+					,cdtipram , "No se recibi\u00F3 el tipo de ramo"
+					,cdtipimp , "No se recibi\u00F3 el tipo de impresi\u00F3n"
+					,tipolote , "No se recibi\u00F3 el tipo de lote"
+					);
+			
+			fileInputStream = explotacionDocumentosManager.descargarLoteDplx(
+					lote
+					,hoja
+					,peso
+					,cdtipram
+					,cdtipimp
+					,tipolote
+					,cdusuari
+					,cdsisrol
+					);
+			
+			contentType = TipoArchivo.PDF.getContentType();
+			filename    = Utils.join("descarga_lote_",lote,"_papel_",hoja,".pdf");
+			
+			success = true;
+			session.put("descargarLote" , "S");
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+			session.put("descargarLote" , message);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### descargarLote ######"
+				,"\n###########################"
+				));
+		return SUCCESS;
+	}
+	
 	@Action(value   = "esperarDescargaLote",
 			results = { @Result(name="success", type="json") }
 	)

@@ -2,6 +2,7 @@ package mx.com.gseguros.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +14,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
 import com.lowagie.text.RectangleReadOnly;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
@@ -135,4 +138,32 @@ public class DocumentosUtils
 	      }
 	    }
 	  }
+	
+	public static File pdfBlanco(File output){
+		
+		try {
+			FileOutputStream outputStream=new FileOutputStream(output);;
+			Document doc=new Document();
+			doc.open();
+			doc.newPage();
+			PdfWriter writer = PdfWriter.getInstance(doc,outputStream);
+			writer.open();
+			doc.open();
+			doc.add(new Paragraph(" "));
+			writer.flush();
+			doc.close();
+			writer.close();
+			outputStream.flush();
+			outputStream.close();
+			
+		} catch (FileNotFoundException e) {
+			logger.error(e);
+		} catch (DocumentException e) {
+			logger.error(e);
+		} catch (IOException e) {
+			logger.error(e);
+		}
+		return output;
+
+	}
 }

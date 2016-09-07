@@ -15,7 +15,7 @@ Ext.define('VentanaDescargaLote',
             ,layout :
             {
                 type     : 'table'
-                ,columns : 3
+                ,columns : 4
             }
             ,defaults : { style : 'margin:5px;' }
             ,border   : 0
@@ -32,7 +32,7 @@ Ext.define('VentanaDescargaLote',
 	 				}
 	 				,{
 	 				    xtype    : 'button'
-	 				    ,text    : 'Descargar PDF papeler\u00EDa completa'
+	 				    ,text    : 'Descargar PDF'
 	 				    ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'page_lightning.png'
 	 				    ,hoja    : 'B'
 	 				    ,tipoimp : 'GI'
@@ -40,7 +40,18 @@ Ext.define('VentanaDescargaLote',
 	 				    ,sumaHab : 1
 	 				    ,peso    : 11
 	 				    
-	 				},
+	 				},{
+	 				    xtype    : 'button'
+		 				    ,text    : 'Descargar PDF duplex '
+		 				    ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'page_lightning.png'
+		 				    ,hoja    : 'B'
+		 				    ,tipoimp : 'GI'
+		 				    ,suma    : 2
+		 				    ,sumaHab : 1
+		 				    ,peso    : 11
+		 				    ,duplex	 : true	
+		 				    
+		 				}
 	 				,{
 	                    xtype    : 'image'
 	                    ,src     : _GLOBAL_DIRECTORIO_ICONOS+'cancel.png'
@@ -59,7 +70,7 @@ Ext.define('VentanaDescargaLote',
 	                }
 	                ,{
 	                    xtype    : 'button'
-	                    ,text    : 'Descargar credenciales'
+	                    ,text    : 'Descargar PDF'
 	                    ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'group_key.png'
 	                    ,hoja    : 'C'
 	                    ,tipoimp : 'GI'
@@ -67,6 +78,10 @@ Ext.define('VentanaDescargaLote',
 	                    ,sumaHab : 1
 	                    ,peso    : 100
 	                    
+	                }
+	                ,{
+	                	xtype	 : 'displayfield'
+	                	,value	 : ' '
 	                }
 	                ,{
 	                    xtype    : 'image'
@@ -554,10 +569,15 @@ Ext.define('VentanaDescargaLote',
             {
                 throw 'Se perdi\u00F3 el componente de impresi\u00F3n';
             }
-            
+            var direccion;
+            if(botPap.duplex!=undefined && botPap.duplex==true){
+            	direccion=_GLOBAL_URL_DESCARGAR_LOTE_DPLX;
+            }else{
+            	direccion=_GLOBAL_URL_DESCARGAR_LOTE;
+            }
             Ext.create('Ext.form.Panel').submit(
             {
-                url             : _GLOBAL_URL_DESCARGAR_LOTE
+                url             : direccion
                 ,params         :
                 {
                     'params.lote'      : me.lote

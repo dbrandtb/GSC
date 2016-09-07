@@ -114,4 +114,15 @@ public interface ExplotacionDocumentosManager
 			,String cdusuari
 			,String cdsisrol
 			)throws Exception;
+	
+	public InputStream descargarLoteDplx(
+			String lote
+			,String hoja
+			,String peso
+			,String cdtipram
+			,String cdtipimp
+			,String tipolote
+			,String cdusuari
+			,String cdsisrol
+			)throws Exception;
 }
