@@ -814,8 +814,8 @@ Ext.onReady(function()
                 ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
                 ,handler : function()
                 {
-                    _p25_setActiveConcepto();
-                }
+                	_p25_setActiveConcepto();
+				}
             }
         ]
     };
@@ -2573,13 +2573,14 @@ function _p25_construirModificada(button,event,confirmado)
         }
     }
     debug('<_p25_construirModificada');
-    
-    //agregar tab grupos
+
     if(valido)
     {
         _p25_quitarTabsDetalleGrupo();
-        _p25_clasif = _p25_TARIFA_MODIFICADA;
-        _p25_agregarTabGrupos();
+		//se condiciona por rol el valor de la variable, para que guarde las coberturas sin necesidad de editar subgrupo, para roles restringidos (EGS)
+		_p25_clasif = (!([RolSistema.Agente,RolSistema.EjecutivoVenta,RolSistema.MesaControl].indexOf(_p25_smap1.cdsisrol) == -1)&&_p25_smap1.cdtipsit == 'RC') ? _p25_TARIFA_LINEA : _p25_TARIFA_MODIFICADA;
+		//_p25_clasif = _p25_TARIFA_MODIFICADA; //(EGS)
+		_p25_agregarTabGrupos();
     }
 }
 
@@ -3768,7 +3769,7 @@ function _p25_guardarGrupo(panelGrupo)
              debug('storeFactores:',storeFactores);
              storeFactores.commitChanges();
          }
-         mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p25_setActiveResumen);
+       	mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p25_setActiveResumen);
      }
      
      debug('<_p25_guardarGrupo');
@@ -3868,7 +3869,7 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                 mensajeDeError = mensajeDeError + record.get('letra') + ' ';
             }
         });
-        if(!valido)
+        if(!valido)	
         {
             mensajeWarning(mensajeDeError,_p25_setActiveResumen);
         }

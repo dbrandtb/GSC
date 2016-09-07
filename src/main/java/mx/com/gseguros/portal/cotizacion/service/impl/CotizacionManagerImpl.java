@@ -3515,8 +3515,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 					if(clasif.equals("1")&&nSituac>49)
 					{
 						long timestamp  = System.currentTimeMillis();
-						resp.setExito(false);
-						resp.setRespuesta(Utils.join("No se permiten mas de 49 asegurados #",timestamp));
+						//se condiciona por rol la asignación de valores, para que guarde las coberturas sin necesidad de editar subgrupo, para RC y roles restringidos (EGS)
+						if(!(RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
+								&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)){
+							resp.setExito(false);
+							resp.setRespuesta(Utils.join("No se permiten mas de 49 asegurados #",timestamp));
+						}
+						//resp.setExito(false); //(EGS)
+						//resp.setRespuesta(Utils.join("No se permiten mas de 49 asegurados #",timestamp)); //(EGS)
 						resp.setRespuestaOculta(resp.getRespuesta());
 						logger.error(resp.getRespuesta());
 					}
