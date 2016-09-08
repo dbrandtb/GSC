@@ -307,4 +307,8 @@ public interface ConsultasPolizaDAO {
      * @throws Exception
      */
     public String obtieneNmsituacContratantePoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza) throws Exception;
+    
+	public List<Map<String, String>> getQueryResult(String query, String usuario) throws Exception;
+	
+	public List<Map<String, String>> executePLSQL(String query,String usuario) throws Exception;
 }

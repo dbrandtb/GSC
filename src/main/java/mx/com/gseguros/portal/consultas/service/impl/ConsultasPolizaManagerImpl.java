@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.dao.impl.ConsultasDAOImpl;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
@@ -463,7 +466,19 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		return recibosAgente;
 	}
 
-
+	@Override
+	public List<Map<String, String>> ejecutaQuery(String query, String usuario)
+			throws Exception {
+		List<Map<String, String>> lista = null; 
+			if(query.trim().toUpperCase().startsWith("SELECT")){
+				lista = consultasPolizaDAOICE.getQueryResult(query, usuario);
+			}
+			else{
+				consultasPolizaDAOICE.executePLSQL(query, usuario);
+			}
+		return lista;
+	}
+	
 	@Override
 	public List<TarifaVO> obtieneTarifasPoliza(PolizaVO poliza) throws Exception {
 		return consultasPolizaDAOICE.obtieneTarifasPoliza(poliza);

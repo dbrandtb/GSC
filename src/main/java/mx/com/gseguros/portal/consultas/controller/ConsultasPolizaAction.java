@@ -1096,6 +1096,64 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	
+	public String obtenerPantallaOperacionBD()
+	{
+		logger.info(""
+				+ "\n###############################################"
+				+ "\n###### obtenerPantallaOperacionBD ######"
+				);
+//		try{
+//			
+//		}
+//		catch(Exception ex){
+//			success = false;
+//			error = ex.getMessage();
+//			logger.error("error al editar permisos",ex);
+//		}
+		logger.info(""
+				+ "\n###### obtenerPantallaOperacionBD ######"
+				+ "\n###############################################"
+				);
+		return SUCCESS;
+	}
+	
+public String ejecutaQuery(){
+		
+		logger.debug(Utils.log(
+				 "\n###########################################"
+				,"\n###### ejecutaQuery ######"
+				,"\n###### params=",params
+				));
+		
+		mensajeRes = "";
+		try {	
+				Utils.validate(params,"No se recibieron datos");
+	
+				String query = params.get("query");
+					
+				Utils.validate(
+						 query, "No se recibi\u00f3 la query"
+						);
+				UserVO usuario = (UserVO) session.get("USUARIO");
+				loadList = consultasPolizaManager.ejecutaQuery(query, usuario.getUser());
+				logger.debug(Utils.log(
+						"\n###### loadList "+loadList+" ######"
+						,"\n###### OBTUVO  "+loadList.size()+" ######"
+						,"\n###### ejecutaQuery ######"
+						,"\n###########################################"
+						));
+				success = true;
+		    }
+	  catch (Exception e) 
+	       {
+			logger.error("Error al ejecutar query", datosSuplemento, e);
+			mensajeRes = Utils.manejaExcepcion(e);
+		  }
+		return SUCCESS;
+	}
+	
+	
 	// Getters and setters:
 
 	public List<AseguradoVO> getDatosAsegurados() {

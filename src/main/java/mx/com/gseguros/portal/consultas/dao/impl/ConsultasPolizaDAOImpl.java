@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,8 @@ import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang3.StringUtils;
@@ -1000,4 +1003,56 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 		return null;
 	}
 
+	@Override
+	public List<Map<String, String>> getQueryResult(
+			String query,
+			String usuario
+			) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("query"  , query);
+		params.put("usuario", usuario);
+		Map<String, Object> procRes = ejecutaSP(new GetQueryResult(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+//		if (lista == null || lista.size() == 0) {
+//			throw new ApplicationException("No se encuentra el tipo de endoso");
+//		} else if (lista.size() > 1) {
+//			throw new ApplicationException("No se pudo ejecutar query");
+//		}
+		return lista;
+	}
+
+	protected class GetQueryResult extends StoredProcedure {
+    	protected GetQueryResult(DataSource dataSource) {
+    		super(dataSource, "PKG_EXEC_SQL.GET_SALIDA");
+            declareParameter(new SqlParameter("query"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o"  , OracleTypes.CURSOR,  new DinamicMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+	
+	@Override
+	public List<Map<String, String>> executePLSQL(
+			String archivo,
+			String usuario
+			) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("blob"   , archivo);
+		params.put("usuario", usuario);
+		Map<String, Object> procRes = ejecutaSP(new ExecutePLSQL(getDataSource()), params);
+		List<Map<String, String>> lista = null;//(List<Map<String, String>>) procRes.get("pv_registro_o");
+		return lista;
+	}
+
+	protected class ExecutePLSQL extends StoredProcedure {
+    	protected ExecutePLSQL(DataSource dataSource) {
+    		super(dataSource, "PKG_EXEC_SQL.EJECUTAR");
+            declareParameter(new SqlParameter("blob"  , OracleTypes.BLOB));
+//            declareParameter(new SqlOutParameter("pv_registro_o"  , OracleTypes.CURSOR,  new DinamicMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }
