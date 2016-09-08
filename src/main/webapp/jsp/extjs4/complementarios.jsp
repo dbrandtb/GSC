@@ -118,7 +118,7 @@
                 		}
                 	else
                 		{
-                		 Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.YEAR, 1));
+                		 Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.DAY,365));
                 		}
                 }catch(e)
                 {
