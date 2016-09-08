@@ -112,13 +112,15 @@
             {
                 try
                 {
-                	if(!Ext.isEmpty(plazoEnDias))
+                	alert('fecha renova');
+                	inputCdramo+'x'=='6x'
+                	if(!Ext.isEmpty(plazoEnDias) && '|16|5|6|'.lastIndexOf('|'+inputCdramo+'|')!=-1)
                 		{
                 		  Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.DAY, plazoEnDias));
                 		}
                 	else
                 		{
-                		 Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.DAY,365));
+                		 Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.YEAR, 1));
                 		}
                 }catch(e)
                 {
