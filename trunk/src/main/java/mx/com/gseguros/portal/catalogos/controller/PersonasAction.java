@@ -464,7 +464,7 @@ public class PersonasAction extends PrincipalCoreAction
 							,cliImport.getOrirecCli(),null,null,cliImport.getNacCli(),null,null,null,null,null,null
 							,null,null,(cliImport.getOcuPro() > 0) ? Integer.toString(cliImport.getOcuPro()) : "0"
 							,null,null,null,null,cliImport.getCurpCli(),null,null,null,null,null,null,null,null,null
-							,null,null,null,null,cliImport.getMailCli(),null,null,null,null,null,null,null,null,null
+							,null,null,null,cliImport.getTelefonoCli(),cliImport.getMailCli(),null,null,null,null,null,null,null,null,null
 							,null,null, cliImport.getFaxCli(), cliImport.getCelularCli(),timestamp);
 					
 					exito                = (Boolean)managerResult.get("exito");
@@ -681,7 +681,7 @@ public class PersonasAction extends PrincipalCoreAction
 								,cliImport.getOrirecCli(),null,null,cliImport.getNacCli(),null,null,null,null,null,null
 								,null,null,(cliImport.getOcuPro() > 0) ? Integer.toString(cliImport.getOcuPro()) : "0"
 								,null,null,null,null,cliImport.getCurpCli(),null,null,null,null,null,null,null,null,null
-								,null,null,null,null,cliImport.getMailCli(),null,null,null,null,null,null,null,null,null
+								,null,null,null,cliImport.getTelefonoCli(),cliImport.getMailCli(),null,null,null,null,null,null,null,null,null
 								,null,null, cliImport.getFaxCli(), cliImport.getCelularCli(),timestamp);
 						
 						exito                = (Boolean)managerResult.get("exito");
