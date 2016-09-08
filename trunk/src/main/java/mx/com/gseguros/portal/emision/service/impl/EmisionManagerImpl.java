@@ -241,6 +241,18 @@ public class EmisionManagerImpl implements EmisionManager
 		return emisionDAO.recuperarTramiteCotizacion(cdunieco, cdramo, estado, nmpoliza);
 	}
 	
+	public boolean revierteEmision(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem){
+		
+		logger.debug(" <<<<<<>>>>>> Entrando a Revierte Emision <<<<<<>>>>>>");
+		try{
+			emisionDAO.revierteEmision(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			return true;
+		}catch(Exception e){
+			logger.error("XXXXXxxx  ERROR AL REVETIR LA EMISION xxxXXXXX:::"+e.getMessage(), e);
+			return false;
+		}
+	}
+	
 	@Override
 	public String generarLigasDocumentosEmisionLocalesIce (String ntramite) throws Exception {
 		logger.debug(Utils.log(
@@ -276,4 +288,5 @@ public class EmisionManagerImpl implements EmisionManager
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 		return ligas;
 	}
+	
 }

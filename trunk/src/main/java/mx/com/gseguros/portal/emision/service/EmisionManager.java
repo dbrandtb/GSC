@@ -58,5 +58,8 @@ public interface EmisionManager
 	@Deprecated
 	public String recuperarTramiteCotizacion (String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 	
+	public boolean revierteEmision(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem);
+	
 	public String generarLigasDocumentosEmisionLocalesIce (String ntramite) throws Exception;
+	
 }

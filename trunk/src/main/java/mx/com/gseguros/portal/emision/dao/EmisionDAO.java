@@ -80,5 +80,8 @@ public interface EmisionDAO {
 	
 	public void bloquearProceso (String cdproceso, boolean bloquear, String cdusuari, String cdsisrol) throws Exception;
 	
+	public void revierteEmision(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
+	
 	public List<Map<String, String>> recuperarDocumentosGeneradosPorParametrizacion (String ntramite) throws Exception;
+	
 }
