@@ -3491,7 +3491,8 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                 {
                                                     title      : 'TARIFA POR EDADES'
                                                     ,minHeight : 100
-                                                    ,hidden    : _p25_ntramite && _cotcol_smap1.modificarTodo === false ? false : true
+                                                    ,hidden    : (_p25_ntramite && _cotcol_smap1.modificarTodo === false ? false : true)
+                                                        || _p25_smap1.cdsisrol === RolSistema.Agente
                                                     ,maxHeight : 250
                                                     ,tbar      :
                                                     [
@@ -3576,7 +3577,8 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                 {
                                                     title      : 'PRIMA PROMEDIO'
                                                     ,minHeight : 100
-                                                    ,hidden    : _p25_ntramite && _cotcol_smap1.modificarTodo === false ? false : true
+                                                    ,hidden    : (_p25_ntramite && _cotcol_smap1.modificarTodo === false ? false : true)
+                                                        || _p25_smap1.cdsisrol === RolSistema.Agente
                                                     ,maxHeight : 250
                                                     ,store     : Ext.create('Ext.data.Store',
                                                     {
