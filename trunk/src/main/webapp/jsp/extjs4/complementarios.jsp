@@ -112,8 +112,6 @@
             {
                 try
                 {
-                	alert('fecha renova');
-                	inputCdramo+'x'=='6x'
                 	if(!Ext.isEmpty(plazoEnDias) && '|16|5|6|'.lastIndexOf('|'+inputCdramo+'|')!=-1)
                 		{
                 		  Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.DAY, plazoEnDias));
