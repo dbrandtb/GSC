@@ -264,7 +264,13 @@
                 </param>
 			</result>
 		</action>
-
+		<action name="obtenerPantallaOperacionBD" class="ConsultasPolizaAction" method="obtenerPantallaOperacionBD">
+            <result name="success">/jsp/consultas/editorConsultaBD.jsp</result>
+            <result name="error">/jsp-script/general/errroPantalla.jsp</result>
+        </action>
+        <action name="ejecutaQuery" class="ConsultasPolizaAction" method="ejecutaQuery">
+            <result name="success" type="json" />
+        </action>
 	</package>
 
 </struts>

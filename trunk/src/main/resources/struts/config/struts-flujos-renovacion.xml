@@ -20,5 +20,11 @@
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/renovacion/pantallaRenovacionIndividual.jsp</result>
         </action>
+         <action name="buscarPolizasIndividualesRenovables" class="renovacionAction" method="buscarPolizasIndividualesRenovables">
+            <result type="json" />
+        </action>
+         <action name="buscarPolizasIndividualesMasivasRenovables" class="renovacionAction" method="buscarPolizasIndividualesMasivasRenovables">
+            <result type="json" />
+        </action>
     </package>
 </struts>
