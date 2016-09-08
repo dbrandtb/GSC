@@ -1703,8 +1703,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				String ntramite = archivo.get("ntramite");
 				String cddocume = archivo.get("cddocume");
 				String swimpdpx = archivo.get("swimpdpx");
+				String dsdocume = archivo.get("dsdocume");
+
 				String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
-				
 				sb.append(Utils.log("\ntramite,archivo=",ntramite,",",cddocume));
 				
 				if(cddocume.toLowerCase().indexOf("://")!=-1)
@@ -1725,7 +1726,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					
 					File local = new File(filePath);
 					
-					cddocume=cddocume.replace("http://201.151.228.153:9080", "http://192.168.2.153:9080").replace("https","http").replace("HTTPS","HTTP");
+					cddocume=cddocume.replace("https","http").replace("HTTPS","HTTP")
+							.replace("http://201.151.228.153:9080", "http://192.168.2.153:9080")
+							.replace("HTTP://201.151.228.153:9080", "HTTP://192.168.2.153:9080");
+
 					sb.append("Cambiando url: "+cddocume);
 					InputStream remoto = HttpUtil.obtenInputStream(cddocume);
 					FileUtils.copyInputStreamToFile(remoto, local);
@@ -1733,7 +1737,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				}
 				
 				files.add(new File(filePath));
-				if("N".equalsIgnoreCase(swimpdpx.trim())){
+				if(!dsdocume.toLowerCase().contains("recibo") && "N".equalsIgnoreCase(swimpdpx.trim())){
 					paso="Añadiendo hoja en blanco";
 					long timestamp = System.currentTimeMillis();
 					long rand      = new Double(1000d*Math.random()).longValue();
@@ -1747,6 +1751,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 											))
 							));
 				}
+				
+				
 			}
 			
 			File fusionado = DocumentosUtils.fusionarDocumentosPDF(
