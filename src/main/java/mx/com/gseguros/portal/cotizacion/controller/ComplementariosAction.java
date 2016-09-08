@@ -3221,6 +3221,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 								);
 					}
 					
+					// JTEZVA 2016 09 08 Se complementan las ligas con los documentos ice
+					this.mensajeEmail += emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite);
+					
 					this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
 										 "General de Seguros<br/>"+
 										 "</span>";
@@ -4508,10 +4511,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 									,null, false
 									);
 						}
+						
+						// JTEZVA 2016 09 08 Se complementan las ligas con los documentos ice
+						this.mensajeEmail += emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite);
 
 						this.mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
 								 "General de Seguros<br/>"+
 								 "</span>";
+						
+						flujoMesaControlManager.guardarMensajeCorreoEmision(
+								ntramite,
+								Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail)
+						);
 						
 					}
 				}
@@ -4556,6 +4567,37 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.error("error al insertar detalle de emision",ex);
 					mensajeRespuesta = ex.getMessage();
 					success          = false;
+				}
+			}
+			
+			if (success) {
+				try {
+					flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
+				} catch (Exception ex) {
+					logger.error("Error al enviar correos de emision", ex);
+				}
+			}
+			
+			//Se actualiza valores en sigs de poliza original y emitida
+			if (success) 
+			{
+				try 
+				{
+					Map<String,String>parame = siniestrosManager.obtenerTramiteCompleto(ntramite);
+					if(!parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null )
+					{
+						logger.debug(Utils.log(
+								 "\nPoliza extraida del sigs"
+								,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
+								,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolAlt
+								,"\n usuario registrado=", params
+								));
+						consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), cdunieco, cdramo, nmpolAlt, us.getUser());
+					}
+				} 
+				catch (Exception ex) 
+				{
+					logger.error("Error actualizando segrenovaciones_renovada", ex);
 				}
 			}
 		

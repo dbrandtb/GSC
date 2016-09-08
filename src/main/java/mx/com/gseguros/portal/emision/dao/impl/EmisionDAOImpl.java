@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.emision.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.sql.DataSource;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
 import mx.com.gseguros.utils.Utils;
@@ -365,6 +367,34 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarDocumentosGeneradosPorParametrizacion (String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite", ntramite);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarDocumentosGeneradosPorParametrizacionSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarDocumentosGeneradosPorParametrizacion lista: ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarDocumentosGeneradosPorParametrizacionSP extends StoredProcedure
+	{
+		protected RecuperarDocumentosGeneradosPorParametrizacionSP(DataSource dataSource)
+		{
+			super(dataSource, "PKG_EMISION.P_GET_DOCS_GENERADOS_X_PARAM");
+			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(new String[]{
+					"CDDOCUME", "DSDOCUME", "CDORDDOC", "CDMODDOC"
+			})));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
 		}
 	}

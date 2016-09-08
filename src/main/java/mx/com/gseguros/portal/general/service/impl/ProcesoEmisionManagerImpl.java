@@ -7,6 +7,8 @@ import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
@@ -18,6 +20,7 @@ import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
+import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.dao.AseguradoDAO;
 import mx.com.gseguros.portal.general.service.ProcesoEmisionManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
@@ -141,6 +144,15 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	
 	@Autowired
 	private DocumentosManager documentosManager;
+	
+	@Autowired
+	private EmisionManager emisionManager;
+	
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
+	
+	@Autowired
+	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
 	@Override
 	public Map<String, String> emitir(String cdunieco, String cdramo, String estado, String nmpoliza, 
@@ -943,9 +955,17 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							);
 				}
 				
+				// JTEZVA 2016 09 08 Se complementan las ligas con los documentos ice
+				mensajeEmail += emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite);
+				
 				mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
 									 "General de Seguros<br/>"+
 									 "</span>";
+				
+				flujoMesaControlDAO.guardarMensajeCorreoEmision(
+						ntramite,
+						Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail)
+				);
 				
 			}
 			
@@ -955,6 +975,12 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	        	
 	        mesaControlDAO.movimientoDetalleTramite(ntramite,new Date(),null,
 	        		"El tr\u00e1mite se emiti\u00f3",cdusuari,null,cdsisrol,"S", null, null, EstatusTramite.CONFIRMADO.getCodigo(),true);
+	        
+			try {
+				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
+			} catch (Exception ex) {
+				logger.error("Error al enviar correos de emision", ex);
+			}
 			
 		} catch(Exception ex) {
 			Utils.generaExcepcion(ex, paso);

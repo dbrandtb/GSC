@@ -20,6 +20,7 @@ import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 public class EmisionManagerImpl implements EmisionManager
 {
@@ -34,6 +35,9 @@ public class EmisionManagerImpl implements EmisionManager
 	
 	@Autowired
 	private EmisionDAO emisionDAO;
+	
+	@Value("${url.descargar.documentos}")
+	private String urlDescargarDocumentosLibre;
 	
 	@Override
 	public ManagerRespuestaImapVO construirPantallaClausulasPoliza() throws Exception
@@ -235,5 +239,41 @@ public class EmisionManagerImpl implements EmisionManager
 	@Deprecated
 	public String recuperarTramiteCotizacion (String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
 		return emisionDAO.recuperarTramiteCotizacion(cdunieco, cdramo, estado, nmpoliza);
+	}
+	
+	@Override
+	public String generarLigasDocumentosEmisionLocalesIce (String ntramite) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ generarLigasDocumentosEmisionLocalesIce @@@@@@",
+				"\n@@@@@@ ntramite = ", ntramite));
+		String ligas = "",
+			paso = null;
+		try {
+			paso = "Recuperando documentos generados por parametrizaci\u00f3n";
+			logger.debug(paso);
+			List<Map<String, String>> docsGenerados = emisionDAO.recuperarDocumentosGeneradosPorParametrizacion(ntramite);
+			if (docsGenerados.size() > 0) {
+				StringBuilder sb = new StringBuilder();
+				for (Map<String, String> doc : docsGenerados) {
+					sb.append(Utils.join(
+							"<br/><br/><a style=\"font-weight: bold\" href=\"",
+							urlDescargarDocumentosLibre,
+							"?subfolder=", ntramite,
+							"&filename=", doc.get("CDDOCUME"),
+							"\">",
+							doc.get("DSDOCUME"),
+							"</a>"));
+				}
+				ligas = sb.toString();
+			}
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ ligas =", ligas,
+				"\n@@@@@@ generarLigasDocumentosEmisionLocalesIce @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return ligas;
 	}
 }

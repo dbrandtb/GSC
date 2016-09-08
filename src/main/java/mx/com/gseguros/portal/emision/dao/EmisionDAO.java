@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.emision.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
@@ -78,4 +79,6 @@ public interface EmisionDAO {
 	public String recuperarTramiteCotizacion (String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 	
 	public void bloquearProceso (String cdproceso, boolean bloquear, String cdusuari, String cdsisrol) throws Exception;
+	
+	public List<Map<String, String>> recuperarDocumentosGeneradosPorParametrizacion (String ntramite) throws Exception;
 }
