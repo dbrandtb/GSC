@@ -921,4 +921,16 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public List<Map<String, String>> getQueryResult(String query, String usuario) throws Exception{
+		// TODO Auto-generated method stub
+				return null;
+	}
+	
+	@Override
+	public List<Map<String, String>> executePLSQL(String archivo,String usuario) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
