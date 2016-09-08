@@ -1503,9 +1503,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							);
 					
 					File local = new File(filePath);
-					cddocume=cddocume.replace("http://201.151.228.153:9080", "http://192.168.2.153:9080").replace("https","http").replace("HTTPS","HTTP");
+					
 
-					InputStream remoto = HttpUtil.obtenInputStream(cddocume);
+					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
 					FileUtils.copyInputStreamToFile(remoto, local);
 				}
 				
@@ -1726,12 +1726,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					
 					File local = new File(filePath);
 					
-					cddocume=cddocume.replace("https","http").replace("HTTPS","HTTP")
-							.replace("http://201.151.228.153:9080", "http://192.168.2.153:9080")
-							.replace("HTTP://201.151.228.153:9080", "HTTP://192.168.2.153:9080");
-
-					sb.append("Cambiando url: "+cddocume);
-					InputStream remoto = HttpUtil.obtenInputStream(cddocume);
+					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
 					FileUtils.copyInputStreamToFile(remoto, local);
 					
 				}
