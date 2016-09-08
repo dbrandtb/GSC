@@ -7,6 +7,7 @@ import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.WSEmisionAutoException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
@@ -399,18 +400,18 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						
 					} catch(Exception e){
 						logger.error("Error al Insertar Poliza Externa: " + e.getMessage(), e);
-						throw new ApplicationException("Error al insertar Poliza Externa: " + nmpolAlt);
+						throw new WSEmisionAutoException("Error al insertar Poliza Externa: " + nmpolAlt);
 					}
 					
 					if(!aux.isExitoRecibos()){
-						retryRec = true;
-						throw new ApplicationException("Error al generar los recibos, intente de nuevo");
+						//retryRec = true;//Ya no Aplica
+						throw new WSEmisionAutoException("Error al generar los recibos, intente de nuevo");
 						//return SUCCESS;
 					}
 					
 				} else {
 					logger.error("Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza");
-					throw new ApplicationException("Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza");
+					throw new WSEmisionAutoException("Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza");
 				}
 			}
 			

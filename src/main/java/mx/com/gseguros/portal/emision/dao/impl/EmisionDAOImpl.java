@@ -372,6 +372,34 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	}
 	
 	@Override
+	public void revierteEmision(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_estado_i"  , estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		
+		ejecutaSP(new RevierteEmision(getDataSource()), params);
+	}
+	
+	protected class RevierteEmision extends StoredProcedure
+	{
+		protected RevierteEmision(DataSource dataSource)
+		{
+			super(dataSource,"P_REVIERTE_EMISION");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public List<Map<String, String>> recuperarDocumentosGeneradosPorParametrizacion (String ntramite) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
 		params.put("ntramite", ntramite);
@@ -398,4 +426,5 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 			compile();
 		}
 	}
+	
 }
