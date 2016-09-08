@@ -50,6 +50,13 @@ function destruirLoaderContratante<s:property value="smap1.idPantalla" />(){
 	 */
 }
 
+function callbackDocumentoSubidoPersona(){
+	/**
+	 *	Declaracion de Funcion que se ejecutara desde fuera de esta pantalla, o desde ventana de carga de documentos y se iguala a una funcion interna
+	 *  No es necesario declarar esta funcion afuera de este script
+	 */
+}
+
 
 Ext.onReady(function(){
 	
@@ -2914,14 +2921,15 @@ function _p22_datosAdicionalesClic()
 	        		                            }
 	        		                            ,{
 	        		                                xtype     : 'button'
-	        		                                ,name     : itemDocumento.name
+	        		                                ,name     : itemDocumento.name+'btnId'
 	        		                                ,icon     : '${ctx}/resources/fam3icons/icons/arrow_up.png'
 	        		                                ,tooltip  : 'Subir nuevo'
 	        		                                ,codidocu : itemDocumento.codidocu
 	        		                                ,descrip  : itemDocumento.inicialField
+	        		                                ,iddocumento: itemDocumento.name
 	        		                                ,handler  : function(button)
 	        		                                {
-	        		                                	_DocASubir = button.name;
+	        		                                	_DocASubir = button.iddocumento;
 	        		                                    _p22_subirArchivo(_p22_fieldCdperson().getValue(),button.codidocu,button.descrip);
 	        		                                }
 	        		                            },{
@@ -3528,11 +3536,12 @@ function _p22_cargarArchivo(cdperson,codidocu,dsdocume)
     debug('<_p22_cargarArchivo');
 }
 
-function callbackDocumentoSubidoPersona()
+callbackDocumentoSubidoPersona = function()
 {
+	
     _p22_windowAgregarDocu.destroy();
     
-    var elemento = _fieldByName(_DocASubir,null,true);
+    var elemento = _fieldByName(_DocASubir,_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />,true);
     
     if(!Ext.isEmpty(elemento.store)){
     	elemento.setValue('S');
@@ -3540,7 +3549,7 @@ function callbackDocumentoSubidoPersona()
     
     (Ext.ComponentQuery.query('[docCargado='+_DocASubir+'ImgDocId]',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />)[Ext.ComponentQuery.query('[docCargado='+_DocASubir+'ImgDocId]',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).length-1]).setSrc('${ctx}/resources/fam3icons/icons/accept.png');
     
-}
+};
 
 /**
  * 	PARA ANTES DE IR A MODO AGREGAR 
