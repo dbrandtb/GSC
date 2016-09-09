@@ -13,9 +13,9 @@ if(extjs_custom_override_mayusculas==true)
 				{
     				try
     				{
-	    				if('string' == typeof this.getValue())
+	    				if('string' == typeof this.getValue() && true !== this.sinmayus)
 	    				{
-	    					debug('mayus de '+this.getValue());
+	    					//debug('mayus de '+this.getValue());
 	    					this.setValue(this.getValue().toUpperCase());
 	    				}
     				}
@@ -57,7 +57,7 @@ Ext.define('Ext.grid.override.RowEditor', {
 });
 
 
-// Bug fix para tooltip en Firefox, se debe eliminar cuando se cambie la versión de EXTJS 4.2.1 a una superior
+// Bug fix para tooltip en Firefox, se debe eliminar cuando se cambie la versiï¿½n de EXTJS 4.2.1 a una superior
 // Fuente: https://www.sencha.com/forum/showthread.php?260106-Tooltips-on-forms-and-grid-are-not-resizing-to-the-size-of-the-text&p=976013&viewfull=1
 Ext.define('Ext.SubPixelRoundingFix', {
     override: 'Ext.dom.Element',
@@ -113,5 +113,55 @@ Ext.define('Ext.SubPixelRoundingFix', {
         }
         
         return (width < 0) ? 0 : width;
+    }
+});
+
+Ext.define('TextfieldCodificado', {
+    extend : 'Ext.form.field.Text',
+    constructor : function (config) {
+        var me = this;
+        Ext.apply(me, {
+            inputType  : 'password',
+            sinmayus   : true,
+            token      : 0,
+            allowBlank : false,
+            minLength  : 6,
+            listeners  : {
+                afterrender : function (me) {
+                    me.token = ('' + (new Date().getTime())).slice(-5);
+                    me.allowBlank = false;
+                    me.minLength = 6;
+                },
+                focus : function (me) {
+                    me.setValue('');
+                    me.allowBlank = false;
+                    me.minLength = 6;
+                    var bots = Ext.ComponentQuery.query('button[disabled=false]');
+                    for (var i = 0; i < bots.length; i++) {
+                        var bot = bots[i];
+                        bot.TextfieldCodificadoDisabled = true;
+                        bot.disable();
+                    }
+                },
+                blur : function (me) {
+                    var val = me.getValue(); 
+                    var valor = me.token;
+                    for (var i = 0; i < val.length ; i++) {
+                        valor = '' + valor + ('x00000000000000000000' + (Number(me.token) * Number(val.charCodeAt(i)))).slice(-20);
+                    }
+                    me.setValue(valor);
+                    me.allowBlank = false;
+                    me.minLength = 6;
+                    me.isValid();
+                    var bots = Ext.ComponentQuery.query('button[TextfieldCodificadoDisabled=true]');
+                    for (var i = 0; i < bots.length; i++) {
+                        var bot = bots[i];
+                        bot.TextfieldCodificadoDisabled = false;
+                        bot.enable();
+                    }
+                }
+            }
+        });
+        this.callParent(arguments);
     }
 });

@@ -792,4 +792,6 @@ public interface FlujoMesaControlDAO {
 	public List<Map<String, String>> recuperarValidacionPorCdvalidafk(String ntramite, String clave) throws Exception;
 	
 	public List<Map<String, String>> recuperarCotizacionesColectivasAprobadas(String ntramite) throws Exception;
+	
+	public String recuperaNombreMd5(String md5) throws Exception;
 }
