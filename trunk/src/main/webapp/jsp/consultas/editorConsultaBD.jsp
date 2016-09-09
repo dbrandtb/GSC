@@ -51,7 +51,12 @@ Ext.onReady(function()
     	           	 	           		 fieldLabel : 'Codigo',
     	           	    	           	 width      : 800,
     	           	      	 	         height 	: 300,
-    	           	 	           		 }
+    	           	      	 	     },
+    	           	 	           	 new TextfieldCodificado({
+    	           	 	           		 fieldLabel : 'Password',
+    	           	 	           		 name       : 'password',
+    	           	 	           		 itemId		: 'password'
+    	           	 	           	 })
     	           	 	           	 ]
     	           	,buttons :
     			        [
@@ -69,7 +74,8 @@ Ext.onReady(function()
     	                        			 url     : _ejecutaQuery
     	                                	 ,params :
     	                                	 {
-    	                                		 'params.query'    : _fieldById('queryVal').getValue()
+    	                                		 'params.query'     : _fieldById('queryVal').getValue()
+    	                                		 ,'params.password' : _fieldById('password').getValue()
     	                                		 }
     	                        			 ,success : function(response)
     	                        			 {
@@ -106,7 +112,7 @@ Ext.onReady(function()
     	                        					 mensajeCorrecto('query ejecutado con exito','exito');
     	                        					 }
     	                        				 else{
-    	                        					 mensajeError(json.message);
+    	                        					 mensajeError(json.mensajeRes);
     	                        					 }
     	                        				 }
     	                        			 ,failure : function()

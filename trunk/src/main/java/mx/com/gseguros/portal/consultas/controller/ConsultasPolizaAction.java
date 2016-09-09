@@ -1130,20 +1130,30 @@ public String ejecutaQuery(){
 		try {	
 				Utils.validate(params,"No se recibieron datos");
 	
-				String query = params.get("query");
+				String query    = params.get("query");
+				String password = params.get("password");
 					
 				Utils.validate(
-						 query, "No se recibi\u00f3 la query"
+						 query, "No se recibi\u00f3 la query",
+						 query, "No se recibi\u00f3 password"
 						);
-				UserVO usuario = (UserVO) session.get("USUARIO");
-				loadList = consultasPolizaManager.ejecutaQuery(query, usuario.getUser());
-				logger.debug(Utils.log(
-						"\n###### loadList "+loadList+" ######"
-						,"\n###### OBTUVO  "+loadList.size()+" ######"
-						,"\n###### ejecutaQuery ######"
-						,"\n###########################################"
-						));
-				success = true;
+				loadList = consultasPolizaManager.ejecutaQuery(query, password);
+				if (loadList.size() > 0){
+					logger.debug(Utils.log(
+							"\n###### loadList "+loadList+" ######"
+							,"\n###### obtuvo  "+loadList.size()+" ######"
+							,"\n###### ejecutaQuery ######"
+							,"\n###########################################"
+							));
+					success = true;
+				}else{
+					logger.debug(Utils.log(
+							"\n###### loadList "+loadList+" ######"
+							,"\n###### ejecutaQuery ######"
+							,"\n###########################################"
+							));
+					success = true;
+				}
 		    }
 	  catch (Exception e) 
 	       {

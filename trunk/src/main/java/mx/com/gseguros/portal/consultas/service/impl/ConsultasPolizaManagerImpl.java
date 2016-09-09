@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.dao.impl.ConsultasDAOImpl;
@@ -29,7 +30,10 @@ import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
+import net.sf.jasperreports.engine.util.LinkedMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -53,6 +57,9 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	
 	@Autowired
 	private AutosSIGSDAO autosDAOSIGS;
+	
+	@Autowired
+	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
 	@Override
 	public List<PolizaAseguradoVO> obtienePolizasAsegPromotor(String user,
@@ -467,15 +474,26 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 
 	@Override
-	public List<Map<String, String>> ejecutaQuery(String query, String usuario)
+	public List<Map<String, String>> ejecutaQuery(String query, String password)
 			throws Exception {
-		List<Map<String, String>> lista = null; 
+		String paso = "entro a ejecuta query";
+		List<Map<String, String>> lista = null;
+		try{
+			paso = "verificando password";
+			String usuario = flujoMesaControlDAO.recuperaNombreMd5(Utils.convierteTextfieldCodificadoEnMD5(password));
+			paso = "entro a ejecuta query";
 			if(query.trim().toUpperCase().startsWith("SELECT")){
+				paso = "ejecuta select";
 				lista = consultasPolizaDAOICE.getQueryResult(query, usuario);
 			}
 			else{
+				paso = "ejecuta plsql";
+				lista = new ArrayList<Map<String, String>>();
 				consultasPolizaDAOICE.executePLSQL(query, usuario);
 			}
+		}catch(Exception ex){
+			Utils.generaExcepcion(ex, paso);
+		}
 		return lista;
 	}
 	

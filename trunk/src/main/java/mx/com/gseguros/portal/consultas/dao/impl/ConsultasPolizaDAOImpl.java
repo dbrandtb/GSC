@@ -1038,8 +1038,8 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 			String usuario
 			) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
-		params.put("blob"   , archivo);
 		params.put("usuario", usuario);
+		params.put("blob"   , archivo);		
 		Map<String, Object> procRes = ejecutaSP(new ExecutePLSQL(getDataSource()), params);
 		List<Map<String, String>> lista = null;//(List<Map<String, String>>) procRes.get("pv_registro_o");
 		return lista;
@@ -1048,7 +1048,8 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 	protected class ExecutePLSQL extends StoredProcedure {
     	protected ExecutePLSQL(DataSource dataSource) {
     		super(dataSource, "PKG_EXEC_SQL.EJECUTAR");
-            declareParameter(new SqlParameter("blob"  , OracleTypes.BLOB));
+    		declareParameter(new SqlParameter("usuario"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("blob"  , OracleTypes.CLOB));
 //            declareParameter(new SqlOutParameter("pv_registro_o"  , OracleTypes.CURSOR,  new DinamicMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
