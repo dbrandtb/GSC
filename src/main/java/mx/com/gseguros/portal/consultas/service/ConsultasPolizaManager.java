@@ -309,5 +309,5 @@ public interface ConsultasPolizaManager {
     @Deprecated
 	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception;
     
-    public List<Map<String, String>> ejecutaQuery(String query, String usuario) throws Exception;
+    public List<Map<String, String>> ejecutaQuery(String query, String password) throws Exception;
 }
