@@ -237,7 +237,7 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
             		,"DS_STATUS_TRAMITE"
             		,"CDRAMO"
             		,"DSRAMO"
-            		,"NOMBRE_TRAMITE"
+            		,"CLIENTE"
             		,"CDAGENTE"
             		,"NOMBRE_AGENTE"
             		,"NMPOLIZA"
