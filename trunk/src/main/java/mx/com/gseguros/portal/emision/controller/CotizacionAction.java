@@ -1268,6 +1268,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		,ntramite
 	            		,nmpoliza //nmsolici
 	            		);
+				
+				// JTEZVA 2016 09 09 se mandan avisos cuando se emite si estan configurados
+				try {
+					flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
+				} catch (Exception ex) {
+					logger.error("Error al enviar correos de emision", ex);
+				}
 	            
 				//-------------------------------------
 				paso = "Insertando detalle de emision";
