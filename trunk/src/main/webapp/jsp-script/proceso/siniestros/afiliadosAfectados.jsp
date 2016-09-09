@@ -4011,7 +4011,7 @@
 					centrarVentanaInterna(mensajeWarning(json.msgResult));
 				}else{
 					myMask.hide();
-					//_11_mostrarSolicitudPago();
+					_11_mostrarSolicitudPago();
 				}
 			},
 			failure : function (){
