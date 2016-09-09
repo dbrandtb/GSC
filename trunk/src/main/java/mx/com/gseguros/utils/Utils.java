@@ -1,5 +1,6 @@
 package mx.com.gseguros.utils;
 
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -868,5 +869,28 @@ public class Utils
 				.replace("\u00cd", "&Iacute;")
 				.replace("\u00d3", "&Oacute;")
 				.replace("\u00da", "&Uacute;");
+    }
+    
+    public static String convierteTextfieldCodificadoEnMD5(String cadena) throws Exception{
+    	StringBuilder dec = new StringBuilder();
+    	long token = Long.valueOf(cadena.substring(0, 5));
+    	cadena = cadena.substring(5);
+    	long _char;
+    	while (cadena.length() > 0) {
+    		_char = Long.valueOf(cadena.substring(0, 20));
+    		cadena = cadena.substring(20);
+    		dec.append(Character.toString((char) ((int) _char / token)));
+    	}
+    	cadena = dec.toString();
+    	// convertir a MD5 https://www.mkyong.com/java/java-md5-hashing-example/
+    	MessageDigest md = MessageDigest.getInstance("MD5");
+    	md.update(cadena.getBytes());
+    	byte byteData[] = md.digest();
+    	//convert the byte to hex format method 1
+    	StringBuffer sb = new StringBuffer();
+    	for (int i = 0; i < byteData.length; i++) {
+    		sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+    	}
+    	return sb.toString();
     }
 }

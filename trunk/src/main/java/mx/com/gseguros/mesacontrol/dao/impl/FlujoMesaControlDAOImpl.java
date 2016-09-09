@@ -3576,4 +3576,26 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	public String recuperaNombreMd5(String md5) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("md5", md5);
+		Map<String, Object> procRes = ejecutaSP(new RecuperaNombreMd5SP(getDataSource()), params);
+		String nombre = (String) procRes.get("pv_salida_o");
+		if (StringUtils.isBlank(nombre)) {
+			throw new ApplicationException("MD5 NO EXISTE");
+		}
+		return nombre;
+	}
+	
+	protected class RecuperaNombreMd5SP extends StoredProcedure {
+		protected RecuperaNombreMd5SP (DataSource dataSource) {
+			super(dataSource,"P_GET_NOMBREMD5");
+			declareParameter(new SqlParameter("md5" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_salida_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
