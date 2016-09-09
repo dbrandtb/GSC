@@ -32,7 +32,7 @@ Ext.define('VentanaDescargaLote',
 	 				}
 	 				,{
 	 				    xtype    : 'button'
-	 				    ,text    : 'Descargar PDF'
+	 				    ,text    : 'Descargar PDF simple'
 	 				    ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'page_lightning.png'
 	 				    ,hoja    : 'B'
 	 				    ,tipoimp : 'GI'
@@ -70,7 +70,7 @@ Ext.define('VentanaDescargaLote',
 	                }
 	                ,{
 	                    xtype    : 'button'
-	                    ,text    : 'Descargar PDF'
+	                    ,text    : 'Descargar PDF simple'
 	                    ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'group_key.png'
 	                    ,hoja    : 'C'
 	                    ,tipoimp : 'GI'
