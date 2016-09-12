@@ -7470,6 +7470,27 @@ public class CotizacionAction extends PrincipalCoreAction
 				new tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject();
 		resp.exito = true;
 		
+		// Actualizar plan de mpolisit
+		if (resp.exito && (
+			RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol().equals(cdsisrol) ||
+			RolSistema.SUPERVISOR_TECNICO_SALUD.getCdsisrol().equals(cdsisrol) ||
+			RolSistema.SUBDIRECTOR_SALUD.getCdsisrol().equals(cdsisrol) ||
+			RolSistema.DIRECTOR_SALUD.getCdsisrol().equals(cdsisrol)
+		)) {
+			try {
+				for (Map<String,Object> iGrupo : olist1) {
+					String cdgrupo = (String)iGrupo.get("letra"),
+					       cdplan  = (String)iGrupo.get("cdplan");
+					cotizacionManager.actualizarCdplanGrupo(cdunieco, cdramo, "W", nmpoliza, "0", cdgrupo, cdplan);
+				}
+			} catch (Exception ex) {
+				long timestamp = System.currentTimeMillis();
+				resp.exito = false;
+				resp.respuesta = Utils.join("Error al actualizar plan de grupos #", timestamp);
+				logger.error(resp.respuesta, ex);
+			}
+		}
+		
 		//tvalosit
 		logger.debug("1.- Valor de resp.exito ===>"+resp.exito);
 		if(resp.exito)

@@ -84,4 +84,7 @@ public interface EmisionDAO {
 	
 	public List<Map<String, String>> recuperarDocumentosGeneradosPorParametrizacion (String ntramite) throws Exception;
 	
+	public void actualizarCdplanGrupo(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem, String cdgrupo, String cdplan) throws Exception;
+	
 }
