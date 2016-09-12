@@ -1042,5 +1042,10 @@ public interface CotizacionManager
 			)throws Exception;
 	
 	public String recuperarDescripcionEstatusTramite (String status) throws Exception;
+	
+	@Deprecated
+	// LOS METODOS DE MANAGER SIN LOGICA QUE SOLO INVOCAN A UN DAO DEBEN DEJAR DE USARSE
+	public void actualizarCdplanGrupo(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem, String cdgrupo, String cdplan) throws Exception;
 
 }

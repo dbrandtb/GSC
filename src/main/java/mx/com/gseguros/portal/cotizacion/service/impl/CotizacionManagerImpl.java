@@ -31,6 +31,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.MailService;
@@ -100,6 +101,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
+	
+	@Autowired
+	private EmisionDAO emisionDAO;
 	    
 	@Override
 	public void movimientoTvalogarGrupo(
@@ -10575,6 +10579,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 				"\n@@@@@@ recuperarDescripcionEstatusTramite @@@@@@",
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 		return dsstatus;
+	}
+	
+	@Override
+	@Deprecated // LOS METODOS DE MANAGER SIN LOGICA QUE SOLO INVOCAN AL DAO DEBEN DEJAR DE USARSE
+	public void actualizarCdplanGrupo(String cdunieco, String cdramo, String estado, String nmpoliza,
+		String nmsuplem, String cdgrupo, String cdplan) throws Exception {
+		emisionDAO.actualizarCdplanGrupo(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdgrupo, cdplan);
 	}
 	
 	/////////////////////////////////////////////////////

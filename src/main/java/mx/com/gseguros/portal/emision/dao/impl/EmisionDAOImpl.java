@@ -427,4 +427,34 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		}
 	}
 	
+	@Override
+	public void actualizarCdplanGrupo(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem, String cdgrupo, String cdplan) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdgrupo"  , cdgrupo);
+		params.put("cdplan"   , cdplan);
+		ejecutaSP(new ActualizarCdplanGrupoSP(getDataSource()), params);
+	}
+	
+	protected class ActualizarCdplanGrupoSP extends StoredProcedure {
+		protected ActualizarCdplanGrupoSP (DataSource dataSource) {
+			super(dataSource, "P_EMI_ACTUALIZA_CDPLAN_GRUPO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdplan"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
