@@ -144,6 +144,7 @@ Ext.onReady(function()
     _fieldByName('cdplan',_8_panelEndoso).hidden = _TIPOFLOT != "F"? false:true;
     _fieldByName('cdplan',_8_panelEndoso).allowBlank = true;
     _fieldByName('dsplan',_8_formLectura).hidden = _TIPOFLOT != "F"? false:true;
+    _fieldByName('cdplan',_8_formLectura).hidden = true;// Se agrega cdplan
     _fieldByName('NEWCDUNIECO',_8_panelEndoso).value  = _8_smap1.CDUNIECO;
     
 	var _8_colsBaseColumns =
