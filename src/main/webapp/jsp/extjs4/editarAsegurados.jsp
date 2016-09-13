@@ -784,7 +784,13 @@
                                             Apellido_Materno: datosContr.apmat,
                                             cdrfc:datosContr.rfc,
                                             tpersona : datosContr.tipoper,
-                                            nacional : datosContr.naciona
+                                            nacional : datosContr.naciona,
+                                            cdestciv    :  recordAsegu.get('cdestciv'),
+                                            numsoc      :  recordAsegu.get('numsoc'),
+                                            clvfam      :  recordAsegu.get('clvfam'),
+                                            ocup        :  recordAsegu.get('ocup'),
+                                            parentesco	:  recordAsegu.get('Parentesco'),
+                                            estomador   :  recordAsegu.get('estomador')
                                         });
                                         debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
                                         var recordTmp = recordAsegu;
@@ -816,6 +822,12 @@
                                         cdrfc: recordAsegu.get('cdrfc'),
                                         tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
                                         nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key'),
+                                		cdestciv 	:  recordAsegu.get('cdestciv'),
+                                        numsoc   	:  recordAsegu.get('numsoc'),
+                                        clvfam   	:  recordAsegu.get('clvfam'),
+                                        ocup     	:  recordAsegu.get('ocup'),
+                                        parentesco	:  recordAsegu.get('Parentesco'),
+                                        estomador   :  recordAsegu.get('estomador')
                                     });
                                     debug('*f6');
                                 });
@@ -918,6 +930,11 @@
                                                                                 cdrfc:datosContr.rfc,
                                                                                 tpersona : datosContr.tipoper,
                                                                                 nacional : datosContr.naciona
+                                                                               ,cdestciv :  recordAsegu2.get('cdestciv'),
+										                                        clvfam   :  recordAsegu2.get('clvfam'),
+										                                        numsoc   :  recordAsegu2.get('numsoc'),
+										                                        ocup     :  recordAsegu2.get('ocup'),
+										                                        parentesco	: recordAsegu2.get('Parentesco')
                                                                             });
                                                                         }
                                                                         incisosJson.push({
@@ -936,6 +953,12 @@
                                                                             cdrfc: recordAsegu2.get('cdrfc'),
                                                                             tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
                                                                             nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
+	                                                                   	   ,cdestciv :  recordAsegu2.get('cdestciv'),
+									                                        numsoc   :  recordAsegu2.get('numsoc'),
+									                                        clvfam   :  recordAsegu2.get('clvfam'),
+									                                        ocup     :  recordAsegu2.get('ocup'),
+									                                        parentesco	: recordAsegu2.get('Parentesco'),
+									                                        estomador   : recordAsegu2.get('estomador')
                                                                         });
                                                                     });                
                                                                     Ext.getCmp('form1p2').setLoading(false);
@@ -1437,7 +1460,21 @@ debug("validarYGuardar flag:2");
             displayField: 'value',
             valueField: 'key',
             allowBlank:false,
-            editable:false
+            editable:false,
+            listeners: {
+				'beforeselect' : function(combo, record, index, eOpts){
+					var edicivPersona = gridPersonasp2.getSelectionModel().getLastSelected();
+					if(edicivPersona.get('estomador')){
+						Ext.Msg.show({
+							title    : 'Aviso'
+					        ,icon    : Ext.Msg.WARNING
+					        ,msg     : 'No puede cambiar el Estado Civil del Contratante.'
+					        ,buttons : Ext.Msg.OK
+					    });
+						return false;
+					}
+				}
+            }
         });
         
         editorEstcivBp2=Ext.create('Ext.form.ComboBox',
@@ -1447,7 +1484,21 @@ debug("validarYGuardar flag:2");
             displayField: 'value',
             valueField: 'key',
             allowBlank:false,
-            editable:false
+            editable:false,
+            listeners: {
+				'beforeselect' : function(combo, record, index, eOpts){
+					var edicivPersona = gridPersonasp2.getSelectionModel().getLastSelected();
+					if(edicivPersona.get('estomador')){
+						Ext.Msg.show({
+							title    : 'Aviso'
+					        ,icon    : Ext.Msg.WARNING
+					        ,msg     : 'No puede cambiar el Estado Civil del Contratante.'
+					        ,buttons : Ext.Msg.OK
+					    });
+						return false;
+					}
+				}
+            }
         });
         
         editorOcupp2=Ext.create('Ext.form.ComboBox',
@@ -1611,13 +1662,19 @@ debug("validarYGuardar flag:2");
                 'blur' : function( field , event)
                 {
                     var valorFieldRFC = field.getValue();
+                    var esContratante = (!Ext.isEmpty(campoAactualizar.get('estomador'))&& campoAactualizar.get('estomador'))?true:false;
                     
-                    campoAactualizar.set("cdperson",'');
-                    campoAactualizar.set("swexiper",'N');
-                    campoAactualizar.set("cdideper",'');
-                    campoAactualizar.set("cdideext",'');
-
-                    var esContratante = campoAactualizar.get('estomador');
+                    if(esContratante){
+                    	campoAactualizar.set("swexiper",'S');
+                    	campoAactualizar.set("estomador",esContratante);
+                    	return;
+                    }else{
+                    	campoAactualizar.set("swexiper",'N');
+                    	campoAactualizar.set("estomador",esContratante);
+                    	campoAactualizar.set("cdperson",'');
+                        campoAactualizar.set("cdideper",'');
+                        campoAactualizar.set("cdideext",'');
+                    }                  
                     
                     if(valorFieldRFC.length>8)
                     {
@@ -2194,6 +2251,16 @@ debug("validarYGuardar flag:2");
             
             onEditarClick:function(grid,rowIndex)
             {
+            	
+            	var validaNegocioCvFam;
+                if(inputCduniecop2 == 1403){
+                	validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
+                }
+                if(!Ext.isEmpty(validaNegocioCvFam)){
+        		    mensajeWarning(validaNegocioCvFam);
+        		    return false;
+        		}
+            	
                 var me=this;
                 debug("domicilios.click");
                 debug("validarYGuardar");
@@ -2349,6 +2416,15 @@ debug("validarYGuardar flag:2");
             
             onDomiciliosClick:function(grid,rowIndex)
             {
+            	var validaNegocioCvFam;
+                if(inputCduniecop2 == 1403){
+                	validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
+                }
+                if(!Ext.isEmpty(validaNegocioCvFam)){
+        		    mensajeWarning(validaNegocioCvFam);
+        		    return false;
+        		}
+            	
                 var me=this;
                 debug("domicilios.click");
                 debug("validarYGuardar");
@@ -2358,6 +2434,17 @@ debug("validarYGuardar flag:2");
             
             onExclusionClick:function(grid,rowIndex)
             {
+            	
+            	
+            	var validaNegocioCvFam;
+                if(inputCduniecop2 == 1403){
+                	validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
+                }
+                if(!Ext.isEmpty(validaNegocioCvFam)){
+        		    mensajeWarning(validaNegocioCvFam);
+        		    return false;
+        		}
+                
                 var me=this;
                 debug("onExclusionClick");
                 debug("validarYGuardar");
@@ -2417,6 +2504,16 @@ debug("validarYGuardar flag:2");
             }
             ,onValositClick : function(grid,rowIndex)
             {
+            	
+            	var validaNegocioCvFam;
+                if(inputCduniecop2 == 1403){
+                	validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
+                }
+                if(!Ext.isEmpty(validaNegocioCvFam)){
+        		    mensajeWarning(validaNegocioCvFam);
+        		    return false;
+        		}
+            	
                 var record=grid.getStore().getAt(rowIndex);
                 debug(record);
                 if(Ext.getCmp('valositAccordionEl'))
