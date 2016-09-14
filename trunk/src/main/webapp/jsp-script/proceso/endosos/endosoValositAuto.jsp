@@ -9,6 +9,7 @@
 var _p36_urlConfirmarEndoso        = '<s:url namespace="/endosos" action="confirmarEndosoTvalositAuto" />';
 var _p36_previewConfirmarEndoso    = '<s:url namespace="/endosos" action="previewEndosoTvalositAuto" />';
 var _p36_urlRecuperacionSimple     = '<s:url namespace="/emision" action="recuperacionSimple"          />';
+var _p29_urlObtieneValNumeroSerie  = '<s:url namespace="/emision"    action="obtieneValNumeroSerie"    />';
 ////// urls //////
 
 ////// variables //////
@@ -21,6 +22,7 @@ debug('_p36_slist1:' , _p36_slist1);
 debug('_p36_flujo:'  , _p36_flujo);
 
 var _p36_store;
+var numSerie = '';
 ////// variables //////
 
 ////// overrides //////
@@ -272,6 +274,7 @@ Ext.onReady(function()
 		                                            fecha+=value.getFullYear();
 		                                            value=fecha;
 		                                        }
+		                                       
 		                                        valores[key]=value;
 		                                        for(var i in _p39_gridColumnsEditables)
 		                                        {
@@ -282,9 +285,12 @@ Ext.onReady(function()
 		                                            debug('metemos:',record.get(name));
 		                                            valores['OTVALOR'+cdatribu]=record.get(name);
 		                                            debug('metimos:',valores['OTVALOR'+cdatribu]);
+		                                            
 		                                        }
+		                                        //numSerie+=valores['OTVALOR99'];
 		                                    }
 		                                    jsonDatosConfirmacion.slist1.push(valores);
+		                                    
 		                                });
 		                                
 		                                var panelMask = new Ext.LoadMask('_p36_divpri', {msg:"Confirmando..."});
@@ -294,7 +300,12 @@ Ext.onReady(function()
 										{
 										    jsonDatosConfirmacion.flujo = _p36_flujo;
 										}
-										
+										_p36_store.each(function(record) {
+									    	debug( record.get('CVE_NUMERO_DE_SERIE'));
+									    	numSerie=(record.get('CVE_NUMERO_DE_SERIE'));
+									    });
+										debug('jsonDatosConfirmacion****',jsonDatosConfirmacion.slist1['OTVALOR99']);
+										//numSerie+=''+(record.get('parametros.pv_otvalor37'))+'|';
 		                                Ext.Ajax.request(
 		                                {
 		                                    url     : _p36_urlConfirmarEndoso
@@ -307,7 +318,26 @@ Ext.onReady(function()
 		                                        debug('### confirmar endoso:',json);
 		                                        if(json.success)
 		                                        {
-		                                        	
+		                                        	Ext.Ajax.request(
+															{
+																url     : _p29_urlObtieneValNumeroSerie
+																,params :
+																{
+																	'smap1.numSerie'  : numSerie
+																	,'smap1.feini'    : new Date()
+																}
+																,success : function(response)
+																{
+																	var jsonNumSerie=Ext.decode(response.responseText);
+												        	    	if(jsonNumSerie.exito!=true)
+												        	    	{
+												                       debug('jsonNumSerie.respuesta**** -->',jsonNumSerie.respuesta);
+																	   mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+																								
+												        	    	}
+																}
+																,failure : errorComunicacion
+															});	
 
 		                                        }
 		                                        else
@@ -401,6 +431,72 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
+function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
+	var panelImagen = new Ext.Panel({
+		defaults 	: {
+			style   : 'margin:5px;'
+		},
+		layout: {
+			type: 'hbox'
+			,align: 'center'
+			,pack: 'center'
+		}
+		,border: false
+		,items:[{	        	
+			xtype   : 'image'
+			,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
+			,width: 200
+			,height: 100
+		}]
+	});
+
+	validacionNumSerie = Ext.create('Ext.window.Window',{
+		title        : titulo
+		,modal       : true
+		,buttonAlign : 'center'
+		,width		 : 520
+		,icon 		 : imagenSeccion
+		,resizable	 : false
+		,height      : 250
+		,items       :[
+			Ext.create('Ext.form.Panel', {
+				id: 'panelClausula'
+				,width		 : 500
+				,height      : 150
+				,bodyPadding: 5
+				,renderTo: Ext.getBody()
+				,defaults 	 : {
+					style : 'margin:5px;'
+				}
+				,border: false
+				,html: txtRespuesta 
+				/*,Items: [
+				{
+					xtype  : 'label'
+					,text  : txtRespuesta
+					,width : 100
+					,height: 100
+					,style : 'color:red;margin:10px;'
+				}
+				,{
+					border: false
+					,items    :
+						[	panelImagen		]
+				}]*/
+			})
+		],
+		buttonAlign:'center',
+		buttons: [{
+			text: 'Aceptar',
+			icon: '${ctx}/resources/fam3icons/icons/accept.png',
+			buttonAlign : 'center',
+			handler: function() {
+				validacionNumSerie.close();
+			}
+		}]
+	});
+	centrarVentanaInterna(validacionNumSerie.show());
+}
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
