@@ -456,6 +456,19 @@ Ext.onReady(function()
             ,icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
             ,handler  : _p25_editarGrupoClic
         });
+        if ([
+            RolSistema.SuscriptorTecnico,
+            RolSistema.SupervisorTecnico,
+            RolSistema.SubdirectorSalud,
+            RolSistema.DirectorSalud
+        ].indexOf(_cotcol_smap1.cdsisrol) !== -1) {
+            botoneslinea.push(
+            {
+                tooltip   : 'Borrar detalle'
+                ,icon     : '${ctx}/resources/fam3icons/icons/error_delete.png'
+                ,handler  : _p25_borrarDetalleGrupoClic
+            });
+        }
     }
     if(!_p25_ntramite || _cotcol_smap1.modificarTodo === true)
     {
@@ -675,6 +688,19 @@ Ext.onReady(function()
             ,icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
             ,handler  : _p25_editarGrupoClic
         });
+        if ([
+            RolSistema.SuscriptorTecnico,
+            RolSistema.SupervisorTecnico,
+            RolSistema.SubdirectorSalud,
+            RolSistema.DirectorSalud
+        ].indexOf(_cotcol_smap1.cdsisrol) !== -1) {
+            botonesModificada.push(
+            {
+                tooltip   : 'Borrar detalle'
+                ,icon     : '${ctx}/resources/fam3icons/icons/error_delete.png'
+                ,handler  : _p25_borrarDetalleGrupoClic
+            });
+        }
     }
     
     if(!_p25_ntramite || _cotcol_smap1.modificarTodo === true)

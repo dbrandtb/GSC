@@ -2213,3 +2213,23 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
         });
     }
 }
+
+function _p25_borrarDetalleGrupoClic (grid,rowIndex) {
+    debug('_p25_borrarDetalleGrupoClic() args:', arguments);
+    var record = grid.getStore().getAt(rowIndex);
+    debug('record.data:', record.data);
+    centrarVentanaInterna(Ext.MessageBox.confirm(
+        'Confirmar',
+        'Se borrar\u00e1n las coberturas y factores del subgrupo y se cargar\u00e1n los valores iniciales del nuevo plan ¿Desea continuar?',
+        function (btn) {
+            if (btn=='yes') {
+                grid.editingPlugin.cancelEdit();
+                record.valido    = false;
+                record.tvalogars = [];
+                _p25_editarGrupoClic(grid, rowIndex);
+            } else {
+                grid.editingPlugin.cancelEdit();
+            }
+        }
+    ));
+}
