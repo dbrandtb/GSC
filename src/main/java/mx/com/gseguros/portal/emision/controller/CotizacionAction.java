@@ -1640,15 +1640,15 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.putAll(resp.getSmap());
 				slist2=resp.getSlist();
 				
-				// Cambio en ramo 5 para poner la prima en cero de los planes mensuales "4L", "3A" y "5B": 
-				for (int i = 0; i < slist2.size(); i++) {
-					if (Integer.parseInt(slist2.get(i).get("CDPERPAG").trim()) == 1 && Integer.parseInt(cdramo.trim())==5) {
-						slist2.get(i).put("MNPRIMA4L","0");
-						slist2.get(i).put("MNPRIMA3A","0");
-						slist2.get(i).put("MNPRIMA5B","0");
-						break;
-					}
-				}
+				// vils Cambio en ramo 5 para poner la prima en cero de los planes mensuales "4L", "3A" y "5B": 
+//				for (int i = 0; i < slist2.size(); i++) {
+//					if (Integer.parseInt(slist2.get(i).get("CDPERPAG").trim()) == 1 && Integer.parseInt(cdramo.trim())==5) {
+//						slist2.get(i).put("MNPRIMA4L","0");
+//						slist2.get(i).put("MNPRIMA3A","0");
+//						slist2.get(i).put("MNPRIMA5B","0");
+//						break;
+//					}
+//				}
 			}
 			
 			success = exito;
