@@ -971,6 +971,6 @@
 		</script>
 	</head>
 	<body>
-		<div id="dvEstadisticas"></div>
+		<div id="dvEstadisticas" style="height:650px"></div>
 	</body>
 </html>
