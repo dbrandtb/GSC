@@ -1222,7 +1222,7 @@ function _p29_emitirFinal(me)
             poliza = json.nmpolAlt;
             debug('### emitir:',json);
             if(json.success==true)
-            {   _fieldById('_p29_botonRedireccionar').setDisabled(false);
+            {   //vils _fieldById('_p29_botonRedireccionar').setDisabled(false);
             
             	_p29_smap1.nmpolizaEmitida=json.panel2.nmpoliza;
                 debug("_p29_smap1.nmpolizaEmitida:",_p29_smap1.nmpolizaEmitida);

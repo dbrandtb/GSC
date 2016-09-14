@@ -555,7 +555,7 @@ Ext.onReady(function()
           ,width  : 435
           ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
           ,items  : _p28_panel7Items
-          ,hidden : false
+          ,hidden : true
     }
    ,{
          xtype   : 'fieldset'
@@ -3217,7 +3217,15 @@ function llenandoCampos(json)
                 ,callback : function()
                 {
                     agente.setValue(agente.findRecord('key',primerInciso.get('parametros.pv_otvalor01')));
-                    _p28_ramo5AgenteSelect(agente,agente.getValue());
+                    if(!Ext.isEmpty(agente.getValue()))
+                    {
+                        _p28_ramo5AgenteSelect(agente,agente.getValue());
+                    }
+                    else
+                    {
+                    	_p28_ramo5AgenteSelect(agente,primerInciso.get('parametros.pv_otvalor01'));
+                    	_fieldLikeLabel()
+                    }
                     renderiza();
                 }
             });
@@ -3478,8 +3486,8 @@ function _p28_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p28_botonImprimir').setDisabled(false);
         _fieldById('_p28_botonEnviar').setDisabled(false);
         _fieldById('_p28_botonDetalles').setDisabled(false);
-        
-        if( Number(_p28_selectedCdperpag) == 1 && (_p28_selectedCdplan=="3A" || _p28_selectedCdplan =="4L" || _p28_selectedCdplan =="5B"))
+        //vils
+        /*if( Number(_p28_selectedCdperpag) == 1 && (_p28_selectedCdplan=="3A" || _p28_selectedCdplan =="4L" || _p28_selectedCdplan =="5B"))
         {
             debug(".D.");
             debug('DSPERPAG');  
@@ -3488,7 +3496,7 @@ function _p28_tarifaSelect(selModel, record, row, column, eOpts)
             _fieldById('_p28_botonImprimir').setDisabled(true);
             _fieldById('_p28_botonEnviar').setDisabled(true);
             _fieldById('_p28_botonDetalles').setDisabled(true);
-        }
+        }*/
     }
 }
 
