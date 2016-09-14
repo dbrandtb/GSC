@@ -561,7 +561,7 @@ function _p29_loadCallback()
         {
             try
             {
-            	debug('### obtener retroactividad:',json);
+//             	debug('### obtener retroactividad:',json);
                 fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,vigen.getValue()))
             }
             catch(e)
