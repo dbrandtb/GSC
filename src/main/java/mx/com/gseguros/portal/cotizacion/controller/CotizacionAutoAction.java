@@ -1742,14 +1742,37 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,numSerie , "No se recibi\u00f3 el numero de serie"
 					);
 			
-			String iCodAviso = "exito";
+			String iCodAviso = null;
+			String sSubCadena = null;
+			
 			
 			String feAutorizacion = Utils.join(feini.substring(8,10),"/",feini.substring(5,7),"/",feini.substring(0,4));
 			
-			iCodAviso = cotizacionAutoManager.obtieneValidacionRetroactividad(numSerie, renderFechas.parse(feAutorizacion));
+			String[] value_split = numSerie.split("\\|");
 			
-			exito           = StringUtils.isNotBlank(iCodAviso) ? false : true;
-			respuesta       = iCodAviso;
+		    for (String serie : value_split) {
+		    	int contador = 0;
+		        logger.debug("Serie==>> "+serie);
+		        iCodAviso="";
+		        iCodAviso +=cotizacionAutoManager.obtieneValidacionRetroactividad(serie, renderFechas.parse(feAutorizacion));
+		        contador++;
+		        
+		        
+		        	sSubCadena = iCodAviso.substring(0,60);
+		        	System.out.println(sSubCadena);
+		        	logger.debug(sSubCadena);
+		        
+		        logger.debug(String.valueOf(iCodAviso.length()));
+		        sSubCadena += "".equals(iCodAviso)?"": "INCISO: "+contador+" VERIFIQUE SI PUEDE REALIZAR EL ENDOSO O BIEN SI NECESITA REEXPEDIR LA POLIZA INGRESE TRAMITE POR MESA DE CONTROL.";
+		        
+		        
+		        numSerie="";
+
+		    }
+			//iCodAviso = cotizacionAutoManager.obtieneValidacionRetroactividad(numSerie, renderFechas.parse(feAutorizacion));
+			
+			exito           = StringUtils.isNotBlank(sSubCadena) ? false : true;
+			respuesta       = sSubCadena;
 			respuestaOculta = iCodAviso;
 			
 			logger.debug("respuesta--->"+respuesta+" : "+iCodAviso.length());

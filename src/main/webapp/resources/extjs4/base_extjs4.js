@@ -5,7 +5,7 @@
 ///////////////////////
 ////// FUNCIONES //////
 /*///////////////////*/
-var _ice_debug = false;
+var _ice_debug = true;
 
 function debug(a,b,c,d,e)
 {
@@ -3528,6 +3528,75 @@ function _iceMostrar() {
             cmp.show();
         } catch (e) {}
     }
+    
+
+}
+
+function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
+	var panelImagen = new Ext.Panel({
+		defaults 	: {
+			style   : 'margin:5px;'
+		},
+		layout: {
+			type: 'hbox'
+			,align: 'center'
+			,pack: 'center'
+		}
+		,border: false
+		,items:[{	        	
+			xtype   : 'image'
+			,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
+			,width: 200
+			,height: 100
+		}]
+	});
+
+	validacionNumSerie = Ext.create('Ext.window.Window',{
+		title        : titulo
+		,modal       : true
+		,buttonAlign : 'center'
+		,width		 : 520
+		,icon 		 : imagenSeccion
+		,resizable	 : false
+		,height      : 250
+		,items       :[
+			Ext.create('Ext.form.Panel', {
+				id: 'panelClausula'
+				,width		 : 500
+				,height      : 150
+				,bodyPadding: 5
+				,renderTo: Ext.getBody()
+				,defaults 	 : {
+					style : 'margin:5px;'
+				}
+				,border: false
+				,html: txtRespuesta 
+				/*,Items: [
+				{
+					xtype  : 'label'
+					,text  : txtRespuesta
+					,width : 100
+					,height: 100
+					,style : 'color:red;margin:10px;'
+				}
+				,{
+					border: false
+					,items    :
+						[	panelImagen		]
+				}]*/
+			})
+		],
+		buttonAlign:'center',
+		buttons: [{
+			text: 'Aceptar',
+			icon: '${ctx}/resources/fam3icons/icons/accept.png',
+			buttonAlign : 'center',
+			handler: function() {
+				validacionNumSerie.close();
+			}
+		}]
+	});
+	centrarVentanaInterna(validacionNumSerie.show());
 }
 
 ////////////////////////////

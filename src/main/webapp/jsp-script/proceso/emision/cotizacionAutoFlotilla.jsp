@@ -38,6 +38,7 @@ var _p30_urlConfirmarEndoso                   = '<s:url namespace="/endosos"    
 var _p30_urlCargarPolizaSIGS                  = '<s:url namespace="/emision"         action="cargarPoliza"                        />';
 
 var _p30_urlRecuperarDatosTramiteValidacion = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente" />';
+var _p29_urlObtieneValNumeroSerie           = '<s:url namespace="/emision"          action="obtieneValNumeroSerie"                  />';
 
 var MontoMaximo = 0;
 var MontoMinimo = 0;
@@ -47,6 +48,7 @@ var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 
 var cargarXpoliza = false;
+var numSerie='';
 ////// urls //////
 
 ////// variables //////
@@ -521,7 +523,10 @@ var _p30_tatrisitAutoWindows  = [];
                 ,{
                     text     : 'B&uacute;squeda de veh&iacute;culo'
                     ,icon    : '${ctx}/resources/fam3icons/icons/car.png'
-                    ,handler : function(bot) { _p30_editarAutoAceptar(bot,_p30_editarAutoBuscar); }
+                    ,handler : function(bot) 
+                    				{
+                    					debug('bot***',bot);
+                    					_p30_editarAutoAceptar(bot,_p30_editarAutoBuscar); }
                 }
             ]
         };
@@ -5754,6 +5759,7 @@ function _p30_pedirCdtipsit()
 function _p30_editarAutoAceptar(bot,callback)
 {
     debug('>_p30_editarAutoAceptar');
+   
     var form   = bot.up('form');
     var record = _p30_selectedRecord;
     
@@ -5767,7 +5773,6 @@ function _p30_editarAutoAceptar(bot,callback)
             datosIncompletos();
         }
     }
-    
     if(valido)
     {
         var values=form.getValues();
@@ -5779,9 +5784,39 @@ function _p30_editarAutoAceptar(bot,callback)
         
         if(!Ext.isEmpty(callback))
         {
-            callback();
+        	debug('form.getValues()***',form.getValues());
+        	_p30_store.each(function(record) {
+			    	debug( record);
+			    	numSerie+=''+(record.get('parametros.pv_otvalor37'))+'|';
+			    	//console.log( record.get('parametros.pv_otvalor37') );
+			    });
+        	Ext.Ajax.request(
+				{
+					url     : _p29_urlObtieneValNumeroSerie
+					,params :
+					{
+						'smap1.numSerie'  : numSerie
+						,'smap1.feini'    : _fieldByName('feini').getValue()
+					}
+					,success : function(response)
+					{
+						var jsonNumSerie=Ext.decode(response.responseText);
+	        	    	if(jsonNumSerie.exito!=true)
+	        	    	{
+	                       debug('jsonNumSerie.respuesta**** -->',jsonNumSerie.respuesta);
+						   mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+	                       //Ext.Msg.alert('Error**', jsonNumSerie.respuesta);
+	                       
+													
+	        	    	}else{callback();}
+					}
+					,failure : errorComunicacion
+				});
+            
         }
     }
+    
+   
     debug('<_p30_editarAutoAceptar');
 }
 
