@@ -5026,4 +5026,43 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> obtenerContratantes(
+			String cdunieco,
+			String cdramo,
+			String cadena)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_cadena_i"  , cadena);
+		Utils.debugProcedure(logger, "P_OBTENER_CONTRATANTES", params);
+		Map<String,Object>procResult  = ejecutaSP(new ObtenerContratantes(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		Utils.debugProcedure(logger, "P_OBTENER_CONTRATANTES", params,lista);
+		return lista;
+	}
+	
+	protected class ObtenerContratantes extends StoredProcedure
+    {
+    	protected ObtenerContratantes(DataSource dataSource)
+        {
+            super(dataSource,"P_OBTENER_CONTRATANTES");
+            declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cadena_i"  , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+            		"cdperson"  ,"nombre_completo"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

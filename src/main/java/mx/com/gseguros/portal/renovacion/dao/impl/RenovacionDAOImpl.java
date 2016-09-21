@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.renovacion.dao.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -286,4 +287,245 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		}
 	}
 	
+	@Override
+	public List<Map<String,String>> busquedaRenovacionIndividual(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************")
+				.append("\n****** PKG_RENOVACION_IND.P_GET_DATOS_POLIZA ******")
+				.append("\n****** params=").append(params)
+				.append("\n**************************************************") 
+				.toString()
+				);
+		Map<String,Object>procResult = ejecutaSP(new BusquedaRenovacionIndividual(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************")
+				.append("\n****** PKG_RENOVACION_IND.P_GET_DATOS_POLIZA ******")
+				.append("\n****** result=").append(lista)
+				.append("\n**************************************************") 
+				.toString()
+				);
+		return lista;
+	}
+	
+	protected class BusquedaRenovacionIndividual extends StoredProcedure
+	{
+		protected BusquedaRenovacionIndividual(DataSource dataSource)
+		{
+			super(dataSource, "PKG_RENOVACION_IND.P_GET_DATOS_POLIZA");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+						"cdperson",
+						"contratante",
+						"dsdomici",
+						"nmtelefo",
+						"cdpostal",
+//						"otpoblac",
+						"cdpais",
+//						"otpiso",
+						"nmnumero",
+//						"cdprovin",
+//						"dszona",
+//						"dsdelega",
+//						"cdregion",
+//						"cdsector",
+//						"cdmanzan",
+//						"cdedific",
+//						"ruta_cart",
+//						"puntoent",
+//						"chkdigit",
+//						"nmapto",
+//						"cdkilome",
+//						"instespe",
+//						"dsdirecc",
+						"nmnumint",
+						"cdedo",
+						"cdmunici",
+						"cdcoloni",
+						"swactivo",
+						"cdunieco",
+						"cdramo",
+						"nmpoliza",
+//						"cdusrcre",
+//						"swrecupera",
+						"feefecto",
+						"feproren",
+						"renovada",
+						"pagada",
+						"dsplan",
+						"antiguedad",
+						"aseg_edad_val", 
+						"primas",
+						"descuento",
+						"extra_prima"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> busquedaRenovacionIndividualMasiva(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cdtipsit,
+			String fecini,
+			String fecfin,
+			String status
+			)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("fecini"   , fecini);
+		params.put("fecfin"   , fecfin);
+		params.put("status"   , status);
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************")
+				.append("\n****** PKG_RENOVACION_IND.P_GET_DATOS_POL_MAS ******")
+				.append("\n****** params=").append(params)
+				.append("\n**************************************************") 
+				.toString()
+				);
+		Map<String,Object>procResult = ejecutaSP(new BusquedaRenovacionIndividualMasiva(getDataSource()),params);
+		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************")
+				.append("\n****** PKG_RENOVACION_IND.P_GET_DATOS_POL_MAS ******")
+				.append("\n****** result=").append(lista)
+				.append("\n**************************************************") 
+				.toString()
+				);
+		return lista;
+	}
+	
+	protected class BusquedaRenovacionIndividualMasiva extends StoredProcedure
+	{
+		protected BusquedaRenovacionIndividualMasiva(DataSource dataSource)
+		{
+//			super(dataSource, "PKG_RENOVACION_IND.P_GET_DATOS_POLIZA_MASIVA");
+			super(dataSource, "PKG_RENOVACION_IND.P_GET_DATOS_POL_MAS");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+//			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+//			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fecini"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fecfin"   , OracleTypes.VARCHAR));
+//			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+						"cdperson",
+						"contratante",
+						"dsdomici",
+						"nmtelefo",
+						"cdpostal",
+						"cdpais",
+						"nmnumero",
+						"nmnumint",
+						"cdedo",
+						"cdmunici",
+						"cdcoloni",
+						"swactivo",
+						"cdunieco",
+						"cdramo",
+						"nmpoliza",
+						"feefecto",
+						"feproren",
+						"renovada",
+						"pagada",
+						"dsplan",
+						"antiguedad",
+						"aseg_edad_val",
+						"primas",
+						"descuento",
+						"extra_prima"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String renuevaPolizaIndividual(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************************")
+				.append("\n****** PKG_RENOVACION_IND.P_GENERA_TRAMITE ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************************")
+				.toString()
+				);	
+		Map<String,Object> procResult = ejecutaSP(new RenuevaPolizaIndividual(getDataSource()),params);
+		String ntramite = String.valueOf(procResult.get("pv_ntramite_o"));
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************************")
+				.append("\n****** ntramite=").append(ntramite)
+				.append("\n******************************************************")
+				.toString()
+				);
+		return ntramite;
+	}
+	
+	protected class RenuevaPolizaIndividual extends StoredProcedure
+	{
+		protected RenuevaPolizaIndividual(DataSource dataSource)
+		{
+			super(dataSource, "PKG_RENOVACION_IND.P_GENERA_TRAMITE");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

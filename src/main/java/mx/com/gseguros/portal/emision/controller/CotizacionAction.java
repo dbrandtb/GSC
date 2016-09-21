@@ -4900,7 +4900,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 	            if(exito)
 	            {
-					exito = FTPSUtils.upload
+					exito = /*FTPSUtils.upload
 							(
 								this.getText("dominio.server.layouts"),
 								this.getText("user.server.layouts"),
@@ -4908,7 +4908,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								archivoTxt.getAbsolutePath(),
 								this.getText("directorio.server.layouts")+"/"+nombreCenso
 						    )
-							&&FTPSUtils.upload
+							&&*/FTPSUtils.upload
 							(
 								this.getText("dominio.server.layouts2"),
 								this.getText("user.server.layouts"),
@@ -6191,7 +6191,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 	            if(exito)
 	            {
-					exito = FTPSUtils.upload
+					exito = /*FTPSUtils.upload
 							(
 								this.getText("dominio.server.layouts"),
 								this.getText("user.server.layouts"),
@@ -6199,7 +6199,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								archivoTxt.getAbsolutePath(),
 								this.getText("directorio.server.layouts")+"/"+nombreCenso
 						    )
-							&&FTPSUtils.upload
+							&&*/FTPSUtils.upload
 							(
 								this.getText("dominio.server.layouts2"),
 								this.getText("user.server.layouts"),
@@ -7271,14 +7271,14 @@ public class CotizacionAction extends PrincipalCoreAction
 						throw new ApplicationException(Utils.join("No hay asegurados para el grupo ",cdgrupoVacio));
 					}
 					
-					boolean transferidoAmbosServer = FTPSUtils.upload(
+					boolean transferidoAmbosServer = /*FTPSUtils.upload(
 							this.getText("dominio.server.layouts"),
 								this.getText("user.server.layouts"),
 								this.getText("pass.server.layouts"),
 								archivoTxt.getAbsolutePath(),
 								this.getText("directorio.server.layouts")+"/"+nombreCenso
 							)
-							&&FTPSUtils.upload
+							&&*/FTPSUtils.upload
 							(
 								this.getText("dominio.server.layouts2"),
 								this.getText("user.server.layouts"),

@@ -472,9 +472,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 			List<ComponenteVO> itemsFormularioContratante=pantallasDAO.obtenerComponentes(
 					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_CONTRATANTE",null);
 			logger.info(Utils.log("itemsFormularioContratante",itemsFormularioContratante));
-			gc.generaComponentes(itemsFormularioContratante, true, false, true, false, false, false);		
+			gc.generaComponentes(itemsFormularioContratante, true, true, true, false, false, false);		
 			imap.put("itemsFormularioContratante"  , gc.getItems());
-			
+			imap.put("fieldsFormularioContratante"  , gc.getFields());
 			List<ComponenteVO> itemsFormularioPoliza = pantallasDAO.obtenerComponentes(
 					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_POLIZAS",null);			
 			gc.generaComponentes(itemsFormularioPoliza, true, true, false, true, true, false);			
@@ -504,6 +504,141 @@ public class RenovacionManagerImpl implements RenovacionManager
 		return resp;
 	}
 
+	@Override
+	public ManagerRespuestaSlistVO buscarPolizasRenovacionIndividual(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza
+			){
+		logger.debug(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ buscarPolizasRenovacionIndividual @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=").append(cdramo)
+				.append("\n@@@@@@ estado=").append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.toString()
+				);
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		try{
+			List<Map<String,String>> listaPolizasRenovables = renovacionDAO.busquedaRenovacionIndividual(cdunieco, cdramo, estado, nmpoliza);
+			resp.setSlist(listaPolizasRenovables);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error al obtener componentes de busqueda #")
+					.append(timestamp)
+					.toString()
+					);
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ buscarPolizasRenovacionIndividual @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString());
+		return resp;
+	}
+	
+	@Override
+	public ManagerRespuestaSlistVO buscarPolizasRenovacionIndividualMasiva(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cdtipsit,
+			String fecini,
+			String fecfin,
+			String status
+			){
+		logger.debug(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ buscarPolizasRenovacionIndividualMasiva @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=").append(cdramo)
+				.append("\n@@@@@@ estado=").append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ fecini=").append(fecini)
+				.append("\n@@@@@@ fecfin=").append(fecfin)
+				.append("\n@@@@@@ status=").append(status)
+				.toString()
+				);
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		try{
+			List<Map<String,String>> listaPolizasRenovables = renovacionDAO.busquedaRenovacionIndividualMasiva(cdunieco, cdramo, estado, nmpoliza, cdtipsit, fecini, fecfin, status);
+			resp.setSlist(listaPolizasRenovables);
+		}
+		catch(Exception ex)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(
+					new StringBuilder()
+					.append("Error al obtener componentes de busqueda #")
+					.append(timestamp)
+					.toString()
+					);
+			resp.setRespuestaOculta(ex.getMessage());
+			logger.error(resp.getRespuesta(),ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ buscarPolizasRenovacionIndividualMasiva @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString());
+		return resp;
+	}
+	
+	@Override
+	public String renuevaPolizaIndividual(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza)
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ renuevaPolizaIndividual @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=").append(cdramo)
+				.append("\n@@@@@@ estado=").append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.toString());
+		
+		//obtener componentes
+		String paso  = null;
+		String ntramite = ""; 
+		try
+		{	
+			paso     = "enviando para renovar poliza";
+			ntramite = renovacionDAO.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza);
+			logger.info(
+					new StringBuilder()
+					.append("\n@@@@@@ paso=").append(paso)
+					.toString());
+		}
+		catch(Exception ex){
+			paso = ex.getMessage().toString();
+			logger.info(
+					new StringBuilder()
+					.append("\n@@@@@@ paso=").append(paso)
+					.toString());
+		}
+		return ntramite;
+	}
+	
 	//Getters y setters
 	public void setRenovacionDAO(RenovacionDAO renovacionDAO) {
 		this.renovacionDAO = renovacionDAO;
