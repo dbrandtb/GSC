@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.renovacion.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ public class RenovacionAction extends PrincipalCoreAction
 	private boolean                  success          = true;
 	private boolean                  exito            = false;
 	private Map<String,String>       smap1            = null;
+	private Map<String,String>       params           = null;
 	private String                   respuesta;
 	private String                   respuestaOculta  = null;
 	private Map<String,Item>         imap             = null;
@@ -338,6 +341,141 @@ public class RenovacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String buscarPolizasIndividualesRenovables()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#####################################")
+				.append("\n###### buscarPolizasIndividualesRenovables ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		
+		//datos completos
+		try{	
+			Utils.validate(smap1, "No se recibieron datos");
+			Utils.validate(smap1.get("cdunieco"), "No se recibio la oficina",
+						   smap1.get("cdramo")  , "No se recibio el producto",
+						   smap1.get("estado")  , "No se recibio el estado",
+						   smap1.get("nmpoliza"), "No se recibio la poliza");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			
+			//proceso
+			ManagerRespuestaSlistVO managerResp = renovacionManager.buscarPolizasRenovacionIndividual(cdunieco, cdramo, estado, nmpoliza);
+			logger.info(new StringBuilder().append("managerResp ").append(managerResp).toString());
+			slist1 			= managerResp.getSlist();
+			success         = managerResp.isExito();
+			respuesta       = managerResp.getRespuesta();
+			respuestaOculta = managerResp.getRespuestaOculta();
+			
+		}catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n###### slist1=").append(slist1)
+				.append("\n###### buscarPolizasIndividualesRenovables ######")
+				.append("\n#####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	
+	public String buscarPolizasIndividualesMasivasRenovables()
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n#####################################")
+				.append("\n###### buscarPolizasIndividualesMasivasRenovables ######")
+				.append("\n###### smap1=").append(smap1)
+				.toString()
+				);
+		
+		success = true;
+		ManagerRespuestaSlistVO managerResp = null;
+		//datos completos
+		try{	
+			Utils.validate(smap1, "No se recibieron datos");
+			Utils.validate(smap1.get("fecini")  , "No se recibio la fecha inicio",
+					   	   smap1.get("fecfin")  , "No se recibio la fecha fin"//,
+//						   smap1.get("cdunieco"), "No se recibio la oficina",
+//						   smap1.get("cdramo")  , "No se recibio el producto",
+//						   smap1.get("estado")  , "No se recibio el estado",
+//						   smap1.get("nmpoliza"), "No se recibio la poliza",
+//						   smap1.get("cdtipsit"), "No se recibio el subramo",						   
+//						   smap1.get("status")  , "No se recibio el status"
+					);
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = null;//smap1.get("nmpoliza");
+			String cdtipsit	= smap1.get("cdtipsit");
+			String fecini	= smap1.get("fecini");
+			String fecfin	= smap1.get("fecfin");
+			String status	= smap1.get("status");
+			
+			//proceso
+			managerResp = renovacionManager.buscarPolizasRenovacionIndividualMasiva(cdunieco, cdramo, estado, nmpoliza, cdtipsit, fecini, fecfin, status);
+			logger.info(new StringBuilder().append("managerResp ").append(managerResp).toString());
+			slist1 			= managerResp.getSlist();
+			success         = managerResp.isExito();
+			respuesta       = managerResp.getRespuesta();
+			respuestaOculta = managerResp.getRespuestaOculta();			
+		}catch(Exception ex){
+			respuesta 		= Utils.manejaExcepcion(ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n###### slist1=").append(slist1)
+				.append("\n###### buscarPolizasIndividualesMasivasRenovables ######")
+				.append("\n#####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String renovarPolizaIndividual(){
+		logger.info(
+				new StringBuilder()
+				.append("\n###### params=").append(params)
+				.append("\n###### Entrando a renovarPolizaIndividual ######")
+				.append("\n################################################")
+				.toString()
+				);
+		try{
+			Utils.validate(params, "No se recibieron datos");
+			Utils.validate(params.get("cdunieco"),"No se recibio oficina",
+						   params.get("cdramo")  ,"No se recibio producto",
+						   params.get("estado")  ,"No se recibio estado",
+						   params.get("nmpoliza"),"No se recibio numero de poliza"
+						   );
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String estado   = params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String ntramite = String.valueOf(renovacionManager.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza));
+			Map<String, String> result = new HashMap<String, String>();
+			result.put("ntramite", ntramite);
+			slist1 = new ArrayList<Map<String,String>>();
+			slist1.add(result);
+		}catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n###### Saliendo de renovarPolizaIndividual ######")
+				.append("\n#################################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
 	//Getters y setters
 	public boolean isSuccess() {
 		return success;
@@ -397,5 +535,13 @@ public class RenovacionAction extends PrincipalCoreAction
 
 	public void setSlist1(List<Map<String, String>> slist1) {
 		this.slist1 = slist1;
+	}
+
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+	public void setParams(Map<String, String> params) {
+		this.params = params;
 	}
 }

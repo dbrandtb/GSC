@@ -26,5 +26,8 @@
          <action name="buscarPolizasIndividualesMasivasRenovables" class="renovacionAction" method="buscarPolizasIndividualesMasivasRenovables">
             <result type="json" />
         </action>
+        <action name="renovarPolizaIndividual" class="renovacionAction" method="renovarPolizaIndividual">
+            <result type="json" />
+        </action>
     </package>
 </struts>

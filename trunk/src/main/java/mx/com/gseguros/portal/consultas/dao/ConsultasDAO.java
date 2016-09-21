@@ -587,4 +587,13 @@ public interface ConsultasDAO
 	public Map<String,String> recuperarDatosFlujoRenovacion (String cdramo, String tipoflot) throws Exception;
 	
 	public String recuperarCorreoEmisionTramite (String ntramite) throws Exception;
+	
+	/**
+	 * Proceso que obtiene todos los nombres de los contratantes
+	 * @param cdunieco
+	 * @param cdramo
+	 * @return Lista de contratantes
+	 * @throws Exception
+	 */
+	public List<Map<String,String>> obtenerContratantes(String cdunieco, String cdramo, String cadena)throws Exception;
 }

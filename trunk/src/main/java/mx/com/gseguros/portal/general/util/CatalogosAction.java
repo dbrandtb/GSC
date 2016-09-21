@@ -960,6 +960,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.recuperarMotivosRechazo(ntramite);
 					break;
+				case CATALOGO_CONTRATANTES:
+					if(params == null)
+					{
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperaContratantes(params.get("cdunieco"), params.get("cdramo"), params.get("cadena"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

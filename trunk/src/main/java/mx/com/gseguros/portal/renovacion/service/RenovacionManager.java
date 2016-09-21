@@ -23,4 +23,27 @@ public interface RenovacionManager
 			,UserVO usuario
 			);
 	public ManagerRespuestaImapVO pantallaRenovacionIndividual(String cdsisrol);
+	
+	public ManagerRespuestaSlistVO buscarPolizasRenovacionIndividual(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza
+			);
+	public ManagerRespuestaSlistVO buscarPolizasRenovacionIndividualMasiva(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cdtipsit,
+			String fecini,
+			String fecfin,
+			String status
+			);
+	public String renuevaPolizaIndividual(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza
+			);
 }
