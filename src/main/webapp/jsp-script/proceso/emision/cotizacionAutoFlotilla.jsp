@@ -5804,7 +5804,7 @@ function _p30_editarAutoAceptar(bot,callback)
 	        	    	if(jsonNumSerie.exito!=true)
 	        	    	{
 	                       debug('jsonNumSerie.respuesta**** -->',jsonNumSerie.respuesta);
-						   mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+						   mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
 	                       //Ext.Msg.alert('Error**', jsonNumSerie.respuesta);
 	                       
 													
