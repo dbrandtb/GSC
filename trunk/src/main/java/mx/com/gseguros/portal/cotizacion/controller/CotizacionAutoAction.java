@@ -1750,7 +1750,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String feAutorizacion = Utils.join(feini.substring(8,10),"/",feini.substring(5,7),"/",feini.substring(0,4));
 			
 			String[] value_split = numSerie.split("\\|");
-			int  contador = 1;
 			
 			for (String serie : value_split) {
 			
@@ -1758,10 +1757,10 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			if(iCodAviso.trim().length()>0){//Se agrega validacion para iterar si es una carga de flotillas o individual
 				
-				CodAviso +=  ((iCodAviso.substring(0,60))+" INCISO: "+contador+" VERIFIQUE SI PUEDE REALIZAR EL ENDOSO O BIEN SI NECESITA REEXPEDIR LA POLIZA INGRESE TRAMITE POR MESA DE CONTROL.<br/>");
+				CodAviso +=  iCodAviso+"<br/>";
 				
 			}
-			contador++;
+			
 			}
 		    
 			exito           = StringUtils.isNotBlank(CodAviso) ? false : true;
