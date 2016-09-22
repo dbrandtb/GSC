@@ -5803,6 +5803,7 @@ function _p30_editarAutoAceptar(bot,callback)
 						var jsonNumSerie=Ext.decode(response.responseText);
 	        	    	if(jsonNumSerie.exito!=true)
 	        	    	{
+	        	    		numSerie='';
 	                       debug('jsonNumSerie.respuesta**** -->',jsonNumSerie.respuesta);
 						   mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
 	                       //Ext.Msg.alert('Error**', jsonNumSerie.respuesta);
