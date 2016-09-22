@@ -43,4 +43,26 @@ public interface RenovacionDAO
 			,String nmpoliza)throws Exception;
 	
 	public List<Map<String,String>>cargarDocumentosSubidosPorUsuario(String cdunieco,String cdramo,String estado,String nmpoliza)throws Exception;
+	
+	public List<Map<String,String>> busquedaRenovacionIndividual(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza)throws Exception;
+	
+	public List<Map<String,String>> busquedaRenovacionIndividualMasiva(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cdtipsit,
+			String fecini,
+			String fecfin,
+			String status)throws Exception;
+	
+	public String renuevaPolizaIndividual(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza)throws Exception;
 }
