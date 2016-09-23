@@ -237,4 +237,6 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarMotivosRechazo (String ntramite) throws Exception;
     
     public List<GenericVO> recuperaContratantes(String cdunieco, String cdramo, String cadena) throws Exception;
+    
+    public List<GenericVO> recuperaContratantesRfc(String cadena) throws Exception;
 }

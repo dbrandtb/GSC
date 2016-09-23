@@ -596,4 +596,12 @@ public interface ConsultasDAO
 	 * @throws Exception
 	 */
 	public List<Map<String,String>> obtenerContratantes(String cdunieco, String cdramo, String cadena)throws Exception;
+	
+	/**
+	 * Proceso que obtiene todos los nombres de los contratantes
+	 * @param cadena
+	 * @return Lista de contratantes
+	 * @throws Exception
+	 */
+	public List<Map<String,String>> obtenerContratantesRfc(String cadena)throws Exception;
 }

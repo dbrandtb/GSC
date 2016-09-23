@@ -1990,4 +1990,31 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> recuperaContratantesRfc(String cadena) throws Exception {
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperaContratantesRfc @@@@@@")
+				.toString()
+				);
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		List<Map<String, String >> result = consultasDAO.obtenerContratantesRfc(cadena);
+		if(null != result && !result.isEmpty()){
+			for(Map<String, String> map : result){
+				GenericVO genericVO = new GenericVO();
+				genericVO.setKey(map.get("cdperson"));
+				genericVO.setValue(map.get("nombre_completo"));
+				lista.add(genericVO);
+			}
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperaContratantesRfc @@@@@@")
+				.toString()
+				);
+		return lista;
+	}
 }
