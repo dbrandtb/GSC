@@ -480,6 +480,17 @@ public class RenovacionManagerImpl implements RenovacionManager
 			gc.generaComponentes(itemsFormularioPoliza, true, true, false, true, true, false);			
 			imap.put("itemsFormularioPolizaFields"  , gc.getFields());
 			imap.put("itemsFormularioPolizaColumns" , gc.getColumns());
+			
+			List<ComponenteVO> componentesEditarPago=pantallasDAO.obtenerComponentes(
+					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","EDITAR_FORMA_PAGO",null);			
+			gc.generaComponentes(componentesEditarPago, true, false, true, false, false, false);
+			imap.put("itemsEditarPago" , gc.getItems());
+			
+			List<ComponenteVO> componentesEditarDomicilio = pantallasDAO.obtenerComponentes(
+					null,null,"4",null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","EDITAR_DOMICILIO",null);				
+			gc.generaComponentes(componentesEditarDomicilio, true, false, true, false, false, false);
+			imap.put("itemsEditarDomicilio" , gc.getItems());
+			
 		}
 		catch(Exception ex)
 		{

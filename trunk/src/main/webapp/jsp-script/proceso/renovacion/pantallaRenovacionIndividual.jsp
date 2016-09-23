@@ -16,19 +16,21 @@ var _p25_ultimosParams;
 ////// variables //////
 
 ////// componentes dinamicos //////
-var itemsFormularioContratante   = [<s:property value="imap.itemsFormularioContratante" escapeHtml="false" />];
+var itemsFormularioBusqueda      = [<s:property value="imap.busquedaItems" 				  escapeHtml="false" />];
+var itemsFormularioContratante   = [<s:property value="imap.itemsFormularioContratante"   escapeHtml="false" />];
 var itemsFormularioPolizaColumns = [<s:property value="imap.itemsFormularioPolizaColumns" escapeHtml="false" />];
-var gridColumns					 = [<s:property value="imap.gridColumns" escapeHtml="false" />];
-/*itemsFormularioPolizaColumns.push({
-									xtype : 'actioncolumn'
-									,icon : '${icons}pencil.png'
-		        					,tooltip : 'observaciones'
-			    				},
-			    				{
-									xtype : 'actioncolumn'
-									,icon : '${icons}doc_ok.png'
-		        					,tooltip : 'documentacion adicional'
-			    				});*/
+var gridColumns					 = [<s:property value="imap.gridColumns"                  escapeHtml="false" />];
+var itemsEditarPago				 = [<s:property value="imap.itemsEditarPago"              escapeHtml="false" />];
+var itemsEditarDomicilio	     = [<s:property value="imap.itemsEditarDomicilio"         escapeHtml="false" />];
+itemsEditarPago.push({ 
+						xtype      : 'button',
+						itemId     : 'itemEditDomicil',
+						text       : 'Editar domicilio contratante',
+						arrowAlign : 'bottom',
+						handler    : function(){
+							_p25_ventanaCambioDomicilio();
+						} 
+					});
 ////// componentes dinamicos //////
 
 Ext.onReady(function()
@@ -131,10 +133,7 @@ Ext.onReady(function()
                     type     : 'table'
                     ,columns : 3
                 }
-                ,items    :
-                [
-                    <s:property value="imap.busquedaItems" escapeHtml="false" />
-                ]
+                ,items       : itemsFormularioBusqueda
                 ,buttonAlign : 'center'
                 ,buttons     :
                 [
@@ -329,7 +328,8 @@ function _p25_buscarClic(button,e)
   	_fieldById('_p25_grid').hide();
     var form = button.up('form');
     var tipo = _fieldByName('tipo'     , form);
-    if (tipo.getValue() == 'AS' || tipo == 'SA'){
+    debug('tipo ',tipo.getValue());
+    if (tipo.getValue() == 'AS' || tipo.getValue() == 'SA'){
     //AS && SA
     	debug('entro por AS & SA');
     	_p25_ultimosParams =
@@ -461,6 +461,9 @@ function _p25_renovarPolizaClic(button,e)
     		_p25_ventanaAutoServicio();
     	}
     	else{
+    		_p25_ventanaServicioAsistido();
+    	}
+    	/*else{
     		_mask('Renovando poliza');
     		Ext.Ajax.request(
     		{
@@ -495,7 +498,7 @@ function _p25_renovarPolizaClic(button,e)
             		errorComunicacion();
         		}
     		});
-    	}
+    	}*/
     }
     else{
     	mensajeError('La poliza ya esta renovada');
@@ -607,14 +610,79 @@ function _p25_ventanaAutoServicio(){
     	items  : [
     		Ext.create('Ext.form.Panel', {
     			bodyPadding : 10,
+    			width       : 500,
+    			items       : [
+    				{
+    					xtype       : 'radiogroup',
+    					itemId      : 'itemRadio',
+    					columns		: 2,
+        				vertical	: false,
+            			items       : [
+                			{
+                    			boxLabel   : 'Cambio en forma de pago, contratante y/o domicilio',
+                    			name       : 'topping',
+                    			inputValue : 'S',
+                    			itemId     : 'checkbox1',
+                    			checked	   : true
+                			},
+                			{
+                    			boxLabel   : 'Inclusion de coberturas',
+                    			name       : 'topping',
+                    			inputValue : 'M',
+                    			itemId     : 'checkbox2'
+                			}
+            			]
+    				}	
+    			],
+    			buttons	:	
+    				[
+    					{ 
+    						text    : 'Aceptar',
+    						handler : function(){
+    							debug(_fieldById('itemRadio'));
+    							if(_fieldById('checkbox1').getValue()){
+    								_fieldById('winAutoServicio').close();
+    								_p25_ventanaCambioFormaPago();
+    							}
+    						} 
+    					},
+    					{ 
+    						text    : 'Cancelar',
+    						handler : function(){
+    							_fieldById('winAutoServicio').close();
+    						}
+    					}
+    				]
+    		})
+        ]
+    }).show();
+	debug('<_p25_ventanaAutoServicio');
+}
+
+function _p25_ventanaServicioAsistido(){
+	debug('>_p25_ventanaServicioAsistido');
+	Ext.create('Ext.window.Window', {
+		title  : 'Auto-servicio',
+		itemId : 'winServicioAsistido',
+    	height : 200,
+    	width  : 400,
+    	layout : 'fit',
+    	items  : [
+    		Ext.create('Ext.form.Panel', {
+    			bodyPadding : 10,
     			width       : 300,
     			items       : [
     				{
     					xtype       : 'fieldcontainer',
             			defaultType : 'checkboxfield',
+            			layout :
+            			{
+                    		type     : 'table',
+                    		columns : 2
+                		},
             			items       : [
                 			{
-                    			boxLabel   : 'Tratamiento de renovación por Servicio Asistido',
+                    			boxLabel   : 'Cambio de ',
                     			name       : 'topping',
                     			inputValue : 'S',
                     			id         : 'checkbox1'
@@ -636,14 +704,89 @@ function _p25_ventanaAutoServicio(){
     					{ 
     						text    : 'Cancelar',
     						handler : function(){
-    							_fieldById('winAutoServicio').close();
+    							_fieldById('winServicioAsistido').close();
     						}
     					}
     				]
     		})
         ]
     }).show();
-	debug('<_p25_ventanaAutoServicio');
+	debug('<_p25_ventanaServicioAsistido');
+}
+
+function _p25_ventanaCambioFormaPago(){
+	debug('>_p25_ventanaServicioAsistido');
+	Ext.create('Ext.window.Window', {
+		title  : 'Autoservicio-Editar',
+		itemId : 'winCambioPago',
+    	height : 250,
+    	width  : 400,
+    	layout : 'fit',
+    	items  : [
+    		Ext.create('Ext.form.Panel', {
+    			bodyPadding : 10,
+    			width       : 300,
+    			items       : itemsEditarPago,
+    			layout :
+                {
+                    type     : 'table',
+                    columns  : 1
+                },
+    			buttons	:	
+    				[
+    					{ 
+    						text : 'Guardar' 
+    					},
+    					{ 
+    						text    : 'Cancelar',
+    						handler : function(){
+    							_fieldById('winCambioPago').close();
+    						}
+    					}
+    				]
+    		})
+        ]
+    }).show();
+	debug('<_p25_ventanaServicioAsistido');
+}
+
+function _p25_ventanaCambioDomicilio(){
+	debug('>_p25_ventanaCambioDomicilio');
+	Ext.create('Ext.window.Window', {
+		title  : 'Autoservicio-Editar domicilio',
+		itemId : 'winCambioDomicilio',
+    	height : 350,
+    	width  : 600,
+    	layout : 'fit',
+    	items  : [
+    		Ext.create('Ext.form.Panel', {
+    			bodyPadding : 10,
+    			width       : 300,
+    			items       : itemsEditarDomicilio,
+    			layout :
+                {
+                    type     : 'table',
+                    columns : 2
+                },
+    			buttons	:	
+    				[
+    					{ 
+    						text : 'Guardar',
+    						handler : function(){
+    							_fieldById('winCambioDomicilio').close();
+    						}
+    					},
+    					{ 
+    						text    : 'Cancelar',
+    						handler : function(){
+    							_fieldById('winCambioDomicilio').close();
+    						}
+    					}
+    				]
+    		})
+        ]
+    }).show();
+	debug('<_p25_ventanaCambioDomicilio');
 }
 ////// funciones //////
 </script>

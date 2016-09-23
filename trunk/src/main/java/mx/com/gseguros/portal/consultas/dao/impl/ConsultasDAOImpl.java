@@ -5065,4 +5065,36 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+	
+	@Override
+	public List<Map<String,String>> obtenerContratantesRfc(String cadena)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cadena_i"  , cadena);
+		Utils.debugProcedure(logger, "P_OBTENER_CONTRATANTES_RFC", params);
+		Map<String,Object>procResult  = ejecutaSP(new ObtenerContratantesRfc(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		Utils.debugProcedure(logger, "P_OBTENER_CONTRATANTES_RFC", params,lista);
+		return lista;
+	}
+	
+	protected class ObtenerContratantesRfc extends StoredProcedure
+    {
+    	protected ObtenerContratantesRfc(DataSource dataSource)
+        {
+            super(dataSource,"P_OBTENER_CONTRATANTES_RFC");
+            declareParameter(new SqlParameter("pv_cadena_i"  , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+            		"cdperson"  ,"nombre_completo"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }
