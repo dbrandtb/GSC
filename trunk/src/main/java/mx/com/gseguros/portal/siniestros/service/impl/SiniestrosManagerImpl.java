@@ -202,6 +202,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
+	public List<GenericVO> getConsultaListaCPTICD(String cdicd, String cdramo, String cdtipsit, String edad, String genero) // (EGS)
+			throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoCPTICD(cdicd, cdramo, cdtipsit, edad, genero);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
 	public List<GenericVO> getConsultaListaTipoPago(String cdramo) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoTipoPago(cdramo);
@@ -767,6 +777,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	@Override
 	public List<PolizaVigenteVO> getConsultaPolizaUnica(HashMap<String, Object> paramPolUnica) throws Exception {
 		try {
+			log.debug("EN CONSULTA..." + paramPolUnica);
 			return siniestrosDAO.consultaPolizaUnica(paramPolUnica);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);

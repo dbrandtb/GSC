@@ -73,6 +73,18 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave) throws Exception;
 	
+	/**
+	 * Método sobrecargado para considerar edad y genero del asegurado en la consulta de ICD's (EGS)
+	 * @param cdicd
+	 * @param cdramo
+	 * @param cdtipsit
+	 * @param edad
+	 * @param genero
+	 * @return
+	 * @throws Exception
+	 */
+	public List<GenericVO> getConsultaListaCPTICD(String cdicd, String cdramo, String cdtipsit, String edad, String genero) throws Exception;
+	
 	public List<GenericVO> getConsultaListaTipoPago(String cdramo) throws Exception;
 	
 	public List<ConsultaTDETAUTSVO> getConsultaListaTDeTauts(String nmautser) throws Exception;

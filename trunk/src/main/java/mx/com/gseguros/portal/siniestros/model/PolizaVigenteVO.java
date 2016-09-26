@@ -41,6 +41,8 @@ public class PolizaVigenteVO implements Serializable {
 	private String telefono;
 	private String nombAsegurado;
 	private String dsTipsit;
+	private String genero; // (EGS)
+	private String fenacimi; // (EGS)
 	 
 	
 	
@@ -386,5 +388,22 @@ public class PolizaVigenteVO implements Serializable {
 	public void setFcancelacionAfiliado(String fcancelacionAfiliado) {
 		this.fcancelacionAfiliado = fcancelacionAfiliado;
 	}
+	
+	// metodos agregados (EGS)
+	public String getGenero(){
+		return genero;
+	}
+	
+	public void setGenero(String genero){
+		this.genero = genero;
+	}
+	
+	public String getFenacimi(){
+		return fenacimi;
+	}
+	
+	public void setFenacimi(String fenacimi){
+		this.fenacimi = fenacimi;
+	} // fin (EGS)
 	
 }

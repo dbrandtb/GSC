@@ -54,6 +54,8 @@ public class AutorizacionServicioVO implements Serializable{
 	private String aplicaZonaHosp;
 	private String aplicaCirHos;
 	private String descTipsit;
+	private String genero; // (EGS)
+	private String fenacimi; // (EGS)
 	
 	
 	public String getCopagofi() {
@@ -397,4 +399,21 @@ public class AutorizacionServicioVO implements Serializable{
 		this.descTipsit = descTipsit;
 	}	
 	
+	// metodos agregados (EGS)
+	public String getGenero(){
+		return genero;
+	}
+	
+	public void setGenero(String genero){
+		this.genero = genero;
+	}
+	
+	public String getFenacimi(){
+		return fenacimi;
+	}
+	
+	public void setFenacimi(String fenacimi){
+		this.fenacimi = fenacimi;
+	} // fin (EGS)
+
 }

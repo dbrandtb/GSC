@@ -634,6 +634,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"), params.get("cdramo"), usuario.getRolActivo().getClave());
 			if(lista!=null && !lista.isEmpty())	listaPoliza = lista;
+			logger.debug("listaPoliza"+listaPoliza);
 		}catch( Exception e){
 			logger.error("Error al obtener los datos de la poliza : {}", e.getMessage(), e);
 			return SUCCESS;
@@ -1013,6 +1014,22 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
+	/**
+	 *  Consulta de ICD's de la nueva tabla de apoyo (EGS)
+	 * @return
+	 */
+	public String consultaListaICD(){
+		logger.debug("Entra a consultaListaICD params de entrada :{}",params);
+		try {
+			listaCPTICD= siniestrosManager.getConsultaListaCPTICD(params.get("otclave1"), params.get("cdramo"),params.get("cdtipsit"),params.get("edad"),params.get("genero")); // (EGS) 
+		}catch( Exception e){
+			logger.error("Error al consultar la Lista de ICD's : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
 	/**
 	* Funcion que nos muestra la informacion de las pantalla principal de facturas y afiliados
 	* @param params

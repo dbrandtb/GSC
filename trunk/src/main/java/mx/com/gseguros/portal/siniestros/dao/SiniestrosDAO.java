@@ -49,6 +49,18 @@ public interface SiniestrosDAO {
 	
 	public List<GenericVO> obtieneListadoCPTICD(String cdtabla, String otclave) throws Exception;
 	
+	/**
+	 * Método sobrecargado para considerar edad y genero del asegurado en la consulta de ICD's (EGS)
+	 * @param cdicd
+	 * @param cdramo
+	 * @param cdtipsit
+	 * @param edad
+	 * @param genero
+	 * @return
+	 * @throws Exception
+	 */
+	public List<GenericVO> obtieneListadoCPTICD(String cdicd, String cdramo, String cdtipsit, String edad, String genero) throws Exception;
+	
 	public List<GenericVO> obtieneListadoTipoPago(String cdramo) throws Exception;
 
 	public List<HashMap<String, String>> loadListaDocumentos(Map<String, String> params) throws Exception;

@@ -116,6 +116,9 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setAplicaCirHos(rs.getString("SWPECIHO"));
         	consulta.setAplicaZonaHosp(rs.getString("SWPEZOHO"));
         	consulta.setDescTipsit(rs.getString("DESCTIPSIT"));
+        	consulta.setFenacimi(Utils.formateaFecha(rs.getString("FENACIMI"))); // (EGS)
+        	consulta.setGenero(rs.getString("GENERO")); //(EGS)
+        	
             return consulta;
         }
     }
@@ -463,8 +466,8 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 	public List<GenericVO> obtieneListadoCPTICD(String cdtabla, String otclave)
 			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdtabla_i", cdtabla);
-		params.put("pv_otclave_i", otclave);
+		params.put("pv_cdtabla_i", cdtabla); // (EGS)
+		params.put("pv_otclave_i", otclave); // (EGS)
 		
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoCPTICDSP(getDataSource()), params);
 		return (List<GenericVO>) mapResult.get("pv_registro_o");
@@ -494,6 +497,51 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     }
     
     
+	/**
+	 * (EGS)
+	 */
+    public List<GenericVO> obtieneListadoCPTICD(String cdicd, String cdramo, String cdtipsit, String edad, String genero)
+			throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdicd_i", cdicd);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_cdtipsit_i", cdtipsit);
+		params.put("pv_edad_i", edad);
+		params.put("pv_genero_i", genero);
+		
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoICDSP(getDataSource()), params);
+		return (List<GenericVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListadoICDSP extends StoredProcedure
+	{
+		protected ObtieneListadoICDSP(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_CATALOGO_ICDXPROD"); // Nuevo PL a invocar (EGS)
+			declareParameter(new SqlParameter("pv_cdicd_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_edad_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_genero_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaICD()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+    /**
+     * Mapper para catalogo de ICD's restringidos
+     * @author (EGS)
+     */
+	protected class DatosListaICD  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	GenericVO consulta = new GenericVO();
+        	consulta.setKey(rs.getString("OTCLAVE1"));
+        	consulta.setValue(rs.getString("OTVALOR01"));
+            return consulta;
+        }
+    }
     
     
     public List<GenericVO> obtieneListadoTipoPago(String cdramo)
@@ -874,6 +922,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setEmail(rs.getString("EMAIL"));
         	consulta.setNombAsegurado(rs.getString("NOMBASEGURADO"));
         	consulta.setDsTipsit(rs.getString("DESCTIPSIT"));
+        	consulta.setGenero(rs.getString("GENERO")); // (EGS)
+        	consulta.setFenacimi(Utils.formateaFecha(rs.getString("FENACIMI"))); // (EGS)
             return consulta;
         }
     }
@@ -1483,6 +1533,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"PTIMPCEDASEG",	"DEDUCIBLE",		"IMPORTETOTALPAGO",	"COMPLEMENTO"
 					,"REQAUTES",		"NMAUTESP", 		"REQAUTESPECIAL",	"VALTOTALCOB"
 					,"LIMITE",			"IMPPAGCOB",		"NMCALLCENTER",		"SECTWORKSIN"
+					,"GENERO",			"FENACIMI"	// (EGS)
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1690,8 +1741,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 	@Override
 	public List<PolizaVigenteVO> consultaPolizaUnica(HashMap<String, Object> paramPolUnica) throws Exception {
+		logger.debug("ANTES DE CONSULTAR POLIZA UNICA" + paramPolUnica);
 		Map<String, Object> mapResult = ejecutaSP(new ObtienePolizaUnicaSP(getDataSource()), paramPolUnica);
+		logger.debug("LUEGO DE CONSULTAR POLIZA UNICA");
 		List<PolizaVigenteVO> listaDatosPoliza = (List<PolizaVigenteVO>)mapResult.get("pv_registro_o");
+		logger.debug("DATOS ASIGNADOS");
 		return listaDatosPoliza;
 	}
 	
