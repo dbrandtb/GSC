@@ -1048,4 +1048,7 @@ public interface CotizacionManager
 	public void actualizarCdplanGrupo(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String cdgrupo, String cdplan) throws Exception;
 
+	public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
+			String promotoria, String cdagente, String cdtipsit, String cdatribu) throws Exception;
+	
 }

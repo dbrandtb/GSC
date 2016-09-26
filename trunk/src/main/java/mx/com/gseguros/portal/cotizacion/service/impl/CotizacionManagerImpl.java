@@ -10621,5 +10621,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public void setConsultasDAO(ConsultasDAO consultasDAO) {
 		this.consultasDAO = consultasDAO;
 	}
+
+	@Override
+	public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
+			String promotoria, String cdagente, String cdtipsit, String cdatribu) throws Exception {
+		return cotizacionDAO.obtieneValidacionDescuentoR6(tipoUnidad, uso, zona,
+				promotoria, cdagente, cdtipsit, cdatribu);
+	}
 	
 }

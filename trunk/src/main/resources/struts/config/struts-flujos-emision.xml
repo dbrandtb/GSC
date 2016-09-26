@@ -475,6 +475,10 @@
         <action name="obtieneValNumeroSerie" class="cotizacionAutoAction" method="obtieneValNumeroSerie"><!--cargarValoresSituacion -->
             <result name="success" type="json" />
         </action>
+ 
+        <action name="obtieneValidacionDescuentoR6" class="cotizacionAutoAction" method="obtieneValidacionDescuentoR6">
+            <result name="success" type="json" />
+        </action>
        
        <action name="cargarPoliza" class="emisionAction" method="cargarPoliza"><!--Buscar por poliza -->
             <result name="success" type="json" />

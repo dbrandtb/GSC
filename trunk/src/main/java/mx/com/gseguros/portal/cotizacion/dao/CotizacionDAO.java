@@ -807,4 +807,7 @@ public interface CotizacionDAO {
 			String cdtipsit,
 			String cdgarant
 			)throws Exception;
+
+	public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
+			String promotoria, String cdagente, String cdtipsit, String cdatribu)throws Exception;
 }

@@ -8050,5 +8050,57 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile(); 
 		}
 	}
+
+	@Override
+	public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
+			String promotoria, String cdagente, String cdtipsit, String cdatribu) throws Exception {
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		Map<String,String> descuento = new LinkedHashMap<String,String>();
+
+	    params.put("pv_tipo_unidad", tipoUnidad);
+		params.put("pv_uso", uso);
+		params.put("pv_zona", zona);
+		params.put("pv_promotoria", promotoria);
+		params.put("pv_cdagente", cdagente);
+		params.put("pv_cdtipsit_i", cdtipsit);
+		params.put("pv_cdatribu_i", cdatribu);
+		
+		Map<String,Object> resultado = ejecutaSP(new ObtieneValidacionDescuentoR6(getDataSource()), params);
+		List<Map<String,String>>listaDatos = (List<Map<String,String>>)resultado.get("pv_registro_o");
+		if(listaDatos==null||listaDatos.size()==0)
+		{
+			throw new Exception("No se pudo cargar la poliza");
+		}else{
+			logger.debug("Lista de resultado: " +listaDatos);
+			Map<String,String> datos = listaDatos.get(0);
+			descuento.put("RANGO_MINIMO", "0");
+			descuento.put("RANGO_MAXIMO", "20");
+		}
+		return descuento;
+	}
+	
+	protected class ObtieneValidacionDescuentoR6 extends StoredProcedure
+	{
+		protected ObtieneValidacionDescuentoR6(DataSource dataSource){
+			super(dataSource,"PKG_CONSULTA.P_GET_RANGOS_DESCUENTO_COMER");
+			declareParameter(new SqlParameter("pv_tipo_unidad"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_uso"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_zona"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_promotoria"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdagente"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdatribu_i"    , OracleTypes.VARCHAR));
+			
+			String[] cols=new String[]{
+					"RANGO_MINIMO"
+					,"RANGO_MAXIMO"
+				};
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile(); 
+		}
+	}
 	
 }

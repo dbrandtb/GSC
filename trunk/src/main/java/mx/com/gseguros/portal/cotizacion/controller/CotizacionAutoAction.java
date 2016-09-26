@@ -1781,6 +1781,55 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
+	public String obtieneValidacionDescuentoR6()
+	{
+		logger.debug(Utils.log(""
+				,"\n##########################################"
+				,"\n###### obtieneValidacionDescuentoR6 ######"
+				,"\n###### smap1=", smap1
+				));
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Validando datos de entrada";
+			logger.debug(Utils.log("","paso=",paso));
+			
+			Utils.validate(smap1, "No se recibieron datos del auto");
+			
+			String tipoUnidad     = smap1.get("tipoUnidad")
+			,uso = smap1.get("uso")
+			,cdagente = smap1.get("cdagente")
+			,cdtipsit = smap1.get("cdtipsit")
+			,cdatribu = smap1.get("cdatribu");
+			
+			Utils.validate(
+					tipoUnidad     , "No se recibi\u00f3 la tipoUnidad"
+					,uso       , "No se recibi\u00f3 el uso"
+					,cdagente  , "No se recibi\u00f3 el cdagente"
+					,cdtipsit  , "No se recibi\u00f3 el cdtipsit"
+					,cdatribu  , "No se recibi\u00f3 el cdatribu"
+					);
+			
+			smap1 = cotizacionManager.obtieneValidacionDescuentoR6(tipoUnidad, uso, "9",
+					"13", cdagente, cdtipsit, cdatribu);
+			
+			logger.debug("Valores maximo y minimo de descuento ramo 6 --->"+smap1);
+			
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(""
+				,"\n###### obtieneValidacionDescuentoR6 ######"
+				,"\n##########################################"
+				));
+		return SUCCESS;
+	}
+	
 	/*
 	 * Getters y setters
 	 */
