@@ -39,6 +39,7 @@
             var _URL_LISTA_COBERTURA 				= '<s:url namespace="/siniestros"  action="consultaListaCoberturaPoliza" />';
             var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros"  action="consultaListaSubcobertura" />';
             var _URL_LISTA_CPTICD					= '<s:url namespace="/siniestros"  action="consultaListaCPTICD" />';
+            var _URL_LISTA_ICD						= '<s:url namespace="/siniestros"  action="consultaListaICD" />'; // (EGS)
             
             var _URL_CONSULTA_DEDUCIBLE_COPAGO		= '<s:url namespace="/siniestros"  action="consultaListaDatSubGeneral" />';
             var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros"  action="consultaListaPoliza" />';

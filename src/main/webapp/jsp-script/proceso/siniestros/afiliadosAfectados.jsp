@@ -76,6 +76,7 @@
           	var _URL_LISTARECHAZOS						= '<s:url namespace="/siniestros"		action="loadListaRechazos" />';
             var _URL_LISTAINCISOSRECHAZOS				= '<s:url namespace="/siniestros"		action="loadListaIncisosRechazos" />';
 			var _URL_LISTA_CPTICD						= '<s:url namespace="/siniestros"  		action="consultaListaCPTICD" />';
+            var _URL_LISTA_ICD							= '<s:url namespace="/siniestros"  		action="consultaListaICD" />'; // (EGS)
 			var _URL_GENERAR_CALCULO					= '<s:url namespace="/siniestros" 		action="generarCalculoSiniestros" />';
 			var _URL_CONCEPTOSASEG						= '<s:url namespace="/siniestros" 		action="obtenerMsinival" />';
 			var _URL_LISTADO_ASEGURADO          		= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
@@ -147,6 +148,9 @@
 			var banderaConcepto 	= "0";
 			var banderaAsegurado 	= "0";
 			var recordsStoreFactura = [];
+			var _fenacimi			= "";	// (EGS)
+			var _genero				= "";	// (EGS)
+			var _edad				= "";	// (EGS)
 			
 			//iteramos el arreglos de loas Facturas para hacer la asignacion
 			<s:set name="contadorFactura" value="0" />
@@ -271,7 +275,8 @@
 						{type:'string',	name:'NMAUTESP'},		{type:'string',	name:'REQAUTESPECIAL'},
 						{type:'string',	name:'VALTOTALCOB'},	{type:'string',	name:'LIMITE'},
 						{type:'string',	name:'IMPPAGCOB'},		{type:'string',	name:'NMCALLCENTER'},
-						{type:'string',	name:'SECTWORKSIN'}
+						{type:'string',	name:'SECTWORKSIN'},
+						{type:'string', name:'GENERO'},			{type:'string', name:'FENACIMI'}	// (EGS)
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -336,7 +341,7 @@
 								{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
 								{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'},
 								{type:'string',    name:'dsestatus'},			{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'faltaAsegurado'},
-								{type:'string',    name:'fcancelacionAfiliado'},{type:'string',    name:'desEstatusCliente'},		{type:'string',    name:'numPoliza'}]
+								{type:'string',    name:'fcancelacionAfiliado'},{type:'string',    name:'desEstatusCliente'},		{type:'string',    name:'numPoliza'}	]
 				});
 				
 				Ext.define('modeloRechazos',{
@@ -683,36 +688,58 @@
 					model:'Generic',
 					proxy: {
 						type: 'ajax',
-						url: _URL_LISTA_CPTICD,
-						extraParams : {'params.cdtabla' : '2TABLICD'},
+						//url: _URL_LISTA_CPTICD, // (EGS)
+						url: _URL_LISTA_ICD,
+						//extraParams : {'params.cdtabla' : '2TABLICD'}, // (EGS)
 						reader: {
 							type: 'json',
 							root: 'listaCPTICD'
 						}
+					},
+					listeners: { // se agrega listener (EGS)
+						'beforeload' : function(store, operation) {
+							store.removeAll();
+							store.proxy.extraParams = {
+								'params.cdramo' 	: _tipoProducto,
+								'params.cdtipsit' 	: _cdtipsitProducto,
+								'params.edad' 		: _edad,
+								'params.genero' 	: _genero
+							};
+						}
 					}
 				});
-				storeTiposICDPrimario.load();
+				//storeTiposICDPrimario.load();	// (EGS)
 				var storeTiposICDPrimarioRender = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
 					autoLoad:true,
 					cargado:false,
 					proxy: {
 						type: 'ajax',
-						url: _URL_LISTA_CPTICD,
-						extraParams : {'params.cdtabla' : '2TABLICD'},
+						//url: _URL_LISTA_CPTICD, // (EGS)
+						url: _URL_LISTA_ICD, // (EGS)
+						//extraParams : {'params.cdtabla' : '2TABLICD'},	// (EGS)
 						reader: {
 							type: 'json',
 							root: 'listaCPTICD'
 						}
 					}
-				,listeners: {
-					load : function() {
-						this.cargado=true;
-						if(!Ext.isEmpty(gridFacturaDirecto)){
-							gridFacturaDirecto.getView().refresh();
+					,listeners: {
+						'beforeload' : function(store, operation) { // (EGS)
+							store.removeAll();
+							store.proxy.extraParams = {
+								'params.cdramo' 	: _tipoProducto,
+								'params.cdtipsit' 	: _cdtipsitProducto,
+								'params.edad' 		: _edad,
+								'params.genero' 	: _genero
+							};
+						},
+						load : function() {
+							this.cargado=true;
+							if(!Ext.isEmpty(gridFacturaDirecto)){
+								gridFacturaDirecto.getView().refresh();
+							}
 						}
 					}
-				}
 				});
 				
 // STORE PARA EL ICD SECUNDARIO
@@ -720,29 +747,51 @@
 					model:'Generic',
 					proxy: {
 						type: 'ajax',
-						url: _URL_LISTA_CPTICD,
-						extraParams : {'params.cdtabla' : '2TABLICD'},
+						//url: _URL_LISTA_CPTICD,	// (EGS)
+						url: _URL_LISTA_ICD,	// (EGS)
+						//extraParams : {'params.cdtabla' : '2TABLICD'},	// (EGS)
 						reader: {
 							type: 'json',
 							root: 'listaCPTICD'
 						}
+					},
+					listeners: {	// se agrega listener (EGS)
+						'beforeload' : function(store,operation){
+							store.removeAll();
+							store.proxy.extraParams = {
+								'params.cdramo'		: _tipoProducto,
+								'params.cdtipsit'	: _cdtipsitProducto,
+								'params.edad'		: _edad,
+								'params.genero'		: _genero
+							};
+						}
 					}
 				});
-				storeTiposICDSecundario.load();
+				//storeTiposICDSecundario.load();	// (EGS)
 				var storeTiposICDSecundarioRender = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
 					autoLoad:true,
 					cargado:false,
 					proxy: {
 						type: 'ajax',
-						url: _URL_LISTA_CPTICD,
-						extraParams : {'params.cdtabla' : '2TABLICD'},
+						//url: _URL_LISTA_CPTICD,	// (EGS)
+						url: _URL_LISTA_ICD, // (EGS)
+						//extraParams : {'params.cdtabla' : '2TABLICD'},	// (EGS)
 						reader: {
 							type: 'json',
 							root: 'listaCPTICD'
 						}
 					}
 					,listeners: {
+						'beforeload' : function(store,operation){	// (EGS)
+							store.removeAll();
+							store.proxy.extraParams = {
+								'params.cdramo'		: _tipoProducto,
+								'params.cdtipsit'	: _cdtipsitProducto,
+								'params.edad'		: _edad,
+								'params.genero'		: _genero
+							};
+						},
 						load : function() {
 							this.cargado=true;
 							if(!Ext.isEmpty(gridFacturaDirecto)){
@@ -1011,7 +1060,7 @@
 				{
 					allowBlank: false,				displayField : 'value',		forceSelection : true,
 					name:'idComboICDPrimario',		valueField   : 'key',		store : storeTiposICDPrimario,
-					matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.otclave',
+					matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.otclave1', //queryParam: 'params.otclave', // (EGS)
 					minChars  : 2,					editable:true,				triggerAction: 'all',		hideTrigger:true,
 					listeners : {
 						'select' : function(combo, record) {
@@ -1025,7 +1074,7 @@
 				var comboICDSecundario = Ext.create('Ext.form.field.ComboBox', {
 					allowBlank: false,				displayField : 'value',		forceSelection : true,
 					name:'idComboICDSEcundario',	valueField   : 'key',		store : storeTiposICDSecundario,
-					matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.otclave',
+					matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.otclave1',	//queryParam: 'params.otclave',	// (EGS)
 					minChars  : 2,					editable:true,				triggerAction: 'all',		hideTrigger:true,
 					listeners : {
 						'select' : function(combo, record) {
@@ -1689,7 +1738,28 @@
 						listeners: {
 							select: function (grid, record, index, opts){
 								debug("<--VALOR DE LA BANDERA DEL CONCEPTO-->",banderaConcepto,"<--VALOR DE LA BANDERA DEL ASEGURADO-->",banderaAsegurado);
-								
+								_genero = record.get('GENERO');	// (EGS)
+								_fenacimi = record.get('FENACIMI');	// (EGS)
+								calculaEdad();
+								storeTiposICDPrimario.removeAll();	// (EGS)
+								storeTiposICDPrimario.load({ // (EGS)
+									params:{
+									'params.cdramo' 	: _tipoProducto,
+									'params.cdtipsit' 	: _cdtipsitProducto,
+									'params.edad' 		: _edad,
+									'params.genero' 	: record.get('GENERO') //_genero
+									}
+				
+								});
+								storeTiposICDSecundario.removeAll();	// (EGS)
+								storeTiposICDSecundario.load({			// (EGS)
+									params: {
+										'params.cdramo'		: _tipoProducto,
+										'params.cdtipsit'	: _cdtipsitProducto,
+										'params.edad'		: _edad,
+										'params.genero'		: record.get('GENERO')
+									}
+								});
 								if(_11_params.CDRAMO != _RECUPERA){
 									debug("<<<<<======  DIFERENTE DE RECUPERA	======>>>>>>>");
 									if (banderaConcepto == "1"){
@@ -6920,7 +6990,14 @@
 				centrarVentana(msgWindow);
 			}
 		//}
-	}	
+	}
+	
+	// (EGS)
+	function calculaEdad(){
+		var fecha = ''; 
+		fecha = fecha.concat(_fenacimi.substr(6,4),_fenacimi.substr(2,4),_fenacimi.substr(0,2));
+		_edad = calculaAniosTranscurridos(new Date(fecha),new Date());
+	}
 	//FIN DE FUNCIONES
 		</script>
 		<script type="text/javascript" src="${ctx}/js/proceso/siniestros/afiliadosAfectados.js?${now}"></script>

@@ -50,7 +50,7 @@ Ext.onReady(function() {
 					{type:'string',    name:'faltaAsegurado'},		{type:'string',    name:'fcancelacionAfiliado'},	{type:'string',    name:'mtoBeneficioMax'},
 					{type:'string',    name:'zonaContratada'},		{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'desEstatusCliente'},
 					{type:'string',    name:'numPoliza'},			{type:'string',    name:'dsplan'},					{type:'string',    name:'mesesAsegurado'},
-					{type:'string',    name:'dsTipsit'}]
+					{type:'string',    name:'dsTipsit'},			{type:'string',	   name:'genero'},					{type:'string',	   name:'fenacimi'} ] // (EGS) genero, fenacimi
 	});
 
 	Ext.define('modelListadoTmanteni',{
@@ -191,13 +191,26 @@ Ext.onReady(function() {
 		autoLoad:false,
 		proxy: {
 			type: 'ajax',
-			url : _URL_LISTA_CPTICD,
-			extraParams:{
+			//url : _URL_LISTA_CPTICD, // (EGS)
+			url: _URL_LISTA_ICD, // (EGS)
+			/*extraParams:{
 				'params.cdtabla' : '2TABLICD'
-			},
+			},*/ // no se envian extraParams (EGS)
 			reader: {
 				type: 'json',
 				root: 'listaCPTICD'
+			}
+		},
+		listeners: { // se agrega listener (EGS)
+			'beforeload' : function(store, operation) {
+				store.removeAll();
+				store.proxy.extraParams = {
+						'params.cdicd' 		:  Ext.getCmp('idComboICD').getValue(),
+						'params.cdramo' 	: Ext.getCmp('idcdRamo').getValue(),
+						'params.cdtipsit' 	: Ext.getCmp('idcdtipsit').getValue(),
+						'params.edad' 		: calculaAniosTranscurridos(Ext.getCmp('edad').getValue(),new Date()),
+						'params.genero' 	: Ext.getCmp('genero').getValue()
+				};
 			}
 		}
 	});
@@ -531,13 +544,13 @@ Ext.onReady(function() {
 		
 		storeMedico.load();
 		storeProveedor.load();
-		storeTiposICD.load();
+		//storeTiposICD.load(); // (EGS)
 		centrarVentanaInterna(modificacionClausula.show()); 
 	}else{
 		storeMedico.load();
 		storeTratamiento.load();
 		storePlazas.load();
-		storeTiposICD.load();
+		//storeTiposICD.load(); // (EGS)
 		storeProveedor.load();
 		storeTipoMedico.load({
 			params:{
@@ -610,6 +623,8 @@ Ext.onReady(function() {
 				Ext.getCmp('idZonaContratadaPoliza').setValue(record.get('zonaContratada'));
 				Ext.getCmp('idcdtipsit').setValue(record.get('cdtipsit'));
 				Ext.getCmp('idMesesAsegurado').setValue(record.get('mesesAsegurado'));
+				Ext.getCmp('edad').setValue(record.get('fenacimi')); // (EGS)
+				Ext.getCmp('genero').setValue(record.get('genero')); // (EGS)
 				storeCobertura.load({
 					params:{
 						'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
@@ -618,6 +633,18 @@ Ext.onReady(function() {
 						'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
 						'params.nmsituac':Ext.getCmp('idNmSituac').getValue()
 					}
+				});
+				/*agregamos llenar lista ICD's (EGS) */ 
+
+				storeTiposICD.removeAll();
+				storeTiposICD.load({
+					params:{
+						'params.cdramo' 	: Ext.getCmp('idcdRamo').getValue(),
+						'params.cdtipsit' 	: Ext.getCmp('idcdtipsit').getValue(),
+						'params.edad' 		: calculaAniosTranscurridos(Ext.getCmp('edad').getValue(),new Date()),
+						'params.genero' 	: Ext.getCmp('genero').getValue()
+					}
+				
 				});
 				storeListadoAsegurado.removeAll();
 				modificacionPolizas.hide();
@@ -788,16 +815,16 @@ Ext.onReady(function() {
 	});
 
 	comboICD = Ext.create('Ext.form.field.ComboBox', {
-		colspan:2,						fieldLabel : 'ICD',					allowBlank: false,				displayField : 'value',		width:500,
+		colspan:2,						fieldLabel : 'ICD',					allowBlank: false,				displayField : 'value',		width:500,	//displayField : 'value',
 		id:'idComboICD',				labelWidth: 170,					valueField   : 'key',			forceSelection : true,
-		matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.otclave',	store : storeTiposICD,
+		matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.otclave1',	store : storeTiposICD,	// queryParam: 'params.otclave' (EGS)
 		minChars  : 2,					name:'cdicd',	editable:true,		triggerAction: 'all',			hideTrigger:true,
 		listeners : {
 			'select':function(field,value){
 				Ext.Ajax.request({
 					url     : _URL_NUM_MESES_TIEMPO_ESPERA
 					,params : {
-						'params.otvalor':this.getValue(),
+						'params.otvalor01':this.getValue(), // 'params.otvalor':this.getValue() (EGS)
 						'params.cdtabla':'TAPERESP'
 					}
 					,success : function (response){
@@ -1736,7 +1763,7 @@ Ext.onReady(function() {
 				labelWidth: 170,					hidden:true
 			},
 			{	 xtype       : 'textfield',			fieldLabel : 'MesesAsegurado'		,	id       : 'idMesesAsegurado', 		name:'idMesesAsegurado',
-				labelWidth: 170,					hidden:true
+				labelWidth: 170 ,					hidden:true
 			},
 			{	 xtype       : 'textfield',			fieldLabel : 'TipoCopago'		,		id       : 'idTipoCopago', 			name:'idTipoCopago',
 				labelWidth: 170,					hidden:true
@@ -1763,6 +1790,12 @@ Ext.onReady(function() {
 				labelWidth: 170,					hidden:true
 			},
 			{	 xtype       : 'textfield',			fieldLabel : 'idCausaSini'			,	id       : 'idCausaSini', 			name:'idCausaSini',
+				labelWidth: 170,					hidden:true
+			},
+			{	 xtype       : 'datefield',			fieldLabel : 'Edad'					,	id       : 'edad', 					name:'edad',
+				format		 : 'd/m/Y',				labelWidth: 170,					hidden:true
+			},
+			{	 xtype       : 'textfield',			fieldLabel : 'Genero'				,	id       : 'genero', 				name:'genero',
 				labelWidth: 170,					hidden:true
 			},
 			{	colspan:2
@@ -2420,7 +2453,19 @@ Ext.onReady(function() {
 				});
 				Ext.getCmp('cmbRamos').setValue(json.cdramo);								// Valor de Ramos
 				panelInicialPrincipal.down('[name="cdperson"]').setReadOnly(false);
+				Ext.getCmp('edad').setValue(json.fenacimi); // (EGS)
+				Ext.getCmp('genero').setValue(json.genero); // (EGS)
+				storeTiposICD.removeAll(); // (EGS)
+				storeTiposICD.load({ // consulta de catalogo (EGS)
+					params:{
+						'params.cdicd' 		:  json.cdicd,
+						'params.cdramo' 	: json.cdramo,
+						'params.cdtipsit' 	: json.cdtipsit,
+						'params.edad' 		: calculaAniosTranscurridos(Ext.getCmp('edad').getValue(),new Date()),
+						'params.genero' 	: Ext.getCmp('genero').getValue()
+					}
 				
+				});				
 				Ext.getCmp('idComboICD').setValue(json.cdicd);								// Valor de ICD
 				//debug("<--- Valor de cdrol --->",cdrol);
 				if(cdrol == "COORDINAMED"){

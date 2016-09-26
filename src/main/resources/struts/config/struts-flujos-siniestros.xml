@@ -581,6 +581,17 @@
 			</result>
 		</action>
 		
+		<!-- agregado (EGS) consulta ICDs x edad y genero-->
+		<action name="consultaListaICD" class="siniestrosAction" method="consultaListaICD"> 
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaCPTICD.*,
+					success
+				</param>
+			</result>
+		</action>
+
 		<action name="afiliadosAfectados" class="siniestrosAction" method="afiliadosAfectados">
 			<result name="success">/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</result>
 		</action>
