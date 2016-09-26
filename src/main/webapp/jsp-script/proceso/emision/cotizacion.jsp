@@ -71,6 +71,8 @@ var _0_urlCargarParamerizacionCoberturas    = '<s:url namespace="/emision"      
 var _0_urlRecuperarDatosTramiteValidacion   = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente"      />';
 var _0_urlCargarPoliza                      = '<s:url namespace="/emision"          action="cargarPoliza"                                />';
 var _0_urlCargarCatalogo                    = '<s:url namespace="/catalogos"       action="obtieneCatalogo"                     />';
+var _0_urlCargaValidacionDescuentoR6        = '<s:url namespace="/emision"         action="obtieneValidacionDescuentoR6"                 />';
+
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
     <s:property value="imap.modeloExtraFields" />
@@ -4395,21 +4397,38 @@ Ext.onReady(function()
                 if(valido)
                 {
                     _fieldLikeLabel('DESCUENTO').setLoading(true);
-                    _fieldLikeLabel('DESCUENTO').getStore().load(
-                    {
-                        params :
+                    
+                    Ext.Ajax.request({
+               	        url      : _0_urlCargaValidacionDescuentoR6
+               	        ,params :
                         {
-                            'params.tipoUnidad' : _fieldByLabel('TIPO DE UNIDAD').getValue()
-                            ,'params.uso'       : _fieldByLabel('TIPO DE USO').getValue()
-                            ,'params.cdagente'  : _fieldByLabel('AGENTE').getValue()
-                            ,'params.cdtipsit'  : _0_smap1.cdtipsit
-                            ,'params.cdatribu'  : '21'
+                            'smap1.tipoUnidad' : _fieldByLabel('TIPO DE UNIDAD').getValue()
+                            ,'smap1.uso'       : _fieldByLabel('TIPO DE USO').getValue()
+                            ,'smap1.cdagente'  : _fieldByLabel('AGENTE').getValue()
+                            ,'smap1.cdtipsit'  : _0_smap1.cdtipsit
+                            ,'smap1.cdatribu'  : '21'
                         }
-                        ,callback : function()
-                        {
-                            _fieldLikeLabel('DESCUENTO').setLoading(false);
-                        }
-                    });
+               	        ,success : function(response)
+               	        {
+               	            var ijson=Ext.decode(response.responseText);
+               	            debug('### obtener auto por clave gs:',ijson);
+               	            if(ijson.success)
+               	            {
+               	            	_fieldLikeLabel('DESCUENTO').setMinValue(ijson.smap1.RANGO_MINIMO);
+               	            	_fieldLikeLabel('DESCUENTO').setMaxValue(ijson.smap1.RANGO_MAXIMO);
+               	             	_fieldLikeLabel('DESCUENTO').setLoading(false);
+               	            }
+               	            else
+               	            {
+               	                mensajeWarning(ijson.respuesta);
+               	            }
+               	        }
+               	        ,failure : function()
+               	        {
+               	            errorComunicacion();
+               	        }
+               	    });
+                    
                 }
             }
         });
