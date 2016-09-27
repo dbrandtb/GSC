@@ -307,71 +307,89 @@ Ext.onReady(function()
 										debug('jsonDatosConfirmacion****',jsonDatosConfirmacion.slist1['OTVALOR99']);
 										//numSerie+=''+(record.get('parametros.pv_otvalor37'))+'|';
 		                                Ext.Ajax.request(
-		                                {
-		                                    url     : _p36_urlConfirmarEndoso
-		                                    ,jsonData: jsonDatosConfirmacion 
-		                                    ,success : function(response)
-		                                    {
-		                                        _p36_store.commitChanges();
-		                                        panelMask.hide();
-		                                        var json = Ext.decode(response.responseText);
-		                                        debug('### confirmar endoso:',json);
-		                                        if(json.success)
-		                                        {
-		                                        	Ext.Ajax.request(
-															{
-																url     : _p29_urlObtieneValNumeroSerie
-																,params :
-																{
-																	'smap1.numSerie'  : numSerie
-																	,'smap1.feini'    : new Date()
-																}
-																,success : function(response)
-																{
-																	var jsonNumSerie=Ext.decode(response.responseText);
-												        	    	if(jsonNumSerie.exito!=true)
-												        	    	{
-												        	    		if(!RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL))
-													        	    		 {
-													        	    		 		mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
-														        	    			
-														        				}else{
-														        					var callbackRemesa = function()
+											{
+												url     : _p29_urlObtieneValNumeroSerie
+												,params :
+												{
+													'smap1.numSerie'  : numSerie
+													,'smap1.feini'    : new Date()
+												}
+												,success : function(response)
+												{
+													var jsonNumSerie=Ext.decode(response.responseText);
+								        	    	if(jsonNumSerie.exito!=true)
+								        	    	{
+								        	    		if(!RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL))
+									        	    		 {
+									        	    		 		mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+										        	    			
+										        				}else{
+										        					
+																	 centrarVentanaInterna(Ext.MessageBox.confirm(
+																		'Confirmar'
+																		,'¿Desea Continuar?'
+																		,function(btn)
+																		{
+																			if(btn === 'yes')
+																			{
+																				Ext.Ajax.request(
 																					{
-																						marendNavegacion(2);
-																					};
-																					mensajeCorrecto('Endoso generado','Endoso generado',function()
-																					{
-																						_generarRemesaClic(
-																							true
-																							,_p36_smap1.CDUNIECO
-																							,_p36_smap1.CDRAMO
-																							,_p36_smap1.ESTADO
-																							,_p36_smap1.NMPOLIZA
-																							,callbackRemesa
-																						);
-																					});
-														        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
-														        					
-																					
-														        				}
-	                       											}
-																}
-																,failure : errorComunicacion
-															});
+																						url     : _p36_urlConfirmarEndoso
+																						,jsonData: jsonDatosConfirmacion 
+																						,success : function(response)
+																						{
+																							_p36_store.commitChanges();
+																							panelMask.hide();
+																							var json = Ext.decode(response.responseText);
+																							debug('### confirmar endoso:',json);
+																							if(json.success)
+																							{
+																								mensajeCorrecto('Endoso generado','Endoso generado',function()
+																										{
+																											var callbackRemesa = function()
+																											{
+																												marendNavegacion(2);
+																											};
+																											_generarRemesaClic(
+																												true
+																												,_p36_smap1.CDUNIECO
+																												,_p36_smap1.CDRAMO
+																												,_p36_smap1.ESTADO
+																												,_p36_smap1.NMPOLIZA
+																												,callbackRemesa
+																											);
+																										});
+																								
 
-		                                        }
-		                                        else
-		                                        {
-		                                            mensajeError(json.respuesta);
-		                                        }
-		                                    }
-		                                    ,failure : function(response)
-		                                    {
-		                                        panelMask.hide();
-		                                        errorComunicacion();
-		                                    }
-		                                });
+																							}
+																							else
+																							{
+																								mensajeError(json.respuesta);
+																							}
+																						}
+																						,failure : function(response)
+																						{
+																							panelMask.hide();
+																							errorComunicacion();
+																						}
+																					});
+																			}
+																			else
+																			{
+																				panelMask.hide();
+																				debug('no quiso Continuar');
+																				
+																			}
+																		}
+																	));
+										        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
+										        					
+																	
+										        				}
+           											}
+												}
+												,failure : errorComunicacion
+											});
 		                            };
 		                            
 		                            var valido = _fieldById('_p36_form').getForm().isValid()&&_fieldById('_p36_formEndoso').getForm().isValid();
