@@ -946,311 +946,316 @@ function _p31_mostrarVistaPrevia()
 									var jsonNumSerie=Ext.decode(response.responseText);
 					    	    	if(jsonNumSerie.exito!=true)
 						        	    	{
-						                        debug('jsonNumSerie.respuesta**** -->',jsonNumSerie.respuesta);
-						        	    			mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
-						                        
-						        	    	}else{
-                centrarVentanaInterna(Ext.create('Ext.window.Window',
-                {
-                    title       : 'Tarifa final'
-                    ,width      : 660
-                    ,maxHeight  : 500
-                    ,autoScroll : true
-                    ,modal      : true
-                    ,closable   : false
-                    ,items      :
-                    [
-                        Ext.create('Ext.grid.Panel',
-                        {
-                            store    : Ext.create('Ext.data.Store',
-                            {
-                                model       : '_p31_modeloDetalleCotizacion'
-                                ,groupField : 'TITULO'
-                                ,sorters    :
-                                [
-                                    {
-                                        sorterFn : function(o1,o2)
-                                        {
-                                            debug('sorting:',o1,o2);
-                                            if (o1.get('COBERTURA') == o2.get('COBERTURA'))
-                                            {
-                                                return 0;
-                                            }
-                                            return o1.get('COBERTURA') < o2.get('COBERTURA') ? -1 : 1;
-                                        }
-                                    }
-                                ]
-                                ,proxy      :
-                                {
-                                    type    : 'memory'
-                                    ,reader : 'json'
-                                }
-                                ,data : json.slist1
-                            })
-                            ,columns :
-                            [
-                                {
-                                    header           : 'Nombre de la cobertura'
-                                    ,dataIndex       : 'COBERTURA'
-                                    ,width           : 480
-                                    ,summaryType     : 'count'
-                                    ,summaryRenderer : function(value)
-                                    {
-                                        return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
-                                    }
-                                }
-                                ,{
-                                    header       : 'Importe por cobertura'
-                                    ,dataIndex   : 'PRIMA'
-                                    ,width       : 150
-                                    ,renderer    : Ext.util.Format.usMoney
-                                    ,align       : 'right'
-                                    ,summaryType : 'sum'
-                                } 
-                            ]
-                            ,features :
-                            [
-                                {
-                                    groupHeaderTpl :
-                                    [
-                                        '{name:this.formatName}'
-                                        ,{
-                                            formatName : function(name)
-                                            {
-                                                return name.split("_")[1];
-                                            }
-                                        }
-                                    ]
-                                    ,ftype          : 'groupingsummary'
-                                    ,startCollapsed : _p31_smap1.cdsisrol!='SUSCRIAUTO'
-                                    ,listeners      :
-                                    {
-                                        groupexpand : function(view,node,group)
-                                        {
-                                            if(_p31_smap1.cdsisrol!='SUSCRIAUTO')
-                                            {
-                                                this.collapseAll();
-                                            }
-                                        }
-                                    }                                    
-                                }
-                            ]
-                        })
-                        ,Ext.create('Ext.toolbar.Toolbar',
-                        {
-                            buttonAlign : 'right'
-                            ,items      :
-                            [
-                                '->'
-                                ,Ext.create('Ext.form.Label',
-                                {
-                                    style          : 'color:white;'
-                                    ,initComponent : function()
-                                    {
-                                        var sum = 0;
-                                        for ( var i = 0; i < json.slist1.length; i++)
-                                        {
-                                            sum += parseFloat(json.slist1[i].PRIMA);
-                                        }
-                                        this.setText('Total: '+ Ext.util.Format.usMoney(sum));
-                                        this.callParent();
-                                    }
-                                })
-                            ]
-                        })
-                        ,Ext.create('Ext.form.Panel',
-                        {
-                            layout :
-                            {
-                                type     : 'table'
-                                ,columns : 5
-                            }
-                            ,defaults : { style : 'margin:5px;' }
-                            ,items    :
-                            [
-                                {
-                                    xtype       : 'textfield'
-                                    ,itemId     : '_p31_numerofinalpoliza'
-                                    ,fieldLabel : 'N&uacute;mero de poliza'
-                                    ,readOnly   : true
-                                }
-                                ,{
-                                    itemId   : '_p31_botonEmitirPolizaFinal'
-                                    ,xtype   : 'button'
-                                    ,text    : 'Emitir'
-                                    ,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
-                                    ,handler : _p31_emitirFinal
-                                },{
-                                    itemId : 'botonEnvioEmail'
-                                    ,xtype : 'button'
-                                    ,text  : 'Enviar Email'
-                                    ,icon  : '${ctx}/resources/fam3icons/icons/email.png'
-                                    ,disabled: true
-                                    ,handler:function()
-                                    {
-                                        Ext.Msg.prompt('Envio de Email', 'Escriba los correos que recibir&aacute;n la documentaci&oacute;n (separados por ;)', 
-                                        function(buttonId, text){
-                                            if(buttonId == "ok" && !Ext.isEmpty(text)){
-                                                
-                                                if(Ext.isEmpty(_mensajeEmail)){
-                                                    mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
-                                                    return;
-                                                }
-                                                
-                                                Ext.Ajax.request(
-                                                        {
-                                                            url : _urlEnviarCorreo,
-                                                            params :
-                                                            {
-                                                                to     : text,
-                                                                asunto : 'Documentación de póliza de Autos',
-                                                                mensaje: _mensajeEmail,
-                                                                html   : true
-                                                            },
-                                                            callback : function(options,success,response)
-                                                            {
-                                                                if (success)
-                                                                {
-                                                                    var json = Ext.decode(response.responseText);
-                                                                    if (json.success == true)
-                                                                    {
-                                                                        Ext.Msg.show(
-                                                                        {
-                                                                            title    : 'Correo enviado'
-                                                                            ,msg     : 'El correo ha sido enviado'
-                                                                            ,buttons : Ext.Msg.OK
-                                                                            ,icon    : 'x-message-box-ok'
-                                                                            ,fn      : function()
-                                                                            {
-                                                                                _generarRemesaClic(
-                                                                                    false
-                                                                                    ,_p31_smap1.cdunieco
-                                                                                    ,_p31_smap1.cdramo
-                                                                                    ,'M'
-                                                                                    ,_p31_smap1.nmpolizaEmitida
-                                                                                    ,function(){}
-                                                                                    ,'S'
-                                                                                );
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        mensajeError('Error al enviar el correo');
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    errorComunicacion();
-                                                                }
-                                                            }
-                                                        });
-                                            
-                                            }else {
-                                                mensajeWarning('Introduzca al menos una direcci&oacute;n de email');    
-                                            }
-                                        })
-                                    }
-                                }
-                                ,{
-                                    itemId : 'botonReenvioWS'
-                                    ,xtype : 'button'
-                                    ,text  : 'Reintentar Emisi&oacute;n'
-                                    ,icon  : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
-                                    ,disabled: true
-                                    ,handler:function()
-                                    {
-                                        var me=this;
-                                        reintentarWSAuto(me.up().up(), _paramsRetryWS);
-                                    }
-                                }
-                                ,{
-                                    xtype     : 'button'
-                                    ,itemId   : '_p31_botonDocumentosPolizaEmitida'
-                                    ,text     : 'Imprimir'
-                                    ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
-                                    ,disabled : true
-                                    ,handler  : function(me)
-                                    {
-                                        var callbackRemesa = function()
-                                        {
-	                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
-	                                        {
-	                                            title        : 'Documentos del tr&aacute;mite'
-	                                            ,modal       : true
-	                                            ,buttonAlign : 'center'
-	                                            ,width       : 600
-	                                            ,height      : 400
-	                                            ,autoScroll  : true
-	                                            ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
-	                                            ,loader      :
-	                                            {
-	                                                url       : _p31_urlDocumentosPoliza
-	                                                ,params   :
-	                                                {
-	                                                    'smap1.nmpoliza'  : _p31_smap1.nmpolizaEmitida
-	                                                    ,'smap1.cdunieco' : _p31_smap1.cdunieco
-	                                                    ,'smap1.cdramo'   : _p31_smap1.cdramo
-	                                                    ,'smap1.estado'   : 'M'
-	                                                    ,'smap1.nmsuplem' : '0'
-	                                                    ,'smap1.ntramite' : ''
-	                                                    ,'smap1.nmsolici' : _p31_smap1.nmpoliza
-	                                                    ,'smap1.tipomov'  : '0'
-	                                                }
-	                                                ,scripts  : true
-	                                                ,autoLoad : true
-	                                            }
-	                                        }).show());
-                                        };
-                                        _generarRemesaClic(
-                                            false
-                                            ,_p31_smap1.cdunieco
-                                            ,_p31_smap1.cdramo
-                                            ,'M'
-                                            ,_p31_smap1.nmpolizaEmitida
-                                            ,callbackRemesa
-                                        );
-                                    }
-                                }
-                                ,{
-                                    xtype    : 'button'
-                                    ,itemId  : '_p31_botonCancelarEmision'
-                                    ,text    : 'Cancelar'
-                                    ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                                    ,handler : function()
-                                    {
-                                        var me=this;
-                                        me.up().up().destroy();
-                                    }
-                                }
-                                ,{
-                                    xtype     : 'button'
-                                    ,itemId   : '_p31_botonNueva'
-                                    ,text     : 'Nueva'
-                                    ,icon     : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                                    ,disabled : true
-                                    ,hidden   : !Ext.isEmpty(_p31_flujo)
-                                    ,handler  : function(){ _p31_nuevaClic(); }
-                                }
-								,{
-                                    itemId   : '_p31_botonMesaControl'
-                                    ,xtype   : 'button'
-                                    ,text    : 'Mesa de control'
-                                    ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
-                                    ,hidden  : Ext.isEmpty(_p31_flujo)
-                                    ,handler : function(){
-                                    	_mask('Redireccionando...');
-                                    	Ext.create('Ext.form.Panel').submit({
-                                    		standardSubmit : true
-                                    		,url           : _GLOBAL_COMP_URL_MCFLUJO
-                                    		}); 	
-                                    	} 
-                                }
-                            ]
-                        })
-                    ]
-                }).show());
-            }
+						        	    		 if(!RolSistema.puedeSuscribirAutos(_p31_smap1.cdsisrol))
+						        	    		 {
+						        	    		 		mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+							        	    			
+							        				}else{
+							        					centrarVentanaInterna(Ext.create('Ext.window.Window',
+													                {
+													                    title       : 'Tarifa final'
+													                    ,width      : 660
+													                    ,maxHeight  : 500
+													                    ,autoScroll : true
+													                    ,modal      : true
+													                    ,closable   : false
+													                    ,items      :
+													                    [
+													                        Ext.create('Ext.grid.Panel',
+													                        {
+													                            store    : Ext.create('Ext.data.Store',
+													                            {
+													                                model       : '_p31_modeloDetalleCotizacion'
+													                                ,groupField : 'TITULO'
+													                                ,sorters    :
+													                                [
+													                                    {
+													                                        sorterFn : function(o1,o2)
+													                                        {
+													                                            debug('sorting:',o1,o2);
+													                                            if (o1.get('COBERTURA') == o2.get('COBERTURA'))
+													                                            {
+													                                                return 0;
+													                                            }
+													                                            return o1.get('COBERTURA') < o2.get('COBERTURA') ? -1 : 1;
+													                                        }
+													                                    }
+													                                ]
+													                                ,proxy      :
+													                                {
+													                                    type    : 'memory'
+													                                    ,reader : 'json'
+													                                }
+													                                ,data : json.slist1
+													                            })
+													                            ,columns :
+													                            [
+													                                {
+													                                    header           : 'Nombre de la cobertura'
+													                                    ,dataIndex       : 'COBERTURA'
+													                                    ,width           : 480
+													                                    ,summaryType     : 'count'
+													                                    ,summaryRenderer : function(value)
+													                                    {
+													                                        return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
+													                                    }
+													                                }
+													                                ,{
+													                                    header       : 'Importe por cobertura'
+													                                    ,dataIndex   : 'PRIMA'
+													                                    ,width       : 150
+													                                    ,renderer    : Ext.util.Format.usMoney
+													                                    ,align       : 'right'
+													                                    ,summaryType : 'sum'
+													                                } 
+													                            ]
+													                            ,features :
+													                            [
+													                                {
+													                                    groupHeaderTpl :
+													                                    [
+													                                        '{name:this.formatName}'
+													                                        ,{
+													                                            formatName : function(name)
+													                                            {
+													                                                return name.split("_")[1];
+													                                            }
+													                                        }
+													                                    ]
+													                                    ,ftype          : 'groupingsummary'
+													                                    ,startCollapsed : _p31_smap1.cdsisrol!='SUSCRIAUTO'
+													                                    ,listeners      :
+													                                    {
+													                                        groupexpand : function(view,node,group)
+													                                        {
+													                                            if(_p31_smap1.cdsisrol!='SUSCRIAUTO')
+													                                            {
+													                                                this.collapseAll();
+													                                            }
+													                                        }
+													                                    }                                    
+													                                }
+													                            ]
+													                        })
+													                        ,Ext.create('Ext.toolbar.Toolbar',
+													                        {
+													                            buttonAlign : 'right'
+													                            ,items      :
+													                            [
+													                                '->'
+													                                ,Ext.create('Ext.form.Label',
+													                                {
+													                                    style          : 'color:white;'
+													                                    ,initComponent : function()
+													                                    {
+													                                        var sum = 0;
+													                                        for ( var i = 0; i < json.slist1.length; i++)
+													                                        {
+													                                            sum += parseFloat(json.slist1[i].PRIMA);
+													                                        }
+													                                        this.setText('Total: '+ Ext.util.Format.usMoney(sum));
+													                                        this.callParent();
+													                                    }
+													                                })
+													                            ]
+													                        })
+													                        ,Ext.create('Ext.form.Panel',
+													                        {
+													                            layout :
+													                            {
+													                                type     : 'table'
+													                                ,columns : 5
+													                            }
+													                            ,defaults : { style : 'margin:5px;' }
+													                            ,items    :
+													                            [
+													                                {
+													                                    xtype       : 'textfield'
+													                                    ,itemId     : '_p31_numerofinalpoliza'
+													                                    ,fieldLabel : 'N&uacute;mero de poliza'
+													                                    ,readOnly   : true
+													                                }
+													                                ,{
+													                                    itemId   : '_p31_botonEmitirPolizaFinal'
+													                                    ,xtype   : 'button'
+													                                    ,text    : 'Emitir'
+													                                    ,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+													                                    ,handler : _p31_emitirFinal
+													                                },{
+													                                    itemId : 'botonEnvioEmail'
+													                                    ,xtype : 'button'
+													                                    ,text  : 'Enviar Email'
+													                                    ,icon  : '${ctx}/resources/fam3icons/icons/email.png'
+													                                    ,disabled: true
+													                                    ,handler:function()
+													                                    {
+													                                        Ext.Msg.prompt('Envio de Email', 'Escriba los correos que recibir&aacute;n la documentaci&oacute;n (separados por ;)', 
+													                                        function(buttonId, text){
+													                                            if(buttonId == "ok" && !Ext.isEmpty(text)){
+													                                                
+													                                                if(Ext.isEmpty(_mensajeEmail)){
+													                                                    mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
+													                                                    return;
+													                                                }
+													                                                
+													                                                Ext.Ajax.request(
+													                                                        {
+													                                                            url : _urlEnviarCorreo,
+													                                                            params :
+													                                                            {
+													                                                                to     : text,
+													                                                                asunto : 'Documentación de póliza de Autos',
+													                                                                mensaje: _mensajeEmail,
+													                                                                html   : true
+													                                                            },
+													                                                            callback : function(options,success,response)
+													                                                            {
+													                                                                if (success)
+													                                                                {
+													                                                                    var json = Ext.decode(response.responseText);
+													                                                                    if (json.success == true)
+													                                                                    {
+													                                                                        Ext.Msg.show(
+													                                                                        {
+													                                                                            title    : 'Correo enviado'
+													                                                                            ,msg     : 'El correo ha sido enviado'
+													                                                                            ,buttons : Ext.Msg.OK
+													                                                                            ,icon    : 'x-message-box-ok'
+													                                                                            ,fn      : function()
+													                                                                            {
+													                                                                                _generarRemesaClic(
+													                                                                                    false
+													                                                                                    ,_p31_smap1.cdunieco
+													                                                                                    ,_p31_smap1.cdramo
+													                                                                                    ,'M'
+													                                                                                    ,_p31_smap1.nmpolizaEmitida
+													                                                                                    ,function(){}
+													                                                                                    ,'S'
+													                                                                                );
+													                                                                            }
+													                                                                        });
+													                                                                    }
+													                                                                    else
+													                                                                    {
+													                                                                        mensajeError('Error al enviar el correo');
+													                                                                    }
+													                                                                }
+													                                                                else
+													                                                                {
+													                                                                    errorComunicacion();
+													                                                                }
+													                                                            }
+													                                                        });
+													                                            
+													                                            }else {
+													                                                mensajeWarning('Introduzca al menos una direcci&oacute;n de email');    
+													                                            }
+													                                        })
+													                                    }
+													                                }
+													                                ,{
+													                                    itemId : 'botonReenvioWS'
+													                                    ,xtype : 'button'
+													                                    ,text  : 'Reintentar Emisi&oacute;n'
+													                                    ,icon  : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+													                                    ,disabled: true
+													                                    ,handler:function()
+													                                    {
+													                                        var me=this;
+													                                        reintentarWSAuto(me.up().up(), _paramsRetryWS);
+													                                    }
+													                                }
+													                                ,{
+													                                    xtype     : 'button'
+													                                    ,itemId   : '_p31_botonDocumentosPolizaEmitida'
+													                                    ,text     : 'Imprimir'
+													                                    ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
+													                                    ,disabled : true
+													                                    ,handler  : function(me)
+													                                    {
+													                                        var callbackRemesa = function()
+													                                        {
+														                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+														                                        {
+														                                            title        : 'Documentos del tr&aacute;mite'
+														                                            ,modal       : true
+														                                            ,buttonAlign : 'center'
+														                                            ,width       : 600
+														                                            ,height      : 400
+														                                            ,autoScroll  : true
+														                                            ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
+														                                            ,loader      :
+														                                            {
+														                                                url       : _p31_urlDocumentosPoliza
+														                                                ,params   :
+														                                                {
+														                                                    'smap1.nmpoliza'  : _p31_smap1.nmpolizaEmitida
+														                                                    ,'smap1.cdunieco' : _p31_smap1.cdunieco
+														                                                    ,'smap1.cdramo'   : _p31_smap1.cdramo
+														                                                    ,'smap1.estado'   : 'M'
+														                                                    ,'smap1.nmsuplem' : '0'
+														                                                    ,'smap1.ntramite' : ''
+														                                                    ,'smap1.nmsolici' : _p31_smap1.nmpoliza
+														                                                    ,'smap1.tipomov'  : '0'
+														                                                }
+														                                                ,scripts  : true
+														                                                ,autoLoad : true
+														                                            }
+														                                        }).show());
+													                                        };
+													                                        _generarRemesaClic(
+													                                            false
+													                                            ,_p31_smap1.cdunieco
+													                                            ,_p31_smap1.cdramo
+													                                            ,'M'
+													                                            ,_p31_smap1.nmpolizaEmitida
+													                                            ,callbackRemesa
+													                                        );
+													                                    }
+													                                }
+													                                ,{
+													                                    xtype    : 'button'
+													                                    ,itemId  : '_p31_botonCancelarEmision'
+													                                    ,text    : 'Cancelar'
+													                                    ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+													                                    ,handler : function()
+													                                    {
+													                                        var me=this;
+													                                        me.up().up().destroy();
+													                                    }
+													                                }
+													                                ,{
+													                                    xtype     : 'button'
+													                                    ,itemId   : '_p31_botonNueva'
+													                                    ,text     : 'Nueva'
+													                                    ,icon     : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+													                                    ,disabled : true
+													                                    ,hidden   : !Ext.isEmpty(_p31_flujo)
+													                                    ,handler  : function(){ _p31_nuevaClic(); }
+													                                }
+																					,{
+													                                    itemId   : '_p31_botonMesaControl'
+													                                    ,xtype   : 'button'
+													                                    ,text    : 'Mesa de control'
+													                                    ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
+													                                    ,hidden  : Ext.isEmpty(_p31_flujo)
+													                                    ,handler : function(){
+													                                    	_mask('Redireccionando...');
+													                                    	Ext.create('Ext.form.Panel').submit({
+													                                    		standardSubmit : true
+													                                    		,url           : _GLOBAL_COMP_URL_MCFLUJO
+													                                    		}); 	
+													                                    	} 
+													                                }
+													                            ]
+													                        })
+													                    ]
+													                }).show());
+													                mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
+            
+							        				}
+							        	    		
+						        	    	}
 					    	    	
 								}
 								,failure : errorComunicacion

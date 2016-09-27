@@ -5804,12 +5804,21 @@ function _p30_editarAutoAceptar(bot,callback)
 	        	    	if(jsonNumSerie.exito!=true)
 	        	    	{
 	        	    		numSerie='';
-	                       debug('jsonNumSerie.respuesta**** -->',jsonNumSerie.respuesta);
-						   mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
-	                       //Ext.Msg.alert('Error**', jsonNumSerie.respuesta);
+	        	    		if(!RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol))
+						        	    		 {
+						        	    		 		mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+							        	    			
+							        				}else{
+							        					callback();
+							        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
+							        					
+							        				}
+	                       
+						   
+	                      
 	                       
 													
-	        	    	}else{callback();}
+	        	    	}
 					}
 					,failure : errorComunicacion
 				});
