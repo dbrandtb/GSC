@@ -2173,7 +2173,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							
 							String tipoFormatoCalculo			= copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
 							String calculosPenalizaciones		= copagoDeducibleSiniestroIte.get("PENALIZACIONES");
-							
+							String sonSesiones                  = copagoDeducibleSiniestroIte.get("VALSESIONES");
 							facturaObj.put("TIPOFORMATOCALCULO",""+tipoFormatoCalculo);
 							facturaObj.put("CALCULOSPENALIZACIONES",""+calculosPenalizaciones);
 							logger.debug("Paso 14.- Aplica Penalizacion : {} ",calculosPenalizaciones);
@@ -2381,7 +2381,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 												DESTOPOR = DESTOPOR+Double.valueOf(scopago);
 											}
 											else{
-												DESTOIMP=DESTOIMP+Double.valueOf(scopago);
+												if(sonSesiones.equalsIgnoreCase("1")){
+													DESTOIMP=DESTOIMP+(Double.valueOf(scopago)*Double.parseDouble(concepto.get("CANTIDAD"))) ;
+												}else{
+													DESTOIMP=DESTOIMP+Double.valueOf(scopago);
+												}
 											}
 										}
 										
@@ -2685,7 +2689,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								
 								if(StringUtils.isNotBlank(tipoCopagoSiniestroIte)) {
 									if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){ //Diferente de Accidente
-										copagoAplicadoSiniestroIte = Double.parseDouble(penalizacionPesos) + (subttDesto * ( Double.parseDouble(penalizacionPorcentaje) / 100d ));
+										if(sonSesiones.equalsIgnoreCase("1")){
+											copagoAplicadoSiniestroIte = DESTOIMP;
+										}else{
+											copagoAplicadoSiniestroIte = Double.parseDouble(penalizacionPesos) + (subttDesto * ( Double.parseDouble(penalizacionPorcentaje) / 100d ));
+										}
 									}else{
 										copagoAplicadoSiniestroIte= 0d;
 									}
@@ -3873,7 +3881,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						
 						String tipoFormatoCalculo         = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
 						String calculosPenalizaciones     = copagoDeducibleSiniestroIte.get("PENALIZACIONES");
-						
+						String sonSesiones                = copagoDeducibleSiniestroIte.get("VALSESIONES");
 						facturaObj.put("TIPOFORMATOCALCULO",""+tipoFormatoCalculo);
 						facturaObj.put("CALCULOSPENALIZACIONES",""+calculosPenalizaciones);
 						
@@ -4063,7 +4071,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										scopago="0";
 									}
 									logger.debug("Valor de respuesta :{}",StringUtils.isNotBlank(scopago));
-									/*if(StringUtils.isNotBlank(scopago)){
+									if(StringUtils.isNotBlank(scopago)){
 										if(scopago.contains("%")){
 											copagoPorc = true;
 										}
@@ -4072,9 +4080,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											DESTOPOR = DESTOPOR+Double.valueOf(scopago);
 										}
 										else{
-											DESTOIMP=DESTOIMP+Double.valueOf(scopago);
+											if(sonSesiones.equalsIgnoreCase("1")){
+												DESTOIMP=DESTOIMP+(Double.valueOf(scopago)*Double.parseDouble(concepto.get("CANTIDAD"))) ;
+											}else{
+												DESTOIMP=DESTOIMP+Double.valueOf(scopago);
+											}
 										}
-									}*/
+									}
 									
 									double hPTIMPORT 	= Double.parseDouble(hosp.get("PTIMPORT"));
 									double hDESTO    	= Double.parseDouble(hosp.get("DESTO"));
@@ -4344,7 +4356,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							
 							if(StringUtils.isNotBlank(tipoCopagoSiniestroIte)) {
 								if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){ //Diferente de Accidente
-									copagoAplicadoSiniestroIte = Double.parseDouble(penalizacionPesos) + (subttDesto * ( Double.parseDouble(penalizacionPorcentaje) / 100d ));
+									if(sonSesiones.equalsIgnoreCase("1")){
+										copagoAplicadoSiniestroIte = DESTOIMP;
+									}else{
+										copagoAplicadoSiniestroIte = Double.parseDouble(penalizacionPesos) + (subttDesto * ( Double.parseDouble(penalizacionPorcentaje) / 100d ));
+									}
 								}else{
 									copagoAplicadoSiniestroIte= 0d;
 								}
