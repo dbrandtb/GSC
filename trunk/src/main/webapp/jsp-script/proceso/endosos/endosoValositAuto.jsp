@@ -306,6 +306,49 @@ Ext.onReady(function()
 									    });
 										debug('jsonDatosConfirmacion****',jsonDatosConfirmacion.slist1['OTVALOR99']);
 										//numSerie+=''+(record.get('parametros.pv_otvalor37'))+'|';
+										function confirmaEmitir(Confirmacion){
+											Ext.Ajax.request(
+												{
+													url     : _p36_urlConfirmarEndoso
+													,jsonData: Confirmacion 
+													,success : function(response)
+													{
+														_p36_store.commitChanges();
+														panelMask.hide();
+														var json = Ext.decode(response.responseText);
+														debug('### confirmar endoso:',json);
+														if(json.success)
+														{
+															mensajeCorrecto('Endoso generado','Endoso generado',function()
+																	{
+																		var callbackRemesa = function()
+																		{
+																			marendNavegacion(2);
+																		};
+																		_generarRemesaClic(
+																			true
+																			,_p36_smap1.CDUNIECO
+																			,_p36_smap1.CDRAMO
+																			,_p36_smap1.ESTADO
+																			,_p36_smap1.NMPOLIZA
+																			,callbackRemesa
+																		);
+																	});
+															
+									
+														}
+														else
+														{
+															mensajeError(json.respuesta);
+														}
+													}
+													,failure : function(response)
+													{
+														panelMask.hide();
+														errorComunicacion();
+													}
+												});
+										}
 		                                Ext.Ajax.request(
 											{
 												url     : _p29_urlObtieneValNumeroSerie
@@ -332,47 +375,7 @@ Ext.onReady(function()
 																		{
 																			if(btn === 'yes')
 																			{
-																				Ext.Ajax.request(
-																					{
-																						url     : _p36_urlConfirmarEndoso
-																						,jsonData: jsonDatosConfirmacion 
-																						,success : function(response)
-																						{
-																							_p36_store.commitChanges();
-																							panelMask.hide();
-																							var json = Ext.decode(response.responseText);
-																							debug('### confirmar endoso:',json);
-																							if(json.success)
-																							{
-																								mensajeCorrecto('Endoso generado','Endoso generado',function()
-																										{
-																											var callbackRemesa = function()
-																											{
-																												marendNavegacion(2);
-																											};
-																											_generarRemesaClic(
-																												true
-																												,_p36_smap1.CDUNIECO
-																												,_p36_smap1.CDRAMO
-																												,_p36_smap1.ESTADO
-																												,_p36_smap1.NMPOLIZA
-																												,callbackRemesa
-																											);
-																										});
-																								
-
-																							}
-																							else
-																							{
-																								mensajeError(json.respuesta);
-																							}
-																						}
-																						,failure : function(response)
-																						{
-																							panelMask.hide();
-																							errorComunicacion();
-																						}
-																					});
+																				confirmaEmitir(jsonDatosConfirmacion);
 																			}
 																			else
 																			{
@@ -386,6 +389,8 @@ Ext.onReady(function()
 										        					
 																	
 										        				}
+           											}else{
+           												confirmaEmitir(jsonDatosConfirmacion);
            											}
 												}
 												,failure : errorComunicacion
