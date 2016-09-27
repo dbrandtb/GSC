@@ -1762,7 +1762,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			}
 			contador++;
 			}
-		    
+			CodAviso        += StringUtils.isNotBlank(CodAviso) ?" VERIFIQUE SI PUEDE REALIZAR EL ENDOSO O BIEN SI NECESITA REEXPEDIR LA POLIZA INGRESE TRAMITE MESA DE CONTROL":"";
 			exito           = StringUtils.isNotBlank(CodAviso) ? false : true;
 			respuesta       = CodAviso.trim();
 			respuestaOculta = CodAviso;
