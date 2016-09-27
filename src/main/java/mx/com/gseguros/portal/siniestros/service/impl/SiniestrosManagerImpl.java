@@ -2553,4 +2553,40 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		log.debug("obtenerFacturasTramite lista size: "+lista.size());
 		return lista;
 	}
+	
+	@Override
+	public String actualizaValoresMCSiniestros(HashMap<String, Object> datosMC) throws Exception {
+		try {
+			return siniestrosDAO.actualizaValoresMCSiniestros(datosMC);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtenerAseguradosxTworksin(String ntramite, String nfactura) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_nfactura_i" , nfactura);
+		log.debug("obtenerAseguradosxTworksin params: "+params);
+		List<Map<String,String>> tramite = siniestrosDAO.obtenerAseguradosxTworksin(params);
+		log.debug("obtenerAseguradosxTworksin tramite: "+tramite);
+		return tramite;
+	}
+
+	@Override
+	public void eliminarFaltantesAsegurados() throws Exception {
+		siniestrosDAO.eliminaFaltantesAsegurados();
+	}
+
+	@Override
+	public void getEliminaAseguradoEspecifico(String ntramite, String nfactura, String cdperson, Date feocurre) throws Exception {
+		try {
+			siniestrosDAO.eliminacionAseguradoEspecifico(ntramite,nfactura,cdperson,feocurre);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+		
+	}
 }

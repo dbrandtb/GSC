@@ -1273,6 +1273,61 @@
 				</param>
 			</result>
 		</action>
+		
+		<!-- LLAMADOS PARA LA TABLA DE APOYO-->
+		<action name="consultaDatosMesaControl" class="siniestrosAction" method="consultaDatosMesaControl">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					map1.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="guardaDatosMesaControl" class="siniestrosAction" method="guardaDatosMesaControl">
+			<interceptor-ref name="json">
+				<param name="enableSMD">true</param>
+				<param name="ignoreSMDMethodInterfaces">false</param>
+			</interceptor-ref>
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaDatosAsegurados" class="siniestrosAction" method="consultaDatosAsegurados">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="eliminarFaltantesAsegurados" class="siniestrosAction" method="eliminarFaltantesAsegurados">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+		
+		<action name="eliminarAseguradosEspecifico" class="siniestrosAction" method="eliminarAseguradosEspecifico">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

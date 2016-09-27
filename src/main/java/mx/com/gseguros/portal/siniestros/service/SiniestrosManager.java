@@ -726,4 +726,12 @@ public interface SiniestrosManager {
 	public String obtieneValidacionAsegurado(String cdperson, Date feocurre, String nmpoliza)throws Exception;
 	
 	public List<Map<String,String>> obtenerInfImporteAsegTramiteAseg(String tipopago,String ntramite, String nfactura) throws Exception;
+	
+	public String actualizaValoresMCSiniestros(HashMap<String, Object> datosMC) throws Exception;
+	
+	public List<Map<String, String>> obtenerAseguradosxTworksin(String ntramite,String nfactura) throws Exception;
+
+	public void eliminarFaltantesAsegurados() throws Exception;
+	
+	public void getEliminaAseguradoEspecifico(String ntramite, String nfactura, String cdperson, Date feocurre) throws Exception;
 }
