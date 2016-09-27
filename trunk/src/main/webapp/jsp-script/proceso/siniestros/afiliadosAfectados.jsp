@@ -6211,7 +6211,7 @@
 						,ptimpoex : record.get('PTIMPOEX')
 						,mtoArancel : record.get('PTMTOARA')
 						,aplicaIVA : record.get('APLICIVA')
-						,ptIVA 	   : '0'
+						,ptIVA 	   : record.get('PTIVA')
 					});
 				});
 				submitValues['datosTablas']=datosTablas;

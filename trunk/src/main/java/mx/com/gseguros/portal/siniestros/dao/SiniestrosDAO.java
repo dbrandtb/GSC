@@ -589,4 +589,12 @@ public interface SiniestrosDAO {
 	public String obtieneValidacionAsegurado(String cdperson, Date feocurre, String nmpoliza) throws Exception;
 	
 	public List<Map<String,String>> obtieneInfImporteAsegTramiteAseg(Map<String, String> params) throws Exception;
+	
+	public String actualizaValoresMCSiniestros(HashMap<String, Object> datosMC) throws Exception;
+	
+	public List<Map<String, String>> obtenerAseguradosxTworksin(Map<String, String> params) throws Exception;
+
+	public void eliminaFaltantesAsegurados() throws Exception;
+
+	public void eliminacionAseguradoEspecifico(String ntramite, String nfactura, String cdperson, Date feocurre) throws Exception;
 }

@@ -5873,5 +5873,109 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	public String actualizaValoresMCSiniestros(HashMap<String, Object> datosActualizacion) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ActualizaValoresMCSiniestros(this.getDataSource()), datosActualizacion);
+		return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class ActualizaValoresMCSiniestros extends StoredProcedure
+	{
+		protected ActualizaValoresMCSiniestros(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_MOV_ACTMCSINIESTROS");
+			declareParameter(new SqlParameter("pv_accion_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsubram_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor04_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor05_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor16_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor17_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor20_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor22_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor26_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",	OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	@Override
+	public List<Map<String, String>> obtenerAseguradosxTworksin(Map<String, String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerAseguradosxTworksin(this.getDataSource()), params);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtenerAseguradosxTworksin extends StoredProcedure
+	{
+		protected ObtenerAseguradosxTworksin(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_OBTIENE_ASEGXTWORKSIN");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NTRAMITE"
+					,"CDUNIECO"
+					,"CDRAMO"
+					,"ESTADO"
+					,"NMPOLIZA"
+					,"NMSOLICI"
+					,"NMSUPLEM"
+					,"NMSITUAC"
+					,"CDTIPSIT"
+					,"CDPERSON"
+					,"DESCDPERSON"
+					,"FEOCURRE"
+					,"NFACTURA"
+					,"REQAUTES"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
+
+	@Override
+	public void eliminaFaltantesAsegurados() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> mapResult = ejecutaSP(new EliminaFaltantesAsegurados(getDataSource()), params);
+	}
+	
+	protected class EliminaFaltantesAsegurados extends StoredProcedure {
+		protected EliminaFaltantesAsegurados(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_ELIMINA_ASEGFALTANTES");
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void eliminacionAseguradoEspecifico(String ntramite, String nfactura, String cdperson, Date feocurre) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_nfactura_i", nfactura);
+		params.put("pv_cdperson_i",	cdperson);
+		params.put("pv_feocurre_i", feocurre);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionAseguradoEspecifico(this.getDataSource()), params);
+	}
+	protected class EliminacionAseguradoEspecifico extends StoredProcedure {
+		protected EliminacionAseguradoEspecifico(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_BORRA_ASEGESPECIFICO");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feocurre_i", OracleTypes.DATE));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

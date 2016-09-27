@@ -1407,8 +1407,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					logger.debug(" IVA ==> {}",		datosTablas.get(i).get("ptIVA"));
 					logger.debug(" ptprecio ==> {}",datosTablas.get(i).get("ptprecio"));
 					
+					if(StringUtils.isNotBlank(datosTablas.get(i).get("ptIVA"))){
+						modIVA     = Double.parseDouble(datosTablas.get(i).get("ptIVA")); 
+					}else{
+						modIVA     = 0d; 
+					}
+					if(StringUtils.isNotBlank(datosTablas.get(i).get("ptprecio"))){
+						modImporte = Double.parseDouble(datosTablas.get(i).get("ptprecio"));  
+					}else{
+						modImporte = 0d;  
+					}
+					
 					importeTotal = importeTotal + modImporte;
-					importeIVA   = importeIVA   + modIVA ;
+					importeIVA   = importeIVA   + modIVA;
 					
 					siniestrosManager.P_MOV_MSINIVAL(
 						datosTablas.get(i).get("cdunieco"), 	datosTablas.get(i).get("cdramo"), 		datosTablas.get(i).get("estado"), 		datosTablas.get(i).get("nmpoliza"),
@@ -1417,7 +1428,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						datosTablas.get(i).get("cdconcep"), 	datosTablas.get(i).get("idconcep"), 	datosTablas.get(i).get("cdcapita"),		datosTablas.get(i).get("nmordina"), 
 						dFemovimi, 								datosTablas.get(i).get("cdmoneda"), 	datosTablas.get(i).get("ptprecio"), 	datosTablas.get(i).get("cantidad"),
 						datosTablas.get(i).get("destopor"), 	datosTablas.get(i).get("destoimp"),		datosTablas.get(i).get("ptimport"), 	datosTablas.get(i).get("ptrecobr"),
-						nmanno,									datosTablas.get(i).get("nmapunte"),		 "", 									dFeregist,
+						nmanno,									datosTablas.get(i).get("nmapunte"),		"", 									dFeregist,
 						datosTablas.get(i).get("operacion"),	datosTablas.get(i).get("ptpcioex"),		datosTablas.get(i).get("dctoimex"),		datosTablas.get(i).get("ptimpoex"),
 						datosTablas.get(i).get("mtoArancel"),	datosTablas.get(i).get("aplicaIVA"));
 			}
@@ -5899,6 +5910,96 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	/****************************METODOS DE APOYO PARA SERVIDOR *****************************************/
+	
+	public String consultaDatosMesaControl(){
+		logger.debug("Entra a consultaDatosMesaControl params de entrada :{} ",params);
+		try {
+			String ntramite = params.get("ntramite");
+			map1 = siniestrosManager.obtenerTramiteCompleto(ntramite);
+			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
+		}catch( Exception e){
+			logger.error("Error al obtener consultaDatosMesaControl : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		setSuccess(true);
+		return SUCCESS;
+	}
+	
+	public String guardaDatosMesaControl() {
+		logger.debug("Entra a guardaDatosMesaControl params de entrada :{}",params);
+		try {
+			
+			HashMap<String, Object> datosMC = new HashMap<String, Object>();
+			datosMC.put("pv_accion_i" , 	params.get("txtaccion"));
+			datosMC.put("pv_ntramite_i" , 	params.get("txtntramite"));
+			datosMC.put("pv_cdsubram_i" , 	params.get("txtsubramo"));
+			datosMC.put("pv_cdtiptra_i"  , 	params.get("txtproceso"));
+			datosMC.put("pv_status_i"  , 	params.get("txtstatus"));
+			datosMC.put("pv_cdtipsit_i"  , 	params.get("txttipsit"));
+			datosMC.put("pv_otvalor04_i"  , params.get("txtotvalor04"));
+			datosMC.put("pv_otvalor05_i"  , params.get("txtotvalor05"));
+			datosMC.put("pv_otvalor16_i"  , params.get("txtotvalor16"));
+			datosMC.put("pv_otvalor17_i"  , params.get("txtotvalor17"));
+			datosMC.put("pv_otvalor20_i"  , params.get("txtotvalor20"));
+			datosMC.put("pv_otvalor22_i"  , params.get("txtotvalor22"));
+			datosMC.put("pv_otvalor26_i"  , params.get("txtotvalor26"));
+			siniestrosManager.actualizaValoresMCSiniestros(datosMC);
+			success = true;
+			mensaje = "Tr\u00e1mite actualizado";
+		}
+		catch(Exception ex) {
+			success=false;
+			logger.error("error guardaDatosMesaControl : {}", ex.getMessage(), ex);
+			mensaje = ex.getMessage();
+		}
+		return SUCCESS;
+	}
+	
+	public String consultaDatosAsegurados(){
+		logger.debug("Entra a consultaDatosAsegurados params de entrada :{}",params);
+		try {
+			String ntramite = params.get("ntramite");
+			String nfactura = params.get("nfactura");			
+			datosValidacion = siniestrosManager.obtenerAseguradosxTworksin(ntramite,nfactura);
+			logger.debug("Respuesta datosValidacion : {}", datosValidacion);
+		}catch( Exception e){
+			logger.error("Error consultaDatosAsegurados : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String eliminarFaltantesAsegurados(){
+		logger.debug("Entra a eliminarFaltantesAsegurados params de entrada :{}",params);
+		try{
+			siniestrosManager.eliminarFaltantesAsegurados();
+			mensaje = "Asegurado eliminado";
+			success = true;
+		}catch(Exception ex){
+			logger.debug("error al eliminar registro : {}", ex.getMessage(), ex);
+			success=false;
+			mensaje=ex.getMessage();
+		}
+		return SUCCESS;
+	}
+	
+	
+	
+	public String eliminarAseguradosEspecifico(){
+		logger.debug("Entra a eliminarAseguradosEspecifico params de entrada :{}",params);
+		try{
+			siniestrosManager.getEliminaAseguradoEspecifico(params.get("ntramite"),params.get("nfactura"),params.get("cdperson"),renderFechas.parse(params.get("ntramite")));
+			mensaje = "Asegurado eliminado";
+			success = true;
+		}catch(Exception ex){
+			logger.debug("error al eliminarAseguradosEspecifico: {}", ex.getMessage(), ex);
+			success=false;
+			mensaje=ex.getMessage();
+		}
+		return SUCCESS;
+	}
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;
