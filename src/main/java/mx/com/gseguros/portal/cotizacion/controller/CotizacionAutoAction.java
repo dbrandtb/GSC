@@ -1750,17 +1750,17 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			String feAutorizacion = Utils.join(feini.substring(8,10),"/",feini.substring(5,7),"/",feini.substring(0,4));
 			
 			String[] value_split = numSerie.split("\\|");
-			
+			int contador= 1;
 			for (String serie : value_split) {
 			
 			iCodAviso = cotizacionAutoManager.obtieneValidacionRetroactividad(serie, renderFechas.parse(feAutorizacion));
 			
 			if(iCodAviso.trim().length()>0){//Se agrega validacion para iterar si es una carga de flotillas o individual
 				
-				CodAviso +=  iCodAviso+"<br/>";
+				CodAviso +=  "EL INCISO : "+contador+" "+iCodAviso+"<br/>";
 				
 			}
-			
+			contador++;
 			}
 		    
 			exito           = StringUtils.isNotBlank(CodAviso) ? false : true;

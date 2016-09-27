@@ -331,13 +331,34 @@ Ext.onReady(function()
 																	var jsonNumSerie=Ext.decode(response.responseText);
 												        	    	if(jsonNumSerie.exito!=true)
 												        	    	{
-												                       debug('jsonNumSerie.respuesta**** -->',jsonNumSerie.respuesta);
-																	   mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
-																								
-												        	    	}
+												        	    		if(!RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL))
+													        	    		 {
+													        	    		 		mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+														        	    			
+														        				}else{
+														        					var callbackRemesa = function()
+																					{
+																						marendNavegacion(2);
+																					};
+																					mensajeCorrecto('Endoso generado','Endoso generado',function()
+																					{
+																						_generarRemesaClic(
+																							true
+																							,_p36_smap1.CDUNIECO
+																							,_p36_smap1.CDRAMO
+																							,_p36_smap1.ESTADO
+																							,_p36_smap1.NMPOLIZA
+																							,callbackRemesa
+																						);
+																					});
+														        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
+														        					
+																					
+														        				}
+	                       											}
 																}
 																,failure : errorComunicacion
-															});	
+															});
 
 		                                        }
 		                                        else
