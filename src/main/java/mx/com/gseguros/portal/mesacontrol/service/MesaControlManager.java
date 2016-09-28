@@ -95,6 +95,18 @@ public interface MesaControlManager
      * @throws Exception
      */
     public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif, String cdmoddoc) throws Exception;
+
+    /**
+     * Regenera Documentos a nivrl endoso
+     * @param cdunieco
+     * @param cdramo
+     * @param estado
+     * @param nmpoliza
+     * @param nmsuplem
+     * @return
+     * @throws Exception
+     */
+    public boolean regeneraDocumentosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
     
     /**
 	 * Se pone un status al tramite y se retorna el actual, no se registra en los historicos

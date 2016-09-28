@@ -291,6 +291,10 @@ public class MesaControlManagerImpl implements MesaControlManager
 	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif, String cdmoddoc) throws Exception{
 		return mesaControlDAO.regeneraReporte(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cddocume, nmsituac, nmcertif, cdmoddoc);
 	}
+
+	public boolean regeneraDocumentosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
+		return mesaControlDAO.regeneraDocumentosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+	}
 	
 	public String marcarTramiteComoStatusTemporal(String ntramite, String statusTemporal) throws Exception{
 		return mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite, statusTemporal);

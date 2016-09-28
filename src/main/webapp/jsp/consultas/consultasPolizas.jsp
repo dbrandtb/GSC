@@ -26,6 +26,8 @@
             var _URL_LOADER_VER_EXCLUSIONES       = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
             var _URL_LOADER_VER_TATRISIT          = '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit" />';
             var _URL_LOADER_HISTORIAL_RECLAMACIONES= '<s:url namespace="/siniestros"	 action="includes/historialReclamaciones" />';
+            
+            var _URL_REGENERA_DOCUMENTOS_ENDOSO   = '<s:url namespace="/documentos"      action="regeneraDocumentosEndoso" />';
 
             var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             
@@ -49,7 +51,10 @@
             var _reporteEdoCtaSin   = '<s:text name="rdf.siniestro.estadocuenta.nombre" />';
             var _urlViewDoc         = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
             
-            
+            var _botonesGrid = [
+            		<s:property value="itemMap.gridbuttons" />
+            	];
+            function regeneraDocsConsulta (){}
             
         </script>
         <script type="text/javascript" src="${ctx}/resources/scripts/consultaPolizas/consultasPolizas.js?${now}"></script>

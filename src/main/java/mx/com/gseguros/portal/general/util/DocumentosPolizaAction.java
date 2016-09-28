@@ -127,6 +127,27 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 
 		return SUCCESS;
 	}
+
+	/**
+	 * Regenera documentos desde consulta de polizas a nivel suplemento  
+	 */
+	public String regeneraDocumentosEndoso() {
+		
+		logger.debug("**********  Parametros de entrada para regenerar documentos ***********");
+		logger.debug("smap1: " + smap1);
+		
+		try {
+			success = mesaControlManager.regeneraDocumentosEndoso(smap1.get("cdunieco"), smap1.get("cdramo"), smap1.get("estado"), 
+					smap1.get("nmpoliza"), smap1.get("nmsuplem"));
+			
+		} catch (Exception e) {
+			logger.error("Error al regenerar el reporte "+ smap1, e);
+			addActionError(e.getMessage());
+			success = false;
+		}
+		
+		return SUCCESS;
+	}
 	
 	/**
 	 * Reintenta la regeneracion de un reporte regresa false si no hace el reintento. (se maneja un solo reintento para evitar recursividad)

@@ -1089,6 +1089,62 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
+
+	@Override
+	public boolean regeneraDocumentosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cddevcia" , null);
+		params.put("cdgestor" , null);
+		
+		ejecutaSP(new RegeneraDocumentosEndoso(getDataSource()),params);
+		
+		ejecutaSP(new RegeneraRecibosEndoso(getDataSource()),params);
+		
+		return true;
+	}
+	
+	protected class RegeneraDocumentosEndoso extends StoredProcedure
+	{
+		protected RegeneraDocumentosEndoso(DataSource dataSource)
+		{
+			super(dataSource,"pkg_db_report.pr_reg_document");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cddevcia"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgestor"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_cdorddoc_o"      , OracleTypes.NUMERIC));
+			String cols[]=new String[]{};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"        , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"         , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class RegeneraRecibosEndoso extends StoredProcedure
+	{
+		protected RegeneraRecibosEndoso(DataSource dataSource)
+		{
+			super(dataSource,"pkg_db_report.pr_reg_link_rec");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"        , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"         , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	/*******************************************************************/
 	/*  Se agrega pkg_db_report.P_REVERSA_STATUS_IMPRESO
