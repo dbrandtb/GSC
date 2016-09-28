@@ -1271,6 +1271,35 @@ Ext.onReady(function() {
     });
     
     
+    var elementosTbar  = [
+                          {
+                       	   xtype      : 'textfield',
+                       	   fieldLabel : '<div style="color: white">Nombre</div>',
+//                       	   style      : 'margin:5px',
+//                       	   labelWidth : 100,
+//                              width      : 300,
+                              heigth	  : 10,
+                              maxLength  : 50,
+                              id		  : 'nombreAsegurado'
+                          },
+                          {
+                       	   xtype   : 'button', 
+                       	   text    : 'Buscar',
+                       	   style   : 'margin:5px',
+                       	   icon    : _CONTEXT+'/resources/fam3icons/icons/zoom.png',
+                       	   id      : 'buscarAsegurado',
+                              handler : function(){
+                                  var formBusqueda = panelBusqueda.down('form').getForm();
+                                  var params = formBusqueda.getValues();
+                                  params['params.nombre'] = Ext.getCmp('nombreAsegurado').getValue();                    
+                                  debug('params',params);
+                                  cargaStoreSuplementos(params);
+                           	 }   
+                          }
+                         ];
+    
+    elementosTbar = elementosTbar.concat(_botonesGrid);
+    
     // SECCION DE INFORMACION GENERAL:
     
     var panelBusqueda = Ext.create('Ext.Panel', {
@@ -1634,32 +1663,7 @@ Ext.onReady(function() {
             items : [
                 gridSuplementos
             ],
-            tbar: [
-                   {
-                	   xtype      : 'textfield',
-                	   fieldLabel : '<div style="color: white">Nombre</div>',
-//                	   style      : 'margin:5px',
-//                	   labelWidth : 100,
-//                       width      : 300,
-                       heigth	  : 10,
-                       maxLength  : 50,
-                       id		  : 'nombreAsegurado'
-                   },
-                   {
-                	   xtype   : 'button', 
-                	   text    : 'Buscar',
-                	   style   : 'margin:5px',
-                	   icon    : _CONTEXT+'/resources/fam3icons/icons/zoom.png',
-                	   id      : 'buscarAsegurado',
-                       handler : function(){
-                           var formBusqueda = panelBusqueda.down('form').getForm();
-                           var params = formBusqueda.getValues();
-                           params['params.nombre'] = Ext.getCmp('nombreAsegurado').getValue();                    
-                           debug('params',params);
-                           cargaStoreSuplementos(params);
-                    	 }   
-                   }
-                  ]
+            tbar: elementosTbar
         },
         {
             //title:
@@ -1897,5 +1901,48 @@ Ext.onReady(function() {
         windowVerRep.center();
     }   
     
+    
+    /**
+     * Regenerar documentos por endoso
+     */
+    regeneraDocsConsulta = function (button, evt) {
+    	
+    	debug('<<<<<>>>>> Parametros regenrar documentos Endoso ::: ');
+    	
+    	var selRecord;
+    	if(gridSuplementos.getSelectionModel().hasSelection()){
+    		selRecord = gridSuplementos.getSelectionModel().getLastSelected();
+    		debug('>>>>>> Record Seleccionado : ',selRecord);
+    	}else{
+    		mensajeWarning('Debe seleccionar un registro para esta acci&oacute;n');
+    		return;
+    	}
+    	
+        Ext.Ajax.request({
+        	url       : _URL_REGENERA_DOCUMENTOS_ENDOSO,       	
+            params    : {
+            	'smap1.cdunieco' : selRecord.get('cdunieco'),
+            	'smap1.cdramo' : selRecord.get('cdramo'),
+            	'smap1.estado' : selRecord.get('estado'),
+            	'smap1.nmpoliza' : selRecord.get('nmpoliza'),
+            	'smap1.nmsuplem' : selRecord.get('nmsuplem'),
+            	'smap1.nsuplogi' : selRecord.get('nsuplogi')
+            },
+            callback  : function (options, success, response){
+                if(success){
+                    var jsonResponse = Ext.decode(response.responseText);
+                    
+                    if(jsonResponse.success){
+                    	mensajeCorrecto('Aviso','Ejecuci&oacuten correcta en regenerar documentos.');
+                    }else{
+                    	showMessage('Error', 'Error al regenerar documentos.', Ext.Msg.OK, Ext.Msg.ERROR);
+                    }
+                    
+                }else{
+                    showMessage('Error', 'Error al regenerar documentos.', Ext.Msg.OK, Ext.Msg.ERROR);
+                }
+            }
+        });
+    };
     
 });

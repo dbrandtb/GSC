@@ -33,6 +33,7 @@ import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.ConveniosManager;
+import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.utils.Utils;
@@ -80,6 +81,10 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
+	
+	@Autowired
+	private PantallasManager               pantallasManager;
+	
 	@Autowired
 	private KernelManagerSustituto kernelManager;
 
@@ -151,6 +156,19 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		if (cdRolSistema.equals(RolSistema.CONSULTA_INFORMACION.getCdsisrol())) {
 			usuarioCallCenter = true;
 		}
+		
+		logger.debug("<<<<<<>>>>>> Entrando a Consulta de Polizas <<<<<<>>>>>>");
+		
+		List<ComponenteVO>ltgridbuttons=pantallasManager.obtenerComponentes(
+				null, null, null,
+				null, null, cdRolSistema,
+				"BOTON_REGENERA_DOC", "GRIDBUTTONS", null);
+		
+		GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+		gc.generaComponentes(ltgridbuttons, true, false, false, false, false, true);
+		
+		itemMap=new HashMap<String,Item>(0);
+		itemMap.put("gridbuttons",gc.getButtons());
 
 		return SUCCESS;
 	}

@@ -267,6 +267,18 @@ public interface MesaControlDAO
 	 * @throws Exception
 	 */
 	public boolean regeneraReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cddocume, String nmsituac, String nmcertif, String cdmoddoc) throws Exception;
+
+	/**
+	 * Regenera documentos a nivel suplemento
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean regeneraDocumentosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
 	
 	/**
 	 * Reversa por tramite dado impreso

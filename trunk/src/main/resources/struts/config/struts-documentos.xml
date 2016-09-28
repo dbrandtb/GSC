@@ -46,6 +46,10 @@
         <action name="regeneraReporte" class="documentosPolizaAction" method="regeneraReporte">
             <result name="success" type="json" />
         </action>
+
+        <action name="regeneraDocumentosEndoso" class="documentosPolizaAction" method="regeneraDocumentosEndoso">
+            <result name="success" type="json" />
+        </action>
         
         <action name="fusionarDocumentos" class="documentosPolizaAction" method="fusionarDocumentos">
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
