@@ -1918,6 +1918,7 @@ Ext.onReady(function() {
     		return;
     	}
     	
+    	_mask('Regenerando Documentos...');
         Ext.Ajax.request({
         	url       : _URL_REGENERA_DOCUMENTOS_ENDOSO,       	
             params    : {
@@ -1929,11 +1930,12 @@ Ext.onReady(function() {
             	'smap1.nsuplogi' : selRecord.get('nsuplogi')
             },
             callback  : function (options, success, response){
+            	_unmask();
                 if(success){
                     var jsonResponse = Ext.decode(response.responseText);
                     
                     if(jsonResponse.success){
-                    	mensajeCorrecto('Aviso','Ejecuci&oacuten correcta en regenerar documentos.');
+                    	mensajeCorrecto('Aviso','Ejecuci&oacuten correcta al regenerar documentos.');
                     }else{
                     	showMessage('Error', 'Error al regenerar documentos.', Ext.Msg.OK, Ext.Msg.ERROR);
                     }
