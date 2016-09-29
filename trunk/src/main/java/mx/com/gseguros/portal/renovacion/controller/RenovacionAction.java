@@ -2,16 +2,20 @@ package mx.com.gseguros.portal.renovacion.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
 import mx.com.gseguros.utils.Utils;
 
@@ -35,6 +39,8 @@ public class RenovacionAction extends PrincipalCoreAction
 	
 	//Dependencias inyectadas
 	private RenovacionManager renovacionManager;
+	private CotizacionManager cotizacionManager;
+	private ConsultasManager  consultasManager;
 	
 	public String pantallaRenovacion()
 	{
@@ -459,11 +465,21 @@ public class RenovacionAction extends PrincipalCoreAction
 			String cdramo   = params.get("cdramo");
 			String estado   = params.get("estado");
 			String nmpoliza = params.get("nmpoliza");
-			String ntramite = String.valueOf(renovacionManager.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza));
-			Map<String, String> result = new HashMap<String, String>();
-			result.put("ntramite", ntramite);
-			slist1 = new ArrayList<Map<String,String>>();
-			slist1.add(result);
+			UserVO usuario  = Utils.validateSession(session);
+			ManagerRespuestaSlistVO resp = renovacionManager.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza, usuario.getUser());
+			logger.info(
+					new StringBuilder()
+					.append("\n###### resp ")
+					.append(resp)
+					.toString()
+					);
+//			Map<String, String> result = new HashMap<String, String>();
+//			result.put("ntramite", ntramite);
+//			result.put("cambioCuadro",cotizacionManager.cargarBanderaCambioCuadroPorProducto(cdramo)?"S":"N");
+//			result.put("cdpercli"    ,consultasManager.recuperarCdpersonClienteTramite(ntramite));
+//			slist1 = new ArrayList<Map<String,String>>();
+			setSlist1(resp.getSlist());
+//			slist1.add(resp.getSlist().get(0));
 		}catch(Exception ex){
 			respuesta = Utils.manejaExcepcion(ex);
 		}

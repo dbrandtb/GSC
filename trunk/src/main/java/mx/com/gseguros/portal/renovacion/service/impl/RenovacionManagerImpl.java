@@ -2,11 +2,15 @@ package mx.com.gseguros.portal.renovacion.service.impl;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -14,6 +18,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -45,6 +50,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 	
 	@Autowired
 	private DocumentosManager documentosManager;
+	
+	@Autowired
+	private KernelManagerSustituto kernelManager;
 	
 	@Override
 	public ManagerRespuestaImapVO pantallaRenovacion(String cdsisrol)
@@ -470,11 +478,11 @@ public class RenovacionManagerImpl implements RenovacionManager
 			imap.put("gridColumns" , gc.getColumns());
 			
 			List<ComponenteVO> itemsFormularioContratante=pantallasDAO.obtenerComponentes(
-					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_CONTRATANTE",null);
-			logger.info(Utils.log("itemsFormularioContratante",itemsFormularioContratante));
+					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_CONTRATANTE",null);			
 			gc.generaComponentes(itemsFormularioContratante, true, true, true, false, false, false);		
 			imap.put("itemsFormularioContratante"  , gc.getItems());
 			imap.put("fieldsFormularioContratante"  , gc.getFields());
+			
 			List<ComponenteVO> itemsFormularioPoliza = pantallasDAO.obtenerComponentes(
 					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_POLIZAS",null);			
 			gc.generaComponentes(itemsFormularioPoliza, true, true, false, true, true, false);			
@@ -490,6 +498,12 @@ public class RenovacionManagerImpl implements RenovacionManager
 					null,null,"4",null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","EDITAR_DOMICILIO",null);				
 			gc.generaComponentes(componentesEditarDomicilio, true, false, true, false, false, false);
 			imap.put("itemsEditarDomicilio" , gc.getItems());
+			
+			//TODO
+			//Quitar esta parte para obtenerla cuando se dispare la renovacion
+			List<ComponenteVO> listaTatrisit = kernelManager.obtenerTatripol(new String[]{"2","SL","I"});
+			gc.generaComponentes(listaTatrisit, true, false, true, false, false, false);
+			imap.put("itemsTatrisit", gc.getItems());
 			
 		}
 		catch(Exception ex)
@@ -612,11 +626,12 @@ public class RenovacionManagerImpl implements RenovacionManager
 	}
 	
 	@Override
-	public String renuevaPolizaIndividual(
+	public ManagerRespuestaSlistVO renuevaPolizaIndividual(
 			String cdunieco,
 			String cdramo,
 			String estado,
-			String nmpoliza)
+			String nmpoliza,
+			String usuario)
 	{
 		logger.info(
 				new StringBuilder()
@@ -626,15 +641,38 @@ public class RenovacionManagerImpl implements RenovacionManager
 				.append("\n@@@@@@ cdramo=").append(cdramo)
 				.append("\n@@@@@@ estado=").append(estado)
 				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ usuario=").append(usuario)
 				.toString());
 		
 		//obtener componentes
+		ManagerRespuestaSlistVO lista = new ManagerRespuestaSlistVO();
 		String paso  = null;
 		String ntramite = ""; 
 		try
 		{	
 			paso     = "enviando para renovar poliza";
-			ntramite = renovacionDAO.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza);
+			ntramite = renovacionDAO.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza, usuario);
+			List<Map<String, String>> slist = renovacionDAO.obtenerPolizaCdpersonTramite(ntramite);
+			slist.get(0).put("ntramite", ntramite);
+			Map<String,String> paramGetValopol = new HashMap<String,String>(0);
+			paramGetValopol.put("pv_cdunieco",cdunieco);
+			paramGetValopol.put("pv_cdramo"  ,cdramo);
+			paramGetValopol.put("pv_estado"  ,estado);
+			paramGetValopol.put("pv_nmpoliza",nmpoliza);
+			Map<String,Object> parametrosCargados = kernelManager.pGetTvalopol(paramGetValopol);
+			if(parametrosCargados.isEmpty()){
+				throw new Exception("No se obtuvo ningun atributo variable a nivel de poliza");
+			}
+			Iterator it = parametrosCargados.entrySet().iterator();			
+			while(it.hasNext())
+			{
+				Entry<String,Object> entry = (Map.Entry<String, Object>) it.next();
+				slist.get(0).put("pv_"+entry.getKey(), (String)entry.getValue());
+			}
+			if(slist.size() > 0){
+				lista.setSlist(slist);
+				lista.setExito(true);
+			}
 			logger.info(
 					new StringBuilder()
 					.append("\n@@@@@@ paso=").append(paso)
@@ -647,7 +685,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 					.append("\n@@@@@@ paso=").append(paso)
 					.toString());
 		}
-		return ntramite;
+		return lista;
 	}
 	
 	//Getters y setters
