@@ -40,10 +40,11 @@ public interface RenovacionManager
 			String fecfin,
 			String status
 			);
-	public String renuevaPolizaIndividual(
+	public ManagerRespuestaSlistVO renuevaPolizaIndividual(
 			String cdunieco,
 			String cdramo,
 			String estado,
-			String nmpoliza
+			String nmpoliza,
+			String usuario
 			);
 }

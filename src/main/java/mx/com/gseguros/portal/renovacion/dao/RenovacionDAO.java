@@ -64,5 +64,8 @@ public interface RenovacionDAO
 			String cdunieco,
 			String cdramo,
 			String estado,
-			String nmpoliza)throws Exception;
+			String nmpoliza,
+			String usuario)throws Exception;
+	
+	public List<Map<String,String>> obtenerPolizaCdpersonTramite(String ntramite)throws Exception;
 }
