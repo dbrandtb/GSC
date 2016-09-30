@@ -38,7 +38,7 @@ public interface ExplotacionDocumentosManager
 	 * @param cdsisrol
 	 * @param test
 	 * @param esDuplex Indica si la impresora soporta la opcion duplex (doble cara)
-	 * @return lista de archivos no encontrados
+	 * @return Archivo con la lista de nombres de archivos no encontrados
 	 * @throws Exception
 	 */
 	public File imprimirLote(
