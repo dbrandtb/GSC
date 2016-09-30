@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.general.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -373,7 +374,116 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			compile();
 		}
 	}
+	
+	@Override
+	public String guardaImpresorasUsuario(String cdusuario,
+										  String ip,
+										  String tipo, 
+										  String descripcion,
+										  String swactivo,
+										  String impAsig,
+										  String nombre)
+			throws Exception {
+		HashMap<String, String> params=new HashMap<String, String>();
+		
+		params.put("PV_CDUSUARIO_I", cdusuario);
+		params.put("PV_IP_I", ip);
+		params.put("PV_TIPO_I", tipo);
+		params.put("PV_DESCRIPCION_I", descripcion);
+		params.put("PV_SWACTIVO_I", swactivo);
+		params.put("PV_IMP_ASIG_I", impAsig);
+		params.put("PV_NOMBRE_I", nombre);
+		logger.debug("Params guardaImpresorasUsuario: "+ params);
+		Map<String, Object> mapResult = ejecutaSP(new GuardaImpresorasUsuario(getDataSource()), params);
+		logger.debug("## termino");
+		return (String) mapResult.get("PV_TITLE_O");
+	}
+	
+	protected class GuardaImpresorasUsuario extends StoredProcedure {
 
+		protected GuardaImpresorasUsuario(DataSource dataSource) {
+			super(dataSource, "Pkg_Tabapoyo.P_INSERTA_IMPRESORA_USUARIO");
+			
+			declareParameter(new SqlParameter("PV_CDUSUARIO_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_IP_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_TIPO_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NOMBRE_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_DESCRIPCION_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_SWACTIVO_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_IMP_ASIG_I", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public String habilitaDeshabilitaImpresora(String pv_habilita,
+										  String pv_impresora_i,
+										  String pv_CdUsuari_i)
+			throws Exception {
+		HashMap<String, String> params=new HashMap<String, String>();
+		
+		params.put("pv_habilita",pv_habilita );
+		params.put("pv_impresora_i", pv_impresora_i);
+		params.put("pv_CdUsuari_i", pv_CdUsuari_i);
+		logger.debug("Params habilitaDeshabilitaImpresora: "+ params);
+		Map<String, Object> mapResult = ejecutaSP(new HabilitaDeshabilitaImpresora(getDataSource()), params);
+		
+		return (String) mapResult.get("PV_TITLE_O");
+	}
+	
+	protected class HabilitaDeshabilitaImpresora extends StoredProcedure {
+
+		protected HabilitaDeshabilitaImpresora(DataSource dataSource) {
+			super(dataSource, "Pkg_Tabapoyo.P_HABILITA_IMPRESORA");
+			
+			declareParameter(new SqlParameter("pv_habilita", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_impresora_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_CdUsuari_i", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String insertaActualizaImpresora(String pv_nombre_i,
+										  String pv_ip_i,
+										  String pv_tipo_i,
+										  String pv_descripcion_i,
+										  String pv_swactivo_i)
+			throws Exception {
+		HashMap<String, String> params=new HashMap<String, String>();
+		
+		params.put("pv_nombre_i",pv_nombre_i );
+		params.put("pv_ip_i", pv_ip_i);
+		params.put("pv_tipo_i", pv_tipo_i);
+		params.put("pv_descripcion_i", pv_descripcion_i);
+		params.put("pv_swactivo_i", pv_swactivo_i);
+		logger.debug("Params habilitaDeshabilitaImpresora: "+ params);
+		Map<String, Object> mapResult = ejecutaSP(new InsertaActualizaImpresora(getDataSource()), params);
+		
+		return (String) mapResult.get("PV_TITLE_O");
+	}
+	
+	protected class InsertaActualizaImpresora extends StoredProcedure {
+
+		protected InsertaActualizaImpresora(DataSource dataSource) {
+			super(dataSource, "Pkg_Tabapoyo_cesar.P_INSERTA_ACTUALIZA_IMPRESORA");
+			
+			declareParameter(new SqlParameter("pv_nombre_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ip_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_descripcion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swactivo_i", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	
 	@Override
 	public List<Map<String, String>> obtieneProductosAgente(Map params) throws Exception {
 		Map<String, Object> resultado = ejecutaSP(new ObtieneProductosAgente(getDataSource()), params);
@@ -394,6 +504,31 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String, String>> obtieneImpresorasUsuario(String cdusuario) throws Exception{
+		;
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("pv_cdusuario_i", cdusuario);
+		
+		Map<String,Object> resultado=ejecutaSP(new ObtieneImpresorasUsuario(getDataSource()),params);
+		return (List<Map<String, String>>) resultado.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtieneImpresorasUsuario extends StoredProcedure{
+		protected ObtieneImpresorasUsuario(DataSource dataSource){
+			super(dataSource, "Pkg_Tabapoyo.P_GET_IMPRESORAS_USR");
+			declareParameter(new SqlParameter("pv_cdusuario_i", OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"IMPRESORA" ,"IP","TIPO", "DESCRIPCION" , "DISPONIBLE","ALTA"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 	
 	@Override
 	public String guardaProductoAgente(Map params)

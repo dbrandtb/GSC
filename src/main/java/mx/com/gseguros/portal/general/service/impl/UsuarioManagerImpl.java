@@ -16,6 +16,7 @@ import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
 import mx.com.gseguros.portal.general.service.UsuarioManager;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 
@@ -69,6 +70,157 @@ public class UsuarioManagerImpl implements UsuarioManager {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	
+	}
+	@Override
+	public List<Map<String, String>> obtieneImpresorasUsuario(String cdusuario) throws Exception{
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtieneImpresorasUsuario @@@@@@"
+				,"\n@@@@@@ params=" , cdusuario
+				));
+		List<Map<String, String>> imp=null;
+		String paso=null;
+		try {
+			paso="Obteniendo impresoras";
+			imp=usuarioDAO.obtieneImpresorasUsuario(cdusuario);
+			
+			paso="Convertiendo booleanos y formato";
+			for(Map<String, String> m: imp){
+				m.put("ALTA", m.get("ALTA").equalsIgnoreCase("S")?"true":"false");
+				m.put("DISPONIBLE", m.get("DISPONIBLE")!=null && m.get("DISPONIBLE").equalsIgnoreCase("S")?"SI":"NO");
+				m.put("IMPRESORA",m.get("IMPRESORA").toUpperCase());
+				m.put("DESCRIPCION",m.get("DESCRIPCION").toUpperCase());
+				
+			}
+			logger.debug(Utils.join(
+					"\n@@@@@ imp= ",imp));
+			
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ obtieneImpresorasUsuario @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return imp;
+	}
+	
+	@Override
+	public String habilitaDeshabilitaImpresora(String pv_habilita,
+			  String pv_impresora_i,
+			  String pv_CdUsuari_i) throws Exception{
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ habilitaDeshabilitaImpresora @@@@@@"
+				,"\n@@@@@@ pv_habilita=" , pv_habilita
+				,"\n@@@@@@ pv_impresora_i=" , pv_impresora_i
+				,"\n@@@@@@ pv_CdUsuari_i=" , pv_CdUsuari_i
+				));
+		
+		String paso=null,mensaje=null;
+		try{
+			paso="Haciendo peticion DAO";
+			mensaje=usuarioDAO.habilitaDeshabilitaImpresora(pv_habilita, pv_impresora_i, null);
+			
+		}catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@ habilitaDeshabilitaImpresora @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return mensaje;
+		
+	}
+	
+	@Override
+	public String insertaActualizaImpresora(String pv_nombre_i,
+											  String pv_ip_i,
+											  String pv_tipo_i,
+											  String pv_descripcion_i,
+											  String pv_swactivo_i)
+													  	throws Exception{
+		
+		
+	
+	logger.debug(Utils.join(
+			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+			,"\n@@@@@@ insertaActualizaImpresora @@@@@@"
+			,"\n@@@@@@ pv_nombre_i=" , pv_nombre_i
+			,"\n@@@@@@ pv_ip_i=" , pv_ip_i
+			,"\n@@@@@@ pv_tipo_i=" , pv_tipo_i
+			,"\n@@@@@@ pv_descripcion_i=" , pv_descripcion_i
+			,"\n@@@@@@ pv_swactivo_i=" , pv_swactivo_i
+			));
+	
+				String paso=null,mensaje=null;
+				try{
+					paso="Haciendo peticion DAO";
+					mensaje=usuarioDAO.insertaActualizaImpresora(pv_nombre_i, pv_ip_i, pv_tipo_i, pv_descripcion_i, pv_swactivo_i);
+					
+				}catch (Exception ex) {
+					Utils.generaExcepcion(ex, paso);
+				}
+				
+				
+				logger.debug(Utils.join(
+			 "\n@@@@@@ insertaActualizaImpresora @@@@@@"
+			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+			));
+	return mensaje;
+		
+		
+		
+		
+	}
+	
+	@Override
+	public boolean guardaImpresorasUsuario(String cdusuario,
+										   String impresora,
+										   String ip,
+										   String tipo,
+										   String descripcion,
+										   String disponible,
+										   String alta) throws Exception{
+		
+		
+		logger.debug(Utils.join(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardaImpresorasUsuario @@@@@@"
+				,"\n@@@@@@ cdusuario= " , cdusuario
+				,"\n@@@@@@ impresora= " , impresora
+				,"\n@@@@@@ ip= " , ip
+				,"\n@@@@@@ tipo= " , tipo
+				,"\n@@@@@@ descripcion= " , descripcion
+				,"\n@@@@@@ disponible= " , disponible
+				,"\n@@@@@@ alta= " , alta
+				));
+		boolean allUpdated = true;
+		String paso=null;
+
+		try{
+			
+			paso="Guarda impresoras";
+			usuarioDAO.guardaImpresorasUsuario(cdusuario, ip, tipo, descripcion, disponible, alta, impresora);
+
+    		
+        		
+		}catch(Exception ex)
+		{
+			
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.join(
+				 "\n@@@@@@ guardaImpresorasUsuario @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		
+		return allUpdated;
 	}
 	
 	@Override

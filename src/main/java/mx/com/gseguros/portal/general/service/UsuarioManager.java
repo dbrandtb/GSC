@@ -31,4 +31,25 @@ public interface UsuarioManager {
     public List<RamaVO> getClientesRoles(String user)throws Exception;
 
     public List<UserVO> getAttributesUser(String user) throws Exception;
+    
+    public List<Map<String, String>> obtieneImpresorasUsuario(String cdusuario) throws Exception;
+
+    public boolean guardaImpresorasUsuario(String cdusuario,
+			   String impresora,
+			   String ip,
+			   String tipo,
+			   String descripcion,
+			   String disponible,
+			   String alta) throws Exception;
+    
+    public String habilitaDeshabilitaImpresora(String pv_habilita,
+			  String pv_impresora_i,
+			  String pv_CdUsuari_i) throws Exception;
+    
+    public String insertaActualizaImpresora(String pv_nombre_i,
+			  String pv_ip_i,
+			  String pv_tipo_i,
+			  String pv_descripcion_i,
+			  String pv_swactivo_i)
+					  	throws Exception;
 }

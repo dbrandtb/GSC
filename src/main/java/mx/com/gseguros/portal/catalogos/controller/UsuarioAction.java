@@ -13,6 +13,7 @@ import mx.com.gseguros.portal.general.model.UsuarioVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.UsuarioManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -210,6 +211,184 @@ public class UsuarioAction extends PrincipalCoreAction {
     	
     	return SUCCESS;
     }
+    
+    public String obtieneImpresorasUsuario() throws Exception{
+    	
+    	try{
+    		logger.debug(Utils.log(
+    				"\n#######################################",
+    				"\n#######################################",
+    				"\n###### obtieneImpresorasUsuario ######",
+    				"\n###### params=",params,"        ######"
+    				));
+    		
+
+    		loadList=usuarioManager.obtieneImpresorasUsuario(params.get("pv_cdusuario_i"));
+    		
+  		
+    		
+    		success =  true;
+    		
+    	}catch( Exception e){
+    		errorMessage = Utils.manejaExcepcion(e);
+       		success =  false;
+       		return SUCCESS;
+       	}
+       	success = true;
+       	
+       	logger.debug(Utils.log(
+				 "\n###### obtieneImpresorasUsuario ######"
+				,"\n#########################"
+				));
+    	
+    	
+    	return SUCCESS;
+    }
+    
+    
+    public String guardaEditaImpresora(){
+    	
+    	
+    	logger.debug(Utils.log(
+				"\n##########################################",
+				"\n##########################################",
+				"\n###### guardaEditaImpresora         ######",
+				"\n###### saveList=",saveList,"        ######"
+				));
+    	
+    	
+    	try{
+    		Utils.validate(saveList,"No se recibierRon datos");
+    		
+    		for(Map<String, String> imp : saveList){
+    			
+        		String impresora=imp.get("IMPRESORA");
+        		String ip=imp.get("IP");
+        		String tipo=imp.get("TIPO");
+        		String descripcion=imp.get("DESCRIPCION");
+        		Utils.validate(impresora,"No se recibió impresora",
+        				ip,"No se recibió ip",
+        				tipo,"No se recibió tipo",
+        				descripcion,"No se recibió descripcion");
+        		
+        		errorMessage=usuarioManager.insertaActualizaImpresora(impresora, ip, tipo, descripcion, "S");
+        	}
+        	
+    	}catch( Exception e){
+    		errorMessage = Utils.manejaExcepcion(e);
+       		success =  false;
+       		return SUCCESS;
+       	}
+    	
+    	logger.debug(Utils.log(
+				 "\n###### guardaEditaImpresora         ######"
+				,"\n##########################################"
+				));
+    	
+    	success =  true;
+    	return SUCCESS;
+    }
+    
+    public String habilitaDeshabilitaImpresora(){
+    	
+    	
+    	logger.debug(Utils.log(
+				"\n##########################################",
+				"\n##########################################",
+				"\n###### habilitaDeshabilitaImpresora ######",
+				"\n###### saveList=",saveList,"        ######"
+				));
+    	try{
+    		Utils.validate(saveList,"No se recibieron datos");
+    		
+    		for(Map<String, String> imp : saveList){
+    			
+        		String pv_habilita=imp.get("enable");
+        		String pv_impresora_i=imp.get("IMPRESORA");
+        		Utils.validate(pv_habilita,"No se recibió habilita",
+        				pv_impresora_i,"No se recibió pv_impresora_i");
+        		
+        		errorMessage=usuarioManager.habilitaDeshabilitaImpresora(pv_habilita, pv_impresora_i.toLowerCase(), null);
+        	}
+        	
+    	}catch( Exception e){
+    		errorMessage = Utils.manejaExcepcion(e);
+       		success =  false;
+       		return SUCCESS;
+       	}
+    	
+    	
+    	
+    	
+    	logger.debug(Utils.log(
+				 "\n###### habilitaDeshabilitaImpresora ######"
+				,"\n##########################################"
+				));
+    	success =  true;
+    	return SUCCESS;
+    }
+    
+    public String guardaImpresorasUsuario(){// por el momento no sirve
+   		
+   		try{
+   			
+   			logger.debug(Utils.log(
+    				"\n#######################################",
+    				"\n#######################################",
+    				"\n###### guardaImpresorasUsuario ######",
+    				"\n###### params=",params,"        ######",
+    				"\n###### saveList=",saveList,"        ######"
+    				));
+    		
+    		Utils.validate(params , "No se recibieron par\u00E1metros");
+    		String cdusuario=params.get("CDUSUARIO");
+    		for(Map<String, String> imp : saveList){
+    			
+        		String impresora=imp.get("IMPRESORA");
+        		String ip=imp.get("IP");
+        		String tipo=imp.get("TIPO");
+        		String descripcion=imp.get("DESCRIPCION");
+        		String disponible=imp.get("DISPONIBLE");
+        		String alta=imp.get("ALTA");
+        		
+        		
+        		
+            	Utils.validate(
+            			ip,"No se recibó ip",
+            			tipo,"No se recibó tipo",
+            			descripcion,"No se recibó descripcion",
+            			disponible,"No se recibó disponible",
+            			alta,"No se recibó alta",
+            			impresora,"No se recibió impresora");
+            	usuarioManager.guardaImpresorasUsuario(cdusuario,
+            											impresora,
+            											ip,
+            											tipo,
+            											descripcion,
+            											disponible,
+            											alta);
+    		}
+    		
+        		
+    		
+   			
+   			
+   		}catch( Exception e){
+       		logger.error("Error en obtieneRolesUsuario",e);
+       		success =  false;
+       		return SUCCESS;
+       	}
+       	
+       	success = true;
+       	
+    	logger.debug(Utils.log(
+				 "\n###### guardaImpresorasUsuario ######"
+				,"\n#########################"
+				));
+       	return SUCCESS;
+    }
+    
+    
     
     public String obtieneRolesUsuario() throws Exception {
        	try {
