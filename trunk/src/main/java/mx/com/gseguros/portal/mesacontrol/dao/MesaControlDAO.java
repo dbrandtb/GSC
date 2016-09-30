@@ -321,4 +321,8 @@ public interface MesaControlDAO
 	public void borrarNmsoliciTramite(String ntramite) throws Exception;
 	
 	public void concatenarAlInicioDelUltimoDetalle(String ntramite, String comentario, String cdmodulo, String cdevento) throws Exception;
+	
+	public String regeneraRemesaReport(String ntramite, String cddocume) throws Exception;
+	
+	
 }

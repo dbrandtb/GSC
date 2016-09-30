@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.consultas.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,7 @@ import com.opensymphony.xwork2.ActionContext;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.model.DescargaLotePdfVO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
@@ -43,6 +46,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 	private String                   filename;
 	private String                   contentType;
 	private List<String>			 tramites;
+	private boolean 				 dwnError;
 	
 	@Autowired
 	private ExplotacionDocumentosManager explotacionDocumentosManager;
@@ -215,7 +219,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,charola1 , "No se recibi\u00F3 la charola"
 					);
 			
-			explotacionDocumentosManager.imprimirLote(
+			File noExiste=explotacionDocumentosManager.imprimirLote(
 					lote
 					,hoja
 					,peso
@@ -230,6 +234,10 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,"S".equals(test)
 					,"S".equals(soportaDuplex)
 					);
+			if(noExiste!=null){
+				dwnError=true;
+				session.put("fileDownErr", noExiste);
+			}
 			
 			success = true;
 		}
@@ -624,7 +632,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,tipolote , "No se recibi\u00F3 el tipo de lote"
 					);
 			
-			fileInputStream = explotacionDocumentosManager.descargarLote(
+			DescargaLotePdfVO dlp = explotacionDocumentosManager.descargarLote(
 					lote
 					,hoja
 					,peso
@@ -634,12 +642,16 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,cdusuari
 					,cdsisrol
 					);
+			fileInputStream=dlp.getFileInput();
 			
 			contentType = TipoArchivo.PDF.getContentType();
 			filename    = Utils.join("descarga_lote_",lote,"_papel_",hoja,".pdf");
 			
 			success = true;
+			session.put("fileDownErr", dlp.getErrores());
 			session.put("descargarLote" , "S");
+			logger.debug(Utils.log(
+					"\n###### fileError=  ",dlp.getErrores()));
 		}
 		catch(Exception ex)
 		{
@@ -658,7 +670,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 	{
 		logger.debug(Utils.log(
 				 "\n###########################"
-				,"\n###### descargarLote ######"
+				,"\n###### descargarLoteDplx ######"
 				));
 		
 		try
@@ -685,7 +697,8 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,tipolote , "No se recibi\u00F3 el tipo de lote"
 					);
 			
-			fileInputStream = explotacionDocumentosManager.descargarLoteDplx(
+			
+			DescargaLotePdfVO dlp = explotacionDocumentosManager.descargarLoteDplx(
 					lote
 					,hoja
 					,peso
@@ -696,10 +709,13 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,cdsisrol
 					);
 			
+			fileInputStream=dlp.getFileInput();
+			
 			contentType = TipoArchivo.PDF.getContentType();
 			filename    = Utils.join("descarga_lote_",lote,"_papel_",hoja,".pdf");
 			
 			success = true;
+			session.put("fileDownErr",dlp.getErrores());
 			session.put("descargarLote" , "S");
 		}
 		catch(Exception ex)
@@ -709,7 +725,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				 "\n###### descargarLote ######"
+				 "\n###### descargarLoteDplx ######"
 				,"\n###########################"
 				));
 		return SUCCESS;
@@ -730,18 +746,23 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			Utils.validateSession(session);
 			
 			String descargarLote = null;
+			File errores=null;
 			
 			while(StringUtils.isBlank(descargarLote))
 			{
 				descargarLote = (String)session.get("descargarLote");
 				Thread.sleep(250l);
 			}
-			
+			errores=(File)session.get("fileDownErr");
 			session.put("descargarLote" , "");
 			
-			if("S".equals(descargarLote))
+			if("S".equals(descargarLote) && errores==null)
 			{
 				success = true;
+			}
+			else if(errores!=null){
+				success=true;
+				dwnError=true;
 			}
 			else
 			{
@@ -761,6 +782,36 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	public String descargaListaError(){
+		
+		logger.debug(Utils.log(
+				 "\n################################"
+				,"\n###### descargaListaError ######"
+				));
+		
+		try{
+			File err=(File) session.get("fileDownErr");
+			fileInputStream=new FileInputStream(err);
+			contentType = TipoArchivo.TXT.getContentType();
+			filename    = Utils.join("lista_errores.csv");
+			
+		}
+		catch(Exception ex)
+		{
+			success=false;
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		success=true;
+		
+		logger.debug(Utils.log(
+				 "\n###### descargaListaError ########"
+				,"\n##################################"
+				));
+		return SUCCESS;
+	}
+	
 	
 	////////////////// Getters y setters ///////////////////////////
 	                                                              //
@@ -828,6 +879,16 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		this.contentType = contentType;                           //
 	} 
 	
+	
+	
+	public boolean isDwnError() {
+		return dwnError;
+	}
+
+	public void setDwnError(boolean dwnError) {
+		this.dwnError = dwnError;
+	}
+
 	public List<String> getTramites() {
 		return tramites;
 	}

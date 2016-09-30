@@ -1089,6 +1089,35 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
+	
+	
+	@Override
+	public String regeneraRemesaReport(String ntramite, String cddocume) throws Exception{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		
+		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_cddocume_i" , cddocume);
+		
+		
+		Map<String, Object> mapResult =ejecutaSP(new RegeneraRemesaReport(getDataSource()),params);
+		
+		return (String) mapResult.get("pv_title_o");
+		
+	}
+	
+	protected class RegeneraRemesaReport extends StoredProcedure
+	{
+		protected RegeneraRemesaReport(DataSource dataSource)
+		{
+			super(dataSource,"pkg_db_report.reg_remesa_report");
+			
+			declareParameter(new SqlParameter("pv_ntramite_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cddocume_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"        , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"         , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
 	@Override
 	public boolean regeneraDocumentosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
@@ -1145,7 +1174,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
-	
+
 	/*******************************************************************/
 	/*  Se agrega pkg_db_report.P_REVERSA_STATUS_IMPRESO
 	 * 	para realizar el reverso de impresion 

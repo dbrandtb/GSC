@@ -1,8 +1,11 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +18,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.model.DescargaLotePdfVO;
 import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
@@ -177,6 +181,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 		return items;
 	}
+	
+	
 	
 	@Override
 	public String generarLote(
@@ -443,7 +449,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	}
 	
 	@Override
-	public void imprimirLote(
+	public File imprimirLote(
 			String lote
 			,String hoja
 			,String peso
@@ -479,7 +485,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		
 		String paso = "Iniciando impresi\u00F3n";
 		sb.append("\n").append(paso);
-		
+		boolean errorArchivo=false;
+		long timestamp ;
+		long rand     ;
+		File noExiste=null;
 		try
 		{
 			paso = "Recuperando archivos";
@@ -503,6 +512,19 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			boolean apagado = false;
 			
+			
+			 timestamp = System.currentTimeMillis();
+			rand      = new Double(1000d*Math.random()).longValue();
+			noExiste=new File(Utils.join(
+					rutaDocumentosTemporal,
+					"/archivos_no_encontrados_lote_",lote,
+					"_",timestamp,rand,
+					".txt"
+				));
+			BufferedWriter bw=new BufferedWriter(new FileWriter(noExiste,true));
+			bw.append("POLIZA,DOCUMENTO\r\n");
+			bw.close();
+			
 			for(Map<String,String>archivo:listaArchivos)
 			{
 				logger.debug("archivo={} rutaDocumentosPoliza={} nmcopias={} ntramite={} cddocume={} swimpdpx{}",
@@ -514,6 +536,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					String cddocume = archivo.get("cddocume");
 					String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
 					String papelDoc = archivo.get("tipodoc");
+					String nmpoliza = archivo.get("nmpoliza");
 					
 					sb.append(Utils.log("\ntramite,archivo=",ntramite,",",cddocume));
 					
@@ -521,8 +544,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					{
 						paso = "Descargando archivo remoto";
 						sb.append("\n").append(paso);
-						long timestamp = System.currentTimeMillis();
-						long rand      = new Double(1000d*Math.random()).longValue();
+						 timestamp = System.currentTimeMillis();
+						 rand      = new Double(1000d*Math.random()).longValue();
 						filePath       = Utils.join(
 								rutaDocumentosTemporal
 								,"/lote_"    , lote
@@ -534,8 +557,55 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						
 						File local = new File(filePath);
 						
-						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
-						FileUtils.copyInputStreamToFile(remoto, local);
+						try{
+							InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
+							FileUtils.copyInputStreamToFile(remoto, local);
+						}catch(ConnectException ex){
+							logger.error("Error al descargar documento: ",ex);
+							
+						}catch(Exception ex){
+							logger.error("Error al descargar documento: ",ex);
+						}
+					}
+					File f=new File(filePath);
+					paso="Verificando si existe el archivo";
+					
+					if(!f.exists()){
+						
+						if(cdtipram.trim().equals("10")){
+							paso="Creando directorio ";
+							String dirTramite=Utils.join(rutaDocumentosPoliza,"/",ntramite,"/");
+							sb.append(Utils.join("\n@@@@ Creando directorio : ",dirTramite));
+							File dir=new File(dirTramite);
+							dir.mkdirs();
+							
+							paso="Regenerando Docs";
+							mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
+						}
+						
+						f=new File(filePath);
+						
+						if(!f.exists()){
+							
+							
+							sb.append(Utils.join("\n@@@@No existe el archivo: ",
+													filePath,
+													"\n",
+													archivo));
+							paso="Creando archivo de errores";
+							
+							
+							
+							bw=new BufferedWriter(new FileWriter(noExiste,true));
+							bw.append(Utils.join(nmpoliza,",\"",archivo.get("cddocume"),"\"\r\n"));
+							bw.close();
+							
+							
+							errorArchivo=true;
+							continue;
+							
+						}
+						
 					}
 					
 					paso = "Imprimiendo archivo";
@@ -661,6 +731,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 		
 		logger.debug(sb.toString());
+		
+		if(!errorArchivo){
+			noExiste=null;
+		}
+		
+		return noExiste;
 	}
 	
 	@Override
@@ -1422,7 +1498,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	}
 	
 	@Override
-	public InputStream descargarLote(
+	public DescargaLotePdfVO descargarLote(
 			String lote
 			,String hoja
 			,String peso
@@ -1447,6 +1523,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 		
 		InputStream inputStream = null;
+		DescargaLotePdfVO pdfReturn=new DescargaLotePdfVO();
 		
 		String paso = "Iniciando descarga";
 		sb.append("\n").append(paso);
@@ -1478,12 +1555,25 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			sb.append("\n").append(paso);
 			
 			List<File>files = new ArrayList<File>();
+			long timestamp = System.currentTimeMillis();
+			long rand      = new Double(1000d*Math.random()).longValue();
+			File noExiste=new File(Utils.join(
+					rutaDocumentosTemporal,
+					"/archivos_no_encontrados_lote_",lote,
+					"_",timestamp,rand,
+					".txt"
+				));
+			BufferedWriter bw=new BufferedWriter(new FileWriter(noExiste,true));
+			bw.append("POLIZA,DOCUMENTO\r\n");
+			bw.close();
 			
 			for(Map<String,String>archivo:listaArchivos)
 			{
 				String ntramite = archivo.get("ntramite");
 				String cddocume = archivo.get("cddocume");
+				String dsdocume = archivo.get("dsdocume");
 				String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
+				String nmpoliza = archivo.get("nmpoliza");
 				
 				sb.append(Utils.log("\ntramite,archivo=",ntramite,",",cddocume));
 				
@@ -1491,8 +1581,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				{
 					paso = "Descargando archivo remoto";
 					sb.append("\n").append(paso);
-					long timestamp = System.currentTimeMillis();
-					long rand      = new Double(1000d*Math.random()).longValue();
+					timestamp = System.currentTimeMillis();
+					rand      = new Double(1000d*Math.random()).longValue();
 					filePath       = Utils.join(
 							rutaDocumentosTemporal
 							,"/lote_"    , lote
@@ -1502,13 +1592,61 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							,".pdf"
 							);
 					
+					
+					
 					File local = new File(filePath);
 					
-
-					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
-					FileUtils.copyInputStreamToFile(remoto, local);
+					try{
+						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
+						FileUtils.copyInputStreamToFile(remoto, local);
+					}catch(ConnectException ex){
+						logger.error("Error al descargar documento: ",ex);
+						
+					}catch(Exception ex){
+						logger.error("Error al descargar documento: ",ex);
+					}
 				}
 				
+				File f=new File(filePath);
+				paso="Verificando si existe el archivo";
+				
+				if(!f.exists()){
+					
+					if(cdtipram.trim().equals("10")){
+						
+						String dirTramite=Utils.join(rutaDocumentosPoliza,"/",ntramite,"/");
+						sb.append(Utils.join("\n@@@@ Creando directorio : ",dirTramite));
+						File dir=new File(dirTramite);
+						dir.mkdirs();
+						paso="Regenerando Docs";
+						mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
+					}
+					
+					f=new File(filePath);
+					
+					if(!f.exists()){
+						
+						
+						sb.append(Utils.join("\n@@@@No existe el archivo: ",
+												filePath,
+												"\n",
+												archivo));
+						paso="Creando archivo de errores";
+						
+						
+						
+						bw=new BufferedWriter(new FileWriter(noExiste,true));
+						bw.append(Utils.join(nmpoliza,",\"",archivo.get("cddocume"),"\"\r\n"));
+						bw.close();
+						
+						
+						pdfReturn.setErrores(noExiste);
+						continue;
+						
+					}
+					
+				}
+					
 				files.add(new File(filePath));
 			}
 			
@@ -1634,13 +1772,14 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		
 		logger.debug(sb.toString());
 		
-		return inputStream;
+		pdfReturn.setFileInput(inputStream);
+		return pdfReturn;
 	}
 	
 	
 	
 	@Override
-	public InputStream descargarLoteDplx(
+	public DescargaLotePdfVO descargarLoteDplx(
 			String lote
 			,String hoja
 			,String peso
@@ -1666,6 +1805,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 		
 		InputStream inputStream = null;
+		DescargaLotePdfVO pdfReturn=new DescargaLotePdfVO();
 		
 		String paso = "Iniciando descarga";
 		sb.append("\n").append(paso);
@@ -1697,6 +1837,17 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			sb.append("\n").append(paso);
 			
 			List<File>files = new ArrayList<File>();
+			long timestamp = System.currentTimeMillis();
+			long rand      = new Double(1000d*Math.random()).longValue();
+			File noExiste=new File(Utils.join(
+					rutaDocumentosTemporal,
+					"/archivos_no_encontrados_lote_",lote,
+					"_",timestamp,rand,
+					".txt"
+				));
+			BufferedWriter bw=new BufferedWriter(new FileWriter(noExiste,true));
+			bw.append("POLIZA,DOCUMENTO\r\n");
+			bw.close();
 			
 			for(Map<String,String>archivo:listaArchivos)
 			{
@@ -1704,6 +1855,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				String cddocume = archivo.get("cddocume");
 				String swimpdpx = archivo.get("swimpdpx");
 				String dsdocume = archivo.get("dsdocume");
+				String nmpoliza = archivo.get("nmpoliza");
 
 				String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
 				sb.append(Utils.log("\ntramite,archivo=",ntramite,",",cddocume));
@@ -1713,8 +1865,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					
 					 paso = "Descargando archivo remoto";
 					sb.append("\n").append(paso);
-					long timestamp = System.currentTimeMillis();
-					long rand      = new Double(1000d*Math.random()).longValue();
+					timestamp = System.currentTimeMillis();
+					rand      = new Double(1000d*Math.random()).longValue();
 					filePath       = Utils.join(
 							rutaDocumentosTemporal
 							,"/lote_"    , lote
@@ -1726,16 +1878,62 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					
 					File local = new File(filePath);
 					
-					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
-					FileUtils.copyInputStreamToFile(remoto, local);
+					try{
+						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
+						FileUtils.copyInputStreamToFile(remoto, local);
+					}catch(ConnectException ex){
+						logger.error("Error al descargar documento: ",ex);
+						
+					}catch(Exception ex){
+						logger.error("Error al descargar documento: ",ex);
+					}
 					
 				}
 				
+				File f=new File(filePath);
+				paso="Verificando si existe el archivo";
+				
+				if(!f.exists()){
+					
+					if(cdtipram.trim().equals("10")){
+						
+						String dirTramite=Utils.join(rutaDocumentosPoliza,"/",ntramite,"/");
+						sb.append(Utils.join("\n@@@@ Creando directorio : ",dirTramite));
+						File dir=new File(dirTramite);
+						dir.mkdirs();
+						paso="Regenerando Docs";
+						mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
+					}
+					
+					f=new File(filePath);
+					
+					if(!f.exists()){
+						
+						
+						sb.append(Utils.join("\n@@@@No existe el archivo: ",
+												filePath,
+												"\n",
+												archivo));
+						paso="Creando archivo de errores";
+						
+						
+						
+						bw=new BufferedWriter(new FileWriter(noExiste,true));
+						bw.append(Utils.join(nmpoliza,",\"",archivo.get("cddocume"),"\"\r\n"));
+						bw.close();
+						
+						
+						pdfReturn.setErrores(noExiste);
+						continue;
+						
+					}
+					
+				}
 				files.add(new File(filePath));
 				if(!dsdocume.toLowerCase().contains("recibo") && "N".equalsIgnoreCase(swimpdpx.trim())){
 					paso="Añadiendo hoja en blanco";
-					long timestamp = System.currentTimeMillis();
-					long rand      = new Double(1000d*Math.random()).longValue();
+					timestamp = System.currentTimeMillis();
+					rand      = new Double(1000d*Math.random()).longValue();
 					files.add(DocumentosUtils.pdfBlanco(
 							new File(
 									Utils.join(
@@ -1871,8 +2069,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 		
 		logger.debug(sb.toString());
-		
-		return inputStream;
+		pdfReturn.setFileInput(inputStream);
+		return pdfReturn;
 	}
 	
 	/*public static void main(String[] args)

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -125,7 +126,7 @@ public class HttpUtil {
 	 * @param urlOrigen   URL de donde se obtendr� el flujo de datos 
 	 * @return InputStream o null en caso de que no existan datos
 	 */
-	public static InputStream obtenInputStream(String urlOrigen) {
+	public static InputStream obtenInputStream(String urlOrigen) throws Exception{
 		
 		logger.debug("Entrando a obtenInputStream()");
 		logger.debug("urlOrigen=" + urlOrigen);
@@ -146,8 +147,14 @@ public class HttpUtil {
 			
 			inputStream = con.getInputStream();
 
+		}catch(ConnectException cex){
+			logger.error("Error al conectarce para obtener los datos " , cex);
+			throw cex;
 		} catch (Exception e) {
 			logger.error("Error al obtener los datos " , e);
+			if(e.getMessage().indexOf("Codigo de respuesta erroneo: ")>-1){
+				throw e;
+			}
 		}
 		return inputStream;
 	}
