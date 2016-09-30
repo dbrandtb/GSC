@@ -289,7 +289,7 @@ Ext.onReady(function() {
 			{    xtype : 'textfield',		fieldLabel : 'nmsuplem',		name : 'txtnmsuplem',		hidden:true		},
 			{    xtype : 'textfield',		fieldLabel : 'nmsituac',		name : 'txtnmsituac',		hidden:true		},
 			{    xtype : 'textfield',		fieldLabel : 'nmsinies',		name : 'txtnmsinies',		hidden:true		},
-			{    xtype : 'textfield',		fieldLabel : 'tipoPago',		name : 'txttipoPago'},//,		hidden:true		},
+			{    xtype : 'textfield',		fieldLabel : 'tipoPago',		name : 'txttipoPago',		hidden:true		},
 			{    xtype : 'textfield',		fieldLabel : 'valRango',		name : 'valRango',				value:'0',		hidden:true		},
 			{    xtype : 'textfield',		fieldLabel : 'valGarant',		name : 'valGarant',				value:'0',		hidden:true		},
 			{    xtype : 'textfield',		fieldLabel : 'No. autorizacion',name : 'nmautespecial',			value:'0',		hidden:true		},

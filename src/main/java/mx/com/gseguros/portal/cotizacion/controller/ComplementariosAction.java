@@ -4567,6 +4567,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					"&userid=", this.getText("pass.servidor.reports"),
 					"&report=", nombreRdf,
 					"&p_ntramite=", ntramite,
+					"&p_ramo=", cdramo,
 					"&p_comments=", commentsM
 			);
 			logger.debug(Utils.log(

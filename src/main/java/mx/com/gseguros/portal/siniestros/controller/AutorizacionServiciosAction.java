@@ -858,6 +858,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 						+ "&paramform=no"
 						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
 						+ "&p_ntramite="+ntramite
+						+ "&p_ramo="+cdramo
 						+ "&p_comments="+commentsM;
 		logger.debug("Se solicita reporte : {}", url);
 		HttpUtil.generaArchivo(url,rutaCarpeta+"/"+this.getText("pdf.emision.rechazo.nombre"));
