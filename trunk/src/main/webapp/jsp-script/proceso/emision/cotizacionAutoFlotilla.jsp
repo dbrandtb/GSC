@@ -5790,6 +5790,7 @@ function _p30_editarAutoAceptar(bot,callback)
 			    	numSerie+=''+(record.get('parametros.pv_otvalor37'))+'|';
 			    	//console.log( record.get('parametros.pv_otvalor37') );
 			    });
+		if(Ext.isEmpty(numSerie)){
         	Ext.Ajax.request(
 				{
 					url     : _p29_urlObtieneValNumeroSerie
@@ -5822,7 +5823,7 @@ function _p30_editarAutoAceptar(bot,callback)
 					}
 					,failure : errorComunicacion
 				});
-            
+		}else{callback();}
         }
     }
     
