@@ -35,6 +35,26 @@ public interface UsuarioDAO {
 	
 	public void guardarSesion(String idSesion,String cdusuari,String cdsisrol,String userAgent,boolean esMovil,Date fecha) throws Exception;
 	
+	public List<Map<String, String>> obtieneImpresorasUsuario(String cdusuario) throws Exception;
+	
+	public String guardaImpresorasUsuario(String cdusuario,
+			  String ip,
+			  String tipo, 
+			  String descripcion,
+			  String swactivo,
+			  String impAsig,
+			  String nombre)
+					  throws Exception;
+	public String habilitaDeshabilitaImpresora(String pv_habilita,
+			  String pv_impresora_i,
+			  String pv_CdUsuari_i)
+					  throws Exception;
+	public String insertaActualizaImpresora(String pv_nombre_i,
+			  String pv_ip_i,
+			  String pv_tipo_i,
+			  String pv_descripcion_i,
+			  String pv_swactivo_i)
+					  throws Exception;
 	
 	/* *
 	 * Valida la edad de los asegurados en una poliza
