@@ -557,81 +557,106 @@ Ext.define('VentanaDescargaLote',
     }
     ,download : function(botPap)
     {
-        debug('download botPap,botImp:',botPap,'--.',this);
-        
-        
-        var win = botPap.up('window');
-        var me = win;
-        var ck = 'Descargando';
-        try
-        {
-            if(Ext.isEmpty(botPap))
-            {
-                throw 'Se perdi\u00F3 el componente de impresi\u00F3n';
-            }
-            var direccion;
-            if(botPap.duplex!=undefined && botPap.duplex==true){
-            	direccion=_GLOBAL_URL_DESCARGAR_LOTE_DPLX;
-            }else{
-            	direccion=_GLOBAL_URL_DESCARGAR_LOTE;
-            }
-            Ext.create('Ext.form.Panel').submit(
-            {
-                url             : direccion
-                ,params         :
-                {
-                    'params.lote'      : me.lote
-                    ,'params.hoja'     : botPap.hoja
-                    ,'params.peso'     : botPap.peso
-                    ,'params.cdtipram' : me.cdtipram
-                    ,'params.cdtipimp' : me.cdtipimp
-                    ,'params.tipolote' : me.tipolote
-                }
-                ,standardSubmit : true
-                ,target         : '_blank'
-            });
-            
-            _setLoading(true,win);
-            Ext.Ajax.request(
-            {
-                url      : _GLOBAL_URL_ESPERAR_DESCARGA_LOTE
-                ,timeout : 1000*60*60*3
-                ,success : function(response)
-                {
-                    _setLoading(false,win);
-                    var ck = 'Decodificando respuesta al imprimir';
-                    try
-                    {
-                        var json = Ext.decode(response.responseText);
-                        if(json.success==true)
-                        {
-                            mensajeCorrecto(
-                                'Descarga correcta'
-                                ,'Descarga correcta'
-                                ,function()
+    	 debug('download botPap,botImp:',botPap,'--.',this);
+         
+         
+         var win = botPap.up('window');
+         var me = win;
+         var ck = 'Descargando';
+         try
+         {
+             if(Ext.isEmpty(botPap))
+             {
+                 throw 'Se perdi\u00F3 el componente de impresi\u00F3n';
+             }
+             var direccion;
+             if(botPap.duplex!=undefined && botPap.duplex==true){
+             	direccion=_GLOBAL_URL_DESCARGAR_LOTE_DPLX;
+             }else{
+             	direccion=_GLOBAL_URL_DESCARGAR_LOTE;
+             }
+             Ext.create('Ext.form.Panel').submit(
+             {
+                 url             : direccion
+                 ,params         :
+                 {
+                     'params.lote'      : me.lote
+                     ,'params.hoja'     : botPap.hoja
+                     ,'params.peso'     : botPap.peso
+                     ,'params.cdtipram' : me.cdtipram
+                     ,'params.cdtipimp' : me.cdtipimp
+                     ,'params.tipolote' : me.tipolote
+                 }
+                 ,standardSubmit : true
+                 ,target         : '_blank'
+             });
+             
+             _setLoading(true,win);
+             Ext.Ajax.request(
+             {
+                 url      : _GLOBAL_URL_ESPERAR_DESCARGA_LOTE
+                 ,timeout : 1000*60*60*3
+                 ,success : function(response)
+                 {
+                     _setLoading(false,win);
+                     var ck = 'Decodificando respuesta al imprimir';
+                     try
+                     {
+                         var json = Ext.decode(response.responseText);
+                         if(json.success==true && json.dwnError!=true)
+                         {
+                             mensajeCorrecto(
+                                 'Descarga correcta'
+                                 ,'Descarga correcta'
+                                 ,function()
+                                 {
+                                     //win.destroy();
+                                     //me.actualizarBotones();
+                                    // me.setActive();
+                                 }
+                             );
+                         }else if(json.dwnError==true){
+                        	
+                        	 centrarVentanaInterna(Ext.Msg.alert("Error","Se gener&oacute; el pdf pero con errores, se descargar&aacute; la lista de archivos no encontrados",function(){
+                         		debug('DescargarListaErrores');
+                                var me = win;
+                                var ck = 'Descargando';
+                                try
                                 {
-                                    //win.destroy();
-                                    //me.actualizarBotones();
-                                   // me.setActive();
-                                }
-                            );
-                        }
-                        else
-                        {
-                            mensajeError(json.message);
-                        }
-                    }
-                    catch(e)
-                    {
-                        manejaException(e,ck);
-                    }
-                }
-                ,failure  : function()
-                {
-                    _setLoading(false,win);
-                    errorComunicacion(null,'Error al descargar');
-                }
-            });
+                                    Ext.create('Ext.form.Panel').submit(
+                                    {
+                                        url             : _GLOBAL_URL_DESCARGAR_LISTA_ERROR_ARCHIVO
+                                        ,params         :
+                                        {
+                                           
+                                        }
+                                        ,standardSubmit : true
+                                        ,target         : '_blank'
+                                    });
+                               }
+                               catch(e)
+                               {
+                            	  
+                            	   manejaException(e,ck);
+                               }
+                         	}));
+                         }
+                         else
+                         {
+                             mensajeError(json.message,"Error");
+                         }
+                     }
+                     catch(e)
+                     {
+                         manejaException(e,ck);
+                     }
+                 }
+                 ,failure  : function()
+                 {
+                     _setLoading(false,win);
+                     errorComunicacion(null,'Error al descargar');
+                 }
+             });
         }
         catch(e)
         {

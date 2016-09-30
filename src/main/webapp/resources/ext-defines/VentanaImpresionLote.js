@@ -555,7 +555,7 @@ Ext.define('VentanaImpresionLote',
                     try
                     {
                         var json = Ext.decode(response.responseText);
-                        if(json.success==true)
+                        if(json.success==true && json.dwnError!=true)
                         {
                             mensajeCorrecto(
                                 'Impresi\u00F3n correcta'
@@ -566,7 +566,34 @@ Ext.define('VentanaImpresionLote',
                                     me.actualizarBotones();
                                 }
                             );
-                        }
+                        }else if(json.dwnError==true){
+                        	var me2=me;
+                        	centrarVentanaInterna(Ext.Msg.alert("Error","Se imprimi&oacute; pero con errores, se descargar&aacute; la lista de archivos no encontrados",function(){
+                         		debug('DescargarListaErrores');
+                                var me = win;
+                                var ck = 'Descargando';
+                                try
+                                {
+                                    Ext.create('Ext.form.Panel').submit(
+                                    {
+                                        url             : _GLOBAL_URL_DESCARGAR_LISTA_ERROR_ARCHIVO
+                                        ,params         :
+                                        {
+                                           
+                                        }
+                                        ,standardSubmit : true
+                                        ,target         : '_blank'
+                                    });
+                                    win.destroy();
+                                    me2.actualizarBotones();
+                               }
+                               catch(e)
+                               {
+                            	  
+                            	   manejaException(e,ck);
+                               }
+                         	}));
+                         }
                         else
                         {
                             mensajeError(json.message);
@@ -632,7 +659,7 @@ Ext.define('VentanaImpresionLote',
                     try
                     {
                         var json = Ext.decode(response.responseText);
-                        if(json.success==true)
+                        if(json.success==true &&  json.dwnError!=true)
                         {
                             mensajeCorrecto(
                                 'Descarga correcta'
@@ -643,6 +670,32 @@ Ext.define('VentanaImpresionLote',
                                     me.actualizarBotones();
                                 }
                             );
+                        }
+                        else if(json.dwnError==true){
+                        	
+                       	 centrarVentanaInterna(Ext.Msg.alert("Error","Se gener&oacute; el pdf pero con errores, se descargar&aacute; la lista de archivos no encontrados",function(){
+                        		debug('DescargarListaErrores');
+                               var me = win;
+                               var ck = 'Descargando';
+                               try
+                               {
+                                   Ext.create('Ext.form.Panel').submit(
+                                   {
+                                       url             : _GLOBAL_URL_DESCARGAR_LISTA_ERROR_ARCHIVO
+                                       ,params         :
+                                       {
+                                          
+                                       }
+                                       ,standardSubmit : true
+                                       ,target         : '_blank'
+                                   });
+                              }
+                              catch(e)
+                              {
+                           	  
+                           	   manejaException(e,ck);
+                              }
+                        	}));
                         }
                         else
                         {

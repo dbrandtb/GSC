@@ -110,6 +110,7 @@ Ext.onReady(function()
 	
     ////// requires //////
     Ext.require('${defines}VentanaImpresionLote');
+    Ext.require('${defines}VentanaDescargaLote');
     ////// requires //////
 
     ////// modelos //////
@@ -193,6 +194,7 @@ Ext.onReady(function()
                                 
                                 _fieldById('_p50_botonImprimir1').disable();
                                 _fieldById('_p50_botonImprimir2').disable();
+                                _fieldById('botonDescargar').disable();
                                 
                                 var cduniecos = '|';
                                 _fieldById('_p50_gridSucursales').getStore().each(function(record)
@@ -254,6 +256,7 @@ Ext.onReady(function()
                         {
                             _fieldById('_p50_botonImprimir1').setDisabled(selected.length==0);
                             _fieldById('_p50_botonImprimir2').setDisabled(selected.length==0);
+                            _fieldById('botonDescargar').setDisabled(selected.length==0);
                         }
                     }
                 }
@@ -281,6 +284,18 @@ Ext.onReady(function()
                         }
                         ,hidden   : true
                     }
+                    ,{
+                        text      : 'Descarga PDF'
+                            ,icon     : '${icons}printer.png'
+                            ,itemId   : 'botonDescargar'
+                            ,disabled : true
+                            ,handler  : function(me)
+                            {
+                                _p50_impresionClic('G');
+                                
+                                descargaPdf();
+                            }
+                        }
                 ]
             })
         ]
@@ -555,6 +570,127 @@ function _p50_impresionClic(tipoimp)
     {
         manejaException(e,ck);
     }
+}
+
+function descargaPdf(){
+	var tipoimp='G';
+	 var ck = 'Generando tr\u00E1mite';
+	    try
+	    {
+	        debug('_p50_impresionClic timoimp:',tipoimp);
+	        centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se generar\u00E1 el lote y los tr\u00E1mites de impresi\u00F3n ¿Desea continuar?', function(btn)
+	        {
+	            if(btn === 'yes')
+	            {
+	                var ck = 'Construyendo petici\u00F3n';
+	                try
+	                {
+	                    var jsonData =
+	                    {
+	                        params :
+	                        {
+	                            cdtipimp  : tipoimp
+	                            ,tipolote : 'R'
+	                        }
+	                        ,list  : []
+	                    };
+	                
+	                    var grid    = _fieldById('_p50_gridRecibos');
+	                    var records = grid.getSelectionModel().getSelection();
+	                    debug('records:',records);
+	                    
+	                    jsonData.params.cdtipram = records[0].get('cdtipram');
+	                    
+	                    for(var i in records)
+	                    {
+	                        var rec  = records[i];
+	                        jsonData.list.push(
+	                        {
+	                            cdunieco  : rec.get('cdunieco')
+	                            ,cdramo   : rec.get('cdramo')
+	                            ,estado   : rec.get('estado')
+	                            ,nmpoliza : rec.get('nmpoliza')
+	                            ,nmsuplem : rec.get('nmsuplem')
+	                            ,cdagente : rec.get('cdagente')
+	                            ,nmrecibo : rec.get('nmrecibo')
+	                        });
+	                    }
+	                    debug('jsonData:',jsonData);
+	                    
+	                    _setLoading(true,grid);
+	                    Ext.Ajax.request(
+	                    {
+	                        url       : _p50_urlGenerarLote
+	                        ,jsonData : jsonData
+	                        ,success  : function(response)
+	                        {
+	                            _setLoading(false,grid);
+	                            var ck = 'Decodificando respuesta al generar lote';
+	                            try
+	                            {
+	                                var json = Ext.decode(response.responseText);
+	                                debug('### generarLote:',json);
+	                                if(json.success==true)
+	                                {
+	                                    mensajeCorrecto(
+	                                        'Lote generado'
+	                                        ,'Se gener\u00F3 el lote '+json.params.lote
+	                                        ,function()
+	                                        {
+	                                            var ck = 'Invocando ventana de impresi\u00F3n';
+	                                            try
+	                                            {
+	                                                var venImp = Ext.create('VentanaDescargaLote',
+	                                                {
+	                                                    lote      : json.params.lote
+	                                                    ,cdtipram : json.params.cdtipram
+	                                                    ,cdtipimp : json.params.cdtipimp
+	                                                    ,tipolote : 'R'
+	                                                    ,callback : function(){ _fieldById('_p50_gridRecibos').getStore().removeAll(); }
+	                                                });
+	                                                venImp.on(
+	                                                {
+	                                                    close : function()
+	                                                    {
+	                                                        _fieldById('_p50_gridRecibos').getStore().removeAll();
+	                                                    }
+	                                                });
+	                                                centrarVentanaInterna(venImp.show());
+	                                            }
+	                                            catch(e)
+	                                            {
+	                                                manejaException(e,ck);
+	                                            }
+	                                        });
+	                                }
+	                                else
+	                                {
+	                                    mensajeError(json.message);
+	                                }
+	                            }
+	                            catch(e)
+	                            {
+	                                manejaException(e,ck);
+	                            }
+	                        }
+	                        ,failure  : function()
+	                        {
+	                            _setLoading(false,grid);
+	                            errorComunicacion(null,'Error al generar lote');
+	                        }
+	                    });
+	                }
+	                catch(e)
+	                {
+	                    manejaException(e,ck);
+	                }
+	            }
+	        }));
+	    }
+	    catch(e)
+	    {
+	        manejaException(e,ck);
+	    }
 }
 ////// funciones //////
 </script>

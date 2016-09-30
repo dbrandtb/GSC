@@ -1,9 +1,11 @@
 package mx.com.gseguros.portal.consultas.service;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.consultas.model.DescargaLotePdfVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 
 public interface ExplotacionDocumentosManager
@@ -36,9 +38,10 @@ public interface ExplotacionDocumentosManager
 	 * @param cdsisrol
 	 * @param test
 	 * @param esDuplex Indica si la impresora soporta la opcion duplex (doble cara)
+	 * @return lista de archivos no encontrados
 	 * @throws Exception
 	 */
-	public void imprimirLote(
+	public File imprimirLote(
 			String lote
 			,String hoja
 			,String peso
@@ -104,7 +107,7 @@ public interface ExplotacionDocumentosManager
 			,String pantalla
 			)throws Exception;
 	
-	public InputStream descargarLote(
+	public DescargaLotePdfVO descargarLote(
 			String lote
 			,String hoja
 			,String peso
@@ -115,7 +118,7 @@ public interface ExplotacionDocumentosManager
 			,String cdsisrol
 			)throws Exception;
 	
-	public InputStream descargarLoteDplx(
+	public DescargaLotePdfVO descargarLoteDplx(
 			String lote
 			,String hoja
 			,String peso
