@@ -586,6 +586,22 @@ public interface EndososDAO
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+
+	/**
+	 * Para otbener Tipoflot
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @return
+	 * @throws Exception
+	 */
+	public String obtieneTipoFlot(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 	
 	public Map<String,String> recuperarNmsuplemNsuplogiEndosoValidando(
 			String cdunieco

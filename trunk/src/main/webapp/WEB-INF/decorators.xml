@@ -38,6 +38,7 @@
         <pattern>/endosos/endosoCopago.action</pattern>
         <pattern>/endosos/endosoReexpedicion.action</pattern>
         <pattern>/endosos/endosoExtraprima.action</pattern>
+        <pattern>/endosos/endosoExtraprimaIndividual.action</pattern>
         <pattern>/endosos/endosoFormaPago.action</pattern>
         <pattern>/endosos/endosoAgente.action</pattern>
         <pattern>/endosos/endosoRehabilitacionEnd.action</pattern>

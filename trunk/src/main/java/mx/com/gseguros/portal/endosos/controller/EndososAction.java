@@ -9541,6 +9541,26 @@ public class EndososAction extends PrincipalCoreAction
 	/*//////////////////////*/
 	public String endosoExtraprima() {
 		
+		
+		try{
+			
+			logger.debug("<<<<<<>>>>>> Endoso de Extraprima, Determinando tipoFloat:::");
+			
+			String cduniecoPol = smap1.get("CDUNIECO");
+			String cdramoPol   = smap1.get("CDRAMO");
+			String estadoPol   = smap1.get("ESTADO");
+			String nmpolizaPol = smap1.get("NMPOLIZA");
+			
+			String tipoFlot = endososManager.obtieneTipoFlot(cduniecoPol, cdramoPol, estadoPol, nmpolizaPol);
+			
+			if(StringUtils.isBlank(tipoFlot) || (!tipoFlot.equalsIgnoreCase("F") && !tipoFlot.equalsIgnoreCase("P"))){
+				return this.endosoExtraprimaIndividual();
+			}
+			
+		}catch(Exception ex){
+			logger.debug("Error al identificar el tipo de producto, se omite.",ex);
+		}
+		
 		logger.debug(new StringBuilder("\n")
 		        .append("\n##############################")
 		        .append("\n##############################")
@@ -9730,6 +9750,153 @@ public class EndososAction extends PrincipalCoreAction
 		
 		return resp!=null&&resp.isSuccess() ? SUCCESS : ERROR;
 	}
+
+	public String endosoExtraprimaIndividual() {
+		
+		logger.debug(new StringBuilder("\n")
+		        .append("\n########################################")
+		        .append("\n########################################")
+		        .append("\n###### endosoExtraprimaIndividual ######")
+		        .append("\n######                            ######").toString());
+		logger.debug(new StringBuilder("smap1: ").append(smap1).toString());
+		logger.debug(new StringBuilder("smap2: ").append(smap2).toString());
+		
+		this.session=ActionContext.getContext().getSession();
+		
+		RespuestaVO resp = null;
+		
+		try
+		{
+			transformaEntrada(smap1, slist1, true);
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			String cdtipsit = smap1.get("CDTIPSIT");
+			String nmsituac = smap1.get("nmsituac");
+			String cdtipsup = smap2.get("masextraprima").equalsIgnoreCase("si")?
+					TipoEndoso.EXTRAPRIMA_MAS.getCdTipSup().toString():
+					TipoEndoso.EXTRAPRIMA_MENOS.getCdTipSup().toString();
+					
+			UserVO usuario    = (UserVO)session.get("USUARIO");
+			String cdelemento = usuario.getEmpresa().getElementoId();
+			String cdusuari   = usuario.getUser();
+			String rol        = usuario.getRolActivo().getClave();
+			
+			// Valida si hay un endoso anterior pendiente:
+			resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			error = resp.getMensaje();
+			
+			String llaveExtraprima     = "";
+			String cdatribuExtraprima  = "";
+			
+			String nombreItemExtraprimaOriginal = "EXTRAPRIMA ORIGINAL";
+			String nombreItemNuevaExtraprima    = "NUEVA EXTRAPRIMA";
+			
+			String llaveItemExtraprimaOriginal = "itemExtraprimaLectura";
+			String llaveItemNuevaExtraprima    = "itemExtraprima";
+			String llavePanelLectura           = "itemsLectura";
+			
+			String pantalla = "ENDOSO_EXTRAPRIMA";
+			
+			//obtener campo extraprima
+			if(resp.isSuccess())
+			{
+				try
+				{
+					List<ComponenteVO>tatrisitAux = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+					
+					for(ComponenteVO tatri:tatrisitAux)
+					{
+						if(tatri.getLabel().lastIndexOf("EXTRAPRIMA")>-1)
+						{
+							cdatribuExtraprima = tatri.getNameCdatribu();
+							llaveExtraprima    = new StringBuilder("otvalor").append(StringUtils.leftPad(tatri.getNameCdatribu(),2,"0")).toString();
+						}
+					}
+					
+					logger.debug(new StringBuilder("cdatribuExtraprima=").append(cdatribuExtraprima).toString());
+					logger.debug(new StringBuilder("llaveExtraprima=")   .append(llaveExtraprima).toString());
+				}
+				catch(Exception ex)
+				{
+					logger.error("Error al obtener componente de extraprima", ex);
+					error = ex.getMessage();
+					resp.setSuccess(false);
+				}
+			}
+			
+			if(resp.isSuccess()) {
+				try {
+					Map<String,Object>valosit=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituac);
+					if(llaveExtraprima.length()>0
+							&&valosit.containsKey(llaveExtraprima)) {
+						String extraprima=(String)valosit.get(llaveExtraprima);
+						if(StringUtils.isBlank(extraprima)) {
+							extraprima="0";
+						}
+						logger.debug("extraprima del asegurado: "+extraprima);
+						smap1.put("extraprima"    , extraprima);
+						smap1.put("masextraprima" , smap2.get("masextraprima"));
+					} else {
+						throw new Exception("No hay extraprima definida para este producto");
+					}
+					
+					List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
+					List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
+					for(ComponenteVO tatrisitIte:tatrisit) {
+						if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuExtraprima)) {
+							temp.add(tatrisitIte);
+						}
+					}
+					tatrisit=temp;
+					
+					GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+					gc.setCdtipsit(cdtipsit);
+					
+					imap1=new HashMap<String,Item>();
+					tatrisit.get(0).setLabel(nombreItemNuevaExtraprima);
+					
+					gc.generaParcial(tatrisit);
+					
+					imap1.put(llaveItemNuevaExtraprima,gc.getItems());
+					
+					tatrisit.get(0).setSoloLectura(true);
+					tatrisit.get(0).setLabel(nombreItemExtraprimaOriginal);
+					
+					gc.generaParcial(tatrisit);
+					
+					imap1.put(llaveItemExtraprimaOriginal,gc.getItems());
+					
+					gc.generaParcial(pantallasManager.obtenerComponentes(
+							null, cdunieco, cdramo,
+							cdtipsit, estado, rol,
+							pantalla, "PANEL_LECTURA", null));
+					
+					imap1.put(llavePanelLectura,gc.getItems());
+					
+				} catch(Exception ex) {
+					logger.error("error al mostrar pantalla endoso extraprima",ex);
+					error = ex.getMessage();
+					resp.setSuccess(false);
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error al contruir pantalla de endoso de extraprima",ex);
+			error = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(new StringBuilder("\n")
+		        .append("\n######                            ######")
+		        .append("\n###### endosoExtraprimaIndividual ######")
+		        .append("\n########################################")
+		        .append("\n########################################").toString());
+		
+		return resp!=null&&resp.isSuccess() ? "EXTRAINDIV" : ERROR;
+	}
 	/*//////////////////////////*/
 	////// endosoExtraprima //////
 	//////////////////////////////
@@ -9910,6 +10077,134 @@ public class EndososAction extends PrincipalCoreAction
 				,"\n#####################################"
 				));
 		
+		return SUCCESS;
+	}
+
+	public String guardarEndosoExtraprimaIndividual() {
+		this.session=ActionContext.getContext().getSession();
+		logger.debug("\n"
+				+ "\n###############################################"
+				+ "\n###############################################"
+				+ "\n###### guardarEndosoExtraprimaIndividual ######"
+				+ "\n######                                   ######"
+				);
+		logger.debug("smap1:"+smap1);
+		logger.debug("smap2:"+smap2);
+		logger.debug("slist1:"+slist1);
+		try {
+			UserVO usuario    = (UserVO)session.get("USUARIO");
+			String cdunieco   = smap1.get("CDUNIECO");
+			String cdramo     = smap1.get("CDRAMO");
+			String estado     = smap1.get("ESTADO");
+			String nmpoliza   = smap1.get("NMPOLIZA");
+			String nmsituac   = smap1.get("nmsituac");
+			String cdtipsit   = smap1.get("CDTIPSIT");
+			String ntramite   = smap1.get("NTRAMITE");
+			String cdtipsup   = smap1.get("masextraprima").equalsIgnoreCase("si")?
+					TipoEndoso.EXTRAPRIMA_MAS.getCdTipSup().toString():
+						TipoEndoso.EXTRAPRIMA_MENOS.getCdTipSup().toString();
+			String extraprima = smap2.get("extraprima");
+			String fecha      = smap2.get("fecha_endoso");
+			Date   dFecha     = renderFechas.parse(fecha);
+			String cdelemento = usuario.getEmpresa().getElementoId();
+			String cdusuari   = usuario.getUser();
+			String cdsisrol   = usuario.getRolActivo().getClave();
+			String proceso    = "END";
+			
+			//PKG_ENDOSOS.P_ENDOSO_INICIA
+			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, fecha, cdelemento, cdusuari, proceso, cdtipsup);
+			
+			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
+			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
+			
+			//PKG_ENDOSOS.P_INS_NEW_EXTRAPRIMA_TVALOSIT
+			endososManager.actualizaExtraprimaValosit(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, extraprima);
+			
+			//Iteracion
+			for(Map<String,String>cla:slist1) {
+				String cdclausu = cla.get("cdclausu");
+				String dslinea  = cla.get("linea_usuario");
+				String cdtipcla = cla.get("cdtipcla");					
+				
+				//PKG_SATELITES.P_MOV_MPOLICOT
+				endososManager.guardarMpolicot(cdunieco, cdramo, estado, nmpoliza, 
+						nmsituac, cdclausu, nmsuplem, Constantes.STATUS_VIVO, cdtipcla, 
+						null, dslinea, Constantes.INSERT_MODE);
+			}
+			
+			//pkg_satelites.valida_extraprima_situac_read
+			String statusValidacionExtraprimas=(String)kernelManager.validarExtraprimaSituacRead(
+					cdunieco,cdramo, estado, nmpoliza, nmsituac, nmsuplem).getItemMap().get("status");
+			logger.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
+			if(statusValidacionExtraprimas.equalsIgnoreCase("N")) {
+				error="Favor de verificar las extraprimas y los endosos de extraprima";
+				throw new Exception(error);
+			}
+			
+			//PKG_SATELITES.P_INSERTA_TWORKSUP_END
+			endososManager.movimientoTworksupEnd(cdunieco, cdramo, estado, nmpoliza, cdtipsup, nmsuplem, nmsituac, "I");
+
+            //PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
+            endososManager.sigsvalipolEnd(cdusuari, cdelemento, cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, /*cdtipsit,*/ cdtipsup);
+			
+			//PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
+			endososManager.calcularValorEndoso(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, dFecha, cdtipsup);			
+			
+
+			// Se confirma el endoso si cumple la validacion de fechas: 
+						RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,nsuplogi
+								,cdtipsup
+								,""
+								,dFecha
+								,cdtipsit
+								,flujo
+								,cdusuari
+								,cdsisrol
+								);
+			
+			
+			// Si el endoso fue confirmado:
+			if(respConfirmacionEndoso.isConfirmado()) {
+				
+				// Regeneramos los documentos:
+				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
+				
+				String sucursal = cdunieco;
+				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, null, 
+						sucursal, nmsolici, ntramite, 
+						true, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
+				
+				mensaje="Se ha guardado el endoso "+nsuplogi;
+			} else {
+				mensaje="El endoso "+nsuplogi
+						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
+						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
+			}
+			success=true;
+			
+		} catch(Exception ex) {
+			error=ex.getMessage();
+			success=false;
+			logger.error("error al guardar endoso de extraprima",ex);
+		}
+		
+		logger.debug("\n"
+				+ "\n######                                   ######"
+				+ "\n###### guardarEndosoExtraprimaIndividual ######"
+				+ "\n###############################################"
+				+ "\n###############################################"
+				);
 		return SUCCESS;
 	}
 	/*/////////////////////////////////*/

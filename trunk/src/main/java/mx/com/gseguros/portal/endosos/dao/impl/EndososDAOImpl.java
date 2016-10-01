@@ -1699,7 +1699,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaExtraprimaValosit(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_INS_NEW_EXTRAPRIMA_TVALOSIT2");
+			super(dataSource, "PKG_ENDOSOS.P_INS_NEW_EXTRAPRIMA_TVALOSIT");
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
@@ -4745,6 +4745,40 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_cdtipsit_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public String obtieneTipoFlot(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String,Object> procRes  = ejecutaSP(new ObtieneTipoFlot(getDataSource()),params);
+		String tipofloat = (String)procRes.get("pv_cdtipsit_o");
+		
+		logger.debug("Tipo de flotilla: "+tipofloat);
+		return tipofloat;
+	}
+	
+	protected class ObtieneTipoFlot extends StoredProcedure
+	{
+		protected ObtieneTipoFlot(DataSource dataSource)
+		{
+			super(dataSource, "P_GET_TIPOFLOT");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

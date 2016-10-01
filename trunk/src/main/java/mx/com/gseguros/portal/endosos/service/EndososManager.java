@@ -511,6 +511,22 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			)throws Exception;
+
+	/**
+	 * Obtiene si una poliza es tipo flotilla, pyme o ninguno
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @return
+	 * @throws Exception
+	 */
+	public String obtieneTipoFlot(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception;
 	
 	public Map<String,Object> pantallaEndosoAltaBajaFamilia(
 			String cdusuari
