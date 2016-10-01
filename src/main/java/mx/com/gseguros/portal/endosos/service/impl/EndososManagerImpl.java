@@ -2431,6 +2431,33 @@ public class EndososManagerImpl implements EndososManager
 				));
 		return cdtipsit;
 	}
+
+	@Override
+	public String obtieneTipoFlot(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ obtieneTipoFlot @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				));
+		
+		String tipoflot = endososDAO.obtieneTipoFlot(cdunieco,cdramo,estado,nmpoliza);
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ tipoflot=",tipoflot
+				,"\n@@@@@@ obtieneTipoFlot @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return tipoflot;
+	}
 	
 	public int recuperarDiasDiferenciaEndosoValidos(String cdramo,String cdtipsup)throws Exception
 	{
