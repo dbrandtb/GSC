@@ -17,10 +17,12 @@ import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
+import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.MailService;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -67,6 +69,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
+	
+	@Autowired
+	private EndososDAO endososDAO;
 	
 	@Override
 	public Map<String,Item> workflow(String cdsisrol) throws Exception
@@ -2626,6 +2631,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		
 		try
 		{
+			if (EstatusTramite.RECHAZADO.getCodigo().equals(statusNew)) {
+				paso = "Validando cambios pendientes de un endoso";
+				logger.debug(paso);
+				endososDAO.validarTramiteSinCambiosEndosoPendiente(ntramite);
+			}
+			
 			paso = "Recuperando status anterior";
 			logger.debug(paso);
 			

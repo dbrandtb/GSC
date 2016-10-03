@@ -699,6 +699,11 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				} else {
 					mapa.put("correo", "");
 				}
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_ASEGURADO_COMPLETO_ENDOSO_ALTA)) {
+				mapa = endososDAO.recuperarAseguradoCompletoEndosoAlta(params.get("cdunieco"), params.get("cdramo"), params.get("estado"),
+						params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_PERSONA_ENDOSO_ALTA)) {
+				mapa = endososDAO.recuperarPersonaEndosoAlta(params.get("cdperson"));
 			}
 		}
 		catch(Exception ex)
@@ -1263,6 +1268,23 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				}
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COTIZACIONES_COLECTIVAS_APROBADAS)) {
 				lista = flujoMesaControlDAO.recuperarCotizacionesColectivasAprobadas(params.get("ntramite"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_ASEGURADOS_ENDOSO_ALTA)) {
+				lista = endososDAO.recuperarAseguradosEndosoAlta(params.get("cdunieco"), params.get("cdramo"), params.get("estado"),
+						params.get("nmpoliza"), params.get("nmsuplem"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_PERSONAS_FISICAS_POR_RFC_MULTIPLE_DOMICILIO)) {
+				lista = endososDAO.recuperarPersonasFisicasPorRFCMultipleDomicilio(params.get("rfc"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_BUSQUEDA_ASEGURADOS_END_COBERTURAS)) {
+				lista = endososDAO.buscarAseguradosEndosoCoberturas(params.get("cdunieco"), params.get("cdramo"),
+						params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"), params.get("cadena"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_AMPARADAS_CONFIRMADAS)) {
+				lista = endososDAO.recuperarCoberturasAmparadasConfirmadas(params.get("cdunieco"), params.get("cdramo"),
+						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_DISPONIBLES)) {
+				lista = endososDAO.recuperarCoberturasDisponibles(params.get("cdunieco"), params.get("cdramo"),
+						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_AGREGADAS)) {
+				lista = endososDAO.recuperarCoberturasAgregadas(params.get("cdunieco"), params.get("cdramo"),
+						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"));
 			}
 		}
 		catch(Exception ex)

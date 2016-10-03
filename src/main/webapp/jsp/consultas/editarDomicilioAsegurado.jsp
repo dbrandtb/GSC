@@ -6,6 +6,9 @@
 var _CONTEXT = '${ctx}';
 
 var _cdPersonAsegurado = '<s:property value="params.cdperson" />';
+var _nmordinaDomiclio = '<s:property value="params.nmorddom" />';
+
+debug('_nmordinaDomiclio:', _nmordinaDomiclio, '.');
 
 var _URL_ObtieneDomicilioAseg   = '<s:url namespace="/catalogos" action="obtenerDomicilioPorCdperson" />';
 var _URL_GuardaDomicilioAseg    = '<s:url namespace="/catalogos" action="guardarDomicilioAsegurado" />';
@@ -113,14 +116,18 @@ Ext.onReady(function() {
     
     storeDomicilio.load({
     	params: {
-    		'smap1.cdperson' : _cdPersonAsegurado
+    		'smap1.cdperson' : _cdPersonAsegurado,
+    		'smap1.nmorddom' : _nmordinaDomiclio
     	},
-    	callback: function(){
-    		
-    		recordCargaDomi = storeDomicilio.getAt(0);
-    		panelDomici.loadRecord(recordCargaDomi);
-    		debug('Valores a agregar:',storeDomicilio.getAt(0));
-    		
+    	callback: function(records, op, success){
+    		if (success === true && records.length > 0) {
+    		    recordCargaDomi = storeDomicilio.getAt(0);
+    		    panelDomici.loadRecord(recordCargaDomi);
+    		    panelDomici.down('[name=smap1.accion]').setValue('U');
+    		    debug('Valores a agregar:',storeDomicilio.getAt(0));
+    		} else {
+    		    panelDomici.down('[name=smap1.accion]').setValue('I');
+    		}
     	}
     });
     
@@ -134,7 +141,13 @@ Ext.onReady(function() {
         },
 		url: _URL_GuardaDomicilioAseg,
 		height: 300,
-		items : [  {
+		items : [   {
+		                xtype      : 'textfield',
+		                name       : 'smap1.accion',
+		                allowBlank : false,
+		                fieldLabel : 'accion',
+		                hidden     : true
+		            }, {
                         xtype: 'textfield',
                         fieldLabel: 'CDPERSON',
                         name: 'smap1.CDPERSON',
@@ -266,10 +279,17 @@ Ext.onReady(function() {
 					var form = panelDomici.getForm();
 					
 					if (form.isValid()) {
+					    var mask = _maskLocal('Guardando domicilio');
 		                form.submit({
 		                    success: function(form, action) {
-		                    	if(action.result.exito){
-		                    		mensajeCorrecto('Aviso', 'Datos guardados.');	
+		                        mask.close();
+		                    	if(action.result.exito === true){
+		                    		mensajeCorrecto('Aviso', 'Datos guardados.');
+		                    		try {
+                                        _callbackDomicilioAseg();
+                                    } catch (e) {
+                                        debugError('No hay funcion callback en domicilio.',e);
+                                    }	
 		                    	}else{
 		                    		 mensajeError(action.result ? action.result.respuesta : 'Error al guardar los datos.');
 		                    	}
@@ -277,16 +297,11 @@ Ext.onReady(function() {
 		                       
 		                    },
 		                    failure: function(form, action) {
+		                        mask.close();
 		                        mensajeError('Error', action.result ? action.result.respuesta : 'Error al guardar los datos.');
 		                    }
 		                });
 		            }
-					
-					try{
-						_callbackDomicilioAseg();
-					}catch(e){
-						debugError('No hay funcion callback en domicilio.',e);
-					}
 				}
 		}]
 	});

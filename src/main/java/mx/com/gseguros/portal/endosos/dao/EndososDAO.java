@@ -14,7 +14,10 @@ public interface EndososDAO
 {
     public List<Map<String,String>> obtenerEndosos(Map<String,String>params)                   throws Exception;
     public Map<String, String>      guardarEndosoNombres(Map<String, Object> params)           throws Exception;
+    
+    @Deprecated
     public List<Map<String,String>> retarificarEndosos(Map<String,String>params)                   throws Exception;
+    
     @Deprecated
     public Map<String, String>      confirmarEndosoB(Map<String, String> params)               throws Exception;
     public void confirmarEndosoB(
@@ -34,7 +37,10 @@ public interface EndososDAO
     public Map<String, String>      iniciaEndoso(Map<String, Object> params)        throws Exception;
 	public List<Map<String,String>> obtenerAtributosCoberturas(Map<String, String> params)     throws Exception;
 	public Map<String, String>      guardarEndosoClausulas(Map<String, Object> params)         throws Exception;
+	
+	@Deprecated
 	public Map<String, String>      calcularValorEndoso(Map<String, Object> params)            throws Exception;
+	
 	@Deprecated
 	public Map<String, String>      iniciarEndoso(Map<String, String> params)                  throws Exception;
 	public Map<String, String>      iniciarEndoso(
@@ -60,7 +66,11 @@ public interface EndososDAO
 			)throws Exception;
 	
 	public void                     insertarTworksupSitTodas(Map<String, String> params)       throws Exception;
+	
+	@Deprecated
 	public Map<String, String>      obtieneDatosMpolisit(Map<String, String> params)           throws Exception;
+	public Map<String, String> obtieneDatosMpolisit(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+	
 	public List<Map<String,String>> obtenerNombreEndosos(String cdsisrol, Integer cdramo, String cdtipsit) throws Exception;
 	public String                   obtieneDescripcionEndoso(String cdtipsup)                  throws Exception;
 	public void                     actualizaNombreCliente(Map<String, String> params)             throws Exception;
@@ -739,4 +749,88 @@ public interface EndososDAO
 			,String nmpoliza
 			,String nmsuplem)throws Exception;
 	
+	public List<Map<String, String>> recuperarDatosEndosoPendiente (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String cdtipsup) throws Exception;
+	
+	public Map<String, String> recuperarFechasVigenciaPoliza(String cdunieco, String cdramo,
+			String estado, String nmpoliza) throws Exception;
+	
+	public Map<String, String> recuperarMpolisitTitularVigente(String cdunieco, String cdramo,
+			String estado, String nmpoliza) throws Exception;
+	
+	public Map<String, String> recuperarTvalositTitularVigente(String cdunieco, String cdramo,
+			String estado, String nmpoliza) throws Exception;
+	
+	public Map<String, String> recuperarMdomicilTitularVigente(String cdunieco, String cdramo,
+			String estado, String nmpoliza) throws Exception;
+	
+	public List<Map<String, String>> recuperarAseguradosEndosoAlta (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) throws Exception;
+	
+	public Map<String, String> recuperarAseguradoCompletoEndosoAlta (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String nmsituac) throws Exception;
+	
+	public void borrarMpoliperEndoso (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem, String nmsituac) throws Exception;
+	
+	public List<Map<String, String>> recuperarPersonasFisicasPorRFCMultipleDomicilio (String rfc) throws Exception;
+	
+	public Map<String, String> recuperarPersonaEndosoAlta (String cdperson) throws Exception;
+	
+	public List<Map<String, String>> recuperarAseguradosRepetidos (String cdunieco, String cdramo, String estado,
+			String nmpoliza) throws Exception;
+	
+	public List<Map<String, String>> recuperaParentescosActivos (String cdunieco, String cdramo, String estado,
+			String nmpoliza) throws Exception;
+	
+	public List<Map<String, String>> recuperarAseguradosConExtraprimaIncompleta (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) throws Exception;
+	
+	public List<Map<String, String>> recuperarAseguradosSinDomicilio (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) throws Exception;
+	
+	public void borraCoberturasYTarifaEndosoAltaAsegurados (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem) throws Exception;
+	
+	public List<Map<String, String>> retarificarEndosos(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem) throws Exception;
+	
+	public void calcularValorEndoso(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String nmsuplem, Date feinival, String cdtipsup) throws Exception;
+	
+	public List<Map<String, String>> recuperarTarifaEndosoSalud(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem) throws Exception;
+	
+	public void validarTramiteSinCambiosEndosoPendiente(String ntramite) throws Exception;
+	
+	public List<Map<String, String>> buscarAseguradosEndosoCoberturas(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem, String cadena) throws Exception;
+	
+	public List<Map<String, String>> recuperarCoberturasAmparadasConfirmadas(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String nmsuplem) throws Exception;
+	
+	public List<Map<String, String>> recuperarCoberturasDisponibles(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String nmsuplem) throws Exception;
+	
+	public void movimientoMpoligar (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String nmsuplem, String cdcapita, String status,
+			String cdtipbca, String ptvalbas, String swmanual, String swreas, String cdagrupa,
+			String accion, String cdtipsup) throws Exception;
+	
+	public Map<String, String> recuperarDatosCoberturaParaInsercion (String cdramo, String cdtipsit, String cdgarant) throws Exception;
+	
+	public Map<String, String> recuperarTvalositInciso (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String nmsuplem) throws Exception;
+	
+	public List<Map<String, String>> recuperarCoberturasAgregadas(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String nmsuplem) throws Exception;
+	
+	public void eliminarCoberturaImagenExacta (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String status, String nmsuplem) throws Exception;
+	
+	public int recuperarConteoCoberturasImagenExacta (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String status, String nmsuplem) throws Exception;
+	
+	public void eliminarTvalositImagenExacta (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String status, String nmsuplem) throws Exception;
 }

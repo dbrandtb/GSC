@@ -906,6 +906,7 @@ public class PersonasAction extends PrincipalCoreAction
 					,smap1.get("NMNUMINT")
 					,usuario
 					,"S"//Domicilio activo
+					,smap1.get("accion")
 					,timestamp
 					);
 		}
@@ -939,7 +940,7 @@ public class PersonasAction extends PrincipalCoreAction
 				);
 		try
 		{
-			Map<String,Object> managerResult=personasManager.obtenerDomicilioPorCdperson(smap1.get("cdperson"),timestamp);
+			Map<String,Object> managerResult=personasManager.obtenerDomicilioPorCdperson(smap1.get("cdperson"),smap1.get("nmorddom"),timestamp);
 			exito           = (Boolean)managerResult.get("exito");
 			respuesta       = (String)managerResult.get("respuesta");
 			respuestaOculta = (String)managerResult.get("respuestaOculta");

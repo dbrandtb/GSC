@@ -807,7 +807,16 @@ public interface CotizacionDAO {
 			String cdtipsit,
 			String cdgarant
 			)throws Exception;
-
+	
+	public List<ComponenteVO> recuperarTatrirol(String cdramo, String cdrol, String cdtipsit, String cdperson) throws Exception;
+	
+	public void movimientoMpolisitV2 (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsituac, String nmsuplem,
+			String status, String cdtipsit, String swreduci, String cdagrupa,
+			String cdestado, Date fefecsit, Date fecharef, String cdgrupo,
+			String nmsituaext, String nmsitaux, String nmsbsitext,
+			String cdplan, String cdasegur, String accion) throws Exception;
+	
 	public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
 			String promotoria, String cdagente, String cdtipsit, String cdatribu)throws Exception;
 }

@@ -519,4 +519,75 @@ public interface EndososAutoManager
 	public void sacaEndosoFlujo(FlujoVO flujo) throws Exception;
 	
 	public void validacionSigsAgente (String cdagente, String cdramo, String cdtipsit, String cdtipend) throws Exception;
+	
+	public Map<String, String> guardarFechaEfectoEndosoPendiente (String cdunieco, String cdramo, String estado,
+			String nmpoliza, String fecha, String cdelemen, String cdusuari, String proceso, String cdtipsup) throws Exception;
+	
+	public Map<String, String> recuperarDatosEndosoPendiente (String cdunieco, String cdramo, String estado,
+			String nmpoliza, String cdtipsup) throws Exception;
+	
+	public Map<String, Object> endosoAltaAsegurados(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String cdusuari, String cdsisrol, String status) throws Exception;
+	
+	public String guardarAseguradoParaEndosoAlta (
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cdusuari,
+			String cdsisrol,
+			String accion,
+			String nombre,
+			String nombre2,
+			String apat,
+			String amat,
+			String sexo,
+			String fenacimi,
+			String rfc,
+			String nacional,
+			String edocivil,
+			String feingreso,
+			String cdperson,
+			String cdtipide,
+			String cdideper,
+			String cdtipper,
+			String dsemail,
+			String canaling,
+			String conducto,
+			String ptcumupr,
+			String residencia,
+			String nongrata,
+			String cdideext,
+			String cdsucemi,
+			String otfisjur,
+			String nmsituac,
+			String cdrol,
+			String nmorddom,
+			String swreclam,
+			String swexiper,
+			String nmsuplem,
+			String nsuplogi,
+			String fesolici,
+			String feendoso,
+			Map<String, String> valosit
+			) throws Exception;
+	
+	public List<Map<String, String>> tarificarEndosoAltaAsegurados (String cdusuari, String cdelemen, String cdunieco,
+			String cdramo, String estado, String nmpoliza, String nmsuplem, String feinival) throws Exception;
+	
+	public Map<String, String> confirmarEndosoFlujo (String cdusuari, String cdsisrol, String cdelemen,
+			String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza,
+			String status, String nmsuplem, String nsuplogi, Date fesolici, Date feinival, boolean autoriza,
+			String cdtipsup, UserVO usuario) throws Exception;
+	
+	public Map<String, Object> endosoCoberturasFlujo (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String cdusuari, String cdsisrol, String status) throws Exception;
+	
+	public void agregarCoberturaEndosoCoberturas (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1, String otvalor1,
+			String cdatribu2, String otvalor2, String cdatribu3, String otvalor3, String cdtipsit) throws Exception;
+	
+	public void quitarCoberturaAgregadaEndCob (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1,
+			String cdatribu2, String cdatribu3, String cdtipsit) throws Exception;
 }
