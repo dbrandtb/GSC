@@ -5,38 +5,78 @@
 ///////////////////////
 ////// FUNCIONES //////
 /*///////////////////*/
-var _ice_debug = false;
-
-function debug(a,b,c,d,e)
+function debug()
 {
-	if(_ice_debug)
-	{
-	    if(e!=undefined)
-            console.log(a,b,c,d,e);
-	    else if(d!=undefined)
-	        console.log(a,b,c,d);
-	    else if(c!=undefined)
-	        console.log(a,b,c);
-	    else if(b!=undefined)
-	        console.log(a,b);
-	    else
-	        console.log(a);
-	}
+	try {
+	    switch (arguments.length) {
+	        case 0 : console.log('(sin argumentos)');
+	                 break;
+	        case 1 : console.log(arguments[0]);
+	                 break;
+	        case 2 : console.log(arguments[0], arguments[1]);
+                     break;
+            case 3 : console.log(arguments[0], arguments[1], arguments[2]);
+                     break;
+            case 4 : console.log(arguments[0], arguments[1], arguments[2], arguments[3]);
+                     break;
+            case 5 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+                     break;
+            case 6 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+                                 arguments[5]);
+                     break;
+            case 7 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+                                 arguments[5], arguments[6]);
+                     break;
+            case 8 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+                                 arguments[5], arguments[6], arguments[7]);
+                     break;
+            case 9 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+                                 arguments[5], arguments[6], arguments[7], arguments[8]);
+                     break;
+            case 10 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+                                 arguments[5], arguments[6], arguments[7], arguments[8], arguments[9]);
+                     break;
+            default : console.log(arguments);
+                      break;
+	    }
+	} catch (e) {}
 }
 
-function debugError(a,b,c,d)
+function debugError()
 {
-    if(_ice_debug)
-    {
-        if(d!=undefined)
-            console.error('error manejado:',a,b,c,d);
-        else if(c!=undefined)
-            console.error('error manejado:',a,b,c);
-        else if(b!=undefined)
-            console.error('error manejado:',a,b);
-        else
-            console.error('error manejado:',a);
-    }
+    try {
+        switch (arguments.length) {
+            case 0 : console.error('(sin argumentos)');
+                     break;
+            case 1 : console.error(arguments[0]);
+                     break;
+            case 2 : console.error(arguments[0], arguments[1]);
+                     break;
+            case 3 : console.error(arguments[0], arguments[1], arguments[2]);
+                     break;
+            case 4 : console.error(arguments[0], arguments[1], arguments[2], arguments[3]);
+                     break;
+            case 5 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+                     break;
+            case 6 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+                                 arguments[5]);
+                     break;
+            case 7 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+                                 arguments[5], arguments[6]);
+                     break;
+            case 8 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+                                 arguments[5], arguments[6], arguments[7]);
+                     break;
+            case 9 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+                                 arguments[5], arguments[6], arguments[7], arguments[8]);
+                     break;
+            case 10 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+                                 arguments[5], arguments[6], arguments[7], arguments[8], arguments[9]);
+                     break;
+            default : console.error(arguments);
+                      break;
+        }
+    } catch (e) {}
 }
 
 //se llama automatico cuando un grid tiene columnas con editor y el editor es combo
