@@ -5,7 +5,7 @@
 ///////////////////////
 ////// FUNCIONES //////
 /*///////////////////*/
-var _ice_debug = true;
+var _ice_debug = false;
 
 function debug(a,b,c,d,e)
 {
@@ -3597,6 +3597,22 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 		}]
 	});
 	centrarVentanaInterna(validacionNumSerie.show());
+}
+
+function _iceNames () {
+    var names = Ext.ComponentQuery.query('[name]');
+    for (var i = 0; i < names.length; i++) {
+        names[i].setFieldLabel(names[i].fieldLabel + ', [' + names[i].name + ']');
+    }
+}
+
+function _iceMesaControl () {
+    debug('_iceMesaControl()');
+    _mask('Redireccionando...');
+    Ext.create('Ext.form.Panel').submit({
+        url            : _GLOBAL_COMP_URL_MCFLUJO,
+        standardSubmit : true
+    });
 }
 
 ////////////////////////////

@@ -89,7 +89,7 @@ public interface PersonasDAO
 	/**
 	 * obtener domicilio por cdperson desde PKG_CONSULTA.P_GET_MDOMICIL
 	 */
-	public Map<String,String> obtenerDomicilioPorCdperson(String cdperson) throws Exception;
+	public Map<String,String> obtenerDomicilioPorCdperson(String cdperson, String nmorddom) throws Exception;
 
 	public List<Map<String,String>> obtenerDomiciliosPorCdperson(String cdperson) throws Exception;
 	

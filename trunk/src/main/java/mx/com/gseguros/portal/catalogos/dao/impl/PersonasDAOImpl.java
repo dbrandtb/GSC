@@ -335,11 +335,12 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	 * obtener domicilio por cdperson desde PKG_CONSULTA.P_GET_MDOMICIL
 	 */
 	@Override
-	public Map<String,String> obtenerDomicilioPorCdperson(String cdperson) throws Exception
+	public Map<String,String> obtenerDomicilioPorCdperson(String cdperson, String nmorddom) throws Exception
 	{
 		Map<String,String>domicilio = null;
 		Map<String,String>params    = new LinkedHashMap<String,String>();
 		params.put("cdperson",cdperson);
+		params.put("nmorddom",nmorddom);
 		logger.debug(
 				new StringBuilder()
 				.append("\n*****************************************")
@@ -368,6 +369,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		Map<String,String>params    = new LinkedHashMap<String,String>();
 		params.put("cdperson",cdperson);
+		params.put("nmorddom",null);
 		logger.debug(
 				new StringBuilder()
 				.append("\n*****************************************")
@@ -391,6 +393,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     	protected ObtenerDomicilioPorCdperson(DataSource dataSource) {
             super(dataSource,"PKG_CONSULTA.P_GET_MDOMICIL");
     		declareParameter(new SqlParameter("cdperson"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmorddom"    , OracleTypes.VARCHAR));
     		String[] cols=new String[]{
     				"CDPERSON" , "NMORDDOM" , "DSDOMICI"  , "NMTELEFO" , "CODPOSTAL" , "CDEDO"
     				,"ESTADO"  , "CDMUNICI" , "MUNICIPIO" , "CDCOLONI" , "COLONIA","NMNUMERO"  , "NMNUMINT", "CDTIPDOM","DSTIPDOM","SWACTIVO", "CDUSRCRE"

@@ -5,73 +5,100 @@
 <head>
 <script>
 ////// urls //////
+var _p59_urlRecuperarDatosEndoso  = '<s:url namespace = "/endosos"   action = "recuperarDatosEndosoPendiente"          />',
+    _p59_urlGuardarFechaEfecto    = '<s:url namespace = "/endosos"   action = "guardarFechaEfectoEndosoPendiente"      />',
+    _p59_urlGuardarAsegurado      = '<s:url namespace = "/endosos"   action = "guardarAseguradoParaEndosoAlta"         />',
+    _p59_urlSacaendoso            = '<s:url namespace = "/endosos"   action = "sacaendoso"                             />',
+    _p59_urlPantallaDomicilios    = '<s:url namespace = "/catalogos" action = "includes/editarDomicilioAsegurado"      />',
+    _p59_urlPantallaExclusiones   = '<s:url namespace = "/"          action = "pantallaExclusion"                      />',
+    _p59_urlTarificar             = '<s:url namespace = "/endosos"   action = "tarificarEndosoAltaAsegurados"          />',
+    _p59_urlPantallaBeneficiarios = '<s:url namespace = "/catalogos" action = "includes/pantallaBeneficiarios"         />',
+    _p59_urlConfirmarEndosoFlujo  = '<s:url namespace = "/endosos"   action = "confirmarEndosoFlujo"                   />';
 ////// urls //////
 
 ////// variables //////
-var _p59_storeAseguradosNuevos,
-    _p59_windowAsegurado;
+var _p59_storeAseguradosNuevos;
+
+var _p59_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />,
+    _p59_params = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+
+debug('_p59_flujo:', _p59_flujo);
+debug('_p59_params:', _p59_params);
+
+var _callbackDomicilioAseg;        // Variable para el callback de la ventana de domicilios
+var _callbackAseguradoExclusiones; // Variable para el callback de la ventana de exclusiones
 ////// variables //////
 
 ////// overrides //////
 ////// overrides //////
 
-////// componentes dinamicos //////
-////// componentes dinamicos //////
-
 Ext.onReady(function()
 {
+    ////// componentes dinamicos //////
+    var _p59_mpersonaItems = [ <s:property value = "items.mpersonaItems" escapeHtml = "false" /> ];
+    var _p59_mpoliperItems = [ <s:property value = "items.mpoliperItems" escapeHtml = "false" /> ];
+    var _p59_tatrisitItems = [ <s:property value = "items.tatrisitItems" escapeHtml = "false" /> ];
+    //var _p59_tatrirolItems = [ <%-- s:property value = "items.tatrirolItems" escapeHtml = "false" / --%> ];
+    
+    debug('inicio de mpersona items');
+    for (var i = 0; i < _p59_mpersonaItems.length; i++) {
+        debug(_p59_mpersonaItems[i].name);
+    }
+    debug('fin de mpersona items');
+
+    var _p59_datosPersonaItems = [];
+    for (var i = 0; i < _p59_mpersonaItems.length ; i++) {
+        _p59_datosPersonaItems.push(_p59_mpersonaItems[i]);
+    }
+    for (var i = 0; i < _p59_mpoliperItems.length ; i++) {
+        _p59_datosPersonaItems.push(_p59_mpoliperItems[i]);
+    }
+    for (var i = 0; i < _p59_tatrisitItems.length ; i++) {
+        _p59_datosPersonaItems.push(_p59_tatrisitItems[i]);
+     }
+    ////// componentes dinamicos //////
+    
     ////// modelos //////
     ////// modelos //////
     
     ////// stores //////
-    _p59_storeAseguradosNuevos = Ext.create('Ext.data.Store',
-    {
-        type    : 'memory'
-        ,data   : []
-        ,fields :
-        [
-            'NMSITUAC', 'DSPARENT', 'DSNOMBRE', 'DSSEXO', { type : 'date', name : 'FENACIMI', dateFormat : 'd/m/Y' }
-        ]
-        ,cargar : function()
-        {
+    _p59_storeAseguradosNuevos = Ext.create('Ext.data.Store', {
+        autoLoad: false,
+        fields: [
+            'CDPERSON', 'NMSITUAC', 'DSPARENT', 'DSNOMBRE', 'DSSEXO', { type : 'date', name : 'FENACIMI', dateFormat : 'd/m/Y' }, 'NMORDDOM',
+            'CDRFC'
+        ],
+        proxy : {
+            type        : 'ajax',
+            url         : _GLOBAL_URL_RECUPERACION,
+            extraParams : {
+                'params.consulta' : 'RECUPERAR_ASEGURADOS_ENDOSO_ALTA',
+                'params.cdunieco' : _p59_flujo.cdunieco,
+                'params.cdramo'   : _p59_flujo.cdramo,
+                'params.estado'   : _p59_flujo.estado,
+                'params.nmpoliza' : _p59_flujo.nmpoliza
+            },
+            reader : {
+                type            : 'json',
+                root            : 'list',
+                successProperty : 'success',
+                messageProperty : 'message'
+            }
+        },
+        cargar: function () {
+            debug('_p59_storeAseguradosNuevos.cargar()');
             var me = this;
-            me.removeAll();
-            
-            if(Math.random()>0.5)
-            {
-                me.add(
-                {
-                    NMSITUAC  : '5'
-                    ,DSPARENT : 'CONYUGE'
-                    ,DSNOMBRE : 'TEST '+(new Date()).getTime()
-                    ,DSSEXO   : 'MUJER'
-                    ,FENACIMI : '06/11/1989'
-                });
-            }
-            
-            if(Math.random()>0.5)
-            {
-                me.add(
-                {
-                    NMSITUAC  : '6'
-                    ,DSPARENT : 'DEPENDIENTE'
-                    ,DSNOMBRE : 'TEST '+(new Date()).getTime()
-                    ,DSSEXO   : 'HOMBRE'
-                    ,FENACIMI : '01/01/2000'
-                });
-            }
-            
-            if(Math.random()>0.5)
-            {
-                me.add(
-                {
-                    NMSITUAC  : '7'
-                    ,DSPARENT : 'DEPENDIENTE'
-                    ,DSNOMBRE : 'TEST '+(new Date()).getTime()
-                    ,DSSEXO   : 'MUJER'
-                    ,FENACIMI : '02/02/2010'
-                });
-            }
+            me.load({
+                params : {
+                    'params.nmsuplem' : _p59_params.nmsuplem
+                },
+                callback : function (records, op, success) {
+                    debug('_p59_storeAseguradosNuevos.load().callback() args:', arguments);
+                    if (!success) {
+                        mensajeError(op.error);
+                    }
+                }
+            });
         }
     });
     ////// stores //////
@@ -89,7 +116,36 @@ Ext.onReady(function()
         ,defaults : { style : 'margin : 5px;' }
         ,items    :
         [
-            {
+            Ext.create('Ext.panel.Panel', {
+                itemId      : '_p59_panelFlujo',
+                title       : 'ACCIONES',
+                hidden      : Ext.isEmpty(_p59_flujo),
+                buttonAlign : 'left',
+                buttons     : [],
+                listeners   : {
+                    afterrender : function (me) {
+                        if (!Ext.isEmpty(_p59_flujo)) {
+                            _cargarBotonesEntidad(
+                                _p59_flujo.cdtipflu,
+                                _p59_flujo.cdflujomc,
+                                _p59_flujo.tipoent,
+                                _p59_flujo.claveent,
+                                _p59_flujo.webid,
+                                me.itemId, // callback
+                                _p59_flujo.ntramite,
+                                _p59_flujo.status,
+                                _p59_flujo.cdunieco,
+                                _p59_flujo.cdramo,
+                                _p59_flujo.estado,
+                                _p59_flujo.nmpoliza,
+                                _p59_flujo.nmsituac,
+                                _p59_flujo.nmsuplem,
+                                null // callbackDespuesProceso
+                            );
+                        }
+                    }
+                }
+            }), {
                 xtype     : 'panel'
                 ,layout   : 'hbox'
                 ,border   : 0
@@ -102,13 +158,15 @@ Ext.onReady(function()
                         ,format     : 'd/m/Y'
                         ,name       : 'FEEFECTO'
                         ,allowBlank : false
+                        ,minValue   : _p59_params.FEEFECTO
+                        ,maxValue   : _p59_params.FEPROREN
                     }
                     ,{
                         xtype    : 'button'
                         ,text    : 'Confirmar fecha'
                         ,itemId  : '_p59_botonConfirmarFecha'
                         ,icon    : '${icons}accept.png'
-                        ,handler : _p59_confirmarClic
+                        ,handler : _p59_confirmarFechaClic
                     }
                 ]
             }
@@ -174,23 +232,101 @@ Ext.onReady(function()
                                 {
                                     _fieldById('_p59_formAsegurado').mostrarParaEditar(record);
                                 }
-                            }
-                            ,{
-                                tooltip : 'Domicilio'
-                                ,icon   : '${icons}report_key.png'
-                            }
-                            ,{
-                                tooltip : 'Exclusiones'
-                                ,icon   : '${icons}lock.png'
-                            }
-                            ,{
+                            }, {
+                                tooltip : 'Domicilio',
+                                icon    : '${icons}report_key.png',
+                                handler : function (me, row, col, item, e, record) {
+                                    debug('ASEGURADOS NUEVOS Domicilio handler() args:', arguments);
+                                    var ven = centrarVentanaInterna(Ext.create('Ext.window.Window', {
+                                        title  : 'EDITAR DOMICILIO',
+                                        width  : 500,
+                                        height : 350,
+                                        modal  : true,
+                                        loader : {
+                                            url      : _p59_urlPantallaDomicilios,
+                                            autoLoad : true,
+                                            scripts  : true,
+                                            params   : {
+                                                'params.cdperson' : record.get('CDPERSON'),
+                                                'params.nmorddom' : record.get('NMORDDOM')
+                                            }
+                                        }
+                                    }).show()); 
+                                    _callbackDomicilioAseg = function () {
+                                        ven.close();
+                                    };
+                                }
+                            }, {
+                                tooltip : 'Exclusiones',
+                                icon    : '${icons}lock.png',
+                                handler : function (me, row, col, item, e, record) {
+                                    debug('ASEGURADOS NUEVOS Exclusiones handler() args:', arguments);
+                                    var ven = centrarVentanaInterna(Ext.create('Ext.window.Window', {
+                                        title  : 'EDITAR EXCLUSIONES',
+                                        width  : 700,
+                                        height : 500,
+                                        modal  : true,
+                                        loader : {
+                                            url      : _p59_urlPantallaExclusiones,
+                                            autoLoad : true,
+                                            scripts  : true,
+                                            params   : {
+                                                'smap1.pv_cdunieco'     : _p59_flujo.cdunieco,
+                                                'smap1.pv_cdramo'       : _p59_flujo.cdramo,
+                                                'smap1.pv_estado'       : _p59_flujo.estado,
+                                                'smap1.pv_nmpoliza'     : _p59_flujo.nmpoliza,
+                                                'smap1.pv_nmsituac'     : record.get('NMSITUAC'),
+                                                'smap1.pv_nmsuplem'     : _p59_params.nmsuplem,
+                                                'smap1.pv_cdperson'     : record.get('CDPERSON'),
+                                                'smap1.pv_cdrol'        : '2',
+                                                'smap1.nombreAsegurado' : record.get('DSNOMBRE'),
+                                                'smap1.cdrfc'           : record.get('CDRFC'),
+                                                'smap1.botonCopiar'     : '0'
+                                            }
+                                        }
+                                    }).show()); 
+                                    _callbackAseguradoExclusiones = function () {
+                                        ven.close();
+                                    };
+                                }
+                            }, {
+                                tooltip : 'Beneficiarios',
+                                icon    : '${icons}money.png',
+                                handler : function (me, row, col, item, e, record) {
+                                    debug('ASEGURADOS NUEVOS Beneficiarios handler() args:', arguments);
+                                    var ven = centrarVentanaInterna(Ext.create('Ext.window.Window', {
+                                        title  : 'EDITAR BENEFICIARIOS',
+                                        width  : 800,
+                                        height : 400,
+                                        modal  : true,
+                                        loader : {
+                                            url      : _p59_urlPantallaBeneficiarios,
+                                            autoLoad : true,
+                                            scripts  : true,
+                                            params   : {
+                                                'smap1.ntramite'     : _p59_flujo.ntramite,
+                                                'smap1.cdunieco'     : _p59_flujo.cdunieco,
+                                                'smap1.cdramo'       : _p59_flujo.cdramo,
+                                                'smap1.estado'       : _p59_flujo.estado,
+                                                'smap1.nmpoliza'     : _p59_flujo.nmpoliza,
+                                                'smap1.nmsuplem'     : _p59_params.nmsuplem,
+                                                'smap1.nmsituac'     : record.get('NMSITUAC'),
+                                                'smap1.cdrolPipes'   : '3',
+                                                'smap1.cdtipsup'     : '27',
+                                                'smap1.ultimaImagen' : 'N',
+                                                'smap1.sinConfirmar' : 'S'
+                                            }
+                                        }
+                                    }).show());
+                                }
+                            }/*, {
                                 tooltip  : 'Quitar'
                                 ,icon    : '${icons}delete.png'
                                 ,handler : function(me,row,col,item,e,record)
                                 {
                                     _p59_storeAseguradosNuevos.remove(record);
                                 }
-                            }
+                            }*/
                         ]
                     }
                 ]
@@ -202,93 +338,11 @@ Ext.onReady(function()
                 ,border   : 0
                 ,hidden   : true
                 ,defaults : { style : 'margin : 5px;' }
-                ,items    :
-                [
-                    {
-                        xtype   : 'fieldset'
-                        ,title  : '<span style="font:bold 14px Calibri;">DATOS DE PERSONA</span>'
-                        ,layout :
-                        {
-                            type     : 'table'
-                            ,columns : 2
-                        }
-                        ,defaults : { style : 'margin : 5px;' }
-                        ,items    :
-                        [
-                            {
-                                xtype       : 'textfield'
-                                ,fieldLabel : 'NOMBRE'
-                                ,allowBlank : false
-                            }
-                            ,{
-                                xtype       : 'textfield'
-                                ,fieldLabel : 'SEGUNDO NOMBRE'
-                            }
-                            ,{
-                                xtype       : 'textfield'
-                                ,fieldLabel : 'APELLIDO PATERNO'
-                                ,allowBlank : false
-                            }
-                            ,{
-                                xtype       : 'textfield'
-                                ,fieldLabel : 'APELLIDO MATERNO'
-                                ,allowBlank : false
-                            }
-                            ,{
-                                xtype       : 'textfield'
-                                ,fieldLabel : 'SEXO'
-                                ,allowBlank : false
-                            }
-                        ]
-                    }
-                    ,{
-                        xtype   : 'fieldset'
-                        ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES</span>'
-                        ,layout :
-                        {
-                            type     : 'table'
-                            ,columns : 2
-                        }
-                        ,defaults : { style : 'margin : 5px;' }
-                        ,items    :
-                        [
-                            {
-                                xtype       : 'textfield'
-                                ,fieldLabel : 'CLIENTE VIP'
-                            }
-                            ,{
-                                xtype       : 'textfield'
-                                ,fieldLabel : 'CORREO ELECTR\u00d3NICO'
-                            }
-                        ]
-                    }
-                    ,{
-                        xtype   : 'fieldset'
-                        ,title  : '<span style="font:bold 14px Calibri;">DATOS RELACIONADOS A LA P\u00d3LIZA</span>'
-                        ,layout :
-                        {
-                            type     : 'table'
-                            ,columns : 2
-                        }
-                        ,defaults : { style : 'margin : 5px;' }
-                        ,items    :
-                        [
-                            {
-                                xtype       : 'textfield'
-                                ,fieldLabel : 'PARENTESCO'
-                                ,allowBlank : false
-                            }
-                            ,{
-                                xtype       : 'textfield'
-                                ,fieldLabel : 'EXTRAPRIMA OCUPACI\U00D3N'
-                            }
-                            ,{
-                                xtype       : 'textfield'
-                                ,fieldLabel : 'EXTRAPRIMA SOBREPESO'
-                            }
-                        ]
-                    }
-                ]
+                ,layout   : {
+                    type     : 'table'
+                    ,columns : 2
+                }
+                ,items    : _p59_datosPersonaItems
                 ,buttonAlign : 'center'
                 ,buttons     :
                 [
@@ -311,16 +365,58 @@ Ext.onReady(function()
                     debug('_p59_formAsegurado.mostrarParaNuevo args:',arguments);
                     var me = this;
                     me.getForm().reset();
+                    me.down('[name=ACCION]').setValue('I');
                     _fieldById('_p59_gridAseguradosNuevos').hide();
                     me.show();
                 }
-                ,mostrarParaEditar : function(datos)
+                ,mostrarParaEditar : function(record)
                 {
                     debug('_p59_formAsegurado.mostrarParaEditar args:',arguments);
                     var me = this;
-                    me.getForm().reset();
-                    _fieldById('_p59_gridAseguradosNuevos').hide();
-                    me.show();
+                    var mask, ck = 'Recuperando datos de asegurado';
+                    try {
+                        mask = _maskLocal(ck);
+                        Ext.Ajax.request({
+                            url     : _GLOBAL_URL_RECUPERACION,
+                            params  : {
+                                'params.consulta' : 'RECUPERAR_ASEGURADO_COMPLETO_ENDOSO_ALTA',
+                                'params.cdunieco' : _p59_flujo.cdunieco,
+                                'params.cdramo'   : _p59_flujo.cdramo,
+                                'params.estado'   : _p59_flujo.estado,
+                                'params.nmpoliza' : _p59_flujo.nmpoliza,
+                                'params.nmsuplem' : _p59_params.nmsuplem,
+                                'params.nmsituac' : record.get('NMSITUAC')
+                            },
+                            success : function (response) {
+                                mask.close();
+                                var ck = 'Decodificando respuesta al recuperar datos de asegurado';
+                                try {
+                                    var jsonAsegurado = Ext.decode(response.responseText);
+                                    debug('AJAX jsonAsegurado:', jsonAsegurado);
+                                    if (jsonAsegurado.success !== true) {
+                                        throw jsonAsegurado.message;
+                                    }
+                                    me.getForm().reset();
+                                    _fieldById('_p59_gridAseguradosNuevos').hide();
+                                    me.getForm().loadRecord({
+                                        getData : function () {
+                                            return jsonAsegurado.params;
+                                        }
+                                    });
+                                    me.down('[name=ACCION]').setValue('U');
+                                    me.show();
+                                } catch (e) {
+                                    manejaException(e, ck);
+                                }
+                            },
+                            failure : function () {
+                                mask.close();
+                                errorComunicacion(null, 'Error al recuperar datos de asegurado');
+                            }
+                        });
+                    } catch (e) {
+                        manejaException(e, ck, mask);
+                    }
                 }
                 ,cerrar : function()
                 {
@@ -332,54 +428,96 @@ Ext.onReady(function()
             }
         ]
         ,buttonAlign : 'center'
-        ,buttons     :
-        [
+        ,buttons     : [
             {
-                text     : 'Tarificar'
-                ,icon    : '${icons}key.png'
-                ,handler : _p59_tarificarClic
-            },{
-                text  : 'Cancelar endoso'
-                ,icon : '${icons}cancel.png'
-                ,handler : _p59_cancelarClic
-            }
-            ,{
-                text     : '- simular carga -'
-                ,icon    : '${icons}bug.png'
-                ,handler : _p59_cargar
+                text    : 'Validar datos y tarificar',
+                icon    : '${icons}key.png',
+                handler : _p59_tarificarClic
+            }, {
+                text    : 'Borrar cambios',
+                icon    : '${icons}delete.png',
+                handler : _p59_borrarClic
             }
         ]
     });
     ////// contenido //////
     
     ////// custom //////
+    _p59_ocultarRepetidos();
+    
+    _p59_agregarFuncionamientoRFC();
     ////// custom //////
     
     ////// loaders //////
-    mensajeWarning('Por favor confirme la fecha de efecto para continuar con la captura de asegurados');
+    _p59_recuperarDatosEndoso();
     ////// loaders //////
 });
 
 ////// funciones //////
-function _p59_confirmarClic(me)
+function _p59_confirmarFechaClic(me)
 {
-    debug('>_p59_confirmarClic args:',arguments);
+    debug('_p59_confirmarFechaClic() args:',arguments);
     
     if(!_fieldByName('FEEFECTO').isValid())
     {
         return datosIncompletos();
     }
     
-    _p59_bloquearFecha();
+    var mask, ck = 'Guardando fecha de efecto';
+    try {
+        var params = {
+            'params.fecha'    : _fieldByName('FEEFECTO').getSubmitValue(),
+            'params.cdtipsup' : '9'
+        };
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url     : _p59_urlGuardarFechaEfecto,
+            params  : _flujoToParams(_p59_flujo, params),
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al guardar fecha de efecto';
+                try {
+                    var datosEndoso = Ext.decode(response.responseText);
+                    debug('AJAX datosEndoso:', datosEndoso);
+                    if (datosEndoso.success === true) {
+                        _p59_params.fesolici = datosEndoso.params.pv_fesolici_o;
+                        _p59_params.nsuplogi = datosEndoso.params.pv_nsuplogi_o;
+                        _p59_params.nmsuplem = datosEndoso.params.pv_nmsuplem_o;
+                        debug('_p59_params:', _p59_params);
+                        _p59_bloquearFecha(true);
+                    } else {
+                        mensajeError(datosEndoso.message);
+                        _fieldByName('FEEFECTO').setValue('');
+                    }
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al guardar fecha de efecto');
+            }
+        });
+    } catch (e) {
+        manejaException(e, ck, mask);
+    }
 }
 
-function _p59_bloquearFecha()
+function _p59_bloquearFecha(bloqueo)
 {
-    debug('_p59_bloquearFecha');
-    
-    _fieldByName('FEEFECTO').setReadOnly(true);
-    _fieldById('_p59_botonConfirmarFecha').hide();
-    _fieldById('_p59_gridAseguradosNuevos').show();
+    debug('_p59_bloquearFecha() args:', arguments);
+    if (bloqueo === true) {
+        _fieldByName('FEEFECTO').setReadOnly(true);
+        _fieldById('_p59_botonConfirmarFecha').hide();
+        _fieldById('_p59_gridAseguradosNuevos').show();
+        _fieldById('_p59_formAsegurado').hide();
+        _p59_storeAseguradosNuevos.cargar();
+    } else {
+        _fieldByName('FEEFECTO').setReadOnly(false);
+        _fieldById('_p59_botonConfirmarFecha').show();
+        _fieldById('_p59_gridAseguradosNuevos').hide();
+        _fieldById('_p59_formAsegurado').hide();
+    }
 }
 
 function _p59_agregarClic(me)
@@ -401,15 +539,42 @@ function _p59_formAseguradosGuardarClic(me)
             throw 'Favor de revisar los datos';
         }
         
-        mensajeCorrecto(
-            'Datos guardados'
-            ,'Datos guardados'
-            ,function()
-            {
-                form.cerrar();
-                _p59_storeAseguradosNuevos.cargar();
+        var values = form.getValues();
+        for (var att in _p59_params) {
+            values[att] = _p59_params[att];
+        }
+        
+        values.feendoso = _fieldByName('FEEFECTO').getSubmitValue();
+        values.cdunieco = _p59_flujo.cdunieco;
+        values.cdramo   = _p59_flujo.cdramo;
+        values.estado   = _p59_flujo.estado;
+        values.nmpoliza = _p59_flujo.nmpoliza;
+        
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url     : _p59_urlGuardarAsegurado,
+            params  : _formValuesToParams(values),
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al guardar asegurado';
+                try {
+                    var jsonAsegurado = Ext.decode(response.responseText);
+                    debug('AJAX jsonAsegurado:', jsonAsegurado);
+                    if (jsonAsegurado.success === true) {
+                        form.cerrar();
+                        _p59_storeAseguradosNuevos.cargar();
+                    } else {
+                        mensajeError(jsonAsegurado.message);
+                    }
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al guardar asegurado');
             }
-        );
+        });
     }
     catch(e)
     {
@@ -417,98 +582,140 @@ function _p59_formAseguradosGuardarClic(me)
     }
 }
 
-function _p59_cargar()
+function _p59_borrarClic(me)
 {
-    debug('_p59_cargar');
-    _fieldByName('FEEFECTO').setValue(new Date());
-    _p59_bloquearFecha();
-    _p59_storeAseguradosNuevos.cargar();
-}
-
-function _p59_cancelarClic(me)
-{
-    debug('_p59_cancelarClic args:',arguments);
-    mensajeCorrecto(
-        'Endoso revertido'
-        ,'Endoso revertido'
-        ,function()
-        {
-            _p59_mesacontrol();
+    debug('_p59_borrarClic() args:',arguments);
+    Ext.MessageBox.confirm(
+        'Confirmar',
+        '¿Est&aacute; seguro que desea borrar todos los cambios?',
+        function (btn) {
+            if (btn === 'yes') {
+                _p59_sacaendoso();
+            }
         }
     );
 }
 
+function _p59_sacaendoso (callback) {
+    debug('_p59_sacaendoso()');
+    var mask, ck = 'Borrando cambios';
+    try {
+        if (Ext.isEmpty(_p59_params.nmsuplem)) {
+            throw 'No hay cambios';
+        }
+        mask = _maskLocal('Borrando cambios');
+        Ext.Ajax.request({
+            url     : _p59_urlSacaendoso,
+            params  : {
+                'params.cdunieco' : _p59_flujo.cdunieco,
+                'params.cdramo'   : _p59_flujo.cdramo,
+                'params.estado'   : _p59_flujo.estado,
+                'params.nmpoliza' : _p59_flujo.nmpoliza,
+                'params.nmsuplem' : _p59_params.nmsuplem,
+                'params.nsuplogi' : _p59_params.nsuplogi
+            },
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al borrar cambios';
+                try {
+                    var jsonSacaendoso = Ext.decode(response.responseText);
+                    debug('AJAX jsonSacaendoso:', jsonSacaendoso);
+                    if (jsonSacaendoso.success === true) {
+                        _p59_params.nsuplogi = '';
+                        _p59_params.nmsuplem = '';
+                        _p59_params.fesolici = '';
+                        _fieldByName('FEEFECTO').setValue('');
+                        _p59_bloquearFecha(false);
+                        if (!Ext.isEmpty(callback) && typeof callback === 'function') {
+                            callback();
+                        } else {
+                            mensajeCorrecto('Datos borrados', 'Se han borrado todos los cambios');
+                        }
+                    } else {
+                        mensajeError(jsonSacaendoso.message);
+                    }
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al borrar cambios');
+            }
+        });
+    } catch (e) {
+        manejaException(e, ck, mask);
+    }
+}
+
 function _p59_tarificarClic(me)
 {
-    debug('_p59_tarificarClic args:',arguments);
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
-    {
-        title  : 'TARIFA PREVIA'
-        ,modal : true
-        ,items :
-        [
-            {
-                xtype    : 'grid'
-                ,border  : 0
-                ,width   : 700
-                ,height  : 400
-                ,columns :
-                [
-                    {
-                        text       : 'COBERTURA'
-                        ,width     : 300
-                        ,dataIndex : 'DSGARANT'
+    debug('_p59_tarificarClic() args:',arguments);
+    var mask, ck;
+    try {
+        if (_p59_storeAseguradosNuevos.getCount() === 0) {
+            throw 'No hay nuevos asegurados';
+        }
+        ck = 'Tarificando nuevos asegurados';
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url     : _p59_urlTarificar,
+            params  : {
+                'params.cdunieco' : _p59_flujo.cdunieco,
+                'params.cdramo'   : _p59_flujo.cdramo,
+                'params.estado'   : _p59_flujo.estado,
+                'params.nmpoliza' : _p59_flujo.nmpoliza,
+                'params.nmsuplem' : _p59_params.nmsuplem,
+                'params.feinival' : _fieldByName('FEEFECTO').getSubmitValue()
+            },
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al tarificar asegurados nuevos';
+                try {
+                    var jsonTarifa = Ext.decode(response.responseText);
+                    debug('AJAX jsonTarifa:', jsonTarifa);
+                    if (jsonTarifa.success !== true) {
+                        throw jsonTarifa.message;
                     }
-                    ,{
-                        text       : 'PRIMA'
-                        ,width     : 100
-                        ,renderer  : Ext.util.Format.usMoney
-                        ,dataIndex : 'NMIMPORT'
+                    for (var i = 0; i < jsonTarifa.list.length; i++) {
+                        var e = jsonTarifa.list[i];
+                        if (e.NMSITUAC == 999999) {
+                            e.AGRUPADOR = 'CONCEPTOS GLOBALES';
+                        } else {
+                            e.AGRUPADOR = e.NMSITUAC + '. ' + e.ASEGURADO;
+                        }
+                        e.PRIMA = e.IMPORTE;
                     }
-                ]
-                ,store : Ext.create('Ext.data.Store',
-                {
-                    fields :
-                    [
-                        'DSGARANT'
-                        ,{
-                            name  : 'NMIMPORT'
-                            ,type : 'float'
-                        }
-                    ]
-                    ,data :
-                    [
-                        {
-                            DSGARANT  : 'EMERGENCIA EN EL EXTRANJERO'
-                            ,NMIMPORT : 429.50
-                        }
-                        ,{
-                            DSGARANT  : 'ASISTENCIA INTERNACIONAL'
-                            ,NMIMPORT : 225
-                        }
-                        ,{
-                            DSGARANT  : 'DERECHOS'
-                            ,NMIMPORT : 300
-                        }
-                    ]
-                })
+                    Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTarifa');
+                    new VentanaTarifa({
+                        title   : 'TARIFA DEL ENDOSO',
+                        datos   : jsonTarifa.list,
+                        buttons : [
+                            {
+                                text    : 'Confirmar',
+                                icon    : '${icons}key.png',
+                                hidden  : _p59_params.permisoEmitir !== 'S',
+                                handler : _p59_confirmarClic
+                            }, {
+                                text    : 'Autorizar',
+                                icon    : '${icons}key.png',
+                                hidden  : _p59_params.permisoAutorizar !== 'S',
+                                handler : _p59_autorizarClic
+                            }
+                        ]
+                    }).mostrar();
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al tarificar asegurados nuevos');
             }
-        ]
-        ,buttonAlign : 'center'
-        ,buttons     :
-        [
-            {
-                text     : 'Confirmar'
-                ,icon    : '${icons}key.png'
-                ,handler : _p59_confirmarEndosoClic
-            }
-            ,{
-                text    : 'Documentos'
-                ,hidden : true
-                ,icon   : '${icons}printer.png'
-            }
-        ]
-    }).show());
+        });
+    } catch (e) {
+        manejaException(e, ck, mask);
+    }
 }
 
 function _p59_mesacontrol()
@@ -535,6 +742,331 @@ function _p59_confirmarEndosoClic(me)
             me.up('window').down('[text=Documentos]').show();
         }
     );
+}
+
+function _p59_recuperarDatosEndoso () {
+    debug('_p59_recuperarDatosEndoso()');
+    var mask, ck = 'Recuperando datos de endoso';
+    try {
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url     : _p59_urlRecuperarDatosEndoso,
+            params  : _flujoToParams(_p59_flujo, { 'params.cdtipsup' : 9 }),
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al recuperar datos de endoso';
+                try {
+                    var datosEndoso = Ext.decode(response.responseText);
+                    debug('AJAX datosEndoso:', datosEndoso);
+                    if (datosEndoso.success === true) {
+                        if (!Ext.isEmpty(datosEndoso.params.FEINIVAL)) {
+                            _p59_params.nmsuplem = datosEndoso.params.NMSUPLEM;
+                            _p59_params.nsuplogi = datosEndoso.params.NSUPLOGI;
+                            _p59_params.fesolici = datosEndoso.params.FESOLICI;
+                            debug('_p59_params:', _p59_params);
+                            _fieldByName('FEEFECTO').setValue(datosEndoso.params.FEINIVAL);
+                            _p59_bloquearFecha(true);
+                        }
+                    } else {
+                        mensajeError(datosEndoso.message);
+                    }
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al recuperar datos de endoso');
+            }
+        });
+    } catch (e) {
+        manejaException(e, ck, mask);
+    }
+}
+
+function _p59_agregarListenerImitadores (cmp, imitadores) {
+    debug('_p59_agregarListenerImitadores() args[]:', arguments);
+    if (imitadores.length > 0) {
+        cmp.imitadores = imitadores;
+        for (var i = 0; i < imitadores.length; i++) {
+            _hide(imitadores[i]);
+        }
+        cmp.on({
+            change : function (me, val) {
+                for (var i = 0; i < me.imitadores.length ; i++) {
+                    me.imitadores[i].setValue(val);
+                }
+            }
+        });
+    }
+}
+
+function _p59_ocultarRepetidos () {
+    debug('_p59_ocultarRepetidos()');
+    var sexoCmp = _fieldByName('OTSEXO');
+    var otrosSexo = Ext.ComponentQuery.query('[name*=otvalor][fieldLabel*=SEXO]');
+    debug('otrosSexo:', otrosSexo);
+    _p59_agregarListenerImitadores(sexoCmp, otrosSexo);
+    var fenacimiCmp = _fieldByName('FENACIMI');
+    var otrosFenacimi = Ext.ComponentQuery.query('[name*=otvalor][fieldLabel*=NACIMI]');
+    debug('otrosFenacimi:', otrosFenacimi);
+    _p59_agregarListenerImitadores(fenacimiCmp, otrosFenacimi);
+}
+
+function _hide (comp) {
+    debug('_hide comp:',comp,'.');
+    if (!Ext.isEmpty(comp) && typeof comp === 'object') {
+        //comp.addCls('red');
+        //comp.removeCls('green');
+        comp.hide();
+    }
+}
+
+function _show (comp) {
+    debug('_show comp:',comp,'.');
+    if (!Ext.isEmpty(comp) && typeof comp === 'object') {
+        //comp.addCls('green');
+        //comp.removeCls('red');
+        comp.show();
+    }
+}
+
+function _p59_agregarFuncionamientoRFC () {
+    debug('_p59_agregarFuncionamientoRFC()');
+    var ck = 'Agregando funcionamiento de recuperaci\u00f3n de asegurados';
+    try {
+        var rfcCmp = _fieldByName('CDRFC');
+        rfcCmp.on({
+            change : function (me) {
+                _fieldByName('CDPERSON').setValue('');
+                _fieldByName('SWEXIPER').setValue('N');
+            },
+            blur : function (me) {
+                debug('CDRFC.blur!');
+                var mask, ck = 'Verificando coincidencias de RFC';
+                try {
+                    if (Ext.isEmpty(me.getValue()) || me.getValue().length < 6) {
+                        return;
+                    }
+                    mask = _maskLocal(ck);
+                    Ext.Ajax.request({
+                        url     : _GLOBAL_URL_RECUPERACION,
+                        params  : {
+                            'params.consulta' : 'RECUPERAR_PERSONAS_FISICAS_POR_RFC_MULTIPLE_DOMICILIO',
+                            'params.rfc'      : me.getValue()
+                        },
+                        success : function (response) {
+                            mask.close();
+                            var ck = 'Decodificando respuesta al buscar coincidencias de RFC';
+                            try {
+                                var jsonRFC = Ext.decode(response.responseText);
+                                debug('AJAX jsonRFC:', jsonRFC);
+                                if (jsonRFC.success !== true) {
+                                    throw jsonRFC.message;
+                                }
+                                if (jsonRFC.list.length === 0) {
+                                    return;
+                                }
+                                var rfcRepetido = false;
+                                for (var i = 0; i < jsonRFC.list.length; i++) {
+                                    if (me.getValue() === jsonRFC.list[i].RFC) {
+                                        rfcRepetido = true;
+                                        break;
+                                    }
+                                }
+                                centrarVentanaInterna(Ext.create('Ext.window.Window', {
+                                    title       : 'PERSONAS EXISTENTES',
+                                    modal       : true,
+                                    closable    : !rfcRepetido,
+                                    buttonAlign : 'center',
+                                    buttons     : [
+                                        {
+                                            text    : 'CANCELAR',
+                                            icon    : '${icons}cancel.png',
+                                            hidden  : !rfcRepetido,
+                                            handler : function (me) {
+                                                debug('PERSONAS EXISTENTES.CANCELAR.handler()');
+                                                me.up('window').close();
+                                                _fieldByName('CDRFC').setValue('');
+                                                _fieldByName('CDRFC').isValid();
+                                            }
+                                        }
+                                    ],
+                                    items       : [
+                                        Ext.create('Ext.grid.Panel', {
+                                            width   : 700,
+                                            height  : 300,
+                                            border  : 0,
+                                            columns : [
+                                                {
+                                                    xtype   : 'actioncolumn',
+                                                    icon    : '${icons}accept.png',
+                                                    width   : 30,
+                                                    handler : function (v, row, col, item, e, record) {
+                                                        debug('PERSONAS EXISTENTES actioncolumn handler() args:', arguments);
+                                                        _p59_recuperarPersona(record.get('CDPERSON'), record.get('NMORDDOM'), v.up('window'));
+                                                    }
+                                                }, {
+                                                    text      : 'RFC',
+                                                    dataIndex : 'RFC',
+                                                    width     : 120
+                                                }, {
+                                                    text      : 'NOMBRE',
+                                                    dataIndex : 'NOMBRE',
+                                                    width     : 150
+                                                }, {
+                                                    text      : 'DIRECCI\u00d3N',
+                                                    dataIndex : 'DIRECCION',
+                                                    flex      : 1
+                                                }
+                                            ],
+                                            store : Ext.create('Ext.data.Store', {
+                                                fields : [ "CDPERSON", "NMORDDOM", "RFC", "NOMBRE", "DIRECCION" ],
+                                                data : jsonRFC.list
+                                            })
+                                        })
+                                    ]
+                                }).show());
+                            } catch (e) {
+                                manejaException(e, ck);
+                            }
+                        },
+                        failure : function () {
+                            mask.close();
+                            errorComunicacion(null, 'Error al buscar coincidencias de RFC');
+                        }
+                    });
+                } catch (e) {
+                    manejaException(e, ck, mask);
+                }
+            }
+        });
+    } catch (e) {
+        manejaException(e, ck);
+    }
+}
+
+function _p59_recuperarPersona (cdperson, nmorddom, window) {
+    debug('_p59_recuperarPersona() args:', arguments);
+    var mask, ck = 'Recuperando datos de persona';
+    try {
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url     : _GLOBAL_URL_RECUPERACION,
+            params  : {
+                'params.consulta' : 'RECUPERAR_PERSONA_ENDOSO_ALTA',
+                'params.cdperson' : cdperson
+            },
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al recuperar datos de persona';
+                try {
+                    var jsonPersona = Ext.decode(response.responseText);
+                    debug('AJAX jsonPersona:', jsonPersona);
+                    if (jsonPersona.success !== true) {
+                        throw jsonPersona.message;
+                    }
+                    for (var att in jsonPersona.params) {
+                        try {
+                            _fieldByName(att, _fieldById('_p59_formAsegurado'), true).setValue(jsonPersona.params[att]);
+                        } catch (e) {}
+                    }
+                    _fieldByName('CDPERSON').setValue(cdperson);
+                    _fieldByName('NMORDDOM').setValue(nmorddom);
+                    _fieldByName('SWEXIPER').setValue('S');
+                    window.close();
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al recuperar datos de persona');
+            }
+        });
+    } catch (e) {
+        manejaException(e, ck);
+    }
+}
+
+function _p59_confirmarClic (me) {
+    debug('_p59_confirmarClic() args:', arguments);
+    _p59_confirmar(me, false);
+}
+
+function _p59_autorizarClic (me) {
+    debug('_p59_confirmarClic() args:', arguments);
+    _p59_confirmar(me, true);
+}
+
+function _p59_confirmar (button, autorizar) {
+    debug('_p59_confirmar() args:', arguments);
+    var mask, ck;
+    try {
+        ck = 'Recopilando par\u00e1metros';
+        var params = _flujoToParams(_p59_flujo);
+        params['params.nmsuplem'] = _p59_params.nmsuplem;
+        params['params.nsuplogi'] = _p59_params.nsuplogi;
+        params['params.fesolici'] = _p59_params.fesolici;
+        params['params.feinival'] = _fieldByName('FEEFECTO').getSubmitValue();
+        params['params.autoriza'] = autorizar === true ? 'S' : 'N';
+        params['params.cdtipsup'] = '9';
+        debug('params:', params);
+        ck = 'Confirmando endoso';
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url     : _p59_urlConfirmarEndosoFlujo,
+            params  : params,
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al confirmar endoso';
+                try {
+                    var jsonConfirmar = Ext.decode(response.responseText);
+                    debug('AJAX jsonConfirmar:', jsonConfirmar);
+                    if (jsonConfirmar.success !== true) {
+                        throw jsonConfirmar.message;
+                    }
+                    mensajeCorrecto(
+                        'Endoso confirmado',
+                        jsonConfirmar.params.message,
+                        function () {
+                            if (jsonConfirmar.params.confirmado === 'S') {
+                                var callbackRemesa = function () {
+                                    try {
+                                        //////////////////////////////////
+                                        ////// usa codigo del padre //////
+                                        /*// ////////////////////////////*/
+                                        marendNavegacion(2);
+                                        /*//////////////////////////////*/
+                                        ////// usa codigo del padre //////
+                                        //////////////////////////////////
+                                    } catch (e) {}
+                                };
+                                _generarRemesaClic(
+                                    true,
+                                    _p59_flujo.cdunieco,
+                                    _p59_flujo.cdramo,
+                                    _p59_flujo.estado,
+                                    _p59_flujo.nmpoliza,
+                                    callbackRemesa
+                                );
+                            } else {
+                                _iceMesaControl();
+                            }
+                        }
+                    );
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al confirmar endoso');
+            }
+        });
+    } catch (e) {
+        manejaException(e, ck, mask);
+    }
 }
 ////// funciones //////
 </script>

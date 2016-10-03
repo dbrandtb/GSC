@@ -468,7 +468,7 @@ public class PersonasManagerImpl implements PersonasManager
 	@Override
 	public void guardarPantallaDomicilio(String cdperson, String nmorddom, String dsdomici, String nmtelefo,
 			String cdpostal, String cdedo, String cdmunici, String cdcoloni, String nmnumero, String nmnumint, UserVO usuario, String swactivo,
-			long timestamp) throws Exception {
+			String accion, long timestamp) throws Exception {
 		
 		String usuarioCaptura =  null;
 		
@@ -482,7 +482,8 @@ public class PersonasManagerImpl implements PersonasManager
 		}
 		
 		personasDAO.movimientosMdomicil(cdperson, nmorddom, dsdomici, nmtelefo, cdpostal, cdedo, cdmunici, cdcoloni,
-				nmnumero, nmnumint, null,usuarioCaptura,swactivo,Constantes.INSERT_MODE);
+				nmnumero, nmnumint, null,usuarioCaptura,swactivo,
+				StringUtils.isNotEmpty(accion) ? accion : Constantes.INSERT_MODE);
 	}
 
 	/**
@@ -538,7 +539,7 @@ public class PersonasManagerImpl implements PersonasManager
 	 * Obtener el domicilio de una persona por su cdperson de PKG_CONSULTA.P_GET_MDOMICIL
 	 * @return exito,respuesta,respuestaOculta,domicilio
 	 */
-	public Map<String,Object> obtenerDomicilioPorCdperson(String cdperson,long timestamp) throws Exception
+	public Map<String,Object> obtenerDomicilioPorCdperson(String cdperson,String nmorddom,long timestamp) throws Exception
 	{
 		Map<String,Object>result = new HashMap<String,Object>();
 		logger.info(timestamp+""
@@ -554,7 +555,7 @@ public class PersonasManagerImpl implements PersonasManager
 		{
 			try
 			{
-				domicilio = personasDAO.obtenerDomicilioPorCdperson(cdperson);
+				domicilio = personasDAO.obtenerDomicilioPorCdperson(cdperson, nmorddom);
 			}
 			catch(Exception ex)
 			{

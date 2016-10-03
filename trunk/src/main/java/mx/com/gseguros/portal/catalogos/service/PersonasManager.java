@@ -88,12 +88,13 @@ public interface PersonasManager
 			,String nmnumint
 			,UserVO usuario
 			,String swactivo
+			,String accion
 			,long   timestamp) throws Exception;
 	/**
 	 * Obtener el domicilio de una persona por su cdperson de PKG_CONSULTA.P_GET_MDOMICIL
 	 * @return exito,respuesta,respuestaOculta,domicilio
 	 */
-	public Map<String,Object> obtenerDomicilioPorCdperson(String cdperson,long timestamp) throws Exception;
+	public Map<String,Object> obtenerDomicilioPorCdperson(String cdperson,String nmorddom,long timestamp) throws Exception;
 
 	public Map<String,Object> obtenerDomiciliosPorCdperson(String cdperson,long timestamp) throws Exception;
 	/**

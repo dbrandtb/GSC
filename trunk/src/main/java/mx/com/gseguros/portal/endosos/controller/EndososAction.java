@@ -11,6 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -60,15 +69,6 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class EndososAction extends PrincipalCoreAction
 {
@@ -11190,7 +11190,7 @@ public class EndososAction extends PrincipalCoreAction
 				paso = "Recuperando domicilio";
 				logger.debug(paso);
 				
-				Map<String,Object> managerResult = personasManager.obtenerDomicilioPorCdperson(smap2.get("cdpersonNvoContr"), timestamp);
+				Map<String,Object> managerResult = personasManager.obtenerDomicilioPorCdperson(smap2.get("cdpersonNvoContr"), null, timestamp);
 				Map<String,String> domicilioNvo  = (Map<String,String>)managerResult.get("domicilio");
 				
 				if(domicilioNvo.containsKey("CODPOSTAL") && StringUtils.isNotBlank(domicilioNvo.get("CODPOSTAL"))){

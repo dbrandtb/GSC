@@ -159,8 +159,14 @@ Ext.onReady(function()
                 ,buttons     :
                 [
                     {
-                        text     : _p32_smap1.cdtipsup-0==1?'Guardar':'Confirmar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/'+(_p32_smap1.cdtipsup-0==1?'disk.png':'key.png')
+                        text     : Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
+                            ? 'Guardar'
+                            : 'Confirmar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/' + (
+                            Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
+                                ? 'disk.png'
+                                : 'key.png'
+                        )
                         ,handler : function(){ _p32_guardarClic(); }
                     }
                 ]
@@ -453,7 +459,9 @@ function _p32_guardarClic(callback)
         _setLoading(true,_fieldById('_p32_grid'));
         Ext.Ajax.request(
         {
-            url       : _p32_smap1.cdtipsup-0==1 ? _p32_urlGuardar : _p32_urlConfirmarEndoso
+            url       : Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
+                ? _p32_urlGuardar
+                : _p32_urlConfirmarEndoso
             ,jsonData : json
             ,success  : function(response)
             {
@@ -462,8 +470,7 @@ function _p32_guardarClic(callback)
                 debug('### guardar:',json2);
                 if(json2.exito)
                 {
-                    if(_p32_smap1.cdtipsup-0==1)
-                    {
+                    if (Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S') {
                         mensajeCorrecto('Datos guardados','Datos guardados',function()
                         {
                             try

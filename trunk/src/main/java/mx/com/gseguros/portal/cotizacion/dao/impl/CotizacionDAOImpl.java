@@ -14,6 +14,15 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.StoredProcedure;
+
+import mx.com.aon.portal.dao.ObtieneTatriperMapper;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ConfiguracionCoberturaDTO;
@@ -31,14 +40,6 @@ import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.StoredProcedure;
 
 public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionDAO
 {
@@ -8103,4 +8104,109 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 	}
 	
+	@Override
+	public List<ComponenteVO> recuperarTatrirol (String cdramo, String cdrol, String cdtipsit, String cdperson) throws Exception {
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		params.put("cdrol"    , cdrol);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdperson" , cdperson);
+		Map<String,Object> procResult = ejecutaSP(new RecuperarTatrirolSP(getDataSource()),params);
+		List<ComponenteVO> lista = (List<ComponenteVO>)procResult.get("pv_registro_o");
+		if (lista==null || lista.size()==0) {
+			throw new Exception("No hay tatrirol");
+		}
+		logger.debug(Utils.log("recuperarTatrirol lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarTatrirolSP extends StoredProcedure {
+    	protected RecuperarTatrirolSP (DataSource dataSource) {
+            super(dataSource,"PKG_LISTAS.P_GET_ATRI_ROL");
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdrol"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatriperMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public void movimientoMpolisitV2(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String status
+			,String cdtipsit
+			,String swreduci
+			,String cdagrupa
+			,String cdestado
+			,Date   fefecsit
+			,Date   fecharef
+			,String cdgrupo
+			,String nmsituaext
+			,String nmsitaux
+			,String nmsbsitext
+			,String cdplan
+			,String cdasegur
+			,String accion) throws Exception {
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("cdunieco"   , cdunieco);
+		params.put("cdramo"     , cdramo);
+		params.put("estado"     , estado);
+		params.put("nmpoliza"   , nmpoliza);
+		params.put("nmsituac"   , nmsituac);
+		params.put("nmsuplem"   , nmsuplem);
+		params.put("status"     , status);
+		params.put("cdtipsit"   , cdtipsit);
+		params.put("swreduci"   , swreduci);
+		params.put("cdagrupa"   , cdagrupa);
+		params.put("cdestado"   , cdestado);
+		params.put("fefecsit"   , fefecsit);
+		params.put("fecharef"   , fecharef);
+		params.put("cdgrupo"    , cdgrupo);
+		params.put("nmsituaext" , nmsituaext);
+		params.put("nmsitaux"   , nmsitaux);
+		params.put("nmsbsitext" , nmsbsitext);
+		params.put("cdplan"     , cdplan);
+		params.put("cdasegur"   , cdasegur);
+		params.put("accion"     , accion);
+		ejecutaSP(new MovimientoMpolisitV2SP(getDataSource()),params);
+	}
+	
+	protected class MovimientoMpolisitV2SP extends StoredProcedure {
+		protected MovimientoMpolisitV2SP (DataSource dataSource) {
+	        super(dataSource,"P_MOV_MPOLISIT_V2");
+		    declareParameter(new SqlParameter("cdunieco"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("cdramo"     , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("estado"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("nmpoliza"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("nmsituac"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("nmsuplem"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("status"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("swreduci"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("cdagrupa"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("cdestado"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("fefecsit"   , OracleTypes.DATE));
+		    declareParameter(new SqlParameter("fecharef"   , OracleTypes.DATE));
+		    declareParameter(new SqlParameter("cdgrupo"    , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("nmsituaext" , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("nmsitaux"   , OracleTypes.NUMERIC));
+		    declareParameter(new SqlParameter("nmsbsitext" , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("cdplan"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("cdasegur"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+		    declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+		    compile();
+		}
+	}
 }

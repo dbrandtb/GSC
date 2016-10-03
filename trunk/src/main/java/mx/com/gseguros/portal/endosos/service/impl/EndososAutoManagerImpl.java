@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.endosos.service.impl;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +11,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -53,21 +63,12 @@ import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 @Service
 public class EndososAutoManagerImpl implements EndososAutoManager
 {
 	private Map<String, String> iniciarEndosoResp = null;
-	private Map<String, Object> resParams         = null;
-	private static Logger           logger       = LoggerFactory.getLogger(EndososAutoManagerImpl.class);
+	private Map<String, Object> resParams = null;
+	private static final Logger logger = LoggerFactory.getLogger(EndososAutoManagerImpl.class);
 	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	@Autowired
@@ -6679,7 +6680,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			paso = "Obtenemos la informaci\u00f3n del cliente de SICAPS";
 			logger.debug(paso);
-			Map<String,String> managerResult=personasDAO.obtenerDomicilioPorCdperson(cdpersonNew);
+			Map<String,String> managerResult=personasDAO.obtenerDomicilioPorCdperson(cdpersonNew, null);
 			SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 			
 			paso = "Generaci\u00f3n del mapa de guardado SIGS";
@@ -7019,5 +7020,932 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String cdsisrol, FlujoVO flujo) throws Exception {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public Map<String, String> guardarFechaEfectoEndosoPendiente (String cdunieco, String cdramo, String estado,
+			String nmpoliza, String fecha, String cdelemen, String cdusuari, String proceso, String cdtipsup) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ guardarFechaEfectoEndosoPendiente @@@@@@",
+				"\n@@@@@@ cdunieco = " , cdunieco,
+				"\n@@@@@@ cdramo   = " , cdramo,
+				"\n@@@@@@ estado   = " , estado,
+				"\n@@@@@@ nmpoliza = " , nmpoliza,
+				"\n@@@@@@ fecha    = " , fecha,
+				"\n@@@@@@ cdelemen = " , cdelemen,
+				"\n@@@@@@ cdusuari = " , cdusuari,
+				"\n@@@@@@ proceso  = " , proceso,
+				"\n@@@@@@ cdtipsup = " , cdtipsup));
+		Map<String, String> datosEndoso = null;
+		String paso = null;
+		try {
+			paso = "Iniciando endoso";
+			logger.debug(paso);
+			Date fechaDate = Utils.parse(fecha);
+			datosEndoso = endososDAO.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, fechaDate, cdelemen, cdusuari, proceso, cdtipsup);
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ datosEndoso = " , datosEndoso,
+				"\n@@@@@@ guardarFechaEfectoEndosoPendiente @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return datosEndoso;
+	}
+	
+	@Override
+	public Map<String, String> recuperarDatosEndosoPendiente (String cdunieco, String cdramo, String estado,
+			String nmpoliza, String cdtipsup) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ recuperarDatosEndosoPendiente @@@@@@",
+				"\n@@@@@@ cdunieco = " , cdunieco,
+				"\n@@@@@@ cdramo   = " , cdramo,
+				"\n@@@@@@ estado   = " , estado,
+				"\n@@@@@@ nmpoliza = " , nmpoliza,
+				"\n@@@@@@ cdtipsup = " , cdtipsup));
+		Map<String, String> datosEndoso = new HashMap<String, String>();
+		String paso = null;
+		try {
+			List<Map<String, String>> lista = endososDAO.recuperarDatosEndosoPendiente(cdunieco, cdramo, estado,
+					nmpoliza, cdtipsup);
+			if (lista.size() > 0) {
+				datosEndoso = lista.get(0);
+			}
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ datosEndoso = " , datosEndoso,
+				"\n@@@@@@ recuperarDatosEndosoPendiente @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return datosEndoso;
+	}
+	
+	@Override
+	public Map<String, Object> endosoAltaAsegurados(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String cdusuari, String cdsisrol, String status) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ endosoAltaAsegurados @@@@@@",
+				"\n@@@@@@ cdunieco = " , cdunieco,
+				"\n@@@@@@ cdramo   = " , cdramo,
+				"\n@@@@@@ estado   = " , estado,
+				"\n@@@@@@ nmpoliza = " , nmpoliza,
+				"\n@@@@@@ cdusuari = " , cdusuari,
+				"\n@@@@@@ cdsisrol = " , cdsisrol,
+				"\n@@@@@@ status   = " , status));
+		Map<String, Object> result = new HashMap<String, Object>();
+		String paso = null;
+		try {
+			paso = "Recuperando fechas de vigencia de p\u00f3liza";
+			logger.debug(paso);
+			Map<String, String> fechasVigenciaPol = endososDAO.recuperarFechasVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza);
+			result.put("vigencias", fechasVigenciaPol);
+			paso = "Recuperando componentes de persona";
+			logger.debug(paso);
+			List<ComponenteVO> mpersona = pantallasDAO.obtenerComponentes(
+					null, // cdtiptra
+					null, // cdunieco
+					null, // cdramo
+					null, // cdtipsit
+					null, // estado
+					cdsisrol,
+					"ENDOSO_ALTA_ASEGURADOS",
+					"MPERSONA",
+					null // orden
+					);
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName(), true);
+			gc.generaComponentes(mpersona, true, false, true, false, false, false);
+			Map<String, Item> items = new HashMap<String, Item>();
+			result.put("items", items);
+			items.put("mpersonaItems", gc.getItems());
+			paso = "Recuperando componentes de relaci\u00f3n p\u00f3liza persona";
+			logger.debug(paso);
+			List<ComponenteVO> mpoliper = pantallasDAO.obtenerComponentes(
+					null, // cdtiptra
+					null, // cdunieco
+					null, // cdramo
+					null, // cdtipsit
+					null, // estado
+					cdsisrol,
+					"ENDOSO_ALTA_ASEGURADOS",
+					"MPOLIPER",
+					null // orden
+					);
+			gc.generaComponentes(mpoliper, true, false, true, false, false, false);
+			items.put("mpoliperItems", gc.getItems());
+			paso = "Recuperando tipo de situaci\u00f3n";
+			logger.debug(paso);
+			String cdtipsit = endososDAO.recuperarCdtipsitInciso1(cdunieco, cdramo, estado, nmpoliza);
+			paso = "Recuperando atributos variables de situaci\u00f3n";
+			logger.debug(paso);
+			List<ComponenteVO> listaTatrisitCompleta = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
+			List<ComponenteVO> tatrisit = new ArrayList<ComponenteVO>();
+			for (ComponenteVO atributo : listaTatrisitCompleta) {
+				if (atributo.getSwsuscri().equalsIgnoreCase("S")) {
+					tatrisit.add(atributo);
+					atributo.setMenorCero(true);
+				}
+			}
+			gc.setCdramo(cdramo);
+			gc.setCdtipsit(cdtipsit);
+			gc.generaComponentes(tatrisit, true, false, true, false, false, false);
+			items.put("tatrisitItems", gc.getItems());
+			paso = "Recuperando permiso para emitir";
+			logger.debug(paso);
+			List<ComponenteVO> listaPermisoEmitir = pantallasDAO.obtenerComponentes(
+					null, // cdtiptra
+					null, // cdunieco
+					Utils.join("|", status, "|"), // cdramo
+					null, // cdtipsit
+					null, // estado
+					Utils.join("|", cdsisrol, "|"),
+					"ENDOSO_ALTA_ASEGURADOS",
+					"PERMISO_EMITIR",
+					null // orden
+					);
+			if (listaPermisoEmitir.size() > 0) {
+				result.put("permisoEmitir", "S");
+			}
+			paso = "Recuperando permiso para autorizar";
+			logger.debug(paso);
+			List<ComponenteVO> listaPermisoAutorizar = pantallasDAO.obtenerComponentes(
+					null, // cdtiptra
+					null, // cdunieco
+					Utils.join("|", status, "|"), // cdramo
+					null, // cdtipsit
+					null, // estado
+					Utils.join("|", cdsisrol, "|"),
+					"ENDOSO_ALTA_ASEGURADOS",
+					"PERMISO_AUTORIZAR",
+					null // orden
+					);
+			if (listaPermisoAutorizar.size() > 0) {
+				result.put("permisoAutorizar", "S");
+			}
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ result = " , result,
+				"\n@@@@@@ endosoAltaAsegurados @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return result;
+	}
+	
+	public String guardarAseguradoParaEndosoAlta (
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cdusuari,
+			String cdsisrol,
+			String accion,
+			String nombre,
+			String nombre2,
+			String apat,
+			String amat,
+			String sexo,
+			String fenacimi,
+			String rfc,
+			String nacional,
+			String edocivil,
+			String feingreso,
+			String cdperson,
+			String cdtipide,
+			String cdideper,
+			String cdtipper,
+			String dsemail,
+			String canaling,
+			String conducto,
+			String ptcumupr,
+			String residencia,
+			String nongrata,
+			String cdideext,
+			String cdsucemi,
+			String otfisjur,
+			String nmsituac,
+			String cdrol,
+			String nmorddom,
+			String swreclam,
+			String swexiper,
+			String nmsuplem,
+			String nsuplogi,
+			String fesolici,
+			String feendoso,
+			Map<String, String> valosit
+			) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ guardarAseguradoParaEndosoAlta @@@@@@",
+				"\n@@@@@@ cdunieco   = " , cdunieco,
+				"\n@@@@@@ cdramo     = " , cdramo,
+				"\n@@@@@@ estado     = " , estado,
+				"\n@@@@@@ nmpoliza   = " , nmpoliza,
+				"\n@@@@@@ cdusuari   = " , cdusuari,
+				"\n@@@@@@ cdsisrol   = " , cdsisrol,
+				"\n@@@@@@ accion     = " , accion,
+				"\n@@@@@@ nombre     = " , nombre,
+				"\n@@@@@@ nombre2    = " , nombre2,
+				"\n@@@@@@ apat       = " , apat,
+				"\n@@@@@@ amat       = " , amat,
+				"\n@@@@@@ sexo       = " , sexo,
+				"\n@@@@@@ fenacimi   = " , fenacimi,
+				"\n@@@@@@ rfc        = " , rfc,
+				"\n@@@@@@ nacional   = " , nacional,
+				"\n@@@@@@ edocivil   = " , edocivil,
+				"\n@@@@@@ feingreso  = " , feingreso,
+				"\n@@@@@@ cdperson   = " , cdperson,
+				"\n@@@@@@ cdtipide   = " , cdtipide,
+				"\n@@@@@@ cdideper   = " , cdideper,
+				"\n@@@@@@ cdtipper   = " , cdtipper,
+				"\n@@@@@@ dsemail    = " , dsemail,
+				"\n@@@@@@ canaling   = " , canaling,
+				"\n@@@@@@ conducto   = " , conducto,
+				"\n@@@@@@ ptcumupr   = " , ptcumupr,
+				"\n@@@@@@ residencia = " , residencia,
+				"\n@@@@@@ nongrata   = " , nongrata,
+				"\n@@@@@@ cdideext   = " , cdideext,
+				"\n@@@@@@ cdsucemi   = " , cdsucemi,
+				"\n@@@@@@ otfisjur   = " , otfisjur,
+				"\n@@@@@@ nmsituac   = " , nmsituac,
+				"\n@@@@@@ cdrol      = " , cdrol,
+				"\n@@@@@@ nmorddom   = " , nmorddom,
+				"\n@@@@@@ swreclam   = " , swreclam,
+				"\n@@@@@@ swexiper   = " , swexiper,
+				"\n@@@@@@ nmsuplem   = " , nmsuplem,
+				"\n@@@@@@ nsuplogi   = " , nsuplogi,
+				"\n@@@@@@ fesolici   = " , fesolici,
+				"\n@@@@@@ feendoso   = " , feendoso,
+				"\n@@@@@@ valosit    = " , valosit));
+		String paso = null;
+		try {
+			Date fechaHoy = new Date();
+			Date fechaEndoso = Utils.parse(feendoso);
+			if (!"I".equals(accion) && !"U".equals(accion)) {
+				throw new ApplicationException("Acci\u00f3n no v\u00e1lida");
+			}
+			if ("I".equals(accion)) {
+				paso = "Recuperando nuevo certificado de situaci\u00f3n";
+				logger.debug(paso);
+				Map<String, String> datosNmsituac = endososDAO.obtieneDatosMpolisit(cdunieco, cdramo, estado, nmpoliza);
+				nmsituac = datosNmsituac.get("pv_nmsituac_o");
+			}
+			paso = "Recuperando relaci\u00f3n p\u00f3liza situaci\u00f3n del titular";
+			logger.debug(paso);
+			Map<String, String> mpolisitTitular = endososDAO.recuperarMpolisitTitularVigente(cdunieco, cdramo, estado, nmpoliza);
+			paso = "Guardando relaci\u00f3n p\u00f3liza situaci\u00f3n";
+			logger.debug(paso);
+			cotizacionDAO.movimientoMpolisitV2(
+					cdunieco,
+					cdramo,
+					estado,
+					nmpoliza,
+					nmsituac,
+					nmsuplem,
+					"V",
+					mpolisitTitular.get("CDTIPSIT"),
+					mpolisitTitular.get("SWREDUCI"),
+					mpolisitTitular.get("CDAGRUPA"),
+					mpolisitTitular.get("CDESTADO"),
+					fechaEndoso,
+					fechaHoy,
+					mpolisitTitular.get("CDGRUPO"),
+					mpolisitTitular.get("NMSITUAEXT"),
+					mpolisitTitular.get("NMSITAUX"),
+					mpolisitTitular.get("NMSBSITEXT"),
+					mpolisitTitular.get("CDPLAN"),
+					mpolisitTitular.get("CDASEGUR"),
+					accion);
+			paso = "Recuperando atributos variables del titular";
+			logger.debug(paso);
+			Map<String, String> tvalositTitular = endososDAO.recuperarTvalositTitularVigente(cdunieco, cdramo, estado, nmpoliza);
+			paso = "Contruyendo atributos variables";
+			logger.debug(paso);
+			for (Entry<String, String> en : tvalositTitular.entrySet()) {
+				String key = en.getKey().toLowerCase();
+				if (key.indexOf("otvalor") != -1 && !valosit.containsKey(key)) {
+					valosit.put(key, en.getValue());
+				}
+			}
+			paso = "Insertando relaci\u00f3n p\u00f3liza situaci\u00f3n";
+			logger.debug(paso);
+			cotizacionDAO.movimientoTvalosit(
+					cdunieco,
+					cdramo,
+					estado,
+					nmpoliza,
+					nmsituac,
+					nmsuplem,
+					"V",
+					tvalositTitular.get("CDTIPSIT"),
+					valosit,
+					accion);
+			boolean nuevaPersona = false;
+			if (StringUtils.isBlank(cdperson)) {
+				paso = "Generando clave de persona";
+				logger.debug(paso);
+				cdperson = personasDAO.obtieneCdperson();
+				nuevaPersona = true;
+			}
+			paso = "Insertando registro de persona";
+			logger.debug(paso);
+			personasDAO.movimientosMpersona(
+					cdperson,
+					cdtipide,
+					cdideper,
+					nombre,
+					cdtipper,
+					otfisjur,
+					sexo,
+					Utils.parse(fenacimi),
+					rfc,
+					dsemail,
+					nombre2,
+					apat,
+					amat,
+					Utils.parse(feingreso),
+					nacional,
+					canaling,
+					conducto,
+					ptcumupr,
+					residencia,
+					nongrata,
+					cdideext,
+					edocivil,
+					cdunieco, // cdsucemi
+					cdusuari,
+					nuevaPersona ? "I" : "U");
+			if (nuevaPersona) {
+				paso = "Recuperando domicilio del titular";
+				logger.debug(paso);
+				Map<String, String> mdomicilTitular = endososDAO.recuperarMdomicilTitularVigente(cdunieco, cdramo, estado, nmpoliza);
+				paso = "Guardando domicilio";
+				logger.debug(paso);
+				personasDAO.movimientosMdomicil(
+						cdperson,
+						nmorddom,
+						mdomicilTitular.get("DSDOMICI"),
+						mdomicilTitular.get("NMTELEFO"),
+						mdomicilTitular.get("CDPOSTAL"),
+						mdomicilTitular.get("CDEDO"),
+						mdomicilTitular.get("CDMUNICI"),
+						mdomicilTitular.get("CDCOLONI"),
+						mdomicilTitular.get("NMNUMERO"),
+						mdomicilTitular.get("NMNUMINT"),
+						"1", // cdtipdom
+						cdusuari,
+						"S", // swactivo
+						"I");
+			}
+			if ("U".equals(accion)) { // Si cambian a la persona en pantalla debemos borrar la relacion con la anterior
+				paso = "Borrando relaci\u00f3n p\u00f3liza persona";
+				logger.debug(paso);
+				endososDAO.borrarMpoliperEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac);
+			}
+			paso = "Registrando relaci\u00f3n p\u00f3liza persona";
+			logger.debug(paso);
+			cotizacionDAO.movimientoMpoliper(
+					cdunieco,
+					cdramo,
+					estado,
+					nmpoliza,
+					nmsituac,
+					cdrol,
+					cdperson,
+					nmsuplem,
+					"V", // status
+					nmorddom,
+					"S".equals(swreclam) ? "S" : "N",
+					accion,
+					"S".equals(swexiper) ? "S" : "N");
+			if ("I".equals(accion)) {
+				endososDAO.movimientoTworksupEnd(cdunieco, cdramo, estado, nmpoliza,
+						String.valueOf(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup()), nmsuplem, nmsituac,
+						accion);
+			}
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ nmsituac = ", nmsituac,
+				"\n@@@@@@ guardarAseguradoParaEndosoAlta @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return nmsituac;
+	}
+	
+	@Override
+	public List<Map<String, String>> tarificarEndosoAltaAsegurados(String cdusuari, String cdelemen, String cdunieco,
+			String cdramo, String estado, String nmpoliza, String nmsuplem, String feinival) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ tarificarEndosoAltaAsegurados @@@@@@",
+				"\n@@@@@@ cdusuari = " , cdusuari,
+				"\n@@@@@@ cdelemen = " , cdelemen,
+				"\n@@@@@@ cdunieco = " , cdunieco,
+				"\n@@@@@@ cdramo   = " , cdramo,
+				"\n@@@@@@ estado   = " , estado,
+				"\n@@@@@@ nmpoliza = " , nmpoliza,
+				"\n@@@@@@ nmsuplem = " , nmsuplem,
+				"\n@@@@@@ feinival = " , feinival));
+		String paso = null;
+		List<Map<String, String>> tarifa = null;
+		try {
+			paso = "Validando personas repetidas";
+			logger.debug(paso);
+			List<Map<String, String>> repetidos = endososDAO.recuperarAseguradosRepetidos(cdunieco, cdramo, estado, nmpoliza);
+			if (repetidos.size() > 0) {
+				StringBuilder errorRepetidos = new StringBuilder("Los siguientes asegurados se encuentran repetidos:<BR/>");
+				for (Map<String, String> repetido : repetidos) {
+					errorRepetidos.append(repetido.get("NOMBRE")).append("<BR/>");
+				}
+				throw new ApplicationException(errorRepetidos.toString());
+			}
+			paso = "Validando titulares y conyuges";
+			logger.debug(paso);
+			List<Map<String, String>> parentescos = endososDAO.recuperaParentescosActivos(cdunieco, cdramo, estado, nmpoliza);
+			int titulares = 0, conyuges = 0;
+			for (Map<String, String> parentesco : parentescos) {
+				if ("T".equals(parentesco.get("CDPARENT"))) {
+					titulares += 1;
+				} else if ("C".equals(parentesco.get("CDPARENT"))) {
+					conyuges += 1;
+				}
+			}
+			if (titulares > 1 || conyuges > 1) {
+				StringBuilder errorParentescos = new StringBuilder("No se permite m\u00e1s de un titular ni m\u00e1s de un(a) c\u00f3nyuge, por favor verifique:<BR/>");
+				for (Map<String, String> parentesco : parentescos) {
+					errorParentescos.append("NO: ").append(parentesco.get("NMSITUAC"))
+					    .append(", PARENTESCO: ")  .append(parentesco.get("PARENTESCO"))
+					    .append(", NOMBRE: ")      .append(parentesco.get("NOMBRE"))
+					    .append("<BR/>");
+				}
+				throw new ApplicationException(errorParentescos.toString());
+			}
+			paso = "Validando extraprimas y cl\u00e1usulas de extraprima";
+			logger.debug(paso);
+			List<Map<String, String>> aseguradosConExtraprimaIncompleta = endososDAO.recuperarAseguradosConExtraprimaIncompleta(cdunieco,
+					cdramo, estado, nmpoliza, nmsuplem);
+			if (aseguradosConExtraprimaIncompleta.size() > 0) {
+				StringBuilder errorExtraprimas = new StringBuilder("Favor de verificar las extraprimas y las cl\u00e1usulas de extraprima de:<BR/>");
+				for (Map<String, String> extraprimaMala : aseguradosConExtraprimaIncompleta) {
+					errorExtraprimas.append(extraprimaMala.get("ASEGURADO")).append("<BR/>");
+				}
+				throw new ApplicationException(errorExtraprimas.toString());
+			}
+			paso = "Validando domicilios";
+			logger.debug(paso);
+			List<Map<String, String>> aseguradosSinDomicilio = endososDAO.recuperarAseguradosSinDomicilio(cdunieco, cdramo, estado,
+					nmpoliza, nmsuplem);
+			if (aseguradosSinDomicilio.size() > 0) {
+				StringBuilder errorDomiciliios = new StringBuilder("Favor de verificar el domicilio de:<BR/>");
+				for (Map<String, String> asegSinDomici : aseguradosSinDomicilio) {
+					errorDomiciliios.append(asegSinDomici.get("ASEGURADO")).append("<BR/>");
+				}
+				throw new ApplicationException(errorDomiciliios.toString());
+			}
+			paso = "Borrando tarifa anterior";
+			logger.debug(paso);
+			endososDAO.borraCoberturasYTarifaEndosoAltaAsegurados(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			paso = "Ejecutando coberturas por defecto";
+			logger.debug(paso);
+			String cdtipsup = String.valueOf(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup());
+			cotizacionDAO.sigsvdefEnd(cdunieco, cdramo, estado, nmpoliza,
+					"0", //nmsituac
+					nmsuplem,
+					"TODO", //cdgarant
+					cdtipsup);
+			paso = "Tarificando endoso";
+			logger.debug(paso);
+			endososDAO.sigsvalipolEnd(cdusuari, cdelemen, cdunieco, cdramo, estado, nmpoliza,
+					"0", //nmsituac
+					nmsuplem,
+					cdtipsup);
+			paso = "Calculando valor de endoso";
+			logger.debug(paso);
+			endososDAO.calcularValorEndoso(cdunieco, cdramo, estado, nmpoliza,
+					"0", // nmsituac
+					nmsuplem,
+					Utils.parse(feinival),
+					cdtipsup);
+			paso = "Recuperando tarifa";
+			logger.debug(paso);
+			tarifa = endososDAO.recuperarTarifaEndosoSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ tarifa = ", tarifa,
+				"\n@@@@@@ tarificarEndosoAltaAsegurados @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return tarifa;
+	}
+	
+	@Override
+	public Map<String, String> confirmarEndosoFlujo (String cdusuari, String cdsisrol, String cdelemen,
+			String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza,
+			String status, String nmsuplem, String nsuplogi, Date fesolici, Date feinival, boolean autoriza,
+			String cdtipsup, UserVO usuario) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ confirmarEndosoFlujo @@@@@@",
+				"\n@@@@@@ cdusuari = " , cdusuari,
+				"\n@@@@@@ cdsisrol = " , cdsisrol,
+				"\n@@@@@@ cdelemen = " , cdelemen,
+				"\n@@@@@@ ntramite = " , ntramite,
+				"\n@@@@@@ cdunieco = " , cdunieco,
+				"\n@@@@@@ cdramo   = " , cdramo,
+				"\n@@@@@@ estado   = " , estado,
+				"\n@@@@@@ nmpoliza = " , nmpoliza,
+				"\n@@@@@@ status   = " , status,
+				"\n@@@@@@ nmsuplem = " , nmsuplem,
+				"\n@@@@@@ nsuplogi = " , nsuplogi,
+				"\n@@@@@@ fesolici = " , fesolici,
+				"\n@@@@@@ feinival = " , feinival,
+				"\n@@@@@@ autoriza = " , autoriza,
+				"\n@@@@@@ cdtipsup = " , cdtipsup,
+				"\n@@@@@@ usuario  = " , usuario));
+		Map<String, String> result = new HashMap<String, String>();
+		String paso = null;
+		Date fechaHoy = new Date();
+		try {
+			paso = "Recuperando d\u00edas v\u00e1lidos";
+			logger.debug(paso);
+			long numMaximoDias = (long) endososDAO.recuperarDiasDiferenciaEndosoValidos(cdramo,cdtipsup);
+			long diferenciaFechaActualVSEndoso = fechaHoy.getTime() - feinival.getTime();
+			diferenciaFechaActualVSEndoso = Math.abs(diferenciaFechaActualVSEndoso);
+			long maximoDiasPermitidos = numMaximoDias*24l*60l*60l*1000l;
+			// cuando no es autorizacion y excede los dias validos:
+			if (!autoriza && diferenciaFechaActualVSEndoso > maximoDiasPermitidos) {
+				paso = "Turnando a autorizaci\u00f3n";
+				logger.debug(paso);
+				String comments = "El endoso se envi\u00f3 a autorizaci\u00f3n por exceder la fecha permitida";
+				flujoMesaControlDAO.actualizarStatusTramite(
+						ntramite,
+						EstatusTramite.ENDOSO_EN_ESPERA.getCodigo(),
+						fechaHoy,
+						null //cdusuari
+						);
+				paso = "Guardando detalle de turnado a autorizaci\u00f3n";
+				logger.debug(paso);
+				mesaControlDAO.movimientoDetalleTramite(
+						ntramite,
+						fechaHoy,
+						null, // cdclausu
+						comments,
+						cdusuari,
+						null, // cdmotivo
+						cdsisrol,
+						"S", // swagente
+						null, // cdusuariDest
+						null, // cdsisrolDest
+						EstatusTramite.ENDOSO_EN_ESPERA.getCodigo(),
+						false // cerrado
+						);
+				result.put("confirmado", "N");
+				result.put("message", comments);
+			} else {
+				paso = "Confirmando endoso";
+				logger.debug(paso);
+				endososDAO.confirmarEndosoB(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "");
+				paso = "Actualizando estatus de tr\u00e1mite";
+				logger.debug(paso);
+				flujoMesaControlDAO.actualizarStatusTramite(
+						ntramite,
+						EstatusTramite.ENDOSO_CONFIRMADO.getCodigo(),
+						fechaHoy,
+						null //cdusuari
+						);
+				paso = "Guardando detalle de confirmaci\u00f3n";
+				logger.debug(paso);
+				String comments = Utils.join("Se confirm\u00f3 el endoso ", nsuplogi);
+				mesaControlDAO.movimientoDetalleTramite(
+						ntramite,
+						fechaHoy,
+						null, // cdclausu
+						comments,
+						cdusuari,
+						null, // cdmotivo
+						cdsisrol,
+						"S", // swagente
+						null, // cdusuariDest
+						null, // cdsisrolDest
+						EstatusTramite.ENDOSO_CONFIRMADO.getCodigo(),
+						true // cerrado
+						);
+				paso = "Actualizando suplemento de tr\u00e1mite";
+				logger.debug(paso);
+				mesaControlDAO.actualizarNmsuplemTramite(ntramite, nmsuplem);
+				paso = "Generando documentos";
+				logger.debug(paso);
+				Map<String,String> datosPoliza = documentosManager.generarDocumentosParametrizados(
+						cdunieco,
+						cdramo,
+						estado,
+						nmpoliza,
+						"0", // nmsituac
+						nmsuplem,
+						DocumentosManager.PROCESO_ENDOSO,
+						ntramite,
+						null, // nmsolici
+						null
+						);
+				String nmsolici    = datosPoliza.get("nmsolici"),
+				       rutaCarpeta = Utils.join(rutaDocumentosPoliza, "/", ntramite);
+				paso = "Invocando servicios web";
+				logger.debug(paso);
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, rutaCarpeta, 
+						cdunieco, nmsolici, ntramite, 
+						true, cdtipsup, usuario);
+				result.put("confirmado", "S");
+				result.put("message", comments);
+			}
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ result = ", result,
+				"\n@@@@@@ confirmarEndosoFlujo @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return result;
+	}
+	
+	@Override
+	public Map<String, Object> endosoCoberturasFlujo(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String cdusuari, String cdsisrol, String status) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ endosoCoberturasFlujo @@@@@@",
+				"\n@@@@@@ cdunieco = " , cdunieco,
+				"\n@@@@@@ cdramo   = " , cdramo,
+				"\n@@@@@@ estado   = " , estado,
+				"\n@@@@@@ nmpoliza = " , nmpoliza,
+				"\n@@@@@@ cdusuari = " , cdusuari,
+				"\n@@@@@@ cdsisrol = " , cdsisrol,
+				"\n@@@@@@ status   = " , status));
+		Map<String, Object> result = new HashMap<String, Object>();
+		String paso = null;
+		try {
+			paso = "Recuperando fechas de vigencia de p\u00f3liza";
+			logger.debug(paso);
+			Map<String, String> fechasVigenciaPol = endososDAO.recuperarFechasVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza);
+			result.put("vigencias", fechasVigenciaPol);
+			paso = "Recuperando componentes de persona";
+			logger.debug(paso);
+			/*List<ComponenteVO> mpersona = pantallasDAO.obtenerComponentes(
+					null, // cdtiptra
+					null, // cdunieco
+					null, // cdramo
+					null, // cdtipsit
+					null, // estado
+					cdsisrol,
+					"ENDOSO_ALTA_ASEGURADOS",
+					"MPERSONA",
+					null // orden
+					);
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName(), true);
+			gc.generaComponentes(mpersona, true, false, true, false, false, false);
+			Map<String, Item> items = new HashMap<String, Item>();
+			result.put("items", items);
+			items.put("mpersonaItems", gc.getItems());
+			paso = "Recuperando componentes de relaci\u00f3n p\u00f3liza persona";
+			logger.debug(paso);
+			List<ComponenteVO> mpoliper = pantallasDAO.obtenerComponentes(
+					null, // cdtiptra
+					null, // cdunieco
+					null, // cdramo
+					null, // cdtipsit
+					null, // estado
+					cdsisrol,
+					"ENDOSO_ALTA_ASEGURADOS",
+					"MPOLIPER",
+					null // orden
+					);
+			gc.generaComponentes(mpoliper, true, false, true, false, false, false);
+			items.put("mpoliperItems", gc.getItems());
+			paso = "Recuperando tipo de situaci\u00f3n";
+			logger.debug(paso);
+			String cdtipsit = endososDAO.recuperarCdtipsitInciso1(cdunieco, cdramo, estado, nmpoliza);
+			paso = "Recuperando atributos variables de situaci\u00f3n";
+			logger.debug(paso);
+			List<ComponenteVO> listaTatrisitCompleta = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
+			List<ComponenteVO> tatrisit = new ArrayList<ComponenteVO>();
+			for (ComponenteVO atributo : listaTatrisitCompleta) {
+				if (atributo.getSwsuscri().equalsIgnoreCase("S")) {
+					tatrisit.add(atributo);
+					atributo.setMenorCero(true);
+				}
+			}
+			gc.setCdramo(cdramo);
+			gc.setCdtipsit(cdtipsit);
+			gc.generaComponentes(tatrisit, true, false, true, false, false, false);
+			items.put("tatrisitItems", gc.getItems());*/
+			paso = "Recuperando permiso para emitir";
+			logger.debug(paso);
+			List<ComponenteVO> listaPermisoEmitir = pantallasDAO.obtenerComponentes(
+					null, // cdtiptra
+					null, // cdunieco
+					Utils.join("|", status, "|"), // cdramo
+					null, // cdtipsit
+					null, // estado
+					Utils.join("|", cdsisrol, "|"),
+					"ENDOSO_COBERTURAS_FLUJO",
+					"PERMISO_EMITIR",
+					null // orden
+					);
+			if (listaPermisoEmitir.size() > 0) {
+				result.put("permisoEmitir", "S");
+			}
+			paso = "Recuperando permiso para autorizar";
+			logger.debug(paso);
+			List<ComponenteVO> listaPermisoAutorizar = pantallasDAO.obtenerComponentes(
+					null, // cdtiptra
+					null, // cdunieco
+					Utils.join("|", status, "|"), // cdramo
+					null, // cdtipsit
+					null, // estado
+					Utils.join("|", cdsisrol, "|"),
+					"ENDOSO_COBERTURAS_FLUJO",
+					"PERMISO_AUTORIZAR",
+					null // orden
+					);
+			if (listaPermisoAutorizar.size() > 0) {
+				result.put("permisoAutorizar", "S");
+			}
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ result = " , result,
+				"\n@@@@@@ endosoCoberturasFlujo @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return result;
+	}
+	
+	@Override
+	public void agregarCoberturaEndosoCoberturas(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1, String otvalor1,
+			String cdatribu2, String otvalor2, String cdatribu3, String otvalor3, String cdtipsit) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ agregarCoberturaEndosoCoberturas @@@@@@",
+				"\n@@@@@@ cdunieco  = " , cdunieco,
+				"\n@@@@@@ cdramo    = " , cdramo,
+				"\n@@@@@@ estado    = " , estado,
+				"\n@@@@@@ nmpoliza  = " , nmpoliza,
+				"\n@@@@@@ nmsituac  = " , nmsituac,
+				"\n@@@@@@ cdgarant  = " , cdgarant,
+				"\n@@@@@@ nmsuplem  = " , nmsuplem,
+				"\n@@@@@@ cdatribu1 = " , cdatribu1,
+				"\n@@@@@@ otvalor1  = " , otvalor1,
+				"\n@@@@@@ cdatribu2 = " , cdatribu2,
+				"\n@@@@@@ otvalor2  = " , otvalor2,
+				"\n@@@@@@ cdatribu3 = " , cdatribu3,
+				"\n@@@@@@ otvalor3  = " , otvalor3,
+				"\n@@@@@@ cdtipsit  = " , cdtipsit));
+		String paso = null;
+		try {
+			String cdtipsup = String.valueOf(TipoEndoso.ALTA_COBERTURAS.getCdTipSup());
+			paso = "Validando cobertura";
+			logger.debug(paso);
+			endososDAO.validaNuevaCobertura(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant);
+			paso = "Recuperando datos de cobertura";
+			logger.debug(paso);
+			Map<String, String> datosCobertura = endososDAO.recuperarDatosCoberturaParaInsercion(cdramo, cdtipsit, cdgarant);
+			paso = "Insertando cobertura";
+			logger.debug(paso);
+			endososDAO.movimientoMpoligar(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant, nmsuplem,
+					datosCobertura.get("CDCAPITA"), "V", datosCobertura.get("CDTIPBCA"), datosCobertura.get("PTVALBAS"),
+					datosCobertura.get("SWMANUAL"),
+					null, // swreas
+					"1", // cdagrupa
+					"I",
+					cdtipsup);
+			paso = "Recuperando valores de situaci\u00f3n";
+			logger.debug(paso);
+			Map<String, String> tvalositAnterior = endososDAO.recuperarTvalositInciso(cdunieco, cdramo, estado, nmpoliza,
+					nmsituac, nmsuplem);
+			if(!nmsuplem.equals(tvalositAnterior.get("NMSUPLEM"))) { // es la primera cobertura que se agrega para este inciso
+				                                                     // no existe tvalosit con el nmsuplem de este endoso
+				paso = "Preparando valores de situaci\u00f3n";
+				logger.debug(paso);
+				Map<String, String> valoresVariablesTvalositAnterior = new HashMap<String, String>();
+				for (Entry<String, String> en : tvalositAnterior.entrySet()) {
+					String key = en.getKey();
+					if (key.indexOf("OTVALOR") != -1) {
+						valoresVariablesTvalositAnterior.put(key.toLowerCase(), en.getValue());
+					}
+				}
+				paso = "Insertando nueva imagen de situaci\u00f3n"; // insertamos tvalosit para este inciso
+				logger.debug(paso);
+				cotizacionDAO.movimientoTvalosit(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem,
+						"V", // status
+						cdtipsit,
+						valoresVariablesTvalositAnterior,
+						"I" // accion
+						);
+			}
+			paso = "Actualizando valores de situaci\u00f3n para coberturas";
+			logger.debug(paso);
+			endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup);
+			if (StringUtils.isNotBlank(cdatribu1)) {
+				paso = "Actualizando primer valor capturado";
+				logger.debug(paso);
+				endososDAO.actualizaTvalositSitaucionCobertura(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,
+						cdatribu1, otvalor1);
+			}
+			if (StringUtils.isNotBlank(cdatribu2)) {
+				paso = "Actualizando segundo valor capturado";
+				logger.debug(paso);
+				endososDAO.actualizaTvalositSitaucionCobertura(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,
+						cdatribu2, otvalor2);
+			}
+			if (StringUtils.isNotBlank(cdatribu3)) {
+				paso = "Actualizando tercer valor capturado";
+				logger.debug(paso);
+				endososDAO.actualizaTvalositSitaucionCobertura(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,
+						cdatribu3, otvalor3);
+			}
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ agregarCoberturaEndosoCoberturas @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+	}
+	
+	@Override
+	public void quitarCoberturaAgregadaEndCob(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1,
+			String cdatribu2, String cdatribu3, String cdtipsit) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ quitarCoberturaAgregadaEndCob @@@@@@",
+				"\n@@@@@@ cdunieco  = " , cdunieco,
+				"\n@@@@@@ cdramo    = " , cdramo,
+				"\n@@@@@@ estado    = " , estado,
+				"\n@@@@@@ nmpoliza  = " , nmpoliza,
+				"\n@@@@@@ nmsituac  = " , nmsituac,
+				"\n@@@@@@ cdgarant  = " , cdgarant,
+				"\n@@@@@@ nmsuplem  = " , nmsuplem,
+				"\n@@@@@@ cdatribu1 = " , cdatribu1,
+				"\n@@@@@@ cdatribu2 = " , cdatribu2,
+				"\n@@@@@@ cdatribu3 = " , cdatribu3,
+				"\n@@@@@@ cdtipsit  = " , cdtipsit));
+		String paso = null;
+		try {
+			String cdtipsup = String.valueOf(TipoEndoso.ALTA_COBERTURAS.getCdTipSup());
+			paso = "Eliminando cobertura agregada";
+			logger.debug(paso);
+			endososDAO.eliminarCoberturaImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant, "V", nmsuplem);
+			paso = "Recuperando conteo de coberturas agregadas para el inciso";
+			logger.debug(paso);
+			int nCobAgre = endososDAO.recuperarConteoCoberturasImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, "V", nmsuplem);
+			if (nCobAgre == 0) { // se borra tvalosit del endoso porque ya no hay coberturas nuevas para ese inciso
+				paso = "Borrando imagen de situaci\u00f3n";
+				logger.debug(paso);
+				endososDAO.eliminarTvalositImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, "V", nmsuplem);
+			} else { // aun hay otras coberturas agregadas y hay que actualizar tvalosit
+				paso = "Restaurando valores de situaci\u00f3n para coberturas";
+				logger.debug(paso);
+				endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup);
+				BigInteger nmsuplemInt = new BigInteger(nmsuplem);
+				nmsuplemInt = nmsuplemInt.subtract(BigInteger.valueOf(1l)); // nmsuplem -1
+				paso = "Recuperando valores de situaci\u00f3n originales";
+				logger.debug(paso);
+				Map<String, String> tvalositAnterior = endososDAO.recuperarTvalositInciso(cdunieco, cdramo, estado, nmpoliza,
+						nmsituac, nmsuplemInt.toString());
+				if (StringUtils.isNotBlank(cdatribu1)) {
+					paso = "Restaurando primer valor capturado";
+					logger.debug(paso);
+					String otclave = Utils.join("OTVALOR", StringUtils.leftPad(cdatribu1, 2, "0"));
+					endososDAO.actualizaTvalositSitaucionCobertura(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,
+							cdatribu1, tvalositAnterior.get(otclave));
+				}
+				if (StringUtils.isNotBlank(cdatribu2)) {
+					paso = "Restaurando segundo valor capturado";
+					logger.debug(paso);
+					String otclave = Utils.join("OTVALOR", StringUtils.leftPad(cdatribu2, 2, "0"));
+					endososDAO.actualizaTvalositSitaucionCobertura(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,
+							cdatribu2, tvalositAnterior.get(otclave));
+				}
+				if (StringUtils.isNotBlank(cdatribu3)) {
+					paso = "Restaurando tercer valor capturado";
+					logger.debug(paso);
+					String otclave = Utils.join("OTVALOR", StringUtils.leftPad(cdatribu3, 2, "0"));
+					endososDAO.actualizaTvalositSitaucionCobertura(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,
+							cdatribu3, tvalositAnterior.get(otclave));
+				}
+			}
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ quitarCoberturaAgregadaEndCob @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
 }

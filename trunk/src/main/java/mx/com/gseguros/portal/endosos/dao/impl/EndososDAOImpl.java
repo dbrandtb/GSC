@@ -1,11 +1,8 @@
 package mx.com.gseguros.portal.endosos.dao.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +10,13 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
-import mx.com.aon.portal.dao.CustomStoredProcedure;
-import mx.com.aon.portal.dao.WrapperResultadosGeneric;
-import mx.com.aon.portal.util.WrapperResultados;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.StoredProcedure;
+
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.ObtieneTatrisitMapper;
 import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
@@ -28,14 +29,6 @@ import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.StoredProcedure;
 
 public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 {
@@ -119,6 +112,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
+	@Deprecated
 	public List<Map<String, String>> retarificarEndosos(Map<String, String> params) throws Exception
 	{
 		logger.debug(
@@ -485,6 +479,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		return map;
 	}
 	
+	@Deprecated
 	@Override
 	public Map<String,String> calcularValorEndoso(Map<String, Object> params) throws Exception
 	{
@@ -733,7 +728,18 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	public Map<String, String> obtieneDatosMpolisit(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception
+	{
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		return this.obtieneDatosMpolisit(params);
+	}
+	
 	@Override
+	@Deprecated
 	public Map<String, String> obtieneDatosMpolisit(Map<String, String> params) throws Exception
 	{
 		logger.debug(
@@ -2757,7 +2763,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public List<Map<String,String>> obtenerListaDocumentosEndosos(PolizaVO poliza,String cdmoddoc) throws Exception {
 		
 		logger.debug(new StringBuilder().append("PKG_CONSULTA.P_GET_SUPL_TDOCUPOL params=").append(poliza).toString());
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("pv_cdunieco_i", poliza.getCdunieco());
 		params.put("pv_cdramo_i",   poliza.getCdramo());
 		params.put("pv_estado_i",   poliza.getEstado());
@@ -4113,7 +4119,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String status, String cdtipcla, String swmodi, String dslinea,
 			String accion) throws Exception {
 		
-		Map<String,String> params = new HashMap<String,String>();
+		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("pv_cdunieco_i", cdunieco);
 		params.put("pv_cdramo_i"  , cdramo);
 		params.put("pv_estado_i"  , estado);
@@ -4806,7 +4812,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		{
 			throw new ApplicationException(error);
 		}
-		Map<String,String> res = new HashMap<String,String>();
+		Map<String,String> res = new LinkedHashMap<String,String>();
 		res.put("nmsuplem" , nmsuplem);
 		res.put("nsuplogi" , nsuplogi);
 		logger.debug("****** PKG_CONSULTA.P_GET_NMSUPLEM_ENDOSO_VAL res={}",res);
@@ -5592,4 +5598,1061 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public List<Map<String, String>> recuperarDatosEndosoPendiente (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String cdtipsup) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("cdtipsup" , cdtipsup);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarDatosEndosoPendienteSP(getDataSource()),params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null ) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.join("recuperarDatosEndosoPendiente lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarDatosEndosoPendienteSP extends StoredProcedure {
+		protected RecuperarDatosEndosoPendienteSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_DATOS_END_PEND");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"FEINIVAL", "FESOLICI", "NMSUPLEM", "NSUPLOGI"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, String> recuperarFechasVigenciaPoliza(String cdunieco, String cdramo,
+			String estado, String nmpoliza) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarFechasVigenciaPolizaSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size() == 0) {
+			throw new ApplicationException("No se encontraron fechas de vigencia");
+		}
+		logger.debug(Utils.log("recuperarFechasVigenciaPoliza fechas = ", lista.get(0)));
+		return lista.get(0);
+	}
+	
+	protected class RecuperarFechasVigenciaPolizaSP extends StoredProcedure {
+		protected RecuperarFechasVigenciaPolizaSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_FECHAS_VIG_POL");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"FEEFECTO", "FEPROREN"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, String> recuperarMpolisitTitularVigente(String cdunieco, String cdramo,
+			String estado, String nmpoliza) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarMpolisitTitularVigenteSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size() == 0) {
+			throw new ApplicationException("No hay titular vigente");
+		}
+		logger.debug(Utils.log("recuperarMpolisitTitularVigente titular = ", lista.get(0)));
+		return lista.get(0);
+	}
+	
+	protected class RecuperarMpolisitTitularVigenteSP extends StoredProcedure {
+		protected RecuperarMpolisitTitularVigenteSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_MPOLISIT_TITULAR");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDUNIECO",
+					"CDRAMO",
+					"ESTADO",
+					"NMPOLIZA",
+					"NMSITUAC",
+					"NMSUPLEM",
+					"STATUS",
+					"CDTIPSIT",
+					"SWREDUCI",
+					"CDAGRUPA",
+					"CDESTADO",
+					"FEFECSIT",
+					"FECHAREF",
+					"CDGRUPO",
+					"NMSITUAEXT",
+					"NMSITAUX",
+					"NMSBSITEXT",
+					"CDPLAN",
+					"CDASEGUR",
+					"DSGRUPO",
+					"CDPLAZA"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, String> recuperarTvalositTitularVigente(String cdunieco, String cdramo,
+			String estado, String nmpoliza) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarTvalositTitularVigenteSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size() == 0) {
+			throw new ApplicationException("No hay titular vigente");
+		}
+		logger.debug(Utils.log("recuperarTvalositTitularVigente titular = ", lista.get(0)));
+		return lista.get(0);
+	}
+	
+	protected class RecuperarTvalositTitularVigenteSP extends StoredProcedure {
+		protected RecuperarTvalositTitularVigenteSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_TVALOSIT_TITULAR");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDUNIECO",
+					"CDRAMO",
+					"ESTADO",
+					"NMPOLIZA",
+					"NMSITUAC",
+					"NMSUPLEM",
+					"STATUS",
+					"CDTIPSIT",
+					"OTVALOR01", "OTVALOR02", "OTVALOR03", "OTVALOR04", "OTVALOR05",
+					"OTVALOR06", "OTVALOR07", "OTVALOR08", "OTVALOR09", "OTVALOR10",
+					"OTVALOR11", "OTVALOR12", "OTVALOR13", "OTVALOR14", "OTVALOR15",
+					"OTVALOR16", "OTVALOR17", "OTVALOR18", "OTVALOR19", "OTVALOR20",
+					"OTVALOR21", "OTVALOR22", "OTVALOR23", "OTVALOR24", "OTVALOR25",
+					"OTVALOR26", "OTVALOR27", "OTVALOR28", "OTVALOR29", "OTVALOR30",
+					"OTVALOR31", "OTVALOR32", "OTVALOR33", "OTVALOR34", "OTVALOR35",
+					"OTVALOR36", "OTVALOR37", "OTVALOR38", "OTVALOR39", "OTVALOR40",
+					"OTVALOR41", "OTVALOR42", "OTVALOR43", "OTVALOR44", "OTVALOR45",
+					"OTVALOR46", "OTVALOR47", "OTVALOR48", "OTVALOR49", "OTVALOR50",
+					"OTVALOR51", "OTVALOR52", "OTVALOR53", "OTVALOR54", "OTVALOR55",
+					"OTVALOR56", "OTVALOR57", "OTVALOR58", "OTVALOR59", "OTVALOR60",
+					"OTVALOR61", "OTVALOR62", "OTVALOR63", "OTVALOR64", "OTVALOR65",
+					"OTVALOR66", "OTVALOR67", "OTVALOR68", "OTVALOR69", "OTVALOR70",
+					"OTVALOR71", "OTVALOR72", "OTVALOR73", "OTVALOR74", "OTVALOR75",
+					"OTVALOR76", "OTVALOR77", "OTVALOR78", "OTVALOR79", "OTVALOR80",
+					"OTVALOR81", "OTVALOR82", "OTVALOR83", "OTVALOR84", "OTVALOR85",
+					"OTVALOR86", "OTVALOR87", "OTVALOR88", "OTVALOR89", "OTVALOR90",
+					"OTVALOR91", "OTVALOR92", "OTVALOR93", "OTVALOR94", "OTVALOR95",
+					"OTVALOR96", "OTVALOR97", "OTVALOR98", "OTVALOR99"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, String> recuperarMdomicilTitularVigente(String cdunieco, String cdramo,
+			String estado, String nmpoliza) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarMdomicilTitularVigenteSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size() == 0) {
+			throw new ApplicationException("No hay titular vigente");
+		}
+		logger.debug(Utils.log("recuperarMdomicilTitularVigente titular = ", lista.get(0)));
+		return lista.get(0);
+	}
+	
+	protected class RecuperarMdomicilTitularVigenteSP extends StoredProcedure {
+		protected RecuperarMdomicilTitularVigenteSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_MDOMICIL_TITULAR");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDPERSON" , "NMORDDOM"  , "CDTIPDOM" , "DSDOMICI",
+					"CDSIGLAS" , "CDIDIOMA"  , "NMTELEX"  , "NMFAX",
+					"NMTELEFO" , "CDPOSTAL"  , "OTPOBLAC" , "CDPAIS",
+					"OTPISO"   , "NMNUMERO"  , "CDPROVIN" , "DSZONA",
+					"DSDELEGA" , "CDREGION"  , "CDSECTOR" , "CDMANZAN",
+					"CDEDIFIC" , "RUTA_CART" , "PUNTOENT" , "CHKDIGIT",
+					"PZIPCODE" , "NMAPTO"    , "CDKILOME" , "INSTESPE",
+					"DSDIRECC" , "NMNUMINT"  , "CDEDO"    , "CDMUNICI",
+					"CDCOLONI" , "SWACTIVO"  , "CDUSRCRE" , "SWRECUPERA"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarAseguradosEndosoAlta (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarAseguradosEndosoAltaSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarAseguradosEndosoAlta lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarAseguradosEndosoAltaSP extends StoredProcedure {
+		protected RecuperarAseguradosEndosoAltaSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_ASEG_ENDOSO_ALTA");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMSITUAC", "DSPARENT", "DSNOMBRE", "DSSEXO", "FENACIMI", "CDPERSON", "NMORDDOM", "CDRFC"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, String> recuperarAseguradoCompletoEndosoAlta (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String nmsituac) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsituac" , nmsituac);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarAseguradoCompletoEndosoAltaSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size() == 0) {
+			throw new ApplicationException("No se encuentra el asegurado");
+		}
+		logger.debug(Utils.log("recuperarAseguradoCompletoEndosoAlta asegurado = ", lista.get(0)));
+		return lista.get(0);
+	}
+	
+	protected class RecuperarAseguradoCompletoEndosoAltaSP extends StoredProcedure {
+		protected RecuperarAseguradoCompletoEndosoAltaSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_ASEG_COMPLETO_ALTA");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMSITUAC"    , "CDROL"      , "CDPERSON"    , "NMORDDOM",
+	                "SWRECLAM"    , "SWEXIPER"   , "CDTIPIDE"    , "CDIDEPER",
+	                "DSNOMBRE"    , "CDTIPPER"   , "OTFISJUR"    , "OTSEXO",
+	                "FENACIMI"    , "CDRFC"      , "DSNOMBRE1"   , "DSAPELLIDO",
+	                "DSAPELLIDO1" , "CDNACION"   , "DSCOMNOM"    , "DSRAZSOC",
+	                "FEINGRESO"   , "FEACTUAL"   , "DSNOMUSU"    , "CDESTCIVIL",
+	                "CDGRUECO"    , "CDSTIPPE"   , "NMNUMNOM"    , "CURP",
+	                "CANALING"    , "CONDUCTO"   , "PTCUMUPR"    , "STATUS",
+	                "RESIDENCIA"  , "NONGRATA"   , "CDIDEEXT"    , "CDSUCEMI",
+	                "CDUSRCRE"    , "SWRECUPERA" , "DSOCUPACION" , "DSEMAIL",
+	                "otvalor01" , "otvalor02" , "otvalor03" , "otvalor04" , "otvalor05",
+	                "otvalor06" , "otvalor07" , "otvalor08" , "otvalor09" , "otvalor10",
+	                "otvalor11" , "otvalor12" , "otvalor13" , "otvalor14" , "otvalor15",
+	                "otvalor16" , "otvalor17" , "otvalor18" , "otvalor19" , "otvalor20",
+	                "otvalor21" , "otvalor22" , "otvalor23" , "otvalor24" , "otvalor25",
+	                "otvalor26" , "otvalor27" , "otvalor28" , "otvalor29" , "otvalor30",
+	                "otvalor31" , "otvalor32" , "otvalor33" , "otvalor34" , "otvalor35",
+	                "otvalor36" , "otvalor37" , "otvalor38" , "otvalor39" , "otvalor40",
+	                "otvalor41" , "otvalor42" , "otvalor43" , "otvalor44" , "otvalor45",
+	                "otvalor46" , "otvalor47" , "otvalor48" , "otvalor49" , "otvalor50",
+	                "otvalor51" , "otvalor52" , "otvalor53" , "otvalor54" , "otvalor55",
+	                "otvalor56" , "otvalor57" , "otvalor58" , "otvalor59" , "otvalor60",
+	                "otvalor61" , "otvalor62" , "otvalor63" , "otvalor64" , "otvalor65",
+	                "otvalor66" , "otvalor67" , "otvalor68" , "otvalor69" , "otvalor70",
+	                "otvalor71" , "otvalor72" , "otvalor73" , "otvalor74" , "otvalor75",
+	                "otvalor76" , "otvalor77" , "otvalor78" , "otvalor79" , "otvalor80",
+	                "otvalor81" , "otvalor82" , "otvalor83" , "otvalor84" , "otvalor85",
+	                "otvalor86" , "otvalor87" , "otvalor88" , "otvalor89" , "otvalor90",
+	                "otvalor91" , "otvalor92" , "otvalor93" , "otvalor94" , "otvalor95",
+	                "otvalor96" , "otvalor97" , "otvalor98" , "otvalor99"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void borrarMpoliperEndoso (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem, String nmsituac) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsituac" , nmsituac);
+		ejecutaSP(new BorrarMpoliperEndosoSP(getDataSource()), params);
+	}
+	
+	protected class BorrarMpoliperEndosoSP extends StoredProcedure {
+		protected BorrarMpoliperEndosoSP (DataSource dataSource) {
+			super(dataSource, "P_END_BORRA_MPOLIPER");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarPersonasFisicasPorRFCMultipleDomicilio (String rfc) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("rfc", rfc);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarPersonasFisicasPorRFCMultipleDomicilioSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarPersonasFisicasPorRFCMultipleDomicilio lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarPersonasFisicasPorRFCMultipleDomicilioSP extends StoredProcedure {
+		protected RecuperarPersonasFisicasPorRFCMultipleDomicilioSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_PERSONAS_RFC_ALTA");
+			declareParameter(new SqlParameter("rfc", OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDPERSON", "NMORDDOM", "RFC", "NOMBRE", "DIRECCION"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, String> recuperarPersonaEndosoAlta (String cdperson) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdperson", cdperson);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarPersonaEndosoAltaSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size() == 0) {
+			throw new ApplicationException("No se encuentra la persona");
+		}
+		logger.debug(Utils.log("recuperarPersonaEndosoAlta persona = ", lista.get(0)));
+		return lista.get(0);
+	}
+	
+	protected class RecuperarPersonaEndosoAltaSP extends StoredProcedure {
+		protected RecuperarPersonaEndosoAltaSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_PERSONA_END_ALTA");
+			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDRFC"       , "DSNOMBRE"  , "DSNOMBRE1"  , "DSAPELLIDO",
+				    "DSAPELLIDO1" , "OTSEXO"    , "FENACIMI"   , "CDNACION",
+				    "CDESTCIVIL"  , "FEINGRESO" , "CDPERSON"   , "CDTIPIDE",
+				    "CDIDEPER"    , "CDTIPPER"  , "DSEMAIL"    , "CANALING",
+				    "CONDUCTO"    , "PTCUMUPR"  , "RESIDENCIA" , "NONGRATA",
+				    "CDIDEEXT"    , "CDSUCEMI"  , "OTFISJUR"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarAseguradosRepetidos (String cdunieco, String cdramo, String estado,
+			String nmpoliza) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarAseguradosRepetidosSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarPersonasRepetidas lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarAseguradosRepetidosSP extends StoredProcedure {
+		protected RecuperarAseguradosRepetidosSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_ASEGURA_REPET");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDPERSON", "NOMBRE"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperaParentescosActivos (String cdunieco, String cdramo, String estado,
+			String nmpoliza) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarParentescosActivosSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperaParentescosActivos lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarParentescosActivosSP extends StoredProcedure {
+		protected RecuperarParentescosActivosSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_PARENTESCOS_ACTIV");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMSITUAC", "CDPERSON", "NOMBRE", "CDPARENT", "PARENTESCO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarAseguradosConExtraprimaIncompleta (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarAseguradosConExtraprimaIncompletaSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarAseguradosConExtraprimaIncompleta lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarAseguradosConExtraprimaIncompletaSP extends StoredProcedure {
+		protected RecuperarAseguradosConExtraprimaIncompletaSP (DataSource dataSource) {
+			super(dataSource, "P_END_VALIDA_EXTRAPRIMA");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"STATUS", "ASEGURADO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarAseguradosSinDomicilio (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarAseguradosSinDomicilioSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarAseguradosSinDomicilio lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarAseguradosSinDomicilioSP extends StoredProcedure {
+		protected RecuperarAseguradosSinDomicilioSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_ASEG_SIN_DOMICI");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDUNIECO", "CDRAMO", "ESTADO", "NMPOLIZA", "NMSITUAC", "NMSUPLEM", "CDROL", "CDPERSON", "ASEGURADO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void borraCoberturasYTarifaEndosoAltaAsegurados (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		ejecutaSP(new BorraCoberturasYTarifaEndosoAltaAseguradosSP(getDataSource()), params);
+	}
+	
+	protected class BorraCoberturasYTarifaEndosoAltaAseguradosSP extends StoredProcedure {
+		protected BorraCoberturasYTarifaEndosoAltaAseguradosSP (DataSource dataSource) {
+			super(dataSource, "P_END_BORRA_VDEF_VALIPOL");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String, String>> retarificarEndosos(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		return this.retarificarEndosos(params);
+	}
+	
+	@Override
+	public void calcularValorEndoso(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String nmsuplem, Date feinival, String cdtipsup) throws Exception {
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsituac_i" , nmsituac);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_feinival_i" , feinival);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+		this.calcularValorEndoso(params);
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarTarifaEndosoSalud (String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarTarifaEndosoSaludSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarAseguradosSinDomicilio lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarTarifaEndosoSaludSP extends StoredProcedure {
+		protected RecuperarTarifaEndosoSaludSP (DataSource dataSource) {
+			super(dataSource, "PKG_COTIZA.P_GET_DETALLE_COTI_END_SALUD");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDUNIECO", "CDRAMO", "ESTADO", "NMPOLIZA", "NMSITUAC",
+					"ASEGURADO", "COBERTURA", "IMPORTE", "ORDEN"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void validarTramiteSinCambiosEndosoPendiente(String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("ntramite", ntramite);
+		Map<String, Object> procRes = ejecutaSP(new ValidarTramiteSinCambiosEndosoPendienteSP(getDataSource()), params);
+		String invalido = (String) procRes.get("pv_invalido_o");
+		if ("S".equals(invalido)) {
+			throw new ApplicationException(Utils.join("No se puede cancelar el tr\u00e1mite ", ntramite,
+					" porque el endoso tiene cambios pendientes"));
+		}
+	}
+	
+	protected class ValidarTramiteSinCambiosEndosoPendienteSP extends StoredProcedure {
+		protected ValidarTramiteSinCambiosEndosoPendienteSP (DataSource dataSource) {
+			super(dataSource, "P_END_VALIDA_CANCELA_TRA");
+			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_invalido_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> buscarAseguradosEndosoCoberturas(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem, String cadena) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cadena"   , cadena);
+		Map<String, Object> procRes = ejecutaSP(new BuscarAseguradosEndosoCoberturasSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarAseguradosEndosoCoberturas lista = ", lista));
+		return lista;
+	} 
+	
+	protected class BuscarAseguradosEndosoCoberturasSP extends StoredProcedure {
+		protected BuscarAseguradosEndosoCoberturasSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_ASEG_END_COB");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cadena"   , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMSITUAC", "DSPARENT", "DSNOMBRE", "DSSEXO", "FENACIMI", "GRUPO", "TITULAR", "CDTIPSIT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarCoberturasAmparadasConfirmadas(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarCoberturasAmparadasConfirmadasSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarCoberturasAmparadasConfirmadas lista = ", lista));
+		return lista;
+	} 
+	
+	protected class RecuperarCoberturasAmparadasConfirmadasSP extends StoredProcedure {
+		protected RecuperarCoberturasAmparadasConfirmadasSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_COBERTURAS_CONF");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDGARANT", "DSGARANT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarCoberturasDisponibles(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarCoberturasDisponiblesSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarCoberturasDisponibles lista = ", lista));
+		return lista;
+	} 
+	
+	protected class RecuperarCoberturasDisponiblesSP extends StoredProcedure {
+		protected RecuperarCoberturasDisponiblesSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_COBERTURAS_DISP");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDGARANT", "DSGARANT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movimientoMpoligar (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String nmsuplem, String cdcapita, String status,
+			String cdtipbca, String ptvalbas, String swmanual, String swreas, String cdagrupa,
+			String accion, String cdtipsup) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("cdgarant" , cdgarant);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdcapita" , cdcapita);
+		params.put("status"   , status);
+		params.put("cdtipbca" , cdtipbca);
+		params.put("ptvalbas" , ptvalbas);
+		params.put("swmanual" , swmanual);
+		params.put("swreas"   , swreas);
+		params.put("cdagrupa" , cdagrupa);
+		params.put("accion"   , accion);
+		params.put("cdtipsup" , cdtipsup);
+		ejecutaSP(new MovimientoMpoligarSP(getDataSource()), params);
+	}
+	
+	protected class MovimientoMpoligarSP extends StoredProcedure {
+		protected MovimientoMpoligarSP (DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES.P_MOV_MPOLIGAR");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdcapita" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipbca" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ptvalbas" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swmanual" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swreas"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagrupa" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, String> recuperarDatosCoberturaParaInsercion (String cdramo, String cdtipsit, String cdgarant) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdramo"   , cdramo);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdgarant" , cdgarant);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarDatosCoberturaParaInsercionSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size() == 0) {
+			throw new ApplicationException("No se encuentra la cobertura");
+		}
+		logger.debug(Utils.log("recuperarDatosCoberturaParaInsercion cobertura = ", lista.get(0)));
+		return lista.get(0);
+	}
+	
+	protected class RecuperarDatosCoberturaParaInsercionSP extends StoredProcedure {
+		protected RecuperarDatosCoberturaParaInsercionSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_COB_INSERTAR");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDCAPITA", "CDTIPBCA", "PTVALBAS", "SWMANUAL"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String, String> recuperarTvalositInciso (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarTvalositIncisoSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null || lista.size() == 0) {
+			throw new ApplicationException("No se encuentra el inciso");
+		}
+		logger.debug(Utils.log("recuperarTvalositInciso inciso = ", lista.get(0)));
+		return lista.get(0);
+	}
+	
+	protected class RecuperarTvalositIncisoSP extends StoredProcedure {
+		protected RecuperarTvalositIncisoSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_TVALOSIT_SITUAC");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDUNIECO"  ,"CDRAMO"     , "ESTADO"    , "NMPOLIZA",
+					"NMSITUAC"  ,"NMSUPLEM"   , "STATUS"    , "CDTIPSIT",
+					"OTVALOR01" , "OTVALOR02" , "OTVALOR03" , "OTVALOR04" , "OTVALOR05",
+					"OTVALOR06" , "OTVALOR07" , "OTVALOR08" , "OTVALOR09" , "OTVALOR10",
+					"OTVALOR11" , "OTVALOR12" , "OTVALOR13" , "OTVALOR14" , "OTVALOR15",
+					"OTVALOR16" , "OTVALOR17" , "OTVALOR18" , "OTVALOR19" , "OTVALOR20",
+					"OTVALOR21" , "OTVALOR22" , "OTVALOR23" , "OTVALOR24" , "OTVALOR25",
+					"OTVALOR26" , "OTVALOR27" , "OTVALOR28" , "OTVALOR29" , "OTVALOR30",
+					"OTVALOR31" , "OTVALOR32" , "OTVALOR33" , "OTVALOR34" , "OTVALOR35",
+					"OTVALOR36" , "OTVALOR37" , "OTVALOR38" , "OTVALOR39" , "OTVALOR40",
+					"OTVALOR41" , "OTVALOR42" , "OTVALOR43" , "OTVALOR44" , "OTVALOR45",
+					"OTVALOR46" , "OTVALOR47" , "OTVALOR48" , "OTVALOR49" , "OTVALOR50",
+					"OTVALOR51" , "OTVALOR52" , "OTVALOR53" , "OTVALOR54" , "OTVALOR55",
+					"OTVALOR56" , "OTVALOR57" , "OTVALOR58" , "OTVALOR59" , "OTVALOR60",
+					"OTVALOR61" , "OTVALOR62" , "OTVALOR63" , "OTVALOR64" , "OTVALOR65",
+					"OTVALOR66" , "OTVALOR67" , "OTVALOR68" , "OTVALOR69" , "OTVALOR70",
+					"OTVALOR71" , "OTVALOR72" , "OTVALOR73" , "OTVALOR74" , "OTVALOR75",
+					"OTVALOR76" , "OTVALOR77" , "OTVALOR78" , "OTVALOR79" , "OTVALOR80",
+					"OTVALOR81" , "OTVALOR82" , "OTVALOR83" , "OTVALOR84" , "OTVALOR85",
+					"OTVALOR86" , "OTVALOR87" , "OTVALOR88" , "OTVALOR89" , "OTVALOR90",
+					"OTVALOR91" , "OTVALOR92" , "OTVALOR93" , "OTVALOR94" , "OTVALOR95",
+					"OTVALOR96" , "OTVALOR97" , "OTVALOR98" , "OTVALOR99"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarCoberturasAgregadas(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarCoberturasAgregadasSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarCoberturasAgregadas lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarCoberturasAgregadasSP extends StoredProcedure {
+		protected RecuperarCoberturasAgregadasSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_COBERTURAS_AGRE");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDGARANT", "DSGARANT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void eliminarCoberturaImagenExacta (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String status, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("cdgarant" , cdgarant);
+		params.put("status"   , status);
+		params.put("nmsuplem" , nmsuplem);
+		ejecutaSP(new EliminarCoberturaImagenExactaSP(getDataSource()), params);
+	}
+	
+	protected class EliminarCoberturaImagenExactaSP extends StoredProcedure {
+		protected EliminarCoberturaImagenExactaSP (DataSource dataSource) {
+			super(dataSource, "P_END_BORRA_MPOLIGAR_EXACTO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public int recuperarConteoCoberturasImagenExacta (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String status, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("status"   , status);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarConteoCoberturasImagenExactaSP(getDataSource()), params);
+		int conteo = Integer.valueOf((String) procRes.get("pv_conteo_o"));
+		logger.debug("recuperarConteoCoberturasImagenExacta conteo = {}", conteo);
+		return conteo;
+	}
+	
+	protected class RecuperarConteoCoberturasImagenExactaSP extends StoredProcedure {
+		protected RecuperarConteoCoberturasImagenExactaSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_N_COB_AGREGADAS");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_conteo_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void eliminarTvalositImagenExacta (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String status, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("status"   , status);
+		params.put("nmsuplem" , nmsuplem);
+		ejecutaSP(new EliminarTvalositImagenExactaSP(getDataSource()), params);
+	}
+	
+	protected class EliminarTvalositImagenExactaSP extends StoredProcedure {
+		protected EliminarTvalositImagenExactaSP (DataSource dataSource) {
+			super(dataSource, "P_END_BORRA_TVALOSIT_EXACTO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

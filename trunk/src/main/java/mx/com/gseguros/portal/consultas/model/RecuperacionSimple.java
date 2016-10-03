@@ -98,6 +98,14 @@ public enum RecuperacionSimple
 	,RECUPERAR_TODAS_SUCURSALES                              ("L")
 	,RECUPERAR_VALIDACION_POR_CDVALIDAFK                     ("L")
 	,RECUPERAR_COTIZACIONES_COLECTIVAS_APROBADAS             ("L")
+	,RECUPERAR_ASEGURADOS_ENDOSO_ALTA                        ("L")
+	,RECUPERAR_ASEGURADO_COMPLETO_ENDOSO_ALTA                ("M")
+	,RECUPERAR_PERSONAS_FISICAS_POR_RFC_MULTIPLE_DOMICILIO   ("L")
+	,RECUPERAR_PERSONA_ENDOSO_ALTA                           ("M")
+	,RECUPERAR_BUSQUEDA_ASEGURADOS_END_COBERTURAS            ("L")
+	,RECUPERAR_COBERTURAS_AMPARADAS_CONFIRMADAS              ("L")
+	,RECUPERAR_COBERTURAS_DISPONIBLES                        ("L")
+	,RECUPERAR_COBERTURAS_AGREGADAS                          ("L")
 	;
 	 
 	private String tipo;

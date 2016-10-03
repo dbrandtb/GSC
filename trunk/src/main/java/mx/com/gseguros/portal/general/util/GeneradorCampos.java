@@ -23,6 +23,7 @@ public class GeneradorCampos
 	private static       Logger log                   = Logger.getLogger(GeneradorCampos.class);
     public static final  String namePrefix            = "parametros.pv_otvalor";
     public static final  String namePrefixAux         = "aux.otvalor";
+    public static final  String namePrefixSimple      = "otvalor";
     private static final String formatoFecha          = "d/m/Y";
     private static final String xtypeDatecolumn       = "datecolumn";
     private static final int    staticFlex            = 1;
@@ -52,11 +53,21 @@ public class GeneradorCampos
     private boolean esMovil   = false;
     private boolean auxiliar  = false; 
     
+    private boolean prefixSimple = false;
+    
     public GeneradorCampos(String context)
     {
     	this.context="/"+context;
     	this.rutaIconos = this.context+GeneradorCampos.prefijoRutaIconos;
     	log.debug("contexto para el generador de campos: "+this.context);
+    }
+    
+    public GeneradorCampos(String context, boolean prefixSimple)
+    {
+    	this.context="/"+context;
+    	this.rutaIconos = this.context+GeneradorCampos.prefijoRutaIconos;
+    	log.debug("contexto para el generador de campos: "+this.context);
+    	this.prefixSimple = prefixSimple;
     }
     
     /**
@@ -333,7 +344,12 @@ public class GeneradorCampos
     			size=3;
     		}
         	name = StringUtils.leftPad(name,size,"0");
-        	name = (auxiliar?GeneradorCampos.namePrefixAux:GeneradorCampos.namePrefix) + name;
+        	name = (prefixSimple
+        			? GeneradorCampos.namePrefixSimple
+        			: auxiliar
+        				? GeneradorCampos.namePrefixAux
+        				: GeneradorCampos.namePrefix
+        	) + name;
         }
         
         String value=comp.getValue();
