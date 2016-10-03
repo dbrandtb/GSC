@@ -48,7 +48,6 @@ var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 
 var cargarXpoliza = false;
-var numSerie='';
 ////// urls //////
 
 ////// variables //////
@@ -5785,45 +5784,35 @@ function _p30_editarAutoAceptar(bot,callback)
         if(!Ext.isEmpty(callback))
         {
         	debug('form.getValues()***',form.getValues());
-        	_p30_store.each(function(record) {
-			    	debug( record);
-			    	numSerie+=''+(record.get('parametros.pv_otvalor37'))+'|';
-			    	//console.log( record.get('parametros.pv_otvalor37') );
-			    });
-		if(Ext.isEmpty(numSerie)){
-        	Ext.Ajax.request(
-				{
-					url     : _p29_urlObtieneValNumeroSerie
-					,params :
-					{
+        	var numSerie='';
+			numSerie = record.get('parametros.pv_otvalor37');
+			if(!Ext.isEmpty(numSerie)){
+	        	Ext.Ajax.request({
+					url     : _p29_urlObtieneValNumeroSerie,
+					params : {
 						'smap1.numSerie'  : numSerie
 						,'smap1.feini'    : _fieldByName('feini').getValue()
-					}
-					,success : function(response)
-					{
+					},
+					success : function(response) {
 						var jsonNumSerie=Ext.decode(response.responseText);
-	        	    	if(jsonNumSerie.exito!=true)
-	        	    	{
+	        	    	if(jsonNumSerie.exito!=true) {
 	        	    		numSerie='';
-	        	    		if(!RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol))
-						        	    		 {
-						        	    		 		mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
-							        	    			
-							        				}else{
-							        					callback();
-							        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
-							        					
-							        				}
-	                       
-						   
-	                      
-	                       
-													
+	        	    		if(!RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)) {
+        	    		 		mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+	        				} else {
+	        					callback();
+	        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
+	        					
+	        				}
+	        	    	} else {
+	        	    		callback();
 	        	    	}
-					}
-					,failure : errorComunicacion
+					},
+					failure : errorComunicacion
 				});
-		}else{callback();}
+			} else {
+				callback();
+			}
         }
     }
     
