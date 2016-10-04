@@ -349,52 +349,45 @@ Ext.onReady(function()
 													}
 												});
 										}
-		                                Ext.Ajax.request(
-											{
-												url     : _p29_urlObtieneValNumeroSerie
-												,params :
-												{
+										if(_p36_smap1.cdtipsup =='42'){
+											debug('_p36_smap1.cdtipsup',_p36_smap1.cdtipsup);
+											Ext.Ajax.request({
+			                                	url     : _p29_urlObtieneValNumeroSerie,
+			                                	params :{
 													'smap1.numSerie'  : numSerie
 													,'smap1.feini'    : new Date()
-												}
-												,success : function(response)
-												{
+												},
+												success : function(response){
 													var jsonNumSerie=Ext.decode(response.responseText);
-								        	    	if(jsonNumSerie.exito!=true)
-								        	    	{
-								        	    		if(!RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL))
-									        	    		 {
-									        	    		 		mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
-										        	    			
-										        				}else{
-										        					
-																	 centrarVentanaInterna(Ext.MessageBox.confirm(
-																		'Confirmar'
-																		,'¿Desea Continuar?'
-																		,function(btn)
-																		{
-																			if(btn === 'yes')
-																			{
-																				confirmaEmitir(jsonDatosConfirmacion);
-																			}
-																			else
-																			{
-																				panelMask.hide();
-																				debug('no quiso Continuar');
-																				
-																			}
-																		}
-																	));
-										        					mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
-										        					
-																	
-										        				}
-           											}else{
-           												confirmaEmitir(jsonDatosConfirmacion);
-           											}
-												}
-												,failure : errorComunicacion
+								        	    	if(jsonNumSerie.exito!=true){
+								        	    		if(!RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL)){
+								        	    			mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+										        	    } else {
+										        	    	centrarVentanaInterna(Ext.MessageBox.confirm(
+																'Confirmar'
+																,'¿Desea Continuar?'
+																,function(btn){
+																	if(btn === 'yes') {
+																		confirmaEmitir(jsonDatosConfirmacion);
+																	} else {
+																		panelMask.hide();
+																		debug('no quiso Continuar');
+																	}
+																}
+															));
+										        			mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
+										        		}
+	       											}else{
+	       												confirmaEmitir(jsonDatosConfirmacion);
+	       											}
+												},
+												failure : errorComunicacion
 											});
+										} else {
+											debug('_p36_smap1.cdtipsup',_p36_smap1.cdtipsup);
+											confirmaEmitir(jsonDatosConfirmacion);
+										}
+		                                
 		                            };
 		                            
 		                            var valido = _fieldById('_p36_form').getForm().isValid()&&_fieldById('_p36_formEndoso').getForm().isValid();
