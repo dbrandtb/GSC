@@ -1946,5 +1946,50 @@ Ext.onReady(function() {
             }
         });
     };
+
+    /**
+     * Reenviar recibos por suplemento
+     */
+    reenviaRecibosSuplemento = function (button, evt) {
+    	
+    	debug('<<<<<>>>>> Parametros reenviar recibos Endoso ::: ');
+    	
+    	var selRecord;
+    	if(gridSuplementos.getSelectionModel().hasSelection()){
+    		selRecord = gridSuplementos.getSelectionModel().getLastSelected();
+    		debug('>>>>>> Record Seleccionado : ',selRecord);
+    	}else{
+    		mensajeWarning('Debe seleccionar un registro para esta acci&oacute;n');
+    		return;
+    	}
+    	
+    	_mask('Regenerando Recibos...');
+    	Ext.Ajax.request({
+    		url       : _URL_RECIBOS_ENDOSO,       	
+    		params    : {
+    			'map1.cdunieco' : selRecord.get('cdunieco'),
+    			'map1.cdramo' : selRecord.get('cdramo'),
+    			'map1.estado' : selRecord.get('estado'),
+    			'map1.nmpoliza' : selRecord.get('nmpoliza'),
+    			'map1.nmsuplem' : selRecord.get('nmsuplem'),
+    			'map1.nsuplogi' : selRecord.get('nsuplogi')
+    		},
+    		callback  : function (options, success, response){
+    			_unmask();
+    			if(success){
+    				var jsonResponse = Ext.decode(response.responseText);
+    				
+    				if(jsonResponse.success){
+    					mensajeCorrecto('Aviso','Ejecuci&oacuten correcta al regenerar recibos.');
+    				}else{
+    					showMessage('Error', 'Error al regenerar recibos. ' + jsonResponse.respuesta, Ext.Msg.OK, Ext.Msg.ERROR);
+    				}
+    				
+    			}else{
+    				showMessage('Error', 'Error al regenerar recibos. Error de conexi&oacute;n.', Ext.Msg.OK, Ext.Msg.ERROR);
+    			}
+    		}
+    	});
+    };
     
 });
