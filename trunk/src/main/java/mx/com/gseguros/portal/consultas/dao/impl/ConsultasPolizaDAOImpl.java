@@ -1082,7 +1082,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     
     protected class ObtieneDatosLigasRecibosPoliza extends StoredProcedure {
     	protected ObtieneDatosLigasRecibosPoliza(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_GET_DATOS_PARA_ENVIO_URL");
+    		super(dataSource, "P_GET_DATOS_PARA_ENVIO_URL");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
