@@ -7948,4 +7948,139 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				"\n@@@@@@ quitarCoberturaAgregadaEndCob @@@@@@",
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
+	
+	@Override
+	public void eliminarCoberturaEndosoCoberturas(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String nmsuplem, String cdtipsit) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ eliminarCoberturaEndosoCoberturas @@@@@@",
+				"\n@@@@@@ cdunieco  = " , cdunieco,
+				"\n@@@@@@ cdramo    = " , cdramo,
+				"\n@@@@@@ estado    = " , estado,
+				"\n@@@@@@ nmpoliza  = " , nmpoliza,
+				"\n@@@@@@ nmsituac  = " , nmsituac,
+				"\n@@@@@@ cdgarant  = " , cdgarant,
+				"\n@@@@@@ nmsuplem  = " , nmsuplem,
+				"\n@@@@@@ cdtipsit  = " , cdtipsit));
+		String paso = null;
+		try {
+			String cdtipsup = String.valueOf(TipoEndoso.BAJA_COBERTURAS.getCdTipSup());
+			paso = "Recuperando datos de cobertura";
+			logger.debug(paso);
+			Map<String, String> datosCobertura = endososDAO.recuperarDatosCoberturaParaInsercion(cdramo, cdtipsit, cdgarant);
+			paso = "Eliminando cobertura";
+			logger.debug(paso);
+			endososDAO.movimientoMpoligar(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant, nmsuplem,
+					datosCobertura.get("CDCAPITA"), "V", datosCobertura.get("CDTIPBCA"), datosCobertura.get("PTVALBAS"),
+					datosCobertura.get("SWMANUAL"),
+					null, // swreas
+					"1", // cdagrupa
+					"D",
+					cdtipsup);
+			paso = "Recuperando valores de situaci\u00f3n";
+			logger.debug(paso);
+			Map<String, String> tvalositAnterior = endososDAO.recuperarTvalositInciso(cdunieco, cdramo, estado, nmpoliza,
+					nmsituac, nmsuplem);
+			if(!nmsuplem.equals(tvalositAnterior.get("NMSUPLEM"))) { // es la primera cobertura que se quita para este inciso
+				                                                     // no existe tvalosit con el nmsuplem de este endoso
+				paso = "Preparando valores de situaci\u00f3n";
+				logger.debug(paso);
+				Map<String, String> valoresVariablesTvalositAnterior = new HashMap<String, String>();
+				for (Entry<String, String> en : tvalositAnterior.entrySet()) {
+					String key = en.getKey();
+					if (key.indexOf("OTVALOR") != -1) {
+						valoresVariablesTvalositAnterior.put(key.toLowerCase(), en.getValue());
+					}
+				}
+				paso = "Insertando nueva imagen de situaci\u00f3n"; // insertamos tvalosit para este inciso
+				logger.debug(paso);
+				cotizacionDAO.movimientoTvalosit(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem,
+						"V", // status
+						cdtipsit,
+						valoresVariablesTvalositAnterior,
+						"I" // accion
+						);
+			}
+			paso = "Actualizando valores de situaci\u00f3n para coberturas";
+			logger.debug(paso);
+			endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, cdgarant);
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ eliminarCoberturaEndosoCoberturas @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+	}
+	
+	@Override
+	public void restaurarCoberturaEliminadaEndCob(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1,
+			String cdatribu2, String cdatribu3, String cdtipsit) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ restaurarCoberturaEliminadaEndCob @@@@@@",
+				"\n@@@@@@ cdunieco  = " , cdunieco,
+				"\n@@@@@@ cdramo    = " , cdramo,
+				"\n@@@@@@ estado    = " , estado,
+				"\n@@@@@@ nmpoliza  = " , nmpoliza,
+				"\n@@@@@@ nmsituac  = " , nmsituac,
+				"\n@@@@@@ cdgarant  = " , cdgarant,
+				"\n@@@@@@ nmsuplem  = " , nmsuplem,
+				"\n@@@@@@ cdatribu1 = " , cdatribu1,
+				"\n@@@@@@ cdatribu2 = " , cdatribu2,
+				"\n@@@@@@ cdatribu3 = " , cdatribu3,
+				"\n@@@@@@ cdtipsit  = " , cdtipsit));
+		String paso = null;
+		try {
+			paso = "Recuperando conteo de coberturas eliminadas para el inciso";
+			logger.debug(paso);
+			int nCobAgre = endososDAO.recuperarConteoCoberturasImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, "M", nmsuplem);
+			if (nCobAgre < 2) { // se borra tvalosit del endoso porque ya no hay coberturas eliminadas para ese inciso (solo la que se esta borrando)
+				paso = "Borrando imagen de situaci\u00f3n";
+				logger.debug(paso);
+				endososDAO.eliminarTvalositImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, "V", nmsuplem);
+			} else { // aun hay otras coberturas agregadas y hay que actualizar tvalosit
+				paso = "Restaurando valores de situaci\u00f3n para coberturas";
+				logger.debug(paso);
+				endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem,
+						String.valueOf(TipoEndoso.ALTA_COBERTURAS.getCdTipSup()), cdgarant);
+				BigInteger nmsuplemInt = new BigInteger(nmsuplem);
+				nmsuplemInt = nmsuplemInt.subtract(BigInteger.valueOf(1l)); // nmsuplem -1
+				paso = "Recuperando valores de situaci\u00f3n originales";
+				logger.debug(paso);
+				Map<String, String> tvalositAnterior = endososDAO.recuperarTvalositInciso(cdunieco, cdramo, estado, nmpoliza,
+						nmsituac, nmsuplemInt.toString());
+				if (StringUtils.isNotBlank(cdatribu1)) {
+					paso = "Restaurando primer valor capturado";
+					logger.debug(paso);
+					String otclave = Utils.join("OTVALOR", StringUtils.leftPad(cdatribu1, 2, "0"));
+					endososDAO.actualizaTvalositSitaucionCobertura(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,
+							cdatribu1, tvalositAnterior.get(otclave));
+				}
+				if (StringUtils.isNotBlank(cdatribu2)) {
+					paso = "Restaurando segundo valor capturado";
+					logger.debug(paso);
+					String otclave = Utils.join("OTVALOR", StringUtils.leftPad(cdatribu2, 2, "0"));
+					endososDAO.actualizaTvalositSitaucionCobertura(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,
+							cdatribu2, tvalositAnterior.get(otclave));
+				}
+				if (StringUtils.isNotBlank(cdatribu3)) {
+					paso = "Restaurando tercer valor capturado";
+					logger.debug(paso);
+					String otclave = Utils.join("OTVALOR", StringUtils.leftPad(cdatribu3, 2, "0"));
+					endososDAO.actualizaTvalositSitaucionCobertura(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac,
+							cdatribu3, tvalositAnterior.get(otclave));
+				}
+			}
+			paso = "Eliminando cobertura agregada";
+			logger.debug(paso);
+			endososDAO.eliminarCoberturaImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant, "M", nmsuplem);
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ restaurarCoberturaEliminadaEndCob @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+	}
 }

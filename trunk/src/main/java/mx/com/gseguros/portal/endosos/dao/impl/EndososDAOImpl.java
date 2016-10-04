@@ -6653,7 +6653,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public List<Map<String, String>> recuperarAseguradosAfectadosEndosoCoberturas(String cdunieco, String cdramo, String estado,
+	public List<Map<String, String>> recuperarAseguradosAfectadosEndosoCoberturas (String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
 		params.put("cdunieco" , cdunieco);
@@ -6689,10 +6689,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void actualizaTvalositCoberturasAdicionales(String cdunieco, String cdramo, String estado, String nmpoliza,
+	public void actualizaTvalositCoberturasAdicionales (String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem ,String cdtipsup, String cdgarant) throws Exception
 	{
-		Map<String,String>params=new LinkedHashMap<String,String>();
+		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
@@ -6702,5 +6702,43 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdtipsup" , cdtipsup);
 		params.put("cdgarant" , cdgarant);
 		ejecutaSP(new ActualizaTvalositCoberturasAdicionales(getDataSource()),params);
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarCoberturasBorradas(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsituac" , nmsituac);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarCoberturasBorradasSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarCoberturasBorradas lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarCoberturasBorradasSP extends StoredProcedure {
+		protected RecuperarCoberturasBorradasSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_COBERTURAS_ELIM");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDGARANT", "DSGARANT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
 	}
 }

@@ -107,6 +107,7 @@ public enum RecuperacionSimple
 	,RECUPERAR_COBERTURAS_DISPONIBLES                        ("L")
 	,RECUPERAR_COBERTURAS_AGREGADAS                          ("L")
 	,RECUPERAR_ASEGURADOS_AFECTADOS_END_COBERTURAS           ("L")
+	,RECUPERAR_COBERTURAS_BORRADAS                           ("L")
 	;
 	 
 	private String tipo;
