@@ -933,4 +933,11 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Map<String, String> obtieneDatosLigasRecibosPoliza(String cdunieco, String cdramo, String cdestado,
+			String nmpoliza, String nmsuplem) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
