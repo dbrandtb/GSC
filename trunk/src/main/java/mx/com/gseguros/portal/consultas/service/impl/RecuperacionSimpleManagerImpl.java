@@ -1281,10 +1281,14 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"));
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_DISPONIBLES)) {
 				lista = endososDAO.recuperarCoberturasDisponibles(params.get("cdunieco"), params.get("cdramo"),
-						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"));
+						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"),
+						usuario.getRolActivo().getClave());
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_AGREGADAS)) {
 				lista = endososDAO.recuperarCoberturasAgregadas(params.get("cdunieco"), params.get("cdramo"),
 						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_ASEGURADOS_AFECTADOS_END_COBERTURAS)) {
+				lista = endososDAO.recuperarAseguradosAfectadosEndosoCoberturas(params.get("cdunieco"), params.get("cdramo"),
+						params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"));
 			}
 		}
 		catch(Exception ex)

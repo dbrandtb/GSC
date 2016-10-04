@@ -7851,7 +7851,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 			paso = "Actualizando valores de situaci\u00f3n para coberturas";
 			logger.debug(paso);
-			endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup);
+			endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, cdgarant);
 			if (StringUtils.isNotBlank(cdatribu1)) {
 				paso = "Actualizando primer valor capturado";
 				logger.debug(paso);
@@ -7898,21 +7898,18 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				"\n@@@@@@ cdtipsit  = " , cdtipsit));
 		String paso = null;
 		try {
-			String cdtipsup = String.valueOf(TipoEndoso.ALTA_COBERTURAS.getCdTipSup());
-			paso = "Eliminando cobertura agregada";
-			logger.debug(paso);
-			endososDAO.eliminarCoberturaImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant, "V", nmsuplem);
 			paso = "Recuperando conteo de coberturas agregadas para el inciso";
 			logger.debug(paso);
 			int nCobAgre = endososDAO.recuperarConteoCoberturasImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, "V", nmsuplem);
-			if (nCobAgre == 0) { // se borra tvalosit del endoso porque ya no hay coberturas nuevas para ese inciso
+			if (nCobAgre < 2) { // se borra tvalosit del endoso porque ya no hay coberturas nuevas para ese inciso (solo la que se esta borrando)
 				paso = "Borrando imagen de situaci\u00f3n";
 				logger.debug(paso);
 				endososDAO.eliminarTvalositImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, "V", nmsuplem);
 			} else { // aun hay otras coberturas agregadas y hay que actualizar tvalosit
 				paso = "Restaurando valores de situaci\u00f3n para coberturas";
 				logger.debug(paso);
-				endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup);
+				endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem,
+						String.valueOf(TipoEndoso.BAJA_COBERTURAS.getCdTipSup()), cdgarant);
 				BigInteger nmsuplemInt = new BigInteger(nmsuplem);
 				nmsuplemInt = nmsuplemInt.subtract(BigInteger.valueOf(1l)); // nmsuplem -1
 				paso = "Recuperando valores de situaci\u00f3n originales";
@@ -7941,6 +7938,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							cdatribu3, tvalositAnterior.get(otclave));
 				}
 			}
+			paso = "Eliminando cobertura agregada";
+			logger.debug(paso);
+			endososDAO.eliminarCoberturaImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant, "V", nmsuplem);
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}

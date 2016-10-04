@@ -5,20 +5,20 @@
 <head>
 <script>
 ////// urls //////
-var _p60_urlRecuperarDatosEndoso                = '<s:url namespace = "/endosos"   action = "recuperarDatosEndosoPendiente"       />',
-    _p60_urlGuardarFechaEfecto                  = '<s:url namespace = "/endosos"   action = "guardarFechaEfectoEndosoPendiente"   />',
-    _p60_urlSacaendoso                          = '<s:url namespace = "/endosos"   action = "sacaendoso"                          />',
-    _p60_urlPantallaExclusiones                 = '<s:url namespace = "/"          action = "pantallaExclusion"                   />',
-    _p60_urlTarificar                           = '<s:url namespace = "/endosos"   action = "tarificarEndosoAltaAsegurados"       />',
-    _p60_urlConfirmarEndosoFlujo                = '<s:url namespace = "/endosos"   action = "confirmarEndosoFlujo"                />',
-    _p60_urlObtenerComponenteSituacionCobertura = '<s:url namespace = "/endosos"   action = "obtenerComponenteSituacionCobertura" />',
-    _p60_urlAgregarCobertura                    = '<s:url namespace = "/endosos"   action = "agregarCoberturaEndosoCoberturas"    />',
-    _p60_urlEliminarCoberturaAgregada           = '<s:url namespace = "/endosos"   action = "quitarCoberturaAgregadaEndCob"       />';
+var _p60_urlRecuperarDatosEndoso                = '<s:url namespace = "/endosos" action = "recuperarDatosEndosoPendiente"       />',
+    _p60_urlGuardarFechaEfecto                  = '<s:url namespace = "/endosos" action = "guardarFechaEfectoEndosoPendiente"   />',
+    _p60_urlSacaendoso                          = '<s:url namespace = "/endosos" action = "sacaendoso"                          />',
+    _p60_urlPantallaExclusiones                 = '<s:url namespace = "/"        action = "pantallaExclusion"                   />',
+    _p60_urlTarificar                           = '<s:url namespace = "/endosos" action = "tarificarEndosoAltaAsegurados"       />',
+    _p60_urlConfirmarEndosoFlujo                = '<s:url namespace = "/endosos" action = "confirmarEndosoFlujo"                />',
+    _p60_urlObtenerComponenteSituacionCobertura = '<s:url namespace = "/endosos" action = "obtenerComponenteSituacionCobertura" />',
+    _p60_urlAgregarCobertura                    = '<s:url namespace = "/endosos" action = "agregarCoberturaEndosoCoberturas"    />',
+    _p60_urlEliminarCoberturaAgregada           = '<s:url namespace = "/endosos" action = "quitarCoberturaAgregadaEndCob"       />';
 ////// urls //////
 
 ////// variables //////
-var _p60_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />,
-    _p60_params = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+var _p60_flujo  = <s:property value = "%{convertToJSON('flujo')}"  escapeHtml = "false" />,
+    _p60_params = <s:property value = "%{convertToJSON('params')}" escapeHtml = "false" />;
 
 debug('_p60_flujo:', _p60_flujo);
 debug('_p60_params:', _p60_params);
@@ -76,7 +76,7 @@ Ext.onReady(function()
                 messageProperty : 'message'
             }
         },
-        cargar: function (cadena) {
+        cargar: function () {
             debug('_p60_storeAseguradosAfectados.cargar()');
             var me = this;
             me.load({
@@ -137,7 +137,7 @@ Ext.onReady(function()
     _p60_storeCoberturasAmparadas = Ext.create('Ext.data.Store', {
         autoLoad: false,
         fields: [
-            'CDGARANT', 'DSGARANT'
+            'CDGARANT', 'DSGARANT', 'SWOBLIGA'
         ],
         proxy : {
             type        : 'ajax',
@@ -334,7 +334,16 @@ Ext.onReady(function()
                 width      : 100,
                 format     : 'd/m/Y'
             }
-        ]
+        ],
+        listeners : {
+            selectionChange : function (me, selected) {
+                debug('_p60_gridBusquedaAsegurados.selectionChange() args:', arguments);
+                if (selected.length > 0) {
+                    _p60_recordAseguradoSeleccionado = selected[0];
+                    _p60_cargarStoresCoberturas();
+                }
+            }
+        }
     });
     
     _p60_gridBusquedaAsegurados = Ext.create('Ext.grid.Panel', {
@@ -436,6 +445,17 @@ Ext.onReady(function()
                 text      : 'DSGARANT',
                 dataIndex : 'DSGARANT',
                 flex      : 1
+            }, {
+                dataIndex : 'SWOBLIGA',
+                width     : 30,
+                renderer  : function (v, md, record, row) {
+                    var r = '';
+                    if (record.get('SWOBLIGA') !== 'S') {
+                        r = '<a href = "#"><img src = "${icons}delete.png" data-qtip = "Eliminar" onclick = "_p60_eliminarClic('
+                            + row + '); return false;"/></a>';
+                    }
+                    return r;
+                }
             }
         ]
     });
@@ -756,6 +776,7 @@ function _p60_tarificarClic(me)
     debug('_p60_tarificarClic() args:',arguments);
     var mask, ck;
     try {
+        return alert('pendiente');
         if (_p60_storeAseguradosAfectados.getCount() === 0) {
             throw 'No hay cambios en las coberturas';
         }
@@ -1032,6 +1053,7 @@ function _p60_agregarCoberturaClic (me, row, col, item, e, record) {
 		                                throw jsonAgregarCober.message;
 		                            }
 		                            _p60_cargarStoresCoberturas();
+		                            _p60_storeAseguradosAfectados.cargar();
 		                        } catch (e) {
 		                            manejaException(e, ck);
 		                        }
@@ -1054,7 +1076,8 @@ function _p60_agregarCoberturaClic (me, row, col, item, e, record) {
 		                width       : 300,
 		                minHeight   : 150,
 		                closeAction : 'destroy',
-		                items       : Ext.decode('['+json.smap1.item+']'),
+		                border      : 0,
+		                items       : Ext.decode('['+jsonCompsSit.smap1.item+']'),
 		                buttonAlign : 'center',
 		                buttons     : [
 		                    {
@@ -1102,42 +1125,84 @@ function _p60_agregarCoberturaClic (me, row, col, item, e, record) {
 
 function _p60_quitarCoberturaAgregadaClic (me, row, col, item, e, record) {
     debug('_p60_quitarCoberturaAgregadaClic() args:', arguments);
-    var mask, ck = 'Eliminando cobertura';
+    var ck;
     try {
-        mask = _maskLocal(ck);
-        Ext.Ajax.request({
-            url     : _p60_urlEliminarCoberturaAgregada,
-            params  : {
-                'params.cdunieco' : _p60_flujo.cdunieco,
-                'params.cdramo'   : _p60_flujo.cdramo,
-                'params.estado'   : _p60_flujo.estado,
-                'params.nmpoliza' : _p60_flujo.nmpoliza,
-                'params.nmsituac' : _p60_recordAseguradoSeleccionado.get('NMSITUAC'),
-                'params.nmsuplem' : _p60_params.nmsuplem,
-                'params.cdgarant' : record.get('CDGARANT'),
-                'params.cdtipsit' : _p60_recordAseguradoSeleccionado.get('CDTIPSIT')
-            },
-            success : function (response) {
-                mask.close();
-                var ck = 'Decodificando respuesta al eliminar cobertura agregada';
-                try {
-                    var jsonQuitarAgregada = Ext.decode(response.responseText);
-                    debug('AJAX jsonQuitarAgregada:', jsonQuitarAgregada);
-                    if (jsonQuitarAgregada.success !== true) {
-                        throw jsonQuitarAgregada.message;
-                    }
-                    _p60_cargarStoresCoberturas();
-                } catch (e) {
-                    manejaException(e, ck);
+        ck = 'Declarando receptor de componentes de situaci\u00f3n';
+        var callback = function (record, jsonCompsSit) {
+            debug('_p60_quitarCoberturaAgregadaClic callback() args:', arguments);
+            var mask, ck;
+            try {
+                var cdatribu1, cdatribu2, cdatribu3;
+                if (jsonCompsSit.smap1.CONITEM === 'true') {
+                    ck = 'Construyendo componentes de situaci\u00f3n';
+                    var items = Ext.decode('['+jsonCompsSit.smap1.item+']');
+                    try {
+                        cdatribu1 = items[0].cdatribu;
+                    } catch (e) {}
+                    try {
+                        cdatribu2 = items[1].cdatribu;
+                    } catch (e) {}
+                    try {
+                        cdatribu3 = items[2].cdatribu;
+                    } catch (e) {}
                 }
-            },
-            failure : function () {
-                mask.close();
-                errorComunicacion(null, 'Error al eliminar cobertura agregada');
-            }
-        });
+                ck = 'Eliminando cobertura';
+		        mask = _maskLocal(ck);
+		        Ext.Ajax.request({
+		            url     : _p60_urlEliminarCoberturaAgregada,
+		            params  : {
+		                'params.cdunieco'  : _p60_flujo.cdunieco,
+		                'params.cdramo'    : _p60_flujo.cdramo,
+		                'params.estado'    : _p60_flujo.estado,
+		                'params.nmpoliza'  : _p60_flujo.nmpoliza,
+		                'params.nmsituac'  : _p60_recordAseguradoSeleccionado.get('NMSITUAC'),
+		                'params.nmsuplem'  : _p60_params.nmsuplem,
+		                'params.cdgarant'  : record.get('CDGARANT'),
+		                'params.cdtipsit'  : _p60_recordAseguradoSeleccionado.get('CDTIPSIT'),
+		                'params.cdatribu1' : cdatribu1,
+                        'params.cdatribu2' : cdatribu2,
+                        'params.cdatribu3' : cdatribu3
+		            },
+		            success : function (response) {
+		                mask.close();
+		                var ck = 'Decodificando respuesta al eliminar cobertura agregada';
+		                try {
+		                    var jsonQuitarAgregada = Ext.decode(response.responseText);
+		                    debug('AJAX jsonQuitarAgregada:', jsonQuitarAgregada);
+		                    if (jsonQuitarAgregada.success !== true) {
+		                        throw jsonQuitarAgregada.message;
+		                    }
+		                    _p60_cargarStoresCoberturas();
+		                    _p60_storeAseguradosAfectados.cargar();
+		                } catch (e) {
+		                    manejaException(e, ck);
+		                }
+		            },
+		            failure : function () {
+		                mask.close();
+		                errorComunicacion(null, 'Error al eliminar cobertura agregada');
+		            }
+		        });
+		    } catch (e) {
+		        manejaException(e, ck, mask);
+		    }
+		};
+		ck = 'Invocando recuperaci\u00f3n de componentes de situaci\u00f3n';
+		_p60_recuperarComponentesSituacionCobertura(record, callback);
     } catch (e) {
-        manejaException(e, ck, mask);
+        manejaException(e, ck);
+    }
+}
+
+function _p60_eliminarClic (row) {
+    debug('_p60_eliminarClic() args:', arguments);
+    var ck = 'Eliminando cobertura';
+    try {
+        var record = _p60_storeCoberturasAmparadas.getAt(row);
+        debug('record:', record);
+        alert('pendiente');
+    } catch (e) {
+        manejaException(e, ck);
     }
 }
 ////// funciones //////

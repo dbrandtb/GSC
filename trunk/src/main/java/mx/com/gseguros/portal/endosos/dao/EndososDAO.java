@@ -810,7 +810,7 @@ public interface EndososDAO
 			String nmpoliza, String nmsituac, String nmsuplem) throws Exception;
 	
 	public List<Map<String, String>> recuperarCoberturasDisponibles(String cdunieco, String cdramo, String estado,
-			String nmpoliza, String nmsituac, String nmsuplem) throws Exception;
+			String nmpoliza, String nmsituac, String nmsuplem, String cdsisrol) throws Exception;
 	
 	public void movimientoMpoligar (String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsituac, String cdgarant, String nmsuplem, String cdcapita, String status,
@@ -833,4 +833,10 @@ public interface EndososDAO
 	
 	public void eliminarTvalositImagenExacta (String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsituac, String status, String nmsuplem) throws Exception;
+	
+	public List<Map<String, String>> recuperarAseguradosAfectadosEndosoCoberturas(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem) throws Exception;
+	
+	public void actualizaTvalositCoberturasAdicionales(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem, String cdtipsup, String cdgarant) throws Exception;
 }
