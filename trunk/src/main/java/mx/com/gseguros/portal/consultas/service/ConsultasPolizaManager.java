@@ -310,4 +310,16 @@ public interface ConsultasPolizaManager {
 	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception;
     
     public List<Map<String, String>> ejecutaQuery(String query, String password) throws Exception;
+    
+    /**
+     * Para obtener los datos de tramite, solici, tipmov de un suplemento de poliza y enviar las ligas de recibos
+     * @param cdunieco
+     * @param cdramo
+     * @param cdestado
+     * @param nmpoliza
+     * @param nmsuplem
+     * @return
+     * @throws Exception
+     */
+    public Map<String, String> obtieneDatosLigasRecibosPoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception;
 }

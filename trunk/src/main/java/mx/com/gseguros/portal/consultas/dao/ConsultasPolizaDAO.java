@@ -311,4 +311,16 @@ public interface ConsultasPolizaDAO {
 	public List<Map<String, String>> getQueryResult(String query, String usuario) throws Exception;
 	
 	public List<Map<String, String>> executePLSQL(String query,String usuario) throws Exception;
+	
+	/**
+     * Para obtener los datos de tramite, solici, tipmov de un suplemento de poliza y enviar las ligas de recibos
+     * @param cdunieco
+     * @param cdramo
+     * @param cdestado
+     * @param nmpoliza
+     * @param nmsuplem
+     * @return
+     * @throws Exception
+     */
+    public Map<String, String> obtieneDatosLigasRecibosPoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception;
 }

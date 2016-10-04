@@ -528,4 +528,10 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception{
 	autosDAOSIGS.actualizaTramiteEmisionMC(inNumsuc,inNumram,inNumpol,inRensuc,inRenram,inRenpol,inUsuario);
 	}
+
+	@Override
+	public Map<String, String> obtieneDatosLigasRecibosPoliza(String cdunieco, String cdramo, String cdestado,
+			String nmpoliza, String nmsuplem) throws Exception {
+		return consultasPolizaDAOICE.obtieneDatosLigasRecibosPoliza(cdunieco, cdramo, cdestado, nmpoliza, nmsuplem);
+	}
 }

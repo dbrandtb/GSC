@@ -3842,21 +3842,63 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public String ejecutaWSManualRecibos() {
 
-		String cdunieco = map1.get("cdunieco");
-		String cdramo = map1.get("cdramo");
-		String estado = map1.get("estado");
-		String nmpoliza = map1.get("nmpoliza");
-		String nmsuplem = map1.get("nmsuplem");
-		String sucursal = map1.get("sucursal");
+		try{
+			
+			Utils.validate(map1 , "No se recibieron par\u00e1metros");
+			
+			String cdunieco = map1.get("cdunieco");
+			String cdramo = map1.get("cdramo");
+			String estado = map1.get("estado");
+			String nmpoliza = map1.get("nmpoliza");
+			String nmsuplem = map1.get("nmsuplem");
+			String sucursal = map1.get("sucursal");
+			
+			String nmsolici = map1.get("nmsolici");
+			String nmtramite = map1.get("nmtramite");
+			String tipoMov = map1.get("tipmov");
+			
+			
+			Utils.validate(cdunieco , "No se recibieron par\u00e1metros");
+			Utils.validate(cdramo , "No se recibieron par\u00e1metros");
+			Utils.validate(estado , "No se recibieron par\u00e1metros");
+			Utils.validate(nmpoliza , "No se recibieron par\u00e1metros");
+			Utils.validate(nmsuplem , "No se recibieron par\u00e1metros");
+			
+			if(StringUtils.isBlank(tipoMov) && StringUtils.isBlank(nmtramite) && StringUtils.isBlank(nmsolici)){
+				Map<String,String> datos =  consultasPolizaManager.obtieneDatosLigasRecibosPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+				
+				logger.debug("Parametros Obtenidos para Regenerar Recibos: "+datos);
+				
+				Utils.validate(datos , "No se obtuvieron par\u00e1metros");
+				sucursal = cdunieco;	
+				
+				tipoMov   = datos.get("CDTIPSUP");
+				nmtramite = datos.get("NTRAMITE");
+				nmsolici  = datos.get("NMSOLICI");
+				
+				Utils.validate(tipoMov , "No se obtuvieron par\u00e1metros");
+				Utils.validate(nmtramite , "No se obtuvieron par\u00e1metros");
+				//Utils.validate(nmsolici , "No se obtuvieron par\u00e1metros");
 
-		String nmsolici = map1.get("nmsolici");
-		String nmtramite = map1.get("nmtramite");
-
-		String tipoMov = map1.get("tipmov");
+				// Ejecutamos el Web Service de Recibos Sincrono:
+				success = ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, false, tipoMov, (UserVO) session.get("USUARIO"));
+				
+				Utils.validate(success, "No se regeneraron correctamente todos los recibos.");
+				
+			}else{
+				// Ejecutamos el Web Service de Recibos Asincrono:
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, true, tipoMov, (UserVO) session.get("USUARIO"));
+			}
+			
+			
+			
+		}catch(Exception e){
+			respuesta = Utils.manejaExcepcion(e);
+			
+			success = false;
+			return SUCCESS;
+		}
 		
-		// Ejecutamos el Web Service de Recibos:
-		ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, true, tipoMov, (UserVO) session.get("USUARIO"));
-
 		success = true;
 		return SUCCESS;
 	}

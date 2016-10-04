@@ -28,6 +28,7 @@
             var _URL_LOADER_HISTORIAL_RECLAMACIONES= '<s:url namespace="/siniestros"	 action="includes/historialReclamaciones" />';
             
             var _URL_REGENERA_DOCUMENTOS_ENDOSO   = '<s:url namespace="/documentos"      action="regeneraDocumentosEndoso" />';
+            var _URL_RECIBOS_ENDOSO               = '<s:url namespace="/"      action="manualWSrecibos" />';
 
             var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             
@@ -55,6 +56,7 @@
             		<s:property value="itemMap.gridbuttons" />
             	];
             function regeneraDocsConsulta (){}
+            function reenviaRecibosSuplemento (){}
             
         </script>
         <script type="text/javascript" src="${ctx}/resources/scripts/consultaPolizas/consultasPolizas.js?${now}"></script>

@@ -860,6 +860,10 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 
 					if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
 						logger.error("Guardando en bitacora el estatus");
+						
+						if(Estatus.LLAVE_DUPLICADA.getCodigo() != respuesta.getCodigo() ){
+							allInserted =  false;
+						}
 
 						try {
 							kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
@@ -879,6 +883,8 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					}
 				}
 			}catch(WSException e){
+				allInserted =  false;
+				
 				logger.error("Error al insertar recibo: "+recibo.getNumRec()+" tramite: "+ntramite);
 				logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
 				try {
@@ -898,6 +904,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					logger.error("Error al insertar en Bitacora", e1);
 				}
 			}catch (Exception e){
+				allInserted =  false;
 				logger.error("Error Excepcion al insertar recibo: "+recibo.getNumRec()+" tramite: "+ntramite,e);
 			}
 		}
