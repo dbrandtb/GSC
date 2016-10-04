@@ -2368,14 +2368,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdtipsit" , null);
 		params.put("cdtipsup" , cdtipsup);
-		logger.debug(
-				new StringBuilder()
-				.append("\n*************************************************")
-				.append("\n****** PKG_ENDOSOS.P_ACT_TVALOSIT_COB_ADIC ******")
-				.append("\n****** params=").append(params)
-				.append("\n*************************************************")
-				.toString()
-				);
+		params.put("cdgarant" , null);
 		ejecutaSP(new ActualizaTvalositCoberturasAdicionales(getDataSource()),params);
 	}
 	
@@ -2383,7 +2376,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaTvalositCoberturasAdicionales(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_ACT_TVALOSIT_COB_ADIC");
+			super(dataSource, "P_END_ACT_TVALOSIT_COB_ADIC");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2391,6 +2384,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -6335,7 +6329,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"CDGARANT", "DSGARANT"
+					"CDGARANT", "DSGARANT", "SWOBLIGA"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -6346,7 +6340,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	@Override
 	public List<Map<String, String>> recuperarCoberturasDisponibles(String cdunieco, String cdramo, String estado,
-			String nmpoliza, String nmsituac, String nmsuplem) throws Exception {
+			String nmpoliza, String nmsituac, String nmsuplem, String cdsisrol) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
@@ -6354,6 +6348,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsituac" , nmsituac);
 		params.put("nmsuplem" , nmsuplem);
+		params.put("cdsisrol" , cdsisrol);
 		Map<String, Object> procRes = ejecutaSP(new RecuperarCoberturasDisponiblesSP(getDataSource()), params);
 		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
 		if (lista == null) {
@@ -6372,6 +6367,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDGARANT", "DSGARANT"
 			};
@@ -6619,7 +6615,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_conteo_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_conteo_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -6654,5 +6650,57 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarAseguradosAfectadosEndosoCoberturas(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarAseguradosAfectadosEndosoCoberturasSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarAseguradosAfectadosEndosoCoberturas lista = ", lista));
+		return lista;
+	} 
+	
+	protected class RecuperarAseguradosAfectadosEndosoCoberturasSP extends StoredProcedure {
+		protected RecuperarAseguradosAfectadosEndosoCoberturasSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_ASEG_AFEC_COB");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMSITUAC", "DSPARENT", "DSNOMBRE", "DSSEXO", "FENACIMI", "GRUPO", "TITULAR", "CDTIPSIT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizaTvalositCoberturasAdicionales(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem ,String cdtipsup, String cdgarant) throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdtipsit" , null);
+		params.put("cdtipsup" , cdtipsup);
+		params.put("cdgarant" , cdgarant);
+		ejecutaSP(new ActualizaTvalositCoberturasAdicionales(getDataSource()),params);
 	}
 }
