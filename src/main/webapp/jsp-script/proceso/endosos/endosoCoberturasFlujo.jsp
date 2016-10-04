@@ -13,7 +13,9 @@ var _p60_urlRecuperarDatosEndoso                = '<s:url namespace = "/endosos"
     _p60_urlConfirmarEndosoFlujo                = '<s:url namespace = "/endosos" action = "confirmarEndosoFlujo"                />',
     _p60_urlObtenerComponenteSituacionCobertura = '<s:url namespace = "/endosos" action = "obtenerComponenteSituacionCobertura" />',
     _p60_urlAgregarCobertura                    = '<s:url namespace = "/endosos" action = "agregarCoberturaEndosoCoberturas"    />',
-    _p60_urlEliminarCoberturaAgregada           = '<s:url namespace = "/endosos" action = "quitarCoberturaAgregadaEndCob"       />';
+    _p60_urlEliminarCoberturaAgregada           = '<s:url namespace = "/endosos" action = "quitarCoberturaAgregadaEndCob"       />',
+    _p60_urlEliminarCobertura                   = '<s:url namespace = "/endosos" action = "eliminarCoberturaEndosoCoberturas"   />',
+    _p60_urlEliminarCoberturaEliminada          = '<s:url namespace = "/endosos" action = "restaurarCoberturaEliminadaEndCob"   />';
 ////// urls //////
 
 ////// variables //////
@@ -448,6 +450,7 @@ Ext.onReady(function()
             }, {
                 dataIndex : 'SWOBLIGA',
                 width     : 30,
+                hidden    : Number(_p60_params.cdtipsup) !== 7,
                 renderer  : function (v, md, record, row) {
                     var r = '';
                     if (record.get('SWOBLIGA') !== 'S') {
@@ -478,6 +481,7 @@ Ext.onReady(function()
                 icon    : '${icons}add.png',
                 tooltip : 'AGREGAR',
                 width   : 30,
+                hidden  : Number(_p60_params.cdtipsup) !== 6,
                 handler : _p60_agregarCoberturaClic
             }
         ]
@@ -498,8 +502,9 @@ Ext.onReady(function()
                 flex      : 1
             }, {
                 xtype   : 'actioncolumn',
-                icon    : '${icons}delete.png',
-                tooltip : 'ELIMINAR',
+                icon    : '${icons}cancel.png',
+                tooltip : 'DESHACER',
+                hidden  : Number(_p60_params.cdtipsup) !== 6,
                 width   : 30,
                 handler : _p60_quitarCoberturaAgregadaClic
             }
@@ -519,6 +524,13 @@ Ext.onReady(function()
                 text      : 'DSGARANT',
                 dataIndex : 'DSGARANT',
                 flex      : 1
+            }, {
+                xtype   : 'actioncolumn',
+                icon    : '${icons}cancel.png',
+                tooltip : 'DESHACER',
+                width   : 30,
+                hidden  : Number(_p60_params.cdtipsup) !== 7,
+                handler : _p60_quitarCoberturaEliminadaClic
             }
         ]
     });
@@ -971,6 +983,7 @@ function _p60_cargarStoresCoberturas () {
     _p60_storeCoberturasAmparadas.cargar(nmsituac);
     _p60_storeCoberturasDisponibles.cargar(nmsituac);
     _p60_storeCoberturasAgregadas.cargar(nmsituac);
+    _p60_storeCoberturasBorradas.cargar(nmsituac);
 }
 
 function _p60_recuperarComponentesSituacionCobertura (record, callback) {
@@ -1196,11 +1209,114 @@ function _p60_quitarCoberturaAgregadaClic (me, row, col, item, e, record) {
 
 function _p60_eliminarClic (row) {
     debug('_p60_eliminarClic() args:', arguments);
-    var ck = 'Eliminando cobertura';
+    var mask, ck = 'Eliminando cobertura';
     try {
         var record = _p60_storeCoberturasAmparadas.getAt(row);
         debug('record:', record);
-        alert('pendiente');
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url     : _p60_urlEliminarCobertura,
+            params  : {
+                'params.cdunieco' : _p60_flujo.cdunieco,
+                'params.cdramo'   : _p60_flujo.cdramo,
+                'params.estado'   : _p60_flujo.estado,
+                'params.nmpoliza' : _p60_flujo.nmpoliza,
+                'params.nmsituac' : _p60_recordAseguradoSeleccionado.get('NMSITUAC'),
+                'params.cdgarant' : record.get('CDGARANT'),
+                'params.nmsuplem' : _p60_params.nmsuplem,
+                'params.cdtipsit' : _p60_recordAseguradoSeleccionado.get('CDTIPSIT')
+            },
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al eliminar cobertura';
+                try {
+                    var jsonEliminar = Ext.decode(response.responseText);
+                    debug('AJAX jsonEliminar:', jsonEliminar);
+                    if (jsonEliminar.success !== true) {
+                        throw jsonEliminar.message;
+                    }
+                    _p60_cargarStoresCoberturas();
+                    _p60_storeAseguradosAfectados.cargar();
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al eliminar cobertura');
+            }
+        });
+    } catch (e) {
+        manejaException(e, ck, mask);
+    }
+}
+
+function _p60_quitarCoberturaEliminadaClic (me, row, col, item, e, record) {
+    debug('_p60_quitarCoberturaEliminadaClic() args:', arguments);
+    var ck;
+    try {
+        ck = 'Declarando receptor de componentes de situaci\u00f3n';
+        var callback = function (record, jsonCompsSit) {
+            debug('_p60_quitarCoberturaAgregadaClic callback() args:', arguments);
+		    var mask, ck;
+		    try {
+		        var cdatribu1, cdatribu2, cdatribu3;
+                if (jsonCompsSit.smap1.CONITEM === 'true') {
+                    ck = 'Construyendo componentes de situaci\u00f3n';
+                    var items = Ext.decode('['+jsonCompsSit.smap1.item+']');
+                    try {
+                        cdatribu1 = items[0].cdatribu;
+                    } catch (e) {}
+                    try {
+                        cdatribu2 = items[1].cdatribu;
+                    } catch (e) {}
+                    try {
+                        cdatribu3 = items[2].cdatribu;
+                    } catch (e) {}
+                }
+                ck = 'Restaurando cobertura';
+		        mask = _maskLocal(ck);
+		        Ext.Ajax.request({
+		            url     : _p60_urlEliminarCoberturaEliminada,
+		            params  : {
+		                'params.cdunieco'  : _p60_flujo.cdunieco,
+		                'params.cdramo'    : _p60_flujo.cdramo,
+		                'params.estado'    : _p60_flujo.estado,
+		                'params.nmpoliza'  : _p60_flujo.nmpoliza,
+		                'params.nmsituac'  : _p60_recordAseguradoSeleccionado.get('NMSITUAC'),
+		                'params.nmsuplem'  : _p60_params.nmsuplem,
+		                'params.cdgarant'  : record.get('CDGARANT'),
+		                'params.cdtipsit'  : _p60_recordAseguradoSeleccionado.get('CDTIPSIT'),
+		                'params.cdatribu1' : cdatribu1,
+                        'params.cdatribu2' : cdatribu2,
+                        'params.cdatribu3' : cdatribu3
+		            },
+		            success : function (response) {
+		                mask.close();
+		                var ck = 'Decodificando respuesta al restaurar cobertura eliminada';
+		                try {
+		                    var jsonRestaurarQuitada = Ext.decode(response.responseText);
+		                    debug('AJAX jsonRestaurarQuitada:', jsonRestaurarQuitada);
+		                    if (jsonRestaurarQuitada.success !== true) {
+		                        throw jsonRestaurarQuitada.message;
+		                    }
+		                    _p60_cargarStoresCoberturas();
+		                    _p60_storeAseguradosAfectados.cargar();
+		                } catch (e) {
+		                    manejaException(e, ck);
+		                }
+		            },
+		            failure : function () {
+		                mask.close();
+		                errorComunicacion(null, 'Error al restaurar cobertura eliminada');
+		            }
+		        });
+		    } catch (e) {
+		        manejaException(e, ck, mask);
+		    }
+        };
+        ck = 'Invocando recuperaci\u00f3n de componentes de situaci\u00f3n';
+        _p60_recuperarComponentesSituacionCobertura(record, callback);
     } catch (e) {
         manejaException(e, ck);
     }

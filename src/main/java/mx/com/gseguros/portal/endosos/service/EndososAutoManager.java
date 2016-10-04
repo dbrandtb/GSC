@@ -590,4 +590,11 @@ public interface EndososAutoManager
 	public void quitarCoberturaAgregadaEndCob (String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1,
 			String cdatribu2, String cdatribu3, String cdtipsit) throws Exception;
+	
+	public void eliminarCoberturaEndosoCoberturas (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String nmsuplem, String cdtipsit) throws Exception;
+	
+	public void restaurarCoberturaEliminadaEndCob (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1,
+			String cdatribu2, String cdatribu3, String cdtipsit) throws Exception;
 }

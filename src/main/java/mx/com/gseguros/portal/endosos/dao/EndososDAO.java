@@ -822,7 +822,7 @@ public interface EndososDAO
 	public Map<String, String> recuperarTvalositInciso (String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsituac, String nmsuplem) throws Exception;
 	
-	public List<Map<String, String>> recuperarCoberturasAgregadas(String cdunieco, String cdramo, String estado,
+	public List<Map<String, String>> recuperarCoberturasAgregadas (String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsituac, String nmsuplem) throws Exception;
 	
 	public void eliminarCoberturaImagenExacta (String cdunieco, String cdramo, String estado, String nmpoliza,
@@ -834,9 +834,12 @@ public interface EndososDAO
 	public void eliminarTvalositImagenExacta (String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsituac, String status, String nmsuplem) throws Exception;
 	
-	public List<Map<String, String>> recuperarAseguradosAfectadosEndosoCoberturas(String cdunieco, String cdramo, String estado,
+	public List<Map<String, String>> recuperarAseguradosAfectadosEndosoCoberturas (String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem) throws Exception;
 	
-	public void actualizaTvalositCoberturasAdicionales(String cdunieco, String cdramo, String estado, String nmpoliza,
+	public void actualizaTvalositCoberturasAdicionales (String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String cdtipsup, String cdgarant) throws Exception;
+	
+	public List<Map<String, String>> recuperarCoberturasBorradas (String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsituac, String nmsuplem) throws Exception;
 }

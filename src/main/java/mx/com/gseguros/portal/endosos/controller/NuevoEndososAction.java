@@ -647,6 +647,91 @@ public class NuevoEndososAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "eliminarCoberturaEndosoCoberturas",
+			results = { @Result(name="success", type="json") }
+			)
+	public String eliminarCoberturaEndosoCoberturas () {
+		logger.debug(Utils.log(
+				"\n###############################################",
+				"\n###### eliminarCoberturaEndosoCoberturas ######",
+				"\n###### params = ", params));
+		try {
+			Utils.validateSession(session);
+			Utils.validate(params, "Faltan params");
+			String cdunieco  = params.get("cdunieco"),
+			       cdramo    = params.get("cdramo"),
+			       estado    = params.get("estado"),
+			       nmpoliza  = params.get("nmpoliza"),
+			       nmsituac  = params.get("nmsituac"),
+			       cdgarant  = params.get("cdgarant"),
+			       nmsuplem  = params.get("nmsuplem"),
+			       cdtipsit  = params.get("cdtipsit");
+			Utils.validate(cdunieco , "Falta cdunieco",
+			               cdramo   , "Falta cdramo",
+			               estado   , "Falta estado",
+			               nmpoliza , "Falta nmpoliza",
+			               nmsituac , "Falta nmsituac",
+			               cdgarant , "Falta cdgarant",
+			               nmsuplem , "Falta nmsuplem",
+			               cdtipsit , "Falta cdtipsit");
+			endososAutoManager.eliminarCoberturaEndosoCoberturas(cdunieco, cdramo, estado, nmpoliza,
+					nmsituac, cdgarant, nmsuplem, cdtipsit);
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### eliminarCoberturaEndosoCoberturas ######",
+				"\n###############################################"));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "restaurarCoberturaEliminadaEndCob",
+			results = { @Result(name="success", type="json") }
+			)
+	public String restaurarCoberturaEliminadaEndCob () {
+		logger.debug(Utils.log(
+				"\n###############################################",
+				"\n###### restaurarCoberturaEliminadaEndCob ######",
+				"\n###### params = ", params));
+		try {
+			Utils.validateSession(session);
+			Utils.validate(params, "Faltan params");
+			String cdunieco  = params.get("cdunieco"),
+			       cdramo    = params.get("cdramo"),
+			       estado    = params.get("estado"),
+			       nmpoliza  = params.get("nmpoliza"),
+			       nmsituac  = params.get("nmsituac"),
+			       cdgarant  = params.get("cdgarant"),
+			       nmsuplem  = params.get("nmsuplem"),
+			       cdtipsit  = params.get("cdtipsit"),
+			       cdatribu1 = params.get("cdatribu1"),
+	    		   cdatribu2 = params.get("cdatribu2"),
+			       cdatribu3 = params.get("cdatribu3");
+			Utils.validate(cdunieco , "Falta cdunieco",
+			               cdramo   , "Falta cdramo",
+			               estado   , "Falta estado",
+			               nmpoliza , "Falta nmpoliza",
+			               nmsituac , "Falta nmsituac",
+			               cdgarant , "Falta cdgarant",
+			               nmsuplem , "Falta nmsuplem",
+			               cdtipsit , "Falta cdtipsit");
+			endososAutoManager.restaurarCoberturaEliminadaEndCob(cdunieco, cdramo, estado, nmpoliza,
+					nmsituac, cdgarant, nmsuplem, cdatribu1, cdatribu2, cdatribu3, cdtipsit);
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### restaurarCoberturaEliminadaEndCob ######",
+				"\n###############################################"));
+		return SUCCESS;
+	}
+	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////// GETTERS Y SETTERS //////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
