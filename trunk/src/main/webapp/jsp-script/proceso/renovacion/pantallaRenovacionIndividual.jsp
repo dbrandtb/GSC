@@ -714,6 +714,7 @@ Ext.onReady(function()
 				        buttons:	[
 	                        {
 	                            text	: 'Guardar',
+	                            itemId  : 'panDatComBotonGuardar',
 	                            icon	: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
 	                            handler	: function(){ _p29_actualizarCotizacion(null);}	
 	                        },
@@ -2364,9 +2365,13 @@ function tarifaFinal(){
         ,success : function(response)
         {
             _unmask();
+            var panDatComBotonRetarificar = _fieldById('panDatComBotonRetarificar');
+            var panDatComBotonGuardar     = _fieldById('panDatComBotonGuardar');
+            panDatComBotonRetarificar.disable();
+            panDatComBotonGuardar.disable();
             var json=Ext.decode(response.responseText);
             debug('json ',json);
-            if(json.exito){
+            if(json.slist1.length > 0){
 	            datos = [];
 	            for(var i = 0; i < json.slist1.length; i++){
 	            	datos.push({
@@ -2407,6 +2412,7 @@ function tarifaFinal(){
 	                                	if(resp.success==true && list.length > 0){
 	                                		wineditarContratante.resRenova['nmpolizaNew'] = list[0]['nmpolizaNew'];
 	                                		wineditarContratante.resRenova['nmsuplemNew'] = list[0]['nmsuplemNew'];
+	                                		_fieldById('botonEmitirPolizaFinal').disable();
 	                                		_fieldById('botonImprimirPolizaFinal').enable();
 	                                	    mensajeCorrecto('Aviso',resp.respuesta);
 	                                	}
