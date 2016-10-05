@@ -9,8 +9,8 @@ var _p60_urlRecuperarDatosEndoso                = '<s:url namespace = "/endosos"
     _p60_urlGuardarFechaEfecto                  = '<s:url namespace = "/endosos" action = "guardarFechaEfectoEndosoPendiente"   />',
     _p60_urlSacaendoso                          = '<s:url namespace = "/endosos" action = "sacaendoso"                          />',
     _p60_urlPantallaExclusiones                 = '<s:url namespace = "/"        action = "pantallaExclusion"                   />',
-    _p60_urlTarificar                           = '<s:url namespace = "/endosos" action = "tarificarEndosoAltaAsegurados"       />',
-    _p60_urlConfirmarEndosoFlujo                = '<s:url namespace = "/endosos" action = "confirmarEndosoFlujo"                />',
+    _p60_urlTarificar                           = '<s:url namespace = "/endosos" action = "tarificarEndosoCoberturasFlujo"      />',
+    _p60_urlConfirmarEndosoCoberturasFlujo      = '<s:url namespace = "/endosos" action = "confirmarEndosoSaludFlujo"           />',
     _p60_urlObtenerComponenteSituacionCobertura = '<s:url namespace = "/endosos" action = "obtenerComponenteSituacionCobertura" />',
     _p60_urlAgregarCobertura                    = '<s:url namespace = "/endosos" action = "agregarCoberturaEndosoCoberturas"    />',
     _p60_urlEliminarCoberturaAgregada           = '<s:url namespace = "/endosos" action = "quitarCoberturaAgregadaEndCob"       />',
@@ -788,11 +788,10 @@ function _p60_tarificarClic(me)
     debug('_p60_tarificarClic() args:',arguments);
     var mask, ck;
     try {
-        return alert('pendiente');
-        if (_p60_storeAseguradosAfectados.getCount() === 0) {
-            throw 'No hay cambios en las coberturas';
+        if (Ext.isEmpty(_p60_params.nmsuplem)) {
+            return mensajeWarning('Favor de confirmar la fecha de efecto');
         }
-        ck = 'Tarificando nuevos asegurados';
+        ck = 'Tarificando cambios en las coberturas';
         mask = _maskLocal(ck);
         Ext.Ajax.request({
             url     : _p60_urlTarificar,
@@ -802,11 +801,12 @@ function _p60_tarificarClic(me)
                 'params.estado'   : _p60_flujo.estado,
                 'params.nmpoliza' : _p60_flujo.nmpoliza,
                 'params.nmsuplem' : _p60_params.nmsuplem,
-                'params.feinival' : _fieldByName('FEEFECTO').getSubmitValue()
+                'params.feinival' : _fieldByName('FEEFECTO').getSubmitValue(),
+                'params.cdtipsup' : _p60_params.cdtipsup
             },
             success : function (response) {
                 mask.close();
-                var ck = 'Decodificando respuesta al tarificar asegurados nuevos';
+                var ck = 'Decodificando respuesta al tarificar cambios en coberturas';
                 try {
                     var jsonTarifa = Ext.decode(response.responseText);
                     debug('AJAX jsonTarifa:', jsonTarifa);
@@ -920,7 +920,7 @@ function _p60_confirmar (button, autorizar) {
         ck = 'Confirmando endoso';
         mask = _maskLocal(ck);
         Ext.Ajax.request({
-            url     : _p60_urlConfirmarEndosoFlujo,
+            url     : _p60_urlConfirmarEndosoCoberturasFlujo,
             params  : params,
             success : function (response) {
                 mask.close();

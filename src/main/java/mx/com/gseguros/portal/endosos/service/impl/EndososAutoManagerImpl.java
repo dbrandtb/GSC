@@ -7544,13 +7544,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	}
 	
 	@Override
-	public Map<String, String> confirmarEndosoFlujo (String cdusuari, String cdsisrol, String cdelemen,
+	public Map<String, String> confirmarEndosoSaludFlujo (String cdusuari, String cdsisrol, String cdelemen,
 			String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza,
 			String status, String nmsuplem, String nsuplogi, Date fesolici, Date feinival, boolean autoriza,
 			String cdtipsup, UserVO usuario) throws Exception {
 		logger.debug(Utils.log(
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-				"\n@@@@@@ confirmarEndosoFlujo @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ confirmarEndosoSaludFlujo @@@@@@",
 				"\n@@@@@@ cdusuari = " , cdusuari,
 				"\n@@@@@@ cdsisrol = " , cdsisrol,
 				"\n@@@@@@ cdelemen = " , cdelemen,
@@ -7669,8 +7669,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		}
 		logger.debug(Utils.log(
 				"\n@@@@@@ result = ", result,
-				"\n@@@@@@ confirmarEndosoFlujo @@@@@@",
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+				"\n@@@@@@ confirmarEndosoSaludFlujo @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 		return result;
 	}
 	
@@ -7941,6 +7941,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paso = "Eliminando cobertura agregada";
 			logger.debug(paso);
 			endososDAO.eliminarCoberturaImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant, "V", nmsuplem);
+			paso = "Eliminando registro temporal de cobertura";
+			logger.debug(paso);
+			endososDAO.borraTworksupSegundaClave(cdunieco, cdramo, estado, nmpoliza,
+					String.valueOf(TipoEndoso.ALTA_COBERTURAS.getCdTipSup()), nmsuplem, nmsituac, cdgarant);
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
@@ -8073,14 +8077,80 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							cdatribu3, tvalositAnterior.get(otclave));
 				}
 			}
-			paso = "Eliminando cobertura agregada";
+			paso = "Restaurando cobertura eliminada";
 			logger.debug(paso);
 			endososDAO.eliminarCoberturaImagenExacta(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant, "M", nmsuplem);
+			paso = "Eliminando registro temporal de cobertura";
+			logger.debug(paso);
+			endososDAO.borraTworksupSegundaClave(cdunieco, cdramo, estado, nmpoliza,
+					String.valueOf(TipoEndoso.BAJA_COBERTURAS.getCdTipSup()), nmsuplem, nmsituac, cdgarant);
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
 		logger.debug(Utils.log(
 				"\n@@@@@@ restaurarCoberturaEliminadaEndCob @@@@@@",
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+	}
+	
+	@Override
+	public List<Map<String, String>> tarificarEndosoCoberturasFlujo(String cdusuari, String cdelemen, String cdunieco,
+			String cdramo, String estado, String nmpoliza, String nmsuplem, String feinival, String cdtipsup) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ tarificarEndosoCoberturasFlujo @@@@@@",
+				"\n@@@@@@ cdusuari = " , cdusuari,
+				"\n@@@@@@ cdelemen = " , cdelemen,
+				"\n@@@@@@ cdunieco = " , cdunieco,
+				"\n@@@@@@ cdramo   = " , cdramo,
+				"\n@@@@@@ estado   = " , estado,
+				"\n@@@@@@ nmpoliza = " , nmpoliza,
+				"\n@@@@@@ nmsuplem = " , nmsuplem,
+				"\n@@@@@@ feinival = " , feinival,
+				"\n@@@@@@ cdtipsup = " , cdtipsup));
+		String paso = null;
+		List<Map<String, String>> tarifa = null;
+		try {
+			paso = "Recuperando coberturas afectadas";
+			List<Map<String, String>> coberturasAfectadas = endososDAO.recuperarCoberturasAfectadasEndosoCoberturas(cdunieco, cdramo,
+					estado, nmpoliza, nmsuplem);
+			if (coberturasAfectadas.size() == 0) {
+				throw new ApplicationException("No hay cambios en las coberturas");
+			}
+			paso = "Borrando tarifa anterior";
+			logger.debug(paso);
+			endososDAO.borraCapitalesYTarifaEndosoCoberturasFlujo(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			if (cdtipsup.equals(TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString())) {
+				for (Map<String, String> coberturaAfectada : coberturasAfectadas) {
+					String nmsituac = coberturaAfectada.get("NMSITUAC"),
+					       cdgarant = coberturaAfectada.get("CDGARANT");
+					paso = "Ejecutando coberturas por defecto";
+					logger.debug(paso);
+					cotizacionDAO.sigsvdefEnd(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, cdgarant, cdtipsup);
+				}
+			}
+			paso = "Tarificando endoso";
+			logger.debug(paso);
+			endososDAO.sigsvalipolEnd(cdusuari, cdelemen, cdunieco, cdramo, estado, nmpoliza,
+					"0", //nmsituac
+					nmsuplem,
+					cdtipsup);
+			paso = "Calculando valor de endoso";
+			logger.debug(paso);
+			endososDAO.calcularValorEndoso(cdunieco, cdramo, estado, nmpoliza,
+					"0", // nmsituac
+					nmsuplem,
+					Utils.parse(feinival),
+					cdtipsup);
+			paso = "Recuperando tarifa";
+			logger.debug(paso);
+			tarifa = endososDAO.recuperarTarifaEndosoSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ tarifa = ", tarifa,
+				"\n@@@@@@ tarificarEndosoCoberturasFlujo @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return tarifa;
 	}
 }

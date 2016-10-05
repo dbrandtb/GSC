@@ -842,4 +842,13 @@ public interface EndososDAO
 	
 	public List<Map<String, String>> recuperarCoberturasBorradas (String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsituac, String nmsuplem) throws Exception;
+	
+	public void borraCapitalesYTarifaEndosoCoberturasFlujo (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem) throws Exception;
+	
+	public List<Map<String, String>> recuperarCoberturasAfectadasEndosoCoberturas (String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem) throws Exception;
+	
+	public void borraTworksupSegundaClave (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String cdtipsup, String nmsuplem, String clave1, String clave2) throws Exception;
 }

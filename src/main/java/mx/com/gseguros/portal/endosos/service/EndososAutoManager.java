@@ -575,7 +575,7 @@ public interface EndososAutoManager
 	public List<Map<String, String>> tarificarEndosoAltaAsegurados (String cdusuari, String cdelemen, String cdunieco,
 			String cdramo, String estado, String nmpoliza, String nmsuplem, String feinival) throws Exception;
 	
-	public Map<String, String> confirmarEndosoFlujo (String cdusuari, String cdsisrol, String cdelemen,
+	public Map<String, String> confirmarEndosoSaludFlujo (String cdusuari, String cdsisrol, String cdelemen,
 			String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza,
 			String status, String nmsuplem, String nsuplogi, Date fesolici, Date feinival, boolean autoriza,
 			String cdtipsup, UserVO usuario) throws Exception;
@@ -597,4 +597,7 @@ public interface EndososAutoManager
 	public void restaurarCoberturaEliminadaEndCob (String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1,
 			String cdatribu2, String cdatribu3, String cdtipsit) throws Exception;
+	
+	public List<Map<String, String>> tarificarEndosoCoberturasFlujo (String cdusuari, String cdelemen, String cdunieco,
+			String cdramo, String estado, String nmpoliza, String nmsuplem, String feinival, String cdtipsup) throws Exception;
 }

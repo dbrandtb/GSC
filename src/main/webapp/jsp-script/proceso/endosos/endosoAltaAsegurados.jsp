@@ -13,7 +13,7 @@ var _p59_urlRecuperarDatosEndoso  = '<s:url namespace = "/endosos"   action = "r
     _p59_urlPantallaExclusiones   = '<s:url namespace = "/"          action = "pantallaExclusion"                      />',
     _p59_urlTarificar             = '<s:url namespace = "/endosos"   action = "tarificarEndosoAltaAsegurados"          />',
     _p59_urlPantallaBeneficiarios = '<s:url namespace = "/catalogos" action = "includes/pantallaBeneficiarios"         />',
-    _p59_urlConfirmarEndosoFlujo  = '<s:url namespace = "/endosos"   action = "confirmarEndosoFlujo"                   />';
+    _p59_urlConfirmarEndosoFlujo  = '<s:url namespace = "/endosos"   action = "confirmarEndosoSaludFlujo"              />';
 ////// urls //////
 
 ////// variables //////

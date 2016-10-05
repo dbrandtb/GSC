@@ -26,7 +26,6 @@ import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
-import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.Utils;
 
 @Controller
@@ -447,13 +446,13 @@ public class NuevoEndososAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	@Action(value   = "confirmarEndosoFlujo",
+	@Action(value   = "confirmarEndosoSaludFlujo",
 			results = { @Result(name="success", type="json") }
 			)
-	public String confirmarEndosoFlujo () {
+	public String confirmarEndosoSaludFlujo () {
 		logger.debug(Utils.log(
-				"\n##################################",
-				"\n###### confirmarEndosoFlujo ######",
+				"\n#######################################",
+				"\n###### confirmarEndosoSaludFlujo ######",
 				"\n###### params = " , params,
 				"\n###### flujo  = " , flujo));
 		try {
@@ -487,7 +486,7 @@ public class NuevoEndososAction extends PrincipalCoreAction
 			               feinival , "Falta feinival",
 			               autoriza , "Falta autoriza",
 			               cdtipsup , "Falta cdtipsup");
-			params.putAll(endososAutoManager.confirmarEndosoFlujo(cdusuari, cdsisrol, cdelemen, ntramite, cdunieco, cdramo,
+			params.putAll(endososAutoManager.confirmarEndosoSaludFlujo(cdusuari, cdsisrol, cdelemen, ntramite, cdunieco, cdramo,
 					estado, nmpoliza, status, nmsuplem, nsuplogi, Utils.parse(fesolici), Utils.parse(feinival), "S".equals(autoriza),
 					cdtipsup, usuario));
 			success = true;
@@ -498,8 +497,8 @@ public class NuevoEndososAction extends PrincipalCoreAction
 				"\n###### success = " , success,
 				"\n###### message = " , message,
 				"\n###### params  = " , params,
-				"\n###### confirmarEndosoFlujo ######",
-				"\n##################################"));
+				"\n###### confirmarEndosoSaludFlujo ######",
+				"\n#######################################"));
 		return SUCCESS;
 	}
 	
@@ -729,6 +728,45 @@ public class NuevoEndososAction extends PrincipalCoreAction
 				"\n###### message = " , message,
 				"\n###### restaurarCoberturaEliminadaEndCob ######",
 				"\n###############################################"));
+		return SUCCESS;
+	}
+	
+	@Action(value   = "tarificarEndosoCoberturasFlujo",
+			results = { @Result(name="success", type="json") }
+			)
+	public String tarificarEndosoCoberturasFlujo () {
+		logger.debug(Utils.log(
+				"\n############################################",
+				"\n###### tarificarEndosoCoberturasFlujo ######",
+				"\n###### params = ", params));
+		try {
+			UserVO usuario = Utils.validateSession(session);
+			Utils.validate(params, "No se recibieron datos");
+			String cdunieco = params.get("cdunieco"),
+			       cdramo   = params.get("cdramo"),
+			       estado   = params.get("estado"),
+			       nmpoliza = params.get("nmpoliza"),
+			       nmsuplem = params.get("nmsuplem"),
+			       feinival = params.get("feinival"),
+			       cdtipsup = params.get("cdtipsup");
+			Utils.validate(cdunieco , "Falta cdunieco",
+			               cdramo   , "Falta cdramo",
+			               estado   , "Falta estado",
+			               nmpoliza , "Falta nmpoliza",
+			               nmsuplem , "Falta nmsuplem",
+			               feinival , "Falta feinival",
+			               cdtipsup , "Falta cdtipsup");
+			list = endososAutoManager.tarificarEndosoCoberturasFlujo(usuario.getUser(),
+					usuario.getEmpresa().getElementoId(), cdunieco, cdramo, estado, nmpoliza, nmsuplem, feinival, cdtipsup);
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### tarificarEndosoCoberturasFlujo ######",
+				"\n############################################"));
 		return SUCCESS;
 	}
 	
