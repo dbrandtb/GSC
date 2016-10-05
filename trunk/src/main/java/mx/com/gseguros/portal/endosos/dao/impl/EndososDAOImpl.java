@@ -6741,4 +6741,100 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public void borraCapitalesYTarifaEndosoCoberturasFlujo (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		ejecutaSP(new BorraCapitalesYTarifaEndosoCoberturasFlujoSP(getDataSource()), params);
+	}
+	
+	protected class BorraCapitalesYTarifaEndosoCoberturasFlujoSP extends StoredProcedure {
+		protected BorraCapitalesYTarifaEndosoCoberturasFlujoSP (DataSource dataSource) {
+			super(dataSource, "P_END_BORRA_CAP_VALIPOL_COB");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> recuperarCoberturasAfectadasEndosoCoberturas(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		Map<String, Object> procRes = ejecutaSP(new RecuperarCoberturasAfectadasEndosoCoberturasSP(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String, String>>();
+		}
+		logger.debug(Utils.log("recuperarCoberturasBorradas lista = ", lista));
+		return lista;
+	}
+	
+	protected class RecuperarCoberturasAfectadasEndosoCoberturasSP extends StoredProcedure {
+		protected RecuperarCoberturasAfectadasEndosoCoberturasSP (DataSource dataSource) {
+			super(dataSource, "P_END_GET_COB_AFEC_END_COB");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NMSITUAC", "CDGARANT"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void borraTworksupSegundaClave (String cdunieco, String cdramo, String estado, String nmpoliza,
+			String cdtipsup, String nmsuplem, String clave1, String clave2) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("cdtipsup" , cdtipsup);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("clave1"   , clave1);
+		params.put("clave2"   , clave2);
+		ejecutaSP(new BorraTworksupSegundaClaveSP(this.getDataSource()), params);
+	}
+	
+	protected class BorraTworksupSegundaClaveSP extends StoredProcedure
+	{
+		protected BorraTworksupSegundaClaveSP(DataSource dataSource)
+		{
+			super(dataSource, "P_END_BORRA_TWORKSUP_2CLAV");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("clave1"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("clave2"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
