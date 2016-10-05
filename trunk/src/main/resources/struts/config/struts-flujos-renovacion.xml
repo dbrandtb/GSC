@@ -29,5 +29,14 @@
         <action name="renovarPolizaIndividual" class="renovacionAction" method="renovarPolizaIndividual">
             <result type="json" />
         </action>
+        <action name="actualizaValoresCotizacion" class="renovacionAction" method="actualizaValoresCotizacion">
+            <result type="json" />
+        </action>
+        <action name="confirmarPolizaIndividual" class="renovacionAction" method="confirmarPolizaIndividual">
+            <result type="json" />
+        </action>
+        <action name="obtenerItemsTvalopol" class="renovacionAction" method="obtenerItemsTvalopol">
+        	<result type="json" />
+        </action>
     </package>
 </struts>

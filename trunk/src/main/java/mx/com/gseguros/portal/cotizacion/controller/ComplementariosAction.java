@@ -1691,10 +1691,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			try {
 				if (consultasManager.esProductoSalud(cdramo)) {
 					logger.debug("Revisando solicitud de emisi\u00f3n para salud");
-					emisionManager.validarDocumentoTramite(
-							emisionManager.recuperarTramiteCotizacion(cdunieco, cdramo, "W", panel1.get("nmpoliza")),
-							"1" // CDDOCUME 1 = solicitud de emision
-					);
+					if(!"S".equals(panel1.get("renovacion"))){
+						emisionManager.validarDocumentoTramite(
+								emisionManager.recuperarTramiteCotizacion(cdunieco, cdramo, "W", panel1.get("nmpoliza")),
+								"1" // CDDOCUME 1 = solicitud de emision
+						);
+					}
 				}
 			} catch(Exception ex) {
 				logger.error("error surgido al validar solicitud de emision de salud", ex);

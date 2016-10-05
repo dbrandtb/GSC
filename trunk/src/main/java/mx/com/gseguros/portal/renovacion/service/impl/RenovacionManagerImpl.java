@@ -3,9 +3,11 @@ package mx.com.gseguros.portal.renovacion.service.impl;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,16 +15,22 @@ import java.util.Map.Entry;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.externo.service.StoredProceduresManager;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
+import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
 import mx.com.gseguros.utils.Utils;
@@ -45,6 +53,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 	private PantallasDAO  pantallasDAO;
 	private CotizacionDAO cotizacionDAO;
 	
+	
 	private transient Ice2sigsService ice2sigsService;
 	private transient RecibosSigsService recibosSigsService;
 	
@@ -53,6 +62,15 @@ public class RenovacionManagerImpl implements RenovacionManager
 	
 	@Autowired
 	private KernelManagerSustituto kernelManager;
+	
+	@Autowired
+	private CotizacionManager cotizacionManager;
+	
+	@Autowired
+	private StoredProceduresManager storedProceduresManager;
+	
+	@Autowired
+	private EndososDAO endososDAO;
 	
 	@Override
 	public ManagerRespuestaImapVO pantallaRenovacion(String cdsisrol)
@@ -310,7 +328,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 							,DocumentosManager.PROCESO_EMISION
 							,ntramite
 							,null //nmsolici
-, null
+							,null
 							);
 					
 					/*
@@ -631,7 +649,11 @@ public class RenovacionManagerImpl implements RenovacionManager
 			String cdramo,
 			String estado,
 			String nmpoliza,
-			String usuario)
+			String usuario,
+			String feefecto,
+			String feproren,
+			String estadoNew,
+			String cdmoneda)
 	{
 		logger.info(
 				new StringBuilder()
@@ -641,6 +663,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 				.append("\n@@@@@@ cdramo=").append(cdramo)
 				.append("\n@@@@@@ estado=").append(estado)
 				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ estadoNew=").append(estadoNew)
 				.append("\n@@@@@@ usuario=").append(usuario)
 				.toString());
 		
@@ -650,15 +673,30 @@ public class RenovacionManagerImpl implements RenovacionManager
 		String ntramite = ""; 
 		try
 		{	
-			paso     = "enviando para renovar poliza";
-			ntramite = renovacionDAO.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza, usuario);
-			List<Map<String, String>> slist = renovacionDAO.obtenerPolizaCdpersonTramite(ntramite);
-			slist.get(0).put("ntramite", ntramite);
+			paso     = "enviando para renovar poliza";			
+//			generaTcartera(cdunieco, cdramo, nmpoliza, feefecto, feproren, nmsuplem, cdagente, cdperpag, cdcontra, cdmoneda);
+			Map<String,String> map = renovacionDAO.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza, estadoNew, usuario);			
+			List<Map<String, String>> slist = renovacionDAO.obtenerPolizaCdpersonTramite(map.get("ntramite"));
+			String cdtipsit = endososDAO.recuperarCdtipsitInciso1(cdunieco, cdramo, estado, nmpoliza);
+			slist.get(0).put("cdtipsit", cdtipsit);
+			slist.get(0).put("ntramite", map.get("ntramite"));
+			slist.get(0).put("cdtipflu", map.get("cdtipflu"));
+			slist.get(0).put("cdflujomc", map.get("cdflujomc"));
+			slist.get(0).put("estadomc", map.get("status"));
+			slist.get(0).put("nmsuplem", map.get("nmsuplem"));
+			cdunieco = slist.get(0).get("cdunieco");
+			cdramo 	 = slist.get(0).get("cdramo");
+			estado 	 = slist.get(0).get("estado");
+			nmpoliza = slist.get(0).get("nmpoliza");
+			/**
+			 * Obtiene atributos tvalopol
+			 */
 			Map<String,String> paramGetValopol = new HashMap<String,String>(0);
 			paramGetValopol.put("pv_cdunieco",cdunieco);
 			paramGetValopol.put("pv_cdramo"  ,cdramo);
 			paramGetValopol.put("pv_estado"  ,estado);
 			paramGetValopol.put("pv_nmpoliza",nmpoliza);
+			logger.info(new StringBuilder().append("\n@@@@@@ paramGetValopol=").append(paramGetValopol).toString());
 			Map<String,Object> parametrosCargados = kernelManager.pGetTvalopol(paramGetValopol);
 			if(parametrosCargados.isEmpty()){
 				throw new Exception("No se obtuvo ningun atributo variable a nivel de poliza");
@@ -667,16 +705,317 @@ public class RenovacionManagerImpl implements RenovacionManager
 			while(it.hasNext())
 			{
 				Entry<String,Object> entry = (Map.Entry<String, Object>) it.next();
-				slist.get(0).put("pv_"+entry.getKey(), (String)entry.getValue());
+				if(entry.getKey().startsWith("otvalor")){
+					slist.get(0).put("parametros.pv_"+entry.getKey(), (String)entry.getValue());
+				}else{
+					slist.get(0).put(entry.getKey(), (String)entry.getValue());
+				}
 			}
+			
+			if(slist.size() > 0){
+				lista.setSlist(slist);
+				lista.setExito(true);
+			}
+			
+			/**
+			 * Obtiene atributos datos generales
+			 */
+			Map<String,Object> params = new HashMap<String,Object>(0);
+			params.put("pv_cdusuari", usuario);
+			params.put("pv_cdunieco", cdunieco);
+			params.put("pv_cdramo"  , cdramo);
+			params.put("pv_estado"  , estado);
+			params.put("pv_nmpoliza", nmpoliza);
+			logger.info(new StringBuilder().append("\n@@@@@@ params=").append(params).toString());
+			Map<String, Object> select = kernelManager.getInfoMpolizas(params);
+			Iterator ite = select.entrySet().iterator();			
+			while(ite.hasNext())
+			{
+				Entry<String,Object> entry = (Map.Entry<String, Object>) ite.next();
+				if(entry.getKey().startsWith("fe")){
+					String fecha = Utils.format((Date)entry.getValue());
+					entry.setValue(fecha);
+				}
+				slist.get(0).put(entry.getKey(), (String)entry.getValue());
+			}
+			slist.get(0).put("cambioCuadro", cotizacionManager.cargarBanderaCambioCuadroPorProducto(cdramo)?"S":"N");
+			LinkedHashMap<String,Object> paramsRetroactividad = new LinkedHashMap<String,Object>();
+			paramsRetroactividad.put("param1" , cdunieco);
+			paramsRetroactividad.put("param2" , cdramo);
+			paramsRetroactividad.put("param3" , TipoEndoso.EMISION_POLIZA.getCdTipSup()+"");
+			paramsRetroactividad.put("param4" , usuario);
+			paramsRetroactividad.put("param5" , slist.get(0).get("cdtipsit"));			
+			logger.info(new StringBuilder().append("\n@@@@@@ paramsRetroactividad=").append(paramsRetroactividad).toString());
+			Map<String,String> retroactividad = storedProceduresManager.procedureMapCall(ObjetoBD.OBTIENE_RETROACTIVIDAD_TIPSUP.getNombre(), paramsRetroactividad, null);
+			
+			int retroac = Integer.valueOf(retroactividad.get("RETROAC"));
+			int diferi  = Integer.valueOf(retroactividad.get("DIFERI"));
+			
+			Calendar calendarMin = Calendar.getInstance();
+			Calendar calendarMax = Calendar.getInstance();
+			
+			calendarMin.add(Calendar.DAY_OF_YEAR, retroac * -1);
+			calendarMax.add(Calendar.DAY_OF_YEAR, diferi);
+			
+			slist.get(0).put("fechaMinEmi" , renderFechas.format(calendarMin.getTime()));
+			slist.get(0).put("fechaMaxEmi" , renderFechas.format(calendarMax.getTime()));
+			
 			if(slist.size() > 0){
 				lista.setSlist(slist);
 				lista.setExito(true);
 			}
 			logger.info(
 					new StringBuilder()
+					.append("\n@@@@@@ slitst=").append(lista.getSlist())
+					.toString());
+		}
+		catch(Exception ex){
+			paso = ex.getMessage().toString();
+			logger.info(
+					new StringBuilder()
+					.append("\n@@@@@@ pasoException=").append(paso)
+					.toString());
+		}
+		return lista;
+	}
+	
+	@Override
+	public void actualizaValoresCotizacion(Map<String, String> valores, String cdelemen, String cdusuari, String cdtipsup){
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ actualizaValoresCotizacion @@@@@@")
+				.append("\n@@@@@@ valores=").append(valores)
+				.toString());
+		String paso = "";
+		try{
+			paso     = "actualizando informacion de cotizacion";
+			String cdunieco 	= valores.get("cdunieco");
+			String cdramo 		= valores.get("cdramo");
+			String estado 		= valores.get("estado");
+			String nmpoliza 	= valores.get("nmpoliza");
+			String nmsuplem 	= valores.get("nmsuplem");
+			String feefecto 	= Utils.formateaFecha(valores.get("feefecto"));
+			String feefecto_ant = Utils.formateaFecha(valores.get("feefecto_ant"));
+			String cdagente 	= valores.get("cdagente");
+			String cdperpag 	= valores.get("cdperpag");
+			String cdcontra 	= valores.get("cdcontra");
+			String cdmoneda		= valores.get("cdmoneda");			
+			Map<String,String> atributos = new HashMap<String,String>();
+			Map<String,String> campos	 = new HashMap<String,String>();
+			for(Entry<String,String> atrib : valores.entrySet())
+			{
+				String key = atrib.getKey();
+				if(StringUtils.isNotBlank(key) && key.length() >= "pv_otvalor".length()){
+					if(key.substring(0, "pv_otvalor".length()).equals("pv_otvalor")){
+						atributos.put(key.substring("pv_".length(), key.length()), atrib.getValue());
+					}
+				}
+				if(!key.startsWith("pv_otvalor")){
+					campos.put(key, atrib.getValue());
+				}
+			}
+			logger.info(new StringBuilder().append("\n@@@@@@ atributos=").append(atributos).toString());
+			logger.info(new StringBuilder().append("\n@@@@@@ campos=").append(campos).toString());
+			cotizacionDAO.movimientoTvalopol(
+					cdunieco,
+					cdramo,
+					estado,
+					nmpoliza,
+					nmsuplem,
+					"V", //status
+					atributos
+					);
+			renovacionDAO.actualizaContratanteFormaPago(cdunieco, cdramo, estado, nmpoliza, cdperpag, cdcontra);
+			endososDAO.sigsvalipolEnd(
+					cdusuari,
+					cdelemen,
+					cdunieco,
+					cdramo,
+					estado,
+					nmpoliza,
+					"0",
+					nmsuplem,
+					cdtipsup
+					);
+		}catch(Exception ex){
+			paso = ex.getMessage().toString();
+			logger.info(
+					new StringBuilder()
 					.append("\n@@@@@@ paso=").append(paso)
 					.toString());
+		}
+	}
+	
+	@Override
+	public Map<String, String> confirmarCotizacion(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String ntramite,
+			String cdperpag,
+			String feefecto,
+			UserVO usuario,
+			String rutaDocumentosPoliza){
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ confirmarCotizacion @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=").append(cdramo)
+				.append("\n@@@@@@ estado=").append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ ntramite=").append(ntramite)
+				.append("\n@@@@@@ cdperpag=").append(cdperpag)
+				.append("\n@@@@@@ feefecto=").append(feefecto)
+				.append("\n@@@@@@ usuario=").append(usuario)
+				.append("\n@@@@@@ rutaDocumentosPoliza=").append(rutaDocumentosPoliza)
+				.toString());
+		String paso = "";
+		String esDxN = "";
+		Map<String, String> smap1 = new HashMap<String, String>();
+		try{
+			paso     = "confirmando cotizacion";
+			List<Map<String,String>> polizas = renovacionDAO.confirmarPolizaIndividual(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite);
+			paso    = "termino de confirmar";
+			esDxN = polizas.get(0).get("SWDXN");
+			paso    = "obtiene DXN";
+			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN))
+			{	
+				// Ejecutamos el Web Service de Recibos:
+				paso    = "generando recibos DXN";
+				ice2sigsService.ejecutaWSrecibos(
+						cdunieco, 
+						cdramo,
+						estado, 
+						nmpoliza, 
+						nmsuplem, 
+						rutaDocumentosPoliza,
+						cdunieco, 
+						nmpoliza, 
+						ntramite, 
+						false, 
+						"33", //tipMov 33 para Renovacion
+						usuario);
+				// Ejecutamos el Web Service de Recibos DxN:
+				paso    = "generando recibos DXN";
+				recibosSigsService.generaRecibosDxN(
+						cdunieco, 
+						cdramo, 
+						estado, 
+						nmpoliza, 
+						nmsuplem, 
+						cdunieco, 
+						nmpoliza, 
+						ntramite, 
+						usuario);
+			}
+			else
+			{
+				// Ejecutamos el Web Service de Recibos:
+				paso    = "generando recibos diferente DXN";
+				ice2sigsService.ejecutaWSrecibos(
+						cdunieco, 
+						cdramo,
+						estado, 
+						nmpoliza, 
+						nmsuplem, 
+						rutaDocumentosPoliza,
+						cdunieco, 
+						nmpoliza,
+						ntramite, 
+						true, 
+						"33",//tipMov 33 para Renovacion
+						usuario);
+			}
+			paso     = "antes de generar documentos";
+			documentosManager.generarDocumentosParametrizados(
+					cdunieco,
+					cdramo,
+					estado,
+					nmpoliza,
+					"0", //nmsituac
+					nmsuplem,
+					DocumentosManager.PROCESO_EMISION,
+					ntramite,
+					null, //nmsolici
+					null
+					);
+			paso  = "antes de generar documentos";
+			smap1 = renovacionDAO.confirmarTramite(cdunieco, cdramo, estado, nmpoliza, cdperpag, feefecto);
+			logger.info(new StringBuilder().append("\n@@@@@@ smap1=").append(smap1).toString());
+		}catch(Exception ex){
+			paso = ex.getMessage().toString();
+			logger.info(new StringBuilder().append("\n@@@@@@ paso=").append(paso).toString());
+		}
+		return smap1;
+	}
+	
+	public void generaTcartera(
+			String cdunieco,
+			String cdramo,
+			String nmpoliza,
+			String feefecto,
+			String feefecto_ant,
+			String nmsuplem,
+			String cdagente,
+			String cdperpag,
+			String cdcontra,
+			String cdmoneda){
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ confirmarCotizacion @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=").append(cdramo)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ feefecto=").append(feefecto)
+				.append("\n@@@@@@ feefecto_ant=").append(feefecto_ant)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ cdagente=").append(cdagente)
+				.append("\n@@@@@@ cdperpag=").append(cdperpag)
+				.append("\n@@@@@@ cdcontra=").append(cdcontra)
+				.append("\n@@@@@@ cdmoneda=").append(cdmoneda)
+				.toString());
+		String paso = "";
+		try{
+			paso     = "antes de generar tcartera";
+			renovacionDAO.generaTcartera(cdunieco, cdramo, nmpoliza, feefecto, feefecto_ant, nmsuplem, cdagente, cdperpag, cdcontra, cdmoneda);
+			paso     = "despues de generar tcartera";
+		}catch(Exception ex){
+			paso = ex.getMessage().toString();
+			logger.info(
+					new StringBuilder()
+					.append("\n@@@@@@ paso=").append(paso)
+					.toString());
+		}
+	}
+	
+	@Override
+	public String obtenerItemsTatripol(
+			String cdramo,
+			String cdtipsit){
+		logger.debug(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ obtenerItemsTatripol @@@@@@")
+				.append("\n@@@@@@ cdramo=").append(cdramo)
+				.append("\n@@@@@@ estado=").append(cdtipsit)
+				.toString()
+				);
+		String respuesta = "";
+		String paso = "";
+		try{
+			List<ComponenteVO> listaTatrisit = kernelManager.obtenerTatripol(new String[]{cdramo,cdtipsit,"I"});			
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			Map<String,Item> imap = new HashMap<String,Item>();
+			gc.setCdramo(cdramo);
+			gc.setCdtipsit(cdtipsit);
+			gc.generaComponentes(listaTatrisit, true, false, true, false, false, false);
+			respuesta = "["+gc.getItems()+"]";
 		}
 		catch(Exception ex){
 			paso = ex.getMessage().toString();
@@ -685,7 +1024,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 					.append("\n@@@@@@ paso=").append(paso)
 					.toString());
 		}
-		return lista;
+		return respuesta;
 	}
 	
 	//Getters y setters

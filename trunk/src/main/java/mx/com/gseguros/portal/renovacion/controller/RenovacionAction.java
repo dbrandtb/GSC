@@ -16,6 +16,8 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.general.model.UsuarioVO;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
 import mx.com.gseguros.utils.Utils;
 
@@ -459,27 +461,38 @@ public class RenovacionAction extends PrincipalCoreAction
 			Utils.validate(params.get("cdunieco"),"No se recibio oficina",
 						   params.get("cdramo")  ,"No se recibio producto",
 						   params.get("estado")  ,"No se recibio estado",
-						   params.get("nmpoliza"),"No se recibio numero de poliza"
+						   params.get("nmpoliza"),"No se recibio numero de poliza",
+						   params.get("feefecto"),"No se recibio la fecha de efecto",
+						   params.get("feproren"),"No se recibio la fecha de proxima renovacion",
+						   params.get("cdmoneda"),"No se recibio la moneda"
 						   );
-			String cdunieco = params.get("cdunieco");
-			String cdramo   = params.get("cdramo");
-			String estado   = params.get("estado");
-			String nmpoliza = params.get("nmpoliza");
-			UserVO usuario  = Utils.validateSession(session);
-			ManagerRespuestaSlistVO resp = renovacionManager.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza, usuario.getUser());
+			String cdunieco  = params.get("cdunieco");
+			String cdramo    = params.get("cdramo");
+			String estado    = params.get("estado");
+			String nmpoliza  = params.get("nmpoliza");
+			String feefecto  = params.get("feefecto");
+			String feproren  = params.get("feproren");
+			String cdmoneda  = params.get("cdmoneda");
+			String estadoNew = params.get("estadoNew");
+			UserVO usuario   = Utils.validateSession(session);			
+			ManagerRespuestaSlistVO resp = renovacionManager.renuevaPolizaIndividual(
+					cdunieco, 
+					cdramo, 
+					estado, 
+					nmpoliza, 
+					usuario.getUser(),
+					feefecto,
+					feproren,
+					estadoNew,
+					cdmoneda);
 			logger.info(
 					new StringBuilder()
 					.append("\n###### resp ")
 					.append(resp)
 					.toString()
 					);
-//			Map<String, String> result = new HashMap<String, String>();
-//			result.put("ntramite", ntramite);
-//			result.put("cambioCuadro",cotizacionManager.cargarBanderaCambioCuadroPorProducto(cdramo)?"S":"N");
-//			result.put("cdpercli"    ,consultasManager.recuperarCdpersonClienteTramite(ntramite));
-//			slist1 = new ArrayList<Map<String,String>>();
 			setSlist1(resp.getSlist());
-//			slist1.add(resp.getSlist().get(0));
+			exito = true;
 		}catch(Exception ex){
 			respuesta = Utils.manejaExcepcion(ex);
 		}
@@ -489,6 +502,120 @@ public class RenovacionAction extends PrincipalCoreAction
 				.append("\n#################################################")
 				.toString()
 				);
+		return SUCCESS;
+	}
+	
+	public String actualizaValoresCotizacion(){
+		logger.info(
+				new StringBuilder()
+				.append("\n###### params=").append(params)
+				.append("\n###### Entrando a actualizaValoresCotizacion ######")
+				.append("\n################################################")
+				.toString()
+				);
+		try{
+			UserVO usuario = (UserVO)session.get("USUARIO");			
+			renovacionManager.actualizaValoresCotizacion(
+					params, 
+					usuario.getUser(), 
+					usuario.getEmpresa().getElementoId(), 
+					TipoEndoso.RENOVACION.getCdTipSup().toString());
+			
+		}catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n###### Saliendo de actualizaValoresCotizacion ######")
+				.append("\n#################################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String confirmarPolizaIndividual(){
+		logger.info(
+				new StringBuilder()
+				.append("\n###### params=").append(params)
+				.append("\n###### Entrando a confirmarPolizaIndividual ######")
+				.append("\n################################################")
+				.toString()
+				);
+		try{
+			Utils.validate(params, "No se recibieron datos");
+			Utils.validate(params.get("cdunieco"),"No se recibio oficina",
+						   params.get("cdramo")  ,"No se recibio producto",
+						   params.get("estado")  ,"No se recibio estado",
+						   params.get("nmpoliza"),"No se recibio numero de poliza",
+						   params.get("nmsuplem"),"No se recibio nmsuplem",
+						   params.get("ntramite"),"No se recibio numero de tramite",
+						   params.get("cdperpag"),"No se recibio el periodo de pago",
+						   params.get("feefecto"),"No se recibio la fecha de efecto"
+						   );
+			String cdunieco = params.get("cdunieco");
+			String cdramo   = params.get("cdramo");
+			String estado   = params.get("estado");
+			String nmpoliza = params.get("nmpoliza");
+			String nmsuplem = params.get("nmsuplem");
+			String ntramite = params.get("ntramite");
+			String cdperpag = params.get("cdperpag");
+			String feefecto = params.get("feefecto");
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			Map<String, String> result = renovacionManager.confirmarCotizacion(
+					cdunieco, 
+					cdramo, 
+					estado, 
+					nmpoliza, 
+					nmsuplem, 
+					ntramite,
+					cdperpag,
+					feefecto,
+					usuario,
+					getText("ruta.documentos.poliza")//,
+//					getText("ruta.servidor.reports"),
+//					getText("pass.servidor.reports")
+					);
+			List<Map<String, String>> lista = new ArrayList<Map<String,String>>();			
+			logger.info(new StringBuilder().append("\n###### lista").append(lista));
+			if(!result.isEmpty()){
+				lista.add(result);
+				respuesta = "Poliza confirmada";
+				exito = true;
+			}else{
+				respuesta = "No se pudo confirmar la poliza";
+			}
+			setSlist1(lista);
+		}catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n###### Saliendo de renovarPolizaIndividual ######")
+				.append("\n#################################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String obtenerItemsTvalopol(){
+		logger.info(
+				new StringBuilder()
+				.append("\n###### params=").append(params)
+				.append("\n###### Entrando a confirmarPolizaIndividual ######")
+				.append("\n################################################")
+				.toString()
+				);		
+		try{
+			Utils.validate(params,"No se recibieron parametros");
+			Utils.validate(params.get("cdramo")  ,"No se recibio el ramo",
+						   params.get("cdtipsit"),"No se recibio el tipo de ramo");
+			String cdramo = params.get("cdramo");
+			String cdtipsit = params.get("cdtipsit");
+			params.put("items", renovacionManager.obtenerItemsTatripol(cdramo, cdtipsit));
+		}
+		catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
 		return SUCCESS;
 	}
 	

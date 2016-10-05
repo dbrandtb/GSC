@@ -60,12 +60,49 @@ public interface RenovacionDAO
 			String fecfin,
 			String status)throws Exception;
 	
-	public String renuevaPolizaIndividual(
+	public Map<String,String> renuevaPolizaIndividual(
 			String cdunieco,
 			String cdramo,
 			String estado,
 			String nmpoliza,
+			String estadoNew,
 			String usuario)throws Exception;
 	
 	public List<Map<String,String>> obtenerPolizaCdpersonTramite(String ntramite)throws Exception;
+	
+	public List<Map<String,String>> confirmarPolizaIndividual(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String ntramite)throws Exception;
+	
+	public void generaTcartera(
+			String cdunieco,
+			String cdramo,
+			String nmpoliza,
+			String feefecto,
+			String feefecto_ant,
+			String nmsuplem,
+			String cdagente,
+			String cdperpag,
+			String cdcontra,
+			String cdmoneda)throws Exception;
+	
+	public void actualizaContratanteFormaPago(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cdperpag,
+			String cdcontra)throws Exception;
+	
+	public Map<String, String> confirmarTramite(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String cdperpag,
+			String feefecto)throws Exception;
 }

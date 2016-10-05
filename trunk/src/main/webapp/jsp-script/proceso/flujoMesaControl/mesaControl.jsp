@@ -424,7 +424,12 @@ Ext.onReady(function()
                                     function()
                                     {
                                         _setLoading(false,me);
-                                        me.handler(me);
+                                        if(Ext.isEmpty(_p54_params.ntramiteCargar)){
+                                        	me.handler(me);
+                                        }
+                                        else{
+                                        	_p54_cargarTramite(_p54_params.ntramiteCargar);
+                                        }
                                     }
                                     ,1.5*1000
                                 );
@@ -1596,6 +1601,35 @@ function _show(comp)
         //comp.removeCls('red');
         comp.show();
     }
+}
+
+function _p54_cargarTramite(ntramite){
+	debug('>_p54_cargarTramite',ntramite);
+	var form  = _fieldById('_p54_filtroForm');
+    var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
+    form.getForm().reset();
+    form.down('[name=NTRAMITE]').setValue(ntramite);
+    form.down('[name=STATUS]').setValue('0');
+    _fieldById('_p54_filtroCmp').reset();
+    
+    var callbackCheck = function(store, records, success) {
+        store.removeListener('load', callbackCheck);
+        if(success && records.length > 0){
+        	_p54_mostrarCheckDocumentosInicial(
+        			records[0].get('CDTIPFLU'), 
+        			records[0].get('CDFLUJOMC'),
+        			records[0].get('CDTIPTRA'), 
+        			records[0].get('CDTIPSUP'), 
+        			records[0].get('NTRAMITE'));
+        }
+        
+    };
+    
+    _p54_store.on({
+        load : callbackCheck
+    });
+    boton.handler(boton);
+    debug('<_p54_cargarTramite');
 }
 ////// funciones //////
 </script>
