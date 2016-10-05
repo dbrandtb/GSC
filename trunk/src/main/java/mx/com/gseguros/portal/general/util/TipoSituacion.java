@@ -18,7 +18,9 @@ public enum TipoSituacion {
 	RECUPERA_COLECTIVO        ("RC"),
 	GASTOS_MEDICOS_INDIVIDUAL ("GMI"),
 	TRADICIONALES_MEGASALUD   ("TMS"),
-	TRADICIONALES_SUSALUD     ("TSS")
+	TRADICIONALES_SUSALUD     ("TSS"),
+	MOTOS                     ("MO"),
+	TRACTOCAMIONES_ARMADOS    ("TC")
 	;
 
 	private String cdtipsit;
