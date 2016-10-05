@@ -3585,7 +3585,7 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 		,border: false
 		,items:[{	        	
 			xtype   : 'image'
-			,src    : '${ctx}/images/cotizacionautos/menu_endosos.png'
+			,src    : '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'menu_endosos.png'
 			,width: 200
 			,height: 100
 		}]
@@ -3629,7 +3629,7 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 		buttonAlign:'center',
 		buttons: [{
 			text: 'Aceptar',
-			icon: '${ctx}/resources/fam3icons/icons/accept.png',
+			icon: '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'accept.png" />',
 			buttonAlign : 'center',
 			handler: function() {
 				validacionNumSerie.close();
