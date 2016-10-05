@@ -45,6 +45,43 @@ public interface RenovacionManager
 			String cdramo,
 			String estado,
 			String nmpoliza,
-			String usuario
-			);
+			String usuario,
+			String feefecto,
+			String feproren,
+			String estadoNew,
+			String cdmoneda);
+	
+	public void actualizaValoresCotizacion(
+			Map<String, String> valores, 
+			String cdelemen, 
+			String cdusuari, 
+			String cdtipsup);
+	
+	public Map<String, String> confirmarCotizacion(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String ntramite,
+			String cdperpag,
+			String feefecto,
+			UserVO usuario,
+			String rutaDocumentosPoliza);
+	
+	public void generaTcartera(
+			String cdunieco,
+			String cdramo,
+			String nmpoliza,
+			String feefecto,
+			String feefecto_ant,
+			String nmsuplem,
+			String cdagente,
+			String cdperpag,
+			String cdcontra,
+			String cdmoneda);
+	
+	public String obtenerItemsTatripol(
+			String cdramo,
+			String cdtipsit);
 }

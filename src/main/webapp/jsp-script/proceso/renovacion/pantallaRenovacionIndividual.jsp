@@ -5,18 +5,23 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// variables //////
-var contexto						= '${ctx}';
-var urlGuardar                   	= '<s:url namespace="/"           action="guardarDatosComplementarios" 				  />';
-var urlCargarCatalogos              = '<s:url namespace="/catalogos"  action="obtieneCatalogo"             />';
-var _p25_urlBuscarPolizas  			= '<s:url namespace="/renovacion" action="buscarPolizasIndividualesRenovables" 		  />';
-var _p25_urlBuscarPolizasMasivas	= '<s:url namespace="/renovacion" action="buscarPolizasIndividualesMasivasRenovables" />';
-var _p25_urlRenovarPolizaIndividual	= '<s:url namespace="/renovacion" action="renovarPolizaIndividual"			   		  />';
-var _p25_urlBuscarContratantes  	= '<s:url namespace="/endoso" 	  action="cargarContratantesEndosoContratante" 		  />';
-var urlPantallaValosit           	= '<s:url namespace="/"           action="pantallaValosit"             				  />';
-var urlEditarAsegurados 			= '<s:url namespace="/" 		  action="editarAsegurados"							  />';           
-var _p25_urlPantallaCliente        	= '<s:url namespace="/catalogos"  action="includes/personasLoader"            		  />';
-var sesionDsrol   					= _GLOBAL_CDSISROL;
-
+var contexto							= '${ctx}';
+var panDatComMap1 						= '<s:property value="%{convertToJSON('slist')}" escapeHtml="false" 				  />';
+var urlGuardar                   		= '<s:url namespace="/"           action="guardarDatosComplementarios" 				  />';
+var urlCargarCatalogos              	= '<s:url namespace="/catalogos"  action="obtieneCatalogo"             				  />';
+var _p25_urlBuscarPolizas  				= '<s:url namespace="/renovacion" action="buscarPolizasIndividualesRenovables" 		  />';
+var _p25_urlBuscarPolizasMasivas		= '<s:url namespace="/renovacion" action="buscarPolizasIndividualesMasivasRenovables" />';
+var _p25_urlRenovarPolizaIndividual		= '<s:url namespace="/renovacion" action="renovarPolizaIndividual"			   		  />';
+var _p25_urlConfirmarPolizaIndividual	= '<s:url namespace="/renovacion" action="confirmarPolizaIndividual"				  />';
+var _p25_urlActualizaValoresCotizacion	= '<s:url namespace="/renovacion" action="actualizaValoresCotizacion"				  />';
+var _p25_urlBuscarContratantes  		= '<s:url namespace="/endoso" 	  action="cargarContratantesEndosoContratante" 		  />';
+var urlPantallaValosit           		= '<s:url namespace="/"           action="pantallaValosit"             				  />';
+var urlEditarAsegurados 				= '<s:url namespace="/" 		  action="editarAsegurados"							  />';           
+var _p25_urlPantallaCliente        		= '<s:url namespace="/catalogos"  action="includes/personasLoader"            		  />';
+var panDatComUrlDoc2                    = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" 				  />';
+var urlRecotizar                 		= '<s:url namespace="/"           action="recotizar"                   				  />';
+var _p25_urlObtenerItemsTvalopol		= '<s:url namespace="/renovacion" action="obtenerItemsTvalopol"						  />';
+var sesionDsrol   						= _GLOBAL_CDSISROL;
 var _p25_storePolizas;
 var _p25_storePolizasMasivas;
 var _p25_ultimosParams;
@@ -28,12 +33,12 @@ var winCambioDomicilio;
 var wineditarContratante;
 
 var pantallaValositParche = false;
-
-var panDatComUpdateFerenova = function(field,value)
+var _p22_parentCallback;
+/*var panDatComUpdateFerenova = function(field,value)
 {
 	try
     	{
-        	if(!Ext.isEmpty(plazoEnDias) && '|16|5|6|'.lastIndexOf('|'+inputCdramo+'|')!=-1)
+        	if(!Ext.isEmpty(plazoEnDias) && '|16|5|6|'.lastIndexOf('|'+panDatComMap1.cdramo+'|')!=-1)
             	{
                 	Ext.getCmp('fechaRenovacion').setValue(Ext.Date.add(value, Ext.Date.DAY, plazoEnDias));
                 }
@@ -45,7 +50,7 @@ var panDatComUpdateFerenova = function(field,value)
         {
         	debugError(e);
 		}
-}
+}*/
 ////// variables //////
 
 ////// componentes dinamicos //////
@@ -190,9 +195,14 @@ Ext.onReady(function()
     		Ext.create('Ext.form.Panel', {
     			bodyPadding : 10,
     			items       : [
+    			    {
+    			    	xtype		: 'displayfield',
+    			    	itemId      : 'dsTramite'
+    			    },
     				{
     					xtype       : 'radiogroup',
     					itemId      : 'itemRadio',
+    					//fieldLabel  : 'Se creo el tramite '+this.resRenova,
     					columns		: 1,
         				vertical	: false,
             			items       : [
@@ -217,9 +227,49 @@ Ext.onReady(function()
     					{ 
     						text    : 'Aceptar',
     						handler : function(){
-    							if(_fieldById('itemRadio').getValue()['topping'] = 1){
+    							var ntramite = this.up('window').resRenova['ntramite'];
+    							if(_fieldById('itemRadio').getValue()['topping'] == 1){
     								_fieldById('winAutoServicio').close();
     								_p25_ventanaCambioFormaPago(this.up('window').resRenova);
+    							}else if(_fieldById('itemRadio').getValue()['topping'] == 2){
+    		                        Ext.Ajax.request(
+		                                {
+		                                    url     : _GLOBAL_COMP_URL_TURNAR
+		                                    ,params : {
+		                                    	'params.NTRAMITE'  : ntramite,
+		                                    	'params.CDTIPFLU'  : this.up('window').resRenova['cdtipflu'],
+		                                    	'params.CDFLUJOMC' : this.up('window').resRenova['cdflujomc'],
+		                                    	'params.STATUSOLD' : this.up('window').resRenova['estadomc'],
+		                                		'params.STATUSNEW' : '13'
+		                                    }
+		                                    ,success : function(response)
+		                                    {
+		                                        _unmask();
+		                                        var ck = '';
+		                                        try
+		                                        {
+		                                            var json = Ext.decode(response.responseText);
+		                                            debug('### turnar:',json);
+		                                            if(json.success)
+		                                            {
+		                                            	_iceMesaControl(ntramite);		                                                
+		                                            }
+		                                            else
+		                                            {
+		                                                mensajeError(json.message);
+		                                            }
+		                                        }
+		                                        catch(e)
+		                                        {
+		                                            manejaException(e,ck);
+		                                        }
+		                                    }
+		                                    ,failure : function()
+		                                    {
+		                                        _unmask();
+		                                        errorComunicacion(null,'Error al turnar tr\u00e1mite');
+		                                    }
+		                                });
     							}
     						} 
     					},
@@ -256,13 +306,13 @@ Ext.onReady(function()
                     			boxLabel   : 'Cambio de ',
                     			name       : 'topping',
                     			inputValue : 'S',
-                    			id         : 'checkbox1'
+                    			itemId     : 'checkbox1'
                 			},
                 			{
                     			boxLabel   : 'Modificar los datos del tramite',
                     			name       : 'topping',
                     			inputValue : 'M',
-                    			id         : 'checkbox2'
+                    			itemId     : 'checkbox2'
                 			}
             			]
     				}	
@@ -313,6 +363,37 @@ Ext.onReady(function()
         ]
     });
     
+    _p25_clientePanel = Ext.create('Ext.panel.Panel',{
+		itemId     : '_p25_clientePanel',
+		title      : 'CLIENTE',
+		height     : 400,
+		autoScroll : true,
+		loader     :
+				{
+    				url       	: _p25_urlPantallaCliente,
+    				scripts  	: true,
+    				autoLoad 	: false,
+    				ajaxOptions	: {
+                    	method: 'POST'
+                 	},
+                 	params:	{
+						//'smap1.cdperson' 			: this.resRenova['cdperson'],//_fieldById('winCambioPago').resRenova['cdperson'],	//_fieldByName('cdperson',form).getValue(),
+    					'smap1.cdideper' 			: '',	//json.smap1.cdideper,
+    					'smap1.cdideext' 			: '',	//json.smap1.cdideext,
+    					'smap1.esSaludDanios' 		: 'S',
+    					'smap1.esCargaClienteNvo' 	: 'N',	//(Ext.isEmpty(json.smap1.cdperson)? 'S' : 'N' ),
+    					'smap1.ocultaBusqueda' 		: 'N',
+    					'smap1.cargaCP' 			: '',	//json.smap1.cdpostal,
+    					'smap1.cargaTipoPersona' 	: '',	//json.smap1.otfisjur,
+    					'smap1.cargaSucursalEmi' 	: '',	//_fieldByName('cdunieco',form).getValue(),
+    					'smap1.activaCveFamiliar'	: 'N',
+						'smap1.modoRecuperaDanios'	: 'N',
+						//'smap1.modoSoloEdicion'		: 'S',
+						'smap1.modoEdicionDomicilio': 'S'
+					}
+				}
+	});
+    
     wineditarContratante = Ext.create('Ext.window.Window', {
 		title       : 'Autoservicio-Editar',
 		itemId      : 'winCambioPago',
@@ -332,43 +413,33 @@ Ext.onReady(function()
 						title      : 'CLIENTE',
 						height     : 400,
 						autoScroll : true,
-						loader     :
-								{
-				    				url       	: _p25_urlPantallaCliente,
-				    				scripts  	: true,
-				    				autoLoad 	: false,
-				    				ajaxOptions	: {
-				                    	method: 'POST'
-				                 	},
-				                 	params:	{
-										//'smap1.cdperson' 			: _fieldById('winCambioPago').resRenova['cdperson'],	//_fieldByName('cdperson',form).getValue(),
-				    					'smap1.cdideper' 			: '',	//json.smap1.cdideper,
-				    					'smap1.cdideext' 			: '',	//json.smap1.cdideext,
-				    					'smap1.esSaludDanios' 		: 'S',
-				    					'smap1.esCargaClienteNvo' 	: 'N',	//(Ext.isEmpty(json.smap1.cdperson)? 'S' : 'N' ),
-				    					'smap1.ocultaBusqueda' 		: 'N',
-				    					'smap1.cargaCP' 			: '',	//json.smap1.cdpostal,
-				    					'smap1.cargaTipoPersona' 	: '',	//json.smap1.otfisjur,
-				    					'smap1.cargaSucursalEmi' 	: '',	//_fieldByName('cdunieco',form).getValue(),
-				    					'smap1.activaCveFamiliar'	: 'N',
-										'smap1.modoRecuperaDanios'	: 'N',
-										//'smap1.modoSoloEdicion'		: 'S',
-										'smap1.modoEdicionDomicilio': 'S'
-									}
-								}
+						items	   : [
+							Ext.create('Ext.Button', {
+							    text		: 'Editar contratante',
+							    handler		: function() {
+							    	_p25_loaderContratante(this.up('window').resRenova['cdpersoncon']);
+							    }
+							}),
+							Ext.create('Ext.Button', {
+							    text		: 'Cambiar contratante',
+							    handler		: function() {
+							    	_p25_loaderContratante('');
+							    }
+							}),
+							_p25_clientePanel							
+						]
 					}),
 					Ext.create('Ext.panel.Panel',{
 						title 	    : 'Editar datos complementarios / emitir',
 				        cls		    : 'claseTitulo',
-				        id		    : 'formPanel',
-				        itemId 	    : 'formPanel',
+				        itemId 	    : 'panelDatos',
 				        url         : urlGuardar,
 				        buttonAlign : 'center',
 				        autoScroll  : true,
 				        border		: 0,
 				        items		: [
 				            Ext.create('Ext.panel.Panel',{
-				                id				: 'panelDatosGeneralesPoliza',
+				                itemId			: 'panelDatosGenerales',
 				                title			: 'Datos generales de la poliza',
 				                style			: 'margin:5px',
 				                frame			: false,
@@ -380,22 +451,22 @@ Ext.onReady(function()
 				                },
 				                items:[
 				                    Ext.create('Ext.form.TextField', {
-				                        id			: 'companiaAseguradora',//id3
-				                        name		: 'panel1.dsciaaseg',
+				                        itemId		: 'companiaAseguradora',//id3
+				                        name		: 'dsunieco',
 				                        fieldLabel	: 'Sucursal',
 				                        readOnly	: true,
 				                        style		: 'margin:5px;'
 				                    }),
 				                    Ext.create('Ext.form.TextField', {
-				                        id			: 'agenteVentas',
-				                        name		: 'panel1.nombreagente',
+				                    	itemId		: 'agenteVentas',
+				                        name		: 'nombre',
 				                        fieldLabel	: 'Agente',		                            
 				                        readOnly	: true,
 				                        style		:'margin:5px;'
 				                    }),
 				                    Ext.create('Ext.form.TextField', {
-				                        id			: 'producto',
-				                        name		: 'panel1.dsramo',
+				                    	itemId		: 'producto',
+				                        name		: 'dsramo',
 				                        fieldLabel	: 'Producto',		                                 
 				                        readOnly	: true,
 				                        style		: 'margin:5px;'
@@ -403,7 +474,7 @@ Ext.onReady(function()
 				                ]
 				            }),
 				            Ext.create('Ext.panel.Panel',{
-			                    id				: 'panelDatosGenerales',//id5
+				            	itemId			: 'panelDatosPoliza',//id5
 			                    title			: 'Datos generales',
 			                    style			: 'margin:5px',
 			                    frame			:  false,
@@ -416,8 +487,8 @@ Ext.onReady(function()
 			                    items:[
 			                        {
 			                            xtype		: 'textfield',
-			                            id			: 'poliza',//id6
-			                            name		: 'panel2.nmpoliza',
+			                            itemId		: 'poliza',//id6
+			                            name		: 'nmpoliza',
 			                            readOnly	: true,
 			                            fieldLabel	: 'Poliza',
 			                            style		: 'margin:5px;',
@@ -432,8 +503,8 @@ Ext.onReady(function()
 			                        },                       
 			                        {
 			                            xtype			: 'combo',
-			                            id				: 'estadoPoliza',//id8
-			                            name			: 'panel2.estado',
+			                            itemId			: 'estadoPoliza',//id8
+			                            name			: 'estado',
 			                            fieldLabel		: 'Estado',
 			                            displayField	: 'value',
 			                            valueField		: 'key',
@@ -460,8 +531,8 @@ Ext.onReady(function()
 			                        },
 			                        {
 			                            xtype		: 'numberfield',
-			                            id			: 'solicitud',
-			                            name		: 'panel2.solici',
+			                            itemId		: 'solicitud',
+			                            name		: 'nmsolici',
 			                            fieldLabel	: 'Cotizaci&oacute;n',
 			                            style		: 'margin:5px;',
 			                            allowBlank	: false,
@@ -469,8 +540,8 @@ Ext.onReady(function()
 			                        },
 			                        {
 			                            xtype		: 'datefield',
-			                            id			: 'fechaSolicitud',
-			                            name		: 'panel2.fesolici',
+			                            itemId		: 'fechaSolicitud',
+			                            name		: 'fesolici',
 			                            fieldLabel	: 'Fecha de solicitud',
 			                            allowBlank	: false,
 			                            style		: 'margin:5px;',
@@ -479,22 +550,22 @@ Ext.onReady(function()
 			                        },
 			                        {
 			                            xtype		: 'datefield',
-			                            id			: 'fechaEfectividad',//id11
-			                            name		: 'panel2.feefec',
+			                            itemId		: 'fechaEfectividad',//id11
+			                            name		: 'feefecto',
 			                            fieldLabel	: 'Fecha de inicio de vigencia',
 			                            allowBlank	: false,
 			                            style		: 'margin:5px;',
 			                            format		: 'd/m/Y',
-			                            listeners	: {
+			                            /* listeners	: {
 			                                change  : panDatComUpdateFerenova
-			                            }//,
-			                            //minValue:fechaMinEmi,
-	                                    //maxValue:fechaMaxEmi
+			                            }, */
+			                            minValue : panDatComMap1.fechaMinEmi,
+	                                    maxValue : panDatComMap1.fechaMaxEmi
 			                        },
 			                        {
 			                            xtype		: 'datefield',
-			                            id			: 'fechaRenovacion',//id14
-			                            name		: 'panel2.ferenova',
+			                            itemId		: 'fechaRenovacion',//id14
+			                            name		: 'feproren',
 			                            fieldLabel	: 'Fecha de t&eacute;rmino de vigencia',
 			                            allowBlank	: false,
 			                            style		: 'margin:5px;',
@@ -503,24 +574,24 @@ Ext.onReady(function()
 			                        },
 			                        {
 			                            xtype			: 'combo',
-			                            id				: 'tipoPoliza',//id12
-			                            name			: 'panel2.cdtipopol',
+			                            itemId			: 'tipoPoliza',//id12
+			                            name			: 'ottempot',
 			                            fieldLabel		: 'Tipo de poliza',
 			                            displayField	: 'value',
 			                            valueField		: 'key',
 			                            store			: Ext.create('Ext.data.Store', {
-			                                model	 :'Generic',
-			                                autoLoad :true,
+			                                model	 : 'Generic',
+			                                //autoLoad : true,
 			                                proxy	 :
 			                                {
 			                                    type		: 'ajax',
 			                                    url			: urlCargarCatalogos,
-			                                    <s:if test='%{getMap1().get("SITUACION").equals("AUTO")}'>
+			                                    /* <s:if test='%{getMap1().get("SITUACION").equals("AUTO")}'>
 			                                    extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_POLIZA_AUTO"/>'},
 			                                    </s:if>
-			                                    <s:else>
+			                                    <s:else> */
 			                                    extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_POLIZA"/>'},
-			                                    </s:else>
+			                                    /* </s:else> */
 			                                    reader:
 			                                    {
 			                                        type: 'json',
@@ -535,22 +606,22 @@ Ext.onReady(function()
 			                        },
 			                        {
 			                            xtype			: 'combo',
-			                            id				: 'formaPagoPoliza',//id15
-			                            name			: 'panel2.cdperpag',
+			                            itemId			: 'formaPagoPoliza',//id15
+			                            name			: 'cdperpag',
 			                            fieldLabel		: 'Forma de pago',
 			                            displayField	: 'value',
 			                            valueField		: 'key',
-			                            store:Ext.create('Ext.data.Store', {
+			                            store			: Ext.create('Ext.data.Store', {
 			                                model		: 'Generic',
-			                                autoLoad	: true,
+			                                //autoLoad	: true,
 			                                proxy		: {
 			                                    type		: 'ajax',
 			                                    url			: urlCargarCatalogos,
-			                                    /*extraParams : {
+			                                    /* extraParams : {
 			                                        catalogo           : 'FORMAS_PAGO_POLIZA_POR_RAMO_TIPSIT',
-			                                        'params.cdramo'    : inputCdramo,
-			                                        'params.cdtipsit'  : inputCdtipsit
-			                                    },*/
+			                                        'params.cdramo'    : panDatComMap1.cdramo,
+			                                        'params.cdtipsit'  : panDatComMap1.cdtipsit
+			                                    }, */
 			                                    reader:
 			                                    {
 			                                        type: 'json',
@@ -562,18 +633,18 @@ Ext.onReady(function()
 			                            queryMode	: 'local',
 			                            style		: 'margin:5px;',
 			                            allowBlank	: false,
-			                            //readOnly 	: Number(inputCdramo)==16
+			                            readOnly 	: Number(panDatComMap1.cdramo)==16
 			                        },
 			                        {
 	                                    xtype	 	: 'textfield',
-	                                    name	  	: 'panel2.dsplan',
+	                                    name	  	: 'dsplan',
 	                                    readOnly  	: true,
 	                                    fieldLabel	: 'Plan',
 	                                    style		: 'margin:5px;'
 	                                },
 			                        {
 	                                    xtype		: 'numberfield',
-	                                    name		: 'panel2.nmrenova',
+	                                    name		: 'nmrenova',
 	                                    allowBlank	: false,
 	                                    maxValue	: 99,
 	        							minValue	: 0,
@@ -583,7 +654,7 @@ Ext.onReady(function()
 	                                },
 			                        {
 	                                    xtype		: 'textfield',
-	                                    name		: 'panel2.nmpolant',
+	                                    name		: 'nmpolant',
 	                                    fieldLabel	: 'P&oacute;liza Anterior',
 	                                    style		: 'margin:5px;'
 	                                }
@@ -591,15 +662,15 @@ Ext.onReady(function()
 	                                    xtype           : 'combo',
 	                                    itemId         : '_panDatCom_nmcuadroCmp',
 	                                    fieldLabel     : 'Cuadro de comisiones',
-	                                    name           : 'panel2.nmcuadro',
+	                                    name           : 'nmcuadro',
 	                                    style          : 'margin:5px;',
 	                                    forceSelection : true,
 	                                    valueField     : 'key',
 	                                    displayField   : 'value',       
 	                                    editable       : true,
 	                                    queryMode      : 'local',
-	                                    //disabled       : panDatComMap1.cambioCuadro!='S',
-	                                    //hidden         : panDatComMap1.cambioCuadro!='S',
+	                                    disabled       : panDatComMap1.cambioCuadro != 'S',
+	                                    hidden         : panDatComMap1.cambioCuadro!='S',
 	                                    allowBlank     : false,
 	                                    store          :
 	                                    Ext.create('Ext.data.Store',
@@ -610,11 +681,11 @@ Ext.onReady(function()
 	                                        {
 	                                           type         : 'ajax',
 	                                           url         	: urlCargarCatalogos,
-	                                           /*extraParams 	:
+	                                           extraParams 	:
 	                                           {
 	                                               catalogo          : 'CUADROS_POR_SITUACION',
-	                                               'params.cdtipsit' : inputCdtipsit
-	                                           },*/
+	                                               'params.cdtipsit' : panDatComMap1.cdtipsit
+	                                           },
 	                                           reader      :
 	                                           {
 	                                               type  : 'json',
@@ -626,7 +697,7 @@ Ext.onReady(function()
 			                    ]
 			                }),
 			                Ext.create('Ext.panel.Panel',{
-			                    id				: 'panelDatosAdicionales',
+			                	itemId			: 'panelDatosAdicionales',
 			                    title			: 'Datos adicionales',
 			                    style			: 'margin:5px',
 			                    collapsible		: true,
@@ -644,7 +715,7 @@ Ext.onReady(function()
 	                        {
 	                            text	: 'Guardar',
 	                            icon	: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
-	                            handler	: function(){ _p29_guardarComplementario(null);}	
+	                            handler	: function(){ _p29_actualizarCotizacion(null);}	
 	                        },
                             {
 	                            text		: 'Editar agentes',
@@ -663,83 +734,10 @@ Ext.onReady(function()
                                    itemId  : 'panDatComBotonRetarificar',
                                    icon    : contexto+'/resources/fam3icons/icons/key.png',
                                    hidden  : /*panDatComMap1.SITUACION !== 'AUTO' &&*/ (['SUSCRIPTOR', 'COTIZADOR', 'SUPTECSALUD'].indexOf(sesionDsrol) === -1),
-                                   handler : function(me)
-                                   {
-                                   	try
-                                   	{
-                                    	_p29_guardarComplementario
-                                    	(
-                                    	  function()
-                                    	  {
-                                    			if(inputCdramo == 16)
-                                                {
-                                                  Ext.Ajax.request(
-                                                             {
-                                                                 url     : _URL_urlCargarTvalosit,
-                                                                 params  :
-                                                                 {
-                                                                     'smap1.cdunieco' : inputCdunieco,
-                                                                     'smap1.cdramo'   : inputCdramo,
-                                                                     'smap1.estado'   : inputEstado,
-                                                                     'smap1.nmpoliza' : inputNmpoliza,
-                                                                     'smap1.nmsituac' : '1'
-                                                                 }
-                                                                 ,success : function(response)
-                                                                 {
-                                                                     var json=Ext.decode(response.responseText);
-                                                                     if(json.exito)
-                                                                     {
-                                                                             var _p29_validaSeguro = json.smap1['parametros.pv_seguroVida'];	                                                                            
-                                                                             debug('fn:', _p29_validaSeguro);
-                                                                             if(_p29_validaSeguro == "S")
-                                                                             {    
-                                                                                 var suma=0;
-                                                                                 _p32_store.each(function(record)
-                                                                                 {
-                                                                                     if(record.get('mov')+'x'!='-x')
-                                                                                     {
-                                                                                         suma=suma+(record.get('PORBENEF')-0);
-                                                                                     }
-                                                                                 });
-                                                                                 if(suma!=100)
-                                                                                 {  
-                                                                                     mensajeError('La suma de porcentajes de beneficiarios activos es '+suma+', en lugar de 100');
-                                                                                     return
-                                                                                 }
-                                                                                 else
-                                                                                 {
-                                                                                	 try{
-                                                                                     _p32_guardarClic(_p29_emitirClicComplementarios);
-                                                                                	 }
-                                                                                	 catch(e){manejaException(e);}
-                                                                                     
-                                                                                 }
-
-                                                                             }
-                                                                             else
-                                                                             {
-                                                                                 _p29_emitirClicComplementarios();
-                                                                             }
-                                                                     }
-                                                                     else
-                                                                     {
-                                                                         mensajeError(json.respuesta);
-                                                                     }
-                                                                 }
-                                                             });
-                                                }
-                                                else
-                                                {
-                                                    _p29_emitirClicComplementarios();
-                                                }
-                                    	  }
-                                    	);
-                                   	}
-                                   	catch(e)
-                                       {
-                                           debugError(e,' panDatComBotonRetarificar handler ');
-                                       }
-                                   }
+                                   handler	: function(){ 
+                                	   var winCambioPago = _fieldById('winCambioPago');                                	   
+                                	   tarifaFinal();                                		
+                                	}
                                  },
 	                        {
                                    text    : 'Guardar y dar Vo. Bo.',
@@ -762,7 +760,7 @@ Ext.onReady(function()
                                             items       :
                                             [
 												{
-												    id     : 'inputTextareaCommentsToMCFromMedico',
+												    itemId : 'inputTextareaCommentsToMCFromMedico',
 											    	width  : 570,
                                                     height : 300,
                                                     xtype  : 'textarea',
@@ -804,10 +802,10 @@ Ext.onReady(function()
 				                                        	window.setLoading(true);
 				                                            form.submit({
 				                                                params:{
-				                                                    'map1.pv_cdunieco' :  inputCdunieco,
-				                                                    'map1.pv_cdramo' :    inputCdramo,
-				                                                    'map1.pv_estado' :    inputEstado,
-				                                                    'map1.pv_nmpoliza' :  inputNmpoliza
+				                                                    'map1.pv_cdunieco' :  panDatComMap1.cdunieco,
+				                                                    'map1.pv_cdramo'   :  panDatComMap1.cdramo,
+				                                                    'map1.pv_estado'   :  panDatComMap1.estado,
+				                                                    'map1.pv_nmpoliza' :  panDatComMap1.nmpoliza
 				                                                },
 				                                                success:function(){
 				                                                    Ext.Ajax.request
@@ -815,7 +813,7 @@ Ext.onReady(function()
 				                                                        url     : datComUrlMCUpdateStatus
 				                                                        ,params : 
 				                                                        {
-				                                                            'smap1.ntramite'  : inputNtramite,
+				                                                            'smap1.ntramite'  : panDatComMap1.ntramite,
 				                                                            'smap1.status'    : '5',//Vo.Bo.Medico
 				                                                            'smap1.comments'  : Ext.getCmp('inputTextareaCommentsToMCFromMedico').getValue(),
 				                                                            'smap1.swagente'  : _fieldById('SWAGENTE').getGroupValue()
@@ -913,7 +911,7 @@ Ext.onReady(function()
                                                ,items       :
                                                [
                                                    {
-                                                       id     : 'inputTextareaCommentsToMCFromMedico',
+                                                       itemId : 'inputTextareaCommentsToMCFromMedico',
                                                        width  : 570,
                                                        height : 300,
                                                        xtype  : 'textarea'
@@ -957,10 +955,10 @@ Ext.onReady(function()
                                                                window.setLoading(true);
                                                                form.submit({
                                                                    params:{
-                                                                       'map1.pv_cdunieco' :  inputCdunieco,
-                                                                       'map1.pv_cdramo'   :  inputCdramo,
-                                                                       'map1.pv_estado'   :  inputEstado,
-                                                                       'map1.pv_nmpoliza' :  inputNmpoliza
+                                                                       'map1.pv_cdunieco' :  panDatComMap1.cdunieco,
+                                                                       'map1.pv_cdramo'   :  panDatComMap1.cdramo,
+                                                                       'map1.pv_estado'   :  panDatComMap1.estado,
+                                                                       'map1.pv_nmpoliza' :  panDatComMap1.nmpoliza
                                                                    },
                                                                    success:function(){
                                                                        Ext.Ajax.request
@@ -968,7 +966,7 @@ Ext.onReady(function()
                                                                            url     : datComUrlMCUpdateStatus
                                                                            ,params : 
                                                                            {
-                                                                               'smap1.ntramite'  : inputNtramite,
+                                                                               'smap1.ntramite'  : panDatComMap1.ntramite,
                                                                                'smap1.status'    : '6',
                                                                                'smap1.comments'  : Ext.getCmp('inputTextareaCommentsToMCFromMedico').getValue(),
                                                                                'smap1.swagente'  : _fieldById('SWAGENTE').getGroupValue() 
@@ -1047,224 +1045,6 @@ Ext.onReady(function()
                                                });
                                          }
                                    }
-                               },
-	                        {
-                                   text     : 'Rechazar'
-                                   ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                                   ,hidden  : ((!sesionDsrol)||(sesionDsrol!='SUSCRIPTOR'&&sesionDsrol!='MEDICO'))//||!Ext.isEmpty(panDatComFlujo)
-                                   ,handler:function()
-                                   {
-                                       var form=Ext.getCmp('formPanel');
-                                       var idClausula;                                       
-                                       if(sesionDsrol=='MEDICO'){
-                                       	descripcion = 'CARTA RECHAZO MEDICO';
-                                       }else{
-                                       	descripcion ='CARTA RECHAZO ADMINISTRATIVA';
-                                       }
-                                       //Obtengo el valor del ID para obtener el valor de la descripcion
-                                       Ext.Ajax.request(
-                          				{
-                          				    url     : _URL_CONSULTA_CLAUSU
-                          				    ,params : 
-                          				    {
-                          						'params.cdclausu' : null,
-											'params.dsclausu' : descripcion
-                          				    }
-                          				    ,success : function (response)
-                          				    {
-                          				    	var json=Ext.decode(response.responseText);
-                          				    	var claveClausula = json.listaGenerica[0].key;
-                                               
-                          				    	Ext.Ajax.request(
-       										{
-       										    url     : _URL_CONSULTA_CLAUSU_DETALLE
-       										    ,params : 
-       										    {
-       										        'params.cdclausu'  : claveClausula
-       										    }
-       										    ,success : function (response)
-       										    {
-       										    	var json=Ext.decode(response.responseText);
-       										    	txtContenido =json.msgResult;
-       										    	
-       										    	Ext.create('Ext.window.Window',
-  		                                                {
-  		                                                    title       : 'Guardar detalle',
-  		                                                    width       : 600,
-  		                                                    height      : 430,
-  		                                                    buttonAlign : 'center',
-  		                                                    modal       : true,
-  		                                                    closable    : false,
-  		                                                    autoScroll  : true,
-  		                                                    items       :
-  		                                                    [
-  		                                                        Ext.create('Ext.form.field.TextArea', {
-  		                                                            id     : 'inputTextareaCommentsToRechazo',
-  		                                                            width  : 570,
-  		                                                            height : 200,
-  		                                                            value  : txtContenido
-  		                                                        }),
-  		                                                     	Ext.create('Ext.form.field.TextArea', {
-	                                                            id     : 'inputTextareaComments',
-	                                                            width  : 570,
-	                                                            height : 100
-	                                                        })
-	                                                        ,{
-												                xtype      : 'radiogroup',
-												                fieldLabel : 'Mostrar al agente',
-												                columns    : 2,
-												                width      : 250,
-												                style      : 'margin:5px;',
-												                hidden     : _GLOBAL_CDSISROL===RolSistema.Agente,
-												                items      :
-												                [
-												                    {
-												                        boxLabel   : 'Si',
-												                        itemId     : 'SWAGENTE',
-												                        name       : 'SWAGENTE',
-												                        inputValue : 'S',
-												                        checked    : _GLOBAL_CDSISROL===RolSistema.Agente
-												                    }
-												                    ,{
-												                        boxLabel   : 'No',
-												                        name       : 'SWAGENTE',
-												                        inputValue : 'N',
-                                                                           checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
-												                    }
-												                ]
-												            }
-  		                                                    ]
-  		                                                    ,buttons    :
-  		                                                    [
-  		                                                        {
-  		                                                            text    : 'Rechazar',
-  		                                                            icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
-  		                                                            handler : function()
-  		                                                            {
-  		                                                                if(true||form.isValid())
-  		                                                                {
-  		                                                                    var window=this.up().up();
-  		                                                                    window.setLoading(true);
-  		                                                                    
-                                                                           Ext.Ajax.request
-                                                                           ({
-                                                                               url     : datComUrlMCUpdateStatus
-                                                                               ,params : 
-                                                                               {
-                                                                                   'smap1.ntramite' : inputNtramite,
-                                                                                   'smap1.status'  : '4',//rechazado
-                                                                                   'smap1.comments' : Ext.getCmp('inputTextareaComments').getValue(),
-                                                                                   'smap1.swagente' : _fieldById('SWAGENTE').getGroupValue()
-                                                                               }
-                                                                               ,success : function(response)
-                                                                               {
-                                                                                   var json=Ext.decode(response.responseText);
-                                                                                   if(json.success==true)
-                                                                                   {
-                                                                                       Ext.Ajax.request(
-                                                                                       {
-                                                                                           url     : compleUrlGuardarCartoRechazo,
-                                                                                        	method  : 'GET',
-                                                                                           params  :
-                                                                                           {
-                                                                                               'map1.ntramite' : inputNtramite,
-                                                                                               'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue(),
-                                                                                               'map1.cdsisrol' : sesionDsrol,
-                                                                                               'map1.cdunieco' : inputCdunieco,
-                                                                                               'map1.cdramo'   : inputCdramo,
-                                                                                               'map1.estado'   : inputEstado,
-                                                                                               'map1.nmpoliza' : inputNmpoliza
-                                                                                           }
-	                                                                                    ,success : function(response)
-   		                                                                                {
-	                                                                                    	Ext.create('Ext.form.Panel').submit
-	                                                                                        ({
-	                                                                                            url            : datComUrlMC,
-	                                                                                            standardSubmit : true,
-	                                                                                            params         :
-	                                                                                            {
-	                                                                                                'smap1.gridTitle'		: 'Tareas',
-	                                                                                                'smap2.pv_cdtiptra_i'	: 1,
-	                                                                                                'smap1.editable'		: 1
-	                                                                                            }
-	                                                                                        });
-   		                                                                                }
-		                                                                                 ,failure : function()
-		                                                                                {
-		                                                                                    Ext.Msg.show({
-		                                                                                        title	: 'Error',
-		                                                                                        msg		: 'Error de comunicaci&oacute;n',
-		                                                                                        buttons	: Ext.Msg.OK,
-		                                                                                        icon	: Ext.Msg.ERROR
-		                                                                                    });
-		                                                                                }
-                                                                                       });
-                                                                                   }else{
-                                                                                       window.setLoading(false);
-                                                                                       Ext.Msg.show({
-                                                                                           title	: 'Error',
-                                                                                           msg		: 'Error al rechazar',
-                                                                                           buttons	: Ext.Msg.OK,
-                                                                                           icon	: Ext.Msg.ERROR
-                                                                                       });
-                                                                                   }
-                                                                               }
-                                                                               ,failure : function()
-                                                                               {
-                                                                                   Ext.Msg.show({
-                                                                                       title	: 'Error',
-                                                                                       msg		: 'Error de comunicaci&oacute;n',
-                                                                                       buttons	: Ext.Msg.OK,
-                                                                                       icon	: Ext.Msg.ERROR
-                                                                                   });
-                                                                               }
-                                                                           });
-  		                                                                }
-  		                                                                else
-  		                                                                {
-  		                                                                    Ext.Msg.show({
-  		                                                                        title	: 'Datos incompletos',
-  		                                                                        msg		: 'Favor de introducir todos los campos requeridos',
-  		                                                                        buttons	: Ext.Msg.OK,
-  		                                                                        icon	: Ext.Msg.WARNING
-  		                                                                    });
-  		                                                                }
-  		                                                            }
-  		                                                        }
-  		                                                        ,{
-  		                                                            text  	: 'Cancelar',
-  		                                                            icon 	: '${ctx}/resources/fam3icons/icons/cancel.png',
-  		                                                            handler : function()
-  		                                                            {
-  		                                                                this.up().up().destroy();
-  		                                                            }
-  		                                                        }
-  		                                                    ]
-  		                                                }).show();
-       										    },
-       										    failure : function ()
-       										    {
-       										        Ext.Msg.show({
-       										            title	: 'Error',
-       										            msg		: 'Error de comunicaci&oacute;n',
-       										            buttons	: Ext.Msg.OK,
-       										            icon	: Ext.Msg.ERROR
-       										        });
-       										    }
-       										});
-                          				    },
-                          				    failure : function ()
-                          				    {
-                          				        Ext.Msg.show({
-                          				            title	: 'Error',
-                          				            msg		: 'Error de comunicaci&oacute;n',
-                          				            buttons	: Ext.Msg.OK,
-                          				            icon	: Ext.Msg.ERROR
-                          				        });
-                          				    }
-                          				});
-
-                                   }
                                }				                	 
 		            		]
 					})
@@ -1272,6 +1052,592 @@ Ext.onReady(function()
 			})
 		]
     });    
+    
+    panDatComVentanaTarifaFinal = Ext.create('Ext.window.Window',{
+        title: 'Tarifa final',
+    	itemId: 'panDatComVentanaTarifaFinal',
+    	autoScroll:true,
+    	width: 660,
+    	height: 400,
+    	defaults: {
+    		width: 650
+    	},
+    	modal:false,
+    	closable:false,
+    	collapsible:true,
+    	titleCollapse:true,
+    	items:[  // Let's put an empty grid in just to illustrate fit layout
+    		Ext.create('Ext.grid.Panel',{
+    		width : 600
+    			,store:Ext.create('Ext.data.Store',{
+    				model:'ModeloDetalleCotizacion',
+    				groupField: 'orden_parentesco',
+    				sorters: [{
+    					sorterFn: function(o1, o2){
+    						if (o1.get('orden') === o2.get('orden'))
+    						{
+    							return 0;
+    						}
+    						return o1.get('orden') < o2.get('orden') ? -1 : 1;
+    					}
+    				}],
+    				proxy: {
+    					type: 'memory',
+    					reader: 'json'
+    				}//,
+    				//data:json.slist1
+    			}),
+    			columns:
+    			[
+    				{
+    					header    : 'Nombre de la cobertura',
+    					dataIndex : 'Nombre_garantia',
+    					flex      : 2,
+    					summaryType: 'count',
+    					summaryRenderer: function(value){
+    						return Ext.String.format('Total de {0} cobertura{1}', value, value !== 1 ? 's' : '');
+    					}
+    				},
+    				{
+    					header      : 'Importe por cobertura',
+    					dataIndex   : 'Importe',
+    					flex        : 1,
+    					renderer    : Ext.util.Format.usMoney,
+    					align       : 'right',
+    					summaryType : 'sum'
+    				}
+    			],
+    			features: [{
+    				groupHeaderTpl:
+    					[
+    						'{name:this.formatName}',
+    						{
+    							formatName:function(name)
+    							{
+    								return name.split("_")[1];
+    							}
+    						}
+    					],
+    				ftype:'groupingsummary',
+    				startCollapsed :true
+    			}]
+    		})
+    		,Ext.create('Ext.toolbar.Toolbar',{
+    			buttonAlign:'right'
+    			,items:
+    			[
+    				'->'
+    				,Ext.create('Ext.form.Label',
+    				{
+    					style:'color:white;'
+    					,initComponent:function()
+    					{
+    						var sum=0;
+    						/* for(var i=0;i<json.slist1.length;i++)
+    						{
+    							sum+=parseFloat(json.slist1[i].Importe);
+    						} */
+    						this.setText('Total: '+Ext.util.Format.usMoney(sum));
+    						this.callParent();
+    					}
+    				})
+    			]
+    		})
+    		,Ext.create('Ext.form.Panel',
+    		{
+    			layout:
+    			{
+    				type    : 'table',
+    				columns : 5
+    			}
+    			,defaults:
+    			{
+    				style : 'margin:5px;'
+    			}
+    			,items:
+    			[
+    				{
+    					xtype : 'textfield'
+    					,id   : 'numerofinalpoliza'
+    					,fieldLabel : 'N&uacute;mero de poliza'
+    					,readOnly   : true
+    				}
+    				,{
+    					id      : 'botonEmitirPolizaFinal'
+    					,xtype  : 'button'
+    					,text   : 'Emitir'
+    					,hidden : panDatComMap1.SITUACION !== 'AUTO' && ('SUSCRIPTOR' !== sesionDsrol)
+    					,icon   : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
+    					,handler:function()
+    					{
+    						var me=this;
+    						me.up().up().setLoading(true);
+    						Ext.Ajax.request(
+    						{
+    							url     : urlEmitir
+    							,params :
+    							{
+    								'panel1.pv_nmpoliza'  : panDatComMap1.nmpoliza
+    								,'panel1.pv_ntramite' : panDatComMap1.ntramite
+    								,'panel2.pv_cdramo'   : panDatComMap1.cdramo
+    								,'panel2.pv_cdunieco' : panDatComMap1.cdunieco
+    								,'panel2.pv_estado'   : panDatComMap1.estado
+    								,'panel2.pv_nmpoliza' : panDatComMap1.nmpoliza
+    								,'panel2.pv_cdtipsit' : panDatComMap1.cdtipsit
+    							}
+    							,success:function(response)
+    							{
+    								me.up().up().setLoading(false);
+    								//var json = Ext.decode(response.responseText);
+    								//debug(json);
+    								//if(json.success==true)
+    								//{
+    									//datComPolizaMaestra=json.panel2.nmpoliza;
+    									//debug("datComPolizaMaestra",datComPolizaMaestra);
+    									//_numeroPolizaExt = json.panel2.nmpoliex;
+    									/*if(json.retryRec){
+    										
+    										Ext.getCmp('botonEmitirPolizaFinal').hide();
+    										Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
+    										Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
+    										Ext.getCmp('botonPagar').setDisabled(false);
+    										
+    										Ext.Msg.show({
+    											title    :'Aviso'
+    											,msg     : 'Error en la emisi&oacute;n. No se pudo emitir la p&oacute;liza.'
+    											,buttons : Ext.Msg.OK
+    											,icon    : Ext.Msg.WARNING
+    											,fn      : function(){
+    												if(''+json.panel1.necesitaAutorizacion=='S')
+    												{
+    													Ext.create('Ext.form.Panel').submit(
+    													{
+    														url     : datComUrlMC
+    														,params :
+    														{
+    															'smap1.gridTitle'     : 'Tareas',
+    															'smap2.pv_cdtiptra_i' : 1,
+    															'smap1.editable'      : 1
+    														}
+    														,standardSubmit : true
+    													});
+    												}
+    												var paramsWS = {
+    														'panel1.pv_nmpoliza'  : panDatComMap1.nmpoliza
+    														,'panel1.pv_ntramite' : panDatComMap1.ntramite
+    														,'panel2.pv_cdramo'   : panDatComMap1.cdramo
+    														,'panel2.pv_cdunieco' : panDatComMap1.cdunieco
+    														,'panel2.pv_estado'   : panDatComMap1.estado
+    														,'panel2.pv_nmpoliza' : panDatComMap1.nmpoliza
+    														,'panel2.pv_cdtipsit' : panDatComMap1.cdtipsit
+    														,'nmpoliza'           : json.nmpoliza
+    														,'nmsuplem'           : json.nmsuplem
+    														,'cdIdeper'           : json.cdIdeper
+    														,'nmpolAlt'           : json.nmpolAlt
+    														,'sucursalGS'         : json.sucursalGS
+    														,'cdRamoGS'           : json.cdRamoGS
+    														,'retryRec'           : json.retryRec
+    													};
+    												reintentarWSAuto(me.up().up(), paramsWS);
+    											}
+    										});
+    										return;
+    									}*/
+    									
+    									/*Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
+    									
+    									Ext.getCmp('botonEmitirPolizaFinal').hide();
+    									Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
+    									Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
+    									Ext.getCmp('botonPagar').setDisabled(false);
+    									
+    									Ext.getCmp('botonReenvioWS').hide();
+    									
+    									if(panDatComMap1.SITUACION == 'AUTO'){
+    										_mensajeEmail = json.mensajeEmail;
+    										//debug("Mensaje Mail: " + _mensajeEmail);
+    										Ext.getCmp('botonEnvioEmail').enable();
+    									}else {
+    										Ext.getCmp('botonEnvioEmail').hide();
+    									}
+    									
+    									if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
+    									{
+    										Ext.getCmp('venDocVenEmiBotIrCotiza').show();
+    									}
+    									Ext.getCmp('venDocVenEmiBotMesa').show();
+    									Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);*/
+    									/*if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
+    									{
+    										var ventanaTmp = Ext.Msg.show({
+    											title:'Aviso del sistema',
+    											msg: json.mensajeRespuesta,
+    											buttons: Ext.Msg.OK,
+    											icon: Ext.Msg.WARNING,
+    											fn: function(){
+    												if(!Ext.isEmpty(json.nmpolAlt)){
+    													mensajeCorrecto("Aviso","P&oacute;liza Emitida: " + json.nmpolAlt);
+    												}
+    											}
+    										});
+    										centrarVentanaInterna(ventanaTmp);
+    									}else { 
+    										if(!Ext.isEmpty(json.nmpolAlt)){
+    											mensajeCorrecto("Aviso","P&oacute;liza Emitida: " + json.nmpolAlt);
+    										}
+    									}*/
+    								//}
+    								//else
+    								//{
+    									/*if(json.retryWS){
+    										datComPolizaMaestra=json.panel2.nmpoliza;
+    										debug("datComPolizaMaestra",datComPolizaMaestra);
+    										
+    										Ext.getCmp('botonEmitirPolizaFinal').hide();
+    										Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
+    										
+    										if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
+    										{
+    											Ext.getCmp('venDocVenEmiBotIrCotiza').show();
+    										}
+    										Ext.getCmp('venDocVenEmiBotMesa').show();
+    										Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
+    									}*/
+    									/*Ext.Msg.show({
+    										title    :'Aviso'
+    										,msg     : json.mensajeRespuesta
+    										,buttons : Ext.Msg.OK
+    										,icon    : Ext.Msg.WARNING
+    										,fn      : function(){
+    											if(''+json.panel1.necesitaAutorizacion=='S')
+    											{
+    												Ext.create('Ext.form.Panel').submit(
+    												{
+    													url     : datComUrlMC
+    													,params :
+    													{
+    														'smap1.gridTitle'     : 'Tareas',
+    														'smap2.pv_cdtiptra_i' : 1,
+    														'smap1.editable'      : 1
+    													}
+    													,standardSubmit : true
+    												});
+    											}
+    											if(json.retryWS){
+    												var paramsWS = {
+    														'panel1.pv_nmpoliza'  : panDatComMap1.nmpoliza
+    														,'panel1.pv_ntramite' : panDatComMap1.ntramite
+    														,'panel2.pv_cdramo'   : panDatComMap1.cdramo
+    														,'panel2.pv_cdunieco' : panDatComMap1.cdunieco
+    														,'panel2.pv_estado'   : panDatComMap1.estado
+    														,'panel2.pv_nmpoliza' : panDatComMap1.nmpoliza
+    														,'panel2.pv_cdtipsit' : panDatComMap1.cdtipsit
+    														,'nmpoliza'           : json.nmpoliza
+    														,'nmsuplem'           : json.nmsuplem
+    														,'cdIdeper'           : json.cdIdeper
+    													};
+    												reintentarWSAuto(me.up().up(), paramsWS);
+    											}
+    										}
+    									});*/
+    								//}
+    							}
+    							,failure:function()
+    							{
+    								me.up().up().setLoading(false);
+    								Ext.Msg.show({
+    									title:'Error',
+    									msg: 'Error de comunicaci&oacute;n',
+    									buttons: Ext.Msg.OK,
+    									icon: Ext.Msg.ERROR
+    								});
+    							}
+    						});
+    					}
+    				}
+    				,{
+    					id     : 'botonEnvioEmail'
+    					,xtype : 'button'
+    					,text  : 'Enviar Email'
+    					,icon  : contexto+'/resources/fam3icons/icons/email.png'
+    					,disabled: true
+    					,hidden: (panDatComMap1.SITUACION != 'AUTO') ? true: false
+    					/* ,handler:function()
+    					{
+    						Ext.Msg.prompt('Envio de Email', 'Escriba los correos que recibir&aacute;n la documentaci&oacute;n (separados por ;)', 
+    						function(buttonId, text){
+    							if(buttonId == "ok" && !Ext.isEmpty(text)){
+    								
+    								if(Ext.isEmpty(_mensajeEmail)){
+    									mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
+    									return;
+    								}
+    								
+    								Ext.Ajax.request(
+    										{
+    											url : _urlEnviarCorreo,
+    											params :
+    											{
+    												to     : text,
+    												asunto : 'Documentación de póliza de Autos',
+    												mensaje: _mensajeEmail,
+    												html   : true
+    											},
+    											callback : function(options,success,response)
+    											{
+    												if (success)
+    												{
+    													var json = Ext.decode(response.responseText);
+    													if (json.success == true)
+    													{
+    														Ext.Msg.show(
+    														{
+    															title    : 'Correo enviado'
+    															,msg     : 'El correo ha sido enviado'
+    															,buttons : Ext.Msg.OK
+    															,fn      : function()
+    															{
+    																_generarRemesaClic(
+    																	false
+    																	,panDatComMap1.cdunieco
+    																	,panDatComMap1.cdramo
+    																	,'M'
+    																	,datComPolizaMaestra
+    																	,function(){}
+    																	,'S'
+    																	);
+    															}
+    														});
+    													}
+    													else
+    													{
+    														mensajeError('Error al enviar el correo');
+    													}
+    												}
+    												else
+    												{
+    													errorComunicacion();
+    												}
+    											}
+    										});
+    							
+    							}else {
+    								mensajeWarning('Introduzca al menos una direcci&oacute;n de email');    
+    							}
+    						})
+    					} */
+    				}
+    				,{
+    					id     : 'botonReenvioWS'
+    					,xtype : 'button'
+    					,text  : 'Reintentar Emisi&oacute;n'
+    					,icon  : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
+    					,disabled: true
+    					,hidden: (panDatComMap1.SITUACION != 'AUTO') ? true: false
+    					,handler:function()
+    					{
+    						var me=this;
+    						reintentarWSAuto(me.up().up(), _paramsRetryWS);
+    					}
+    				}
+    				,{
+    					xtype    : 'button'
+    					,id      : 'botonEmitirPolizaFinalPreview'
+    					,text    : 'Vista previa'
+    					,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+    					,hidden  : panDatComMap1.cdramo=='6'
+    					,handler : function()
+    					{
+    						var me=this;
+    						var urlRequestImpCotiza=urlServidorReports
+    						+'?destype=cache'
+    						+"&desformat=PDF"
+    						+"&report="+_NOMBRE_REPORTE_CARATULA
+    						+"&paramform=no"
+    						+"&userid="+complerepSrvUsr
+    						+"&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+    						+'&p_unieco='+panDatComMap1.cdunieco
+    						+'&p_estado=W'
+    						+'&p_ramo='+
+    						+'&p_poliza='+panDatComMap1.nmpoliza
+    						debug(urlRequestImpCotiza);
+    						var numRand=Math.floor((Math.random()*100000)+1);
+    						debug(numRand);
+    						var windowVerDocu=Ext.create('Ext.window.Window',
+    						{
+    							title          : 'Vista previa'
+    							,width         : 700
+    							,height        : 500
+    							,collapsible   : true
+    							,titleCollapse : true
+    							,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+    											 +'src="'+compleUrlViewDoc+"?contentType=application/pdf&url="+encodeURIComponent(urlRequestImpCotiza)+"\">"
+    											 +'</iframe>'
+    							,listeners     :
+    							{
+    								resize : function(win,width,height,opt){
+    									debug(width,height);
+    									$('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+    								}
+    							}
+    						}).show();
+    						windowVerDocu.center();
+    					}
+    				}
+    				,{
+    					xtype     : 'button'
+    					,id       : 'botonImprimirPolizaFinal'
+    					,text     : 'Imprimir'
+    					,icon     : contexto+'/resources/fam3icons/icons/printer.png'
+    					,disabled : true
+    					,handler  : function(me)
+    					{
+    						var callbackRemesa = function()
+    						{
+    							try
+    							{
+    								_fieldById('IdvenDocuTramite', true).destroy();
+    							}
+    							catch(e){
+    								debugError(e, 'venDocuTramite');
+    							}
+    							
+    							Ext.create('Ext.window.Window',
+    							{
+    								title        : 'Documentos del tr&aacute;mite '+panDatComMap1.ntramite
+    								,modal       : true
+    								,buttonAlign : 'center'
+    								,width       : 600
+    								,height      : 400
+    								,autoScroll  : true
+    								,cls         : 'VENTANA_DOCUMENTOS_CLASS'
+    								,loader      :
+    								{
+    									url       : panDatComUrlDoc2
+    									,params   :
+    									{
+    										'smap1.nmpoliza'  : datComPolizaMaestra
+    										,'smap1.cdunieco' : panDatComMap1.cdunieco
+    										,'smap1.cdramo'   : panDatComMap1.cdramo
+    										,'smap1.estado'   : 'M'
+    										,'smap1.nmsuplem' : '0'
+    										,'smap1.ntramite' : panDatComMap1.ntramite
+    										,'smap1.nmsolici' : panDatComMap1.nmpoliza
+    										,'smap1.tipomov'  : '0'
+    									}
+    									,scripts  : true
+    									,autoLoad : true
+    								}
+    							}).show();
+    						};
+    						_generarRemesaClic(
+    							false
+    							,panDatComMap1.cdunieco
+    							,panDatComMap1.cdramo
+    							,'M'
+    							,datComPolizaMaestra
+    							,callbackRemesa
+    							);
+    					}
+    				}
+    				,{
+    					xtype     : 'button'
+    					,id       : 'botonPagar'
+    					,text     : 'Pagar'
+    					,icon     : contexto+'/resources/fam3icons/icons/money.png'
+    					,disabled : true
+    					,hidden  : true//TODO: Reemplazar obtDatLoaderContratante por obtieneDatosClienteContratante //inputCdramo!='2'
+    					,handler  : function()
+    					{
+    						if(Ext.isEmpty(_numeroPolizaExt)){
+    							mensajeWarning('Error al cargar el n&uacute;mero de p&oacute;liza.');
+    							return;
+    						}
+    							
+    						var nombreCompCont = '';
+    						try{
+    							var datosCont = obtDatLoaderContratante();
+    							debug(datosCont);
+    							nombreCompCont = datosCont.nombre +" "+ datosCont.snombre +" "+ datosCont.appat +" "+ datosCont.apmat;
+    						}
+    						catch(e){
+    							debug('Sin datos de contratante.');
+    							nombreCompCont = '';
+    						}
+    						
+    						var IDventana = window.open("http://www.biosnettcs.com/", "IDventana", "width=610,height=725,top=0,left=190");
+    							var parametrosPago = {
+    									'etiqueta': 'USERADM1',
+    									'etiquetaSys': 'lorant',
+    									'mensajeExito': '16168',
+    									'asegPago' : '906',//qualitas
+    									'contratante' : nombreCompCont,//qualitas
+    									'polext' : _numeroPolizaExt
+    							};
+    							
+    							creaWindowPay("http://www.ibseguros.com/securepayment/Validate.action", parametrosPago, "IDventana");
+    					}
+    				}
+    				,{
+    					xtype    : 'button'
+    					,id      : 'venDocVenEmiBotMesa'
+    					,text    : 'Regresar a mesa de control'
+    					,icon    : '${ctx}/resources/fam3icons/icons/house.png'
+    					//,hidden  : panDatComMap1.SITUACION=='AUTO'
+    					,handler : function()
+    					{
+    						var me=this;
+    						Ext.create('Ext.form.Panel').submit(
+    						{
+    							standardSubmit : true
+    							,url           : datComUrlMC
+    							,params        :
+    							{
+    								'smap1.gridTitle':'Tareas',
+    								'smap2.pv_cdtiptra_i':1,
+    								'smap1.editable':1
+    							}
+    						});
+    					}
+    				}
+    				,{
+    					xtype    : 'button'
+    					,id      : 'venDocVenEmiBotIrCotiza'
+    					,text    : 'Nueva cotizaci&oacute;n'
+    					,icon    : '${ctx}/resources/fam3icons/icons/book_open.png'
+    					,hidden  : panDatComMap1.SITUACION!='AUTO'
+    					,handler : function()
+    					{
+    						var me=this;
+    						Ext.create('Ext.form.Panel').submit(
+    						{
+    							standardSubmit : true
+    							,url           : compleUrlCotizacion
+    							,params        :
+    							{
+    								'smap1.cdramo'    : panDatComMap1.cdramo
+    								,'smap1.cdtipsit' : panDatComMap1.cdtipsit
+    							}
+    						});
+    					}
+    				}
+    				,{
+    					xtype    : 'button'
+    					,id      : 'venDocVenEmiBotCancelar'
+    					,text    : 'Cancelar'
+    					,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+    					,handler : function()
+    					{
+    						var me=this;
+    						me.up().up().destroy();
+    					}
+    				}
+    			]
+    		})
+    	]
+    });
+
+                         
     ////// componentes //////
     
     ////// contenido //////
@@ -1635,16 +2001,8 @@ function _p25_renovarPolizaClic(button,e)
 {
     debug('>_p25_renovarPolizaClic');
     var pol = _fieldById('_p25_poliza').store.data.items[0].raw;
-    if(pol['renovada'] == 'NO'){
-    	/*var form = _fieldById('_p25_busquedaForm');
-    	if(_fieldByName('tipo',form).getValue() == 'AS'){
-    		var resRenova = { nmtramite : '25231', cdperson : '501321'};
-    		_p25_ventanaAutoServicio(resRenova);
-    	}
-    	else{
-    		_p25_ventanaServicioAsistido();
-    	}*/
-    	//else{
+    debug('pol',pol);
+    if(pol['renovada'] == 'NO'){    	
     		_mask('Renovando poliza');
     		Ext.Ajax.request(
     		{
@@ -1654,38 +2012,49 @@ function _p25_renovarPolizaClic(button,e)
         			'params.cdunieco'  : pol['cdunieco'],
         			'params.cdramo'    : pol['cdramo'],
         			'params.estado'    : 'M',
-        			'params.nmpoliza'  : pol['nmpoliza']
+        			'params.nmpoliza'  : pol['nmpoliza'],
+        			'params.feefecto'  : pol['feefecto'],
+        			'params.feproren'  : pol['feproren'],
+        			'params.cdmoneda'  : pol['cdmoneda'],
+        			'params.estadoNew' : 'W'
         		},
         		success  : function(response)
         		{
+                	_unmask();
             		var resp = Ext.decode(response.responseText);
-            		//debug("resp ",resp.slist1[0]['ntramite']);
-            		var ntramite = resp.slist1[0]['ntramite'];
-            		debug('resp',ntramite);
-            		if(!Ext.isEmpty(ntramite))
-            		{
-                		_unmask();
-                		mensajeCorrecto('Proceso completo','Se creo el tramite '+ntramite);
-                		var form = _fieldById('_p25_busquedaForm');
-                    	if(_fieldByName('tipo',form).getValue() == 'AS'){
-                    		var resRenova = resp.slist1[0];//{ nmtramite : '25231', cdperson : '501321'};
-                    		_p25_ventanaAutoServicio(resRenova);
-                    	}
-                    	else{
-                    		_p25_ventanaServicioAsistido();
-                    	}
-                		_fieldById('_p25_contratante').hide();
-  						_fieldById('_p25_poliza').hide();
-  						_fieldById('_p25_grid').hide();
+            		debug('resp',resp);
+            		if(resp.exito){
+	            		var ntramite = resp.slist1[0]['ntramite'];
+	            		debug('resp',ntramite);
+	            		debug('pol',pol);
+	            		if(!Ext.isEmpty(ntramite))
+	            		{
+	                		var form = _fieldById('_p25_busquedaForm');
+	                    	if(_fieldByName('tipo',form).getValue() == 'AS'){
+	                    		var resRenova = resp.slist1[0];
+	                    		resRenova['feefecto_ant'] = pol['feefecto'];
+	                    		resRenova['cdmoneda'] 	  = pol['cdmoneda'];
+	                    		_p25_ventanaAutoServicio(resRenova);
+	                    	}
+	                    	else{
+	                    		_p25_ventanaServicioAsistido();
+	                    	}
+	                		_fieldById('_p25_contratante').hide();
+	  						_fieldById('_p25_poliza').hide();
+	  						_fieldById('_p25_grid').hide();
+	            		}
+	            		else
+	            		{
+	                		mensajeError(resp.respuesta);
+	            		}
             		}
-            		else
-            		{
-            			_unmask();
-                		mensajeError(resp.respuesta);
+            		else{
+            			mensajeError(resp.respuesta);
             		}
         		},
         		failure  : function()
         		{
+        			_unmask();
             		errorComunicacion();
         		}
     		});
@@ -1793,8 +2162,10 @@ function _p25_limpiarFiltros(button,e)
 function _p25_ventanaAutoServicio(resRenova){
 	debug('>_p25_ventanaAutoServicio');
 	debug(resRenova);
+	winAutoServicio.resRenova = resRenova;
+	var dsTramite = _fieldById('dsTramite');
+	dsTramite.setValue('Se creo el tramite '+ resRenova['ntramite']);
 	winAutoServicio.show();
-	winAutoServicio.resRenova = resRenova;	
 	debug('<_p25_ventanaAutoServicio');
 }
 
@@ -1806,34 +2177,109 @@ function _p25_ventanaServicioAsistido(){
 
 function _p25_ventanaCambioFormaPago(resRenova){
 	debug('>_p25_ventanaCambioFormaPago');
-	//winCambioPago.show();
-	_fieldById('winCambioPago').resRenova = resRenova;
-	wineditarContratante.show();
-	alert(resRenova['cdperson']);
-	_fieldById('_p25_clientePanel').getLoader().load({params : { 'smap1.cdperson' : resRenova['cdperson']}});
-	//_fieldById('_p25_clientePanel').getLoader().load();	
+	Ext.Ajax.request({
+		url     : _p25_urlObtenerItemsTvalopol
+		,params : 
+		{
+			'params.cdramo'  : resRenova['cdramo'],
+			'params.cdtipsit': resRenova['cdtipsit']
+		}
+		,success : function(response){
+			var resp = Ext.decode(response.responseText);
+			debug('resp',resp);
+			if(!Ext.isEmpty(resp.params.items)){
+				var items = Ext.decode(resp.params.items);
+				var panelDatosAdicionales = _fieldById('panelDatosAdicionales');
+				panelDatosAdicionales.removeAll();
+				panelDatosAdicionales.add(items);
+				_fieldById('winCambioPago').resRenova = resRenova;
+				wineditarContratante.show();
+				_p25_cargarValoresComplementarios(resRenova);
+			}
+			else{
+				mensajeError('No se pudieron obtener los atributos variables de poliza');
+			}
+		}
+		,failure : function(){
+				window.setLoading(false);
+				Ext.Msg.show({
+					title	: 'Error',
+					msg		: 'Error de comunicaci&oacute;n',
+					buttons	: Ext.Msg.OK,
+					icon	: Ext.Msg.ERROR
+				});
+		}
+	});
+	
 	debug('<_p25_ventanaCambioFormaPago');
 }
 
-function _p25_ventanaCambioDomicilio(){
-	debug('>_p25_ventanaCambioDomicilio');
-    winCambioDomicilio.show();
-	debug('<_p25_ventanaCambioDomicilio');
+function _p25_loaderContratante(cdperson){
+	debug('>_p25_loaderContratante ',cdperson);
+	//_fieldById('_p25_clientePanel')
+	_p25_clientePanel.getLoader().load({params : { 'smap1.cdperson' : cdperson}});
+	debug('<_p25_loaderContratante');
 }
 
-function _p29_guardarComplementario(callback){
-	debug('>_p29_guardarComplementario');
+
+function _p29_actualizarCotizacion(callback){
+	debug('>_p29_actualizarCotizacion');
+	var panelDatosPoliza 	  = _fieldById('panelDatosPoliza');
+	var panelDatosAdicionales = _fieldById('panelDatosAdicionales');
+	var mapUpdate 	  		  = {};
 	
+	for(var i = 0; i < panelDatosPoliza.items.items.length; i++){
+		var item = panelDatosPoliza.items.items[i];
+		mapUpdate['params.'+item.name] = item.value;
+	}
+	
+	for(var i = 0; i < panelDatosAdicionales.items.items.length; i++){
+		var item = panelDatosAdicionales.items.items[i];
+		mapUpdate['params.'+item.name.replace('parametros.','')] = item.value;
+	}
+	
+	var panelDatos = _fieldById('panelDatos');
+	mapUpdate['params.cdunieco'] 	 = wineditarContratante.resRenova['cdunieco'];
+	mapUpdate['params.cdramo']		 = wineditarContratante.resRenova['cdramo'];
+	mapUpdate['params.nmsuplem']	 = wineditarContratante.resRenova['nmsuplem'];
+	mapUpdate['params.cdtipsit']	 = wineditarContratante.resRenova['cdtipsit'];
+	mapUpdate['params.feefecto_ant'] = wineditarContratante.resRenova['feefecto_ant'];
+	mapUpdate['params.cdagente'] 	 = wineditarContratante.resRenova['cdagente'];
+	mapUpdate['params.cdmoneda'] 	 = wineditarContratante.resRenova['cdmoneda'];
+	mapUpdate['params.cdcontra'] 	 = wineditarContratante.resRenova['cdpersoncon'];	
+	_mask("Actualizando valores");	
+	Ext.Ajax.request(
+   		{
+       		url      : _p25_urlActualizaValoresCotizacion,
+       		params   : mapUpdate,
+       		success  : function(response)
+       		{
+           		var resp = Ext.decode(response.responseText);
+           		if(resp.success==true)
+                {
+           			mensajeCorrecto('Aviso','Se ha actualizado con exito.');
+           			_unmask();
+                }
+           		else{
+           			mensajeError('Error en la validacion de session');
+           			_unmask();
+           		}
+       		},
+       		failure  : function()
+       		{
+           		errorComunicacion();
+       		}
+   		});
     /*var form=Ext.getCmp('formPanel');
     if(form.isValid())
     {
         form.setLoading(true);
         form.submit({
             params:{
-                'map1.pv_cdunieco' :  inputCdunieco,
-                'map1.pv_cdramo' :    inputCdramo,
-                'map1.pv_estado' :    inputEstado,
-                'map1.pv_nmpoliza' :  inputNmpoliza
+                'map1.pv_cdunieco' :  panDatComMap1.cdunieco,
+                'map1.pv_cdramo' :    panDatComMap1.cdramo,
+                'map1.pv_estado' :    panDatComMap1.estado,
+                'map1.pv_nmpoliza' :  panDatComMap1.nmpoliza
             },
             success:function(){
                 form.setLoading(false);
@@ -1870,8 +2316,186 @@ function _p29_guardarComplementario(callback){
             icon: Ext.Msg.WARNING
         });
     }*/
-    debug('<_p29_guardarComplementario');
+    debug('<_p29_actualizarCotizacion');
 }
+
+function _p25_cargarValoresComplementarios(resRenova){
+	debug('>_p25_cargarValoresComplementarios ',resRenova);
+	var panelDatos 		= _fieldById('panelDatos');
+	for (var i = 0; i < panelDatos.items.items.length; i++){
+		var panel = panelDatos.items.items[i];
+		for (var j = 0; j < panel.items.items.length; j++){
+			var item = panel.items.items[j];
+			var data = resRenova[item.name];
+			if(!Ext.isEmpty(data)){
+				item.setValue(data);
+			}
+		}
+	}
+	var tipoPoliza		= _fieldById('tipoPoliza');
+	var formaPagoPoliza = _fieldById('formaPagoPoliza');
+	tipoPoliza.getStore().load();
+	formaPagoPoliza.getStore().load({params : { 'catalogo' : 'FORMAS_PAGO_POLIZA_POR_RAMO_TIPSIT', 'params.cdramo' : resRenova['cdramo'], 'params.cdtipsit' : resRenova['cdtipsit']}});	
+	debug('<_p25_cargarValoresComplementarios');
+}
+
+_p22_parentCallback = function(json){
+	debug('>_p22_parentCallback',json);
+	wineditarContratante.resRenova['cdpersoncon'] = json.smap1['CDPERSON'];
+	debug('wineditarContratante.resRenova ',wineditarContratante.resRenova);
+	debug('<_p22_parentCallback');
+}
+
+function tarifaFinal(){
+	debug('>tarifaFinal');
+	debug('wineditarContratante',wineditarContratante);
+	_mask('Preparando para confirmar');
+	Ext.Ajax.request({
+        url     : urlRecotizar
+        ,params :
+        {
+            'panel1.nmpoliza'   : wineditarContratante.resRenova['nmpoliza'],
+            cdunieco            : wineditarContratante.resRenova['cdunieco'],
+            cdramo              : wineditarContratante.resRenova['cdramo'],
+            cdtipsit            : wineditarContratante.resRenova['cdtipsit'],
+            'panel1.notarifica' : ( Number(wineditarContratante.resRenova['cdramo'])==16 || Number(wineditarContratante.resRenova['cdramo'])==6 || Number(wineditarContratante.resRenova['cdramo'])==5 ) ? 'si' : '',
+            'panel1.renovacion' : 'S'
+        }
+        ,success : function(response)
+        {
+            _unmask();
+            var json=Ext.decode(response.responseText);
+            debug('json ',json);
+            if(json.exito){
+	            datos = [];
+	            for(var i = 0; i < json.slist1.length; i++){
+	            	datos.push({
+	            	    AGRUPADOR : json.slist1[i]['parentesco'],
+	        			COBERTURA : json.slist1[i]['Nombre_garantia'],
+	        			PRIMA     : json.slist1[i]['Importe']
+	        		});
+	            }
+	            debug('datos ',datos);
+	            Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTarifa');
+				new VentanaTarifa({
+	    			title   : 'TARIFA DEL ENDOSO',
+	    			datos   : datos,
+	    			buttons : [
+	    				{
+	    					xtype     : 'button',
+	    					itemId    : 'botonEmitirPolizaFinal',
+	    					text      : 'Emitir',
+	    					icon      : contexto+'/resources/fam3icons/icons/award_star_gold_3.png',
+	    					handler   : function(){
+	    						_mask('Emitiendo Poliza');
+	    						Ext.Ajax.request({
+	                                url      : _p25_urlConfirmarPolizaIndividual,
+	                                params   : {
+	                                    'params.cdunieco' : wineditarContratante.resRenova['cdunieco'],
+	                                	'params.cdramo'   : wineditarContratante.resRenova['cdramo'],
+	                                	'params.estado'   : wineditarContratante.resRenova['estado'],
+	                                	'params.nmpoliza' : wineditarContratante.resRenova['nmpoliza'],
+	                                	'params.nmsuplem' : wineditarContratante.resRenova['nmsuplem'],
+	                                	'params.ntramite' : wineditarContratante.resRenova['ntramite'],
+	                                    'params.cdperpag' : wineditarContratante.resRenova['cdperpag'],
+	                                	'params.feefecto' : wineditarContratante.resRenova['feefecto']
+	                                },
+	                                success  : function(response){
+	                                	_unmask();
+	                                    var resp = Ext.decode(response.responseText);
+	                                   	var list = resp.slist1;
+	                                	if(resp.success==true && list.length > 0){
+	                                		wineditarContratante.resRenova['nmpolizaNew'] = list[0]['nmpolizaNew'];
+	                                		wineditarContratante.resRenova['nmsuplemNew'] = list[0]['nmsuplemNew'];
+	                                		_fieldById('botonImprimirPolizaFinal').enable();
+	                                	    mensajeCorrecto('Aviso',resp.respuesta);
+	                                	}
+	                                	else{
+	                                		mensajeError(resp.respuesta);
+	                                	}
+	                                },
+	                                failure  : function(){
+	                                	_unmask();
+	                                    errorComunicacion();
+	                                }
+	                            });
+	    					}
+	    				},
+	    				{
+							xtype     : 'button'
+		                    ,itemId   : 'botonImprimirPolizaFinal'
+		                    ,text     : 'Imprimir'
+		                    ,icon     : contexto+'/resources/fam3icons/icons/printer.png'
+		                    ,disabled : true
+		                    ,handler  : function(me){
+		                        debug(wineditarContratante.resRenova);
+		                        var callbackRemesa = function(){
+		                            Ext.create('Ext.window.Window',{
+		                                title       : 'Documentos del tr&aacute;mite '+ wineditarContratante.resRenova['ntramite'],
+		                                modal       : true,
+		                                buttonAlign : 'center',
+		                                width       : 600,
+		                                height      : 400,
+		                                autoScroll  : true,
+		                                cls         : 'VENTANA_DOCUMENTOS_CLASS',
+		                                loader      : {
+		                                    url       : panDatComUrlDoc2
+		                                    ,params   : {
+		                                        'smap1.nmpoliza' : wineditarContratante.resRenova['nmpolizaNew'],
+		                                        'smap1.cdunieco' : wineditarContratante.resRenova['cdunieco'],
+		                                        'smap1.cdramo'   : wineditarContratante.resRenova['cdramo'],
+		                                        'smap1.estado'   : 'M',
+		                                        'smap1.nmsuplem' : '0',
+		                                        'smap1.ntramite' : wineditarContratante.resRenova['ntramite'],
+		                                        'smap1.nmsolici' : wineditarContratante.resRenova['nmsolici'],
+		                                        'smap1.tipomov'  : '0'
+		                                     },
+		                                     scripts  : true,
+		                                     autoLoad : true
+		                                 }
+		                             }).show();
+		                         };
+		                         _generarRemesaClic(
+		                             false
+		                             ,wineditarContratante.resRenova['cdunieco']
+		                             ,wineditarContratante.resRenova['cdramo']
+		                             ,'M'
+		                             ,wineditarContratante.resRenova['nmpolizaNew']
+		                             ,callbackRemesa
+		                             );
+		                     }
+		                },
+	    				{
+		                    xtype   : 'button',
+		                    itemId  : 'venDocVenEmiBotCancelar',
+		                    text    : 'Cancelar',
+		                    icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
+		                    handler : function(){
+		                        var me=this;
+		                        me.up().up().destroy();
+		                    }
+		                }
+	    			]
+					}).mostrar();
+            }
+            else{
+            	mensajeError(json.mensajeRespuesta);
+            }
+        }
+        ,failure : function()
+        {
+            _unmask();
+            Ext.Msg.show({
+                title:'Error',
+                msg: 'Error de comunicaci&oacute;n',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            });
+        }
+    });
+    debug('<tarifaFinal');
+}
+
 ////// funciones //////
 </script>
 </head>

@@ -221,6 +221,8 @@ var _permiteDuplicarRFC = false;
 
 var _polizaEnEmision = false;
 
+var _modoEdicionDomicilio = false;
+
 if(!Ext.isEmpty(_p22_smap1)){
 	
 	_cargaCdPerson = _p22_smap1.cdperson;
@@ -247,6 +249,7 @@ if(!Ext.isEmpty(_p22_smap1)){
 	_domicilioSimple = !Ext.isEmpty(_p22_smap1.domicilioSimple) && _p22_smap1.domicilioSimple == "S" ? true : false ;
 	_polizaEnEmision = !Ext.isEmpty(_p22_smap1.polizaEnEmision) && _p22_smap1.polizaEnEmision == "S" ? true : false ;
 	_cargaOrdDomicilio= _p22_smap1.cargaOrdDomicilio;
+	_modoEdicionDomicilio = !Ext.isEmpty(_p22_smap1.modoEdicionDomicilio) && _p22_smap1.modoEdicionDomicilio == "S" ? true : false ;
 }
 
 if(_polizaEnEmision){
@@ -327,7 +330,8 @@ var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarVal
         				
 	            		storeDomiciliosCliente.each(function(record, index){
             				if(index != rowIndex){
-            					record.set('SEL',false);
+								record.set('SEL',false);	      					
+            					
             					if(_esSaludDanios == 'S'){
             						mensajeWarning('Domicilio seleccionado para efectos de la p&oacute;liza actual. Guarde los datos de Persona.');
             						try{
@@ -3890,7 +3894,9 @@ function agregaEditaDomicilio(editMode, recordCargar){
 		        			 * NO SE BLOQUEAN LOS CAMPOS CON VALORES DE UN DOMICILIO QUE SE ACABA DE AGREGAR
 		        			 */
 		        			if(!Ext.isEmpty(recordCargar.get('NMORDDOM')) && !Ext.Array.contains(_domiciliosNuevos,recordCargar.get('NMORDDOM'))){
-					    		fijarCamposEditables(formDomicilio,_editandoCliente);
+		        				if(!_modoEdicionDomicilio){
+		        					fijarCamposEditables(formDomicilio,_editandoCliente);		
+		        				}
 					    	}
 					    }
 					    
