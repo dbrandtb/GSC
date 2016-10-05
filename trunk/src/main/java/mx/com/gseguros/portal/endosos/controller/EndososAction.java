@@ -11012,7 +11012,8 @@ public class EndososAction extends PrincipalCoreAction
 					boolean esProductoSalud = consultasManager.esProductoSalud(cdramo);
 					
 					if(!esProductoSalud){
-						smap1.put("fechaInicioEndoso",renderFechas.format(new Date()));
+						//smap1.put("fechaInicioEndoso",renderFechas.format(new Date()));
+						smap1.put("fechaInicioEndoso",renderFechas.format(fechaInicioEndoso));
 						smap1.put("cdtipsup",cdtipsup);
 					}
 					
