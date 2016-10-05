@@ -196,7 +196,11 @@ Ext.onReady(function()
             debug('_35_FormContratante initComponent');
             Ext.apply(this,
             {
-                title       : 'Datos del Nuevo Contratante'
+                title       : 'Datos del Nuevo Contratante',
+                layout: {
+			        type: 'hbox',
+			        align: 'stretch'
+			    }
 //                ,height     : 80
 //                ,autoScroll : true
                 ,defaults :

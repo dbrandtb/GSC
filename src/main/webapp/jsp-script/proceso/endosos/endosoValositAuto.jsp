@@ -370,6 +370,10 @@ Ext.onReady(function()
 																	if(btn === 'yes') {
 																		confirmaEmitir(jsonDatosConfirmacion);
 																	} else {
+																		_p36_store.each(function(record) {
+																	    	debug( record.get('CVE_NUMERO_DE_SERIE'));
+																	    	record.set('CVE_NUMERO_DE_SERIE',record.get('DES_NUMERO_DE_SERIE'));
+																	    });
 																		panelMask.hide();
 																		debug('no quiso Continuar');
 																	}
