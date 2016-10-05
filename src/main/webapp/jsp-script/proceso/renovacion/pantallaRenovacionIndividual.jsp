@@ -1870,6 +1870,10 @@ Ext.onReady(function()
 function _p25_buscarClic(button,e)
 {
     debug('>_p25_buscarClic');
+    var panDatComBotonRetarificar = _fieldById('panDatComBotonRetarificar');
+    var panDatComBotonGuardar     = _fieldById('panDatComBotonGuardar');
+    panDatComBotonRetarificar.enable();
+    panDatComBotonGuardar.enable();
     _fieldById('_p25_contratante').hide();
   	_fieldById('_p25_poliza').hide();
   	_fieldById('_p25_grid').hide();
@@ -2364,125 +2368,127 @@ function tarifaFinal(){
         }
         ,success : function(response)
         {
-            _unmask();
-            var panDatComBotonRetarificar = _fieldById('panDatComBotonRetarificar');
-            var panDatComBotonGuardar     = _fieldById('panDatComBotonGuardar');
-            panDatComBotonRetarificar.disable();
-            panDatComBotonGuardar.disable();
+            _unmask();            
             var json=Ext.decode(response.responseText);
             debug('json ',json);
-            if(json.slist1.length > 0){
-	            datos = [];
-	            for(var i = 0; i < json.slist1.length; i++){
-	            	datos.push({
-	            	    AGRUPADOR : json.slist1[i]['parentesco'],
-	        			COBERTURA : json.slist1[i]['Nombre_garantia'],
-	        			PRIMA     : json.slist1[i]['Importe']
-	        		});
-	            }
-	            debug('datos ',datos);
-	            Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTarifa');
-				new VentanaTarifa({
-	    			title   : 'TARIFA DEL ENDOSO',
-	    			datos   : datos,
-	    			buttons : [
-	    				{
-	    					xtype     : 'button',
-	    					itemId    : 'botonEmitirPolizaFinal',
-	    					text      : 'Emitir',
-	    					icon      : contexto+'/resources/fam3icons/icons/award_star_gold_3.png',
-	    					handler   : function(){
-	    						_mask('Emitiendo Poliza');
-	    						Ext.Ajax.request({
-	                                url      : _p25_urlConfirmarPolizaIndividual,
-	                                params   : {
-	                                    'params.cdunieco' : wineditarContratante.resRenova['cdunieco'],
-	                                	'params.cdramo'   : wineditarContratante.resRenova['cdramo'],
-	                                	'params.estado'   : wineditarContratante.resRenova['estado'],
-	                                	'params.nmpoliza' : wineditarContratante.resRenova['nmpoliza'],
-	                                	'params.nmsuplem' : wineditarContratante.resRenova['nmsuplem'],
-	                                	'params.ntramite' : wineditarContratante.resRenova['ntramite'],
-	                                    'params.cdperpag' : wineditarContratante.resRenova['cdperpag'],
-	                                	'params.feefecto' : wineditarContratante.resRenova['feefecto']
-	                                },
-	                                success  : function(response){
-	                                	_unmask();
-	                                    var resp = Ext.decode(response.responseText);
-	                                   	var list = resp.slist1;
-	                                	if(resp.success==true && list.length > 0){
-	                                		wineditarContratante.resRenova['nmpolizaNew'] = list[0]['nmpolizaNew'];
-	                                		wineditarContratante.resRenova['nmsuplemNew'] = list[0]['nmsuplemNew'];
-	                                		_fieldById('botonEmitirPolizaFinal').disable();
-	                                		_fieldById('botonImprimirPolizaFinal').enable();
-	                                	    mensajeCorrecto('Aviso',resp.respuesta);
-	                                	}
-	                                	else{
-	                                		mensajeError(resp.respuesta);
-	                                	}
-	                                },
-	                                failure  : function(){
-	                                	_unmask();
-	                                    errorComunicacion();
-	                                }
-	                            });
-	    					}
-	    				},
-	    				{
-							xtype     : 'button'
-		                    ,itemId   : 'botonImprimirPolizaFinal'
-		                    ,text     : 'Imprimir'
-		                    ,icon     : contexto+'/resources/fam3icons/icons/printer.png'
-		                    ,disabled : true
-		                    ,handler  : function(me){
-		                        debug(wineditarContratante.resRenova);
-		                        var callbackRemesa = function(){
-		                            Ext.create('Ext.window.Window',{
-		                                title       : 'Documentos del tr&aacute;mite '+ wineditarContratante.resRenova['ntramite'],
-		                                modal       : true,
-		                                buttonAlign : 'center',
-		                                width       : 600,
-		                                height      : 400,
-		                                autoScroll  : true,
-		                                cls         : 'VENTANA_DOCUMENTOS_CLASS',
-		                                loader      : {
-		                                    url       : panDatComUrlDoc2
-		                                    ,params   : {
-		                                        'smap1.nmpoliza' : wineditarContratante.resRenova['nmpolizaNew'],
-		                                        'smap1.cdunieco' : wineditarContratante.resRenova['cdunieco'],
-		                                        'smap1.cdramo'   : wineditarContratante.resRenova['cdramo'],
-		                                        'smap1.estado'   : 'M',
-		                                        'smap1.nmsuplem' : '0',
-		                                        'smap1.ntramite' : wineditarContratante.resRenova['ntramite'],
-		                                        'smap1.nmsolici' : wineditarContratante.resRenova['nmsolici'],
-		                                        'smap1.tipomov'  : '0'
-		                                     },
-		                                     scripts  : true,
-		                                     autoLoad : true
-		                                 }
-		                             }).show();
-		                         };
-		                         _generarRemesaClic(
-		                             false
-		                             ,wineditarContratante.resRenova['cdunieco']
-		                             ,wineditarContratante.resRenova['cdramo']
-		                             ,'M'
-		                             ,wineditarContratante.resRenova['nmpolizaNew']
-		                             ,callbackRemesa
-		                             );
-		                     }
-		                },
-	    				{
-		                    xtype   : 'button',
-		                    itemId  : 'venDocVenEmiBotCancelar',
-		                    text    : 'Cancelar',
-		                    icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
-		                    handler : function(){
-		                        var me=this;
-		                        me.up().up().destroy();
-		                    }
-		                }
-	    			]
-					}).mostrar();
+            if(!Ext.isEmpty(json.slist1)){
+            	if(json.slist1.length > 0){
+			            datos = [];
+			            for(var i = 0; i < json.slist1.length; i++){
+			            	datos.push({
+			            	    AGRUPADOR : json.slist1[i]['parentesco'],
+			        			COBERTURA : json.slist1[i]['Nombre_garantia'],
+			        			PRIMA     : json.slist1[i]['Importe']
+			        		});
+			            }
+			            debug('datos ',datos);
+			            Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTarifa');
+						new VentanaTarifa({
+			    			title   : 'TARIFA DEL ENDOSO',
+			    			datos   : datos,
+			    			buttons : [
+			    				{
+			    					xtype     : 'button',
+			    					itemId    : 'botonEmitirPolizaFinal',
+			    					text      : 'Emitir',
+			    					icon      : contexto+'/resources/fam3icons/icons/award_star_gold_3.png',
+			    					handler   : function(){
+			    						_mask('Emitiendo Poliza');
+			    						var panDatComBotonRetarificar = _fieldById('panDatComBotonRetarificar');
+		            					var panDatComBotonGuardar     = _fieldById('panDatComBotonGuardar');
+		            					panDatComBotonRetarificar.disable();
+		            					panDatComBotonGuardar.disable();
+			    						Ext.Ajax.request({
+			                                url      : _p25_urlConfirmarPolizaIndividual,
+			                                params   : {
+			                                    'params.cdunieco' : wineditarContratante.resRenova['cdunieco'],
+			                                	'params.cdramo'   : wineditarContratante.resRenova['cdramo'],
+			                                	'params.estado'   : wineditarContratante.resRenova['estado'],
+			                                	'params.nmpoliza' : wineditarContratante.resRenova['nmpoliza'],
+			                                	'params.nmsuplem' : wineditarContratante.resRenova['nmsuplem'],
+			                                	'params.ntramite' : wineditarContratante.resRenova['ntramite'],
+			                                    'params.cdperpag' : wineditarContratante.resRenova['cdperpag'],
+			                                	'params.feefecto' : wineditarContratante.resRenova['feefecto']
+			                                },
+			                                success  : function(response){
+			                                	_unmask();
+			                                    var resp = Ext.decode(response.responseText);
+			                                   	var list = resp.slist1;
+			                                	if(resp.success==true && list.length > 0){
+			                                		wineditarContratante.resRenova['nmpolizaNew'] = list[0]['nmpolizaNew'];
+			                                		wineditarContratante.resRenova['nmsuplemNew'] = list[0]['nmsuplemNew'];
+			                                		_fieldById('botonEmitirPolizaFinal').disable();
+			                                		_fieldById('botonImprimirPolizaFinal').enable();
+			                                	    mensajeCorrecto('Aviso',resp.respuesta);
+			                                	}
+			                                	else{
+			                                		mensajeError(resp.respuesta);
+			                                	}
+			                                },
+			                                failure  : function(){
+			                                	_unmask();
+			                                    errorComunicacion();
+			                                }
+			                            });
+			    					}
+			    				},
+			    				{
+									xtype     : 'button'
+				                    ,itemId   : 'botonImprimirPolizaFinal'
+				                    ,text     : 'Imprimir'
+				                    ,icon     : contexto+'/resources/fam3icons/icons/printer.png'
+				                    ,disabled : true
+				                    ,handler  : function(me){
+				                        debug(wineditarContratante.resRenova);
+				                        var callbackRemesa = function(){
+				                            Ext.create('Ext.window.Window',{
+				                                title       : 'Documentos del tr&aacute;mite '+ wineditarContratante.resRenova['ntramite'],
+				                                modal       : true,
+				                                buttonAlign : 'center',
+				                                width       : 600,
+				                                height      : 400,
+				                                autoScroll  : true,
+				                                cls         : 'VENTANA_DOCUMENTOS_CLASS',
+				                                loader      : {
+				                                    url       : panDatComUrlDoc2
+				                                    ,params   : {
+				                                        'smap1.nmpoliza' : wineditarContratante.resRenova['nmpolizaNew'],
+				                                        'smap1.cdunieco' : wineditarContratante.resRenova['cdunieco'],
+				                                        'smap1.cdramo'   : wineditarContratante.resRenova['cdramo'],
+				                                        'smap1.estado'   : 'M',
+				                                        'smap1.nmsuplem' : '0',
+				                                        'smap1.ntramite' : wineditarContratante.resRenova['ntramite'],
+				                                        'smap1.nmsolici' : wineditarContratante.resRenova['nmsolici'],
+				                                        'smap1.tipomov'  : '0'
+				                                     },
+				                                     scripts  : true,
+				                                     autoLoad : true
+				                                 }
+				                             }).show();
+				                         };
+				                         _generarRemesaClic(
+				                             false
+				                             ,wineditarContratante.resRenova['cdunieco']
+				                             ,wineditarContratante.resRenova['cdramo']
+				                             ,'M'
+				                             ,wineditarContratante.resRenova['nmpolizaNew']
+				                             ,callbackRemesa
+				                             );
+				                     }
+				                },
+			    				{
+				                    xtype   : 'button',
+				                    itemId  : 'venDocVenEmiBotCancelar',
+				                    text    : 'Cancelar',
+				                    icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
+				                    handler : function(){
+				                        var me=this;
+				                        me.up().up().destroy();
+				                    }
+				                }
+			    			]
+							}).mostrar();
+            	}
             }
             else{
             	mensajeError(json.mensajeRespuesta);
