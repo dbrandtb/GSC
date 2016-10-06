@@ -1705,7 +1705,6 @@ Ext.onReady(function()
                 ,minHeight   : 200
                 ,maxHeight   : 400
                 ,columns     : itemsFormularioPolizaColumns
-                //,viewConfig  : viewConfigAutoSize
                 ,buttonAlign : 'center'
                 ,hidden		 : 'true'
                 ,autoScroll	 : true
@@ -2007,7 +2006,31 @@ function _p25_renovarPolizaClic(button,e)
     debug('>_p25_renovarPolizaClic');
     var pol = _fieldById('_p25_poliza').store.data.items[0].raw;
     debug('pol',pol);
-    if(pol['renovada'] == 'NO'){    	
+    var sePuedeRenovar = false;
+    var mensaje = 'No ha sido posible renovar por las siguientes razones<br/>';
+    if(pol['renovada'] == 'NO'){
+    	sePuedeRenovar = true;
+    }
+    else{
+    	sePuedeRenovar = false;
+    	mensaje = mensaje+'La p\u00F3liza ya est\u00E1 renovada<br/>';
+    } 
+    if(pol['pagada'] == 'SI'){
+    	sePuedeRenovar = true;
+    }
+    else{
+    	sePuedeRenovar = false;
+    	mensaje = mensaje+'La p\u00F3liza no est\u00E1 pagada<br/>';
+    } 
+    if(pol['aseg_edad_val'] > 0){
+    	sePuedeRenovar = true;
+    }
+    else{
+    	sePuedeRenovar = false;
+    	mensaje = mensaje+'La p\u00F3liza no tiene asegurados con edad valida<br/>';
+    }
+    
+    if(sePuedeRenovar){    	
     		_mask('Renovando poliza');
     		Ext.Ajax.request(
     		{
@@ -2066,7 +2089,7 @@ function _p25_renovarPolizaClic(button,e)
     	//}
     }
     else{
-    	mensajeError('La poliza ya esta renovada');
+    	mensajeError(mensaje);
     }
     debug('<_p25_renovarPolizaClic');
 }
