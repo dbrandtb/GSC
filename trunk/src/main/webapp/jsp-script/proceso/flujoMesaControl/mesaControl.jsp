@@ -1360,8 +1360,7 @@ function _p54_registrarTramite(bot)
 	                                 
 	                                 var callbackCheck = function(store, records, success) {
 	                                     store.removeListener('load', callbackCheck);
-	                                     _p54_mostrarCheckDocumentosInicial(json.params.CDTIPFLU, json.params.CDFLUJOMC,
-	                                             json.params.CDTIPTRA, json.params.CDTIPSUP, json.params.ntramite);
+	                                     _p54_mostrarCheckDocumentosInicial(json.params.ntramite);
 	                                 };
 	                                 
 	                                 _p54_store.on({
@@ -1512,7 +1511,7 @@ function _p54_setearSucursalAgente () {
     }
 }
 
-function _p54_mostrarCheckDocumentosInicial (cdtipflu, cdflujomc, cdtiptra, cdtipsup, ntramite) {
+function _p54_mostrarCheckDocumentosInicial (ntramite) {
     debug('_p54_mostrarCheckDocumentosInicial args:', arguments);
     var mask, ck = 'Verificando tr\u00e1mite en grid';
     try {
@@ -1529,10 +1528,7 @@ function _p54_mostrarCheckDocumentosInicial (cdtipflu, cdflujomc, cdtiptra, cdti
             Ext.Ajax.request({
                 url    : _p54_urlRecuperarChecklist,
                 params : {
-                    'params.cdtipflu'  : cdtipflu,
-                    'params.cdflujomc' : cdflujomc,
-                    'params.cdtiptra'  : cdtiptra,
-                    'params.cdtipsup'  : cdtipsup
+                    'params.ntramite' : ntramite
                 },
                 success : function (response) {
                     mask.close();
@@ -1615,12 +1611,7 @@ function _p54_cargarTramite(ntramite){
     var callbackCheck = function(store, records, success) {
         store.removeListener('load', callbackCheck);
         if(success && records.length > 0){
-        	_p54_mostrarCheckDocumentosInicial(
-        			records[0].get('CDTIPFLU'), 
-        			records[0].get('CDFLUJOMC'),
-        			records[0].get('CDTIPTRA'), 
-        			records[0].get('CDTIPSUP'), 
-        			records[0].get('NTRAMITE'));
+        	_p54_mostrarCheckDocumentosInicial(records[0].get('NTRAMITE'));
         }
         
     };

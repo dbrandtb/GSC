@@ -3077,36 +3077,29 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public Map<String, String> recuperarChecklistInicial (String cdtipflu, String cdflujomc, String cdtiptra, String cdtipsup) throws Exception {
+	public Map<String, String> recuperarChecklistInicial (String ntramite, String cdsisrol) throws Exception {
 		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 				"\n@@@@@@ recuperarChecklistInicial @@@@@@",
-				"\n@@@@@@ cdtipflu  = " , cdtipflu,
-				"\n@@@@@@ cdflujomc = " , cdflujomc,
-				"\n@@@@@@ cdtiptra  = " , cdtiptra,
-				"\n@@@@@@ cdtipsup  = " , cdtipsup
-				));
+				"\n@@@@@@ cdtipflu = " , ntramite,
+				"\n@@@@@@ cdsisrol = " , cdsisrol));
 		String paso = null;
 		Map<String, String> mapa = null;
 		try {
 			paso = "Recuperando lista de checklist";
-			
-			List<Map<String, String>> lista = flujoMesaControlDAO.recuperarChecklistInicial(cdtipflu, cdflujomc, cdtiptra, cdtipsup);
-			
+			List<Map<String, String>> lista = flujoMesaControlDAO.recuperarChecklistInicial(ntramite, cdsisrol);
 			if (lista == null || lista.size() == 0) {
 				mapa = new LinkedHashMap<String, String>();
 			} else {
 				mapa = lista.get(0);
 			}
-			
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
 		logger.debug(Utils.log(
 				"\n@@@@@@ mapa = ", mapa,
 				"\n@@@@@@ recuperarChecklistInicial @@@@@@",
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 		return mapa;
 	}
 	
