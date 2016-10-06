@@ -5829,7 +5829,7 @@
 												maxconsultas = false;
 												centrarVentanaInterna(Ext.Msg.show({
 													   title: 'Aviso',
-													   msg: 'Se sobrepas&oacute; el n&uacute;mero m&aacute;ximo de consultas.',
+													   msg: 'Se sobrepas&oacute; el n&uacute;mero m&aacute;ximo de servicios para este Asegurado.',
 													   buttons: Ext.Msg.OK,
 													   icon: Ext.Msg.WARNING
 												}));
@@ -5839,7 +5839,7 @@
 												maxconsultas = false;
 												centrarVentanaInterna(Ext.Msg.show({
 													   title: 'Aviso',
-													   msg: 'Se sobrepas&oacute; el n&uacote;mero m&aacute;ximo de consultas.',
+													   msg: 'Se sobrepas&oacute; el n&uacote;mero m&aacute;ximo de servicios para este Asegurado.',
 													   buttons: Ext.Msg.OK,
 													   icon: Ext.Msg.WARNING
 												}));
