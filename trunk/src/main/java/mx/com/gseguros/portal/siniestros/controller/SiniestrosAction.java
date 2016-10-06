@@ -2488,8 +2488,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										row.put("SUBTTDESCUENTO",subtotalDescuento+""); // SUBTOTAL A OCUPAR CUANDO SEA ANTES DE COPAGO
 										
 										if(aplicaIVA.equalsIgnoreCase("S")){
-											if(seleccionAplica.equalsIgnoreCase("A")){ // ANTES DEL COPAGO
-												double iVaaplicaAntes = subtotalDescuento*(ivaprov/100d);
+											if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
+												if(seleccionAplica.equalsIgnoreCase("A")){ // ANTES DEL COPAGO
+													double iVaaplicaAntes = subtotalDescuento*(ivaprov/100d);
+													row.put("IVAAPLICA",iVaaplicaAntes+"");
+												}
+											}else{
+												double iVaaplicaAntes = 0d;
 												row.put("IVAAPLICA",iVaaplicaAntes+"");
 											}
 										}
@@ -2581,7 +2586,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										
 										if(aplicaIVA.equalsIgnoreCase("S")){
 											if(seleccionAplica.equalsIgnoreCase("D")){
-												ivaaplicado       = subtotalCopago*(ivaprov/100d);
+												if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
+													ivaaplicado       = subtotalCopago*(ivaprov/100d);
+												}else{
+													ivaaplicado= 0d;
+												}
+												//ivaaplicado       = subtotalCopago*(ivaprov/100d);
 												row.put("IVAAPLICA",ivaaplicado+"");
 												if(ivaRetenido.equalsIgnoreCase("S")){
 													ivaRetenidos      = ((2d * ivaaplicado)/3);
@@ -2593,7 +2603,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 												ptimportauto      = (subtotalImpuestos - ivaRetenidos)+ivaaplicado;
 												row.put("PTIMPORTAUTO",ptimportauto+"");
 											}else{
-												ivaaplicado       = subtotalDescuento*(ivaprov/100d);
+												if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
+													ivaaplicado       = subtotalDescuento*(ivaprov/100d);
+												}else{
+													ivaaplicado= 0d;
+												}
+												//ivaaplicado       = subtotalDescuento*(ivaprov/100d);
 												row.put("IVAAPLICA",ivaaplicado+"");
 												if(ivaRetenido.equalsIgnoreCase("S")){
 													ivaRetenidos      = ((2d * ivaaplicado)/3);
@@ -2717,6 +2732,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										hosp.put("IVA"    , hIVADesCopago+"");
 										hosp.put("BASEIVA" , importeSiniestroIte+"");
 									}else{
+										hosp.put("IVA"    , importeSiniestroIte*(ivaprov/100d)+"");
 										hosp.put("BASEIVA" , subttDesto+"");
 									}
 								}else{
@@ -3881,7 +3897,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						
 						String tipoFormatoCalculo         = copagoDeducibleSiniestroIte.get("FORMATOCALCULO");
 						String calculosPenalizaciones     = copagoDeducibleSiniestroIte.get("PENALIZACIONES");
-						String sonSesiones                = copagoDeducibleSiniestroIte.get("VALSESIONES");
+						
 						facturaObj.put("TIPOFORMATOCALCULO",""+tipoFormatoCalculo);
 						facturaObj.put("CALCULOSPENALIZACIONES",""+calculosPenalizaciones);
 						
@@ -4071,7 +4087,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 										scopago="0";
 									}
 									logger.debug("Valor de respuesta :{}",StringUtils.isNotBlank(scopago));
-									if(StringUtils.isNotBlank(scopago)){
+									/*if(StringUtils.isNotBlank(scopago)){
 										if(scopago.contains("%")){
 											copagoPorc = true;
 										}
@@ -4080,13 +4096,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											DESTOPOR = DESTOPOR+Double.valueOf(scopago);
 										}
 										else{
-											if(sonSesiones.equalsIgnoreCase("1")){
-												DESTOIMP=DESTOIMP+(Double.valueOf(scopago)*Double.parseDouble(concepto.get("CANTIDAD"))) ;
-											}else{
-												DESTOIMP=DESTOIMP+Double.valueOf(scopago);
-											}
+											DESTOIMP=DESTOIMP+Double.valueOf(scopago);
 										}
-									}
+									}*/
 									
 									double hPTIMPORT 	= Double.parseDouble(hosp.get("PTIMPORT"));
 									double hDESTO    	= Double.parseDouble(hosp.get("DESTO"));
@@ -4178,8 +4190,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									row.put("SUBTTDESCUENTO",subtotalDescuento+""); // SUBTOTAL A OCUPAR CUANDO SEA ANTES DE COPAGO
 
 									if(aplicaIVA.equalsIgnoreCase("S")){
-										if(seleccionAplica.equalsIgnoreCase("A")){ // ANTES DEL COPAGO
-											double iVaaplicaAntes = subtotalDescuento*(ivaprov/100d);
+										if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
+											if(seleccionAplica.equalsIgnoreCase("A")){ // ANTES DEL COPAGO
+												double iVaaplicaAntes = subtotalDescuento*(ivaprov/100d);
+												row.put("IVAAPLICA",iVaaplicaAntes+"");
+											}
+										}else{
+											double iVaaplicaAntes = 0d;
 											row.put("IVAAPLICA",iVaaplicaAntes+"");
 										}
 									}
@@ -4248,7 +4265,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									
 									if(aplicaIVA.equalsIgnoreCase("S")){
 										if(seleccionAplica.equalsIgnoreCase("D")){
-											ivaaplicado       = subtotalCopago*(ivaprov/100d);
+											if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
+												ivaaplicado       = subtotalCopago*(ivaprov/100d);
+											}else{
+												ivaaplicado= 0d;
+											}
+											//ivaaplicado       = subtotalCopago*(ivaprov/100d);
 											row.put("IVAAPLICA",ivaaplicado+"");
 											if(ivaRetenido.equalsIgnoreCase("S")){
 												ivaRetenidos      = ((2d * ivaaplicado)/3);
@@ -4260,7 +4282,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											ptimportauto      = (subtotalImpuestos - ivaRetenidos)+ivaaplicado;
 											row.put("PTIMPORTAUTO",ptimportauto+"");
 										}else{
-											ivaaplicado       = subtotalDescuento*(ivaprov/100d);
+											if(concepto.get("APLICIVA").equalsIgnoreCase("S")){
+												ivaaplicado       = subtotalDescuento*(ivaprov/100d);
+											}else{
+												ivaaplicado= 0d;
+											}
+											//ivaaplicado       = subtotalDescuento*(ivaprov/100d);
 											row.put("IVAAPLICA",ivaaplicado+"");
 											if(ivaRetenido.equalsIgnoreCase("S")){
 												ivaRetenidos      = ((2d * ivaaplicado)/3);
@@ -4356,11 +4383,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							
 							if(StringUtils.isNotBlank(tipoCopagoSiniestroIte)) {
 								if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){ //Diferente de Accidente
-									if(sonSesiones.equalsIgnoreCase("1")){
-										copagoAplicadoSiniestroIte = DESTOIMP;
-									}else{
-										copagoAplicadoSiniestroIte = Double.parseDouble(penalizacionPesos) + (subttDesto * ( Double.parseDouble(penalizacionPorcentaje) / 100d ));
-									}
+									copagoAplicadoSiniestroIte = Double.parseDouble(penalizacionPesos) + (subttDesto * ( Double.parseDouble(penalizacionPorcentaje) / 100d ));
 								}else{
 									copagoAplicadoSiniestroIte= 0d;
 								}
@@ -4384,6 +4407,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									hosp.put("IVA"    , hIVADesCopago+"");
 									hosp.put("BASEIVA" , importeSiniestroIte+"");
 								}else{
+									hosp.put("IVA"    , importeSiniestroIte*(ivaprov/100d)+"");
 									hosp.put("BASEIVA" , subttDesto+"");
 								}
 							}else{

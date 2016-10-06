@@ -700,23 +700,58 @@ Ext.onReady(function() {
 			                        }));
 		                    	}
 	                        }else{
-	                        	Ext.Msg.show({
-			                        title:'Error',
-			                        msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente',
-			                        buttons: Ext.Msg.OK,
-			                        icon: Ext.Msg.ERROR,
-			                        fn: function() {
-			                            valorIndexSeleccionado.set('modCdperson','');
-			                            valorIndexSeleccionado.set('modCdpersondesc','');
-			                        }
-			                    });
-			                    modPolizasAltaTramite.hide();
-			                    limpiarRegistros();
-			                    if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-			                        panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
-			                    }else{
-			                        panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-			                    }
+		                        centrarVentanaInterna(Ext.Msg.show({
+		                            title: 'Aviso',
+		                            msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente.<br/> &iquest;Desea continuar ?',
+		                            buttons: Ext.Msg.YESNO,
+		                            icon: Ext.Msg.QUESTION,
+		                            fn: function(buttonId, text, opt){
+		                                if(buttonId == 'yes'){
+		                                    panelInicialPral.down('[name="cdunieco"]').setValue(record.get('cdunieco'));
+		                                    panelInicialPral.down('[name="estado"]').setValue(record.get('estado'));
+		                                    panelInicialPral.down('[name="cdramo"]').setValue(record.get('cdramo'));
+		                                    panelInicialPral.down('[name="nmsituac"]').setValue(record.get('nmsituac'));
+		                                    panelInicialPral.down('[name="polizaAfectada"]').setValue(record.get('nmpoliza'));
+		                                    panelInicialPral.down('[name="idNmsolici"]').setValue(record.get('nmsolici'));
+		                                    panelInicialPral.down('[name="idNmsuplem"]').setValue(record.get('nmsuplem'));
+		                                    panelInicialPral.down('[name="idCdtipsit"]').setValue(record.get('cdtipsit'));
+		                                    panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.get('numPoliza'));
+		                                    panelInicialPral.down('[name="txtTelefono"]').setValue(record.get('telefono'));
+		                                    panelInicialPral.down('[name="txtEmail"]').setValue(record.get('email'));
+		                                    // realizamos la asignacion de las variables JOSE
+		                                    valorIndexSeleccionado.set('modUnieco',record.get('cdunieco'));
+		                                    valorIndexSeleccionado.set('modEstado',record.get('estado'));
+		                                    valorIndexSeleccionado.set('modRamo',record.get('cdramo'));
+		                                    valorIndexSeleccionado.set('modNmsituac',record.get('nmsituac'));
+		                                    valorIndexSeleccionado.set('polizaAfectada',record.get('nmpoliza'));
+		                                    valorIndexSeleccionado.set('modNmsolici',record.get('nmsolici'));
+		                                    valorIndexSeleccionado.set('modNmsuplem',record.get('nmsuplem'));
+		                                    valorIndexSeleccionado.set('modCdtipsit',record.get('cdtipsit'));
+		                                    valorIndexSeleccionado.set('modNmautserv',null);
+		                                    valorIndexSeleccionado.set('modCdpersondesc',record.get('nombAsegurado'));
+		                                    valorIndexSeleccionado.set('modnumPoliza',record.get('numPoliza'));
+		                                    valorIndexSeleccionado.set('modTelefono',record.get('telefono'));
+		                                    valorIndexSeleccionado.set('modEmail',record.get('email'));
+		                                    valorIndexSeleccionado.set('modFactura',noFactura);
+		                                    valorIndexSeleccionado.set('modPolizaAfectada',record.get('nmpoliza'));
+		                                    valorIndexSeleccionado.set('modtxtAutEspecial',"1");
+		                                    banderaAsegurado = "1";
+		                                    limpiarRegistros();
+		                                    modPolizasAltaTramite.hide();
+		                                }else{
+		                                    valorIndexSeleccionado.set('modCdperson','');
+		                                    valorIndexSeleccionado.set('modCdpersondesc','');
+		                                    modPolizasAltaTramite.hide();
+		                                    limpiarRegistros();
+		                                    if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
+		                                        panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
+		                                    }else{
+		                                        panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
+		                                    }
+		                                }
+		                                
+		                            }
+		                        }));
 	                        }
 	                    },
 	                    failure : function (){
