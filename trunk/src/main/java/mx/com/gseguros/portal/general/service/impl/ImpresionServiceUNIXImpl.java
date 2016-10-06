@@ -47,6 +47,7 @@ public class ImpresionServiceUNIXImpl implements ImpresionService {
 				,"\n@@@@@@ nombreImpresora=" , nombreImpresora
 				,"\n@@@@@@ numCopias="       , numCopias
 				,"\n@@@@@@ bandeja="         , bandeja
+				,"\n@@@@@@ esDuplex="        , esDuplex
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
         
@@ -62,7 +63,7 @@ public class ImpresionServiceUNIXImpl implements ImpresionService {
 	    commands.add("-c");
 	    // Se forma el comando de impresion:
 		StringBuilder sbComando = new StringBuilder("lpr")
-				.append(" -P").append(nombreImpresora)
+				.append(" -P ").append(nombreImpresora)
 				.append(" '").append(documento).append("'")
 				.append(" -#").append(numCopias);
 	    // Si se especifica la bandeja de impresion, se agrega al comando:
