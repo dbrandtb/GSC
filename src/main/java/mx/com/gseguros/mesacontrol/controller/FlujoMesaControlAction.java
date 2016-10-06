@@ -2298,25 +2298,13 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n#######################################"
 				,"\n###### recuperarChecklistInicial ######"
-				,"\n###### params = " , params
-				));
+				,"\n###### params = " , params));
 		try {
-			Utils.validateSession(session);
-			
+			String cdsisrol = Utils.validateSession(session).getRolActivo().getClave();
 			Utils.validate(params , "No se recibieron datos");
-			
-			String cdtipflu   = params.get("cdtipflu"),
-					cdflujomc = params.get("cdflujomc"),
-					cdtiptra  = params.get("cdtiptra"),
-					cdtipsup  = params.get("cdtipsup");
-			
-			Utils.validate(cdtipflu, "Falta cdtipflu",
-					cdflujomc , "Falta cdflujomc",
-					cdtiptra  , "Falta cdtiptra"
-					);
-			
-			params.putAll(flujoMesaControlManager.recuperarChecklistInicial(cdtipflu, cdflujomc, cdtiptra, cdtipsup));
-			
+			String ntramite = params.get("ntramite");
+			Utils.validate(ntramite, "Falta ntramite");
+			params.putAll(flujoMesaControlManager.recuperarChecklistInicial(ntramite, cdsisrol));
 			success = true;
 		} catch (Exception ex) {
 			message = Utils.manejaExcepcion(ex);
@@ -2325,8 +2313,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				 "\n###### success = " , success
 				,"\n###### message = " , message
 				,"\n###### recuperarChecklistInicial ######"
-				,"\n#######################################"
-				));
+				,"\n#######################################"));
 		return SUCCESS;
 	}
 	

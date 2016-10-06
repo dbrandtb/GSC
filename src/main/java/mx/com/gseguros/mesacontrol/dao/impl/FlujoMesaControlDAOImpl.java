@@ -2898,18 +2898,16 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	}
 	
 	@Override
-	public List<Map<String, String>> recuperarChecklistInicial (String cdtipflu, String cdflujomc,
-			String cdtiptra, String cdtipsup) throws Exception {
+	public List<Map<String, String>> recuperarChecklistInicial (String ntramite, String cdsisrol) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
-		params.put("cdtipflu"  , cdtipflu);
-		params.put("cdflujomc" , cdflujomc);
-		params.put("cdtiptra"  , cdtiptra);
-		params.put("cdtipsup"  , cdtipsup);
+		params.put("ntramite", ntramite);
+		params.put("cdsisrol", cdsisrol);
 		Map<String, Object> procRes = ejecutaSP(new RecuperarChecklistInicialSP(getDataSource()), params);
 		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
 		if (lista == null) {
 			lista = new ArrayList<Map<String, String>>();
 		}
+		logger.debug(Utils.log("recuperarChecklistInicial lista = ", lista));
 		return lista;
 	}
 	
@@ -2918,16 +2916,18 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		protected RecuperarChecklistInicialSP(DataSource dataSource)
 		{
 			super(dataSource,"P_GET_ACCION_CHECKLIST");
-			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtiptra"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipsup"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDTIPFLU",
 		            "CDFLUJOMC",
 		            "CLAVEDEST",
 		            "WEBIDDEST",
-		            "AUX"
+		            "AUX",
+		            "CDREVISI",
+		            "DSREVISI",
+		            "JSVALIDA",
+		            "PRIORIDAD"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
