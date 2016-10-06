@@ -2997,10 +2997,12 @@ Ext.onReady(function()
                                         ,maxLength     : 8
                                     }
                                     ,{
-                                        xtype          : 'textarea'
-                                        ,fieldLabel    : 'VALIDACI\u00D3N CLIENTE'
-                                        ,labelAlign    : 'top'
-                                        ,name          : 'JSVALIDA'
+                                        xtype       : 'textarea'
+                                        ,fieldLabel : 'VALIDACI\u00D3N CLIENTE'
+                                        ,labelAlign : 'top'
+                                        ,name       : 'JSVALIDA'
+                                        ,width      : 270
+                                        ,height     : 200
                                     }
                                 ]
                             })
