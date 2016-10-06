@@ -2381,7 +2381,7 @@ function _procesaAccion(
 	                                                        value : 'Favor de revisar los requisitos y documentos obligatorios:'
 	                                                    }, {
 	                                                        xtype      : 'grid',
-	                                                        width      : 700,
+	                                                        width      : 800,
 	                                                        height     : 200,
 	                                                        autoScroll : true,
 	                                                        tipo       : 'REQ',
@@ -2476,7 +2476,7 @@ function _procesaAccion(
 	                                                        })
 	                                                    }, {
                                                             xtype      : 'grid',
-                                                            width      : 700,
+                                                            width      : 800,
                                                             height     : 200,
                                                             autoScroll : true,
                                                             tipo       : 'DOC',
