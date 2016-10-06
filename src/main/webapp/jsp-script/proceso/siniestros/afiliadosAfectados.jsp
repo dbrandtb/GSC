@@ -1432,7 +1432,7 @@
 								]
 							},
 							{
-								header: 'Id<br/>Sini.',				dataIndex: 'NMSINIES',			width: 50 
+								header: 'Id<br/>Sini.',				dataIndex: 'NMSINIES',			width: 120 
 							},
 							{
 								header: '#<br/>Call Center',		dataIndex: 'NMCALLCENTER',		width: 70
