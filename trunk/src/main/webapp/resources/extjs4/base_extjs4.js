@@ -3646,12 +3646,15 @@ function _iceNames () {
     }
 }
 
-function _iceMesaControl () {
+function _iceMesaControl (ntramiteCargar) {
     debug('_iceMesaControl()');
     _mask('Redireccionando...');
     Ext.create('Ext.form.Panel').submit({
         url            : _GLOBAL_COMP_URL_MCFLUJO,
-        standardSubmit : true
+        standardSubmit : true,
+        params		   : {
+        	'params.ntramiteCargar' : ntramiteCargar
+        }
     });
 }
 
