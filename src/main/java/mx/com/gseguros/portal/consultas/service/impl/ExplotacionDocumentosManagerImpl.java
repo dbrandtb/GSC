@@ -501,6 +501,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					);
 			
 			sb.append(Utils.log("\nlista=",listaArchivos));
+			
+			paso = "Armando juegos de impresiones";
+			sb.append("\n").append(paso);
+			
+			listaArchivos = this.armaJuegosDeImpresiones(listaArchivos);
+			List<Map<String,String>> listaArchivosOriginales=listaArchivos;
 			paso="Regenerando documentos";
 			long timestamp = System.currentTimeMillis();
 			long rand      = new Double(1000d*Math.random()).longValue();
@@ -513,10 +519,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			listaArchivos=regeneraDocs(listaArchivos, noExiste, cdtipram, hayErrores);
 			
-			paso = "Armando juegos de impresiones";
-			sb.append("\n").append(paso);
 			
-			listaArchivos = this.armaJuegosDeImpresiones(listaArchivos);
 			
 			paso = "Imprimiendo archivos";
 			sb.append("\n").append(paso);
@@ -544,6 +547,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					if(cddocume.toLowerCase().indexOf("://")!=-1)
 					{
 						paso = "Descargando archivo remoto";
+						cddocume=cddocume.replaceAll("\\s", "").trim();
 						sb.append("\n").append(paso);
 						 timestamp = System.currentTimeMillis();
 						 rand      = new Double(1000d*Math.random()).longValue();
@@ -596,6 +600,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					hayErrores.set(true);
 				}
 			}
+			
+			listaArchivos=listaArchivosOriginales;
 			
 			paso = "Actualizando remesas, emisiones y endosos";
 			sb.append("\n").append(paso);
@@ -1513,6 +1519,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					,tipolote
 					);
 			
+			
 			paso="Regenerando archivos";
 			long timestamp = System.currentTimeMillis();
 			long rand      = new Double(1000d*Math.random()).longValue();
@@ -1523,13 +1530,15 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					".txt"
 				));
 			AtomicBoolean hayErrores=new AtomicBoolean(false);
-			listaArchivos=regeneraDocs(listaArchivos, noExiste, cdtipram, hayErrores);
 			
-			logger.debug(Utils.join("--->",listaArchivos," - ",noExiste," - ",cdsisrol," - ",hayErrores));
+			
+			
 			
 			if(!"C".equals(hoja)){
 				listaArchivos=armaJuegosDeImpresiones(listaArchivos);
 			}
+			List<Map<String,String>> listaArchivosOriginal=listaArchivos;
+			listaArchivos=regeneraDocs(listaArchivos, noExiste, cdtipram, hayErrores);
 				
 					
 			sb.append(Utils.log("\nlista=",listaArchivos));
@@ -1554,6 +1563,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				if(cddocume.toLowerCase().indexOf("://")!=-1)
 				{
 					paso = "Descargando archivo remoto";
+					cddocume=cddocume.replaceAll("\\s", "").trim();
 					sb.append("\n").append(paso);
 					timestamp = System.currentTimeMillis();
 					rand      = new Double(1000d*Math.random()).longValue();
@@ -1627,6 +1637,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			}
 			
 			inputStream = new FileInputStream(fusionado);
+			
+			listaArchivos=listaArchivosOriginal;
 			
 			paso = "Actualizando remesas, emisiones y endosos";
 			sb.append("\n").append(paso);
@@ -1785,6 +1797,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					,tipolote
 					);
 			
+			
 			long timestamp = System.currentTimeMillis();
 			long rand      = new Double(1000d*Math.random()).longValue();
 			File noExiste=new File(Utils.join(
@@ -1796,11 +1809,13 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			paso = "Regenerando archivos";
 			sb.append("\n").append(paso);
 			AtomicBoolean hayErrores=new AtomicBoolean(false);
-			listaArchivos=regeneraDocs(listaArchivos, noExiste, cdtipram, hayErrores);
+			
 			
 			if(!"C".equals(hoja)){
 				listaArchivos=armaJuegosDeImpresiones(listaArchivos);
 			}
+			List<Map<String,String>> listaArchivosOriginal=listaArchivos;
+			listaArchivos=regeneraDocs(listaArchivos, noExiste, cdtipram, hayErrores);
 				
 			
 					
@@ -1829,6 +1844,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				{
 					
 					 paso = "Descargando archivo remoto";
+					 cddocume=cddocume.replaceAll("\\s", "").trim();
 					sb.append("\n").append(paso);
 					timestamp = System.currentTimeMillis();
 					rand      = new Double(1000d*Math.random()).longValue();
@@ -1904,7 +1920,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			}
 			
 			inputStream = new FileInputStream(fusionado);
-			
+			listaArchivos=listaArchivosOriginal;
 			paso = "Actualizando remesas, emisiones y endosos";
 			sb.append("\n").append(paso);
 			
@@ -2211,10 +2227,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		logger.debug(Utils.join("@@@@@ documentos = ",documentos,
 								"@@@@@ cdtipram = ",cdtipram));
 		List<Map<String, String>> docsExisten=new ArrayList<Map<String,String>>();
-		long timestamp = System.currentTimeMillis();
-		long rand      = new Double(1000d*Math.random()).longValue();
 		
-		boolean entra=true;
+		
+		
 		
 		BufferedWriter bw=new BufferedWriter(new FileWriter(errores,true));
 		bw.append("POLIZA,DOCUMENTO,DESCRIPCION\r\n");
@@ -2236,10 +2251,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				
 				logger.debug("Verificando archivo remoto");
 				
+				cddocume=cddocume.replaceAll("\\s", "").trim();
+				
 				
 				try{
 					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
-					
+					logger.debug("Si descargo {}",existe);
 				}catch(ConnectException ex){
 					
 					existe=false;
@@ -2252,6 +2269,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					logger.error("Error al descargar documento: ",ex);
 					
 				}
+				
 			}else{
 				File f=new File(filePath);
 				logger.debug("Verificando si existe el archivo");
