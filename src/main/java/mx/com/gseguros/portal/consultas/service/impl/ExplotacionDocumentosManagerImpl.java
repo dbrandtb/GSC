@@ -1581,7 +1581,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					File local = new File(filePath);
 					
 					try{
-						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
+						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP").replace("http://201.151.228.153:9080", "http://192.168.2.153:9080"));
 						FileUtils.copyInputStreamToFile(remoto, local);
 					}catch(ConnectException ex){
 						logger.error("Error al descargar documento: ",ex);
@@ -1860,7 +1860,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					File local = new File(filePath);
 					
 					try{
-						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
+						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP").replace("http://201.151.228.153:9080", "http://192.168.2.153:9080"));
 						FileUtils.copyInputStreamToFile(remoto, local);
 					}catch(ConnectException ex){
 						logger.error("Error al descargar documento: ",ex);
@@ -2283,7 +2283,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						File dir=new File(dirTramite);
 						dir.mkdirs();
 						logger.debug("Regenerando Docs");
-						//mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
+						mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
 					}
 					
 					f=new File(filePath);
