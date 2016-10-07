@@ -5757,7 +5757,8 @@ function _p30_editarAutoAceptar(bot,callback)
     debug('>_p30_editarAutoAceptar');
     var form   = bot.up('form');
     var record = _p30_selectedRecord;
-    
+   myMask = _maskLocal('Cargando...');
+    myMask.show();
     var valido=true;
     
     if(valido)
@@ -5795,6 +5796,7 @@ function _p30_editarAutoAceptar(bot,callback)
 						success : function(response) {
 							var jsonNumSerie=Ext.decode(response.responseText);
 							if(jsonNumSerie.exito!=true) {
+								myMask.close();
 								numSerie='';
 								if(!RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)) {
 									mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
@@ -5805,6 +5807,7 @@ function _p30_editarAutoAceptar(bot,callback)
 											,'¿Desea Continuar?'
 											,function(btn){
 												if(btn === 'yes') {
+													myMask.close();
 													_fieldById('_p30_grid').getSelectionModel().deselectAll();
 												} else {
 													debug('no quiso Continuar');
@@ -5813,14 +5816,10 @@ function _p30_editarAutoAceptar(bot,callback)
 										));
 										mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
 							        }
-									
-									
-									
-									
-									
 								}
 							} else {
-								
+								myMask.close();
+								_fieldById('_p30_grid').getSelectionModel().deselectAll();
 							}
 						},
 						failure : errorComunicacion
@@ -5830,6 +5829,7 @@ function _p30_editarAutoAceptar(bot,callback)
 				}
 			
         } else {
+        	myMask.close();
         	_fieldById('_p30_grid').getSelectionModel().deselectAll();
         }
         /*_fieldById('_p30_grid').getSelectionModel().deselectAll();
@@ -6692,13 +6692,10 @@ function _p30_confirmarEndoso()
         json.slist2.push(recordTvalositPoliza.data);
         //crear record con los valores del formulario y el formulario oculto
         
-        if(!Ext.isEmpty(_p30_flujo))
-        {
+        if(!Ext.isEmpty(_p30_flujo)) {
             json.flujo = _p30_flujo;
         }
-        
         debug('>>> json a enviar:',json);
-        
         var boton=_fieldById('_p30_endosoButton');
         boton.setText('Cargando...');
         boton.setDisabled(true);
@@ -6707,17 +6704,14 @@ function _p30_confirmarEndoso()
         {
             url       : _p30_urlConfirmarEndoso
             ,jsonData : json
-            ,success  : function(response)
-            {
+            ,success  : function(response) {
             	myMask.close();
                 boton.setText('Emitir');
                 boton.setDisabled(false);
                 var json2 = Ext.decode(response.responseText);
                 debug('### confirmar endoso:',json2);
-                if(json2.success)
-                {
-                	Ext.create('Ext.window.Window',
-						{
+                if(json2.success) {
+                	Ext.create('Ext.window.Window',{
 							title        : 'Tarifa final'
 							,id          : 'tarifa'
 							,autoScroll  : true
@@ -6728,11 +6722,9 @@ function _p30_confirmarEndoso()
 							,defaults    : { width: 650 }
 							,closable    : false
 							,autoScroll  : true
-							,loader      :
-								{
+							,loader      :{
 									url       : url_PantallaPreview
-									,params   :
-										{
+									,params   : {
 											'smap4.nmpoliza'  : _p30_smap1.NMPOLIZA
                                             ,'smap4.cdunieco' : _p30_smap1.CDUNIECO
                                             ,'smap4.cdramo'   : _p30_smap1.CDRAMO
@@ -6752,8 +6744,7 @@ function _p30_confirmarEndoso()
                                                 boton.setDisabled(true);
                                                 var json2 =
 												        {
-												            smap1 :
-												            {
+												            smap1 : {
 												                cdunieco     : _p30_smap1.CDUNIECO
 												                ,cdramo      : _p30_smap1.CDRAMO
 												                ,estado      : _p30_smap1.ESTADO
@@ -6766,16 +6757,13 @@ function _p30_confirmarEndoso()
 												            ,slist2 : []
 												            ,slist3 : []
 												        };
-												storeTvalosit.each(function(record)
-												        {
+												storeTvalosit.each(function(record) {
 												            json2.slist1.push(record.data);
 												        });
-                                                Ext.Ajax.request(
-											        {
+                                                Ext.Ajax.request( {
 											            url       : _p30_urlConfirmarEndoso
 											           ,jsonData : json2
-												       ,success  : function(response)
-												            {
+												       ,success  : function(response){
 												            	var json3 = Ext.decode(response.responseText);
 												                var callbackRemesa = function() { marendNavegacion(2); };
 												                
@@ -6786,38 +6774,38 @@ function _p30_confirmarEndoso()
 																	,_p30_smap1.CDRAMO
 																	,_p30_smap1.ESTADO
 																	,_p30_smap1.NMPOLIZA
-																	,callbackRemesa
-																);
+																	,callbackRemesa);
 															});
-														
 														}
-											            ,failure  : function()
-											            {
+											            ,failure  : function(){
 											                errorComunicacion();
-											            }
-											        });
+											            }});
                                                     me.up('window').destroy();
                                                     
                                                    }
 																			                    
-									   },
-									   {
+									   },{
 										text    : 'Cancelar'
 										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
 										,handler : function (me){
 														me.up('window').destroy();
                                                         marendNavegacion(2);
-                                                        }
-									 } ]
+                                                        } 
+                                        },{
+										text    : 'Documentos'
+										,hidden : _p30_smap1.TIPOFLOT != TipoFlotilla.Pymes ? true: false
+										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+										,handler : function (me){
+														me.up('window').destroy();
+														
+                                                        } 
+									 	} ]
 					     }).show();
-                }
-                else
-                {
+                } else {
                     mensajeError(json2.respuesta);
                 }
             }
-            ,failure  : function()
-            {
+            ,failure  : function(){
             	myMask.close();
                 boton.setText('Emitir');
                 boton.setDisabled(false);
