@@ -6791,15 +6791,7 @@ function _p30_confirmarEndoso()
 														me.up('window').destroy();
                                                         marendNavegacion(2);
                                                         } 
-                                        },{
-										text    : 'Documentos'
-										,hidden : _p30_smap1.TIPOFLOT != TipoFlotilla.Pymes ? true: false
-										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-										,handler : function (me){
-														me.up('window').destroy();
-														
-                                                        } 
-									 	} ]
+                                        } ]
 					     }).show();
                 } else {
                     mensajeError(json2.respuesta);
