@@ -5097,4 +5097,140 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+	
+	@Override
+	public List<Map<String,String>> cargaLayoutImpresion(String filename,
+														 String tipoimp,
+														 String cdusuario)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_filename_i"  , filename);
+		params.put("pv_cdtipimp_i"  , tipoimp);
+		params.put("pv_cdusuari_i"  , cdusuario);
+		
+		Utils.debugProcedure(logger, "P_OBTENER_CONTRATANTES_RFC", params);
+		Map<String,Object>procResult  = ejecutaSP(new CargaLayoutImpresion(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		Utils.debugProcedure(logger, "P_OBTENER_CONTRATANTES_RFC", params,lista);
+		return lista;
+	}
+	
+	protected class CargaLayoutImpresion extends StoredProcedure
+    {
+    	protected CargaLayoutImpresion(DataSource dataSource)
+        {
+            super(dataSource,"PKG_IMPRESION.P_CARGA_LAYOUT_IMPRESION");
+            declareParameter(new SqlParameter("pv_filename_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipimp_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuari_i"  , OracleTypes.VARCHAR));
+            
+            String[] cols = new String[]{
+            		"IDPROCESO"
+            		,"CDTIPIMP"
+            		,"SUCURSAL"
+            		,"RAMO"
+            		,"POLIZA"
+            		,"CDTIPEND"
+            		,"NUMENDOSO"
+            		,"OBSERVAC"
+            		,"SEQRECIBO"
+            		,"NMCERTIF"
+            		,"SWIMPRIME"
+            		
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public String eliminaZwimpxlayout(String pv_idproceso_i)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_idproceso_i"  , pv_idproceso_i);
+		
+		Utils.debugProcedure(logger, "PKG_IMPRESION.P_ELIMINA_ZWIMPXLAYOUT", params);
+		Map<String,Object>procResult  = ejecutaSP(new EliminaZwimpxlayout(getDataSource()),params);
+		return (String) procResult.get("pv_title_o");
+	}
+		
+	
+	protected class EliminaZwimpxlayout extends StoredProcedure
+    {
+    	protected EliminaZwimpxlayout(DataSource dataSource)
+        {
+            super(dataSource,"PKG_IMPRESION.P_ELIMINA_ZWIMPXLAYOUT");
+            declareParameter(new SqlParameter("pv_idproceso_i"  , OracleTypes.VARCHAR));
+          
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public List<Map<String,String>> getDocumentosLayout(String pv_idproceso_i
+									  ,String pv_cdtipimp_i
+									  ,String pv_papel_i
+									  ,String pv_cdusuari_i
+									  ,String pv_cdsisrol_i)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_idproceso_i"  , pv_idproceso_i);
+		params.put("pv_cdtipimp_i"  , pv_cdtipimp_i);
+		params.put("pv_papel_i"  , pv_papel_i);
+		params.put("pv_cdusuari_i"  , pv_cdusuari_i);
+		params.put("pv_cdsisrol_i"  , pv_cdsisrol_i);
+		
+		Utils.debugProcedure(logger, "PKG_IMPRESION.P_GET_DOCUMENTOS_LAYOUT", params);
+		Map<String,Object>procResult  = ejecutaSP(new GetDocumentosLayout(getDataSource()),params);
+		return (List<Map<String, String>>) procResult.get("pv_registro_o");
+	}
+		
+	
+	protected class GetDocumentosLayout extends StoredProcedure
+    {
+    	protected GetDocumentosLayout(DataSource dataSource)
+        {
+            super(dataSource,"PKG_IMPRESION.P_GET_DOCUMENTOS_LAYOUT");
+            declareParameter(new SqlParameter("pv_idproceso_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipimp_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_papel_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuari_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdsisrol_i"  , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+            		"cdbroker"
+            		,"cdagente"
+            		,"ordenimp"
+            		,"cdsubram"
+            		,"tipend"
+            		,"nmpoliza"
+            		,"cddocume"
+            		,"dsdocume"
+            		,"nmcopias"
+            		,"numrec"
+            		,"nmordina"
+            		,"remesa"
+            		,"tipodoc"
+            		,"ntramite"
+            		,"nmcertif"
+            		,"nmsituac"
+            		,"orden"
+            		,"numend"
+            		,"swimpdpx"
+
+            		
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }
