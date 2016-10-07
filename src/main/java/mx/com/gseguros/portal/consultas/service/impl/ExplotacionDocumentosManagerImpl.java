@@ -2018,7 +2018,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		
 		sb.append(Utils.log(
 				 "\n@@@@@@ inputStream=",inputStream
-			    ,"\n@@@@@@ descargarLote @@@@@@"
+			    ,"\n@@@@@@ descargarLoteDplx @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		
@@ -2255,7 +2255,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				
 				
 				try{
-					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
+					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP").replace("http://201.151.228.153:9080", "http://192.168.2.153:9080"));
 					logger.debug("Si descargo {}",existe);
 				}catch(ConnectException ex){
 					
