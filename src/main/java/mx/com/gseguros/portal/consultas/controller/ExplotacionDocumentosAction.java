@@ -755,7 +755,6 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			}
 			errores=(File)session.get("fileDownErr");
 			session.put("descargarLote" , "");
-			
 			if("S".equals(descargarLote) && errores==null)
 			{
 				success = true;
@@ -793,9 +792,9 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		try{
 			File err=(File) session.get("fileDownErr");
 			fileInputStream=new FileInputStream(err);
-			contentType = TipoArchivo.TXT.getContentType();
+			contentType = TipoArchivo.CSV.getContentType();
 			filename    = Utils.join("lista_errores.csv");
-			
+			session.remove("fileDownErr");
 		}
 		catch(Exception ex)
 		{

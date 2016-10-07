@@ -604,4 +604,16 @@ public interface ConsultasDAO
 	 * @throws Exception
 	 */
 	public List<Map<String,String>> obtenerContratantesRfc(String cadena)throws Exception;
+	
+	public String eliminaZwimpxlayout(String pv_idproceso_i)throws Exception;
+	
+	public List<Map<String,String>> cargaLayoutImpresion(String filename,
+			 String tipoimp,
+			 String cdusuario)throws Exception;
+	
+	public List<Map<String, String>> getDocumentosLayout(String pv_idproceso_i
+			  ,String pv_cdtipimp_i
+			  ,String pv_papel_i
+			  ,String pv_cdusuari_i
+			  ,String pv_cdsisrol_i)throws Exception;
 }

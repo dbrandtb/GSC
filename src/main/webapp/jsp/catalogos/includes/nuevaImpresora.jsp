@@ -97,6 +97,7 @@ Ext.onReady(function() {
 		columns       :[ 
 						
 		                 { header     : 'Impresora' ,dataIndex : 'IMPRESORA', flex: 1 }
+		                 ,{ header     : 'Visible' ,dataIndex : 'DISPONIBLE',  flex: 1 }
 		                 ,{ header     : 'Descripción' ,dataIndex : 'DESCRIPCION', editor: 'textfield',flex: 1,
 		                	 allowBlank:false}
 		                 ,{ header     : 'No. bandejas' ,dataIndex : 'TIPO', editor: comboSN, flex: 1 ,

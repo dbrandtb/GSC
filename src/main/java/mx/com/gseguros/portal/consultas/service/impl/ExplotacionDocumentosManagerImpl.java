@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
@@ -485,10 +486,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		
 		String paso = "Iniciando impresi\u00F3n";
 		sb.append("\n").append(paso);
-		boolean errorArchivo=false;
-		long timestamp ;
-		long rand     ;
+		AtomicBoolean hayErrores=new AtomicBoolean(false);
 		File noExiste=null;
+		
 		try
 		{
 			paso = "Recuperando archivos";
@@ -501,6 +501,17 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					);
 			
 			sb.append(Utils.log("\nlista=",listaArchivos));
+			paso="Regenerando documentos";
+			long timestamp = System.currentTimeMillis();
+			long rand      = new Double(1000d*Math.random()).longValue();
+			noExiste=new File(Utils.join(
+					rutaDocumentosTemporal,
+					"/archivos_no_encontrados_lote_",lote,
+					"_",timestamp,rand,
+					".txt"
+				));
+			
+			listaArchivos=regeneraDocs(listaArchivos, noExiste, cdtipram, hayErrores);
 			
 			paso = "Armando juegos de impresiones";
 			sb.append("\n").append(paso);
@@ -512,21 +523,11 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			boolean apagado = false;
 			
-			
-			 timestamp = System.currentTimeMillis();
-			rand      = new Double(1000d*Math.random()).longValue();
-			noExiste=new File(Utils.join(
-					rutaDocumentosTemporal,
-					"/archivos_no_encontrados_lote_",lote,
-					"_",timestamp,rand,
-					".txt"
-				));
-			BufferedWriter bw=new BufferedWriter(new FileWriter(noExiste,true));
-			bw.append("POLIZA,DOCUMENTO\r\n");
-			bw.close();
-			
+			paso="generando Archivo";
 			for(Map<String,String>archivo:listaArchivos)
 			{
+				
+				try{
 				logger.debug("archivo={} rutaDocumentosPoliza={} nmcopias={} ntramite={} cddocume={} swimpdpx{}",
 						archivo, rutaDocumentosPoliza, archivo.get("nmcopias"),
 						archivo.get("ntramite"), archivo.get("cddocume"), archivo.get("swimpdpx"));
@@ -567,46 +568,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							logger.error("Error al descargar documento: ",ex);
 						}
 					}
-					File f=new File(filePath);
-					paso="Verificando si existe el archivo";
 					
-					if(!f.exists()){
-						
-						if(cdtipram.trim().equals("10")){
-							paso="Creando directorio ";
-							String dirTramite=Utils.join(rutaDocumentosPoliza,"/",ntramite,"/");
-							sb.append(Utils.join("\n@@@@ Creando directorio : ",dirTramite));
-							File dir=new File(dirTramite);
-							dir.mkdirs();
-							
-							paso="Regenerando Docs";
-							mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
-						}
-						
-						f=new File(filePath);
-						
-						if(!f.exists()){
-							
-							
-							sb.append(Utils.join("\n@@@@No existe el archivo: ",
-													filePath,
-													"\n",
-													archivo));
-							paso="Creando archivo de errores";
-							
-							
-							
-							bw=new BufferedWriter(new FileWriter(noExiste,true));
-							bw.append(Utils.join(nmpoliza,",\"",archivo.get("cddocume"),"\"\r\n"));
-							bw.close();
-							
-							
-							errorArchivo=true;
-							continue;
-							
-						}
-						
-					}
 					
 					paso = "Imprimiendo archivo";
 					sb.append("\n").append(paso);
@@ -628,6 +590,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					{
 						apagado = true;
 					}
+				}
+				}catch(Exception e){
+					logger.error("Error Generando archivo", e);
+					hayErrores.set(true);
 				}
 			}
 			
@@ -732,11 +698,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		
 		logger.debug(sb.toString());
 		
-		if(!errorArchivo){
-			noExiste=null;
+		
+		if(hayErrores.get()){
+			return noExiste;
 		}
 		
-		return noExiste;
+		return null;
 	}
 	
 	@Override
@@ -1533,7 +1500,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			//TODO si el papel es multiple hay que mandar por charola especifica (B por la 1, M por la 2)
 			if(hoja.length()>1)
 			{
-				throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
+				hoja=hoja.substring(0, 1);
+				//throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
 			}
 			
 			paso = "Recuperando archivos";
@@ -1541,9 +1509,24 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			List<Map<String,String>> listaArchivos = consultasDAO.recuperarArchivosParaImprimirLote(
 					lote
-					,hoja
+					,hoja.equalsIgnoreCase("B")?"BM":hoja
 					,tipolote
 					);
+			
+			paso="Regenerando archivos";
+			long timestamp = System.currentTimeMillis();
+			long rand      = new Double(1000d*Math.random()).longValue();
+			File noExiste=new File(Utils.join(
+					rutaDocumentosTemporal,
+					"/archivos_no_encontrados_lote_",lote,
+					"_",timestamp,rand,
+					".txt"
+				));
+			AtomicBoolean hayErrores=new AtomicBoolean(false);
+			listaArchivos=regeneraDocs(listaArchivos, noExiste, cdtipram, hayErrores);
+			
+			logger.debug(Utils.join("--->",listaArchivos," - ",noExiste," - ",cdsisrol," - ",hayErrores));
+			
 			if(!"C".equals(hoja)){
 				listaArchivos=armaJuegosDeImpresiones(listaArchivos);
 			}
@@ -1555,20 +1538,11 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			sb.append("\n").append(paso);
 			
 			List<File>files = new ArrayList<File>();
-			long timestamp = System.currentTimeMillis();
-			long rand      = new Double(1000d*Math.random()).longValue();
-			File noExiste=new File(Utils.join(
-					rutaDocumentosTemporal,
-					"/archivos_no_encontrados_lote_",lote,
-					"_",timestamp,rand,
-					".txt"
-				));
-			BufferedWriter bw=new BufferedWriter(new FileWriter(noExiste,true));
-			bw.append("POLIZA,DOCUMENTO\r\n");
-			bw.close();
+			paso="Generando archivo";
 			
 			for(Map<String,String>archivo:listaArchivos)
 			{
+				try{
 				String ntramite = archivo.get("ntramite");
 				String cddocume = archivo.get("cddocume");
 				String dsdocume = archivo.get("dsdocume");
@@ -1607,61 +1581,45 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					}
 				}
 				
-				File f=new File(filePath);
-				paso="Verificando si existe el archivo";
-				
-				if(!f.exists()){
-					
-					if(cdtipram.trim().equals("10")){
-						
-						String dirTramite=Utils.join(rutaDocumentosPoliza,"/",ntramite,"/");
-						sb.append(Utils.join("\n@@@@ Creando directorio : ",dirTramite));
-						File dir=new File(dirTramite);
-						dir.mkdirs();
-						paso="Regenerando Docs";
-						mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
-					}
-					
-					f=new File(filePath);
-					
-					if(!f.exists()){
-						
-						
-						sb.append(Utils.join("\n@@@@No existe el archivo: ",
-												filePath,
-												"\n",
-												archivo));
-						paso="Creando archivo de errores";
-						
-						
-						
-						bw=new BufferedWriter(new FileWriter(noExiste,true));
-						bw.append(Utils.join(nmpoliza,",\"",archivo.get("cddocume"),"\"\r\n"));
-						bw.close();
-						
-						
-						pdfReturn.setErrores(noExiste);
-						continue;
-						
-					}
-					
-				}
+			
 					
 				files.add(new File(filePath));
+				
+				}catch(Exception e){
+					logger.error("Error Generando archivo", e);
+					hayErrores.set(true);;
+				}
+				
 			}
 			
-			File fusionado = DocumentosUtils.fusionarDocumentosPDF(
-					files
-					,new File(Utils.join(
-							rutaDocumentosTemporal
-							,"/lote_"         , lote
-							,"_fusion_papel_" , hoja
-							,"_t_"            , System.currentTimeMillis()
-							,".pdf"
-					        )
-					)
-					,"C".equals(hoja)
-			);
+			if(hayErrores.get()){
+				pdfReturn.setErrores(noExiste);
+			}else{
+				pdfReturn.setErrores(null);
+			}
+			
+//			File fusionado = DocumentosUtils.fusionarDocumentosPDF(
+//					files
+//					,new File(Utils.join(
+//							rutaDocumentosTemporal
+//							,"/lote_"         , lote
+//							,"_fusion_papel_" , hoja
+//							,"_t_"            , System.currentTimeMillis()
+//							,".pdf"
+//					        )
+//					)
+//					,"C".equals(hoja)
+//			);
+			
+			paso="Creando archivo fusionado";
+			File fusionado = DocumentosUtils.mixPdf(files,new File(Utils.join(
+					rutaDocumentosTemporal
+					,"/lote_"         , lote
+					,"_fusion_papel_" , hoja
+					,"_t_"            , System.currentTimeMillis()
+					,".pdf"
+			        )
+			) );
 			
 			if(fusionado==null || !fusionado.exists())
 			{
@@ -1793,7 +1751,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 
 		StringBuilder sb = new StringBuilder(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-			    ,"\n@@@@@@ descargarLote @@@@@@"
+			    ,"\n@@@@@@ descargarLoteDplx @@@@@@"
 			    ,"\n@@@@@@ lote="     , lote
 			    ,"\n@@@@@@ hoja="     , hoja
 			    ,"\n@@@@@@ peso="     , peso
@@ -1815,7 +1773,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			//TODO si el papel es multiple hay que mandar por charola especifica (B por la 1, M por la 2)
 			if(hoja.length()>1)
 			{
-				throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
+				//throw new ApplicationException("No soporta intercalada, consulte a desarrollo");
 			}
 			
 			paso = "Recuperando archivos";
@@ -1823,20 +1781,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			List<Map<String,String>> listaArchivos = consultasDAO.recuperarArchivosParaImprimirLote(
 					lote
-					,hoja
+					,hoja.equalsIgnoreCase("B")?"BM":hoja
 					,tipolote
 					);
-			if(!"C".equals(hoja)){
-				listaArchivos=armaJuegosDeImpresiones(listaArchivos);
-			}
-				
-					
-			sb.append(Utils.log("\nlista=",listaArchivos));
 			
-			paso = "Fusionando archivos";
-			sb.append("\n").append(paso);
-			
-			List<File>files = new ArrayList<File>();
 			long timestamp = System.currentTimeMillis();
 			long rand      = new Double(1000d*Math.random()).longValue();
 			File noExiste=new File(Utils.join(
@@ -1845,12 +1793,29 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					"_",timestamp,rand,
 					".txt"
 				));
-			BufferedWriter bw=new BufferedWriter(new FileWriter(noExiste,true));
-			bw.append("POLIZA,DOCUMENTO\r\n");
-			bw.close();
+			paso = "Regenerando archivos";
+			sb.append("\n").append(paso);
+			AtomicBoolean hayErrores=new AtomicBoolean(false);
+			listaArchivos=regeneraDocs(listaArchivos, noExiste, cdtipram, hayErrores);
+			
+			if(!"C".equals(hoja)){
+				listaArchivos=armaJuegosDeImpresiones(listaArchivos);
+			}
+				
+			
+					
+			sb.append(Utils.log("\nlista=",listaArchivos));
+			
+			paso = "Fusionando archivos";
+			sb.append("\n").append(paso);
+			
+			List<File>files = new ArrayList<File>();
+			
 			
 			for(Map<String,String>archivo:listaArchivos)
 			{
+				
+				try{
 				String ntramite = archivo.get("ntramite");
 				String cddocume = archivo.get("cddocume");
 				String swimpdpx = archivo.get("swimpdpx");
@@ -1890,52 +1855,11 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					
 				}
 				
-				File f=new File(filePath);
-				paso="Verificando si existe el archivo";
 				
-				if(!f.exists()){
-					
-					if(cdtipram.trim().equals("10")){
-						
-						String dirTramite=Utils.join(rutaDocumentosPoliza,"/",ntramite,"/");
-						sb.append(Utils.join("\n@@@@ Creando directorio : ",dirTramite));
-						File dir=new File(dirTramite);
-						dir.mkdirs();
-						paso="Regenerando Docs";
-						mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
-					}
-					
-					f=new File(filePath);
-					
-					if(!f.exists()){
-						
-						
-						sb.append(Utils.join("\n@@@@No existe el archivo: ",
-												filePath,
-												"\n",
-												archivo));
-						paso="Creando archivo de errores";
-						
-						
-						
-						bw=new BufferedWriter(new FileWriter(noExiste,true));
-						bw.append(Utils.join(nmpoliza,",\"",archivo.get("cddocume"),"\"\r\n"));
-						bw.close();
-						
-						
-						pdfReturn.setErrores(noExiste);
-						continue;
-						
-					}
-					
-				}
-				files.add(new File(filePath));
+				
+				
 				if(!dsdocume.toLowerCase().contains("recibo") && "N".equalsIgnoreCase(swimpdpx.trim())){
-					paso="Añadiendo hoja en blanco";
-					timestamp = System.currentTimeMillis();
-					rand      = new Double(1000d*Math.random()).longValue();
-					files.add(DocumentosUtils.pdfBlanco(
-							new File(
+						files.add(DocumentosUtils.blancoParaDuplex(new File(filePath), new File(
 									Utils.join(
 											rutaDocumentosTemporal
 											,"/blanco"    , lote
@@ -1943,23 +1867,36 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 											,".pdf"
 											))
 							));
+				}else{
+					files.add(new File(filePath));
 				}
+				
+				}catch(Exception e){
+					logger.error("Error Generando archivo", e);
+					hayErrores.set(true);
+				}
+					
+
 				
 				
 			}
 			
-			File fusionado = DocumentosUtils.fusionarDocumentosPDF(
-					files
-					,new File(Utils.join(
-							rutaDocumentosTemporal
-							,"/lote_"         , lote
-							,"_fusion_papel_" , hoja
-							,"_t_"            , System.currentTimeMillis()
-							,".pdf"
-					        )
-					)
-					,"C".equals(hoja)
-			);
+			if(hayErrores.get()){
+				pdfReturn.setErrores(noExiste);
+			}else{
+				pdfReturn.setErrores(null);
+			}
+			
+			
+			paso="Creando archivo fusionado";
+			File fusionado = DocumentosUtils.mixPdf(files,new File(Utils.join(
+					rutaDocumentosTemporal
+					,"/lote_"         , lote
+					,"_fusion_papel_" , hoja
+					,"_t_"            , System.currentTimeMillis()
+					,".pdf"
+			        )
+			) );
 			
 			if(fusionado==null || !fusionado.exists())
 			{
@@ -2266,4 +2203,108 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 		return listaArmada;
 	}
+	
+	
+	private List<Map<String, String>> regeneraDocs(List<Map<String, String>> documentos,File errores,String cdtipram,AtomicBoolean hayErrores)throws Exception{
+		logger.debug(Utils.join("@@@@@ documentos = ",documentos,
+								"@@@@@ cdtipram = ",cdtipram));
+		List<Map<String, String>> docsExisten=new ArrayList<Map<String,String>>();
+		long timestamp = System.currentTimeMillis();
+		long rand      = new Double(1000d*Math.random()).longValue();
+		
+		boolean entra=true;
+		
+		BufferedWriter bw=new BufferedWriter(new FileWriter(errores,true));
+		bw.append("POLIZA,DOCUMENTO,DESCRIPCION\r\n");
+		//bw.close();
+		
+		for(Map<String,String>archivo:documentos)
+		{
+			
+			String ntramite = archivo.get("ntramite");
+			String cddocume = archivo.get("cddocume");
+			String dsdocume = archivo.get("dsdocume");
+			String nmpoliza = archivo.get("nmpoliza");
+			String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
+			boolean existe=true;
+			logger.debug(Utils.join("\ntramite,archivo=",ntramite,",",cddocume));
+			
+			if(cddocume.toLowerCase().indexOf("://")!=-1)
+			{
+				
+				logger.debug("Verificando archivo remoto");
+				
+				
+				try{
+					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
+					
+				}catch(ConnectException ex){
+					
+					existe=false;
+					logger.error("Error al descargar documento: ",ex);
+					
+					
+				}catch(Exception ex){
+					existe=false;
+				
+					logger.error("Error al descargar documento: ",ex);
+					
+				}
+			}else{
+				File f=new File(filePath);
+				logger.debug("Verificando si existe el archivo");
+				
+				if(!f.exists()){
+					
+					if(cdtipram.trim().equals("10")){
+						
+						String dirTramite=Utils.join(rutaDocumentosPoliza,"/",ntramite,"/");
+						logger.debug(Utils.join("\n@@@@ Creando directorio : ",dirTramite));
+						File dir=new File(dirTramite);
+						dir.mkdirs();
+						logger.debug("Regenerando Docs");
+						//mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
+					}
+					
+					f=new File(filePath);
+					
+					if(!f.exists()){
+						
+						
+						logger.debug(Utils.join("\n@@@@No existe el archivo: ",
+												filePath,
+												"\n",
+												archivo));
+						existe=false;
+						
+					}
+					
+				}
+			}
+			
+			if(!existe){
+				logger.debug("Escribiendo errores");
+				bw.append(Utils.join(nmpoliza==null?"":nmpoliza
+						,",\"",cddocume,"\""
+						,",\"",dsdocume,"\""
+						,"\r\n"));
+				
+				hayErrores.set(true);
+				
+			}else{
+				
+				docsExisten.add(archivo);
+			}
+			
+			
+		
+	}
+		bw.close();
+		logger.debug("......"+hayErrores);
+	
+	return docsExisten;
+	}
+		
 }
+
+

@@ -15,11 +15,13 @@ import org.apache.log4j.Logger;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.RectangleReadOnly;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
@@ -166,4 +168,91 @@ public class DocumentosUtils
 		return output;
 
 	}
+	
+	
+	
+	/**
+	 * Si es un archivo con numero impar de hojas le agrega una hoja blanca para la impresion duplex
+	 * 
+	 * @param input archivo a analizar 
+	 * @param blanco ruta para guardar temporalmente el pdf blanco que se le agrega al archivo
+	 * @return el mismo input pero con una hoja blanca si es el caso
+	 */
+	public static File blancoParaDuplex(File input,File blanco){
+		try {
+			PdfReader reader=new PdfReader(input.getAbsolutePath());
+			int nPaginas=reader.getNumberOfPages();
+			List<File> fus=new ArrayList<File>();
+			fus.add(input);
+			if(nPaginas%2!=0){
+				fus.add(pdfBlanco(blanco));
+			}
+			
+			long timestamp = System.currentTimeMillis();
+			long rand = new Double(1000d*Math.random()).longValue();
+			
+			File ot=new File(blanco.getAbsoluteFile().getParent()+"\\"+
+					input.getName().substring(
+							0, input.getName().indexOf(".")
+							)+"_dplx_"+timestamp+rand+".pdf");
+			
+			
+			return fusionarDocumentosPDF(fus,ot); 
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e);
+		}  catch (IOException e) {
+			logger.error(e);
+		}
+		return null;
+	}
+	
+	public static File mixPdf(List<File> pdfs,File salida) {
+		
+		Document document= new Document();
+		PdfCopy copy;
+		try {
+			copy = new PdfCopy(document, new FileOutputStream(salida));
+		
+			document.open();
+			PdfReader reader;
+			int n;
+			for(File doc: pdfs){
+				reader=new PdfReader(doc.getAbsolutePath());
+				n=reader.getNumberOfPages();
+				for(int page=0;page<n;){
+					copy.addPage(copy.getImportedPage(reader, ++page));
+				}
+				copy.freeReader(reader);
+				reader.close();
+			}
+			document.close();
+		
+		} catch (FileNotFoundException e) {
+			logger.error(e);
+		} catch (DocumentException e) {
+			
+			logger.error(e);
+		} catch (IOException e) {
+		
+			logger.error(e);
+		}catch(ExceptionConverter e){
+			logger.error(e);
+		}catch(Exception e){
+			logger.error(e);
+		}
+		
+		return salida;
+		
+	}
+	
+//	public static void main(String []args)throws Exception{
+//		
+//		List<File> l=new ArrayList();
+//		l.add(new File("c:\\RES\\horizontal.pdf"));
+//		l.add(new File("c:\\RES\\lo.pdf"));
+//		mixPdf(l, new File("c:\\RES\\slm.pdf"));
+//		
+//	}
 }
