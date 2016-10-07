@@ -1647,7 +1647,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				{
 					listaRecibos.add(new DocumentoReciboParaMostrarDTO(archivo.get("ntramite"),archivo.get("cddocume")));
 				}
-				
+				logger.debug("listaRecibos: {}", listaRecibos);
 				emisionDAO.mostrarRecibosImpresosListaDeListas(listaRecibos);
 			}
 			
@@ -1924,6 +1924,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				{
 					listaRecibos.add(new DocumentoReciboParaMostrarDTO(archivo.get("ntramite"),archivo.get("cddocume")));
 				}
+				logger.debug("listaRecibos: {}", listaRecibos);
 				
 				emisionDAO.mostrarRecibosImpresosListaDeListas(listaRecibos);
 			}
@@ -2181,6 +2182,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				}
 				
 			}
+			
 			
 			paso = "Reiniciando contadores";
 			logger.debug(paso);
