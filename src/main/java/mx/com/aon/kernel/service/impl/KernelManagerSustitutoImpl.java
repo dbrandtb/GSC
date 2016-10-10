@@ -1335,6 +1335,20 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 			return result;
 	}
 
+	public WrapperResultados obtenerAgentePolizaPorPuntos(String cdunieco,
+			String cdramo, String estado, String nmpoliza)
+					throws ApplicationException {		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pi_CDUNIECO", cdunieco);
+		params.put("pi_CDRAMO", cdramo);
+		params.put("pi_ESTADO", estado);
+		params.put("pi_NMPOLIZA", nmpoliza);
+		
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.OBTIENE_DATOS_POLIZA_AGENTE_X_PUNTOS);
+		return result;
+	}
+
 	public WrapperResultados obtenerTiposAgente() throws ApplicationException {
 		HashMap<String, Object> params = new HashMap<String, Object>();		
 		WrapperResultados result = this.returnBackBoneInvoke(params,
@@ -1351,11 +1365,84 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 				ProcesoDAO.GUARDA_PORCENTAJE_POLIZA);
 		return result;
 	}
+
+	/**
+	 * PKG_SATELITES.P_MOV_MPOLIAGE_PORCENTAJES
+	 */
+	public WrapperResultados guardaPorcentajeAgentesPorPuntos(Map<String, Object> params)
+			throws ApplicationException {
+		
+		/**
+		 * Se convierte a porcentaje de puntos porcentuales
+		 */
+		String comision = (String) params.get("COMISION");
+		String porcComPP  = (String) params.get("pi_PORREDAU");
+		
+		try{
+			logger.debug("<<<<<<>>>>>> Antes de convertir el punto porcentual a valor porcentual <<<<<<>>>>>>");
+			logger.debug("::::::Comision: " + comision);
+			logger.debug("::::::Porcentaje Cesion de Comision PP: " + porcComPP);
+			
+    		if(StringUtils.isNotBlank(comision) && StringUtils.isNotBlank(porcComPP)){
+    			float fComision = Float.parseFloat(comision);
+    			float fporcCom  = 0;
+    			float fporcComPP = Float.parseFloat(porcComPP);
+    			
+    			fporcCom = (fporcComPP * 100) / fComision;
+    			porcComPP = Float.toString(fporcCom);
+    			
+    			logger.debug("::::: Despues de convertir  la comision a comision total de punto porcentual: " + porcComPP);
+    		}
+		}catch (Exception e){
+			logger.debug("Error al convertir punto porcentual a valor porcentual de la cesion de comision");
+		}
+		
+		params.put("pi_PORREDAU", porcComPP);
+		
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.GUARDA_PORCENTAJE_POLIZA_X_PUNTOS);
+		return result;
+	}
 	
 	public WrapperResultados guardarEliminarPorcentajeAgentes(Map<String, Object> params)
 			throws ApplicationException {
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				ProcesoDAO.GUARDA_ELIMINA_PORCENTAJE_POLIZA);
+		return result;
+	}
+
+	public WrapperResultados guardaEliminaPorcentajeAgentesPorPuntos(Map<String, Object> params)
+			throws ApplicationException {
+		
+		/**
+		 * Se convierte a porcentaje de puntos porcentuales
+		 */
+		String comision = (String) params.get("COMISION");
+		String porcComPP  = (String) params.get("pi_PORREDAU");
+		
+		try{
+			logger.debug("<<<<<<>>>>>> Antes de convertir el punto porcentual a valor porcentual <<<<<<>>>>>>");
+			logger.debug("::::::Comision: " + comision);
+			logger.debug("::::::Porcentaje Cesion de Comision PP: " + porcComPP);
+			
+    		if(StringUtils.isNotBlank(comision) && StringUtils.isNotBlank(porcComPP)){
+    			float fComision = Float.parseFloat(comision);
+    			float fporcCom  = 0;
+    			float fporcComPP = Float.parseFloat(porcComPP);
+    			
+    			fporcCom = (fporcComPP * 100) / fComision;
+    			porcComPP = Float.toString(fporcCom);
+    			
+    			logger.debug("::::: Despues de convertir  la comision a comision total de punto porcentual: " + porcComPP);
+    		}
+		}catch (Exception e){
+			logger.debug("Error al convertir punto porcentual a valor porcentual de la cesion de comision");
+		}
+		
+		params.put("pi_PORREDAU", porcComPP);
+		
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.GUARDA_ELIMINA_PORCENTAJE_POLIZA_X_PUNTOS);
 		return result;
 	}
 

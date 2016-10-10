@@ -199,13 +199,16 @@ public interface KernelManagerSustituto {
 	public List<Map<String, String>> PValInfoPersonas(Map<String,String> params) throws ApplicationException;	
 	public String validaTitularMenorEdad(Map<String,String> params) throws ApplicationException;	
 	public WrapperResultados obtenerAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza)throws ApplicationException;
+	public WrapperResultados obtenerAgentePolizaPorPuntos(String cdunieco, String cdramo, String estado, String nmpoliza)throws ApplicationException;
 	public WrapperResultados obtenerTiposAgente()throws ApplicationException;
 	/**
 	 * PKG_SATELITES.P_MOV_MPOLIAGE_PORCENTAJES
 	 */
 	public WrapperResultados guardarPorcentajeAgentes(Map<String, Object> params) throws ApplicationException;
+	public WrapperResultados guardaPorcentajeAgentesPorPuntos(Map<String, Object> params) throws ApplicationException;
 	
 	public WrapperResultados guardarEliminarPorcentajeAgentes(Map<String, Object> params) throws ApplicationException;
+	public WrapperResultados guardaEliminaPorcentajeAgentesPorPuntos(Map<String, Object> params) throws ApplicationException;
 	/**
 	 * Devuelve una lista con los asegurados extraprimados invalidos
 	 * @param params

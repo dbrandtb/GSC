@@ -31,7 +31,7 @@ Ext.onReady(function() {
         ,autoLoad  : false
         ,proxy     : {
             type: 'ajax',
-            url : _URL_VALIDA_DATOS_SITUACION,
+            url : _URL_OBTIENE_DATOS_AGENTE_X_PUNTOS,
             reader: {
                 type: 'json',
                 root: 'datosPolizaAgente'
@@ -122,7 +122,7 @@ Ext.onReady(function() {
 			//INFORMACION PARA LA MODIFICACION DE CESION DE COMISION
 			{
 				xtype : 'numberfield',			fieldLabel : 'Cesi&oacute;n de Comisi&oacute;n',		id : 'sesionComision',					name : 'sesionComision',
-				allowNegative : false,			labelWidth : 170,			allowBlank : false,			maxValue : 100,							allowDecimals : true,
+				allowNegative : false,			labelWidth : 170,			allowBlank : false,			allowDecimals : true,
 				decimalSeparator : '.',			minValue : 0,				width : 500
 			}
         ]
@@ -144,7 +144,14 @@ Ext.onReady(function() {
                         if (panelModificacionInsercion.form.isValid()) {
                             var datos=panelModificacionInsercion.form.getValues();
                             
-                            if(parseFloat(datos.sesionComision) > parseFloat(datos.participacion)){
+                            if((parseFloat(datos.sesionComision) > parseFloat(datos.comisionCuadro))){
+                            	centrarVentanaInterna(Ext.Msg.show({
+                                    title:'Error',
+                                    msg: 'La cesi&oacute;n de comisi&oacute;n debe ser menor que la comisi&oacute;n.',
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.Msg.WARNING
+                                }));
+                            }else if(parseFloat(datos.sesionComision) > parseFloat(datos.participacion)){
                             	centrarVentanaInterna(Ext.Msg.show({
                                     title:'Error',
                                     msg: 'El valor de la partici&oacute;n debe ser mayor a Cesi&oacute;n de comisi&oacute;n',
@@ -160,7 +167,7 @@ Ext.onReady(function() {
                                         nmsuplem=storGridClau.data.items[0].data.nmsuplem;
                                     }
                                     
-                                    guardaEliminaPorcentajeAgentes(datos.pv_cdagente_i,datos.pv_cdagente_i, nmsuplem, datos.tipoAgente, datos.sesionComision, nmcuadro, cdsucurs,datos.participacion,datos.nvacomision, "I");
+                                    guardaEliminaPorcentajeAgentes(datos.pv_cdagente_i,datos.pv_cdagente_i, nmsuplem, datos.tipoAgente, datos.sesionComision, nmcuadro, cdsucurs,datos.participacion,datos.nvacomision, "I", datos.comisionCuadro);
                                     Ext.getCmp('btnGuardaRegistro').enable();
                                     ventanaGrid.close();
                                 }
@@ -183,7 +190,7 @@ Ext.onReady(function() {
                                         respuesta=datos.pv_cdagente_i;
                                     }
                                     
-                                    guardaEliminaPorcentajeAgentes(datos.pv_cdagente_i,respuesta, storGridClau.data.items[valorIndex].get('nmsuplem'), datos.tipoAgente,datos.sesionComision, storGridClau.data.items[valorIndex].get('nmcuadro'), storGridClau.data.items[valorIndex].get('cdsucurs'),datos.participacion,datos.nvacomision, "U");
+                                    guardaEliminaPorcentajeAgentes(datos.pv_cdagente_i,respuesta, storGridClau.data.items[valorIndex].get('nmsuplem'), datos.tipoAgente,datos.sesionComision, storGridClau.data.items[valorIndex].get('nmcuadro'), storGridClau.data.items[valorIndex].get('cdsucurs'),datos.participacion,datos.nvacomision, "U", datos.comisionCuadro);
                                     Ext.getCmp('btnGuardaRegistro').enable();
                                     ventanaGrid.close();
                                 }
@@ -213,7 +220,7 @@ Ext.onReady(function() {
     menuPrincipal= Ext.create('Ext.form.Panel',{
         border    : 0
         ,renderTo : 'div_clau'
-        ,url: _URL_GUARDA_PORCENTAJE
+        ,url: _URL_GUARDA_PORCENTAJE_X_PUNTOS
         ,items    :
         [
             /*ELIMINAR EL PANEL DE LAS BUSQUEDAS*/            
@@ -306,7 +313,8 @@ Ext.onReady(function() {
 			       onRemoveClick: function(grid, rowIndex){
 			    	   if(+storGridClau.data.length > 1){
 			    		   var record=this.getStore().getAt(rowIndex);
-			    		   guardaEliminaPorcentajeAgentes(record.data.cdagente, record.data.cdagente, record.data.nmsuplem, record.data.cdtipoAg, record.data.porredau, record.data.nmcuadro, record.data.cdsucurs,record.data.porparti,record.data.nvacomision, 'D' );
+			    		   
+			    		   guardaEliminaPorcentajeAgentes(record.data.cdagente, record.data.cdagente, record.data.nmsuplem, record.data.cdtipoAg, record.data.porredau, record.data.nmcuadro, record.data.cdsucurs,record.data.porparti,record.data.nvacomision, 'D' , record.data.comision);
 				    	   this.getStore().removeAt(rowIndex);
 			    	   }else{
 			    		   centrarVentanaInterna(mensajeWarning('Antes de eliminar el agente, ingrese el nuevo agente.'));
@@ -360,6 +368,7 @@ Ext.onReady(function() {
                                                cdtipoAg: arr[i].cdtipoAg, descripl: arr[i].descripl,
                                                nmcuadro: arr[i].nmcuadro, nmsuplem: arr[i].nmsuplem,
                                                porparti: arr[i].porparti, porredau:arr[i].porredau,
+                                               comision: arr[i].comision,
                                                nvacomision: arr[i].nvacomision});
                         resultado=parseFloat(resultado) + parseFloat(arr[i].porparti);
                         storGridClau.data.items[i].set('cdagenteA',arr[i].cdagente);
@@ -378,7 +387,7 @@ Ext.onReady(function() {
                         submitValues['datosPorcentajeAgente']=guardarRegistros; // guardamos la informacion del grid, dependiendo del numero
                         menuPrincipal.setLoading(true);
                         Ext.Ajax.request({
-                            url: _URL_GUARDA_PORCENTAJE,
+                            url: _URL_GUARDA_PORCENTAJE_X_PUNTOS,
                             jsonData:Ext.encode(submitValues), // convierte a estructura JSON
                             
                             success:function(response,opts){
@@ -534,9 +543,9 @@ Ext.onReady(function() {
         }
     }
     
-    function guardaEliminaPorcentajeAgentes(cdagente,cdagenteA, nmsuplem, cdtipoAg, porredau, nmcuadro, cdsucurs,porparti,nvacomision,accion){
+    function guardaEliminaPorcentajeAgentes(cdagente,cdagenteA, nmsuplem, cdtipoAg, porredau, nmcuadro, cdsucurs,porparti,nvacomision,accion, comisionCuadro){
             Ext.Ajax.request({
-                url     : _URL_GUARDA_ELIMINA_PORC
+                url     : _URL_GUARDA_ELIMINA_PORC_X_PUNTOS
                 ,params : {
                 	'params.cdunieco'   : Ext.getCmp('unieco').getValue()
                     ,'params.ramo'      : Ext.getCmp('ramo').getValue()
@@ -550,6 +559,7 @@ Ext.onReady(function() {
                     ,'params.nmcuadro'   : nmcuadro
                     ,'params.cdsucurs'   : cdsucurs
                     ,'params.porparti'   : porparti
+                    ,'params.comision'   : comisionCuadro
                     ,'params.nvacomision': nvacomision
                     ,'params.accion'    : accion
                 }
