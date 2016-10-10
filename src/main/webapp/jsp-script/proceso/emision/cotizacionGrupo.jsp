@@ -273,6 +273,8 @@ var _p47_callback;
 
 var _cotcol_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 debug('_cotcol_flujo:', _cotcol_flujo, '.');
+
+var listaSinPadre = [];
 ////// variables //////
 
 Ext.onReady(function()
@@ -6332,6 +6334,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 							rec.set(y,rec.raw[y]);
                 						}
                 						rec.commit();
+                						debug('termino commit');
                 					}
                 				}
                 			}
@@ -6401,6 +6404,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                 {
                     afterrender : function(me)
                     {
+                    	debug('afterrender');
                         Ext.getStore('_p21_storeExtraprimas'+record.get('letra')).sort('NMSITUAC','ASC');
                     }
 					,beforedeselect : beforedesel
