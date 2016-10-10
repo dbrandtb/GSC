@@ -7392,9 +7392,9 @@ function _p30_actualizarSwexiperTramite(callback)
 
 
 ////// funciones //////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
+<%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
 </script>
 <script type="text/javascript" src="${ctx}/js/proceso/emision/cotizacionAutoFlotillaScript.js?now=${now}"></script>
 </head>
-<body><div id="_p30_divpri" style="height:1100px;"</body>
+<body><div id="_p30_divpri" style="height:1100px;"></div></body>
 </html>
