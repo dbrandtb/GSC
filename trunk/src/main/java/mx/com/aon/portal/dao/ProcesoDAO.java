@@ -149,9 +149,12 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String P_VAL_INFO_PERSONAS="P_VAL_INFO_PERSONAS";    
     public static final String VALIDA_TITULAR_MENOR_EDAD="VALIDA_TITULAR_MENOR_EDAD";    
     public static final String OBTIENE_DATOS_POLIZA_AGENTE =    "OBTIENE_DATOS_POLIZA_AGENTE";
+    public static final String OBTIENE_DATOS_POLIZA_AGENTE_X_PUNTOS =    "OBTIENE_DATOS_POLIZA_AGENTE_X_PUNTOS";
 	public static final String OBTIENE_DATOS_GENERAL_AGENTE =	"OBTIENE_DATOS_GENERAL_AGENTE";
 	public static final String GUARDA_PORCENTAJE_POLIZA =	"GUARDA_PORCENTAJE_POLIZA";
+	public static final String GUARDA_PORCENTAJE_POLIZA_X_PUNTOS =	"GUARDA_PORCENTAJE_POLIZA_X_PUNTOS";
 	public static final String GUARDA_ELIMINA_PORCENTAJE_POLIZA =	"GUARDA_ELIMINA_PORCENTAJE_POLIZA";
+	public static final String GUARDA_ELIMINA_PORCENTAJE_POLIZA_X_PUNTOS =	"GUARDA_ELIMINA_PORCENTAJE_POLIZA_X_PUNTOS";
 	public static final String OBTIENE_DATOS_RECIBOS_DxN =	"OBTIENE_DATOS_RECIBOS_DxN";
 	public static final String GUARDA_PERIODOS_DXN =	"GUARDA_PERIODOS_DXN";
 	public static final String LANZA_PROCESO_DXN =	"LANZA_PROCESO_DXN";
@@ -260,9 +263,12 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(VALIDA_TITULAR_MENOR_EDAD,new ValidaTitularMenorEdad(getDataSource()));
         
         addStoredProcedure(OBTIENE_DATOS_POLIZA_AGENTE,      new ObtieneDatosPolizaAgente(getDataSource()));
+        addStoredProcedure(OBTIENE_DATOS_POLIZA_AGENTE_X_PUNTOS,      new ObtieneDatosPolizaAgentePorPuntos(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_GENERAL_AGENTE,      new ObtieneDatosGeneralAgente(getDataSource()));
 		addStoredProcedure(GUARDA_PORCENTAJE_POLIZA, new GuardarPorcentajePoliza(getDataSource()));
+		addStoredProcedure(GUARDA_PORCENTAJE_POLIZA_X_PUNTOS, new GuardarPorcentajePolizaPorPuntos(getDataSource()));
 		addStoredProcedure(GUARDA_ELIMINA_PORCENTAJE_POLIZA, new GuardarEliminarPorcentajePoliza(getDataSource()));
+		addStoredProcedure(GUARDA_ELIMINA_PORCENTAJE_POLIZA_X_PUNTOS, new GuardarEliminarPorcentajePolizaPorPuntos(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_RECIBOS_DxN, new ObtenDatosRecibosDxN(getDataSource()));
 		addStoredProcedure(GUARDA_PERIODOS_DXN, new GuardaPeriodosDxN(getDataSource()));
 		addStoredProcedure(LANZA_PROCESO_DXN, new LanzaProcesoDxN(getDataSource()));
@@ -4553,6 +4559,77 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		return consulta;
     	}
     }
+
+    
+    protected class ObtieneDatosPolizaAgentePorPuntos extends CustomStoredProcedure {
+    	
+    	protected ObtieneDatosPolizaAgentePorPuntos(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SATELITES.P_OBTIENE_MPOLIAGE_PORCENTAJES");
+    		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMPOLIZA", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_rc_cursor", OracleTypes.CURSOR, new DatosPolizaAgentePorPuntos()));
+    		declareParameter(new SqlOutParameter("po_CDERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_DSERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_TIPOERROR", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("po_rc_cursor");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
+    protected class DatosPolizaAgentePorPuntos  implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		
+    		AgentePolizaVO consulta = new AgentePolizaVO();
+    		consulta.setCdagente(rs.getString("cdagente"));
+    		consulta.setCdtipoAg(rs.getString("cdtipoag"));
+    		consulta.setDescripl(rs.getString("descripl"));
+    		consulta.setPorparti(rs.getString("porparti"));
+    		
+    		/**
+    		 * Se convierte a puntos porcentuales
+    		 */
+    		String comision = rs.getString("pocompro");
+    		String porcCom  = rs.getString("porredau");
+    		
+    		try{
+    			logger.debug("<<<<<<>>>>>> Antes de convertir el valor porcentual a punto porcentual <<<<<<>>>>>>");
+    			logger.debug("::::::Comision: " + comision);
+    			logger.debug("::::::Porcentaje Cesion de Comision: " + porcCom);
+    			
+	    		if(StringUtils.isNotBlank(comision) && StringUtils.isNotBlank(porcCom)){
+	    			float fComision = Float.parseFloat(comision);
+	    			float fporcCom  = Float.parseFloat(porcCom);
+	    			float fporcComPP = 0;
+	    			
+	    			fporcComPP = (fporcCom * fComision) / 100;
+	    			porcCom = Float.toString((float)(Math.round(fporcComPP*100.0)/100.0));
+	    			
+	    			logger.debug("::::: Despues de convertir la cesion de comision a punto porcentual de la comision: " + porcCom);
+	    		}
+    		}catch (Exception e){
+    			logger.debug("Error al convertir el valor porcentual de la cesion de comision a punto porcentual");
+    		}
+    		
+    		consulta.setPorredau(porcCom);
+    		consulta.setNmsuplem(rs.getString("nmsuplem"));
+    		consulta.setNmcuadro(rs.getString("nmcuadro"));
+    		consulta.setCdsucurs(rs.getString("cdsucurs"));
+    		consulta.setComision(comision);
+    		consulta.setNvacomision(rs.getString("nvopccom"));
+    		return consulta;
+    	}
+    }
     
     
     
@@ -4617,6 +4694,37 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		}   	
 
     }
+
+    protected class GuardarPorcentajePolizaPorPuntos extends CustomStoredProcedure {
+    	
+    	protected GuardarPorcentajePolizaPorPuntos(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SATELITES2.P_MOV_MPOLIAGE_PORCENTAJES");
+    		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMPOLIZA", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDAGENTE_NVO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDAGENTE", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMSUPLEM", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDTIPOAG", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_PORREDAU", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMCUADRO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDSUCURS", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_PORPARTI", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NVOPCCOM", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_CDERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_DSERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_TIPOERROR", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		return mapper.build(map);
+    	}   	
+    	
+    }
     
     
     protected class GuardarEliminarPorcentajePoliza extends CustomStoredProcedure {
@@ -4649,6 +4757,38 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			return mapper.build(map);
 		}   	
 
+    }
+
+    protected class GuardarEliminarPorcentajePolizaPorPuntos extends CustomStoredProcedure {
+    	
+    	protected GuardarEliminarPorcentajePolizaPorPuntos(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SATELITES2.P_MOV_MPOLIAGE_PORCENTAJES2");
+    		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMPOLIZA", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDAGENTE_NVO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDAGENTE", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMSUPLEM", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDTIPOAG", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_PORREDAU", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMCUADRO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDSUCURS", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_PORPARTI", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NVOPCCOM", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_ACCION", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_CDERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_DSERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_TIPOERROR", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		return mapper.build(map);
+    	}   	
+    	
     }
     
     

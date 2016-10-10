@@ -66,6 +66,17 @@
 			</result>
 		</action>
 
+        <action name="obtenerAgentePolizaPorPuntos" class="agentesAction"
+			method="obtenerAgentePolizaPorPuntos">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+                    datosPolizaAgente.*,
+                    success
+                </param>
+			</result>
+		</action>
+
 		 <action name="consultaGeneralAgente" class="agentesAction"
 			method="obtieneTiposAgente">
 			<result type="json">
@@ -84,8 +95,20 @@
 	        </interceptor-ref>
 	        <result name="success" type="json"/>
 		</action>
+
+		<action name="guardaPorcentajeAgentesPorPuntos" class="agentesAction" method="guardaPorcentajeAgentesPorPuntos">
+	        <interceptor-ref name="json">
+	            <param name="enableSMD">true</param>
+	            <param name="ignoreSMDMethodInterfaces">false</param>
+	        </interceptor-ref>
+	        <result name="success" type="json"/>
+		</action>
 		
 		<action name="guardaEliminaPorcentajeAgentes" class="agentesAction" method="guardaEliminaPorcentajeAgentes">
+	         <result name="success" type="json" />
+        </action>
+
+		<action name="guardaEliminaPorcentajeAgentesPorPuntos" class="agentesAction" method="guardaEliminaPorcentajeAgentesPorPuntos">
 	         <result name="success" type="json" />
         </action>
 		
