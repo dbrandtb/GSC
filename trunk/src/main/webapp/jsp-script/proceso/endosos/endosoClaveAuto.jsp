@@ -92,13 +92,13 @@ Ext.onReady(function()
                 ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                 ,handler : function(me)
                 {
-                	_mask();
+                	
                     if(!me.up('form').getForm().isValid())
                     {
                         datosIncompletos();
                         return;
                     }
-                    
+                    _mask();
                     me.setDisabled(true);
                     me.setText('Cargando...');
                     
