@@ -133,6 +133,7 @@ var _ventanaPersonas;
 var _numIDpantalla;
 
 var _ventanaClausulas;
+var _ventanaGridAgentesSuperior;
 
 var _callbackAseguradoExclusiones =  function (){
    	_ventanaClausulas.close();
@@ -5683,6 +5684,15 @@ function _p21_agentes()
             url       : _p21_urlPantallaAgentes
             ,scripts  : true
             ,autoLoad : true
+        },
+        listeners: {
+        	close: function (){
+        		try{
+        			_ventanaGridAgentesSuperior.destroy();
+        		}catch (e){
+        			debugError('Error al destruir ventana de agentes.',e);
+        		}
+        	}
         }
     }).show());
     debug('<_p21_agentes');
