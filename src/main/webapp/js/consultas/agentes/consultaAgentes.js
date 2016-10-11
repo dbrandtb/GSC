@@ -216,6 +216,12 @@ Ext.onReady(function() {
            ]
            });
     
+    
+    /**
+     * Para evitar duplicidad de componentes se  destruye la ventana desde un nivel superior
+     */
+    _ventanaGridAgentesSuperior = ventanaGrid;
+    
     /*MENU PRINCIPAL */
     menuPrincipal= Ext.create('Ext.form.Panel',{
         border    : 0
