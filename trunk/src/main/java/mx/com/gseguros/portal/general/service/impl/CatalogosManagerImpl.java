@@ -2017,4 +2017,58 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> recuperaTablaApoyo1(String cdtabla) throws Exception {
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperaContratantesRfc @@@@@@")
+				.toString()
+				);
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		List<Map<String, String >> result = catalogosDAO.obtenerTablaApoyo1(cdtabla);
+		if(null != result && !result.isEmpty()){
+			for(Map<String, String> map : result){
+				GenericVO genericVO = new GenericVO();
+				genericVO.setKey(map.get("otclave"));
+				genericVO.setValue(map.get("otvalor"));
+				lista.add(genericVO);
+			}
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperaContratantesRfc @@@@@@")
+				.toString()
+				);
+		return lista;
+	}
+	
+	@Override
+	public List<GenericVO> recuperaCamposExclusionRenovacion() throws Exception {
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperaCamposExclusionRenovacion @@@@@@")
+				.toString()
+				);
+		List<GenericVO> lista = new ArrayList<GenericVO>();
+		List<Map<String, String >> result = catalogosDAO.obtenerCamposExclusionRenovacion();
+		if(null != result && !result.isEmpty()){
+			for(Map<String, String> map : result){
+				GenericVO genericVO = new GenericVO();
+				genericVO.setKey(map.get("otvalor01"));
+				genericVO.setValue(map.get("otclave1"));
+				lista.add(genericVO);
+			}
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ recuperaCamposExclusionRenovacion @@@@@@")
+				.toString()
+				);
+		return lista;
+	}
 }

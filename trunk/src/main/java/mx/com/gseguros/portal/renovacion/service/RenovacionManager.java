@@ -22,14 +22,14 @@ public interface RenovacionManager
 			,String passServidorReports
 			,UserVO usuario
 			);
-	public ManagerRespuestaImapVO pantallaRenovacionIndividual(String cdsisrol);
+	public ManagerRespuestaImapVO pantallaRenovacionIndividual(String cdsisrol) throws Exception;
 	
 	public ManagerRespuestaSlistVO buscarPolizasRenovacionIndividual(
 			String cdunieco,
 			String cdramo,
 			String estado,
 			String nmpoliza
-			);
+			) throws Exception;
 	public ManagerRespuestaSlistVO buscarPolizasRenovacionIndividualMasiva(
 			String cdunieco,
 			String cdramo,
@@ -38,8 +38,10 @@ public interface RenovacionManager
 			String cdtipsit,
 			String fecini,
 			String fecfin,
-			String status
-			);
+			String status,
+			String cdperson,
+			String retenedora
+			) throws Exception;
 	public ManagerRespuestaSlistVO renuevaPolizaIndividual(
 			String cdunieco,
 			String cdramo,
@@ -49,13 +51,13 @@ public interface RenovacionManager
 			String feefecto,
 			String feproren,
 			String estadoNew,
-			String cdmoneda);
+			String cdmoneda) throws Exception;
 	
 	public void actualizaValoresCotizacion(
 			Map<String, String> valores, 
 			String cdelemen, 
 			String cdusuari, 
-			String cdtipsup);
+			String cdtipsup) throws Exception;
 	
 	public Map<String, String> confirmarCotizacion(
 			String cdunieco,
@@ -67,7 +69,7 @@ public interface RenovacionManager
 			String cdperpag,
 			String feefecto,
 			UserVO usuario,
-			String rutaDocumentosPoliza);
+			String rutaDocumentosPoliza) throws Exception;
 	
 	public void generaTcartera(
 			String cdunieco,
@@ -79,9 +81,25 @@ public interface RenovacionManager
 			String cdagente,
 			String cdperpag,
 			String cdcontra,
-			String cdmoneda);
+			String cdmoneda) throws Exception;
 	
 	public String obtenerItemsTatripol(
 			String cdramo,
-			String cdtipsit);
+			String cdtipsit) throws Exception;
+	
+	public void renovarPolizasMasivasIndividuales(
+			List<Map<String,String>> slist) throws Exception;
+	
+	public List<Map<String, String>> obtenerCondicionesRenovacionIndividual(
+			String anio,
+			String mes) throws Exception;
+	
+	public void movimientoCondicionesRenovacionIndividual(
+			String anio,
+			String mes,
+			String criterio,
+			String campo,
+			String valor,
+			String valor2,
+			String operacion) throws Exception;	
 }

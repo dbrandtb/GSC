@@ -2050,4 +2050,66 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> obtenerTablaApoyo1(String cdtabla)throws Exception{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdtabla_i"  , cdtabla);
+		Utils.debugProcedure(logger, "P_GET_VAL_TTAPVAT1", params);
+		Map<String,Object>procResult  = ejecutaSP(new ObtenerTablaApoyo1(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		Utils.debugProcedure(logger, "P_GET_VAL_TTAPVAT1", params,lista);
+		return lista;
+	}
+	
+	protected class ObtenerTablaApoyo1 extends StoredProcedure
+    {
+    	protected ObtenerTablaApoyo1(DataSource dataSource)
+        {
+            super(dataSource,"P_GET_VAL_TTAPVAT1");
+            declareParameter(new SqlParameter("pv_cdtabla_i"  , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+            		"otclave",
+            		"otvalor"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+	
+	@Override
+	public List<Map<String,String>> obtenerCamposExclusionRenovacion()throws Exception{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		Utils.debugProcedure(logger, "P_GET_CAMPEXTREN", params);
+		Map<String,Object>procResult  = ejecutaSP(new ObtenerCamposExclusionRenovacion(getDataSource()),params);
+		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		Utils.debugProcedure(logger, "P_GET_CAMPEXTREN", params,lista);
+		return lista;
+	}
+	
+	protected class ObtenerCamposExclusionRenovacion extends StoredProcedure
+    {
+    	protected ObtenerCamposExclusionRenovacion(DataSource dataSource)
+        {
+            super(dataSource,"P_GET_CAMPEXTREN");
+            String[] cols = new String[]{
+            		"otvalor01",
+            		"otclave1"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
 }

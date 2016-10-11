@@ -288,14 +288,20 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         			this.getText("user.server.layouts"), 
         			this.getText("pass.server.layouts"), 
         			file.getAbsolutePath(),
-        			this.getText("directorio.server.layouts")+Constantes.SEPARADOR_ARCHIVO+fileFileName);
+        			this.getText("directorio.server.layouts")+Constantes.SEPARADOR_ARCHIVO+fileFileName)
+        			&&FTPSUtils.upload(
+                			this.getText("dominio.server.layouts2"), 
+                			this.getText("user.server.layouts"), 
+                			this.getText("pass.server.layouts"), 
+                			file.getAbsolutePath(),
+                			this.getText("directorio.server.layouts")+Constantes.SEPARADOR_ARCHIVO+fileFileName);
         	
         	if(!success) {
         		mensajeRespuesta = "Error al subir archivo.";
         		return SUCCESS;
         	}
         }catch(Exception ex) {
-        	logger.error("Error al subir el archivo al servidor " + this.getText("dominio.server.layouts"), ex);
+        	logger.error("Error al subir el archivo al servidor " + this.getText("dominio.server.layouts2"), ex);
         	mensajeRespuesta = "Error al subir archivo.";
         	success= false;
         	return SUCCESS;
