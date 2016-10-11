@@ -2363,7 +2363,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 }
                                             }
                                             debug('json.slist1[j]::', json.slist1[j]);
-                                            debug('SWOBLIGA=' + json.slist1[j].SWOBLIGA + ', SWSELECCIONADO=' + json.slist1[j].SWSELECCIONADO + ', SWHABILITADO=' + json.slist1[j].SWHABILITADO);
+                                            debug('SWOBLIGA=' + json.slist1[j].SWOBLIGA + ', SWSELECCIONADO=' + json.slist1[j].SWSELECCIONADO + ', SWEDITABLE=' + json.slist1[j].SWEDITABLE);
                                             //para factores menor a cero
                                             var item = Ext.create('Ext.form.Panel',
                                             {
@@ -2386,10 +2386,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
-                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&(json.slist1[j].SWSELECCIONADO=='S')//SWMODIFI == 'S' es el encargado de la Asistencia a VIajes
-                                                        //,disabled : json.slist1[j].SWHABILITADO=='N'
-                                                        ,readOnly   : json.slist1[j].SWHABILITADO=='N'
-                                                        //,hideTrigger: json.slist1[j].SWHABILITADO=='N'
+                                                        ,checked    : json.slist1[j].SWOBLIGA == 'S' && (json.slist1[j].SWSELECCIONADO == 'S')
+                                                        ,readOnly   : json.slist1[j].SWEDITABLE == 'N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
                                                         {
