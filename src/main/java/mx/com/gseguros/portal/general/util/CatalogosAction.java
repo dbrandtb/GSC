@@ -168,6 +168,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPO_RECIBOS_IMPRESION:
 				case ETAPAS_ESTADO_FLUJO:
 				case TIPO_BUSQUEDA_RENOVACION_INDIVIDUAL:
+				case CRITERIOS_RENOVACION_INDIVIDUAL:	
 				case TAPOYO:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
@@ -974,6 +975,16 @@ public class CatalogosAction extends PrincipalCoreAction {
 						params = new HashMap<String,String>();
 					}
 					lista = catalogosManager.recuperaContratantesRfc(params.get("cadena"));
+					break;
+				case TAPOYO1:
+					if(params == null)
+					{
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.recuperaTablaApoyo1(params.get("cdtabla"));
+					break;
+				case CAMPOS_EXCLUSION_RENOVACION:
+					lista = catalogosManager.recuperaCamposExclusionRenovacion();
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);

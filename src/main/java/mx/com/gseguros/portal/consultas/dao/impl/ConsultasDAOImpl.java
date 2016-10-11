@@ -5097,7 +5097,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
-	
+		
 	@Override
 	public List<Map<String,String>> cargaLayoutImpresion(String filename,
 														 String tipoimp,

@@ -604,7 +604,7 @@ public interface ConsultasDAO
 	 * @throws Exception
 	 */
 	public List<Map<String,String>> obtenerContratantesRfc(String cadena)throws Exception;
-	
+		
 	public String eliminaZwimpxlayout(String pv_idproceso_i)throws Exception;
 	
 	public List<Map<String,String>> cargaLayoutImpresion(String filename,

@@ -58,7 +58,9 @@ public interface RenovacionDAO
 			String cdtipsit,
 			String fecini,
 			String fecfin,
-			String status)throws Exception;
+			String status,
+			String cdperson,
+			String retenedora)throws Exception;
 	
 	public Map<String,String> renuevaPolizaIndividual(
 			String cdunieco,
@@ -105,4 +107,19 @@ public interface RenovacionDAO
 			String nmpoliza,
 			String cdperpag,
 			String feefecto)throws Exception;
+	
+	public void renovarPolizasMasivasIndividuales(List<Map<String, String>> slist)throws Exception;
+	
+	public List<Map<String,String>> obtenerCondicionesRenovacionprogramada(
+			String anio,
+			String mes)throws Exception;
+	
+	public void movimientoCondicionesRenovacionProgramada(
+			String anio,
+			String mes,
+			String criterio,
+			String campo,
+			String valor,
+			String valor2,
+			String operacion)throws Exception;
 }

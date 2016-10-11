@@ -29,6 +29,13 @@
         <action name="renovarPolizaIndividual" class="renovacionAction" method="renovarPolizaIndividual">
             <result type="json" />
         </action>
+        <action name="renovarPolizasMasivasIndividuales" class="renovacionAction" method="renovarPolizasMasivasIndividuales">
+        	<interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+        	<result type="json" />
+        </action>
         <action name="actualizaValoresCotizacion" class="renovacionAction" method="actualizaValoresCotizacion">
             <result type="json" />
         </action>
@@ -36,6 +43,12 @@
             <result type="json" />
         </action>
         <action name="obtenerItemsTvalopol" class="renovacionAction" method="obtenerItemsTvalopol">
+        	<result type="json" />
+        </action>
+        <action name="obtenerCondicionesRenovacionIndividual" class="renovacionAction" method="obtenerCondicionesRenovacionIndividual">
+        	<result type="json" />
+        </action>
+        <action name="movimientoCondicionesRenovacionIndividual" class="renovacionAction" method="movimientoCondicionesRenovacionIndividual">
         	<result type="json" />
         </action>
     </package>

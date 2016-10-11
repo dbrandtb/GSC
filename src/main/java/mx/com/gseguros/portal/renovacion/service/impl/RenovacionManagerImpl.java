@@ -465,7 +465,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 	}
 	
 	@Override
-	public ManagerRespuestaImapVO pantallaRenovacionIndividual(String cdsisrol)
+	public ManagerRespuestaImapVO pantallaRenovacionIndividual(String cdsisrol) throws Exception
 	{
 		logger.info(
 				new StringBuilder()
@@ -474,10 +474,11 @@ public class RenovacionManagerImpl implements RenovacionManager
 				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
 				.toString());
 		ManagerRespuestaImapVO resp = new ManagerRespuestaImapVO(true);
-		
+		String paso = "";
 		//obtener componentes
 		try
 		{
+			paso = "antes de obtener componentes busqueda";
 			List<ComponenteVO>componentesBusqueda=pantallasDAO.obtenerComponentes(
 					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","BUSQUEDA",null);
 			
@@ -488,30 +489,30 @@ public class RenovacionManagerImpl implements RenovacionManager
 			Map<String,Item> imap = new HashMap<String,Item>();
 			resp.setImap(imap);			
 			imap.put("busquedaItems" , gc.getItems());
-			
+			paso = "antes de obtener componentes modelo polizas";
 			List<ComponenteVO> componentesGrid=pantallasDAO.obtenerComponentes(
 					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_POLIZAS_RENOVAR",null);			
 			gc.generaComponentes(componentesGrid, true, true, false, true, true, false);			
 			imap.put("gridFields"  , gc.getFields());
 			imap.put("gridColumns" , gc.getColumns());
-			
+			paso = "antes de obtener modelo contratante";
 			List<ComponenteVO> itemsFormularioContratante=pantallasDAO.obtenerComponentes(
 					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_CONTRATANTE",null);			
 			gc.generaComponentes(itemsFormularioContratante, true, true, true, false, false, false);		
 			imap.put("itemsFormularioContratante"  , gc.getItems());
 			imap.put("fieldsFormularioContratante"  , gc.getFields());
-			
+			paso = "antes de obtener modelo polizas";
 			List<ComponenteVO> itemsFormularioPoliza = pantallasDAO.obtenerComponentes(
 					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","MODELO_POLIZAS",null);			
 			gc.generaComponentes(itemsFormularioPoliza, true, true, false, true, true, false);			
 			imap.put("itemsFormularioPolizaFields"  , gc.getFields());
 			imap.put("itemsFormularioPolizaColumns" , gc.getColumns());
-			
+			paso = "antes de obtener componentes editar forma pago";
 			List<ComponenteVO> componentesEditarPago=pantallasDAO.obtenerComponentes(
 					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","EDITAR_FORMA_PAGO",null);			
 			gc.generaComponentes(componentesEditarPago, true, false, true, false, false, false);
 			imap.put("itemsEditarPago" , gc.getItems());
-			
+			paso = "antes de obtener componentes domicilio";
 			List<ComponenteVO> componentesEditarDomicilio = pantallasDAO.obtenerComponentes(
 					null,null,"4",null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","EDITAR_DOMICILIO",null);				
 			gc.generaComponentes(componentesEditarDomicilio, true, false, true, false, false, false);
@@ -522,20 +523,21 @@ public class RenovacionManagerImpl implements RenovacionManager
 			List<ComponenteVO> listaTatrisit = kernelManager.obtenerTatripol(new String[]{"2","SL","I"});
 			gc.generaComponentes(listaTatrisit, true, false, true, false, false, false);
 			imap.put("itemsTatrisit", gc.getItems());
-			
+			paso = "antes de obtener componentes exclusiones";
+			List<ComponenteVO> componentesCondicionesRenovacion = pantallasDAO.obtenerComponentes(
+					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","PROGRAMADO_EXCLUSIONES",null);				
+			gc.generaComponentes(componentesCondicionesRenovacion, true, false, true, false, false, false);
+			imap.put("itemsCondicionesRenovacion" , gc.getItems());
+			paso = "antes de obtener componentes exclusiones grid";
+			List<ComponenteVO> itemsCondiciones = pantallasDAO.obtenerComponentes(
+					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","PROGRAMADO_EXCLUSIONES_GRID",null);			
+			gc.generaComponentes(itemsCondiciones, true, true, false, true, true, false);			
+			imap.put("itemsCondicionesFields"  , gc.getFields());
+			imap.put("itemsCondicionesColumns" , gc.getColumns());			
 		}
 		catch(Exception ex)
 		{
-			long timestamp = System.currentTimeMillis();
-			resp.setExito(false);
-			resp.setRespuesta(
-					new StringBuilder()
-					.append("Error al obtener componentes de busqueda #")
-					.append(timestamp)
-					.toString()
-					);
-			resp.setRespuestaOculta(ex.getMessage());
-			logger.error(resp.getRespuesta(),ex);
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
 		}
 		
 		logger.info(
@@ -553,7 +555,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			String cdramo,
 			String estado,
 			String nmpoliza
-			){
+			) throws Exception{
 		logger.debug(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
@@ -564,23 +566,17 @@ public class RenovacionManagerImpl implements RenovacionManager
 				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
 				.toString()
 				);
+		String paso = "";
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
 		try{
+			paso = "antes de obtener componentes de poliza";
 			List<Map<String,String>> listaPolizasRenovables = renovacionDAO.busquedaRenovacionIndividual(cdunieco, cdramo, estado, nmpoliza);
+			paso = "despues de obtener componentes de poliza";
 			resp.setSlist(listaPolizasRenovables);
 		}
 		catch(Exception ex)
 		{
-			long timestamp = System.currentTimeMillis();
-			resp.setExito(false);
-			resp.setRespuesta(
-					new StringBuilder()
-					.append("Error al obtener componentes de busqueda #")
-					.append(timestamp)
-					.toString()
-					);
-			resp.setRespuestaOculta(ex.getMessage());
-			logger.error(resp.getRespuesta(),ex);
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
 		}
 		logger.info(
 				new StringBuilder()
@@ -600,46 +596,32 @@ public class RenovacionManagerImpl implements RenovacionManager
 			String cdtipsit,
 			String fecini,
 			String fecfin,
-			String status
-			){
-		logger.debug(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ buscarPolizasRenovacionIndividualMasiva @@@@@@")
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=").append(cdramo)
-				.append("\n@@@@@@ estado=").append(estado)
-				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
-				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
-				.append("\n@@@@@@ fecini=").append(fecini)
-				.append("\n@@@@@@ fecfin=").append(fecfin)
-				.append("\n@@@@@@ status=").append(status)
-				.toString()
-				);
+			String status,
+			String cdperson,
+			String retenedora
+			) throws Exception{
+		String paso = "";
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
 		try{
-			List<Map<String,String>> listaPolizasRenovables = renovacionDAO.busquedaRenovacionIndividualMasiva(cdunieco, cdramo, estado, nmpoliza, cdtipsit, fecini, fecfin, status);
+			paso = "antes de obtener polizas masivas";
+			List<Map<String,String>> listaPolizasRenovables = renovacionDAO.busquedaRenovacionIndividualMasiva(
+					cdunieco, 
+					cdramo, 
+					estado, 
+					nmpoliza, 
+					cdtipsit, 
+					fecini, 
+					fecfin, 
+					status,
+					cdperson,
+					retenedora);
+			paso = "despues de obtener polizas masivas";
 			resp.setSlist(listaPolizasRenovables);
 		}
 		catch(Exception ex)
 		{
-			long timestamp = System.currentTimeMillis();
-			resp.setExito(false);
-			resp.setRespuesta(
-					new StringBuilder()
-					.append("Error al obtener componentes de busqueda #")
-					.append(timestamp)
-					.toString()
-					);
-			resp.setRespuestaOculta(ex.getMessage());
-			logger.error(resp.getRespuesta(),ex);
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
 		}
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@ ").append(resp)
-				.append("\n@@@@@@ buscarPolizasRenovacionIndividualMasiva @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.toString());
 		return resp;
 	}
 	
@@ -653,23 +635,11 @@ public class RenovacionManagerImpl implements RenovacionManager
 			String feefecto,
 			String feproren,
 			String estadoNew,
-			String cdmoneda)
+			String cdmoneda) throws Exception
 	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ renuevaPolizaIndividual @@@@@@")
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=").append(cdramo)
-				.append("\n@@@@@@ estado=").append(estado)
-				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
-				.append("\n@@@@@@ estadoNew=").append(estadoNew)
-				.append("\n@@@@@@ usuario=").append(usuario)
-				.toString());
-		
 		//obtener componentes
 		ManagerRespuestaSlistVO lista = new ManagerRespuestaSlistVO();
-		String paso  = null;
+		String paso  = "";
 		String ntramite = ""; 
 		try
 		{	
@@ -684,6 +654,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			slist.get(0).put("cdflujomc", map.get("cdflujomc"));
 			slist.get(0).put("estadomc", map.get("status"));
 			slist.get(0).put("nmsuplem", map.get("nmsuplem"));
+			paso = "asignando valores de cdtipsit";
 			cdunieco = slist.get(0).get("cdunieco");
 			cdramo 	 = slist.get(0).get("cdramo");
 			estado 	 = slist.get(0).get("estado");
@@ -696,7 +667,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			paramGetValopol.put("pv_cdramo"  ,cdramo);
 			paramGetValopol.put("pv_estado"  ,estado);
 			paramGetValopol.put("pv_nmpoliza",nmpoliza);
-			logger.info(new StringBuilder().append("\n@@@@@@ paramGetValopol=").append(paramGetValopol).toString());
+			paso = "antes de obtener atributos variables poliza";
 			Map<String,Object> parametrosCargados = kernelManager.pGetTvalopol(paramGetValopol);
 			if(parametrosCargados.isEmpty()){
 				throw new Exception("No se obtuvo ningun atributo variable a nivel de poliza");
@@ -727,6 +698,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			params.put("pv_estado"  , estado);
 			params.put("pv_nmpoliza", nmpoliza);
 			logger.info(new StringBuilder().append("\n@@@@@@ params=").append(params).toString());
+			paso = "antes de obtener informacion de poliza";
 			Map<String, Object> select = kernelManager.getInfoMpolizas(params);
 			Iterator ite = select.entrySet().iterator();			
 			while(ite.hasNext())
@@ -770,23 +742,13 @@ public class RenovacionManagerImpl implements RenovacionManager
 					.toString());
 		}
 		catch(Exception ex){
-			paso = ex.getMessage().toString();
-			logger.info(
-					new StringBuilder()
-					.append("\n@@@@@@ pasoException=").append(paso)
-					.toString());
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
 		}
 		return lista;
 	}
 	
 	@Override
-	public void actualizaValoresCotizacion(Map<String, String> valores, String cdelemen, String cdusuari, String cdtipsup){
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ actualizaValoresCotizacion @@@@@@")
-				.append("\n@@@@@@ valores=").append(valores)
-				.toString());
+	public void actualizaValoresCotizacion(Map<String, String> valores, String cdelemen, String cdusuari, String cdtipsup) throws Exception{
 		String paso = "";
 		try{
 			paso     = "actualizando informacion de cotizacion";
@@ -803,6 +765,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			String cdmoneda		= valores.get("cdmoneda");			
 			Map<String,String> atributos = new HashMap<String,String>();
 			Map<String,String> campos	 = new HashMap<String,String>();
+			paso = "antes de armar valores";
 			for(Entry<String,String> atrib : valores.entrySet())
 			{
 				String key = atrib.getKey();
@@ -815,8 +778,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 					campos.put(key, atrib.getValue());
 				}
 			}
-			logger.info(new StringBuilder().append("\n@@@@@@ atributos=").append(atributos).toString());
-			logger.info(new StringBuilder().append("\n@@@@@@ campos=").append(campos).toString());
+			paso = "antes de actualizar tvalopol";
 			cotizacionDAO.movimientoTvalopol(
 					cdunieco,
 					cdramo,
@@ -826,7 +788,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 					"V", //status
 					atributos
 					);
+			paso = "antes de actualizar contratante";
 			renovacionDAO.actualizaContratanteFormaPago(cdunieco, cdramo, estado, nmpoliza, cdperpag, cdcontra);
+			paso = "antes de lanzar tarifa";
 			endososDAO.sigsvalipolEnd(
 					cdusuari,
 					cdelemen,
@@ -839,11 +803,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 					cdtipsup
 					);
 		}catch(Exception ex){
-			paso = ex.getMessage().toString();
-			logger.info(
-					new StringBuilder()
-					.append("\n@@@@@@ paso=").append(paso)
-					.toString());
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
 		}
 	}
 	
@@ -858,22 +818,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			String cdperpag,
 			String feefecto,
 			UserVO usuario,
-			String rutaDocumentosPoliza){
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ confirmarCotizacion @@@@@@")
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=").append(cdramo)
-				.append("\n@@@@@@ estado=").append(estado)
-				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
-				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
-				.append("\n@@@@@@ ntramite=").append(ntramite)
-				.append("\n@@@@@@ cdperpag=").append(cdperpag)
-				.append("\n@@@@@@ feefecto=").append(feefecto)
-				.append("\n@@@@@@ usuario=").append(usuario)
-				.append("\n@@@@@@ rutaDocumentosPoliza=").append(rutaDocumentosPoliza)
-				.toString());
+			String rutaDocumentosPoliza) throws Exception{
 		String paso = "";
 		String esDxN = "";
 		Map<String, String> smap1 = new HashMap<String, String>();
@@ -948,8 +893,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			smap1 = renovacionDAO.confirmarTramite(cdunieco, cdramo, estado, nmpoliza, cdperpag, feefecto);
 			logger.info(new StringBuilder().append("\n@@@@@@ smap1=").append(smap1).toString());
 		}catch(Exception ex){
-			paso = ex.getMessage().toString();
-			logger.info(new StringBuilder().append("\n@@@@@@ paso=").append(paso).toString());
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
 		}
 		return smap1;
 	}
@@ -964,52 +908,27 @@ public class RenovacionManagerImpl implements RenovacionManager
 			String cdagente,
 			String cdperpag,
 			String cdcontra,
-			String cdmoneda){
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ confirmarCotizacion @@@@@@")
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=").append(cdramo)
-				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
-				.append("\n@@@@@@ feefecto=").append(feefecto)
-				.append("\n@@@@@@ feefecto_ant=").append(feefecto_ant)
-				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
-				.append("\n@@@@@@ cdagente=").append(cdagente)
-				.append("\n@@@@@@ cdperpag=").append(cdperpag)
-				.append("\n@@@@@@ cdcontra=").append(cdcontra)
-				.append("\n@@@@@@ cdmoneda=").append(cdmoneda)
-				.toString());
+			String cdmoneda) throws Exception{		
 		String paso = "";
 		try{
 			paso     = "antes de generar tcartera";
 			renovacionDAO.generaTcartera(cdunieco, cdramo, nmpoliza, feefecto, feefecto_ant, nmsuplem, cdagente, cdperpag, cdcontra, cdmoneda);
 			paso     = "despues de generar tcartera";
 		}catch(Exception ex){
-			paso = ex.getMessage().toString();
-			logger.info(
-					new StringBuilder()
-					.append("\n@@@@@@ paso=").append(paso)
-					.toString());
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
 		}
 	}
 	
 	@Override
 	public String obtenerItemsTatripol(
 			String cdramo,
-			String cdtipsit){
-		logger.debug(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ obtenerItemsTatripol @@@@@@")
-				.append("\n@@@@@@ cdramo=").append(cdramo)
-				.append("\n@@@@@@ estado=").append(cdtipsit)
-				.toString()
-				);
+			String cdtipsit) throws Exception{
 		String respuesta = "";
 		String paso = "";
 		try{
-			List<ComponenteVO> listaTatrisit = kernelManager.obtenerTatripol(new String[]{cdramo,cdtipsit,"I"});			
+			paso = "antes de obtener tatripol";
+			List<ComponenteVO> listaTatrisit = kernelManager.obtenerTatripol(new String[]{cdramo,cdtipsit,"I"});
+			paso = "despues de obtener tatripol";
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			Map<String,Item> imap = new HashMap<String,Item>();
 			gc.setCdramo(cdramo);
@@ -1018,13 +937,60 @@ public class RenovacionManagerImpl implements RenovacionManager
 			respuesta = "["+gc.getItems()+"]";
 		}
 		catch(Exception ex){
-			paso = ex.getMessage().toString();
-			logger.info(
-					new StringBuilder()
-					.append("\n@@@@@@ paso=").append(paso)
-					.toString());
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
 		}
 		return respuesta;
+	}
+	
+	@Override
+	public void renovarPolizasMasivasIndividuales(
+			List<Map<String,String>> slist) throws Exception{
+		String paso = "";
+		try{
+			paso = "antes de renovar polizas masivas";
+			renovacionDAO.renovarPolizasMasivasIndividuales(slist);
+			paso = "despues de renovar polizas masivas";
+		}
+		catch(Exception ex){
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
+		}
+	}
+		
+	@Override
+	public List<Map<String, String>> obtenerCondicionesRenovacionIndividual(
+			String anio,
+			String mes) throws Exception{
+		String paso = "";
+		List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+		try{
+			paso = "Antes de obtener condiciones de renovacion programada";
+			result = renovacionDAO.obtenerCondicionesRenovacionprogramada(anio, mes);
+			paso = "Despues de obtener conciones de renovacion programada";
+		}
+		catch(Exception ex){
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
+		}
+		return result;
+	}
+	
+	@Override
+	public void movimientoCondicionesRenovacionIndividual(
+			String anio,
+			String mes,
+			String criterio,
+			String campo,
+			String valor,
+			String valor2,
+			String operacion) throws Exception{
+		String paso = "";
+		try{
+			paso = "Antes de entrar a mov condiciones de renovacion programada";
+			renovacionDAO.movimientoCondicionesRenovacionProgramada(anio, mes, criterio, campo, valor, valor2, operacion);
+			paso = "Despues de mov condiciones de renovacion programada";
+		}
+		catch(Exception ex){
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
+		}
 	}
 	
 	//Getters y setters

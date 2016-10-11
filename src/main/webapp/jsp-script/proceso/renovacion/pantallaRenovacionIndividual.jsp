@@ -5,25 +5,29 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// variables //////
-var contexto							= '${ctx}';
-var panDatComMap1 						= '<s:property value="%{convertToJSON('slist')}" escapeHtml="false" 				  />';
-var urlGuardar                   		= '<s:url namespace="/"           action="guardarDatosComplementarios" 				  />';
-var urlCargarCatalogos              	= '<s:url namespace="/catalogos"  action="obtieneCatalogo"             				  />';
-var _p25_urlBuscarPolizas  				= '<s:url namespace="/renovacion" action="buscarPolizasIndividualesRenovables" 		  />';
-var _p25_urlBuscarPolizasMasivas		= '<s:url namespace="/renovacion" action="buscarPolizasIndividualesMasivasRenovables" />';
-var _p25_urlRenovarPolizaIndividual		= '<s:url namespace="/renovacion" action="renovarPolizaIndividual"			   		  />';
-var _p25_urlConfirmarPolizaIndividual	= '<s:url namespace="/renovacion" action="confirmarPolizaIndividual"				  />';
-var _p25_urlActualizaValoresCotizacion	= '<s:url namespace="/renovacion" action="actualizaValoresCotizacion"				  />';
-var _p25_urlBuscarContratantes  		= '<s:url namespace="/endoso" 	  action="cargarContratantesEndosoContratante" 		  />';
-var urlPantallaValosit           		= '<s:url namespace="/"           action="pantallaValosit"             				  />';
-var urlEditarAsegurados 				= '<s:url namespace="/" 		  action="editarAsegurados"							  />';           
-var _p25_urlPantallaCliente        		= '<s:url namespace="/catalogos"  action="includes/personasLoader"            		  />';
-var panDatComUrlDoc2                    = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" 				  />';
-var urlRecotizar                 		= '<s:url namespace="/"           action="recotizar"                   				  />';
-var _p25_urlObtenerItemsTvalopol		= '<s:url namespace="/renovacion" action="obtenerItemsTvalopol"						  />';
-var sesionDsrol   						= _GLOBAL_CDSISROL;
+var contexto							      = '${ctx}';
+var panDatComMap1 						      = '<s:property value="%{convertToJSON('slist')}" escapeHtml="false" 				      />';
+var urlGuardar                   		      = '<s:url namespace="/"           action="guardarDatosComplementarios" 				  />';
+var urlCargarCatalogos              	      = '<s:url namespace="/catalogos"  action="obtieneCatalogo"             				  />';
+var _p25_urlBuscarPolizas  				      = '<s:url namespace="/renovacion" action="buscarPolizasIndividualesRenovables" 		  />';
+var _p25_urlBuscarPolizasMasivas		      = '<s:url namespace="/renovacion" action="buscarPolizasIndividualesMasivasRenovables"   />';
+var _p25_urlBuscarCondiciones		          = '<s:url namespace="/renovacion" action="obtenerCondicionesRenovacionIndividual"       />';
+var _p25_urlRenovarPolizaIndividual		      = '<s:url namespace="/renovacion" action="renovarPolizaIndividual"			   		  />';
+var _p25_urlRenovarPolizasMasivasIndividuales = '<s:url namespace="/renovacion" action="renovarPolizasMasivasIndividuales"            />';
+var _p25_urlConfirmarPolizaIndividual	      = '<s:url namespace="/renovacion" action="confirmarPolizaIndividual"				      />';
+var _p25_urlActualizaValoresCotizacion	      = '<s:url namespace="/renovacion" action="actualizaValoresCotizacion"				      />';
+var _p25_urlMovimientoCondiciones	      	  = '<s:url namespace="/renovacion" action="movimientoCondicionesRenovacionIndividual"	  />';
+var _p25_urlBuscarContratantes  		      = '<s:url namespace="/endoso" 	action="cargarContratantesEndosoContratante" 		  />';
+var urlPantallaValosit           		      = '<s:url namespace="/"           action="pantallaValosit"             				  />';
+var urlEditarAsegurados 				      = '<s:url namespace="/" 		    action="editarAsegurados"							  />';           
+var _p25_urlPantallaCliente        	 	      = '<s:url namespace="/catalogos"  action="includes/personasLoader"            		  />';
+var panDatComUrlDoc2                          = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" 				  />';
+var urlRecotizar                 		      = '<s:url namespace="/"           action="recotizar"                   				  />';
+var _p25_urlObtenerItemsTvalopol		      = '<s:url namespace="/renovacion" action="obtenerItemsTvalopol"						  />';
+var sesionDsrol   						      = _GLOBAL_CDSISROL;
 var _p25_storePolizas;
 var _p25_storePolizasMasivas;
+var _p25_storeCondiciones;
 var _p25_ultimosParams;
 
 var winAutoServicio;
@@ -31,6 +35,7 @@ var winServicioAsistido;
 var winCambioPago;
 var winCambioDomicilio;
 var wineditarContratante;
+var panCondicion;
 
 var pantallaValositParche = false;
 var _p22_parentCallback;
@@ -61,6 +66,8 @@ var gridColumns					 = [<s:property value="imap.gridColumns"                  es
 var itemsEditarPago				 = [<s:property value="imap.itemsEditarPago"              escapeHtml="false" />];
 var itemsEditarDomicilio	     = [<s:property value="imap.itemsEditarDomicilio"         escapeHtml="false" />];
 var itemsTatrisit	     		 = [<s:property value="imap.itemsTatrisit"				  escapeHtml="false" />];
+var itemsCondicionesRenovacion   = [<s:property value="imap.itemsCondicionesRenovacion"	  escapeHtml="false" />];
+var itemsCondicionesColumns 	 = [<s:property value="imap.itemsCondicionesColumns"      escapeHtml="false" />];
 itemsEditarPago.splice(1, 0, { border : 0 });
 itemsEditarPago.push({ 
 						xtype      : 'button',
@@ -73,6 +80,29 @@ itemsEditarPago.push({
 							_p25_ventanaCambioDomicilio();
 						} 
 					});
+itemsCondicionesColumns.push({ 
+	xtype      : 'actioncolumn',
+	itemId     : 'buttonEditarCondicion',
+	icon       : '${ctx}/resources/fam3icons/icons/arrow_refresh.png',
+	tooltip    : 'Actualizar condicion',
+	arrowAlign : 'bottom',
+	handler    : function(view,	rowIndex, colIndex, item, e, record){
+		debug('actualizar condicion',record.data);
+		actualizaCondicion(record);
+	}
+});
+itemsCondicionesColumns.push({
+	xtype      : 'actioncolumn',
+	itemId     : 'buttonBorrarCondicion',
+	icon       : '${ctx}/resources/fam3icons/icons/cross.png',
+	tooltip    : 'Borrar condicion',
+	arrowAlign : 'bottom',
+	handler    : function(view,	rowIndex, colIndex, item, e, record){
+		debug('borrar condicion');
+		borraCondicion(record);
+	}
+});
+//itemsCondicionesRenovacion.splice(2, 0, { border : 0 });
 ////// componentes dinamicos //////
 
 Ext.onReady(function()
@@ -95,6 +125,11 @@ Ext.onReady(function()
     {
         extend  : 'Ext.data.Model'
         ,fields : [ <s:property value="imap.itemsFormularioPolizaFields" escapeHtml="false" /> ]
+    });
+    
+    Ext.define('_p25_modeloCondiciones',{
+    	extend  : 'Ext.data.Model'
+        ,fields : [ <s:property value="imap.itemsCondicionesFields" escapeHtml="false" /> ]
     });
     ////// modelos //////
     
@@ -150,6 +185,23 @@ Ext.onReady(function()
             }
         }
     });
+    
+    _p25_storeCondiciones = Ext.create('Ext.data.Store',
+    	    {
+    	        model     : '_p25_modeloCondiciones'
+    	        ,autoLoad : false
+    	        ,proxy    :
+    	        {
+    	            type    : 'ajax'
+    	            ,url    : _p25_urlBuscarCondiciones
+    	            ,reader :
+    	            {
+    	                type             : 'json'
+    	                ,root            : 'slist1'
+    	                ,messageProperty : 'respuesta'
+    	            }
+    	        }
+    	    });
     ////// stores //////
     
     ////// componentes //////
@@ -1067,7 +1119,7 @@ Ext.onReady(function()
     	closable:false,
     	collapsible:true,
     	titleCollapse:true,
-    	items:[  // Let's put an empty grid in just to illustrate fit layout
+    	items:[
     		Ext.create('Ext.grid.Panel',{
     		width : 600
     			,store:Ext.create('Ext.data.Store',{
@@ -1637,7 +1689,74 @@ Ext.onReady(function()
     		})
     	]
     });
-
+	
+	panCondicion = Ext.create('Ext.window.Window',{
+    	itemId			: 'panCondicion',
+    	autoScroll		: true,
+    	//width			: 800,
+    	height			: 200,
+    	modal			: false,
+    	closable		: true,
+    	closeAction     : 'hide',
+    	items			: [
+    		Ext.create('Ext.form.Panel',{
+            	title        : 'Condiciones de renovacion programada'
+                ,itemId      : '_p25_condiciones'
+                ,defaults    : { 
+                	style : 'margin :5px;' 
+                }
+                ,layout      : {
+                    type     : 'table'
+                    ,columns : 3
+                }
+                ,items       : itemsCondicionesRenovacion
+                ,buttonAlign : 'center'
+            })
+		],
+		buttons: [{
+  			text	: 'Guardar',
+  			handler : function(me){
+  				var _p25_condiciones = _fieldById('_p25_condiciones');
+  				debug(_p25_condiciones.form.getValues());
+  				var datos = _p25_condiciones.form.getValues(); 
+  				var params = {};
+  				for(var k in datos){
+  					params['params.'+k] = datos[k]; 
+  				}
+  				params['params.operacion'] = panCondicion['operacion'];//'A';
+  				debug('params',params);
+  				_mask('Guardando cambios');
+  				Ext.Ajax.request({
+        			url       : _p25_urlMovimientoCondiciones,
+        			params    : params,
+        			success  : function(response){
+	                	_unmask();
+	            		var resp = Ext.decode(response.responseText);
+	            		debug('resp',resp);	            		
+	            		if(resp.exito == true){
+	            			mensajeCorrecto('Mensaje','Guardado con exito');
+	            			var _p25_gridCondiciones = _fieldById('_p25_gridCondiciones');
+	            			_p25_gridCondiciones.store.reload();
+	            			me.up('window').close();
+	            		}
+	        			else{
+	        				mensajeError(resp.respuesta);
+	        			}
+        			},
+        			failure  : function(){
+        				_unmask();
+            			errorComunicacion();
+        			}
+    			});
+  			}
+  		},
+  		{ 
+  			text: 'Cancelar',
+  			handler : function(){
+  				this.up('window').close();
+  			} 
+  		}]
+	});
                          
     ////// componentes //////
     
@@ -1651,13 +1770,11 @@ Ext.onReady(function()
         ,border   : 0
         ,items    :
         [
-            Ext.create('Ext.form.Panel',
-            {
+            Ext.create('Ext.form.Panel',{
                 title     : 'Buscar p&oacute;lizas a renovar'
                 ,itemId   : '_p25_busquedaForm'
                 ,defaults : { style : 'margin :5px;' }
-                ,layout   :
-                {
+                ,layout   : {
                     type     : 'table'
                     ,columns : 3
                 }
@@ -1682,22 +1799,19 @@ Ext.onReady(function()
                 		}
                 }
             })
-            ,Ext.create('Ext.form.Panel',
-            {
+            ,Ext.create('Ext.form.Panel',{
                 title        : 'Contratante'
                 ,itemId      : '_p25_contratante'
-                ,defaults : { style : 'margin :5px;' }
+                ,defaults    : { style : 'margin :5px;' }
                 ,autoScroll	 : true
                 ,hidden		 : 'true'
-                ,layout   :
-                {
+                ,layout      : {
                     type     : 'table'
                     ,columns : 3
                 }
                 ,items    :	itemsFormularioContratante
             })
-            ,Ext.create('Ext.grid.Panel',
-            {
+            ,Ext.create('Ext.grid.Panel',{
                 title        : 'Informacion de poliza'
                 ,itemId      : '_p25_poliza'
                 ,selType     : 'checkboxmodel'
@@ -1719,8 +1833,7 @@ Ext.onReady(function()
                     }
                 ]
             })
-            ,Ext.create('Ext.grid.Panel',
-            {
+            ,Ext.create('Ext.grid.Panel',{
                 title        : 'Resultados'
                 ,itemId      : '_p25_grid'
                 ,selType     : 'checkboxmodel'
@@ -1742,6 +1855,38 @@ Ext.onReady(function()
                         ,disabled : true
                     }
                 ]
+            })            
+            ,Ext.create('Ext.grid.Panel',{
+                title        : 'Condiciones de renovacion programada'
+                ,itemId      : '_p25_gridCondiciones'
+                ,selType     : 'checkboxmodel'
+                ,store       : _p25_storeCondiciones
+                ,minHeight   : 200
+                ,maxHeight   : 400
+                ,columns     : itemsCondicionesColumns
+                //,viewConfig  : viewConfigAutoSize
+                ,buttonAlign : 'center'
+                ,hidden		 : 'true'
+                ,autoScroll	 : true
+                ,bbar			: [
+  		    		{ 
+  		        		xtype   : 'button', 
+  		        		text    : 'Agregar condicion',
+  		        		handler : function(){
+  		        			agregaCondicion();
+  		        		}
+  		    		}
+				]
+                /*,buttons     :
+                [
+                    {
+                        text      : 'Renovar'
+                        ,itemId   : '_p25_gridBotonRenovar'
+                        ,icon     : '${ctx}/resources/fam3icons/icons/date_add.png'
+                        ,handler  : _p25_renovarClic
+                        ,disabled : true
+                    }
+                ]*/
             })
         ]
     });
@@ -1770,23 +1915,29 @@ Ext.onReady(function()
   					_fieldByName('cdtipsit',form).hide();
   					_fieldByName('retenedora',form).hide();
   					_fieldByName('cdperson',form).hide();
+  					_fieldByName('anio',form).hide();
+  					_fieldByName('mes',form).hide();
   					_fieldById('_p25_contratante').hide();
   					_fieldById('_p25_poliza').hide();
   					_fieldById('_p25_grid').hide();
+  					_fieldById('_p25_gridCondiciones').hide();
   					form.doLayout();
   				}else if(me.getValue() == 'P'){
-  					_fieldByName('fecini',form).show();
-  					_fieldByName('fecfin',form).show();
-  					_fieldByName('status',form).show();
-  					_fieldByName('cdunieco',form).show();
-  					_fieldByName('cdramo',form).show();
-  					_fieldByName('nmpoliza',form).show();
+  					_fieldByName('fecini',form).hide();
+  					_fieldByName('fecfin',form).hide();
+  					_fieldByName('status',form).hide();
+  					_fieldByName('cdunieco',form).hide();
+  					_fieldByName('cdramo',form).hide();
+  					_fieldByName('nmpoliza',form).hide();
   					_fieldByName('cdtipsit',form).hide();
   					_fieldByName('retenedora',form).hide();
   					_fieldByName('cdperson',form).hide();
+  					_fieldByName('anio',form).show();
+  					_fieldByName('mes',form).show();
   					_fieldById('_p25_contratante').hide();
   					_fieldById('_p25_poliza').hide();
   					_fieldById('_p25_grid').hide();
+  					_fieldById('_p25_gridCondiciones').hide();
   					form.doLayout();
   				}else if(me.getValue() == 'M'){
   					_fieldByName('fecini',form).show();
@@ -1798,9 +1949,12 @@ Ext.onReady(function()
   					_fieldByName('cdtipsit',form).show();
   					_fieldByName('retenedora',form).show();
   					_fieldByName('cdperson',form).show();
+  					_fieldByName('anio',form).hide();
+  					_fieldByName('mes',form).hide();
   					_fieldById('_p25_contratante').hide();
   					_fieldById('_p25_poliza').hide();
   					_fieldById('_p25_grid').hide();
+  					_fieldById('_p25_gridCondiciones').hide();
   					form.doLayout();
   				}
   			}
@@ -1838,27 +1992,21 @@ Ext.onReady(function()
     _fieldById('_p25_poliza').getSelectionModel().on(
     {
         selectionChange : _p25_polizaSelectionChange
-    });
-    
-     /*_fieldById('_p25_clientePanel').loader.load(
-     {
-     	params:
-        	{
-            	'smap1.cdperson' 			: _fieldByName('cdperson',form).getValue(),
-                'smap1.cdideper' 			: '',	//json.smap1.cdideper,
-                'smap1.cdideext' 			: '',	//json.smap1.cdideext,
-                'smap1.esSaludDanios' 		: 'S',
-                'smap1.polizaEnEmision'		: 'S',
-                'smap1.esCargaClienteNvo' 	: 'N',	//(Ext.isEmpty(json.smap1.cdperson)? 'S' : 'N' ),
-                'smap1.cargaCP' 			: '',	//json.smap1.cdpostal,
-                'smap1.cargaTipoPersona' 	: '',	//json.smap1.otfisjur,
-                'smap1.cargaSucursalEmi' 	: _fieldByName('cdunieco',form).getValue(),
-	            'smap1.cargaFenacMin' 		: '',	//_aplicaCobVida?_FechaMinEdad:'',
-	            'smap1.cargaFenacMax' 		: '',	//_aplicaCobVida?_FechaMaxEdad:'',
-	            'smap1.tomarUnDomicilio' 	: 'S',
-	            'smap1.cargaOrdDomicilio' 	: ''   	//json.smap1.nmorddom
-		}
-     });*/
+    });    
+     
+     var formCondicion = panCondicion.down('form');	 
+	 _fieldByName('criterio',formCondicion).on({
+  	     select : function(me){
+  		     debug('> Cambiando criterio',me.getValue());
+  		     if(me.getValue() == 2){
+	     	     _fieldByName('valor2',formCondicion).enable();
+	         }
+	 		 else{
+	     	    _fieldByName('valor2',formCondicion).disable();
+	 		 }  		
+			 debug('< Cambiando criterio');
+  	     }
+  	 });
     ////// custom //////
     
     ////// loaders //////
@@ -1878,7 +2026,8 @@ function _p25_buscarClic(button,e)
   	_fieldById('_p25_grid').hide();
     var form = button.up('form');
     var tipo = _fieldByName('tipo'     , form);
-    debug('tipo ',tipo.getValue());
+    debug('tipo ',tipo);
+    tipo.disable();
     if (tipo.getValue() == 'AS' || tipo.getValue() == 'SA'){
     //AS && SA
     	debug('entro por AS & SA');
@@ -1898,11 +2047,12 @@ function _p25_buscarClic(button,e)
             	debug('op',op);
             	if(success)
             	{
+            		_unmask();
             		debug('records',records);
                 	if(records.length==0)
                 	{
                     	mensajeWarning('Poliza no existe');
-                    	_unmask();
+                    	
                 	}else{
                 		_p25_storeContratante(records, op, success);
                 		var tipo = _fieldByName('tipo');
@@ -1912,6 +2062,7 @@ function _p25_buscarClic(button,e)
             	}
             	else
             	{
+            		_unmask();
                 	mensajeError(op.getError());
             	}
         	}
@@ -1921,6 +2072,8 @@ function _p25_buscarClic(button,e)
     }else if (tipo.getValue() == 'M'){
     //M
     	debug('Entra a M');
+    	_mask('Obteniendo polizas candidatas a renovacion');
+    	debug('form ',form);
     	_p25_ultimosParams =
     	{
     		'smap1.fecini'		: Ext.Date.format(_fieldByName('fecini'		, form).getValue(), "d-M-Y")
@@ -1934,20 +2087,28 @@ function _p25_buscarClic(button,e)
     	};
     	_p25_storePolizasMasivas.load({
     		params    :	_p25_ultimosParams,
-    		callback :  function(records, op, success)
-        	{
+    		callback :  function(records, op, success){
             	debug('entro a callback');
-            	if(success)
-            	{
-                	if(records.length==0)
-                	{
-                    	mensajeWarning('No hay resultados');
-                	}else{
-                		_p25_selectionCharge(tipo);
-                	}
+            	debug('op ',op);
+            	debug('records ',records);            	
+            	if(success){
+            		_unmask();
+            		var response = Ext.decode(op.response.responseText);
+                	debug('response ',response);
+            		if(response["exito"]){
+	                	if(records.length==0){
+	                    	mensajeWarning('No hay resultados');
+	                	}
+	                	else{
+	                		_p25_selectionCharge(tipo);
+	                	}
+	            	}
+	            	else{
+	            		mensajeError(response["respuesta"]);
+	            	}
             	}
-            	else
-            	{
+            	else{
+            		_unmask();
                 	mensajeError(op.getError());
             	}
         	}
@@ -1959,15 +2120,10 @@ function _p25_buscarClic(button,e)
     	debug('Entra a P');
     	_p25_ultimosParams =
     	{
-    		'smap1.fecini'		: Ext.Date.format(_fieldByName('fecini'		, form).getValue(), "d-M-Y")
-    		,'smap1.fecfin'		: Ext.Date.format(_fieldByName('fecfin'		, form).getValue(), "d-M-Y")
-    		,'smap1.status'		: _fieldByName('status'		, form).getValue()
-    		,'smap1.cdunieco' 	: _fieldByName('cdunieco' 	, form).getValue()
-        	,'smap1.cdramo'   	: _fieldByName('cdramo'   	, form).getValue()
-        	,'smap1.estado'   	: 'M'
-        	,'smap1.nmpoliza' 	: _fieldByName('nmpoliza' 	, form).getValue()
+    		'smap1.anio'    : _fieldByName('anio', form).getValue(),
+    		'smap1.mes'		: _fieldByName('mes' , form).getValue()
     	};
-    	_p25_storePolizasMasivas.load({
+    	_p25_storeCondiciones.load({
     		params    :	_p25_ultimosParams,
     		callback :  function(records, op, success)
         	{
@@ -2055,8 +2211,7 @@ function _p25_renovarPolizaClic(button,e)
 	            		var ntramite = resp.slist1[0]['ntramite'];
 	            		debug('resp',ntramite);
 	            		debug('pol',pol);
-	            		if(!Ext.isEmpty(ntramite))
-	            		{
+	            		if(!Ext.isEmpty(ntramite)){
 	                		var form = _fieldById('_p25_busquedaForm');
 	                    	if(_fieldByName('tipo',form).getValue() == 'AS'){
 	                    		var resRenova = resp.slist1[0];
@@ -2100,6 +2255,7 @@ function _p25_renovarClic(button,e)
     var json   = {};
     var slist1 = [];
     var arr    = _fieldById('_p25_grid').getSelectionModel().getSelection();
+    debug('arr',arr);
     Ext.Array.each(arr,function(record)
     {
         var val=record.raw;
@@ -2107,15 +2263,13 @@ function _p25_renovarClic(button,e)
         slist1.push(val);
     });
     json['slist1'] = slist1;
-    //json['smap1']  = _p25_ultimosParams;
     debug('### renovar json params:',json);
     _fieldById('_p25_grid').setLoading(true);
     Ext.Ajax.request(
     {
-        url       : _p25_urlRenovarPolizas
+        url       : _p25_urlRenovarPolizasMasivasIndividuales
         ,jsonData : json
-        ,success  : function(response)
-        {
+        ,success  : function(response){
             _fieldById('_p25_grid').setLoading(false);
             var resp = Ext.decode(response.responseText);
             debug('### renovar json response:',resp);
@@ -2156,14 +2310,17 @@ debug('>_p25_selectionCharge');
   		_fieldById('_p25_contratante').show();
   		_fieldById('_p25_poliza').show();
   		_fieldById('_p25_grid').hide();
+  		_fieldById('_p25_gridCondiciones').hide();
   	}else if(field.getValue() == 'P'){
   		_fieldById('_p25_contratante').hide();
   		_fieldById('_p25_poliza').hide();
-  		_fieldById('_p25_grid').show();
+  		_fieldById('_p25_grid').hide();
+  		_fieldById('_p25_gridCondiciones').show();
   	}else if(field.getValue() == 'M'){
   		_fieldById('_p25_contratante').hide();
   		_fieldById('_p25_poliza').hide();
   		_fieldById('_p25_grid').show();
+  		_fieldById('_p25_gridCondiciones').hide();
   	}
 debug('<_p25_selectionCharge');
 }
@@ -2172,6 +2329,8 @@ function _p25_limpiarFiltros(button,e)
 {
     debug('>_p25_limpiarFiltros');
     var form = button.up('form');
+    var tipo = _fieldByName('tipo',form);
+    tipo.enable();
     var cdperson = _fieldByName('cdperson',form);
   	cdperson.store.proxy.extraParams['params.cdunieco'] = '';
   	cdperson.store.proxy.extraParams['params.cdramo']   = ''; 
@@ -2184,6 +2343,7 @@ function _p25_limpiarFiltros(button,e)
   	_fieldByName('cdtipsit',form).setValue('');
   	_fieldByName('retenedora',form).setValue('');
   	_fieldByName('cdperson',form).setValue('');
+  	_fieldByName('anio',form).setValue('');
     debug('<_p25_limpiarFiltros');
 }
 
@@ -2283,6 +2443,7 @@ function _p29_actualizarCotizacion(callback){
        		success  : function(response)
        		{
            		var resp = Ext.decode(response.responseText);
+           		debug('resp',resp);
            		if(resp.success==true)
                 {
            			mensajeCorrecto('Aviso','Se ha actualizado con exito.');
@@ -2531,6 +2692,77 @@ function tarifaFinal(){
     debug('<tarifaFinal');
 }
 
+function actualizaCondicion(record){
+	debug('>actualizaCondicion',record);	
+	var form = panCondicion.down('form');
+	_fieldByName('anio',form).readOnly = true;
+	_fieldByName('mes',form).readOnly = true;
+	_fieldByName('campo',form).readOnly = true;
+	var criterio = record.data['criterio'];
+	if(criterio == 2){
+		_fieldByName('valor2',form).enable();
+	}
+	else{
+		_fieldByName('valor2',form).disable();
+	}
+	panCondicion['operacion'] = 'A';
+	panCondicion.setTitle('Editar condicion');
+	panCondicion.show();
+	debug(panCondicion.down('form'));
+	panCondicion.down('form').loadRecord(record);
+	_p25_gridCondiciones.store.reload;
+	debug('<actualizaCondicion',record);
+}
+
+function borraCondicion(record){
+	debug('>borraCondicion',record);	
+	var _p25_condiciones = _fieldById('_p25_condiciones');
+  	debug(_p25_condiciones.form.getValues());
+  	var datos = record.data; 
+  	var params = {};
+  	for(var k in datos){
+  		params['params.'+k] = datos[k]; 
+  	}
+  	params['params.operacion'] = 'B';
+  	debug('params',params);
+  	_mask('Eliminando condicion');
+  	Ext.Ajax.request({
+        url       : _p25_urlMovimientoCondiciones,
+        params    : params,
+        success  : function(response){
+	        _unmask();
+	        var resp = Ext.decode(response.responseText);
+	        debug('resp',resp);
+	        if(resp.exito == true){	        
+	        	mensajeCorrecto('Mensaje','Borrado con exito');
+	        	var _p25_gridCondiciones = _fieldById('_p25_gridCondiciones');
+	        	_p25_gridCondiciones.store.reload();
+	        }
+	        else{
+	        	mensajeError(resp.respuesta);
+	        }
+        },
+        failure  : function(){
+        	_unmask();
+            errorComunicacion();
+        }
+    });
+	debug('<borraCondicion',record);
+}
+
+function agregaCondicion(){
+	debug('>agregaCondicion');
+	panCondicion['operacion'] = 'I';
+	panCondicion.setTitle('Agregar condicion');
+	var form = panCondicion.down('form');
+	debug(_fieldByName('anio',form));
+	_fieldByName('anio',form).readOnly = false;
+	_fieldByName('mes',form).readOnly = false
+	_fieldByName('campo',form).readOnly = false	
+	_fieldByName('valor2',form).readOnly = false
+	panCondicion.show();
+	debug('<agregaCondicion');
+}
 ////// funciones //////
 </script>
 </head>

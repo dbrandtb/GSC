@@ -411,30 +411,37 @@ public class RenovacionAction extends PrincipalCoreAction
 		try{	
 			Utils.validate(smap1, "No se recibieron datos");
 			Utils.validate(smap1.get("fecini")  , "No se recibio la fecha inicio",
-					   	   smap1.get("fecfin")  , "No se recibio la fecha fin"//,
-//						   smap1.get("cdunieco"), "No se recibio la oficina",
-//						   smap1.get("cdramo")  , "No se recibio el producto",
-//						   smap1.get("estado")  , "No se recibio el estado",
-//						   smap1.get("nmpoliza"), "No se recibio la poliza",
-//						   smap1.get("cdtipsit"), "No se recibio el subramo",						   
-//						   smap1.get("status")  , "No se recibio el status"
+					   	   smap1.get("fecfin")  , "No se recibio la fecha fin"
 					);
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String estado   = smap1.get("estado");
-			String nmpoliza = null;//smap1.get("nmpoliza");
-			String cdtipsit	= smap1.get("cdtipsit");
-			String fecini	= smap1.get("fecini");
-			String fecfin	= smap1.get("fecfin");
-			String status	= smap1.get("status");
-			
+			String cdunieco   = smap1.get("cdunieco");
+			String cdramo     = smap1.get("cdramo");
+			String estado     = smap1.get("estado");
+			String nmpoliza   = null;//smap1.get("nmpoliza");
+			String cdtipsit	  = smap1.get("cdtipsit");
+			String fecini	  = smap1.get("fecini");
+			String fecfin	  = smap1.get("fecfin");
+			String status	  = smap1.get("status");
+			String retenedora = smap1.get("retenedora");
+			String cdperson	  = smap1.get("cdperson");
 			//proceso
-			managerResp = renovacionManager.buscarPolizasRenovacionIndividualMasiva(cdunieco, cdramo, estado, nmpoliza, cdtipsit, fecini, fecfin, status);
+			managerResp = renovacionManager.buscarPolizasRenovacionIndividualMasiva(
+					cdunieco, 
+					cdramo, 
+					estado, 
+					nmpoliza, 
+					cdtipsit, 
+					fecini, 
+					fecfin, 
+					status,
+					cdperson,
+					retenedora
+					);
 			logger.info(new StringBuilder().append("managerResp ").append(managerResp).toString());
 			slist1 			= managerResp.getSlist();
 			success         = managerResp.isExito();
 			respuesta       = managerResp.getRespuesta();
-			respuestaOculta = managerResp.getRespuestaOculta();			
+			respuestaOculta = managerResp.getRespuestaOculta();
+			exito = true;
 		}catch(Exception ex){
 			respuesta 		= Utils.manejaExcepcion(ex);
 		}
@@ -491,8 +498,16 @@ public class RenovacionAction extends PrincipalCoreAction
 					.append(resp)
 					.toString()
 					);
-			setSlist1(resp.getSlist());
-			exito = true;
+			if(resp.isExito()){
+				setSlist1(resp.getSlist());
+				exito = true;
+				respuesta = resp.getRespuesta();
+			}
+			else{
+				exito = false;
+				respuesta = resp.getRespuesta();
+			}
+			
 		}catch(Exception ex){
 			respuesta = Utils.manejaExcepcion(ex);
 		}
@@ -612,6 +627,87 @@ public class RenovacionAction extends PrincipalCoreAction
 			String cdramo = params.get("cdramo");
 			String cdtipsit = params.get("cdtipsit");
 			params.put("items", renovacionManager.obtenerItemsTatripol(cdramo, cdtipsit));
+			exito = true;
+		}
+		catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	public String renovarPolizasMasivasIndividuales(){
+		logger.info(
+				new StringBuilder()
+				.append("\n###### slist1=").append(slist1)
+				.append("\n###### Entrando a renovarPolizasMasivasIndividuales ######")
+				.append("\n##########################################################")
+				.toString()
+				);
+		session=ActionContext.getContext().getSession();
+		try{
+			Utils.validate(slist1, "No se recibieron parametros de entrada");
+			renovacionManager.renovarPolizasMasivasIndividuales(slist1);
+			exito = true;
+		}
+		catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n###### Saliendo a renovarPolizasMasivasIndividuales ######")
+				.append("\n##########################################################")
+				.toString()
+				);		
+		return SUCCESS;
+	}
+	
+	public String obtenerCondicionesRenovacionIndividual(){
+		logger.info(
+				new StringBuilder()
+				.append("\n###### smap1=").append(smap1)
+				.append("\n###### Entrando a obtenerCondicionesRenovacionIndividual ######")
+				.append("\n##########################################################")
+				.toString()
+				);
+		List<Map<String, String>> slist = new ArrayList<Map<String,String>>();
+		try{
+			Utils.validate(smap1, "No se recibieron parametros de entrada");
+			Utils.validate(smap1.get("anio"),"No se recibio el año");
+			String anio = smap1.get("anio");
+			String mes  = smap1.get("mes");
+			slist = renovacionManager.obtenerCondicionesRenovacionIndividual(anio, mes);
+			setSlist1(slist);
+			exito = true;
+		}
+		catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	public String movimientoCondicionesRenovacionIndividual(){
+		logger.info(
+				new StringBuilder()
+				.append("\n###### params=").append(params)
+				.append("\n###### Entrando a movimientoCondicionesRenovacionIndividual ######")
+				.append("\n##########################################################")
+				.toString()
+				);
+		exito = false;
+		try{
+			Utils.validate(params, "No se recibieron parametros de entrada");
+			Utils.validate(params.get("anio"),"No se recibio el año",
+						   params.get("mes") ,"No se recibio el mes",
+						   params.get("operacion") ,"No se recibio la operacion");
+			String anio      = params.get("anio");
+			String mes       = params.get("mes");
+			String criterio  = params.get("criterio");
+			String campo     = params.get("campo");
+			String valor     = params.get("valor");
+			String valor2    = params.get("valor2");
+			String operacion = params.get("operacion");
+			renovacionManager.movimientoCondicionesRenovacionIndividual(anio, mes, criterio, campo, valor, valor2, operacion);
+			exito = true;
 		}
 		catch(Exception ex){
 			respuesta = Utils.manejaExcepcion(ex);

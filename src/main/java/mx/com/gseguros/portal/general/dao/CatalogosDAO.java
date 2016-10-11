@@ -156,4 +156,19 @@ public interface CatalogosDAO {
 	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception;
 	
 	public List<GenericVO> recuperarMotivosRechazo (String ntramite) throws Exception;
+	
+	/**
+	 * Obtiene los valores de ttapvat1
+	 * @param cdtabla
+	 * @return Lista de otvalor de ttapvat1
+	 * @throws Exception
+	 */
+	public List<Map<String,String>> obtenerTablaApoyo1(String cdtabla)throws Exception;
+	
+	/**
+	 * Obtiene los valores de la tabla de apoyo CAMPEXTREN
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String,String>> obtenerCamposExclusionRenovacion()throws Exception;
 }
