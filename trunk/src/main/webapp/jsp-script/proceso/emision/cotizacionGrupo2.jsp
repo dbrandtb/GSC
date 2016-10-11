@@ -2947,8 +2947,8 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
-                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&!(json.slist1[j].CDGARANT=='4AYM'||json.slist1[j].CDGARANT=='4EE')
-                                                        ,disabled   : json.slist1[j].SWMODIFI=='N'
+	                                                    ,checked    : json.slist1[j].SWOBLIGA == 'S' // && (json.slist1[j].SWSELECCIONADO == 'S')
+	                                                    ,readOnly   : json.slist1[j].SWEDITABLE == 'N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
                                                         {
