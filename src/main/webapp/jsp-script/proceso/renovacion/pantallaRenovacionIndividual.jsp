@@ -2164,32 +2164,34 @@ function _p25_renovarPolizaClic(button,e)
     debug('pol',pol);
     var sePuedeRenovar = false;
     var mensaje = 'No ha sido posible renovar por las siguientes razones<br/>';
+    debug('renovada',pol['renovada']);
     if(pol['renovada'] == 'NO'){
     	sePuedeRenovar = true;
+    	debug('pagada',pol['pagada']);
+    	if(pol['pagada'] == 'SI'){
+    		debug('aseg_edad_val',pol['aseg_edad_val']); 
+    		if(pol['aseg_edad_val'] > 0){
+    			sePuedeRenovar = true;
+    		}
+    		else{
+    			sePuedeRenovar = false;
+    			mensaje = mensaje+'La p\u00F3liza no tiene asegurados con edad valida<br/>';
+    		}
+    		sePuedeRenovar = true;
+    	}
+    	else{
+    		sePuedeRenovar = false;
+    		mensaje = mensaje+'La p\u00F3liza no est\u00E1 pagada<br/>';
+    	}
     }
     else{
     	sePuedeRenovar = false;
     	mensaje = mensaje+'La p\u00F3liza ya est\u00E1 renovada<br/>';
-    } 
-    if(pol['pagada'] == 'SI'){
-    	sePuedeRenovar = true;
-    }
-    else{
-    	sePuedeRenovar = false;
-    	mensaje = mensaje+'La p\u00F3liza no est\u00E1 pagada<br/>';
-    } 
-    if(pol['aseg_edad_val'] > 0){
-    	sePuedeRenovar = true;
-    }
-    else{
-    	sePuedeRenovar = false;
-    	mensaje = mensaje+'La p\u00F3liza no tiene asegurados con edad valida<br/>';
-    }
+    }        
     
-    if(sePuedeRenovar){    	
+    if(sePuedeRenovar == true){
     		_mask('Renovando poliza');
-    		Ext.Ajax.request(
-    		{
+    		/*Ext.Ajax.request({
         		url       : _p25_urlRenovarPolizaIndividual,
         		params     : 
         		{
@@ -2240,7 +2242,7 @@ function _p25_renovarPolizaClic(button,e)
         			_unmask();
             		errorComunicacion();
         		}
-    		});
+    		});*/
     	//}
     }
     else{
