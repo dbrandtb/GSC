@@ -24,6 +24,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.model.DescargaLotePdfVO;
+import mx.com.gseguros.portal.consultas.model.ImpresionLayoutVO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
@@ -811,6 +812,158 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "pantallaDescargaDocumentosLayout",
+	        results = {
+			    @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+                @Result(name="success" , location="/jsp-script/consultas/pantallaDescargaDocumentosLayout.jsp")
+            }
+	)
+	public String pantallaDescargaDocumentosLayout(){
+		logger.debug(Utils.log(
+				 "\n###########################"
+				,"\n###### pantallaDescargaDocumentosLayout ######"
+				));
+		
+		logger.debug(Utils.log(
+				 "\n###### pantallaDescargaDocumentosLayout ################"
+				,"\n########################################################"
+				));
+		return SUCCESS;
+	}
+
+	public String descargaLayout(){
+		
+		logger.debug(Utils.log(
+				 "\n############################"
+				,"\n###### descargaLayout ######"
+				));
+		
+		try{
+			String cdtipram=params.get("cdtipram");
+			Map<String, String> map=(Map<String, String>) session.get("layout.datos.para.documentos");
+			
+			DescargaLotePdfVO datos = explotacionDocumentosManager.generaPdfLayout(map,
+																					cdtipram, 
+																					"B",
+																					params.get("duplex").equals("S"));
+			
+			session.put("fileDownErr",datos.getErrores());
+			fileInputStream=datos.getFileInput();
+			
+			contentType = TipoArchivo.PDF.getContentType();
+			filename    = Utils.join("layout.pdf");
+			session.put("descargarLote" , "S");
+			
+			
+		}catch(Exception ex){
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### descargaLayout ################"
+				,"\n#######################################"
+				));
+		
+		success=true;
+		return SUCCESS;
+	}
+	@Action(value           = "verificaLayout",
+			results         = { @Result(name="success", type="json") },
+					interceptorRefs = {
+						    @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+						}
+            )
+	public String verificaLayout(){
+		
+		
+		logger.debug(Utils.log(
+				 "\n###########################"
+				,"\n###### verificaLayout ######"
+				));
+		logger.debug(Utils.log(
+				 "\n###### params= ",params,
+				 "\n###### list= ",list
+				 ));
+		
+		try{
+			
+			UserVO usuario = Utils.validateSession(session);
+			String cdusuari = usuario.getUser();
+			String cdsisrol = usuario.getRolActivo().getClave();
+			
+			Utils.validate(params , "No se recibieron datos");
+			
+			String tpdocum  = params.get("tpdocum");
+			String cdramo   = params.get("cdramo");
+			
+			Utils.validate(
+					tpdocum      , "No se recibi\u00F3 el tipo de documento"
+					,cdramo     , "No se recibi\u00F3 el ramo"
+					
+					);
+		    ImpresionLayoutVO lay=explotacionDocumentosManager.verificaLayout(
+					  list
+					, tpdocum
+					, cdusuari
+					, cdsisrol
+					, this.getText("user.server.layouts")
+					, this.getText("pass.server.layouts")
+					, this.getText("directorio.server.layouts")
+					, this.getText("dominio.server.layouts")
+					, this.getText("dominio.server.layouts2")
+					);
+		    list=lay.getValidacion();
+		    session.put("layout.datos.para.documentos", lay.getDocumentos());
+			success =true;
+			
+		}catch(Exception ex){
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success=" , success
+				,"\n###### message=" , message
+				,"\n###### verificaLayout ###########"
+				,"\n#################################"
+				));
+		return SUCCESS;
+		
+	}
+	
+	
+	@Action(value   = "borrarDatosLayout",
+			results = { @Result(name="success", type="json") }
+	)
+	public String borrarDatosLayout()
+	{
+		logger.debug(Utils.log(
+				 "\n######################################"
+				,"\n###### borrarDatosLayout ######"
+				,"\n###### params=",params
+				));
+		
+		try
+		{
+			String pv_idproceso_i;
+			Map<String, String> map=(Map<String, String>) session.get("layout.datos.para.documentos");
+			pv_idproceso_i=map.get("pv_idproceso_i");
+			message=explotacionDocumentosManager.borrarDatosLayout(pv_idproceso_i);
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### success=" , success
+				,"\n###### message=" , message
+				,"\n###### params="  , params
+				,"\n###### marcarImpresionOperacion ######"
+				,"\n######################################"
+				));
+		return SUCCESS;
+	}
 	
 	////////////////// Getters y setters ///////////////////////////
 	                                                              //
