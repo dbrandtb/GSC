@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +22,7 @@ import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.DescargaLotePdfVO;
 import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
+import mx.com.gseguros.portal.consultas.model.ImpresionLayoutVO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -41,6 +43,7 @@ import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.DocumentosUtils;
+import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
@@ -2255,8 +2258,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				
 				
 				try{
-					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
-					logger.debug("Si descargo {}",existe);
+					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP").replaceAll("\\s",""));
+					
 				}catch(ConnectException ex){
 					
 					existe=false;
@@ -2320,10 +2323,359 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		
 	}
 		bw.close();
-		logger.debug("......"+hayErrores);
+		
 	
 	return docsExisten;
 	}
+	
+	
+	public ImpresionLayoutVO verificaLayout(
+			List<Map<String,String>> layout,
+			String tpdocum,
+			String cdusuari,
+			String cdsisrol,
+			String usuario,
+			String pass,
+			String dirLayouts,
+			String server1,
+			String server2
+			)throws Exception{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ verificaLayout @@@@@@@@@@@@@@@"
+				,"\n@@@@@@ usuario=" , usuario
+				,"\n@@@@@@ pass=" , pass
+				,"\n@@@@@@ dirLayouts=" , dirLayouts
+				,"\n@@@@@@ server1=" , server1
+				,"\n@@@@@@ server2=" , server2
+				,"\n@@@@@@ cdsisrol=" , cdsisrol
+				
+				));
+		List<Map<String,String>> respuesta=null;
+		String paso="";
+		long timestamp = System.currentTimeMillis();
+		long rand      = new Double(1000d*Math.random()).longValue();
+		File archivoTxt = new File(Utils.join(rutaDocumentosTemporal,"/layoutPdf_"
+												,timestamp,rand,".txt"));
+		PrintStream output     = new PrintStream(archivoTxt);
+		ImpresionLayoutVO layoutReturn=new ImpresionLayoutVO();
+		
+		paso="Escribiendo layout";
+		for(Map<String,String> m: layout){
+			
+			
+			
+			output.print(m.get("SUCURSAL")==null?"":m.get("SUCURSAL"));
+			output.print("|");
+			output.print(m.get("RAMO")==null?"":m.get("RAMO"));
+			output.print("|");
+			output.print(m.get("POLIZA")==null?"":m.get("POLIZA"));
+			output.print("|");
+			output.print(m.get("CDTIPEND")==null?"":m.get("CDTIPEND"));
+			output.print("|");
+			output.print(m.get("NUMENDOSO")==null?"":m.get("NUMENDOSO"));
+			output.print("|");
+			output.print(m.get("SEQRECIBO")==null?"":m.get("SEQRECIBO"));
+			output.print("|");
+			output.print(m.get("NMCERTIF")==null?"":m.get("NMCERTIF"));
+			output.print("|");
+			output.println();
+			
+			
+		}
+		
+		output.close();
+		
+		
+		paso="Guardando layout en el server";
+		
+		logger.debug(Utils.join("@@@@ Archivo local=  ",archivoTxt.getAbsolutePath()));
+		boolean transferidoAmbosServer=FTPSUtils.upload(server1
+													,usuario
+													, pass
+													, archivoTxt.getAbsolutePath()
+													, dirLayouts+"/"+archivoTxt.getName()) 
+											&&
+										FTPSUtils.upload(server2
+													, usuario
+													, pass
+													, archivoTxt.getAbsolutePath()
+													, dirLayouts+"/"+archivoTxt.getName())
+				;
+		
+		if(!transferidoAmbosServer)
+		{
+			throw new ApplicationException("Error al transferir archivo al servidor");
+		}
+		
+		respuesta=consultasDAO.cargaLayoutImpresion(archivoTxt.getName(), tpdocum, cdusuari);
+		
+		
+		
+		logger.debug("@@@@ Respuesta de cargaLayoutImpresion: ");
+		logger.debug(respuesta.toString());
+		
+		paso="Ordenando layout";
+		respuesta=sortLayout(layout, respuesta);
+		
+		layoutReturn.setValidacion(respuesta);
+		logger.debug(respuesta.toString());
+		
+		if(respuesta !=null && !respuesta.isEmpty()){
+			String pv_idproceso_i=respuesta.get(0).get("IDPROCESO");
+			
+			//List<Map<String, String>> documentos = consultasDAO.getDocumentosLayout(pv_idproceso_i, tpdocum, "B", cdusuari, cdsisrol);
+			
+			Map<String,String> map=new HashMap<String, String>();
+			map.put("pv_idproceso_i", pv_idproceso_i);
+			map.put("pv_cdtipimp_i", tpdocum);
+			map.put("pv_papel_i", "B");
+			map.put("pv_cdusuari_i", cdusuari);
+			map.put("pv_cdsisrol_i", cdsisrol);
+			
+			layoutReturn.setDocumentos(map);
+			
+			
+			for(Map<String,String> m: respuesta){
+				if((m.get("OBSERVAC"))==null){
+					m.put("VALIDO", "true");
+				}else{
+					m.put("VALIDO", "false");
+				}
+				if(m.get("SWIMPRIME").equalsIgnoreCase("N")){
+					m.put("VALIDO", "false");
+				}
+				
+			}
+			
+		}
+
+		
+		
+		
+		
+		
+		
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ respuesta = ", respuesta
+				,"\n@@@@@@ verificaLayout @@@@@@@@@@@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return layoutReturn;
+		
+	}
+	
+	@Override
+	public DescargaLotePdfVO generaPdfLayout(Map<String, String> map,String cdtipram,String hoja,boolean duplex) throws Exception{
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ generaPdfLayout @@@@@@@@@@@@@@@"
+				,"\n@@@@@@ map=" , map
+				,"\n@@@@@@ cdtipram=" , cdtipram
+				,"\n@@@@@@ hoja=" , hoja
+				
+				
+				));
+		
+		
+		List<Map<String, String>> documentos=consultasDAO.getDocumentosLayout(
+																	      map.get("pv_idproceso_i")
+																		, map.get("pv_cdtipimp_i")
+																		, map.get("pv_papel_i")
+																		, map.get("pv_cdusuari_i")
+																		, map.get("pv_cdsisrol_i")
+																	);
+		logger.debug(Utils.log(
+				
+				"\n@@@@@@ documentos=" , documentos
+				
+				
+				));
+		
+		String paso="";
+		InputStream inputStream = null;
+		DescargaLotePdfVO pdfReturn=new DescargaLotePdfVO();
+		
+		try{
+			long timestamp   = System.currentTimeMillis();
+			long rand        = new Double(1000d*Math.random()).longValue();
+			StringBuilder sb = new StringBuilder();
+			List<File> files = new ArrayList<File>();
+			File noExiste=new File(Utils.join(
+					rutaDocumentosTemporal,
+					"/archivos_no_encontrados_layout",
+					"_",timestamp,rand,
+					".txt"
+				));
+			AtomicBoolean hayErrores=new AtomicBoolean(false);
+			//Se intenta regenerar archivos si no existen, devuelve los archivos que si existen y crea una lista en un archivo con los documentos no encontrados
+			documentos=regeneraDocs(documentos, noExiste, cdtipram,hayErrores);
+			
+			documentos=armaJuegosDeImpresiones(documentos);
+			
+			logger.debug(Utils.log("\n@@@@ Documentos a imprimir: ",documentos));
+			
+			for(Map<String, String> archivo: documentos){
+				String ntramite = archivo.get("ntramite");
+				String cddocume = archivo.get("cddocume");
+				String dsdocume = archivo.get("dsdocume");
+				String nmpoliza = archivo.get("nmpoliza");
+				String swimpdpx = archivo.get("swimpdpx");
+				String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
+				
+				
+				
+				
+				sb.append(Utils.log("\ntramite,archivo=",ntramite,",",cddocume));
+				
+				if(cddocume.toLowerCase().indexOf("://")!=-1)
+				{
+					paso = "Descargando archivo remoto";
+					sb.append("\n").append(paso);
+					timestamp = System.currentTimeMillis();
+					rand      = new Double(1000d*Math.random()).longValue();
+					filePath       = Utils.join(
+							rutaDocumentosTemporal
+							,"_tramite_" , ntramite
+							,"_t_"       , timestamp , "_" , rand
+							,".pdf"
+							);
+					
+					
+					
+					
+					File local = new File(filePath);
+					
+					try{
+						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP").replaceAll("\\s",""));
+						FileUtils.copyInputStreamToFile(remoto, local);
+					}catch(ConnectException ex){
+						logger.error("Error al descargar documento: ",ex);
+						
+					}catch(Exception ex){
+						logger.error("Error al descargar documento: ",ex);
+					}
+				}
+				
+				if(duplex && !dsdocume.toLowerCase().contains("recibo") && "N".equalsIgnoreCase(swimpdpx.trim())){
+					files.add(DocumentosUtils.blancoParaDuplex(new File(filePath), new File(
+								Utils.join(
+										rutaDocumentosTemporal
+										,"/blanco_layout"
+										,"_t_"       , timestamp , "_" , rand
+										,".pdf"
+										))
+						));
+				}else{
+					files.add(new File(filePath));
+				}
+				
+				
+			}
+			
+			
+			File fusionado = DocumentosUtils.mixPdf(files, new File(Utils.join(
+							rutaDocumentosTemporal
+							,"layout"
+							,"_fusion_papel_" , hoja
+							,"_t_"            , System.currentTimeMillis()
+							,".pdf"
+					        )
+					));
+			
+			
+//			
+			
+			if(fusionado==null || !fusionado.exists())
+			{
+				throw new ApplicationException("El archivo no fue creado");
+			}
+			
+			inputStream = new FileInputStream(fusionado);
+			
+			pdfReturn.setFileInput(inputStream);
+			if(hayErrores.get()){
+				pdfReturn.setErrores(noExiste);
+			}else{
+				pdfReturn.setErrores(null);
+			}
+			
+			
+		}catch(Exception ex)
+		{
+			//ex.printStackTrace();
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				 "\n@@@@@@ respuesta = ", pdfReturn
+				,"\n@@@@@@ generaPdfLayout @@@@@@@@@@@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		
+		return pdfReturn;
+	}
+	
+	private List<Map<String, String>> sortLayout(List<Map<String, String>> original,List<Map<String, String>> respuesta){
+		logger.debug(Utils.join("@@@@ original  = ",original));
+		logger.debug(Utils.join("@@@@ respuesta = ",respuesta));
+		List<Map<String, String>> orden=new ArrayList<Map<String,String>>();
+		
+		for(Map<String, String> m1:original){
+			for(Map<String, String> m2:respuesta){
+				
+				if(
+						   m1.get("SUCURSAL").trim().equals(m2.get("SUCURSAL")==null?"":m2.get("SUCURSAL").trim()) 
+						&& m1.get("RAMO").trim().equals(m2.get("RAMO")==null?"":m2.get("RAMO").trim()) 
+						&& m1.get("POLIZA").trim().equals(m2.get("POLIZA")==null?"":m2.get("POLIZA").trim())
+						&& m1.get("CDTIPEND").trim().equalsIgnoreCase(m2.get("CDTIPEND")==null?"":m2.get("CDTIPEND").trim())
+						&& m1.get("NUMENDOSO").trim().equals(m2.get("NUMENDOSO")==null?"":m2.get("NUMENDOSO").trim())
+						&& m1.get("SEQRECIBO").trim().equals(m2.get("SEQRECIBO")==null?"":m2.get("SEQRECIBO").trim())
+						&& m1.get("NMCERTIF").trim().equals(m2.get("NMCERTIF")==null?"":m2.get("NMCERTIF").trim())
+				){
+					orden.add(m2);
+					continue;
+				}
+			}
+			
+		}
+		
+		logger.debug(Utils.join("@@@@ orden=",orden));
+		return orden;
+	}
+	
+	public String borrarDatosLayout(String pv_idproceso_i) throws Exception{
+		String paso="";
+		String msg="";
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ borrarDatosLayout @@@@@@@@@@@@@@@"
+				,"\n@@@@@@ pv_idproceso_i=" , pv_idproceso_i
+				
+				
+				
+				));
+		try{
+			paso="Borrando datos";
+			msg= consultasDAO.eliminaZwimpxlayout(pv_idproceso_i);
+		}
+		catch(Exception ex)
+		{
+			//ex.printStackTrace();
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@ msg = ", msg
+				,"\n@@@@@@ borrarDatosLayout @@@@@@@@@@@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return msg;
+	}
+	
+	
+	
 		
 }
 

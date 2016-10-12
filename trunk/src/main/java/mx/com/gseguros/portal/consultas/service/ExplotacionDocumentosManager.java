@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.consultas.model.DescargaLotePdfVO;
+import mx.com.gseguros.portal.consultas.model.ImpresionLayoutVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 
 public interface ExplotacionDocumentosManager
@@ -128,4 +129,26 @@ public interface ExplotacionDocumentosManager
 			,String cdusuari
 			,String cdsisrol
 			)throws Exception;
+	
+	public ImpresionLayoutVO verificaLayout(
+			List<Map<String,String>> layout,
+			String tpdocum,
+			String cdusuari,
+			String cdsisrol,
+			String usuario,
+			String pass,
+			String dirLayouts,
+			String server1,
+			String server2
+			)throws Exception;
+	
+	DescargaLotePdfVO generaPdfLayout(
+			Map<String, String> documentos,
+			String cdtipram,
+			String hoja,
+			boolean duplex
+			) throws Exception;
+	
+	public String borrarDatosLayout(String pv_idproceso_i) throws Exception;
+
 }
