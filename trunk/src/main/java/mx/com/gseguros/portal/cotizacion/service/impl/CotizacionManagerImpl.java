@@ -6838,7 +6838,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             	}
             	catch(Exception ex)
             	{
-            		logger.warn("Error sin impacto funcional al cotizar",ex);
+            		logger.warn("Error sin impacto funcional al cotizar");
             	}
                 	
             	if(cdtipsit.equals(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit()))
