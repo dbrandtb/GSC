@@ -92,7 +92,7 @@ var _p21_urlComplementoCotizacion        = '<s:url namespace="/emision"         
 var _p21_urlRecuperacion                 = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
 var _p21_urlRestaurarRespaldoCenso       = '<s:url namespace="/emision"         action="restaurarRespaldoCenso"           />';
 var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
-
+var _p21_urlReporte                 	 = '<s:url namespace="/reportes"    	action="procesoObtencionReporte" />';
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
     ,_cotcol_urlPantallaActTvalosit = '<s:url namespace="/tvalosit" action="includes/pantallaActTvalosit" />'
@@ -100,12 +100,12 @@ var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="incl
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp 
 
 var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol" action="marcarTramiteVistaPrevia" />';
-
 var _p21_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
 var _p21_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p21_reportsServerUser = '<s:text name="pass.servidor.reports" />';
+var _TIPO_SITUACION_RENOVACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -474,6 +474,7 @@ Ext.onReady(function()
             ,handler : _p21_revisarAseguradosClic
         });
     }
+    
     _p21_tabGruposLineal =
     {
         title     : 'RESUMEN SUBGRUPOS'
@@ -1395,6 +1396,30 @@ Ext.onReady(function()
     {
         debugError('error inofensivo al querer mover boton de agentes',e);
     }
+    
+    
+    try
+    {
+    	if(_p21_smap1.cdtipsup == _TIPO_SITUACION_RENOVACION){
+    		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
+    		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].show();
+    	}else{
+    		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
+    		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].hide();
+    	}
+    }
+    catch(e)
+    {
+        debugError('error para la renovacion de la Poliza',e);
+    }
+    
+    /*if(_p21_smap1.cdtipsup=='33')
+    {
+        
+    	alert("tenemos que ocultar botoness");
+    	var bot = Ext.ComponentQuery.query('[xtype=button][text=Guardar y recargar]',_fieldById('_p29_clientePanel'));
+		debug('bot:',bot);
+    }*/
     
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
@@ -2739,7 +2764,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                         grid.editingPlugin.cancelEdit();
                                         _p21_agregarTab(
                                         {
-                                            title       : 'DETALLE DE SUBGRUPO '+record.get('letra')
+                                            title       : 'DETALLE DE SUBGRUPO_1.-  '+record.get('letra')
                                             ,itemId     : 'id'+(new Date().getTime())
                                             ,letraGrupo : record.get('letra')
                                             ,tipo       : 'tabDetalleGrupo'

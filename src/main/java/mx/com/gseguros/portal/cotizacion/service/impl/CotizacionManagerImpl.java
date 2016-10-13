@@ -5779,6 +5779,35 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(29)),"-"));
 	                }
+	              //ID ASEGURADO
+	                try
+                	{
+		                auxCell=row.getCell(30);
+		                logger.debug(
+		                		new StringBuilder("ID ASEGURADO: ")
+		                		.append(
+		                				auxCell!=null?
+		                						auxCell.getStringCellValue()
+		                						:""
+		                		)
+		                		.append("|")
+		                		.toString()
+		                		);
+		                bufferLinea.append(
+		                		auxCell!=null?
+		                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+		                				:"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' (AE) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(30)),"-"));
+	                }
 	                
 	                /* nuevos para SSI fin */
 	                
@@ -5824,6 +5853,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     					params.put("pv_edocivil_i", extraerStringDeCelda(row.getCell(26)));
     					params.put("pv_feingresoempleo_i", feingreso);
     					params.put("pv_plaza_i", extraerStringDeCelda(row.getCell(29)));
+    					params.put("pv_idasegurado_i", extraerStringDeCelda(row.getCell(30)));
     					
     					filasFamilia.add(params);
 	                	
