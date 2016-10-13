@@ -1412,15 +1412,6 @@ Ext.onReady(function()
     {
         debugError('error para la renovacion de la Poliza',e);
     }
-    
-    /*if(_p21_smap1.cdtipsup=='33')
-    {
-        
-    	alert("tenemos que ocultar botoness");
-    	var bot = Ext.ComponentQuery.query('[xtype=button][text=Guardar y recargar]',_fieldById('_p29_clientePanel'));
-		debug('bot:',bot);
-    }*/
-    
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
     
