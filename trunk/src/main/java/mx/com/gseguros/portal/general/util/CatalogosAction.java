@@ -986,6 +986,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case CAMPOS_EXCLUSION_RENOVACION:
 					lista = catalogosManager.recuperaCamposExclusionRenovacion();
 					break;
+				case CATALOGO_ATRIPOL_DSATRIBU:
+					if(params == null){
+						params = new HashMap<String,String>();
+					}
+					lista = catalogosManager.obtieneCatalogoDescAtrib(params.get("cdramo"), params.get("dsatribu"), params.get("idPadre"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

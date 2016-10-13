@@ -171,4 +171,7 @@ public interface CatalogosDAO {
 	 * @throws Exception
 	 */
 	public List<Map<String,String>> obtenerCamposExclusionRenovacion()throws Exception;
+	
+	public List<GenericVO> obtieneCatalogoDescAtrib(String cdRamo, String dsAtribu, String otValor) throws Exception;
+	
 }
