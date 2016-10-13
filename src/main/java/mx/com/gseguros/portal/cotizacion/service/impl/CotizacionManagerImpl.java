@@ -10019,6 +10019,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 								}
 							}
 						}
+						
+						logger.debug("grupoIte={}", grupoIte);
+						// Guardar el maestro de grupos mpoligrup:
+						cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("nombre"), (String)grupoIte.get("cdplan"), null, "0", "0", Constantes.NO, Constantes.NO, Constantes.NO);
+						// Guardar el detalle de grupos mgrupogar:
+						cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("cdplan"), "0");
+						
 					}
 				}
 				
