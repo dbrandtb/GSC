@@ -137,6 +137,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 					,""//"parame.get(\"RENPOLIEX\")"
 					,""//"ntramite"
 					);
+			resp= cotizacionManager.cotizarContinuacion(params.get("cdusuari"),params.get("cdunieco"),params.get("cdramo"), params.get("cdelemento"),params.get("cdtipsit"),resp.getSmap().get("nmpoliza"),params.containsKey("movil"));
 			
 			// Se vacian los datos de entrada para no devolverlos de nuevo:
 			params = new HashMap<String, String>();
