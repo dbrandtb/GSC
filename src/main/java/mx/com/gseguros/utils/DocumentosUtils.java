@@ -197,7 +197,7 @@ public class DocumentosUtils
 							)+"_dplx_"+timestamp+rand+".pdf");
 			
 			
-			return fusionarDocumentosPDF(fus,ot); 
+			return mixPdf(fus,ot); 
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
