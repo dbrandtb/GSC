@@ -7501,6 +7501,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("pv_edocivil_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feingresoempleo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_plaza_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_idasegurado_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

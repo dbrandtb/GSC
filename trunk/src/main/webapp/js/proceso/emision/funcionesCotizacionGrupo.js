@@ -2233,3 +2233,31 @@ function _p25_borrarDetalleGrupoClic (grid,rowIndex) {
         }
     ));
 }
+
+function _p21_exportarExcelCensoFinal(){
+	Ext.create('Ext.form.Panel').submit({
+	    standardSubmit : true,
+	    url:_p21_urlReporte,
+	    params: {
+	        cdreporte : 'REPEXC021'
+	        ,'params.pv_cdunieco_i' : _p21_smap1.cdunieco
+	        ,'params.pv_cdramo_i'   : _p21_smap1.cdramo
+	        ,'params.pv_estado_i'   : _p21_smap1.estado
+	        ,'params.pv_nmpoliza_i' : _p21_smap1.nmpoliza
+	    },
+	    success: function(form, action) {
+	        
+	    },
+	    failure: function(form, action){
+	        switch (action.failureType){
+	            case Ext.form.action.Action.CONNECT_FAILURE:
+	                Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+	                break;
+	            case Ext.form.action.Action.SERVER_INVALID:
+	            case Ext.form.action.Action.LOAD_FAILURE:
+	                Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+	                break;
+	       }
+	    }
+	});
+}
