@@ -6,24 +6,27 @@
 <script>
 ////// variables //////
 var contexto							      = '${ctx}';
+var urlServidorReports  					  = '<s:text name="ruta.servidor.reports"         										  />';
+var complerepSrvUsr     					  = '<s:text name="pass.servidor.reports"         										  />';
 var panDatComMap1 						      = '<s:property value="%{convertToJSON('slist')}" escapeHtml="false" 				      />';
-var urlGuardar                   		      = '<s:url namespace="/"           action="guardarDatosComplementarios" 				  />';
-var urlCargarCatalogos              	      = '<s:url namespace="/catalogos"  action="obtieneCatalogo"             				  />';
-var _p25_urlBuscarPolizas  				      = '<s:url namespace="/renovacion" action="buscarPolizasIndividualesRenovables" 		  />';
-var _p25_urlBuscarPolizasMasivas		      = '<s:url namespace="/renovacion" action="buscarPolizasIndividualesMasivasRenovables"   />';
-var _p25_urlBuscarCondiciones		          = '<s:url namespace="/renovacion" action="obtenerCondicionesRenovacionIndividual"       />';
-var _p25_urlRenovarPolizaIndividual		      = '<s:url namespace="/renovacion" action="renovarPolizaIndividual"			   		  />';
-var _p25_urlRenovarPolizasMasivasIndividuales = '<s:url namespace="/renovacion" action="renovarPolizasMasivasIndividuales"            />';
-var _p25_urlConfirmarPolizaIndividual	      = '<s:url namespace="/renovacion" action="confirmarPolizaIndividual"				      />';
-var _p25_urlActualizaValoresCotizacion	      = '<s:url namespace="/renovacion" action="actualizaValoresCotizacion"				      />';
-var _p25_urlMovimientoCondiciones	      	  = '<s:url namespace="/renovacion" action="movimientoCondicionesRenovacionIndividual"	  />';
-var _p25_urlBuscarContratantes  		      = '<s:url namespace="/endoso" 	action="cargarContratantesEndosoContratante" 		  />';
-var urlPantallaValosit           		      = '<s:url namespace="/"           action="pantallaValosit"             				  />';
-var urlEditarAsegurados 				      = '<s:url namespace="/" 		    action="editarAsegurados"							  />';           
-var _p25_urlPantallaCliente        	 	      = '<s:url namespace="/catalogos"  action="includes/personasLoader"            		  />';
-var panDatComUrlDoc2                          = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" 				  />';
-var urlRecotizar                 		      = '<s:url namespace="/"           action="recotizar"                   				  />';
-var _p25_urlObtenerItemsTvalopol		      = '<s:url namespace="/renovacion" action="obtenerItemsTvalopol"						  />';
+var urlGuardar                   		      = '<s:url namespace="/"            action="guardarDatosComplementarios" 				  />';
+var urlCargarCatalogos              	      = '<s:url namespace="/catalogos"   action="obtieneCatalogo"             				  />';
+var _p25_urlBuscarPolizas  				      = '<s:url namespace="/renovacion"  action="buscarPolizasIndividualesRenovables" 		  />';
+var _p25_urlBuscarPolizasMasivas		      = '<s:url namespace="/renovacion"  action="buscarPolizasIndividualesMasivasRenovables"  />';
+var _p25_urlBuscarCondiciones		          = '<s:url namespace="/renovacion"  action="obtenerCondicionesRenovacionIndividual"      />';
+var _p25_urlRenovarPolizaIndividual		      = '<s:url namespace="/renovacion"  action="renovarPolizaIndividual"			   		  />';
+var _p25_urlRenovarPolizasMasivasIndividuales = '<s:url namespace="/renovacion"  action="renovarPolizasMasivasIndividuales"           />';
+var _p25_urlConfirmarPolizaIndividual	      = '<s:url namespace="/renovacion"  action="confirmarPolizaIndividual"				      />';
+var _p25_urlActualizaValoresCotizacion	      = '<s:url namespace="/renovacion"  action="actualizaValoresCotizacion"				  />';
+var _p25_urlMovimientoCondiciones	      	  = '<s:url namespace="/renovacion"  action="movimientoCondicionesRenovacionIndividual"	  />';
+var _p25_urlBuscarContratantes  		      = '<s:url namespace="/endoso" 	 action="cargarContratantesEndosoContratante" 		  />';
+var urlPantallaValosit           		      = '<s:url namespace="/"            action="pantallaValosit"             				  />';
+var urlEditarAsegurados 				      = '<s:url namespace="/" 		     action="editarAsegurados"							  />';           
+var _p25_urlPantallaCliente        	 	      = '<s:url namespace="/catalogos"   action="includes/personasLoader"            		  />';
+var panDatComUrlDoc2                          = '<s:url namespace="/documentos"  action="ventanaDocumentosPolizaClon" 				  />';
+var compleUrlViewDoc             			  = '<s:url namespace="/documentos"  action="descargaDocInline"           				  />';
+var urlRecotizar                 		      = '<s:url namespace="/"            action="recotizar"                   				  />';
+var _p25_urlObtenerItemsTvalopol		      = '<s:url namespace="/renovacion"  action="obtenerItemsTvalopol"						  />';
 var sesionDsrol   						      = _GLOBAL_CDSISROL;
 var _p25_storePolizas;
 var _p25_storePolizasMasivas;
@@ -39,6 +42,7 @@ var panCondicion;
 
 var pantallaValositParche = false;
 var _p22_parentCallback;
+var _NOMBRE_REPORTE_CARATULA;
 /*var panDatComUpdateFerenova = function(field,value)
 {
 	try
@@ -462,7 +466,7 @@ Ext.onReady(function()
     			items: [
 					Ext.create('Ext.panel.Panel',{
 						itemId     : '_p25_clientePanel',
-						title      : 'CLIENTE',
+						title      : 'Contratante',
 						height     : 400,
 						autoScroll : true,
 						items	   : [
@@ -482,7 +486,7 @@ Ext.onReady(function()
 						]
 					}),
 					Ext.create('Ext.panel.Panel',{
-						title 	    : 'Editar datos complementarios / emitir',
+						title 	    : 'Cambio forma de pago / emitir',
 				        cls		    : 'claseTitulo',
 				        itemId 	    : 'panelDatos',
 				        url         : urlGuardar,
@@ -598,7 +602,7 @@ Ext.onReady(function()
 			                            allowBlank	: false,
 			                            style		: 'margin:5px;',
 			                            format		: 'd/m/Y',
-			                            readOnly	: false
+			                            readOnly	: true
 			                        },
 			                        {
 			                            xtype		: 'datefield',
@@ -612,7 +616,8 @@ Ext.onReady(function()
 			                                change  : panDatComUpdateFerenova
 			                            }, */
 			                            minValue : panDatComMap1.fechaMinEmi,
-	                                    maxValue : panDatComMap1.fechaMaxEmi
+	                                    maxValue : panDatComMap1.fechaMaxEmi,
+	                                    readOnly : true
 			                        },
 			                        {
 			                            xtype		: 'datefield',
@@ -631,6 +636,7 @@ Ext.onReady(function()
 			                            fieldLabel		: 'Tipo de poliza',
 			                            displayField	: 'value',
 			                            valueField		: 'key',
+			                            readOnly	    : true,
 			                            store			: Ext.create('Ext.data.Store', {
 			                                model	 : 'Generic',
 			                                //autoLoad : true,
@@ -702,13 +708,15 @@ Ext.onReady(function()
 	        							minValue	: 0,
 	                                    value		: 0,
 	                                    fieldLabel	: 'N&uacute;mero Renovaci&Oacute;n',
-	                                    style		: 'margin:5px;'
+	                                    style		: 'margin:5px;',
+	                                    readOnly	: true
 	                                },
 			                        {
 	                                    xtype		: 'textfield',
 	                                    name		: 'nmpolant',
 	                                    fieldLabel	: 'P&oacute;liza Anterior',
-	                                    style		: 'margin:5px;'
+	                                    style		: 'margin:5px;',
+	                                    readOnly	: true
 	                                }
 	                                ,{
 	                                    xtype           : 'combo',
@@ -724,6 +732,7 @@ Ext.onReady(function()
 	                                    disabled       : panDatComMap1.cambioCuadro != 'S',
 	                                    hidden         : panDatComMap1.cambioCuadro!='S',
 	                                    allowBlank     : false,
+	                                    readOnly	   : true,
 	                                    store          :
 	                                    Ext.create('Ext.data.Store',
 	                                    {
@@ -1538,6 +1547,46 @@ Ext.onReady(function()
     					}
     				}
     				,{
+	                   xtype    : 'button'
+	                   ,id      : 'botonEmitirPolizaFinalPreview'
+	                   ,text    : 'Vista previa'
+	                   ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'																	
+	                   ,handler : function(){
+	                       var me=this;
+	                       var urlRequestImpCotiza=urlServidorReports
+	                       +'?destype=cache'
+	                       +"&desformat=PDF"
+	                       +"&report="+_NOMBRE_REPORTE_CARATULA
+	                       +"&paramform=no"
+	                       +"&userid="+complerepSrvUsr
+	                       +"&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+	                       +'&p_unieco='+inputCdunieco
+	                       +'&p_estado=W'
+	                       +'&p_ramo='+inputCdramo
+	                       +'&p_poliza='+inputNmpoliza
+	                       debug(urlRequestImpCotiza);
+	                       var numRand=Math.floor((Math.random()*100000)+1);
+	                       debug(numRand);
+	                       var windowVerDocu=Ext.create('Ext.window.Window',{
+	                           title          : 'Vista previa'
+	                           ,width         : 700
+	                           ,height        : 500
+	                           ,collapsible   : true
+	                           ,titleCollapse : true
+	                           ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+	                                            +'src="'+compleUrlViewDoc+"?contentType=application/pdf&url="+encodeURIComponent(urlRequestImpCotiza)+"\">"
+	                                            +'</iframe>'
+	                           ,listeners     : {
+	                               resize : function(win,width,height,opt){
+	                                   debug(width,height);
+	                                   $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+	                               }
+	                           }
+	                        }).show();
+	                        windowVerDocu.center();
+	                    }
+	                }    				
+    				,{
     					xtype     : 'button'
     					,id       : 'botonImprimirPolizaFinal'
     					,text     : 'Imprimir'
@@ -1901,7 +1950,7 @@ Ext.onReady(function()
   		    _fieldByName('tipo',form).setValue('AS');
   		}
   	});
-  	
+ 	
   	_fieldByName('tipo',form).on(
   	{
   		change: function(me, newValue) {
@@ -1913,6 +1962,7 @@ Ext.onReady(function()
   					_fieldByName('cdramo',form).show();
   					_fieldByName('nmpoliza',form).show();
   					_fieldByName('cdtipsit',form).hide();
+  					_fieldByName('administradora',form).hide();
   					_fieldByName('retenedora',form).hide();
   					_fieldByName('cdperson',form).hide();
   					_fieldByName('anio',form).hide();
@@ -1930,6 +1980,7 @@ Ext.onReady(function()
   					_fieldByName('cdramo',form).hide();
   					_fieldByName('nmpoliza',form).hide();
   					_fieldByName('cdtipsit',form).hide();
+  					_fieldByName('administradora',form).hide();
   					_fieldByName('retenedora',form).hide();
   					_fieldByName('cdperson',form).hide();
   					_fieldByName('anio',form).show();
@@ -1947,6 +1998,7 @@ Ext.onReady(function()
   					_fieldByName('cdramo',form).show();
   					_fieldByName('nmpoliza',form).hide();
   					_fieldByName('cdtipsit',form).show();
+  					_fieldByName('administradora',form).show();
   					_fieldByName('retenedora',form).show();
   					_fieldByName('cdperson',form).show();
   					_fieldByName('anio',form).hide();
@@ -1972,15 +2024,31 @@ Ext.onReady(function()
   		}
   	});
     
-	_fieldByName('cdramo',form).on(
-  	{
+	_fieldByName('cdramo',form).on({
   		select : function(){
   			debug('> Cambiando cdperson');
   			var cdperson = _fieldByName('cdperson',form);
   			cdperson.store.proxy.extraParams['params.cdunieco'] = _fieldByName('cdunieco',form).getValue();
   			cdperson.store.proxy.extraParams['params.cdramo']   = _fieldByName('cdramo',form).getValue(); 
  			debug(cdperson.store.extraParams);
-			debug('< Cambiando cdperson');  															
+ 			debug('< Cambiando cdperson');
+ 			debug('> Cambiando admistradora');
+ 			debug(_fieldByName('administradora',form));
+ 			_fieldByName('administradora',form).store.proxy.extraParams['params.cdramo'] = _fieldByName('cdramo',form).getValue();
+ 			_fieldByName('administradora',form).store.proxy.extraParams['params.dsatribu'] = 'ADMINISTRADORA';
+			_fieldByName('administradora',form).store.load();
+			debug('< Cambiando admistradora');
+  		}
+  	});
+  	
+  	_fieldByName('administradora',form).on({
+  		select : function(){  			
+ 			debug('> Cambiando retenedora');
+ 			debug(_fieldByName('retenedora',form));
+ 			_fieldByName('retenedora',form).store.proxy.extraParams['params.cdramo']   = _fieldByName('cdramo',form).getValue();;
+ 			_fieldByName('retenedora',form).store.proxy.extraParams['params.dsatribu'] = 'RETENEDORA';
+			_fieldByName('retenedora',form).store.load();
+			debug('< Cambiando retenedora');
   		}
   	});
   	
@@ -1992,7 +2060,7 @@ Ext.onReady(function()
     _fieldById('_p25_poliza').getSelectionModel().on(
     {
         selectionChange : _p25_polizaSelectionChange
-    });    
+    });
      
      var formCondicion = panCondicion.down('form');	 
 	 _fieldByName('criterio',formCondicion).on({
@@ -2191,7 +2259,7 @@ function _p25_renovarPolizaClic(button,e)
     
     if(sePuedeRenovar == true){
     		_mask('Renovando poliza');
-    		/*Ext.Ajax.request({
+    		Ext.Ajax.request({
         		url       : _p25_urlRenovarPolizaIndividual,
         		params     : 
         		{
@@ -2242,7 +2310,7 @@ function _p25_renovarPolizaClic(button,e)
         			_unmask();
             		errorComunicacion();
         		}
-    		});*/
+    		});
     	//}
     }
     else{
@@ -2384,6 +2452,7 @@ function _p25_ventanaCambioFormaPago(resRenova){
 				panelDatosAdicionales.add(items);
 				_fieldById('winCambioPago').resRenova = resRenova;
 				wineditarContratante.show();
+				_p25_loaderContratante(resRenova['cdpersoncon']);
 				_p25_cargarValoresComplementarios(resRenova);
 			}
 			else{
@@ -2764,6 +2833,23 @@ function agregaCondicion(){
 	_fieldByName('valor2',form).readOnly = false
 	panCondicion.show();
 	debug('<agregaCondicion');
+}
+
+function getNombreReporteCaratura(cdtipsit){
+	var _NOMBRE_REPORTE_CARATULA;
+	if(cdtipsit == 'SL' || cdtipsit == 'SN'){
+        _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.nombre" />';
+    }
+    else if(cdtipsit == 'GMI'){
+        _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.gmi.nombre" />';
+    }
+    else if(cdtipsit == 'MS'){
+        _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ms.nombre" />';
+    }
+    else if(cdtipsit == 'RI'){
+        _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ri.nombre" />';
+    }
+    return _NOMBRE_REPORTE_CARATULA;
 }
 ////// funciones //////
 </script>

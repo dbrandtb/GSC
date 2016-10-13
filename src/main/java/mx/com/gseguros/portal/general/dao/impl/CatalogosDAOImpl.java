@@ -2112,4 +2112,33 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             compile();
     	}
     }
+	
+	@Override
+	public List<GenericVO> obtieneCatalogoDescAtrib(String cdRamo, String dsAtribu, String otValor) throws Exception {		
+		try {
+			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
+			params.put("pv_cdramo_i", cdRamo);
+			params.put("pv_dsatribu_i", dsAtribu);
+			params.put("pv_otvalor_i", otValor);    		
+    		Map<String, Object> resultado = ejecutaSP(new ObtieneCatalogoDescAtrib(getDataSource()), params);
+    		return (List<GenericVO>) resultado.get("pv_registro_o");
+		} catch (Exception e) {
+			throw new Exception(e.getMessage(), e);
+		}
+	}
+	
+	protected class ObtieneCatalogoDescAtrib extends StoredProcedure {
+	
+		protected ObtieneCatalogoDescAtrib(DataSource dataSource) {
+			super(dataSource, "P_GET_CAT_X_DSATRI_POL");
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsatribu_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosPolMapper()));
+			declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

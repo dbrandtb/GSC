@@ -2071,4 +2071,10 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				);
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO> obtieneCatalogoDescAtrib(String cdRamo, String dsAtribu, String idPadre) throws Exception {		
+		String otValor = StringUtils.isNotBlank(idPadre) ? idPadre : null;
+		return catalogosDAO.obtieneCatalogoDescAtrib(cdRamo, dsAtribu, otValor);
+	}
 }

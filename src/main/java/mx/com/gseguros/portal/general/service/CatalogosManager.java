@@ -243,4 +243,6 @@ public interface CatalogosManager {
     public List<GenericVO> recuperaTablaApoyo1(String cdtabla) throws Exception;
     
 	public List<GenericVO> recuperaCamposExclusionRenovacion() throws Exception;
+	
+	public List<GenericVO> obtieneCatalogoDescAtrib(String cdRamo, String dsAtribu, String idPadre) throws Exception;
 }
