@@ -1621,7 +1621,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			if(fromSigs==null)fromSigs="N";
 			Map<String,String>parame = tramiteMC(ntramite, nmpoliza, cdunieco, cdramo, cdtipsit);
-			/*if(parame.get("Mensaje")!=null)
+			if(parame.get("Mensaje")!=null)
 			{
 				logger.debug(Utils.log(
 						 "\n#######################"
@@ -1629,7 +1629,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,"\n",parame.get("Mensaje")
 						,"\n######################"
 						));
-			}*/
+			}
 			
 			ManagerRespuestaSlistSmapVO resp=cotizacionManager.cotizar(
 					cdunieco
@@ -1657,8 +1657,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,parame.get("RENPOLIEX")
 					,ntramite
 					);
-			/*
-				if(!parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null)
+			if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null)
 	    		{
 		             List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
 		            		cdusuari
@@ -1676,7 +1675,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			        	logger.debug(Utils.log(paqYplan));
 			        	resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 	    		}
-			 */
 			resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			
 			exito           = resp.isExito();
