@@ -625,8 +625,15 @@ public interface CotizacionManager
 			,Map<String,String>tvalopol
 			,String cdagente
 			,UserVO usuarioSesion
+			,String fromSigs
+			,String cduniext
+			,String renramo
+			,String nmpolie
+			,String ntramite
 			)throws Exception;
 	
+	
+	public ManagerRespuestaSlistSmapVO cotizarContinuacion(String nmpoliza,  String cdunieco, String cdramo, String cdelemen, String cdtipsit, String nmpoliza2, boolean flagMovil)throws Exception;
 	
 	public boolean validaDomicilioCotizacionTitular(Map<String,String> params)throws Exception;
 	

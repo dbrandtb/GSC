@@ -1317,7 +1317,6 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			if(smap1.get("agrupado").equalsIgnoreCase("si"))
 			//actualizar todos
 			{
-				
 				/**
 				 * Para Hererdar domicilio a asegurados cuando se cambia de la cotizacion
 				 */
@@ -1369,7 +1368,8 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 				{
 					logger.debug("iterando asegurado "+i+": ");
 					logger.debug("asegurado: "+asegurado);
-					if((Integer)Integer.parseInt((String)asegurado.get("nmsituac"))>0)
+//					if(true)//vils
+					if((Integer)Integer.parseInt((String)asegurado.get("nmsituac"))>0)//vils
 					{
 						logger.debug("es asegurado (situac>0)");
 						Map<String,String>paramsValositAseguradoIterado=new LinkedHashMap<String,String>(0);
@@ -1495,9 +1495,137 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 						kernelManager.actualizaValoresSituaciones(paramsNuevos);
 						
 					}
+					//VILS 
+					else if((Integer)Integer.parseInt((String)asegurado.get("nmsituac"))==0)//vils
+					{
+						logger.debug("es CONTRATANTE (situac == 0)");
+						Map<String,String>paramsValositAseguradoIterado=new LinkedHashMap<String,String>(0);
+						paramsValositAseguradoIterado.put("pv_cdunieco_i", smap1.get("cdunieco"));
+						paramsValositAseguradoIterado.put("pv_nmpoliza_i", smap1.get("nmpoliza"));
+						paramsValositAseguradoIterado.put("pv_cdramo_i",   smap1.get("cdramo"));
+						paramsValositAseguradoIterado.put("pv_estado_i",   smap1.get("estado"));
+						paramsValositAseguradoIterado.put("pv_nmsituac_i", (String)asegurado.get("nmsituac"));
+						logger.debug("paramsValositAseguradoIterado: "+paramsValositAseguradoIterado);
+						Map<String,Object>valositAseguradoIterado=kernelManager.obtieneValositSituac(paramsValositAseguradoIterado);
+						logger.debug("valositAseguradoIterado: "+valositAseguradoIterado);
+						
+						Map<String,Object>valositAseguradoIteradoTemp=new LinkedHashMap<String,Object>(0);
+						//poner pv_ a los leidos
+						Iterator it=valositAseguradoIterado.entrySet().iterator();
+						while(it.hasNext())
+						{
+							Entry en=(Entry)it.next();
+							valositAseguradoIteradoTemp.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
+						}
+						valositAseguradoIterado=valositAseguradoIteradoTemp;
+						logger.debug("se puso pv_");
+						
+						try
+						{
+							if(smap1.get("cdramo").equals("2"))
+							{
+								String cpanterior = (String) valositAseguradoIterado.get("pv_otvalor03");
+								String cpnuevo    = parametros.get("pv_otvalor03");
+								logger.debug("compara "+cpanterior+" con "+cpnuevo
+										+" para cdperson "+asegurado.get("cdperson"));
+								if(!cpanterior.equalsIgnoreCase(cpnuevo))
+								{
+									String cdpersonAfectadoValosit = (String) asegurado.get("cdperson");
+									logger.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
+									
+									Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
+									paramBorrarDomicil.put("pv_cdperson_i" , cdpersonAfectadoValosit);
+									paramBorrarDomicil.put("pv_nmorddom_i" , "1");//numero de domicilio default para asegurados
+									paramBorrarDomicil.put("pv_msdomici_i" , null);
+									paramBorrarDomicil.put("pv_nmtelefo_i" , null);
+									paramBorrarDomicil.put("pv_cdpostal_i" , null);
+									paramBorrarDomicil.put("pv_cdedo_i"    , null);
+									paramBorrarDomicil.put("pv_cdmunici_i" , null);
+									paramBorrarDomicil.put("pv_cdcoloni_i" , null);
+									paramBorrarDomicil.put("pv_nmnumero_i" , null);
+									paramBorrarDomicil.put("pv_nmnumint_i" , null);
+									paramBorrarDomicil.put("pv_cdtipdom_i" , "1");//tipdom default para domicilio unico de asegurados
+									paramBorrarDomicil.put("pv_cdusuario_i", usuarioCaptura);
+									paramBorrarDomicil.put("pv_swactivo_i",  Constantes.NO);
+									paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
+									kernelManager.pMovMdomicil(paramBorrarDomicil);
+								}
+							}
+							else if(smap1.get("cdramo").equals("4"))
+							{
+								String estadoanterior = (String) valositAseguradoIterado.get("pv_otvalor04");
+								String ciudadanterior = (String) valositAseguradoIterado.get("pv_otvalor05");
+								String estadonuevo    = parametros.get("pv_otvalor04");
+								String ciudadnueva    = parametros.get("pv_otvalor05");
+								logger.debug("compara estado"+estadoanterior+" con "+estadonuevo
+										+" para cdperson "+asegurado.get("cdperson"));
+								logger.debug("compara ciudad"+ciudadanterior+" con "+ciudadnueva
+										+" para cdperson "+asegurado.get("cdperson"));
+								if(!estadoanterior.equalsIgnoreCase(estadonuevo)
+										||!ciudadanterior.equalsIgnoreCase(ciudadnueva)
+										)
+								{
+									String cdpersonAfectadoValosit = (String) asegurado.get("cdperson");
+									logger.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
+									
+									Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
+									paramBorrarDomicil.put("pv_cdperson_i" , cdpersonAfectadoValosit);
+									paramBorrarDomicil.put("pv_nmorddom_i" , null);
+									paramBorrarDomicil.put("pv_msdomici_i" , null);
+									paramBorrarDomicil.put("pv_nmtelefo_i" , null);
+									paramBorrarDomicil.put("pv_cdpostal_i" , null);
+									paramBorrarDomicil.put("pv_cdedo_i"    , null);
+									paramBorrarDomicil.put("pv_cdmunici_i" , null);
+									paramBorrarDomicil.put("pv_cdcoloni_i" , null);
+									paramBorrarDomicil.put("pv_nmnumero_i" , null);
+									paramBorrarDomicil.put("pv_nmnumint_i" , null);
+									paramBorrarDomicil.put("pv_cdtipdom_i" , null);
+									paramBorrarDomicil.put("pv_cdusuario_i", usuarioCaptura);
+									paramBorrarDomicil.put("pv_swactivo_i",  Constantes.NO);
+									paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
+									kernelManager.pMovMdomicil(paramBorrarDomicil);
+								}
+							}
+						}
+						catch(Exception ex)
+						{
+							logger.warn("Error sin impacto funcional al comparar codigos postales",ex);
+						}
+						
+						//agregar los del form a los leidos
+						Iterator it2=parametros.entrySet().iterator();
+						while(it2.hasNext())
+						{
+							Entry en=(Entry)it2.next();
+							valositAseguradoIterado.put((String)en.getKey(),en.getValue());//tienen pv_ los del form
+							//ya agregamos todos los nuevos en el mapa
+						}
+						logger.debug("se agregaron los nuevos");
+						
+						//convertir a string el total
+						Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
+						it=valositAseguradoIterado.entrySet().iterator();
+						while(it.hasNext())
+						{
+							Entry en=(Entry)it.next();
+							paramsNuevos.put((String)en.getKey(),(String)en.getValue());
+						}
+						logger.debug("se pasaron a string");
+						
+						paramsNuevos.put("pv_cdunieco", smap1.get("cdunieco"));
+						paramsNuevos.put("pv_nmpoliza", smap1.get("nmpoliza"));
+						paramsNuevos.put("pv_cdramo",   smap1.get("cdramo"));
+						paramsNuevos.put("pv_estado",   smap1.get("estado"));
+						paramsNuevos.put("pv_nmsituac", (String)asegurado.get("nmsituac"));
+						logger.debug("los actualizados seran: "+paramsNuevos);
+						
+						kernelManager.actualizaValoresSituaciones(paramsNuevos);
+						
+					}
+					
 					else
 					{
-						logger.debug("no es asegurado (situac<=0)");
+						logger.debug("no es asegurado (situac != 0,1)");
 					}
 					i++;
 				}

@@ -971,7 +971,7 @@ Ext.onReady(function()
                 }
             ]
         }
-        ,{//VILS
+        ,{
             xtype   : 'fieldset'
             ,itemId : '_p30_panel3Fieldset'
             ,title  : '<span style="font:bold 14px Calibri;">CLIENTE</span>'

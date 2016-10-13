@@ -523,12 +523,11 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	autosDAOSIGS.actualizaTramiteMC(poliza,estra);
 	}
 	
-	@Deprecated
 	@Override
 	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception{
 	autosDAOSIGS.actualizaTramiteEmisionMC(inNumsuc,inNumram,inNumpol,inRensuc,inRenram,inRenpol,inUsuario);
 	}
-
+	
 	@Override
 	public Map<String, String> obtieneDatosLigasRecibosPoliza(String cdunieco, String cdramo, String cdestado,
 			String nmpoliza, String nmsuplem) throws Exception {

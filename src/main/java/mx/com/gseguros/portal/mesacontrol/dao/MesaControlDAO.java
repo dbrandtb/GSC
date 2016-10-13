@@ -56,6 +56,23 @@ public interface MesaControlDAO
 			)throws Exception;
 	
 	/**
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param cdtiptra
+	 * @param renuniext TODO
+	 * @param renramo TODO
+	 * @param renpoliex TODO
+	 * @return
+	 * @throws Exception
+	 */
+	public void actualizaNmpolizaMesaControl(
+												  String nmpoliza ,String cdunieco ,String cdramo ,String estado  ,String ntramite
+												 ,String cdtiptra ,String cduniext ,String ramo   ,String nmpoliex
+												)throws Exception;
+	
+	/**
 	 * GUARDA UN REGISTRO DE TDMESACONTROL.
 	 * @param cerrado ¿EL REGISTRO NUEVO YA INSERTA FECHA, USUARIO y ROL FIN?
 	 */

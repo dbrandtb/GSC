@@ -130,7 +130,13 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 					params.containsKey("movil"),
 					tvalopol, 
 					params.get("cdagenteAux"), 
-					userVO);
+					userVO
+					,""//"fromSigs"
+					,""//"parame.get(\"RENUNIEXT\")"
+					,""//"parame.get(\"RENRAMO\")"
+					,""//"parame.get(\"RENPOLIEX\")"
+					,""//"ntramite"
+					);
 			
 			// Se vacian los datos de entrada para no devolverlos de nuevo:
 			params = new HashMap<String, String>();

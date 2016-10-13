@@ -2103,6 +2103,45 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
+	public void actualizaTramiteMC(
+			  String nmpoliza ,String cdunieco ,String cdramo ,String estado  ,String ntramite
+			 ,String cdtiptra ,String cduniext ,String renramo   ,String nmpoliex
+	) throws Exception {
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ actualizaNmpolizaMesaControl @@@@@@",
+				"\n@@@@@@ cdunieco   = " , cdunieco,
+				"\n@@@@@@ cdramo     = " , cdramo,
+				"\n@@@@@@ estado     = " , estado,
+				"\n@@@@@@ nmpoliza   = " , nmpoliza,
+				"\n@@@@@@ cduniext   = " , cduniext,
+				"\n@@@@@@ ramo       = " , renramo,
+				"\n@@@@@@ nmpoliex   = " , nmpoliex
+		));
+		String paso = "Actualizando numero de poliza en MC";
+		try {
+			mesaControlDAO.actualizaNmpolizaMesaControl(
+					nmpoliza
+				   ,cdunieco
+				   ,cdramo
+				   ,estado
+				   ,ntramite
+				   ,cdtiptra
+				   ,cduniext
+				   ,renramo
+				   ,nmpoliex);
+
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(Utils.log(
+				"\n@@@@@@ ntramite = ", ntramite,
+				"\n@@@@@@ actualizaNmpolizaMesaControl @@@@@@",
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+		));
+	}
+	
+	@Override
 	public List<Map<String,String>>cargarAccionesEntidad(
 			String cdtipflu
 			,String cdflujomc
