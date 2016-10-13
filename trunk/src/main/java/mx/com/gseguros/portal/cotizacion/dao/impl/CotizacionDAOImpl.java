@@ -8209,4 +8209,86 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		    compile();
 		}
 	}
+	
+	
+	@Override
+	public void insertaMpoligrup(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
+			String cdgrupo, String dsgrupo, String cdplan, String cdcveplan, String nmsumaaseg, String nmdeducible,
+			String swmat, String swmed, String swee) throws Exception {
+		
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdtipsit_i" , cdtipsit);
+		params.put("pv_cdgrupo_i"  , cdgrupo);
+		params.put("pv_dsgrupo_i"  , dsgrupo);
+		params.put("pv_cdplan_i"   , cdplan);
+		params.put("pv_cdcveplan_i", cdcveplan);
+		params.put("pv_nmsumaaseg_i", nmsumaaseg);
+		params.put("pv_nmdeducible_i", nmdeducible);
+		params.put("pv_swmat_i"    , swmat);
+		params.put("pv_swmed_i"    , swmed);
+		params.put("pv_swee_i"     , swee);
+		ejecutaSP(new MovimientoMpoligrupSP(getDataSource()),params);
+	}
+	
+	protected class MovimientoMpoligrupSP extends StoredProcedure {
+		protected MovimientoMpoligrupSP (DataSource dataSource) {
+	        super(dataSource,"PKG_CONSULTA_ANGELES.P_INSERTA_MPOLIGRUP");
+		    declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdgrupo_i" , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_dsgrupo_i" , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdplan_i"  , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdcveplan_i",OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_nmsumaaseg_i",  OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_nmdeducible_i", OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_swmat_i"  ,  OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_swmed_i"  ,  OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_swee_i"   ,  OracleTypes.VARCHAR));
+		    declareParameter(new SqlOutParameter("pv_msg_id_o",OracleTypes.NUMERIC));
+		    declareParameter(new SqlOutParameter("pv_title_o" ,OracleTypes.VARCHAR));
+		    compile();
+		}
+	}
+	
+	
+	@Override
+	public void insertaMgrupogar(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
+			String cdgrupo, String cdplan, String nmsumaaseg) throws Exception {
+		
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdtipsit_i" , cdtipsit);
+		params.put("pv_cdgrupo_i"  , cdgrupo);
+		params.put("pv_cdplan_i"   , cdplan);
+		params.put("pv_nmsumaaseg_i", nmsumaaseg);
+		ejecutaSP(new MovimientoMgrupogarSP(getDataSource()),params);
+	}
+	
+	protected class MovimientoMgrupogarSP extends StoredProcedure {
+		protected MovimientoMgrupogarSP (DataSource dataSource) {
+	        super(dataSource,"PKG_CONSULTA_ANGELES.P_INSERTA_MGRUPOGAR");
+		    declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdtipsit_i"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdgrupo_i"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdplan_i"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_nmsumaaseg_i"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+		    declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+		    compile();
+		}
+	}   
+	
 }

@@ -819,4 +819,50 @@ public interface CotizacionDAO {
 	
 	public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
 			String promotoria, String cdagente, String cdtipsit, String cdatribu)throws Exception;
+
+	/**
+	 * Insercion de relacion de grupo con poliza colectiva
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param cdtipsit
+	 * @param cdgrupo
+	 * @param dsgrupo
+	 * @param cdplan
+	 * @param cdcveplan
+	 * @param nmsumaaseg
+	 * @param nmdeducible
+	 * @param swmat
+	 * @param swmed
+	 * @param swee
+	 * @throws Exception
+	 */
+	public void insertaMpoligrup(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
+			String cdgrupo, String dsgrupo, String cdplan, String cdcveplan, String nmsumaaseg, String nmdeducible,
+			String swmat, String swmed, String swee) throws Exception;
+	
+	
+	/**
+	 * Insercion de relacion grupo - cobertura
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param cdtipsit
+	 * @param cdgrupo
+	 * @param dsgrupo
+	 * @param cdplan
+	 * @param cdcveplan
+	 * @param nmsumaaseg
+	 * @param nmdeducible
+	 * @param swmat
+	 * @param swmed
+	 * @param swee
+	 * @throws Exception
+	 */
+	public void insertaMgrupogar(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
+			String cdgrupo, String cdplan, String nmsumaaseg) throws Exception;
+	
+	
 }
