@@ -694,6 +694,27 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		return tramite;
 	}
 	
+	
+	/**
+	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
+	 * 
+	 */
+	@Override
+	public Map<String,String> obtenerTramiteCompletoXNmpoliza(String nmpoliza, String cdunieco, String cdramo, String cdtipsit) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i" , cdramo);
+		params.put("pv_cdtipsit_i" , cdtipsit);
+		params.put("pv_cdtiptra_i" , "21");
+		params.put("pv_estado_i"   , "W");
+		
+		log.debug("obtenerTramiteCompletoXNmpoliza params: "+params);
+		Map<String,String> tramite = siniestrosDAO.obtenerTramiteCompletoXNmpoliza(params);
+		log.debug("obtenerTramiteCompletoXNmpoliza tramite: "+tramite);
+		return tramite;
+	}
 	/**
 	 * PKG_SATELITES.P_OBT_TFACMESCTRL
 	 * CDCONVAL=null,

@@ -1640,6 +1640,66 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
+	@Override
+	public Map<String,String> obtenerTramiteCompletoXNmpoliza(Map<String, String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new obtenerTramiteCompletoXNmpoliza(this.getDataSource()), params);
+		
+		List<Map<String,String>> listaTramites = (List<Map<String,String>>) mapResult.get("pv_registro_o");
+		if(listaTramites==null||listaTramites.size()==0)
+		{
+			params.put("Mensaje","La poliza no corresponde a un tramite de renovacion:  "+params.get("pv_nmpoliza_i"));
+			return params;
+		}
+		else
+		return listaTramites.get(0);
+	}
+	
+	protected class obtenerTramiteCompletoXNmpoliza extends StoredProcedure
+	{
+		protected obtenerTramiteCompletoXNmpoliza(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES2.P_GET_TRAMITE_X_NMPOLIZA");
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"NTRAMITE"
+					,"CDUNIECO"
+					,"CDRAMO"
+					,"ESTADO"
+					,"NMPOLIZA"
+					,"NMSUPLEM"
+					,"NMSOLICI"
+					,"CDSUCADM"
+					,"CDSUCDOC"
+					,"CDSUBRAM"
+					,"CDTIPTRA"
+					,"FERECEPC"
+					,"CDAGENTE"
+					,"REFERENCIA"
+					,"NOMBRE"
+					,"FECSTATU"
+					,"STATUS"
+					,"COMMENTS"
+					,"CDTIPSIT"
+					,"OTVALOR01","OTVALOR02","OTVALOR03","OTVALOR04","OTVALOR05","OTVALOR06","OTVALOR07","OTVALOR08","OTVALOR09","OTVALOR10"
+					,"OTVALOR11","OTVALOR12","OTVALOR13","OTVALOR14","OTVALOR15","OTVALOR16","OTVALOR17","OTVALOR18","OTVALOR19","OTVALOR20"
+					,"OTVALOR21","OTVALOR22","OTVALOR23","OTVALOR24","OTVALOR25","OTVALOR26","OTVALOR27","OTVALOR28","OTVALOR29","OTVALOR30"
+					,"OTVALOR31","OTVALOR32","OTVALOR33","OTVALOR34","OTVALOR35","OTVALOR36","OTVALOR37","OTVALOR38","OTVALOR39","OTVALOR40"
+					,"OTVALOR41","OTVALOR42","OTVALOR43","OTVALOR44","OTVALOR45","OTVALOR46","OTVALOR47","OTVALOR48","OTVALOR49","OTVALOR50"
+					,"RENUNIEXT", "RENRAMO" ,"RENPOLIEX"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 	/**
 	 * PKG_SATELITES.P_OBT_TFACMESCTRL
 	 * ntramite,

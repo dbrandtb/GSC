@@ -157,6 +157,8 @@ public interface SiniestrosDAO {
 	@Deprecated
 	public Map<String,String> obtenerTramiteCompleto(Map<String, String> params) throws Exception;
 	
+	public Map<String,String> obtenerTramiteCompletoXNmpoliza(Map<String, String> params) throws Exception;
+	
 	public Map<String,String> obtenerTramiteCompleto(String ntramite) throws Exception;
 	
 	/**

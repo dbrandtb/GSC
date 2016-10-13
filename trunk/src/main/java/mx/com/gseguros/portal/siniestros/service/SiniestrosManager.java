@@ -262,6 +262,8 @@ public interface SiniestrosManager {
 	 */
 	public Map<String,String> obtenerTramiteCompleto(String ntramite) throws Exception;
 	
+	Map<String, String> obtenerTramiteCompletoXNmpoliza(String nmpoliza, String cdunico, String cdramo, String cdtipsit) throws Exception;
+	
 	/**
 	 * PKG_SATELITES.P_OBT_TFACMESCTRL
 	 * ntramite,
@@ -734,4 +736,6 @@ public interface SiniestrosManager {
 	public void eliminarFaltantesAsegurados() throws Exception;
 	
 	public void getEliminaAseguradoEspecifico(String ntramite, String nfactura, String cdperson, Date feocurre) throws Exception;
+
+
 }

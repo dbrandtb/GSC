@@ -227,6 +227,11 @@ public interface FlujoMesaControlManager
 			,String cdtipsup, String cduniext, String ramo, String nmpoliex, boolean origenMesa
 			)throws Exception;
 	
+	public void actualizaTramiteMC(
+			  String nmpoliza ,String cdunieco ,String cdramo ,String estado  ,String ntramite
+			 ,String cdtiptra ,String cduniext ,String ramo   ,String nmpoliex
+			)throws Exception;
+	
 	public List<Map<String,String>>cargarAccionesEntidad(
 			String cdtipflu
 			,String cdflujomc

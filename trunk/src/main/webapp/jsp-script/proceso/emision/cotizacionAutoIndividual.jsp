@@ -1720,6 +1720,10 @@ function _p28_cotizar(sinTarificar)
             json.slist1[0][att]=valuesFormOculto[att];
             debug('Agregado a cotizacion:',att,':',valuesFormOculto[att]);
         }
+        if(cargarXpoliza)
+       	{
+        	json.smap1.cargarXpoliza= 'S';
+       	}
         debug('json a enviar para cotizar:',json);
         panelpri.setLoading(true);
         Ext.Ajax.request(

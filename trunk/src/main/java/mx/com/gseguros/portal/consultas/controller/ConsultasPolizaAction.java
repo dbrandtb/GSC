@@ -83,7 +83,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	private ConsultasPolizaManager consultasPolizaManager;
 	
 	@Autowired
-	private PantallasManager               pantallasManager;
+	private PantallasManager pantallasManager;
 	
 	@Autowired
 	private KernelManagerSustituto kernelManager;
@@ -146,6 +146,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	/**
 	 * Metodo de entrada a consulta de polizas
+	 * 
 	 */
 	public String execute() throws Exception {
 

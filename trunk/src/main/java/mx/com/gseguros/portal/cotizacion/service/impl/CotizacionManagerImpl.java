@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -43,6 +44,7 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
@@ -104,7 +106,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 	
 	@Autowired
 	private EmisionDAO emisionDAO;
+	
+	@Autowired
+	private SiniestrosManager siniestrosManager;
 	    
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
+	
 	@Override
 	public void movimientoTvalogarGrupo(
 			String cdunieco
@@ -6493,6 +6501,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,Map<String,String>tvalopol
 			,String cdagente
 			,UserVO usuarioSesion
+			,String fromSigs
+			,String cduniext
+			,String renramo
+			,String nmpoliex
+			,String ntramite
 			)throws Exception
     {
     	logger.debug(Utils.log(
@@ -6516,6 +6529,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,"\n@@@@@@ flagMovil="   , flagMovil
     			,"\n@@@@@@ tvalopol="    , tvalopol
     			,"\n@@@@@@ cdagente="    , cdagente
+    			,"\n@@@@@@ fromSigs="    , fromSigs
     			));
     	
     	ManagerRespuestaSlistSmapVO resp=new ManagerRespuestaSlistSmapVO(true);
@@ -6544,6 +6558,20 @@ public class CotizacionManagerImpl implements CotizacionManager
 						paso = "Recuperando consecutivo de p\u00F3liza";
 						nmpoliza = cotizacionDAO.calculaNumeroPoliza(cdunieco,cdramo,"W");
 						resp.getSmap().put("nmpoliza" , nmpoliza);
+						if(nmpoliex != null && !nmpoliex.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 && fromSigs.equals("S"))
+						{
+							flujoMesaControlManager.actualizaTramiteMC(
+									 nmpoliza 
+									,cdunieco
+									,cdramo
+									,"W"//estado
+									,ntramite
+									,"21"//cdtiptra 
+									,cduniext
+									,renramo
+									,nmpoliex
+									);
+						}
 					}
 					catch(Exception ex)
 					{
@@ -7133,275 +7161,11 @@ public class CotizacionManagerImpl implements CotizacionManager
             	}
 //            }
             
-            ////// 0.1 verificamos que el plan tenga las coberturas que le corresponden //////
-            
-            paso = "Recuperando resultados de cotizaci\u00F3n";
-            List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
-            		cdusuari
-            		,cdunieco
-            		,cdramo
-            		,"W"
-            		,nmpoliza
-            		,cdelemen
-            		,cdtipsit
-            		);
-            logger.debug("listaResultados: "+listaResultados);
             /*///////////////////////////////*/
             ////// Generacion cotizacion //////
             ///////////////////////////////////
             
-            ////////////////////////////////
-            ////// Agrupar resultados //////
-            /*
-            NMSUPLEM=0,
-			FEFECSIT=13/01/2014,
-			NMPOLIZA=3853,
-			MNPRIMA=4571.92,           <--2
-			CDPERPAG=7,                <--1
-			DSPLAN=Plus 500,           <--3
-			FEVENCIM=13/01/2015,
-			STATUS=V,
-			NMSITUAC=3,
-			ESTADO=W,
-			DSPERPAG=DXN Catorcenal,   <--(1)
-			CDCIAASEG=20,
-			CDIDENTIFICA=2,
-			CDTIPSIT=SL,
-			FEEMISIO=13/01/2014,
-			CDUNIECO=1,
-			CDRAMO=2,
-			CDPLAN=M,                  <--(3)
-			DSUNIECO=PUEBLA
-             */
-            
-            paso = "Agrupando tarifa";
-            
-            ////// 1. encontrar planes, formas de pago y algun nmsituac//////
-            Map<String,String>formasPago = new LinkedHashMap<String,String>();
-            Map<String,String>planes     = new LinkedHashMap<String,String>();
-            String nmsituac="";
-            for(Map<String,String>res:listaResultados)
-            {
-            	String cdperpag = res.get("CDPERPAG");
-            	String dsperpag = res.get("DSPERPAG");
-            	String cdplan   = res.get("CDPLAN");
-            	String dsplan   = res.get("DSPLAN");
-            	if(!formasPago.containsKey(cdperpag))
-            	{
-            		formasPago.put(cdperpag,dsperpag);
-            	}
-            	if(!planes.containsKey(cdplan))
-            	{
-            		planes.put(cdplan,dsplan);
-            	}
-            	nmsituac=res.get("NMSITUAC");
-            }
-            logger.debug("formas de pago: "+formasPago);
-            logger.debug("planes: "+planes);
-            ////// 1. encontrar planes y formas de pago //////
-            
-            ////// 2. crear formas de pago //////
-            List<Map<String,String>>tarifas=new ArrayList<Map<String,String>>();
-            for(Entry<String,String>formaPago:formasPago.entrySet())
-            {
-            	Map<String,String>tarifa=new HashMap<String,String>();
-            	tarifa.put("CDPERPAG",formaPago.getKey());
-            	tarifa.put("DSPERPAG",formaPago.getValue());
-            	tarifa.put("NMSITUAC",nmsituac);
-            	tarifas.add(tarifa);
-            }
-            logger.debug("tarifas despues de formas de pago: "+tarifas);
-            ////// 2. crear formas de pago //////
-            
-            ////// 3. crear planes //////
-            for(Map<String,String>tarifa:tarifas)
-            {
-            	for(Entry<String,String>plan:planes.entrySet())
-                {
-                	tarifa.put("CDPLAN"+plan.getKey(),plan.getKey());
-                	tarifa.put("DSPLAN"+plan.getKey(),plan.getValue());
-                }
-            }
-            logger.debug("tarifas despues de planes: "+tarifas);
-            ////// 3. crear planes //////
-            
-            ////// 4. crear primas //////
-            for(Map<String,String>res:listaResultados)
-            {
-            	String cdperpag = res.get("CDPERPAG");
-            	String mnprima  = res.get("MNPRIMA");
-            	String cdplan   = res.get("CDPLAN");
-            	for(Map<String,String>tarifa:tarifas)
-                {
-            		if(tarifa.get("CDPERPAG").equals(cdperpag))
-            		{
-            			if(tarifa.containsKey("MNPRIMA"+cdplan))
-            			{
-            				logger.debug("ya hay prima para "+cdplan+" en "+cdperpag+": "+tarifa.get("MNPRIMA"+cdplan));
-            				tarifa.put("MNPRIMA"+cdplan,((Double)Double.parseDouble(tarifa.get("MNPRIMA"+cdplan))+(Double)Double.parseDouble(mnprima))+"");
-            				logger.debug("nueva: "+tarifa.get("MNPRIMA"+cdplan));
-            			}
-            			else
-            			{
-            				logger.debug("primer prima para "+cdplan+" en "+cdperpag+": "+mnprima);
-            				tarifa.put("MNPRIMA"+cdplan,mnprima);
-            			}
-            		}
-                }
-            }
-            logger.debug("tarifas despues de primas: "+tarifas);
-            
-            resp.setSlist(tarifas);
-            ////// 4. crear primas //////
-            
-            ////// Agrupar resultados //////
-            ////////////////////////////////
-            
-            ///////////////////////////////////
-            ////// columnas para el grid //////
-            List<ComponenteVO>tatriPlanes=new ArrayList<ComponenteVO>();
-            
-            ////// 1. forma de pago //////
-            ComponenteVO tatriCdperpag=new ComponenteVO();
-        	tatriCdperpag.setType(ComponenteVO.TIPO_GENERICO);
-        	tatriCdperpag.setLabel("CDPERPAG");
-        	tatriCdperpag.setTipoCampo(ComponenteVO.TIPOCAMPO_NUMERICO);
-        	tatriCdperpag.setNameCdatribu("CDPERPAG");
-        	
-        	/*Map<String,String>mapaCdperpag=new HashMap<String,String>();
-        	mapaCdperpag.put("OTVALOR10","CDPERPAG");
-        	tatriCdperpag.setMapa(mapaCdperpag);*/
-        	tatriPlanes.add(tatriCdperpag);
-        	
-        	ComponenteVO tatriDsperpag=new ComponenteVO();
-        	tatriDsperpag.setType(ComponenteVO.TIPO_GENERICO);
-        	tatriDsperpag.setLabel("Forma de pago");
-        	tatriDsperpag.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
-        	tatriDsperpag.setNameCdatribu("DSPERPAG");
-        	tatriDsperpag.setColumna(Constantes.SI);
-        	
-        	/*Map<String,String>mapaDsperpag=new HashMap<String,String>();
-        	mapaDsperpag.put("OTVALOR08","S");
-        	mapaDsperpag.put("OTVALOR10","DSPERPAG");
-        	tatriDsperpag.setMapa(mapaDsperpag);*/
-        	tatriPlanes.add(tatriDsperpag);
-        	////// 1. forma de pago //////
-        	
-        	////// 2. nmsituac //////
-        	ComponenteVO tatriNmsituac=new ComponenteVO();
-        	tatriNmsituac.setType(ComponenteVO.TIPO_GENERICO);
-        	tatriNmsituac.setLabel("NMSITUAC");
-        	tatriNmsituac.setTipoCampo(ComponenteVO.TIPOCAMPO_NUMERICO);
-        	tatriNmsituac.setNameCdatribu("NMSITUAC");
-        	
-        	/*Map<String,String>mapaNmsituac=new HashMap<String,String>();
-        	mapaNmsituac.put("OTVALOR10","NMSITUAC");
-        	tatriNmsituac.setMapa(mapaNmsituac);*/
-        	tatriPlanes.add(tatriNmsituac);
-        	////// 2. nmsituac //////
-        	
-        	////// 2. planes //////
-            for(Entry<String,String>plan:planes.entrySet())
-            {
-            	////// prima
-            	ComponenteVO tatriPrima=new ComponenteVO();
-            	tatriPrima.setType(ComponenteVO.TIPO_GENERICO);
-            	tatriPrima.setLabel(plan.getValue());
-            	tatriPrima.setTipoCampo(ComponenteVO.TIPOCAMPO_PORCENTAJE);
-            	tatriPrima.setColumna(Constantes.SI);
-            	tatriPrima.setNameCdatribu("MNPRIMA"+plan.getKey());
-            	tatriPrima.setRenderer("function(v)"
-            			+ "{"
-            			+ "    debug('valor:',v);"
-            			+ "    v=v.toFixed(2);"
-            			+ "    debug('valor fixed:',v);"
-            			+ "    var v2='';"
-            			+ "    var ultimoPunto=-3;"
-            			+ "    for(var i=(v+'').length-1;i>=0;i--)"
-            			+ "    {"
-            			+ "        var digito=(v+'').charAt(i);"
-            			+ "        if(digito=='.')"
-            			+ "        {"
-            			+ "            ultimoPunto=-2;"
-            			+ "        }"
-            			+ "        if(ultimoPunto>-3)"
-            			+ "        {"
-            			+ "            ultimoPunto=ultimoPunto+1;"
-            			+ "        }"
-            			+ "        if(ultimoPunto%3==0&&ultimoPunto>0)"
-            			+ "        {"
-            			+ "            digito=digito+',';"
-            			+ "        }"
-            			+ "        v2=digito+v2;"
-            			+ "        if(i==0)"
-            			+ "        {"
-            			+ "            v2='$ '+v2;"
-            			+ "        }"
-            			+ "    }"
-            			+ "    return v2;"
-            			+ "}");
-            	
-            	/*Map<String,String>mapaPlan=new HashMap<String,String>();
-            	mapaPlan.put("OTVALOR08","S");
-            	mapaPlan.put("OTVALOR09","MONEY");
-            	mapaPlan.put("OTVALOR10","MNPRIMA"+plan.getKey());
-            	tatriPrima.setMapa(mapaPlan);*/
-            	tatriPlanes.add(tatriPrima);
-            	
-            	////// cdplan
-            	ComponenteVO tatriCdplan=new ComponenteVO();
-             	tatriCdplan.setType(ComponenteVO.TIPO_GENERICO);
-             	tatriCdplan.setLabel("CDPLAN"+plan.getKey());
-             	tatriCdplan.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
-             	tatriCdplan.setNameCdatribu("CDPLAN"+plan.getKey());
-             	tatriCdplan.setColumna(ComponenteVO.COLUMNA_OCULTA);
-             	
-             	/*Map<String,String>mapaCdplan=new HashMap<String,String>();
-             	//mapaCdplan.put("OTVALOR08","H");
-             	mapaCdplan.put("OTVALOR10","CDPLAN"+plan.getKey());
-             	tatriCdplan.setMapa(mapaCdplan);*/
-             	tatriPlanes.add(tatriCdplan);
-             	
-             	////// dsplan
-             	ComponenteVO tatriDsplan=new ComponenteVO();
-             	tatriDsplan.setType(ComponenteVO.TIPO_GENERICO);
-             	tatriDsplan.setLabel("DSPLAN"+plan.getKey());
-             	tatriDsplan.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
-             	tatriDsplan.setNameCdatribu("DSPLAN"+plan.getKey());
-             	
-             	/*Map<String,String>mapaDsplan=new HashMap<String,String>();
-             	//mapaDsplan.put("OTVALOR08","H");
-             	mapaDsplan.put("OTVALOR10","DSPLAN"+plan.getKey());
-             	tatriDsplan.setMapa(mapaDsplan);*/
-             	tatriPlanes.add(tatriDsplan);
-            }
-            ////// 2. planes //////
-            
-            GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-            try
-            {
-            	Map<String,Object> session = ActionContext.getContext().getSession();
-            	gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
-            }
-            catch(Exception ex)
-            {
-            	logger.warn("Warning! error manejado al intentar acceder a sesion",ExceptionUtils.getStackTrace(ex));
-            }
-            if(!gc.isEsMovil()&&flagMovil)
-            {
-            	gc.setEsMovil(true);
-            }
-            gc.genera(tatriPlanes);
-            
-            String columnas = gc.getColumns().toString();
-            // c o l u m n s : [
-            //0 1 2 3 4 5 6 7 8
-            resp.getSmap().put("columnas",columnas.substring(8));
-            
-            String fields = gc.getFields().toString();
-            // f i e l d s : [
-            //0 1 2 3 4 5 6 7
-            resp.getSmap().put("fields",fields.substring(7));
+        	return resp;
     	}
     	catch(Exception ex)
     	{
@@ -7417,6 +7181,302 @@ public class CotizacionManagerImpl implements CotizacionManager
     	resp.setRespuesta("El n\u00FAmero de p\u00F3liza es : "+nmpoliza);
     	return resp;
     }
+
+    @Override
+    public ManagerRespuestaSlistSmapVO cotizarContinuacion(String cdusuari,String cdunieco,String cdramo,String cdelemen,String cdtipsit,String nmpoliza,  boolean flagMovil)throws Exception
+    {
+	logger.debug(Utils.log(
+			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+			,"\n@@@@@@ cotizarContinuacion @@@@@@"
+			));
+	ManagerRespuestaSlistSmapVO resp=new ManagerRespuestaSlistSmapVO(true);
+	resp.setSmap(new HashMap<String,String>());
+	resp.getSmap().put("nmpoliza" , nmpoliza);
+	String paso = "cotizarContinuacion";
+	try
+	{
+		 paso = "Recuperando resultados de cotizaci\u00F3n";
+	     List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
+	     		 cdusuari
+	     		,cdunieco
+	     		,cdramo
+	     		,"W"
+	     		,nmpoliza
+	     		,cdelemen
+	     		,cdtipsit
+	     		);
+	     logger.debug("listaResultados: "+listaResultados);
+	     resp.setSlist(listaResultados);
+		
+		paso = "Cotizando";
+        ////////////////////////////////
+        ////// Agrupar resultados //////
+        /*
+        NMSUPLEM=0,
+		FEFECSIT=13/01/2014,
+		NMPOLIZA=3853,
+		MNPRIMA=4571.92,           <--2
+		CDPERPAG=7,                <--1
+		DSPLAN=Plus 500,           <--3
+		FEVENCIM=13/01/2015,
+		STATUS=V,
+		NMSITUAC=3,
+		ESTADO=W,
+		DSPERPAG=DXN Catorcenal,   <--(1)
+		CDCIAASEG=20,
+		CDIDENTIFICA=2,
+		CDTIPSIT=SL,
+		FEEMISIO=13/01/2014,
+		CDUNIECO=1,
+		CDRAMO=2,
+		CDPLAN=M,                  <--(3)
+		DSUNIECO=PUEBLA
+         */
+        
+        paso = "Agrupando tarifa";
+        
+        ////// 1. encontrar planes, formas de pago y algun nmsituac//////
+        Map<String,String>formasPago = new LinkedHashMap<String,String>();
+        Map<String,String>planes     = new LinkedHashMap<String,String>();
+        String nmsituac="";
+        for(Map<String,String>res:listaResultados)
+        {
+        	String cdperpag = res.get("CDPERPAG");
+        	String dsperpag = res.get("DSPERPAG");
+        	String cdplan   = res.get("CDPLAN");
+        	String dsplan   = res.get("DSPLAN");
+        	if(!formasPago.containsKey(cdperpag))
+        	{
+        		formasPago.put(cdperpag,dsperpag);
+        	}
+        	if(!planes.containsKey(cdplan))
+        	{
+        		planes.put(cdplan,dsplan);
+        	}
+        	nmsituac=res.get("NMSITUAC");
+        }
+        logger.debug("formas de pago: "+formasPago);
+        logger.debug("planes: "+planes);
+        ////// 1. encontrar planes y formas de pago //////
+        
+        ////// 2. crear formas de pago //////
+        List<Map<String,String>>tarifas=new ArrayList<Map<String,String>>();
+        for(Entry<String,String>formaPago:formasPago.entrySet())
+        {
+        	Map<String,String>tarifa=new HashMap<String,String>();
+        	tarifa.put("CDPERPAG",formaPago.getKey());
+        	tarifa.put("DSPERPAG",formaPago.getValue());
+        	tarifa.put("NMSITUAC",nmsituac);
+        	tarifas.add(tarifa);
+        }
+        logger.debug("tarifas despues de formas de pago: "+tarifas);
+        ////// 2. crear formas de pago //////
+        
+        ////// 3. crear planes //////
+        for(Map<String,String>tarifa:tarifas)
+        {
+        	for(Entry<String,String>plan:planes.entrySet())
+            {
+            	tarifa.put("CDPLAN"+plan.getKey(),plan.getKey());
+            	tarifa.put("DSPLAN"+plan.getKey(),plan.getValue());
+            }
+        }
+        logger.debug("tarifas despues de planes: "+tarifas);
+        ////// 3. crear planes //////
+        
+        ////// 4. crear primas //////
+        for(Map<String,String>res:listaResultados)
+        {
+        	String cdperpag = res.get("CDPERPAG");
+        	String mnprima  = res.get("MNPRIMA");
+        	String cdplan   = res.get("CDPLAN");
+        	for(Map<String,String>tarifa:tarifas)
+            {
+        		if(tarifa.get("CDPERPAG").equals(cdperpag))
+        		{
+        			if(tarifa.containsKey("MNPRIMA"+cdplan))
+        			{
+        				logger.debug("ya hay prima para "+cdplan+" en "+cdperpag+": "+tarifa.get("MNPRIMA"+cdplan));
+        				tarifa.put("MNPRIMA"+cdplan,((Double)Double.parseDouble(tarifa.get("MNPRIMA"+cdplan))+(Double)Double.parseDouble(mnprima))+"");
+        				logger.debug("nueva: "+tarifa.get("MNPRIMA"+cdplan));
+        			}
+        			else
+        			{
+        				logger.debug("primer prima para "+cdplan+" en "+cdperpag+": "+mnprima);
+        				tarifa.put("MNPRIMA"+cdplan,mnprima);
+        			}
+        		}
+            }
+        }
+        logger.debug("tarifas despues de primas: "+tarifas);
+        
+        resp.setSlist(tarifas);
+        ////// 4. crear primas //////
+        
+        ////// Agrupar resultados //////
+        ////////////////////////////////
+        
+        ///////////////////////////////////
+        ////// columnas para el grid //////
+        List<ComponenteVO>tatriPlanes=new ArrayList<ComponenteVO>();
+        
+        ////// 1. forma de pago //////
+        ComponenteVO tatriCdperpag=new ComponenteVO();
+    	tatriCdperpag.setType(ComponenteVO.TIPO_GENERICO);
+    	tatriCdperpag.setLabel("CDPERPAG");
+    	tatriCdperpag.setTipoCampo(ComponenteVO.TIPOCAMPO_NUMERICO);
+    	tatriCdperpag.setNameCdatribu("CDPERPAG");
+    	
+    	/*Map<String,String>mapaCdperpag=new HashMap<String,String>();
+    	mapaCdperpag.put("OTVALOR10","CDPERPAG");
+    	tatriCdperpag.setMapa(mapaCdperpag);*/
+    	tatriPlanes.add(tatriCdperpag);
+    	
+    	ComponenteVO tatriDsperpag=new ComponenteVO();
+    	tatriDsperpag.setType(ComponenteVO.TIPO_GENERICO);
+    	tatriDsperpag.setLabel("Forma de pago");
+    	tatriDsperpag.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
+    	tatriDsperpag.setNameCdatribu("DSPERPAG");
+    	tatriDsperpag.setColumna(Constantes.SI);
+    	
+    	/*Map<String,String>mapaDsperpag=new HashMap<String,String>();
+    	mapaDsperpag.put("OTVALOR08","S");
+    	mapaDsperpag.put("OTVALOR10","DSPERPAG");
+    	tatriDsperpag.setMapa(mapaDsperpag);*/
+    	tatriPlanes.add(tatriDsperpag);
+    	////// 1. forma de pago //////
+    	
+    	////// 2. nmsituac //////
+    	ComponenteVO tatriNmsituac=new ComponenteVO();
+    	tatriNmsituac.setType(ComponenteVO.TIPO_GENERICO);
+    	tatriNmsituac.setLabel("NMSITUAC");
+    	tatriNmsituac.setTipoCampo(ComponenteVO.TIPOCAMPO_NUMERICO);
+    	tatriNmsituac.setNameCdatribu("NMSITUAC");
+    	
+    	/*Map<String,String>mapaNmsituac=new HashMap<String,String>();
+    	mapaNmsituac.put("OTVALOR10","NMSITUAC");
+    	tatriNmsituac.setMapa(mapaNmsituac);*/
+    	tatriPlanes.add(tatriNmsituac);
+    	////// 2. nmsituac //////
+    	
+    	////// 2. planes //////
+        for(Entry<String,String>plan:planes.entrySet())
+        {
+        	////// prima
+        	ComponenteVO tatriPrima=new ComponenteVO();
+        	tatriPrima.setType(ComponenteVO.TIPO_GENERICO);
+        	tatriPrima.setLabel(plan.getValue());
+        	tatriPrima.setTipoCampo(ComponenteVO.TIPOCAMPO_PORCENTAJE);
+        	tatriPrima.setColumna(Constantes.SI);
+        	tatriPrima.setNameCdatribu("MNPRIMA"+plan.getKey());
+        	tatriPrima.setRenderer("function(v)"
+        			+ "{"
+        			+ "    debug('valor:',v);"
+        			+ "    v=v.toFixed(2);"
+        			+ "    debug('valor fixed:',v);"
+        			+ "    var v2='';"
+        			+ "    var ultimoPunto=-3;"
+        			+ "    for(var i=(v+'').length-1;i>=0;i--)"
+        			+ "    {"
+        			+ "        var digito=(v+'').charAt(i);"
+        			+ "        if(digito=='.')"
+        			+ "        {"
+        			+ "            ultimoPunto=-2;"
+        			+ "        }"
+        			+ "        if(ultimoPunto>-3)"
+        			+ "        {"
+        			+ "            ultimoPunto=ultimoPunto+1;"
+        			+ "        }"
+        			+ "        if(ultimoPunto%3==0&&ultimoPunto>0)"
+        			+ "        {"
+        			+ "            digito=digito+',';"
+        			+ "        }"
+        			+ "        v2=digito+v2;"
+        			+ "        if(i==0)"
+        			+ "        {"
+        			+ "            v2='$ '+v2;"
+        			+ "        }"
+        			+ "    }"
+        			+ "    return v2;"
+        			+ "}");
+        	
+        	/*Map<String,String>mapaPlan=new HashMap<String,String>();
+        	mapaPlan.put("OTVALOR08","S");
+        	mapaPlan.put("OTVALOR09","MONEY");
+        	mapaPlan.put("OTVALOR10","MNPRIMA"+plan.getKey());
+        	tatriPrima.setMapa(mapaPlan);*/
+        	tatriPlanes.add(tatriPrima);
+        	
+        	////// cdplan
+        	ComponenteVO tatriCdplan=new ComponenteVO();
+         	tatriCdplan.setType(ComponenteVO.TIPO_GENERICO);
+         	tatriCdplan.setLabel("CDPLAN"+plan.getKey());
+         	tatriCdplan.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
+         	tatriCdplan.setNameCdatribu("CDPLAN"+plan.getKey());
+         	tatriCdplan.setColumna(ComponenteVO.COLUMNA_OCULTA);
+         	
+         	/*Map<String,String>mapaCdplan=new HashMap<String,String>();
+         	//mapaCdplan.put("OTVALOR08","H");
+         	mapaCdplan.put("OTVALOR10","CDPLAN"+plan.getKey());
+         	tatriCdplan.setMapa(mapaCdplan);*/
+         	tatriPlanes.add(tatriCdplan);
+         	
+         	////// dsplan
+         	ComponenteVO tatriDsplan=new ComponenteVO();
+         	tatriDsplan.setType(ComponenteVO.TIPO_GENERICO);
+         	tatriDsplan.setLabel("DSPLAN"+plan.getKey());
+         	tatriDsplan.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
+         	tatriDsplan.setNameCdatribu("DSPLAN"+plan.getKey());
+         	
+         	/*Map<String,String>mapaDsplan=new HashMap<String,String>();
+         	//mapaDsplan.put("OTVALOR08","H");
+         	mapaDsplan.put("OTVALOR10","DSPLAN"+plan.getKey());
+         	tatriDsplan.setMapa(mapaDsplan);*/
+         	tatriPlanes.add(tatriDsplan);
+        }
+        ////// 2. planes //////
+        
+        GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+        try
+        {
+        	Map<String,Object> session = ActionContext.getContext().getSession();
+        	gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
+        }
+        catch(Exception ex)
+        {
+        	logger.warn("Warning! error manejado al intentar acceder a sesion",ExceptionUtils.getStackTrace(ex));
+        }
+        if(!gc.isEsMovil()&&flagMovil)
+        {
+        	gc.setEsMovil(true);
+        }
+        gc.genera(tatriPlanes);
+        
+        String columnas = gc.getColumns().toString();
+        // c o l u m n s : [
+        //0 1 2 3 4 5 6 7 8
+        resp.getSmap().put("columnas",columnas.substring(8));
+        
+        String fields = gc.getFields().toString();
+        // f i e l d s : [
+        //0 1 2 3 4 5 6 7
+        resp.getSmap().put("fields",fields.substring(7));
+	}
+	catch(Exception ex)
+	{
+		Utils.generaExcepcion(ex, paso);
+	}
+	
+	logger.debug(Utils.log(
+		 "\n@@@@@@ ",resp
+		,"\n@@@@@@ cotizar @@@@@@"
+			,"\n@@@@@@@@@@@@@@@@@@@@@"
+			));
+	
+	resp.setRespuesta("El n\u00FAmero de p\u00F3liza es : "+nmpoliza);
+	return resp;
+}
+    
     
     @Override
     public String procesoComprarCotizacion(String cdunieco, String cdramo, String nmpoliza, String cdtipsit,

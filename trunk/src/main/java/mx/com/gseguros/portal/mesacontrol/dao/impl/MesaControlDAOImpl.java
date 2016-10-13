@@ -220,6 +220,55 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	}
 	
 	@Override
+	public void actualizaNmpolizaMesaControl(
+			  String nmpoliza ,String cdunieco ,String cdramo ,String estado  ,String ntramite
+			 ,String cdtiptra ,String renuniext ,String renramo   ,String renpoliex
+			)throws Exception
+	{
+		Map<String,Object>params=new LinkedHashMap<String,Object>();
+		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdtiptra_i" , cdtiptra);
+		params.put("pv_renuniext_i", renuniext);
+		params.put("pv_renramo_i"  , renramo);
+		params.put("pv_renpoliex_i", renpoliex);
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************************************")
+				.append("\n****** PKG_SATELITES2.P_UPDATE_NMPOLIZA_MC *************")
+				.append("\n****** params=").append(params)
+				.append("\n********************************************************")
+				.toString()
+				);
+		ejecutaSP(new actualizaNmpolizaMesaControl(getDataSource()),params);
+		
+	}
+	
+	protected class actualizaNmpolizaMesaControl extends StoredProcedure
+	{
+		protected actualizaNmpolizaMesaControl(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES2.P_UPDATE_NMPOLIZA_MC");
+			declareParameter(new SqlParameter("pv_ntramite_i"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdtiptra_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_renuniext_i"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_renramo_i"    , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_renpoliex_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public void movimientoDetalleTramite(
 			String ntramite
 			,Date feinicio
