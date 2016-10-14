@@ -796,7 +796,8 @@ Ext.onReady(function()
                                    itemId  : 'panDatComBotonRetarificar',
                                    icon    : contexto+'/resources/fam3icons/icons/key.png',
                                    hidden  : /*panDatComMap1.SITUACION !== 'AUTO' &&*/ (['SUSCRIPTOR', 'COTIZADOR', 'SUPTECSALUD'].indexOf(sesionDsrol) === -1),
-                                   handler	: function(){ 
+                                   handler	: function(){
+                                	   _p29_actualizarCotizacion(null);
                                 	   var winCambioPago = _fieldById('winCambioPago');                                	   
                                 	   tarifaFinal();                                		
                                 	}
@@ -1769,8 +1770,18 @@ Ext.onReady(function()
   				debug(_p25_condiciones.form.getValues());
   				var datos = _p25_condiciones.form.getValues(); 
   				var params = {};
-  				for(var k in datos){
-  					params['params.'+k] = datos[k]; 
+  				debug('_p25_condiciones.form',_p25_condiciones.form);
+  				var i = 0;
+  				for(var k in datos){  					
+  					if(k === 'criterio'){
+  	  					//debug('k',k);
+  	  					//debug(_p25_condiciones.form.getFields().items[i].rawValue);
+  	  					params['params.'+k] = _p25_condiciones.form.getFields().items[i].rawValue;
+  					}
+  					else{
+  						params['params.'+k] = datos[k];
+  					}
+  					i++;
   				}
   				params['params.operacion'] = panCondicion['operacion'];//'A';
   				debug('params',params);

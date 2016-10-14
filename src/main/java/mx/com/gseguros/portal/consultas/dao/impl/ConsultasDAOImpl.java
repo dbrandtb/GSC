@@ -5224,8 +5224,6 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"orden"
             		,"numend"
             		,"swimpdpx"
-
-            		
             };
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
@@ -5233,4 +5231,30 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
     	}
     }
+	
+	@Override
+	public void actualizaFlujoTramite(
+			String ntramite,
+			String cdflujomc,
+			String cdtipflu
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite"    ,ntramite);
+		params.put("cdflujomc"   ,cdflujomc);
+		params.put("cdtipflu"    ,cdtipflu);
+		ejecutaSP(new ActualizaFlujoTramite(getDataSource()),params);
+	}
+	
+	protected class ActualizaFlujoTramite extends StoredProcedure{
+		protected ActualizaFlujoTramite(DataSource dataSource){
+			super(dataSource,"P_ACTUALIZA_FLUJOMC");
+			declareParameter(new SqlParameter("ntramite"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipflu"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
