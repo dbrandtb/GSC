@@ -307,8 +307,8 @@ function _9_confirmar()
         var panelMask = new Ext.LoadMask('_9_divPri', {msg:"Confirmando..."});
 		panelMask.show();
         if(   _9_smap1.CDRAMO == Ramo.AutosFronterizos
-           || _9_smap1.CDRAMO == Ramo.servicioPublico
-           || _9_smap1.CDRAMO == Ramo.autosResidentes){
+           || _9_smap1.CDRAMO == Ramo.ServicioPublico
+           || _9_smap1.CDRAMO == Ramo.AutosResidentes){
         Ext.Ajax.request(
         {
             url       : _9_urlGuardar
