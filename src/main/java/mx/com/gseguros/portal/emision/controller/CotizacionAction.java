@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +15,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.json.JSONUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -24,7 +39,6 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
@@ -75,22 +89,6 @@ import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleValue_Struc;
 import mx.com.gseguros.ws.nada.service.NadaService;
 import mx.com.gseguros.ws.tipocambio.client.axis2.TipoCambioWSServiceStub.ResponseTipoCambio;
 import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.json.JSONUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class CotizacionAction extends PrincipalCoreAction
 {
@@ -431,7 +429,13 @@ public class CotizacionAction extends PrincipalCoreAction
 							}
 							//sustituir componente si es promotor o suscriptor
 							else if(cdsisrol.equalsIgnoreCase(RolSistema.PROMOTOR_AUTO.getCdsisrol())
-									||cdsisrol.equalsIgnoreCase(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol()))
+									||cdsisrol.equalsIgnoreCase(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.EMISOR_SUSCRI_DANIOS.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.JEFE_SUSCRI_DANIOS.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.GERENTE_SUSCRI_DANIOS.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.SUBDIRECTOR_SUSCRI_DANIOS.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.TECNICO_SUSCRI_DANIOS.getCdsisrol())
+									)
 							{
 								List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
 										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
@@ -553,7 +557,13 @@ public class CotizacionAction extends PrincipalCoreAction
 							}
 							//sustituir componente si es promotor o suscriptor
 							else if(cdsisrol.equalsIgnoreCase(RolSistema.PROMOTOR_AUTO.getCdsisrol())
-									||cdsisrol.equalsIgnoreCase(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol()))
+									||cdsisrol.equalsIgnoreCase(RolSistema.SUSCRIPTOR_AUTO.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.EMISOR_SUSCRI_DANIOS.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.JEFE_SUSCRI_DANIOS.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.GERENTE_SUSCRI_DANIOS.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.SUBDIRECTOR_SUSCRI_DANIOS.getCdsisrol())
+									||cdsisrol.equalsIgnoreCase(RolSistema.TECNICO_SUSCRI_DANIOS.getCdsisrol())
+									)
 							{
 								List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
 										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
@@ -1711,7 +1721,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	 public String modificaPrimas(String ntramite, List<Map<String, String>> listaResultados, Integer formpagSigs, ArrayList<String> paquete, String cdunieco, String cdramo, String nmpoliza, String cdtipsit, String renuniext, String renramo, String renpoliex) throws Exception
 	    {
-	    	String mensaje = "Error Modificacion de primas según sigs";
+	    	String mensaje = "Error Modificacion de primas segï¿½n sigs";
 	    		try
 				{		int i = 0;
 						String mnprima = null;

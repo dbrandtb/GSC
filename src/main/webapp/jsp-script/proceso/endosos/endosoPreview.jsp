@@ -147,13 +147,12 @@ Ext.onReady(function()
                                         }
                                     ]
                                     ,ftype          : 'groupingsummary'
-                                    ,startCollapsed : _GLOBAL_CDSISROL != RolSistema.SuscriptorAuto
+                                    ,startCollapsed : RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL) !== true
                                     ,listeners      :
                                     {
                                         groupexpand : function(view,node,group)
                                         {
-                                            if(_GLOBAL_CDSISROL != RolSistema.SuscriptorAuto)
-                                            {
+                                            if (RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL) !== true) {
                                                 this.collapseAll();
                                             }
                                         }
