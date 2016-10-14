@@ -46,34 +46,34 @@ function debugError()
 {
     try {
         switch (arguments.length) {
-            case 0 : console.error('(sin argumentos)');
+            case 0 : console.error('Error manejado: (sin argumentos)');
                      break;
-            case 1 : console.error(arguments[0]);
+            case 1 : console.error('Error manejado: ', arguments[0]);
                      break;
-            case 2 : console.error(arguments[0], arguments[1]);
+            case 2 : console.error('Error manejado: ', arguments[0], arguments[1]);
                      break;
-            case 3 : console.error(arguments[0], arguments[1], arguments[2]);
+            case 3 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2]);
                      break;
-            case 4 : console.error(arguments[0], arguments[1], arguments[2], arguments[3]);
+            case 4 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3]);
                      break;
-            case 5 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+            case 5 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
                      break;
-            case 6 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+            case 6 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
                                  arguments[5]);
                      break;
-            case 7 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+            case 7 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
                                  arguments[5], arguments[6]);
                      break;
-            case 8 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+            case 8 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
                                  arguments[5], arguments[6], arguments[7]);
                      break;
-            case 9 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+            case 9 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
                                  arguments[5], arguments[6], arguments[7], arguments[8]);
                      break;
-            case 10 : console.error(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
+            case 10 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
                                  arguments[5], arguments[6], arguments[7], arguments[8], arguments[9]);
                      break;
-            default : console.error(arguments);
+            default : console.error('Error manejado: ', arguments);
                       break;
         }
     } catch (e) {}
