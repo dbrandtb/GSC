@@ -616,4 +616,9 @@ public interface ConsultasDAO
 			  ,String pv_papel_i
 			  ,String pv_cdusuari_i
 			  ,String pv_cdsisrol_i)throws Exception;
+	
+	public void actualizaFlujoTramite(
+			String ntramite,
+			String cdflujomc,
+			String cdtipflu)throws Exception;
 }

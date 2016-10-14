@@ -442,4 +442,23 @@ public class ConsultasManagerImpl implements ConsultasManager
 		));
 		return esSalud;
 	}
+	
+	@Override
+	public void actualizaFlujoTramite(String ntramite, String cdflujomc, String cdtipflu) throws Exception {
+		logger.debug(Utils.log(
+			"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+			"\n@@@@@@ actualizaFlujoTramite @@@@@@",
+			"\n@@@@@@ ntramite = ", ntramite,
+			"\n@@@@@@ cdflujomc = ", cdflujomc,
+			"\n@@@@@@ cdtipflu = ", cdtipflu
+		));
+		String paso = null;
+		try {
+			paso = "Actualizando datos tr\u00e1mite";
+			consultasDAO.actualizaFlujoTramite(ntramite, cdflujomc, cdtipflu);
+			paso = "Termino de actualizar datos tr\u00e1mite";
+		} catch (Exception ex) {
+			Utils.generaExcepcion(ex, paso);
+		}
+	}
 }

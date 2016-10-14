@@ -17,6 +17,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
@@ -51,8 +52,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 	//Dependencias inyectadas
 	private RenovacionDAO renovacionDAO;
 	private PantallasDAO  pantallasDAO;
-	private CotizacionDAO cotizacionDAO;
-	
+	private CotizacionDAO cotizacionDAO;	
 	
 	private transient Ice2sigsService ice2sigsService;
 	private transient RecibosSigsService recibosSigsService;
@@ -71,6 +71,12 @@ public class RenovacionManagerImpl implements RenovacionManager
 	
 	@Autowired
 	private EndososDAO endososDAO;
+	
+	@Autowired
+	private ConsultasDAO  consultasDAO;
+	
+	@Autowired
+	private ConsultasManager consultasManager;
 	
 	@Override
 	public ManagerRespuestaImapVO pantallaRenovacion(String cdsisrol)
@@ -645,15 +651,19 @@ public class RenovacionManagerImpl implements RenovacionManager
 		{	
 			paso     = "enviando para renovar poliza";			
 //			generaTcartera(cdunieco, cdramo, nmpoliza, feefecto, feproren, nmsuplem, cdagente, cdperpag, cdcontra, cdmoneda);
-			Map<String,String> map = renovacionDAO.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza, estadoNew, usuario);			
+			Map<String,String> map = renovacionDAO.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza, estadoNew, usuario);
+			//Map<String,String> flujomc = consultasDAO.recuperarDatosFlujoRenovacion(cdramo, "I");
+			Map<String,String> flujomc = consultasDAO.recuperarDatosFlujoEmision(cdramo, "I");
+			consultasManager.actualizaFlujoTramite(map.get("ntramite"), flujomc.get("cdflujomc"), flujomc.get("cdtipflu"));
+//			logger.info(new StringBuilder().append("\n@@@@@@ flujomc=").append(flujomc).toString());
 			List<Map<String, String>> slist = renovacionDAO.obtenerPolizaCdpersonTramite(map.get("ntramite"));
 			String cdtipsit = endososDAO.recuperarCdtipsitInciso1(cdunieco, cdramo, estado, nmpoliza);
-			slist.get(0).put("cdtipsit", cdtipsit);
-			slist.get(0).put("ntramite", map.get("ntramite"));
-			slist.get(0).put("cdtipflu", map.get("cdtipflu"));
-			slist.get(0).put("cdflujomc", map.get("cdflujomc"));
-			slist.get(0).put("estadomc", map.get("status"));
-			slist.get(0).put("nmsuplem", map.get("nmsuplem"));
+			slist.get(0).put("cdtipsit",  cdtipsit);
+			slist.get(0).put("ntramite",  map.get("ntramite"));
+			slist.get(0).put("cdtipflu",  flujomc.get("cdtipflu"));
+			slist.get(0).put("cdflujomc", flujomc.get("cdflujomc"));
+			slist.get(0).put("estadomc",  map.get("status"));
+			slist.get(0).put("nmsuplem",  map.get("nmsuplem"));
 			paso = "asignando valores de cdtipsit";
 			cdunieco = slist.get(0).get("cdunieco");
 			cdramo 	 = slist.get(0).get("cdramo");
@@ -673,8 +683,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 				throw new Exception("No se obtuvo ningun atributo variable a nivel de poliza");
 			}
 			Iterator it = parametrosCargados.entrySet().iterator();			
-			while(it.hasNext())
-			{
+			while(it.hasNext()){
 				Entry<String,Object> entry = (Map.Entry<String, Object>) it.next();
 				if(entry.getKey().startsWith("otvalor")){
 					slist.get(0).put("parametros.pv_"+entry.getKey(), (String)entry.getValue());
@@ -701,8 +710,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 			paso = "antes de obtener informacion de poliza";
 			Map<String, Object> select = kernelManager.getInfoMpolizas(params);
 			Iterator ite = select.entrySet().iterator();			
-			while(ite.hasNext())
-			{
+			while(ite.hasNext()){
 				Entry<String,Object> entry = (Map.Entry<String, Object>) ite.next();
 				if(entry.getKey().startsWith("fe")){
 					String fecha = Utils.format((Date)entry.getValue());

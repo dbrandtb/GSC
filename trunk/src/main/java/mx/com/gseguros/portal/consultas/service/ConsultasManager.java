@@ -162,4 +162,6 @@ public interface ConsultasManager
 	public Map<String,String> recuperarDatosFlujoEndoso(String cdramo, String cdtipsup) throws Exception;
 	
 	boolean esTramiteSalud(String ntramite) throws Exception;
+	
+	public void actualizaFlujoTramite(String ntramite, String cdflujomc, String cdtipflu) throws Exception;
 }
