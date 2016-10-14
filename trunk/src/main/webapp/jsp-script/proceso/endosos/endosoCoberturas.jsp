@@ -1170,8 +1170,8 @@
                                 ,handler : function(){ var form=Ext.getCmp('endoso');
                                 		                debug('endcobSumitpreview',form);
                                 		                if(   inputCdramop3 == Ramo.AutosFronterizos
-												           || inputCdramop3 == Ramo.servicioPublico
-												           || inputCdramop3 == Ramo.autosResidentes)
+												           || inputCdramop3 == Ramo.ServicioPublico
+												           || inputCdramop3 == Ramo.AutosResidentes)
 												           	{
 												           		endcobSumitpreview(form,'no');
 												           	}else

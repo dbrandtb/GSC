@@ -81,11 +81,13 @@ var EstatusTramite = {
 
 // Catalogo de cdramo:
 var Ramo = {
-	AutosFronterizos : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@AUTOS_FRONTERIZOS.cdramo"/>',
-    Multisalud       : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo"/>',
-    SaludVital       : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo"/>',
-    servicioPublico  : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SERVICIO_PUBLICO.cdramo"/>',
-    autosResidentes  : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@AUTOS_RESIDENTES.cdramo"/>'
+	AutosFronterizos    : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@AUTOS_FRONTERIZOS.cdramo"/>',
+	AutosResidentes     : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@AUTOS_RESIDENTES.cdramo"/>',
+	GastosMedicosMayores: '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo"/>',
+    Multisalud          : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo"/>',
+    Recupera            : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo"/>',
+    SaludVital          : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo"/>',
+    ServicioPublico     : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SERVICIO_PUBLICO.cdramo"/>'
 };
 
 
