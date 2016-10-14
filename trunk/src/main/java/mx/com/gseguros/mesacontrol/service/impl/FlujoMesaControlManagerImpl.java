@@ -3543,4 +3543,27 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				"\n@@@@@@ recuperarCotiColec @@@@@@",
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
+	
+	@Override
+	public Map<String,String> tramiteMC(String ntramite, String nmpoliza, String cdunieco, String cdramo, String cdtipsit) throws Exception
+	{
+		String mensaje = "Consultando mesa de control para renovacion";
+		try
+		{
+			if(nmpoliza!=null && !nmpoliza.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
+			{	
+				return siniestrosManager.obtenerTramiteCompletoXNmpoliza(nmpoliza, cdunieco, cdramo, cdtipsit);
+				
+			}
+			else if(ntramite!=null && !ntramite.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
+			{
+				return siniestrosManager.obtenerTramiteCompleto(ntramite);
+			}
+		}
+		catch (Exception ex)
+		{
+			Utils.generaExcepcion(ex, mensaje);
+		}
+		return new HashMap<String, String>(0);
+	}
 }
