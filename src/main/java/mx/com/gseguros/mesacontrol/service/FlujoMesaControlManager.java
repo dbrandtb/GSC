@@ -398,4 +398,6 @@ public interface FlujoMesaControlManager
 	public void actualizaStatusMesaControl(String ntramite, String status) throws Exception;
 	
 	public void recuperarCotiColec(String cdusuari, String cdsisrol, String ntramite, String nmsolici, String status) throws Exception;
+	
+	public Map<String,String> tramiteMC(String ntramite, String nmpoliza, String cdunieco, String cdramo, String cdtipsit) throws Exception;
 }
