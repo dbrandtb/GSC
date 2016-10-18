@@ -12458,6 +12458,9 @@ public class CotizacionAction extends PrincipalCoreAction
     			String nmpolant         = smap1.get("nmpolant");
     			String nmrenova         = smap1.get("nmrenova");
     			
+    			String estatuRenovacion = smap1.get("estatusRenovacion");
+    			String esRenovacion		= smap1.get("esRenovacion");
+    			
     			String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
     			String nombreCenso= nombreCensoConfirmado;
     			
@@ -12526,7 +12529,16 @@ public class CotizacionAction extends PrincipalCoreAction
     			long stamp = System.currentTimeMillis();
     			logger.debug(Utils.log(stamp,"Mandando el tramite a estatus completo despues de subir censo cocurrente y proceso colectivo interno"));
     			
-    			mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
+    			
+    			logger.debug("VALOR DE esRenovacion ===>:{}",esRenovacion);
+    			logger.debug("EstatusTramite.EN_ESPERA_DE_COTIZACION ===> :{}",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
+    			
+    			if(estatuRenovacion.equalsIgnoreCase(EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())){
+    				mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
+    			}else{
+    				mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
+    			}
+    			
     		}
     		catch(Exception ex)
     		{

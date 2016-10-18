@@ -255,6 +255,8 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                 conceptos['cdtipsit']              = _p21_smap1.cdtipsit;
                 conceptos['ntramiteVacio']         = _p21_ntramiteVacio ? _p21_ntramiteVacio : '';
                 conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
+                conceptos['esRenovacion'] 		   = _p21_smap1.cdtipsup;
+                conceptos['estatusRenovacion'] 	   = _p21_smap1.status;
                 var grupos = [];
                 _p21_storeGrupos.each(function(record)
                 {
@@ -279,11 +281,16 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                         {
                         
                             //var callback = function() { _p21_turnar(19,'Observaciones de la carga',false); };
-                            var callback = function() { mensajeCorrecto('Aviso','Se ha turnado el tr\u00e1mite a mesa de control en estatus ' +
-                            							'"En Tarifa" para procesar el censo. Una vez terminado podra encontrar su tr\u00e1mite ' +
-                            							'en estatus "Carga completa".',function(){ _p21_mesacontrol(); } 
-                            							);
-                            						  };
+                            var callback = function() {
+                            	if(_p21_smap1.status == _EN_ESPERA_DE_COTIZACION){
+                            		_p21_mesacontrol();
+                            	}else{
+                            		mensajeCorrecto('Aviso','Se ha turnado el tr\u00e1mite a mesa de control en estatus ' +
+										'"En Tarifa" para procesar el censo. Una vez terminado podra encontrar su tr\u00e1mite ' +
+										'en estatus "Carga completa".',function(){ _p21_mesacontrol(); } 
+									);
+                            	}
+						  	};
                             
                             
                             if(Ext.isEmpty(nombreCensoParaConfirmar))
@@ -464,7 +471,7 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                                         ,buttons     :
                                                         [
                                                             {
-                                                                text       : 'Aceptar y continuar'
+                                                                text       : 'Aceptar y continuar 1.-'
                                                                 ,icon      : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/accept.png'
                                                                 ,disabled  : !enableBoton
                                                                 ,handler   : function(me)
@@ -899,7 +906,7 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
                                                         ,buttons     :
                                                         [
                                                             {
-                                                                text       : 'Aceptar y continuar'
+                                                                text       : 'Aceptar y continuar 2.-'
                                                                 ,icon      : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/accept.png'
                                                                 //,disabled  : !enableBoton
                                                                 ,handler   : function(me)
@@ -1739,7 +1746,7 @@ function _p21_mostrarVentanaComplementoCotizacion(complemento,callback)
                                                         ,buttons     :
                                                         [
                                                             {
-                                                                text     : 'Aceptar y continuar'
+                                                                text     : 'Aceptar y continuar 3.-'
                                                                 ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
                                                                 ,handler : function(me){ callback(); }
                                                             }
@@ -2039,7 +2046,7 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                                         ,buttons     :
                                                         [
                                                             {
-                                                                text      : 'Aceptar y continuar'
+                                                                text      : 'Aceptar y continuar 4.-'
                                                                 ,icon     : '${ctx}/resources/fam3icons/icons/accept.png'
                                                                 ,disabled : !enableBoton
                                                                 ,handler  : function(me)
