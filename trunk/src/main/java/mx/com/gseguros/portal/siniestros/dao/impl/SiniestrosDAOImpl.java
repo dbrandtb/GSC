@@ -1665,7 +1665,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtiptra_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"NTRAMITE"
 					,"CDUNIECO"
