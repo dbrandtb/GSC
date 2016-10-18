@@ -10,7 +10,7 @@
 <script type="text/javascript" src="${ctx}/resources/extjs4/plugins/spreadsheet/spread-all-debug.js"></script>
 
 <link type="text/css" rel="stylesheet" href="${ctx}/resources/extjs4/plugins/spreadsheet/css/spread.css" />
-<script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js"></script>
+<%-- <script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js"></script> --%>
 <script>
 
 
@@ -87,6 +87,13 @@ var tipo_ramo=Ext.create('Ext.form.ComboBox',{
 
 
 Ext.onReady(function(){
+	
+    // Se aumenta el timeout para todas las peticiones:
+    Ext.Ajax.timeout = 1000*60*10; // 10 minutos
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
+	
 	
 	layout=Ext.create('Ext.panel.Panel',{
 		itemId		: 'layout',
@@ -743,7 +750,7 @@ function descargarPDF(btn){
 					Ext.Ajax.request(
 				             {
 				                 url      : _GLOBAL_URL_ESPERAR_DESCARGA_LOTE
-				                 ,timeout : 1000*60*60*3
+				                // ,timeout : 1000*60*60*3
 				                 ,callback:function(o,s,r){
 				                		spreadWnd.close();
 				                		  _fieldByName('spreadLayout').getStore().removeAll();
