@@ -29,7 +29,7 @@ var url_borra_datos_layout='<s:url namespace="/consultas" action="borrarDatosLay
 ////// urls //////
 
 ////// variables //////
-
+var spreadWnd;
 var tipo_documento=[];
 var layout;
 var filasIniciales=100;
@@ -210,7 +210,7 @@ Ext.onReady(function(){
 		                                
 		                                 
 		                                 
-		                            	  var spreadWnd = new Ext.window.Window({
+		                            	     spreadWnd = new Ext.window.Window({
 		                                     title: 'VERIFICACION LAYOUT',
 		                                     name:'ventana_descarga',
 		                                     layout: 'fit',
@@ -228,12 +228,7 @@ Ext.onReady(function(){
 		                                            	  duplex:false,
 		                                            	  handler: function(btn){
 		                                            		  descargarPDF(btn);
-		                                            		  spreadWnd.close();
-		                                            		  _fieldByName('spreadLayout').getStore().removeAll();
-		                                            		  layout.removeAll();
 		                                            		  
-		                                            		  layout.add(generaLayout(tpdocum,false));
-			                      	                    		layout.show();
 		                                            		  
 		                                            	  }
 		                                              },
@@ -245,12 +240,12 @@ Ext.onReady(function(){
 		                                            	  duplex:true,
 		                                            	  handler: function(btn){
 		                                            		  descargarPDF(btn);
-		                                            		  spreadWnd.close();
-		                                            		  _fieldByName('spreadLayout').getStore().removeAll();
-		                                            		  layout.removeAll();
+// 		                                            		  spreadWnd.close();
+// 		                                            		  _fieldByName('spreadLayout').getStore().removeAll();
+// 		                                            		  layout.removeAll();
 		                                            		  
-		                                            		  layout.add(generaLayout(tpdocum,false));
-			                      	                    		layout.show();
+// 		                                            		  layout.add(generaLayout(tpdocum,false));
+// 			                      	                    		layout.show();
 		                                            		  
 		                                            	  }
 		                                              }
@@ -749,6 +744,14 @@ function descargarPDF(btn){
 				             {
 				                 url      : _GLOBAL_URL_ESPERAR_DESCARGA_LOTE
 				                 ,timeout : 1000*60*60*3
+				                 ,callback:function(o,s,r){
+				                		spreadWnd.close();
+				                		  _fieldByName('spreadLayout').getStore().removeAll();
+				                		  layout.removeAll();
+				                		  
+				                		  layout.add(generaLayout(tpdocum,false));
+				                      		layout.show();
+				                 }
 				                 ,success : function(response)
 				                 {
 				                     _setLoading(false,layout);
@@ -814,7 +817,7 @@ function descargarPDF(btn){
 					//
 					
 					
-					
+				
 	
 				}
 		);
