@@ -12529,16 +12529,11 @@ public class CotizacionAction extends PrincipalCoreAction
     			long stamp = System.currentTimeMillis();
     			logger.debug(Utils.log(stamp,"Mandando el tramite a estatus completo despues de subir censo cocurrente y proceso colectivo interno"));
     			
-    			
-    			logger.debug("VALOR DE esRenovacion ===>:{}",esRenovacion);
-    			logger.debug("EstatusTramite.EN_ESPERA_DE_COTIZACION ===> :{}",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
-    			
     			if(estatuRenovacion.equalsIgnoreCase(EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())){
     				mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
     			}else{
     				mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
     			}
-    			
     		}
     		catch(Exception ex)
     		{
