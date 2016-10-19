@@ -142,7 +142,7 @@ public interface ExplotacionDocumentosManager
 			String server2
 			)throws Exception;
 	
-	DescargaLotePdfVO generaPdfLayout(
+	public DescargaLotePdfVO generaPdfLayout(
 			Map<String, String> documentos,
 			String cdtipram,
 			String hoja,
