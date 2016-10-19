@@ -863,6 +863,18 @@ public interface CotizacionDAO {
 	 */
 	public void insertaMgrupogar(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
 			String cdgrupo, String cdplan, String nmsumaaseg) throws Exception;
+
+	/**
+	 * Elimina todos los grupos de una poliza
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param cdtipsit
+	 * @throws Exception
+	 */
+	public void eliminarGrupos(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit)
+			throws Exception;
 	
 	
 }

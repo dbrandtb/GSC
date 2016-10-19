@@ -8290,6 +8290,34 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		    declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 		    compile();
 		}
-	}   
+	}
+	
+	
+	@Override
+	public void eliminarGrupos(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit)
+			throws Exception {
+		
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdtipsit_i" , cdtipsit);
+		ejecutaSP(new EliminarGruposSP(getDataSource()),params);
+	}
+	
+	protected class EliminarGruposSP extends StoredProcedure {
+		protected EliminarGruposSP (DataSource dataSource) {
+	        super(dataSource,"PKG_CONSULTA_ANGELES.P_ELIMINA_GRUPOS");
+		    declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlParameter("pv_cdtipsit_i"   , OracleTypes.VARCHAR));
+		    declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+		    declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+		    compile();
+		}
+	}
 	
 }

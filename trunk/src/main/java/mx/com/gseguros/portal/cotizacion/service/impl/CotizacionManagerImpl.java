@@ -4062,6 +4062,28 @@ public class CotizacionManagerImpl implements CotizacionManager
             }
 		}
 		
+		// Se inserta el maestro y detalle de los grupos:
+		try {
+			try {
+				cotizacionDAO.eliminarGrupos(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit);
+			} catch (Exception e) {
+				logger.warn("No se eliminaron los grupos de la poliza: {}", e);
+			}
+			for(Map<String,Object> grupoIte : grupos) {
+				logger.debug("grupoIte=={}", grupoIte);
+				// Guardar el maestro de grupos mpoligrup:
+				cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("nombre"), (String)grupoIte.get("cdplan"), null, "0", "0", Constantes.NO, Constantes.NO, Constantes.NO);
+				// Guardar el detalle de grupos mgrupogar:
+				cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("cdplan"), "0");
+			}
+		} catch(Exception ex) {
+			long timestamp = System.currentTimeMillis();
+        	resp.setExito(false);
+        	resp.setRespuesta(new StringBuilder("Error al guardar grupos de la poliza #").append(timestamp).toString());
+        	resp.setRespuestaOculta(ex.getMessage());
+        	logger.error(resp.getRespuesta(),ex);
+		}
+		
 		//tramite
 		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||duplicar))
 		{
