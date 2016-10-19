@@ -67,7 +67,7 @@ var _p21_urlMesaControl                  = '<s:url namespace="/flujomesacontrol"
 var _p21_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"          />';
 var _p21_urlEmitir                       = '<s:url namespace="/emision"         action="emitirColectivo"                  />';
 var _p21_urlViewDoc                      = '<s:url namespace="/documentos"      action="descargaDocInline"                />';
-var _p21_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas"      />';
+var _p21_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas3"      />';
 var _p21_urlGuardarExtraprimas           = '<s:url namespace="/emision"         action="guardarExtraprimasAsegurados"     />';
 var _p21_urlSigsvalipol                  = '<s:url namespace="/emision"         action="ejecutaSigsvalipol"               />';
 var _p21_urlCargarAseguradosGrupo        = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"            />';
@@ -261,6 +261,7 @@ var _p21_TARIFA_MODIFICADA = 2;
 
 var _p82_callback;
 var _p47_callback;
+var listaSinPadre = [];
 ////// variables //////
 
 Ext.onReady(function()

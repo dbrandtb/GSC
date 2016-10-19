@@ -1058,4 +1058,12 @@ public interface CotizacionManager
 	public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
 			String promotoria, String cdagente, String cdtipsit, String cdatribu) throws Exception;
 	
+	public List<Map<String,String>>cargarAseguradosExtraprimas(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo)throws Exception;
+	
 }

@@ -5220,7 +5220,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String fefin            = smap1.get("fefin");
 		String nmpolant         = smap1.get("nmpolant");
 		String nmrenova         = smap1.get("nmrenova");
-		
+		String esRenovacion		= smap1.get("esRenovacion");
 		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
 		
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
@@ -6037,69 +6037,87 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(21)),"-"));
 	                }
 	              //EXT. OCUPACIONAL
-                	try
-                	{
-		                auxCell=row.getCell(22);
+                	try {
+	                	auxCell=row.getCell(22);
 		                logger.debug("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
 		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+	                } catch(Exception ex) {
+	                    logger.error("error al leer la extraprima de ocupación como numero, se intentara como string:",ex);
+	                    try {
+	                    	auxCell=row.getCell(22);
+			                logger.debug("EXTRAPRIMA OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+	                        
+	                    } catch(Exception ex2) {
+	                        logger.error("error extraprima ocupacion:",ex2);
+	                        filaBuena = false;
+	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (W) de la fila ",fila," "));
+	                    }
+	                } finally {
+	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(22)),"-"));
 	                }
-	                catch(Exception ex)
-	                {
-	                	filaBuena          = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (W) de la fila ",fila," "));
-	                }
-                    finally
-                    {
-                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(22)),"-"));
-                    }
+
             	//PESO
-                	try
-                	{
-		                auxCell=row.getCell(23);
+                	try {
+	                	auxCell=row.getCell(23);
 		                logger.debug("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
 		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+	                } catch(Exception ex) {
+	                    logger.error("error al leer el peso como numero, se intentara como string:",ex);
+	                    try {
+	                    	auxCell=row.getCell(23);
+			                logger.debug("PESO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+	                        
+	                    } catch(Exception ex2) {
+	                        logger.error("error peso:",ex2);
+	                        filaBuena          = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (X) de la fila ",fila," "));
+	                    }
+	                } finally {
+	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(23)),"-"));
 	                }
-	                catch(Exception ex)
-	                {
-	                	filaBuena          = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (X) de la fila ",fila," "));
-	                }
-                    finally
-                    {
-                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(23)),"-"));
-                    }
+                	
             	//ESTATURA
-	                try
-                	{
-		                auxCell=row.getCell(24);
+                	try {
+	                	auxCell=row.getCell(24);
 		                logger.debug("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
 		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+	                } catch(Exception ex) {
+	                    logger.error("error al leer la estatura como numero, se intentara como string:",ex);
+	                    try {
+	                    	auxCell=row.getCell(24);
+			                logger.debug("ESTATURA: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+	                        
+	                    } catch(Exception ex2) {
+	                        logger.error("error estatura:",ex2);
+	                        filaBuena          = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (y) de la fila ",fila," "));
+	                    }
+	                } finally {
+	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(24)),"-"));
 	                }
-	                catch(Exception ex)
-	                {
-	                	filaBuena          = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (Y) de la fila ",fila," "));
-	                }
-                    finally
-                    {
-                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(24)),"-"));
-                    }
 	              //EXT. SOBREPESO
-	                try
-                	{
-		                auxCell=row.getCell(25);
+                	try {
+	                	auxCell=row.getCell(25);
 		                logger.debug("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
 		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+	                } catch(Exception ex) {
+	                    logger.error("error al leer la extraprima como numero, se intentara como string:",ex);
+	                    try {
+	                    	auxCell=row.getCell(25);
+			                logger.debug("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+	                        
+	                    } catch(Exception ex2) {
+	                        logger.error("error estatura:",ex2);
+	                        filaBuena          = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (z) de la fila ",fila," "));
+	                    }
+	                } finally {
+	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(25)),"-"));
 	                }
-	                catch(Exception ex)
-	                {
-	                	filaBuena          = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (Z) de la fila ",fila," "));
-	                }
-                    finally
-                    {
-                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(25)),"-"));
-                    }
 	                
 	              //ESTADO CIVIL
 	                try
@@ -6269,6 +6287,49 @@ public class CotizacionAction extends PrincipalCoreAction
 	                finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(30)),"-"));
 	                } 
+	                
+                //TRAMITE
+	                if(esRenovacion.equalsIgnoreCase(TipoEndoso.RENOVACION.getCdTipSup().toString())){
+		                try {
+		                	logger.debug("##ENTRA###");
+		                	auxCell=row.getCell(31);
+		                	if(auxCell!=null){
+		                		String tramiteArchivo = auxCell.getNumericCellValue()+"";
+		                		if(!ntramite.equalsIgnoreCase(tramiteArchivo)){
+		                			logger.debug("##ENTRA IF 1###");
+		                			throw new ApplicationException("El tramite no concuerda");
+		                		}		                		
+		                	}else{
+		                		logger.debug("##ENTRA AL IF 2###");
+		                		throw new ApplicationException("El tramite no puede ser null");
+		                	}		                	
+	                	} catch(Exception ex2) {
+	                		try {
+	                			logger.debug("##ENTRA CATCH###");
+			                	auxCell=row.getCell(31);
+			                	if(auxCell!=null){
+			                		logger.debug("##ENTRA IF 3###");
+			                		String tramiteArchivo = auxCell.getStringCellValue()+"";
+			                		if(!ntramite.equalsIgnoreCase(tramiteArchivo)){	
+			                			logger.debug("##ENTRA IF 4###");
+			                			throw new ApplicationException("El tramite no concuerda");
+			                		}		                		
+			                	}else{
+			                		logger.debug("##ENTRA IF 5###");
+			                		throw new ApplicationException("El tramite no puede ser null");
+			                	}		                	
+		                	} catch(Exception ex) {
+		                		filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Tr&aacute;mite' (AF) de la fila ",fila," "));
+			                }
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(31)),"-"));
+		                }
+	                }
+	                
+	              //TRAMITE
+
+	                
 	                
 	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
@@ -10082,7 +10143,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdgrupo  , "No se recibio la clave de grupo"
 			);			
 			
-		    slist1 = cotizacionManager.cargarAseguradosExtraprimas2(
+		    slist1 = cotizacionManager.cargarAseguradosExtraprimas(
 		    		cdunieco
 		    		,cdramo
 		    		,estado
