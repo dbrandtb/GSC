@@ -10035,6 +10035,81 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	/**
 	 ****************************************************
+	 ************cargarAseguradosExtraprimas3************
+	 ****************************************************
+	 **Paginado de la asegurados que muestra 
+	 **los valores por situacion como extraprimas,
+	 **ademas de agruparlos por familia.
+	 ****************************************************
+	 * @return
+	 */
+	public String cargarAseguradosExtraprimas3()
+	{
+		logger.debug(Utils.log(
+				 "\n##########################################"
+				,"\n###### cargarAseguradosExtraprimas3 ######"
+				,"\n###### smap1=" , smap1
+				));
+		
+		
+		//datos completos
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdunieco  = null
+					,cdramo   = null
+					,estado   = null
+					,nmpoliza = null
+					,nmsuplem = null
+					,cdgrupo  = null;
+			
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			nmsuplem = smap1.get("nmsuplem");
+			cdgrupo  = smap1.get("cdgrupo");
+			
+			Utils.validate(
+					cdunieco  , "No se recibio la sucursal"
+					,cdramo   , "No se recibio el producto"
+					,estado   , "No se recibio el estado"
+					,nmpoliza , "No se recibio el numero de cotizacion"
+					,nmsuplem , "No se recibio el suplemento"
+					,cdgrupo  , "No se recibio la clave de grupo"
+			);			
+			
+		    slist1 = cotizacionManager.cargarAseguradosExtraprimas2(
+		    		cdunieco
+		    		,cdramo
+		    		,estado
+		    		,nmpoliza
+		    		,nmsuplem
+		    		,cdgrupo
+		    		);		
+			exito   = true;
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### respuesta=" , respuesta
+				,"\n###### exito="     , exito
+				,"\n###### slist1="    , slist1
+				,"\n###### cargarAseguradosExtraprimas3 ######"
+				,"\n##########################################"
+				));
+		return SUCCESS;
+	}
+	
+	/**
+	 ****************************************************
 	 ************guardarExtraprimasAsegurados************
 	 ****************************************************
 	 **Guarda los cambios en la pagina de asegurados
