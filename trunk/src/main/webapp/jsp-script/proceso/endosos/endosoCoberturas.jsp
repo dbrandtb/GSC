@@ -37,6 +37,8 @@
     var endcobUrlGuardar                               = '<s:url namespace="/endosos"    action="guardarEndosoCoberturas"              />';
     var urlPantallaBeneficiarios                       = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
     var url_PantallaPreview                            = '<s:url namespace="/endosos"    action="includes/previewEndosos"              />';
+    var _p30_urlViewDoc                                = '<s:url namespace="/documentos"      action="descargaDocInline"               />';
+    var _RUTA_DOCUMENTOS_TEMPORAL                      = '<s:text name="ruta.documentos.temporal"                                      />';
    
     debug('inputCduniecop3',inputCduniecop3);
     debug('inputCdramop3',inputCdramop3);
@@ -178,7 +180,30 @@
 														me.up('window').destroy();
 														marendNavegacion(2);
 														}
-									   } ]
+									   },{
+										text    : 'Documentos'
+										,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+										,handler  :function(){
+											 var numRand=Math.floor((Math.random()*100000)+1);
+	                                         debug(numRand);
+											 centrarVentanaInterna(Ext.create('Ext.window.Window', {
+											 	title          : 'Vista previa'
+										        ,width         : 700
+										        ,height        : 500
+										        ,collapsible   : true
+										        ,titleCollapse : true
+										        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+										                         +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+json.smap2.pdfEndosoNom_o+"\">"
+										                         +'</iframe>'
+										        ,listeners     : {
+										        	resize : function(win,width,height,opt){
+										                debug(width,height);
+										                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+										        }
+										      }}).show());
+										}
+										,hidden   : _p3_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
+                                        } ]
 					     }).show();
                     	
                             //////////////////////////////////
