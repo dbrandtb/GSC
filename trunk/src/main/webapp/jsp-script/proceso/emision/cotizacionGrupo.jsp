@@ -8,6 +8,9 @@
 .valorNoOriginal {
     background: #FFFF99;
 }
+.valorRenovacionColec {
+    background: #FFD299;
+}
 ._p21_editorLectura {
     visibility: hidden;
 }
@@ -2758,7 +2761,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                         grid.editingPlugin.cancelEdit();
                                         _p21_agregarTab(
                                         {
-                                            title       : 'DETALLE DE SUBGRUPO_1.-  '+record.get('letra')
+                                            title       : 'DETALLE DE SUBGRUPO '+record.get('letra')
                                             ,itemId     : 'id'+(new Date().getTime())
                                             ,letraGrupo : record.get('letra')
                                             ,tipo       : 'tabDetalleGrupo'
@@ -2873,18 +2876,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                 ,decimalSeparator : '.'
                                                             }
                                                         }
-                                                        /*,{
-                                                            header     : 'Cesi&oacute;n comisi&oacute;n<br/>intermediario'
-                                                            ,dataIndex : 'cesicomi'
-                                                            ,flex      : 1
-                                                            ,editor    :
-                                                            {
-                                                                xtype             : 'numberfield'
-                                                                ,allowBlank       : false
-                                                                ,allowDecimals    : true
-                                                                ,decimalSeparator : '.'
-                                                            }
-                                                        }*/
                                                         ,{
                                                             header     : 'Ponderaci&oacute;n ubicaci&oacute;n<br/>geogr&aacute;fica'
                                                             ,dataIndex : 'pondubic'
@@ -3007,34 +2998,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         var name  = elem.NAME;
                                                                         var valor = elem.VALOR;
                                                                         record.set(name,valor);
-                                                                        /*
-                                                                        if(name=='extrreno')
-                                                                        {
-                                                                            $.each(_p21_arrayNombresExtrreno,function(i,nombre)
-                                                                            {
-                                                                                var componentes=Ext.ComponentQuery.query('[fieldLabel*='+nombre+']',pestania);
-                                                                                debug('componentes para poner factor extrreno:',componentes);
-                                                                                $.each(componentes,function(i,comp)
-                                                                                {
-                                                                                    debug('poniendo valor en:',comp);
-                                                                                    comp.setValue(valor);
-                                                                                });
-                                                                            });
-                                                                        }
-                                                                        else if(name=='incrinfl')
-                                                                        {
-                                                                            $.each(_p21_arrayNombresIncrinfl,function(i,nombre)
-                                                                            {
-                                                                                var componentes=Ext.ComponentQuery.query('[fieldLabel*='+nombre+']',pestania);
-                                                                                debug('componentes para poner factor incrinfl:',componentes);
-                                                                                $.each(componentes,function(i,comp)
-                                                                                {
-                                                                                    debug('poniendo valor en:',comp);
-                                                                                    comp.setValue(valor);
-                                                                                });
-                                                                            });
-                                                                        }
-                                                                        */
                                                                     }
                                                                 };
                                                                 if(Ext.isEmpty(_p21_valoresFactores))

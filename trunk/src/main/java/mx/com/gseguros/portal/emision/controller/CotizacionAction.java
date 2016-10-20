@@ -6288,50 +6288,39 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(30)),"-"));
 	                } 
 	                
-                //TRAMITE
+	                //TRAMITE
 	                if(esRenovacion.equalsIgnoreCase(TipoEndoso.RENOVACION.getCdTipSup().toString())){
 		                try {
-		                	logger.debug("##ENTRA###");
-		                	auxCell=row.getCell(31);
-		                	if(auxCell!=null){
-		                		String tramiteArchivo = auxCell.getNumericCellValue()+"";
-		                		if(!ntramite.equalsIgnoreCase(tramiteArchivo)){
-		                			logger.debug("##ENTRA IF 1###");
-		                			throw new ApplicationException("El tramite no concuerda");
-		                		}		                		
-		                	}else{
-		                		logger.debug("##ENTRA AL IF 2###");
-		                		throw new ApplicationException("El tramite no puede ser null");
-		                	}		                	
-	                	} catch(Exception ex2) {
-	                		try {
-	                			logger.debug("##ENTRA CATCH###");
-			                	auxCell=row.getCell(31);
-			                	if(auxCell!=null){
-			                		logger.debug("##ENTRA IF 3###");
-			                		String tramiteArchivo = auxCell.getStringCellValue()+"";
-			                		if(!ntramite.equalsIgnoreCase(tramiteArchivo)){	
-			                			logger.debug("##ENTRA IF 4###");
-			                			throw new ApplicationException("El tramite no concuerda");
-			                		}		                		
-			                	}else{
-			                		logger.debug("##ENTRA IF 5###");
-			                		throw new ApplicationException("El tramite no puede ser null");
-			                	}		                	
-		                	} catch(Exception ex) {
-		                		filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Tr&aacute;mite' (AF) de la fila ",fila," "));
-			                }
-		                } finally {
+		                	String tramiteRe= row.getCell(31).getStringCellValue();
+		                	if(tramiteRe!=null){
+			                	if(!ntramite.equalsIgnoreCase(tramiteRe)){
+	                                throw new ApplicationException("El tramite no concuerda");
+	                            }
+			                }else{
+	                            throw new ApplicationException("El tramite no puede ser null");
+	                        }
+	                	}
+		                catch(Exception ex) {
+		                	try {
+		                		String tramiteRe= String.format("%.0f",row.getCell(31).getNumericCellValue())+"";
+		                		if(tramiteRe!=null){
+				                	if(!ntramite.equalsIgnoreCase(tramiteRe)){
+		                                throw new ApplicationException("El tramite no concuerda");
+		                            }
+				                }else{
+		                            throw new ApplicationException("El tramite no puede ser null");
+		                        }
+			                } catch (Exception e) {
+								filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Trámite' (AF) de la fila ",fila," "));
+							}
+		                }
+		                finally {
 		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(31)),"-"));
 		                }
 	                }
 	                
-	              //TRAMITE
-
-	                
-	                
-	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
+	              	logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
 	                if(filaBuena)
 	                {
