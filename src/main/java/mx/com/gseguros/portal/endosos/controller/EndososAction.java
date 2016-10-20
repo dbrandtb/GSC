@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -55,6 +56,8 @@ import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoFlotilla;
+import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -76,6 +79,7 @@ public class EndososAction extends PrincipalCoreAction
 	private final static Logger      logger             = LoggerFactory.getLogger(EndososAction.class);
 	private boolean                  success;
 	private SimpleDateFormat         renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
+	private static SimpleDateFormat renderFechaHora = new SimpleDateFormat("ddMMyyyyHHss");
 
 	public static final String       ENDOSO_SIMPLE_NO_PERMITIDO = "Este endoso solo lo puede capturar si no hay endosos anteriores";
 	
@@ -2854,8 +2858,6 @@ public class EndososAction extends PrincipalCoreAction
 						,tipoEndoso.getCdTipSup().toString()
 						);
 				
-				/*if(smap1.get("confirmar").equalsIgnoreCase("si"))
-				{*/
 					paso = "Calculando valor de endoso";
 					logger.debug(paso);
 					
@@ -2886,6 +2888,56 @@ public class EndososAction extends PrincipalCoreAction
 							,usuario.getUser()
 							,usuario.getRolActivo().getClave()
 							);
+					
+					if(smap1.get("confirmar").equals("no")){
+						paso = "Realizando PDF de Vista Previa de Autos";
+						logger.debug(paso);
+						
+						String cdunieco = (String)omap1.get("pv_cdunieco_i"),
+							   cdramo   = (String)omap1.get("pv_cdramo_i"),
+							   estado   = (String)omap1.get("pv_estado_i"),
+							   nmpoliza = (String)omap1.get("pv_nmpoliza_i"),
+							   nmsuplem = smap2.get("pv_nmsuplem_o");
+
+						String rutaReports    = getText("ruta.servidor.reports");
+						String passReports    = getText("pass.servidor.reports");
+						String rutaDocumentos = getText("ruta.documentos.temporal");
+						String tipoFlotilla   = (String)omap1.get("tipoflot");
+						String nombreReporte  = getText("rdf.endosos.nombre.auto.pymes"); //getText("rdf.endosos.nombre.auto.individual");
+						String cdperpag       = smap1.get("CDPERPAG");
+						String ntramite       = smap1.get("ntramite");
+						
+						/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)){
+							nombreReporte = getText("rdf.endosos.nombre.auto.pymes");
+						}*/
+						
+						Date fechaHoy = new Date();
+						
+						String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
+
+						String url = rutaReports
+								+ "?destype=cache"
+								+ "&desformat=PDF"
+								+ "&userid="+passReports
+								+ "&report="+nombreReporte
+								+ "&paramform=no"
+								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+								+ "&p_unieco="+cdunieco
+								+ "&p_ramo="+cdramo
+								+ "&p_estado="+estado
+								+ "&p_poliza="+nmpoliza
+								+ "&p_suplem="+nmsuplem
+								+ "&p_perpag="+cdperpag
+								+ "&P_ntramite="+ntramite
+								+ "&desname="+rutaDocumentos+"/"+pdfEndosoNom;
+						
+						paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+						logger.debug(paso);
+						HttpUtil.generaArchivo(url,rutaDocumentos+"/"+pdfEndosoNom);
+						
+						smap2.put("pdfEndosoNom_o",pdfEndosoNom);
+					}
+					
 					if(smap1.get("confirmar").equalsIgnoreCase("si"))
 					{
 					// Si el endoso fue confirmado:
@@ -3085,12 +3137,7 @@ public class EndososAction extends PrincipalCoreAction
 	////// retarificarEndosos //////
 	/////////////////////////////////////
 	
-
-	public String verPreviewEndoso(){
-		return SUCCESS;
-	}
-	
-	public String retarificarEndosos()
+public String retarificarEndosos()
 	{
 		logger.debug(Utils.log(
 				 "\n#####################################"
@@ -3102,6 +3149,11 @@ public class EndososAction extends PrincipalCoreAction
 		
 		try 
 		{
+			String paso = null;
+			
+			paso = "Recuperando Datos para Preview de Endosos";
+			logger.debug(paso);
+			
 			Map<String,String>paramDetallePoliza=new LinkedHashMap<String,String>(0);
 			paramDetallePoliza.put("pv_cdunieco_i" , smap4.get("cdunieco"));
 			paramDetallePoliza.put("pv_cdramo_i"   , smap4.get("cdramo"  ));
@@ -3110,7 +3162,9 @@ public class EndososAction extends PrincipalCoreAction
 			paramDetallePoliza.put("pv_nmsuplem_i",  smap4.get("nmsuplem"));
 			slist1=endososManager.retarificarEndosos(paramDetallePoliza);
 			
-			//
+			paso = "Realizando Sacaendoso de Preview";
+			logger.debug(paso);
+			
 			endososManager.sacaEndoso(smap4.get("cdunieco")
 									, smap4.get("cdramo")
 									, smap4.get("estado")
@@ -10454,6 +10508,51 @@ public class EndososAction extends PrincipalCoreAction
 						,cdusuari
 						,cdsisrol
 						);
+				
+				if(smap2.get("confirmar").equals("no")){
+					paso = "Realizando PDF de Vista Previa de Autos";
+					logger.debug(paso);
+					
+					String rutaReports    = getText("ruta.servidor.reports");
+					String passReports    = getText("pass.servidor.reports");
+					String rutaDocumentos = getText("ruta.documentos.temporal");
+					String tipoFlotilla   =  smap1.get("TIPOFLOT");
+					
+					logger.debug("tipoFlotilla: "+tipoFlotilla);
+					String nombreReporte = getText("rdf.endosos.nombre.auto.pymes"); //getText("rdf.endosos.nombre.auto.individual");
+					
+					/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)){
+						paso = "Tomando rdf de Pymes";
+						logger.debug(paso);
+						nombreReporte = getText("rdf.endosos.nombre.auto.pymes");
+					}*/
+					
+					Date fechaHoy = new Date();
+					
+					String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
+
+					String url = rutaReports
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+passReports
+							+ "&report="+nombreReporte
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+cdunieco
+							+ "&p_ramo="+cdramo
+							+ "&p_estado="+estado
+							+ "&p_poliza="+nmpoliza
+							+ "&p_suplem="+nmsuplem
+							+ "&p_perpag="+cdperpag
+							+ "&P_ntramite="+ntramite
+							+ "&desname="+rutaDocumentos+"/"+pdfEndosoNom;
+					
+					paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+					logger.debug(paso);
+					HttpUtil.generaArchivo(url,rutaDocumentos+"/"+pdfEndosoNom);
+					
+					smap2.put("pdfEndosoNom_o",pdfEndosoNom);
+				}
 				
 				if(smap2.get("confirmar").equals("si")){// Si el endoso fue confirmado:
 					if(respConfirmacionEndoso.isConfirmado())

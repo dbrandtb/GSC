@@ -197,5 +197,11 @@ var TipoRamo = {
     ,Autos : '<s:property value="@mx.com.gseguros.portal.general.util.TipoRamo@AUTOS.cdtipram" />'
 };
 
+// Catalogo Tipo Flotilla TIPOFLOT
+var TipoFlotilla = {
+	Flotilla : '<s:property value="@mx.com.gseguros.portal.general.util.TipoFlotilla@Tipo_Flotilla.cdtipsit" />'
+	        
+}
+
 
 </script>

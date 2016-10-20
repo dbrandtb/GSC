@@ -113,6 +113,7 @@ public interface EndososAutoManager
 			,String cdsisrol
 			,FlujoVO flujo
 			,String confirmar
+			,String cdperpag
 			)throws Exception;
 	
 	public Map<String,Item> endosoBajaIncisos(
@@ -256,6 +257,7 @@ public interface EndososAutoManager
 			,UserVO usuarioSesion
 			,FlujoVO flujo
 			,String confirmar
+			,String cdperpag
 			)throws Exception;
 	
 	public List<Map<String,String>> obtenerRetroactividad(
@@ -379,6 +381,7 @@ public interface EndososAutoManager
 			,UserVO usuarioSesion
 			,FlujoVO flujo
 			,String confirmar
+			,String cdperpag
 			)throws Exception;
 	
 	public Map<String,Item> endosoCancelacionPolAuto(String cdsisrol, String cdramo) throws Exception;
@@ -430,6 +433,8 @@ public interface EndososAutoManager
 			,UserVO usuarioSesion
 			,FlujoVO flujo
 			,String confirmar
+			,String tipoflot
+			,String cdperpag
 			)throws Exception;
 	
 	public Map<String,Item> confirmarEndosoRehabilitacionPolAuto(String cdsisrol, String cdramo) throws Exception;
@@ -476,6 +481,8 @@ public interface EndososAutoManager
 			,FlujoVO flujo
 			,String cdsisrol
 			,String confirmar
+			,String TIPOFLOT
+			,String cdperpag
 			)throws Exception;
 	
 	public List<Map<String,String>> obtieneRecibosDespagados(

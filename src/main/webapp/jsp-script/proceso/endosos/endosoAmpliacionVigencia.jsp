@@ -9,6 +9,8 @@ var _CONTEXT = '${ctx}';
 		
 	var guarda_Vigencia_Poliza   = '<s:url namespace="/endosos"      action="guardarEndosoAmpliacionVigencia"       />';
 	var url_PantallaPreview      = '<s:url namespace="/endosos"      action="includes/previewEndosos"                />';
+	var _p30_urlViewDoc          = '<s:url namespace="/documentos"      action="descargaDocInline"      />';
+    var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 	
 	var endAmpVigFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 	
@@ -83,8 +85,8 @@ var _CONTEXT = '${ctx}';
 						if(feAmpli > feProren){
 						    //Exito
 							var submitValues={};
+							paramsEntrada.confirmar = 'no';
 	        				submitValues['smap1']= paramsEntrada;
-	        				submitValues['smap1.confirmar']='no' ;
 	        				
 	        				if(!Ext.isEmpty(endAmpVigFlujo))
 	        				{
@@ -98,7 +100,7 @@ var _CONTEXT = '${ctx}';
 	   						    	 myMask.hide();
 	   						    	 myMask1.close();
 					                 var jsonResp1 = Ext.decode(response.responseText);
-	   						         Ext.create('Ext.window.Window',
+					                 Ext.create('Ext.window.Window',
 											{
 												title        : 'Tarifa final'
 												,id          : 'tarifa'
@@ -180,7 +182,30 @@ var _CONTEXT = '${ctx}';
 																			me.up('window').destroy();
 																			marendNavegacion(2);
 																			}
-														 } ]
+														 	},{
+															text    : 'Documentos'
+															,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+															,handler  :function(){
+																 var numRand=Math.floor((Math.random()*100000)+1);
+						                                         debug(numRand);
+																 centrarVentanaInterna(Ext.create('Ext.window.Window', {
+																 	title          : 'Vista previa'
+															        ,width         : 700
+															        ,height        : 500
+															        ,collapsible   : true
+															        ,titleCollapse : true
+															        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+															                         +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+jsonResp1.smap2.pdfEndosoNom_o+"\">"
+															                         +'</iframe>'
+															        ,listeners     : {
+															        	resize : function(win,width,height,opt){
+															                debug(width,height);
+															                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+															        }
+															      }}).show());
+															}
+															,hidden   : paramsEntrada.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
+					                                        } ]
 										     }).show();
 										     
 	   						    },

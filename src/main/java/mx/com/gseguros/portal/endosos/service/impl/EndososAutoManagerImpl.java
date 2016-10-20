@@ -51,6 +51,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoFlotilla;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
@@ -70,6 +71,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	private Map<String, Object> resParams = null;
 	private static final Logger logger = LoggerFactory.getLogger(EndososAutoManagerImpl.class);
 	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	private static SimpleDateFormat renderFechaHora = new SimpleDateFormat("ddMMyyyyHHss");
 	
 	@Autowired
 	private PantallasDAO pantallasDAO;
@@ -174,6 +176,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 
 	@Value("${rdf.emision.nombre.esp.cobvida}")
 	private String rdfEspecSeguroVida;
+	
+	@Value("${rdf.endosos.nombre.auto.pymes}")
+	private String rdfEndosoPreview;
+	
+	@Value("${rdf.endosos.nombre.auto.individual}")
+	private String rdfEndosoPreviewIndi;
 
 	//Datos para el servidor de Reportes
 	@Value("${ruta.servidor.reports}")
@@ -184,6 +192,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 
 	@Value("${ruta.documentos.poliza}")
 	private String rutaDocumentosPoliza;
+	
+	@Value("${ruta.documentos.temporal}")
+	private String rutaTempEndoso;
 	
 	
 	@Override
@@ -1191,6 +1202,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cdsisrol
 			,FlujoVO flujo
 			,String confirmar
+			,String cdperpag
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -1209,6 +1221,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdsisrol      = " , cdsisrol
 				,"\n@@@@@@ flujo         = " , flujo
 				,"\n@@@@@@ confirmar     = " , confirmar
+				,"\n@@@@@@ cdperpag      = " , cdperpag
 				));
 		
 		String paso = null;
@@ -1393,6 +1406,36 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,null
 					,valores, null, null, null, null, false
 					);
+			if("no".equals(confirmar)){
+				paso = "Realizando PDF de Vista Previa de Autos";
+				logger.debug(paso);
+				
+				String reporteEndosoPrevia = rdfEndosoPreview;
+				String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
+				
+				String url = rutaServidorReportes
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+passServidorReportes
+						+ "&report="+reporteEndosoPrevia
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+cdunieco
+						+ "&p_ramo="+cdramo
+						+ "&p_estado="+estado
+						+ "&p_poliza="+nmpoliza
+						+ "&p_suplem="+nmsuplem
+						+ "&p_perpag="+cdperpag
+						+ "&P_ntramite="+ntramiteEmi
+						+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
+				
+				paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+				logger.debug(paso);
+				HttpUtil.generaArchivo(url,rutaTempEndoso+"/"+pdfEndosoNom);
+				
+				resParams.put("pdfEndosoNom_o",pdfEndosoNom);
+				
+			}
 			if(("si".equals(confirmar)))
 				{
 					paso = "Realizando endoso en Web Service Autos";
@@ -3298,6 +3341,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			,FlujoVO flujo
 			,String confirmar
+			,String cdperpag
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -3317,6 +3361,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ usuarioSesion  = " , usuarioSesion
 				,"\n@@@@@@ flujo          = " , flujo
 				,"\n@@@@@@ confirmar      = " , confirmar
+				,"\n@@@@@@ cdperpag       = " , cdperpag
 				));
 		
 		String paso = null;
@@ -3446,6 +3491,43 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,valoresTra, null
 					);
 			*/
+			
+			if(("no").equals(confirmar)){
+				Date fechaHoy = new Date();
+				
+				paso = "Realizando PDF de Vista Previa de Autos";
+				logger.debug(paso);
+				String reporteEndosoPrevia = rdfEndosoPreview;//rdfEndosoPreviewIndi;
+				/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoGrupoInciso)){
+					reporteEndosoPrevia = rdfEndosoPreview;
+				}*/
+				
+				String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
+				
+				String url = rutaServidorReportes
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+passServidorReportes
+						+ "&report="+reporteEndosoPrevia
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+cdunieco
+						+ "&p_ramo="+cdramo
+						+ "&p_estado="+estado
+						+ "&p_poliza="+nmpoliza
+						+ "&p_suplem="+nmsuplemGen
+						+ "&p_perpag="+cdperpag
+						+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
+				
+				paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+				logger.debug(paso);
+				paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+				logger.debug(paso);
+				HttpUtil.generaArchivo(url,rutaTempEndoso+"/"+pdfEndosoNom);
+				
+				resParams.put("pdfEndosoNom_o",pdfEndosoNom);
+				
+			}
 			if(("si").equals(confirmar)){
 					paso = "Realizando endoso en Web Service Autos";
 					logger.debug(paso);
@@ -4974,6 +5056,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			,FlujoVO flujo
 			,String confirmar
+			,String cdperpag
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -4993,6 +5076,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ usuarioSesion = " , usuarioSesion
 				,"\n@@@@@@ flujo         = " , flujo
 				,"\n@@@@@@ confirmar     = " , confirmar
+				,"\n@@@@@@ cdperpag      = " , cdperpag
 				));
 		
 		String paso = null;
@@ -5054,7 +5138,42 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					);
 			
 			// Se envian los datos a traves del WS de autos:
-			
+			if(("no").equals(confirmar)){
+				Date fechaHoy = new Date();
+				logger.debug("tipoGrupoInciso: "+tipoGrupoInciso);
+				paso = "Realizando PDF de Vista Previa de Autos";
+				logger.debug(paso);
+				String reporteEndosoPrevia = rdfEndosoPreview; //rdfEndosoPreviewIndi;
+				/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoGrupoInciso)){
+					reporteEndosoPrevia = rdfEndosoPreview;
+				}*/
+				
+				String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
+				
+				String url = rutaServidorReportes
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+passServidorReportes
+						+ "&report="+reporteEndosoPrevia
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+cdunieco
+						+ "&p_ramo="+cdramo
+						+ "&p_estado="+estado
+						+ "&p_poliza="+nmpoliza
+						+ "&p_suplem="+nmsuplemGen
+						+ "&p_perpag="+cdperpag
+						+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
+				
+				paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+				logger.debug(paso);
+				paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+				logger.debug(paso);
+				HttpUtil.generaArchivo(url,rutaTempEndoso+"/"+pdfEndosoNom);
+				
+				resParams.put("pdfEndosoNom_o",pdfEndosoNom);
+				
+			}
 			if("si".equals(confirmar)){
 					paso = "Realizando endoso en Web Service Autos";
 					logger.debug(paso);
@@ -5480,6 +5599,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			,FlujoVO flujo
 			,String confirmar
+			,String tipoflot
+			,String cdperpag
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -5498,6 +5619,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ usuarioSesion = " , usuarioSesion
 				,"\n@@@@@@ flujo         = " , flujo
 				,"\n@@@@@@ confirmar     = " ,confirmar
+				,"\n@@@@@@ tipoflot      = " ,tipoflot
+				,"\n@@@@@@ cdperpag      = " ,cdperpag
+				
 				));
 		
 		String paso = null;
@@ -5714,6 +5838,43 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							incisosAfectados.put(inciso,inciso);
 						}
 					}
+					
+					if(("no").equals(confirmar)){
+						Date fechaHoy = new Date();
+						paso = "Realizando PDF de Vista Previa de Autos";
+						logger.debug(paso);
+						String reporteEndosoPrevia = rdfEndosoPreview; //rdfEndosoPreviewIndi;
+						/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot)){
+							reporteEndosoPrevia = rdfEndosoPreview;
+						}*/
+						
+						String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
+						
+						String url = rutaServidorReportes
+								+ "?destype=cache"
+								+ "&desformat=PDF"
+								+ "&userid="+passServidorReportes
+								+ "&report="+reporteEndosoPrevia
+								+ "&paramform=no"
+								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+								+ "&p_unieco="+cdunieco
+								+ "&p_ramo="+cdramo
+								+ "&p_estado="+estado
+								+ "&p_poliza="+nmpoliza
+								+ "&p_suplem="+nmsuplemGen
+								+ "&p_perpag="+cdperpag
+								+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
+						
+						paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+						logger.debug(paso);
+						paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+						logger.debug(paso);
+						HttpUtil.generaArchivo(url,rutaTempEndoso+"/"+pdfEndosoNom);
+						
+						valores.put("pdfEndosoNom_o",pdfEndosoNom);
+						
+					}
+					
 					if(("si").equals(confirmar))
 						{
 						if(TipoEndoso.CAMBIO_TIPO_SERVICIO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
@@ -6078,6 +6239,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,FlujoVO flujo
 			,String cdsisrol
 			,String confirmar
+			,String tipoflot
+			,String cdperpag
 		)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -6099,6 +6262,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cdsisrol         = " , cdsisrol
 				,"\n@@@@@@ flujo            = " , flujo
 				,"\n@@@@@@ confirmar        = " , confirmar
+				,"\n@@@@@@ TIPOFLOT         = " , tipoflot
+				,"\n@@@@@@ cdperpag         = " , cdperpag
 				));
 		
 		String paso = "";
@@ -6190,6 +6355,41 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					);
 
 			String nmsuplemGen = nmsuplem;
+			if(("no").equals(confirmar)){
+				Date fechaHoy = new Date();
+				paso = "Realizando PDF de Vista Previa de Autos";
+				logger.debug(paso);
+				String reporteEndosoPrevia = rdfEndosoPreview; //rdfEndosoPreviewIndi;
+				/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot)){
+					reporteEndosoPrevia = rdfEndosoPreview;
+				}*/
+				
+				String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
+				
+				String url = rutaServidorReportes
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+passServidorReportes
+						+ "&report="+reporteEndosoPrevia
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+cdunieco
+						+ "&p_ramo="+cdramo
+						+ "&p_estado="+estado
+						+ "&p_poliza="+nmpoliza
+						+ "&p_suplem="+nmsuplemGen
+						+ "&p_perpag="+cdperpag
+						+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
+				
+				paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+				logger.debug(paso);
+				paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+				logger.debug(paso);
+				HttpUtil.generaArchivo(url,rutaTempEndoso+"/"+pdfEndosoNom);
+				
+				iniciarEndosoResp.put("pdfEndosoNom_o",pdfEndosoNom);
+				
+			}
 			
 			if(("si").equals(confirmar)){
 						

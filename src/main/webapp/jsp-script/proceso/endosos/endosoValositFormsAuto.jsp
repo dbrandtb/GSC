@@ -9,6 +9,8 @@
 var url_PantallaPreview        = '<s:url namespace="/endosos"      action="includes/previewEndosos"         />';
 var _p44_urlConfirmar          = '<s:url namespace="/endosos"      action="confirmarEndosoValositFormsAuto" />';
 var _p44_urlRecuperacionSimple = '<s:url namespace="/emision"      action="recuperacionSimple"              />';
+var _p30_urlViewDoc          = '<s:url namespace="/documentos"      action="descargaDocInline"      />';
+var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 ////// urls //////
 
 ////// variables //////
@@ -263,7 +265,30 @@ Ext.onReady(function()
 																me.up('window').destroy();
 																marendNavegacion(2);
 																}
-											 } ]
+											 },{
+												text    : 'Documentos'
+												,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+												,handler  :function(){
+											 var numRand=Math.floor((Math.random()*100000)+1);
+	                                         debug(numRand);
+											 centrarVentanaInterna(Ext.create('Ext.window.Window', {
+											 	title          : 'Vista previa'
+										        ,width         : 700
+										        ,height        : 500
+										        ,collapsible   : true
+										        ,titleCollapse : true
+										        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+										                         +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+json2.smap2.pdfEndosoNom_o+"\">"
+										                         +'</iframe>'
+										        ,listeners     : {
+										        	resize : function(win,width,height,opt){
+										                debug(width,height);
+										                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+										        }
+										      }}).show());
+										}
+												,hidden   : _p44_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
+		                                        } ]
 							     });
 							     win.show();
 							     

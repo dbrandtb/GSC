@@ -927,7 +927,7 @@
             <result name="success" type="json" />
         </action>
         
-        <action name="includes/previewEndosos" class="EndososAction" method="verPreviewEndoso">
+        <action name="includes/previewEndosos" class="EndososAction">
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoPreview.jsp</result>
         </action>

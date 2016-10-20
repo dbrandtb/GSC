@@ -443,7 +443,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,nmpoliza    = smap1.get("nmpoliza")
 					,cdtipsup    = smap1.get("cdtipsup")
 					,fechaEndoso = smap1.get("fechaEndoso")
-					,comfirmar   = smap1.get("confirmar");
+					,comfirmar   = smap1.get("confirmar")
+					,cdperpag    = smap1.get("cdperpag");
 			
 			Utils.validate(
 					cdunieco     , "No se recibio la sucursal"
@@ -467,6 +468,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,usuarioSesion.getRolActivo().getClave()
 					,flujo
 					,comfirmar
+					,cdperpag
 					);
 			
 			
@@ -1100,6 +1102,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String ntramite = smap1.get("NTRAMITE");
 			String nmsuplemOriginal = smap1.get("NMSUPLEM");
 			String confirmar        = smap1.get("confirmar");
+			String TIPOFLOT         = smap1.get("TIPOFLOT");
+			String cdperpag         = smap1.get("CDPERPAG");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -1146,7 +1150,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 					tipoGrupoInciso,
 					flujo,
 					cdsisrol,
-					confirmar
+					confirmar,
+					TIPOFLOT,
+					cdperpag
 					);
 			
 			respuesta = "Endoso generado correctamente";
@@ -1406,6 +1412,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String nmpoliza = smap1.get("NMPOLIZA");
 			String feefecto = smap2.get("feefecto");
 			String confirmar= smap1.get("confirmar");
+			String tipoflot = smap1.get("TIPOFLOT");
+			String cdperpag = smap1.get("CDPERPAG");
 			
 			Utils.validate(cdtipsup , "No se recibio el tipo de endoso");
 			Utils.validate(cdunieco , "No se recibio la sucursal");
@@ -1429,6 +1437,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,usuarioSesion
 					,flujo
 					,confirmar
+					,cdperpag
 					);
 			
 			success = true;
@@ -1513,8 +1522,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,cdtipsup = smap1.get("cdtipsup")
 					,tstamp   = smap1.get("tstamp")
 					,fechaEnd = smap2.get("feefecto")
-					,confirmar=smap1.get("confirmar");
-			
+					,confirmar= smap1.get("confirmar")
+					,cdperpag = smap1.get("cdperpag");
 			Utils.validate(
 					cdunieco  , "No se recibio la sucursal"
 					,cdramo   , "No se recibio el producto"
@@ -1540,6 +1549,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,user
 					,flujo
 					,confirmar
+					,cdperpag
 					);
 			
 			success = true;
@@ -2171,6 +2181,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String nmpoliza = smap1.get("NMPOLIZA");
 			String feinival = smap1.get("feinival");
 			String confirmar= smap1.get("confirmar");
+			String tipoflot = smap1.get("TIPOFLOT");
+			String cdperpag = smap1.get("CDPERPAG");
 			
 			Utils.validate(cdtipsup  , "No se recibio el codigo de endoso"
 					       ,cdunieco , "No se recibio la sucursal"
@@ -2194,6 +2206,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,usuarioSesion
 					,flujo
 					,confirmar
+					,tipoflot
+					,cdperpag
 					);
 			
 			success = true;

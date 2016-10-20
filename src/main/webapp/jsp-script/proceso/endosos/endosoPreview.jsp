@@ -1,12 +1,11 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var _p29_urlRecotizar                      = '<s:url namespace="/endosos"           action="retarificarEndosos" />';
+var _urlRecotizarPreview = '<s:url namespace="/endosos"          action="retarificarEndosos" />';
 ////// urls //////
 
 ////// variables //////
@@ -38,12 +37,10 @@ Ext.onReady(function()
 	debug('### nsuplogi: ',nsuplogi);
 	
 	////// modelos //////
-	Ext.define('_p31_modeloDetalleCotizacion',
-    {
-        extend : 'Ext.data.Model'
-        ,fields :
-        [
-            'COBERTURA'
+	Ext.define('_p31_modeloDetalleCotizacion',{
+		extend : 'Ext.data.Model'
+        ,fields :[
+        	'COBERTURA'
             ,{
                 name : 'PRIMA'
                 ,type : 'float'
@@ -55,11 +52,9 @@ Ext.onReady(function()
 
 /////Funnciones//////
 	
-	Ext.Ajax.request(
-    {
-        url     : _p29_urlRecotizar
-        ,params :
-        {
+	Ext.Ajax.request({
+		url     : _urlRecotizarPreview
+        ,params :{
         	'smap4.cdunieco'          : cdunieco
             ,'smap4.cdramo'           : cdramo
             ,'smap4.estado'           : estado
@@ -67,136 +62,105 @@ Ext.onReady(function()
             ,'smap4.nmsuplem'         : nmsuplem
             ,'smap4.nsuplogi'         : nsuplogi
         }
-        ,success : function(response)
-        {
-            var jsonpreview = Ext.decode(response.responseText);
-            debug('### jsonpreview:',jsonpreview);
-             if(Ext.isEmpty(jsonpreview.slist1)) {
-             	Ext.Msg.show(
-                {
-                	
-                    title    : 'Error no hay datos'
+        ,success : function(response, options){
+        	var jsonpreview = Ext.decode(response.responseText);
+            debug('### succes, jsonpreview:', jsonpreview);
+            if(Ext.isEmpty(jsonpreview.slist1)) {
+            	Ext.Msg.show({
+            		title    : 'Error no hay datos'
                     ,msg     : 'No hay Informacion por mostrar...  '
                     ,buttons: Ext.Msg.OK
 					,icon: Ext.Msg.ERROR
                 });
-            }else{
-            	
-                Ext.create('Ext.grid.Panel',
+            } else {
+            	Ext.create('Ext.grid.Panel',{
+            		renderTo: '_p29_divpri'
+                    ,store    : Ext.create('Ext.data.Store',{
+                    				model       : '_p31_modeloDetalleCotizacion'
+                        			,groupField : 'TITULO'
+                        			,sorters    :[{
+                        				sorterFn : function(o1,o2){
+                        								debug('sorting:',o1,o2);
+                                						if (o1.get('COBERTURA') == o2.get('COBERTURA')){
+                                							return 0;
+                                						}
+                                						return o1.get('COBERTURA') < o2.get('COBERTURA') ? -1 : 1;
+                            						}
+                        			}]
+                        			,proxy :{
+                        				type    : 'memory'
+                            			,reader : 'json'
+                        			}
+                        			,data : jsonpreview.slist1
+                    			})
+                    ,columns :[
                         {
-                        	renderTo: '_p29_divpri'
-                            ,store    : Ext.create('Ext.data.Store',
-                            {
-                                model       : '_p31_modeloDetalleCotizacion'
-                                ,groupField : 'TITULO'
-                                ,sorters    :
-                                [
-                                    {
-                                        sorterFn : function(o1,o2)
-                                        {
-                                            debug('sorting:',o1,o2);
-                                            if (o1.get('COBERTURA') == o2.get('COBERTURA'))
-                                            {
-                                                return 0;
-                                            }
-                                            return o1.get('COBERTURA') < o2.get('COBERTURA') ? -1 : 1;
-                                        }
-                                    }
-                                ]
-                                ,proxy      :
-                                {
-                                    type    : 'memory'
-                                    ,reader : 'json'
-                                }
-                                ,data : jsonpreview.slist1
-                            })
-                            ,columns :
-                            [
-                                {
-                                    header           : 'Nombre de la cobertura'
-                                    ,dataIndex       : 'COBERTURA'
-                                    //,width           : 480
-                                     ,flex            : 2
-                                    ,summaryType     : 'count'
-                                    ,summaryRenderer : function(value)
-                                    {
-                                        return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
-                                    }
-                                }
+                            header           : 'Nombre de la cobertura'
+                            ,dataIndex       : 'COBERTURA'
+                            //,width           : 480
+                             ,flex            : 2
+                            ,summaryType     : 'count'
+                            ,summaryRenderer : function(value){
+                            						return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
+                            					}
+                        }
+                        ,{
+                            header       : 'Importe por cobertura'
+                            ,dataIndex   : 'PRIMA'
+                            //,width       : 150
+                             ,flex       : 1
+                            ,renderer    : Ext.util.Format.usMoney
+                            ,align       : 'right'
+                            ,summaryType : 'sum'
+                        } 
+                    ]
+                    ,features :[
+                        {
+                            groupHeaderTpl :[
+                                '{name:this.formatName}'
                                 ,{
-                                    header       : 'Importe por cobertura'
-                                    ,dataIndex   : 'PRIMA'
-                                    //,width       : 150
-                                     ,flex       : 1
-                                    ,renderer    : Ext.util.Format.usMoney
-                                    ,align       : 'right'
-                                    ,summaryType : 'sum'
-                                } 
-                            ]
-                            ,features :
-                            [
-                                {
-                                    groupHeaderTpl :
-                                    [
-                                        '{name:this.formatName}'
-                                        ,{
-                                            formatName : function(name)
-                                            {
-                                                return name.split("_")[1];
-                                            }
-                                        }
-                                    ]
-                                    ,ftype          : 'groupingsummary'
-                                    ,startCollapsed : RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL) !== true
-                                    ,listeners      :
-                                    {
-                                        groupexpand : function(view,node,group)
-                                        {
-                                            if (RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL) !== true) {
-                                                this.collapseAll();
-                                            }
-                                        }
-                                    }                                    
+                                    formatName : function(name) {
+                                    				return name.split("_")[1];
+                                    			 }
                                 }
                             ]
-							,bbar: Ext.create('Ext.toolbar.Toolbar',
-									{
-										buttonAlign : 'right'
-										,items      :
-										[
-											'->'
-											,Ext.create('Ext.form.Label',
-											{
-												style          : 'color:white;'
-												,initComponent : function()
-												{
+                            ,ftype          : 'groupingsummary'
+                            ,startCollapsed : RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL) !== true
+                            ,listeners      :{
+                                groupexpand : function(view,node,group){
+                                    				if(RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL) !== true){
+                                    					this.collapseAll();
+                                    				}
+                                				}
+                            }                                    
+                        }
+                    ],
+					bbar: Ext.create('Ext.toolbar.Toolbar',{
+						buttonAlign : 'right',
+						items       :[
+							'->'
+							,Ext.create('Ext.form.Label',{
+								style          : 'color:white;'
+								,initComponent : function(){
 													var sum = 0;
-													for ( var i = 0; i < jsonpreview.slist1.length; i++)
-													{
+													for ( var i = 0; i < jsonpreview.slist1.length; i++){
 														sum += parseFloat(jsonpreview.slist1[i].PRIMA);
 													}
 													this.setText('Total: '+ Ext.util.Format.usMoney(sum));
 													this.callParent();
-												}
-											})
-										]
-									})
-                        })
-         }
+												 }
+							})
+						]
+					})
+                })
+     		}
+        },
+        failure : function(response, options) {
+        	debug('failure:', response)
+            errorComunicacion(null,'Error al cancelar endoso');
         }
-        ,failure : function()
-	        {
-	            errorComunicacion(null,'Error al cancelar endoso');
-	        }
-        
-        
-    })
-	
-		
-	
+    });
 })
-
-
 </script>
 </head>
 <body><div id="_p29_divpri" style="height:700px;"></div></body>

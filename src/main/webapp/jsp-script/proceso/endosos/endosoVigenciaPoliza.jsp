@@ -5,7 +5,6 @@
 	var asegAlterno              = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false"               />;
 	var guarda_Aseg_alterno      = '<s:url namespace="/endosos"      action="guardarEndosoAseguradoAlterno"       />';
 	var guarda_Vigencia_Poliza   = '<s:url namespace="/endosos"      action="guardarEndosoVigenciaPoliza"         />';
-	var url_PantallaPreview      = '<s:url namespace="/endosos"      action="includes/previewEndosos"             />';
 	var endVigPolFlujo           = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false"               />;
 	
 	debug('asegAlterno  -->:',asegAlterno);
