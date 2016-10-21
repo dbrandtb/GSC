@@ -6652,6 +6652,7 @@ function _p30_confirmarEndoso()
                 ,cdtipsup    : _p30_smap1.cdtipsup
                 ,fechaEndoso : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
                 ,confirmar   : 'no'
+                ,cdperpag    : _p30_smap1.CDPERPAG
             }
             ,slist1 : []
             ,slist2 : []
