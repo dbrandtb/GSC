@@ -645,7 +645,7 @@ public class RenovacionAction extends PrincipalCoreAction
 				);
 		session=ActionContext.getContext().getSession();
 		try{
-			Utils.validate(slist1, "No se recibieron parametros de entrada");
+			Utils.validate(slist1, "No se recibieron polizas a renovar");
 			renovacionManager.renovarPolizasMasivasIndividuales(slist1);
 			exito = true;
 		}
@@ -673,9 +673,12 @@ public class RenovacionAction extends PrincipalCoreAction
 		try{
 			Utils.validate(smap1, "No se recibieron parametros de entrada");
 			Utils.validate(smap1.get("anio"),"No se recibio el año");
-			String anio = smap1.get("anio");
-			String mes  = smap1.get("mes");
-			slist = renovacionManager.obtenerCondicionesRenovacionIndividual(anio, mes);
+			String nmperiod = smap1.get("nmperiod");
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String anio     = smap1.get("anio");
+			String mes      = smap1.get("mes");
+			slist = renovacionManager.obtenerCondicionesRenovacionIndividual(nmperiod, cdunieco, cdramo, anio, mes);
 			setSlist1(slist);
 			exito = true;
 		}
@@ -699,6 +702,9 @@ public class RenovacionAction extends PrincipalCoreAction
 			Utils.validate(params.get("anio"),"No se recibio el año",
 						   params.get("mes") ,"No se recibio el mes",
 						   params.get("operacion") ,"No se recibio la operacion");
+			String nmperiod  = params.get("nmperiod");
+			String cdunieco  = params.get("cdunieco");
+			String cdramo    = params.get("cdramo");
 			String anio      = params.get("anio");
 			String mes       = params.get("mes");
 			String criterio  = params.get("criterio");
@@ -706,7 +712,69 @@ public class RenovacionAction extends PrincipalCoreAction
 			String valor     = params.get("valor");
 			String valor2    = params.get("valor2");
 			String operacion = params.get("operacion");
-			renovacionManager.movimientoCondicionesRenovacionIndividual(anio, mes, criterio, campo, valor, valor2, operacion);
+			renovacionManager.movimientoCondicionesRenovacionIndividual(nmperiod, cdunieco, cdramo, anio, mes, criterio, campo, valor, valor2, operacion);
+			exito = true;
+		}
+		catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	public String obtenerCalendarizacionRenovacionIndividual(){
+		logger.info(
+				new StringBuilder()
+				.append("\n###### smap1=").append(smap1)
+				.append("\n###### Entrando a obtenerCalendarizacionRenovacionIndividual ######")
+				.append("\n##########################################################")
+				.toString()
+				);
+		List<Map<String, String>> slist = new ArrayList<Map<String,String>>();
+		try{
+			Utils.validate(smap1, "No se recibieron parametros de entrada");
+			Utils.validate(smap1.get("anio"),"No se recibio el año",
+						   smap1.get("mes"),"No se recibio el mes");
+			String anio = smap1.get("anio");
+			String mes  = smap1.get("mes");
+			slist = renovacionManager.obtenerCalendarizacionRenovacionIndividual(anio, mes);
+			setSlist1(slist);
+			exito = true;
+		}
+		catch(Exception ex){
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
+	
+	public String movimientoCalendarizacionRenovacionIndividual(){
+		logger.info(
+				new StringBuilder()
+				.append("\n###### params=").append(params)
+				.append("\n###### Entrando a movimientoCalendarizacionRenovacionIndividual ######")
+				.append("\n##########################################################")
+				.toString()
+				);
+		exito = false;
+		try{
+			Utils.validate(params, "No se recibieron parametros de entrada");
+			if(params.get("operacion").toUpperCase().equals("B") || params.get("operacion").toUpperCase().equals("D")){
+				Utils.validate(params.get("nmperiod"),"No se recibio el identificador");
+			}
+			else{
+				Utils.validate(params.get("feinicio"),"No se recibio la fecha de inicio",
+							   params.get("fefinal") ,"No se recibio la fecha fin",
+							   params.get("fefinal") ,"No se recibio la fecha de ejecucion");
+			}
+			String nmperiod  = params.get("nmperiod");
+			String anio      = params.get("anio");
+			String mes       = params.get("mes");
+			String cdunieco  = params.get("cdunieco");
+			String cdramo    = params.get("cdramo");
+			String feinicio  = params.get("feinicio");
+			String fefinal   = params.get("fefinal");
+			String feaplica  = params.get("feaplica");
+			String operacion = params.get("operacion");
+			renovacionManager.movimientoCalendarizacionRenovacionIndividual(nmperiod, anio, mes, cdunieco, cdramo, feinicio, fefinal, feaplica, operacion);
 			exito = true;
 		}
 		catch(Exception ex){

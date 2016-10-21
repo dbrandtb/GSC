@@ -91,15 +91,36 @@ public interface RenovacionManager
 			List<Map<String,String>> slist) throws Exception;
 	
 	public List<Map<String, String>> obtenerCondicionesRenovacionIndividual(
+			String nmperiod,
+			String cdunieco,
+			String cdramo,
 			String anio,
 			String mes) throws Exception;
 	
 	public void movimientoCondicionesRenovacionIndividual(
+			String nmperiod,
+			String cdunieco,
+			String cdramo,
 			String anio,
 			String mes,
 			String criterio,
 			String campo,
 			String valor,
 			String valor2,
-			String operacion) throws Exception;	
+			String operacion) throws Exception;
+	
+	public List<Map<String, String>> obtenerCalendarizacionRenovacionIndividual(
+			String anio,
+			String mes) throws Exception;
+	
+	public void movimientoCalendarizacionRenovacionIndividual(
+			String nmperiod,
+			String anio,
+			String mes,
+			String cdunieco,
+			String cdramo,
+			String feinicio,
+			String fefinal,
+			String feaplica,
+			String operacion) throws Exception;
 }

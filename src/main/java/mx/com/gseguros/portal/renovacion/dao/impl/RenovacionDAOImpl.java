@@ -410,7 +410,9 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("estado"    , estado);
 		params.put("fecini"    , fecini);
 		params.put("fecfin"    , fecfin);
+		params.put("cdtipsit"  , cdtipsit);
 		params.put("cdperson"  , cdperson);
+		params.put("exclusion" , "N");
 		params.put("retenedora", retenedora);
 		params.put("use_exec"  , "N");
 		logger.debug(
@@ -449,9 +451,10 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			declareParameter(new SqlParameter("estado"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("fecini"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("fecfin"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdperson"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperson"   , OracleTypes.VARCHAR));			
 			declareParameter(new SqlParameter("retenedora" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("use_exec"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("exclusion"  , OracleTypes.VARCHAR));
 			String[] cols=new String[]
 					{
 						"cdperson",
@@ -847,7 +850,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		}
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("array" , new SqlArrayValue(array));
-		Utils.debugProcedure(logger, "PKG_RENOVACION_IND.P_RENOVAR_POL_MAS", params);
+		Utils.debugProcedure(logger, "PKG_RENOVACION_IND.P_RENOVACION_MASIVA", params);
 		ejecutaSP(new RenovarPolizasMasivasIndividuales(getDataSource()),params);
 	}
 	
@@ -855,29 +858,33 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected RenovarPolizasMasivasIndividuales(DataSource dataSource)
 		{
-			super(dataSource,"PKG_RENOVACION_IND.P_RENOVAR_POL_MAS");
+			super(dataSource,"PKG_RENOVACION_IND.P_RENOVACION_MASIVA");
 			declareParameter(new SqlParameter("array" , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			String[] cols = null;
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" ,  OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  ,  OracleTypes.VARCHAR));
 			compile();
 		}
 	}
 	
 	@Override
 	public List<Map<String,String>> obtenerCondicionesRenovacionprogramada(
+			String nmperiod,
+			String cdunieco,
+			String cdramo,
 			String anio,
 			String mes)throws Exception
 	{
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("anio" , anio);
-		params.put("mes"  , mes);
+		params.put("nmperiod", nmperiod);
+		params.put("cdunieco", cdunieco);
+		params.put("cdramo"  , cdramo);
+		params.put("anio"    , anio);
+		params.put("mes"     , mes);
 		Map<String,Object> procedureResult        = ejecutaSP(new ObtenerCondicionesRenovacionprogramada(getDataSource()),params);
 		logger.debug(new StringBuilder().append("\n****** procedureResult=").append(procedureResult).toString());	
-		List<Map<String,String>> polizasRenovadas = (List<Map<String,String>>) procedureResult.get("pv_registro_o");
-		if(polizasRenovadas==null||polizasRenovadas.size()==0)
-		{
-			throw new ApplicationException("No se renovaron polizas");
-		}
+		List<Map<String,String>> condiciones = (List<Map<String,String>>) procedureResult.get("pv_registro_o");
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************************")
@@ -886,7 +893,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 				.append("\n******************************************************")
 				.toString()
 				);	
-		return polizasRenovadas;
+		return condiciones;
 	}
 	
 	protected class ObtenerCondicionesRenovacionprogramada extends StoredProcedure
@@ -894,11 +901,17 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		protected ObtenerCondicionesRenovacionprogramada(DataSource dataSource)
 		{
 			super(dataSource, "PKG_RENOVACION_IND.P_GET_TRENOVA_EXC");
-			declareParameter(new SqlParameter("anio" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("mes"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmperiod", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("anio"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("mes"     , OracleTypes.VARCHAR));
 			String[] cols=new String[]
 					{
-					"anio"
+					"nmperiod"		
+					,"cdunieco"
+					,"cdramo"
+					,"anio"
 					,"mes"
 					,"criterio"
 					,"campo"
@@ -913,6 +926,9 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	
 	@Override
 	public void movimientoCondicionesRenovacionProgramada(
+			String nmperiod,
+			String cdunieco,
+			String cdramo,
 			String anio,
 			String mes,
 			String criterio,
@@ -921,7 +937,10 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			String valor2,
 			String operacion)throws Exception
 	{
-		Map<String,String> params = new HashMap<String,String>();
+		Map<String,String> params = new HashMap<String,String>();		
+		params.put("nmperiod" , nmperiod);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
 		params.put("anio" 	  , anio);
 		params.put("mes"   	  , mes);
 		params.put("criterio" , criterio);
@@ -945,16 +964,122 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		protected InsertaCondicionesRenovacionProgramada(DataSource dataSource)
 		{
 			super(dataSource, "PKG_RENOVACION_IND.P_MOV_TRENOVA_EXC ");
-			declareParameter(new SqlParameter("anio" 	 , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("mes"   	 , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("criterio" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("campo" 	 , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("valor" 	 , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("valor2" 	 , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("operacion", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmperiod" 	 	 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" 	 	 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo" 	 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("anio" 	 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("mes"   	 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("criterio" 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("campo" 	 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("valor" 	 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("valor2" 	 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("operacion"		 , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> obtenerCalendarizacionProgramada(
+			String anio,
+			String mes)throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("anio" , anio);
+		params.put("mes"  , mes);
+		Map<String,Object> procedureResult        = ejecutaSP(new ObtenerCalendarizacionProgramada(getDataSource()),params);
+		logger.debug(new StringBuilder().append("\n****** procedureResult=").append(procedureResult).toString());	
+		List<Map<String,String>> calendario = (List<Map<String,String>>) procedureResult.get("pv_registro_o");
+//		if(calendario==null||calendario.size()==0){
+//			throw new ApplicationException("No hay resultados");
+//		}
+		logger.debug(
+				new StringBuilder()
+				.append("\n***********************************************")
+				.append("\n*************** PKG_RENOVACION_IND.P_GET_TCALRENOV ***************")
+				.append("\n****** params=").append(params)
+				.append("\n***********************************************")
+				.toString()
+				);	
+		return calendario;
+	}
+	
+	protected class ObtenerCalendarizacionProgramada extends StoredProcedure
+	{
+		protected ObtenerCalendarizacionProgramada(DataSource dataSource)
+		{
+			super(dataSource, "PKG_RENOVACION_IND.P_GET_TCALRENOV");
+			declareParameter(new SqlParameter("anio" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("mes"  , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{
+				    "nmperiod"
+					,"anio"
+					,"mes"
+					,"cdunieco"
+					,"cdramo"
+					,"feinicio"
+					,"fefinal"
+					,"feaplica"
+					};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void movimientoCalendarizacionProgramada(
+			String nmperiod,
+			String anio,
+			String mes,
+			String cdunieco,
+			String cdramo,
+			String feinicio,
+			String fefinal,
+			String feaplica,
+			String operacion)throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("nmperiod" , nmperiod);
+		params.put("anio" 	  , anio);
+		params.put("mes"   	  , mes);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("feinicio" , feinicio);
+		params.put("fefinal"  , fefinal);
+		params.put("feaplica" , feaplica);
+		params.put("operacion", operacion);
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************************")
+				.append("\n****** PKG_RENOVACION_IND.P_MOV_TCALRENOV ******")
+				.append("\n****** params=").append(params)
+				.append("\n******************************************************")
+				.toString()
+				);	
+		ejecutaSP(new MovimientoCalendarizacionProgramada(getDataSource()),params);
+	}
+	
+	protected class MovimientoCalendarizacionProgramada extends StoredProcedure
+	{
+		protected MovimientoCalendarizacionProgramada(DataSource dataSource)
+		{
+			super(dataSource, "PKG_RENOVACION_IND.P_MOV_TCALRENOV");
+			declareParameter(new SqlParameter("nmperiod"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("anio" 	 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("mes"   	 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo" 	 		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feinicio" 	 	 , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fefinal" 	     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("feaplica" 	     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("operacion"		 , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}	
 }
