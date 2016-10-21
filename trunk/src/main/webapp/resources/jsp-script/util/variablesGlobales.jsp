@@ -16,6 +16,7 @@
 	var _GLOBAL_URL_TEST_SLEEP             = '<s:url namespace="/test" action="sleep" />';
 	
 	var _GLOBAL_DIRECTORIO_ICONOS         = '${icons}';
+	var _GLOBAL_DIRECTORIO_IMAGENES       = '${images}';
 	var _GLOBAL_CONTEXTO                  = '${ctx}';
 	var _GLOBAL_DIRECTORIO_DEFINES        = '${defines}'
 	var _GLOBAL_URL_RECUPERACION          = '<s:url namespace="/recuperacion" action="recuperar"           />';
