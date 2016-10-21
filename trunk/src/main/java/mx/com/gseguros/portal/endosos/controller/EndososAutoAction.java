@@ -1412,7 +1412,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String nmpoliza = smap1.get("NMPOLIZA");
 			String feefecto = smap2.get("feefecto");
 			String confirmar= smap1.get("confirmar");
-			String tipoflot = smap1.get("TIPOFLOT");
 			String cdperpag = smap1.get("CDPERPAG");
 			
 			Utils.validate(cdtipsup , "No se recibio el tipo de endoso");

@@ -1426,7 +1426,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						+ "&p_poliza="+nmpoliza
 						+ "&p_suplem="+nmsuplem
 						+ "&p_perpag="+cdperpag
-						+ "&P_ntramite="+ntramiteEmi
 						+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
 				
 				paso = "Guardando PDF de Vista Previa de Autos en Temporal";
@@ -5867,8 +5866,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						
 						paso = "Guardando PDF de Vista Previa de Autos en Temporal";
 						logger.debug(paso);
-						paso = "Guardando PDF de Vista Previa de Autos en Temporal";
-						logger.debug(paso);
 						HttpUtil.generaArchivo(url,rutaTempEndoso+"/"+pdfEndosoNom);
 						
 						valores.put("pdfEndosoNom_o",pdfEndosoNom);
@@ -6381,8 +6378,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						+ "&p_perpag="+cdperpag
 						+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
 				
-				paso = "Guardando PDF de Vista Previa de Autos en Temporal";
-				logger.debug(paso);
 				paso = "Guardando PDF de Vista Previa de Autos en Temporal";
 				logger.debug(paso);
 				HttpUtil.generaArchivo(url,rutaTempEndoso+"/"+pdfEndosoNom);

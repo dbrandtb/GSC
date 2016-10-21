@@ -2905,7 +2905,6 @@ public class EndososAction extends PrincipalCoreAction
 						String tipoFlotilla   = (String)omap1.get("tipoflot");
 						String nombreReporte  = getText("rdf.endosos.nombre.auto.pymes"); //getText("rdf.endosos.nombre.auto.individual");
 						String cdperpag       = smap1.get("CDPERPAG");
-						String ntramite       = smap1.get("ntramite");
 						
 						/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)){
 							nombreReporte = getText("rdf.endosos.nombre.auto.pymes");
@@ -2928,7 +2927,6 @@ public class EndososAction extends PrincipalCoreAction
 								+ "&p_poliza="+nmpoliza
 								+ "&p_suplem="+nmsuplem
 								+ "&p_perpag="+cdperpag
-								+ "&P_ntramite="+ntramite
 								+ "&desname="+rutaDocumentos+"/"+pdfEndosoNom;
 						
 						paso = "Guardando PDF de Vista Previa de Autos en Temporal";
@@ -10544,7 +10542,6 @@ public String retarificarEndosos()
 							+ "&p_poliza="+nmpoliza
 							+ "&p_suplem="+nmsuplem
 							+ "&p_perpag="+cdperpag
-							+ "&P_ntramite="+ntramite
 							+ "&desname="+rutaDocumentos+"/"+pdfEndosoNom;
 					
 					paso = "Guardando PDF de Vista Previa de Autos en Temporal";
