@@ -3610,7 +3610,13 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 					style : 'margin:5px;'
 				}
 				,border: false
-				,html: txtRespuesta 
+				,html  : '<label>'+txtRespuesta+'<br></label>'
+				+'<p style="text-align:center;">'
+				+'<img src="'+_GLOBAL_DIRECTORIO_IMAGENES+'cotizacionautos/menu_endosos.png"></p>'
+				//+'<img src="'+_GLOBAL_DIRECTORIO_IMAGENES+'cotizacionautos/menu_endosos.png"'+'>'
+
+										        
+				//,html: txtRespuesta 
 				/*,Items: [
 				{
 					xtype  : 'label'
@@ -3629,7 +3635,7 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 		buttonAlign:'center',
 		buttons: [{
 			text: 'Aceptar',
-			icon: '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'accept.png" />',
+			icon: _GLOBAL_DIRECTORIO_ICONOS+'accept.png',//'${ctx}/resources/fam3icons/icons/accept.png', //'<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'accept.png" />',
 			buttonAlign : 'center',
 			handler: function() {
 				validacionNumSerie.close();

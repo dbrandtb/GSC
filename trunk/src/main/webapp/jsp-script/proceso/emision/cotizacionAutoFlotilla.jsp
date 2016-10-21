@@ -5782,66 +5782,70 @@ function _p30_editarAutoAceptar(bot,callback)
         {
             record.set(prop,values[prop]);
         }
-        if((record.get('cdtipsit'))==TipoSituacion.AutosResidentes
-         ||(record.get('cdtipsit'))==TipoSituacion.CamionesCarga
-         ||(record.get('cdtipsit'))==TipoSituacion.PickUpCarga
-         ||(record.get('cdtipsit'))==TipoSituacion.TractoCamionesArmados
-         ||(record.get('cdtipsit'))==TipoSituacion.Motos
-         ||(record.get('cdtipsit'))==TipoSituacion.PickUpParticular){
-        	
-				var numSerie='';
-				numSerie = record.get('parametros.pv_otvalor37');
-				if(!Ext.isEmpty(numSerie)){
-					Ext.Ajax.request({
-						url     : _p29_urlObtieneValNumeroSerie,
-						params : {
-							'smap1.numSerie'  : numSerie
-							,'smap1.feini'    : _fieldByName('feini').getValue()
-						},
-						success : function(response) {
-							var jsonNumSerie=Ext.decode(response.responseText);
-							if(jsonNumSerie.exito!=true) {
-								myMask.close();
-								numSerie='';
-								if(!RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)) {
+        if(_p30_endoso){
+        	if((record.get('cdtipsit'))==TipoSituacion.AutosResidentes
+         	||(record.get('cdtipsit'))==TipoSituacion.CamionesCarga
+         	||(record.get('cdtipsit'))==TipoSituacion.PickUpCarga
+         	||(record.get('cdtipsit'))==TipoSituacion.TractoCamionesArmados
+         	||(record.get('cdtipsit'))==TipoSituacion.Motos
+	         	||(record.get('cdtipsit'))==TipoSituacion.PickUpParticular){
+	         		var numSerie='';
+					numSerie = record.get('parametros.pv_otvalor37');
+					if(!Ext.isEmpty(numSerie)){
+						Ext.Ajax.request({
+							url     : _p29_urlObtieneValNumeroSerie,
+							params : {
+								'smap1.numSerie'  : numSerie
+								,'smap1.feini'    : _fieldByName('feini').getValue()
+							},
+							success : function(response) {
+								var jsonNumSerie=Ext.decode(response.responseText);
+								if(jsonNumSerie.exito!=true) {
 									myMask.close();
-									mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
-									
-								} else {
-									if(Ext.isEmpty(callback)){
-							        	centrarVentanaInterna(Ext.MessageBox.confirm(
-											'Confirmar'
-											,'¿Desea Continuar?'
-											,function(btn){
-												if(btn === 'yes') {
-													myMask.close();
-													_fieldById('_p30_grid').getSelectionModel().deselectAll();
-												} else {
-													debug('no quiso Continuar');
+									numSerie='';
+									if(!RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)) {
+										myMask.close();
+										mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+										
+									} else {
+										if(Ext.isEmpty(callback)){
+								        	centrarVentanaInterna(Ext.MessageBox.confirm(
+												'Confirmar'
+												,'¿Desea Continuar?'
+												,function(btn){
+													if(btn === 'yes') {
+														myMask.close();
+														_fieldById('_p30_grid').getSelectionModel().deselectAll();
+													} else {
+														debug('no quiso Continuar');
+													}
 												}
-											}
-										));
-										mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
-							        }
+											));
+											mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
+								        }
+									}
+								} else {
+									myMask.close();
+									_fieldById('_p30_grid').getSelectionModel().deselectAll();
 								}
-							} else {
-								myMask.close();
-								_fieldById('_p30_grid').getSelectionModel().deselectAll();
-							}
-						},
-						failure : errorComunicacion
-					});
-				} else {
-					myMask.close();
-					mensajeError("No se recibio el número de serie");
-				}
-			
+							},
+							failure : errorComunicacion
+						});
+					} else {
+						myMask.close();
+						mensajeError("No se recibio el número de serie");
+					}
+				
+	        } else {
+	        	myMask.close();
+	        	_fieldById('_p30_grid').getSelectionModel().deselectAll();
+	        }
         } else {
         	myMask.close();
         	_fieldById('_p30_grid').getSelectionModel().deselectAll();
-        }
+        	}
         if(!Ext.isEmpty(callback)){
-        	//_fieldById('_p30_grid').getSelectionModel().deselectAll();
+        	_fieldById('_p30_grid').getSelectionModel().deselectAll();
         	callback();
         }
     }
