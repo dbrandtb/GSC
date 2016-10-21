@@ -529,17 +529,33 @@ public class RenovacionManagerImpl implements RenovacionManager
 			List<ComponenteVO> listaTatrisit = kernelManager.obtenerTatripol(new String[]{"2","SL","I"});
 			gc.generaComponentes(listaTatrisit, true, false, true, false, false, false);
 			imap.put("itemsTatrisit", gc.getItems());
+			
+			paso = "antes de obtener componentes calendario";
+			List<ComponenteVO> componentesCalendarioRenovacion = pantallasDAO.obtenerComponentes(
+					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","PROGRAMADO_CALENDARIO",null);				
+			gc.generaComponentes(componentesCalendarioRenovacion, true, false, true, false, false, false);
+			imap.put("itemsCalendarioRenovacion" , gc.getItems());
+			
+			paso = "antes de obtener componentes calendario grid";
+			List<ComponenteVO> itemsCalendario = pantallasDAO.obtenerComponentes(
+					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","PROGRAMADO_CALENDARIO_GRID",null);			
+			gc.generaComponentes(itemsCalendario, true, true, false, true, true, false);
+			imap.put("itemsCalendarioFields"  , gc.getFields());
+			imap.put("itemsCalendarioColumns" , gc.getColumns());
+			
 			paso = "antes de obtener componentes exclusiones";
 			List<ComponenteVO> componentesCondicionesRenovacion = pantallasDAO.obtenerComponentes(
 					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","PROGRAMADO_EXCLUSIONES",null);				
 			gc.generaComponentes(componentesCondicionesRenovacion, true, false, true, false, false, false);
 			imap.put("itemsCondicionesRenovacion" , gc.getItems());
+			
 			paso = "antes de obtener componentes exclusiones grid";
 			List<ComponenteVO> itemsCondiciones = pantallasDAO.obtenerComponentes(
 					null,null,null,null,null,cdsisrol,"PANTALLA_RENOVACION_INDIVIDUAL","PROGRAMADO_EXCLUSIONES_GRID",null);			
 			gc.generaComponentes(itemsCondiciones, true, true, false, true, true, false);			
 			imap.put("itemsCondicionesFields"  , gc.getFields());
-			imap.put("itemsCondicionesColumns" , gc.getColumns());			
+			imap.put("itemsCondicionesColumns" , gc.getColumns());
+				
 		}
 		catch(Exception ex)
 		{
@@ -718,14 +734,16 @@ public class RenovacionManagerImpl implements RenovacionManager
 				}
 				slist.get(0).put(entry.getKey(), (String)entry.getValue());
 			}
+			paso = "antes de cargar bandera cambio cuadro";
 			slist.get(0).put("cambioCuadro", cotizacionManager.cargarBanderaCambioCuadroPorProducto(cdramo)?"S":"N");
 			LinkedHashMap<String,Object> paramsRetroactividad = new LinkedHashMap<String,Object>();
 			paramsRetroactividad.put("param1" , cdunieco);
 			paramsRetroactividad.put("param2" , cdramo);
 			paramsRetroactividad.put("param3" , TipoEndoso.EMISION_POLIZA.getCdTipSup()+"");
 			paramsRetroactividad.put("param4" , usuario);
-			paramsRetroactividad.put("param5" , slist.get(0).get("cdtipsit"));			
+			paramsRetroactividad.put("param5" , slist.get(0).get("cdtipsit"));
 			logger.info(new StringBuilder().append("\n@@@@@@ paramsRetroactividad=").append(paramsRetroactividad).toString());
+			paso = "antes de obtener retroactividad ";
 			Map<String,String> retroactividad = storedProceduresManager.procedureMapCall(ObjetoBD.OBTIENE_RETROACTIVIDAD_TIPSUP.getNombre(), paramsRetroactividad, null);
 			
 			int retroac = Integer.valueOf(retroactividad.get("RETROAC"));
@@ -750,6 +768,10 @@ public class RenovacionManagerImpl implements RenovacionManager
 					.toString());
 		}
 		catch(Exception ex){
+			logger.info(
+					new StringBuilder()
+					.append("\n@@@@@@ paso=").append(paso)
+					.toString());
 			Utils.generaExcepcion(ex, ex.getMessage().toString());
 		}
 		return lista;
@@ -966,13 +988,16 @@ public class RenovacionManagerImpl implements RenovacionManager
 		
 	@Override
 	public List<Map<String, String>> obtenerCondicionesRenovacionIndividual(
+			String nmperiod,
+			String cdunieco,
+			String cdramo,
 			String anio,
 			String mes) throws Exception{
 		String paso = "";
 		List<Map<String, String>> result = new ArrayList<Map<String,String>>();
 		try{
 			paso = "Antes de obtener condiciones de renovacion programada";
-			result = renovacionDAO.obtenerCondicionesRenovacionprogramada(anio, mes);
+			result = renovacionDAO.obtenerCondicionesRenovacionprogramada(nmperiod, cdunieco, cdramo, anio, mes);
 			paso = "Despues de obtener conciones de renovacion programada";
 		}
 		catch(Exception ex){
@@ -983,6 +1008,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 	
 	@Override
 	public void movimientoCondicionesRenovacionIndividual(
+			String nmperiod,
+			String cdunieco,
+			String cdramo,
 			String anio,
 			String mes,
 			String criterio,
@@ -993,8 +1021,51 @@ public class RenovacionManagerImpl implements RenovacionManager
 		String paso = "";
 		try{
 			paso = "Antes de entrar a mov condiciones de renovacion programada";
-			renovacionDAO.movimientoCondicionesRenovacionProgramada(anio, mes, criterio, campo, valor, valor2, operacion);
+			renovacionDAO.movimientoCondicionesRenovacionProgramada(nmperiod, cdunieco, cdramo, anio, mes, criterio, campo, valor, valor2, operacion);
 			paso = "Despues de mov condiciones de renovacion programada";
+		}
+		catch(Exception ex){
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtenerCalendarizacionRenovacionIndividual(
+			String anio,
+			String mes) throws Exception{
+		String paso = "";
+		List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+		try{
+			paso = "Antes de obtener calendarizacion de renovacion programada";
+			result = renovacionDAO.obtenerCalendarizacionProgramada(anio, mes);
+			paso = "Despues de obtener calendarizacion de renovacion programada";
+		}
+		catch(Exception ex){
+			Utils.generaExcepcion(ex, ex.getMessage().toString());
+		}
+		return result;
+	}
+	
+	@Override
+	public void movimientoCalendarizacionRenovacionIndividual(
+			String nmperiod,
+			String anio,
+			String mes,
+			String cdunieco,
+			String cdramo,
+			String feinicio,
+			String fefinal,
+			String feaplica,
+			String operacion) throws Exception{
+		String paso = "";
+		try{
+			paso = "Antes de entrar a mov calendarizacion de renovacion programada";
+//			Date fecha = renderFechas.parse(feinicio);
+			feinicio = Utils.formateaFecha(feinicio);
+			fefinal  = Utils.formateaFecha(fefinal);
+			feaplica = Utils.formateaFecha(feaplica);
+			renovacionDAO.movimientoCalendarizacionProgramada(nmperiod, anio, mes, cdunieco, cdramo, feinicio, fefinal, feaplica, operacion);
+			paso = "Despues de mov calendarizacion de renovacion programada";
 		}
 		catch(Exception ex){
 			Utils.generaExcepcion(ex, ex.getMessage().toString());

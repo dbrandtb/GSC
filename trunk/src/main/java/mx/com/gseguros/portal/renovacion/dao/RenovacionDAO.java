@@ -111,15 +111,36 @@ public interface RenovacionDAO
 	public void renovarPolizasMasivasIndividuales(List<Map<String, String>> slist)throws Exception;
 	
 	public List<Map<String,String>> obtenerCondicionesRenovacionprogramada(
+			String nmperiod,
+			String cdunieco,
+			String cdramo,
 			String anio,
 			String mes)throws Exception;
 	
 	public void movimientoCondicionesRenovacionProgramada(
+			String nmperiod,
+			String cdunieco,
+			String cdramo,
 			String anio,
 			String mes,
 			String criterio,
 			String campo,
 			String valor,
 			String valor2,
+			String operacion)throws Exception;
+	
+	public List<Map<String,String>> obtenerCalendarizacionProgramada(
+			String anio,
+			String mes)throws Exception;
+	
+	public void movimientoCalendarizacionProgramada(
+			String nmperiod,
+			String anio,
+			String mes,
+			String cdunieco,
+			String cdramo,
+			String feinicio,
+			String fefinal,
+			String feaplica,
 			String operacion)throws Exception;
 }
