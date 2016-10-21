@@ -51,5 +51,11 @@
         <action name="movimientoCondicionesRenovacionIndividual" class="renovacionAction" method="movimientoCondicionesRenovacionIndividual">
         	<result type="json" />
         </action>
+        <action name="obtenerCalendarizacionRenovacionIndividual" class="renovacionAction" method="obtenerCalendarizacionRenovacionIndividual">
+        	<result type="json" />
+        </action>
+        <action name="movimientoCalendarizacionRenovacionIndividual" class="renovacionAction" method="movimientoCalendarizacionRenovacionIndividual">
+        	<result type="json" />
+        </action>
     </package>
 </struts>
