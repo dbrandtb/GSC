@@ -1726,7 +1726,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				));
 		
 		String paso = null;
-		int i= 0;
 		
 		try
 		{
@@ -1757,12 +1756,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			if(iCodAviso.trim().length()>0){//Se agrega validacion para iterar si es una carga de flotillas o individual
 				
-				CodAviso +=  "EL INCISO : "+contador+" "+iCodAviso+"<br/>";
+				CodAviso +=  "EL INCISO : "+contador+" "+iCodAviso+ (contador>1 ?"<br/>" : "" );
 				
 			}
 			contador++;
 			}
-			CodAviso        += StringUtils.isNotBlank(CodAviso) ?" VERIFIQUE SI PUEDE REALIZAR EL ENDOSO O BIEN SI NECESITA REEXPEDIR LA POLIZA INGRESE TRAMITE MESA DE CONTROL":"";
+			//CodAviso        += StringUtils.isNotBlank(CodAviso) ?" VERIFIQUE SI PUEDE REALIZAR EL ENDOSO O BIEN SI NECESITA REEXPEDIR LA POLIZA INGRESE TRAMITE MESA DE CONTROL":"";
+			CodAviso        += StringUtils.isNotBlank(CodAviso) ?" verifique si puede realizar el endoso o bien si necesita reexpedir la poliza ingrese el tramite a mesa de control":"";
 			exito           = StringUtils.isNotBlank(CodAviso) ? false : true;
 			respuesta       = CodAviso.trim();
 			respuestaOculta = CodAviso;

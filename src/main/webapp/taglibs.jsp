@@ -9,6 +9,8 @@
 
 <c:set var="icons" value="${pageContext.request.contextPath}/resources/fam3icons/icons/" />
 
+<c:set var="images" value="${pageContext.request.contextPath}/images/" />
+
 <c:set var="defines" value="${pageContext.request.contextPath}/resources/ext-defines/" />
 
 <c:set var="flujoimg" value="${pageContext.request.contextPath}/resources/images/flujomc/" />
