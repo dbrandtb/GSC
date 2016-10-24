@@ -626,6 +626,10 @@ public class RenovacionManagerImpl implements RenovacionManager
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
 		try{
 			paso = "antes de obtener polizas masivas";
+//			fecini = Utils.formateaFechaConHora(fecini);
+//			fecfin = Utils.formateaFechaConHora(fecfin);
+			fecini = Utils.formateaFecha(fecini);
+			fecfin = Utils.formateaFecha(fecfin);
 			List<Map<String,String>> listaPolizasRenovables = renovacionDAO.busquedaRenovacionIndividualMasiva(
 					cdunieco, 
 					cdramo, 
@@ -858,16 +862,19 @@ public class RenovacionManagerImpl implements RenovacionManager
 			paso    = "termino de confirmar";
 			esDxN = polizas.get(0).get("SWDXN");
 			paso    = "obtiene DXN";
-			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN))
-			{	
+			smap1 = renovacionDAO.confirmarTramite(cdunieco, cdramo, estado, nmpoliza, cdperpag, feefecto);
+			logger.info(new StringBuilder().append("\n@@@@@@ smap1=").append(smap1).toString());
+			String nmpolizaNew = smap1.get("nmpolizaNew");
+			String nmsuplemNew = smap1.get("nmsuplemNew");
+			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
 				// Ejecutamos el Web Service de Recibos:
 				paso    = "generando recibos DXN";
 				ice2sigsService.ejecutaWSrecibos(
 						cdunieco, 
 						cdramo,
-						estado, 
-						nmpoliza, 
-						nmsuplem, 
+						"M",//estado, 
+						nmpolizaNew, 
+						nmsuplemNew, 
 						rutaDocumentosPoliza,
 						cdunieco, 
 						nmpoliza, 
@@ -880,9 +887,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 				recibosSigsService.generaRecibosDxN(
 						cdunieco, 
 						cdramo, 
-						estado, 
-						nmpoliza, 
-						nmsuplem, 
+						"M",//estado, 
+						nmpolizaNew, 
+						nmsuplemNew, 
 						cdunieco, 
 						nmpoliza, 
 						ntramite, 
@@ -895,9 +902,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 				ice2sigsService.ejecutaWSrecibos(
 						cdunieco, 
 						cdramo,
-						estado, 
-						nmpoliza, 
-						nmsuplem, 
+						"M",//estado, 
+						nmpolizaNew, 
+						nmsuplemNew, 
 						rutaDocumentosPoliza,
 						cdunieco, 
 						nmpoliza,
@@ -910,18 +917,18 @@ public class RenovacionManagerImpl implements RenovacionManager
 			documentosManager.generarDocumentosParametrizados(
 					cdunieco,
 					cdramo,
-					estado,
-					nmpoliza,
+					"M",//estado,
+					nmpolizaNew,
 					"0", //nmsituac
-					nmsuplem,
+					nmsuplemNew,
 					DocumentosManager.PROCESO_EMISION,
 					ntramite,
 					null, //nmsolici
 					null
 					);
 			paso  = "antes de generar documentos";
-			smap1 = renovacionDAO.confirmarTramite(cdunieco, cdramo, estado, nmpoliza, cdperpag, feefecto);
-			logger.info(new StringBuilder().append("\n@@@@@@ smap1=").append(smap1).toString());
+//			smap1 = renovacionDAO.confirmarTramite(cdunieco, cdramo, estado, nmpoliza, cdperpag, feefecto);
+//			logger.info(new StringBuilder().append("\n@@@@@@ smap1=").append(smap1).toString());
 		}catch(Exception ex){
 			Utils.generaExcepcion(ex, ex.getMessage().toString());
 		}
