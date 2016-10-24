@@ -2331,10 +2331,9 @@ function _p25_buscarClic(button,e)
     	debug('Entra a M');
     	_mask('Obteniendo polizas candidatas a renovacion');
     	debug('form ',form);
-    	_p25_ultimosParams =
-    	{
-    		'smap1.fecini'		: Ext.Date.format(_fieldByName('fecini'		, form).getValue(), "d-M-Y")
-    		,'smap1.fecfin'		: Ext.Date.format(_fieldByName('fecfin'		, form).getValue(), "d-M-Y")
+    	_p25_ultimosParams = {
+    		'smap1.fecini'		: Ext.Date.format(_fieldByName('fecini'		, form).getValue(), "d/m/Y")
+    		,'smap1.fecfin'		: Ext.Date.format(_fieldByName('fecfin'		, form).getValue(), "d/m/Y")
     		,'smap1.cdunieco' 	: _fieldByName('cdunieco' 	, form).getValue()
         	,'smap1.cdramo'   	: _fieldByName('cdramo'   	, form).getValue()
         	,'smap1.estado'   	: 'M'
