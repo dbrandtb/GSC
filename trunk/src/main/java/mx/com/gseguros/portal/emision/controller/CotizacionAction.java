@@ -10158,6 +10158,54 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String guardarExtraprimasAseguradosEnd()
+	{
+		logger.debug(Utils.log(
+				 "\n##########################################"
+				,"\n###### guardarExtraprimasAseguradosEnd ######"
+				,"\n###### slist1: "+slist1
+				));
+		
+		try
+		{
+			for(Map<String,String>iAsegurado:slist1)
+			{
+				cotizacionManager.guardarExtraprimaAsegurado(
+						iAsegurado.get("cdunieco")
+						,iAsegurado.get("cdramo")
+						,iAsegurado.get("estado")
+						,iAsegurado.get("nmpoliza")
+						,iAsegurado.get("nmsuplem")
+						,iAsegurado.get("nmsituac")
+						,iAsegurado.get("cdtipsit")
+						,iAsegurado.get("ocupacion")
+						,iAsegurado.get("extpri_ocupacion")
+						,iAsegurado.get("peso")
+						,iAsegurado.get("estatura")
+						,iAsegurado.get("extpri_estatura")
+						,iAsegurado.get("cdgrupo")
+						);
+			}
+			
+			respuesta = "Se guardaron todos los datos";
+			success   = true;
+			exito     = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				 "\n###### exito="   , exito
+				,"\n###### success=" , success
+				,"\n###### guardarExtraprimasAseguradosEnd ######"
+				,"\n##########################################"
+				));
+		
+		return SUCCESS;
+	}
+	
 	/**
 	 ****************************************************
 	 ************guardarExtraprimasAsegurados************
