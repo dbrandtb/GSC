@@ -68,7 +68,7 @@ var _p21_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     
 var _p21_urlEmitir                       = '<s:url namespace="/emision"         action="emitirColectivo"                  />';
 var _p21_urlViewDoc                      = '<s:url namespace="/documentos"      action="descargaDocInline"                />';
 var _p21_urlCargarAseguradosExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas3"      />';
-var _p21_urlGuardarExtraprimas           = '<s:url namespace="/emision"         action="guardarExtraprimasAsegurados"     />';
+var _p21_urlGuardarExtraprimasEnd        = '<s:url namespace="/emision"         action="guardarExtraprimasAseguradosEnd"   />';
 var _p21_urlSigsvalipol                  = '<s:url namespace="/emision"         action="ejecutaSigsvalipol"               />';
 var _p21_urlCargarAseguradosGrupo        = '<s:url namespace="/emision"         action="cargarAseguradosGrupo"            />';
 var _p21_urlRecuperarPersona             = '<s:url namespace="/"                action="buscarPersonasRepetidas"          />';
@@ -5940,7 +5940,7 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                         ,hidden  : _p21_smap1.EXTRAPRIMAS_EDITAR=='N'
                         ,handler : function()
                         {
-                            _p21_guardarExtraprimas(record.get('letra'));
+                            p21_guardarExtraprimas(record.get('letra'));
                         }
                     }
                 ]
@@ -6182,9 +6182,9 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     debug('<_cotcol_aseguradosClic');
 }
 
-function _p21_guardarExtraprimas(letra)
+function p21_guardarExtraprimas(letra)
 {
-    debug('>_p21_guardarExtraprimas:',letra);
+    debug('>p21_guardarExtraprimas:',letra);
     var tab=Ext.ComponentQuery.query('[extraprimaLetraGrupo='+letra+']')[0];
     debug('tab a guardar:',tab);
     var grid=tab.down('[xtype=grid]');
@@ -6231,7 +6231,7 @@ function _p21_guardarExtraprimas(letra)
         tab.setLoading(true);
         Ext.Ajax.request(
         {
-            url       : _p21_urlGuardarExtraprimas
+            url       : _p21_urlGuardarExtraprimasEnd
             ,jsonData :
             {
                 slist1 : asegurados
@@ -6262,7 +6262,7 @@ function _p21_guardarExtraprimas(letra)
             }
         });
     }
-    debug('<_p21_guardarExtraprimas');
+    debug('<p21_guardarExtraprimas');
 }
 
 function _p21_sigsvalipol(callback)
