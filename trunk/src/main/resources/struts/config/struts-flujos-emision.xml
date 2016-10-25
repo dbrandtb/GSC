@@ -66,6 +66,14 @@
        <action name="obtenerCoberturasPlanColec" class="CotizacionAction" method="obtenerCoberturasPlanColec">
            <result type="json" />
        </action>
+
+       <action name="obtienePlanDefinitivo" class="CotizacionAction" method="obtienePlanDefinitivo">
+           <interceptor-ref name="json">
+               <param name="enableSMD">true</param>
+               <param name="ignoreSMDMethodInterfaces">false</param>
+           </interceptor-ref>
+           <result type="json" />
+       </action>
        
        <action name="obtenSumaAseguradosMedicamentos" class="CotizacionAction" method="obtenSumaAseguradosMedicamentos">
            <result type="json" />

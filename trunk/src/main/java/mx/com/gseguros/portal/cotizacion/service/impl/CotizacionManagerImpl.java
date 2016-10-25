@@ -4108,7 +4108,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			for(Map<String,Object> grupoIte : grupos) {
 				logger.debug("grupoIte=={}", grupoIte);
 				// Guardar el maestro de grupos mpoligrup:
-				cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("nombre"), (String)grupoIte.get("cdplan"), null, "0", "0", Constantes.NO, Constantes.NO, Constantes.NO);
+				cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("nombre"), (String)grupoIte.get("cdplan"),(String)grupoIte.get("dsplanl"), null, "0", "0", Constantes.NO, Constantes.NO, Constantes.NO);
 				// Guardar el detalle de grupos mgrupogar:
 				cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("cdplan"), "0");
 			}
@@ -9571,6 +9571,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 
 	@Override
+	public List<Map<String,String>> obtieneCobeturasNombrePlan(
+			String cdramo
+			,String cdtipsit
+			,String cdplan
+			)throws Exception
+	{
+		return cotizacionDAO.obtieneCobeturasNombrePlan(cdramo,cdtipsit,cdplan);
+	}
+
+	@Override
 	public Map<String,String> obtieneDatosContratantePoliza(
 			String cdunieco
 			,String cdramo
@@ -10175,7 +10185,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					logger.debug("grupoIte=={}", grupoIte);
 					// Guardar el maestro de grupos mpoligrup:
 					logger.debug(Utils.log("\n&&&&&& insertaMpoligrup [id=",timestamp,"] &&&&&&"));
-					cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("nombre"), (String)grupoIte.get("cdplan"), null, "0", "0", Constantes.NO, Constantes.NO, Constantes.NO);
+					cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("nombre"), (String)grupoIte.get("cdplan"), (String)grupoIte.get("dsplanl"), null, "0", "0", Constantes.NO, Constantes.NO, Constantes.NO);
 					// Guardar el detalle de grupos mgrupogar:
 					logger.debug(Utils.log("\n&&&&&& insertaMgrupogar [id=",timestamp,"] &&&&&&"));
 					cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("cdplan"), "0");

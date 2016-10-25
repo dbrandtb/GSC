@@ -496,6 +496,12 @@ public interface CotizacionDAO {
 			,String cdsisrol
 			)throws Exception;
 
+	public List<Map<String,String>> obtieneCobeturasNombrePlan(
+			String cdramo
+			,String cdtipsit
+			,String cdplan
+			)throws Exception;
+
 	public List<Map<String,String>> obtieneDatosContratantePoliza(
 			String cdunieco
 			,String cdramo
@@ -839,7 +845,7 @@ public interface CotizacionDAO {
 	 * @throws Exception
 	 */
 	public void insertaMpoligrup(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
-			String cdgrupo, String dsgrupo, String cdplan, String cdcveplan, String nmsumaaseg, String nmdeducible,
+			String cdgrupo, String dsgrupo, String cdplan, String dsplanVariable, String cdcveplan, String nmsumaaseg, String nmdeducible,
 			String swmat, String swmed, String swee) throws Exception;
 	
 	

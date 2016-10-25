@@ -54,6 +54,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
+import mx.com.gseguros.portal.cotizacion.model.PuntajeCoberturasPlanVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
@@ -8174,6 +8175,30 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		
+		// Se inserta el maestro y detalle de los grupos:
+				try {
+					try {
+						cotizacionDAO.eliminarGrupos(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit);
+					} catch (Exception e) {
+						logger.warn("No se eliminaron los grupos de la poliza: {}", e);
+					}
+					for(Map<String,Object> grupoIte : olist1) {
+						logger.debug("grupoIte=={}", grupoIte);
+						// Guardar el maestro de grupos mpoligrup:
+						cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("nombre"), (String)grupoIte.get("cdplan"),(String)grupoIte.get("dsplanl"), null, "0", "0", Constantes.NO, Constantes.NO, Constantes.NO);
+						// Guardar el detalle de grupos mgrupogar:
+						cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("cdplan"), "0");
+					}
+				} catch(Exception ex) {
+					long timestamp = System.currentTimeMillis();
+		        	resp.exito = false;
+		        	resp.respuesta = new StringBuilder("Error al guardar grupos de la poliza #").append(timestamp).toString();
+		        	resp.respuestaOculta = ex.getMessage();
+		        	logger.error(resp.respuesta,ex);
+				}
+		
+		
 		//contratante
 		logger.debug("28.- Valor de resp.exito:{}",resp.exito);
 		
@@ -12494,6 +12519,167 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		logger.debug(""
 				+ "\n###### obtenerCoberturasPlanColec ######"
+				+ "\n########################################"
+				);
+		return SUCCESS;
+	}
+
+	public String obtienePlanDefinitivo()
+	{
+		logger.debug(""
+				+ "\n########################################"
+				+ "\n###### obtienePlanDefinitivo ######"
+				+ "\nsmap1:  "+smap1
+				+ "\nslist1: "+slist1
+				);
+		
+		String planSeleccionado = null;
+		String nombrePlanLargo  = null;
+		
+		try
+		{
+			
+			/**
+			 * Se obtiene lista de coberturas seleccionadas en pantalla
+			 */
+			Map<String,String> coberturasSel = new HashMap<String, String>();
+			
+			for(Map<String,String> cobSel:slist1){
+				if(Constantes.SI.equalsIgnoreCase(cobSel.get("amparada"))){
+					coberturasSel.put(cobSel.get("cdgarant"), cobSel.get("cdgarant"));
+				}
+			}
+			
+			/**
+			 * Se obtiene la lista de planes a iterar del producto 
+			 */
+			
+			LinkedHashMap<String,Object>param=new LinkedHashMap<String,Object>();
+			param.put("param1",smap1.get("cdramo"));
+			param.put("param2",smap1.get("cdtipsit"));
+			List<Map<String,String>>listaPlanes=storedProceduresManager.procedureListCall(
+					ObjetoBD.OBTIENE_PLANES_X_PRODUCTO.getNombre(), param, null);
+			
+			logger.debug("Lista de planes obtenidos: "+ listaPlanes);
+			
+			HashMap<String, PuntajeCoberturasPlanVO> puntajeCoberturas = new HashMap<String, PuntajeCoberturasPlanVO>();
+			
+			int puntajeMenorSeparacion = 999999999;
+			
+			/**
+			 * Por cada uno de los planes del prodcto se calcula el puntaje para decidir el plan con menos coberturas a sumar
+			 * y a restar. sumando preferentemente
+			 */
+			
+			String cdplanOrig = smap1.get("cdplan");
+			String dsplanOrig = "";
+			
+			for(Map<String,String> plan : listaPlanes){
+				
+				if(StringUtils.isNotBlank(cdplanOrig) && cdplanOrig.equalsIgnoreCase(plan.get("CDPLAN"))){
+					dsplanOrig = plan.get("DSPLAN");
+				}
+				
+				//Coberturas del plan
+				List<Map<String,String>> coberturasPlanList = cotizacionManager.obtieneCobeturasNombrePlan(smap1.get("cdramo"),smap1.get("cdtipsit"),plan.get("CDPLAN"));
+				
+				//Coberturas sobrantes o faltantes del plan original 
+
+				int faltantes = 0; //coberturas faltantes a sumar del plan iterado para igualar el plan seleccionado
+				int sobrantes = 0; //coberturas sobrantes a restar del plan iterado para igualar el plan seleccionado
+				
+				StringBuilder nombreLargo = new StringBuilder(plan.get("DSPLAN"));
+				
+				String ultimaGarantia = null;
+				
+				
+				for(Map<String,String> cob : coberturasPlanList){
+					//si la cobertura esta en el plan original y no esta seleccionada en pantalla
+					if(Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA")) && !coberturasSel.containsKey(cob.get("CDGARANT"))){
+						sobrantes ++;
+						nombreLargo.append(" -").append(cob.get("CDGARANT"));//TGARANTI
+						ultimaGarantia = " SIN "+cob.get("DSGARANT");
+						
+					}else //si la cobertura se considera dentro del plan predefinido y se encuentra seleccionada en pantalla
+						if(Constantes.NO.equalsIgnoreCase(cob.get("SWOBLIGA")) && coberturasSel.containsKey(cob.get("CDGARANT"))){
+							faltantes ++;
+							nombreLargo.append(" +").append(cob.get("CDGARANT"));//TGARANTI
+							ultimaGarantia = " CON "+cob.get("DSGARANT");
+						}
+				}
+				
+				//se agrega el plan a generar puntaje
+				PuntajeCoberturasPlanVO puntajePlan =  new PuntajeCoberturasPlanVO();
+				puntajePlan.setCdplan(plan.get("CDPLAN"));
+				puntajePlan.setDsplan(plan.get("DSPLAN"));
+				
+				if( (faltantes == 0 && sobrantes == 1) || (faltantes == 1 && sobrantes == 0)){
+					puntajePlan.setDsplanLargo(plan.get("DSPLAN")+ultimaGarantia);
+				}else{
+					puntajePlan.setDsplanLargo(nombreLargo.toString());
+				}
+				
+				
+				puntajePlan.setCoberturasAquitar(sobrantes);
+				puntajePlan.setCoberturasAagregar(faltantes);
+				puntajePlan.setTotalCoberturasDif(faltantes+sobrantes);
+				
+				puntajeCoberturas.put(plan.get("CDPLAN"), puntajePlan);
+				
+				if((faltantes+sobrantes) < puntajeMenorSeparacion){
+					puntajeMenorSeparacion = faltantes+sobrantes;
+				}
+				
+			}
+			logger.debug("PLan Resumen:::::"+puntajeCoberturas);
+			logger.debug("Puntaje Menor Separacion:::::"+puntajeMenorSeparacion);
+			
+			//Se seleccionan los planes con menor puntaje absoluto
+			HashMap<String, PuntajeCoberturasPlanVO> planesMenorPuntaje = new HashMap<String, PuntajeCoberturasPlanVO>();
+			
+			for(String plan : puntajeCoberturas.keySet()){
+				PuntajeCoberturasPlanVO planIt = puntajeCoberturas.get(plan);
+				if(planIt.getTotalCoberturasDif() == puntajeMenorSeparacion){
+					planesMenorPuntaje.put(plan, puntajeCoberturas.get(plan));
+				}
+			}
+			
+			
+			//De los planes con menor puntaje abosuluto se obtiene el que tenga la menor cantidad de coberturas negativas (a quitar)
+			PuntajeCoberturasPlanVO planMasProximo = null;
+			int menorCoberturasAquitar = 999999999;
+			
+			for(String plan : planesMenorPuntaje.keySet()){
+				PuntajeCoberturasPlanVO planIt = planesMenorPuntaje.get(plan);
+				
+				if(planIt.getCoberturasAquitar() < menorCoberturasAquitar){
+					menorCoberturasAquitar = planIt.getCoberturasAquitar();
+					planMasProximo = planIt;
+				}
+			}
+			
+			logger.debug("Puntaje Menor Coberturas a Quitar:::::"+menorCoberturasAquitar);
+			logger.debug("Plan mas proximo Elegido ::::: "+planMasProximo);
+			
+			smap1.put("NVO_CDPLAN", planMasProximo.getCdplan());
+			smap1.put("NVO_DSPLAN", planMasProximo.getDsplan());
+			smap1.put("DSPLAN_ORIG", dsplanOrig);
+			smap1.put("NVO_NOMBRE", planMasProximo.getDsplanLargo());
+			
+			success = true;
+			exito   = true;
+			 
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error(timestamp+" error al obtener coberturas plan", ex);
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+			exito           = false;
+		}
+		logger.debug(""
+				+ "\n###### obtienePlanDefinitivo ######"
 				+ "\n########################################"
 				);
 		return SUCCESS;
