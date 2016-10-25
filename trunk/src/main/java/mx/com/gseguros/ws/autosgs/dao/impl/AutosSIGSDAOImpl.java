@@ -1002,46 +1002,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	}
 	
 	@Override
-	public String tramiteRFCAle (String rfc) throws Exception {
-		
-		String resp = null;
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("rfc", rfc);
-		Map<String, Object> mapResult = ejecutaSP(new TramiteRFCAlex(getDataSource()), params);
-		resp = (String) mapResult.get("rs");
-		
-		logger.debug("Datos VILS Ale",resp);
-		
-		return resp;
-		}
-	
-	public class TramiteRFCAlex extends StoredProcedure
-	{
-		protected TramiteRFCAlex (DataSource dataSource)
-		{
-			super(dataSource, "stp_exprov");
-			declareParameter(new SqlParameter("rfc", Types.VARCHAR));
-			
-			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<String>(){  
-				@Override  
-				public String extractData(ResultSet rs) throws SQLException, DataAccessException {  
-					String result = null;
-					while(rs.next()){  
-						result = rs.getString(1)+"|"+rs.getString(2);
-					}  
-					return result;  
-				}
-			}));
-			
-			compile();
-
-		}
-	}
-
-	
-	
-	
-	@Override
 	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("inNumsuc" , inNumsuc);
