@@ -148,6 +148,10 @@ public interface CotizacionAutoManager
 			,String tipoflot
 			,Map<String,String>tvalopol
 			,UserVO usuarioSesion
+			,String cduniext
+			,String renramo
+			,String nmpoliex
+			,String ntramite
 			);
 	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc) throws Exception;
 	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel)throws Exception;

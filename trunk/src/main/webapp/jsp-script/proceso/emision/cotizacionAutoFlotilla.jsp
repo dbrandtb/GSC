@@ -572,8 +572,11 @@ Ext.onReady(function()
 {
     _grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p30_smap1.cdramo);
 
-    Ext.Ajax.timeout = 60*60*1000;
-
+    Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
+    
     ////// modelos //////
     Ext.define('_p30_modelo',
     {
@@ -4477,6 +4480,7 @@ function _p30_cotizar(sinTarificar)
             ,slist1 : []
             ,slist2 : []
             ,slist3 : []
+            ,flujo  : !Ext.isEmpty(_p30_flujo) ?_p30_flujo :null
         };
         
         for(var cdtipsitPanel in recordsCdtipsit)

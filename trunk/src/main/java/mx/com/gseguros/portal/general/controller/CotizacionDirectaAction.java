@@ -316,6 +316,10 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 					,tipoflot
 					,tvalopol
 					,userVO
+					,""//cduniext
+					,""//renramo
+					,""//nmpoliex
+					,""//ntramite
 					);
 			
 			// Se vacian los datos de entrada para no devolverlos de nuevo:

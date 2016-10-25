@@ -19,6 +19,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -114,6 +115,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
+	
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
 	
 	@Autowired
     private MailService mailService;
@@ -1933,6 +1937,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			,String tipoflot
 			,Map<String,String>tvalopol
 			,UserVO usuarioSesion
+			,String cduniext
+			,String renramo
+			,String nmpoliex
+			,String ntramite
 			)
 	{
 		logger.info(
@@ -1979,8 +1987,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					logger.debug("\nPaso: "+paso);
 					nmpoliza = cotizacionDAO.calculaNumeroPoliza(cdunieco, cdramo, estado);
 					resp.getSmap().put("nmpoliza" , nmpoliza);
-				}
-				
+					if(nmpoliex != null && !nmpoliex.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
+					{
+						flujoMesaControlManager.actualizaTramiteMC(
+								 nmpoliza 
+								,cdunieco
+								,cdramo
+								,"W"//estado
+								,ntramite
+								,"21"//cdtiptra 
+								,cduniext
+								,renramo
+								,nmpoliex
+								);
+					}
+				}				
 				paso = ("Insertando maestro de poliza");
 				logger.debug("\nPaso: "+paso);
 				cotizacionDAO.movimientoPoliza(

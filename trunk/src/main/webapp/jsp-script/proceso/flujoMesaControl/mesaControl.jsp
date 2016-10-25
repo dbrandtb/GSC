@@ -1168,6 +1168,10 @@ Ext.onReady(function()
                                         if (!Ext.isEmpty(jsonSIGS.smap1.mensajeError)){
                                             throw jsonSIGS.smap1.mensajeError;
                                         }
+                                        //Datos a resaltar de la recuperada cuando no corresponde al tipo fronterizo/residente individual/flotilla indicado
+                                        if (!Ext.isEmpty(jsonSIGS.smap1.mensajeAviso)){
+                                        	mensajeCorrecto('Aviso',jsonSIGS.smap1.mensajeAviso);
+                                        }
                                         
                                         centrarVentanaInterna(Ext.create('Ext.window.Window',
                                         {

@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.cotizacion.controller;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
@@ -24,9 +26,11 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +68,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 	
 	@Autowired
 	private CotizacionManager cotizacionManager;
+	
+	@Autowired
+	private CotizacionDAO  cotizacionDAO;
 
 	/**
 	 * Constructor que se asegura de que el action tenga sesion
@@ -938,13 +945,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				,"\n###### slist1=" , slist1
 				,"\n###### slist2=" , slist2
 				,"\n###### slist3=" , slist3
+				,"\n###### flujo="  , flujo
 				));
 		
 		try
 		{
 			logger.debug(Utils.log("","Validando datos de entrada"));
-			
-			
+						
 			UserVO usuario  = Utils.validateSession(session);
 			
 			String cdusuari  = usuario.getUser()
@@ -966,6 +973,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			       ,cdideperCli = smap1.get("cdideperCli")
 			       ,tipoflot    = smap1.get("tipoflot");
 			
+			String ntramite ="";
+			if(flujo!=null && !flujo.getNtramite().isEmpty())
+			{
+				ntramite = flujo.getNtramite();
+			}
+				
 			Utils.validate(
 					cdunieco  , "No se recibi\u00f3 la sucursal"
 					,cdramo   , "No se recibi\u00f3 el producto"
@@ -980,7 +993,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			Utils.validate(slist1, "No se recibieron las situaciones mixtas");
 			Utils.validate(slist2, "No se recibieron las situaciones base");
 			Utils.validate(slist3, "No se recibieron las configuraciones de plan");
-			
+						
 			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
 			
 			Map<String,String>tvalopol=new HashMap<String,String>();
@@ -995,6 +1008,20 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				}
 			}
 			
+			Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmpoliza, cdunieco, cdramo, cdtipsit);
+			if(parame.get("Mensaje")!=null)
+			{
+				logger.debug(Utils.log(
+						 "\n##################################"
+						,"\n###### cotizarAutosFlotilla ######"
+						,"\n",parame.get("Mensaje")
+						,"\n##################################"
+						));
+			}else if(!parame.isEmpty() && nmpoliza== null && !parame.get("NMPOLIZA").equals("0"))
+			{
+				nmpoliza = parame.get("NMPOLIZA");
+			}
+
 			ManagerRespuestaSlistSmapVO resp=cotizacionAutoManager.cotizarAutosFlotilla(
 					cdusuari
 					,cdsisrol
@@ -1017,8 +1044,22 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 					,tipoflot
 					,tvalopol
 					,usuario
+					,parame.get("RENUNIEXT")
+					,parame.get("RENRAMO")
+					,parame.get("RENPOLIEX")
+					,ntramite
 					);
-			
+			if(!parame.isEmpty() && parame.get("Mensaje")==null && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 )
+			{
+				List<String> cdtipsits = new ArrayList<String>();
+				for(Map<String,String> tipsit: slist1) 
+				{cdtipsits.add(tipsit.get("cdtipsit"));}
+				ArrayList<String> paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsits, null);
+				List<Map<String,String>> listaResultados= resp.getSlist();
+				String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+	        	logger.debug(Utils.log(paqYplan));
+	        	resp.setSlist(cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza));
+			}
 			exito     = resp.isExito();
 			respuesta = resp.getRespuesta();
 			
@@ -1829,6 +1870,96 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
+	
+	public ArrayList<String> cargarPoliza(String cdunieco, String cdramo, String cdpoliza, String tipoflot, List<String> cdtipsit, String cargaCot)
+	{
+		logger.debug(Utils.log(
+				 "\n###############################"
+				,"\n######## cargarPoliza #########"
+				,"\n###### smap1 = " , smap1
+				));
+		if(cargaCot == null)
+		{
+			cargaCot="N";
+		}
+		ArrayList<String> paquetesYFormaPago = new ArrayList<String>();
+		try
+		{
+			String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
+				  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
+				HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
+				Map<String,String>parametros = (Map<String,String>)someObject.get("params");
+				String formpagSigs = parametros.get("formpagSigs");
+				paquetesYFormaPago.add(formpagSigs);
+				paquetesYFormaPago.addAll(1,someObject.get("paquetes"));
+				logger.debug(Utils.log(paquetesYFormaPago));
+		}
+		catch (Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		return paquetesYFormaPago;
+	}
+
+ public String modificaPrimasFlotillas(String ntramite, List<Map<String, String>> listaResultados, Integer formpagSigs, ArrayList<String> paquete, String cdunieco, String cdramo, String nmpoliza, String cdtipsit, String renuniext, String renramo, String renpoliex) throws Exception
+    {
+    	String mensaje = "Modificacion de primas según sigs";
+    		try
+			{		int i = 0;
+					String mnprima = null;
+					paquete.remove(0);
+//					Ciclamos paquetes devueltos del ice con relacion a los paquetes devueltos del sigs
+					logger.debug(Utils.log("Forma de pago sigs :",formpagSigs));
+//					for(String paq:paquete)
+//					{	
+			            for(Map<String,String>res:listaResultados)
+			            {	
+			            	String dsperpag = res.get("DSPERPAG");
+//			            	String cdperpag   = res.get("CDPERPAG");
+			            	if (formpagSigs == 1 && dsperpag.contains("Contado/Anual"))// && paquete.get(i).trim().equals(cdperpag.trim()))
+			            	{
+			            		formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
+			            		mnprima = res.get("PRIMA");break;
+		        			}
+			        		else if ( (formpagSigs == 2 || formpagSigs == 5) && dsperpag.contains("Semestral"))// && paquete.get(i).trim().equals(cdperpag.trim()))
+		        			{
+			        			formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
+			        			mnprima = res.get("PRIMA");break;
+		        			}
+			        		else if ( (formpagSigs == 3 || formpagSigs == 6) && dsperpag.contains("Trimestral"))// && paquete.get(i).trim().equals(cdperpag.trim()))
+		        			{
+			        			formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
+			        			mnprima = res.get("PRIMA");break;
+		        			}
+			        		else if ( (formpagSigs == 4 || formpagSigs == 7) && dsperpag.contains("Mensual"))// && paquete.get(i).trim().equals(cdperpag.trim()))
+		        			{
+			        			formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
+			        			mnprima = res.get("PRIMA");break;
+		        			}
+			            }
+//					}
+		            try
+		    		{
+		    			String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
+		    				   mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
+		    			if(mensaje != null)
+		    			{
+		    				return mensaje;
+		    			}	
+		    			logger.debug(Utils.log("\n WS consumido con exito: "));//,mensaje
+		    			return mensaje;
+		    		}
+		    		catch (Exception ex)
+		    		{
+		    			throw new Exception(Utils.manejaExcepcion(ex));
+		    		}
+			}
+			catch (Exception ex)
+			{
+				Utils.generaExcepcion(ex, mensaje);
+			}
+		return "mensaje";
+    }
 	
 	/*
 	 * Getters y setters
