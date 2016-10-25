@@ -50,6 +50,7 @@ Ext.override(Ext.form.NumberField,
 ////// variables //////
 var _p21_urlObtenerCoberturas            = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"            />';
 var _p21_urlObtenerCoberturasColec       = '<s:url namespace="/emision"         action="obtenerCoberturasPlanColec"       />';
+var _p21_urlObtienePlanDefinitivo        = '<s:url namespace="/emision"         action="obtienePlanDefinitivo"       />';
 var _p21_urlObtenerSumaAseguradaDefault  = '<s:url namespace="/emision"         action="obtenSumaAseguradosMedicamentos"  />';
 var _p21_urlObtenerHijosCobertura        = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"        />';
 var _p21_urlSubirCenso                   = '<s:url namespace="/emision"         action="subirCenso"                       />';
@@ -213,6 +214,14 @@ var _p21_editorNombreGrupo=
     ,minLength  : 3
 };
 
+var _p21_editorNombrePlan=
+{
+    xtype       : 'textfield'
+    ,allowBlank : true
+    ,minLength  : 3
+    ,readOnly   : ([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? false : true
+};
+
 var _p21_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
 _p21_editorPlan.on('change',_p21_editorPlanChange);
 debug('_p21_editorPlan:',_p21_editorPlan);
@@ -302,6 +311,7 @@ Ext.onReady(function()
             'letra'
             ,'nombre'
             ,'cdplan'
+            ,'dsplanl'
             ,'ptsumaaseg'
             ,'ayudamater'
             ,'asisinte'
@@ -719,6 +729,12 @@ Ext.onReady(function()
                     }
                 }
                 ,{
+                    header     : 'Nombre del Plan'
+                    ,dataIndex : 'dsplanl'
+                    ,width     : 380
+                    ,editor    : _p21_editorNombrePlan
+                }
+                ,{
                     header     : 'Paquete'
                     ,dataIndex : 'paquete'
                     ,width     : 120
@@ -779,7 +795,11 @@ Ext.onReady(function()
                         {
                             _p21_estiloEditores(context.record.get('cdplan'));
                         }
-                    }
+                    }/*,
+                    edit: function(editor,context){
+                    	var editedRecord = context.record;
+                    	alert(editedRecord.get('cdplan'));
+                    }*/
                 }
             })
         })
@@ -2245,7 +2265,11 @@ function _p21_borrarGrupoClic(grid,rowIndex)
 
 function _p21_editarGrupoClic(grid,rowIndex)
 {
-    var record = grid.getStore().getAt(rowIndex);
+	var gridGrupos  = grid.up();
+	var record      = grid.getStore().getAt(rowIndex);
+	var recordGrupo = gridGrupos.getStore().getAt(rowIndex);
+    
+    
     debug('>_p21_editarGrupoClic:',record);
     
 // var cdPlanParaQuitarPrim = record.get('cdplan');
@@ -2260,6 +2284,15 @@ function _p21_editarGrupoClic(grid,rowIndex)
         if(!valido)
         {
             mensajeWarning('Favor de seleccionar un plan para el subgrupo');
+        }
+    }
+
+    if(valido)
+    {
+        valido = !Ext.isEmpty(record.get('ptsumaaseg'));
+        if(!valido)
+        {
+            mensajeWarning('Favor de seleccionar una Suma Asegurada para el subgrupo');
         }
     }
     
@@ -3193,7 +3226,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     text     : 'Guardar'
                                                     ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                                                     ,handler : function(button){
-                                                    	_p21_guardarGrupo(button.up().up());
+                                                    	
+                                                    	_p21_guardarGrupo(button.up().up(), gridGrupos, recordGrupo, rowIndex);
                                                     	}
                                                     ,hidden  : _p21_smap1.COBERTURAS=='N'||_p21_smap1.COBERTURAS_BOTON=='N'
                                                 }
@@ -3323,7 +3357,7 @@ function _p21_quitarTabsDetalleGrupo(letraGrupo)
     debug('<_p21_quitarTabsDetalleGrupo');
 }
 
-function _p21_guardarGrupo(panelGrupo)
+function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 {
      debug('>_p21_guardarGrupo:',panelGrupo);
      
@@ -3374,7 +3408,95 @@ function _p21_guardarGrupo(panelGrupo)
              debug('storeFactores:',storeFactores);
              storeFactores.commitChanges();
          }
-         mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
+         
+         if(_p21_clasif == _p21_TARIFA_MODIFICADA){
+         
+	         var smap1p = {
+	        		 cdramo  : _p21_smap1.cdramo,
+	        		 cdtipsit: _p21_smap1.cdtipsit,
+	        		 cdplan  : recordGrupoEdit.get('cdplan')
+	         };
+	         
+	         var params = {
+	        		 slist1 : tvalogars,
+	                 smap1  : smap1p
+	         };
+	         
+	         _mask('Espere un momento...');
+	         
+	         Ext.Ajax.request(
+				        {
+			            url       : _p21_urlObtienePlanDefinitivo
+			            ,jsonData : params
+			            ,success  : function(response)
+			            {
+			            	_unmask();
+	
+			            	var jsonCont = Ext.decode(response.responseText);
+			            	
+			            	var cdplanAnt = recordGrupoEdit.get('cdplan');
+			            	var dsplanAnt = recordGrupoEdit.get('dsplanl');
+			            	
+			            	if(Ext.isEmpty(dsplanAnt)){
+			            		dsplanAnt = jsonCont.smap1.DSPLAN_ORIG;
+			            	}
+			            	
+			            	var nvoCdplan = jsonCont.smap1.NVO_CDPLAN;
+		                	var nvoDSplan = jsonCont.smap1.NVO_DSPLAN;
+		                	var nvoNombrePlan = jsonCont.smap1.NVO_NOMBRE;
+		                	
+			                if(jsonCont.exito){
+			                		/**
+				                      * Se calcula el plan y las descripcion
+				                      **/
+				                    
+				                      recordGrupoEdit.set('cdplan',nvoCdplan);
+				                      recordGrupoEdit.set('dsplanl',nvoNombrePlan);
+				                    
+				                    mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',function(){         	
+				                   	 
+				                    	setTimeout(function(){
+				                    		_p21_setActiveResumen();
+				                    		
+				                    		if( cdplanAnt != nvoCdplan || dsplanAnt != nvoNombrePlan){
+				                    			
+				                    			recordGrupoEdit.set('ptsumaaseg','');
+				                    			
+					                    		mensajeWarning('El plan del grupo '+recordGrupoEdit.get('letra')+ ' ha cambido. Seleccione una Suma asegurada');
+					                    		gridGrupos.editingPlugin.startEdit(recordGrupoEdit,0);
+					                    		
+					                    		var indexSumAseg = 0;
+					                    		
+					                    		Ext.Array.each(gridGrupos.columns,function(columnGpo, indexCol){
+						                       		if(columnGpo.dataIndex == "ptsumaaseg"){
+						                       			indexSumAseg = indexCol;
+						                       			return false;
+						                       		}
+						                       	});
+					                    		
+					                    		var comboPlan = gridGrupos.columns[indexSumAseg].getEditor(recordGrupoEdit);
+					                    		setTimeout(function(){
+					                    			comboPlan.setValue('');
+					                        	},500);
+				                    		}
+				                    	},250);
+				                    });
+			                	
+			                }
+			                else
+			                {
+			                    mensajeWarning(jsonCont.respuesta);
+			                }
+			            }
+			            ,failure  : function()
+			            {
+			            	_unmask();
+			                errorComunicacion();
+			            }
+			        });
+         }else{
+        	 mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
+         }
      }
      
      debug('<_p21_guardarGrupo');
@@ -3531,6 +3653,23 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
             {
                 valido         = false;
                 mensajeDeError = mensajeDeError + record.get('letra') + ' ';
+            }
+        });
+        if(!valido)
+        {
+            mensajeWarning(mensajeDeError,_p21_setActiveResumen);
+        }
+    }
+    
+    if(valido&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N'))
+    {
+        var mensajeDeError = 'Falta definir la Suma Asegurada para el(los) grupo(s): ';
+        _p21_storeGrupos.each(function(record)
+        {
+            if(Ext.isEmpty(record.get('ptsumaaseg')))
+            {
+                valido         = false;
+                mensajeDeError = mensajeDeError + record.get('letra') + '  ';
             }
         });
         if(!valido)

@@ -768,6 +768,12 @@ public interface CotizacionManager
 			,String cdsisrol
 			)throws Exception;
 
+	public List<Map<String,String>> obtieneCobeturasNombrePlan(
+			String cdramo
+			,String cdtipsit
+			,String cdplan
+			)throws Exception;
+
 	public Map<String,String> obtieneDatosContratantePoliza(
 			String cdunieco
 			,String cdramo
