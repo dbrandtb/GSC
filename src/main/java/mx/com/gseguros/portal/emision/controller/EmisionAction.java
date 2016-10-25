@@ -117,7 +117,7 @@ public class EmisionAction extends PrincipalCoreAction
 		try {//CHECAR PARA CAMBIOS FUTUROS
 			String login  = smap1.get("cdusuari"),
 			       params = Utils.join("login=",login),
-			       idUsu  = HttpUtil.sendPost(getText("sigs.obtenerIdususByLogin.url"), params);
+			       idUsu  = HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"), params);
 			
 			smap1.put("idUsu", idUsu);
 			
