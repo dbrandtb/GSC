@@ -1140,7 +1140,8 @@ Ext.onReady(function()
                                         'smap1.pv_cddocume_i' : record.get('cddocume'),
                                         'smap1.pv_nmsituac_i' : record.get('nmsituac'),
                                         'smap1.pv_nmcertif_i' : record.get('nmcertif'),
-                                        'smap1.pv_cdmoddoc_i' : record.get('cdmoddoc')
+                                        'smap1.pv_cdmoddoc_i' : record.get('cdmoddoc'),
+                                        'smap1.pv_nmtramite_i': panDocInputNtramite
                                         
                                     }
                                     ,success  : function(response){
