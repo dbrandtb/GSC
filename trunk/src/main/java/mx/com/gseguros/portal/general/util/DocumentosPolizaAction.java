@@ -115,9 +115,46 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		logger.debug("smap1: " + smap1);
 		
 		try {
-			success = mesaControlManager.regeneraReporte(smap1.get("pv_cdunieco_i"), smap1.get("pv_cdramo_i"), smap1.get("pv_estado_i"), 
-					smap1.get("pv_nmpoliza_i"), smap1.get("pv_nmsuplem_i"), smap1.get("pv_cddocume_i"), smap1.get("pv_nmsituac_i"),
-					smap1.get("pv_nmcertif_i"), smap1.get("pv_cdmoddoc_i"));
+		    if(consultasManager.esProductoSalud(smap1.get("pv_cdramo_i"))){
+		        success = mesaControlManager.regeneraReporte(smap1.get("pv_cdunieco_i"), smap1.get("pv_cdramo_i"), smap1.get("pv_estado_i"), 
+	                    smap1.get("pv_nmpoliza_i"), smap1.get("pv_nmsuplem_i"), smap1.get("pv_cddocume_i"), smap1.get("pv_nmsituac_i"),
+	                    smap1.get("pv_nmcertif_i"), smap1.get("pv_cdmoddoc_i"));
+		    } else {
+		        String paso = null;
+	            
+	            String cdunieco      = smap1.get("pv_cdunieco_i"), 
+	                   cdramo        = smap1.get("pv_cdramo_i"), 
+	                   estado        = smap1.get("pv_estado_i"),
+	                   nmpoliza      = smap1.get("pv_nmpoliza_i"), 
+	                   nmsuplem      = smap1.get("pv_nmsuplem_i"),
+	                   nmtramite     = smap1.get("pv_nmtramite_i"),
+	                   nombreReporte = smap1.get("pv_cddocume_i").substring(0 , smap1.get("pv_cddocume_i").length()-3);
+	            
+	            paso = "Generando URL para SOL_VIDA_AUTO.pdf";
+	            String rutaReports    = getText("ruta.servidor.reports");
+	            String passReports    = getText("pass.servidor.reports");
+	            String rutaDocumentos = getText("ruta.documentos.poliza");
+	            String url = rutaReports
+	                    + "?destype=cache"
+	                    + "&desformat=PDF"
+	                    + "&userid="+passReports
+	                    + "&report="+nombreReporte+"rdf"
+	                    + "&paramform=no"
+	                    + "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+	                    + "&p_unieco="+cdunieco
+	                    + "&p_ramo="+cdramo
+	                    + "&p_estado="+estado
+	                    + "&p_poliza="+nmpoliza
+	                    + "&p_suplem="+nmsuplem
+	                    + "&desname="+rutaDocumentos+"/"+nmtramite+"/"+nombreReporte+"pdf";
+	            
+	            paso = "Guardando PDF de Vista Previa de Autos en Temporal";
+	            logger.debug(paso);
+	            HttpUtil.generaArchivo(url,rutaDocumentos+"/"+nmtramite+"/"+nombreReporte+"pdf");
+	            success = true;
+		        
+		    }
+			
 			
 		} catch (Exception e) {
 			logger.error("Error al regenerar el reporte "+ smap1, e);
