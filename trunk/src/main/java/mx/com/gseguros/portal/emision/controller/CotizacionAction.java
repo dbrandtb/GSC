@@ -6289,7 +6289,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                } 
 	                
 	                //TRAMITE
-	                if(esRenovacion.equalsIgnoreCase(TipoEndoso.RENOVACION.getCdTipSup().toString())){
+	                if(TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase(esRenovacion)){
 		                try {
 		                	String tramiteRe= row.getCell(31).getStringCellValue();
 		                	if(tramiteRe!=null){
