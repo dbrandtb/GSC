@@ -1756,7 +1756,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			if(iCodAviso.trim().length()>0){//Se agrega validacion para iterar si es una carga de flotillas o individual
 				
-				CodAviso +=  "EL INCISO : "+contador+" "+iCodAviso+ (contador>1 ?"<br/>" : "" );
+				CodAviso +=  (contador>1 ?"<br/>" : "" )+"El inciso : "+contador+" "+iCodAviso+ (contador>1 ?"<br/>" : "" );
 				
 			}
 			contador++;

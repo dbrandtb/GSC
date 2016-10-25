@@ -396,29 +396,3 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         manejaException(e, ck);
     }
 }
-/*
- * Funcion para generar PDF de Preview de Pymes en el Endos Alta/Inciso
- */
-function generaPDF_imprimir()
-{
-    debug('>generaPDF_imprimir');
-    centrarVentanaInterna(Ext.create('Ext.window.Window', {
-    	title          : 'Vista previa'
-        ,width         : 700
-        ,height        : 500
-        ,collapsible   : true
-        ,titleCollapse : true
-        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-                         +'src="'+_p30_urlViewDoc+"?contentType=application/pdf&path="+encodeURIComponent(urlRequestImpCotiza)+"\">"
-                         +'</iframe>'
-        ,listeners     :
-        {
-            resize : function(win,width,height,opt){
-                debug(width,height);
-                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-            }
-        }}).show());
-  
-    
-    debug('<generaPDF_imprimir');
-}

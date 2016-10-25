@@ -6711,137 +6711,189 @@ function _p30_confirmarEndoso()
         boton.setText('Cargando...');
         boton.setDisabled(true);
         var myMask = _maskLocal();
-        Ext.Ajax.request(
-        {
-            url       : _p30_urlConfirmarEndoso
-            ,jsonData : json
-            ,success  : function(response) {
-            	myMask.close();
-                boton.setText('Emitir');
-                boton.setDisabled(false);
-                var json2 = Ext.decode(response.responseText);
-                debug('### confirmar endoso:',json2);
-                if(json2.success) {
-                	Ext.create('Ext.window.Window',{
-							title        : 'Tarifa final'
-							,itemId      : 'tarifa'
-							,modal       : true
-							,buttonAlign : 'center'
-							,width       : 600
-							,height      : 550
-							//,defaults    : { width: 650 }
-							,closable    : false
-							,autoScroll  : true
-							,loader      :{
-									url       : url_PantallaPreview
-									,params   : {
-											'smap4.nmpoliza'  : _p30_smap1.NMPOLIZA
-                                            ,'smap4.cdunieco' : _p30_smap1.CDUNIECO
-                                            ,'smap4.cdramo'   : _p30_smap1.CDRAMO
-                                            ,'smap4.estado'   : _p30_smap1.ESTADO
-                                            ,'smap4.nmsuplem' : json2.omap1.pv_nmsuplem_o 
-                                            ,'smap4.nsuplogi' : json2.omap1.pv_nsuplogi_o
-                                     }
-									,scripts  : true
-									,loadMask : true
-									,autoLoad : true
-									,ajaxOptions : {
-                                    	method: 'POST'
-									}
-							 }
-							,buttons:[{
-										text    : 'Confirmar endoso'
-										,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
-										,handler : 
-											function (me){
-                                                boton.setText('Cargando...');
-                                                boton.setDisabled(true);
-                                                var json2 =
-												        {
-												            smap1 : {
-												                cdunieco     : _p30_smap1.CDUNIECO
-												                ,cdramo      : _p30_smap1.CDRAMO
-												                ,estado      : _p30_smap1.ESTADO
-												                ,nmpoliza    : _p30_smap1.NMPOLIZA
-												                ,cdtipsup    : _p30_smap1.cdtipsup
-												                ,fechaEndoso : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
-												                ,confirmar   : 'si'
-												            }
-												            ,slist1 : []
-												            ,slist2 : []
-												            ,slist3 : []
-												        };
-												storeTvalosit.each(function(record) {
-												            json2.slist1.push(record.data);
-												        });
-                                                Ext.Ajax.request( {
-											            url       : _p30_urlConfirmarEndoso
-											           ,jsonData : json2
-												       ,success  : function(response){
-												            	var json3 = Ext.decode(response.responseText);
-												                var callbackRemesa = function() { marendNavegacion(2); };
-												                
-												                mensajeCorrecto('Endoso generado',json3.respuesta,function(){
-																	_generarRemesaClic(
-																	true
-																	,_p30_smap1.CDUNIECO
-																	,_p30_smap1.CDRAMO
-																	,_p30_smap1.ESTADO
-																	,_p30_smap1.NMPOLIZA
-																	,callbackRemesa);
-															});
-														}
-											            ,failure  : function(){
-											                errorComunicacion();
-											            }});
-                                                    me.up('window').destroy();
-                                                    
-                                                   }
-																			                    
-									   },{
-										text    : 'Cancelar'
-										,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-										,handler : function (me){
-														me.up('window').destroy();
-                                                        marendNavegacion(2);
-                                                        } 
-                                        },{
-										text    : 'Documentos'
-										,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
-										,handler  :function(){
-											 var numRand=Math.floor((Math.random()*100000)+1);
-	                                         debug(numRand);
-											 centrarVentanaInterna(Ext.create('Ext.window.Window', {
-											 	title          : 'Vista previa'
-										        ,width         : 700
-										        ,height        : 500
-										        ,collapsible   : true
-										        ,titleCollapse : true
-										        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-										                         +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+json2.omap1.pdfEndosoNom_o+"\">"
-										                         +'</iframe>'
-										        ,listeners     : {
-										        	resize : function(win,width,height,opt){
-										                debug(width,height);
-										                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-										        }
-										      }}).show());
-										}
-										,hidden   : _p30_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
-                                        } ]
-					     }).show();
-                } else {
-                    mensajeError(json2.respuesta);
-                }
-            }
-            ,failure  : function(){
-            	myMask.close();
-                boton.setText('Emitir');
-                boton.setDisabled(false);
-                errorComunicacion();
-            }
-        });
         
+        function ConfirmarEndoso(){
+        Ext.Ajax.request(
+			        {
+			            url       : _p30_urlConfirmarEndoso
+			            ,jsonData : json
+			            ,success  : function(response) {
+			            	myMask.close();
+			                boton.setText('Emitir');
+			                boton.setDisabled(false);
+			                var json2 = Ext.decode(response.responseText);
+			                debug('### confirmar endoso:',json2);
+			                if(json2.success) {
+			                	Ext.create('Ext.window.Window',{
+										title        : 'Tarifa final'
+										,itemId      : 'tarifa'
+										,modal       : true
+										,buttonAlign : 'center'
+										,width       : 600
+										,height      : 550
+										//,defaults    : { width: 650 }
+										,closable    : false
+										,autoScroll  : true
+										,loader      :{
+												url       : url_PantallaPreview
+												,params   : {
+														'smap4.nmpoliza'  : _p30_smap1.NMPOLIZA
+			                                            ,'smap4.cdunieco' : _p30_smap1.CDUNIECO
+			                                            ,'smap4.cdramo'   : _p30_smap1.CDRAMO
+			                                            ,'smap4.estado'   : _p30_smap1.ESTADO
+			                                            ,'smap4.nmsuplem' : json2.omap1.pv_nmsuplem_o 
+			                                            ,'smap4.nsuplogi' : json2.omap1.pv_nsuplogi_o
+			                                     }
+												,scripts  : true
+												,loadMask : true
+												,autoLoad : true
+												,ajaxOptions : {
+			                                    	method: 'POST'
+												}
+										 }
+										,buttons:[{
+													text    : 'Confirmar endoso'
+													,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+													,handler : 
+														function (me){
+			                                                boton.setText('Cargando...');
+			                                                boton.setDisabled(true);
+			                                                var json2 =
+															        {
+															            smap1 : {
+															                cdunieco     : _p30_smap1.CDUNIECO
+															                ,cdramo      : _p30_smap1.CDRAMO
+															                ,estado      : _p30_smap1.ESTADO
+															                ,nmpoliza    : _p30_smap1.NMPOLIZA
+															                ,cdtipsup    : _p30_smap1.cdtipsup
+															                ,fechaEndoso : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
+															                ,confirmar   : 'si'
+															                ,cdperpag    : _p30_smap1.CDPERPAG
+															            }
+															            ,slist1 : []
+															            ,slist2 : []
+															            ,slist3 : []
+															        };
+															storeTvalosit.each(function(record) {
+															            json2.slist1.push(record.data);
+															        });
+			                                                Ext.Ajax.request( {
+														            url       : _p30_urlConfirmarEndoso
+														           ,jsonData : json2
+															       ,success  : function(response){
+															            	var json3 = Ext.decode(response.responseText);
+															                var callbackRemesa = function() { marendNavegacion(2); };
+															                
+															                mensajeCorrecto('Endoso generado',json3.respuesta,function(){
+																				_generarRemesaClic(
+																				true
+																				,_p30_smap1.CDUNIECO
+																				,_p30_smap1.CDRAMO
+																				,_p30_smap1.ESTADO
+																				,_p30_smap1.NMPOLIZA
+																				,callbackRemesa);
+																		});
+																	}
+														            ,failure  : function(){
+														                errorComunicacion();
+														            }});
+			                                                    me.up('window').destroy();
+			                                                    
+			                                                   }
+																						                    
+												   },{
+													text    : 'Cancelar'
+													,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+													,handler : function (me){
+																	me.up('window').destroy();
+			                                                        marendNavegacion(2);
+			                                                        } 
+			                                        },{
+													text    : 'Documentos'
+													,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+													,handler  :function(){
+														 var numRand=Math.floor((Math.random()*100000)+1);
+				                                         debug(numRand);
+														 centrarVentanaInterna(Ext.create('Ext.window.Window', {
+														 	title          : 'Vista previa'
+													        ,width         : 700
+													        ,height        : 500
+													        ,collapsible   : true
+													        ,titleCollapse : true
+													        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+													                         +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+json2.omap1.pdfEndosoNom_o+"\">"
+													                         +'</iframe>'
+													        ,listeners     : {
+													        	resize : function(win,width,height,opt){
+													                debug(width,height);
+													                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+													        }
+													      }}).show());
+													}
+													,hidden   : _p30_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
+			                                        } ]
+								     }).show();
+			                } else {
+			                    mensajeError(json2.respuesta);
+			                }
+			            }
+			            ,failure  : function(){
+			            	myMask.close();
+			                boton.setText('Emitir');
+			                boton.setDisabled(false);
+			                errorComunicacion();
+			            }
+			        });
+    	}
+        var numSerie= '';
+        _p30_store.each(function(record) {
+	    	debug( record.get('parametros.pv_otvalor37'));
+	    	numSerie+=''+(record.get('parametros.pv_otvalor37'))+'|';
+	    	
+    	});
+        
+        Ext.Ajax.request(
+        	{
+				url     : _p29_urlObtieneValNumeroSerie,
+				params : {
+					'smap1.numSerie'  : numSerie
+					,'smap1.feini'    : _fieldByName('feini').getValue()
+				},
+				success : function(response) {
+					var jsonNumSerie=Ext.decode(response.responseText);
+					if(jsonNumSerie.exito!=true) {
+						myMask.close();
+						numSerie='';
+						if(!RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)) {
+							myMask.close();
+							mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", jsonNumSerie.respuesta);
+							boton.setText('Emitir');
+       			 			boton.setDisabled(false);
+						} else {
+							centrarVentanaInterna(Ext.MessageBox.confirm(
+								'Confirmar'
+								,'¿Desea Continuar?'
+								,function(btn){
+									if(btn === 'yes') {
+										myMask.close();
+										ConfirmarEndoso();
+									} else {
+										boton.setText('Emitir');
+       			 						boton.setDisabled(false);
+										debug('no quiso Continuar');
+									}
+								}
+							));
+							mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", jsonNumSerie.respuesta);
+					        
+						}
+					} else {
+						myMask.close();
+						ConfirmarEndoso();
+					}
+				},
+				failure : errorComunicacion
+			});
     }
     
     debug('<_p30_confirmarEndoso');
