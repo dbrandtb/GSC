@@ -8320,7 +8320,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	
 	protected class MovimientoMgrupogarSP extends StoredProcedure {
 		protected MovimientoMgrupogarSP (DataSource dataSource) {
-	        super(dataSource,"PKG_COTIZA.P_INSERTA_MGRUPOGAR");
+//	        super(dataSource,"PKG_COTIZA.P_INSERTA_MGRUPOGAR");
+	        super(dataSource,"pkg_consulta_angeles.P_INSERTA_MGRUPOGAR");
 		    declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 		    declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
 		    declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
