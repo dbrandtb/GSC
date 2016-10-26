@@ -910,7 +910,7 @@ Ext.onReady(function()
                                                     {
 				                                        var form=Ext.getCmp('formPanel');
 				                                        var window=this.up().up();
-				                                        	window.setLoading(true);
+				                                        	//window.setLoading(true);
 				                                            form.submit({
 				                                                params:{
 				                                                    'map1.pv_cdunieco' :  panDatComMap1.cdunieco,
@@ -948,7 +948,7 @@ Ext.onReady(function()
 				                                                            }
 				                                                            else
 				                                                            {
-				                                                            	window.setLoading(false);
+				                                                            	//window.setLoading(false);
 				                                                                Ext.Msg.show({
 				                                                                    title	: 'Error',
 				                                                                    msg		: 'Error al guardar Vo. Bo.',
@@ -959,7 +959,7 @@ Ext.onReady(function()
 				                                                        }
 				                                                        ,failure : function()
 				                                                        {
-				                                                        	window.setLoading(false);
+				                                                        	//window.setLoading(false);
 				                                                            Ext.Msg.show({
 				                                                                title	: 'Error',
 				                                                                msg		: 'Error de comunicaci&oacute;n',
@@ -970,7 +970,7 @@ Ext.onReady(function()
 				                                                    });
 				                                                },
 				                                                failure:function(){
-				                                                	window.setLoading(false);
+				                                                	//window.setLoading(false);
 				                                                    Ext.Msg.show({
 				                                                        title	: 'Error',
 				                                                        msg		: 'Error de comunicaci&oacute;n',
@@ -1063,7 +1063,7 @@ Ext.onReady(function()
                                                            var window=this.up().up();
                                                            //console.log(form.getValues());
                                                           
-                                                               window.setLoading(true);
+                                                               //window.setLoading(true);
                                                                form.submit({
                                                                    params:{
                                                                        'map1.pv_cdunieco' :  panDatComMap1.cdunieco,
@@ -1101,7 +1101,7 @@ Ext.onReady(function()
                                                                                }
                                                                                else
                                                                                {
-                                                                                   window.setLoading(false);
+                                                                                   //window.setLoading(false);
                                                                                    Ext.Msg.show({
                                                                                        title	: 'Error',
                                                                                        msg		: 'Error al guardar Vo. Bo.',
@@ -1112,7 +1112,7 @@ Ext.onReady(function()
                                                                            }
                                                                            ,failure : function()
                                                                            {
-                                                                               window.setLoading(false);
+                                                                               //window.setLoading(false);
                                                                                Ext.Msg.show({
                                                                                    title	: 'Error',
                                                                                    msg		: 'Error de comunicaci&oacute;n',
@@ -1123,7 +1123,7 @@ Ext.onReady(function()
                                                                        });
                                                                    },
                                                                    failure:function(){
-                                                                       window.setLoading(false);
+                                                                       //window.setLoading(false);
                                                                        Ext.Msg.show({
                                                                            title	: 'Error',
                                                                            msg		: 'Error de comunicaci&oacute;n',
@@ -1282,7 +1282,7 @@ Ext.onReady(function()
     					,handler:function()
     					{
     						var me=this;
-    						me.up().up().setLoading(true);
+    						//me.up().up().setLoading(true);
     						Ext.Ajax.request(
     						{
     							url     : urlEmitir
@@ -1298,7 +1298,7 @@ Ext.onReady(function()
     							}
     							,success:function(response)
     							{
-    								me.up().up().setLoading(false);
+    								//me.up().up().setLoading(false);
     								//var json = Ext.decode(response.responseText);
     								//debug(json);
     								//if(json.success==true)
@@ -1455,7 +1455,7 @@ Ext.onReady(function()
     							}
     							,failure:function()
     							{
-    								me.up().up().setLoading(false);
+    								//me.up().up().setLoading(false);
     								Ext.Msg.show({
     									title:'Error',
     									msg: 'Error de comunicaci&oacute;n',
@@ -2538,12 +2538,12 @@ function _p25_renovarClic(button,e)
     });
     json['slist1'] = slist1;    
     debug('### renovar json params:',json);
-    _fieldById('_p25_grid').setLoading(true);
+    //_fieldById('_p25_grid').setLoading(true);
     Ext.Ajax.request({
         url       : _p25_urlRenovarPolizasMasivasIndividuales
         ,jsonData : json
         ,success  : function(response){
-            _fieldById('_p25_grid').setLoading(false);
+            //_fieldById('_p25_grid').setLoading(false);
             var resp = Ext.decode(response.responseText);
             debug('### renovar json response:',resp);
             if(resp.exito == true){
@@ -2570,7 +2570,7 @@ function _p25_renovarClic(button,e)
     		}
         }
         ,failure  : function(){
-            _fieldById('_p25_grid').setLoading(false);
+            //_fieldById('_p25_grid').setLoading(false);
             errorComunicacion();
         }
     });
@@ -2681,7 +2681,7 @@ function _p25_ventanaCambioFormaPago(resRenova){
 			}
 		}
 		,failure : function(){
-				window.setLoading(false);
+				//window.setLoading(false);
 				Ext.Msg.show({
 					title	: 'Error',
 					msg		: 'Error de comunicaci&oacute;n',
@@ -2754,7 +2754,7 @@ function _p29_actualizarCotizacion(callback){
     /*var form=Ext.getCmp('formPanel');
     if(form.isValid())
     {
-        form.setLoading(true);
+        //form.setLoading(true);
         form.submit({
             params:{
                 'map1.pv_cdunieco' :  panDatComMap1.cdunieco,
@@ -2763,7 +2763,7 @@ function _p29_actualizarCotizacion(callback){
                 'map1.pv_nmpoliza' :  panDatComMap1.nmpoliza
             },
             success:function(){
-                form.setLoading(false);
+                //form.setLoading(false);
                 centrarVentanaInterna(Ext.Msg.show({
                     title    : 'Cambios guardados'
                     ,msg     : 'Sus cambios han sido guardados'
@@ -2778,7 +2778,7 @@ function _p29_actualizarCotizacion(callback){
                 }));
             },
             failure:function(){
-                form.setLoading(false);
+                //form.setLoading(false);
                 Ext.Msg.show({
                     title:'Error',
                     msg: 'Error de comunicaci&oacute;n',
