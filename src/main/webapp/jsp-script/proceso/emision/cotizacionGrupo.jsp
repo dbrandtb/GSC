@@ -2365,9 +2365,9 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         if(me.isDisabled())
                                                         {
                                                             if(_p21_cdtipsup == _TIPO_SITUACION_RENOVACION){
-                                                            	me.removeCls('valorNoOriginal');
-                                                            }else{
                                                             	me.removeCls('valorRenovacionColec');
+                                                            }else{
+                                                            	me.removeCls('valorNoOriginal');
                                                             }
                                                         }
                                                         else
@@ -2375,17 +2375,17 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         	if(me.getValue()!=me.valorInicial)
                                                             {
                                                                 if(_p21_cdtipsup == _TIPO_SITUACION_RENOVACION){
-	                                                            	me.addCls('valorNoOriginal');
-	                                                            }else{
 	                                                            	me.addCls('valorRenovacionColec');
+	                                                            }else{
+	                                                            	me.addCls('valorNoOriginal');
 	                                                            }
                                                             }
                                                             else
                                                             {
                                                                 if(_p21_cdtipsup == _TIPO_SITUACION_RENOVACION){
-	                                                            	me.removeCls('valorNoOriginal');
-	                                                            }else{
 	                                                            	me.removeCls('valorRenovacionColec');
+	                                                            }else{
+	                                                            	me.removeCls('valorNoOriginal');
 	                                                            }
                                                             }
                                                         }
