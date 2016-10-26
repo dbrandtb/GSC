@@ -10180,7 +10180,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 					}
 				}
 				
+				
 				// Se inserta el maestro y detalle de los grupos:
+				try {
+	                cotizacionDAO.eliminarGrupos(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit);
+	            } catch (Exception e) {
+	                logger.warn("No se eliminaron los grupos de la poliza: {}", e);
+	            }
 				for(Map<String,Object> grupoIte : grupos) {
 					logger.debug("grupoIte=={}", grupoIte);
 					// Guardar el maestro de grupos mpoligrup:
@@ -10190,6 +10196,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					logger.debug(Utils.log("\n&&&&&& insertaMgrupogar [id=",timestamp,"] &&&&&&"));
 					cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("cdplan"), "0");
 				}
+				
 				
 				logger.debug(Utils.log("\n&&&&&& eliminarMpolirec [id=",timestamp,"] &&&&&&"));
 				cotizacionDAO.eliminarMpolirec(
