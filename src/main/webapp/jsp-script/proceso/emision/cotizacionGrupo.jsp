@@ -179,6 +179,7 @@ var _p21_arrayNombresExtrreno =
 
 var _p21_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p21_smap1:',_p21_smap1);
+var _p21_cdtipsup = _p21_smap1.cdtipsup;
 
 _p21_smap1.modificarTodo = false;
 
@@ -1424,7 +1425,7 @@ Ext.onReady(function()
     
     try
     {
-    	if(_p21_smap1.cdtipsup == _TIPO_SITUACION_RENOVACION){
+    	if(_p21_cdtipsup  == _TIPO_SITUACION_RENOVACION){
     		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Complementar]')[0].hide();
@@ -2333,6 +2334,9 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                 ,'smap1.cdplan'   : record.get('cdplan')
                                 ,'smap1.cdgarant' : json.slist1[i].CDGARANT
                                 ,'smap1.indice'   : i
+                                ,'smap1.cdtipsup' : _p21_cdtipsup
+                                ,'smap1.nmpolant' : _p21_smap1.nmpolant
+                                ,'smap1.cdgrupo'  : record.get('letra')
                             }
                             ,success : function(response)
                             {
@@ -2357,19 +2361,32 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 {
                                                     var compara = function(me)
                                                     {
+                                                        debug("Valor cdtipsup ==>",_p21_cdtipsup);
                                                         if(me.isDisabled())
                                                         {
-                                                            me.removeCls('valorNoOriginal');
+                                                            if(_p21_cdtipsup == _TIPO_SITUACION_RENOVACION){
+                                                            	me.removeCls('valorNoOriginal');
+                                                            }else{
+                                                            	me.removeCls('valorRenovacionColec');
+                                                            }
                                                         }
                                                         else
                                                         {
-                                                            if(me.getValue()!=me.valorInicial)
+                                                        	if(me.getValue()!=me.valorInicial)
                                                             {
-                                                                me.addCls('valorNoOriginal');
+                                                                if(_p21_cdtipsup == _TIPO_SITUACION_RENOVACION){
+	                                                            	me.addCls('valorNoOriginal');
+	                                                            }else{
+	                                                            	me.addCls('valorRenovacionColec');
+	                                                            }
                                                             }
                                                             else
                                                             {
-                                                                me.removeCls('valorNoOriginal');
+                                                                if(_p21_cdtipsup == _TIPO_SITUACION_RENOVACION){
+	                                                            	me.removeCls('valorNoOriginal');
+	                                                            }else{
+	                                                            	me.removeCls('valorRenovacionColec');
+	                                                            }
                                                             }
                                                         }
                                                     };

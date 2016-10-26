@@ -2008,6 +2008,9 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                 ,'smap1.cdplan'   : record.get('cdplan')
                                 ,'smap1.cdgarant' : json.slist1[i].CDGARANT
                                 ,'smap1.indice'   : i
+                                ,'smap1.cdtipsup'  : null
+                                ,'smap1.nmpolant'  : null
+                                ,'smap1.cdgrupo'   : null
                             }
                             ,success : function(response)
                             {

@@ -1071,5 +1071,7 @@ public interface CotizacionManager
 			,String nmpoliza
 			,String nmsuplem
 			,String cdgrupo)throws Exception;
+
+	public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception;
 	
 }

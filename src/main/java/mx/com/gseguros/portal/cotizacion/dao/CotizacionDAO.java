@@ -882,5 +882,5 @@ public interface CotizacionDAO {
 	public void eliminarGrupos(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit)
 			throws Exception;
 	
-	
+   public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception;
 }
