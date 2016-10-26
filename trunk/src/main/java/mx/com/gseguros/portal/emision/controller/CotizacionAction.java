@@ -4058,19 +4058,38 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			success = true;
 			exito   = true;
-			Map<String,String>params=new HashMap<String,String>();
-			params.put("pv_cdramo_i"    , smap1.get("cdramo"));
-			params.put("pv_cdtipsit_i"  , smap1.get("cdtipsit"));
-			params.put("pv_cdgarant_i"  , smap1.get("cdgarant"));
-			params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
-			List<ComponenteVO>componentesTatrigar=kernelManager.obtenerTatrigar(params);
+			List<ComponenteVO>componentesTatrigar;
+			
+			if(TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase(smap1.get("cdtipsup"))){
+			    String nmpolant = smap1.get("nmpolant");
+			    Map<String,String>params=new HashMap<String,String>();
+			    params.put("pv_cdunieco_i"   , Integer.parseInt(nmpolant.substring(0,4))+"");
+			    params.put("pv_cdramo_i"     , smap1.get("cdramo"));
+			    params.put("pv_estado_i"     , "M");
+			    params.put("pv_nmpoliza_i"   , Integer.parseInt(nmpolant.substring(7,13))+"");
+			    params.put("pv_cdgrupo_i"    , smap1.get("cdgrupo"));
+			    params.put("pv_cdplan_i"     , smap1.get("cdplan"));
+			    params.put("pv_sexo_i"       , "H");
+			    params.put("pv_cdtipsit_i"   , smap1.get("cdtipsit"));
+			    params.put("pv_cdgarant_i"   , smap1.get("cdgarant"));
+			    params.put("pv_cdatrivar_i"  , smap1.get("cdatrivar"));
+			    componentesTatrigar=cotizacionManager.obtenerAtributosPolizaOriginal(params);
+			    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
+			}else{
+			    Map<String,String>params=new HashMap<String,String>();
+	            params.put("pv_cdramo_i"    , smap1.get("cdramo"));
+	            params.put("pv_cdtipsit_i"  , smap1.get("cdtipsit"));
+	            params.put("pv_cdgarant_i"  , smap1.get("cdgarant"));
+	            params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
+	            componentesTatrigar=kernelManager.obtenerTatrigar(params);
+			}
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			gc.setCdramo(smap1.get("cdramo"));
-			gc.setCdtipsit(smap1.get("cdtipsit"));
-			gc.setCdgarant(smap1.get("cdgarant"));
-			gc.generaComponentes(componentesTatrigar, false, true, true, false, false, false);
-			respuesta       = gc.getItems().toString();
-			respuestaOculta = gc.getFields().toString();
+            gc.setCdramo(smap1.get("cdramo"));
+            gc.setCdtipsit(smap1.get("cdtipsit"));
+            gc.setCdgarant(smap1.get("cdgarant"));
+            gc.generaComponentes(componentesTatrigar, false, true, true, false, false, false);
+            respuesta       = gc.getItems().toString();
+            respuestaOculta = gc.getFields().toString();
 		}
 		catch(Exception ex)
 		{

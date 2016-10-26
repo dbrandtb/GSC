@@ -2878,6 +2878,9 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                 ,'smap1.cdgarant'  : json.slist1[i].CDGARANT
                                 ,'smap1.indice'    : i
                                 ,'smap1.cdatrivar' : record.get('parametros.pv_otvalor'+_p25_smap1.ATRIVAR_TATRIGAR)
+                                ,'smap1.cdtipsup'  : null
+                                ,'smap1.nmpolant'  : null
+                                ,'smap1.cdgrupo'   : null
                             }
                             ,success : function(response)
                             {

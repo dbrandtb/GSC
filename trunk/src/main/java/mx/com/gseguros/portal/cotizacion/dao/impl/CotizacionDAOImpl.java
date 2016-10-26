@@ -8363,5 +8363,36 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		    compile();
 		}
 	}
-	
+
+    @Override
+    public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception {
+        Map<String,Object> procResult = ejecutaSP(new ObtenerAtributosPolizaOriginal(getDataSource()),params);
+        List<ComponenteVO> lista = (List<ComponenteVO>)procResult.get("pv_registro_o");
+        if (lista==null || lista.size()==0) {
+            throw new Exception("No hay informacion de la poliza original");
+        }
+        logger.debug(Utils.log("Recupera la informacion de la poliza original lista = ", lista));
+        return lista;
+    }
+    
+    protected class ObtenerAtributosPolizaOriginal extends StoredProcedure {
+        protected ObtenerAtributosPolizaOriginal (DataSource dataSource) {
+            super(dataSource,"PKG_LISTAS.P_GET_ATRI_GARANTIA_X_POLIZA");
+            declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdgrupo_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdplan_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_sexo_i"      , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdgarant_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdatrivar_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatrigarMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }	
 }

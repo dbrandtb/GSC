@@ -10797,5 +10797,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return cotizacionDAO.obtieneValidacionDescuentoR6(tipoUnidad, uso, zona,
 				promotoria, cdagente, cdtipsit, cdatribu);
 	}
+
+    @Override
+    public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception {
+        if(!params.containsKey("pv_cdatrivar_i")) {
+            params.put("pv_atrivar_i" , null);
+        }
+        return cotizacionDAO.obtenerAtributosPolizaOriginal(params);
+    }
 	
 }
