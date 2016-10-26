@@ -5241,7 +5241,7 @@
 					var validaTope = aseguradosTotales[i].VALTOTALCOB;
 					if( validaTope  == '1'){
 						debug("Limite ",limite, "importeDisponible",importeDisponible,"importePagarAsegurado",importePagarAsegurado);
-						if(+importeDisponible <=limite && +importePagarAsegurado < importeDisponible){
+						if(+importeDisponible <=limite && +importePagarAsegurado <= importeDisponible){
 							//resultadoTope = resultadoTope + 'La Factura ' + nfactura + ' del siniestro '+ aseguradosTotales[i].NMSINIES+ ' Es éxitoso. <br/>';
 						}else{
 							banderaValidacion = 1;

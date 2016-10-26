@@ -3923,6 +3923,8 @@ function _p21_reload(json,status,nmpoliza)
             ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
             ,'smap1.cdagente' : _fieldByName('cdagente').getValue()
             ,'smap1.status'   : Ext.isEmpty(status) ? _p21_smap1.status : status
+            ,'smap1.cdtipsup' : null
+            ,'smap1.nmpolant' : null
         }
     });
     debug('<_p21_reload');
