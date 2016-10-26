@@ -5548,7 +5548,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					//logger.debug("limite :{} importePagado:{} importePagarAsegurado: {} importeDisponible:{}",limite,importePagado,importePagarAsegurado,importeDisponible);
 					if(siniestroIte.get("VALTOTALCOB").equalsIgnoreCase("1")){
 						logger.debug("Entra a 1");
-						if(importeDisponible <=limite && +importePagarAsegurado < importeDisponible){
+						if(importeDisponible <=limite && +importePagarAsegurado <= importeDisponible){
 							
 						}else{
 							banderaValidacion = "1";
