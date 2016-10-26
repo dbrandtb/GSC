@@ -12545,6 +12545,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			Map<String,String> coberturasSel = new HashMap<String, String>();
 			
 			for(Map<String,String> cobSel:slist1){
+			    
+			    if("4EAC".equalsIgnoreCase(cobSel.get("amparada"))) continue; //Para saltar la cobertura de Evento de Alto Costo
+			    
 				if(Constantes.SI.equalsIgnoreCase(cobSel.get("amparada"))){
 					coberturasSel.put(cobSel.get("cdgarant"), cobSel.get("cdgarant"));
 				}
@@ -12594,6 +12597,9 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				
 				for(Map<String,String> cob : coberturasPlanList){
+				    
+				    if("4EAC".equalsIgnoreCase(cob.get("CDGARANT"))) continue; //Para saltar la cobertura de Evento de Alto Costo
+				    
 					//si la cobertura esta en el plan original y no esta seleccionada en pantalla
 					if(Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA")) && !coberturasSel.containsKey(cob.get("CDGARANT"))){
 						sobrantes ++;
