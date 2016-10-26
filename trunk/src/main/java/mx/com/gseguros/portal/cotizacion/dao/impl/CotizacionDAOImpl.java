@@ -565,8 +565,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected CargarGruposCotizacion(DataSource dataSource)
 		{
-//			super(dataSource,"PKG_CONSULTA.P_GET_GRUPOS_COTIZACION");
-			super(dataSource,"pkg_consulta_angeles.P_GET_GRUPOS_COTIZACION");
+			super(dataSource,"PKG_CONSULTA.P_GET_GRUPOS_COTIZACION");
+			//super(dataSource,"pkg_consulta_angeles.P_GET_GRUPOS_COTIZACION");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -589,7 +589,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"ayudamater"
 					,"letra"
 					,"cdplan"
-					,"dsplanl"
+					//,"dsplanl"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
