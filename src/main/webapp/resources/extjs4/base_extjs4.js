@@ -3596,14 +3596,15 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 		,modal       : true
 		,buttonAlign : 'center'
 		,width		 : 520
+		,autoScroll : true
 		,icon 		 : imagenSeccion
 		,resizable	 : false
-		,height      : 250
+		,height      : 300
 		,items       :[
 			Ext.create('Ext.form.Panel', {
 				id: 'panelClausula'
 				,width		 : 500
-				,height      : 150
+				//,height      : 150
 				,bodyPadding: 5
 				,renderTo: Ext.getBody()
 				,defaults 	 : {
