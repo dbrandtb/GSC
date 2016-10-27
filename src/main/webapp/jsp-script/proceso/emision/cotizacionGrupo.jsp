@@ -1161,7 +1161,25 @@ Ext.onReady(function()
                             }
                         ]
                         ,buttonAlign : 'center'
-                        ,buttons     :
+                        ,buttons:[{
+                            xtype :'panel',
+                            defaults : { style : 'margin:5px' },
+                            border   : 0,
+                            width    : 950,
+                            ui       :'footer',
+                            items    : [
+                                <s:if test='%{getImap().get("botones")!=null}'>
+                                    <s:property value="imap.botones" />,
+                                </s:if>
+                                {
+                                    text     : 'Limpiar'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                                    ,handler : _p21_cotizarNueva
+                                    ,hidden  : _p21_ntramite ? true : false
+                                }
+                            ]
+                        }]
+                        /*,buttons     :
                         [
                             <s:if test='%{getImap().get("botones")!=null}'>
                                 <s:property value="imap.botones" />,
@@ -1172,7 +1190,7 @@ Ext.onReady(function()
                                 ,handler : _p21_cotizarNueva
                                 ,hidden  : _p21_ntramite ? true : false
                             }
-                        ]
+                        ]*/
                     })
                 ]
             }
@@ -1423,7 +1441,7 @@ Ext.onReady(function()
     }
     
     
-    try
+    /*try
     {
     	if(_p21_cdtipsup  == _TIPO_SITUACION_RENOVACION){
     		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
@@ -1438,7 +1456,7 @@ Ext.onReady(function()
     catch(e)
     {
         debugError('error para la renovacion de la Poliza',e);
-    }
+    }*/
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
     

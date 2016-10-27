@@ -10812,5 +10812,14 @@ public class CotizacionManagerImpl implements CotizacionManager
         }
         return cotizacionDAO.obtenerAtributosPolizaOriginal(params);
     }
+
+    @Override
+    public String obtenerAseguradoDuplicado(HashMap<String, Object> paramPersona) throws Exception {
+        try {
+            return cotizacionDAO.obtenerAseguradoDuplicado(paramPersona);
+        } catch (Exception daoExc) {
+            throw new Exception(daoExc.getMessage(), daoExc);
+        }
+    }
 	
 }
