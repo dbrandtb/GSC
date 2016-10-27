@@ -1797,13 +1797,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 			
 			if(iCodAviso.trim().length()>0){//Se agrega validacion para iterar si es una carga de flotillas o individual
 				
-				CodAviso +=  (contador>1 ?"<br/>" : "" )+"El inciso: "+contador+" "+iCodAviso+ (contador>1 ?"<br/>" : "" );
+				CodAviso +=  (contador>1 ?"<br/>" : "" )+"El inciso "+contador+" "+iCodAviso+ (contador>1 ?"<br/>" : "" );
 				
 			}
 			contador++;
 			}
 			//CodAviso        += StringUtils.isNotBlank(CodAviso) ?" VERIFIQUE SI PUEDE REALIZAR EL ENDOSO O BIEN SI NECESITA REEXPEDIR LA POLIZA INGRESE TRAMITE MESA DE CONTROL":"";
-			CodAviso        += StringUtils.isNotBlank(CodAviso) ?" Verifique si puede realizar el endoso o bien, si necesita reexpedir la póliza ingrese el trámite en mesa de control":"";
+			CodAviso        += StringUtils.isNotBlank(CodAviso) ?" Verifique si puede realizar el endoso o bien, si necesita reexpedir la póliza ingrese el trámite en mesa de control.":"";
 			exito           = StringUtils.isNotBlank(CodAviso) ? false : true;
 			respuesta       = CodAviso.trim();
 			respuestaOculta = CodAviso;
