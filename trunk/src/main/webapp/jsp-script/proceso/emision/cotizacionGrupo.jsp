@@ -1441,7 +1441,7 @@ Ext.onReady(function()
     }
     
     
-    /*try
+    try
     {
     	if(_p21_cdtipsup  == _TIPO_SITUACION_RENOVACION){
     		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
@@ -1456,7 +1456,7 @@ Ext.onReady(function()
     catch(e)
     {
         debugError('error para la renovacion de la Poliza',e);
-    }*/
+    }
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
     
