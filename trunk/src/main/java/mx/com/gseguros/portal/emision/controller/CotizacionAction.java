@@ -4503,10 +4503,18 @@ public class CotizacionAction extends PrincipalCoreAction
 	                fila        = fila + 1;
 	                filasLeidas = filasLeidas + 1;
 	                
-	                String parentesco = null;
-	                String dependiente = null;
-	                String nombre     = "";
-	                double cdgrupo    = -1d;
+	                String parentesco      = null;
+	                String dependiente     = null;
+	                String nombre          = "";
+	                double cdgrupo         = -1d;
+	                int total              = 1;
+	                String dsnombre        = null;
+	                String dsnombre1       = null;
+	                String dsapellido      = null;
+	                String dsapellido1     = null;
+	                String genero          = null;
+	                String fechaNacAfectad = null;
+	                int errorSubcobertura  = 0;
 	                //GRUPO
 	                try {
 	                	cdgrupo = row.getCell(0).getNumericCellValue();
@@ -4570,6 +4578,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("PATERNO: "+(row.getCell(3).getStringCellValue()+"|"));
 		                bufferLinea.append(row.getCell(3).getStringCellValue()+"|");
 		                nombre = Utils.join(nombre,row.getCell(3).getStringCellValue()," ");
+		                dsapellido = row.getCell(3).getStringCellValue();
                 	} catch(Exception ex) {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (D) de la fila ",fila," "));
@@ -4582,6 +4591,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("MATERNO: "+(row.getCell(4).getStringCellValue()+"|"));
 		                bufferLinea.append(row.getCell(4).getStringCellValue()+"|");
 		                nombre = Utils.join(nombre,row.getCell(4).getStringCellValue()," ");
+		                dsapellido1 = row.getCell(4).getStringCellValue();
                 	} catch(Exception ex) {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (E) de la fila ",fila," "));
@@ -4594,6 +4604,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("NOMBRE: "+(row.getCell(5).getStringCellValue()+"|"));
 		                bufferLinea.append(row.getCell(5).getStringCellValue()+"|");
 		                nombre = Utils.join(nombre,row.getCell(5).getStringCellValue()," ");
+		                dsnombre = row.getCell(5).getStringCellValue();
                 	} catch(Exception ex) {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (F) de la fila ",fila," "));
@@ -4607,7 +4618,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("SEGUNDO NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 		                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
-		                
+		                dsnombre1 = auxCell!=null?auxCell.getStringCellValue():"";
 		                if("T".equals(parentesco)||!"0|".equals(dependiente)) {
 		                	nFamilia++;
 		                	familias.put(nFamilia,"");
@@ -4629,6 +4640,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	) {
 	                		throw new ApplicationException("No se reconoce el sexo [H,M]");
 	                	}
+	                	genero = row.getCell(7).getStringCellValue();
 		                logger.debug("SEXO: "+(sexo+"|"));
 		                bufferLinea.append(sexo+"|");
                 	} catch(Exception ex) {
@@ -4651,12 +4663,42 @@ public class CotizacionAction extends PrincipalCoreAction
 		                }
 		                logger.debug("FECHA NACIMIENTO: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
 		                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
+		                fechaNacAfectad = auxDate!=null?renderFechas.format(auxDate):"";
                 	} catch(Exception ex) {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (I) de la fila ",fila," "));
 	                } finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
 	                }
+	                
+	                
+                    //validamos asegurados duplicados
+                    try {
+                        auxCell=row.getCell(6);
+                        if(dsapellido!= null && dsapellido1 != null && dsnombre != null && genero != null && fechaNacAfectad!= null && total <= 1){
+                            logger.debug("Entra a la validacion de asegurados duplicados ==> :{} :{} :{} :{} :{} :{} ",dsapellido,dsapellido,dsnombre,dsnombre1,genero,fechaNacAfectad);
+                            total = total+1;
+                            HashMap<String, Object> paramPersona = new HashMap<String, Object>();
+                            paramPersona.put("pv_dsnombre_i",   dsnombre);
+                            paramPersona.put("pv_dsnombre1_i",  dsnombre1);
+                            paramPersona.put("pv_dsapellido_i", dsapellido);
+                            paramPersona.put("pv_dsapellido1_i",dsapellido1);
+                            paramPersona.put("pv_genero_i",     genero);
+                            paramPersona.put("pv_fenacimi_i",   renderFechas.parse(fechaNacAfectad));
+                            logger.debug("Valor a enviar paramPersona ==> :{}",paramPersona);
+                            
+                            String duplicadoAseg = cotizacionManager.obtenerAseguradoDuplicado(paramPersona);
+                            logger.debug("Existe Duplicados ==> :{}",duplicadoAseg);
+                            if(Integer.parseInt(duplicadoAseg) == 1){
+                                throw new Exception("El asegurado esta duplicado");
+                            }
+                        }
+                    } catch(Exception ex) {
+                        filaBuena = false;
+                        bufferErroresCenso.append(Utils.join("Error el asegurado se encuentra duplicado en la fila ",fila," "));
+                    } finally {
+                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
+                    }
 	                
 	                //CODIGO POSTAL
 	                try {

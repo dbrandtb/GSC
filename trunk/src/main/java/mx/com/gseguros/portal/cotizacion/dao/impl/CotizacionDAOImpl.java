@@ -8394,5 +8394,27 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();
         }
+    }
+
+    @Override
+    public String obtenerAseguradoDuplicado(HashMap<String, Object> paramPersona) throws Exception {
+        Map<String, Object> resultado = ejecutaSP(new ObtenerAseguradoDuplicado(getDataSource()), paramPersona);
+        return (String) resultado.get("pv_existe_o");
+    }
+
+    protected class ObtenerAseguradoDuplicado extends StoredProcedure {
+        protected ObtenerAseguradoDuplicado(DataSource dataSource) {          
+            super(dataSource, "PKG_SESAS.P_VALIDA_AFI_DUPLICADO");
+            declareParameter(new SqlParameter("pv_dsnombre_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_dsnombre1_i",   OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_dsapellido_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_dsapellido1_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_genero_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_fenacimi_i",    OracleTypes.DATE));
+            declareParameter(new SqlOutParameter("pv_existe_o",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
+        }
     }	
 }

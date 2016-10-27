@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.cotizacion.service;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1073,5 +1074,7 @@ public interface CotizacionManager
 			,String cdgrupo)throws Exception;
 
 	public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception;
+	
+	public String obtenerAseguradoDuplicado(HashMap<String, Object> paramPersona) throws Exception;
 	
 }

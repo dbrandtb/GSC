@@ -980,7 +980,25 @@ Ext.onReady(function()
                             }
                         ]
                         ,buttonAlign : 'center'
-                        ,buttons     :
+                        ,buttons:[{
+                            xtype :'panel',
+                            defaults : { style : 'margin:5px' },
+                            border   : 0,
+                            width    : 950,
+                            ui       :'footer',
+                            items    : [
+                                <s:if test='%{getImap().get("botones")!=null}'>
+                                    <s:property value="imap.botones" />,
+                                </s:if>
+                                {
+                                    text     : 'Limpiar'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                                    ,handler : _p21_cotizarNueva
+                                    ,hidden  : _p21_ntramite ? true : false
+                                }
+                            ]
+                        }]
+                        /*,buttons     :
                         [
                             <s:if test='%{getImap().get("botones")!=null}'>
                                 <s:property value="imap.botones" />,
@@ -991,7 +1009,7 @@ Ext.onReady(function()
                                 ,handler : _p21_cotizarNueva
                                 ,hidden  : _p21_ntramite ? true : false
                             }
-                        ]
+                        ]*/
                     })
                 ]
             }
