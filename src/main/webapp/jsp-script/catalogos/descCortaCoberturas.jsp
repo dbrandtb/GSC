@@ -138,7 +138,7 @@ Ext.onReady(function(){
 	storeProducto.load();
 	
 	var panelBusqueda = Ext.create('Ext.form.Panel', {
-        title: 'Seleccione un plan para editar los nombres cortos de sus coberturas.',
+        title: 'Seleccione un producto para editar los nombres cortos de sus coberturas.',
         border: false,
         bodyStyle:'padding:2px 0px 0px 5px;',
         items    : [productos,modalidades,planes],
