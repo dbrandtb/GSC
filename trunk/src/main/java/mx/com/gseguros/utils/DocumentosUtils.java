@@ -2,7 +2,6 @@ package mx.com.gseguros.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,12 +9,16 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.RectangleReadOnly;
@@ -28,7 +31,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 public class DocumentosUtils
 {
-	private final static Logger logger = Logger.getLogger(DocumentosUtils.class);
+	private final static Logger logger = LoggerFactory.getLogger(DocumentosUtils.class);
 	
 	public static File fusionarDocumentosPDF(List<File>origen,File destino)
 	{
@@ -49,7 +52,7 @@ public class DocumentosUtils
 			resp=new File(destino.getCanonicalPath());
 		}catch(Exception ex)
 		{
-			logger.error(ex);
+			logger.error("Error al fusionarDocumentosPDF: ", ex);
 		}
 		return resp;
 	}
@@ -128,7 +131,7 @@ public class DocumentosUtils
 	      document.close();
 	      outputStream.close();
 	    } catch (Exception e) {
-	      logger.error(e);
+	      logger.error("Error en concatPDFs: ", e);
 	    } finally {
 	      if (document.isOpen())
 	        document.close();
@@ -136,7 +139,7 @@ public class DocumentosUtils
 	        if (outputStream != null)
 	          outputStream.close();
 	      } catch (IOException ioe) {
-	        logger.error(ioe);
+	        logger.error("Error en concatPDFs:: ", ioe);
 	      }
 	    }
 	  }
@@ -158,12 +161,8 @@ public class DocumentosUtils
 			outputStream.flush();
 			outputStream.close();
 			
-		} catch (FileNotFoundException e) {
-			logger.error(e);
-		} catch (DocumentException e) {
-			logger.error(e);
-		} catch (IOException e) {
-			logger.error(e);
+		} catch (Exception e) {
+			logger.error("Error en pdfBlanco: ", e);
 		}
 		return output;
 
@@ -199,11 +198,8 @@ public class DocumentosUtils
 			
 			return mixPdf(fus,ot); 
 			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			logger.error(e);
-		}  catch (IOException e) {
-			logger.error(e);
+		} catch (Exception e) {
+			logger.error("Error en blancoParaDuplex: ", e);
 		}
 		return null;
 	}
@@ -229,23 +225,72 @@ public class DocumentosUtils
 			}
 			document.close();
 		
-		} catch (FileNotFoundException e) {
-			logger.error(e);
-		} catch (DocumentException e) {
-			
-			logger.error(e);
-		} catch (IOException e) {
-		
-			logger.error(e);
-		}catch(ExceptionConverter e){
-			logger.error(e);
-		}catch(Exception e){
-			logger.error(e);
+		} catch (Exception e) {
+			logger.error("Error en mixPdf: ",e);
 		}
 		
 		return salida;
 		
 	}
+	
+	
+	/**
+	 * Genera un documento de Excel en base a los parámetros de la lista
+	 * @param lista					
+	 * @param nombreArchivo   Nombre del archivo a generar
+	 * @param incluyeEncabezado true si se requiere agregar un registro con el nombre de los encabezados, false si no
+	 * @return
+	 */
+	public static boolean generaExcel(List<Map<String, String>> lista, String nombreArchivo, boolean incluyeEncabezado) {
+		
+		boolean exito = false;
+		
+		try {
+		 // Generar archivo en Excel en ruta temporal
+	        if(lista != null && lista.size() > 0) {
+	                            
+	            SXSSFWorkbook wb = new SXSSFWorkbook(); 
+	            wb.setCompressTempFiles(true);
+	            SXSSFSheet sh = (SXSSFSheet) wb.createSheet();
+	            sh.setRandomAccessWindowSize(100);// keep 100 rows in memory, exceeding rows will be flushed to disk
+	            
+	            int rownum = 0;
+	            // Incluimos el encabezado de las columnas:
+	            if(incluyeEncabezado && lista != null && lista.size() > 0) {
+	                Map<String, String> map = lista.get(0);
+	                Row row = sh.createRow(rownum);
+	                int cellnum = 0;
+	                for (Map.Entry<String, String> entry : map.entrySet()){
+	                    Cell cell = row.createCell(cellnum);
+	                    cell.setCellValue(entry.getKey());
+	                    cellnum++;
+	                }
+	                rownum ++;
+	            }
+	            // Generamos los datos en el archivo:
+	            for (Map<String, String> map : lista) {
+	                Row row = sh.createRow(rownum);
+	                int cellnum = 0;
+	                for (Map.Entry<String, String> entry : map.entrySet()){
+	                    Cell cell = row.createCell(cellnum);
+	                    cell.setCellValue(entry.getValue());
+	                    cellnum++;
+	                }
+	                rownum ++;
+	            }
+	            FileOutputStream out = new FileOutputStream(nombreArchivo);
+	            wb.write(out);
+	            out.close();
+	        } else {
+	            logger.warn("No hay datos para exportar el archivo {}", nombreArchivo);
+	        }
+	        exito = true;
+        } catch (Exception e) {
+            logger.error("Error al exportar datos al archivo {}", nombreArchivo, e);
+        }
+		return exito;
+	}
+	
 	
 //	public static void main(String []args)throws Exception{
 //		

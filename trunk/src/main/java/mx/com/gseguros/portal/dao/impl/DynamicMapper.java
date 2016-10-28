@@ -12,13 +12,13 @@ import org.springframework.jdbc.core.RowMapper;
 
 import mx.com.gseguros.utils.Utils;
 
-public class DinamicMapper implements RowMapper
+public class DynamicMapper implements RowMapper<Map<String, String>>
 {
 	
-	private final static Logger logger = LoggerFactory.getLogger(DinamicMapper.class);
+	private final static Logger logger = LoggerFactory.getLogger(DynamicMapper.class);
 
 	@Override
-	public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+	public Map<String, String> mapRow(ResultSet rs, int rowNum) throws SQLException
 	{
 		String cols="";
 		Map<String,String> map=new LinkedHashMap<String,String>(0);
