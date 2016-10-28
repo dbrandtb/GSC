@@ -913,7 +913,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 						"33",//tipMov 33 para Renovacion
 						usuario);
 			}
-			paso     = "antes de generar documentos";
+			paso     = "antes de generar documentos";	
 			documentosManager.generarDocumentosParametrizados(
 					cdunieco,
 					cdramo,

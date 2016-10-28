@@ -1269,7 +1269,7 @@ Ext.onReady(function()
     			[
     				{
     					xtype : 'textfield'
-    					,id   : 'numerofinalpoliza'
+    					,itemId   : 'numerofinalpoliza'
     					,fieldLabel : 'N&uacute;mero de poliza'
     					,readOnly   : true
     				}
@@ -1372,8 +1372,7 @@ Ext.onReady(function()
     										Ext.getCmp('botonEnvioEmail').hide();
     									}
     									
-    									if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
-    									{
+    									if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo)){
     										Ext.getCmp('venDocVenEmiBotIrCotiza').show();
     									}
     									Ext.getCmp('venDocVenEmiBotMesa').show();
@@ -1894,43 +1893,63 @@ Ext.onReady(function()
   			text	: 'Guardar',
   			handler : function(me){
   				var _p25_calendario = _fieldById('_p25_calendario');
-  				debug(_p25_calendario.form.getValues());
-  				var datos = _p25_calendario.form.getValues(); 
-  				var params = {};
-  				debug('_p25_calendario.form',_p25_calendario.form);
-  				var i = 0;
-  				for(var k in datos){
-  					debug('datos[k]',datos[k]);
-  					params['params.'+k] = datos[k];
-  					i++;
-  				}
-  				params['params.operacion'] = panCalendario['operacion'];
-  				params['params.nmperiod']  = panCalendario.nmperiod;
-  				debug('params',params);
-  				_mask('Guardando cambios');
-  				Ext.Ajax.request({
-        			url       : _p25_urlMovimientoCalendario,
-        			params    : params,
-        			success  : function(response){
-	                	_unmask();
-	            		var resp = Ext.decode(response.responseText);
-	            		debug('resp',resp);	            		
-	            		if(resp.exito == true){
-	            			mensajeCorrecto('Mensaje','Guardado con exito');
-	            			var _p25_gridCalendario = _fieldById('_p25_gridCalendario');
-	            			_p25_gridCalendario.store.reload();
-	            			me.up('window').close();
-	            		}
-	        			else{
-	        				mensajeError(resp.respuesta);
-	        			}
-        			},
-        			failure  : function(){
-        				_unmask();
-            			errorComunicacion();
-        			}
-    			});
-  			}
+  				debug(_p25_calendario.form.getValues());  				
+  				if((_fieldByName('dias',_p25_calendario).getValue()) > 0){
+  				  debug(_fieldByName('dias',_p25_calendario).getValue());
+  				  _fieldByName('feinicio',_p25_calendario).setValue(
+  				       Ext.Date.add(
+  				          _fieldByName('feaplica',_p25_calendario).getValue(), 
+  				          Ext.Date.DAY, 
+  				          1)
+  				  );
+  				  
+  				  _fieldByName('fefinal',_p25_calendario).setValue(
+                      Ext.Date.add(
+                         _fieldByName('feaplica',_p25_calendario).getValue(), 
+                         Ext.Date.DAY,
+                         _fieldByName('dias',_p25_calendario).getValue()
+                      )
+                  );
+                  var datos = _p25_calendario.form.getValues();
+  				  var params = {};
+  				  debug('_p25_calendario.form',_p25_calendario.form);
+  				  var i = 0;
+  				  for(var k in datos){
+  					 debug('datos[k]',datos[k]);
+  					 params['params.'+k] = datos[k];
+  					 i++;
+  				  }
+  				  params['params.operacion'] = panCalendario['operacion'];
+  				  params['params.nmperiod']  = panCalendario.nmperiod;
+  				  debug('params',params);
+  				  _mask('Guardando cambios');
+  				  Ext.Ajax.request({
+        	          url       : _p25_urlMovimientoCalendario,
+        			  params    : params,
+        			  success  : function(response){
+	                      _unmask();
+	            		  var resp = Ext.decode(response.responseText);
+	            		  debug('resp',resp);	            		
+	            		  if(resp.exito == true){
+	            		     mensajeCorrecto('Mensaje','Guardado con exito');
+	            		 	 var _p25_gridCalendario = _fieldById('_p25_gridCalendario');
+	            			 _p25_gridCalendario.store.reload();
+	            			 me.up('window').close();
+	            		  }
+	        			  else{
+	        		          mensajeError(resp.respuesta);
+	        			  }
+        			  },
+        			  failure  : function(){
+        			      _unmask();
+            			  errorComunicacion();
+                      }
+    			  });
+    		    }
+    		    else{
+    		      mensajeError('Defina el n\u00famero de d\u00edas de renovaci\u00f3n');
+    		    }
+  			 }
   		},
   		{ 
   			text: 'Cancelar',
@@ -2449,7 +2468,7 @@ function _p25_renovarPolizaClic(button,e)
     }
     else{
     	sePuedeRenovar = false;
-    	mensaje = mensaje+'La p\u00F3liza ya est\u00E1 renovada<br/>';
+    	mensaje = mensaje+'La p\u00F3liza ya est\u00E1 renovada '+pol['nmpolant']+'<br/>';
     }        
     debug('sePuedeRenovar',sePuedeRenovar);
     if(sePuedeRenovar == true){
@@ -2896,6 +2915,7 @@ function tarifaFinal(){
 			                                		_fieldById('botonEmitirPolizaFinal').disable();
 			                                		_fieldById('botonImprimirPolizaFinal').enable();
 			                                		_fieldById('botonEmitirPolizaFinalPreview').hide();
+			                                		_fieldById('numerofinalpoliza').setValue(list[0]['nmpoliex']);
 			                                	    mensajeCorrecto('Aviso',resp.respuesta);
 			                                	}
 			                                	else{
@@ -3137,10 +3157,10 @@ function actualizaCalendario(record){
 	_fieldByName('mes',form).readOnly = true;	
 	panCalendario['operacion'] = 'A';
 	panCalendario.setTitle('Editar');
-	_fieldByName('feinicio', form).setMinValue(panCalendario.minDate);
+	/*_fieldByName('feinicio', form).setMinValue(panCalendario.minDate);
 	_fieldByName('feinicio', form).setMaxValue(panCalendario.maxDate);
 	_fieldByName('fefinal',  form).setMinValue(panCalendario.minDate);
-	_fieldByName('fefinal',  form).setMaxValue(panCalendario.maxDate);
+	_fieldByName('fefinal',  form).setMaxValue(panCalendario.maxDate);*/
 	_fieldByName('feaplica', form).setMinValue(Ext.Date.add(panCalendario.maxDate, Ext.Date.DAY, 1));
 	panCalendario.show();
 	debug(panCalendario.down('form'));
@@ -3197,15 +3217,15 @@ function agregaCalendario(){
 	debug('feinicio',_fieldByName('feinicio', form));
 	_fieldByName('anio',form).setValue(_fieldByName('anio', formBusqueda).getValue());
 	_fieldByName('mes',form).setValue(_fieldByName('mes', formBusqueda).getValue());
-	_fieldByName('feinicio', form).setMinValue(panCalendario.minDate);
+	/*_fieldByName('feinicio', form).setMinValue(panCalendario.minDate);
 	_fieldByName('feinicio', form).setMaxValue(panCalendario.maxDate);
 	_fieldByName('fefinal',  form).setMinValue(panCalendario.minDate);
-	_fieldByName('fefinal',  form).setMaxValue(panCalendario.maxDate);
+	_fieldByName('fefinal',  form).setMaxValue(panCalendario.maxDate);*/
 	_fieldByName('feaplica', form).setMinValue(Ext.Date.add(panCalendario.minDate, Ext.Date.MONTH, -2));
 	_fieldByName('feaplica', form).setMaxValue(Ext.Date.add(panCalendario.minDate, Ext.Date.DAY,   -1));
 	//_fieldByName('feaplica', form).setMaxValue(panCalendario.maxDate);
-	_fieldByName('feinicio', form).setValue(panCalendario.minDate);
-	_fieldByName('fefinal',  form).setValue(panCalendario.maxDate);
+	/*_fieldByName('feinicio', form).setValue(panCalendario.minDate);
+	_fieldByName('fefinal',  form).setValue(panCalendario.maxDate);*/
 	_fieldByName('feaplica', form).setValue(Ext.Date.add(panCalendario.minDate, Ext.Date.DAY,   -1));
 	_fieldByName('anio',form).readOnly = true;
 	_fieldByName('mes', form).readOnly = true;

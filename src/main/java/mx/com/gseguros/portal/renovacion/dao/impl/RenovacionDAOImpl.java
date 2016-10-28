@@ -381,7 +381,8 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 						"cdmoneda",
 						"primas",
 						"descuento",
-						"extra_prima"
+						"extra_prima",
+						"nmpolant"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -806,6 +807,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		Map<String,String> result	  = new HashMap<String, String>(); 
 		result.put("nmpolizaNew", String.valueOf(procResult.get("pv_nmpolnew_o")));
 		result.put("nmsuplemNew", String.valueOf(procResult.get("pv_nmsuplem_o")));
+		result.put("nmpoliex",    String.valueOf(procResult.get("pv_nmpoliex_o")));
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************************")
@@ -829,6 +831,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			declareParameter(new SqlParameter("feefecto" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmpolnew_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_nmpoliex_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
