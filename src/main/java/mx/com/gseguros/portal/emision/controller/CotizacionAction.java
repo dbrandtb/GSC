@@ -12784,11 +12784,11 @@ public class CotizacionAction extends PrincipalCoreAction
             //Coberturas del plan
             List<Map<String,String>> coberturasPlanList = cotizacionManager.obtieneCobeturasNombrePlan(smap1.get("cdramo"),smap1.get("cdtipsit"),smap1.get("cdplan"));
             
+            logger.debug("coberturas de la busqiueda:::"+coberturasPlanList);
             
-            logger.debug("coberturas:::"+coberturasPlanList);
             for(Map<String,String> cob : coberturasPlanList){
                 if("4EAC".equalsIgnoreCase(cob.get("CDGARANT"))) continue; //Para saltar la cobertura de Evento de Alto Costo
-                if(Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA"))){
+                if(StringUtils.isBlank(smap1.get("cdplan")) || Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA"))){
                     Map<String,String> cobertura =  new HashMap<String, String>();
                     cobertura.put("CDGARANT", cob.get("CDGARANT"));
                     cobertura.put("DSGARANT", cob.get("DSGARANT"));
@@ -12796,6 +12796,8 @@ public class CotizacionAction extends PrincipalCoreAction
                     slist1.add(cobertura);    
                 }
             }
+            
+            logger.debug("Coberturas obtenidas para edicion de Nombre:::"+slist1);
 	        
 	        success = true;
 	        exito   = true;
