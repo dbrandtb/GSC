@@ -271,7 +271,7 @@ Ext.onReady(function(){
                                             var json = Ext.decode(response.responseText);
                                             if(json.success){
                                                 coberturasStore.reload();
-                                                mensajeCorrecto('Aviso','Las descripciones se han guardado correctamente.');
+                                                mensajeCorrecto('Aviso','Se ha guardado correctamente.');
                                             }else{
                                                 mensajeError(json.msgRespuesta);
                                             }
