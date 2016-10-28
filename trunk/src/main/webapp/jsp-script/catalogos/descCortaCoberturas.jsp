@@ -56,7 +56,7 @@ Ext.onReady(function(){
         queryMode:'local',
         displayField: 'value',
         valueField: 'key',
-        allowBlank:false,
+        //allowBlank:false,
         forceSelection: true,
         emptyText:'Seleccione...',
         store: storePlanes,
