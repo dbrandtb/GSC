@@ -3205,6 +3205,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.put("cdagente" , tramite.get("CDAGENTE"));
 					smap1.put("status"   , flujo.getStatus());
 					smap1.put("sincenso" , tramite.get("OTVALOR02"));
+					smap1.put("cdtipsup" , tramite.get("CDTIPSUP"));
 					
 					if ("M".equals(flujo.getEstado())) {
 						smap1.put("nmpoliza" , flujo.getNmpoliza());
@@ -3216,7 +3217,22 @@ public class CotizacionAction extends PrincipalCoreAction
 						smap1.put("ntramiteVacio" , flujo.getNtramite());
 					}
 					
-					logger.debug(Utils.log("","datos recuperados del flujo smap1=",smap1));
+                    if(tramite.get("CDTIPSUP").equalsIgnoreCase(TipoEndoso.RENOVACION.getCdTipSup().toString())){
+                        PolizaAseguradoVO polizaAseguradoVO = new PolizaAseguradoVO();
+                        polizaAseguradoVO.setCdunieco(smap1.get("cdunieco"));
+                        polizaAseguradoVO.setCdramo(smap1.get("cdramo"));
+                        polizaAseguradoVO.setEstado(smap1.get("estado"));
+                        polizaAseguradoVO.setNmpoliza(smap1.get("nmpoliza"));
+                        List<PolizaDTO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
+                        if (lista != null && !lista.isEmpty()) {
+                            smap1.put("nmpolant" , lista.get(0).getNmpolant());
+                        }else{
+                            smap1.put("nmpolant" , "");
+                        }
+                    }else{
+                        smap1.put("nmpolant" , "");
+                    }
+                    logger.debug(Utils.log("","datos recuperados del flujo smap1=",smap1));
 				}
 				
 				paso = "Verificando datos completos";
