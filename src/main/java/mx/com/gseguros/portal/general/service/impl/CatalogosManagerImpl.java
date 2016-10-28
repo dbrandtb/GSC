@@ -2077,4 +2077,10 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		String otValor = StringUtils.isNotBlank(idPadre) ? idPadre : null;
 		return catalogosDAO.obtieneCatalogoDescAtrib(cdRamo, dsAtribu, otValor);
 	}
+	
+	@Override
+    public boolean guardaDescripcionCortaCobertura(String cdgarant, String descCorta) throws Exception{
+        return catalogosDAO.guardaDescripcionCortaCobertura(cdgarant, descCorta);
+    }
+	
 }

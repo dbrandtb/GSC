@@ -74,6 +74,10 @@
            </interceptor-ref>
            <result type="json" />
        </action>
+
+       <action name="obtieneNombresCoberturasPlan" class="CotizacionAction" method="obtieneNombresCoberturasPlan">
+           <result type="json" />
+       </action>
        
        <action name="obtenSumaAseguradosMedicamentos" class="CotizacionAction" method="obtenSumaAseguradosMedicamentos">
            <result type="json" />

@@ -2141,4 +2141,29 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+
+	@Override
+	public boolean guardaDescripcionCortaCobertura(String cdgarant, String descCorta) throws Exception{		
+	    try {
+	        HashMap<String,Object> params = new LinkedHashMap<String,Object>();
+	        params.put("pv_cdgarant_i", cdgarant);
+	        params.put("pv_dsgarant_corta_i", descCorta);
+	        ejecutaSP(new GuardaDescripcionCortaCobertura(getDataSource()), params);
+	    } catch (Exception e) {
+	        throw new Exception(e.getMessage(), e);
+	    }
+	    return true;
+	}
+	
+	protected class GuardaDescripcionCortaCobertura extends StoredProcedure {
+	    
+	    protected GuardaDescripcionCortaCobertura(DataSource dataSource) {
+	        super(dataSource, "PKG_CONSULTA_ANGELES.P_ACTUALIZA_TGARANTI");
+	        declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_dsgarant_corta_i", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+	        compile();
+	    }
+	}
 }

@@ -3597,6 +3597,33 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
                 var letra  = record.get('letra');
                 debug('letra:',letra);
                 record.valido = false;
+                
+                if(_p21_clasif == _p21_TARIFA_MODIFICADA){
+	                /**
+	                 * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
+	                 * descripcion de plan que se esta editando
+	                 **/
+	                
+	                var gridGps =  combo.up().up(); 
+	                var recordGrpo = gridGps.getSelectionModel().getLastSelected();
+	                var indexDsplanL = 0;
+	                
+	                Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
+	                    if(columnGpo.dataIndex == "dsplanl"){
+	                        indexDsplanL = indexCol;
+	                        return false;
+	                    }
+	                });
+	                
+	                var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
+	                texDsplanL.setValue('');
+	                recordGrpo.set('dsplanl','');
+	                
+	                /**
+	                 * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
+	                 **/
+	            }
+                
                 _p21_quitarTabsDetalleGrupo(letra);
             }
             else

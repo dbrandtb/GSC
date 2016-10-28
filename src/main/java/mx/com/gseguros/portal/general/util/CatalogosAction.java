@@ -1125,6 +1125,28 @@ public class CatalogosAction extends PrincipalCoreAction {
     	return SUCCESS;
     }
     
+    public String actualizaDescCoberturas()throws Exception{
+        
+        logger.debug("Guardando Descripcion Corta Cobertura...");
+        logger.debug("Coberturas: " + saveList);
+        
+        try{
+            Utils.validate(saveList, "No hay coberturas a guardar");
+            
+            for(Map<String, String> cob: saveList){
+                catalogosManager.guardaDescripcionCortaCobertura(cob.get("CDGARANT"), cob.get("DSGARANT_CORTA"));
+            }
+            
+        }catch(Exception ex){
+            msgRespuesta = Utils.manejaExcepcion(ex);;
+            success = false;
+            return SUCCESS;
+        }
+        
+        success = true;
+        return SUCCESS;
+    }
+    
     // Getters and setters
 	public boolean isSuccess() {
 		return success;

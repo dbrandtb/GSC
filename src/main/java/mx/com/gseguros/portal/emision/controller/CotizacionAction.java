@@ -12680,13 +12680,13 @@ public class CotizacionAction extends PrincipalCoreAction
 					//si la cobertura esta en el plan original y no esta seleccionada en pantalla
 					if(Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA")) && !coberturasSel.containsKey(cob.get("CDGARANT"))){
 						sobrantes ++;
-						nombreLargo.append(" -").append(cob.get("CDGARANT"));//TGARANTI
+						nombreLargo.append(" -").append(StringUtils.isBlank(cob.get("DSGARANT_CORTA"))? cob.get("CDGARANT") : cob.get("DSGARANT_CORTA"));//TGARANTI
 						ultimaGarantia = " SIN "+cob.get("DSGARANT");
 						
 					}else //si la cobertura se considera dentro del plan predefinido y se encuentra seleccionada en pantalla
 						if(Constantes.NO.equalsIgnoreCase(cob.get("SWOBLIGA")) && coberturasSel.containsKey(cob.get("CDGARANT"))){
 							faltantes ++;
-							nombreLargo.append(" +").append(cob.get("CDGARANT"));//TGARANTI
+							nombreLargo.append(" +").append(StringUtils.isBlank(cob.get("DSGARANT_CORTA"))? cob.get("CDGARANT") : cob.get("DSGARANT_CORTA"));//TGARANTI
 							ultimaGarantia = " CON "+cob.get("DSGARANT");
 						}
 				}
@@ -12766,6 +12766,54 @@ public class CotizacionAction extends PrincipalCoreAction
 				+ "\n########################################"
 				);
 		return SUCCESS;
+	}
+
+	public String obtieneNombresCoberturasPlan()
+	{
+	    logger.debug(""
+	            + "\n########################################"
+	            + "\n###### obtieneNombresCoberturasPlan ######"
+	            + "\nsmap1:  "+smap1
+	            );
+	    
+	    slist1 = new ArrayList<Map<String,String>>();
+	    
+	    try
+	    {
+	            
+            //Coberturas del plan
+            List<Map<String,String>> coberturasPlanList = cotizacionManager.obtieneCobeturasNombrePlan(smap1.get("cdramo"),smap1.get("cdtipsit"),smap1.get("cdplan"));
+            
+            
+            logger.debug("coberturas:::"+coberturasPlanList);
+            for(Map<String,String> cob : coberturasPlanList){
+                if("4EAC".equalsIgnoreCase(cob.get("CDGARANT"))) continue; //Para saltar la cobertura de Evento de Alto Costo
+                if(Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA"))){
+                    Map<String,String> cobertura =  new HashMap<String, String>();
+                    cobertura.put("CDGARANT", cob.get("CDGARANT"));
+                    cobertura.put("DSGARANT", cob.get("DSGARANT"));
+                    cobertura.put("DSGARANT_CORTA", StringUtils.isBlank(cob.get("DSGARANT_CORTA"))? "" : cob.get("DSGARANT_CORTA"));
+                    slist1.add(cobertura);    
+                }
+            }
+	        
+	        success = true;
+	        exito   = true;
+	        
+	    }
+	    catch(Exception ex)
+	    {
+	        long timestamp=System.currentTimeMillis();
+	        logger.error(timestamp+" error al obtener coberturas plan", ex);
+	        respuesta       = "Error inesperado #"+timestamp;
+	        respuestaOculta = ex.getMessage();
+	        exito           = false;
+	    }
+	    logger.debug(""
+	            + "\n###### obtieneNombresCoberturasPlan ######"
+	            + "\n########################################"
+	            );
+	    return SUCCESS;
 	}
 	
 	public String restaurarRespaldoCenso()
