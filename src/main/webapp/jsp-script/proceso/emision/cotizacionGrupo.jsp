@@ -1173,6 +1173,7 @@ Ext.onReady(function()
                                 </s:if>
                                 {
                                     text     : 'Limpiar'
+                                    ,xtype   : 'button'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                                     ,handler : _p21_cotizarNueva
                                     ,hidden  : _p21_ntramite ? true : false
