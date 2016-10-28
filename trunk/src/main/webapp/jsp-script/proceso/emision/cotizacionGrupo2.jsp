@@ -6,7 +6,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>
 .valorNoOriginal {
-	background: #FFFF99;
+    background: #FFFF99;
+}
+.valorRenovacionColec {
+    background: #FFD299;
 }
 ._p25_editorLectura {
 	visibility: hidden;
@@ -101,10 +104,11 @@ var _p25_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p25_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p25_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p25_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
-var _p25_reportsServerUser = '<s:text name="pass.servidor.reports" />';
-
+var _p25_urlImprimirCotiza      = '<s:text name="ruta.servidor.reports" />';
+var _p25_reportsServerUser      = '<s:text name="pass.servidor.reports" />';
+var _TIPO_SITUACION_RENOVACION  = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
+
 debug('_p25_smap1:',_p25_smap1);
 
 _p25_smap1.modificarTodo = false;
@@ -1209,6 +1213,7 @@ Ext.onReady(function()
                                 </s:if>
                                 {
                                     text     : 'Limpiar'
+                                    ,xtype   : 'button'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                                     ,handler : _p25_cotizarNueva
                                     ,hidden  : _p25_ntramite ? true : false
@@ -2896,9 +2901,9 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                 ,'smap1.cdgarant'  : json.slist1[i].CDGARANT
                                 ,'smap1.indice'    : i
                                 ,'smap1.cdatrivar' : record.get('parametros.pv_otvalor'+_p25_smap1.ATRIVAR_TATRIGAR)
-                                ,'smap1.cdtipsup'  : null
-                                ,'smap1.nmpolant'  : null
-                                ,'smap1.cdgrupo'   : null
+                                ,'smap1.cdtipsup'  : _p25_smap1.cdtipsup
+                                ,'smap1.nmpolant'  : _p25_smap1.nmpolant
+                                ,'smap1.cdgrupo'   : record.get('letra')
                             }
                             ,success : function(response)
                             {
@@ -2925,17 +2930,29 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                     {
                                                         if(me.isDisabled())
                                                         {
-                                                            me.removeCls('valorNoOriginal');
+                                                            if(_p25_smap1.cdtipsup == _TIPO_SITUACION_RENOVACION){
+                                                                me.removeCls('valorRenovacionColec');
+                                                            }else{
+                                                                me.removeCls('valorNoOriginal');
+                                                            }
                                                         }
                                                         else
                                                         {
                                                             if(me.getValue()!=me.valorInicial)
                                                             {
-                                                                me.addCls('valorNoOriginal');
+                                                                if(_p25_smap1.cdtipsup == _TIPO_SITUACION_RENOVACION){
+                                                                    me.addCls('valorRenovacionColec');
+                                                                }else{
+                                                                    me.addCls('valorNoOriginal');
+                                                                }
                                                             }
                                                             else
                                                             {
-                                                                me.removeCls('valorNoOriginal');
+                                                                if(_p25_smap1.cdtipsup == _TIPO_SITUACION_RENOVACION){
+                                                                    me.removeCls('valorRenovacionColec');
+                                                                }else{
+                                                                    me.removeCls('valorNoOriginal');
+                                                                }
                                                             }
                                                         }
                                                     };
