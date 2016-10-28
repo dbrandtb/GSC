@@ -1,9 +1,24 @@
 package mx.com.gseguros.portal.consultas.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
@@ -36,19 +51,10 @@ import mx.com.gseguros.portal.general.service.ConveniosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoArchivo;
+import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.Utils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
 
 /**
  * 
@@ -87,6 +93,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private KernelManagerSustituto kernelManager;
+	
+	@Autowired
+	private ConveniosManager conveniosManager;
 
 	private HashMap<String, String> params;
 
@@ -136,13 +145,22 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	private List<Map<String, String>> loadList;
 	
-	@Autowired
-	ConveniosManager conveniosManager;
-	
 	/**
 	 * Indica si el usuario es de CallCenter
 	 */
 	private boolean usuarioCallCenter;
+	
+	
+	/**
+	 * Nombre del archivo a exportar
+	 */
+	private String fileName;
+	 
+	/**
+	 * Nombre del objeto a exportar
+	 */
+	private InputStream inputStream;
+	
 
 	/**
 	 * Metodo de entrada a consulta de polizas
@@ -1137,7 +1155,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-public String ejecutaQuery(){
+	public String ejecutaQuery(){
 		
 		logger.debug(Utils.log(
 				 "\n###########################################"
@@ -1181,6 +1199,39 @@ public String ejecutaQuery(){
 		  }
 		return SUCCESS;
 	}
+
+    /**
+     * Consulta los incisos de una poliza
+     * @return Nombre del result del action 
+     * @throws Exception
+     */
+    public String consultaIncisosPoliza() throws Exception {
+        
+        String result = SUCCESS;
+        
+        if(params == null){
+            params = new HashMap<String,String>();
+        }
+        
+        loadList = consultasPolizaManager.consultaIncisosPoliza(params.get("cdunieco"),params.get("cdramo"), params.get("estado"), params.get("nmpoliza"));
+        logger.debug("loadList={}", loadList);
+        if(params.get("exportar") != null && "true".equals(params.get("exportar"))){
+            
+            // Generar archivo en Excel en ruta temporal:
+            String fullFileName = this.getText("ruta.documentos.temporal")+Constantes.SEPARADOR_ARCHIVO+"export"+TipoArchivo.XLSX.getExtension();
+            fileName = "export"+TipoArchivo.XLSX.getExtension();
+            // Se genera el archivo en una ruta temporal:
+            boolean exito = DocumentosUtils.generaExcel(loadList, fullFileName, true);
+            if(exito) {
+                // Se asigna el inputstream con el contenido del archivo a exportar:
+                inputStream = new FileInputStream(new File(fullFileName));
+                result = "excel";
+            } else {
+                result = "filenotfound";
+            }
+        }
+        return result;
+    }
 	
 	
 	// Getters and setters:
@@ -1444,4 +1495,21 @@ public String ejecutaQuery(){
 	public void setTotalCount(long totalcount){
 		this.totalCount=totalcount;
 	}
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public InputStream getInputStream() {
+        return inputStream;
+    }
+
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+	
 }

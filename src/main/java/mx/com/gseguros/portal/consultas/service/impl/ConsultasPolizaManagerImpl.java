@@ -533,4 +533,11 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 			String nmpoliza, String nmsuplem) throws Exception {
 		return consultasPolizaDAOICE.obtieneDatosLigasRecibosPoliza(cdunieco, cdramo, cdestado, nmpoliza, nmsuplem);
 	}
+	
+	@Override
+    public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza)
+            throws Exception {
+		return consultasPolizaDAOICE.consultaIncisosPoliza(cdunieco, cdramo, estado, nmpoliza);
+	}
+	
 }

@@ -940,4 +940,12 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

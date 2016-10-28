@@ -322,4 +322,16 @@ public interface ConsultasPolizaManager {
      * @throws Exception
      */
     public Map<String, String> obtieneDatosLigasRecibosPoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception;
+    
+    /**
+     * Consulta los incisos de una poliza
+     * @param cdunieco Sucursal de la poliza
+     * @param cdramo   Ramo de la poliza
+     * @param estado   Estado de la poliza
+     * @param nmpoliza Numero de poliza
+     * @return Incisos de la poliza
+     * @throws Exception
+     */
+    public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+    
 }
