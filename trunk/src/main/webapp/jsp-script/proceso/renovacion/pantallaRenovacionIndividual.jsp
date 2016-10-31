@@ -1267,13 +1267,14 @@ Ext.onReady(function()
     			}
     			,items:
     			[
-    				{
+    				/*{
     					xtype : 'textfield'
     					,itemId   : 'numerofinalpoliza'
     					,fieldLabel : 'N&uacute;mero de poliza'
     					,readOnly   : true
     				}
-    				,{
+    				,*/
+    				{
     					id      : 'botonEmitirPolizaFinal'
     					,xtype  : 'button'
     					,text   : 'Emitir'
@@ -2882,6 +2883,12 @@ function tarifaFinal(){
 			    			title   : 'TARIFA DEL ENDOSO',
 			    			datos   : datos,
 			    			buttons : [
+			    			    {
+                                    xtype       : 'textfield'
+                                    ,itemId     : 'numerofinalpoliza'
+                                    ,fieldLabel : 'N&uacute;mero de poliza'
+                                    ,readOnly   : true
+                                },
 			    				{
 			    					xtype     : 'button',
 			    					itemId    : 'botonEmitirPolizaFinal',
