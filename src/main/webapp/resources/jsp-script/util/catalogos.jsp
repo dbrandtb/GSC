@@ -100,18 +100,19 @@ var TipoPago = {
 
 // Catalogo de cdtipsit:
 var TipoSituacion = {
-    AutosFronterizos : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@AUTOS_FRONTERIZOS.cdtipsit" />',
-    AutosResidentes  :  '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@AUTOS_RESIDENTES.cdtipsit" />',
-    AutosPickUp      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@AUTOS_PICK_UP.cdtipsit" />',
-    CamionesCarga    : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@CAMIONES_CARGA.cdtipsit" />',
-    Multisalud       : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@MULTISALUD.cdtipsit" />',
-    Motos            : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@MOTOS.cdtipsit" />',
-    SaludNomina      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_NOMINA.cdtipsit" />',
-    SaludVital       : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_VITAL.cdtipsit" />',
-    PickUpCarga      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@PICK_UP_CARGA.cdtipsit" />',
-    PickUpParticular : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@PICK_UP_PARTICULAR.cdtipsit" />',
-    RecuperaIndividual: '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECIPERA_INDIVIDUAL.cdtipsit" />',
-    RecuperaColectivo : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECUPERA_COLECTIVO.cdtipsit" />',
+    AutosFronterizos      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@AUTOS_FRONTERIZOS.cdtipsit" />',
+    AutosResidentes       : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@AUTOS_RESIDENTES.cdtipsit" />',
+    AutosPickUp           : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@AUTOS_PICK_UP.cdtipsit" />',
+    CamionesCarga         : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@CAMIONES_CARGA.cdtipsit" />',
+    Multisalud            : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@MULTISALUD.cdtipsit" />',
+    MultisaludColectivo   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@MULTISALUD_COLECTIVO.cdtipsit" />',
+    Motos                 : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@MOTOS.cdtipsit" />',
+    SaludNomina           : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_NOMINA.cdtipsit" />',
+    SaludVital            : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_VITAL.cdtipsit" />',
+    PickUpCarga           : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@PICK_UP_CARGA.cdtipsit" />',
+    PickUpParticular      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@PICK_UP_PARTICULAR.cdtipsit" />',
+    RecuperaIndividual    : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECIPERA_INDIVIDUAL.cdtipsit" />',
+    RecuperaColectivo     : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECUPERA_COLECTIVO.cdtipsit" />',
     TractoCamionesArmados : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TRACTOCAMIONES_ARMADOS.cdtipsit" />'
  };
 
