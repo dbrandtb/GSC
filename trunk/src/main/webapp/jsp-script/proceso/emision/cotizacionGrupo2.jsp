@@ -5038,9 +5038,9 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                         text       : 'NOMBRE'
                         ,dataIndex : 'nombre'
                     }
-                    /*<s:if test='%{getImap().containsKey("extraprimasColumns")&&getImap().get("extraprimasColumns")!=null}'>
+                    <s:if test='%{getImap().containsKey("extraprimasColumns")&&getImap().get("extraprimasColumns")!=null}'>
                         ,<s:property value="imap.extraprimasColumns" escapeHtml='false' />
-                    </s:if>*/
+                    </s:if>
                 ]
                 ,width      : 980
                 ,height     : 500                
