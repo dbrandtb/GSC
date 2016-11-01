@@ -218,7 +218,7 @@ Ext.onReady(function(){
 	        });
 	
     var gridCobeturas = Ext.create('Ext.grid.Panel',{
-		    title : 'Coberturas del plan.',
+		    title : 'Coberturas del plan. De clic en el nombre corto de la cobertura que desee editar.',
 	        bodyStyle:'padding:2px 0px 0px 2px;',
 		    height : 400,
 		    store : coberturasStore,
