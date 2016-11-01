@@ -60,6 +60,8 @@ Ext.onReady(function(){
         forceSelection: true,
         emptyText:'Seleccione...',
         store: storePlanes,
+        hidden: true //Temporalmente solo MSC, existen algunos planes que no tienen las coberutas obligatorias
+                     //y no salen todas por lo que se opta por ocultar este campo para que salgan todas las del subramo 
     }); 
 	
     var storeModalidades = Ext.create('Ext.data.Store', {
@@ -135,10 +137,29 @@ Ext.onReady(function(){
         }
    	});   
 
-	storeProducto.load();
+	/**
+	* Para cargar solo el producto de Multisalud colectivo 
+	*/
+	storeProducto.load({
+	    callback:  function(records, operation, success){
+	        if(success){
+	            productos.setValue(Ramo.Multisalud);
+	            productos.setReadOnly(true);
+	            storeModalidades.load({
+                    params: {
+                        'params.idPadre': Ramo.Multisalud
+                    },
+                    callback : function(){
+                        modalidades.setValue(TipoSituacion.MultisaludColectivo);
+                        modalidades.setReadOnly(true);
+                    }
+                });
+	        }
+	    }
+	});
 	
 	var panelBusqueda = Ext.create('Ext.form.Panel', {
-        title: 'Seleccione un producto para editar los nombres cortos de sus coberturas.',
+        title: 'Edici&oacute;n de nombres cortos de coberturas.',
         border: false,
         bodyStyle:'padding:2px 0px 0px 5px;',
         items    : [productos,modalidades,planes],
