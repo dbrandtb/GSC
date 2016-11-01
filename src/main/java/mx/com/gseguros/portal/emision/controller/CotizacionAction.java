@@ -4846,19 +4846,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
 	                
-	                //IDENTIDAD NO.DE EMPLEADO
-	                /*try {
-		                auxCell=row.getCell(19);
-		                logger.debug("IDENTIDAD: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (T) de la fila ",fila," "));
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
-	                }*/
-	                
-	                //IDENTIDAD NO.DE EMPLEADO
+                    //IDENTIDAD NO.DE EMPLEADO
 	                try {
 		                auxCell=row.getCell(19);
 		                logger.debug("IDENTIDAD: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
@@ -5898,25 +5886,39 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
 	                }
 	              //NUM. EXTERIOR
-	                try
-                	{
-	                	String numExt = extraerStringDeCelda(row.getCell(14));
-	                	if(StringUtils.isBlank(numExt))
-	                	{
-	                		throw new ApplicationException("Falta numero exterior");
-	                	}
-		                logger.debug("NUM EXT: "+numExt);
-		                bufferLinea.append(Utils.join(numExt,"|"));
-                	}
-	                catch(Exception ex)
-	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (O) de la fila ",fila," "));
-	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
-	                }
+                    try
+                    {
+                        String numExt = String.format("%.0f",row.getCell(14).getNumericCellValue())+"";
+                        if(StringUtils.isBlank(numExt))
+                        {
+                            throw new ApplicationException("Falta numero exterior");
+                        }
+                        bufferLinea.append(String.format("%.0f",row.getCell(14).getNumericCellValue())+"|");
+                    }
+                    catch(Exception ex2)
+                    {
+                        logger.warn("error al leer el No. exterior, se intentara como string:",ex2);
+                        try
+                        {
+                            String numExt = row.getCell(14).getStringCellValue();
+                            if(StringUtils.isBlank(numExt))
+                            {
+                                throw new ApplicationException("Falta numero exterior");
+                            }
+                            bufferLinea.append(row.getCell(14).getStringCellValue()+"|");
+                        }
+                        catch(Exception ex)
+                        {
+                            filaBuena = false;
+                            bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (O) de la fila ",fila," "));
+                        }
+                    }
+                    finally
+                    {
+                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
+                    }
+	                
+                    
 	              //NUM. INTERIOR
 	                try
                 	{
@@ -6243,49 +6245,27 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(26)),"-"));
 	                }
-	              //FECHA INGRESO
+	                  //FECHA INGRESO
 	                try
                 	{
-		                auxDate=row.getCell(27)!=null?row.getCell(27).getDateCellValue():null;
-		                if(auxDate!=null)
-		                {
+	                    auxDate= StringUtils.isNotBlank(row.getCell(27).toString())?row.getCell(27).getDateCellValue():null;
+		                if(auxDate!=null){
 		                	Calendar cal = Calendar.getInstance();
 		                	cal.setTime(auxDate);
-		                	if(cal.get(Calendar.YEAR)>2100
-		                			||cal.get(Calendar.YEAR)<1900
-		                			)
+                            if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900)
 		                	{
 		                		throw new ApplicationException("El anio de la fecha de ingreso no es valido");
 		                	}
 		                }
 		                
-		                feingreso = auxDate!=null?
-        						renderFechas.format(auxDate)
-        						:"";
-        						
-		                logger.debug(
-		                		new StringBuilder("FECHA INGRESO EMPLEADO: ")
-		                		.append(
-		                				auxDate!=null?
-		                						renderFechas.format(auxDate)
-		                						:""
-		                		)
-		                		.append("|")
-		                		.toString()
-		                		);
-		                bufferLinea.append(
-		                		auxDate!=null?
-		                				new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
-		                				:"|"
-		                		);
+		                feingreso = auxDate!=null? renderFechas.format(auxDate):"";
+        				logger.debug( new StringBuilder("FECHA INGRESO EMPLEADO: ").append(auxDate!=null?renderFechas.format(auxDate):"").append("|").toString());
+		                bufferLinea.append(auxDate!=null?new StringBuilder(renderFechas.format(auxDate)).append("|").toString():"|");
                 	}
 	                catch(Exception ex)
 	                {
-	                	/*filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (AB) de la fila ",fila," "));*/
-	                	// Segundo intento, se tratara el campo como String:
 	                	try {
-							auxDate= renderFechas.parse(row.getCell(27).getStringCellValue());
+                            auxDate= renderFechas.parse(row.getCell(27).getStringCellValue());
 							if(auxDate!=null) {
 			                	Calendar cal = Calendar.getInstance();
 			                	cal.setTime(auxDate);
@@ -6294,7 +6274,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			                	}
 			                }
 							feingreso = auxDate!=null?renderFechas.format(auxDate):"";
-			                logger.debug("FECHA RECONOCIMIENTO ANTIGUEDAD: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
+			                logger.debug("FECHA INGRESO: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
 			                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
 		                } catch (Exception e) {
 							filaBuena = false;
@@ -12407,19 +12387,19 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	private String extraerStringDeCelda(Cell cell)
-	{
-		try
-		{
-			cell.setCellType(Cell.CELL_TYPE_STRING);
-			String cadena = cell.getStringCellValue();
-			return cadena==null?"":cadena;
-		}
-		catch(Exception ex)
-		{
-			return "";
-		}
-	}
+    private String extraerStringDeCelda(Cell cell)
+    {
+        try
+        {
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            String cadena = cell.getStringCellValue();
+            return cadena==null?"":cadena;
+        }
+        catch(Exception ex)
+        {
+            return "";
+        }
+    }
 	
 	public String complementoSaludGrupo()
 	{

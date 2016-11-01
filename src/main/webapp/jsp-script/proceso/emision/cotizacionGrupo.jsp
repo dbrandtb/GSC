@@ -96,7 +96,7 @@ var _p21_urlComplementoCotizacion        = '<s:url namespace="/emision"         
 var _p21_urlRecuperacion                 = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
 var _p21_urlRestaurarRespaldoCenso       = '<s:url namespace="/emision"         action="restaurarRespaldoCenso"           />';
 var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
-var _p21_urlReporte                 	 = '<s:url namespace="/reportes"    	action="procesoObtencionReporte" />';
+var _p21_urlReporte                 	 = '<s:url namespace="/consultasPoliza" action="consultaIncisosPoliza" />';
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
     ,_cotcol_urlPantallaActTvalosit = '<s:url namespace="/tvalosit" action="includes/pantallaActTvalosit" />'
