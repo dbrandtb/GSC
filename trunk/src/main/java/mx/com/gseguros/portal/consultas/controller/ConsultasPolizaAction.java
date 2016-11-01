@@ -3,7 +3,9 @@ package mx.com.gseguros.portal.consultas.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,7 @@ import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
@@ -52,6 +55,7 @@ import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.Utils;
@@ -145,6 +149,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	private List<Map<String, String>> loadList;
 	
+	@Autowired
+    private DocumentosManager documentosManager;
 	/**
 	 * Indica si el usuario es de CallCenter
 	 */
@@ -1218,13 +1224,38 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
         if(params.get("exportar") != null && "true".equals(params.get("exportar"))){
             
             // Generar archivo en Excel en ruta temporal:
-            String fullFileName = this.getText("ruta.documentos.temporal")+Constantes.SEPARADOR_ARCHIVO+"export"+TipoArchivo.XLSX.getExtension();
-            fileName = "export"+TipoArchivo.XLSX.getExtension();
-            // Se genera el archivo en una ruta temporal:
+            String valorFecha= System.currentTimeMillis()+"";
+            String nombreArchivo = "Censo_" + valorFecha+ TipoArchivo.XLSX.getExtension();
+            String fullFileName = getText("ruta.documentos.poliza") + Constantes.SEPARADOR_ARCHIVO
+                    + params.get("ntramite") + Constantes.SEPARADOR_ARCHIVO + nombreArchivo;
+            fileName = nombreArchivo;
             boolean exito = DocumentosUtils.generaExcel(loadList, fullFileName, true);
             if(exito) {
                 // Se asigna el inputstream con el contenido del archivo a exportar:
                 inputStream = new FileInputStream(new File(fullFileName));
+                    
+                documentosManager.guardarDocumento(
+                        params.get("cdunieco")
+                        ,params.get("cdramo")
+                        ,params.get("estado")
+                        ,params.get("nmpoliza")
+                        ,"0"
+                        ,new Date()
+                        ,fileName
+                        ,"CENSO "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
+                        ,params.get("nmpoliza")
+                        ,params.get("ntramite")
+                        ,"1"
+                        ,null
+                        ,null
+                        ,TipoTramite.RENOVACION.getCdtiptra()
+                        ,null
+                        ,null
+                        ,null
+                        ,null
+                        ,false
+                    );
+                
                 result = "excel";
             } else {
                 result = "filenotfound";
@@ -1232,13 +1263,13 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
         }
         return result;
     }
-	
-	
-	// Getters and setters:
+    
+    
+    // Getters and setters:
 
-	public List<AseguradoVO> getDatosAsegurados() {
-		return datosAsegurados;
-	}
+    public List<AseguradoVO> getDatosAsegurados() {
+        return datosAsegurados;
+    }
 
 	public void setDatosAsegurados(List<AseguradoVO> datosAsegurados) {
 		this.datosAsegurados = datosAsegurados;

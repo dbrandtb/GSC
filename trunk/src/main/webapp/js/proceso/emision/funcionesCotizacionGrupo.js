@@ -2247,10 +2247,12 @@ function _p21_exportarExcelCensoFinal(){
 	    url:_p21_urlReporte,
 	    params: {
 	        cdreporte : 'REPEXC021'
-	        ,'params.pv_cdunieco_i' : _p21_smap1.cdunieco
-	        ,'params.pv_cdramo_i'   : _p21_smap1.cdramo
-	        ,'params.pv_estado_i'   : _p21_smap1.estado
-	        ,'params.pv_nmpoliza_i' : _p21_smap1.nmpoliza
+	        ,'params.cdunieco' : _p21_smap1.cdunieco
+	        ,'params.cdramo'   : _p21_smap1.cdramo
+	        ,'params.estado'   : _p21_smap1.estado
+	        ,'params.nmpoliza' : _p21_smap1.nmpoliza
+	        ,'params.ntramite' : _p21_smap1.ntramite
+	        ,'params.exportar' : true
 	    },
 	    success: function(form, action) {
 	        

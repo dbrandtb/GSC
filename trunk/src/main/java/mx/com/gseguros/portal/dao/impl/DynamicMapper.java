@@ -33,11 +33,11 @@ public class DynamicMapper implements RowMapper<Map<String, String>>
 			}
 			if(col!=null&&(col.substring(0,2).equalsIgnoreCase("fe")||col.substring(0,2).equalsIgnoreCase("ff")))
 			{
-				map.put(col,Utils.formateaFecha(rs.getString(col)));
+			    map.put(col,Utils.formateaFecha(rs.getString(col)!= null?rs.getString(col):""));
 			}
 			else
 			{
-				map.put(col,rs.getString(col));
+			    map.put(col,rs.getString(col)!= null?rs.getString(col):"");
 			}			
 		}
 		if(rowNum==0)
