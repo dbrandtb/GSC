@@ -10772,49 +10772,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				if (Ramo.MULTISALUD.getCdramo().equals(cdramo)
 						&& !TipoSituacion.TRADICIONALES_MEGASALUD.getCdtipsit().equals(cdtipsit))
 				{
-					//excel resumen
-					Map<String,String> paramsResumen = new LinkedHashMap<String,String>();
-					paramsResumen.put("pv_cdunieco_i" , cdunieco);
-					paramsResumen.put("pv_cdramo_i"   , cdramo);
-					paramsResumen.put("pv_estado_i"   , estado);
-					paramsResumen.put("pv_nmpoliza_i" , nmpoliza);
-					paramsResumen.put("pv_nmsuplem_i" , "0");
-					paramsResumen.put("pv_cdperpag_i" , cdperpag);
-					paramsResumen.put("pv_cdusuari_i" , cdusuari);
-					
-					InputStream excel = reportesManager.obtenerDatosReporte(Reporte.SALUD_COLECTIVO_RESUMEN_COTIZACION.getCdreporte()
-							,cdusuari
-							,paramsResumen
-							);
-					
-					String nombreResumen = Utils.join("RESUMEN_COTIZACION_",nmpoliza,TipoArchivo.XLS.getExtension());
-					
-					FileUtils.copyInputStreamToFile(excel, new File(Utils.join(
-									getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreResumen
-					)));
-					
-					documentosManager.guardarDocumento(
-							cdunieco
-							,cdramo
-							,estado
-							,"0"
-							,"0"
-							,new Date()
-							,nombreResumen
-							,Utils.join("RESUMEN DE COTIZACI\u00d3N (EXCEL) (",nmpoliza,")")
-							,nmpoliza
-							,ntramite
-							,"1"
-							,null
-							,null
-							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,null
-							,null
-							,null
-							,null, false
-							
-							);
-					
 					//pdf resumen
 					String urlReporteResumenCotizacion=Utils.join(
 							  getText("ruta.servidor.reports")
