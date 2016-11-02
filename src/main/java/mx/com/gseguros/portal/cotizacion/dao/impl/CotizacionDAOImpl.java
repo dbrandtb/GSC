@@ -565,8 +565,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected CargarGruposCotizacion(DataSource dataSource)
 		{
-			//super(dataSource,"PKG_CONSULTA.P_GET_GRUPOS_COTIZACION");
-			super(dataSource,"pkg_consulta_angeles.P_GET_GRUPOS_COTIZACION");
+			super(dataSource,"PKG_CONSULTA.P_GET_GRUPOS_COTIZACION");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -6253,7 +6252,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected ObtieneCobeturasNombrePlan(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA_ANGELES.P_GET_COBERTURAS_NVOPLAN");
+			super(dataSource,"PKG_CONSULTA.P_GET_COBERTURAS_NVOPLAN");
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdplan"   , OracleTypes.VARCHAR));
@@ -8278,8 +8277,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	
 	protected class MovimientoMpoligrupSP extends StoredProcedure {
 		protected MovimientoMpoligrupSP (DataSource dataSource) {
-//	        super(dataSource,"PKG_COTIZA.P_INSERTA_MPOLIGRUP");
-	        super(dataSource,"pkg_consulta_angeles.P_INSERTA_MPOLIGRUP");
+	        super(dataSource,"PKG_COTIZA.P_INSERTA_MPOLIGRUP");
 		    declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 		    declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
 		    declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
@@ -8320,8 +8318,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	
 	protected class MovimientoMgrupogarSP extends StoredProcedure {
 		protected MovimientoMgrupogarSP (DataSource dataSource) {
-//	        super(dataSource,"PKG_COTIZA.P_INSERTA_MGRUPOGAR");
-	        super(dataSource,"pkg_consulta_angeles.P_INSERTA_MGRUPOGAR");
+	        super(dataSource,"PKG_COTIZA.P_INSERTA_MGRUPOGAR");
 		    declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 		    declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
 		    declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));

@@ -2186,7 +2186,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	protected class GuardaDescripcionCortaCobertura extends StoredProcedure {
 	    
 	    protected GuardaDescripcionCortaCobertura(DataSource dataSource) {
-	        super(dataSource, "PKG_CONSULTA_ANGELES.P_ACTUALIZA_TGARANTI");
+	        super(dataSource, "PKG_COTIZA.P_ACTUALIZA_TGARANTI");
 	        declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
 	        declareParameter(new SqlParameter("pv_dsgarant_corta_i", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
