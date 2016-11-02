@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.mesacontrol.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -126,5 +127,14 @@ public interface MesaControlManager
 	
 	@Deprecated
 	public void concatenarAlInicioDelUltimoDetalle(String ntramite, String comentario, String cdmodulo, String cdevento) throws Exception;
-	 
+	
+	/**
+	 * Se agrega proceso para obtener datos de la mesa de control
+	 * con la nueva arquitectura
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws Exception;
+	
 }
