@@ -5490,22 +5490,46 @@ public class CotizacionAction extends PrincipalCoreAction
 	                StringBuilder bufferLineaStr = new StringBuilder();
 	                boolean       filaBuena      = true;
 	                
-	                String fechaNac =  null;
-	                String fecanti  = null;
-	                String feingreso =  null;
-	                
+	                String parentesco   = null;
+                    String apellidoP    = null;
+                    String apellidoM    = null;
+                    String nombre1      = null;
+                    String nombre2      = null;
+                    String sexo         = null;
+                    String fechaNac     = null;
+                    String codpostal    = null;
+                    String estado       = null;
+                    String municipio    = null;
+                    String colonia      = null;
+                    String calle        = null;
+                    String numExt       = null;
+                    String numInt       = null;
+                    String rfcAsegurado = null;
+                    String emailAseg    = null;
+                    String telefono     = null;
+                    String identidad    = null;
+                    String fecanti      = null;
+                    String ocupacion    = null;
+                    String extOcupacion = null;
+                    String peso         = null;
+                    String estatura     = null;
+                    String extSobrepeso = null;
+                    String estadoCivil  = null;
+                    String feingreso    = null;
+                    String idSisa       = null;
+                    String plaza        = null;
+                    String cveAsegurado = null;
+                    String dependiente = null;
+                    
 	                if(Utils.isRowEmpty(row))
 	                {
 	                	break;
 	                }
 	                
-	                fila        = fila + 1;
-	                filasLeidas = filasLeidas + 1;
-	                
-	                String parentesco = null;
-	                String dependiente = null;
-	                String nombre     = "";
-	                double cdgrupo    = -1d;
+	                fila               = fila + 1;
+	                filasLeidas        = filasLeidas + 1;
+	                String nombre      = "";
+	                double cdgrupo     = -1d;
 	              //GRUPO
 	                try
                 	{
@@ -5617,7 +5641,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                bufferLinea.append(
 		                		row.getCell(3).getStringCellValue()+"|"
 		                		);
-		                
+		                apellidoP = row.getCell(3).getStringCellValue();
 		                nombre = Utils.join(nombre,row.getCell(3).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
@@ -5638,6 +5662,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                bufferLinea.append(
 		                		row.getCell(4).getStringCellValue()+"|"
 		                		);
+		                apellidoM = row.getCell(4).getStringCellValue();
 		                nombre = Utils.join(nombre,row.getCell(4).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
@@ -5658,6 +5683,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                bufferLinea.append(
 		                		row.getCell(5).getStringCellValue()+"|"
 		                		);
+		                nombre1 = row.getCell(5).getStringCellValue();
 		                nombre = Utils.join(nombre,row.getCell(5).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
@@ -5679,6 +5705,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                bufferLinea.append(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		);
+		                nombre2 = auxCell!=null?auxCell.getStringCellValue():"";
 		                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
 		                
 		                if("T".equals(parentesco))
@@ -5707,7 +5734,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	              //SEXO
 	                try
                 	{
-	                	String sexo = row.getCell(7).getStringCellValue();
+	                	sexo = row.getCell(7).getStringCellValue();
 	                	if(!"H".equalsIgnoreCase(sexo)
 	                			&&!"M".equalsIgnoreCase(sexo)
 	                	)
@@ -5747,9 +5774,9 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	}
 		                }
 		                
-		                fechaNac = auxDate!=null?
-        						renderFechas.format(auxDate)
-        						:"";
+                        fechaNac = auxDate!=null?
+                                renderFechas.format(auxDate)
+                                :"";
         						
 		                logger.debug("FECHA NACIMIENTO: "+(
 		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
@@ -5787,6 +5814,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("COD POSTAL: "+(
 		                		String.format("%.0f",row.getCell(9).getNumericCellValue())+"|"
 		                		));
+		                codpostal = String.format("%.0f",row.getCell(9).getNumericCellValue());
 		                bufferLinea.append(
 		                		String.format("%.0f",row.getCell(9).getNumericCellValue())+"|"
 		                		);
@@ -5797,6 +5825,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	try
 	                	{
 	                		logger.debug("COD POSTAL: "+row.getCell(9).getStringCellValue()+"|");
+	                		codpostal = row.getCell(9).getStringCellValue();
 			                bufferLinea.append(row.getCell(9).getStringCellValue()+"|");
 	                	}
 		                catch(Exception ex)
@@ -5815,6 +5844,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("ESTADO: "+(
 		                		row.getCell(10).getStringCellValue()+"|"
 		                		));
+		                estado = row.getCell(10).getStringCellValue();
 		                bufferLinea.append(
 		                		row.getCell(10).getStringCellValue()+"|"
 		                		);
@@ -5834,6 +5864,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("MUNICIPIO: "+(
 		                		row.getCell(11).getStringCellValue()+"|"
 		                		));
+		                municipio = row.getCell(11).getStringCellValue();
 		                bufferLinea.append(
 		                		row.getCell(11).getStringCellValue()+"|"
 		                		);
@@ -5853,6 +5884,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("COLONIA: "+(
 		                		row.getCell(12).getStringCellValue()+"|"
 		                		));
+		                colonia = row.getCell(12).getStringCellValue();
 		                bufferLinea.append(
 		                		row.getCell(12).getStringCellValue()+"|"
 		                		);
@@ -5872,6 +5904,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("CALLE: "+(
 		                		row.getCell(13).getStringCellValue()+"|"
 		                		));
+		                calle = row.getCell(13).getStringCellValue();
 		                bufferLinea.append(
 		                		row.getCell(13).getStringCellValue()+"|"
 		                		);
@@ -5888,7 +5921,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	              //NUM. EXTERIOR
                     try
                     {
-                        String numExt = String.format("%.0f",row.getCell(14).getNumericCellValue())+"";
+                        numExt = String.format("%.0f",row.getCell(14).getNumericCellValue())+"";
                         if(StringUtils.isBlank(numExt))
                         {
                             throw new ApplicationException("Falta numero exterior");
@@ -5900,7 +5933,7 @@ public class CotizacionAction extends PrincipalCoreAction
                         logger.warn("error al leer el No. exterior, se intentara como string:",ex2);
                         try
                         {
-                            String numExt = row.getCell(14).getStringCellValue();
+                            numExt = row.getCell(14).getStringCellValue();
                             if(StringUtils.isBlank(numExt))
                             {
                                 throw new ApplicationException("Falta numero exterior");
@@ -5922,7 +5955,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	              //NUM. INTERIOR
 	                try
                 	{
-	                	String numInt = extraerStringDeCelda(row.getCell(15));
+	                	numInt = extraerStringDeCelda(row.getCell(15));
 		                logger.debug("NUM INT: "+numInt);
 		                bufferLinea.append(Utils.join(numInt,"|"));
                 	}
@@ -5941,7 +5974,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	auxCell=row.getCell(16);
 	                	
 		                logger.debug("RFC: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                
+		                rfcAsegurado = auxCell!=null?auxCell.getStringCellValue():"";
 		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 		                
 		                if(
@@ -5969,6 +6002,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("CORREO: "+(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		));
+		                emailAseg = auxCell!=null?auxCell.getStringCellValue():"";
 		                bufferLinea.append(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		);
@@ -5989,6 +6023,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug("TELEFONO: "+(
 		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
 		                		));
+		                telefono = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue()):"";
 		                bufferLinea.append(
 		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
 		                		);
@@ -5998,6 +6033,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                		logger.warn("error al leer telefono como numero, se intentara como string:",ex);
 			                auxCell=row.getCell(18);
 			                logger.debug("TELEFONO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                telefono = auxCell!=null?auxCell.getStringCellValue():"";
 			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 	                	}
 		                catch(Exception e){
@@ -6023,7 +6059,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                if(cdunieco.equalsIgnoreCase("1403")){
 		                	if(auxCell!=null){
 		                		//Validamos que en verdad
-		                		String identidad = auxCell.getStringCellValue();
+		                		identidad = auxCell.getStringCellValue();
 		                		String identidadModificada[] = identidad.split("\\-");
 		                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
 		                		logger.debug("Seccion 1 IDENTIDAD : {}",seccion1);
@@ -6041,6 +6077,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		throw new ApplicationException("La identidad no puede ser null");
 		                	}
 		                }else{
+		                    identidad = auxCell!=null?auxCell.getStringCellValue():"";
 		                	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 		                }
                 	}
@@ -6069,10 +6106,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                	}
 		                }
 		                
-		                fecanti = auxDate!=null?
-        						renderFechas.format(auxDate)
-        						:"";
-        						
+		                fecanti = auxDate!=null?renderFechas.format(auxDate):"";
         						
 		                logger.debug("FECHA RECONOCIMIENTO ANTIGUEDAD: "+(
 		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
@@ -6109,6 +6143,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                try {
 		                auxCell=row.getCell(21);
 		                logger.debug("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                ocupacion = auxCell!=null?auxCell.getStringCellValue() :"";
 		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
                 	} catch(Exception ex) {
 	                	filaBuena = false;
@@ -6120,12 +6155,14 @@ public class CotizacionAction extends PrincipalCoreAction
                 	try {
 	                	auxCell=row.getCell(22);
 		                logger.debug("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                extOcupacion = auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue()):"";
 		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
 	                } catch(Exception ex) {
 	                    logger.error("error al leer la extraprima de ocupación como numero, se intentara como string:",ex);
 	                    try {
 	                    	auxCell=row.getCell(22);
 			                logger.debug("EXTRAPRIMA OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                extOcupacion = auxCell!=null?auxCell.getStringCellValue():"";
 			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 	                        
 	                    } catch(Exception ex2) {
@@ -6141,12 +6178,14 @@ public class CotizacionAction extends PrincipalCoreAction
                 	try {
 	                	auxCell=row.getCell(23);
 		                logger.debug("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                peso = auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue()):"";
 		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
 	                } catch(Exception ex) {
 	                    logger.error("error al leer el peso como numero, se intentara como string:",ex);
 	                    try {
 	                    	auxCell=row.getCell(23);
 			                logger.debug("PESO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                peso =auxCell!=null?auxCell.getStringCellValue():"";
 			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 	                        
 	                    } catch(Exception ex2) {
@@ -6162,12 +6201,14 @@ public class CotizacionAction extends PrincipalCoreAction
                 	try {
 	                	auxCell=row.getCell(24);
 		                logger.debug("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                estatura = auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue()):"";
 		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
 	                } catch(Exception ex) {
 	                    logger.error("error al leer la estatura como numero, se intentara como string:",ex);
 	                    try {
 	                    	auxCell=row.getCell(24);
 			                logger.debug("ESTATURA: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                estatura = auxCell!=null?auxCell.getStringCellValue():"";
 			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 	                        
 	                    } catch(Exception ex2) {
@@ -6182,12 +6223,14 @@ public class CotizacionAction extends PrincipalCoreAction
                 	try {
 	                	auxCell=row.getCell(25);
 		                logger.debug("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                extSobrepeso = auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue()):"";
 		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
 	                } catch(Exception ex) {
 	                    logger.error("error al leer la extraprima como numero, se intentara como string:",ex);
 	                    try {
 	                    	auxCell=row.getCell(25);
 			                logger.debug("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+			                extSobrepeso = auxCell!=null?auxCell.getStringCellValue():"";
 			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 	                        
 	                    } catch(Exception ex2) {
@@ -6202,7 +6245,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	              //ESTADO CIVIL
 	                try
                 	{
-	                	String estadoCivil = row.getCell(26).getStringCellValue();
+	                	estadoCivil = row.getCell(26).getStringCellValue();
 	                	
 	                	//TODO: quitar cdtipsit estatico y ponerlo por subramo
 	                	if("SSI".equals(cdtipsit)&&StringUtils.isBlank(estadoCivil))
@@ -6245,54 +6288,66 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(26)),"-"));
 	                }
-	                  //FECHA INGRESO
-	                try
-                	{
-	                    auxDate= StringUtils.isNotBlank(row.getCell(27).toString())?row.getCell(27).getDateCellValue():null;
-		                if(auxDate!=null){
-		                	Calendar cal = Calendar.getInstance();
-		                	cal.setTime(auxDate);
-                            if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900)
-		                	{
-		                		throw new ApplicationException("El anio de la fecha de ingreso no es valido");
-		                	}
-		                }
-		                
-		                feingreso = auxDate!=null? renderFechas.format(auxDate):"";
-        				logger.debug( new StringBuilder("FECHA INGRESO EMPLEADO: ").append(auxDate!=null?renderFechas.format(auxDate):"").append("|").toString());
-		                bufferLinea.append(auxDate!=null?new StringBuilder(renderFechas.format(auxDate)).append("|").toString():"|");
-                	}
-	                catch(Exception ex)
-	                {
-	                	try {
-                            auxDate= renderFechas.parse(row.getCell(27).getStringCellValue());
-							if(auxDate!=null) {
-			                	Calendar cal = Calendar.getInstance();
-			                	cal.setTime(auxDate);
-			                	if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900) {
-			                		throw new ApplicationException("El anio de la fecha no es valido");
-			                	}
-			                }
-							feingreso = auxDate!=null?renderFechas.format(auxDate):"";
-			                logger.debug("FECHA INGRESO: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
-			                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
-		                } catch (Exception e) {
-							filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (AB) de la fila ",fila," "));
-						}
-	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(27)),"-"));
-	                }
+	                
+                  //FECHA INGRESO
+                    try
+                    {
+                        logger.debug("Entra como Fecha ==>");
+                        auxDate=row.getCell(27)!=null?row.getCell(27).getDateCellValue():null;
+                        if(auxDate!=null)
+                        {
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(auxDate);
+                            if(cal.get(Calendar.YEAR)>2100||cal.get(Calendar.YEAR)<1900)
+                            {
+                                throw new ApplicationException("El anio de la fecha de ingreso no es valido");
+                            }
+                        }
+                        
+                        feingreso = auxDate!=null?renderFechas.format(auxDate):"";
+                        
+                        logger.debug(new StringBuilder("FECHA INGRESO EMPLEADO: ").append(auxDate!=null?renderFechas.format(auxDate):"").append("|").toString());
+                        bufferLinea.append(auxDate!=null?new StringBuilder(renderFechas.format(auxDate)).append("|").toString():"|");
+                    }
+                    catch(Exception ex)
+                    {
+                        // Segundo intento, se tratara el campo como String:
+                        try {
+                            auxDate= ((extraerStringDeCelda(row.getCell(27))!=null) && 
+                                        StringUtils.isNotBlank(extraerStringDeCelda(row.getCell(27)))) ?
+                                                renderFechas.parse(extraerStringDeCelda(row.getCell(27))):
+                                                null;
+                            if(auxDate!=null) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTime(auxDate);
+                                if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900) {
+                                    throw new ApplicationException("El anio de la fecha no es valido");
+                                }
+                            }
+                            feingreso = auxDate!=null?renderFechas.format(auxDate):"";
+                            logger.debug("FECHA INGRESO EMPLEADO: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
+                            bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
+                        } catch (Exception e) {
+                            logger.debug("Valor del Error => "+e);
+                            filaBuena = false;
+                            bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (AB) de la fila ",fila," "));
+                        }
+                    }
+                    finally
+                    {
+                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(27)),"-"));
+                    }
+                    
 	              //ID SISA
 	                try {
 		                logger.debug("ID SISA: "+(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|"));
+		                idSisa = String.format("%.0f",row.getCell(28).getNumericCellValue());
 		                bufferLinea.append(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|");
                 	} catch(Exception ex2) {
-	                	logger.warn("error al leer el peso, se intentara como string:",ex2);
+	                	logger.warn("error al leer la clave de SISA, se intentara como string:",ex2);
 	                	try {
 	                		auxCell=row.getCell(28);
+	                		idSisa = auxCell!=null?auxCell.getStringCellValue():"";
 			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 	                	} catch(Exception ex) {
 		                	filaBuena = false;
@@ -6315,6 +6370,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		.append("|")
 		                		.toString()
 		                		);
+		                plaza = auxCell!=null?auxCell.getStringCellValue():"";
 		                bufferLinea.append(
 		                		auxCell!=null?
 		                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
@@ -6336,6 +6392,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                logger.debug(
 	                		new StringBuilder("ID. ASEGURADO: ").append( auxCell!=null? auxCell.getStringCellValue() :"") .append("|").toString()
                 		);
+		                cveAsegurado = auxCell!=null?auxCell.getStringCellValue():"";
 		                bufferLinea.append(auxCell!=null?new StringBuilder(auxCell.getStringCellValue()).append("|").toString():"|");
                 	}
 	                catch(Exception ex) {
@@ -6382,46 +6439,45 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                if(filaBuena)
 	                {
-	                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
+	                    familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
 	                	filasProcesadas = filasProcesadas + 1;
 	                	gruposValidos[((int)cdgrupo)-1]=true;
 	                	
 
 	                	Map<String,String> params =  new HashMap<String, String>();
     					
-    					params.put("pv_cdunieco_i", cdunieco);
-    					params.put("pv_cdramo_i", cdramo);
-    					params.put("pv_estado_i", "W");
-    					params.put("pv_nmpoliza_i", nmpoliza);
-    					params.put("pv_cdgrupo_i",  extraerStringDeCelda(row.getCell(0)));
-    					params.put("pv_parentesco_i", extraerStringDeCelda(row.getCell(2)));
-    					params.put("pv_dsapellido_i", extraerStringDeCelda(row.getCell(3)));
-    					params.put("pv_dsapellido1_i", extraerStringDeCelda(row.getCell(4)));
-    					params.put("pv_dsnombre_i",  extraerStringDeCelda(row.getCell(5)));
-    					params.put("pv_dsnombre1_i", extraerStringDeCelda(row.getCell(6)));
-    					params.put("pv_otsexo_i", extraerStringDeCelda(row.getCell(7)));
-    					
-    					params.put("pv_fenacimi_i", fechaNac);
-    					params.put("pv_cdpostal_i", extraerStringDeCelda(row.getCell(9)));
-    					params.put("pv_dsestado_i", extraerStringDeCelda(row.getCell(10)));
-    					params.put("pv_dsmunicipio_i", extraerStringDeCelda(row.getCell(11)));
-    					params.put("pv_dscolonia_i", extraerStringDeCelda(row.getCell(12)));
-    					params.put("pv_dsdomici_i",  extraerStringDeCelda(row.getCell(13)));
-    					params.put("pv_nmnumero_i", extraerStringDeCelda(row.getCell(14)));
-    					params.put("pv_nmnumint_i", extraerStringDeCelda(row.getCell(15)));
-    					params.put("pv_cdrfc_i",    extraerStringDeCelda(row.getCell(16)));
-    					params.put("pv_dsemail_i",  extraerStringDeCelda(row.getCell(17)));
-    					params.put("pv_nmtelefo_i", extraerStringDeCelda(row.getCell(18)));
-    					params.put("pv_identidad_i",extraerStringDeCelda(row.getCell(19)));
-    					params.put("pv_fecantig_i", fecanti);
-    					params.put("pv_expocupacion_i", extraerStringDeCelda(row.getCell(22)));
-    					params.put("pv_peso_i",     extraerStringDeCelda(row.getCell(23)));
-    					params.put("pv_estatura_i", extraerStringDeCelda(row.getCell(24)));
-    					params.put("pv_expsobrepeso_i", extraerStringDeCelda(row.getCell(25)));
-    					params.put("pv_edocivil_i", extraerStringDeCelda(row.getCell(26)));
-    					params.put("pv_feingresoempleo_i", extraerStringDeCelda(row.getCell(27)));
-    					params.put("pv_plaza_i", extraerStringDeCelda(row.getCell(29)));
-    					params.put("pv_idasegurado_i", extraerStringDeCelda(row.getCell(30)));
+	                	params.put("pv_cdunieco_i"       , cdunieco);
+    					params.put("pv_cdramo_i"         , cdramo);
+    					params.put("pv_estado_i"         , "W");
+    					params.put("pv_nmpoliza_i"       , nmpoliza);
+    					params.put("pv_cdgrupo_i"        , String.format("%.0f",cdgrupo));
+    					params.put("pv_parentesco_i"     , parentesco);
+    					params.put("pv_dsapellido_i"     , apellidoP);
+    					params.put("pv_dsapellido1_i"    , apellidoM);
+    					params.put("pv_dsnombre_i"       , nombre1);
+    					params.put("pv_dsnombre1_i"      , nombre2);
+    					params.put("pv_otsexo_i"         , sexo);
+    					params.put("pv_fenacimi_i"       , fechaNac);
+    					params.put("pv_cdpostal_i"       , codpostal);
+    					params.put("pv_dsestado_i"       , estado);
+    					params.put("pv_dsmunicipio_i"    , municipio);
+    					params.put("pv_dscolonia_i"      , colonia);
+    					params.put("pv_dsdomici_i"       , calle);
+    					params.put("pv_nmnumero_i"       , numExt);
+    					params.put("pv_nmnumint_i"       , numInt);
+    					params.put("pv_cdrfc_i"          , rfcAsegurado);
+    					params.put("pv_dsemail_i"        , emailAseg);
+    					params.put("pv_nmtelefo_i"       , telefono);
+    					params.put("pv_identidad_i"      , identidad);
+    					params.put("pv_fecantig_i"       , fecanti);
+    					params.put("pv_expocupacion_i"   , extOcupacion);
+    					params.put("pv_peso_i"           , peso);
+    					params.put("pv_estatura_i"       , estatura);
+    					params.put("pv_expsobrepeso_i"   , extSobrepeso);
+    					params.put("pv_edocivil_i"       , estadoCivil);
+    					params.put("pv_feingresoempleo_i", feingreso);
+    					params.put("pv_plaza_i"          , plaza);
+    					params.put("pv_idasegurado_i"    , cveAsegurado);
     					filasFamilia.add(params);
 	    					
 	                }
