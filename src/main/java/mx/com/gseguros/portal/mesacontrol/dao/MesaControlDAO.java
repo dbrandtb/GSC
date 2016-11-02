@@ -341,5 +341,7 @@ public interface MesaControlDAO
 	
 	public String regeneraRemesaReport(String ntramite, String cddocume) throws Exception;
 	
-	
+	public List<Map<String, String>> obtenerMesaControl(String cdunieco, String ntramite, String cdramo, String nmpoliza, String estado, String cdagente, String status, String cdtipsit, String fedesde, String fehasta, 
+	        String cdrol, String cdtiptra, String contrarecibo, String tipoPago, String nfactura, String cdpresta, String cdusuari, String cdtipram, String lote, String tipolote,     
+	        String tipoimpr, String cdusuari_busq, String dscontra) throws Exception;
 }

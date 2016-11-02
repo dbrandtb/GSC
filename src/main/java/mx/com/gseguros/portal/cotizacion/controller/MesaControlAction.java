@@ -229,7 +229,8 @@ public class MesaControlAction extends PrincipalCoreAction
 			}
 			else
 			{
-				slist1=kernelManager.loadMesaControl(smap1);
+//				slist1=kernelManager.loadMesaControl(smap1);
+			    slist1 = mesaControlManager.loadMesaControl(smap1);
 			}
 			olist1=new ArrayList<Map<String,Object>>();
 			

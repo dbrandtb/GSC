@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.mesacontrol.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -366,5 +367,61 @@ public class MesaControlManagerImpl implements MesaControlManager
 	@Deprecated
 	public void concatenarAlInicioDelUltimoDetalle(String ntramite, String comentario, String cdmodulo, String cdevento) throws Exception {
 		mesaControlDAO.concatenarAlInicioDelUltimoDetalle(ntramite, comentario, cdmodulo, cdevento);
+	}
+	
+	@Override
+	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws Exception{
+	    String paso = null;
+	    List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
+	    try{
+	        if(params!=null){
+	            if(!params.containsKey("cdtipram")){
+	                params.put("cdtipram" , null);
+	            }
+	            if(!params.containsKey("lote")){
+	                params.put("lote" , null);
+	            }
+	            if(!params.containsKey("tipolote")){
+	                params.put("tipolote" , null);
+	            }
+	            if(!params.containsKey("tipoimpr")){
+	                params.put("tipoimpr" , null);
+	            }
+	            if(!params.containsKey("cdusuari_busq")){
+	                params.put("cdusuari_busq" , null);
+	            }
+	            if(!params.containsKey("dscontra")){
+	                params.put("dscontra" , null);
+	            }
+	            String cdunieco         =   params.get("pv_cdunieco_i");
+	            String ntramite         =   params.get("pv_ntramite_i");
+	            String cdramo           =   params.get("pv_cdramo_i");
+	            String nmpoliza         =   params.get("pv_nmpoliza_i");
+	            String estado           =   params.get("pv_estado_i");
+	            String cdagente         =   params.get("pv_cdagente_i");    
+	            String status           =   params.get("pv_status_i");      
+	            String cdtipsit         =   params.get("pv_cdtipsit_i");    
+	            String fedesde          =   params.get("pv_fedesde_i");     
+	            String fehasta          =   params.get("pv_fehasta_i");     
+	            String cdrol            =   params.get("pv_cdrol_i");       
+	            String cdtiptra         =   params.get("pv_cdtiptra_i");    
+	            String contrarecibo     =   params.get("pv_contrarecibo_i");
+	            String tipoPago         =   params.get("pv_tipoPago_i");    
+	            String nfactura         =   params.get("pv_nfactura_i");    
+	            String cdpresta         =   params.get("pv_cdpresta_i");    
+	            String cdusuari         =   params.get("pv_cdusuari_i");    
+	            String cdtipram         =   params.get("cdtipram");         
+	            String lote             =   params.get("lote");             
+	            String tipolote         =   params.get("tipolote");         
+	            String tipoimpr         =   params.get("tipoimpr");         
+	            String cdusuari_busq    =   params.get("cdusuari_busq");    
+	            String dscontra         =   params.get("dscontra");
+	            lista = mesaControlDAO.obtenerMesaControl(cdunieco, ntramite, cdramo, nmpoliza, estado, cdagente, status, cdtipsit, fedesde, fehasta, cdrol, cdtiptra, contrarecibo, tipoPago, nfactura, cdpresta, cdusuari, cdtipram, lote, tipolote, tipoimpr, cdusuari_busq, dscontra);
+	        }	        
+	    }
+	    catch(Exception ex){
+	        Utils.generaExcepcion(ex, paso);
+	    }
+	    return lista;
 	}
 }

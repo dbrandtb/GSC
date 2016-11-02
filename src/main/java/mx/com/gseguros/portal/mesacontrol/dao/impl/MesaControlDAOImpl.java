@@ -16,6 +16,9 @@ import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
+import mx.com.aon.portal.dao.CustomStoredProcedure;
+import mx.com.aon.portal.dao.WrapperResultadosGeneric;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
@@ -1427,4 +1430,92 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String, String>> obtenerMesaControl(String cdunieco, String ntramite, String cdramo, String nmpoliza, String estado, String cdagente, String status, String cdtipsit, String fedesde, String fehasta, 
+            String cdrol, String cdtiptra, String contrarecibo, String tipoPago, String nfactura, String cdpresta, String cdusuari, String cdtipram, String lote, String tipolote,     
+            String tipoimpr, String cdusuari_busq, String dscontra) throws Exception{
+	    Map<String, String> params = new LinkedHashMap<String, String>();
+	    params.put("pv_cdunieco_i",     cdunieco);
+	    params.put("pv_ntramite_i",     ntramite);
+	    params.put("pv_cdramo_i",       cdramo);
+	    params.put("pv_nmpoliza_i",     nmpoliza);
+	    params.put("pv_estado_i",       estado);
+	    params.put("pv_cdagente_i",     cdagente);    
+	    params.put("pv_status_i",       status);      
+	    params.put("pv_cdtipsit_i",     cdtipsit);    
+	    params.put("pv_fedesde_i",      fedesde);     
+	    params.put("pv_fehasta_i",      fehasta);     
+	    params.put("pv_cdrol_i",        cdrol);       
+	    params.put("pv_cdtiptra_i",     cdtiptra);    
+	    params.put("pv_contrarecibo_i", contrarecibo);
+	    params.put("pv_tipoPago_i",     tipoPago);    
+	    params.put("pv_nfactura_i",     nfactura);    
+	    params.put("pv_cdpresta_i",     cdpresta);    
+	    params.put("pv_cdusuari_i",     cdusuari);    
+	    params.put("cdtipram",          cdtipram);         
+	    params.put("lote",              lote);             
+	    params.put("tipolote",          tipolote);         
+	    params.put("tipoimpr",          tipoimpr);         
+	    params.put("cdusuari_busq",     cdusuari_busq);    
+	    params.put("dscontra",          dscontra);
+	    Map<String,Object> procResult     = ejecutaSP(new ObtenerMesaControl(getDataSource()),params);
+        List<Map<String,String>> registro = (List<Map<String,String>>)procResult.get("pv_registro_o");
+        if(registro == null){
+            registro = new ArrayList<Map<String,String>>();
+        }
+        logger.debug(Utils.log(
+                 "\n*********************************************************"
+                ,"\n****** params="   , params
+                ,"\n****** registro=" , registro
+                ,"\n****** PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR ******"
+                ,"\n*********************************************************"
+                ));
+        return registro;
+	}
+	
+	protected class ObtenerMesaControl extends StoredProcedure{
+        protected ObtenerMesaControl(DataSource dataSource){
+            super(dataSource,"P_OBTIENE_MESACONTROL1");
+            declareParameter(new SqlParameter("pv_cdunieco_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_ntramite_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i"       , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i"       , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdagente_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_status_i"       , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_fedesde_i"      , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_fehasta_i"      , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdrol_i"        , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtiptra_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_contrarecibo_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_tipoPago_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nfactura_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdpresta_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuari_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipram"          , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("lote"              , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("tipolote"          , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("tipoimpr"          , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari_busq"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("dscontra"          , OracleTypes.VARCHAR));
+            String[] cols=new String[]{
+                    "ntramite"     , "cdunieco" , "cdramo"   , "dsramo"        , "estado"     , "nmpoliza"
+                    ,"nmsolici"    , "cdsucadm" , "dssucadm" , "cdsucdoc"      , "dssucdoc"   , "cdsubram"
+                    ,"cdtiptra"    , "ferecepc" , "cdagente" , "Nombre_agente" , "referencia" , "nombre"
+                    ,"fecstatu"    , "status"   , "comments" , "cdtipsit"      , "comi"       , "prima_neta"
+                    ,"prima_total" , "nmsuplem"
+                    ,"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09","otvalor10"
+                    ,"otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19","otvalor20"
+                    ,"otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29","otvalor30"
+                    ,"otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39","otvalor40"
+                    ,"otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49","otvalor50"
+                    ,"contratante" , "cdusuari"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o"  , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
+        }
+    }
 }
