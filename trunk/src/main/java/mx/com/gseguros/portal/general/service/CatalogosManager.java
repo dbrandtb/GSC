@@ -245,6 +245,8 @@ public interface CatalogosManager {
 	public List<GenericVO> recuperaCamposExclusionRenovacion() throws Exception;
 	
 	public List<GenericVO> obtieneCatalogoDescAtrib(String cdRamo, String dsAtribu, String idPadre) throws Exception;
+
+    public List<GenericVO> obtieneCatalogoRetAdminAgente(String pv_numsuc_i, String pv_cdagente_i) throws Exception;
 	
 	public boolean guardaDescripcionCortaCobertura(String cdgarant, String descCorta) throws Exception;
 	

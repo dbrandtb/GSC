@@ -115,7 +115,40 @@ var TipoSituacion = {
     RecuperaColectivo     : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECUPERA_COLECTIVO.cdtipsit" />',
     TractoCamionesArmados : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TRACTOCAMIONES_ARMADOS.cdtipsit" />'
  };
+ 
+ //Catalogo de formas de pago
 
+ var FormaPago={
+	Mensual				:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@MENSUAL.codigo" />',
+	ANUAL				:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@ANUAL.codigo" />',
+	TRIMESTRAL			:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@TRIMESTRAL.codigo" />',
+	SEMESTRAL			:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@SEMESTRAL.codigo" />',
+	DXNQUINCENAL		:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNQUINCENAL.codigo" />',
+	DXNCATORCENAL		:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNCATORCENAL.codigo" />',
+	DXNMENSUAL			:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNMENSUAL.codigo" />',
+	DXN16DIAS			:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXN16DIAS.codigo" />',
+	DXNSEMANAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNSEMANAL.codigo" />',
+	esDxN				:    function(formaPago){
+		
+		var dxn=[
+					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNQUINCENAL.codigo" />',
+					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNCATORCENAL.codigo" />',
+					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNMENSUAL.codigo" />',
+					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXN16DIAS.codigo" />',
+					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNSEMANAL.codigo" />'
+
+		         ];
+		
+		if(dxn.indexOf(formaPago+"")>-1){
+			return true;
+		}
+		else{
+			return false;
+		}
+	
+	}
+
+ };
 
 // Catalogo de Tipos de tramite (cdtiptra):
 var TipoTramite = {

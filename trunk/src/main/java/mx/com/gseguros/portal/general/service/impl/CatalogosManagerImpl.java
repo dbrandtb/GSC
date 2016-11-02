@@ -2079,6 +2079,12 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
+    public List<GenericVO> obtieneCatalogoRetAdminAgente(String pv_numsuc_i, String pv_cdagente_i) throws Exception {      
+       
+        return catalogosDAO.obtieneCatalogoRetAdminAgente(pv_numsuc_i, pv_cdagente_i);
+    }
+	
+	@Override
     public boolean guardaDescripcionCortaCobertura(String cdgarant, String descCorta) throws Exception{
         return catalogosDAO.guardaDescripcionCortaCobertura(cdgarant, descCorta);
     }

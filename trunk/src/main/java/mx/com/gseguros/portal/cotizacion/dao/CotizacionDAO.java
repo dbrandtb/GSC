@@ -882,6 +882,14 @@ public interface CotizacionDAO {
 	 */
 	public void eliminarGrupos(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit)
 			throws Exception;
+
+	public List<Map<String, String>> buscaEmpleado(String pv_administradora_i
+            ,String pv_retenedora_i,String pv_clave_i, String pv_nombre_i, String pv_apellido_paterno_i,
+			String pv_apellido_materno_i, String pv_rfc_i) throws Exception;
+
+    public String guardaEmpleado(String pv_numsuc_i, String pv_cveent_i, String pv_cveemp_i, String pv_nomemp_i,
+            String pv_apaterno_i, String pv_amaterno_i, String pv_rfc_i, String pv_curp_i, String pv_usuario_i,
+            String pv_feregist_i, String pv_accion_i) throws Exception;
 	
    public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception;
 

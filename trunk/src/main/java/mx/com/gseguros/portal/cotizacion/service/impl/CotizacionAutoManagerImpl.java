@@ -367,6 +367,18 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 			}
 			
+			List<ComponenteVO>tatripoldxn = pantallasDAO.obtenerComponentes(
+					TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,cdunieco
+					,cdramo
+					,cdtipsit
+					,"I"
+					,cdsisrol
+					,"COTIZACION_CUSTOM"
+					,"TATRIPOLDXN"
+					,null
+					);
+			
 			paso = "Construyendo componentes";//////
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdramo(cdramo);
@@ -392,6 +404,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			gc.generaComponentes(tatrisit, true, true, false, false, false, false);
 			items.put("formFields" , gc.getFields());
+			
+			gc.generaComponentes(tatripoldxn, true, false, true, false, false, false);
+			items.put("panelDxnItems"  , gc.getItems());
 			
 			paso = "Recuperando atributos de poliza";
 			List<ComponenteVO>tatripol    = cotizacionDAO.cargarTatripol(cdramo, null, null);
@@ -673,6 +688,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				resp.getSmap().put("customCode" , "/* error */");
 				logger.error("Error sin impacto funcional", ex);
 			}
+			
+			List<ComponenteVO>tatripoldxn = pantallasDAO.obtenerComponentes(
+					TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,cdunieco
+					,cdramo
+					,cdtipsit
+					,"I"
+					,cdsisrol
+					,"COTIZACION_CUSTOM"
+					,"TATRIPOLDXN_EMISION"
+					,null
+					);
+			
+			gc.generaComponentes(tatripoldxn, true, false, true, false, false, false);
+			resp.getImap().put("panelDxnItems"  , gc.getItems());
 			
 		}
 		catch(Exception ex)

@@ -1368,7 +1368,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 				{
 					logger.debug("iterando asegurado "+i+": ");
 					logger.debug("asegurado: "+asegurado);
-					if(false)//vils
+					if(true)//vils
 					{
 						if((Integer)Integer.parseInt((String)asegurado.get("nmsituac"))>0)//vils
 						{

@@ -992,6 +992,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = catalogosManager.obtieneCatalogoDescAtrib(params.get("cdramo"), params.get("dsatribu"), params.get("idPadre"));
 					break;
+				case TRETXADMINAGE:
+				    if(params == null){
+                        params = new HashMap<String,String>();
+                    }
+				    lista=catalogosManager.obtieneCatalogoRetAdminAgente(params.get("idPadre"), params.get("cdagente"));
+				    break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
