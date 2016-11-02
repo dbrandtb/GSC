@@ -48,7 +48,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     private Map<String,String>       smap2            = null;
     private String                   respuesta;
     private String                   respuestaOculta  = null;
-    private boolean                  exito            = false;
+    private boolean                  exito           = false;
     private Map<String,Item>         imap             = null;
     private List<Map<String,String>> slist1           = null;
     private List<Map<String,String>> slist2           = null;
@@ -1049,6 +1049,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,parame.get("RENPOLIEX")
                     ,ntramite
                     );
+            
+            exito     = resp.isExito();
+            if(!exito)
+            {
+                throw new ApplicationException(respuesta);
+            }
+            
             if(!parame.isEmpty() && parame.get("Mensaje")==null && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 )
             {
                 List<String> cdtipsits = new ArrayList<String>();
@@ -1060,14 +1067,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 logger.debug(Utils.log(paqYplan));
                 resp.setSlist(cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza));
             }
-            exito     = resp.isExito();
+            
             respuesta = resp.getRespuesta();
-            
-            if(!exito)
-            {
-                throw new ApplicationException(respuesta);
-            }
-            
+           
             smap1.putAll(resp.getSmap());
             slist1 = resp.getSlist();
         }
