@@ -567,11 +567,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						File local = new File(filePath);
 						
 						try{
-						    cddocume=cddocume.replace("https","http").replace("HTTPS","HTTP").replaceAll("\\s","");
-		                    cddocume=cddocume.replace("http://gswas.com.mx", "http://192.168.2.133:9080");
-		                    cddocume=cddocume.replace("https://gswas.com.mx", "http://192.168.2.133:9080");
-		                    InputStream remoto = HttpUtil.obtenInputStream(cddocume);
-							
+							InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
 							FileUtils.copyInputStreamToFile(remoto, local);
 						}catch(ConnectException ex){
 							logger.error("Error al descargar documento: ",ex);
@@ -1589,10 +1585,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					File local = new File(filePath);
 					
 					try{
-					    cddocume=cddocume.replace("https","http").replace("HTTPS","HTTP").replaceAll("\\s","");
-	                    cddocume=cddocume.replace("http://gswas.com.mx", "http://192.168.2.133:9080");
-	                    cddocume=cddocume.replace("https://gswas.com.mx", "http://192.168.2.133:9080");
-	                    InputStream remoto = HttpUtil.obtenInputStream(cddocume);
+						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
 						FileUtils.copyInputStreamToFile(remoto, local);
 					}catch(ConnectException ex){
 						logger.error("Error al descargar documento: ",ex);
@@ -1871,11 +1864,8 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					File local = new File(filePath);
 					
 					try{
-					    cddocume=cddocume.replace("https","http").replace("HTTPS","HTTP").replaceAll("\\s","");
-	                    cddocume=cddocume.replace("http://gswas.com.mx", "http://192.168.2.133:9080");
-	                    cddocume=cddocume.replace("https://gswas.com.mx", "http://192.168.2.133:9080");
-	                    InputStream remoto = HttpUtil.obtenInputStream(cddocume);
-	                    FileUtils.copyInputStreamToFile(remoto, local);
+						InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
+						FileUtils.copyInputStreamToFile(remoto, local);
 					}catch(ConnectException ex){
 						logger.error("Error al descargar documento: ",ex);
 						
@@ -2269,10 +2259,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				
 				
 				try{
-				    cddocume=cddocume.replace("https","http").replace("HTTPS","HTTP").replaceAll("\\s","");
-				    cddocume=cddocume.replace("http://gswas.com.mx", "http://192.168.2.133:9080");
-				    cddocume=cddocume.replace("https://gswas.com.mx", "http://192.168.2.133:9080");
-					InputStream remoto = HttpUtil.obtenInputStream(cddocume);
+					InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP").replaceAll("\\s",""));
 					
 				}catch(ConnectException ex){
 					
