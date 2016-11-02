@@ -10764,6 +10764,94 @@ public class CotizacionManagerImpl implements CotizacionManager
 		emisionDAO.actualizarCdplanGrupo(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdgrupo, cdplan);
 	}
 	
+	@Override
+	public Map<String,String> obtieneFormapago(String administradora,String retenedora) throws Exception{
+		
+		List<Map<String,String>> map=consultasDAO.formasPagoRetenedora(administradora, retenedora);
+		if(map.get(0)!=null){
+			return map.get(0);
+		}
+		return null;
+	}
+	
+	@Override
+	public List<Map<String,String>> buescaEmpleado(
+	         String pv_administradora_i
+	        ,String pv_retenedora_i
+	        ,String pv_clave_i
+			,String pv_nombre_i 
+			,String pv_apellido_paterno_i 
+			,String pv_apellido_materno_i 
+			,String pv_rfc_i 
+			) throws Exception{
+		
+	    List<Map<String,String>> res=null;
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ buescaEmpleado @@@@@@"
+				));
+		
+			String paso="";
+			
+			try{
+				
+				paso="busca datos";
+				res=new ArrayList<Map<String,String>>();
+				
+				res=cotizacionDAO.buscaEmpleado(pv_administradora_i,pv_retenedora_i,pv_clave_i, pv_nombre_i, pv_apellido_paterno_i, pv_apellido_materno_i, pv_rfc_i);
+			}catch(Exception ex) {
+				Utils.generaExcepcion(ex, paso);
+			}
+			
+			logger.debug(Utils.log(
+					"\n@@@@@@ ",
+					"\n@@@@@@ buescaEmpleado @@@@@@",
+					"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+		return res;
+		
+	}
+	
+	
+	@Override
+    public String guardaEmpleado(String pv_numsuc_i
+            ,String pv_cveent_i
+            ,String pv_cveemp_i
+            ,String pv_nomemp_i
+            ,String pv_apaterno_i
+            ,String pv_amaterno_i
+            ,String pv_rfc_i
+            ,String pv_curp_i
+            ,String pv_usuario_i
+            ,String pv_feregist_i
+            ,String pv_accion_i
+            ) throws Exception{
+        
+        logger.debug(Utils.log(
+                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                ,"\n@@@@@@ guardaEmpleado @@@@@@"
+                ,"\n@@@@@@ "
+                ));
+        
+            String paso="";
+            
+            try{
+                
+                paso="guardar enpleado";
+                cotizacionDAO.guardaEmpleado(pv_numsuc_i, pv_cveent_i, pv_cveemp_i, pv_nomemp_i, pv_apaterno_i, pv_amaterno_i, pv_rfc_i, pv_curp_i, pv_usuario_i, pv_feregist_i, pv_accion_i);
+            }catch(Exception ex) {
+                Utils.generaExcepcion(ex, paso);
+            }
+            
+            logger.debug(Utils.log(
+                    "\n@@@@@@ ",
+                    "\n@@@@@@ guardaEmpleado @@@@@@",
+                    "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+        return "";
+        
+    }
+	
+
+	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////

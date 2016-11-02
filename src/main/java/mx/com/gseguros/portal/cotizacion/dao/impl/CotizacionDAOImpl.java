@@ -8417,4 +8417,112 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             compile();
         }
     }	
+	@Override
+    public List<Map<String,String>> buscaEmpleado(
+                                                String pv_administradora_i
+                                                ,String pv_retenedora_i,
+                                                 String pv_clave_i
+    											,String pv_nombre_i
+    											,String pv_apellido_paterno_i
+    											,String pv_apellido_materno_i
+    											,String pv_rfc_i) throws Exception
+    {
+	 	Map<String,String> params=new HashMap<String, String>();
+	 	params.put("pv_administradora_i", pv_administradora_i);
+	 	params.put("pv_retenedora_i", pv_retenedora_i);
+	 	params.put("pv_clave_i",  pv_clave_i.trim().equals("")?null:pv_clave_i);
+	 	params.put("pv_nombre_i", pv_nombre_i.trim().equals("")?null:pv_nombre_i);
+	 	params.put("pv_apellido_paterno_i", pv_apellido_paterno_i.trim().equals("")?null:pv_apellido_paterno_i);
+	 	params.put("pv_apellido_materno_i", pv_apellido_materno_i.trim().equals("")?null:pv_apellido_materno_i);
+	 	params.put("pv_rfc_i", pv_rfc_i.trim().equals("")?null:pv_rfc_i);
+    	Map<String,Object>respuestaProcedure=ejecutaSP(new BuscaEmpleado(getDataSource()), params);
+    	List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+    	
+    	return lista;
+    }
+	
+    protected class BuscaEmpleado extends StoredProcedure {
+    	
+    	protected BuscaEmpleado(DataSource dataSource) {
+    		
+    		super(dataSource, "Pkg_Tabapoyo_cesar.P_GET_EMPLEADOS");
+    		declareParameter(new SqlParameter("pv_administradora_i" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_retenedora_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_clave_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nombre_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_apellido_paterno_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_apellido_materno_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_rfc_i" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"OTCLAVE1","OTCLAVE2","clave_empleado","nombre","apellido_p","apellido_m","rfc","curp","OTVALOR06","OTVALOR07"
+			};
+			
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    @Override
+    public String guardaEmpleado(String pv_numsuc_i
+                                                ,String pv_cveent_i
+                                                ,String pv_cveemp_i
+                                                ,String pv_nomemp_i
+                                                ,String pv_apaterno_i
+                                                ,String pv_amaterno_i
+                                                ,String pv_rfc_i
+                                                ,String pv_curp_i
+                                                ,String pv_usuario_i
+                                                ,String pv_feregist_i
+                                                ,String pv_accion_i
+                                                ) throws Exception
+    {
+        Map<String,String> params=new HashMap<String, String>();
+        params.put("pv_numsuc_i", pv_numsuc_i);
+        params.put("pv_cveent_i", pv_cveent_i);
+        params.put("pv_cveemp_i", pv_cveemp_i);
+        params.put("pv_nomemp_i", pv_nomemp_i);
+        params.put("pv_apaterno_i", pv_apaterno_i);
+        params.put("pv_amaterno_i", pv_amaterno_i);
+        params.put("pv_rfc_i", pv_rfc_i);
+        params.put("pv_curp_i", pv_curp_i);
+        params.put("pv_usuario_i", pv_usuario_i);
+        params.put("pv_feregist_i", pv_feregist_i);
+        params.put("pv_accion_i", pv_accion_i);
+        Map<String,Object>respuestaProcedure=ejecutaSP(new GuardaEmpleado(getDataSource()), params);
+        String m=(String)respuestaProcedure.get("pv_registro_o");
+        
+        return m;
+    }
+    
+    protected class GuardaEmpleado extends StoredProcedure {
+        
+        protected GuardaEmpleado(DataSource dataSource) {
+            
+            super(dataSource, "PKG_RETENEDORAS.P_MOV_EMPLEADOS");
+            declareParameter(new SqlParameter("pv_numsuc_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cveent_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cveemp_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nomemp_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_apaterno_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_amaterno_i" , OracleTypes.VARCHAR));
+            
+            declareParameter(new SqlParameter("pv_rfc_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_curp_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_usuario_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_feregist_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_accion_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
 }
+    
+	
+
+
+
+

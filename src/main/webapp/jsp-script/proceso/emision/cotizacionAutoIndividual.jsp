@@ -88,6 +88,7 @@ var _p28_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"
 var _p28_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"          action="actualizarOtvalorTramitePorDsatribu"            />';
 var _p28_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"          action="recuperarOtvalorTramitePorDsatribu"             />';
 var _p28_urlRecuperarDatosTramiteValidacion   = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente"         />';
+var url_obtiene_forma_pago					  = '<s:url namespace="/emision"          action="obtieneFormaPago"        					      />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -108,7 +109,8 @@ var _p28_formFields   = [<s:property value="imap.formFields"   />];
 var _p28_panel2Items  = [<s:property value="imap.panel2Items"  />];
 var _p28_panel3Items  = [<s:property value="imap.panel3Items"  />];
 var _p28_panel4Items  = [<s:property value="imap.panel4Items"  />];
-
+var _p28_panelDxnItems= [<s:property value="imap.panelDxnItems"  />];
+	
 //panel para la renovacio por poliza
 var _p28_panel5Items  = [<s:property value="imap.panel5Items"  />];
 
@@ -123,6 +125,7 @@ var _p28_precioDolarDia          = null;
 var valorRecuperadoValorVehiSigs = null;
 var cdper                        = null;
 var cdperson                     = null;
+var formaPago					 = null;
 
 // var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 var plazoenanios;
@@ -575,16 +578,23 @@ Ext.onReady(function()
         ,itemId : '_p28_fieldsetTatripol'
         ,width  : 435
         ,title  : '<span style="font:bold 14px Calibri;">DATOS ADICIONALES DE P&Oacute;LIZA</span>'
-        ,hidden : _p28_smap1.cdramo+'x'=='5x'
+         ,hidden : _p28_smap1.cdramo+'x'=='5x'
                   ?(
                         (_p28_smap1.cdtipsit+'x'!='CRx' && _p28_smap1.cdtipsit+'x'!='TVx' && _p28_smap1.cdtipsit+'x'!='TLx' ) || 
                         !RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) 
 //                      (rolesSuscriptores.lastIndexOf('|'+_p28_smap1.cdsisrol+'|')==-1)
 //                      _p28_smap1.cdtipsit+'x'!='CRx'||_p28_smap1.cdsisrol!='SUSCRIAUTO'
                    )
-                  :false
+                  :false 
         ,items  : tatripolItems
     }
+,{
+    	
+    	xtype		: 'fieldset'
+    	,title		: '<span style="font:bold 14px Calibri;">DXN</span>'
+    	,items		: _p28_panelDxnItems
+    }
+    
     ,{
         xtype       : 'datefield'
         ,itemId     : '_p28_feiniItem'
@@ -701,20 +711,95 @@ Ext.onReady(function()
     
     ////// custom //////
     
+    //dxn
+   
+    
+    _fieldByName("aux.otvalor08").getStore().filter([{filterFn: function(item) {
+        
+        return item.get("key") < 1000; }}]);
+    
+    _fieldByName("aux.otvalor08").on({
+        change:function(){
+            _fieldByName("fefin").setReadOnly(false);
+            _fieldByName("feini").fireEvent('change',_fieldByName("feini"),_fieldByName("feini").getValue());
+        }
+    });
+    _fieldByName("aux.otvalor09").on({
+    	change:function(t,e,o){
+    		try{
+    		var admin=_fieldByName("aux.otvalor08").getValue();
+    		var ret=_fieldByName("aux.otvalor09").getValue();
+    		
+    		_fieldByName("fefin").setReadOnly(false);
+             _fieldByName("feini").fireEvent('change',_fieldByName("feini"),_fieldByName("feini").getValue());
+           
+
+    		if(ret!=null){
+    			formaPago=getFormaPago(admin,ret);
+    			
+    			var fecha_termino=formaPago.fecha_termino;
+    			if((fecha_termino+'').trim()!=''){
+    			    fecha_termino= Ext.Date.parse(formaPago.fecha_termino, "d/m/Y");
+    			    if(fecha_termino>new Date()){
+    			         _fieldByName("fefin").setValue(formaPago.fecha_termino);
+    	                 _fieldByName("fefin").setReadOnly(true);
+    	                 _fieldByName("fefin").validator=function(){ return true;}
+    	                 _fieldByName("fefin").isValid();
+    			    }else{
+    			        _fieldByName("fefin").setReadOnly(false);
+    			        _fieldByName("feini").fireEvent('change',_fieldByName("feini"),_fieldByName("feini").getValue());
+    			        _fieldByLabel('NEGOCIO').fireEvent('change',_fieldByLabel('NEGOCIO'),_fieldByLabel('NEGOCIO').getValue());
+    			       
+    			    }
+    			    
+    			}else{
+    			    _fieldByName("fefin").setReadOnly(false);
+    			    _fieldByName("feini").fireEvent('change',_fieldByName("feini"),_fieldByName("feini").getValue());
+    			    _fieldByLabel('NEGOCIO').fireEvent('change',_fieldByLabel('NEGOCIO'),_fieldByLabel('NEGOCIO').getValue());
+    			}
+    			
+
+    		}
+    		}catch(e){
+    			debugError(e);
+    		}
+    		
+    	}	
+    }
+    );
+    // ocultando campos que son de emision
+    _fieldByName("aux.otvalor10").hide();
+    _fieldByName("aux.otvalor11").hide();
+    _fieldByName("aux.otvalor12").hide();
+    _fieldByName("aux.otvalor13").hide();
+    _fieldByName("aux.otvalor14").hide();
+    _fieldByName("aux.otvalor15").hide();
+    _fieldByName("aux.otvalor16").hide();
+    
+    
     //fechas
     _fieldByName('feini').on(
     {
         change : function(me,val)
         {
-            debug('val:',val);
-            var fefin = _fieldByName('fefin');
-            fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
-            fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
-            if(!Ext.isEmpty(plazoenanios))
-            {
-            	fefin.setMaxValue(Ext.Date.add(val,Ext.Date.YEAR,plazoenanios));
-            }
-            fefin.isValid();
+            
+	            if(_fieldByName('fefin').readOnly){
+	               
+	                return ;
+	            }
+	            
+	            debug('val:',val);
+	            var fefin = _fieldByName('fefin');
+	            fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
+	            fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
+	           
+	            if(!Ext.isEmpty(plazoenanios))
+	            {
+	            	fefin.setMaxValue(Ext.Date.add(val,Ext.Date.YEAR,plazoenanios));
+	            	
+	            }
+	            fefin.isValid();
+            
         }
     });
     
@@ -1063,10 +1148,10 @@ Ext.onReady(function()
                 {
                 	////vils llama filtrando record
                     _p28_cargarParametrizacionCoberturas();
-                    if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
+                    if(!Ext.isEmpty(_fieldLikeLabel('CLAVE GS',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
                     {
-                        var yy = _fieldLikeLabel('CLAVE');
-                        _fieldLikeLabel('CLAVE').store.proxy.extraParams['params.servicio']=val;
+                        var yy = _fieldLikeLabel('CLAVE GS');
+                        _fieldLikeLabel('CLAVE GS').store.proxy.extraParams['params.servicio']=val;
                     }
                 }
             }
@@ -1117,8 +1202,8 @@ Ext.onReady(function()
                                 me.clearValue();
                             }
                             
-                            if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
-                            {_fieldLikeLabel('CLAVE').store.proxy.extraParams['params.uso']=me.getValue();}
+                            if(!Ext.isEmpty(_fieldLikeLabel('CLAVE GS',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
+                            {_fieldLikeLabel('CLAVE GS').store.proxy.extraParams['params.uso']=me.getValue();}
                             
                             if(!Ext.isEmpty(micallback))
                             {
@@ -1163,14 +1248,14 @@ Ext.onReady(function()
                         change : function(me,val)
                         {
                             valido = false;
-                            var valido  = !Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true))
+                            var valido  = !Ext.isEmpty(_fieldLikeLabel('CLAVE GS',null,true))
                                         &&!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true))
                                         && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1);
                             if(valido)
                             {
                                 var claveCmp = "";
-                                if(!Ext.isEmpty(_fieldLikeLabel('CLAVE',null,true)))
-                                {claveCmp=_fieldLikeLabel('CLAVE');}
+                                if(!Ext.isEmpty(_fieldLikeLabel('CLAVE GS',null,true)))
+                                {claveCmp=_fieldLikeLabel('CLAVE GS');}
                                 var modelo = "";
                                 if(!Ext.isEmpty(_fieldLikeLabel('MODELO',null,true)))
                                 {modelo = _fieldByLabel('MODELO').getValue();}
@@ -1201,7 +1286,7 @@ Ext.onReady(function()
         //camion
         if(_p28_smap1.cdtipsit+'x'=='CRx')
         {
-            _fieldLikeLabel('CLAVE').on(
+            _fieldLikeLabel('CLAVE GS').on(
             {
                 select : function(){ _p28_recuperaObligatorioCamionRamo5(); }
             });
@@ -1425,6 +1510,13 @@ Ext.onReady(function()
     
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
+    
+    
+    //obigatorio si hay administradora
+    
+    
+    agregarAgenteDXN();
+    
     ////// custom //////
     
     ////// loaders //////
@@ -1637,6 +1729,18 @@ function _p28_camposEstacionamiento(combo)
 function _p28_cotizar(sinTarificar)
 {
     debug('>_p28_cotizar sintarifa:',sinTarificar,'DUMMY');
+    var administradora=_fieldByName("aux.otvalor08").getValue();
+    var retenedora=_fieldByName("aux.otvalor09").getValue();
+    
+    if(administradora!=null && (administradora+'').trim()!='' && administradora!="-1"){
+    	if(retenedora==null || (retenedora+'').trim()==''){
+    		mensajeWarning('Favor de registrar una retenedora');
+    		
+    		return ;
+    	}
+    }
+    
+    
     
     var panelpri = _fieldById('_p28_panelpri');
     var form     = _fieldById('_p28_form');
@@ -1925,6 +2029,48 @@ function _p28_cotizar(sinTarificar)
                     }
                     _fieldById('_p28_botonAplicarCesion').setDisabled(disabledComi);
                     
+                    /////////////// DXN //////////////////////////////
+                    var formasPago=json.slist2,soloDXN=[];
+                    var administradora=_fieldByName("aux.otvalor08");
+                    var retenedora=_fieldByName("aux.otvalor09");
+                    
+                    
+                    
+                    
+                    
+                    if(retenedora.getValue()!=null && retenedora.getValue()!="-1" && retenedora.getValue()!=""){
+                        var fpago=getFormaPago(administradora.getValue(),retenedora.getValue());
+//                      console.log(administradora.getValue());
+                        
+                        
+                        var i;
+                        for(i in formasPago){
+                            
+                            if((fpago.fpago+'').trim()==(formasPago[i].CDPERPAG+'').trim()){
+                                soloDXN.push(formasPago[i]);
+                                break;
+                            }
+                            
+                        }
+                        
+                        
+                        formasPago=soloDXN;
+                    }else{
+                        var i;
+                        for(i in formasPago){
+                            
+                            if((!FormaPago.esDxN((formasPago[i].CDPERPAG+'').trim()))){
+                                
+                                soloDXN.push(formasPago[i]);
+                                
+                            }
+                            
+                        }
+                        formasPago=soloDXN;
+                    }
+                    
+         ///////////////// DXN /////////////////////////////
+                    
                     var gridTarifas=Ext.create('Ext.panel.Panel',
                     {
                         itemId : '_p28_gridTarifas'
@@ -1937,7 +2083,7 @@ function _p28_cotizar(sinTarificar)
                                 ,store            : Ext.create('Ext.data.Store',
                                 {
                                     model : '_p28_modeloTarifa'
-                                    ,data : json.slist2
+                                    ,data : formasPago
                                 })
                                 ,columns          : Ext.decode(json.smap1.columnas)
                                 ,selType          : 'cellmodel'
@@ -3079,6 +3225,15 @@ function llenandoCampos(json)
                 {
                     var tatri=itemsTatripol[j];
                     tatri.setValue(json.smap1[tatri.name]);
+                }
+                
+                try {
+		           	_fieldByName('aux.otvalor08').setValue(json.smap1['aux.otvalor08']);
+		           	_fieldByName('aux.otvalor09').heredar(true, function(){
+	         			_fieldByName('aux.otvalor09').setValue(json.smap1['aux.otvalor09']);
+		           	});
+                } catch(e) {
+                	debugError(e);
                 }
                 
                 if(_p28_smap1.cdramo=='5' && 'TL'.lastIndexOf(_p28_smap1.cdtipsit)==-1)
@@ -4354,7 +4509,7 @@ function _p28_recuperaObligatorioCamionRamo5()
         url     : _p28_urlCargarObligatorioCamionRamo5
         ,params :
         {
-            'smap1.clave' : _fieldLikeLabel('CLAVE').getValue()
+            'smap1.clave' : _fieldLikeLabel('CLAVE GS').getValue()
         }
         ,success : function(response)
         {
@@ -5033,6 +5188,76 @@ function centrarVentanaTarifas(ventana)
     }
     return ventana;
 }
+
+
+function getFormaPago(administradora,retenedora){
+	var pago='nan';
+	var esperar = true;
+
+
+	
+	 
+	  $.ajax({
+                      async:false, 
+                      cache:false,
+                      dataType:"json", 
+                      type: 'POST',   
+                      url: url_obtiene_forma_pago,
+                      data: {
+                     	 'smap1.administradora':administradora,
+                     	 'smap1.retenedora':retenedora
+                     	 
+                      }, 
+                      success:  function(respuesta){
+                    	  var ck = 'Decodificando respuesta al recuperar datos para revisar renovaci\u00f3n';
+                          
+                       try
+                       {
+                           var jsonDatTram =  respuesta// Ext.decode(response.responseText);
+                           debug('### jsonDatTram:',jsonDatTram,'.');
+                           
+                           if(jsonDatTram.success === true)
+                           {
+                          	
+                               pago=jsonDatTram.smap1;
+                              
+                           }
+                           else
+                           {
+                               mensajeError(jsonDatTram.message);
+                           }
+                       }
+                       catch(e)
+                       {
+                           manejaException(e,ck,mask);
+                       }
+                       esperar=false;
+                      },
+                      beforeSend:function(){},
+                      error:function(objXMLHttpRequest){
+                    	  esperar=false;
+	                        errorComunicacion(null,'Error al recuperar datos de tr\u00e1mite para revisar renovaci\u00f3n');
+                      }
+                    });
+	
+	 return pago;
+}
+
+
+function agregarAgenteDXN(){
+    
+    try{
+        var cdagente=_fieldByLabel('AGENTE').getValue();
+        
+        _fieldByLabel('RETENEDORA').store.proxy.extraParams['params.cdagente']=cdagente;
+        
+    }catch(e){
+        debugError(e)
+    }
+    
+    
+}
+
 ////// funciones //////
 </script>
 </head>

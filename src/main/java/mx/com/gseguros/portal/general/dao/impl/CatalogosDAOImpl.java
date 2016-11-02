@@ -2141,6 +2141,34 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+	
+	
+	@Override
+    public List<GenericVO> obtieneCatalogoRetAdminAgente(String pv_numsuc_i, String pv_cdagente_i) throws Exception {      
+        try {
+            HashMap<String,Object> params = new LinkedHashMap<String,Object>();
+            params.put("pv_numsuc_i", pv_numsuc_i);
+            params.put("pv_cdagente_i", pv_cdagente_i);
+                      
+            Map<String, Object> resultado = ejecutaSP(new ObtieneCatalogoRetAdminAgente(getDataSource()), params);
+            return (List<GenericVO>) resultado.get("pv_registro_o");
+        } catch (Exception e) {
+            throw new Exception(e.getMessage(), e);
+        }
+    }
+    
+    protected class ObtieneCatalogoRetAdminAgente extends StoredProcedure {
+    
+        protected ObtieneCatalogoRetAdminAgente(DataSource dataSource) {
+            super(dataSource, "Pkg_Tabapoyo_cesar.P_GET_RETENEDORAS_AGENTE");
+            declareParameter(new SqlParameter("pv_numsuc_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdagente_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosPolMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 
 	@Override
 	public boolean guardaDescripcionCortaCobertura(String cdgarant, String descCorta) throws Exception{		

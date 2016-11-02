@@ -173,6 +173,8 @@ public interface CatalogosDAO {
 	public List<Map<String,String>> obtenerCamposExclusionRenovacion()throws Exception;
 	
 	public List<GenericVO> obtieneCatalogoDescAtrib(String cdRamo, String dsAtribu, String otValor) throws Exception;
+
+    public List<GenericVO> obtieneCatalogoRetAdminAgente(String pv_numsuc_i, String pv_cdagente_i) throws Exception;
 	
 	public boolean guardaDescripcionCortaCobertura(String cdgarant, String descCorta) throws Exception;
 	

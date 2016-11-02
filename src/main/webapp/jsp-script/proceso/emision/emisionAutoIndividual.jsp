@@ -25,6 +25,13 @@ var _p28_urlCargarIdUsu                    = '<s:url namespace="/emision"    act
 var urlReintentarWS                        = '<s:url namespace="/"        action="reintentaWSautos" />';
 var _urlEnviarCorreo                       = '<s:url namespace="/general" action="enviaCorreo"      />';
 var _p29_urlRecuperacion                   = '<s:url namespace="/recuperacion"    action="recuperar"                       />';
+
+var url_buscar_empleado                  = '<s:url namespace="/emision"    action="buscarEmpleados"                       />';
+var urlCargar                    = '<s:url namespace="/"                action="cargarDatosComplementarios"  />';
+var url_guarda_empleado         = '<s:url namespace="/emision"                action="guardaEmpleados"  />';
+    
+
+
 ////// urls //////
 
 ////// variables //////
@@ -61,6 +68,11 @@ var _p29_habilitarBotonEmitir  = "S";
 
 var _url_domiciliacion = '<s:text name="portal.agentes.domiciliacion.url" />';
 var _URL_IDUSULOGIN = '<s:text name="sigs.obtenerDatosPorSucRamPol.url" />';
+
+var panelDxnItems=[<s:property value="imap.panelDxnItems" />];
+
+var esDXN=false;
+
 ////// variables //////
 
 Ext.onReady(function()
@@ -162,6 +174,25 @@ Ext.onReady(function()
 	////// componentes //////
 	
 	////// contenido //////
+	
+	
+	
+	panelDxnItems.splice(0, 0,
+		
+	    {
+            xtype:'button',
+            text:'Buscar Empleado',
+            colspan: 2,
+            icon    : '${ctx}/resources/fam3icons/icons/zoom.png',
+            handler:function(){
+                ventanaBusquedaEmpleado();
+            }
+        } );
+	
+	
+	
+	
+	
 	Ext.create('Ext.panel.Panel',
 	{
 	    itemId    : '_p29_panelpri'
@@ -284,6 +315,130 @@ Ext.onReady(function()
                     ,autoLoad:true
                     ,scripts:true
                 }
+	        })
+	        
+	         ,Ext.create('Ext.form.Panel',
+	        {
+	            itemId    : '_p29_dxnForm'
+	            ,name     : '_p29_dxnForm'
+	            ,title    : 'DESCUENTO POR N&Oacute;MINA'
+	            ,defaults : { style : 'margin:5px;' }
+	            ,layout   :
+	            {
+	                type     : 'table'
+	                ,columns : 2
+	                ,tdAttrs : { valign : 'top' }
+	            }
+	            ,items    :
+	            
+	                panelDxnItems
+	                
+	            ,listeners: {
+	                
+	                beforerender:function(me){
+	                    
+	                    _mask("cargando datos");
+	                    Ext.Ajax.request(
+                                {
+                                   
+                                     url     : urlCargar 
+                                    ,params :
+                                    {
+                                        cdunieco :  _p29_smap1.cdunieco,
+                                        cdramo :    _p29_smap1.cdramo,
+                                        estado :    _p29_smap1.estado,
+                                        nmpoliza :  _p29_smap1.nmpoliza
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        _unmask();
+                                        var json = Ext.decode(response.responseText);
+                                        debug('### Response :',json);
+                                        if(json.success ==  true)
+                                        {
+                                            var ck = 'Decodificando respuesta al recuperar permisos de boton Comprar';
+                                            try
+                                            {
+                                                ck="cargando datos";
+                                                
+                                              
+                                                if(json.parametros.pv_otvalor08!=null &&
+                                                        (json.parametros.pv_otvalor08+'').trim()!=''
+                                                        && json.parametros.pv_otvalor08!='-1'){
+                                                    esDXN=true;
+                                                    _fieldByName("aux.otvalor08").setValue(json.parametros.pv_otvalor08);
+                                                    _fieldByName('aux.otvalor09').heredar(true, function(){
+                                                        _fieldByName('aux.otvalor09').setValue(json.parametros.pv_otvalor09);
+                                                        _fieldByName('aux.otvalor15').heredar(true, function(){
+                                                            _fieldByName('aux.otvalor15').setValue(json.parametros.pv_otvalor15);
+                                                          
+                                                        });
+                                                    });
+                                                    
+                                                    
+                                                    
+                                                    _fieldByName("aux.otvalor10").setValue(json.parametros.pv_otvalor10==null?"":json.parametros.pv_otvalor10);
+                                                    _fieldByName("aux.otvalor11").setValue(json.parametros.pv_otvalor11==null?"":json.parametros.pv_otvalor11);
+                                                    _fieldByName("aux.otvalor12").setValue(json.parametros.pv_otvalor12==null?"":json.parametros.pv_otvalor12);
+                                                    _fieldByName("aux.otvalor13").setValue(json.parametros.pv_otvalor13==null?"":json.parametros.pv_otvalor13);
+                                                    _fieldByName("aux.otvalor14").setValue(json.parametros.pv_otvalor14==null?"":json.parametros.pv_otvalor14);
+                                                    _fieldByName("aux.otvalor15").setValue(json.parametros.pv_otvalor15==null?"":json.parametros.pv_otvalor15);
+                                                    
+                                                    _fieldByName("aux.otvalor16").setValue(json.parametros.pv_otvalor15==null?"":json.parametros.pv_otvalor16);
+                                                    _fieldByName("aux.otvalor08").setReadOnly(true);
+                                                    _fieldByName("aux.otvalor09").setReadOnly(true);
+                                                    _fieldByName("aux.otvalor09").focus();
+                                                    
+                                                    Ext.ComponentQuery.query('#_p29_dxnForm [xtype=textfield]').forEach(function(item,idx,arr){
+                                                        
+                                                        item.on({
+                                                            change:function(){
+                                                                try
+                                                                {
+                                                                    if('string' == typeof item.getValue() && true !== item.sinmayus)
+                                                                    {
+                                                                        //debug('mayus de '+this.getValue());
+                                                                        item.setValue(item.getValue().toUpperCase());
+                                                                    }
+                                                                }
+                                                                catch(e){}
+                                                            }
+                                                        })
+                                                    });
+                                                
+                                
+                                                    
+                                                    
+                                                    
+                                                }else{
+                                                    esDXN=false;
+                                                    me.destroy();
+                                                }
+                                                
+                                                
+                                                json.parametros.pv_otvalor08
+                                                
+                                            }
+                                            catch(e)
+                                            {
+                                                manejaException(e,ck);
+                                            }                    
+                                        }
+                                        else
+                                        {
+                                            mensajeError(json.respuesta);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _unmask();
+                                        errorComunicacion();
+                                    }
+                                });
+	                }
+	            }
+	                
+	             
 	        })
 	        ,Ext.create('Ext.panel.Panel',
 	        {
@@ -736,7 +891,14 @@ function _p29_guardar(callback)
     _p22_parentCallbackCallback = null;
     var form1  = _fieldById('_p29_polizaForm');
     var form2  = _fieldById('_p29_adicionalesForm');
-    var valido = form1.isValid()&&form2.isValid();
+    if(esDXN){
+        var form3  = _fieldById('_p29_dxnForm');
+    }else{
+        var form3={}
+        form3.isValid=function(){ return true;}
+    }
+    
+    var valido = form1.isValid()&&form2.isValid()&&form3.isValid();
     if(!valido)
     {
         datosIncompletos();
@@ -753,6 +915,9 @@ function _p29_guardar(callback)
     
     if(valido)
     {
+        if(esDXN){
+        guardaEmpleado();
+        }
         _p22_parentCallbackCallback = function()
         {
             var json =
@@ -760,7 +925,22 @@ function _p29_guardar(callback)
                 smap1  : form1.getValues()
                 ,smap2 : form2.getValues()
             };
-        
+            //para mandar los datos dxn
+            if(esDXN){
+	            try{
+	                 var  datos=_fieldByName('_p29_dxnForm').getForm().getValues();
+	                 json.smap1["parametros.pv_otvalor10"]=datos['aux.otvalor10'];
+	                 json.smap1["parametros.pv_otvalor11"]=datos['aux.otvalor11'];
+	                 json.smap1["parametros.pv_otvalor12"]=datos['aux.otvalor12'];
+	                 json.smap1["parametros.pv_otvalor13"]=datos['aux.otvalor13'];
+	                 json.smap1["parametros.pv_otvalor14"]=datos['aux.otvalor14'];
+	                 json.smap1["parametros.pv_otvalor15"]=datos['aux.otvalor15'];
+	                 json.smap1["parametros.pv_otvalor16"]=datos['aux.otvalor16'];
+	            }catch(e){
+	                debugError(e);
+	            }
+            }
+                ////////////////////////////
             json.smap1['cdunieco'] = _p29_smap1.cdunieco;
             json.smap1['cdramo']   = _p29_smap1.cdramo;
             json.smap1['estado']   = _p29_smap1.estado;
@@ -1602,6 +1782,253 @@ function bloquearBotonEmitir()
                 }
             });
         }
+        
+        
+function ventanaBusquedaEmpleado(){
+	var ventana=Ext.create('Ext.window.Window',
+	        {
+	            title      : 'Recuperar cliente'
+	            ,modal     : true
+	            ,width     : 600
+	            ,height    : 400
+	            ,items     :
+	            [
+	                {
+	                	 layout :
+                         {
+                             type     : 'table'
+                             ,columns : 2
+                         }
+	                    ,defaults : { style : 'margin : 5px;' }
+	                    ,items    :
+	                    [
+							{
+							    xtype       : 'textfield'
+							    ,name       : 'no_empleado'
+							    ,fieldLabel : 'NO. EMPLEADO'
+							    ,minLength  : 0
+							    ,maxLength  : 30
+							}
+							,
+	                        {
+	                            xtype       : 'textfield'
+	                            ,name       : 'rfc'
+	                            ,fieldLabel : 'RFC'
+	                            ,minLength  : 0
+	                            ,maxLength  : 13
+	                        }
+	                        ,
+	                        {
+	                            xtype       : 'textfield'
+	                            ,name       : 'ap_paterno'
+	                            ,fieldLabel : 'APELLIDO PATERNO'
+	                            ,minLength  : 0
+	                            ,maxLength  : 60
+	                        }
+	                        ,
+	                        {
+	                            xtype       : 'textfield'
+	                            ,name       : 'ap_materno'
+	                            ,fieldLabel : 'APELLIDO MATERNO'
+	                            ,minLength  : 0
+	                            ,maxLength  : 60
+	                        }
+	                        ,
+	                        {
+	                            xtype       : 'textfield'
+	                            ,name       : 'nombre'
+	                            ,fieldLabel : 'NOMBRE EMPLEADO'
+	                            ,minLength  : 0
+	                            ,maxLength  : 60
+	                        }
+	                        ,{
+	                            xtype    : 'button'
+	                            ,text    : 'Buscar'
+	                            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+	                            ,handler : function(button)
+	                            {
+	                                debug('recuperar empleado buscar');
+	                                _mask('Buscando empleado');
+	                                Ext.Ajax.request(
+	                                        {
+	                                             url     : url_buscar_empleado 
+	                                            ,params :
+	                                            {
+	                                                 'params.administradora'   :_fieldByName("aux.otvalor08").getValue()
+	                                                ,'params.retenedora'       :_fieldByName("aux.otvalor09").getValue()
+	                                                ,'params.clave_empleado'     : _fieldByName('no_empleado').getValue()
+	                                                ,'params.rfc'     : _fieldByName('rfc').getValue()
+	                                                ,'params.ap_paterno'     : _fieldByName('ap_paterno').getValue()
+	                                                ,'params.ap_materno'     : _fieldByName('ap_materno').getValue()
+	                                                ,'params.nombre'     : _fieldByName('nombre').getValue()
+	                                            }
+	                                            ,success : function(response)
+	                                            {
+	                                            	_unmask();
+	                                                var json = Ext.decode(response.responseText);
+	                                                debug('### Response Boton Comprar:',json);
+	                                                if(json.success ==  true)
+	                                                {
+	                                                	var ck = 'Decodificando respuesta al recuperar permisos de boton Comprar';
+	                                                    try
+	                                                    {
+	                                                        //alert(json);
+	                                                        debug("### respuesta ",json);
+	                                                        _fieldByName("gridBuscaEmpleado").getStore().loadData(json.slist1);
+	                                                    	
+	                                                    }
+	                                                    catch(e)
+	                                                    {
+	                                                        manejaException(e,ck);
+	                                                    }                    
+	                                                }
+	                                                else
+	                                                {
+	                                                    mensajeError(json.respuesta);
+	                                                }
+	                                            }
+	                                            ,failure : function()
+	                                            {
+	                                            	_unmask();
+	                                                errorComunicacion();
+	                                            }
+	                                        });
+	                            }
+	                        }
+	                    ]
+	                }
+	                ,Ext.create('Ext.grid.Panel',
+	                {
+	                    title    : 'Resultados'
+	                    ,name	 : 'gridBuscaEmpleado'
+	                    ,width   : 590
+	                    ,height    : 220
+	                    ,columns :
+	                    [
+	                        {
+	                            xtype    : 'actioncolumn'
+	                            ,width   : 30
+	                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+	                            ,handler : function(view,row,col,item,e,record)
+	                            {
+	                                debug('recuperar cliente handler record:',record);
+// 	                                _p28_recordClienteRecuperado=record;
+// 	                                nombre.setValue(record.raw.NOMBRECLI);
+                                                    _fieldByName("aux.otvalor10").setValue(record.raw.clave_empleado);
+                                                    _fieldByName("aux.otvalor11").setValue(record.raw.nombre);
+                                                    _fieldByName("aux.otvalor12").setValue(record.raw.apellido_p);
+                                                    _fieldByName("aux.otvalor13").setValue(record.raw.apellido_m);
+                                                    _fieldByName("aux.otvalor14").setValue(record.raw.rfc);
+                                                    _fieldByName("aux.otvalor16").setValue(record.raw.curp);
+                                    
+	                                ventana.destroy();
+	                            }
+	                        }
+	                        ,{
+	                            text       : 'CLAVE EMPLEADO'
+	                            ,dataIndex : 'clave_empleado'
+	                            //,width     : 200
+	                        }
+	                        ,{
+	                            text       : 'NOMBRE'
+	                            ,dataIndex : 'nombre'
+	                            ,flex      : 1
+	                        }
+	                        ,{
+                                text       : 'APELLIDO PATERNO'
+                                ,dataIndex : 'apellido_p'
+                                ,flex      : 1
+                            }
+	                        ,{
+                                text       : 'APELLIDO MATERNO'
+                                ,dataIndex : 'apellido_m'
+                                ,flex      : 1
+                            }
+	                        ,{
+                                text       : 'RFC'
+                                ,dataIndex : 'rfc'
+                                ,flex      : 1
+                            }
+	                    ]
+	                    ,store :Ext.create('Ext.data.Store', {
+	        			    fields: ['clave_empleado', 'nombre','apellido_p','apellido_m','rfc'],
+	        			    data : []
+	        			})
+	                    	
+	                    	
+	                })
+	            ]
+	            ,listeners :
+	            {
+	                close : function()
+	                {
+	                    //combcl.setValue('S');
+	                }
+	            }
+	        }).show();
+	        centrarVentanaInterna(ventana);
+}
+
+function guardaEmpleado(){
+    try{
+        ck="preparando datos para enviar";
+	    var datos=_fieldByName('_p29_dxnForm').getForm().getValues();
+	    debug("### Datos de empleado:", datos);
+	    
+	    $.ajax({
+	        async:false, 
+	        cache:false,
+	        dataType:"json", 
+	        type: 'POST',   
+	        url: url_guarda_empleado ,
+	        data: {
+	            'params.administradora':datos['aux.otvalor08'],
+	            'params.retenedora':datos['aux.otvalor09'],
+	            'params.clave':datos['aux.otvalor10'],
+	            'params.nombre':datos['aux.otvalor11'],
+	            'params.apaterno':datos['aux.otvalor12'],
+	            'params.amaterno':datos['aux.otvalor13'],
+	            'params.rfc':datos['aux.otvalor14'],
+	            'params.clavedescuento':datos['aux.otvalor15'],
+	            'params.curp':datos['aux.otvalor16']
+	           
+	        }, 
+	        success:  function(respuesta){
+	            var ck = 'Decodificando respuesta al recuperar datos para guardar empleado';
+	            
+	         try
+	         {
+	             var jsonDatTram =  respuesta// Ext.decode(response.responseText);
+	             debug('### jsonDatTram:',jsonDatTram,'.');
+	             
+	             if(jsonDatTram.success === true)
+	             {
+	              
+	                 //alert()
+	                
+	             }
+	             else
+	             {
+	                 mensajeError(jsonDatTram.message);
+	             }
+	         }
+	         catch(e)
+	         {
+	             debugError(e);
+	         }
+	         
+	        },
+	        beforeSend:function(){},
+	        error:function(objXMLHttpRequest){
+	            
+	              errorComunicacion(null,'Error al recuperar datos de tr\u00e1mite para revisar renovaci\u00f3n');
+	        }
+	      });
+    }catch(e){
+        debugError(e);
+    }
+    
+}
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>

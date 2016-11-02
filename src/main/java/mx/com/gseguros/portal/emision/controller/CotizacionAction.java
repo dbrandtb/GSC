@@ -348,6 +348,24 @@ public class CotizacionAction extends PrincipalCoreAction
 	        
 	        try
 	        {
+	        	
+	        	List<ComponenteVO>tatripoldxn = pantallasManager.obtenerComponentes(
+						TipoTramite.POLIZA_NUEVA.getCdtiptra()
+						,cdunieco
+						,cdramo
+						,cdtipsit
+						,"I"
+						,cdsisrol
+						,"COTIZACION_CUSTOM"
+						,"TATRIPOLDXN16"
+						,null
+						);
+				
+				gc.generaComponentes(tatripoldxn, true, false, true, false, false, false);
+				imap.put("panelDxnItems", gc.getItems());
+				
+				
+				
 		        List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,usuario.getUser());
 		        List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
 		        
@@ -13068,6 +13086,105 @@ public class CotizacionAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+	
+	
+	
+	
+	public String buscarEmpleados()
+	{
+		logger.debug(""
+				+ "\n########################################"
+				+ "\n###### buscarEmpleados ######"
+				+ "\nparams: "+params
+				);
+		try
+		{
+			
+			success = true;
+			exito   = true;
+			String pv_administradora_i=  params.get("administradora");
+			String pv_retenedora_i=  params.get("retenedora");
+			String pv_clave_i=  params.get("clave_empleado");
+			String pv_rfc_i=  params.get("rfc");
+			String pv_apellido_paterno_i=  params.get("ap_paterno");
+			String pv_apellido_materno_i=  params.get("ap_materno");
+			String pv_nombre_i=  params.get("nombre");
+			slist1= cotizacionManager.buescaEmpleado(pv_administradora_i,pv_retenedora_i,pv_clave_i,
+					pv_nombre_i,
+					pv_apellido_paterno_i,
+					pv_apellido_materno_i, 
+					pv_rfc_i);
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error(timestamp+" error al obtener coberturas plan", ex);
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+			exito           = false;
+		}
+		logger.debug(""
+				+ "\n###### buscarEmpleados ######"
+				+ "\n########################################"
+				);
+		return SUCCESS;
+	}
+	
+	
+	   public String guardaEmpleados()
+	    {
+	        logger.debug(""
+	                + "\n########################################"
+	                + "\n###### guardaEmpleados ######"+smap1
+	                + "\nparams: "+params
+	                );
+	        try
+	        {
+	            
+	            success = true;
+	            exito   = true;
+	            String pv_numsuc_i=  params.get("administradora");
+	            String pv_cveent_i=  params.get("retenedora");
+	            String pv_cveemp_i=  params.get("clave");
+	            String pv_nomemp_i=  params.get("nombre");
+	            String pv_apaterno_i=  params.get("apaterno");
+	            String pv_amaterno_i=  params.get("amaterno");
+	            String pv_rfc_i=  params.get("rfc");
+	            String pv_curp_i=  params.get("curp");
+	            String pv_usuario_i=  params.get("usuario");
+	            String pv_feregist_i=  params.get("nombre");
+	            UserVO usuario=(UserVO)session.get("USUARIO");
+	            String cdusuario=usuario.getUser();
+	           cotizacionManager.guardaEmpleado(pv_numsuc_i,
+	                   pv_cveent_i,
+	                   pv_cveemp_i, 
+	                   pv_nomemp_i, 
+	                   pv_apaterno_i,
+	                   pv_amaterno_i,
+	                   pv_rfc_i, 
+	                   pv_curp_i, 
+	                   cdusuario, 
+	                   null,
+	                   null)
+	           ;
+	        }
+	        catch(Exception ex)
+	        {
+	            long timestamp=System.currentTimeMillis();
+	            logger.error(timestamp+" error al obtener coberturas plan", ex);
+	            respuesta       = "Error inesperado #"+timestamp;
+	            respuestaOculta = ex.getMessage();
+	            exito           = false;
+	        }
+	        logger.debug(""
+	                + "\n###### guardaEmpleados ######"
+	                + "\n########################################"
+	                );
+	        return SUCCESS;
+	    }
+	   
+	   
+	  
 	
 	///////////////////////////////
 	////// getters y setters //////

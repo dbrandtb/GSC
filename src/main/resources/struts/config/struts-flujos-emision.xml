@@ -5,7 +5,7 @@
     
     <package name="emision" namespace="/emision" extends="default" >
         
-        <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
+		<action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
             <result name="success">/jsp-script/proceso/emision/cotizacion.jsp</result>
             <result name="success_mobile">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
@@ -523,6 +523,22 @@
         <action name="consultaExtraprimaOcup" class="CotizacionAction" method="consultaExtraprimaOcup">
             <result name="success" type="json" />
         </action>
+        
+        <action name="obtieneFormaPago" class="cotizacionAutoAction" method="obtieneFormaPago">
+           <result type="json" />
+       	</action>
+       	
+       	<action name="guardaDxn" class="cotizacionAutoAction" method="guardaDxn">
+           <result type="json" />
+       	</action>
+       	
+       	<action name="buscarEmpleados" class="CotizacionAction" method="buscarEmpleados">
+           <result type="json" />
+       </action>
+       
+       <action name="guardaEmpleados" class="CotizacionAction" method="guardaEmpleados">
+           <result type="json" />
+       </action>
         
     </package>
     

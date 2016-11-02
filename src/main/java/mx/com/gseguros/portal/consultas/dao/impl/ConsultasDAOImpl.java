@@ -5257,4 +5257,100 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	@Override
+    public List<Map<String,String>> formasPagoRetenedora(String administradora,String retenedora) throws Exception
+    {
+	 	Map<String,String> params=new HashMap<String, String>();
+	 	params.put("pv_administradora_i", administradora);
+	 	params.put("pv_retenedora_i", retenedora);
+    	Map<String,Object>respuestaProcedure=ejecutaSP(new FormasPagoRetenedora(getDataSource()), params);
+    	List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+    	
+    	return lista;
+    }
+	
+    protected class FormasPagoRetenedora extends StoredProcedure {
+    	
+    	protected FormasPagoRetenedora(DataSource dataSource) {
+    		
+    		super(dataSource, "Pkg_Tabapoyo_cesar.P_GET_FORMAS_PAGO_RETENEDORA");
+			declareParameter(new SqlParameter("pv_administradora_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_retenedora_i" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"fpago",
+					"fecha_termino"
+			};
+			
+    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    @Override
+    public List<Map<String,String>> obtieneCdagente(String pv_cdusuari_i) throws Exception
+    {
+        Map<String,String> params=new HashMap<String, String>();
+        params.put("pv_cdusuari_i", pv_cdusuari_i);
+        
+        Map<String,Object>respuestaProcedure=ejecutaSP(new ObtieneCdagente(getDataSource()), params);
+        List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+        
+        return lista;
+    }
+    
+    protected class ObtieneCdagente extends StoredProcedure {
+        
+        protected ObtieneCdagente(DataSource dataSource) {
+            
+            super(dataSource, "Pkg_Tabapoyo_cesar.P_GET_CDAGENTE");
+            declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
+            
+            String[] cols = new String[]{
+                    "cdagente",
+                   
+            };
+            
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    
+    @Override
+    public List<Map<String,String>> remesaDocumentosLayout(String pv_idproceso_i,
+                                                            String pv_cdtipimp_i,
+                                                            String pv_cdusuari_i,
+                                                            String pv_cdsisrol_i) throws Exception
+    {
+        Map<String,String> params=new HashMap<String, String>();
+        params.put("pv_idproceso_i", pv_idproceso_i);
+        params.put("pv_cdtipimp_i", pv_cdtipimp_i);
+        params.put("pv_cdusuari_i", pv_cdusuari_i);
+        params.put("pv_cdsisrol_i", pv_cdsisrol_i);
+        
+        Map<String,Object>respuestaProcedure=ejecutaSP(new RemesaDocumentosLayout(getDataSource()), params);
+        List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+        
+        return lista;
+    }
+    
+    protected class RemesaDocumentosLayout extends StoredProcedure {
+        
+        protected RemesaDocumentosLayout(DataSource dataSource) {
+            
+            super(dataSource, "PKG_IMPRESION.P_GEN_REMESA_DOCUMENTOS_LAYOUT");
+            declareParameter(new SqlParameter("pv_idproceso_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipimp_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
+            
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
