@@ -1048,6 +1048,9 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 			{
 				params.put("cdusuari_busq" , null);
 			}
+			if(!params.containsKey("dscontra")){
+                params.put("dscontra" , null);
+            }
 		}
 		
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.LOAD_MESA_CONTROL);
