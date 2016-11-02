@@ -3494,7 +3494,7 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 				                    	setTimeout(function(){
 				                    		_p21_setActiveResumen();
 				                    		
-				                    		if( cdplanAnt != nvoCdplan || dsplanAnt != nvoNombrePlan){
+				                    		if( cdplanAnt != nvoCdplan /* solo cuando cambia el plan principal || dsplanAnt != nvoNombrePlan*/){
 				                    			
 				                    			recordGrupoEdit.set('ptsumaaseg','');
 				                    			
