@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
@@ -2480,12 +2479,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				
 				));
 		
-		consultasDAO.remesaDocumentosLayout(
-		                                    map.get("pv_idproceso_i"), 
-		                                    map.get("pv_cdtipimp_i"), 
-		                                    map.get("pv_cdusuari_i"),
-		                                    map.get("pv_cdsisrol_i")
-		                                    );
+		
 		List<Map<String, String>> documentos=consultasDAO.getDocumentosLayout(
 																	      map.get("pv_idproceso_i")
 																		, map.get("pv_cdtipimp_i")
@@ -2679,128 +2673,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 		return msg;
 	}
-	@Override
-	public String obtenerCdagente(String pv_cdusuari_i) throws Exception{
-        String paso="";
-        String cdagente="";
-        logger.debug(Utils.log(
-                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                ,"\n@@@@@@ obtenerCdagente @@@@@@@@@@@@@@@"
-                ,"\n@@@@@@ pv_cdusuari_i=" , pv_cdusuari_i
-                
-                
-                
-                ));
-        try{
-            paso="Buscando cdagente";
-            List<Map<String,String>>lista= consultasDAO.obtieneCdagente(pv_cdusuari_i);
-            
-            if(lista.isEmpty()){
-                return null;
-            }
-            cdagente=lista.get(0).get("cdagente");    
-        }
-        catch(Exception ex)
-        {
-            //ex.printStackTrace();
-            Utils.generaExcepcion(ex, paso);
-        }
-        
-        logger.debug(Utils.log(
-                 "\n@@@@@@ cdagente = ", cdagente
-                ,"\n@@@@@@ obtenerCdagente @@@@@@@@@@@@@@@"
-                ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                ));
-        return cdagente;
-    }
-	
-	
-	@Override
-    public List<Map<String,String>> polizasImprimirPromotor(String promotor,
-            String cdtipram
-            ,String cduniecos
-            ,String cdramo
-            ,String ramo
-            ,String nmpoliza
-            ,String fefecha
-            ,String cdusuariLike
-            ,String cdagente
-            ,String cdusuariSesion
-            ,String cduniecoSesion
-            ,UserVO usuario) throws Exception{
-        String paso="";
-        List<Map<String,String>> resultado=new ArrayList<Map<String,String>>();
-        logger.debug(Utils.log(
-                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                ,"\n@@@@@@ polizasImprimirPromotor @@@@@@@@@@@@@@@"
-                ,"\n@@@@@@ pv_idproceso_i=" 
-                
-                
-                
-                ));
-        try{
-            paso="Borrando datos";
-            Map<String,String>params=new HashMap<String,String>();
-            params.put("cdusuari",promotor);
-            List<GenericVO> agentes = catalogosDAO.cargarAgentesPorPromotor(params);
-            
-            if(cdagente!=null && !"".equals(cdagente.trim())){
-                List<Map<String,String>> lista = consultasDAO.recuperarPolizasParaImprimir(
-                        cdtipram
-                        ,cduniecos
-                        ,cdramo
-                        ,ramo
-                        ,nmpoliza
-                        ,Utils.parse(fefecha)
-                        ,cdusuariLike
-                        ,cdagente
-                        ,usuario.getUser()
-                        ,usuario.getCdUnieco()
-                        );
-                resultado=lista;
-                
-            }else{
-            
-                for(GenericVO agente:agentes){
-                    
-                    paso = "Recuperando polizas para explotar documentos";
-                    logger.debug(Utils.log(""," paso: ",paso));
-                    
-                    
-                    
-                    List<Map<String,String>> lista = consultasDAO.recuperarPolizasParaImprimir(
-                            cdtipram
-                            ,cduniecos
-                            ,cdramo
-                            ,ramo
-                            ,nmpoliza
-                            ,Utils.parse(fefecha)
-                            ,cdusuariLike
-                            ,agente.getKey()
-                            ,usuario.getUser()
-                            ,usuario.getCdUnieco()
-                            );
-                    logger.debug(Utils.log(lista));
-                    resultado.addAll(lista);
-                    
-                }
-            }
-            
-            
-        }
-        catch(Exception ex)
-        {
-            //ex.printStackTrace();
-            Utils.generaExcepcion(ex, paso);
-        }
-        
-        logger.debug(Utils.log(
-                 "\n@@@@@@ resultado = ", resultado
-                ,"\n@@@@@@ polizasImprimirPromotor @@@@@@@@@@@@@@@"
-                ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                ));
-        return resultado;
-    }
 	
 	
 	
