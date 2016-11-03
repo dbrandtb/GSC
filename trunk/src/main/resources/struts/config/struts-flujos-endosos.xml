@@ -932,6 +932,19 @@
             <result name="success">/jsp-script/proceso/endosos/endosoPreview.jsp</result>
         </action>
         
+        <action name="includes/pantallaEndosoVidaAuto" class="endososAutoAction"  method="endosoBenefiarioVidaAuto">
+           <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success">/jsp-script/proceso/endosos/endosoVidaAuto.jsp</result>
+            <result name="error">/jsp-script/general/includes/errorPantalla.jsp</result>
+        </action>
+        
+        <action name="obtieneBeneficiariosVidaAuto" class="endososAutoAction" method="obtieneBeneficiariosVidaAuto">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>

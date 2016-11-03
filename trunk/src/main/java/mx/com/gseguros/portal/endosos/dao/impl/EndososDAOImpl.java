@@ -6837,4 +6837,38 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	   @Override
+	    public List<Map<String, String>> obtieneBeneficiarioVidaAuto(String cdunieco, String cdramo ,String estado ,String nmpoliza) throws Exception
+	            {
+	        Map<String,String>params = new LinkedHashMap<String,String>();
+	        params.put("pv_cdunieco_i" , cdunieco);
+	        params.put("pv_cdramo_i"   , cdramo);
+	        params.put("pv_estado_i" , estado);
+	        params.put("pv_nmpoliza_i" , nmpoliza);
+	        
+	        Map<String,Object> resultadoMap=this.ejecutaSP(new obtieneBeneficiariosVidaAuto(this.getDataSource()), params);
+	        return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
+	            }
+	    protected class obtieneBeneficiariosVidaAuto extends StoredProcedure
+	    {
+	        String[] columnas=new String[]{
+	            "CDPERSON","DSNOMBRE","DSNOMBRE1","DSAPELLIDO","DSAPELLIDO1","OTSEXO","CDPARENT","DESCPARENTESCO","PORBENEF"
+	        };
+	        
+	        protected obtieneBeneficiariosVidaAuto(DataSource dataSource)
+	        {
+	            super(dataSource, "PKG_CONSULTA.P_GET_BENEFICIARIOS");
+	            declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+	            declareParameter(new SqlParameter("pv_cdramo_i"       ,OracleTypes.VARCHAR));
+	            declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+	            declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
+	            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(columnas)));
+	            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+	            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+	            compile();
+	        }
+	    }
+	    
+	    
 }

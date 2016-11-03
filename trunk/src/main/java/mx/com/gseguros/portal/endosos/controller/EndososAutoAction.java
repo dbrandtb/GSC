@@ -12,6 +12,7 @@ import java.util.Map;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
@@ -42,6 +43,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private Map<String,Object>       omap1;
 	private Map<String,Item>         imap;
 	private List<Map<String,String>> slist1;
+	private PersonasManager          personasManager;
 	
 	private FlujoVO flujo;
 	
@@ -2706,7 +2708,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
-
+	
 	/*
 	 * Getters y setters
 	 */
