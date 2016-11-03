@@ -2889,7 +2889,7 @@ public class EndososAction extends PrincipalCoreAction
 							,usuario.getRolActivo().getClave()
 							);
 					
-					if(smap1.get("confirmar").equals("no")){
+					if(smap1.get("confirmar").equals("auto")){
 						paso = "Realizando PDF de Vista Previa de Autos";
 						logger.debug(paso);
 						
@@ -2903,12 +2903,12 @@ public class EndososAction extends PrincipalCoreAction
 						String passReports    = getText("pass.servidor.reports");
 						String rutaDocumentos = getText("ruta.documentos.temporal");
 						String tipoFlotilla   = (String)omap1.get("tipoflot");
-						String nombreReporte  = getText("rdf.endosos.nombre.auto.pymes"); //getText("rdf.endosos.nombre.auto.individual");
+						String nombreReporte  = getText("rdf.endosos.nombre.auto.individual");
 						String cdperpag       = smap1.get("CDPERPAG");
 						
-						/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)){
+						if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)){
 							nombreReporte = getText("rdf.endosos.nombre.auto.pymes");
-						}*/
+						}
 						
 						Date fechaHoy = new Date();
 						
@@ -10517,13 +10517,13 @@ public String retarificarEndosos()
 					String tipoFlotilla   =  smap1.get("TIPOFLOT");
 					
 					logger.debug("tipoFlotilla: "+tipoFlotilla);
-					String nombreReporte = getText("rdf.endosos.nombre.auto.pymes"); //getText("rdf.endosos.nombre.auto.individual");
+					String nombreReporte = getText("rdf.endosos.nombre.auto.individual");
 					
-					/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)){
+					if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)){
 						paso = "Tomando rdf de Pymes";
 						logger.debug(paso);
 						nombreReporte = getText("rdf.endosos.nombre.auto.pymes");
-					}*/
+					}
 					
 					Date fechaHoy = new Date();
 					

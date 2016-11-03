@@ -36,6 +36,7 @@ import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
@@ -3496,7 +3497,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				paso = "Realizando PDF de Vista Previa de Autos";
 				logger.debug(paso);
-				String reporteEndosoPrevia = rdfEndosoPreview;//rdfEndosoPreviewIndi;
+				String reporteEndosoPrevia = rdfEndosoPreviewIndi;
 				/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoGrupoInciso)){
 					reporteEndosoPrevia = rdfEndosoPreview;
 				}*/
@@ -5142,10 +5143,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				logger.debug("tipoGrupoInciso: "+tipoGrupoInciso);
 				paso = "Realizando PDF de Vista Previa de Autos";
 				logger.debug(paso);
-				String reporteEndosoPrevia = rdfEndosoPreview; //rdfEndosoPreviewIndi;
-				/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoGrupoInciso)){
+				String reporteEndosoPrevia = rdfEndosoPreview;//rdfEndosoPreviewIndi;
+				if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoGrupoInciso)){
 					reporteEndosoPrevia = rdfEndosoPreview;
-				}*/
+				}
 				
 				String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
 				
@@ -5842,10 +5843,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						Date fechaHoy = new Date();
 						paso = "Realizando PDF de Vista Previa de Autos";
 						logger.debug(paso);
-						String reporteEndosoPrevia = rdfEndosoPreview; //rdfEndosoPreviewIndi;
-						/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot)){
+						String reporteEndosoPrevia = rdfEndosoPreviewIndi;
+						if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot)){
 							reporteEndosoPrevia = rdfEndosoPreview;
-						}*/
+						}
 						
 						String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
 						
@@ -6356,10 +6357,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				Date fechaHoy = new Date();
 				paso = "Realizando PDF de Vista Previa de Autos";
 				logger.debug(paso);
-				String reporteEndosoPrevia = rdfEndosoPreview; //rdfEndosoPreviewIndi;
-				/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot)){
+				String reporteEndosoPrevia = rdfEndosoPreviewIndi;
+				if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot)){
 					reporteEndosoPrevia = rdfEndosoPreview;
-				}*/
+				}
 				
 				String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
 				
@@ -8348,4 +8349,117 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 		return tarifa;
 	}
+	
+	   @Override
+	    public Map<String,Item> pantallaBeneficiariosAutoVida(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup)throws Exception
+            {
+                logger.debug(Utils.log(""
+                        ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                        ,"\n@@@@@@ pantallaBeneficiariosAutoVida @@@@@@"
+                        ,"\n@@@@@@ cdunieco=" , cdunieco
+                        ,"\n@@@@@@ cdramo="   , cdramo
+                        ,"\n@@@@@@ estado="   , estado
+                        ,"\n@@@@@@ cdsisrol=" , cdsisrol
+                        ,"\n@@@@@@ cdtipsup=" , cdtipsup
+                        ));
+                
+                Map<String,Item> items = new HashMap<String,Item>();
+                
+                String paso = null;
+                
+                try
+                {
+                    paso = "Validando suplemento permitido";
+                    logger.debug(Utils.log("","paso=",paso));
+                    
+                    try
+                    {
+                        Map<String,String>permiso=endososDAO.obtenerParametrosEndoso(
+                                ParametroEndoso.ENDOSO_PERMITIDO
+                                ,cdramo
+                                ,"x"
+                                ,cdtipsup
+                                ,null);
+                        if(!permiso.get("P1VALOR").equals("SI"))
+                        {
+                            throw new ApplicationException("No esta permitido");
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        throw new ApplicationException("Suplemento no aplicable al producto");
+                    }
+                    
+                    paso = "Recuperando componentes relacion poliza-persona";
+                    logger.debug(Utils.log("","paso=",paso));
+                    
+                    List<ComponenteVO>componentesMpoliper=pantallasDAO.obtenerComponentes(
+                            null                     //cdtiptra
+                            ,cdunieco
+                            ,"|"+cdramo+"|"
+                            ,null                    //cdtipsit
+                            ,estado
+                            ,cdsisrol
+                            ,"PANTALLA_BENEFICIARIOS"//pantalla
+                            ,"PANEL_LECTURA"              //seccion
+                            ,null                    //orden
+                            );
+                    
+                    paso = "Recuperando componentes persona";
+                    logger.debug(Utils.log("","paso=",paso));
+                    
+                    List<ComponenteVO>componentesMpersona=pantallasDAO.obtenerComponentes(
+                            null                     //cdtiptra
+                            ,cdunieco
+                            ,cdramo
+                            ,null                    //cdtipsit
+                            ,estado
+                            ,cdsisrol
+                            ,"PANTALLA_BENEFICIARIOS"//pantalla
+                            ,"MPERSONA"              //seccion
+                            ,null                    //orden
+                            );
+                    
+                    GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+                    
+                    paso = "Construyendo componentes relacion poliza-persona";
+                    logger.debug(Utils.log("","paso=",paso));
+                    
+                    gc.generaComponentes(componentesMpoliper
+                            ,true  //parcial
+                            ,true  //conField
+                            ,false //conItem
+                            ,true  //conColumn
+                            ,true  //conEditor
+                            ,false //conButton
+                            );
+                    
+                    items.put("mpoliperFields"  , gc.getFields());
+                    items.put("mpoliperColumns" , gc.getColumns());
+                    
+                }
+                catch(Exception ex)
+                {
+                    Utils.generaExcepcion(ex, paso);
+                }
+                
+                logger.debug(Utils.log(""
+                        ,"\n@@@@@@ items=", items
+                        ,"\n@@@@@@ pantallaBeneficiariosAutoVida @@@@@@"
+                        ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                        ));
+                return items;
+}
+
+	   @Override
+	    public List<Map<String,String>> obtieneBeneficiariosVidaAuto(String cdunieco, String cdramo ,String estado ,String nmpoliza) throws Exception {
+	       logger.debug(Utils.log(""
+                   ,"\n cdunieco = ", cdunieco
+                   ,"\n cdramo   = ", cdramo
+                   ,"\n estado   = ", estado
+                   ,"\n nmpoliza = ", nmpoliza
+                   ,"\n pantallaBeneficiariosAutoVida "
+                   ));
+	       return endososDAO.obtieneBeneficiarioVidaAuto(cdunieco, cdramo, estado, nmpoliza);
+	    }
 }

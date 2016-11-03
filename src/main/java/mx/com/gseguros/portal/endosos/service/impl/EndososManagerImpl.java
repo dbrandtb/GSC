@@ -2049,6 +2049,7 @@ public class EndososManagerImpl implements EndososManager
 				String mov    = rec.get("mov");
 				int agregar   = 1;
 				int eliminar  = 2;
+				int actualizar  = 3;
 				int operacion = 0;
 				if(StringUtils.isNotBlank(mov))
 				{
@@ -2060,6 +2061,11 @@ public class EndososManagerImpl implements EndososManager
 					{
 						operacion=eliminar;
 					}
+					else if(mov.equals("*"))
+                    {
+                        operacion=actualizar;
+                    }
+					
 				}
 				
 				if(operacion==agregar)

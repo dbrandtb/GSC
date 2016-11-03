@@ -851,4 +851,11 @@ public interface EndososDAO
 	
 	public void borraTworksupSegundaClave (String cdunieco, String cdramo, String estado, String nmpoliza,
 			String cdtipsup, String nmsuplem, String clave1, String clave2) throws Exception;
+	
+	  public List<Map<String,String>> obtieneBeneficiarioVidaAuto(
+              String cdunieco
+              ,String cdramo
+              ,String estado
+              ,String nmpoliza
+              )throws Exception;
 }

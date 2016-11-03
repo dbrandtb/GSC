@@ -337,6 +337,7 @@ Ext.onReady(function()
                                 jsonData.flujo = _p39_flujo;
                             }
                             jsonData.smap1['confirmar'] = 'no';
+                            jsonData.smap1['cdperpag'] = _p39_smap1.CDPERPAG;
                             Ext.Ajax.request(
                             {
                                 url       : _p39_urlConfirmarEndoso
@@ -381,6 +382,7 @@ Ext.onReady(function()
 																					_mask();
 																					me.up('window').destroy();
 																					jsonData.smap1['confirmar'] = 'si';
+																					
 																					Ext.Ajax.request(
 																						{
 																							url       : _p39_urlConfirmarEndoso

@@ -607,4 +607,13 @@ public interface EndososAutoManager
 	
 	public List<Map<String, String>> tarificarEndosoCoberturasFlujo (String cdusuari, String cdelemen, String cdunieco,
 			String cdramo, String estado, String nmpoliza, String nmsuplem, String feinival, String cdtipsup) throws Exception;
+	
+	public Map<String,Item> pantallaBeneficiariosAutoVida(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup)throws Exception;
+	
+   public List<Map<String,String>> obtieneBeneficiariosVidaAuto(
+	            String cdunieco
+	            ,String cdramo
+	            ,String estado
+	            ,String nmpoliza
+	            )throws Exception;
 }
