@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.consultas.model.DescargaLotePdfVO;
 import mx.com.gseguros.portal.consultas.model.ImpresionLayoutVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -150,5 +151,20 @@ public interface ExplotacionDocumentosManager
 			) throws Exception;
 	
 	public String borrarDatosLayout(String pv_idproceso_i) throws Exception;
+
+    public String obtenerCdagente(String pv_cdusuari_i) throws Exception;
+
+    public List<Map<String, String>> polizasImprimirPromotor(
+            String promotor, 
+            String cdtipram, 
+            String cduniecos, 
+            String cdramo,
+            String ramo, 
+            String nmpoliza, 
+            String fefecha, 
+            String cdusuariLike, 
+            String cdagente, 
+            String cdusuariSesion,
+            String cduniecoSesion, UserVO usuario) throws Exception;
 
 }

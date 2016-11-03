@@ -1,15 +1,19 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 
 <!-- UX libraries -->
-<script type="text/javascript" src="${ctx}/resources/extjs4/plugins/spreadsheet/ux-all-debug.js"></script>
+<script type="text/javascript"
+	src="${ctx}/resources/extjs4/plugins/spreadsheet/ux-all-debug.js"></script>
 <!-- Spread library -->
-<script type="text/javascript" src="${ctx}/resources/extjs4/plugins/spreadsheet/spread-all-debug.js"></script>
+<script type="text/javascript"
+	src="${ctx}/resources/extjs4/plugins/spreadsheet/spread-all-debug.js"></script>
 
-<link type="text/css" rel="stylesheet" href="${ctx}/resources/extjs4/plugins/spreadsheet/css/spread.css" />
+<link type="text/css" rel="stylesheet"
+	href="${ctx}/resources/extjs4/plugins/spreadsheet/css/spread.css" />
 <%-- <script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js"></script> --%>
 <script>
 
@@ -214,7 +218,9 @@ _fieldByName('cdtipram').on(
 	                    				  handler:function(){
 	                    					var ck='Verificando datos'
 	                    					try{  
-	                    					_setLoading(true,layout);
+	                    					_setLoading(true,winSpread);
+	                    					_setLoading(true,'formBusq');
+	                    					
 	                    					  var store=_fieldByName('spreadLayout').getStore();
 	                    					  var tipos={
 	                    							  tpdocum:tpdocum,
@@ -298,162 +304,164 @@ _fieldByName('cdtipram').on(
 	                    					    timeout : 1000*60*60*3,
 	                    					    jsonData: jsonData,
 	                    					    success: function(response){
-	                    					    	_setLoading(false,layout);  
-	                    					        
-	                    					     var ck = 'Decodificando respuesta verifica Layout';
-	                    					     debug('###Datos enviados url=,datos=',url_valida_layout,jsonData);
-	                    					     console.log(jsonData)
-	                    		           try
-	                    		           {
-	                    		               var json = Ext.decode(response.responseText);
-	                    		               debug('### respuesta verifica layout:',json);
-	                    		               
-	                    		               if(json.success==true)
-	                    		               {
-	                    		                   var verLay=generaLayout(json.params.tpdocum,true);
-	                    		                   
-	                    		                   var storeVerLay=verLay.getStore();
-	                    		                   var descarga=false;
-	                    		                   json.list.forEach(function(it,idx,arr){
-	                    		                  	
-	                    		                  	 arr[idx].VALIDO=it.VALIDO=='true';
-	                    		                  	 if(arr[idx].VALIDO){
-	                    		                  		 descarga=true;
-	                    		                  	 }
-	                    		                  	
-	                    		                   });
-	                    		                   
-	                    		                  
-	                    		                   
-	                    		                   
-	                    		              	     spreadWnd = new Ext.window.Window({
-	                    		                       title: 'VERIFICACION LAYOUT',
-	                    		                       name:'ventana_descarga',
-	                    		                       layout: 'fit',
-	                    		                       modal:true,
-	                    		                       maximizable: true,
-	                    		                       resizable: true,
-	                    		                       width: 800,
-	                    		                       height: 300,
-	                    		                       buttons:[
-	                    		                                {
-	                    		                              	  text:'Descargar PDF Simple',
-	                    		                              	  disabled:true,
-	                    		                              	  itemId:'btnDescargar',
-	                    		                              	  name:'btnDescargar',
-	                    		                              	  duplex:false,
-	                    		                              	  handler: function(btn){
-	                    		                              		  descargarPDF(btn);
-	                    		                              		  
-	                    		                              		  
-	                    		                              	  }
-	                    		                                },
-	                    		                                {
-	                    		                              	  text:'Descargar PDF Duplex',
-	                    		                              	  disabled:true,
-	                    		                              	  itemId:'btnDescargarDplx',
-	                    		                              	  name:'btnDescargarDplx',
-	                    		                              	  duplex:true,
-	                    		                              	  handler: function(btn){
-	                    		                              		  descargarPDF(btn);
-//	                    		                               		  spreadWnd.close();
-//	                    		                               		  _fieldByName('spreadLayout').getStore().removeAll();
-//	                    		                               		  layout.removeAll();
-	                    		                              		  
-//	                    		                               		  layout.add(generaLayout(tpdocum,false));
-//	                    		             	                    		layout.show();
-	                    		                              		  
-	                    		                              	  }
-	                    		                                }
-	                    		                                ,
-	                    		                                {
-	                    		                              	  text:'Regresar',
-	                    		                              	  handler:function(){
-	                    		                              		  
-	                    		                              		  spreadWnd.close();
-	                    		                              		  var storOrig=_fieldByName('spreadLayout').getStore();
-	                    		                              		  layout.removeAll();
-	                    		                              		  var lay=generaLayout(tpdocum,false);
-	                    		                              		  var store2= lay.getStore();
-	                    		                              		  store2.removeAll();
-	                    		                              		  storOrig.each(function(record){
-	                    		                              			  store2.add(record.copy());
-	                    		                              			});
-	                    		                              		 
-//	                    		             	                    		layout.add(lay);
-//	                    		             	                    		layout.show();
-	                    		            	                    		
-	                    		            	                    		winSpread.removeAll();
-	                    		            	                    		winSpread.add(lay);
-	                    		            	                    		winSpread.show();
-	                    		            	                    		
-	                    		                              		 
-	                    		                              	  }
-	                    		                                }
-	                    		                                ],
-	                    		                       items: [
-	                    		                               verLay
-	                    		                               ],
-	                    		                       listeners:{
-	                    		                      	 destroy:function(){
-	                    		                      		 _setLoading(true,layout);
-	                    		                      		 Ext.Ajax.request(
-	                    		          				             {
-	                    		          				                 url      : url_borra_datos_layout
-	                    		          				                 ,success : function(response)
-	                    		          				                 {
-	                    		          				                     _setLoading(false,layout);
-	                    		          				                     var ck = 'Decodificando respuesta al imprimir';
-	                    		          				                     try
-	                    		          				                     {
-	                    		          				                         var json = Ext.decode(response.responseText);
-	                    		          				                         if(json.success!=true ) {
-	                    		          				                             mensajeError(json.message,"Error");
-	                    		          				                         }
-	                    		          				                     }
-	                    		          				                     catch(e)
-	                    		          				                     {
-	                    		          				                         manejaException(e,ck);
-	                    		          				                     }
-	                    		          				                 }
-	                    		          				                 ,failure  : function()
-	                    		          				                 {
-	                    		          				                     _setLoading(false,layout);
-	                    		          				                     errorComunicacion(null,'Error al descargar');
-	                    		          				                 }
-	                    		          				             });
-
-	                    		                      	 }
-	                    		                       }
-	                    		                   });
-	                    		              	     
-	                    		              	    
-
-	                    		              	  _fieldByName('btnDescargar').setDisabled(!descarga);
-	                    		              	  _fieldByName('btnDescargarDplx').setDisabled(!descarga);
-	                    		                   spreadWnd.show();
-	                    		                   spreadWnd.center();
-	                    		                   storeVerLay.removeAll();
-	                    		                   storeVerLay.loadData(json.list);
-	                    		                   verLay.setEditable(false);
-	                    		                   if(quita_duplicados){
-	                    			       					mensajeWarning('Se borraron filas duplicadas');
-	                    			       				}
-
-	                    		               }
-	                    		               else
-	                    		               {
-	                    		                   mensajeError(json.message);
-	                    		               }
-	                    		           }
-	                    		           catch(e)
-	                    		           {
-	                    		               manejaException(e,ck);
-	                    		           }
+	                    					        _setLoading(false,winSpread);
+	                    					        _setLoading(false,'formBusq');
+		                    					        
+		                    					     var ck = 'Decodificando respuesta verifica Layout';
+		                    					     debug('###Datos enviados url=,datos=',url_valida_layout,jsonData);
+		                    					     console.log(jsonData)
+			                    		           try
+			                    		           {
+			                    		               var json = Ext.decode(response.responseText);
+			                    		               debug('### respuesta verifica layout:',json);
+			                    		               
+			                    		               if(json.success==true)
+			                    		               {
+			                    		                   var verLay=generaLayout(json.params.tpdocum,true);
+			                    		                   
+			                    		                   var storeVerLay=verLay.getStore();
+			                    		                   var descarga=false;
+			                    		                   json.list.forEach(function(it,idx,arr){
+			                    		                  	
+			                    		                  	 arr[idx].VALIDO=it.VALIDO=='true';
+			                    		                  	 if(arr[idx].VALIDO){
+			                    		                  		 descarga=true;
+			                    		                  	 }
+			                    		                  	
+			                    		                   });
+			                    		                   
+			                    		                  
+			                    		                   
+			                    		                   
+			                    		              	     spreadWnd = new Ext.window.Window({
+			                    		                       title: 'VERIFICACION LAYOUT',
+			                    		                       name:'ventana_descarga',
+			                    		                       layout: 'fit',
+			                    		                       modal:true,
+			                    		                       maximizable: true,
+			                    		                       resizable: true,
+			                    		                       width: 800,
+			                    		                       height: 300,
+			                    		                       buttons:[
+			                    		                                {
+			                    		                              	  text:'Descargar PDF Simple',
+			                    		                              	  disabled:true,
+			                    		                              	  itemId:'btnDescargar',
+			                    		                              	  name:'btnDescargar',
+			                    		                              	  duplex:false,
+			                    		                              	  handler: function(btn){
+			                    		                              		  descargarPDF(btn);
+			                    		                              		  
+			                    		                              		  
+			                    		                              	  }
+			                    		                                },
+			                    		                                {
+			                    		                              	  text:'Descargar PDF Duplex',
+			                    		                              	  disabled:true,
+			                    		                              	  itemId:'btnDescargarDplx',
+			                    		                              	  name:'btnDescargarDplx',
+			                    		                              	  duplex:true,
+			                    		                              	  handler: function(btn){
+			                    		                              		  descargarPDF(btn);
+		//	                    		                               		  spreadWnd.close();
+		//	                    		                               		  _fieldByName('spreadLayout').getStore().removeAll();
+		//	                    		                               		  layout.removeAll();
+			                    		                              		  
+		//	                    		                               		  layout.add(generaLayout(tpdocum,false));
+		//	                    		             	                    		layout.show();
+			                    		                              		  
+			                    		                              	  }
+			                    		                                }
+			                    		                                ,
+			                    		                                {
+			                    		                              	  text:'Regresar',
+			                    		                              	  handler:function(){
+			                    		                              		  
+			                    		                              		  spreadWnd.close();
+			                    		                              		  var storOrig=_fieldByName('spreadLayout').getStore();
+			                    		                              		  layout.removeAll();
+			                    		                              		  var lay=generaLayout(tpdocum,false);
+			                    		                              		  var store2= lay.getStore();
+			                    		                              		  store2.removeAll();
+			                    		                              		  storOrig.each(function(record){
+			                    		                              			  store2.add(record.copy());
+			                    		                              			});
+			                    		                              		 
+		//	                    		             	                    		layout.add(lay);
+		//	                    		             	                    		layout.show();
+			                    		            	                    		
+			                    		            	                    		winSpread.removeAll();
+			                    		            	                    		winSpread.add(lay);
+			                    		            	                    		winSpread.show();
+			                    		            	                    		
+			                    		                              		 
+			                    		                              	  }
+			                    		                                }
+			                    		                                ],
+			                    		                       items: [
+			                    		                               verLay
+			                    		                               ],
+			                    		                       listeners:{
+			                    		                      	 destroy:function(){
+			                    		                      		 _setLoading(true,layout);
+			                    		                      		 Ext.Ajax.request(
+			                    		          				             {
+			                    		          				                 url      : url_borra_datos_layout
+			                    		          				                 ,success : function(response)
+			                    		          				                 {
+			                    		          				                     _setLoading(false,layout);
+			                    		          				                     var ck = 'Decodificando respuesta al imprimir';
+			                    		          				                     try
+			                    		          				                     {
+			                    		          				                         var json = Ext.decode(response.responseText);
+			                    		          				                         if(json.success!=true ) {
+			                    		          				                             mensajeError(json.message,"Error");
+			                    		          				                         }
+			                    		          				                     }
+			                    		          				                     catch(e)
+			                    		          				                     {
+			                    		          				                         manejaException(e,ck);
+			                    		          				                     }
+			                    		          				                 }
+			                    		          				                 ,failure  : function()
+			                    		          				                 {
+			                    		          				                     _setLoading(false,layout);
+			                    		          				                     errorComunicacion(null,'Error al descargar');
+			                    		          				                 }
+			                    		          				             });
+		
+			                    		                      	 }
+			                    		                       }
+			                    		                   });
+			                    		              	     
+			                    		              	    
+		
+			                    		              	  _fieldByName('btnDescargar').setDisabled(!descarga);
+			                    		              	  _fieldByName('btnDescargarDplx').setDisabled(!descarga);
+			                    		                   spreadWnd.show();
+			                    		                   spreadWnd.center();
+			                    		                   storeVerLay.removeAll();
+			                    		                   storeVerLay.loadData(json.list);
+			                    		                   verLay.setEditable(false);
+			                    		                   if(quita_duplicados){
+			                    			       					mensajeWarning('Se borraron filas duplicadas');
+			                    			       				}
+		
+			                    		               }
+			                    		               else
+			                    		               {
+			                    		                   mensajeError(json.message);
+			                    		               }
+			                    		           }
+			                    		           catch(e)
+			                    		           {
+			                    		               manejaException(e,ck);
+			                    		           }
 	                    					    },
 	                    						 failure : function()
 	                    		           {
-	                    		               _setLoading(false,layout);
+	                    						     _setLoading(false,winSpread);
+	                    						     _setLoading(false,'formBusq');
 	                    		               errorComunicacion(null,'Error recuperando verificando layout');
 	                    		           }
 	                    						    
@@ -895,7 +903,7 @@ function descargarPDF(btn){
 <title>Insert title here</title>
 </head>
 <body>
-	<div id="_p49_divpri" style="height:600px;border:1px solid #CCCCCC;"></div>
+	<div id="_p49_divpri" style="height: 600px; border: 1px solid #CCCCCC;"></div>
 	<div id="spread"></div>
 </body>
 </html>
