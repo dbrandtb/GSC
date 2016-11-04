@@ -1659,6 +1659,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         {
             logger.debug(Utils.log("","Validando datos de entrada"));
             
+            session.put("listaBeneficiarios", slist1);
             Utils.validate(smap1, "No se recibieron datos");
             
             String cdunieco  = smap1.get("cdunieco")

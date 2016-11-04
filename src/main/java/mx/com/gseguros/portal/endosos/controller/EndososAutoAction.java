@@ -2709,6 +2709,129 @@ public class EndososAutoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String endosoBenefiarioVidaAuto(){
+        logger.debug(Utils.log(""
+                ,"\n######################################"
+                ,"\n###### endosoBenefiarioVidaAuto ######"
+                ,"\n###### smap1  = " ,smap1
+                ,"\n###### slist1 = " ,slist1
+                ));
+        
+        String result = ERROR;
+        
+        try
+        {
+            String paso = null;
+            try
+            {   
+                paso = "Validando datos de entrada";
+                
+               // Utils.validate(smap1, "No se recibieron datos");
+                
+                EndososAction endososAction = new EndososAction();
+                endososAction.setEndososManager(endososManager);
+                endososAction.transformaEntrada(smap1, slist1, true);
+                
+               //validados
+                String cdunieco    = "0"//smap1.get("cdunieco")
+                       ,cdramo     = "5"//smap1.get("cdramo")
+                       ,estado     = "M"//smap1.get("estado")
+                       ,nmpoliza   = "1906"//smap1.get("nmpoliza")
+                       ,nmsuplem   = "1"//smap1.get("nmsuplem")
+                       ,nmsituac   = "0"//smap1.get("nmsituac")
+                       ,cdrolPipes = "3"//smap1.get("cdrolPipes")
+                       ,cdtipsup   = "1"//smap1.get("cdtipsup")
+                       ,ntramite   = smap1.get("ntramite");
+                
+                Utils.validate(
+                        cdunieco   , "No se recibio la sucursal"
+                        ,cdramo     , "No se recibio el producto"
+                        ,estado     , "No se recibio el estado de la poliza"
+                        ,nmpoliza   , "No se recibio el numero de poliza"
+                        ,nmsuplem   , "No se recibio el numero de suplemento"
+                        ,nmsituac   , "No se recibio el numero de situacion"
+                        ,cdrolPipes , "No se recibieron los roles permitidos"
+                        ,cdtipsup   , "No se recibio el tipo de suplemento"
+                        );
+                
+                if(!cdtipsup.equals("1"))
+                {
+                    Utils.validate(ntramite, "No se recibio el numero de tramite");
+                }
+                
+                //no validados
+                String ultimaImagen = smap1.get("ultimaImagen");
+                if(StringUtils.isBlank(ultimaImagen)
+                        ||!ultimaImagen.equals("S"))
+                {
+                    ultimaImagen="N";
+                }
+                
+                smap1.put("ultimaImagen" , ultimaImagen);
+                
+                String cdsisrol = Utils.validateSession(session).getRolActivo().getClave();
+                
+                imap = endososAutoManager.pantallaBeneficiariosAutoVida(cdunieco,cdramo,estado,cdsisrol,cdtipsup);
+                
+                result = SUCCESS;
+            }
+            catch(Exception ex)
+            {
+                Utils.generaExcepcion(ex, paso);
+            }
+        }
+        catch(Exception ex)
+        {
+            respuesta = Utils.manejaExcepcion(ex);
+        }
+        
+        logger.debug(Utils.log(""
+                ,"\n###### endosoBenefiarioVidaAuto ######"
+                ,"\n######################################"
+                ));
+        
+        return result;
+    }
+    
+       public String obtieneBeneficiariosVidaAuto()
+        {
+            logger.debug(Utils.log(
+                     "\n##########################################"
+                    ,"\n###### obtieneBeneficiariosVidaAuto ######"
+                    ,"\n###### smap1="  , smap1
+                    ));
+            
+            try
+            {
+                String cdunieco = smap1.get("cdunieco");
+                String cdramo   = smap1.get("cdramo");
+                String estado   = smap1.get("estado");
+                String nmpoliza = smap1.get("nmpoliza");
+                logger.debug(Utils.log(""
+                        ,"\n cdunieco = ", cdunieco
+                        ,"\n cdramo   = ", cdramo
+                        ,"\n estado   = ", estado
+                        ,"\n nmpoliza = ", nmpoliza
+                        ,"\n###### obtieneBeneficiariosVidaAuto ######"
+                        ));
+                
+                slist1 = endososAutoManager.obtieneBeneficiariosVidaAuto(cdunieco, cdramo,estado, nmpoliza);
+                
+                success = true;
+            }
+            catch(Exception ex)
+            {
+                respuesta=Utils.manejaExcepcion(ex);
+            }
+            
+            logger.debug(Utils.log(
+                     "\n###### obtieneBeneficiariosVidaAuto ######"
+                    ,"\n###### slist1 => " , slist1
+                    ,"\n##########################################"
+                    ));
+            return SUCCESS;
+        }
+	
 	/*
 	 * Getters y setters
 	 */

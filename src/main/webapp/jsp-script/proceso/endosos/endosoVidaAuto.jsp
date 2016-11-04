@@ -44,10 +44,6 @@ var objetoColumnas  =
                         {
                             return '<span style="font-style:italic;">(agregar)</span>';
                         }
-                        else if(mov+'x'=='*x')
-                        {
-                            return '<span style="font-style:italic;">(actualizar)</span>';
-                        }
                     }
                 }
                 ,<s:property value="imap.mpoliperColumns" />
@@ -152,14 +148,14 @@ Ext.onReady(function()
                         ,handler : function(){ _p32_borrar(); }
                     }
                     ,{
-                        text     : 'Actualizar'
+                        text     : 'Deshacer'
                         ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                        ,handler : function(){_p32_reload();}// _p32_deshacer(); }
+                        ,handler : function(){_p32_deshacer(); }
                     }
-                    ,{
+                    /*,{
                         xtype  : 'displayfield'
                         ,value : '<span style="color:white;">*Para editar un beneficiario haga doble clic sobre la fila</span>'
-                    }
+                    }*/
                 ]
                 ,buttonAlign : 'center'
                 ,buttons     :
@@ -220,19 +216,16 @@ Ext.onReady(function()
                             {
                                 text : 'Aceptar'
                                 ,handler : function(me)
-                                {Ext.getCmp('_p34_endosoWindow').destroy();
+                                {
                                 	me.up('window').destroy();
-                                   // Ext.getCmp('_p34_endosoWindow').close();
-                                    //debug('****endosoWindow: ', endosoWindow )
-                                   
-                                    //marendNavegacion(2);
-                                    //me.up('_p34_endosoWindow').destroy();
+                                    marendNavegacion(2);
                                 }
                             }
                         ]
                     }).show());
             } else {
             	_p32_store.loadData(json.slist1);
+            	mensajeCorrecto('Aviso', 'En caso de que en la emisión original de la póliza se haya declarado que el contratante ha estado expuesto o padecido una enfermedad crónica o grave en los últimos 12 meses, la cobertura VIDAUTO no se amparará.');
             }
         },
         failure : function(response, options) {
@@ -240,73 +233,7 @@ Ext.onReady(function()
             errorComunicacion(null,'Error al cancelar endoso');
         }
     });
-   // _p32_cargarStore();
    
-   /*   _p32_store.load(function(records,op,success)
-    {
-        if(!success)
-        {
-            mensajeError('Error al recuperar asegurados: '+op.getError());
-        }
-    });
-    
-     _p32_store.load(
-    {
-        params :
-        {
-             'smap1.cdunieco'     : _p32_smap1.cdunieco
-            ,'smap1.cdramo'       : _p32_smap1.cdramo
-            ,'smap1.estado'       : _p32_smap1.estado
-            ,'smap1.nmpoliza'     : _p32_smap1.nmpoliza
-        }
-    });
-    
-    debug('_p32_store.data: ',_p32_store.data);
-    if(Ext.isEmpty(_p32_store)){
-     debug('****_p32_store: ',_p32_store);
-    } else {
-    	debug('++++_p32_store: ',_p32_store);
-    }
-    */
-
-   /* if(_p32_smap1.ultimaImagen+'x'=='Sx')
-    {
-        Ext.Ajax.request(
-        {
-            url     : _p32_urlRecuperacionSimple
-            ,params :
-            {
-                'smap1.procedimiento' : 'RECUPERAR_ULTIMO_NMSUPLEM'
-                ,'smap1.cdunieco'     : _p32_smap1.cdunieco
-                ,'smap1.cdramo'       : _p32_smap1.cdramo
-                ,'smap1.estado'       : _p32_smap1.estado
-                ,'smap1.nmpoliza'     : _p32_smap1.nmpoliza
-            }
-            ,success : function(response)
-            {
-                var json=Ext.decode(response.responseText);
-                debug('### nmsuplem:',json);
-                if(json.exito)
-                {
-                    debug('_p32_smap1:',_p32_smap1);
-                    _p32_smap1.nmsuplem=json.smap1.nmsuplem;
-                    debug('_p32_smap1:',_p32_smap1);
-                    
-                    _p32_cargarStore();
-                }
-                else
-                {
-                    mensajeWarning(json.respuesta);
-                }
-            }
-            ,failure : function(){ errorComunicacion(); }
-        });
-    }
-    else
-    {
-        _p32_cargarStore();
-    }*/
-    ////// loaders //////
 });
 
 ////// funciones //////
@@ -402,57 +329,6 @@ function _p32_borrar()
     if(valido)
     {
         record.set('mov','-');
-    }
-}
-
-function _p32_reload()
-{
-    var valido=true;
-    
-    if(valido)
-    {
-        valido = _fieldById('_p32_grid').getSelectionModel().getSelection().length>0;
-        if(!valido)
-        {
-            mensajeWarning('Debe seleccionar un beneficiario');
-        }
-    }
-    
-    var record;
-    
-    if(valido)
-    {
-        record = _fieldById('_p32_grid').getSelectionModel().getSelection()[0];
-        valido = record.get('mov')+'x'!='*x';
-        if(!valido)
-        {
-            mensajeWarning('Este beneficiario ya se marc&oacute; como a actualizar');
-        }
-    }
-    
-    if(valido)
-    {
-        record = _fieldById('_p32_grid').getSelectionModel().getSelection()[0];
-        valido = record.get('mov')+'x'!='*x';
-        if(!valido)
-        {
-            if(valido)
-                {
-                    if(record.get('mov')+'x'=='*x')
-                    {
-                        _p32_store.load(record);
-                    }
-                    else
-                    {
-                        record.set('mov','');
-                    }
-                }
-        }
-    }
-    
-    if(valido)
-    {
-        record.set('mov','*');
     }
 }
 
