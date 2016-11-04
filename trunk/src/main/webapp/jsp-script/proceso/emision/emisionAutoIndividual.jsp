@@ -447,8 +447,7 @@ Ext.onReady(function()
                                                                            
                                                                         }
                                                                       }
-                                                                      console.log("-d--");
-                                                                      console.log(json)
+                                                                      
                                                                     });
                                                                     
                                                                 }
@@ -945,8 +944,7 @@ function _p29_guardar(callback)
     var form2  = _fieldById('_p29_adicionalesForm');
     if(esDXN){
         var form3  = _fieldById('_p29_dxnForm');
-        console.log("*****************************")
-        console.log(form3);
+       
     }else{
         var form3={}
         form3.isValid=function(){ return true;}

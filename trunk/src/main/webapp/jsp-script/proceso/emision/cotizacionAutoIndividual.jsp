@@ -2065,7 +2065,7 @@ function _p28_cotizar(sinTarificar)
                                 soloDXN.push(formasPago[i]);
                                 
                             }
-                            console.log(formasPago[i]);
+                            debug(formasPago[i]);
                         }
                         
                         formasPago=soloDXN;
