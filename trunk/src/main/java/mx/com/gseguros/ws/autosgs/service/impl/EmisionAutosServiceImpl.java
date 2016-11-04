@@ -798,7 +798,9 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		             emisionAutoRes.getSucursal());
 			
 			
-			if(valida == null || valida != 0){
+			
+			logger.debug(Utils.log("Respuesta spIntegraDxN_sigs : ",res));
+			if(res==null || res!=0){
 			    return null;
 			}
 			
