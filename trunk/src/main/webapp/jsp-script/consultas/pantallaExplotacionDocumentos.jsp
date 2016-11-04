@@ -8,6 +8,11 @@
 var _p49_urlRecuperacion  = '<s:url namespace="/recuperacion" action="recuperar"                />';
 var _p49_urlGenerarLote   = '<s:url namespace="/consultas"    action="generarLote"              />';
 var _p49_urlRecuperarCols = '<s:url namespace="/consultas"    action="recuperarColumnasGridPol" />';
+var urlCatalogos          = '<s:url namespace="/catalogos"    action="obtieneCatalogo" />';
+var urlpolizasImprimirPromotor          = '<s:url namespace="/consultas"    action="polizasImprimirPromotor" />';
+
+
+
 ////// urls //////
 
 ////// variables //////
@@ -308,6 +313,15 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
+    if(_GLOBAL_CDSISROL==RolSistema.PromotorAuto){
+        agentesXpromotor();
+        _p49_storePolizas.proxy.url=urlpolizasImprimirPromotor;
+    }else if(_GLOBAL_CDSISROL==RolSistema.Agente){
+        // aqui traer el cdagente
+        defaultAgente();
+        _fieldByName('cdagente').setReadOnly(true);
+    }
+    
     _fieldByName('cdramo').heredar = function(cdtipram)
     {
         this.getStore().load(
@@ -362,6 +376,8 @@ Ext.onReady(function()
     ////// loaders //////
     _p49_navega(1);
     ////// loaders //////
+    
+    
 });
 
 ////// funciones //////
@@ -815,6 +831,25 @@ function descargarPDF(tipoimp){
              });
 	*/
 	
+}
+
+
+function agentesXpromotor(){
+    try{
+	    var agente=_fieldByName('cdagente');
+	    agente.store.proxy.url=urlCatalogos;
+	    agente.store.proxy.extraParams['catalogo']='AGENTES_POR_PROMOTOR';
+	    agente.store.proxy.extraParams['params.cdusuari']=_p49_params.cdusuari;
+    }catch(e){
+	  debugError(e);   
+	}
+}
+
+function defaultAgente(){
+    
+    _fieldByName('cdagente').store.proxy.extraParams['params.agente']=_p49_params.cdagente;
+    _fieldByName('cdagente').getStore().load()
+    _fieldByName('cdagente').setValue(_p49_params.cdagente);
 }
 
 
