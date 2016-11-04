@@ -1027,4 +1027,51 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			compile();
 		}
 	}
+	
+	
+	@Override
+    public Integer integraDxnAutos(Map<String, String> params) throws Exception {
+        
+	    Map<String, Object> mapResult = ejecutaSP(new IntegraDxnAutos(getDataSource()),params);
+        
+        Integer resp = (Integer) mapResult.get("rs");
+        
+        return resp;
+        }
+    
+    protected class IntegraDxnAutos extends StoredProcedure{
+        protected IntegraDxnAutos(DataSource dataSource){
+            super(dataSource, "spIntegraDxN_sigs");
+            declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+            declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+            declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+            declareParameter(new SqlParameter("vAdministradora", Types.SMALLINT));
+            declareParameter(new SqlParameter("vRetenedora", Types.SMALLINT));
+            declareParameter(new SqlParameter("vClaveDescuento", Types.VARCHAR));
+            declareParameter(new SqlParameter("vClaveEmpleado", Types.VARCHAR));
+            declareParameter(new SqlParameter("vNombreEmpleado", Types.VARCHAR));
+            declareParameter(new SqlParameter("vPaternoEmpleado", Types.VARCHAR));
+            declareParameter(new SqlParameter("vMaternoEmpleado", Types.VARCHAR));
+            declareParameter(new SqlParameter("vRFCEmpleado", Types.VARCHAR));
+            declareParameter(new SqlParameter("vCurpEmpleado", Types.VARCHAR));
+            declareParameter(new SqlParameter("vAnexo1", Types.VARCHAR));
+            declareParameter(new SqlParameter("vAnexo2", Types.VARCHAR));
+            declareParameter(new SqlParameter("vAnexo3", Types.VARCHAR));
+            declareParameter(new SqlParameter("vAnexo4", Types.VARCHAR));
+            declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+                @Override  
+                 public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+                    Integer result = null;
+                    while(rs.next()){  
+                        result = rs.getInt(1);
+                    }  
+                    return result;  
+                    }
+                }));
+                        
+            compile();
+        }
+    }
+	
+	
 }

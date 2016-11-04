@@ -631,4 +631,6 @@ public interface ConsultasDAO
                                                 String pv_cdtipimp_i, 
                                                 String pv_cdusuari_i,
                                                 String pv_cdsisrol_i) throws Exception;
+
+    public List<Map<String, String>> obtieneRetAdmin(String administradora, String retenedora) throws Exception;
                                     }

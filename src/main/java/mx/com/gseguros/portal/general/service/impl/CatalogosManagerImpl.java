@@ -2089,4 +2089,13 @@ public class CatalogosManagerImpl implements CatalogosManager {
         return catalogosDAO.guardaDescripcionCortaCobertura(cdgarant, descCorta);
     }
 	
+	@Override
+    public List<GenericVO> obtieneClaveDescuentoSubRamo(String pv_numsuc_i, 
+                                                        String pv_cveent_i,
+                                                        String pv_cdramo_i,
+                                                        String pv_cdtipsit_i) throws Exception  {      
+       
+        return catalogosDAO.obtieneClaveDescuentoSubRamo(pv_numsuc_i, pv_cveent_i, pv_cdramo_i, pv_cdtipsit_i);
+    }
+	
 }

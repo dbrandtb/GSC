@@ -592,6 +592,7 @@ Ext.onReady(function()
     	
     	xtype		: 'fieldset'
     	,title		: '<span style="font:bold 14px Calibri;">DXN</span>'
+        ,width : 435
     	,items		: _p28_panelDxnItems
     }
     
@@ -2064,8 +2065,9 @@ function _p28_cotizar(sinTarificar)
                                 soloDXN.push(formasPago[i]);
                                 
                             }
-                            
+                            console.log(formasPago[i]);
                         }
+                        
                         formasPago=soloDXN;
                     }
                     

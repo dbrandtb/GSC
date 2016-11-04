@@ -3514,6 +3514,7 @@ Ext.onReady(function()
     	    	itemsFormAgrupados.splice(itemsFormAgrupados.length-2,0,{
     	        	
     	        	xtype		: 'fieldset'
+    	        	,width : 435
     	        	,title		: '<span style="font:bold 14px Calibri;">DXN</span>'
     	        	,items		: _p28_panelDxnItems
     	        });

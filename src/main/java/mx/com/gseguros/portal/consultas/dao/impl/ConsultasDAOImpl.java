@@ -5273,7 +5273,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	
     	protected FormasPagoRetenedora(DataSource dataSource) {
     		
-    		super(dataSource, "Pkg_Tabapoyo_cesar.P_GET_FORMAS_PAGO_RETENEDORA");
+    		super(dataSource, "PKG_RETENEDORAS.P_GET_FORMAS_PAGO_RETENEDORA");
 			declareParameter(new SqlParameter("pv_administradora_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_retenedora_i" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
@@ -5348,6 +5348,64 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
             
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    
+    @Override
+    public List<Map<String,String>> obtieneRetAdmin(String administradora,String retenedora) throws Exception
+    {
+        Map<String,String> params=new HashMap<String, String>();
+        params.put("pv_numsuc_i", administradora);
+        params.put("pv_cveent_i", retenedora);
+        Map<String,Object>respuestaProcedure=ejecutaSP(new ObtieneRetAdmin(getDataSource()), params);
+        List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+        
+        return lista;
+    }
+    
+    protected class ObtieneRetAdmin extends StoredProcedure {
+        
+        protected ObtieneRetAdmin(DataSource dataSource) {
+            
+            super(dataSource, "PKG_RETENEDORAS.P_GET_RSDXNADMRET");
+            declareParameter(new SqlParameter("pv_numsuc_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cveent_i" , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+                    "OTCLAVE1"
+                    ,"OTCLAVE2"
+                    ,"OTVALOR01"
+                    ,"OTVALOR02"
+                    ,"OTVALOR03"
+                    ,"OTVALOR04"
+                    ,"OTVALOR05"
+                    ,"OTVALOR06"
+                    ,"OTVALOR07"
+                    ,"OTVALOR08"
+                    ,"OTVALOR09"
+                    ,"OTVALOR10"
+                    ,"OTVALOR11"
+                    ,"OTVALOR12"
+                    ,"OTVALOR13"
+                    ,"OTVALOR14"
+                    ,"OTVALOR15"
+                    ,"OTVALOR16"
+                    ,"OTVALOR17"
+                    ,"OTVALOR18"
+                    ,"OTVALOR19"
+                    ,"OTVALOR20"
+                    ,"OTVALOR21"
+                    ,"OTVALOR22"
+                    ,"OTVALOR23"
+                    ,"OTVALOR24"
+                    ,"OTVALOR25"
+                    ,"OTVALOR26"
+            };
+            
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();

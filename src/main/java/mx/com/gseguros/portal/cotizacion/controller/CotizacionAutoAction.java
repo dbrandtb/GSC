@@ -2007,6 +2007,51 @@ public class CotizacionAutoAction extends PrincipalCoreAction
      return SUCCESS;
  }
  
+ public String obtieneAdminRet()
+ {
+     logger.debug(Utils.log(""
+             ,"\n##############################"
+             ,"\n###### obtieneAdminRet ######"
+             ,"\n###### smap1=", smap1
+             ));
+     
+     String paso = null;
+     
+     try
+     {
+         paso = "Validando datos de entrada";
+         logger.debug(Utils.log("","paso=",paso));
+         
+         Utils.validate(smap1, "No se recibieron datos del auto");
+         
+         String administradora     = smap1.get("administradora")
+         ,retenedora = smap1.get("retenedora");
+         
+         Utils.validate(
+                 administradora     , "No se recibi\u00f3 administradora"
+                 ,retenedora       , "No se recibi\u00f3 retenedora"
+                 );
+         
+         slist1=cotizacionManager.obtieneRetAdmin(administradora, retenedora);
+         smap1=slist1.get(0);
+                 
+         exito=true;
+         logger.debug(Utils.log("##### respuesta:",slist1));
+         
+     }
+     catch(Exception ex)
+     {
+         exito=false;
+         respuesta = Utils.manejaExcepcion(ex);
+     }
+     
+     logger.debug(Utils.log(""
+             ,"\n###### obtieneAdminRet ######"
+             ,"\n##############################"
+             ));
+     return SUCCESS;
+ }
+ 
  
  
  

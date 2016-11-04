@@ -10775,6 +10775,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
+    public List<Map<String,String>> obtieneRetAdmin(String administradora,String retenedora) throws Exception{
+        
+        List<Map<String,String>> list=consultasDAO.obtieneRetAdmin(administradora, retenedora);
+        
+        return list;
+    }
+	
+	@Override
 	public List<Map<String,String>> buescaEmpleado(
 	         String pv_administradora_i
 	        ,String pv_retenedora_i
