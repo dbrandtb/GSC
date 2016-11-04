@@ -128,6 +128,7 @@ var TipoSituacion = {
 	DXNMENSUAL			:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNMENSUAL.codigo" />',
 	DXN16DIAS			:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXN16DIAS.codigo" />',
 	DXNSEMANAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNSEMANAL.codigo" />',
+	DXNANUAL            :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNANUAL.codigo" />',
 	esDxN				:    function(formaPago){
 		
 		var dxn=[
@@ -135,7 +136,8 @@ var TipoSituacion = {
 					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNCATORCENAL.codigo" />',
 					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNMENSUAL.codigo" />',
 					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXN16DIAS.codigo" />',
-					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNSEMANAL.codigo" />'
+					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNSEMANAL.codigo" />',
+					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNANUAL.codigo" />'
 
 		         ];
 		
