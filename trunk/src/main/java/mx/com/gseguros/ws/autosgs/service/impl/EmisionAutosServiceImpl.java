@@ -10,9 +10,14 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.dao.impl.ConsultasDAOImpl;
+import mx.com.gseguros.portal.consultas.dao.impl.ConsultasPolizaDAOImpl;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.utils.Constantes;
@@ -83,6 +88,13 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	
 	@Autowired
 	private ConsultasDAO consultasDAO;
+	
+	@Autowired
+    private CotizacionDAO cotizacionDAO;
+	
+	@Autowired
+	@Qualifier("consultasDAOICEImpl")
+    private ConsultasPolizaDAO consultasPolizaDAO;
 	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
@@ -775,6 +787,24 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				emisionAutoRes.setExitoRecibos(true);
 				emisionAutoRes.setResRecibos(valida);
 			}
+			
+			
+			
+			
+			Integer res=integraDxnAutos( cdunieco,  cdramo,
+		             estado,  nmpoliza,
+		             emisionAutoRes.getNmpoliex(),
+		             emisionAutoRes.getSubramo(),
+		             emisionAutoRes.getSucursal());
+			
+			
+			if(valida == null || valida != 0){
+			    return null;
+			}
+			
+			
+			
+			
 		}else if(listaEndosos!=null && listaEndosos.isEmpty()){
 			
 			/**
@@ -1046,6 +1076,67 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		}
 		
 		return valida;
+	}
+	
+	public Integer integraDxnAutos(String cdunieco, String cdramo,
+            String estado, String nmpoliza,String nmpoliext,String ramo,String cduniex){
+	    
+	    Map<String,String> datos=null;
+	    
+	    Integer respuesta=null;
+	    Map<String,String> datosEnviar=new HashMap<String, String>();
+	    
+	    try {
+            datos=cotizacionDAO.cargarTvalopol(cdunieco, cdramo, estado, nmpoliza);
+            if(datos.get("parametros.pv_otvalor08")==null || datos.get("parametros.pv_otvalor08").trim().equals("")){
+                return 0;
+            }
+            
+        
+              
+        } catch (Exception e) {
+            
+            logger.error("Error recuperando los datos de la poliza");
+            logger.error(e);
+        }
+	    
+    	    
+	        String ret=datos.get("parametros.pv_otvalor09");
+	        ret=ret.substring(4);
+	        String clave_des=datos.get("parametros.pv_otvalor15");
+	        clave_des=clave_des.substring(10).trim();
+	        
+    	    datosEnviar.put("vSucursal", cduniex);
+    	    datosEnviar.put("vRamo", ramo);
+    	    datosEnviar.put("vPoliza", nmpoliext);
+    	    datosEnviar.put("vAdministradora", datos.get("parametros.pv_otvalor08"));
+    	    datosEnviar.put("vRetenedora", ret);
+    	    datosEnviar.put("vClaveDescuento", clave_des);
+    	    datosEnviar.put("vClaveEmpleado", datos.get("parametros.pv_otvalor10"));
+    	    datosEnviar.put("vNombreEmpleado", datos.get("parametros.pv_otvalor11"));
+    	    datosEnviar.put("vPaternoEmpleado", datos.get("parametros.pv_otvalor12"));
+    	    datosEnviar.put("vMaternoEmpleado", datos.get("parametros.pv_otvalor13"));
+    	    datosEnviar.put("vRFCEmpleado", datos.get("parametros.pv_otvalor14"));
+    	    datosEnviar.put("vCurpEmpleado", datos.get("parametros.pv_otvalor16"));
+    	    datosEnviar.put("vAnexo1", "");
+    	    datosEnviar.put("vAnexo2", "");
+    	    datosEnviar.put("vAnexo3", "");
+    	    datosEnviar.put("vAnexo4", "");
+    	    
+	    
+	    try {
+            respuesta=autosSIGSDAO.integraDxnAutos(datosEnviar);
+        } catch (Exception e) {
+            logger.error("Error al enviar datos dxn");
+            logger.error(e);
+            return null;
+            
+        }
+	    
+	    
+	    
+	    
+	    return respuesta;
 	}
 	
 	public int endosoCambioNombreClienteAutos(String cdunieco, String cdramo,

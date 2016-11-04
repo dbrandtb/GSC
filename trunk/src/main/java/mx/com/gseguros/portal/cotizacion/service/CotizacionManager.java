@@ -1084,5 +1084,7 @@ public interface CotizacionManager
 	public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception;
 	
 	public String obtenerAseguradoDuplicado(HashMap<String, Object> paramPersona) throws Exception;
+
+    public List<Map<String, String>> obtieneRetAdmin(String administradora, String retenedora) throws Exception;
 	
 }

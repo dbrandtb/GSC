@@ -26,9 +26,11 @@ var urlReintentarWS                        = '<s:url namespace="/"        action
 var _urlEnviarCorreo                       = '<s:url namespace="/general" action="enviaCorreo"      />';
 var _p29_urlRecuperacion                   = '<s:url namespace="/recuperacion"    action="recuperar"                       />';
 
-var url_buscar_empleado                  = '<s:url namespace="/emision"    action="buscarEmpleados"                       />';
-var urlCargar                    = '<s:url namespace="/"                action="cargarDatosComplementarios"  />';
-var url_guarda_empleado         = '<s:url namespace="/emision"                action="guardaEmpleados"  />';
+var url_buscar_empleado                     = '<s:url namespace="/emision"              action="buscarEmpleados"                       />';
+var urlCargar                               = '<s:url namespace="/"                     action="cargarDatosComplementarios"  />';
+var url_guarda_empleado                     = '<s:url namespace="/emision"                action="guardaEmpleados"  />';
+var url_admin_ret                           = '<s:url namespace="/emision"                action="obtieneAdminRet"  />';
+
     
 
 
@@ -322,6 +324,7 @@ Ext.onReady(function()
 	            itemId    : '_p29_dxnForm'
 	            ,name     : '_p29_dxnForm'
 	            ,title    : 'DESCUENTO POR N&Oacute;MINA'
+	            ,autoScroll : true
 	            ,defaults : { style : 'margin:5px;' }
 	            ,layout   :
 	            {
@@ -369,7 +372,12 @@ Ext.onReady(function()
                                                     _fieldByName("aux.otvalor08").setValue(json.parametros.pv_otvalor08);
                                                     _fieldByName('aux.otvalor09').heredar(true, function(){
                                                         _fieldByName('aux.otvalor09').setValue(json.parametros.pv_otvalor09);
+                                                        claveDescuentoDxn(_fieldByName("aux.otvalor08").getValue(),
+                                                                          _fieldByName("aux.otvalor09").getValue(),
+                                                                          _p29_smap1.cdramo,
+                                                                          _p29_smap1.cdtipsit)
                                                         _fieldByName('aux.otvalor15').heredar(true, function(){
+                                                            
                                                             _fieldByName('aux.otvalor15').setValue(json.parametros.pv_otvalor15);
                                                           
                                                         });
@@ -384,7 +392,8 @@ Ext.onReady(function()
                                                     _fieldByName("aux.otvalor14").setValue(json.parametros.pv_otvalor14==null?"":json.parametros.pv_otvalor14);
                                                     _fieldByName("aux.otvalor15").setValue(json.parametros.pv_otvalor15==null?"":json.parametros.pv_otvalor15);
                                                     
-                                                    _fieldByName("aux.otvalor16").setValue(json.parametros.pv_otvalor15==null?"":json.parametros.pv_otvalor16);
+                                                    _fieldByName("aux.otvalor16").setValue(json.parametros.pv_otvalor16==null?"":json.parametros.pv_otvalor16);
+                                                   
                                                     _fieldByName("aux.otvalor08").setReadOnly(true);
                                                     _fieldByName("aux.otvalor09").setReadOnly(true);
                                                     _fieldByName("aux.otvalor09").focus();
@@ -405,7 +414,50 @@ Ext.onReady(function()
                                                             }
                                                         })
                                                     });
-                                                
+                                                    
+                                                    
+                                                    _mask("cargando datos");
+                                                    Ext.Ajax.request(
+                                                            {
+                                                               
+                                                                 url     : url_admin_ret 
+                                                                ,params :
+                                                                {
+                                                                    'smap1.administradora' :  json.parametros.pv_otvalor08,
+                                                                    'smap1.retenedora' :    json.parametros.pv_otvalor09
+                                                                }
+                                                                ,success : function(response)
+                                                                {
+                                                                    _unmask();
+                                                                    var json2 = Ext.decode(response.responseText);
+                                                                    debug('### Response --- :',json2);
+                                                                    
+                                                                    json2.slist1.forEach(function(it,idx,arr){
+                                                                      for(var i=17;i<22;i++)  {
+                                                                          
+                                                                        if((it['OTVALOR'+(i+5)]+'').trim()!='' && it['OTVALOR'+(i+5)]!=undefined && it['OTVALOR'+(i+5)]!=null){
+                                                                            
+                                                                            _fieldByName('_p29_dxnForm').add({
+                                                                                xtype      :'textfield',
+                                                                                fieldLabel :it['OTVALOR'+(i+5)],
+                                                                                name       :'aux.otvalor'+i
+                                                                            });
+                                                                            _fieldByName("aux.otvalor"+i).setValue(json.parametros['pv_otvalor'+i]==null?"":json['parametros.pv_otvalor'+i]);
+                                                                            
+                                                                           
+                                                                        }
+                                                                      }
+                                                                      console.log("-d--");
+                                                                      console.log(json)
+                                                                    });
+                                                                    
+                                                                }
+                                                                ,failure : function()
+                                                                {
+                                                                    _unmask();
+                                                                    errorComunicacion();
+                                                                }
+                                                            });
                                 
                                                     
                                                     
@@ -893,6 +945,8 @@ function _p29_guardar(callback)
     var form2  = _fieldById('_p29_adicionalesForm');
     if(esDXN){
         var form3  = _fieldById('_p29_dxnForm');
+        console.log("*****************************")
+        console.log(form3);
     }else{
         var form3={}
         form3.isValid=function(){ return true;}
@@ -936,6 +990,12 @@ function _p29_guardar(callback)
 	                 json.smap1["parametros.pv_otvalor14"]=datos['aux.otvalor14'];
 	                 json.smap1["parametros.pv_otvalor15"]=datos['aux.otvalor15'];
 	                 json.smap1["parametros.pv_otvalor16"]=datos['aux.otvalor16'];
+	                 //para los datos variables dxn
+	                 json.smap1["parametros.pv_otvalor17"]=datos['aux.otvalor17'];
+	                 json.smap1["parametros.pv_otvalor18"]=datos['aux.otvalor18'];
+	                 json.smap1["parametros.pv_otvalor19"]=datos['aux.otvalor19'];
+	                 json.smap1["parametros.pv_otvalor20"]=datos['aux.otvalor20'];
+	                 json.smap1["parametros.pv_otvalor21"]=datos['aux.otvalor21'];
 	            }catch(e){
 	                debugError(e);
 	            }
@@ -2028,6 +2088,17 @@ function guardaEmpleado(){
         debugError(e);
     }
     
+}
+
+function claveDescuentoDxn(administradora,retenedora,cdramo,cdtipsit){
+    try{
+        _fieldByLabel('CLAVE DE DESCUENTO').store.proxy.extraParams['params.administradora']=administradora;
+        _fieldByLabel('CLAVE DE DESCUENTO').store.proxy.extraParams['params.retenedora']=retenedora;
+        _fieldByLabel('CLAVE DE DESCUENTO').store.proxy.extraParams['params.cdramo']=cdramo;
+        _fieldByLabel('CLAVE DE DESCUENTO').store.proxy.extraParams['params.cdtipsit']=cdtipsit;
+    }catch(e){
+        debugError(e)
+    }
 }
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>

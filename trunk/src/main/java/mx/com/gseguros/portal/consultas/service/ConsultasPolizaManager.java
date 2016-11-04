@@ -333,5 +333,8 @@ public interface ConsultasPolizaManager {
      * @throws Exception
      */
     public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+
+    public Map<String, String> obtieneTvalopol(String cdunieco, String cdramo, String estado, String nmpoliza)
+            throws Exception;
     
 }

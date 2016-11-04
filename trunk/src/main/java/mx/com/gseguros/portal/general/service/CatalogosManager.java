@@ -249,5 +249,10 @@ public interface CatalogosManager {
     public List<GenericVO> obtieneCatalogoRetAdminAgente(String pv_numsuc_i, String pv_cdagente_i) throws Exception;
 	
 	public boolean guardaDescripcionCortaCobertura(String cdgarant, String descCorta) throws Exception;
+
+    public List<GenericVO> obtieneClaveDescuentoSubRamo(String pv_numsuc_i, 
+                                                        String pv_cveent_i, 
+                                                        String pv_cdramo_i,
+                                                        String pv_cdtipsit_i) throws Exception;
 	
 }

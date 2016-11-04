@@ -2160,7 +2160,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     protected class ObtieneCatalogoRetAdminAgente extends StoredProcedure {
     
         protected ObtieneCatalogoRetAdminAgente(DataSource dataSource) {
-            super(dataSource, "Pkg_Tabapoyo_cesar.P_GET_RETENEDORAS_AGENTE");
+            super(dataSource, "PKG_RETENEDORAS.P_GET_RETENEDORAS_AGENTE");
             declareParameter(new SqlParameter("pv_numsuc_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdagente_i", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosPolMapper()));
@@ -2194,4 +2194,41 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	        compile();
 	    }
 	}
+	
+	@Override
+    public List<GenericVO> obtieneClaveDescuentoSubRamo(String pv_numsuc_i, 
+                                                        String pv_cveent_i,
+                                                        String pv_cdramo_i,
+                                                        String pv_cdtipsit_i) throws Exception {      
+        try {
+            
+            HashMap<String,Object> params = new LinkedHashMap<String,Object>();
+            params.put("pv_numsuc_i", pv_numsuc_i);
+            params.put("pv_cveent_i", pv_cveent_i);
+            params.put("pv_cdramo_i", pv_cdramo_i);
+            params.put("pv_cdtipsit_i", pv_cdtipsit_i);
+            logger.debug(Utils.log(params));   
+            Map<String, Object> resultado = ejecutaSP(new ObtieneClaveDescuentoSubRamo(getDataSource()), params);
+            return (List<GenericVO>) resultado.get("pv_registro_o");
+        } catch (Exception e) {
+            throw new Exception(e.getMessage(), e);
+        }
+    }
+    
+    protected class ObtieneClaveDescuentoSubRamo extends StoredProcedure {
+    
+        protected ObtieneClaveDescuentoSubRamo(DataSource dataSource) {
+            super(dataSource, "PKG_RETENEDORAS.P_GET_CLA_DES_X_SUBRAMO");
+            declareParameter(new SqlParameter("pv_numsuc_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cveent_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosPolMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+	
+	
 }

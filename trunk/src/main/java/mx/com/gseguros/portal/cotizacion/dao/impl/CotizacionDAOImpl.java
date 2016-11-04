@@ -8442,7 +8442,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	
     	protected BuscaEmpleado(DataSource dataSource) {
     		
-    		super(dataSource, "Pkg_Tabapoyo_cesar.P_GET_EMPLEADOS");
+    		super(dataSource, "PKG_RETENEDORAS.P_GET_EMPLEADOS");
     		declareParameter(new SqlParameter("pv_administradora_i" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_retenedora_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_clave_i" , OracleTypes.VARCHAR));

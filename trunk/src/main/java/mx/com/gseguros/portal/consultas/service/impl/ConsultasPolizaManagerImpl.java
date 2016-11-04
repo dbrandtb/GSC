@@ -25,6 +25,7 @@ import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
@@ -57,6 +58,9 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	
 	@Autowired
 	private AutosSIGSDAO autosDAOSIGS;
+	
+	@Autowired
+    private CotizacionDAO cotizacionDAO;
 	
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
@@ -539,5 +543,11 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
             throws Exception {
 		return consultasPolizaDAOICE.consultaIncisosPoliza(cdunieco, cdramo, estado, nmpoliza);
 	}
+	
+	@Override
+    public Map<String, String> obtieneTvalopol(String cdunieco, String cdramo, String estado, String nmpoliza)
+            throws Exception {
+        return cotizacionDAO.cargarTvalopol(cdunieco, cdramo, estado, nmpoliza);
+    }
 	
 }

@@ -207,6 +207,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 			{
 				try
 				{
+				    map4=consultasPolizaManager.obtieneTvalopol(cdunieco, cdramo, estado, nmpoliza);
+				    
 					Map<String,Object> datosTramite = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
 					Map<String,String> tramite      = (Map<String,String>)datosTramite.get("TRAMITE");
 					cdunieco = flujo.getCdunieco();
@@ -257,6 +259,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 				else
 				{
+				    map4=consultasPolizaManager.obtieneTvalopol(cdunieco, cdramo, estado, nmpoliza);
+                    
 					usuario  = (UserVO)session.get("USUARIO");
 					cdsisrol = usuario.getRolActivo().getClave();
 					

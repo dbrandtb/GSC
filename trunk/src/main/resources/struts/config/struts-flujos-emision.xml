@@ -539,7 +539,9 @@
        <action name="guardaEmpleados" class="CotizacionAction" method="guardaEmpleados">
            <result type="json" />
        </action>
-        
+       <action name="obtieneAdminRet" class="cotizacionAutoAction" method="obtieneAdminRet">
+           <result type="json" />
+       </action>        
     </package>
     
 </struts>
