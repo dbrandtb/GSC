@@ -2177,7 +2177,7 @@ public class EndososManagerImpl implements EndososManager
 							,rec.get("CDROL")
 							,rec.get("CDPERSON")
 							,nmsuplem
-							,rec.get("STATUS")
+							,"V"
 							,rec.get("NMORDDOM")
 							,rec.get("SWRECLAM")
 							,rec.get("SWEXIPER")

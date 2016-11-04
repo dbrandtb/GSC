@@ -7,7 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import mx.com.aon.portal.dao.ProcesoDAO;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
@@ -24,11 +31,6 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class PersonasManagerImpl implements PersonasManager
@@ -1386,5 +1388,197 @@ public class PersonasManagerImpl implements PersonasManager
 	public void setEndososDAO(EndososDAO endososDAO) {
 		this.endososDAO = endososDAO;
 	}
+
+    @Override
+    public void guardarBeneficiarios(String cdunieco, String cdramo, String estado, String nmpoliza,
+            String usuarioCaptura, List<Map<String, String>> beneficiarios) throws Exception {
+        logger.debug(Utils.log(
+                "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+               ,"\n@@@@@@ guardarBeneficiarios@@@@@ @@@@@@"
+               ,"\n@@@@@@ cdunieco      = " , cdunieco
+               ,"\n@@@@@@ cdramo        = " , cdramo
+               ,"\n@@@@@@ estado        = " , estado
+               ,"\n@@@@@@ nmpoliza      = " , nmpoliza
+               ,"\n@@@@@@ usuarioCaptura= " , usuarioCaptura
+               ,"\n@@@@@@ beneficiarios = " , beneficiarios
+               ));
+       
+        
+        for(Map<String,String>rec:beneficiarios)
+            {
+                
+               // String cdperson =  ProcesoDAO.GENERA_MPERSON;
+                logger.debug("****cdperson: "+rec.get("CDPERSON"));
+                String mov    = rec.get("mov");
+                int agregar   = 1;
+                int eliminar  = 2;
+                int operacion = 0;
+                if(StringUtils.isNotBlank(mov))
+                {
+                    if(mov.equals("+"))
+                    {
+                        operacion=agregar;
+                    }
+                    else if(mov.equals("-"))
+                    {
+                        operacion=eliminar;
+                    }
+                }
+                
+                if(operacion==agregar)
+                {
+                    personasDAO.movimientosMpersona(
+                            rec.get("CDPERSON")
+                            ,rec.get("CDTIPIDE")
+                            ,rec.get("CDIDEPER")
+                            ,rec.get("DSNOMBRE")
+                            ,rec.get("CDTIPPER")
+                            ,rec.get("OTFISJUR")
+                            ,rec.get("OTSEXO")
+                            ,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+                                    renderFechas.parse(rec.get("FENACIMI"))
+                                    :null
+                            ,rec.get("CDRFC")
+                            ,rec.get("DSEMAIL")
+                            ,rec.get("DSNOMBRE1")
+                            ,rec.get("DSAPELLIDO")
+                            ,rec.get("DSAPELLIDO1")
+                            ,new Date()
+                            ,rec.get("CDNACION")
+                            ,rec.get("CANALING")
+                            ,rec.get("CONDUCTO")
+                            ,rec.get("PTCUMUPR")
+                            ,rec.get("RESIDENCIA")
+                            ,rec.get("NONGRATA")
+                            ,rec.get("CDIDEEXT")
+                            ,rec.get("CDESTCIV")
+                            ,rec.get("CDSUCEMI")
+                            ,usuarioCaptura
+                            ,Constantes.INSERT_MODE);
+                    
+                    endososDAO.movimientoMpoliperBeneficiario(
+                            cdunieco
+                            ,cdramo
+                            ,estado
+                            ,nmpoliza
+                            ,"0"
+                            ,"3"
+                            ,rec.get("CDPERSON")
+                            ,"1"
+                            ,"V"
+                            ,rec.get("NMORDDOM")
+                            ,rec.get("SWRECLAM")
+                            ,"N" //swexiper
+                            ,rec.get("CDPARENT")
+                            ,rec.get("PORBENEF")
+                            ,"I"
+                            );
+                }
+                else if(operacion==eliminar)
+                {
+                    endososDAO.movimientoMpoliperBeneficiario(
+                            cdunieco
+                            ,cdramo
+                            ,estado
+                            ,nmpoliza
+                            ,"0"
+                            ,rec.get("CDROL")
+                            ,rec.get("CDPERSON")
+                            ,"1"
+                            ,rec.get("STATUS")
+                            ,rec.get("NMORDDOM")
+                            ,rec.get("SWRECLAM")
+                            ,rec.get("SWEXIPER")
+                            ,rec.get("CDPARENT")
+                            ,rec.get("PORBENEF")
+                            ,"B"
+                            );
+                    
+                    personasDAO.movimientosMpersona(
+                            rec.get("CDPERSON")
+                            ,rec.get("CDTIPIDE")
+                            ,rec.get("CDIDEPER")
+                            ,rec.get("DSNOMBRE")
+                            ,rec.get("CDTIPPER")
+                            ,rec.get("OTFISJUR")
+                            ,rec.get("OTSEXO")
+                            ,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+                                    renderFechas.parse(rec.get("FENACIMI"))
+                                    :null
+                            ,rec.get("CDRFC")
+                            ,rec.get("DSEMAIL")
+                            ,rec.get("DSNOMBRE1")
+                            ,rec.get("DSAPELLIDO")
+                            ,rec.get("DSAPELLIDO1")
+                            ,new Date()
+                            ,rec.get("CDNACION")
+                            ,rec.get("CANALING")
+                            ,rec.get("CONDUCTO")
+                            ,rec.get("PTCUMUPR")
+                            ,rec.get("RESIDENCIA")
+                            ,rec.get("NONGRATA")
+                            ,rec.get("CDIDEEXT")
+                            ,rec.get("CDESTCIV")
+                            ,rec.get("CDSUCEMI")
+                            ,usuarioCaptura
+                            ,"B");
+                }
+                else
+                {
+                    endososDAO.movimientoMpoliperBeneficiario(
+                            cdunieco
+                            ,cdramo
+                            ,estado
+                            ,nmpoliza
+                            ,"0"
+                            ,rec.get("CDROL")
+                            ,rec.get("CDPERSON")
+                            ,"1"
+                            ,rec.get("STATUS")
+                            ,rec.get("NMORDDOM")
+                            ,rec.get("SWRECLAM")
+                            ,rec.get("SWEXIPER")
+                            ,rec.get("CDPARENT")
+                            ,rec.get("PORBENEF")
+                            ,"U"
+                            );
+                    
+                    personasDAO.movimientosMpersona(
+                            rec.get("CDPERSON")
+                            ,rec.get("CDTIPIDE")
+                            ,rec.get("CDIDEPER")
+                            ,rec.get("DSNOMBRE")
+                            ,rec.get("CDTIPPER")
+                            ,rec.get("OTFISJUR")
+                            ,rec.get("OTSEXO")
+                            ,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+                                    renderFechas.parse(rec.get("FENACIMI"))
+                                    :null
+                            ,rec.get("CDRFC")
+                            ,rec.get("DSEMAIL")
+                            ,rec.get("DSNOMBRE1")
+                            ,rec.get("DSAPELLIDO")
+                            ,rec.get("DSAPELLIDO1")
+                            ,new Date()
+                            ,rec.get("CDNACION")
+                            ,rec.get("CANALING")
+                            ,rec.get("CONDUCTO")
+                            ,rec.get("PTCUMUPR")
+                            ,rec.get("RESIDENCIA")
+                            ,rec.get("NONGRATA")
+                            ,rec.get("CDIDEEXT")
+                            ,rec.get("CDESTCIV")
+                            ,rec.get("CDSUCEMI")
+                            ,usuarioCaptura
+                            ,Constantes.UPDATE_MODE);
+                }
+            }
+        
+        logger.debug(Utils.log(
+                "\n@@@@@@ guardarBeneficiarios@@@@@ @@@@@@"
+                ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                ));
+        
+    }
 		
 }

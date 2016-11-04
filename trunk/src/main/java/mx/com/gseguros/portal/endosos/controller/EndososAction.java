@@ -29,6 +29,7 @@ import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
+import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
@@ -41,9 +42,11 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
+import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
@@ -2632,13 +2635,52 @@ public class EndososAction extends PrincipalCoreAction
 		
 		try //esto deberia estar en un manager
 		{
+		    
 			UserVO usuario = Utils.validateSession(session);
 			
 			String paso = null;
 			
-			try
-			{
-				paso = "Validando tipo de endoso";
+			logger.debug(Utils.log(
+	                 "\n#####################################"
+	                ,"\n###### guardarBeneficiarios #########"
+	                ,"\n###### listaBeneficiarios = " , session.get("listaBeneficiarios")
+	                ));
+			
+			if(smap1.get("confirmar").equalsIgnoreCase("si"))
+            {
+                String usuarioCaptura =  null;
+                paso = "Obteniendo Lista de Pantalla Beneficiarios";
+                if(usuario!=null){
+                    if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+                        usuarioCaptura = usuario.getClaveUsuarioCaptura();
+                    }else{
+                        usuarioCaptura = usuario.getCodigoPersona();
+                    }
+                    List<Map<String,String>>mpoliperMpersona =(List<Map<String, String>>) session.get("listaBeneficiarios");
+                
+                    paso = "Iterando registros";
+                
+                    String cdunieco   = (String)omap1.get("pv_cdunieco_i")
+                           ,cdramo    = (String)omap1.get("pv_cdramo_i")
+                           ,estado    = (String)omap1.get("pv_estado_i")
+                           ,nmpoliza  = (String)omap1.get("pv_nmpoliza_i");
+                
+                    if(mpoliperMpersona!= null &&  mpoliperMpersona.size()>0) {
+                    personasManager.guardarBeneficiarios(cdunieco, cdramo, estado, nmpoliza, usuarioCaptura, mpoliperMpersona);
+                    session.put("listaBeneficiarios",null);
+                    }
+                }
+            }
+			
+			logger.debug(Utils.log(
+	                "\n###### guardarBeneficiarios ##########"
+	                ,"\n#####################################"
+	                ));
+	        
+    			try {
+    			    logger.debug(paso);
+    			 
+    			    paso = "Validando tipo de endoso";
 				logger.debug(paso);
 				
 				// Se determina el tipo de endoso solicitado:
@@ -2938,6 +2980,7 @@ public class EndososAction extends PrincipalCoreAction
 					
 					if(smap1.get("confirmar").equalsIgnoreCase("si"))
 					{
+					    
 					// Si el endoso fue confirmado:
 					if(respConfirmacionEndoso.isConfirmado()) {
 						endosoConfirmado = true;
@@ -3087,7 +3130,11 @@ public class EndososAction extends PrincipalCoreAction
 									incisosAfectados.put(inciso,inciso);
 								}
 							}
-							
+							logger.debug(Utils.log(
+					                 "\n###### ntramite = " , ntramite
+					                ,"\n###### (String)omap1.get(pv_ntramite_i) = " , (String)omap1.get("pv_ntramite_i")
+					                ,"\n#####################################"
+					                ));
 							ejecutaCaratulaEndosoTarifaSigs(cdunieco,cdramo,estado,nmpoliza,nmsuplem, ntramite, tipoEndoso.getCdTipSup().toString(), tipoGrupoInciso, aux,incisosAfectados);
 					    }
 						
@@ -12848,7 +12895,7 @@ public String retarificarEndosos()
 		
 		try
 		{
-			logger.debug("Validando datos de entrada");
+		    logger.debug("Validando datos de entrada");
 			Utils.validate(smap1, "No se recibieron datos");
 			String cdunieco = smap1.get("cdunieco");
 			String cdramo   = smap1.get("cdramo");

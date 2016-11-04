@@ -157,4 +157,7 @@ public interface PersonasManager
 	public Integer obtieneTipoCliWS(String codigoExterno, String compania) throws Exception;
 
 	public List<Map<String, String>> obtieneConfPatallaCli(String cdperson, String usuario, String rol, String tipoCliente) throws Exception;
+	
+	public void guardarBeneficiarios(String cdunieco, String cdramo, String estado, String nmpoliza,
+            String usuarioCaptura, List<Map<String, String>> beneficiarios) throws Exception;
 }
