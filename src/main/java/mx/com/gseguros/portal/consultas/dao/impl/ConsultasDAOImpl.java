@@ -17,8 +17,10 @@ import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.dao.impl.ConsultasPolizaDAOImpl.GetQueryResult;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.DynamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
@@ -5350,6 +5352,40 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public List<Map<String, String>> obtenerCursorTrafudoc(
+            String cdfunci,
+            String cdramo,
+            String cdtipsit) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("cdfunci",  cdfunci);
+        params.put("cdramo",   cdramo);
+        params.put("cdtipsit", cdtipsit);
+        Map<String, Object> procRes = ejecutaSP(new ObtenerCursorTrafudoc(getDataSource()), params);
+        List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+        logger.info(
+                new StringBuilder()
+                .append("\n@@@ obtenerCursorTrafudoc @@@")
+                .append("\n@@@ lista").append(lista)
+                .append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+                .toString()
+                );
+        return lista;
+    }
+
+    protected class ObtenerCursorTrafudoc extends StoredProcedure {
+        protected ObtenerCursorTrafudoc(DataSource dataSource) {
+            super(dataSource, "PKG_DOCUMENTOS.P_GET_TRAFUDOC");
+            declareParameter(new SqlParameter("cdfunci",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo",   OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsit", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR,  new DynamicMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
             compile();
         }
     }

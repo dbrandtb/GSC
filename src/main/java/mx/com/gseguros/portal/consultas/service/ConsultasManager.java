@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 
@@ -164,4 +165,8 @@ public interface ConsultasManager
 	boolean esTramiteSalud(String ntramite) throws Exception;
 	
 	public void actualizaFlujoTramite(String ntramite, String cdflujomc, String cdtipflu) throws Exception;
+	
+	public ManagerRespuestaImapVO pantallaTrafudoc(String cdsisrol) throws Exception;
+	
+	public List<Map<String, String>> obtenerCursorTrafudoc(String cdfunci, String cdramo, String cdtipsit) throws Exception;	
 }

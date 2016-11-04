@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,12 @@ import java.util.Map;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
+import mx.com.gseguros.portal.general.dao.PantallasDAO;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
@@ -18,6 +24,7 @@ import mx.com.gseguros.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +41,9 @@ public class ConsultasManagerImpl implements ConsultasManager
 	
 	@Autowired
 	private SiniestrosDAO siniestrosDAO;
+	
+	@Autowired
+	private PantallasDAO pantallasDAO;
 	
 	@Override
 	public List<Map<String,String>> consultaDinamica(ObjetoBD objetoBD,LinkedHashMap<String,Object>params) throws Exception
@@ -460,5 +470,42 @@ public class ConsultasManagerImpl implements ConsultasManager
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
+	}
+	
+	public ManagerRespuestaImapVO pantallaTrafudoc(String cdsisrol) throws Exception{
+	        ManagerRespuestaImapVO resp = new ManagerRespuestaImapVO(true);
+	        String paso = "";
+	        //obtener componentes
+	        try{
+	            paso = "antes de obtener componentes busqueda";
+	            List<ComponenteVO>componentesBusqueda = pantallasDAO.obtenerComponentes(
+	                    null,null,null,null,null,cdsisrol,"TRAFUDOC_DINAMICA","BUSQUEDA",null);
+	            
+	            GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+	            
+	            gc.generaComponentes(componentesBusqueda, true, false, true, false, false, false);
+	            
+	            Map<String,Item> imap = new HashMap<String,Item>();
+	            resp.setImap(imap);         
+	            imap.put("busquedaItems" , gc.getItems());
+	        }
+	        catch(Exception ex){
+	            Utils.generaExcepcion(ex, paso);
+	        }
+	        return resp;
+	}
+	
+	@Override
+	public List<Map<String, String>> obtenerCursorTrafudoc(String cdfunci, String cdramo, String cdtipsit) throws Exception{
+	    String paso = "";
+	    List<Map<String, String>> lista = new ArrayList<Map<String,String>>();
+	    try{
+	        paso = "Antes de obtener cursor trafudoc;";
+	        lista = consultasDAO.obtenerCursorTrafudoc(cdfunci, cdramo, cdtipsit);
+	    }
+	    catch(Exception ex){
+	        Utils.generaExcepcion(ex, paso);
+	    }
+	    return lista;
 	}
 }
