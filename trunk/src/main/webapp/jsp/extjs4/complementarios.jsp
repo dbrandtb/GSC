@@ -1621,11 +1621,18 @@ function _p29_emitirClicComplementarios()
 		                                            if(_fieldByLabel('ADMINISTRADORA').getValue()!=null &&
 		                                              (_fieldByLabel('ADMINISTRADORA').getValue()+'').trim()!='' &&
 		                                              _fieldByLabel('ADMINISTRADORA').getValue()!="-1"){
+		                                                _fieldByLabel('RETENEDORA').fireEvent('blur',_fieldByLabel('RETENEDORA'));
 		                                                
-		                                                claveDescuentoDxn(_fieldByLabel('ADMINISTRADORA').getValue()
-		                                                                  ,_fieldByLabel('ADMINISTRADORA').getValue()
-		                                                                  ,inputCdramo
-		                                                                  ,inputCdtipsit);
+		                                                
+		                                                
+		                                                _fieldByLabel('CLAVE DESCUENTO').on({
+		                                                    boxready:function(){
+		                                                        claveDescuentoDxn(_fieldByLabel('ADMINISTRADORA').getValue()
+                                                                        ,_fieldByLabel('ADMINISTRADORA').getValue()
+                                                                        ,inputCdramo
+                                                                        ,inputCdtipsit);
+		                                                    }
+		                                                });
 		                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor03"]')[0].hide();
 		                                                _fieldByLabel('CLAVE DESCUENTO').allowBlank=false;
 	                                                    _fieldByLabel('CLAVE DESCUENTO').clearInvalid();
@@ -3348,8 +3355,13 @@ function _p29_emitirClicComplementarios()
                     _fieldByLabel('CLAVE DESCUENTO').store.proxy.extraParams['params.cdramo']=cdramo;
                     _fieldByLabel('CLAVE DESCUENTO').store.proxy.extraParams['params.cdtipsit']=cdtipsit;
                     _fieldByLabel('RETENEDORA').focus();
-                    _fieldByLabel('CLAVE DESCUENTO').getStore().load();
-                    _fieldByLabel('RETENEDORA').fireEvent('blur',_fieldByLabel('RETENEDORA'));
+                    
+                    _fieldByLabel('CLAVE DESCUENTO').getStore().load({
+                        callback:function(){
+                            
+                        }
+                    });
+                    
                     
                     
                 }catch(e){
