@@ -1836,6 +1836,8 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                 conceptos['cdtipsit']              = _p25_smap1.cdtipsit;
                 conceptos['ntramiteVacio']         = _p25_ntramiteVacio ? _p25_ntramiteVacio : '';
                 conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
+                conceptos['esRenovacion']          = _p25_smap1.cdtipsup;
+                conceptos['estatusRenovacion']     = _p25_smap1.status;
                 var grupos = [];
                 _p25_storeGrupos.each(function(record)
                 {
@@ -1858,13 +1860,17 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                         debug('subir censo completo response:',json);
                         if(json.exito)
                         {
-                            //var callback = function() { _p25_turnar(19,'Observaciones de la carga',false); };
-                            var callback = function() { mensajeCorrecto('Aviso','Se ha turnado el tr\u00e1mite a mesa de control en estatus ' +
-                                                        '"En Tarifa" para procesar el censo. Una vez terminado podra encontrar su tr\u00e1mite ' +
-                                                        'en estatus "Carga completa".',function(){ _p25_mesacontrol(); } 
-                                                        );
-                                                      };
-                            
+                            //var callback = function() { _p21_turnar(19,'Observaciones de la carga',false); };
+                            var callback = function() {
+                                if(_p25_smap1.status == _EN_ESPERA_DE_COTIZACION){
+                                    _p25_mesacontrol();
+                                }else{
+                                    mensajeCorrecto('Aviso','Se ha turnado el tr\u00e1mite a mesa de control en estatus ' +
+                                        '"En Tarifa" para procesar el censo. Una vez terminado podra encontrar su tr\u00e1mite ' +
+                                        'en estatus "Carga completa".',function(){ _p25_mesacontrol(); }
+                                    );
+                                }
+                            };
                             
                             if(Ext.isEmpty(nombreCensoParaConfirmar))
                             {
@@ -2239,34 +2245,4 @@ function _p25_borrarDetalleGrupoClic (grid,rowIndex) {
             }
         }
     ));
-}
-
-function _p21_exportarExcelCensoFinal(){
-	Ext.create('Ext.form.Panel').submit({
-	    standardSubmit : true,
-	    url:_p21_urlReporte,
-	    params: {
-	        cdreporte : 'REPEXC021'
-	        ,'params.cdunieco' : _p21_smap1.cdunieco
-	        ,'params.cdramo'   : _p21_smap1.cdramo
-	        ,'params.estado'   : _p21_smap1.estado
-	        ,'params.nmpoliza' : _p21_smap1.nmpoliza
-	        ,'params.ntramite' : _p21_smap1.ntramite
-	        ,'params.exportar' : true
-	    },
-	    success: function(form, action) {
-	        
-	    },
-	    failure: function(form, action){
-	        switch (action.failureType){
-	            case Ext.form.action.Action.CONNECT_FAILURE:
-	                Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
-	                break;
-	            case Ext.form.action.Action.SERVER_INVALID:
-	            case Ext.form.action.Action.LOAD_FAILURE:
-	                Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
-	                break;
-	       }
-	    }
-	});
 }

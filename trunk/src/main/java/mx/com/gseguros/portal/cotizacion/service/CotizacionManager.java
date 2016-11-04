@@ -557,6 +557,7 @@ public interface CotizacionManager
 			,String nmpolant
 			,String nmrenova
 			,UserVO usuarioSesion
+			,String estatuRenovacion
 			);
 	
 	

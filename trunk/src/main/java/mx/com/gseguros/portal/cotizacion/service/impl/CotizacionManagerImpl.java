@@ -4968,8 +4968,21 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	}
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
+	                	//filaBuena = false;
+	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
+	                    try{
+                            cdgrupo = Double.parseDouble(row.getCell(0).getStringCellValue());
+                            logger.debug("GRUPO: "+(row.getCell(0).getStringCellValue()+"|"));
+                            bufferLinea.append(row.getCell(0).getStringCellValue()+"|");
+                            if(cdgrupo>grupos.size())
+                            {
+                                bufferErroresCenso.append(Utils.join("Grupo no permitido: ",cdgrupo," (grupos: ",grupos.size(),") en la fila ",fila," "));
+                                throw new ApplicationException("El grupo de excel no existe");
+                            }
+                        }catch (Exception e) {
+                            filaBuena = false;
+                            bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
+                        }
 	                }
 	                finally
 	                {
@@ -5240,8 +5253,49 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	}
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (I) de la fila ",fila," "));
+	                	//filaBuena = false;
+	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (I) de la fila ",fila," "));
+	                    try
+	                    {
+	                        //auxDate=row.getCell(8).getDateCellValue();
+	                        auxDate= renderFechas.parse(row.getCell(8).getStringCellValue());
+	                        if(auxDate!=null)
+	                        {
+	                            Calendar cal = Calendar.getInstance();
+	                            cal.setTime(auxDate);
+	                            if(cal.get(Calendar.YEAR)>2100
+	                                    ||cal.get(Calendar.YEAR)<1900
+	                                    )
+	                            {
+	                                throw new ApplicationException("El anio de la fecha no es valido");
+	                            }
+	                        }
+	                        
+	                        fechaNac = auxDate!=null?
+	                                renderFechas.format(auxDate)
+	                                :"";
+	                                
+	                        logger.debug(
+	                                new StringBuilder("FECHA NACIMIENTO: ")
+	                                .append(
+	                                        auxDate!=null?
+	                                                renderFechas.format(auxDate)
+	                                                :""
+	                                )
+	                                .append("|")
+	                                .toString()
+	                                );
+	                        bufferLinea.append(
+	                                auxDate!=null?
+	                                        new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
+	                                        :"|"
+	                                );
+	                    }
+	                    catch(Exception e)
+	                    {
+	                        filaBuena = false;
+	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (I) de la fila ",fila," "));
+	                    }
 	                }
 	                finally
 	                {
@@ -5473,7 +5527,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	              //TELEFONO
 	                try
                 	{
-		                auxCell=row.getCell(18);
+	                    logger.debug("Se intenta como Entero ==> ");
+	                    auxCell=row.getCell(18);
 		                logger.debug(
 		                		new StringBuilder("TELEFONO: ")
 		                		.append(
@@ -5492,8 +5547,32 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	}
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono' (S) de la fila ",fila," "));
+	                	try
+	                    {
+	                	    logger.debug("Se intenta como String ==> ");
+	                        auxCell=row.getCell(18);
+	                        logger.debug(
+	                                new StringBuilder("TELEFONO: ")
+	                                .append(
+	                                        auxCell!=null?
+	                                                auxCell.getStringCellValue()
+	                                                :""
+	                                )
+	                                .append("|")
+	                                .toString()
+	                                );
+	                        bufferLinea.append(
+	                                auxCell!=null?
+	                                        new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+	                                        :"|"
+	                                );
+	                    }
+	                    catch(Exception ex2)
+	                    {
+	                        logger.debug("Se intenta como ==> "+ex2);
+	                        filaBuena = false;
+	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono :/' (S) de la fila ",fila," "));
+	                    }
 	                }
 	                finally
 	                {
@@ -5582,8 +5661,47 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	}
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (U) de la fila ",fila," "));
+	                	//filaBuena = false;
+	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (U) de la fila ",fila," "));
+	                    try
+	                    {
+	                        auxDate=row.getCell(20)!=null?renderFechas.parse(row.getCell(20).getStringCellValue()):null;
+	                        if(auxDate!=null)
+	                        {
+	                            Calendar cal = Calendar.getInstance();
+	                            cal.setTime(auxDate);
+	                            if(cal.get(Calendar.YEAR)>2100
+	                                    ||cal.get(Calendar.YEAR)<1900
+	                                    )
+	                            {
+	                                throw new ApplicationException("El anio de la fecha de reconocimiento de antiguedad no es valido");
+	                            }
+	                        }
+	                        fecanti = auxDate!=null?
+	                                renderFechas.format(auxDate)
+	                                :"";
+	                                
+	                        logger.debug(
+	                                new StringBuilder("FECHA RECONOCIMIENTO ANTIGUEDAD: ")
+	                                .append(
+	                                        auxDate!=null?
+	                                                renderFechas.format(auxDate)
+	                                                :""
+	                                )
+	                                .append("|")
+	                                .toString()
+	                                );
+	                        bufferLinea.append(
+	                                auxDate!=null?
+	                                        new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
+	                                        :"|"
+	                                );
+	                    }
+	                    catch(Exception ex3)
+	                    {
+	                        filaBuena = false;
+	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (U) de la fila ",fila," "));
+	                    }
 	                }
 	                finally
 	                {
@@ -5618,8 +5736,28 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                }
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (W) de la fila ",fila," "));
+	                	//filaBuena = false;
+	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (W) de la fila ",fila," "));
+	                    try
+	                    {
+	                        auxCell=row.getCell(22);
+	                        logger.debug(
+	                                new StringBuilder("EXTRAPRIMA OCUPACION: ")
+	                                .append(
+	                                        auxCell!=null?
+	                                                new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+	                                                :"|"
+	                                ).toString());
+	                        bufferLinea.append(
+	                                auxCell!=null?
+	                                        new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+	                                        :"|");
+	                    }
+	                    catch(Exception e)
+	                    {
+	                        filaBuena = false;
+	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (W) de la fila ",fila," "));
+	                    }
 	                }
                     finally
                     {
@@ -5643,8 +5781,28 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                }
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (X) de la fila ",fila," "));
+	                	//filaBuena = false;
+	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (X) de la fila ",fila," "));
+	                    try
+	                    {
+	                        auxCell=row.getCell(23);
+	                        logger.debug(
+	                                new StringBuilder("PESO: ")
+	                                .append(
+	                                        auxCell!=null?
+	                                                new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+	                                                :"|"
+	                                ).toString());
+	                        bufferLinea.append(
+	                                auxCell!=null?
+	                                        new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+	                                        :"|");
+	                    }
+	                    catch(Exception ex2)
+	                    {
+	                        filaBuena = false;
+	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (X) de la fila ",fila," "));
+	                    }
 	                }
                     finally
                     {
@@ -5668,8 +5826,28 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                }
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (Y) de la fila ",fila," "));
+	                	//filaBuena = false;
+	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (Y) de la fila ",fila," "));
+	                    try
+	                    {
+	                        auxCell=row.getCell(24);
+	                        logger.debug(
+	                                new StringBuilder("ESTATURA: ")
+	                                .append(
+	                                        auxCell!=null?
+	                                                new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+	                                                :"|"
+	                                ).toString());
+	                        bufferLinea.append(
+	                                auxCell!=null?
+	                                        new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+	                                        :"|");
+	                    }
+	                    catch(Exception e)
+	                    {
+	                        filaBuena = false;
+	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (Y) de la fila ",fila," "));
+	                    }
 	                }
                     finally
                     {
@@ -5693,8 +5871,28 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                }
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (Z) de la fila ",fila," "));
+	                	//filaBuena = false;
+	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (Z) de la fila ",fila," "));
+	                    try
+	                    {
+	                        auxCell=row.getCell(25);
+	                        logger.debug(
+	                                new StringBuilder("EXTRAPRIMA SOBREPESO: ")
+	                                .append(
+	                                        auxCell!=null?
+	                                                new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+	                                                :"|"
+	                                ).toString());
+	                        bufferLinea.append(
+	                                auxCell!=null?
+	                                        new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+	                                        :"|");
+	                    }
+	                    catch(Exception e)
+	                    {
+	                        filaBuena = false;
+	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (Z) de la fila ",fila," "));
+	                    }
 	                }
                     finally
                     {
@@ -5785,8 +5983,56 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	}
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (AB) de la fila ",fila," "));
+	                	//filaBuena = false;
+	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (AB) de la fila ",fila," "));
+	                    try
+	                    {
+	                        //auxDate=row.getCell(27)!=null?row.getCell(27).getDateCellValue():null;
+	                        auxDate= ((extraerStringDeCelda(row.getCell(27))!=null) && 
+                                    StringUtils.isNotBlank(extraerStringDeCelda(row.getCell(27)))) ?
+                                            renderFechas.parse(extraerStringDeCelda(row.getCell(27))):
+                                            null;
+	                        if(auxDate!=null)
+	                        {
+	                            Calendar cal = Calendar.getInstance();
+	                            cal.setTime(auxDate);
+	                            if(cal.get(Calendar.YEAR)>2100
+	                                    ||cal.get(Calendar.YEAR)<1900
+	                                    )
+	                            {
+	                                throw new ApplicationException("El anio de la fecha de ingreso no es valido");
+	                            }
+	                        }
+	                        
+	                        feingreso = auxDate!=null?
+	                                renderFechas.format(auxDate)
+	                                :"";
+	                                
+	                        logger.debug(
+	                                new StringBuilder("FECHA INGRESO EMPLEADO: ")
+	                                .append(
+	                                        auxDate!=null?
+	                                                renderFechas.format(auxDate)
+	                                                :""
+	                                )
+	                                .append("|")
+	                                .toString()
+	                                );
+	                        bufferLinea.append(
+	                                auxDate!=null?
+	                                        new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
+	                                        :"|"
+	                                );
+	                    }
+	                    catch(Exception e)
+	                    {
+	                        filaBuena = false;
+	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (AB) de la fila ",fila," "));
+	                    }
+	                    finally
+	                    {
+	                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(27)),"-"));
+	                    }
 	                }
 	                finally
 	                {
@@ -6141,6 +6387,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmpolant
 			,String nmrenova
 			,UserVO usuarioSesion
+			,String estatuRenovacion
 			)
 	{
 		logger.info(
@@ -6183,6 +6430,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ cdideext_=")            .append(cdideext_)
 				.append("\n@@@@@@ nmpolant=")             .append(nmpolant)
 				.append("\n@@@@@@ nmrenova=")             .append(nmrenova)
+				.append("\n@@@@@@ estatuRenovacion=")     .append(estatuRenovacion)
 				.toString()
 				);
 		
@@ -6196,7 +6444,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					codpostalCli, cdedoCli, cdmuniciCli, ntramite, ntramiteVacio,
 					clasif, LINEA_EXTENDIDA, cdpersonCli, nombreCli, rfcCli,
 					dsdomiciCli, nmnumeroCli, nmnumintCli, cdelemen, cdideper_,
-					cdideext_, cdperpag, usuarioSesion, grupos
+					cdideext_, cdperpag, usuarioSesion, grupos, estatuRenovacion
 					).start();
 		}
 		catch(Exception ex)
@@ -8110,7 +8358,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					   ,cdelemen
 					   ,cdideper_
 					   ,cdideext_
-					   ,cdperpag;
+					   ,cdperpag
+					   ,estatuRenovacion;
     	
     	private UserVO usuarioSesion;
     	List<Map<String,Object>>grupos;
@@ -8120,7 +8369,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				String codpostalCli, String cdedoCli, String cdmuniciCli, String ntramite, String ntramiteVacio,
 				String clasif, String lINEA_EXTENDIDA, String cdpersonCli, String nombreCli, String rfcCli,
 				String dsdomiciCli, String nmnumeroCli, String nmnumintCli, String cdelemen, String cdideper_,
-				String cdideext_, String cdperpag, UserVO usuarioSesion, List<Map<String, Object>> grupos) {
+				String cdideext_, String cdperpag, UserVO usuarioSesion, List<Map<String, Object>> grupos, String estatuRenovacion) {
 			this.cdunieco = cdunieco;
 			this.cdramo = cdramo;
 			this.nmpoliza = nmpoliza;
@@ -8149,6 +8398,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			this.cdperpag = cdperpag;
 			this.usuarioSesion = usuarioSesion;
 			this.grupos = grupos;
+			this.estatuRenovacion = estatuRenovacion;
 		}
 
 		@Override
@@ -8278,7 +8528,13 @@ public class CotizacionManagerImpl implements CotizacionManager
     			long stamp = System.currentTimeMillis();
     			logger.debug(Utils.log(stamp,"Mandando el tramite a estatus completo despues de subir censo cocurrente 2 y proceso colectivo interno"));
 
-    			mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
+    			if(estatuRenovacion.equalsIgnoreCase(EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())){
+    			    mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
+    			}else{
+    			    mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
+    			}
+    			
+    			
     		}
     		catch(Exception ex)
     		{
