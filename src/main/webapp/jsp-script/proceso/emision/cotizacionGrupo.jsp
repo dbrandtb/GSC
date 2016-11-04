@@ -7486,6 +7486,35 @@ function _p21_crearVentanaClausulas()
     centrarVentanaInterna(_ventanaClausulas);
 }
 
+function _p21_exportarExcelCensoFinal(){
+    Ext.create('Ext.form.Panel').submit({
+        standardSubmit : true,
+        url:_p21_urlReporte,
+        params: {
+            cdreporte : 'REPEXC021'
+            ,'params.cdunieco' : _p21_smap1.cdunieco
+            ,'params.cdramo'   : _p21_smap1.cdramo
+            ,'params.estado'   : _p21_smap1.estado
+            ,'params.nmpoliza' : _p21_smap1.nmpoliza
+            ,'params.ntramite' : _p21_smap1.ntramite
+            ,'params.exportar' : true
+        },
+        success: function(form, action) {
+            
+        },
+        failure: function(form, action){
+            switch (action.failureType){
+                case Ext.form.action.Action.CONNECT_FAILURE:
+                    Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+                    break;
+                case Ext.form.action.Action.SERVER_INVALID:
+                case Ext.form.action.Action.LOAD_FAILURE:
+                    Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+                    break;
+           }
+        }
+    });
+}
 /*
 se paso al archivo funcionesCotizacionGrupo.js por exceso de tamanio
 function _p21_subirArchivoCompleto

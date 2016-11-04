@@ -92,6 +92,7 @@ var _p25_urlRecuperacion                = '<s:url namespace="/recuperacion"    a
 var _p25_urlRestaurarRespaldoCenso      = '<s:url namespace="/emision"         action="restaurarRespaldoCenso"           />';
 var _p25_urlBorrarRespaldoCenso         = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
 var _p25_urlconsultaExtraprimOcup       = '<s:url namespace="/emision"         action="consultaExtraprimaOcup"            />';
+var _p25_urlReporte                     = '<s:url namespace="/consultasPoliza" action="consultaIncisosPoliza" />';
 
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
@@ -107,6 +108,7 @@ var _p25_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nomb
 var _p25_urlImprimirCotiza      = '<s:text name="ruta.servidor.reports" />';
 var _p25_reportsServerUser      = '<s:text name="pass.servidor.reports" />';
 var _TIPO_SITUACION_RENOVACION  = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
+var _EN_ESPERA_DE_COTIZACION    = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 
 debug('_p25_smap1:',_p25_smap1);
@@ -1678,6 +1680,22 @@ Ext.onReady(function()
         debugError('error inofensivo al querer mover boton de agentes',e);
     }
     
+    try
+    {
+        if(_p25_smap1.cdtipsup  == _TIPO_SITUACION_RENOVACION){
+            Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
+            Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].show();
+            Ext.ComponentQuery.query('button[text=Complementar]')[0].hide();
+        }else{
+            Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
+            Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].hide();
+            Ext.ComponentQuery.query('button[text=Complementar]')[0].show();
+        }
+    }
+    catch(e)
+    {
+        debugError('error para la renovacion de la Poliza',e);
+    }
     //para ramo 1 quieren heredar derechos de poliza según paquete
     if(Number(_p25_smap1.cdramo)==1)
     {
@@ -7179,6 +7197,36 @@ function recupeListaTatrisitSinPadre(combo)
                        errorComunicacion();
                    }
                });
+}
+
+function _p25_exportarExcelCensoFinal(){
+    Ext.create('Ext.form.Panel').submit({
+        standardSubmit : true,
+        url:_p25_urlReporte,
+        params: {
+            cdreporte : 'REPEXC021'
+            ,'params.cdunieco' : _p25_smap1.cdunieco
+            ,'params.cdramo'   : _p25_smap1.cdramo
+            ,'params.estado'   : _p25_smap1.estado
+            ,'params.nmpoliza' : _p25_smap1.nmpoliza
+            ,'params.ntramite' : _p25_smap1.ntramite
+            ,'params.exportar' : true
+        },
+        success: function(form, action) {
+            
+        },
+        failure: function(form, action){
+            switch (action.failureType){
+                case Ext.form.action.Action.CONNECT_FAILURE:
+                    Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+                    break;
+                case Ext.form.action.Action.SERVER_INVALID:
+                case Ext.form.action.Action.LOAD_FAILURE:
+                    Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+                    break;
+           }
+        }
+    });
 }
 
 ////// funciones //////

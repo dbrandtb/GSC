@@ -4222,6 +4222,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdideext_       = null;
 		String nmpolant        = null;
 		String nmrenova        = null;
+		String estatuRenovacion= null;
 		
 		String nombreCensoConfirmado = null;
 		
@@ -4259,6 +4260,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdideext_       = smap1.get("cdideext_");
 			nmpolant        = smap1.get("nmpolant");
 			nmrenova        = smap1.get("nmrenova");
+			estatuRenovacion= smap1.get("estatusRenovacion");
 			
 			nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
@@ -4381,6 +4383,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,nmpolant
 						,nmrenova
 						,usuarioSesion
+						,estatuRenovacion
 						);
 			}
 			
