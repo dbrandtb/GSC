@@ -2369,6 +2369,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdtipsit" , null);
 		params.put("cdtipsup" , cdtipsup);
 		params.put("cdgarant" , null);
+        params.put("nmsituac" , null);
 		ejecutaSP(new ActualizaTvalositCoberturasAdicionales(getDataSource()),params);
 	}
 	
@@ -2376,7 +2377,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaTvalositCoberturasAdicionales(DataSource dataSource)
 		{
-			super(dataSource, "P_END_ACT_TVALOSIT_COB_ADIC");
+			super(dataSource, "P_END_ACT_TVALOSIT_COB_ADIC_V2");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2385,6 +2386,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -6690,7 +6692,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	@Override
 	public void actualizaTvalositCoberturasAdicionales (String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsuplem ,String cdtipsup, String cdgarant) throws Exception
+			String nmsuplem ,String cdtipsup, String cdgarant, String nmsituac) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
@@ -6701,6 +6703,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdtipsit" , null);
 		params.put("cdtipsup" , cdtipsup);
 		params.put("cdgarant" , cdgarant);
+        params.put("nmsituac" , nmsituac);
 		ejecutaSP(new ActualizaTvalositCoberturasAdicionales(getDataSource()),params);
 	}
 	
@@ -6838,37 +6841,68 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
-	   @Override
-	    public List<Map<String, String>> obtieneBeneficiarioVidaAuto(String cdunieco, String cdramo ,String estado ,String nmpoliza) throws Exception
-	            {
-	        Map<String,String>params = new LinkedHashMap<String,String>();
-	        params.put("pv_cdunieco_i" , cdunieco);
-	        params.put("pv_cdramo_i"   , cdramo);
-	        params.put("pv_estado_i" , estado);
-	        params.put("pv_nmpoliza_i" , nmpoliza);
-	        
-	        Map<String,Object> resultadoMap=this.ejecutaSP(new obtieneBeneficiariosVidaAuto(this.getDataSource()), params);
-	        return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
-	            }
-	    protected class obtieneBeneficiariosVidaAuto extends StoredProcedure
-	    {
-	        String[] columnas=new String[]{
-	            "CDPERSON","DSNOMBRE","DSNOMBRE1","DSAPELLIDO","DSAPELLIDO1","OTSEXO","CDPARENT","DESCPARENTESCO","PORBENEF"
-	        };
-	        
-	        protected obtieneBeneficiariosVidaAuto(DataSource dataSource)
-	        {
-	            super(dataSource, "PKG_CONSULTA.P_GET_BENEFICIARIOS");
-	            declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
-	            declareParameter(new SqlParameter("pv_cdramo_i"       ,OracleTypes.VARCHAR));
-	            declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
-	            declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
-	            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(columnas)));
-	            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-	            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-	            compile();
-	        }
-	    }
+	@Override
+    public List<Map<String, String>> obtieneBeneficiarioVidaAuto(String cdunieco, String cdramo ,String estado ,String nmpoliza) throws Exception {
+	    Map<String,String>params = new LinkedHashMap<String,String>();
+        params.put("pv_cdunieco_i" , cdunieco);
+        params.put("pv_cdramo_i"   , cdramo);
+        params.put("pv_estado_i" , estado);
+        params.put("pv_nmpoliza_i" , nmpoliza);
+        Map<String,Object> resultadoMap=this.ejecutaSP(new obtieneBeneficiariosVidaAuto(this.getDataSource()), params);
+        return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
+    }
+	
+    protected class obtieneBeneficiariosVidaAuto extends StoredProcedure {
+        String[] columnas=new String[]{
+            "CDPERSON","DSNOMBRE","DSNOMBRE1","DSAPELLIDO","DSAPELLIDO1","OTSEXO","CDPARENT","DESCPARENTESCO","PORBENEF"
+        };
+        protected obtieneBeneficiariosVidaAuto(DataSource dataSource) {
+            super(dataSource, "PKG_CONSULTA.P_GET_BENEFICIARIOS");
+            declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i"       ,OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(columnas)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    /**
+     * SE RESTAURAN LOS VALORES DE TVALOSIT.NMSUPLEM = PV_NMSUPLEM_I QUE SE INDIQUEN EN TPOSICOBADI
+     * COPIANDOLOS DE TVALOSIT.NMSUPLEM = MAX(NMSUPLEM) MENOR QUE PV_NMSUPLEM_I
+     */
+    public void restaurarTvalositCoberturasAdicionales (String cdunieco, String cdramo, String estado, String nmpoliza,
+            String nmsituac, String cdgarant, String nmsuplem, String cdtipsup) throws Exception {
+        Map<String,String>params = new LinkedHashMap<String,String>();
+        params.put("cdunieco" , cdunieco);
+        params.put("cdramo"   , cdramo);
+        params.put("estado"   , estado);
+        params.put("nmpoliza" , nmpoliza);
+        params.put("nmsituac" , nmsituac);
+        params.put("cdgarant" , cdgarant);
+        params.put("nmsuplem" , nmsuplem);
+        params.put("cdtipsup" , cdtipsup);
+        ejecutaSP(new RestaurarTvalositCoberturasAdicionalesSP(this.getDataSource()), params);
+    }
+    
+    protected class RestaurarTvalositCoberturasAdicionalesSP extends StoredProcedure {
+        protected RestaurarTvalositCoberturasAdicionalesSP(DataSource dataSource) {
+            super(dataSource, "P_END_BACK_VALOSIT_POSICOBADI");
+            declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"      ,OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"      , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsituac"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdgarant"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsup"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 	    
 	    
 }

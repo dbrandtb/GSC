@@ -8047,7 +8047,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 			paso = "Actualizando valores de situaci\u00f3n para coberturas";
 			logger.debug(paso);
-			endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, cdgarant);
+			endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, cdgarant, nmsituac);
 			if (StringUtils.isNotBlank(cdatribu1)) {
 				paso = "Actualizando primer valor capturado";
 				logger.debug(paso);
@@ -8104,8 +8104,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			} else { // aun hay otras coberturas agregadas y hay que actualizar tvalosit
 				paso = "Restaurando valores de situaci\u00f3n para coberturas";
 				logger.debug(paso);
-				endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem,
-						String.valueOf(TipoEndoso.BAJA_COBERTURAS.getCdTipSup()), cdgarant);
+				endososDAO.restaurarTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant, nmsuplem,
+				        String.valueOf(TipoEndoso.ALTA_COBERTURAS.getCdTipSup()));
 				BigInteger nmsuplemInt = new BigInteger(nmsuplem);
 				nmsuplemInt = nmsuplemInt.subtract(BigInteger.valueOf(1l)); // nmsuplem -1
 				paso = "Recuperando valores de situaci\u00f3n originales";
@@ -8204,7 +8204,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 			paso = "Actualizando valores de situaci\u00f3n para coberturas";
 			logger.debug(paso);
-			endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, cdgarant);
+			endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, cdgarant, nmsituac);
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
@@ -8243,8 +8243,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			} else { // aun hay otras coberturas agregadas y hay que actualizar tvalosit
 				paso = "Restaurando valores de situaci\u00f3n para coberturas";
 				logger.debug(paso);
-				endososDAO.actualizaTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsuplem,
-						String.valueOf(TipoEndoso.ALTA_COBERTURAS.getCdTipSup()), cdgarant);
+				endososDAO.restaurarTvalositCoberturasAdicionales(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdgarant, nmsuplem,
+				        String.valueOf(TipoEndoso.BAJA_COBERTURAS.getCdTipSup()));
 				BigInteger nmsuplemInt = new BigInteger(nmsuplem);
 				nmsuplemInt = nmsuplemInt.subtract(BigInteger.valueOf(1l)); // nmsuplem -1
 				paso = "Recuperando valores de situaci\u00f3n originales";
