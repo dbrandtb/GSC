@@ -838,7 +838,7 @@ public interface EndososDAO
 			String nmpoliza, String nmsuplem) throws Exception;
 	
 	public void actualizaTvalositCoberturasAdicionales (String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsuplem, String cdtipsup, String cdgarant) throws Exception;
+			String nmsuplem, String cdtipsup, String cdgarant, String nmsituac) throws Exception;
 	
 	public List<Map<String, String>> recuperarCoberturasBorradas (String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsituac, String nmsuplem) throws Exception;
@@ -852,10 +852,17 @@ public interface EndososDAO
 	public void borraTworksupSegundaClave (String cdunieco, String cdramo, String estado, String nmpoliza,
 			String cdtipsup, String nmsuplem, String clave1, String clave2) throws Exception;
 	
-	  public List<Map<String,String>> obtieneBeneficiarioVidaAuto(
-              String cdunieco
-              ,String cdramo
-              ,String estado
-              ,String nmpoliza
-              )throws Exception;
+	public List<Map<String,String>> obtieneBeneficiarioVidaAuto(
+	        String cdunieco,
+	        String cdramo,
+	        String estado,
+	        String nmpoliza)throws Exception;
+	
+	/**
+	 * SE RESTAURAN LOS VALORES DE TVALOSIT.NMSUPLEM = PV_NMSUPLEM_I QUE SE INDIQUEN EN TPOSICOBADI
+	 * COPIANDOLOS DE TVALOSIT.NMSUPLEM = MAX(NMSUPLEM) MENOR QUE PV_NMSUPLEM_I
+	 */
+	public void restaurarTvalositCoberturasAdicionales (String cdunieco, String cdramo, String estado, String nmpoliza,
+	        String nmsituac, String cdgarant, String nmsuplem, String cdtipsup) throws Exception;
+	  
 }
