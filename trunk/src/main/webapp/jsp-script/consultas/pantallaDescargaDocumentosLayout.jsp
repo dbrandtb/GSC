@@ -282,9 +282,10 @@ _fieldByName('cdtipram').on(
 	                    					 
 	                    					  
 	                    					if(datos.length<1){
-	                    						  
+	                    					    _setLoading(false,winSpread);
+                                                _setLoading(false,'formBusq');
 	                    						  mensajeWarning("El layout esta vacío");
-	                    						_setLoading(false,layout);
+	                    						  
 	                    						  return;
 	                    					  }
 	                    					
