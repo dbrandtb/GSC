@@ -4710,7 +4710,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                
                     //validamos asegurados duplicados
-                    try {
+                    /*try {
                         auxCell=row.getCell(6);
                         if(dsapellido!= null && dsapellido1 != null && dsnombre != null && genero != null && fechaNacAfectad!= null && total <= 1){
                             logger.debug("Entra a la validacion de asegurados duplicados ==> :{} :{} :{} :{} :{} :{} ",dsapellido,dsapellido,dsnombre,dsnombre1,genero,fechaNacAfectad);
@@ -4735,7 +4735,7 @@ public class CotizacionAction extends PrincipalCoreAction
                         bufferErroresCenso.append(Utils.join("Error el asegurado se encuentra duplicado en la fila ",fila," "));
                     } finally {
                         bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
-                    }
+                    }*/
 	                
 	                //CODIGO POSTAL
 	                try {
