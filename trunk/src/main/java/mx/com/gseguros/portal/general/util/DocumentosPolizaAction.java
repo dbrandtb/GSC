@@ -10,8 +10,10 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
@@ -52,6 +54,10 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	private ConsultasManager consultasManager;
 	
 	private Map<String,Item> items;
+	
+	private Map<String,Item> imap;
+	
+	private Map<String, String> params;
 	
 	@Autowired
 	private PantallasManager pantallasManager;
@@ -436,7 +442,70 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		return contentType;
 	}
 	
+	public String iniciarPantallaTrafudoc(){
+	    logger.info(
+                new StringBuilder()
+                .append("\n###### iniciarPantallaTrafudoc ######")
+                .append("\n################################")
+                .toString()
+                );
+	    String respuesta = "";
+	    String cdsisrol  = "";
+	    try{
+	        UserVO usuario = (UserVO)session.get("USUARIO");
+            if(usuario == null){
+                throw new ApplicationException("No hay usuario en sesion");
+            }
+            cdsisrol = usuario.getRolActivo().getClave();
+            ManagerRespuestaImapVO managerResponse = consultasManager.pantallaTrafudoc(cdsisrol);
+            exito           = managerResponse.isExito();
+            respuesta       = managerResponse.getRespuesta();
+            respuestaOculta = managerResponse.getRespuestaOculta();
+            if(exito){
+                setImap(managerResponse.getImap());
+            }
+	    }
+	    catch(Exception ex){
+	        respuesta = Utils.manejaExcepcion(ex);
+	    }
+	    logger.info(
+                new StringBuilder()
+                .append("\n###### iniciarPantallaTrafudoc ######")
+                .append("\n################################")
+                .toString()
+                );
+	    return SUCCESS;
+	}
 	
+	public String obtenerCursorTrafudoc(){
+	    logger.info(
+                new StringBuilder()
+                .append("\n###### obtenerCursorTrafudoc ######")
+                .append("\n###### params = ").append(params)
+                .append("\n################################")
+                .toString()
+                );
+	    String respuesta = "";
+	    try{
+	        String cdfunci  = params.get("cdfunci");
+	        String cdramo   = params.get("cdramo");
+	        String cdtipsit = params.get("cdtipsit");
+	        slist1 = consultasManager.obtenerCursorTrafudoc(cdfunci, cdramo, cdtipsit);
+	        success = true;
+	        respuesta = "Operacion realizada con exito";
+	    }
+	    catch(Exception ex){
+	        respuesta = Utils.manejaExcepcion(ex);
+	    }
+	    logger.info(
+                new StringBuilder()
+                .append("\n###### obtenerCursorTrafudoc ######")
+                .append("\n###### slist1").append(slist1)
+                .append("\n################################")
+                .toString()
+                );
+	    return SUCCESS;
+	}
 	
 	//Getters and setters:
 	
@@ -549,5 +618,21 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	public void setItems(Map<String, Item> items) {
 		this.items = items;
 	}
+
+    public Map<String,Item> getImap() {
+        return imap;
+    }
+
+    public void setImap(Map<String,Item> imap) {
+        this.imap = imap;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
+    }
 	
 }

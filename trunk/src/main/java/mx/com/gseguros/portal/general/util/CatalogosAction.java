@@ -169,6 +169,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ETAPAS_ESTADO_FLUJO:
 				case TIPO_BUSQUEDA_RENOVACION_INDIVIDUAL:
 				case CRITERIOS_RENOVACION_INDIVIDUAL:	
+				case CATALOGO_TRAFUDOC_CDFUNCI:
 				case TAPOYO:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
