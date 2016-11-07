@@ -239,7 +239,7 @@ Ext.onReady(function() {
 				        {
 				            fieldLabel: 'IP ',
 				            maxLength:15,
-				        	minLength:7,
+				        	minLength:4,
 				            name: 'IP',
 				            allowBlank:false
 				        },
