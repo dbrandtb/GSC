@@ -470,7 +470,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class InsertaActualizaImpresora extends StoredProcedure {
 
 		protected InsertaActualizaImpresora(DataSource dataSource) {
-			super(dataSource, "Pkg_Tabapoyo_cesar.P_INSERTA_ACTUALIZA_IMPRESORA");
+			super(dataSource, "Pkg_Tabapoyo.P_INSERTA_ACTUALIZA_IMPRESORA");
 			
 			declareParameter(new SqlParameter("pv_nombre_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ip_i", OracleTypes.VARCHAR));
