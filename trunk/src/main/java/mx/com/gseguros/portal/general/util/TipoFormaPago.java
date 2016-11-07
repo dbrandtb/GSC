@@ -13,7 +13,8 @@ public enum TipoFormaPago {
 	DXNMENSUAL(8),
 	DXN16DIAS(9),
     DXNSEMANAL(10),
-    DXNANUAL(2);
+    DXNANUAL(2),
+    DXNDOCENAL(11);
 	
 	private int codigo;
 	
