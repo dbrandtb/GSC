@@ -129,9 +129,11 @@ var TipoSituacion = {
 	DXN16DIAS			:	 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXN16DIAS.codigo" />',
 	DXNSEMANAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNSEMANAL.codigo" />',
 	DXNANUAL            :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNANUAL.codigo" />',
+	DXNDOCENAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNDOCENAL.codigo" />',
 	esDxN				:    function(formaPago){
 		
 		var dxn=[
+                     '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNDOCENAL.codigo" />',
 					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNQUINCENAL.codigo" />',
 					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNCATORCENAL.codigo" />',
 					 '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNMENSUAL.codigo" />',
