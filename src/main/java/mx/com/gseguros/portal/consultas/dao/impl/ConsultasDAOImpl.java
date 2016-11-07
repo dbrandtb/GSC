@@ -5306,7 +5306,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
         
         protected ObtieneCdagente(DataSource dataSource) {
             
-            super(dataSource, "Pkg_Tabapoyo_cesar.P_GET_CDAGENTE");
+            super(dataSource, "Pkg_CONSULTA2.P_GET_CDAGENTE");
             declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
             
             String[] cols = new String[]{
