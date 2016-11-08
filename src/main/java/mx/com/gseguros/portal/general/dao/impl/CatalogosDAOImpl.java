@@ -2230,5 +2230,31 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
         }
     }
 	
-	
+	@Override
+    public List<GenericVO> obtieneIdsCierres() throws Exception {      
+        try {
+            HashMap<String,Object> params = new LinkedHashMap<String,Object>();
+                      
+            Map<String, Object> resultado = ejecutaSP(new ObtieneIdsCierres(getDataSource()), params);
+            return (List<GenericVO>) resultado.get("pv_registro_o");
+        } catch (Exception e) {
+            throw new Exception(e.getMessage(), e);
+        }
+    }
+    
+    protected class ObtieneIdsCierres extends StoredProcedure {
+    
+        protected ObtieneIdsCierres(DataSource dataSource) {
+            super(dataSource, "PKG_ESTADISTICAS_MESA.p_obtiene_cierres");
+            String[] cols = new String[]{
+                    "idcierre",
+                    "fecha_cierre"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
 }
