@@ -9,19 +9,18 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
-import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.GenericMapper;
-import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
-import mx.com.gseguros.utils.Utils;
-import oracle.jdbc.driver.OracleTypes;
-
 import org.apache.log4j.Logger;
 import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
+
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
+import mx.com.gseguros.utils.Utils;
+import oracle.jdbc.driver.OracleTypes;
 
 public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionDAO
 {
@@ -35,14 +34,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("cdramo"   , cdramo);
 		params.put("anio"     , anio);
 		params.put("mes"      , mes);
-		logger.debug(
-				new StringBuilder()
-				.append("\n***************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_POLIZAS_RENOVABLES ******")
-				.append("\n****** params=").append(params)
-				.append("\n***************************************************")
-				.toString()
-				);
 		Map<String,Object>procedureResult=ejecutaSP(new BuscarPolizasRenovables(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
 		if(lista==null)
@@ -107,14 +98,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("swaproba" , swaproba);
 		params.put("nmsituac" , nmsituac);
 		params.put("cducreno" , cducreno);
-		logger.debug(
-				new StringBuilder()
-				.append("\n****************************************")
-				.append("\n****** PKG_RENOVA.P_MARCAR_POLIZA ******")
-				.append("\n****** params=").append(params)
-				.append("\n****************************************")
-				.toString()
-				);
 		ejecutaSP(new MarcarPoliza(getDataSource()),params);
 	}
 	
@@ -208,14 +191,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
 		params.put("nmpoliza" , nmpoliza);
-		logger.debug(
-				new StringBuilder()
-				.append("\n******************************************************")
-				.append("\n****** PKG_RENOVA.P_ACTUALIZA_TCARTERA_SWIMPDOC ******")
-				.append("\n****** params=").append(params)
-				.append("\n******************************************************")
-				.toString()
-				);
 		ejecutaSP(new ActualizaRenovacionDocumentos(getDataSource()),params);
 	}
 	
@@ -244,14 +219,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
-		logger.debug(
-				new StringBuilder()
-				.append("\n**************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_EXPEDIENTE_POLIZA ******")
-				.append("\n****** params=").append(params)
-				.append("\n**************************************************") 
-				.toString()
-				);
 		Map<String,Object>procResult = ejecutaSP(new CargarDocumentosSubidosPorUsuario(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -302,14 +269,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
-		logger.debug(
-				new StringBuilder()
-				.append("\n**************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_GET_DATOS_POLIZA ******")
-				.append("\n****** params=").append(params)
-				.append("\n**************************************************") 
-				.toString()
-				);
 		Map<String,Object>procResult = ejecutaSP(new BusquedaRenovacionIndividual(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -416,14 +375,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("exclusion" , "N");
 		params.put("retenedora", retenedora);
 		params.put("use_exec"  , "N");
-		logger.debug(
-				new StringBuilder()
-				.append("\n**************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_GET_DATOS_POL_MAS ******")
-				.append("\n****** params=").append(params)
-				.append("\n**************************************************") 
-				.toString()
-				);
 		Map<String,Object>procResult = ejecutaSP(new BusquedaRenovacionIndividualMasiva(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -510,14 +461,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("usuario"  , usuario);
 		params.put("cdperpag" , null);
 		params.put("cdcontra" , null);
-		logger.debug(
-				new StringBuilder()
-				.append("\n******************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_GENERAR_TRAMITE ******")
-				.append("\n****** params=").append(params)
-				.append("\n******************************************************")
-				.toString()
-				);	
 		Map<String,Object> procResult = ejecutaSP(new RenuevaPolizaIndividual(getDataSource()),params);
 		Map<String,String> map = new HashMap<String, String>();
 		map.put("cdtipflu", String.valueOf(procResult.get("pv_cdtipflu_o")));
@@ -565,14 +508,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	public List<Map<String,String>> obtenerPolizaCdpersonTramite(String ntramite)throws Exception{
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("ntramite" , ntramite);
-		logger.debug(
-				new StringBuilder()
-				.append("\n**************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_GET_POLIZA_CDPERSON ******")
-				.append("\n****** params=").append(params)
-				.append("\n**************************************************") 
-				.toString()
-				);
 		Map<String,Object> procResult = ejecutaSP(new ObtenerPolizaCdpersonTramite(getDataSource()),params);
 		Map<String, String> result = new HashMap<String, String>();
 		List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
@@ -635,14 +570,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		{
 			throw new ApplicationException("No se renovaron polizas");
 		}
-		logger.debug(
-				new StringBuilder()
-				.append("\n******************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_RENOVAR_POLIZA ******")
-				.append("\n****** params=").append(params)
-				.append("\n******************************************************")
-				.toString()
-				);	
 		return polizasRenovadas;
 	}
 	
@@ -703,14 +630,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("cdperpag" 	  , cdperpag);
 		params.put("cdcontra" 	  , cdcontra);
 		params.put("cdmoneda" 	  , cdmoneda);
-		logger.debug(
-				new StringBuilder()
-				.append("\n******************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_GENERA_TCARTERA ******")
-				.append("\n****** params=").append(params)
-				.append("\n******************************************************")
-				.toString()
-				);	
 		ejecutaSP(new GeneraTcartera(getDataSource()),params);
 	}
 	
@@ -751,14 +670,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("nmpoliza" 	  , nmpoliza);
 		params.put("cdperpag" 	  , cdperpag);
 		params.put("cdcontra" 	  , cdcontra);
-		logger.debug(
-				new StringBuilder()
-				.append("\n******************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_ACTUALIZA_MSELCTPI ******")
-				.append("\n****** params=").append(params)
-				.append("\n******************************************************")
-				.toString()
-				);	
 		ejecutaSP(new ActualizaContratanteFormaPago(getDataSource()),params);
 	}
 	
@@ -795,14 +706,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("nmpoliza" , nmpoliza);
 		params.put("cdperpag" , cdperpag);
 		params.put("feefecto" , feefecto);
-		logger.debug(
-				new StringBuilder()
-				.append("\n******************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_CONFIRMAR_TRAMITE ******")
-				.append("\n****** params=").append(params)
-				.append("\n******************************************************")
-				.toString()
-				);	
 		Map<String,Object> procResult = ejecutaSP(new ConfirmarTramite(getDataSource()),params);
 		Map<String,String> result	  = new HashMap<String, String>(); 
 		result.put("nmpolizaNew", String.valueOf(procResult.get("pv_nmpolnew_o")));
@@ -853,7 +756,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		}
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("array" , new SqlArrayValue(array));
-		Utils.debugProcedure(logger, "PKG_RENOVACION_IND.P_RENOVACION_MASIVA", params);
 		ejecutaSP(new RenovarPolizasMasivasIndividuales(getDataSource()),params);
 	}
 	
@@ -888,14 +790,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		Map<String,Object> procedureResult        = ejecutaSP(new ObtenerCondicionesRenovacionprogramada(getDataSource()),params);
 		logger.debug(new StringBuilder().append("\n****** procedureResult=").append(procedureResult).toString());	
 		List<Map<String,String>> condiciones = (List<Map<String,String>>) procedureResult.get("pv_registro_o");
-		logger.debug(
-				new StringBuilder()
-				.append("\n******************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_GET_TRENOVA_EXC ******")
-				.append("\n****** params=").append(params)
-				.append("\n******************************************************")
-				.toString()
-				);	
 		return condiciones;
 	}
 	
@@ -951,14 +845,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("valor" 	  , valor);
 		params.put("valor2"   , valor2);
 		params.put("operacion", operacion);
-		logger.debug(
-				new StringBuilder()
-				.append("\n******************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_MOV_TRENOVA_EXC ******")
-				.append("\n****** params=").append(params)
-				.append("\n******************************************************")
-				.toString()
-				);	
 		ejecutaSP(new InsertaCondicionesRenovacionProgramada(getDataSource()),params);
 	}
 	
@@ -997,14 +883,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 //		if(calendario==null||calendario.size()==0){
 //			throw new ApplicationException("No hay resultados");
 //		}
-		logger.debug(
-				new StringBuilder()
-				.append("\n***********************************************")
-				.append("\n*************** PKG_RENOVACION_IND.P_GET_TCALRENOV ***************")
-				.append("\n****** params=").append(params)
-				.append("\n***********************************************")
-				.toString()
-				);	
 		return calendario;
 	}
 	
@@ -1055,14 +933,6 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("fefinal"  , fefinal);
 		params.put("feaplica" , feaplica);
 		params.put("operacion", operacion);
-		logger.debug(
-				new StringBuilder()
-				.append("\n******************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_MOV_TCALRENOV ******")
-				.append("\n****** params=").append(params)
-				.append("\n******************************************************")
-				.toString()
-				);	
 		ejecutaSP(new MovimientoCalendarizacionProgramada(getDataSource()),params);
 	}
 	
