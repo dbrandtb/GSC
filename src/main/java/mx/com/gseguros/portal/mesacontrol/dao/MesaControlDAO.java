@@ -298,7 +298,9 @@ public interface MesaControlDAO
 	public boolean regeneraDocumentosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
 	
 	/**
-	 * Reversa por tramite dado impreso
+	 * Realiza el reverso de impresion para que dado un tramite que ya haya sido impreso,
+     * actualizar el mismo como "pendiente por imprimir"
+     * 
 	 * @param ntramite
 	 * @param cdsisrol
 	 * @param cdusuari
