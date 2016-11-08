@@ -20,12 +20,12 @@ public interface RehabilitacionDAO
 	public Map<String,Object> rehabilitarPoliza(Map<String, String> params, String cdusuari, String cdsisrol) throws Exception;
 	
 	/**
-	 * pkg_satelites.p_valida_antiguedad
+	 * valida Antiguedad
 	 */
 	public boolean validaAntiguedad(Map<String,String>params) throws Exception;
 	
 	/**
-	 * pkg_satelites.p_borra_antiguedad
+	 * borra antiguedad
 	 */
 	public void borraAntiguedad(Map<String,String>params) throws Exception;
 	
