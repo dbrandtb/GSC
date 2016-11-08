@@ -35,14 +35,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdusuari" , cdusuari);
-		logger.debug(
-				new StringBuilder()
-				.append("\n****************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_CDAGENTE_X_CDUSUARI ******")
-				.append("\n****** params=").append(params)
-				.append("\n****************************************************")
-				.toString()
-				);
 		Map<String,Object>resultado=this.ejecutaSP(new CargarCdagentePorCdusuari(getDataSource()), params);
 		return (String)resultado.get("pv_cdagente_o");
 	}
@@ -118,15 +110,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 		
 		params.putAll(valores);
-
-		logger.debug(
-				new StringBuilder()
-				.append("\n**********************************************")
-				.append("\n****** PKG_SATELITES2.P_MOV_MESACONTROL ******")
-				.append("\n****** params=").append(params)
-				.append("\n**********************************************")
-				.toString()
-				);
 		Map<String,Object>procResult=ejecutaSP(new MovimientoMesaControl(getDataSource()),params);
 		return String.valueOf(procResult.get("pv_tramite_o"));
 	}
@@ -238,15 +221,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("pv_renuniext_i", renuniext);
 		params.put("pv_renramo_i"  , renramo);
 		params.put("pv_renpoliex_i", renpoliex);
-		
-		logger.debug(
-				new StringBuilder()
-				.append("\n********************************************************")
-				.append("\n****** PKG_SATELITES2.P_UPDATE_NMPOLIZA_MC *************")
-				.append("\n****** params=").append(params)
-				.append("\n********************************************************")
-				.toString()
-				);
 		ejecutaSP(new actualizaNmpolizaMesaControl(getDataSource()),params);
 		
 	}
@@ -300,14 +274,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("cdsisrolDest" , cdsisrolDest);
 		params.put("status"       , status);
 		params.put("cerrado"      , cerrado ? "S" : "N");
-		logger.debug(
-				new StringBuilder()
-				.append("\n**********************************************")
-				.append("\n****** PKG_SATELITES2.P_MOV_DMESACONTROL ******")
-				.append("\n****** params=").append(params)
-				.append("\n**********************************************")
-				.toString()
-				);
 		ejecutaSP(new MovimientoDetalleTramite(getDataSource()),params);
 	}
 	
@@ -340,14 +306,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("nmsolici" , nmsolici);
-		logger.debug(
-				new StringBuilder()
-				.append("\n*********************************************")
-				.append("\n****** PKG_SATELITES.P_UPDATE_NMSOLICI ******")
-				.append("\n****** params=").append(params)
-				.append("\n*********************************************")
-				.toString()
-				);
 		ejecutaSP(new ActualizarNmsoliciTramite(getDataSource()),params);
 	}
 	
@@ -388,16 +346,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 		
 		params.putAll(valores);
-
-		logger.debug(
-				new StringBuilder()
-				.append("\n**********************************************")
-				.append("\n****** PKG_SATELITES.p_upd_tmesacontrol ******")
-				.append("\n****** params=").append(params)
-				.append("\n**********************************************")
-				.toString()
-				);
-		
 		ejecutaSP(new ActualizaValoresTramite(getDataSource()),params);
 	}
 	
@@ -489,12 +437,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsolici" , nmsolici);
-		logger.debug(Utils.log(
-				 "\n*********************************************************"
-				,"\n****** PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR ******"
-				,"\n****** params=",params
-				,"\n*********************************************************"
-				));
 		Map<String,Object>procResult     = ejecutaSP(new CargarTramitesPorParametrosVariables(getDataSource()),params);
 		List<Map<String,String>>registro = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(registro==null)
@@ -505,7 +447,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 				 "\n*********************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , registro
-				,"\n****** PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR ******"
+				,"\n****** cargarTramitesPorParametrosVariables ...P_GET_TMESACONTROL_X_PAR_VAR ******"
 				,"\n*********************************************************"
 				));
 		return registro;
@@ -548,7 +490,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("cdusuari" , cdusuari);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_INSERTA_CONTRARECIBO", params);
 		ejecutaSP(new GuardarRegistroContrarecibo(getDataSource()),params);
 	}
 	
@@ -572,7 +513,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("ntramite" , ntramite);
 		params.put("cddocume" , cddocume);
 		params.put("nuevo"    , nuevo);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_UPD_TDOCUPOL_DSDOCUME", params);
 		ejecutaSP(new ActualizarNombreDocumento(getDataSource()),params);
 	}
 	
@@ -596,7 +536,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("cddocume" , cddocume);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_BORRAR_TDOCUPOL", params);
 		ejecutaSP(new BorrarDocumento(getDataSource()),params);
 	}
 	
@@ -629,7 +568,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_nmsuplem_i" , nmsuplem);
 		params.put("pv_codpostal_i", cdpos);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_ELIMINA_MDOMICIL_ASEGURADOS", params);
 		ejecutaSP(new BorraDomicilioAsegSiCodposCambia(getDataSource()),params);
 	}
 	
@@ -677,7 +615,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("cdusuari"       , cdusuari);
 		params.put("cdsisrol"       , cdsisrol);
 		params.put("sustituir"      , sustituir ? "S" : "N");
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_MOV_DOCUMENTOS", params);
 		ejecutaSP(new GuardarDocumentoPolizaSP(getDataSource()), params);
 	}
 	
@@ -878,7 +815,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("****** PKG_SATELITES2.P_OBTIENE_MESACONTROL lista=",lista));
+		logger.debug(Utils.log("recuperarTramites ...P_OBTIENE_MESACONTROL lista=",lista));
 		return lista;
 	}
 	
@@ -978,7 +915,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,Boolean> result    = new HashMap<String,Boolean>();
 		result.put("preguntar" , "S".equals(preguntar));
 		result.put("marcado"   , "S".equals(marcado));
-		logger.debug(Utils.log("\n****** PKG_SATELITES2.P_MARCA_IMPRESION_OPE result=",result));
+		logger.debug(Utils.log("marcarImpresionOperacion ...P_MARCA_IMPRESION_OPE result=",result));
 		return result;
 	}
 	
@@ -1227,13 +1164,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 	}
 
-	/*******************************************************************/
-	/*  Se agrega pkg_db_report.P_REVERSA_STATUS_IMPRESO
-	 * 	para realizar el reverso de impresion 
-	 *  para que dado un tr�mite que ya haya sido impreso,
-	 *   actualizar el mismo como "pendiente por imprimir", 
-	 * 
-	 */
+
 	@Override
 	public void regeneraReverso(String ntramite, String cdsisrol,String cdusuari) throws Exception{
 		
@@ -1263,8 +1194,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
-	
-	/*******************************************************************/
 	
 	
 	@Override
@@ -1468,7 +1397,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
                  "\n*********************************************************"
                 ,"\n****** params="   , params
                 ,"\n****** registro=" , registro
-                ,"\n****** PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR ******"
+                ,"\n****** obtenerMesaControl ...P_GET_TMESACONTROL_X_PAR_VAR ******"
                 ,"\n*********************************************************"
                 ));
         return registro;
