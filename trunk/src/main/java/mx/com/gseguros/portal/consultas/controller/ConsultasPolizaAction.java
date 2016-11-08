@@ -1223,6 +1223,19 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
         logger.debug("loadList={}", loadList);
         if(params.get("exportar") != null && "true".equals(params.get("exportar"))){
             
+            File carpeta=new File(getText("ruta.documentos.poliza") + "/" + params.get("ntramite"));
+            if(!carpeta.exists()){
+                logger.debug("no existe la carpeta : {}",params.get("ntramite"));
+                carpeta.mkdir();
+                if(carpeta.exists()){
+                    logger.debug("carpeta creada");
+                } else {
+                    logger.debug("carpeta NO creada");
+                }
+            } else {
+                logger.debug("existe la carpeta :{}",params.get("ntramite"));
+            }
+            
             // Generar archivo en Excel en ruta temporal:
             String valorFecha= System.currentTimeMillis()+"";
             String nombreArchivo = "Censo_" + valorFecha+ TipoArchivo.XLSX.getExtension();
