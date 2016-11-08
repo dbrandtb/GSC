@@ -117,7 +117,7 @@ public interface SiniestrosDAO {
 	public String actualizaOTValorMesaControl(Map<String, Object> params) throws Exception;
 	
 	/**
-	 * PKG_SINIESTRO.P_LISTA_SINIESTROSXTRAMITE
+	 * Obtiene lista de siniestros por tramite 
 	 * 6969 NMSINIES,
 	 * 500 NMAUTSER,
 	 * 510918 CDPERSON,
@@ -152,7 +152,7 @@ public interface SiniestrosDAO {
 	public List<Map<String,String>> listaAseguradosTramite(Map<String, String> params) throws Exception;
 	
 	/**
-	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
+	 * Obtiene el tramite completo
 	 */
 	@Deprecated
 	public Map<String,String> obtenerTramiteCompleto(Map<String, String> params) throws Exception;
@@ -162,7 +162,7 @@ public interface SiniestrosDAO {
 	public Map<String,String> obtenerTramiteCompleto(String ntramite) throws Exception;
 	
 	/**
-	 * PKG_SATELITES.P_OBT_TFACMESCTRL
+	 * Obtiene las facturas de un tramite
 	 * ntramite,
 		nfactura,
 		ffactura,
@@ -181,7 +181,7 @@ public interface SiniestrosDAO {
 	public List<HashMap<String,String>> obtenerFacturasTramiteSiniestro(HashMap<String, String> params) throws Exception;
 
 	/**
-	 * PKG_PRESINIESTRO.P_UPB_NMAUTSER_TWORKSIN
+	 * Actualizar autorizacion de servicio de un presiniestro
 	 */
 	public void actualizarAutorizacionTworksin(Map<String, Object>params) throws Exception;
 

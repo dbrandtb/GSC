@@ -127,13 +127,7 @@ public interface EndososDAO
 			) throws Exception;
 	public void                     actualizaExtraprimaValosit(Map<String, String> params)     throws Exception;
 	public void                     insertarPolizaCdperpag(Map<String, String> params)         throws Exception;
-	/**
-	 * PKG_ENDOSOS.P_GET_FEINIVAL_END_FP
-	 */
 	public Date                     obtenerFechaEndosoFormaPago(Map<String, String> params)    throws Exception;
-	/**
-	 * P_CALC_RECIBOS_SUB_ENDOSO_FP
-	 */
 	public void                     calcularRecibosEndosoFormaPago(Map<String, String> params) throws Exception;
 
 	/**
@@ -148,7 +142,7 @@ public interface EndososDAO
 	 */
 	public void                     calcularComisionBase(Map<String, String> params)           throws Exception;
 	/**
-	 * PKG_CONSULTA.P_GET_AGENTE_POLIZA
+	 * obtener Agentes Endoso Agente
 	 * @return a.cdunieco,
 			a.cdramo,
 			a.estado,
@@ -168,11 +162,11 @@ public interface EndososDAO
 	public List<Map<String,String>> obtenerAseguradosPoliza(Map<String, String> params)throws Exception;
 	
 	/**
-	 * PKG_SATELITES.P_MOV_MPOLIAGE
+	 * Inserta relacion de agente y poliza 
 	 */
 	public void                     pMovMpoliage(Map<String, String> params)                   throws Exception;
 	/**
-	 * PKG_SATELITES.P_GET_NMSUPLEM_EMISION
+	 * Obtiene el numero de suplemento de la emision
 	 */
 	public String                   pGetSuplemEmision(Map<String,String>params)                throws Exception;
 	
