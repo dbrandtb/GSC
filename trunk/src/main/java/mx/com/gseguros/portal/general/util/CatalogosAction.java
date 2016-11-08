@@ -1006,6 +1006,9 @@ public class CatalogosAction extends PrincipalCoreAction {
                     lista=catalogosManager.obtieneClaveDescuentoSubRamo(params.get("administradora"), params.get("idPadre"),params.get("cdramo"), params.get("cdtipsit"));
 				    
 				    break;
+				case IDCIERRES:
+                    lista = catalogosManager.obtieneIdsCierres();
+                    break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

@@ -255,4 +255,5 @@ public interface CatalogosManager {
                                                         String pv_cdramo_i,
                                                         String pv_cdtipsit_i) throws Exception;
 	
+	public List<GenericVO> obtieneIdsCierres() throws Exception;
 }

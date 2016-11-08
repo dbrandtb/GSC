@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.consultas.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.model.PagedMapList;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -572,7 +574,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				,"\n@@@@@@ params="   , params
 				,"\n@@@@@@ usuario="  , usuario
 				));
-		Map<String,String> mapa = new HashMap<String,String>();
+		Map<String,String> mapa = new LinkedHashMap<String,String>();
 		String             paso = "Recuperando datos";
 		try
 		{
@@ -680,13 +682,13 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				paso = "Recuperando tablero de indicadores";
 				logger.debug(paso);
 				
-				Map<String, String> res = indicadoresDAO.obtieneDashInicial(params.get("cdunieco"),
-						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"),
-						params.get("cdagente"));
+				Map<String, String> res = indicadoresDAO.obtieneDashInicial(params.get("idcierre"),
+						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"),
+						params.get("tipotramite"), params.get("cdagente"));
 				
-				Map<String, String> res2 = indicadoresDAO.obtieneDashPendientes(params.get("cdunieco"),
-						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"),
-						params.get("cdagente"));
+				Map<String, String> res2 = indicadoresDAO.obtieneDashPendientes(params.get("idcierre"),
+						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"),
+						params.get("tipotramite"), params.get("cdagente"));
 				
 				mapa.putAll(res);
 				mapa.putAll(res2);
@@ -1224,39 +1226,63 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				lista = flujoMesaControlDAO.recuperarRequisitosDatosTramite(params.get("ntramite"));
 			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_POR_LINEA_NEGOCIO) ) {
 				
-				lista = indicadoresDAO.obtieneTramitesPorLineaNegocio(params.get("cdetapa"), params.get("cdunieco"),
-						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+				lista = indicadoresDAO.obtieneTramitesPorLineaNegocio(params.get("idcierre"), params.get("cdetapa"),
+						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
 				
 			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_LINEANEGOCIO_POR_RAMO) ) {
 				
-				lista = indicadoresDAO.obtieneTramitesLineaNegocioPorRamo(params.get("cdetapa"), params.get("cdunieco"),
-						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+				PagedMapList paged = indicadoresDAO.obtieneTramitesLineaNegocioPorRamo(params.get("idcierre"), params.get("cdetapa"),
+						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", "1");
+				
+				PagedMapList paged2 = indicadoresDAO.obtieneTramitesLineaNegocioPorRamo(params.get("idcierre"), params.get("cdetapa"),
+                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", Long.toString(paged.getTotalItems()));
+				
+				lista = paged2.getRangeList();
 				
 			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_LINEA_NEGOCIO) ) {
 				
-				lista = indicadoresDAO.obtieneDetalleLineaNegocio(params.get("cdetapa"), params.get("cdunieco"),
-						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+				PagedMapList paged = indicadoresDAO.obtieneDetalleLineaNegocio(params.get("idcierre"), params.get("cdetapa"),
+						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", "1");
+				
+				PagedMapList paged2 = indicadoresDAO.obtieneDetalleLineaNegocio(params.get("idcierre"), params.get("cdetapa"),
+                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", Long.toString(paged.getTotalItems()));
+				
+				lista =  paged2.getRangeList();
 				
 			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_SUCURSAL) ) {
 				
-				lista = indicadoresDAO.obtieneLineaNegocioPorSucursal(params.get("cdetapa"), params.get("cdunieco"),
-						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+				lista = indicadoresDAO.obtieneLineaNegocioPorSucursal(params.get("idcierre"), params.get("cdetapa"),
+						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
 				
 			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_USUARIO) ) {
 				
-				lista = indicadoresDAO.obtieneLineaNegocioPorUsuario(params.get("cdetapa"), params.get("cdunieco"),
-						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
-				
+			    PagedMapList paged = indicadoresDAO.obtieneLineaNegocioPorUsuario(params.get("idcierre"), params.get("cdetapa"),
+						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", "1");
+			    PagedMapList paged2 = indicadoresDAO.obtieneLineaNegocioPorUsuario(params.get("idcierre"), params.get("cdetapa"),
+                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", Long.toString(paged.getTotalItems()));
+			    
+			    lista =  paged2.getRangeList();
+			    
 			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_POR_TIPO) ) {
 				
-				lista = indicadoresDAO.obtieneTramitesPorTipo(params.get("cdetapa"), params.get("cdunieco"),
-						params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
+			    PagedMapList paged = indicadoresDAO.obtieneTramitesPorTipo(params.get("idcierre"), params.get("cdetapa"),
+						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", "1");
+			    PagedMapList paged2 = indicadoresDAO.obtieneTramitesPorTipo(params.get("idcierre"), params.get("cdetapa"),
+                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", Long.toString(paged.getTotalItems()));
 				
+			    lista =  paged2.getRangeList();
+			    
 			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS) ) {
 				
-				lista = indicadoresDAO.obtieneTramitesPendientesPorDia(params.get("cdunieco"),
-						params.get("lineaNegocio"), params.get("cdramo"), params.get("tipotramite"),
-						params.get("cdagente"), params.get("numdias"));
+				PagedMapList paged = indicadoresDAO.obtieneTramitesPendientesPorDia(params.get("idcierre"),
+						params.get("cdunieco"), params.get("lineaNegocio"), params.get("cdramo"),
+						params.get("tipotramite"), params.get("cdagente"), params.get("numdias"), "0", "1");
+
+				PagedMapList paged2 = indicadoresDAO.obtieneTramitesPendientesPorDia(params.get("idcierre"),
+                        params.get("cdunieco"), params.get("lineaNegocio"), params.get("cdramo"),
+                        params.get("tipotramite"), params.get("cdagente"), params.get("numdias"), "0", Long.toString(paged.getTotalItems()));
+				
+				lista =  paged2.getRangeList();
 				
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_TODAS_SUCURSALES)) {
 				lista = flujoMesaControlDAO.recuperarTodasSucursales();
@@ -1304,6 +1330,64 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return lista;
+	}
+
+	
+	@Override
+	public PagedMapList recuperarListaPaginada(
+	        String cdusuari
+	        ,String cdsisrol
+	        ,RecuperacionSimple consulta
+	        ,Map<String,String> params
+	        ,String start
+            ,String limit
+	        ,UserVO usuario
+	        )throws Exception
+	{
+	    logger.debug(Utils.log(""
+	            ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	            ,"\n@@@@@@ recuperarListaPaginada @@@@@@"
+	            ,"\n@@@@@@ cdusuari=" , cdusuari
+	            ,"\n@@@@@@ cdsisrol=" , cdsisrol
+	            ,"\n@@@@@@ consulta=" , consulta
+	            ,"\n@@@@@@ params="   , params
+	            ,"\n@@@@@@ start="    , start
+	            ,"\n@@@@@@ limit="    , limit
+	            ,"\n@@@@@@ usuario="  , usuario
+	            ));
+	    
+	    PagedMapList lista =  null;
+	    String paso  = "Recuperando datos";
+	    try
+	    {
+	        if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS_LP) ) {
+                
+                lista = indicadoresDAO.obtieneTramitesPendientesPorDia(params.get("idcierre"),
+                        params.get("cdunieco"), params.get("lineaNegocio"), params.get("cdramo"),
+                        params.get("tipotramite"), params.get("cdagente"), params.get("numdias"), start, limit);
+                
+            }else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_USUARIO_LP) ) {
+                
+                lista = indicadoresDAO.obtieneLineaNegocioPorUsuario(params.get("idcierre"), params.get("cdetapa"),
+                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), start, limit);
+                
+            }else if( consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_LINEA_NEGOCIO_LP) ) {
+                
+                lista = indicadoresDAO.obtieneDetalleLineaNegocio(params.get("idcierre"), params.get("cdetapa"),
+                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), start, limit);
+                
+            }
+	    }
+	    catch(Exception ex)
+	    {
+	        Utils.generaExcepcion(ex, paso);
+	    }
+	    logger.debug(Utils.log(""
+	            ,"\n@@@@@@ lista Pagianda=", (lista==null|| lista.getRangeList() ==  null)? "null" : lista.getRangeList().size()
+	                    ,"\n@@@@@@ recuperarLista @@@@@@"
+	                    ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	            ));
+	    return lista;
 	}
 	
 	//////////////////////////////////////////////////////////////

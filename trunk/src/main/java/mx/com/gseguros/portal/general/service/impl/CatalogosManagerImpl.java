@@ -2088,6 +2088,11 @@ public class CatalogosManagerImpl implements CatalogosManager {
     public boolean guardaDescripcionCortaCobertura(String cdgarant, String descCorta) throws Exception{
         return catalogosDAO.guardaDescripcionCortaCobertura(cdgarant, descCorta);
     }
+
+	@Override
+	public List<GenericVO> obtieneIdsCierres() throws Exception{
+	    return catalogosDAO.obtieneIdsCierres();
+	}
 	
 	@Override
     public List<GenericVO> obtieneClaveDescuentoSubRamo(String pv_numsuc_i, 

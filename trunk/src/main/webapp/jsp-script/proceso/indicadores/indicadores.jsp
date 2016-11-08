@@ -44,9 +44,16 @@
 		<script>
 		
 		////// urls //////
+		
+		var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+		var _CAT_IDCIERRES      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@IDCIERRES"/>';
+		
 		////// urls //////
 		
 		////// variables //////
+		
+		var _itemsPerPage = 20;
+		
 		////// variables //////
 		
 		////// overrides //////
@@ -59,6 +66,15 @@
 			
 			
 		    ////// modelos //////
+		    
+		    Ext.define('IdcierresModel', {
+                extend: 'Ext.data.Model',
+                fields: [
+                    {type:'string', name:'idcierre'},
+                    {type:'string', name:'fecha_cierre'}
+                ]
+            });
+		    
 			Ext.define('AseguradosModel', {
 		        extend: 'Ext.data.Model',
 		        fields: [
@@ -192,8 +208,23 @@
 		    ////// modelos //////
 		    
 		    ////// stores //////
-			
-			var storeTramitesPorLineaNegocio = new Ext.data.Store({
+		    
+		    var storeCierres = Ext.create('Ext.data.Store', {
+		        model     : 'IdcierresModel',
+		        proxy     : {
+		            type        : 'ajax'
+		            ,url        : _URL_CARGA_CATALOGO
+		            ,extraParams: {catalogo:_CAT_IDCIERRES}
+		            ,reader     :
+		            {
+		                type  : 'json'
+		                ,root : 'lista'
+		            }
+		        }
+		    });
+    
+
+		    var storeTramitesPorLineaNegocio = new Ext.data.Store({
 				model: 'TramitesPorLineaNegocioModel',
 				proxy: {
 				    type: 'ajax',
@@ -214,8 +245,8 @@
 				 	url : _GLOBAL_URL_RECUPERACION,
 					reader: {
 					    type: 'json',
-					    root: 'list'//,
-					    //totalProperty: 'totalCount',
+					    root: 'list'
+					    //totalProperty: 'total'
 					    //simpleSortMode: true
 				    }
 				}
@@ -239,13 +270,14 @@
 			
 			var storeTramitesLineaNegocioPorUsuario = new Ext.data.Store({
 				model: 'TramitesLineaNegocioPorUsuarioModel',
+				pageSize: _itemsPerPage,
 				proxy: {
 				    type: 'ajax',
 				 	url : _GLOBAL_URL_RECUPERACION,
 					reader: {
 					    type: 'json',
-					    root: 'list'//,
-					    //totalProperty: 'totalCount',
+					    root: 'list',
+					    totalProperty: 'total'
 					    //simpleSortMode: true
 				    }
 				}
@@ -253,13 +285,14 @@
 			
 			var storeTramitesPendientesPorDias = new Ext.data.Store({
 				model: 'TramitesPendientesPorDiasModel',
+				pageSize: _itemsPerPage,
 				proxy: {
 				    type: 'ajax',
 				 	url : _GLOBAL_URL_RECUPERACION,
 					reader: {
 					    type: 'json',
-					    root: 'list'//,
-					    //totalProperty: 'totalCount',
+					    root: 'list',
+					    totalProperty: 'total',
 					    //simpleSortMode: true
 				    }
 				}
@@ -281,13 +314,14 @@
 			
 			var storeDetalleLineaNegocio = new Ext.data.Store({
 				model: 'DetalleLineaNegocioModel',
+				pageSize: _itemsPerPage,
 				proxy: {
 				    type: 'ajax',
 				 	url : _GLOBAL_URL_RECUPERACION,
 					reader: {
 					    type: 'json',
-					    root: 'list'//,
-					    //totalProperty: 'totalCount',
+					    root: 'list',
+					    totalProperty: 'total'
 					    //simpleSortMode: true
 				    }
 				}
@@ -296,6 +330,30 @@
 		    ////// stores //////
 		    
 		    ////// componentes //////
+		    
+		    var idcierres = Ext.create('Ext.form.ComboBox', {
+		        name:'params.idcierre',
+		        fieldLabel: 'Fecha de Cierre',
+		        displayField: 'fecha_cierre',
+		        valueField: 'idcierre',
+		        allowBlank:true,
+		        forceSelection: true,
+		        emptyText:'Seleccione...',
+		        store: storeCierres,
+		        listeners:{
+		            /*change: function(cmbo, newVal, oldVal){
+		                if (!cmbo.getValue() || cmbo.getValue().length === 0) {
+		                    cmbo.reset();
+		                }      
+		            }*/
+		        }
+		    }); 
+		    
+		    storeCierres.load({
+		        callback: function(){
+		            idcierres.setValue('0');
+		        }
+		    });
 		    ////// componentes //////
 		    
 		    ////// contenido //////
@@ -316,6 +374,7 @@
 		        		labelAlign: 'right',
 		        		margin: '5px'
 		        	},
+		        	buttonAlign: 'center',
 					items: [
 //						{xtype: 'textfield', name: 'year', fieldLabel: 'A&ntilde;o'},
 //						{xtype: 'textfield', name: 'zona', fieldLabel: 'Zona'}, 
@@ -345,16 +404,18 @@
 						{xtype: 'textfield', name: 'params.lineanegocio', fieldLabel: 'Tipo Seguro'}, 
 						{xtype: 'textfield', name: 'params.tipotramite', fieldLabel: 'Tipo de tr&aacute;mite'}, 
 						{xtype: 'textfield', name: 'params.cdagente', fieldLabel: 'Agente'},
-						{xtype: 'hiddenfield',name: 'params.cdetapa'},
-						{
-							xtype: 'button',
-							text : 'Buscar',
-							handler: function(btn) {
-								mostrarPanelPrincipal(null);
-								//Ext.ComponentQuery.query('#grdDetalleLOBPorRamo')[0].hide();
-								buscar();
-							}
-					}]
+						idcierres,
+						{xtype: 'hiddenfield',name: 'params.cdetapa'}
+						],
+						buttons: [{
+                            xtype: 'button',
+                            text : 'Buscar',
+                            handler: function(btn) {
+                                mostrarPanelPrincipal(null);
+                                //Ext.ComponentQuery.query('#grdDetalleLOBPorRamo')[0].hide();
+                                buscar();
+                            }
+                    }]
 				},{
 					xtype : 'panel',
 					itemId: 'pnlIndicadores',
@@ -427,7 +488,7 @@
 				},{
 					xtype : 'panel',
 					itemId: 'pnlIndicadores2',
-					height: 100,
+					height: 100,//130,
 					layout: {
                         type : 'hbox',
                         align: 'stretch'
@@ -489,14 +550,47 @@
 								mostrarPanelPrincipal('grdDetalleProcesoPorDia');
 								
 								var par = Ext.ComponentQuery.query('form')[0].getForm().getValues();
-								par['params.consulta'] = 'RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS';
+								par['params.consulta'] = 'RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS_LP';
 								par['params.numdias'] = cellIndex+1;
-								storeTramitesPendientesPorDias.load({
-									params : par
-								});
+
+								storeTramitesPendientesPorDias.getProxy().extraParams = par;
+								
+								storeTramitesPendientesPorDias.loadPage(1);
+								
 							}
 						}
-					}]
+					}],
+                    dockedItems: [{
+                        xtype: 'toolbar',
+                        dock: 'bottom',
+                        hidden: true,
+                        items:['->',{ xtype: 'button', text: 'Exportar', icon: '${ctx}/resources/fam3icons/icons/page_excel.png',
+                                   handler: function(){
+                                       
+                                       var form = Ext.ComponentQuery.query('form')[0].getForm();
+                                       
+                                          var params = {
+                                               "params.consulta"     : 'RECUPERAR_TABLERO_INDICADORES',
+                                               "params.cdunieco"     : form.findField('params.cdunieco').getValue(),
+                                               "params.lineanegocio" : form.findField('params.lineanegocio').getValue(),
+                                               "params.cdramo"       : form.findField('params.cdramo').getValue(),
+                                               "params.tipotramite"  : form.findField('params.tipotramite').getValue(),
+                                               "params.cdagente"     : form.findField('params.cdagente').getValue(),
+                                               "params.idcierre"     : form.findField('params.idcierre').getValue(),
+                                               "params.exportar"     : 'S'
+                                           };
+                                       
+                                       mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
+                                           
+                                       Ext.create('Ext.form.Panel').submit({
+                                           url       : _GLOBAL_URL_RECUPERACION,
+                                           standardSubmit : true,
+                                           target         : '_blank', // para abrir una nueva pestaña en caso de que se recarge la pagina
+                                           params   : params
+                                       });
+                                   }
+                              }]
+                     }]
 				}, {
 					xtype : 'panel',
 					itemId: 'pnlDetalles',
@@ -507,6 +601,14 @@
 						hidden: true,
 						margins: '5 5 5 0',
 						layout: 'fit',
+						listeners:{
+						    tabchange: function(){
+						        /**
+					            * Para ocultar detalle panel secundario
+					            */
+					            mostrarPanelSubdetalles(null);
+						    }
+						},
 						items: [{
 							title : 'Por Linea de Negocio',
 							layout: 'hbox',
@@ -546,7 +648,7 @@
 						            text     : 'M\u00E1s Detalles',
 						            flex     : 2,
 						            items: [{
-						                tooltip : 'Ver Detalle por Ramo',
+						                tooltip : 'Ver Detalle por Subramo',
 						                icon    : '${ctx}/resources/fam3icons/icons/color_swatch.png',
 						                handler : function(grid, rowIndex, colIndex, item, e, record, row) {
 						                						                	
@@ -556,9 +658,10 @@
 											par['params.consulta'] = 'RECUPERAR_TRAMITES_LINEANEGOCIO_POR_RAMO';
 											par['params.lineanegocio'] = record.get('CD_LINEA_NEGOCIO');
 											par['params.cdetapa'] = Ext.ComponentQuery.query('[name=params.cdetapa]')[0].getValue();
-											storeDetalleLineaNegocioPorRamo.load({
-												params : par
-											});
+											
+											storeDetalleLineaNegocioPorRamo.getProxy().extraParams = par;
+											storeDetalleLineaNegocioPorRamo.load();
+											
 						                }
 						            },{
 						                tooltip : 'Ver Detalle por tipo de tr\u00E1mite',
@@ -571,9 +674,9 @@
 											par['params.consulta']     = 'RECUPERAR_TRAMITES_POR_TIPO';
 											par['params.lineanegocio'] = record.get('CD_LINEA_NEGOCIO');
 											par['params.cdetapa']      = Ext.ComponentQuery.query('[name=params.cdetapa]')[0].getValue();
-											storeTramitesPorTipo.load({
-												params : par
-											});
+											
+											storeTramitesPorTipo.getProxy().extraParams = par;
+											storeTramitesPorTipo.load();
 						                	
 						                }
 						            },{
@@ -584,15 +687,47 @@
 						                	mostrarPanelSubdetalles('grdDetalleLineaNegocio');
 						                	
 						                	var par = Ext.ComponentQuery.query('form')[0].getForm().getValues();
-											par['params.consulta']     = 'RECUPERAR_DETALLE_LINEA_NEGOCIO';
+											par['params.consulta']     = 'RECUPERAR_DETALLE_LINEA_NEGOCIO_LP';
 											par['params.lineanegocio'] = record.get('CD_LINEA_NEGOCIO');
 											par['params.cdetapa']      = Ext.ComponentQuery.query('[name=params.cdetapa]')[0].getValue();
-											storeDetalleLineaNegocio.load({
-												params : par
-											});
+											
+											storeDetalleLineaNegocio.getProxy().extraParams = par;
+											
+											storeDetalleLineaNegocio.loadPage(1);
 						                }
 						            }]
     							}],
+    	                        dockedItems: [{
+    	                            xtype: 'toolbar',
+    	                            dock: 'bottom',
+    	                            items:['->',{ xtype: 'button', text: 'Exportar', icon: '${ctx}/resources/fam3icons/icons/page_excel.png',
+    	                                       handler: function(){
+    	                                           
+    	                                           if(storeTramitesPorLineaNegocio.isLoading()){
+    	                                               mensajeWarning('No se puede exportar mientras esta cargando.');
+    	                                               return;
+    	                                           }
+    	                                           
+    	                                           if(storeTramitesPorLineaNegocio.getTotalCount() <= 0){
+                                                       mensajeWarning('No hay datos a exportar.');
+                                                       return;
+                                                   }
+    	                                           
+    	                                           var params = Ext.clone(storeTramitesPorLineaNegocio.getProxy().extraParams); 
+    	                                           params['params.consulta'] = 'RECUPERAR_TRAMITES_POR_LINEA_NEGOCIO';
+    	                                           params['params.exportar'] = 'S';
+    	                                           
+    	                                           mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
+    	                                               
+    	                                           Ext.create('Ext.form.Panel').submit({
+    	                                               url       : _GLOBAL_URL_RECUPERACION,
+    	                                               standardSubmit : true,
+    	                                               target         : '_blank', // para abrir una nueva pestaña en caso de que se recarge la pagina
+    	                                               params   : params
+    	                                           });
+    	                                       }
+    	                                  }]
+    	                         }],
 								listeners: {
 									cellclick: function ( grd, td, cellIndex, record, tr, rowIndex, e, eOpts ) {
 										
@@ -664,7 +799,38 @@
                                         flex     : 3,
                                         dataIndex: 'AUTOS'
                                     }
-								]
+								],
+                                dockedItems: [{
+                                    xtype: 'toolbar',
+                                    dock: 'bottom',
+                                    items:['->',{ xtype: 'button', text: 'Exportar', icon: '${ctx}/resources/fam3icons/icons/page_excel.png',
+                                               handler: function(){
+                                                   
+                                                   if(storeTramitesLineaNegocioPorSucursal.isLoading()){
+                                                       mensajeWarning('No se puede exportar mientras esta cargando.');
+                                                       return;
+                                                   }
+                                                   
+                                                   if(storeTramitesLineaNegocioPorSucursal.getTotalCount() <= 0){
+                                                       mensajeWarning('No hay datos a exportar.');
+                                                       return;
+                                                   }
+                                                   
+                                                   var params = Ext.clone(storeTramitesLineaNegocioPorSucursal.getProxy().extraParams); 
+                                                   params['params.consulta'] = 'RECUPERAR_LINEANEGOCIO_POR_SUCURSAL';
+                                                   params['params.exportar'] = 'S';
+                                                   
+                                                   mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
+                                                       
+                                                   Ext.create('Ext.form.Panel').submit({
+                                                       url       : _GLOBAL_URL_RECUPERACION,
+                                                       standardSubmit : true,
+                                                       target         : '_blank', // para abrir una nueva pestaña en caso de que se recarge la pagina
+                                                       params   : params
+                                                   });
+                                               }
+                                          }]
+                                 }]
 							}]
 						},{
 							title: 'Por Usuario',
@@ -682,7 +848,44 @@
                                     {text: 'Total Salud', flex: 3, dataIndex: 'SALUD'},
                                     {text: 'Total Autos', flex: 3, dataIndex: 'AUTOS'}
 								]
-							}]
+							}],
+	                        dockedItems: [{
+	                            xtype: 'toolbar',
+	                            dock: 'bottom',
+	                            padding: '0 0 0 0',
+	                            items:[{
+	                                    xtype: 'pagingtoolbar',
+	                                    store: storeTramitesLineaNegocioPorUsuario, // same store GridPanel is using
+	                                    displayInfo: true,
+	                                    flex: 1
+	                                   },{ xtype: 'button', text: 'Exportar', icon: '${ctx}/resources/fam3icons/icons/page_excel.png',
+	                                       handler: function(){
+	                                           
+	                                           if(storeTramitesLineaNegocioPorUsuario.isLoading()){
+	                                               mensajeWarning('No se puede exportar mientras esta cargando.');
+	                                               return;
+	                                           }
+	                                           
+	                                           if(storeTramitesLineaNegocioPorUsuario.getTotalCount() <= 0){
+                                                   mensajeWarning('No hay datos a exportar.');
+                                                   return;
+                                               }
+	                                           
+	                                           var params = Ext.clone(storeTramitesLineaNegocioPorUsuario.getProxy().extraParams); 
+	                                           params['params.consulta'] = 'RECUPERAR_LINEANEGOCIO_POR_USUARIO';
+	                                           params['params.exportar'] = 'S';
+	                                           
+	                                           mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
+	                                               
+	                                           Ext.create('Ext.form.Panel').submit({
+	                                               url       : _GLOBAL_URL_RECUPERACION,
+	                                               standardSubmit : true,
+	                                               target         : '_blank', // para abrir una nueva pestaña en caso de que se recarge la pagina
+	                                               params   : params
+	                                           });
+	                                       }
+	                                  }]
+	                         }]
 						}]
 					},{
 						xtype: 'grid',
@@ -704,7 +907,44 @@
 							{text: 'Fecha Recepcion', dataIndex: 'FECHA_RECEP_TRAMITE'},
 							{text: 'Agente',          dataIndex: 'NOMBRE_AGENTE'},
 							{text: 'Tipo Tramite',    dataIndex: 'TIPO_TRAMITE'}
-						]
+						],
+						dockedItems: [{
+                            xtype: 'toolbar',
+                            dock: 'bottom',
+                            padding: '0 0 0 0',
+                            items:[{
+	                                xtype: 'pagingtoolbar',
+	                                store: storeTramitesPendientesPorDias, // same store GridPanel is using
+	                                displayInfo: true,
+	                                flex: 1
+	                               },{ xtype: 'button', text: 'Exportar', icon: '${ctx}/resources/fam3icons/icons/page_excel.png',
+	                                   handler: function(){
+	                                       
+	                                       if(storeTramitesPendientesPorDias.isLoading()){
+	                                           mensajeWarning('No se puede exportar mientras esta cargando.');
+	                                           return;
+	                                       }
+
+	                                       if(storeTramitesPendientesPorDias.getTotalCount() <= 0){
+                                               mensajeWarning('No hay datos a exportar.');
+	                                           return;
+	                                       }
+	                                       
+	                                       var params = Ext.clone(storeTramitesPendientesPorDias.getProxy().extraParams); 
+	                                       params['params.consulta'] = 'RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS';
+	                                       params['params.exportar'] = 'S';
+	                                       
+	                                       mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
+	                                           
+	                                       Ext.create('Ext.form.Panel').submit({
+	                                           url       : _GLOBAL_URL_RECUPERACION,
+	                                           standardSubmit : true,
+                                               target         : '_blank', // para abrir una nueva pestaña en caso de que se recarge la pagina
+	                                           params   : params
+	                                       });
+	                                   }
+	                              }]
+                         }]
 					}]
 				}, {
 					xtype : 'panel',
@@ -726,7 +966,38 @@
 							{text: 'C\u00F3digo', flex: 2, dataIndex: 'CDRAMO'},
 							{text: 'Ramo',        flex: 5, dataIndex: 'DSRAMO'},
 							{text: 'Total',       flex: 3, dataIndex: 'CANTIDAD'}
-						]
+						],
+                        dockedItems: [{
+                            xtype: 'toolbar',
+                            dock: 'bottom',
+                            items:['->',{ xtype: 'button', text: 'Exportar', icon: '${ctx}/resources/fam3icons/icons/page_excel.png',
+                                       handler: function(){
+                                           
+                                           if(storeDetalleLineaNegocioPorRamo.isLoading()){
+                                               mensajeWarning('No se puede exportar mientras esta cargando.');
+                                               return;
+                                           }
+
+                                           if(storeDetalleLineaNegocioPorRamo.getTotalCount() <= 0){
+                                               mensajeWarning('No hay datos a exportar.');
+                                               return;
+                                           }
+                                           
+                                           var params = Ext.clone(storeDetalleLineaNegocioPorRamo.getProxy().extraParams); 
+                                           params['params.consulta'] = 'RECUPERAR_TRAMITES_LINEANEGOCIO_POR_RAMO';
+                                           params['params.exportar'] = 'S';
+                                           
+                                           mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
+                                               
+                                           Ext.create('Ext.form.Panel').submit({
+                                               url       : _GLOBAL_URL_RECUPERACION,
+                                               standardSubmit : true,
+                                               target         : '_blank', // para abrir una nueva pestaña en caso de que se recarge la pagina
+                                               params   : params
+                                           });
+                                       }
+                                  }]
+                         }]
 					},{
 						xtype: 'grid',
 						itemId: 'grdTramitesPorTipo',
@@ -739,7 +1010,38 @@
 							{text: 'C\u00F3digo', flex: 2, dataIndex: 'CD_TIPO_TRAMITE'},
 							{text: 'Tipo',        flex: 5, dataIndex: 'TIPO_TRAMITE'},
                             {text: 'Total',       flex: 3, dataIndex: 'CANTIDAD'}
-						]
+						],
+                        dockedItems: [{
+                            xtype: 'toolbar',
+                            dock: 'bottom',
+                            items:['->',{ xtype: 'button', text: 'Exportar', icon: '${ctx}/resources/fam3icons/icons/page_excel.png',
+                                       handler: function(){
+                                           
+                                           if(storeTramitesPorTipo.isLoading()){
+                                               mensajeWarning('No se puede exportar mientras esta cargando.');
+                                               return;
+                                           }
+
+                                           if(storeTramitesPorTipo.getTotalCount() <= 0){
+                                               mensajeWarning('No hay datos a exportar.');
+                                               return;
+                                           }
+                                           
+                                           var params = Ext.clone(storeTramitesPorTipo.getProxy().extraParams); 
+                                           params['params.consulta'] = 'RECUPERAR_TRAMITES_POR_TIPO';
+                                           params['params.exportar'] = 'S';
+                                           
+                                           mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
+                                               
+                                           Ext.create('Ext.form.Panel').submit({
+                                               url       : _GLOBAL_URL_RECUPERACION,
+                                               standardSubmit : true,
+                                               target         : '_blank', // para abrir una nueva pestaña en caso de que se recarge la pagina
+                                               params   : params
+                                           });
+                                       }
+                                  }]
+                         }]
 					},{
 						xtype: 'grid',
 						itemId: 'grdDetalleLineaNegocio',
@@ -774,7 +1076,44 @@
 							{text: 'Etapa',             dataIndex: 'ETAPA'},
 							{text: 'Fecha inicio',      dataIndex: 'FECHA_DESDE'},
 							{text: 'Fecha de recepci\u00F3n', dataIndex: 'FECHA_RECEP_TRAMITE'}
-						]
+						],
+                        dockedItems: [{
+                            xtype: 'toolbar',
+                            dock: 'bottom',
+                            padding: '0 0 0 0',
+                            items:[{
+                                    xtype: 'pagingtoolbar',
+                                    store: storeDetalleLineaNegocio, // same store GridPanel is using
+                                    displayInfo: true,
+                                    flex: 1
+                                   },{ xtype: 'button', text: 'Exportar', icon: '${ctx}/resources/fam3icons/icons/page_excel.png',
+                                       handler: function(){
+                                           
+                                           if(storeDetalleLineaNegocio.isLoading()){
+                                               mensajeWarning('No se puede exportar mientras esta cargando.');
+                                               return;
+                                           }
+
+                                           if(storeDetalleLineaNegocio.getTotalCount() <= 0){
+                                               mensajeWarning('No hay datos a exportar.');
+                                               return;
+                                           }
+                                           
+                                           var params = Ext.clone(storeDetalleLineaNegocio.getProxy().extraParams); 
+                                           params['params.consulta'] = 'RECUPERAR_DETALLE_LINEA_NEGOCIO';
+                                           params['params.exportar'] = 'S';
+                                           
+                                           mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
+                                               
+                                           Ext.create('Ext.form.Panel').submit({
+                                               url       : _GLOBAL_URL_RECUPERACION,
+                                               standardSubmit : true,
+                                               target         : '_blank', // para abrir una nueva pestaña en caso de que se recarge la pagina
+                                               params   : params
+                                           });
+                                       }
+                                  }]
+                         }]
 					}]
 				}]
 			});
@@ -836,7 +1175,8 @@
 	            	"params.lineanegocio" : form.findField('params.lineanegocio').getValue(),
 	            	"params.cdramo"       : form.findField('params.cdramo').getValue(),
 	            	"params.tipotramite"  : form.findField('params.tipotramite').getValue(),
-	            	"params.cdagente"     : form.findField('params.cdagente').getValue()
+	            	"params.cdagente"     : form.findField('params.cdagente').getValue(),
+	            	"params.idcierre"     : form.findField('params.idcierre').getValue()
 	            },
 	            callback  : function (options, success, response){
 	            	
@@ -882,6 +1222,11 @@
 			Ext.Array.each(elements, function(elem, index, elements) {
 				elem.hide();
 			});
+			
+			/**
+			* Para ocultar detalle panel secundario
+			*/
+			mostrarPanelSubdetalles(null);
 			
 			if(!Ext.isEmpty(itemId)) {
 				Ext.ComponentQuery.query('#'+itemId)[0].show();
@@ -945,25 +1290,30 @@
 			// Se setea al valor de cdetapa en parametros y en el campo hidden:
 			var par = Ext.ComponentQuery.query('form')[0].getForm().getValues();
 			par['params.cdetapa'] = cdetapa;
-			Ext.ComponentQuery.query('[name=params.cdetapa]')[0].setValue(cdetapa);
+            Ext.ComponentQuery.query('[name=params.cdetapa]')[0].setValue(cdetapa);
+			
+			var parNegocio  = Ext.clone(par);
+			var parSucursal = Ext.clone(par);
+			var parUsuario  = Ext.clone(par);
 			
 			// Se obtiene la consulta de tramites por linea de negocio:
-			par['params.consulta'] = 'RECUPERAR_TRAMITES_POR_LINEA_NEGOCIO';
-			Ext.ComponentQuery.query('#grdTramitesPorLineaNegocio')[0].getStore().load({
-				params : par
-			});
+			parNegocio['params.consulta'] = 'RECUPERAR_TRAMITES_POR_LINEA_NEGOCIO';
+			
+			Ext.ComponentQuery.query('#grdTramitesPorLineaNegocio')[0].getStore().getProxy().extraParams = parNegocio;
+			Ext.ComponentQuery.query('#grdTramitesPorLineaNegocio')[0].getStore().load();
 			
 			// Se obtiene la consulta de tramites por sucursal:
-			par['params.consulta'] = 'RECUPERAR_LINEANEGOCIO_POR_SUCURSAL';
-			Ext.ComponentQuery.query('#grdTramitesPorSucursal')[0].getStore().load({
-				params : par
-			});
+			parSucursal['params.consulta'] = 'RECUPERAR_LINEANEGOCIO_POR_SUCURSAL';
+			
+			Ext.ComponentQuery.query('#grdTramitesPorSucursal')[0].getStore().getProxy().extraParams = parSucursal;
+			Ext.ComponentQuery.query('#grdTramitesPorSucursal')[0].getStore().load();
 			
 			// Se obtiene la consulta de tramites por usuario:
-			par['params.consulta'] = 'RECUPERAR_LINEANEGOCIO_POR_USUARIO';
-			Ext.ComponentQuery.query('#grdTramitesPorUsuario')[0].getStore().load({
-				params : par
-			});
+			parUsuario['params.consulta'] = 'RECUPERAR_LINEANEGOCIO_POR_USUARIO_LP';
+			
+			Ext.ComponentQuery.query('#grdTramitesPorUsuario')[0].getStore().getProxy().extraParams = parUsuario;
+			Ext.ComponentQuery.query('#grdTramitesPorUsuario')[0].getStore().loadPage(1);
+			
 			
 		}
 		
@@ -971,6 +1321,6 @@
 		</script>
 	</head>
 	<body>
-		<div id="dvEstadisticas" style="height:650px"></div>
+		<div id="dvEstadisticas" style="height:700px"></div>
 	</body>
 </html>
