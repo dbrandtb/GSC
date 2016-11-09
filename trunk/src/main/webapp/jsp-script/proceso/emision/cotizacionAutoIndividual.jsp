@@ -2041,14 +2041,15 @@ function _p28_cotizar(sinTarificar)
                     
                     if(retenedora.getValue()!=null && retenedora.getValue()!="-1" && retenedora.getValue()!=""){
                         var fpago=getFormaPago(administradora.getValue(),retenedora.getValue());
-//                      console.log(administradora.getValue());
+
                         
                         
                         var i;
                         for(i in formasPago){
-                            
+                           
                             if((fpago.fpago+'').trim()==(formasPago[i].CDPERPAG+'').trim()){
                                 soloDXN.push(formasPago[i]);
+                                
                                 break;
                             }
                             
@@ -2060,7 +2061,7 @@ function _p28_cotizar(sinTarificar)
                         var i;
                         for(i in formasPago){
                             
-                            if((!FormaPago.esDxN((formasPago[i].CDPERPAG+'').trim()))){
+                            if((!FormaPago.esDxN((formasPago[i].CDPERPAG+'').trim())) && (formasPago[i].DSPERPAG+'').trim().indexOf("DXN")==-1 ){
                                 
                                 soloDXN.push(formasPago[i]);
                                 
