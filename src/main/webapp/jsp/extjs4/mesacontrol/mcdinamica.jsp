@@ -59,6 +59,7 @@ mcdinInput['contrarecibo']   = '<s:property value="smap2.pv_contrarecibo_i" />';
 mcdinInput['tipoPago']   = '<s:property value="smap2.pv_tipoPago_i" />';
 mcdinInput['nfactura']   = '<s:property value="smap2.pv_nfactura_i" />';
 mcdinInput['cdpresta']   = '<s:property value="smap2.pv_cdpresta_i" />';
+/* mcdinInput['dscontra']   = '<s:property value="smap2.pv_dscontra_i" />'; */
 debug('mcdinInput: ',mcdinInput);
 
 mcdinSesion['username'] = '<s:property value="username" />';
@@ -764,6 +765,7 @@ Ext.onReady(function()
 		    	    				,'smap1.tipolote'          : _getValueByName('smap1.tipolote'      , false)
 		    	    				,'smap1.tipoimpr'          : _getValueByName('smap1.tipoimpr'      , false)
 		    	    				,'smap1.cdusuari_busq'     : _getValueByName('smap1.cdusuari_busq' , false)
+		    	    				/* ,'smap1.dscontra'          : _fieldByName('smap2.pv_dscontra_i').getValue() */
 		    	    			};
 		    	    			cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){
 		    	    			    loadMcdinStoreFiltro = '';
@@ -911,6 +913,7 @@ Ext.onReady(function()
                 ,'smap1.tipolote'         : mcdinInput['tipolote']
                 ,'smap1.tipoimpr'         : mcdinInput['tipoimpr']
                 ,'smap1.cdusuari_busq'    : mcdinInput['cdusuari_busq']
+    			,'smap1.dscontra'         : mcdinInput['dscontra']
 		   };
     	
     	cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){
