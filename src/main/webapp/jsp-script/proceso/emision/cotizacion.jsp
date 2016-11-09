@@ -1933,7 +1933,7 @@ function _0_cotizar(boton)
 	                        var i;
 	                        for(i in formasPago){
 	                            
-	                            if((!FormaPago.esDxN((formasPago[i].CDPERPAG+'').trim()))){
+	                            if((!FormaPago.esDxN((formasPago[i].CDPERPAG+'').trim())) && (formasPago[i].DSPERPAG+'').trim().indexOf("DXN")==-1  ){
 	                                
 	                                soloDXN.push(formasPago[i]);
 	                                

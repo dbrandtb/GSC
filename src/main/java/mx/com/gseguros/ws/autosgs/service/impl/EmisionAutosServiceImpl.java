@@ -1089,8 +1089,13 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	    Map<String,String> datosEnviar=new HashMap<String, String>();
 	    
 	    try {
+	        
+	        if(consultasDAO.esProductoSalud(cdramo)){
+	            return 0;
+	        }
             datos=cotizacionDAO.cargarTvalopol(cdunieco, cdramo, estado, nmpoliza);
-            if(datos.get("parametros.pv_otvalor08")==null || datos.get("parametros.pv_otvalor08").trim().equals("")){
+            logger.debug(Utils.log("Datos tvalopol: ",datos));
+            if(datos.get("parametros.pv_otvalor08")==null || datos.get("parametros.pv_otvalor08").trim().equals("") || datos.get("parametros.pv_otvalor08").trim().equals("-1")){
                 return 0;
             }
             
