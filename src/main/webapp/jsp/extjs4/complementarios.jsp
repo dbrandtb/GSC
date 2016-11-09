@@ -421,7 +421,9 @@ function _p29_guardarComplementario(callback)
     if(form.isValid())//Modificación para advertir que no se han llegnado los campos
     {
         form.setLoading(true);
-        if(panDatComMap1.SITUACION == 'AUTO' && inputCdtipsit!='MC' && inputCdtipsit!='AT'){
+        //dxn
+        if( inputCdtipsit!='MC' && inputCdtipsit!='AT'){
+            
             guardaEmpleado();
         }
         form.submit({
@@ -1615,43 +1617,61 @@ function _p29_emitirClicComplementarios()
 		                            ,listeners:{
 		                                afterrender:function(me,op){
 		                                   
-		                                    if(panDatComMap1.SITUACION == 'AUTO' && inputCdtipsit!='MC' && inputCdtipsit!='AT'){
+		                                    
 		                                        try{
 		                                          
-		                                            if(_fieldByLabel('ADMINISTRADORA').getValue()!=null &&
-		                                              (_fieldByLabel('ADMINISTRADORA').getValue()+'').trim()!='' &&
-		                                              _fieldByLabel('ADMINISTRADORA').getValue()!="-1"){
-		                                                _fieldByLabel('RETENEDORA').fireEvent('blur',_fieldByLabel('RETENEDORA'));
-		                                                
+		                                           
 		                                                
 		                                                
 		                                                _fieldByLabel('CLAVE DESCUENTO').on({
-		                                                    boxready:function(){
-		                                                        claveDescuentoDxn(_fieldByLabel('ADMINISTRADORA').getValue()
+                                                            boxready:function(){
+                                                                claveDescuentoDxn(_fieldByLabel('ADMINISTRADORA').getValue()
                                                                         ,_fieldByLabel('ADMINISTRADORA').getValue()
                                                                         ,inputCdramo
                                                                         ,inputCdtipsit);
-		                                                    }
-		                                                });
-		                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor03"]')[0].hide();
-		                                                _fieldByLabel('CLAVE DESCUENTO').allowBlank=false;
-	                                                    _fieldByLabel('CLAVE DESCUENTO').clearInvalid();
-	                                                    _fieldByLabel('CLAVE DESCUENTO').store.load();
-	                                                
-	                                                    _fieldByLabel('CLAVE EMPLEADO').allowBlank=false;
-	                                                    _fieldByLabel('CLAVE EMPLEADO').clearInvalid();
-	                                                     _fieldByLabel('NOMBRE EMPLEADO').allowBlank=false;
-	                                                    _fieldByLabel('NOMBRE EMPLEADO').clearInvalid();
-	                                                    _fieldByLabel('APELLIDO PATERNO').allowBlank=false;
-	                                                    _fieldByLabel('APELLIDO PATERNO').clearInvalid();
-	                                                    _fieldByLabel('APELLIDO MATERNO').allowBlank=false;
-	                                                    _fieldByLabel('APELLIDO MATERNO').clearInvalid();
-	                                                    _fieldByLabel('RFC EMPLEADO').allowBlank=false;
-	                                                    _fieldByLabel('RFC EMPLEADO').clearInvalid();
-	                                                    _fieldByLabel('CURP').allowBlank=false;
-	                                                    _fieldByLabel('CURP').clearInvalid();
-	                                                
-	                                                
+                                                            }
+                                                        });
+		                                                
+		                                                if(panDatComMap1.SITUACION == 'AUTO' ){
+			                                                _fieldByLabel('RETENEDORA').fireEvent('blur',_fieldByLabel('RETENEDORA'));
+			                                                
+			                                                if(!(_fieldByLabel('ADMINISTRADORA').getValue()!=null &&
+			                                                        (_fieldByLabel('ADMINISTRADORA').getValue()+'').trim()!='' &&
+			                                                        _fieldByLabel('ADMINISTRADORA').getValue()!="-1")){
+			                                                    
+			                                                    me.hide();
+			                                                    return;
+			                                                }
+			                                                
+			                                                if(inputCdtipsit=='MC' || inputCdtipsit=='AT'){
+			                                                    me.hide();
+                                                                return;
+			                                                }
+			                                                
+			                                                
+			                                                
+			                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor08"]')[0].setReadOnly(true);
+			                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor09"]')[0].setReadOnly(true);
+			                                               
+			                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor03"]')[0].hide();
+			                                                _fieldByLabel('CLAVE DESCUENTO').allowBlank=false;
+		                                                    _fieldByLabel('CLAVE DESCUENTO').clearInvalid();
+		                                                    _fieldByLabel('CLAVE DESCUENTO').store.load();
+		                                                
+		                                                    _fieldByLabel('CLAVE EMPLEADO').allowBlank=false;
+		                                                    _fieldByLabel('CLAVE EMPLEADO').clearInvalid();
+		                                                     _fieldByLabel('NOMBRE EMPLEADO').allowBlank=false;
+		                                                    _fieldByLabel('NOMBRE EMPLEADO').clearInvalid();
+		                                                    _fieldByLabel('APELLIDO PATERNO').allowBlank=false;
+		                                                    _fieldByLabel('APELLIDO PATERNO').clearInvalid();
+		                                                    _fieldByLabel('APELLIDO MATERNO').allowBlank=false;
+		                                                    _fieldByLabel('APELLIDO MATERNO').clearInvalid();
+		                                                    _fieldByLabel('RFC EMPLEADO').allowBlank=false;
+		                                                    _fieldByLabel('RFC EMPLEADO').clearInvalid();
+		                                                    _fieldByLabel('CURP').allowBlank=false;
+			                                                _fieldByLabel('CURP').clearInvalid();
+		                                                    
+		                                                }
 	                                                    _fieldByName('panelDatosAdicionales').insert(0, {
 	                                                        xtype:'button',
 	                                                        text:'Buscar Empleado',
@@ -1667,7 +1687,7 @@ function _p29_emitirClicComplementarios()
 	                                                         }
 	                                                    });
 	                                                    
-	                                                    
+	                                                    //campos variables
 	                                                    _mask("cargando datos");
 	                                                    Ext.Ajax.request(
 	                                                            {
@@ -1683,7 +1703,9 @@ function _p29_emitirClicComplementarios()
 	                                                                    _unmask();
 	                                                                    var json2 = Ext.decode(response.responseText);
 	                                                                    debug('### Response --- :',json2);
-	                                                                    
+	                                                                    if(json2.slist1==null){
+	                                                                        json2.slist1=[]
+	                                                                    }
 	                                                                    json2.slist1.forEach(function(it,idx,arr){
 	                                                                      for(var i=17;i<22;i++)  {
 	                                                                          
@@ -1713,19 +1735,14 @@ function _p29_emitirClicComplementarios()
 	                                                                }
 	                                                            });
 		                                                
-		                                            }
-		                                            else{
-		                                                me.hide();
-		                                            }
+		                                           
 		                                            
 		                                            
 		                                        
-		                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor08"]')[0].setReadOnly(true);
-		                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor09"]')[0].setReadOnly(true);
 		                                        }catch(e){
 		                                            debugError(e);
 		                                        }
-		                                    }
+		                                    
 		                                }
 		                            }
 		                        })
@@ -3165,8 +3182,8 @@ function _p29_emitirClicComplementarios()
 	                                                             url     : url_buscar_empleado 
 	                                                            ,params :
 	                                                            {
-	                                                                 'params.administradora': Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor08"]')[0].getValue()
-	                                                                ,'params.retenedora'    : Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor09"]')[0].getValue()
+	                                                                 'params.administradora': _fieldByLabel('ADMINISTRADORA').getValue()
+	                                                                ,'params.retenedora'    : _fieldByLabel('RETENEDORA').getValue()
 	                                                                ,'params.clave_empleado'     : _fieldByName('no_empleado').getValue()
 	                                                                ,'params.rfc'     : _fieldByName('rfc').getValue()
 	                                                                ,'params.ap_paterno'     : _fieldByName('ap_paterno').getValue()
@@ -3286,6 +3303,7 @@ function _p29_emitirClicComplementarios()
             
             
             function guardaEmpleado(){
+               
                 try{
                     ck="preparando datos para enviar";
                     
@@ -3300,15 +3318,15 @@ function _p29_emitirClicComplementarios()
                         type: 'POST',   
                         url: url_guarda_empleado ,
                         data: {
-                            'params.administradora':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor08"]')[0].getValue(),
-                            'params.retenedora':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor09"]')[0].getValue(),
-                            'params.clave':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor10"]')[0].getValue(),
-                            'params.nombre':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor11"]')[0].getValue(),
-                            'params.apaterno':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor12"]')[0].getValue(),
-                            'params.amaterno':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor13"]')[0].getValue(),
-                            'params.rfc':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor14"]')[0].getValue(),
-                            'params.clavedescuento':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor15"]')[0].getValue(),
-                            'params.curp':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].getValue()
+                            'params.administradora':_fieldByLabel('ADMINISTRADORA').getValue(),
+                            'params.retenedora':_fieldByLabel('RETENEDORA').getValue(),
+                            'params.clave':_fieldByLabel('CLAVE EMPLEADO').getValue(),
+                            'params.nombre':_fieldByLabel('NOMBRE EMPLEADO').getValue(),
+                            'params.apaterno':_fieldByLabel('APELLIDO PATERNO').getValue(),
+                            'params.amaterno':_fieldByLabel('APELLIDO MATERNO').getValue(),
+                            'params.rfc':_fieldByLabel('RFC EMPLEADO').getValue(),
+                            'params.clavedescuento':_fieldByLabel('CLAVE DESCUENTO').getValue(),
+                            'params.curp':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]').length==0?'':Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].getValue()
                            
                         }, 
                         success:  function(respuesta){
@@ -3322,7 +3340,7 @@ function _p29_emitirClicComplementarios()
                              if(jsonDatTram.success === true)
                              {
                               
-                                 //alert()
+                                 //alert("sd")
                                 
                              }
                              else
@@ -3342,9 +3360,10 @@ function _p29_emitirClicComplementarios()
                               errorComunicacion(null,'Error al recuperar datos de tr\u00e1mite para revisar renovaci\u00f3n');
                         }
                       });
+                    
                 }catch(e){
                     debugError(e);
-                }
+               }
                 
             }
             function claveDescuentoDxn(administradora,retenedora,cdramo,cdtipsit){
