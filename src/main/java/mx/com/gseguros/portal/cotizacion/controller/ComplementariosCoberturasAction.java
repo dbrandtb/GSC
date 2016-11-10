@@ -1374,7 +1374,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
                     }
                     paso = Utils.join("Actualizando inciso/asegurado ", nmsituac);
                     logger.debug(paso);
-                    this.procesoPantallaValosit(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, usuarioCaptura, inciso, inciso);
+                    this.procesoPantallaValosit(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, usuarioCaptura, inciso, parametros);
     			}
     			success=true;
 			}
