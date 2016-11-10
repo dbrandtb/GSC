@@ -11181,13 +11181,13 @@ public class CotizacionManagerImpl implements CotizacionManager
     
     @Override
     public void agregarAsegurado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
-            String cdperson_cte, String feefecto, String dsnombre, String dsnombre1, String paterno, String materno,
-            String cdrfc, String sexo, String fenacimi, String cdestciv, String dsocupacion, String cdtipsit,
-            String cdplan, String nmorddom, String cdagrupa, String otvalor01, String otvalor02, String otvalor03,
-            String otvalor04, String otvalor05, String otvalor06, String otvalor07, String otvalor08, String otvalor09,
-            String otvalor10) throws Exception {
+            String feefecto, String dsnombre, String dsnombre1, String paterno, String materno, String cdrfc,
+            String sexo, String fenacimi, String cdestciv, String dsocupacion, String cdtipsit, String cdplan,
+            String nmorddom, String cdagrupa, String otvalor01, String otvalor02, String otvalor03, String otvalor04,
+            String otvalor05, String otvalor06, String otvalor07, String otvalor08, String otvalor09, String otvalor10)
+            throws Exception {
         
-        aseguradoDAO.agregarAsegurado(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdperson_cte, feefecto, dsnombre, dsnombre1,
+        aseguradoDAO.agregarAsegurado(cdunieco, cdramo, estado, nmpoliza, nmsuplem, feefecto, dsnombre, dsnombre1,
                 paterno, materno, cdrfc, sexo, fenacimi, cdestciv, dsocupacion, cdtipsit, cdplan, nmorddom, cdagrupa, otvalor01, otvalor02,
                 otvalor03, otvalor04, otvalor05, otvalor06, otvalor07, otvalor08, otvalor09, otvalor10);
     }

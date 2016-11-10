@@ -60,7 +60,7 @@ public class AseguradoDAOImpl extends AbstractManagerDAO implements AseguradoDAO
 	
     @Override
     public void agregarAsegurado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
-            String cdperson_cte, String feefecto, String dsnombre, String dsnombre1, String paterno, String materno,
+            String feefecto, String dsnombre, String dsnombre1, String paterno, String materno,
             String cdrfc, String sexo, String fenacimi, String cdestciv, String dsocupacion, String cdtipsit,
             String cdplan, String nmorddom, String cdagrupa, String otvalor01, String otvalor02, String otvalor03,
             String otvalor04, String otvalor05, String otvalor06, String otvalor07, String otvalor08, String otvalor09,
@@ -72,7 +72,6 @@ public class AseguradoDAOImpl extends AbstractManagerDAO implements AseguradoDAO
         params.put("pv_estado_i"  , estado);
         params.put("pv_nmpoliza_i", nmpoliza);
         params.put("pv_nmsuplem_i", nmsuplem);
-        params.put("pv_cdperson_cte_i", cdperson_cte);
         params.put("pv_feefecto_i", feefecto);
         params.put("pv_dsnombre_i", dsnombre);
         params.put("pv_dsnombre1_i", dsnombre1);
@@ -110,7 +109,6 @@ public class AseguradoDAOImpl extends AbstractManagerDAO implements AseguradoDAO
             declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_nmsuplem_i"    , OracleTypes.NUMERIC));
-            declareParameter(new SqlParameter("pv_cdperson_cte_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_feefecto_i"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_dsnombre_i"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_dsnombre1_i"   , OracleTypes.VARCHAR));
