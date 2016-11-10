@@ -634,6 +634,23 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
+    /**
+    * Funcion que visualiza la informacion del historial de reclamaciones
+    * @param params
+    * @return Historial de reclamaciones de siniestros
+    */
+    public String cargaICDExcluidosAsegurados(){
+        logger.debug("Entra a cargaICDExcluidosAsegurados Params: {}", params);
+        try {
+            loadList = siniestrosManager.cargaICDExcluidosAsegurados(params); 
+        }catch( Exception e){
+            logger.error("Error en loadListaFacturasTramite : {}", e.getMessage(), e);
+            success =  false;
+            return SUCCESS;
+        }
+        success = true;
+        return SUCCESS;
+    }
 	
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;

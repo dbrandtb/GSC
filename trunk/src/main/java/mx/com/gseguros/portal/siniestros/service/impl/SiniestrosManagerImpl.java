@@ -2609,4 +2609,32 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		}
 		
 	}
+	
+   @Override
+    public List<Map<String,String>> cargaICDExcluidosAsegurados(Map<String,String> params) throws Exception
+    {
+        List<Map<String,String>>lista=siniestrosDAO.cargaICDExcluidosAsegurados(params);
+        if(lista==null)
+        {
+            lista=new ArrayList<Map<String,String>>();
+        }
+        log.debug("cargaHistorial lista size:"+lista.size());
+        return lista;
+    }
+
+    
+    @Override
+    public List<GenericVO> getConsultaListaTipoEvento(String cdramo, String cdtipsit, String cdgarant, String reporte) throws Exception {
+        try {
+            List<GenericVO> lista = siniestrosDAO.obtieneListadoTipoEvento(cdramo, cdtipsit, cdgarant, reporte);
+            if(lista==null)
+            {
+                lista= new ArrayList<GenericVO>();
+            }
+            log.debug("getConsultaListaSubcobertura lista size: "+lista.size());
+            return lista;
+        } catch (DaoException daoExc) {
+            throw new Exception(daoExc.getMessage(), daoExc);
+        }
+    }
 }

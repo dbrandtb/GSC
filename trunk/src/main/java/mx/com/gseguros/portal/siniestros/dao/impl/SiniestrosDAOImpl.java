@@ -118,6 +118,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setDescTipsit(rs.getString("DESCTIPSIT"));
         	consulta.setFenacimi(Utils.formateaFecha(rs.getString("FENACIMI"))); // (EGS)
         	consulta.setGenero(rs.getString("GENERO")); //(EGS)
+        	consulta.setIdTipoEvento(rs.getString("TIPOEVENTO"));
         	
             return consulta;
         }
@@ -3941,6 +3942,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     				,"VALMATERNIDAD"
     				,"VALSESIONES"
     				,"REQVALSUMASEGURADA"
+    				,"REQTIPOATENCION"
     		};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -6037,4 +6039,61 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+
+    @Override
+    public List<Map<String,String>>cargaICDExcluidosAsegurados(Map<String,String> params) throws Exception
+    {
+        Map<String, Object> mapResult = ejecutaSP(new CargaICDExcluidosAsegurados(this.getDataSource()), params);
+        return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+    }
+    
+    protected class CargaICDExcluidosAsegurados extends StoredProcedure
+    {
+        protected CargaICDExcluidosAsegurados(DataSource dataSource)
+        {
+            super(dataSource, "PKG_SINIESTRO.P_GET_ICD_EXCLUSION");
+            declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsuplem_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsituac_i"   , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+                    "CLAUSULA",         "DESCLAUSULA",         "ICD",         "DESCICD"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public List<GenericVO> obtieneListadoTipoEvento(String cdramo, String cdtipsit, String cdgarant, String reporte) throws Exception {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("pv_cdramo_i",   cdramo); 
+        params.put("pv_cdtipsit_i", cdtipsit);
+        params.put("pv_cdgarant_i", cdgarant);
+        params.put("pv_idReporte_i", reporte);
+        
+        Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTipoEvento(getDataSource()), params);
+        return (List<GenericVO>) mapResult.get("pv_registro_o");
+    }
+    
+    protected class ObtieneListadoTipoEvento extends StoredProcedure
+    {
+        protected ObtieneListadoTipoEvento(DataSource dataSource)
+        {
+            super(dataSource, "PKG_PRESINIESTRO.P_LISTA_TIPO_EVENTO");
+            declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdgarant_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_idReporte_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaSubcobertura()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }

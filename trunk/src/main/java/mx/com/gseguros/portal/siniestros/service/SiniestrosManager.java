@@ -737,5 +737,7 @@ public interface SiniestrosManager {
 	
 	public void getEliminaAseguradoEspecifico(String ntramite, String nfactura, String cdperson, Date feocurre) throws Exception;
 
+    public List<Map<String,String>> cargaICDExcluidosAsegurados(Map<String,String> params) throws Exception;
 
+    public List<GenericVO> getConsultaListaTipoEvento(String cdramo, String cdtipsit, String cdgarant, String reporte) throws Exception;
 }

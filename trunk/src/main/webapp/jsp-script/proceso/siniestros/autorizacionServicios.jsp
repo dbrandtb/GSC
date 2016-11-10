@@ -75,7 +75,9 @@
             var _URL_CIRCULO_HOSPITALARIO        	= '<s:url namespace="/siniestros" 	   action="consultaCirculoHospitalario" />';
             var _URL_PORCENTAJE_QUIRURGICO        	= '<s:url namespace="/siniestros"      action="consultaPorcentajeQuirurgico" />';
             var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros"	   action="includes/historialReclamaciones" />';
+            var _URL_LOADER_EXLUSION_ICD_ASEGURADOS = '<s:url namespace="/siniestros"      action="includes/exclusionICDAsegurado" />';
             var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	   action="consultaInfCausaSiniestroProducto" />';
+            var _URL_LISTA_TIPOEVENTO               = '<s:url namespace="/siniestros"      action="consultaListaTipoEventoSiniestro" />';
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             debug("valor d_SALUD_VITAL --->",_SALUD_VITAL);
         </script>

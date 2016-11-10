@@ -1328,6 +1328,31 @@
 				</param>
 			</result>
 		</action>
+
+        <action name="includes/exclusionICDAsegurado" class="detalleSiniestroAction">
+            <result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/verICDExcluidosAsegurado.jsp</result>
+        </action>
+        
+        <action name="cargaICDExcluidosAsegurado" class="detalleSiniestroAction" method="cargaICDExcluidosAsegurados">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    loadList.*,
+                    success,
+                    msgResult
+                </param>
+            </result>
+        </action>
+        
+        <action name="consultaListaTipoEventoSiniestro" class="siniestrosAction" method="consultaListaTipoEventoSiniestro">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosValidacionGral.*,
+                    success
+                </param>
+            </result>
+        </action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>

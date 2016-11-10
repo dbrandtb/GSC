@@ -6042,6 +6042,27 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
+	
+    /**
+    * Funcion que obtiene la lista de Sbcobertura
+    * @param cdgarant
+    * @param cdsubcob
+    * @return Lista GenericVO con la informacion de los asegurados
+    */    
+    public String consultaListaTipoEventoSiniestro(){
+        logger.debug("Entra a consultaListaTipoEventoSiniestro params de entrada :{}",params);
+        try {
+            UserVO usuarioR     = (UserVO)session.get("USUARIO");
+            String cdrol        = usuarioR.getRolActivo().getClave();
+            //cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob
+            datosValidacionGral= siniestrosManager.getConsultaListaTipoEvento(params.get("cdramo"), params.get("cdtipsit"),params.get("cdgarant"),params.get("cveCatalogo"));
+        }catch( Exception e){
+            logger.error("Error al consultaListaTipoEventoSiniestro la Lista de subcoberturas : {}", e.getMessage(), e);
+            return SUCCESS;
+        }
+        success = true;
+        return SUCCESS;
+    }
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;

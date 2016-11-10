@@ -56,6 +56,7 @@ public class AutorizacionServicioVO implements Serializable{
 	private String descTipsit;
 	private String genero; // (EGS)
 	private String fenacimi; // (EGS)
+	private String idTipoEvento;
 	
 	
 	public String getCopagofi() {
@@ -415,5 +416,13 @@ public class AutorizacionServicioVO implements Serializable{
 	public void setFenacimi(String fenacimi){
 		this.fenacimi = fenacimi;
 	} // fin (EGS)
+
+    public String getIdTipoEvento() {
+        return idTipoEvento;
+    }
+
+    public void setIdTipoEvento(String idTipoEvento) {
+        this.idTipoEvento = idTipoEvento;
+    }
 
 }
