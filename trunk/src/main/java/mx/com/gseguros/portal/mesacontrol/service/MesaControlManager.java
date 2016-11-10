@@ -16,7 +16,8 @@ public interface MesaControlManager
     
     public void borrarDocumento(String ntramite,String cddocume)throws Exception;
 
-   public void borraDomicilioAsegSiCodposCambia(
+    @Deprecated
+    public void borraDomicilioAsegSiCodposCambia(
 			String cdunieco
 			,String cdramo
 			,String estado

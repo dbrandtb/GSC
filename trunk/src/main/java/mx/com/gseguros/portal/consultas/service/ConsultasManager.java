@@ -168,5 +168,13 @@ public interface ConsultasManager
 	
 	public ManagerRespuestaImapVO pantallaTrafudoc(String cdsisrol) throws Exception;
 	
-	public List<Map<String, String>> obtenerCursorTrafudoc(String cdfunci, String cdramo, String cdtipsit) throws Exception;	
+	public List<Map<String, String>> obtenerCursorTrafudoc(String cdfunci, String cdramo, String cdtipsit) throws Exception;
+	
+	@Deprecated
+	public List<Map<String,String>>cargarTvalosit (String cdunieco, String cdramo, String estado, String nmpoliza,
+	        String nmsuplem) throws Exception;
+	
+	@Deprecated
+	public Map<String,String>cargarMpoliperSituac (String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem
+            ,String nmsituac) throws Exception;
 }
