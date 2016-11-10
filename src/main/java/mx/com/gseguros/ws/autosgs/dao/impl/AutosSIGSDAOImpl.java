@@ -1072,6 +1072,48 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
             compile();
         }
     }
+    
+    @Override
+    public Integer EndoBeneficiarioVidaAuto(Map<String, Object> params) throws Exception {
+        Integer resp = null;
+        Map<String, Object> mapResult = ejecutaSP(new EndosoBeneficiariosVidaAuto(getDataSource()), params);
+        resp = (Integer) mapResult.get("rs");
+        
+        return resp;
+    }
+    
+    public class EndosoBeneficiariosVidaAuto extends StoredProcedure{
+        protected EndosoBeneficiariosVidaAuto(DataSource dataSource){
+            super(dataSource, "sp_EndosoBBeneficiarioVida");
+           
+            declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
+            declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+            declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+            declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+            declareParameter(new SqlParameter("vInciso", Types.SMALLINT));
+            declareParameter(new SqlParameter("vNombreBen", Types.VARCHAR));
+            declareParameter(new SqlParameter("vApePatBen", Types.VARCHAR));
+            declareParameter(new SqlParameter("vApeMatBen", Types.VARCHAR));
+            declareParameter(new SqlParameter("vParentesco", Types.VARCHAR));
+            declareParameter(new SqlParameter("vPorcentaje", Types.SMALLINT));
+            declareParameter(new SqlParameter("vFEndoso", Types.DATE));
+            declareParameter(new SqlParameter("vUser", Types.VARCHAR));
+            declareParameter(new SqlParameter("vEndoB",    Types.INTEGER));
+            
+            declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+                @Override  
+                public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+                    Integer result = null;
+                    while(rs.next()){  
+                        result = rs.getInt(1);
+                    }  
+                    return result;  
+                }
+            }));
+            
+            compile();
+        }
+    }    
 	
 	
 }

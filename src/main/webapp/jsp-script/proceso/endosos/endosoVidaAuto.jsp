@@ -11,7 +11,7 @@ var _p32_urlRecuperacionSimple      = '<s:url namespace="/emision" action="recup
 var _p32_urlRecuperacionSimpleLista = '<s:url namespace="/endosos" action="obtieneBeneficiariosVidaAuto" />';
 var _p32_urlGenerarCdperson         = '<s:url namespace="/"        action="generarCdperson"              />';
 var _p32_urlGuardar                 = '<s:url namespace="/emision" action="guardarPantallaBeneficiarios" />';
-var _p32_urlConfirmarEndoso         = '<s:url namespace="/endosos" action="guardarEndosoBeneficiarios"   />';
+var _p32_urlConfirmarEndoso         = '<s:url namespace="/endosos" action="confirmaEndosoBeneficiariosVidaAuto"   />';
 ////// urls //////
 
 ////// variables //////
@@ -152,10 +152,10 @@ Ext.onReady(function()
                         ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
                         ,handler : function(){_p32_deshacer(); }
                     }
-                    /*,{
+                    ,{
                         xtype  : 'displayfield'
                         ,value : '<span style="color:white;">*Para editar un beneficiario haga doble clic sobre la fila</span>'
-                    }*/
+                    }
                 ]
                 ,buttonAlign : 'center'
                 ,buttons     :
@@ -179,6 +179,83 @@ Ext.onReady(function()
  
 //                     }
 //                 }
+            }),
+            Ext.create('Ext.grid.Panel',
+            {
+                itemId     : '_p32_grid'
+                ,title     : 'BENEFICIARIOS'
+                ,minHeight : 250
+                ,maxHeight : 400
+                ,plugins   :
+                [
+                    Ext.create('Ext.grid.plugin.RowEditing',
+                    {
+                        clicksToEdit  : 2
+                        ,errorSummary : false
+                    })
+                ]
+                ,selModel  :
+                {
+                    selType        : 'checkboxmodel'
+                    ,allowDeselect : true
+                    ,mode          : 'SINGLE'
+                }
+                ,store     : _p32_store
+                ,columns   : objetoColumnas 
+                ,tbar :
+                [
+                    {
+                        text     : 'Agregar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+                        ,handler : function(){ _p32_agregar(); }
+                    }
+                    ,{
+                        text     : 'Borrar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+                        ,handler : function(){ _p32_borrar(); }
+                    }
+                    ,{
+                        text     : 'Deshacer'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                        ,handler : function(){_p32_deshacer(); }
+                    }
+                    ,{
+                        xtype  : 'displayfield'
+                        ,value : '<span style="color:white;">*Para editar un beneficiario haga doble clic sobre la fila</span>'
+                    }
+                ]
+                ,bbar    :
+                [
+                    '->'
+                    ,{
+                        xtype     : 'form'
+                        ,itemId   : '_p36_formEndoso'
+                        ,layout   : 'hbox'
+                        ,defaults : { style : 'margin:5px;' }
+                        ,items    :
+                        [
+                            {
+                                xtype       : 'datefield'
+                                ,itemId     : '_p36_fechaCmp'
+                                ,fieldLabel : 'Fecha de efecto'
+                                ,value      : _p32_smap1.FEEFECTO
+                                ,allowBlank : false
+                            }
+                            ,{
+                                xtype    : 'button'
+                                ,text    : 'Confirmar'
+                                ,itemId  : '_p36_botonConfirmar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+                                ,handler : function()
+                                            {
+                                            	_p32_guardarClic();
+                                            }
+                            }
+                        ]
+                    }
+                    ,'->'
+                ]
+                
             })
         ]
     });
@@ -483,6 +560,8 @@ function _p32_guardarClic(callback)
                 ,nmsituac : _p32_smap1.nmsituac
                 ,cdtipsup : _p32_smap1.cdtipsup
                 ,ntramite : _p32_smap1.ntramite
+                ,tstamp   : _p32_smap1.tstamp
+                ,feefecto : _p32_smap1.FEEFECTO
             }
             ,slist1 : []
         };
@@ -503,51 +582,15 @@ function _p32_guardarClic(callback)
         _setLoading(true,_fieldById('_p32_grid'));
         Ext.Ajax.request(
         {
-            url       : Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
-                ? _p32_urlGuardar
-                : _p32_urlConfirmarEndoso
+            url       : _p32_urlConfirmarEndoso
             ,jsonData : json
             ,success  : function(response)
             {
                 _setLoading(false,_fieldById('_p32_grid'));
                 var json2 = Ext.decode(response.responseText);
                 debug('### guardar:',json2);
-                if(json2.exito)
-                {
-                    if (Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S') {
-                        mensajeCorrecto('Datos guardados','Datos guardados',function()
-                        {
-                            try
-                            {
-                                //////////////////////////////////
-                                ////// usa codigo del padre //////
-                                /*//////////////////////////////*/
-                                try{
-                                    expande(2);
-                                }catch(e)
-                                {
-                                    //manejaException(e,'Manejando navegacion');
-                                }
-                                /*//////////////////////////////*/
-                                ////// usa codigo del padre //////
-                                //////////////////////////////////
-                            }
-                            catch(e)
-                            {
-                                manejaException(e,'Manejando navegacion');
-                            }
-                        });
-                        _p32_cargarStore();
-                        
-                        if(!Ext.isEmpty(callback))
-                        {
-                            callback();
-                        }
-                        
-                    }
-                    else
-                    {
-                        var callbackRemesa = function()
+                
+                    var callbackRemesa = function()
                         {
                             try
                             {
@@ -576,12 +619,7 @@ function _p32_guardarClic(callback)
                                 ,callbackRemesa
                             );
                         });
-                    }
-                }
-                else
-                {
-                    mensajeError(json2.respuesta);
-                }
+               
             }
             ,failure  : function()
             {

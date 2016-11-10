@@ -6903,6 +6903,45 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
             compile();
         }
     }
-	    
+    
+    @Override
+    public List<Map<String,String>> endosoBeneficiariosVidaAuto(Map<String, String> params)throws Exception
+    {
+        List<Map<String,String>>lista = null;
+        logger.debug( "P_GET_ENDOSO_B_BENEF_VIDA", params);
+        Map<String,Object>procResult  = ejecutaSP(new ObtieneDatoEndBeneficiarioVida(getDataSource()),params);
+        lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+       logger.debug( "P_GET_ENDOSO_B_BENEF_VIDA", params, lista);
+        return lista;
+    }
+    
+    protected class ObtieneDatoEndBeneficiarioVida extends StoredProcedure
+    {
+        protected ObtieneDatoEndBeneficiarioVida(DataSource dataSource)
+        {
+            super(dataSource,"P_GET_ENDOSO_B_BENEF_VIDA");
+            declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+            String[] cols=new String[]{
+                    "IdMotivo"
+                    ,"Sucursal"
+                    ,"Ramo"
+                    ,"Poliza"
+                    ,"CDPERSON"
+                    ,"NombreBen"
+                    ,"ApePatBen"
+                    ,"ApeMatBen"
+                    ,"Parentesco"
+                    ,"Porcentaje"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 	    
 }

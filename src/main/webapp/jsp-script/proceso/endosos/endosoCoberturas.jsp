@@ -123,7 +123,12 @@ function endcobSumit(form,confirmar)
             }
             
             _setLoading(true,form);
+            myMask = _maskLocal('Cargando...');
+            myMask.show();
+           
             function endConfirma(json){
+            	myMask = _maskLocal('Cargando...');
+                myMask.show();
             	json.smap1.confirmar = 'si';
             	confirmar = 'si';
             	
@@ -165,14 +170,14 @@ function endcobSumit(form,confirmar)
                                                 ,inputEstadop3
                                                 ,inputNmpolizap3
                                                 ,callbackRemesa
-                                            );
+                                            ); myMask.close();
                                         }
                                         else
                                         {
                                             //////////////////////////////////
                                             ////// usa codigo del padre //////
                                             /*//////////////////////////////*/
-                                            marendNavegacion(4);
+                                            marendNavegacion(4); myMask.close();
                                             /*//////////////////////////////*/
                                             ////// usa codigo del padre //////
                                             //////////////////////////////////
@@ -214,7 +219,7 @@ function endcobSumit(form,confirmar)
                                         debug('**json**',jsonpreview);
                                         if(jsonpreview.success==true)
                                         {
-                                            
+                                            myMask.close();
                                             Ext.create('Ext.window.Window',
                                             {
                                                 title        : 'Tarifa final'
@@ -247,7 +252,7 @@ function endcobSumit(form,confirmar)
                                                             ,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
                                                             ,disable : true
                                                             ,handler : function(me){
-                                                                            var form=Ext.getCmp('endoso');
+                                                            	            var form=Ext.getCmp('endoso');
                                                                             debug('***json',json);
                                                                             me.up('window').destroy();
                                                                             endConfirma(json);
@@ -318,6 +323,7 @@ function endcobSumit(form,confirmar)
                            
             } else if (confirmar=='si'){
             	endConfirma(json);
+            	 myMask.close();
             }
             
             
