@@ -24,7 +24,6 @@ public interface AseguradoDAO {
 	 * @param estado
 	 * @param nmpoliza
 	 * @param nmsuplem
-	 * @param cdperson_cte
 	 * @param feefecto
 	 * @param dsnombre
 	 * @param dsnombre1
@@ -52,10 +51,10 @@ public interface AseguradoDAO {
 	 * @throws Exception
 	 */
     public void agregarAsegurado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
-            String cdperson_cte, String feefecto, String dsnombre, String dsnombre1, String paterno, String materno,
-            String cdrfc, String sexo, String fenacimi, String cdestciv, String dsocupacion, String cdtipsit,
-            String cdplan, String nmorddom, String cdagrupa, String otvalor01, String otvalor02, String otvalor03,
-            String otvalor04, String otvalor05, String otvalor06, String otvalor07, String otvalor08, String otvalor09,
-            String otvalor10) throws Exception;
+            String feefecto, String dsnombre, String dsnombre1, String paterno, String materno, String cdrfc,
+            String sexo, String fenacimi, String cdestciv, String dsocupacion, String cdtipsit, String cdplan,
+            String nmorddom, String cdagrupa, String otvalor01, String otvalor02, String otvalor03, String otvalor04,
+            String otvalor05, String otvalor06, String otvalor07, String otvalor08, String otvalor09, String otvalor10)
+            throws Exception;
     
 }
