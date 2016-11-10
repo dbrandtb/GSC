@@ -14,6 +14,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
@@ -2831,6 +2832,82 @@ public class EndososAutoAction extends PrincipalCoreAction
                     ));
             return SUCCESS;
         }
+       public String confirmaEndosoBeneficiariosVidaAuto()
+       {
+           logger.debug(Utils.log(
+                    "\n#################################################"
+                   ,"\n###### confirmaEndosoBeneficiariosVidaAuto ######"
+                   ,"\n###### smap1="  , smap1
+                   ,"\n###### slist1=" , slist1
+                   ,"\n###### flujo="  , flujo
+                   ));
+           
+           try
+           {
+               Utils.validate(session                , "No hay sesion");
+               Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+               
+               UserVO usuarioSesion = (UserVO)session.get("USUARIO");
+               String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+               String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+               String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+               
+               Utils.validate(smap1  , "No se recibieron datos");
+               Utils.validate(slist1 , "No se recibieron datos de inciso");
+               
+               String cdtipsup = smap1.get("cdtipsup");
+               String tstamp   = smap1.get("tstamp");
+               String cdunieco = smap1.get("cdunieco");
+               String cdramo   = smap1.get("cdramo");
+               String estado   = smap1.get("estado");
+               String nmpoliza = smap1.get("nmpoliza");
+               String feefecto = smap1.get("feefecto");
+               String nmsituac = smap1.get("nmsituac");
+               
+               Utils.validate(cdtipsup  , "No se recibio el tipo de endoso");
+               Utils.validate(tstamp    , "No se recibio el id de proceso");
+               Utils.validate(cdunieco  , "No se recibio la sucursal");
+               Utils.validate(cdramo    , "No se recibio el producto");
+               Utils.validate(estado    , "No se recibio el estado");
+               Utils.validate(nmpoliza  , "No se recibio el numero de poliza");
+               Utils.validate(feefecto  , "No se recibio la fecha de efecto"); 
+               
+               ManagerRespuestaVoidVO resp = endososAutoManager.confirmaEndosoBeneficiariosVidaAuto(//endososAutoManager.confirmaEndosoBeneficiariosVidaAuto(
+                       cdtipsup
+                       ,tstamp
+                       ,cdunieco 
+                       ,cdramo
+                       ,estado
+                       ,nmpoliza
+                       ,nmsituac
+                       ,feefecto
+                       ,cdusuari 
+                       ,cdsisrol
+                       ,cdelemen
+                       ,usuarioSesion
+                       ,slist1
+                       ,flujo
+                       );
+               
+               
+               success = true;
+               exito           = resp.isExito();
+               respuesta       = resp.getRespuesta();
+               respuestaOculta = resp.getRespuestaOculta();
+           }
+           catch(Exception ex)
+           {
+               respuesta = Utils.manejaExcepcion(ex);
+           }
+           
+           logger.debug(Utils.log(
+                    "\n###### success="   , success
+                   ,"\n###### respuesta=" , respuesta
+                   ,"\n###### confirmaEndosoBeneficiariosVidaAuto ######"
+                   ,"\n#################################################"
+                   ));
+           return SUCCESS;
+       }
 	
 	/*
 	 * Getters y setters

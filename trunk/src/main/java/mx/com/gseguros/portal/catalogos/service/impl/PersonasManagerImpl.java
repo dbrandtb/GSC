@@ -1407,7 +1407,7 @@ public class PersonasManagerImpl implements PersonasManager
         for(Map<String,String>rec:beneficiarios)
             {
                 
-               // String cdperson =  ProcesoDAO.GENERA_MPERSON;
+                String cdperson =  personasDAO.obtieneCdperson();
                 logger.debug("****cdperson: "+rec.get("CDPERSON"));
                 String mov    = rec.get("mov");
                 int agregar   = 1;
@@ -1428,7 +1428,7 @@ public class PersonasManagerImpl implements PersonasManager
                 if(operacion==agregar)
                 {
                     personasDAO.movimientosMpersona(
-                            rec.get("CDPERSON")
+                            cdperson//rec.get("CDPERSON")
                             ,rec.get("CDTIPIDE")
                             ,rec.get("CDIDEPER")
                             ,rec.get("DSNOMBRE")
@@ -1463,7 +1463,7 @@ public class PersonasManagerImpl implements PersonasManager
                             ,nmpoliza
                             ,"0"
                             ,"3"
-                            ,rec.get("CDPERSON")
+                            ,cdperson//rec.get("CDPERSON")
                             ,"1"
                             ,"V"
                             ,rec.get("NMORDDOM")
@@ -1483,7 +1483,7 @@ public class PersonasManagerImpl implements PersonasManager
                             ,nmpoliza
                             ,"0"
                             ,rec.get("CDROL")
-                            ,rec.get("CDPERSON")
+                            ,cdperson//rec.get("CDPERSON")
                             ,"1"
                             ,rec.get("STATUS")
                             ,rec.get("NMORDDOM")
@@ -1495,7 +1495,7 @@ public class PersonasManagerImpl implements PersonasManager
                             );
                     
                     personasDAO.movimientosMpersona(
-                            rec.get("CDPERSON")
+                            cdperson//rec.get("CDPERSON")
                             ,rec.get("CDTIPIDE")
                             ,rec.get("CDIDEPER")
                             ,rec.get("DSNOMBRE")
@@ -1532,7 +1532,7 @@ public class PersonasManagerImpl implements PersonasManager
                             ,nmpoliza
                             ,"0"
                             ,rec.get("CDROL")
-                            ,rec.get("CDPERSON")
+                            ,cdperson//rec.get("CDPERSON")
                             ,"1"
                             ,rec.get("STATUS")
                             ,rec.get("NMORDDOM")
@@ -1544,7 +1544,7 @@ public class PersonasManagerImpl implements PersonasManager
                             );
                     
                     personasDAO.movimientosMpersona(
-                            rec.get("CDPERSON")
+                            cdperson//rec.get("CDPERSON")
                             ,rec.get("CDTIPIDE")
                             ,rec.get("CDIDEPER")
                             ,rec.get("DSNOMBRE")
