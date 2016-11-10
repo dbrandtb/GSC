@@ -350,6 +350,77 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@Action(value="agregarAsegurado",
+        results = {
+            @Result(name="success", type="json")
+        }
+    )
+	public String agregarAsegurado() throws Exception {
+	    
+        try {
+            
+            logger.debug("Inicio agregarAsegurado...");
+        
+            // Se validan datos:
+            Utils.validate(params, "No hay par\u00E1metros");
+            Utils.validate(params.get("cdunieco"),   "No existe el par\u00E1metro params.cdunieco");
+            Utils.validate(params.get("cdramo"),     "No existe el par\u00E1metro params.cdramo");
+            Utils.validate(params.get("estado"),     "No existe el par\u00E1metro params.estado");
+            Utils.validate(params.get("nmpoliza"),   "No existe el par\u00E1metro params.nmpoliza");
+            Utils.validate(params.get("nmsuplem"),   "No existe el par\u00E1metro params.nmsuplem");
+            Utils.validate(params.get("cdperson_cte"),"No existe el par\u00E1metro params.cdperson_cte");
+            Utils.validate(params.get("feefecto"),   "No existe el par\u00E1metro params.feefecto");
+            Utils.validate(params.get("dsnombre"),   "No existe el par\u00E1metro params.dsnombre");
+            Utils.validate(params.get("dsnombre1"),  "No existe el par\u00E1metro params.dsnombre1");
+            Utils.validate(params.get("paterno"),    "No existe el par\u00E1metro params.paterno");
+            Utils.validate(params.get("materno"),    "No existe el par\u00E1metro params.materno");
+            Utils.validate(params.get("cdrfc"),      "No existe el par\u00E1metro params.cdrfc");
+            Utils.validate(params.get("sexo"),       "No existe el par\u00E1metro params.sexo");
+            Utils.validate(params.get("fenacimi"),   "No existe el par\u00E1metro params.fenacimi");
+            Utils.validate(params.get("cdestciv"),   "No exsite el par\u00E1metro params.cdestciv");
+            Utils.validate(params.get("dsocupacion"),"No existe el par\u00E1metro params.dsocupacion");
+            Utils.validate(params.get("cdtipsit"),   "No exsite el par\u00E1metro params.cdtipsit");
+            Utils.validate(params.get("cdplan"),     "No existe el par\u00E1metro params.cdplan");
+            Utils.validate(params.get("nmorddom"),     "No existe el par\u00E1metro params.nmorddom");
+            Utils.validate(params.get("cdagrupa"),     "No existe el par\u00E1metro params.cdagrupa");
+            Utils.validate(params.get("otvalor01"),  "No existe el par\u00E1metro params.otvalor01");
+            Utils.validate(params.get("otvalor02"),  "No existe el par\u00E1metro params.otvalor02");
+            Utils.validate(params.get("otvalor03"),  "No existe el par\u00E1metro params.otvalor03");
+            Utils.validate(params.get("otvalor04"),  "No existe el par\u00E1metro params.otvalor04");
+            Utils.validate(params.get("otvalor05"),  "No existe el par\u00E1metro params.otvalor05");
+            Utils.validate(params.get("otvalor06"),  "No existe el par\u00E1metro params.otvalor06");
+            Utils.validate(params.get("otvalor07"),  "No existe el par\u00E1metro params.otvalor07");
+            Utils.validate(params.get("otvalor08"),  "No existe el par\u00E1metro params.otvalor08");
+            Utils.validate(params.get("otvalor09"),  "No existe el par\u00E1metro params.otvalor09");
+            Utils.validate(params.get("otvalor10"),  "No existe el par\u00E1metro params.otvalor10");
+            
+            cotizacionManager.agregarAsegurado(params.get("cdunieco"), params.get("cdramo"), params.get("estado"),
+                params.get("nmpoliza"), params.get("nmsuplem"), params.get("cdperson_cte"), params.get("feefecto"), params.get("dsnombre"),
+                params.get("dsnombre1"), params.get("paterno"), params.get("materno"), params.get("cdrfc"),
+                params.get("sexo"), params.get("fenacimi"), params.get("cdestciv"), params.get("dsocupacion"),
+                params.get("cdtipsit"), params.get("cdplan"), params.get("nmorddom"), params.get("cdagrupa"), params.get("otvalor01"), params.get("otvalor02"),
+                params.get("otvalor03"), params.get("otvalor04"), params.get("otvalor05"), params.get("otvalor06"),
+                params.get("otvalor07"), params.get("otvalor08"), params.get("otvalor09"), params.get("otvalor10"));
+            
+            respuesta = "Asegurado agregado";
+            success   = true;
+        } catch(Exception e) {
+            logger.error("Error:", e);
+            respuesta = Utils.manejaExcepcion(e);
+            detalleRespuesta = ExceptionUtils.getStackTrace(e);
+        }
+        
+        logger.debug("Fin agregarAsegurado...");
+        
+	    return SUCCESS;
+	}
+	
 	// Getters y setters
 
 	public boolean isSuccess() {
