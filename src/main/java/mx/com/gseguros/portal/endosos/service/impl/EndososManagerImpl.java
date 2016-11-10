@@ -712,48 +712,19 @@ public class EndososManagerImpl implements EndososManager
 		return exito;
 	}
 	
-	
-	//PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN
-	/*
-	CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSITUAC,NMSUPLEM,STATUS,CDTIPSIT,OTVALOR01,OTVALOR02
-	,OTVALOR03,OTVALOR04,OTVALOR05,OTVALOR06,OTVALOR07,OTVALOR08,OTVALOR09,OTVALOR10,OTVALOR11
-	,OTVALOR12,OTVALOR13,OTVALOR14,OTVALOR15,OTVALOR16,OTVALOR17,OTVALOR18,OTVALOR19,OTVALOR20
-	,OTVALOR21,OTVALOR22,OTVALOR23,OTVALOR24,OTVALOR25,OTVALOR26,OTVALOR27,OTVALOR28,OTVALOR29
-	,OTVALOR30,OTVALOR31,OTVALOR32,OTVALOR33,OTVALOR34,OTVALOR35,OTVALOR36,OTVALOR37,OTVALOR38
-	,OTVALOR39,OTVALOR40,OTVALOR41,OTVALOR42,OTVALOR43,OTVALOR44,OTVALOR45,OTVALOR46,OTVALOR47
-	,OTVALOR48,OTVALOR49,OTVALOR50
-	*/
+	@Deprecated
 	@Override
 	public List<Map<String, String>> obtenerValositUltimaImagen(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,String nmsuplem) throws Exception
-	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ obtenerValositUltimaImagen @@@@@@")
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=")  .append(cdramo)
-				.append("\n@@@@@@ estado=")  .append(estado)
-				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
-				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
-				.toString()
-				);
-		Map<String,String>params=new HashMap<String,String>();
-		logger.debug("EndososManager obtenerValositUltimaImagen params: "+params);
-		List<Map<String,String>> lista=endososDAO.obtenerValositUltimaImagen(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
-		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-		logger.debug("EndososManager obtenerValositUltimaImagen lista size: "+lista.size());
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@ lista=").append(lista)
-				.append("\n@@@@@@ obtenerValositUltimaImagen @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.toString()
-				);
+			,String nmsuplem) throws Exception {
+		List<Map<String,String>> lista=endososDAO.obtenerValositUltimaImagen(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+		if (lista == null) {
+		    lista = new ArrayList<Map<String,String>>();
+		}
+		logger.debug("obtenerValositUltimaImagen lista {}: ", Utils.log(lista));
 		return lista;
 	}
 	

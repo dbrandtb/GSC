@@ -7,6 +7,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
@@ -20,13 +27,6 @@ import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.utils.Utils;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ConsultasManagerImpl implements ConsultasManager
@@ -507,5 +507,19 @@ public class ConsultasManagerImpl implements ConsultasManager
 	        Utils.generaExcepcion(ex, paso);
 	    }
 	    return lista;
+	}
+	
+	@Deprecated
+	@Override
+	public List<Map<String,String>>cargarTvalosit (String cdunieco, String cdramo, String estado, String nmpoliza
+            ,String nmsuplem)throws Exception {
+	    return consultasDAO.cargarTvalosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+	}
+	
+	@Override
+	@Deprecated
+	public Map<String,String>cargarMpoliperSituac (String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
+            String nmsituac)throws Exception {
+	    return consultasDAO.cargarMpoliperSituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac);
 	}
 }
