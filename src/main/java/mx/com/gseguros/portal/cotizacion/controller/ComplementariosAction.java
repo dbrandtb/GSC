@@ -991,7 +991,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(Item.crear("editor","editorEstcivp2").setQuotes(""))	
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
-					.add(new Item("header", "No. de Socio"))
+					.add(new Item("header", "No. Empleado"))
 					.add(new Item("dataIndex", "numsoc"))
 					.add(new Item("width", 100))
 					.add(Item.crear("editor",null,Item.OBJ)

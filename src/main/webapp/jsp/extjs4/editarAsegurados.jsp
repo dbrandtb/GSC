@@ -469,7 +469,7 @@
     	  }
     	}
     	
-    	//Sucursal 1403 para el campo No. de Socio
+    	//Sucursal 1403 para el campo No. de Empleado
     	for (var i = 0; i < gridColumns.length; i++) {
     	  if (gridColumns[i].dataIndex == "numsoc" && cdunieco == 1403) {
 	    		gridColumns[i].editor.allowBlank = false;
@@ -528,6 +528,15 @@
 		    	  			debug('**Cuando no es tomador, lo pone no obligatorio',gridColumns[j].editor.allowBlank,'.');
 		    	  		}
 				}
+			}else if(gridSource.items[i].data.Parentesco == "T" && cdunieco == 1403){
+			    
+			    for (var j = 0; j < gridColumns.length; j++) {
+                    if (gridColumns[j].dataIndex === "ocup" && Ext.isEmpty(gridSource.items[i].data.ocup)){
+                        /** A peticion de Adrian Olmos Fwd: (Nro.30) Para las pólizas de Clínica NOVA **/
+                        gridColumns[j].editor.allowBlank = false;
+                        debug('**Cuando es titular, lo pone como obligatorio obligatorio',gridColumns[j].editor.allowBlank,'.');
+                    }
+                }
 			}	
 		}
 		
@@ -600,7 +609,7 @@
 			
 			
 		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.numsoc)){
-		            arrErrores.push('Numero de socio\n');
+		            arrErrores.push('Numero de empleado\n');
 		            grid.getStore().getAt(i).set('numsoc',null);
 		        }
 		
@@ -2691,6 +2700,10 @@ debug("validarYGuardar flag:2");
 								var hayConyuge = false;
 								var titularCasado =  false;
 								
+								var clavesFam = [];
+								var claveFamRepetida = false;
+								var titularSinOcupacion = false;
+								
 								for(var j=0;j < gridSource.length;j++){
 									if(gridSource.getAt(j).data.Parentesco == "C"){
 										hayConyuge = true;
@@ -2698,6 +2711,32 @@ debug("validarYGuardar flag:2");
 									if(gridSource.getAt(j).data.Parentesco == "T" && gridSource.getAt(j).data.cdestciv == 2){
 										titularCasado = true;
 									}
+									
+									var ocupacionRec = gridSource.getAt(j).data.ocup;
+									if(inputCduniecop2 == 1403 && gridSource.getAt(j).data.Parentesco == "T" 
+									        && ( Ext.isEmpty(ocupacionRec) || ocupacionRec == '156' || ocupacionRec == 'n')){
+									    titularSinOcupacion = true;
+									}
+									
+									if(gridSource.getAt(j).data.cdrol == '2' && !Ext.isEmpty(gridSource.getAt(j).data.clvfam)){
+										if( !Ext.Array.contains(clavesFam, gridSource.getAt(j).data.clvfam)){
+										    Ext.Array.push(clavesFam, gridSource.getAt(j).data.clvfam);
+										}else {
+										    claveFamRepetida = true;
+										}
+									}
+								}
+								
+								/** Se agrega validacion para no poder utilizar la misma clave familiar en todos los integrantes de la familia**/
+								if( inputCduniecop2 == 1403 && titularSinOcupacion){
+								    mensajeWarning('La ocupaci&oacute;n del Titular es obligatoria.');
+                                    return false;
+								}
+								
+								/** Se agrega validacion para no poder utilizar la misma clave familiar en todos los integrantes de la familia**/
+								if(claveFamRepetida){
+								    mensajeWarning('No se puede utilizar mas de una vez la Clave Familiar entre los integrantes de una familia.');
+                                    return false;
 								}
 								
 								for(var j=0;j < gridSource.length;j++){
