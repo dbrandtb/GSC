@@ -10,7 +10,7 @@
 }
 </style>
 <script type="text/javascript">
-
+/*
 //Se repara que combos con 'forceSelection' dejen pasar cadena mientras se carga su lista'
 Ext.define('ComboBox', {
     override: 'Ext.form.ComboBox',
@@ -27,7 +27,7 @@ Ext.define('ComboBox', {
         return valido || 'No se encuentra el registro';
     }
 });
-
+*/
 ///////////////////////
 ////// variables //////
 /*///////////////////*/
