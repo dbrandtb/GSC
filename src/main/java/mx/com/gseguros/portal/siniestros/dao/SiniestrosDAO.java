@@ -599,4 +599,8 @@ public interface SiniestrosDAO {
 	public void eliminaFaltantesAsegurados() throws Exception;
 
 	public void eliminacionAseguradoEspecifico(String ntramite, String nfactura, String cdperson, Date feocurre) throws Exception;
+	
+    public List<Map<String,String>>cargaICDExcluidosAsegurados(Map<String,String> params) throws Exception;
+
+    public List<GenericVO> obtieneListadoTipoEvento(String cdramo, String cdtipsit, String cdgarant, String reporte) throws Exception;
 }

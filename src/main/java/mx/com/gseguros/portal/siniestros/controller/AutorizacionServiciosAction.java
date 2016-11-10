@@ -354,6 +354,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					valores.put("otvalor05" , params.get("dsNombreAsegurado"));
 					valores.put("otvalor06" , params.get("copagoTotal"));
 					valores.put("otvalor07" , params.get("idHospitalPlus"));
+					valores.put("otvalor08" , params.get("idTipoEvento"));
 					valores.put("otvalor16" , usuario.getUser());
 					valores.put("otvalor17" , usuario.getUser());
 					valores.put("otvalor18" , usuario.getUser());
@@ -410,7 +411,8 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					otvalor.put("pv_otvalor04_i"  , params.get("fevencim"));
 					otvalor.put("pv_otvalor06_i",params.get("copagoTotal"));
 					otvalor.put("pv_otvalor07_i",params.get("idHospitalPlus"));
-					otvalor.put("pv_otvalor16_i",usuario.getUser());
+					otvalor.put("pv_otvalor08_i",params.get("idTipoEvento"));
+                    otvalor.put("pv_otvalor16_i",usuario.getUser());
 					otvalor.put("pv_otvalor17_i",usuario.getUser());
 					siniestrosManager.actualizaOTValorMesaControl(otvalor);
 					
@@ -694,8 +696,8 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	public String obtieneMesesTiempoEspera(){
 		logger.debug("Entra a obtieneMesesTiempoEspera Params: {}", params);
 		try {
-			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor"),params.get("cdtabla"));
-			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" aï¿½os";
+			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
+			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
 			logger.debug("mesesTiempoEspera: {} mensaje de respuesta : {}", mesesTiempoEspera,mensaje);
 		}catch( Exception e){
 			logger.error("Error obtieneMesesTiempoEspera : {}", e.getMessage(), e);
