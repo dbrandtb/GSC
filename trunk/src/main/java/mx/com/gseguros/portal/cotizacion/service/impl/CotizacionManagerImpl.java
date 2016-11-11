@@ -11191,5 +11191,10 @@ public class CotizacionManagerImpl implements CotizacionManager
                 paterno, materno, cdrfc, sexo, fenacimi, cdestciv, dsocupacion, cdtipsit, cdplan, nmorddom, cdagrupa, otvalor01, otvalor02,
                 otvalor03, otvalor04, otvalor05, otvalor06, otvalor07, otvalor08, otvalor09, otvalor10);
     }
-	
+
+    @Override
+    public String validaCertificadoGrupo(HashMap<String, Object> paramCertificado) throws Exception {
+        return cotizacionDAO.validaCertificadoGrupo(paramCertificado);
+    }
+
 }

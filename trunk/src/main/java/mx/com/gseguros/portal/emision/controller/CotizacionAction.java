@@ -4552,6 +4552,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                String genero          = null;
 	                String fechaNacAfectad = null;
 	                int errorSubcobertura  = 0;
+	                String banCertificado  = "0";
 	                //GRUPO
 	                try {
 	                	cdgrupo = row.getCell(0).getNumericCellValue();
@@ -4566,26 +4567,67 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                //CERTIFICADO
 	                try {
-		                auxCell=row.getCell(1);
-		                dependiente = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|";
-		                logger.debug("CERTIFICADO: "+dependiente);
-		                bufferLinea.append(dependiente);
+	                    auxCell=row.getCell(1);
+	                    dependiente = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|";
+	                    if(auxCell!=null){
+	                        HashMap<String, Object> paramCertificado = new HashMap<String, Object>();
+                            paramCertificado.put("pv_cdunieco_i", cdunieco);
+                            paramCertificado.put("pv_cdramo_i"  , cdramo);
+                            paramCertificado.put("pv_estado_i"  , estado);
+                            paramCertificado.put("pv_nmpoliza_i", nmpoliza);
+                            paramCertificado.put("pv_nmsitaux_i", String.format("%.0f",auxCell.getNumericCellValue()));
+                            String certificadoValido = cotizacionManager.validaCertificadoGrupo(paramCertificado);
+                            
+                            if(certificadoValido.equalsIgnoreCase("s")){
+                                logger.debug("CERTIFICADO: "+dependiente);
+                                bufferLinea.append(dependiente);
+                            }else{
+                                //mandamos excepcion
+                                banCertificado = "1";
+                                throw new ApplicationException("No es valido");
+                            }
+	                    }else{
+	                        logger.debug("CERTIFICADO: "+dependiente);
+	                        bufferLinea.append(dependiente);
+	                    }
 	                } catch(Exception ex) {
-	                	logger.error("error al leer dependiente como numero, se intentara como string:",ex);
-	                	try {
-	                		dependiente = row.getCell(1).getStringCellValue()+"|";
-	                		if("|".equals(dependiente)) {
-	                			dependiente = "0|";
-	                		}
-	                		logger.debug("CERTIFICADO: "+dependiente);
-			                bufferLinea.append(dependiente);
-	                	} catch(Exception ex2) {
-		                	logger.error("error dependiente:",ex2);
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Certificado' (B) de la fila ",fila," "));
-		                }
+	                    logger.error("error al leer dependiente como numero, se intentara como string:",ex);
+	                    try {
+	                        dependiente = row.getCell(1).getStringCellValue()+"|";
+	                        if("|".equals(dependiente)) {
+	                            dependiente = "0|";
+	                            logger.debug("CERTIFICADO: "+dependiente);
+	                            bufferLinea.append(dependiente);
+	                        }else{
+	                            HashMap<String, Object> paramCertificado = new HashMap<String, Object>();
+                                paramCertificado.put("pv_cdunieco_i", cdunieco);
+                                paramCertificado.put("pv_cdramo_i"  , cdramo);
+                                paramCertificado.put("pv_estado_i"  , estado);
+                                paramCertificado.put("pv_nmpoliza_i", nmpoliza);
+                                paramCertificado.put("pv_nmsitaux_i", row.getCell(1).getStringCellValue());
+                                String certificadoValido = cotizacionManager.validaCertificadoGrupo(paramCertificado);
+                                
+                                if(certificadoValido.equalsIgnoreCase("s")){
+                                    logger.debug("CERTIFICADO: "+dependiente);
+                                    bufferLinea.append(dependiente);
+                                }else{
+                                    //mandamos excepcion
+                                    banCertificado = "1";
+                                    throw new ApplicationException("No es valido");
+                                }
+	                        }
+	                        
+	                    } catch(Exception ex2) {
+	                        logger.error("error dependiente:",ex2);
+	                        filaBuena = false;
+	                        if(banCertificado.equalsIgnoreCase("1")){
+	                            bufferErroresCenso.append(Utils.join("Error el titular no se encuentra vigente, en el campo 'Certificado' (B) de la fila ",fila," "));
+	                        }else{
+	                            bufferErroresCenso.append(Utils.join("Error en el campo 'Certificado' (B) de la fila ",fila," "));
+	                        }
+	                    }
 	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
 	                }
 	                
 	                //PARENTESCO
@@ -4708,14 +4750,17 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
 	                }
 	                
-	                
-                    //validamos asegurados duplicados
-                    /*try {
+	                //validamos asegurados duplicados
+                    try {
                         auxCell=row.getCell(6);
                         if(dsapellido!= null && dsapellido1 != null && dsnombre != null && genero != null && fechaNacAfectad!= null && total <= 1){
                             logger.debug("Entra a la validacion de asegurados duplicados ==> :{} :{} :{} :{} :{} :{} ",dsapellido,dsapellido,dsnombre,dsnombre1,genero,fechaNacAfectad);
                             total = total+1;
                             HashMap<String, Object> paramPersona = new HashMap<String, Object>();
+                            paramPersona.put("pv_cdunieco_i",   cdunieco );
+                            paramPersona.put("pv_cdramo_i",     cdramo);
+                            paramPersona.put("pv_estado_i",     estado);
+                            paramPersona.put("pv_nmpoliza_i",   nmpoliza );
                             paramPersona.put("pv_dsnombre_i",   dsnombre);
                             paramPersona.put("pv_dsnombre1_i",  dsnombre1);
                             paramPersona.put("pv_dsapellido_i", dsapellido);
@@ -4732,10 +4777,11 @@ public class CotizacionAction extends PrincipalCoreAction
                         }
                     } catch(Exception ex) {
                         filaBuena = false;
+                        logger.debug("Existe Duplicados ==> :{}",ex);
                         bufferErroresCenso.append(Utils.join("Error el asegurado se encuentra duplicado en la fila ",fila," "));
                     } finally {
                         bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
-                    }*/
+                    }
 	                
 	                //CODIGO POSTAL
 	                try {
