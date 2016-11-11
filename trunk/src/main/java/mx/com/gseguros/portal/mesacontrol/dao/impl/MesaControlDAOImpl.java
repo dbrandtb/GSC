@@ -207,7 +207,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	
 	@Override
 	public void actualizaNmpolizaMesaControl(
-			  String nmpoliza ,String cdunieco ,String cdramo ,String estado  ,String ntramite
+			  String ntramite ,String cdunieco ,String cdramo ,String estado  ,String nmpoliza
 			 ,String cdtiptra ,String renuniext ,String renramo   ,String renpoliex
 			)throws Exception
 	{

@@ -1117,7 +1117,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
     }    
 	
     @Override
-    public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,String vInicioVigencia,String vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception {
+    public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,Date vInicioVigencia,Date vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception {
        
         Integer resp = null;
         Map<String, Object> params = new HashMap<String, Object>();

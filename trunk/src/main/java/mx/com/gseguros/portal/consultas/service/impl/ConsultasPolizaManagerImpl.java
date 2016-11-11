@@ -534,7 +534,7 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	}
 	
 	@Override
-	public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,String vInicioVigencia,String vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception {
+	public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,Date vInicioVigencia,Date vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception {
            return autosDAOSIGS.spIdentificaRenovacion(inNumsuc, inNumram, inNumpol, vFechaEmision, vInicioVigencia, vFinVigencia, inRensuc, inRenram, inRenpol);
     }
 	

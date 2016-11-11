@@ -348,7 +348,7 @@ public interface ConsultasPolizaManager {
      * @param inRenpol
      * @throws Exception
      */
-    public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,String vInicioVigencia,String vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception;
+    public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,Date vInicioVigencia,Date vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception;
     
     public Map<String, String> obtieneTvalopol(String cdunieco, String cdramo, String estado, String nmpoliza)
             throws Exception;

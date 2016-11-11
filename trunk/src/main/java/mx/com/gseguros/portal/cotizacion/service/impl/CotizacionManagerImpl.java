@@ -6902,11 +6902,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 						if(nmpoliex != null && !nmpoliex.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 && fromSigs.equals("S"))
 						{
 							flujoMesaControlManager.actualizaTramiteMC(
-									 nmpoliza 
+							         ntramite 
 									,cdunieco
 									,cdramo
 									,"W"//estado
-									,ntramite
+									,nmpoliza
 									,"21"//cdtiptra 
 									,cduniext
 									,renramo
