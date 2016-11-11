@@ -8523,16 +8523,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	            paso = "Confirmando endoso";
 	            logger.debug(paso);
 	            
-	            /*Map<String,String>resParams=endososDAO.iniciarEndoso(
-	                    cdunieco
-	                    ,cdramo
-	                    ,estado
-	                    ,nmpoliza
-	                    ,fechaEndoso
-	                    ,cdelemen
-	                    ,cdusuari
-	                    ,"END"
-	                    ,cdtipsup);*/
 	            Map<String,Object> resParams = endososDAO.confirmarEndosoTvalositAuto(
 	                    cdtipsup
 	                    ,tstamp

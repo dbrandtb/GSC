@@ -157,73 +157,6 @@ Ext.onReady(function()
                         ,value : '<span style="color:white;">*Para editar un beneficiario haga doble clic sobre la fila</span>'
                     }
                 ]
-                ,buttonAlign : 'center'
-                ,buttons     :
-                [
-                    {
-                        text     : Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
-                            ? 'Guardar'
-                            : 'Confirmar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/' + (
-                            Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
-                                ? 'disk.png'
-                                : 'key.png'
-                        )
-                        ,handler : function(){ _p32_guardarClic(); }
-                    }
-                ]
-//                 ,listeners :
-//                 {
-//                     afterrender : function()
-//                     {
- 
-//                     }
-//                 }
-            }),
-            Ext.create('Ext.grid.Panel',
-            {
-                itemId     : '_p32_grid'
-                ,title     : 'BENEFICIARIOS'
-                ,minHeight : 250
-                ,maxHeight : 400
-                ,plugins   :
-                [
-                    Ext.create('Ext.grid.plugin.RowEditing',
-                    {
-                        clicksToEdit  : 2
-                        ,errorSummary : false
-                    })
-                ]
-                ,selModel  :
-                {
-                    selType        : 'checkboxmodel'
-                    ,allowDeselect : true
-                    ,mode          : 'SINGLE'
-                }
-                ,store     : _p32_store
-                ,columns   : objetoColumnas 
-                ,tbar :
-                [
-                    {
-                        text     : 'Agregar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
-                        ,handler : function(){ _p32_agregar(); }
-                    }
-                    ,{
-                        text     : 'Borrar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
-                        ,handler : function(){ _p32_borrar(); }
-                    }
-                    ,{
-                        text     : 'Deshacer'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                        ,handler : function(){_p32_deshacer(); }
-                    }
-                    ,{
-                        xtype  : 'displayfield'
-                        ,value : '<span style="color:white;">*Para editar un beneficiario haga doble clic sobre la fila</span>'
-                    }
-                ]
                 ,bbar    :
                 [
                     '->'
@@ -236,9 +169,9 @@ Ext.onReady(function()
                         [
                             {
                                 xtype       : 'datefield'
-                                ,itemId     : '_p36_fechaCmp'
+                               //,itemId     : '_p36_fechaCmp'
                                 ,fieldLabel : 'Fecha de efecto'
-                                ,value      : _p32_smap1.FEEFECTO
+                                ,value      : new Date() 
                                 ,allowBlank : false
                             }
                             ,{
@@ -248,14 +181,20 @@ Ext.onReady(function()
                                 ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
                                 ,handler : function()
                                             {
-                                            	_p32_guardarClic();
+                                                _p32_guardarClic();
                                             }
                             }
                         ]
                     }
                     ,'->'
                 ]
-                
+//                 ,listeners :
+//                 {
+//                     afterrender : function()
+//                     {
+ 
+//                     }
+//                 }
             })
         ]
     });
