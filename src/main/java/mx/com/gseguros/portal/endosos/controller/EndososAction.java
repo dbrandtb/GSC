@@ -2947,6 +2947,7 @@ public class EndososAction extends PrincipalCoreAction
 						String tipoFlotilla   = (String)omap1.get("tipoflot");
 						String nombreReporte  = getText("rdf.endosos.nombre.auto.individual");
 						String cdperpag       = smap1.get("CDPERPAG");
+						String p_plan         = smap1.get("CDMEJRED");
 						
 						if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)){
 							nombreReporte = getText("rdf.endosos.nombre.auto.pymes");
@@ -2968,6 +2969,7 @@ public class EndososAction extends PrincipalCoreAction
 								+ "&p_estado="+estado
 								+ "&p_poliza="+nmpoliza
 								+ "&p_suplem="+nmsuplem
+								+ "&p_plan="+p_plan
 								+ "&p_perpag="+cdperpag
 								+ "&desname="+rutaDocumentos+"/"+pdfEndosoNom;
 						
@@ -10492,6 +10494,7 @@ public String retarificarEndosos()
 			String cdsisrol       = usuario.getRolActivo().getClave();
 			String proceso        = "END";
 			String cdtipsup       = TipoEndoso.CAMBIO_FORMA_PAGO.getCdTipSup().toString();
+			String p_plan         = smap1.get("CDMEJRED");
 			
 			String paso = null;
 			
@@ -10588,6 +10591,7 @@ public String retarificarEndosos()
 							+ "&p_estado="+estado
 							+ "&p_poliza="+nmpoliza
 							+ "&p_suplem="+nmsuplem
+							+ "&p_plan="+p_plan
 							+ "&p_perpag="+cdperpag
 							+ "&desname="+rutaDocumentos+"/"+pdfEndosoNom;
 					

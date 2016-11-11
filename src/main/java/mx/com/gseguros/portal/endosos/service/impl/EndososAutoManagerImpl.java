@@ -3341,6 +3341,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,UserVO usuarioSesion
 			,FlujoVO flujo
 			,String confirmar
+			,String p_plan
 			,String cdperpag
 			)throws Exception
 	{
@@ -3361,6 +3362,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ usuarioSesion  = " , usuarioSesion
 				,"\n@@@@@@ flujo          = " , flujo
 				,"\n@@@@@@ confirmar      = " , confirmar
+				,"\n@@@@@@ p_plan         = " , p_plan
 				,"\n@@@@@@ cdperpag       = " , cdperpag
 				));
 		
@@ -3516,6 +3518,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						+ "&p_estado="+estado
 						+ "&p_poliza="+nmpoliza
 						+ "&p_suplem="+nmsuplemGen
+						+ "&p_plan="+p_plan
 						+ "&p_perpag="+cdperpag
 						+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
 				
@@ -5057,6 +5060,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,FlujoVO flujo
 			,String confirmar
 			,String cdperpag
+			,String p_plan
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -5077,6 +5081,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ flujo         = " , flujo
 				,"\n@@@@@@ confirmar     = " , confirmar
 				,"\n@@@@@@ cdperpag      = " , cdperpag
+				,"\n@@@@@@ p_plan        = " , p_plan
 				));
 		
 		String paso = null;
@@ -5143,7 +5148,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				logger.debug("tipoGrupoInciso: "+tipoGrupoInciso);
 				paso = "Realizando PDF de Vista Previa de Autos";
 				logger.debug(paso);
-				String reporteEndosoPrevia = rdfEndosoPreview;//rdfEndosoPreviewIndi;
+				String reporteEndosoPrevia = rdfEndosoPreviewIndi;
 				if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoGrupoInciso)){
 					reporteEndosoPrevia = rdfEndosoPreview;
 				}
@@ -5162,6 +5167,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						+ "&p_estado="+estado
 						+ "&p_poliza="+nmpoliza
 						+ "&p_suplem="+nmsuplemGen
+						+ "&p_plan="+p_plan
 						+ "&p_perpag="+cdperpag
 						+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
 				
@@ -5601,6 +5607,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String confirmar
 			,String tipoflot
 			,String cdperpag
+			,String p_plan
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -5621,7 +5628,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ confirmar     = " ,confirmar
 				,"\n@@@@@@ tipoflot      = " ,tipoflot
 				,"\n@@@@@@ cdperpag      = " ,cdperpag
-				
+				,"\n@@@@@@ p_plan        = " ,p_plan
 				));
 		
 		String paso = null;
@@ -5862,6 +5869,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								+ "&p_estado="+estado
 								+ "&p_poliza="+nmpoliza
 								+ "&p_suplem="+nmsuplemGen
+								+ "&p_plan="+p_plan
 								+ "&p_perpag="+cdperpag
 								+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
 						
@@ -6239,6 +6247,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String confirmar
 			,String tipoflot
 			,String cdperpag
+			,String p_plan
 		)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -6262,6 +6271,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ confirmar        = " , confirmar
 				,"\n@@@@@@ TIPOFLOT         = " , tipoflot
 				,"\n@@@@@@ cdperpag         = " , cdperpag
+				,"\n@@@@@@ p_plan           = " , p_plan
 				));
 		
 		String paso = "";
@@ -6376,6 +6386,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						+ "&p_estado="+estado
 						+ "&p_poliza="+nmpoliza
 						+ "&p_suplem="+nmsuplemGen
+						+ "&p_plan="+p_plan
 						+ "&p_perpag="+cdperpag
 						+ "&desname="+rutaTempEndoso+"/"+pdfEndosoNom;
 				
@@ -8512,6 +8523,16 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	            paso = "Confirmando endoso";
 	            logger.debug(paso);
 	            
+	            /*Map<String,String>resParams=endososDAO.iniciarEndoso(
+	                    cdunieco
+	                    ,cdramo
+	                    ,estado
+	                    ,nmpoliza
+	                    ,fechaEndoso
+	                    ,cdelemen
+	                    ,cdusuari
+	                    ,"END"
+	                    ,cdtipsup);*/
 	            Map<String,Object> resParams = endososDAO.confirmarEndosoTvalositAuto(
 	                    cdtipsup
 	                    ,tstamp
@@ -8561,6 +8582,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                     
                     if(operacion==agregar)
                     {
+                        logger.debug("Entro A Agregar");
                         personasDAO.movimientosMpersona(
                                 rec.get("CDPERSON")
                                 ,rec.get("CDTIPIDE")
@@ -8595,7 +8617,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                                 ,cdramo
                                 ,estado
                                 ,nmpoliza
-                                ,nmsituac
+                                ,"0"//nmsituac
                                 ,"3"
                                 ,rec.get("CDPERSON")
                                 ,nmsuplem
@@ -8610,6 +8632,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                     }
                     else if(operacion==eliminar)
                     {
+                        logger.debug("Entro A eliminar");
                         endososDAO.movimientoMpoliperBeneficiario(
                                 cdunieco
                                 ,cdramo
@@ -8619,7 +8642,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                                 ,rec.get("CDROL")
                                 ,rec.get("CDPERSON")
                                 ,nmsuplem
-                                ,"M"//rec.get("STATUS")
+                                ,rec.get("STATUS")
                                 ,rec.get("NMORDDOM")
                                 ,rec.get("SWRECLAM")
                                 ,rec.get("SWEXIPER")
@@ -8659,6 +8682,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                     }
                     else
                     {
+                        logger.debug("Entro A Actualizar");
                         endososDAO.movimientoMpoliperBeneficiario(
                                 cdunieco
                                 ,cdramo
