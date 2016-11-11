@@ -144,11 +144,11 @@ public interface EndososDAO
     public void                     cancelaRecibosCambioCliente(Map<String, String> params) throws Exception;
     
     /**
-     * P_CALCULA_COMISION_BASE
+     * calcula comision base
      */
     public void                     calcularComisionBase(Map<String, String> params)           throws Exception;
+    
     /**
-
      * obtener Agentes Endoso Agente
      * @return a.cdunieco,
             a.cdramo,
@@ -162,19 +162,19 @@ public interface EndososDAO
             a.porparti,
             nombre,
             cdsucurs,
-            nmcuadro
+            nmcuadro,
+            descripl
      */
     public List<Map<String,String>> obtenerAgentesEndosoAgente(Map<String, String> params)     throws Exception;
 
     public List<Map<String,String>> obtenerAseguradosPoliza(Map<String, String> params)throws Exception;
     
     /**
-
      * Inserta relacion de agente y poliza 
      */
     public void                     pMovMpoliage(Map<String, String> params)                   throws Exception;
+    
     /**
-
      * Obtiene el numero de suplemento de la emision
      */
     public String                   pGetSuplemEmision(Map<String,String>params)                throws Exception;
@@ -369,7 +369,6 @@ public interface EndososDAO
     public List<Map<String,String>> obtieneDatosEndBeneficiario(Map<String, String> params)throws Exception;
     public List<Map<String,String>> obtieneDatosEndAseguradoAlterno(Map<String, String> params)throws Exception;
     public List<Map<String,String>> obtieneDatosEndAdaptacionesRC(Map<String, String> params)throws Exception;
-    public List<Map<String,String>> obtieneDatosEndVigencia(Map<String, String> params)throws Exception;
     public List<Map<String,String>> obtieneDatosEndTextoLibre(Map<String, String> params)throws Exception;
     public void actualizaNumeroEndosSigs(Map<String, String> params)throws Exception;
     
