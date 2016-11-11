@@ -12,6 +12,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
@@ -28,6 +37,8 @@ import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
@@ -48,15 +59,6 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import net.sf.json.JSONArray;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.ActionContext;
 
 /**
  *
@@ -183,6 +185,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	private FlujoMesaControlManager flujoMesaControlManager;
     
 	private FlujoVO flujo;
+	
+	@Autowired
+	private DespachadorManager despachadorManager;
 	
     public String entrar()
     {
@@ -873,6 +878,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	boolean esFlotilla = false;
     	String tipoflot    = null;
     	
+    	Date fechaHoy = new Date();
+    	
     	//sesion valida
     	if(exito)
     	{
@@ -1167,11 +1174,17 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	{
 	            		logger.debug("El status se usa del flujo y no PENDIENTE");
 	            		statusDetalle = flujo.getStatus();
+	            	} else {
+    	            	try {
+    	            	    statusDetalle = flujoMesaControlManager.recuperarEstatusDefectoRol(usuario.getRolActivo().getClave());
+                        } catch (Exception ex) {
+                            logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
+                        }
 	            	}
 	            	
 	            	mesaControlManager.movimientoDetalleTramite(
 	            			ntramite
-	            			,new Date()
+	            			,fechaHoy
 	            			,null//cdclausu
 	            			,Utils.join("Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite: ",comprarNmpoliza)
 	            			,cdusuari
@@ -1196,28 +1209,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             {
             	try
             	{
-	            	/*Map<String,Object>parMesCon=new LinkedHashMap<String,Object>(0);
-	            	parMesCon.put("pv_cdunieco_i"   , comprarCdunieco);
-	            	parMesCon.put("pv_cdramo_i"     , comprarCdramo);
-	            	parMesCon.put("pv_estado_i"     , "W");
-	            	parMesCon.put("pv_nmpoliza_i"   , "0");
-	            	parMesCon.put("pv_nmsuplem_i"   , "0");
-	            	parMesCon.put("pv_cdsucadm_i"   , null);
-	            	parMesCon.put("pv_cdsucdoc_i"   , null);
-	            	parMesCon.put("pv_cdtiptra_i"   , "1");
-	            	parMesCon.put("pv_ferecepc_i"   , new Date());
-	            	parMesCon.put("pv_cdagente_i"   , cdagente);
-	            	parMesCon.put("pv_referencia_i" , null);
-	            	parMesCon.put("pv_nombre_i"     , "");
-	            	parMesCon.put("pv_festatus_i"   , new Date());
-	            	parMesCon.put("pv_status_i"     , "2");
-	            	parMesCon.put("pv_comments_i"   , "");
-	            	parMesCon.put("pv_nmsolici_i"   , comprarNmpoliza);
-	            	parMesCon.put("pv_cdtipsit_i"   , cdtipsit);
-	            	parMesCon.put("cdusuari"        , cdusuari);
-	            	parMesCon.put("cdsisrol"        , cdsisrol);
-	            	WrapperResultados mesaContWr = kernelManagerSustituto.PMovMesacontrol(parMesCon);*/
-	            	
             		String tipoProcesoParaRecuperarFlujo = "I";
             		if (StringUtils.isNotBlank(tipoflot)) {
             			tipoProcesoParaRecuperarFlujo = tipoflot;
@@ -1238,14 +1229,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            			,"W"
 	            			,"0"
 	            			,"0"
-	            			,null
-	            			,null
+	            			,comprarCdunieco
+	            			,comprarCdunieco
 	            			,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-	            			,new Date()
+	            			,fechaHoy
 	            			,cdagente
 	            			,null
 	            			,""
-	            			,new Date()
+	            			,fechaHoy
 	            			,estatus
 	            			,""
 	            			,comprarNmpoliza
@@ -1261,47 +1252,28 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	
 	            	smap1.put("ntramite",ntramite);
 	            	
-	            	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-	            	parDmesCon.put("pv_ntramite_i"   , ntramite);
-	            	parDmesCon.put("pv_feinicio_i"   , new Date());
-	            	parDmesCon.put("pv_cdclausu_i"   , null);
-	            	parDmesCon.put("pv_comments_i"   , "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente");
-	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
-	            	parDmesCon.put("pv_cdmotivo_i"   , null);
-	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);*/
-	            	
-	            	mesaControlManager.movimientoDetalleTramite(
-	            			ntramite
-	            			,new Date()
-	            			,null//cdclausu
-	            			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
-	            			,cdusuari
-	            			,null//cdmotivo
-	            			,cdsisrol
-	            			,"S"//swagente
-	            			,estatus
-	            			,false
-	            			);
-	            	
-	            	mesaControlManager.movimientoDetalleTramite(
-	            			ntramite
-	            			,new Date()
-	            			,null//cdclausu
-	            			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
-	            			,cdusuari
-	            			,null//cdmotivo
-	            			,cdsisrol
-	            			,"S"//swagente
-	            			,estatus
-	            			,false
-	            			);
+	                RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+	                        cdusuari,
+	                        cdsisrol,
+	                        ntramite,
+	                        estatus,
+	                        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
+	                        null,  // cdrazrecha
+	                        null,  // cdusuariDes
+	                        null,  // cdsisrolDes
+	                        true,  // permisoAgente
+	                        false, // porEscalamiento
+	                        fechaHoy,
+	                        false  // sinGrabarDetalle
+	                        );
+	                
+	                respuesta = Utils.join(StringUtils.isBlank(respuesta) ? "" : respuesta, ". ", despacho.getMessage());
 	            	
 	            	try
 		            {
 		            	serviciosManager.grabarEvento(new StringBuilder("\nCotizar tramite grupo")
-		            	    ,"EMISION"     //cdmodulo
-		            	    ,"COMTRAMITMC" //cdevento
+		            	    ,Constantes.MODULO_EMISION     //cdmodulo
+		            	    ,Constantes.EVENTO_COMPRAR_TRAMITE_MC //cdevento
 		            	    ,new Date()    //fecha
 		            	    ,cdusuari
 		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()

@@ -583,6 +583,7 @@ public interface FlujoMesaControlDAO {
 			,String status
 			,Date fecstatu
 			,String cdusuari
+			,String cdunidspch
 			)throws Exception;
 	
 	public Map<String,Object> recuperarDatosTramiteValidacionCliente(
@@ -612,7 +613,7 @@ public interface FlujoMesaControlDAO {
 	
 	public Map<String,String> recuperarUsuarioHistoricoTramitePorRol(String ntramite, String cdsisrol) throws Exception;
 	
-	public void guardarHistoricoTramite(Date fecha, String ntramite, String cdusuari, String cdsisrol, String status) throws Exception;
+	public void guardarHistoricoTramite(Date fecha, String ntramite, String cdusuari, String cdsisrol, String status, String cdunidspch, String cdtipasig) throws Exception;
 	
 	/**
 	 * Se recupera una conexion a una pantalla o componente que no tenga ningun permiso

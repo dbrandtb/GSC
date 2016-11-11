@@ -9,6 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
@@ -20,14 +28,6 @@ import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.Utils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
-import com.opensymphony.xwork2.ActionContext;
 
 @Controller
 @Scope("prototype")
@@ -447,7 +447,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,cdtipsup    = smap1.get("cdtipsup")
 					,fechaEndoso = smap1.get("fechaEndoso")
 					,comfirmar   = smap1.get("confirmar")
-					,cdperpag    = smap1.get("cdperpag");
+					,cdperpag    = smap1.get("cdperpag")
+					,cdagente    = smap1.get("cdagente");
 			
 			Utils.validate(
 					cdunieco     , "No se recibio la sucursal"
@@ -455,7 +456,8 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,estado      , "No se recibio el estado de la poliza"
 					,nmpoliza    , "No se recibio el numero de poliza"
 					,cdtipsup    , "No se recibio el codigo de endoso"
-					,fechaEndoso , "No se recibio la fecha de efecto" );
+					,fechaEndoso , "No se recibio la fecha de efecto"
+					,cdagente    , "No se recibio el agente");
 			
 			omap1 = endososAutoManager.confirmarEndosoAltaIncisoAuto(
 					cdunieco
@@ -472,6 +474,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 					,flujo
 					,comfirmar
 					,cdperpag
+					,cdagente
 					);
 			
 			

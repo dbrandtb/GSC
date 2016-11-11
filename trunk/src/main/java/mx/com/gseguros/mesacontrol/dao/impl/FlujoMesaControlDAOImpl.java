@@ -9,13 +9,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
-import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.GenericMapper;
-import mx.com.gseguros.utils.Utils;
-import oracle.jdbc.driver.OracleTypes;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +17,13 @@ import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
+
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.utils.Utils;
+import oracle.jdbc.driver.OracleTypes;
 
 public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements FlujoMesaControlDAO {
 	
@@ -1945,13 +1945,15 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String status
 			,Date fecstatu
 			,String cdusuari
+			,String cdunidspch
 			)throws Exception
 	{
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
-		params.put("ntramite" , ntramite);
-		params.put("status"   , status);
-		params.put("fecstatu" , fecstatu);
-		params.put("cdusuari" , cdusuari);
+		params.put("ntramite"   , ntramite);
+		params.put("status"     , status);
+		params.put("fecstatu"   , fecstatu);
+		params.put("cdusuari"   , cdusuari);
+        params.put("cdunidspch" , cdunidspch);
 		ejecutaSP(new ActualizarStatusTramiteSP(getDataSource()),params);
 	}
 	
@@ -1959,11 +1961,12 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	{
 		protected ActualizarStatusTramiteSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_MESACONTROL.P_ACTUALIZA_STATUS_TRAMITE");
-			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("fecstatu" , OracleTypes.TIMESTAMP));
-			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			super(dataSource,"P_DSPCH_ACT_STATUS_TRAMITE");
+			declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fecstatu"   , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("cdusuari"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdunidspch" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -2168,14 +2171,17 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	}
 	
 	@Override
-	public void guardarHistoricoTramite(Date fecha, String ntramite, String cdusuari, String cdsisrol, String status) throws Exception
+	public void guardarHistoricoTramite(Date fecha, String ntramite, String cdusuari, String cdsisrol, String status,
+			String cdunidspch, String cdtipasig) throws Exception
 	{
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
-		params.put("fecha"    , fecha);
-		params.put("ntramite" , ntramite);
-		params.put("cdusuari" , cdusuari);
-		params.put("cdsisrol" , cdsisrol);
-		params.put("status"   , status);
+		params.put("fecha"      , fecha);
+		params.put("ntramite"   , ntramite);
+		params.put("cdusuari"   , cdusuari);
+		params.put("cdsisrol"   , cdsisrol);
+		params.put("status"     , status);
+		params.put("cdunidspch" , cdunidspch);
+		params.put("cdtipasig"  , cdtipasig);
 		ejecutaSP(new GuardarHistoricoTramiteSP(getDataSource()),params);
 	}
 	
@@ -2184,11 +2190,13 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		protected GuardarHistoricoTramiteSP(DataSource dataSource)
 		{
 			super(dataSource,"PKG_MESACONTROL.P_INSERTA_THMESACONTROL");
-			declareParameter(new SqlParameter("fecha"    , OracleTypes.TIMESTAMP));
-			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("fecha"      , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunidspch" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipasig"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

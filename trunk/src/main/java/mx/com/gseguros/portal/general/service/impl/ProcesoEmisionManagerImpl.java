@@ -5,6 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.WSEmisionAutoException;
@@ -17,6 +26,8 @@ import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
@@ -39,15 +50,6 @@ import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
@@ -155,6 +157,9 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
+	@Autowired
+	private DespachadorManager despachadorManager;
+	
 	@Override
 	public Map<String, String> emitir(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String cdtipsit, String ntramite, String cdusuari, String cdsisrol, String cdelemento,
@@ -165,6 +170,8 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 		String paso = null;
 		
 		try {
+		    Date fechaHoy = new Date();
+		    
 			// Datos de la sesion del usuario:
 			paso = "Obteniendo datos del usuario";
 			DatosUsuario datUs = cotizacionDAO.cargarInformacionUsuario(cdusuari, cdtipsit);
@@ -199,25 +206,23 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						msjeEnvio = msjeEnvio + " supera la edad de "+iAseguradoEdadInvalida.get("EDADMAXI")+" a&ntilde;os<br/>";
 					}
 				}
-				
-				Map<String, String> otvalores = new HashMap<String,String>();
-				otvalores.put("otvalor01", cdusuari);
-				otvalores.put("otvalor02", cdelemento);
-				otvalores.put("otvalor03", ntramite);
-				otvalores.put("otvalor04", cdpersonSesion);
-				otvalores.put("otvalor05", "EMISION");
-				String ntramiteAutorizacion = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo, estado, nmpoliza, 
-						"0", cdunieco, cdunieco, TipoTramite.EMISION_EN_ESPERA.getCdtiptra(), new Date(), null,
-						null, null, new Date(), EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
-						msjeEnvio, null, cdtipsit, cdusuari, cdsisrol, null, null, null, otvalores, null, null, null, null, false);
-				
-				msjeEnvio = msjeEnvio + "<br/>Tr\u00e1mite de autorizaci\u00f3n: "+ntramiteAutorizacion;
 	        	
-	        	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
-	        			"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")",
-	        			cdusuari, null, cdsisrol,"N", null, null, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),false);
+	        	RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+	        	        cdusuari,
+	        	        cdsisrol,
+	        	        ntramite,
+	        	        EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
+	        	        msjeEnvio,
+	        	        null,  // cdrazrecha
+	        	        null,  // cdusuariDes
+	        	        null,  // cdsisrolDes
+	        	        false, // permisoAgente
+	        	        false, // porEscalamiento
+	        	        fechaHoy,
+	        	        false  // sinGrabarDetalle
+	        	        );
 	        	
-	        	mesaControlDAO.actualizaStatusMesaControl(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+	        	msjeEnvio = Utils.join(msjeEnvio, ". ", despacho.getMessage());
 	        	
 				throw new ApplicationException(msjeEnvio, "Error " + paso);
 			}
@@ -232,28 +237,23 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					result.put("necesitaAutorizacion", "S");
 					String msjeAutorizacion = "La p\u00f3liza se envi\u00f3 a autorizaci\u00f3n debido a que se cambio el cuadro de comisiones";
 					
-					Map<String, String> otvalores = new HashMap<String,String>();
-					otvalores.put("otvalor01", cdusuari);
-					otvalores.put("otvalor02", cdelemento);
-					otvalores.put("otvalor03", ntramite);
-					otvalores.put("otvalor04", cdpersonSesion);
-					otvalores.put("otvalor05", "EMISION");
-					String ntramiteAutorizacion = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo, estado, nmpoliza, 
-							"0", cdunieco, cdunieco, TipoTramite.EMISION_EN_ESPERA.getCdtiptra(),
-							new Date(), null, null, null, new Date(), 
-							EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
-							msjeAutorizacion, null, cdtipsit,
-							cdusuari, cdsisrol, null,null,null,
-							otvalores, null, null, null, null, false);
+					RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+	                        cdusuari,
+	                        cdsisrol,
+	                        ntramite,
+	                        EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
+	                        msjeAutorizacion,
+	                        null,  // cdrazrecha
+	                        null,  // cdusuariDes
+	                        null,  // cdsisrolDes
+	                        false, // permisoAgente
+	                        false, // porEscalamiento
+	                        fechaHoy,
+	                        false  // sinGrabarDetalle
+	                        );
+	                
+					msjeAutorizacion = Utils.join(msjeAutorizacion, ". ", despacho.getMessage());
 					
-					msjeAutorizacion = msjeAutorizacion + "<br/>Tr\u00e1mite de autorizaci\u00f3n: "+ntramiteAutorizacion;
-					
-		        	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
-		        			"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")",
-		        			cdusuari, null, cdsisrol,"N", null, null, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),false);
-					
-		        	mesaControlDAO.actualizaStatusMesaControl(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
-		        	
 					throw new ApplicationException(msjeAutorizacion, "Error " + paso);
 				}
 			}
@@ -289,8 +289,8 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			
 			try {
             	serviciosManager.grabarEvento(new StringBuilder("\nEmision")
-            	    ,"EMISION"  //cdmodulo
-            	    ,"EMISION"  //cdevento
+            	    ,Constantes.MODULO_EMISION  //cdmodulo
+            	    ,Constantes.EVENTO_EMISION  //cdevento
             	    ,new Date() //fecha
             	    ,cdusuari
             	    ,cdsisrol

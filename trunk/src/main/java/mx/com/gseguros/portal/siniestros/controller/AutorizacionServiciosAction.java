@@ -9,6 +9,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.json.JSONUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -37,14 +45,6 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.json.JSONUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	private static final long serialVersionUID = -6059133827980738197L;
@@ -697,7 +697,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		logger.debug("Entra a obtieneMesesTiempoEspera Params: {}", params);
 		try {
 			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
-			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
+			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" aï¿½os";
 			logger.debug("mesesTiempoEspera: {} mensaje de respuesta : {}", mesesTiempoEspera,mensaje);
 		}catch( Exception e){
 			logger.error("Error obtieneMesesTiempoEspera : {}", e.getMessage(), e);
@@ -818,18 +818,18 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		String comments    = map1.get("comments");
 		logger.debug("comments: {}", comments); 
 		String commentsM   = comments.replaceAll("\n", "%0A").
-                replaceAll("á", "%C3%A1").
-                replaceAll("é", "%C3%A9").
-                replaceAll("í", "%C3%AD").
-                replaceAll("ó", "%C3%B3").
-                replaceAll("ú", "%C3%BA").
-                replaceAll("ñ", "%C3%B1").
-                replaceAll("Á", "%C3%81").
-                replaceAll("É", "%C3%89").
-                replaceAll("Í", "%C3%8D").
-                replaceAll("Ó", "%C3%93").
-                replaceAll("Ú", "%C3%9A").
-                replaceAll("Ñ", "%C3%91");
+                replaceAll("ï¿½", "%C3%A1").
+                replaceAll("ï¿½", "%C3%A9").
+                replaceAll("ï¿½", "%C3%AD").
+                replaceAll("ï¿½", "%C3%B3").
+                replaceAll("ï¿½", "%C3%BA").
+                replaceAll("ï¿½", "%C3%B1").
+                replaceAll("ï¿½", "%C3%81").
+                replaceAll("ï¿½", "%C3%89").
+                replaceAll("ï¿½", "%C3%8D").
+                replaceAll("ï¿½", "%C3%93").
+                replaceAll("ï¿½", "%C3%9A").
+                replaceAll("ï¿½", "%C3%91");
 		String cdsisrol    = map1.get("cdsisrol");
 		String cdunieco    = map1.get("cdunieco");
 		String cdramo      = map1.get("cdramo");

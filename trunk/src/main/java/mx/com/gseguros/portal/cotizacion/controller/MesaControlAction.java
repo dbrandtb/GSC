@@ -10,6 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -19,6 +27,8 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
@@ -27,15 +37,8 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class MesaControlAction extends PrincipalCoreAction
 {
@@ -78,6 +81,9 @@ public class MesaControlAction extends PrincipalCoreAction
 	
 	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
+	
+	@Autowired
+	private DespachadorManager despachadorManager;
 	
 	public String principal()
 	{
@@ -334,7 +340,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			kernelManager.validaUsuarioSucursal(omap.get("pv_cdsucdoc_i").toString(), null, null, user.getUser());
 			
 			//WrapperResultados res = kernelManager.PMovMesacontrol(omap);
-			String ntramiteGenerado = mesaControlManager.movimientoTramite(
+			String ntramiteGenerado = mesaControlManager.movimientoTramite (
 					(String)omap.get("pv_cdsucdoc_i")
 					,(String)omap.get("pv_cdramo_i")
 					,(String)omap.get("pv_estado_i")
@@ -480,8 +486,8 @@ public class MesaControlAction extends PrincipalCoreAction
 					       estado   = tramite.get("ESTADO"),
 					       nmsolici = tramite.get("NMSOLICI"),
 					       cdagente = tramite.get("CDAGENTE"),
-					       cdmodulo = "MESADECONTROL",
-					       cdevento = "APROBCOTCOL";
+					       cdmodulo = Constantes.MODULO_MESA_CONTROL,
+					       cdevento = Constantes.EVENTO_APROBACION_COT_COL;
 					StringBuilder sb = new StringBuilder("\nSe confirma una cotizacion colectiva");
 					serviciosManager.grabarEvento(
 						sb,
@@ -1022,7 +1028,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			omap.put("cdsisrol" , user.getRolActivo().getClave());
 			
 			//WrapperResultados res = kernelManager.PMovMesacontrol(omap);
-			String ntramiteGenerado = mesaControlManager.movimientoTramite(
+			String ntramiteGenerado = mesaControlManager.movimientoTramite (
 					(String)omap.get("pv_cdsucdoc_i")
 					,(String)omap.get("pv_cdramo_i")
 					,(String)omap.get("pv_estado_i")
@@ -1098,8 +1104,8 @@ public class MesaControlAction extends PrincipalCoreAction
         	try
             {
             	serviciosManager.grabarEvento(new StringBuilder("\nNuevo tramite")
-            	    ,"GENERAL"
-            	    ,"NUETRAMITMC"
+            	    ,Constantes.MODULO_GENERAL
+            	    ,Constantes.EVENTO_NUEVO_TRAMITE
             	    ,new Date()
             	    ,((UserVO)session.get("USUARIO")).getUser()
             	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -1148,60 +1154,54 @@ public class MesaControlAction extends PrincipalCoreAction
 		this.session=ActionContext.getContext().getSession();
 		logger.debug(Utils.log(
 				"\n#####################################",
-				"\n###### regresarEmisionEnAutori ######"
+				"\n###### regresarEmisionEnAutori ######",
+				"\n###### smap1 = ", smap1
 				));
-		logger.debug("smap1: "+smap1);
-		String ntramiteAuto = smap1.get("ntramiteAuto");
-		String ntramiteEmi  = smap1.get("ntramiteEmi");
-		String comentario   = smap1.get("comentario");
-		logger.debug("ntramiteAuto:"+ntramiteAuto);
-		logger.debug("ntramiteEmi:"+ntramiteEmi);
-		logger.debug("comentario:"+comentario);
-		String cdusuari;
-		String cdsisrol;
-		{
-			UserVO usuario = (UserVO)session.get("USUARIO");
-			cdusuari = usuario.getUser();
-			cdsisrol = usuario.getRolActivo().getClave();
-		}
-		logger.debug("cdusuari:"+cdusuari);
-		try
-		{
-			kernelManager.mesaControlUpdateStatus(ntramiteEmi  , EstatusTramite.PENDIENTE.getCodigo());
-			kernelManager.mesaControlUpdateStatus(ntramiteAuto , EstatusTramite.CONFIRMADO.getCodigo());
-			/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-        	parDmesCon.put("pv_ntramite_i"   , ntramiteEmi);
-        	parDmesCon.put("pv_feinicio_i"   , new Date());
-        	parDmesCon.put("pv_cdclausu_i"   , null);
-        	parDmesCon.put("pv_comments_i"   , "El gerente regres\u00f3 el tr\u00e1mite con las siguientes observaciones:<br/>"+comentario);
-        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
-        	parDmesCon.put("pv_cdmotivo_i"   , null);
-        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-        	kernelManager.movDmesacontrol(parDmesCon);*/
-			
-			mesaControlManager.movimientoDetalleTramite(
-					ntramiteEmi
-					,new Date()
-					,null
-					,"El gerente regres\u00f3 el tr\u00e1mite con las siguientes observaciones:<br/>"+comentario
-					,cdusuari
-					,null
-					,cdsisrol
-					,"N"
-					,EstatusTramite.PENDIENTE.getCodigo()
-					,false
-					);
-			
-        	mensaje = "Tr\u00e1mite regresado";
+		try {
+		    Utils.validate(smap1, "No hay datos");
+    		String ntramiteAuto = smap1.get("ntramiteAuto"),
+    		       ntramiteEmi  = smap1.get("ntramiteEmi"),
+    		       comentario   = smap1.get("comentario");
+    		UserVO usuario = Utils.validateSession(session);
+    		String cdusuari = usuario.getUser(),
+                   cdsisrol = usuario.getRolActivo().getClave();
+			Date fechaHoy = new Date();
+			RespuestaTurnadoVO despachoAutoriz = despachadorManager.turnarTramite(
+			        cdusuari, 
+			        cdsisrol, 
+			        ntramiteAuto, 
+			        EstatusTramite.CONFIRMADO.getCodigo(), 
+			        Utils.join("El gerente regres\u00f3 el tr\u00e1mite con las siguientes observaciones: ", comentario), 
+			        null,  // cdrazrecha 
+			        null,  // cdusuariDes 
+			        null,  // cdsisrolDes 
+			        false, // permisoAgente 
+			        false, // porEscalamiento 
+			        fechaHoy, 
+			        false  // sinGrabarDetalle
+			        );
+			RespuestaTurnadoVO despachoEmisi = despachadorManager.turnarTramite(
+                    cdusuari, 
+                    cdsisrol, 
+                    ntramiteEmi, 
+                    EstatusTramite.EN_SUSCRIPCION.getCodigo(), 
+                    Utils.join("El gerente regres\u00f3 el tr\u00e1mite con las siguientes observaciones: ", comentario), 
+                    null,  // cdrazrecha 
+                    null,  // cdusuariDes 
+                    null,  // cdsisrolDes 
+                    false, // permisoAgente 
+                    false, // porEscalamiento 
+                    fechaHoy, 
+                    false  // sinGrabarDetalle
+                    );
+        	mensaje = Utils.join("Tr\u00e1mite regresado. ", despachoEmisi.getMessage());
         	success = true;
-		}
-		catch(Exception ex)
-		{
-			logger.error("error al regresar emision de autorizacion",ex);
-			success = false;
-			mensaje = ex.getMessage();
+		} catch (Exception ex) {
+			mensaje = Utils.manejaExcepcion(ex);
 		}
 		logger.debug(Utils.log(
+		        "\n###### success = " , success,
+		        "\n###### mensaje = " , mensaje,
 				"\n###### regresarEmisionEnAutori ######",
 				"\n#####################################"
 				));

@@ -6,12 +6,13 @@ package mx.com.gseguros.portal.general.util;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import mx.com.gseguros.utils.Utils;
 
 /**
  *
@@ -855,12 +856,12 @@ public class GeneradorCampos
         		{}
         		else
         		{
-        			throw new Exception(descExcTipoCampoOtro);
+        			throw new Exception(Utils.join(descExcTipoCampoOtro, ". Campo: ", comp.getLabel(), ", tipo: ", tipo));
         		}
         	}
         	else
         	{
-        		throw new Exception(descExcTipoCampoVacio);
+        		throw new Exception(Utils.join(descExcTipoCampoVacio, ". Campo: ", comp.getLabel()));
         	}
         }
 

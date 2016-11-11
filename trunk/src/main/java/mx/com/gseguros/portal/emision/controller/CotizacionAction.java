@@ -56,6 +56,8 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.model.PuntajeCoberturasPlanVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
@@ -159,6 +161,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
+	
+	@Autowired
+	private DespachadorManager despachadorManager;
 	
 	public CotizacionAction()
 	{
@@ -1276,8 +1281,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				try
 	            {
 	            	serviciosManager.grabarEvento(new StringBuilder("\nEmision")
-	            	    ,"EMISION"  //cdmodulo
-	            	    ,"EMISION"  //cdevento
+	            	    ,Constantes.MODULO_EMISION  //cdmodulo
+	            	    ,Constantes.EVENTO_EMISION  //cdevento
 	            	    ,new Date() //fecha
 	            	    ,cdusuari
 	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -5304,7 +5309,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		if(exito)
 		{
-			respuesta       = "Se han complementado los asegurados";
+			respuesta       = Utils.join("Se han complementado los asegurados",
+			        StringUtils.isBlank(respuesta)
+    			        ? ""
+    			        : Utils.join(". ", respuesta));
 			respuestaOculta = "Todo OK";
 		}
 		
@@ -6225,7 +6233,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                extOcupacion = auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue()):"";
 		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
 	                } catch(Exception ex) {
-	                    logger.error("error al leer la extraprima de ocupación como numero, se intentara como string:",ex);
+	                    logger.error("error al leer la extraprima de ocupaciï¿½n como numero, se intentara como string:",ex);
 	                    try {
 	                    	auxCell=row.getCell(22);
 			                logger.debug("EXTRAPRIMA OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
@@ -6494,7 +6502,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                        }
 			                } catch (Exception e) {
 								filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Trámite' (AF) de la fila ",fila," "));
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Trï¿½mite' (AF) de la fila ",fila," "));
 							}
 		                }
 		                finally {
@@ -7867,7 +7875,10 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				if(StringUtils.isBlank(respuesta))
 				{
-					respuesta = "Se gener\u00f3 el tr\u00e1mite "+smap1.get("ntramite");
+					respuesta = Utils.join("Se gener\u00f3 el tr\u00e1mite ", smap1.get("ntramite"),
+					        StringUtils.isBlank(respuesta)
+    					        ? ""
+    					        : Utils.join(". ", respuesta));
 				}
 			}
 			catch(Exception ex)
@@ -8172,8 +8183,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 	            	logger.debug("12.- Entra a serviciosManager.grabarEvento");
 	            	serviciosManager.grabarEvento(new StringBuilder("\nCotizacion grupo")
-	            	    ,"COTIZACION" //cdmodulo
-	            	    ,"COTIZA"     //cdevento
+	            	    ,Constantes.MODULO_COTIZACION //cdmodulo
+	            	    ,Constantes.EVENTO_COTIZAR     //cdevento
 	            	    ,new Date()   //fecha
 	            	    ,cdusuari
 	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -8384,6 +8395,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		logger.debug("29,30,31,32,33,34,35,36,37.- XXX Se Quito insercion de contratante MOV_MPERSONA,MDOMICIL");
 		
+		Date fechaHoy = new Date();
+		
 		//tramite
 		logger.debug("38.- resp.exito:{} hayTramite:{} hayTramiteVacio: {} censoAtrasado: {}",resp.exito,hayTramite,hayTramiteVacio,censoAtrasado);
 		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||duplicar))
@@ -8418,11 +8431,11 @@ public class CotizacionAction extends PrincipalCoreAction
 							,cdunieco
 							,cdunieco
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,new Date()
+							,fechaHoy
 							,cdagente
 							,null
 							,null
-							,new Date()
+							,fechaHoy
 							,estatus
 							,null
 							,nmpoliza
@@ -8437,29 +8450,23 @@ public class CotizacionAction extends PrincipalCoreAction
 							);
 					smap1.put("ntramite",ntramiteNew);
 					
-					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-	            	parDmesCon.put("pv_ntramite_i"   , ntramiteNew);
-	            	parDmesCon.put("pv_feinicio_i"   , new Date());
-	            	parDmesCon.put("pv_cdclausu_i"   , null);
-	            	parDmesCon.put("pv_comments_i"   , "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente");
-	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
-	            	parDmesCon.put("pv_cdmotivo_i"   , null);
-	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-	            	kernelManager.movDmesacontrol(parDmesCon);*/
 					logger.debug("42.- mesaControlManager.movimientoDetalleTramite");
 					
-					mesaControlManager.movimientoDetalleTramite(
-							ntramiteNew
-							,new Date()
-							,null
-							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
-							,cdusuari
-							,null
-							,cdsisrol
-							,"S"
-							,estatus
-							,false
-							);
+					RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+					        cdusuari,
+					        cdsisrol,
+					        ntramiteNew,
+					        estatus,
+					        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
+					        null,  // cdrazrecha
+					        null,  // cdusuariDes
+					        null,  // cdsisrolDes
+					        true,  // permisoAgente
+					        false, // porEscalamiento
+					        fechaHoy,
+					        false  //sinGrabarDetalle
+					        );
+					resp.respuesta = despacho.getMessage();
 					
 					/* JTEZVA 7 sep 2016
 					 * el tramite no se turna por lo que no lleva doble detalle
@@ -8486,9 +8493,9 @@ public class CotizacionAction extends PrincipalCoreAction
 		            {
 	            		logger.debug("43.- serviciosManager.grabarEvento");
 		            	serviciosManager.grabarEvento(new StringBuilder("\nNuevo tramite grupo")
-		            	    ,"EMISION"    //cdmodulo
-		            	    ,"GENTRAGRUP" //cdevento
-		            	    ,new Date()   //fecha
+		            	    ,Constantes.MODULO_EMISION               //cdmodulo
+		            	    ,Constantes.EVENTO_GENERAR_TRAMITE_GRUPO //cdevento
+		            	    ,fechaHoy   //fecha
 		            	    ,cdusuari
 		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
 		            	    ,ntramiteNew
@@ -8524,22 +8531,21 @@ public class CotizacionAction extends PrincipalCoreAction
 					siniestrosManager.actualizaOTValorMesaControl(params);
 					
 					if (duplicar) {
-						mesaControlManager.movimientoDetalleTramite(
-								ntramiteActualiza,
-								new Date(),
-								null, // cdclausu
-								Utils.join("Se duplica la cotizaci\u00f3n para generar la nueva solicitud ", nmpoliza),
-								cdusuari,
-								null, // cdmotivo
-								cdsisrol,
-								"S", // swagente
-								EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
-								false // cerrado
-								);
-						
-						smap1.put("nombreUsuarioDestino"
-		            			,cotizacionManager.turnaPorCargaTrabajo(ntramiteActualiza,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
-		            			);
+					    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+					            cdusuari,
+					            cdsisrol,
+					            ntramite,
+					            EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
+					            Utils.join("Se duplica la cotizaci\u00f3n para generar la nueva solicitud ", nmpoliza),
+					            null,  // cdrazrecha
+					            null,  // cdusuariDes
+					            null,  // cdsisrolDes
+					            true,  // permisoAgente
+					            false, // porEscalamiento
+					            fechaHoy,
+					            false  // sinGrabarDetalle
+					            );
+					    resp.respuesta = despacho.getMessage();
 					}
 				}
 			}
@@ -8930,8 +8936,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 	            	logger.debug("12.- Entra a serviciosManager.grabarEvento");
 	            	serviciosManager.grabarEvento(new StringBuilder("\nCotizacion grupo")
-	            	    ,"COTIZACION" //cdmodulo
-	            	    ,"COTIZA"     //cdevento
+	            	    ,Constantes.MODULO_COTIZACION //cdmodulo
+	            	    ,Constantes.EVENTO_COTIZAR     //cdevento
 	            	    ,new Date()   //fecha
 	            	    ,cdusuari
 	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -9267,7 +9273,16 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					logger.debug("40.- consultasManager.recuperarDatosFlujoEmision");
 					Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(cdramo,"C");
-
+					
+					String estatus = EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo();
+                    try {
+                        estatus = flujoMesaControlManager.recuperarEstatusDefectoRol(cdsisrol);
+                    } catch (Exception ex) {
+                        logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
+                    }
+					
+					Date fechaHoy = new Date();
+					
 					//logger.debug("");
 					logger.debug("41.- mesaControlManager.movimientoTramite");
 					String ntramiteNew = mesaControlManager.movimientoTramite(
@@ -9279,12 +9294,12 @@ public class CotizacionAction extends PrincipalCoreAction
 							,cdunieco
 							,cdunieco
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,new Date()
+							,fechaHoy
 							,cdagente
 							,null
 							,null
-							,new Date()
-							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							,fechaHoy
+							,estatus
 							,null
 							,nmpoliza
 							,cdtipsit
@@ -9298,30 +9313,26 @@ public class CotizacionAction extends PrincipalCoreAction
 							);
 					smap1.put("ntramite",ntramiteNew);
 					
-					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-	            	parDmesCon.put("pv_ntramite_i"   , ntramiteNew);
-	            	parDmesCon.put("pv_feinicio_i"   , new Date());
-	            	parDmesCon.put("pv_cdclausu_i"   , null);
-	            	parDmesCon.put("pv_comments_i"   , "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente");
-	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
-	            	parDmesCon.put("pv_cdmotivo_i"   , null);
-	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-	            	kernelManager.movDmesacontrol(parDmesCon);*/
 					logger.debug("42.- mesaControlManager.movimientoDetalleTramite");
 					
-					mesaControlManager.movimientoDetalleTramite(
-							ntramiteNew
-							,new Date()
-							,null
-							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
-							,cdusuari
-							,null
-							,cdsisrol
-							,"S"
-							,EstatusTramite.PENDIENTE.getCodigo()
-							,false
-							);
+					RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+                            cdusuari,
+                            cdsisrol,
+                            ntramiteNew,
+                            estatus,
+                            "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
+                            null,  // cdrazrecha
+                            null,  // cdusuariDes
+                            null,  // cdsisrolDes
+                            true,  // permisoAgente
+                            false, // porEscalamiento
+                            fechaHoy,
+                            false  //sinGrabarDetalle
+                            );
+					resp.respuesta = despacho.getMessage();
 					
+					/* JTEZVA 7 sep 2016
+                     * el tramite no se turna por lo que no lleva doble detalle
 					mesaControlManager.movimientoDetalleTramite(
 							ntramiteNew
 							,new Date()
@@ -9338,13 +9349,14 @@ public class CotizacionAction extends PrincipalCoreAction
 	            	smap1.put("nombreUsuarioDestino"
 	            			,cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
 	            			);
+	            	*/
 	            	
 	            	try
 		            {
 	            		logger.debug("43.- serviciosManager.grabarEvento");
 		            	serviciosManager.grabarEvento(new StringBuilder("\nNuevo tramite grupo")
-		            	    ,"EMISION"    //cdmodulo
-		            	    ,"GENTRAGRUP" //cdevento
+		            	    ,Constantes.MODULO_EMISION               //cdmodulo
+		            	    ,Constantes.EVENTO_GENERAR_TRAMITE_GRUPO //cdevento
 		            	    ,new Date()   //fecha
 		            	    ,cdusuari
 		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -13068,8 +13080,10 @@ public class CotizacionAction extends PrincipalCoreAction
     						,true //censoCompleto
     						,false // duplicar
     						);
-    				exito           = aux.exito;
-    				respuesta       = aux.respuesta;
+    				exito     = aux.exito;
+    				respuesta = StringUtils.isBlank(aux.respuesta)
+    				        ? ""
+    				        : aux.respuesta;
     				respuestaOculta = aux.respuestaOculta;
     			}
     			catch(Exception ex)

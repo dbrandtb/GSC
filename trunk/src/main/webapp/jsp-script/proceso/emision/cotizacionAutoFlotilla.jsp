@@ -570,7 +570,7 @@ debug('_p30_tatrisitAutoWindows:'  , _p30_tatrisitAutoWindows);
 
 Ext.onReady(function()
 {
-    _grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p30_smap1.cdramo);
+    //_grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p30_smap1.cdramo);
 
     Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
@@ -6661,6 +6661,7 @@ function _p30_confirmarEndoso()
                 ,fechaEndoso : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
                 ,confirmar   : 'no'
                 ,cdperpag    : _p30_smap1.CDPERPAG
+                ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
             }
             ,slist1 : []
             ,slist2 : []
@@ -6773,6 +6774,7 @@ function _p30_confirmarEndoso()
 															                ,fechaEndoso : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
 															                ,confirmar   : 'si'
 															                ,cdperpag    : _p30_smap1.CDPERPAG
+															                ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
 															            }
 															            ,slist1 : []
 															            ,slist2 : []

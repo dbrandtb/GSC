@@ -15,6 +15,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
@@ -32,6 +48,8 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.general.dao.AseguradoDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
@@ -53,22 +71,6 @@ import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class CotizacionManagerImpl implements CotizacionManager 
 {
@@ -114,9 +116,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
 	
-	
 	@Autowired
 	private AseguradoDAO aseguradoDAO;
+	
+	@Autowired
+	private DespachadorManager despachadorManager;
 	
 	@Override
 	public void movimientoTvalogarGrupo(
@@ -3884,6 +3888,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		
 		final String LINEA = "1";
 		
+		Date fechaHoy = new Date();
+		
 		//mpolisit y tvalosit
 		if(resp.isExito())
 		{
@@ -3993,9 +3999,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 				try
 	            {
 	            	cotizacionDAO.grabarEvento(new StringBuilder("\nCotizacion grupo")
-	            	    ,"COTIZACION" //cdmodulo
-	            	    ,"COTIZA"     //cdevento
-	            	    ,new Date()   //fecha
+	            	    ,Constantes.MODULO_COTIZACION //cdmodulo
+	            	    ,Constantes.EVENTO_COTIZAR    //cdevento
+	            	    ,fechaHoy   //fecha
 	            	    ,cdusuari
 	            	    ,((UserVO)ActionContext.getContext().getSession().get("USUARIO")).getRolActivo().getClave()
 	            	    ,ntramite
@@ -4154,13 +4160,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,cdunieco
 							,cdunieco
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,new Date()
+							,fechaHoy
 							,cdagente
 							,null      //referencia
 							,null      //nombre
-							,new Date()
+							,fechaHoy
 							,estatus
-							,null      //comments
+							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
 							,nmpoliza
 							,cdtipsit
 							,cdusuari
@@ -4169,24 +4175,26 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,datosFlujo.get("cdtipflu")
 	            			,datosFlujo.get("cdflujomc")
 							,otvalorMesaControl
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null, false
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null, false, null
 							);
 					resp.getSmap().put("ntramite" , ntramite);
 					
-					mesaControlDAO.movimientoDetalleTramite(
-							ntramite
-							,new Date()
-							,null       //cdclausu
-							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
-							,cdusuari
-							,null       //cdmotivo
-							,cdsisrol
-							,"S"
-							,null
-							,null
-							,estatus
-							,false
-							);
+					RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+					        cdusuari,
+					        cdsisrol,
+					        ntramite,
+					        estatus,
+					        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
+					        null,  // cdrazrecha
+					        cdusuari,
+					        cdsisrol,
+					        true,  // permisoAgente
+					        false, //porEscalamiento
+					        fechaHoy,
+					        false  // sinGrabarDetalle
+					        );
+					
+					resp.setRespuesta(despacho.getMessage());
 					
 					/* JTEZVA 7 sep 2016
 					 * el tramite no se turna por lo que no lleva doble detalle
@@ -4214,8 +4222,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					try
 		            {
 						cotizacionDAO.grabarEvento(new StringBuilder("\nNuevo tramite grupo")
-		            	    ,"EMISION"    //cdmodulo
-		            	    ,"GENTRAGRUP" //cdevento
+		            	    ,Constantes.MODULO_EMISION    //cdmodulo
+		            	    ,Constantes.EVENTO_GENERAR_TRAMITE_GRUPO //cdevento
 		            	    ,new Date()   //fecha
 		            	    ,cdusuari
 		            	    ,((UserVO)ActionContext.getContext().getSession().get("USUARIO")).getRolActivo().getClave()
@@ -4257,24 +4265,21 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,valoresTramite);
 					
 					if (duplicar) {
-						mesaControlDAO.movimientoDetalleTramite(
-								ntramiteActualiza,
-								new Date(),
-								null, // cdclausu
-								Utils.join("Se duplica la cotizaci\u00f3n para generar la nueva solicitud ", nmpoliza),
-								cdusuari,
-								null, // cdmotivo
-								cdsisrol,
-								"S", // swagente
-								null, // cdusuariDest
-								null, // cdsisrolDest
-								EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
-								false //cerrado
-								);
-						
-						resp.getSmap().put("nombreUsuarioDestino"
-								,mesaControlDAO.turnaPorCargaTrabajo(ntramiteActualiza,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
-						);
+					    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+					            cdusuari,
+					            cdsisrol,
+					            ntramiteActualiza,
+					            EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
+					            Utils.join("Se duplica la cotizaci\u00f3n para generar la nueva solicitud ", nmpoliza),
+					            null,  // cdrazrecha,
+					            null,  // cdusuariDes,
+					            null,  // cdsisrolDes,
+					            true,  // permisoAgente,
+					            false, // porEscalamiento,
+					            fechaHoy,
+					            false  // sinGrabarDetalle
+					            );
+					    resp.setRespuesta(despacho.getMessage());
 					}
 				}
 			}
@@ -4373,7 +4378,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,cdperpag
 							);
 					logger.debug("##############GRABANDO EVENTO DE COTIZACION 1##############");
-					cotizacionDAO.grabarEvento(new StringBuilder(), "COTIZACION", "COTIZA", new Date(), cdusuari, cdsisrol, ntramite, cdunieco, cdramo, "W", nmpoliza, nmpoliza, cdagente, "", "", null);
+					cotizacionDAO.grabarEvento(new StringBuilder(),
+					        Constantes.MODULO_COTIZACION,
+					        Constantes.EVENTO_COTIZAR,
+					        new Date(), cdusuari, cdsisrol, ntramite, cdunieco, cdramo, "W", nmpoliza, nmpoliza, cdagente, "", "", null);
 				}
 			}
 			catch(Exception ex)
@@ -4410,7 +4418,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		
 		if(resp.isExito())
 		{
-			resp.setRespuesta(new StringBuilder("Se gener\u00f3 el tr\u00e1mite ").append(ntramite).toString());
+		    String mensaje = resp.getRespuesta();
+			resp.setRespuesta(Utils.join("Se gener\u00f3 el tr\u00e1mite ", ntramite,
+			        StringUtils.isBlank(mensaje)
+			            ? ""
+			            : (Utils.join(". ", mensaje))
+			));
 			resp.setRespuestaOculta("Todo OK");
 		}
 		
@@ -7829,6 +7842,8 @@ public class CotizacionManagerImpl implements CotizacionManager
     	
     	String paso = null;
     	
+    	Date fechaHoy = new Date();
+    	
     	try {
     		
         	//datos de usuario
@@ -7940,16 +7955,16 @@ public class CotizacionManagerImpl implements CotizacionManager
             			"W",
             			"0",
             			"0", 
-            			null,
-            			null,
+            			cdunieco,
+            			cdunieco,
             			cdtiptra,
-            			new Date(),
+            			fechaHoy,
             			cdagente,
-            			null,
-            			"", 
-            			new Date(),
-            			EstatusTramite.PENDIENTE.getCodigo(),
             			"",
+            			"", 
+            			fechaHoy,
+            			EstatusTramite.PENDIENTE.getCodigo(),
+            			"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
             			nmpoliza,
             			cdtipsit,
             			cdusuari,
@@ -7962,20 +7977,28 @@ public class CotizacionManagerImpl implements CotizacionManager
             			sucursal,
             			ramo,
             			poliza,
-            			false
+            			false,
+            			null
             	);
             	
-            	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
-            			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
-            			,cdusuari, null, cdsisrol,"S", null, null, EstatusTramite.PENDIENTE.getCodigo(),false);
-            	
-            	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
-            			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
-            			,cdusuari, null, cdsisrol,"S", null, null, EstatusTramite.PENDIENTE.getCodigo(),false);
-            	
+            	RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+            	        cdusuari,
+            	        cdsisrol,
+            	        ntramite,
+            	        EstatusTramite.PENDIENTE.getCodigo(),
+            	        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
+            	        null,  // cdrazrecha
+            	        null,  // cdusuariDes
+            	        null,  // cdsisrolDes
+            	        true,  // permisoAgente
+            	        false, // porEscalamiento
+            	        fechaHoy,
+            	        false  // sinGrabarDetalle
+            	        );
+            	logger.debug(despacho.getMessage());
             	try {
 	            	cotizacionDAO.grabarEvento(new StringBuilder("\nCotizar tramite grupo"), 
-	            			"EMISION", "COMTRAMITMC", new Date(), cdusuari, cdsisrol, ntramite, 
+	            			Constantes.MODULO_EMISION, Constantes.EVENTO_COMPRAR_TRAMITE_MC, new Date(), cdusuari, cdsisrol, ntramite, 
 	            			cdunieco, cdramo, "W", nmpoliza, nmpoliza, 
 	            			cdagente, null, null, null);
 	            } catch(Exception ex) {
@@ -8331,7 +8354,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	    			,cdperpag
 	    			);
     		logger.debug("@@@@@@@@@@@@@@@@@GRABANDO EVENTO DE COTIZACION 2@@@@@@@@@@@@@@@@@");
-    		cotizacionDAO.grabarEvento(new StringBuilder(), "COTIZACION", "COTIZA", new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
+    		cotizacionDAO.grabarEvento(new StringBuilder(), Constantes.MODULO_COTIZACION, Constantes.EVENTO_COTIZAR,
+    		        new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
     	}
 	}
     
@@ -8613,7 +8637,8 @@ public class CotizacionManagerImpl implements CotizacionManager
         			,cdperpag
         			);
     		    logger.debug("@@@@@@@@@@@@@@@@@GRABANDO EVENTO DE COTIZACION 3@@@@@@@@@@@@@@@@@");
-    		    cotizacionDAO.grabarEvento(new StringBuilder(), "COTIZACION", "COTIZA", new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
+    		    cotizacionDAO.grabarEvento(new StringBuilder(), Constantes.MODULO_COTIZACION, Constantes.EVENTO_COTIZAR,
+    		            new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
     		}
     		catch(Exception ex)
     		{
@@ -9086,6 +9111,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return pagoRepartido;
 	}
 	
+	/*
 	@Deprecated
 	@Override
 	public String turnaPorCargaTrabajo(
@@ -9111,6 +9137,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				));
 		return nombre;
 	}
+	*/
 	
 	@Override
 	public String guardarConfiguracionGarantias(
@@ -10483,7 +10510,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,cdperpag
 						);
 				logger.debug("@@@@@@@@@@@@@@@@@GRABANDO EVENTO DE COTIZACION 4@@@@@@@@@@@@@@@@@");
-				cotizacionDAO.grabarEvento(new StringBuilder(), "COTIZACION", "COTIZA", new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
+				cotizacionDAO.grabarEvento(new StringBuilder(), Constantes.MODULO_COTIZACION, Constantes.EVENTO_COTIZAR,
+				        new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
 			}
 			catch(Exception ex)
 			{

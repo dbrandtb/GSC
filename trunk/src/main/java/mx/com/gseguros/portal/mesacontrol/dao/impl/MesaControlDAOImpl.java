@@ -16,9 +16,6 @@ import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
-import mx.com.aon.portal.dao.CustomStoredProcedure;
-import mx.com.aon.portal.dao.WrapperResultadosGeneric;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
@@ -53,17 +50,16 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	}
 	
 	@Override
-	public String movimientoMesaControl(
-			String cdunieco  , String cdramo   , String estado     , String nmpoliza
-			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
-			,Date ferecepc   , String cdagente , String referencia , String nombre
-			,Date festatus   , String status   , String comments   , String nmsolici
-			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
-			,String cdtipflu , String cdflujomc
-			,Map<String, String> valores
-			,String cdtipsup , String renuniext , String renramo , String renpoliex, boolean origenMesa
-			)throws Exception
-	{
+	public String movimientoMesaControl (
+			String cdunieco  , String cdramo   , String estado     , String nmpoliza,
+			String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra,
+			Date ferecepc   , String cdagente , String referencia , String nombre,
+			Date festatus   , String status   , String comments   , String nmsolici,
+			String cdtipsit , String cdusuari , String cdsisrol   , String swimpres,
+			String cdtipflu , String cdflujomc,
+			Map<String, String> valores,
+			String cdtipsup , String renuniext , String renramo , String renpoliex, boolean origenMesa,
+			String cdunidspch) throws Exception {
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
 		params.put("cdunieco"  , cdunieco);
 		params.put("cdramo"    , cdramo);
@@ -93,31 +89,26 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("renpoliex" , renpoliex);
 		
 		params.put("sworigenmesa" , origenMesa ? "S" : "N");
+		params.put("cdunidspch" , cdunidspch);
 		
-		if(valores==null)
-		{
+		if (valores==null) {
 			valores = new LinkedHashMap<String,String>();
 		}
 		
-		for(int i=1; i <= 50; i++)
-		{
+		for (int i=1; i <= 50; i++) {
 			String key    = Utils.join("otvalor",StringUtils.leftPad(String.valueOf(i),2,"0"));
 			String pv_key = Utils.join("pv_",key);
-			if(!valores.containsKey(key))
-			{
+			if (!valores.containsKey(key)) {
 				valores.put(key,valores.get(pv_key));
 			}
 		}
-		
 		params.putAll(valores);
 		Map<String,Object>procResult=ejecutaSP(new MovimientoMesaControl(getDataSource()),params);
 		return String.valueOf(procResult.get("pv_tramite_o"));
 	}
 	
-	protected class MovimientoMesaControl extends StoredProcedure
-	{
-		protected MovimientoMesaControl(DataSource dataSource)
-		{
+	protected class MovimientoMesaControl extends StoredProcedure {
+		protected MovimientoMesaControl (DataSource dataSource) {
 			super(dataSource,"PKG_SATELITES2.P_MOV_MESACONTROL");
 			declareParameter(new SqlParameter("cdunieco"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"     , OracleTypes.VARCHAR));
@@ -197,6 +188,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("renpoliex"  , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlParameter("sworigenmesa" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunidspch"   , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_tramite_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
@@ -646,6 +638,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 	}
 	
+	/*
 	@Override
 	public String turnaPorCargaTrabajo(
 			String ntramite
@@ -673,6 +666,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
+	*/
 	
 	@Override
 	public void validarAntesDeTurnar(

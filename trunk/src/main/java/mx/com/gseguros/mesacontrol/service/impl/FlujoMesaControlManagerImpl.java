@@ -8,6 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
@@ -17,26 +24,21 @@ import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
+import mx.com.gseguros.portal.despachador.dao.DespachadorDAO;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.MailService;
-import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
@@ -72,6 +74,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Autowired
 	private EndososDAO endososDAO;
+	
+	@Autowired
+	private DespachadorDAO despachadorDAO;
+	
+	@Autowired
+	private DespachadorManager despachadorManager;
 	
 	@Override
 	public Map<String,Item> workflow(String cdsisrol) throws Exception
@@ -1948,34 +1956,34 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 				"\n@@@@@@ registrarTramite @@@@@@",
-				"\n@@@@@@ cdunieco   = " , cdunieco,
-				"\n@@@@@@ cdramo     = " , cdramo,
-				"\n@@@@@@ estado     = " , estado,
-				"\n@@@@@@ nmpoliza   = " , nmpoliza,
-				"\n@@@@@@ nmsuplem   = " , nmsuplem,
-				"\n@@@@@@ cdsucadm   = " , cdsucadm,
-				"\n@@@@@@ cdsucdoc   = " , cdsucdoc,
-				"\n@@@@@@ cdtiptra   = " , cdtiptra,
-				"\n@@@@@@ ferecepc   = " , ferecepc,
-				"\n@@@@@@ cdagente   = " , cdagente,
-				"\n@@@@@@ referencia = " , referencia,
-				"\n@@@@@@ nombre     = " , nombre,
-				"\n@@@@@@ festatus   = " , festatus,
-				"\n@@@@@@ status     = " , status,
-				"\n@@@@@@ comments   = " , comments,
-				"\n@@@@@@ nmsolici   = " , nmsolici,
-				"\n@@@@@@ cdtipsit   = " , cdtipsit,
-				"\n@@@@@@ cdusuari   = " , cdusuari,
-				"\n@@@@@@ cdsisrol   = " , cdsisrol,
-				"\n@@@@@@ swimpres   = " , swimpres,
-				"\n@@@@@@ cdtipflu   = " , cdtipflu,
-				"\n@@@@@@ cdflujomc  = " , cdflujomc,
-				"\n@@@@@@ valores    = " , valores,
-				"\n@@@@@@ cdtipsup   = " , cdtipsup,
-				"\n@@@@@@ cduniext   = " , cduniext,
-				"\n@@@@@@ ramo       = " , ramo,
-				"\n@@@@@@ nmpoliex   = " , nmpoliex,
-				"\n@@@@@@ origenMesa = " , origenMesa
+				"\n@@@@@@ cdunieco    = " , cdunieco,
+				"\n@@@@@@ cdramo      = " , cdramo,
+				"\n@@@@@@ estado      = " , estado,
+				"\n@@@@@@ nmpoliza    = " , nmpoliza,
+				"\n@@@@@@ nmsuplem    = " , nmsuplem,
+				"\n@@@@@@ cdsucadm    = " , cdsucadm,
+				"\n@@@@@@ cdsucdoc    = " , cdsucdoc,
+				"\n@@@@@@ cdtiptra    = " , cdtiptra,
+				"\n@@@@@@ ferecepc    = " , ferecepc,
+				"\n@@@@@@ cdagente    = " , cdagente,
+				"\n@@@@@@ referencia  = " , referencia,
+				"\n@@@@@@ nombre      = " , nombre,
+				"\n@@@@@@ festatus    = " , festatus,
+				"\n@@@@@@ status      = " , status,
+				"\n@@@@@@ comments    = " , comments,
+				"\n@@@@@@ nmsolici    = " , nmsolici,
+				"\n@@@@@@ cdtipsit    = " , cdtipsit,
+				"\n@@@@@@ cdusuari    = " , cdusuari,
+				"\n@@@@@@ cdsisrol    = " , cdsisrol,
+				"\n@@@@@@ swimpres    = " , swimpres,
+				"\n@@@@@@ cdtipflu    = " , cdtipflu,
+				"\n@@@@@@ cdflujomc   = " , cdflujomc,
+				"\n@@@@@@ valores     = " , valores,
+				"\n@@@@@@ cdtipsup    = " , cdtipsup,
+				"\n@@@@@@ cduniext    = " , cduniext,
+				"\n@@@@@@ ramo        = " , ramo,
+				"\n@@@@@@ nmpoliex    = " , nmpoliex,
+				"\n@@@@@@ origenMesa  = " , origenMesa
 		));
 		
 		String paso = null, ntramite = null;
@@ -2037,6 +2045,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				}
 			}
 			
+			paso = "Recuperando sucursal del usuario";
+            logger.debug(paso);
+            cdsucadm = despachadorDAO.recuperarSucursalUsuarioPorTipoTramite(cdusuari, cdflujomc);
+			
 			paso = "Registrando tr\u00e1mite";
 			logger.debug(paso);
 			
@@ -2068,28 +2080,45 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					renuniext,
 					renramo,
 					renpoliex,
-					origenMesa
+					origenMesa,
+					cdsucadm
 			);
 			
-			mesaControlDAO.movimientoDetalleTramite(
-					ntramite,
-					new Date(),
-					null, // Cdclausu
-					Utils.join(
-							"Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: ",
-							StringUtils.isBlank(comments)
-							    ? "(sin observaciones)"
-							    : comments
-					),
-					cdusuari,
-					null, // Cdmotivo
-					cdsisrol,
-					"S",
-					null,
-					null,
-					status,
-					false
-			);
+			paso = "Registrando movimiento";
+			logger.debug(paso);
+			
+			Date fechaHoy = new Date();
+			
+			String cdusuariDestino = cdusuari,
+			       cdsisrolDestino = cdsisrol;
+			
+			if (Constantes.USUARIO_SISTEMA.equals(cdusuari)
+			        || Constantes.ROL_SISTEMA.equals(cdsisrol)) {
+			    cdusuariDestino = null;
+			    cdsisrolDestino = null;
+			}
+			
+			RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+			        cdusuari,
+			        cdsisrol,
+			        ntramite,
+			        status,
+			        Utils.join(
+                            "Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: ",
+                            StringUtils.isBlank(comments)
+                                ? "(sin observaciones)"
+                                : comments
+                    ),
+			        null,  // cdrazrecha
+			        cdusuariDestino,
+			        cdsisrolDestino,
+			        true,  // permisoAgente
+			        false, // porEscalamiento
+			        fechaHoy,
+			        false  // sinGrabarDetalle
+			        );
+			logger.debug(despacho.getMessage());
+			
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
@@ -2334,6 +2363,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		return docsFaltan;
 	}
 	
+	/*
+	JTEZVA 1 NOV 2016 SE DEJA DE USAR
 	@SuppressWarnings("deprecation")
 	@Override
 	public String turnarTramite(
@@ -2363,11 +2394,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ cerrado="      , cerrado
 				,"\n@@@@@@ swagente="     , swagente
 				));
-		String paso     = "Iniciando turnado"
-		       ,message = null;
-		
-		try
-		{
+		String paso    = "Iniciando turnado",
+		       message = null;
+		try {
+			/ *
 			Map<String,String> usuarioDestino = new HashMap<String,String>();
 			Date               fecstatu       = new Date();
 			
@@ -2458,7 +2488,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				paso = "Guardando historico de tramite";
 				logger.debug(paso);
 				
-				flujoMesaControlDAO.guardarHistoricoTramite(new Date(),ntramite,usuarioDestino.get("cdusuari"),cdsisrolTurnado,statusOld);
+				flujoMesaControlDAO.guardarHistoricoTramite(new Date(),ntramite,usuarioDestino.get("cdusuari"),cdsisrolTurnado,statusOld, null, null);
 			}
 			
 			if(!"1".equals(cdtipasigOld)) //antes lo tenia un usuario especifico
@@ -2491,11 +2521,21 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					 * Ya sabemos de quien es por TMESACONTROL.CDUSUARI
 					 * pero no sabemos el rol, lo necesitamos para descontarlo en la lista,
 					 * porque la lista viene en clave doble CDUSUARI-CDSISROL
-					 */
+					 *
 					cdsisrolActual = flujoMesaControlDAO.recuperarRolRecienteTramite(ntramite,cdusuariActual);
 				}
 				
 				flujoMesaControlDAO.restarTramiteUsuario(cdusuariActual,cdsisrolActual);
+			}
+			* /
+			
+			Date fechaHoy = new Date();
+			paso = "Recuperando tipo de estatus";
+			logger.debug(paso);
+			boolean esFinal = despachadorDAO.esStatusFinal(ntramite, statusNew); // estatus final: CONFIRMADO, RECHAZADO, CANCELADO...
+			RespuestaDespachadorVO destino = null;
+			if (!esFinal) {
+				destino = despachadorManager.despachar(ntramite, statusNew);
 			}
 			
 			paso = "Actualizando status";
@@ -2504,11 +2544,30 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			flujoMesaControlDAO.actualizarStatusTramite(
 					ntramite
 					,statusNew
-					,fecstatu
-					,usuarioDestino.get("cdusuari")
+					,fechaHoy
+					,esFinal
+						? null
+						: destino.getCdusuari()
 					);
 			
-			paso = "Actualizando recuperando descripci\u00f3n de status";
+			if (esFinal) { // hay que borrar el usuario
+				paso = "Borrar usuario encargado";
+				logger.debug(paso);
+				despachadorDAO.borrarUsuarioEncargado(ntramite);
+			}
+			
+			paso = "Cerrando historial anterior";
+			logger.debug(paso);
+			despachadorDAO.cerrarHistorialTramite(ntramite, fechaHoy, cdusuariSes, cdsisrolSes, esFinal ? statusNew : destino.getStatus());
+			
+			if (!esFinal) {
+			    paso = "Insertar nuevo historial";
+			    logger.debug(paso);
+			    flujoMesaControlDAO.guardarHistoricoTramite(fechaHoy, ntramite, cdusuariSes, cdsisrolSes, destino.getStatus(),
+			            destino.getCdunieco(), destino.getCdtipasig());
+			}
+			
+			paso = "Recuperando descripci\u00f3n de estatus";
 			logger.debug(paso);
 			
 			List<Map<String,String>>estados = flujoMesaControlDAO.recuperaTestadomc(statusNew);
@@ -2533,8 +2592,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,null//cdmotivo
 					,cdsisrolSes
 					,"S".equals(swagente) ? "S" : "N"
-					,usuarioDestino.get("cdusuari")
-					,usuarioDestino.get("cdsisrol")
+					,esFinal ? destino.getCdusuari() : null
+					,esFinal ? destino.getCdsisrol() : null
 					,statusNew
 					,cerrado
 					);
@@ -2595,6 +2654,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		return message;
 	}
+	*/
 	
 	@Override
 	public Map<String,Object> recuperarDatosTramiteValidacionCliente(FlujoVO flujo)throws Exception
@@ -2636,6 +2696,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		return datos;
 	}
 	
+	/*
+	JTEZVA 1 NOV 2016 SE DEJA DE USAR
 	@Override
 	public String turnarDesdeComp(
 			String cdusuari
@@ -2746,6 +2808,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		return message;
 	}
+	*/
 	
 	@Override
 	public void recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(FlujoVO flujo) throws Exception
@@ -3295,6 +3358,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		String paso = null;
 		Map<String, String> result = new HashMap<String, String>();
 		try {
+		    Date fechaHoy = new Date();
+		    
 			paso = "Recuperando estatus anterior al vencimiento";
 			logger.debug(paso);
 			Map<String, String> estatusAnterior = flujoMesaControlDAO.recuperarEstatusAnteriorVencido(ntramite);
@@ -3331,34 +3396,39 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					throw new ApplicationException("No tiene permisos para regresar");
 				}
 				
-				flujoMesaControlDAO.actualizarStatusTramite(
-					ntramite,
-					cdstatus,
-					new Date(),
-					null //cdusuari (con null le deja el mismo)
-					);
-				
-				mesaControlDAO.movimientoDetalleTramite(
-					ntramite,
-					new Date(),
-					null, // cdclausu
-					Utils.join("Se regresa el tr\u00e1mite desde vencido"),
-					cdusuari,
-					null, // cdmotivo
-					cdsisrol,
-					"N", // swagente
-					null, // cdusuariDest
-					null, // cdsisrolDest
-					cdstatus,
-					false //cerrado
-					);
+				paso = "Recuperando historial";
+                logger.debug(paso);
+                List<Map<String, String>> historial = despachadorDAO.recuperarHistorialMesa(ntramite);
+                if (historial.size() == 0) {
+                    throw new ApplicationException("No se puede encontrar el usuario anterior");
+                }
+                
+                String cdusuariAnt = historial.get(0).get("CDUSUARI"),
+                       cdsisrolAnt = historial.get(0).get("CDSISROL");
+                
+                paso = "Turnando tr\u00e1mite";
+                logger.debug(paso);
+                RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+                        cdusuari,
+                        cdsisrol,
+                        ntramite,
+                        cdstatus,
+                        "Se regresa el tr\u00e1mite desde vencido",
+                        null, // cdrazrecha
+                        cdusuariAnt,
+                        cdsisrolAnt,
+                        false, // permisoAgente
+                        false, // porEscalamiento
+                        fechaHoy, false);
+                
+                result.put("mensajeDespacho", despacho.getMessage());
 				
 				try {
 					cotizacionDAO.grabarEvento(
 						new StringBuilder()
-						,"FLAGS"
-						,"REGRESAR"
-						,new Date()
+						,Constantes.MODULO_FLAGS
+						,Constantes.EVENTO_REGRESAR
+						,fechaHoy
 						,cdusuari
 						,cdsisrol
 						,ntramite

@@ -1476,8 +1476,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			try
 	        {
 				cotizacionDAO.grabarEvento(new StringBuilder("\nTurnar tramite")
-	        	    ,"GENERAL"    //cdmodulo
-	        	    ,"TURNATRA"   //cdevento
+	        	    ,Constantes.MODULO_GENERAL    //cdmodulo
+	        	    ,Constantes.EVENTO_TURNAR     //cdevento
 	        	    ,new Date()   //fecha
 	        	    ,cdusuariSesion
 	        	    ,cdsisrolSesion

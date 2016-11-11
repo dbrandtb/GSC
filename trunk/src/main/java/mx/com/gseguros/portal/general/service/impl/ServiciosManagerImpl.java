@@ -8,20 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
-import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
-import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
-import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
-import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
-import mx.com.gseguros.portal.emision.dao.EmisionDAO;
-import mx.com.gseguros.portal.endosos.dao.EndososDAO;
-import mx.com.gseguros.portal.general.service.MailService;
-import mx.com.gseguros.portal.general.service.ServiciosManager;
-import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
-import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.Utils;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
@@ -29,6 +15,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
+import mx.com.gseguros.portal.emision.dao.EmisionDAO;
+import mx.com.gseguros.portal.endosos.dao.EndososDAO;
+import mx.com.gseguros.portal.general.service.MailService;
+import mx.com.gseguros.portal.general.service.ServiciosManager;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
+import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utils;
 
 @Service
 public class ServiciosManagerImpl implements ServiciosManager
@@ -67,6 +70,9 @@ public class ServiciosManagerImpl implements ServiciosManager
 	
 	@Autowired
 	private EmisionDAO emisionDAO;
+	
+	@Autowired
+	private DespachadorManager despachadorManager;
 	
 	@Override
 	public String reemplazarDocumentoCotizacion(StringBuilder sb, String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
@@ -449,11 +455,11 @@ public class ServiciosManagerImpl implements ServiciosManager
 				try {
 					cotizacionDAO.grabarEvento(
 							new StringBuilder()
-							,"FLAGS"
-							,"VERDE"
+							,Constantes.MODULO_FLAGS
+							,Constantes.EVENTO_FLAG_VERDE
 							,new Date()
-							,"CRON"
-							,"CRON"
+							,Constantes.USUARIO_SISTEMA
+							,Constantes.ROL_SISTEMA
 							,ntramite
 							,null //cdunieco
 							,null //cdramo
@@ -495,7 +501,9 @@ public class ServiciosManagerImpl implements ServiciosManager
 			paso = "Recuperando tramites tengan flags vencidas";
 			logger.debug(paso);
 			List<Map<String, String>> tramitesConFlagVencida = flujoMesaControlDAO.recuperarTramitesConFlagVencida();
-						
+			
+			Date fechaHoy = new Date();
+			
 			for (Map<String, String> tramite: tramitesConFlagVencida) {
 				paso = Utils.join("Iterando tramite ", tramite);
 				logger.debug(paso);
@@ -525,59 +533,51 @@ public class ServiciosManagerImpl implements ServiciosManager
 					
 					flujoMesaControlManager.mandarCorreosStatusTramite(
 							ntramite,
-							"CRON",
+							Constantes.ROL_SISTEMA,
 							true
 							);
 					
 					if (!"-1".equals(statusout)) { // Status de vencimiento definido
-						
-						flujoMesaControlDAO.actualizarStatusTramite(
-								ntramite,
-								statusout,
-								new Date(),
-								null //cdusuari (con null le deja el mismo)
-								);
-						
-						mesaControlDAO.movimientoDetalleTramite(
-								ntramite,
-								new Date(),
-								null, // cdclausu
-								Utils.join(
-										"Tr\u00e1mite vencido",
-										"\nFecha de recepci\u00f3n: " , Utils.formatConHora(fecstatu)
-										,"\nFecha primera alerta: " , Utils.formatConHora(feamarilla)
-										,"\nFecha segunda alerta: " , Utils.formatConHora(feroja)
-										,"\nFecha l\u00edmite: " , Utils.formatConHora(fevencim)
-								),
-								"SISTEMA", // cdusuari
-								null, // cdmotivo
-								"SISTEMA", // cdsisrol
-								"N", // swagente
-								null, // cdusuariDest
-								null, // cdsisrolDest
-								statusout,
-								true //cerrado
-								);
+					    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+					            Constantes.USUARIO_SISTEMA, // cdusuariSes
+					            Constantes.ROL_SISTEMA,     // cdsisrolSes
+					            ntramite,
+					            statusout,
+					            Utils.join(
+                                        "Tr\u00e1mite vencido",
+                                        "\nFecha de recepci\u00f3n: " , Utils.formatConHora(fecstatu)
+                                        ,"\nFecha primera alerta: " , Utils.formatConHora(feamarilla)
+                                        ,"\nFecha segunda alerta: " , Utils.formatConHora(feroja)
+                                        ,"\nFecha l\u00edmite: " , Utils.formatConHora(fevencim)
+                                ),     // comments
+					            null,  // cdrazrecha
+					            null,  // cdusuariDes
+					            null,  // cdsisrolDes
+					            false, // permisoAgente
+					            true,  // porEscalamiento
+					            fechaHoy,
+					            false  // sinGrabarDetalle
+					            );
 					}
 				}
 				
 				String nombreFlag = "nombreFlag";
 				if ("A".equals(nuevaflag)) {
-					nombreFlag = "AMARILLA";
+					nombreFlag = Constantes.EVENTO_FLAG_AMARILLA;
 				} else if ("R".equals(nuevaflag)) {
-					nombreFlag = "ROJA";
+					nombreFlag = Constantes.EVENTO_FLAG_ROJA;
 				} else if ("X".equals(nuevaflag)) {
-					nombreFlag = "VENCIDA";
+					nombreFlag = Constantes.EVENTO_FLAG_VENCIDA;
 				}
 				
 				try {
 					cotizacionDAO.grabarEvento(
 							new StringBuilder()
-							,"FLAGS"
+							,Constantes.MODULO_FLAGS
 							,nombreFlag
-							,new Date()
-							,"CRON"
-							,"CRON"
+							,fechaHoy
+							,Constantes.USUARIO_SISTEMA
+							,Constantes.ROL_SISTEMA
 							,ntramite
 							,null //cdunieco
 							,null //cdramo
