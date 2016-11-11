@@ -1390,8 +1390,9 @@ Ext.onReady(function()
                                 if((_p28_negocio.DXN+'').trim()=='' || (_p28_negocio.DXN+'').trim()==0 || _p28_negocio.DXN==null )
                                 {
                                     _fieldById('fieldDXN').hide();
+                                }else{
+                                    _fieldById('fieldDXN').show();
                                 }
-                                  
                                 
                                 plazoenanios = Number(json.smap1.LIMITE_SUPERIOR);
 //                              _fieldByName('FESOLICI').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR, Number(json.smap1.LIMITE_SUPERIOR)));
