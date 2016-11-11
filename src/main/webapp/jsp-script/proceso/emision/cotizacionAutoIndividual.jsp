@@ -89,6 +89,7 @@ var _p28_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"    
 var _p28_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"          action="recuperarOtvalorTramitePorDsatribu"             />';
 var _p28_urlRecuperarDatosTramiteValidacion   = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente"         />';
 var url_obtiene_forma_pago					  = '<s:url namespace="/emision"          action="obtieneFormaPago"        					      />';
+var _p28_datosFlujo                           = '<s:url namespace="/emision"          action="datosFlujo"                                     />';
 
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -3366,6 +3367,47 @@ function llenandoCampos(json)
                                     }
                                 ]
                             }).show());
+                        }
+                        else if(!Ext.isEmpty(_p28_flujo))
+                        {
+                           var tramite = 
+                           {
+                                 flujo :!Ext.isEmpty(_p28_flujo) ?_p28_flujo :null
+                           }
+                           Ext.Ajax.request(
+                                   {
+                                       url       : _p28_datosFlujo
+                                       ,jsonData : tramite
+                                       ,success : function(response)
+                                        {
+                                           var json=Ext.decode(response.responseText);
+                                           if(json.exito)
+                                           {
+                                               if(json.smap1.CDTIPTRA+'x' == '21x')
+                                               {
+                                                   if(json.smap1.NMPOLIZA+'x' != '0X')
+                                                   {
+	                                                   _fieldByName('nmpoliza').semaforo=true;
+	                                                   _fieldByName('nmpoliza').setValue(json.smap1.NMPOLIZA);
+	                                                   _fieldByName('nmpoliza').semaforo=false;
+	                                                   _p28_cotizar();
+                                                   }
+                                                   else
+                                                   {
+                                                       _p28_cotizar();
+                                                   }
+                                               }
+                                           }
+                                           else
+                                           {
+                                               mensajeError('Error al obtener datos de flujo');
+                                           }
+                                        }
+	                                   ,failure : function()
+	                                    {
+	                                       errorComunicacion(null,'Error al enviar datos para flujo');
+	                                    }
+                                   });
                         }
                     });
                 }

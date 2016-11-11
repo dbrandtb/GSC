@@ -545,7 +545,15 @@
        </action>
        <action name="obtieneAdminRet" class="cotizacionAutoAction" method="obtieneAdminRet">
            <result type="json" />
-       </action>        
+       </action>  
+       
+       <action name="datosFlujo" class="cotizacionAutoAction" method="datosFlujo">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>      
     </package>
     
 </struts>

@@ -6892,7 +6892,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			{
 				////////////////////////////////
 				////// si no hay nmpoliza //////
-				if(StringUtils.isBlank(nmpoliza))
+				if(StringUtils.isBlank(nmpoliza) || nmpoliza.equals("0"))
 				{
 					try
 					{

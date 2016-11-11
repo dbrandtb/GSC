@@ -2091,10 +2091,35 @@ public class CotizacionAutoAction extends PrincipalCoreAction
      return SUCCESS;
  }
  
- 
- 
- 
- 
+ @SuppressWarnings("unchecked")
+ public String datosFlujo() throws Exception
+ {
+     logger.debug(Utils.log(""
+             ,"\n######################################"
+             ,"\n###### getdatosFlujo ######"
+             ,"\n###### flujo=" , flujo
+             ));
+     String result = ERROR;
+     try
+     {
+         smap1 = new HashMap<String,String>();
+         Map<String, Object> tramiteObj = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
+         smap1.putAll((Map<String,String>)tramiteObj.get("TRAMITE"));
+         exito = true;
+     }
+     catch(Exception ex)
+     {
+         exito=false;
+         respuesta = Utils.manejaExcepcion(ex);
+     }
+     logger.debug(Utils.log(""
+             ,"\n###### exito="  , exito
+             ,"\n###### result=" , result
+             ,"\n###### getdatosFlujo ######"
+             ,"\n###########################"
+             ));
+     return SUCCESS;
+ }
  
      /*
      * Getters y setters

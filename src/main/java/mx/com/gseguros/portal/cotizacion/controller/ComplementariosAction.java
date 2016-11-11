@@ -29,6 +29,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
@@ -170,6 +171,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private SiniestrosManager  siniestrosManager;
+	
+	@Autowired
+    private ConsultasDAO consultasDAO;
 	
 	public static final String SUCURSAL_SALUD_NOVA = "1403";
 
@@ -3313,6 +3317,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 							,"\n usuario registrado=", params
 							));
 					consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), cdunieco, cdramo, nmpolAlt, us.getUser());
+					
+					Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, estado, nmpoliza, cdusuari);
+					Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(parame.get("CDUNIECO"), parame.get("CDRAMO"), parame.get("NMPOLIZA"),  new Date(), infoPoliza.get("FEEFECTO"), infoPoliza.get("FEPROREN"), parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
 				}
 			} 
 			catch (Exception ex) 

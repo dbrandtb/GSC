@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -531,6 +532,11 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception{
 	autosDAOSIGS.actualizaTramiteEmisionMC(inNumsuc,inNumram,inNumpol,inRensuc,inRenram,inRenpol,inUsuario);
 	}
+	
+	@Override
+	public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,String vInicioVigencia,String vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception {
+           return autosDAOSIGS.spIdentificaRenovacion(inNumsuc, inNumram, inNumpol, vFechaEmision, vInicioVigencia, vFinVigencia, inRensuc, inRenram, inRenpol);
+    }
 	
 	@Override
 	public Map<String, String> obtieneDatosLigasRecibosPoliza(String cdunieco, String cdramo, String cdestado,
