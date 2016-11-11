@@ -2104,28 +2104,30 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public void actualizaTramiteMC(
-			  String nmpoliza ,String cdunieco ,String cdramo ,String estado  ,String ntramite
+			  String ntramite ,String cdunieco ,String cdramo ,String estado  ,String nmpoliza
 			 ,String cdtiptra ,String cduniext ,String renramo   ,String nmpoliex
 	) throws Exception {
 		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 				"\n@@@@@@ actualizaNmpolizaMesaControl @@@@@@",
+				"\n@@@@@@ ntramite   = " , ntramite,
 				"\n@@@@@@ cdunieco   = " , cdunieco,
 				"\n@@@@@@ cdramo     = " , cdramo,
 				"\n@@@@@@ estado     = " , estado,
 				"\n@@@@@@ nmpoliza   = " , nmpoliza,
-				"\n@@@@@@ cduniext   = " , cduniext,
+				"\n@@@@@@ cdtiptra   = " , cdtiptra,
+				"\n@@@@@@ renuniext  = " , cduniext,
 				"\n@@@@@@ ramo       = " , renramo,
 				"\n@@@@@@ nmpoliex   = " , nmpoliex
 		));
 		String paso = "Actualizando numero de poliza en MC";
 		try {
 			mesaControlDAO.actualizaNmpolizaMesaControl(
-					nmpoliza
+					ntramite
 				   ,cdunieco
 				   ,cdramo
 				   ,estado
-				   ,ntramite
+				   ,nmpoliza
 				   ,cdtiptra
 				   ,cduniext
 				   ,renramo
@@ -3547,10 +3549,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	@Override
 	public Map<String,String> tramiteMC(String ntramite, String nmpoliza, String cdunieco, String cdramo, String cdtipsit) throws Exception
 	{
-		String mensaje = "Consultando mesa de control para renovacion";
+	        String mensaje = "Consultando mesa de control para renovacion";
 		try
 		{
-			if(nmpoliza!=null && !nmpoliza.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
+			if(nmpoliza!=null && !nmpoliza.equals("0") && !nmpoliza.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
 			{	
 				return siniestrosManager.obtenerTramiteCompletoXNmpoliza(nmpoliza, cdunieco, cdramo);
 				

@@ -3304,29 +3304,32 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		//Se actualiza valores en sigs de poliza original y emitida
 		if (success) 
-		{
-			try 
-			{
-				Map<String,String>parame = siniestrosManager.obtenerTramiteCompleto(ntramite);
-				if(!parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null )
-				{
-					logger.debug(Utils.log(
-							 "\nPoliza extraida del sigs"
-							,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
-							,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolAlt
-							,"\n usuario registrado=", params
-							));
-					consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), cdunieco, cdramo, nmpolAlt, us.getUser());
-					
-					Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, estado, nmpoliza, cdusuari);
-					Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(parame.get("CDUNIECO"), parame.get("CDRAMO"), parame.get("NMPOLIZA"),  new Date(), infoPoliza.get("FEEFECTO"), infoPoliza.get("FEPROREN"), parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-				}
-			} 
-			catch (Exception ex) 
-			{
-				logger.error("Error actualizando segrenovaciones_renovada", ex);
-			}
-		}
+        {
+            try 
+            {
+                Map<String,String>parame = siniestrosManager.obtenerTramiteCompleto(ntramite);
+                if(!parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null )
+                {
+                    logger.debug(Utils.log(
+                             "\nPoliza extraida del sigs"
+                            ,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
+                            ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpoliza
+                            ));
+                    consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), cdunieco, cdramo, nmpoliza, us.getUser());
+                    
+                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, estado, nmpoliza, cdusuari);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
+                          vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
+                    Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(parame.get("CDUNIECO"), parame.get("CDRAMO"), parame.get("NMPOLIZA"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                }
+            } 
+            catch (Exception ex) 
+            {
+                success = false;
+                logger.error("Error actualizando segrenovaciones_renovada", ex);
+            }
+        }
 		
 		logger.debug(
 				new StringBuilder()

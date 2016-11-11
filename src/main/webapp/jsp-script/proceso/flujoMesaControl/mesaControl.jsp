@@ -1107,7 +1107,7 @@ Ext.onReady(function()
                     else if(Number(cdtiptra) === 21)//renovacion
                     {
                         ck = 'Recuperando p\u00f3liza SIGS';
-                        
+                        //redirije mc
                         var cdflujoCmp = _p54_windowNuevo.down('[name=CDFLUJOMC]');
                         debug('cdflujoCmp:',cdflujoCmp,'.');
                         
@@ -1169,9 +1169,9 @@ Ext.onReady(function()
                                             throw jsonSIGS.smap1.mensajeError;
                                         }
                                         //Datos a resaltar de la recuperada cuando no corresponde al tipo fronterizo/residente individual/flotilla indicado
-                                        if (!Ext.isEmpty(jsonSIGS.smap1.mensajeAviso)){
-                                        	mensajeCorrecto('Aviso',jsonSIGS.smap1.mensajeAviso);
-                                        }
+//                                         if (!Ext.isEmpty(jsonSIGS.smap1.mensajeAviso)){
+//                                         	mensajeCorrecto('Aviso',jsonSIGS.smap1.mensajeAviso);
+//                                         }
                                         
                                         centrarVentanaInterna(Ext.create('Ext.window.Window',
                                         {
@@ -1238,6 +1238,7 @@ Ext.onReady(function()
                                                         me.up('window').down('[name=CDRAMOEND]').setValue(jsonSIGS.smap1.cdramo);
                                                         me.up('window').down('[name=CDTIPSITEND]').setValue(jsonSIGS.smap1.cdtipsit);
                                                         me.up('window').down('[name=NMPOLIZA]').setValue('0');
+                                                        
                                                     }
                                                 }
                                                 ,{
@@ -1368,7 +1369,7 @@ function _p54_registrarTramite(bot)
 	                                 };
 	                                 
 	                                 _p54_store.on({
-	                                     load : callbackCheck
+	                                     load : callbackCheck  
 	                                 });
 	                                 boton.handler(boton);
 	                             }
