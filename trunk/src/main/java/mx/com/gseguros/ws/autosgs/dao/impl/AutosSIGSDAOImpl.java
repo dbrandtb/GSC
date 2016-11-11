@@ -4,6 +4,7 @@ package mx.com.gseguros.ws.autosgs.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -1115,5 +1116,53 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
         }
     }    
 	
-	
+    @Override
+    public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,String vInicioVigencia,String vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception {
+       
+        Integer resp = null;
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("vSucursalNueva"   , inRensuc);
+        params.put("vRamoNuevo"       , inRenram);
+        params.put("vPolizaNueva"     , inRenpol);
+        params.put("vFechaEmision"    , vFechaEmision);
+        params.put("vInicioVigencia"  , vInicioVigencia);
+        params.put("vFinVigencia"     , vFinVigencia);
+        params.put("vSucursalAnterior", inNumsuc); 
+        params.put("vRamoAnterior"    , inNumram);
+        params.put("vPolizaAnterior"  , inNumpol);
+        
+        ejecutaSP(new spIdentificaRenovacionSP(getDataSource()),params);
+        Map<String, Object> mapResult  = ejecutaSP(new spIdentificaRenovacionSP(getDataSource()), params);
+        resp = (Integer) mapResult.get("rs");
+        
+        return resp;
+        }
+    
+    protected class spIdentificaRenovacionSP extends StoredProcedure{
+        protected spIdentificaRenovacionSP(DataSource dataSource){
+            super(dataSource, "spidentificarenovacion");
+            declareParameter(new SqlParameter("vSucursalNueva"   ,Types.SMALLINT));
+            declareParameter(new SqlParameter("vRamoNuevo"       ,Types.SMALLINT));
+            declareParameter(new SqlParameter("vPolizaNueva"     ,Types.INTEGER));
+            declareParameter(new SqlParameter("vFechaEmision"    ,Types.DATE));
+            declareParameter(new SqlParameter("vInicioVigencia"  ,Types.DATE));
+            declareParameter(new SqlParameter("vFinVigencia"     ,Types.DATE));
+            declareParameter(new SqlParameter("vSucursalAnterior",Types.SMALLINT));
+            declareParameter(new SqlParameter("vRamoAnterior"    ,Types.SMALLINT));
+            declareParameter(new SqlParameter("vPolizaAnterior"  ,Types.INTEGER));
+            declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+                @Override  
+                public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+                    Integer result = null;
+                    while(rs.next()){  
+                        result = rs.getInt(1);
+                    }  
+                    return result;  
+                }
+            }));
+            
+            compile();
+        }
+    }
+    
 }

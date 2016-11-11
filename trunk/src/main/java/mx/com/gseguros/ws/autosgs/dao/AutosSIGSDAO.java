@@ -1,5 +1,6 @@
 package mx.com.gseguros.ws.autosgs.dao;
 
+import java.util.Date;
 import java.util.Map;
 
 import mx.com.gseguros.portal.general.model.PolizaVO;
@@ -60,8 +61,10 @@ public interface AutosSIGSDAO {
 	public void actualizaTramiteMC(PolizaVO poliza, String estra) throws Exception;
 	
 	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception;
-
-    public Integer integraDxnAutos(Map<String, String> params) throws Exception;
+	
+	public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,String vInicioVigencia,String vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception;
+	
+	public Integer integraDxnAutos(Map<String, String> params) throws Exception;
     
     public Integer EndoBeneficiarioVidaAuto(Map<String, Object> params) throws Exception;
 }

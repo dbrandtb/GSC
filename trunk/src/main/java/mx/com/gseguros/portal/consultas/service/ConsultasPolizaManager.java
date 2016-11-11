@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.consultas.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -334,7 +335,22 @@ public interface ConsultasPolizaManager {
      */
     public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 
+    /**
+     * Actualiza sigs poliza de renovacion 
+     * @param inNumsuc
+     * @param inNumram
+     * @param inNumpol
+     * @param vFechaEmision
+     * @param string
+     * @param string2
+     * @param inRensuc
+     * @param inRenram
+     * @param inRenpol
+     * @throws Exception
+     */
+    public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,String vInicioVigencia,String vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception;
+    
     public Map<String, String> obtieneTvalopol(String cdunieco, String cdramo, String estado, String nmpoliza)
             throws Exception;
-    
+
 }
