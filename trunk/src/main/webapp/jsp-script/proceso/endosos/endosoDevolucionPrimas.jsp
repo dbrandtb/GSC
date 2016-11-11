@@ -338,6 +338,7 @@ Ext.onReady(function()
                             }
                             jsonData.smap1['confirmar'] = 'no';
                             jsonData.smap1['cdperpag'] = _p39_smap1.CDPERPAG;
+                            jsonData.smap1['p_plan']   = _p39_smap1.CDMEJRED;
                             Ext.Ajax.request(
                             {
                                 url       : _p39_urlConfirmarEndoso
