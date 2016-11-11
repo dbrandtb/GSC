@@ -1,7 +1,13 @@
 package mx.com.gseguros.utils.cmd;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This class can be used to execute a system command from a Java application.
@@ -38,6 +44,8 @@ public class SystemCommandExecutor
   private String adminPassword;
   private ThreadedStreamHandler inputStreamHandler;
   private ThreadedStreamHandler errorStreamHandler;
+  
+  private final static Logger logger = LoggerFactory.getLogger(SystemCommandExecutor.class);  
   
   /**
    * Pass in the system command you want to run as a List of Strings, as shown here:
@@ -125,7 +133,12 @@ public class SystemCommandExecutor
    */
   public StringBuilder getStandardOutputFromCommand()
   {
-    return inputStreamHandler.getOutputBuffer();
+      if(inputStreamHandler != null) {
+          return inputStreamHandler.getOutputBuffer();
+      } else {
+          logger.warn("Buffer de salida es null para el comando:{}", commandInformation);
+          return new StringBuilder();
+      }
   }
 
   /**
@@ -133,7 +146,12 @@ public class SystemCommandExecutor
    */
   public StringBuilder getStandardErrorFromCommand()
   {
-    return errorStreamHandler.getOutputBuffer();
+      if(errorStreamHandler != null) {
+          return errorStreamHandler.getOutputBuffer();
+      } else {
+          logger.warn("Buffer de Error es null para el comando:{}", commandInformation);
+          return new StringBuilder();
+      }
   }
 
 
