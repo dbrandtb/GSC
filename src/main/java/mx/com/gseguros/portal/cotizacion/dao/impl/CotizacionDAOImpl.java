@@ -8404,7 +8404,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     protected class ObtenerAseguradoDuplicado extends StoredProcedure {
         protected ObtenerAseguradoDuplicado(DataSource dataSource) {          
             super(dataSource, "PKG_SESAS.P_VALIDA_AFI_DUPLICADO");
-            declareParameter(new SqlParameter("pv_dsnombre_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_dsnombre_i",   OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_dsnombre1_i",   OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_dsapellido_i",  OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_dsapellido1_i", OracleTypes.VARCHAR));
@@ -8547,6 +8551,27 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
         }
     }
     
+    @Override
+    public String validaCertificadoGrupo(HashMap<String, Object> paramExclusion) throws Exception {
+        Map<String, Object> resultado = ejecutaSP(new ValidaCertificadoGrupo(getDataSource()), paramExclusion);
+        logger.debug( resultado.get("pv_status_o"));
+        return (String) resultado.get("pv_status_o");
+    }
+
+    protected class ValidaCertificadoGrupo extends StoredProcedure {
+        protected ValidaCertificadoGrupo(DataSource dataSource) {
+            super(dataSource, "PKG_DESARROLLO.P_VALIDA_TITULAR_VIGENTE");
+            declareParameter(new SqlParameter("pv_cdunieco_i",   OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsitaux_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_status_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+            compile();
+        }
+    }    
 }
     
 	

@@ -1127,5 +1127,7 @@ public interface CotizacionManager
             String nmorddom, String cdagrupa, String otvalor01, String otvalor02, String otvalor03, String otvalor04,
             String otvalor05, String otvalor06, String otvalor07, String otvalor08, String otvalor09, String otvalor10)
             throws Exception;
+
+    public String validaCertificadoGrupo(HashMap<String, Object> paramCertificado)throws Exception;
 	
 }
