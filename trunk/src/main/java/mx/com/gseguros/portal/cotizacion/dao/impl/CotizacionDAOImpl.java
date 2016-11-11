@@ -38,6 +38,7 @@ import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -5203,6 +5204,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     				,"F3"
     				,"PORC_BONO"
     				,"LIMITE_SUPERIOR"
+    				,"DXN"
     				};
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -8512,6 +8514,35 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             declareParameter(new SqlParameter("pv_accion_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public boolean aplicaDxn( String cdtipsit,
+                                    String cdsisrol,
+                                    String cdusuari) throws Exception {
+        boolean aplicaDxn = false;
+        Map<String,Object> params = new HashMap<String, Object>();
+        params.put("pv_cdtipsit_i" , cdtipsit);
+        params.put("pv_cdsisrol_i" , cdsisrol);
+        params.put("pv_cdusuari_i" , cdusuari);
+        Map<String,Object> result = ejecutaSP(new AplicaDxn(getDataSource()),params);
+        if(Constantes.SI.equals(result.get("pv_swaplica_o"))) {
+            aplicaDxn = true;
+        }
+        return aplicaDxn;
+    }
+    
+    protected class AplicaDxn extends StoredProcedure {
+        protected AplicaDxn(DataSource dataSource) {
+            super(dataSource , "PKG_RETENEDORAS.P_GET_APLICA_DXN");
+            declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_swaplica_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   ,  OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    ,  OracleTypes.VARCHAR));
             compile();
         }
     }

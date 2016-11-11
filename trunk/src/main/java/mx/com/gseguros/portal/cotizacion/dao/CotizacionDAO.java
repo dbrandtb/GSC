@@ -894,4 +894,6 @@ public interface CotizacionDAO {
    public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception;
 
    public String obtenerAseguradoDuplicado(HashMap<String, Object> paramPersona) throws Exception;
+
+   public boolean aplicaDxn(String cdtipsit, String cdsisrol, String cdusuari) throws Exception;
 }

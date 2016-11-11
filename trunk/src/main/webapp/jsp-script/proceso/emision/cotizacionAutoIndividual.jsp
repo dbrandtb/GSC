@@ -126,6 +126,7 @@ var valorRecuperadoValorVehiSigs = null;
 var cdper                        = null;
 var cdperson                     = null;
 var formaPago					 = null;
+var _p28_negocio                 = null;
 
 // var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 var plazoenanios;
@@ -591,9 +592,11 @@ Ext.onReady(function()
 ,{
     	
     	xtype		: 'fieldset'
+    	,itemId     : 'fieldDXN'
     	,title		: '<span style="font:bold 14px Calibri;">DXN</span>'
         ,width : 435
     	,items		: _p28_panelDxnItems
+    	//,hidden     : ((_p28_negocio.DXN+'').trim()=='' || (_p28_negocio.DXN+'').trim()==0 )
     }
     
     ,{
@@ -1380,6 +1383,14 @@ Ext.onReady(function()
                                 negoCmp.setLoading(false);
                                 var json = Ext.decode(response.responseText);
                                 debug('### detalle negocio:',json);
+                             
+                                _p28_negocio=json.smap1;
+                                
+                                if((_p28_negocio.DXN+'').trim()=='' || (_p28_negocio.DXN+'').trim()==0 || _p28_negocio.DXN==null )
+                                {
+                                    _fieldById('fieldDXN').hide();
+                                }
+                                  
                                 
                                 plazoenanios = Number(json.smap1.LIMITE_SUPERIOR);
 //                              _fieldByName('FESOLICI').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR, Number(json.smap1.LIMITE_SUPERIOR)));

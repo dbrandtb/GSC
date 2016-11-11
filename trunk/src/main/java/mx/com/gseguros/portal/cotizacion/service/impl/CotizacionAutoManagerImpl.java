@@ -222,6 +222,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			paso = "Recuperando tipo de situaci\u00f3n";//////
 			Map<String,String>tipoSituacion=cotizacionDAO.cargarTipoSituacion(cdramo,cdtipsit);
+			logger.debug("->tipo situacion: {}",tipoSituacion);
 			if(tipoSituacion!=null)
 			{
 				smap.putAll(tipoSituacion);
@@ -4624,6 +4625,42 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				);
 		return resp;
 	}
+	
+	@Override
+    public boolean aplicaDxn(
+            String cdtipsit,
+            String cdsisrol,
+            String cdusuari
+            )throws Exception
+    {
+        logger.debug(Utils.log(
+                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                ,"\n@@@@@@ aplicaDxn @@@@@@"
+                ,"\n@@@@@@ "
+                ));
+        
+      
+        boolean resp=false;
+        String paso = null;
+        
+        try
+        {
+            paso = "Recuperando datos";
+            
+            resp = cotizacionDAO.aplicaDxn(cdtipsit, cdsisrol, cdusuari);
+            
+        }
+        catch(Exception ex)
+        {
+            Utils.generaExcepcion(ex, paso);
+        }
+        
+        logger.debug(Utils.log(
+                 "\n@@@@@@ aplicaDxn @@@@@@"
+                ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                ));
+        return resp;
+    }
 	
 	/*
 	 * Getters y setters

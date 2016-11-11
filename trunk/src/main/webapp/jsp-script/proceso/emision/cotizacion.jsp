@@ -73,6 +73,8 @@ var _0_urlRecuperarDatosTramiteValidacion   = '<s:url namespace="/flujomesacontr
 var _0_urlCargarPoliza                      = '<s:url namespace="/emision"          action="cargarPoliza"                                />';
 var _0_urlCargarCatalogo                    = '<s:url namespace="/catalogos"       action="obtieneCatalogo"                     />';
 var _0_urlCargaValidacionDescuentoR6        = '<s:url namespace="/emision"         action="obtieneValidacionDescuentoR6"                 />';
+var _0_urlAplicaDxn                         = '<s:url namespace="/emision"         action="aplicaDxn"                 />';
+
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -1942,6 +1944,7 @@ function _0_cotizar(boton)
 	                        }
 	                        formasPago=soloDXN;
 	                    }
+	                    
                     }
                     
          			///////////////// DXN /////////////////////////////
@@ -3514,6 +3517,7 @@ Ext.onReady(function()
     	    	itemsFormAgrupados.splice(itemsFormAgrupados.length-2,0,{
     	        	
     	        	xtype		: 'fieldset'
+    	        	,itemId     : 'fieldsetDxn'
     	        	,width : 435
     	        	,title		: '<span style="font:bold 14px Calibri;">DXN</span>'
     	        	,items		: _p28_panelDxnItems
@@ -4289,6 +4293,7 @@ Ext.onReady(function()
 	     	}	
 	     }
 	     );
+	     aplicaDxn();
      }
      
      /////
@@ -5391,6 +5396,48 @@ Ext.onReady(function()
         }
         
         
+    }
+    
+    function aplicaDxn(){
+        Ext.Ajax.request(
+                {
+                    url      : _0_urlAplicaDxn
+                    ,params  :
+                    { 
+                        
+                        'smap1.cdtipsit' : _0_smap1.cdtipsit
+                    }
+                    ,success : function(response)
+                    {
+                        _0_panelPri.setLoading(false);
+                        var ck = 'Recuperando aplica dxn';
+                        try
+                        {
+                            var json=Ext.decode(response.responseText);
+                            debug('### respuesta obtener aplica dxn:',json);
+                            if(json.exito)
+                            {
+                                if((json.smap1.aplicaDxn+'')=='N'){
+                                    _fieldById('fieldsetDxn').hide();
+                                }
+                                
+                            }
+                            else
+                            {
+                                mensajeWarning('Fallo consultando aplica DXN');
+                            }
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }
+                    }
+                    ,failure : function()
+                    {
+                        _0_panelPri.setLoading(false);
+                        errorComunicacion();
+                    }
+                });
     }
 </script>
 </head>

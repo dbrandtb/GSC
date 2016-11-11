@@ -2052,7 +2052,44 @@ public class CotizacionAutoAction extends PrincipalCoreAction
              ));
      return SUCCESS;
  }
- 
+     
+ public String aplicaDxn()
+ {
+     logger.debug(Utils.log(""
+             ,"\n#######################################"
+             ,"\n###### aplicaDxn ######"
+             ,"\n###### smap1=", smap1
+             ));
+     
+     try
+     {
+         logger.debug(Utils.log("","Validando datos de entrada"));
+         
+         Utils.validate(smap1, "No se recibieron datos para cargar detalle de negocio");
+         
+         UserVO usuario = Utils.validateSession(session);
+         
+         String cdtipsit = smap1.get("cdtipsit")
+                ,cdusuari = usuario.getUser()
+                ,cdsisrol = usuario.getRolActivo().getClave();
+         
+         Utils.validate(cdtipsit, "No se recibi\u00f3 clave de negocio");
+         
+         smap1.put("aplicaDxn",cotizacionAutoManager.aplicaDxn(cdtipsit, cdsisrol, cdusuari)?"S":"N");
+         exito=true;
+         
+     }
+     catch(Exception ex)
+     {
+         respuesta = Utils.manejaExcepcion(ex);
+     }
+     
+     logger.debug(Utils.log(
+              "\n###### aplicaDxn ######"
+             ,"\n#######################################"
+             ));
+     return SUCCESS;
+ }
  
  
  
