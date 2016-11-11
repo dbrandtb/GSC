@@ -15,6 +15,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 
+
 public interface CotizacionAutoManager
 {
 	
@@ -233,4 +234,5 @@ public interface CotizacionAutoManager
 	public List<Map<String, String>> modificadorValorVehPYME(List<Map<String, String>> slist1, String cdsisrol, String cdpost, String cambio) throws Exception;
 	public List<Map<String,String>> validaVacioDescRecg(List<Map<String,String>> slistPYME) throws Exception;
 	public List<Map<String,String>> validaExcelCdtipsitXNegocio(String tipoflot, String negocio, List<Map<String,String>> slistPYME) throws Exception;
+    public boolean aplicaDxn(String cdtipsit, String cdsisrol, String cdusuari) throws Exception;
 }

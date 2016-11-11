@@ -431,6 +431,10 @@
             <result type="json" />
         </action>
         
+        <action name="aplicaDxn" class="cotizacionAutoAction" method="aplicaDxn">
+            <result type="json" />
+        </action>
+        
         <action name="guardarPantallaBeneficiarios" class="cotizacionAutoAction" method="guardarPantallaBeneficiarios">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
