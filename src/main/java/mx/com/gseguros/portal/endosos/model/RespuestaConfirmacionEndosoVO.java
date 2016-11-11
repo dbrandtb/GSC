@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.endosos.model;
 
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+
 public class RespuestaConfirmacionEndosoVO {
 
 	/**
@@ -11,6 +13,8 @@ public class RespuestaConfirmacionEndosoVO {
 	 * Numero de tr&aacute;mite del endoso que fue generado
 	 */
 	private String numeroTramite;
+	
+	private RespuestaTurnadoVO respuestaTurnado;
 
 	public boolean isConfirmado() {
 		return confirmado;
@@ -27,5 +31,13 @@ public class RespuestaConfirmacionEndosoVO {
 	public void setNumeroTramite(String numeroTramite) {
 		this.numeroTramite = numeroTramite;
 	}
+
+    public RespuestaTurnadoVO getRespuestaTurnado() {
+        return respuestaTurnado;
+    }
+
+    public void setRespuestaTurnado(RespuestaTurnadoVO respuestaTurnado) {
+        this.respuestaTurnado = respuestaTurnado;
+    }
 	
 }

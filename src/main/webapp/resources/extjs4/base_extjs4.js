@@ -1,12 +1,15 @@
 ////////////////////////////////////////////////////////////////////
 // ESTE DOCUMENTO ES LA BASE DE TODOS LOS JSP QUE TENGAN EXT JS 4 //
 ////////////////////////////////////////////////////////////////////
-
+var _ice_debug = false;
 ///////////////////////
 ////// FUNCIONES //////
 /*///////////////////*/
 function debug()
 {
+    if (_ice_debug !== true) {
+        return;
+    }
 	try {
 	    switch (arguments.length) {
 	        case 0 : console.log('(sin argumentos)');
@@ -44,6 +47,9 @@ function debug()
 
 function debugError()
 {
+    if (_ice_debug !== true) {
+        return;
+    }
     try {
         switch (arguments.length) {
             case 0 : console.error('Error manejado: (sin argumentos)');

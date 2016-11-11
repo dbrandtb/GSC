@@ -6,20 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.model.AgrupadorMC;
-import mx.com.gseguros.mesacontrol.model.FlujoVO;
-import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
-import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
-import mx.com.gseguros.portal.endosos.service.EndososManager;
-import mx.com.gseguros.portal.general.util.RolSistema;
-import mx.com.gseguros.portal.general.util.TipoModelado;
-import mx.com.gseguros.portal.general.util.TipoTramite;
-import mx.com.gseguros.utils.Utils;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -32,6 +18,22 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
+
+import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.model.AgrupadorMC;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
+import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoModelado;
+import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.utils.Utils;
 
 @Controller
 @Scope("prototype")
@@ -74,6 +76,9 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	
 	@Autowired
 	private EndososManager endososManager;
+	
+	@Autowired
+	private DespachadorManager despachadorManager;
 	
 	@Action(value   = "workflow",
 	        results = {
@@ -1816,6 +1821,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	/*
 	@Action(value   = "turnarTramite",
 			results = { @Result(name="success", type="json") }
 			)
@@ -1879,6 +1885,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		}
 		return SUCCESS;
 	}
+	*/
 	
 	@Action(value   = "recuperarDatosTramiteValidacionCliente",
 			results = { @Result(name="success", type="json") }
@@ -1920,63 +1927,51 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	@Action(value   = "turnarDesdeComp",
 			results = { @Result(name="success", type="json") }
 			)
-	public String turnar()
-	{
+	public String turnar () {
 		logger.debug(Utils.log(
 				 "\n#############################"
 				,"\n###### turnarDesdeComp ######"
-				,"\n###### params=" , params
-				));
-		try
-		{
+				,"\n###### params=" , params));
+		try {
 			UserVO user     = Utils.validateSession(session);
 			String cdusuari = user.getUser();
 			String cdsisrol = user.getRolActivo().getClave();
-			
 			Utils.validate(params, "No se recibieron datos");
-			
-			String cdtipflu    = params.get("CDTIPFLU")
-			       ,cdflujomc  = params.get("CDFLUJOMC")
-			       ,ntramite   = params.get("NTRAMITE")
-			       ,statusOld  = params.get("STATUSOLD")
-			       ,statusNew  = params.get("STATUSNEW")
-			       ,swagente   = params.get("SWAGENTE")
-			       ,comments   = params.get("COMMENTS")
-			       ,cdrazrecha = params.get("CDRAZRECHA");
-			
+			String cdtipflu    = params.get("CDTIPFLU"),
+			       cdflujomc   = params.get("CDFLUJOMC"),
+			       ntramite    = params.get("NTRAMITE"),
+			       statusOld   = params.get("STATUSOLD"),
+			       statusNew   = params.get("STATUSNEW"),
+			       swagente    = params.get("SWAGENTE"),
+			       comments    = params.get("COMMENTS"),
+			       cdrazrecha  = params.get("CDRAZRECHA"),
+			       cdusuariDes = params.get("CDUSUARI_DES"),
+			       cdsisrolDes = params.get("CDSISROL_DES");
 			boolean cerrado = "S".equals(params.get("cerrado"));
-			
-			Utils.validate(
-					cdtipflu   , "No se recibi\u00f3 el tipo de flujo"
-					,cdflujomc , "No se recibi\u00f3 el proceso"
-					,ntramite  , "No se recibi\u00f3 el tr\u00e1mite"
-					,statusOld , "No se recibi\u00f3 el status anterior"
-					,statusNew , "No se recibi\u00f3 el status nuevo"
-					);
-			
-			message = flujoMesaControlManager.turnarDesdeComp(
-					cdusuari
-					,cdsisrol
-					,cdtipflu
-					,cdflujomc
-					,ntramite
-					,statusOld
-					,statusNew
-					,swagente
-					,comments
-					,cerrado
-					,cdrazrecha
-					);
-			
+			Date fechaHoy = new Date();
+			Utils.validate(ntramite  , "No se recibi\u00f3 el tr\u00e1mite",
+			        statusNew , "No se recibi\u00f3 el status nuevo");
+			RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+			        cdusuari,
+			        cdsisrol,
+			        ntramite,
+			        statusNew,
+			        comments,
+			        cdrazrecha,
+			        cdusuariDes,
+			        cdsisrolDes,
+			        "S".equalsIgnoreCase(swagente),
+			        false, // porEscalamiento
+			        fechaHoy,
+			        false //sinGrabarDetalle
+			        );
+			message = despacho.getMessage();
 			success = true;
-			
 			logger.debug(Utils.log(
 					 "\n###### turnarDesdeComp ######"
 					,"\n#############################"
 					));
-		}
-		catch(Exception ex)
-		{
+		} catch (Exception ex) {
 			message = Utils.manejaExcepcion(ex);
 		}
 		return SUCCESS;

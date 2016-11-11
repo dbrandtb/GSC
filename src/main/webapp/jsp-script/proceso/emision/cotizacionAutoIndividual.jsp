@@ -279,7 +279,7 @@ Ext.onReady(function()
     }); //FIN THOUSAND SEPARATOR
     
      
-    _grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p28_smap1.cdramo);
+    //_grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p28_smap1.cdramo);
 
     Ext.Ajax.timeout = 3*60*1000;
  

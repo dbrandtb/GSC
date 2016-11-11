@@ -2602,6 +2602,11 @@ Ext.onReady(function()
                                                         ,inputValue : 1
                                                     }
                                                     ,{
+                                                        boxLabel    : 'Propio'
+                                                        ,name       : 'CDTIPASIG'
+                                                        ,inputValue : 2
+                                                    }
+                                                    ,{
                                                         boxLabel    : 'Carrusel'
                                                         ,name       : 'CDTIPASIG'
                                                         ,inputValue : 3

@@ -39,6 +39,8 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.model.ParametroEndoso;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
@@ -102,6 +104,9 @@ public class EndososManagerImpl implements EndososManager
 	
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
+	
+	@Autowired
+	private DespachadorManager despachadorManager;
 	
 	@Override
 	public List<Map<String, String>> obtenerEndosos(Map<String, String> params) throws Exception
@@ -1927,6 +1932,9 @@ public class EndososManagerImpl implements EndososManager
 						,"con n\u00famero de tr\u00e1mite ", ntramiteEndoso
 						));
 			}
+			if (confirmacion.getRespuestaTurnado() != null) {
+			    resp.setRespuesta(Utils.join(resp.getRespuesta(), ". ", confirmacion.getRespuestaTurnado().getMessage()));
+			}
 		}
 		catch(Exception ex)
 		{
@@ -2290,7 +2298,13 @@ public class EndososManagerImpl implements EndososManager
 			}
 			*/
 			
-			
+			if (confirmacion.getRespuestaTurnado() != null) {
+			    if (StringUtils.isBlank(resp.getRespuesta())) {
+			        resp.setRespuesta(confirmacion.getRespuestaTurnado().getMessage());
+			    } else {
+			        resp.setRespuesta(Utils.join(resp.getRespuesta(), ". ", confirmacion.getRespuestaTurnado().getMessage()));
+			    }
+            }
 		}
 		catch(Exception ex)
 		{
@@ -3014,6 +3028,9 @@ public class EndososManagerImpl implements EndososManager
 						," con n\u00famero de tr\u00e1mite ",ntramiteEndoso
 						+mensajeInvalido);
 			}
+			if (confirmacion.getRespuestaTurnado() != null) {
+			    respuesta = Utils.join(respuesta, ". ", confirmacion.getRespuestaTurnado().getMessage());
+			}
 		}
 		catch(Exception ex)
 		{
@@ -3248,6 +3265,9 @@ public class EndososManagerImpl implements EndososManager
 						," se guard\u00f3 en mesa de control para autorizaci\u00f3n"
 						," con n\u00famero de tr\u00e1mite ",ntramiteEndoso
 						+mensajeInvalido);
+			}
+			if (confirmacion.getRespuestaTurnado() != null) {
+			    respuesta = Utils.join(respuesta, ". ", confirmacion.getRespuestaTurnado().getMessage());
 			}
 		}
 		catch(Exception ex)
@@ -3917,6 +3937,8 @@ public class EndososManagerImpl implements EndososManager
 		private String ntramite
 		               ,ntramiteEmision;
 		
+		private RespuestaTurnadoVO respuestaTurnado;
+		
 		public RespuestaConfirmarEndoso(){}
 
 		public boolean isConfirmado() {
@@ -3955,6 +3977,14 @@ public class EndososManagerImpl implements EndososManager
 					,"\n**************************************"
 					);
 		}
+
+        public RespuestaTurnadoVO getRespuestaTurnado() {
+            return respuestaTurnado;
+        }
+
+        public void setRespuestaTurnado(RespuestaTurnadoVO respuestaTurnado) {
+            this.respuestaTurnado = respuestaTurnado;
+        }
 	}
 	
 	private RespuestaConfirmarEndoso confirmarEndoso(
@@ -3997,6 +4027,7 @@ public class EndososManagerImpl implements EndososManager
 		
 		try
 		{
+		    Date fechaHoy = new Date();
 			if(consultasDAO.esProductoSalud(cdramo)) // SALUD
 			{
 				if(flujo == null) // SALUD SIN FLUJO
@@ -4015,7 +4046,6 @@ public class EndososManagerImpl implements EndososManager
 					respuesta.setNtramiteEmision(ntramiteEmision);
 					
 					// Se almacena la diferencia entre la fecha actual y a fecha que tendra el endoso:
-					Date fechaHoy=new Date();
 					long diferenciaFechaActualVSEndoso = fechaHoy.getTime() - fechaEndoso.getTime();
 					diferenciaFechaActualVSEndoso = Math.abs(diferenciaFechaActualVSEndoso);
 					// Se almacena el maximo de dias permitidos para realizar un endoso (30 dias):
@@ -4095,8 +4125,23 @@ public class EndososManagerImpl implements EndososManager
 							,null
 							,null
 							,null
-							,false
+							,false, null
 							);
+					
+					respuesta.setRespuestaTurnado(despachadorManager.turnarTramite(
+					        cdusuari,
+					        cdsisrol,
+					        ntramiteGenerado,
+					        estatusTramite,
+					        dscoment,
+					        null,  // cdrazrecha
+					        null,  // cdusuariDes
+					        null,  // cdsisrolDes
+					        EstatusTramite.ENDOSO_CONFIRMADO.getCodigo().equals(estatusTramite), // permisoAgente
+					        false, // porEscalamiento
+					        fechaHoy,
+					        false  // sinGrabarDetalle
+					        ));
 					
 					// Si fue confirmado no asignamos numero de tramite:
 					respuesta.setNtramite(ntramiteGenerado);
@@ -4116,7 +4161,6 @@ public class EndososManagerImpl implements EndososManager
 					respuesta.setNtramiteEmision(ntramiteEmision);
 					
 					// Se almacena la diferencia entre la fecha actual y a fecha que tendra el endoso:
-					Date fechaHoy=new Date();
 					long diferenciaFechaActualVSEndoso = fechaHoy.getTime() - fechaEndoso.getTime();
 					diferenciaFechaActualVSEndoso = Math.abs(diferenciaFechaActualVSEndoso);
 					// Se almacena el maximo de dias permitidos para realizar un endoso (30 dias):
@@ -4151,16 +4195,6 @@ public class EndososManagerImpl implements EndososManager
 						logger.debug("************* El Endoso fue confirmado, confirmado true");
 					}
 					
-					paso = "Actualizando estatus de tr\u00e1mite de endoso";
-					logger.debug(paso);
-					
-					flujoMesaControlDAO.actualizarStatusTramite(
-							flujo.getNtramite()
-							,estatusTramite
-							,new Date() //fecstatu
-							,null //cdusuari
-							);
-					
 					paso = "Guardando detalle de tr\u00e1mite de endoso";
 					logger.debug(paso);
 					
@@ -4171,20 +4205,20 @@ public class EndososManagerImpl implements EndososManager
 						comments = Utils.join("Endoso enviado a autorizaci\u00f3n: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment);
 					}
 					
-					mesaControlDAO.movimientoDetalleTramite(
-							flujo.getNtramite()
-							,new Date() //feinicio
-							,null //cdclausu
-							,comments
-							,cdusuari
-							,null //cdmotivo
-							,cdsisrol
-							,"S" //swagente
-							,null //cdusuariDest
-							,null //cdsisrolDest
-							,estatusTramite
-							,true //cerrado
-							);
+					respuesta.setRespuestaTurnado(despachadorManager.turnarTramite(
+					        cdusuari,
+					        cdsisrol,
+					        flujo.getNtramite(),
+					        estatusTramite,
+					        comments,
+					        null,  // cdrazrecha
+					        null,  // cdusuariDes
+					        null,  // cdsisrolDes
+					        true,  // permisoAgente
+					        false, // porEscalamiento
+					        fechaHoy,
+					        false  // sinGrabarDetalle
+					        ));
 					
 					paso = "Actualizar suplemento del tr\u00e1mite";
 					logger.debug(paso);
@@ -4280,8 +4314,6 @@ public class EndososManagerImpl implements EndososManager
 					cdtipflu  = datosFlujoEndoso.get("cdtipflu");
 					cdflujomc = datosFlujoEndoso.get("cdflujomc");
 					
-					Date fechaHoy = new Date();
-					
 					String ntramiteGenerado = mesaControlDAO.movimientoMesaControl(
 							cdunieco
 							,cdramo
@@ -4310,8 +4342,23 @@ public class EndososManagerImpl implements EndososManager
 							,null
 							,null
 							,null
-							,false
+							,false, null
 							);
+					
+					respuesta.setRespuestaTurnado(despachadorManager.turnarTramite(
+					        cdusuari,
+					        cdsisrol,
+					        ntramiteGenerado,
+					        estatusTramite,
+					        dscoment,
+					        null,  // cdrazrecha
+					        null,  // cdusuariDes
+					        null,  // cdsisrolDes
+					        true,  // permisoAgente
+					        false, // porEscalamiento
+					        fechaHoy,
+					        false  // sinGrabarDetalle
+					        ));
 					
 					// Si fue confirmado no asignamos numero de tramite:
 					respuesta.setNtramite(ntramiteGenerado);
@@ -4344,31 +4391,20 @@ public class EndososManagerImpl implements EndososManager
 					
 					paso = "Actualizando estatus de tr\u00e1mite de endoso";
 					logger.debug(paso);
-					
-					flujoMesaControlDAO.actualizarStatusTramite(
-							flujo.getNtramite()
-							,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
-							,new Date() //fecstatu
-							,null //cdusuari
-							);
-					
-					paso = "Guardando detalle de tr\u00e1mite de endoso";
-					logger.debug(paso);
-					
-					mesaControlDAO.movimientoDetalleTramite(
-							flujo.getNtramite()
-							,new Date() //feinicio
-							,null //cdclausu
-							,Utils.join("Endoso confirmado: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment)
-							,cdusuari
-							,null //cdmotivo
-							,cdsisrol
-							,"S" //swagente
-							,null //cdusuariDest
-							,null //cdsisrolDest
-							,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
-							,true //cerrado
-							);
+					respuesta.setRespuestaTurnado(despachadorManager.turnarTramite(
+					        cdusuari,
+					        cdsisrol,
+					        flujo.getNtramite(),
+					        EstatusTramite.ENDOSO_CONFIRMADO.getCodigo(),
+					        Utils.join("Endoso confirmado: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment),
+					        null,  // cdrazrecha
+					        null,  // cdusuariDes
+					        null,  // cdsisrolDes
+					        true,  // permisoAgente
+					        false, // porEscalamiento
+					        fechaHoy,
+					        false  //sinGrabarDetalle
+					        ));
 					
 					paso = "Actualizar suplemento del tr\u00e1mite";
 					logger.debug(paso);

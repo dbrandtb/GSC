@@ -50,7 +50,7 @@ public interface MesaControlManager
     		)throws Exception;
     
     @Deprecated
-	public String movimientoTramite(
+	public String movimientoTramite (
 			String cdunieco
 			,String cdramo
 			,String estado

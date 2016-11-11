@@ -267,8 +267,8 @@ var listaSinPadre = [];
 Ext.onReady(function()
 {
 
-    _grabarEvento('COTIZACION','ACCCOTIZA'
-                  ,_p21_ntramiteVacio?_p21_ntramiteVacio:(_p21_ntramite?_p21_ntramite:''),_p21_smap1.cdunieco,_p21_smap1.cdramo);
+    /*_grabarEvento('COTIZACION','ACCCOTIZA'
+                  ,_p21_ntramiteVacio?_p21_ntramiteVacio:(_p21_ntramite?_p21_ntramite:''),_p21_smap1.cdunieco,_p21_smap1.cdramo);*/
 
     Ext.Ajax.timeout = 60*60*1000;
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });

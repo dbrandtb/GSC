@@ -115,6 +115,7 @@ public interface EndososAutoManager
 			,FlujoVO flujo
 			,String confirmar
 			,String cdperpag
+			,String cdagente
 			)throws Exception;
 	
 	public Map<String,Item> endosoBajaIncisos(

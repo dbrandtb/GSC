@@ -3267,7 +3267,7 @@ function _0_atributoNacimientoContratante(combo)
 Ext.onReady(function()
 {
     
-    _grabarEvento('COTIZACION','ACCCOTIZA',_0_smap1.ntramite,_0_smap1.cdunieco,_0_smap1.cdramo);
+    //_grabarEvento('COTIZACION','ACCCOTIZA',_0_smap1.ntramite,_0_smap1.cdunieco,_0_smap1.cdramo);
     
     Ext.Ajax.timeout = 5*60*1000;
     

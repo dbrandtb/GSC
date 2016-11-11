@@ -265,8 +265,8 @@ debug('_cotcol_flujo:', _cotcol_flujo, '.');
 Ext.onReady(function()
 {
 	debug('si entra a la vista');
-    _grabarEvento('COTIZACION','ACCCOTIZA'
-                  ,_p25_ntramiteVacio?_p25_ntramiteVacio:(_p25_ntramite?_p25_ntramite:''),_p25_smap1.cdunieco,_p25_smap1.cdramo);
+    /*_grabarEvento('COTIZACION','ACCCOTIZA'
+                  ,_p25_ntramiteVacio?_p25_ntramiteVacio:(_p25_ntramite?_p25_ntramite:''),_p25_smap1.cdunieco,_p25_smap1.cdramo);*/
 
     Ext.Ajax.timeout = 60*60*1000;
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });

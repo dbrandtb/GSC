@@ -746,12 +746,14 @@ public interface CotizacionManager
 			,String nmpoliza
 			)throws Exception;
 	
+	/*
 	@Deprecated
 	public String turnaPorCargaTrabajo(
 			String ntramite
 			,String cdsisrol
 			,String status
 			)throws Exception;
+	*/
 	
 	public String guardarConfiguracionGarantias(
 			String cdramo

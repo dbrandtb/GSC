@@ -3,6 +3,9 @@ package mx.com.gseguros.portal.endosos.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -10,9 +13,6 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.endosos.service.EndososGrupoManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 public class EndososGrupoAction extends PrincipalCoreAction
 {

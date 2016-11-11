@@ -16,6 +16,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
@@ -25,7 +35,6 @@ import mx.com.gseguros.portal.consultas.model.DescargaLotePdfVO;
 import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.consultas.model.ImpresionLayoutVO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
-import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
@@ -33,7 +42,6 @@ import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.ImpresionService;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -47,16 +55,6 @@ import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosManager
@@ -261,7 +259,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				paso = "Generando tr\u00E1mite iterado";
 				sb.append("\n").append(paso);
 				
-				String ntramite = mesaControlDAO.movimientoMesaControl(
+				String ntramite = mesaControlDAO.movimientoMesaControl (
 						null  //cdunieco
 						,null //cdramo
 						,null //estado
@@ -284,7 +282,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null //swimpres
 						,null //cdtipflu
 						,null //cdflujomc
-						,valores, null, null, null, null, false
+						,valores, null, null, null, null, false, null
 						);
 				
 				mesaControlDAO.movimientoDetalleTramite(

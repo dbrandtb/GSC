@@ -249,6 +249,8 @@ public interface FlujoMesaControlManager
 	
 	public Map<String, Object> ejecutaRevision(FlujoVO flujo)throws Exception;
 	
+	/*
+	JTEZVA 1 NOV 2016 SE DEJA DE USAR
 	public String turnarTramite(
 			String ntramite
 			,String statusOld
@@ -261,9 +263,12 @@ public interface FlujoMesaControlManager
 			,boolean cerrado
 			,String swagente
 			)throws Exception;
+	*/
 	
 	public Map<String,Object> recuperarDatosTramiteValidacionCliente(FlujoVO flujo)throws Exception;
 	
+	/*
+	JTEZVA 1 NOV 2016 SE DEJA DE USAR
 	public String turnarDesdeComp(
 			String cdusuari
 			,String cdsisrol
@@ -276,6 +281,7 @@ public interface FlujoMesaControlManager
 			,String comments
 			,boolean cerrado, String cdrazrecha
 			)throws Exception;
+	*/
 	
 	/**
 	 * Este procedimiento se usa para salto entre pantallas o componentes

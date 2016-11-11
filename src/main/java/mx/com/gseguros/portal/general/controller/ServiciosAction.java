@@ -4,17 +4,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
-import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
-import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
-import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
-import mx.com.gseguros.portal.general.service.ServiciosManager;
-import mx.com.gseguros.portal.general.util.TipoRamo;
-import mx.com.gseguros.utils.Utils;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
@@ -24,6 +13,19 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+
+import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
+import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
+import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
+import mx.com.gseguros.portal.general.service.ServiciosManager;
+import mx.com.gseguros.portal.general.util.TipoRamo;
+import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utils;
 
 @Controller
 @Scope("prototype")
@@ -50,6 +52,9 @@ public class ServiciosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private CotizacionManager cotizacionManager;
+	
+	@Autowired
+	private DespachadorManager despachadorManager;
 	
 	@Action(value   = "reemplazarDocumentoCotizacion",
 		    results = {
@@ -460,7 +465,7 @@ public class ServiciosAction extends PrincipalCoreAction
 			 * la bandera como true porque esta peticion hizo el bloqueo.
 			 * Si da exception es porque ya estaba bloqueado anteriormente y no llega al = true
 			 */
-			serviciosManager.bloquearProceso("FLAGS", true, "SISTEMA", "SISTEMA");
+			serviciosManager.bloquearProceso(Constantes.PROCESO_FLAGS, true, Constantes.USUARIO_SISTEMA, Constantes.ROL_SISTEMA);
 			seBloqueaFLAGS = true;
 			
 			respuesta = Utils.join(
@@ -476,7 +481,7 @@ public class ServiciosAction extends PrincipalCoreAction
 			 */
 			if (seBloqueaFLAGS) {
 				try {
-					serviciosManager.bloquearProceso("FLAGS", false, "SISTEMA", "SISTEMA");
+					serviciosManager.bloquearProceso(Constantes.PROCESO_FLAGS, false, Constantes.USUARIO_SISTEMA, Constantes.ROL_SISTEMA);
 				} catch (Exception ex) {
 					logger.debug("Error al desbloquear proceso FLAGS", ex);
 				}

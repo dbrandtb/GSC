@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -29,7 +28,6 @@ import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
-import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
@@ -42,11 +40,11 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
-import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
-import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
@@ -60,7 +58,6 @@ import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoFlotilla;
-import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -153,6 +150,9 @@ public class EndososAction extends PrincipalCoreAction
 	
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
+	
+	@Autowired
+	private DespachadorManager despachadorManager;
 	
 	public EndososAction()
 	{
@@ -636,11 +636,16 @@ public class EndososAction extends PrincipalCoreAction
 				if(respConfirmacionEndoso.isConfirmado()) {
 					endosoConfirmado = true;
 					mensaje = "Endoso generado";
-					
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 	            } else {
 					mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
 							.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
 							.append("con n\u00famero de tr\u00e1mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 				}
 				
 				success = true;
@@ -766,11 +771,16 @@ public class EndososAction extends PrincipalCoreAction
 			if(respConfirmacionEndoso.isConfirmado()) {
 				endosoConfirmado = true;
 				mensaje = "Endoso generado";
-				
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+				    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+				}
             } else {
 				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
 						.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
 						.append("con n\u00famero de tr\u00e1mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			}
 			success = true;
 
@@ -1290,7 +1300,13 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje="El endoso "+respuestaEndosoNombres.get("pv_nsuplogi_o")
 						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			}
+			if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+            }
 			success=true;
 		} catch(Exception ex) {
 			logger.error("error al generar endoso de nombres",ex);
@@ -1416,11 +1432,17 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), null, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 				
 				mensaje = "Endoso generado";
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 				
             } else {
 				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
 						.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
 						.append("con n\u00famero de tr\u00e1mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			}
 			
 			success = true;
@@ -1613,10 +1635,16 @@ public class EndososAction extends PrincipalCoreAction
 					//////////////////////////////
 					
 					mensaje="Se ha confirmado el endoso "+resEnd.get("pv_nsuplogi_o");
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 				} else {
 					mensaje="El endoso "+resEnd.get("pv_nsuplogi_o")
 							+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 							+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 				}
 			}
 			success=true;
@@ -1931,11 +1959,16 @@ public class EndososAction extends PrincipalCoreAction
     			ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("pv_cdperson"), saludDanios, saveList, updateList, false, usuario);
 								
 			    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
-			    
+			    if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			} else {
 				mensaje="El endoso "+resEndDomi.get("pv_nsuplogi_o")
 						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			}
 			success=true;
 			
@@ -2274,11 +2307,16 @@ public class EndososAction extends PrincipalCoreAction
 					}
 					
 					mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
-				
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 				} else {
 					mensaje="El endoso "+resEndDomi.get("pv_nsuplogi_o")
 							+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 							+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 				}
 				success=true;
 			}
@@ -2531,10 +2569,16 @@ public class EndososAction extends PrincipalCoreAction
     			ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("pv_cdperson"), saludDanios, saveList, updateList, false, usuario);
 				
 				mensaje = "Endoso generado";
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			} else {
 				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
 						.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
 						.append("con n\u00famero de tr\u00e1mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			}
 			success=true;
 
@@ -3141,16 +3185,24 @@ public class EndososAction extends PrincipalCoreAction
 					    }
 						
 						mensaje = new StringBuilder("Se ha confirmado el endoso ").append(smap2.get("pv_nsuplogi_o")).toString();
-						
+						if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+		                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+		                }
 					} else {
 						mensaje = new StringBuilder("El endoso ")
 									.append(smap2.get("pv_nsuplogi_o"))
 									.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
 									.append("con n\u00famero de tr\u00e1mite ")
 									.append(respConfirmacionEndoso.getNumeroTramite()).toString();
+						if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+		                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+		                }
 					}
 				} else {
 					mensaje = "Se ha guardado el endoso "+smap2.get("pv_nsuplogi_o");
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 				}
 				
 				success = true;
@@ -3723,13 +3775,18 @@ public String retarificarEndosos()
 				    ///////////////////////////////////////
 					
 					mensaje="Se ha confirmado el endoso "+respEnd.get("pv_nsuplogi_o");
-					
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 				} else {
 					mensaje="El endoso "+respEnd.get("pv_nsuplogi_o")
 							+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 							+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 				}
-			} else {				
+			} else {
 				mensaje="Se ha guardado el endoso "+respEnd.get("pv_nsuplogi_o");
 			}
 			success=true;
@@ -3979,11 +4036,16 @@ public String retarificarEndosos()
 					///////////////////////////////////////
 					
 					mensaje="Se ha confirmado el endoso "+respEnd.get("pv_nsuplogi_o");
-					
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 				} else {
 					mensaje="El endoso "+respEnd.get("pv_nsuplogi_o")
 					+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 					+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
+					if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+	                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+	                }
 				}
 			} else {				
 				mensaje="Se ha guardado el endoso "+respEnd.get("pv_nsuplogi_o");
@@ -4199,10 +4261,16 @@ public String retarificarEndosos()
 				ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, respConfirmacionEndoso.getNumeroTramite(), null, Ice2sigsService.Operacion.ACTUALIZA, clienteGeneral, (UserVO) session.get("USUARIO"), false);
 				
 				mensaje = "Endoso generado";
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			} else {
 				mensaje = new StringBuilder().append("El endoso ").append(nsuplogi)
 						.append(" se guard\u00f3 en mesa de control para autorizaci\u00f3n ")
 						.append("con n\u00famero de tr\u00e1mite ").append(respConfirmacionEndoso.getNumeroTramite()).toString();
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			}
 			success=true;
 			
@@ -5370,8 +5438,14 @@ public String retarificarEndosos()
 					,cdusuari
 					,cdsisrol
 					);
+			
 			String tramiteGenerado = respConfirmacionEndoso.getNumeroTramite();
 		    
+			String mensajeDespacho = null;
+			if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+			    mensajeDespacho = respConfirmacionEndoso.getRespuestaTurnado().getMessage();
+			}
+			
 			List<Map<String,String>>invalidos = new ArrayList<Map<String,String>>();
 			if(alta)
 			{
@@ -5383,10 +5457,8 @@ public String retarificarEndosos()
 				paramsValidaEdad.put("5nmsuplem" , nmsuplem);
 				invalidos=consultasManager.consultaDinamica(ObjetoBD.VALIDA_EDAD_ASEGURADOS, paramsValidaEdad);
 				
-				if(invalidos.size()>0)
-				{
-					kernelManager.mesaControlUpdateStatus(respConfirmacionEndoso.getNumeroTramite(), EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
-					
+				if (invalidos.size() > 0 && respConfirmacionEndoso.isConfirmado()) {
+				    respConfirmacionEndoso.setConfirmado(false);
 					String cdtipsup = alta ? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
 						     : TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString();
 					
@@ -5404,88 +5476,27 @@ public String retarificarEndosos()
 						}
 					}
 					
-					String dssuplem="";
-					// Obtenemos TODOS los nombres de los endosos:
-					List<Map<String,String>> endosos = endososManager.obtenerNombreEndosos(null, Integer.parseInt(cdramo), cdtipsit);
-					for(Map<String,String>endoso:endosos)
-					{
-						if(endoso.get("CDTIPSUP").equalsIgnoreCase(cdtipsup))
-						{
-							dssuplem=endoso.get("DSTIPSUP");
-						}
-					}
-					
-					/*Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
-					paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
-					paramsMesaControl.put("pv_cdramo_i"     , cdramo);
-					paramsMesaControl.put("pv_estado_i"     , estado);
-					paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
-					paramsMesaControl.put("pv_nmsuplem_i"   , nmsuplem);
-					paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
-					paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
-					paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.EMISION_EN_ESPERA.getCdtiptra());
-					paramsMesaControl.put("pv_ferecepc_i"   , fechaEndosoD);
-					paramsMesaControl.put("pv_cdagente_i"   , null);
-					paramsMesaControl.put("pv_referencia_i" , null);
-					paramsMesaControl.put("pv_nombre_i"     , null);
-					paramsMesaControl.put("pv_festatus_i"   , fechaEndosoD);
-					paramsMesaControl.put("pv_status_i"     , EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
-					paramsMesaControl.put("pv_comments_i"   , mensajeRespuesta);
-					paramsMesaControl.put("pv_nmsolici_i"   , null);
-					paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
-					paramsMesaControl.put("pv_otvalor01"    , cdusuari);
-					paramsMesaControl.put("pv_otvalor02"    , cdelemen);
-					paramsMesaControl.put("pv_otvalor03"    , (Integer.valueOf(respConfirmacionEndoso.getNumeroTramite())).toString());
-					paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
-					paramsMesaControl.put("pv_otvalor05"    , dssuplem);
-					paramsMesaControl.put("pv_otvalor06"    , cdtipsup);
-					paramsMesaControl.put("pv_otvalor07"    , nsuplogi);
-					paramsMesaControl.put("pv_otvalor08"    , ntramite);
-					paramsMesaControl.put("cdusuari"        , cdusuari);
-					paramsMesaControl.put("cdsisrol"        , cdsisrol);
-					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
-					tramiteGenerado=(String) wr.getItemMap().get("ntramite");*/
-					
-					Map<String,String> valores = new LinkedHashMap<String,String>();
-					valores.put("otvalor01" , cdusuari);
-					valores.put("otvalor02" , cdelemen);
-					valores.put("otvalor03" , (Integer.valueOf(respConfirmacionEndoso.getNumeroTramite())).toString());
-					valores.put("otvalor04" , cdpersonSesion);
-					valores.put("otvalor05" , dssuplem);
-					valores.put("otvalor06" , cdtipsup);
-					valores.put("otvalor07" , nsuplogi);
-					valores.put("otvalor08" , ntramite);
-					
-					tramiteGenerado = mesaControlManager.movimientoTramite(
-							cdunieco
-							,cdramo
-							,estado
-							,nmpoliza
-							,nmsuplem
-							,cdunieco
-							,cdunieco
-							,TipoTramite.EMISION_EN_ESPERA.getCdtiptra()
-							,fechaHoy
-							,null
-							,null
-							,null
-							,fechaHoy
-							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
-							,mensajeRespuesta
-							,null
-							,cdtipsit
-							,cdusuari
-							,cdsisrol
-							,null //swimpres
-							,null //cdtipflu
-							,null //cdflujomc
-							,valores, null, null, null, null
-							);
+					RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+					        cdusuari,
+					        cdsisrol,
+					        respConfirmacionEndoso.getNumeroTramite(),
+					        EstatusTramite.ENDOSO_EN_ESPERA.getCodigo(),
+					        mensajeRespuesta,
+					        null,  // cdrazrecha
+					        null,  // cdusuariDes
+					        null,  // cdsisrolDes
+					        false, // permisoAgente
+					        false, // porEscalamiento
+					        fechaHoy,
+					        false  // sinGrabarDetalle
+					        );
+					mensajeDespacho = StringUtils.isBlank(mensajeDespacho)
+					        ? despacho.getMessage()
+					        : Utils.join(mensajeDespacho, ". ", despacho.getMessage());
 				}
 			}
 			
-			if(StringUtils.isBlank(tramiteGenerado))
-			{
+			if (respConfirmacionEndoso.isConfirmado()) {
 			
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
@@ -5506,69 +5517,7 @@ public String retarificarEndosos()
 				String nmsolici    = datosPoliza.get("nmsolici");
 				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
 				
-				/*
-			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
-			    		cdunieco
-			    		,cdramo
-			    		,estado
-			    		,nmpoliza
-			    		,nmsuplem
-			    		,alta
-			    		    ? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
-			    		    : TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString()
-			    		);
-			    logger.debug("documentos que se regeneran: "+listaDocu);
-			    
-			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
-			    
-				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-				for(Map<String,String> docu:listaDocu)
-				{
-					logger.debug("docu iterado: "+docu);
-					String descripc=docu.get("descripc");
-					String descripl=docu.get("descripl");
-					String url=this.getText("ruta.servidor.reports")
-							+ "?destype=cache"
-							+ "&desformat=PDF"
-							+ "&userid="+this.getText("pass.servidor.reports")
-							+ "&report="+descripl
-							+ "&paramform=no"
-							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-							+ "&p_unieco="+cdunieco
-							+ "&p_ramo="+cdramo
-							+ "&p_estado="+estado
-							+ "&p_poliza="+nmpoliza
-							+ "&p_suplem="+nmsuplem
-							+ "&desname="+rutaCarpeta+"/"+descripc;
-					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
-					{
-						// C R E D E N C I A L _ X X X X X X . P D F
-						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
-					}
-					logger.debug(""
-							+ "\n#################################"
-							+ "\n###### Se solicita reporte ######"
-							+ "\na "+url+""
-							+ "\n#################################");
-					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					logger.debug(""
-							+ "\n######                    ######"
-							+ "\n###### reporte solicitado ######"
-							+ "\na "+url+""
-							+ "\n################################"
-							+ "\n################################"
-							+ "");
-				}
-				*/
-			    /*///////////////////////////////////*/
-				////// re generar los documentos //////
-			    ///////////////////////////////////////
-				
 				String sucursal = cdunieco;
-				
-				//String nmsolici = listaDocu.size()>0?listaDocu.get(0).get("nmsolici"):nmpoliza;
-				//String nmtramite = listaDocu.get(0).get("ntramite");
 				
 				String tipomov = alta?"9":"10";
 				
@@ -5580,8 +5529,7 @@ public String retarificarEndosos()
 						true, tipomov, 
 						(UserVO) session.get("USUARIO"));
 				
-				mensaje="Se ha guardado el endoso "+nsuplogi;
-				
+				mensaje = Utils.join("Se ha guardado el endoso ", nsuplogi);
 			}
 			else
 			{
@@ -5605,6 +5553,9 @@ public String retarificarEndosos()
 							+mensajeInvalido;
 			}
 			
+			if (StringUtils.isNotBlank(mensajeDespacho)) {
+			    mensaje = Utils.join(mensaje, ". ", mensajeDespacho);
+			}
 			success=true;
 		}
 		catch(Exception ex)
@@ -6033,10 +5984,16 @@ public String retarificarEndosos()
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				mensaje="Endoso confirmado "+nsuplogi;
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			} else {
 				mensaje="El endoso "+nsuplogi
 						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 			}
 			
 			success=true;
@@ -6397,6 +6354,9 @@ public String retarificarEndosos()
 						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
+			if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+            }
 			success=true;
 		} catch(Exception ex) {
 			success=false;
@@ -6555,12 +6515,12 @@ public String retarificarEndosos()
 							,cdunieco
 							,cdunieco
 							,TipoTramite.ENDOSO.getCdtiptra()
-							,fechaEndoso
+							,fechaHoy
 
 							,null
 							,null
 							,null
-							,fechaEndoso
+							,fechaHoy
 
 							,estatusTramite
 							,dscoment
@@ -6577,6 +6537,21 @@ public String retarificarEndosos()
 							,null
 							,null
 							);
+					
+				    respuesta.setRespuestaTurnado(despachadorManager.turnarTramite(
+				            cdusuari,
+				            cdsisrol,
+				            ntramiteGenerado, 
+				            estatusTramite,
+				            "La fecha de efecto del endoso supera la fecha permitida",
+				            null,  // cdrazrecha
+				            null,  // cdusuariDes
+				            null,  // cdsisrolDes
+				            true,  // permisoAgente
+				            false, // porEscalamiento
+				            fechaHoy,
+				            true   //sinGrabarDetalle
+				            ));
 					
 					// Si fue confirmado no asignamos numero de tramite:
 					if(respuesta.isConfirmado()) {
@@ -6632,26 +6607,31 @@ public String retarificarEndosos()
 						respuesta.setConfirmado(true);
 						logger.debug("************* El Endoso fue confirmado, confirmado true");
 					}
+                    
+                    String comments = Utils.join("Endoso confirmado: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment);
+                    if (estatusTramite.equals(EstatusTramite.ENDOSO_EN_ESPERA.getCodigo())) {
+                        comments = Utils.join("Endoso enviado a autorizaci\u00f3n: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment);
+                    }
 					
-					paso = "Actualizando estatus de tr\u00e1mite de endoso";
+					paso = "Actualizando estatus de tr\u00e1mite";
 					logger.debug(paso);
-					
-					flujoMesaControlDAO.actualizarStatusTramite(
-							flujo.getNtramite()
-							,estatusTramite
-							,new Date() //fecstatu
-							,null //cdusuari
-							);
+					respuesta.setRespuestaTurnado(despachadorManager.turnarTramite(
+                            cdusuari,
+                            cdsisrol,
+                            flujo.getNtramite(), 
+                            estatusTramite,
+                            comments,
+                            null,  // cdrazrecha
+                            null,  // cdusuariDes
+                            null,  // cdsisrolDes
+                            true,  // permisoAgente
+                            false, // porEscalamiento
+                            fechaHoy,
+                            true   //sinGrabarDetalle
+                            ));
 					
 					paso = "Guardando detalle de tr\u00e1mite de endoso";
 					logger.debug(paso);
-					
-					String comments = Utils.join("Endoso confirmado: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment);
-					
-					if(estatusTramite.equals(EstatusTramite.ENDOSO_EN_ESPERA.getCodigo()))
-					{
-						comments = Utils.join("Endoso enviado a autorizaci\u00f3n: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment);
-					}
 					
 					mesaControlDAO.movimientoDetalleTramite(
 							flujo.getNtramite()
@@ -6778,12 +6758,12 @@ public String retarificarEndosos()
 							,cdunieco
 							,cdunieco
 							,TipoTramite.ENDOSO.getCdtiptra()
-							,fechaEndoso
+							,fechaHoy
 
 							,null
 							,null
 							,null
-							,fechaEndoso
+							,fechaHoy
 
 							,estatusTramite
 							,dscoment
@@ -6801,6 +6781,21 @@ public String retarificarEndosos()
 							,null
 							);
 					
+					respuesta.setRespuestaTurnado(despachadorManager.turnarTramite(
+					        cdusuari,
+					        cdsisrol,
+					        ntramiteGenerado,
+					        estatusTramite,
+					        dscoment,
+					        null,  // cdrazrecha,
+					        null,  // cdusuariDes,
+					        null,  // cdsisrolDes,
+					        true,  // permisoAgente,
+					        false, // porEscalamiento,
+					        fechaHoy,
+					        false  // sinGrabarDetalle
+					        ));
+					
 					// Si fue confirmado no asignamos numero de tramite:
 					if(respuesta.isConfirmado()) {
 						respuesta.setNumeroTramite(null);
@@ -6811,6 +6806,8 @@ public String retarificarEndosos()
 				}
 				else // AUTOS CON FLUJO
 				{
+				    Date fechaHoy = new Date();
+				    
 					paso = "Confirmando endoso de flujo";
 					logger.debug(paso);
 				
@@ -6825,24 +6822,33 @@ public String retarificarEndosos()
 							,dscoment
 							);
 					
-					paso = "Actualizando estatus de tr\u00e1mite de endoso";
-					logger.debug(paso);
-					
-					flujoMesaControlDAO.actualizarStatusTramite(
-							flujo.getNtramite()
-							,EstatusTramite.ENDOSO_CONFIRMADO.getCodigo()
-							,new Date() //fecstatu
-							,null //cdusuari
-							);
+					String comments = Utils.join("Endoso confirmado: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment);
+                    
+                    paso = "Actualizando estatus de tr\u00e1mite";
+                    logger.debug(paso);
+                    respuesta.setRespuestaTurnado(despachadorManager.turnarTramite(
+                            cdusuari,
+                            cdsisrol,
+                            flujo.getNtramite(), 
+                            EstatusTramite.ENDOSO_CONFIRMADO.getCodigo(),
+                            comments,
+                            null,  // cdrazrecha
+                            null,  // cdusuariDes
+                            null,  // cdsisrolDes
+                            true,  // permisoAgente
+                            false, // porEscalamiento
+                            fechaHoy,
+                            true   //sinGrabarDetalle
+                            ));
 					
 					paso = "Guardando detalle de tr\u00e1mite de endoso";
 					logger.debug(paso);
 					
 					mesaControlDAO.movimientoDetalleTramite(
 							flujo.getNtramite()
-							,new Date() //feinicio
+							,fechaHoy //feinicio
 							,null //cdclausu
-							,Utils.join("Endoso confirmado: ",StringUtils.isBlank(dscoment) ? "(sin comentarios)" : dscoment)
+							,comments
 							,cdusuari
 							,null //cdmotivo
 							,cdsisrol
@@ -6941,6 +6947,8 @@ public String retarificarEndosos()
 					,ntramiteEnd = null
 					,status      = null
 					,coment      = null;
+
+			Date fechaHoy = new Date();
 			
 			UserVO usuario = Utils.validateSession(session);
 			
@@ -7018,8 +7026,6 @@ public String retarificarEndosos()
 					,"\ncoment      = " , coment
 					));
 			
-			kernelManager.mesaControlUpdateStatus(ntramiteEnd, status);
-			
 			Map<String,String>paramConfirmarEndosoB=new LinkedHashMap<String,String>(0);
 			paramConfirmarEndosoB.put("pv_cdunieco_i" , cdunieco);
 			paramConfirmarEndosoB.put("pv_cdramo_i"   , cdramo);
@@ -7033,9 +7039,26 @@ public String retarificarEndosos()
 			String nmsolici = null;
 			String rutaCarpeta = null;
 			
+			RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+			        cdusuari,
+			        cdsisrol,
+			        ntramiteEnd,
+			        status,
+			        "Se autoriza endoso", // comments
+			        null,  // cdrazrecha
+			        null,  // cdusuariDes
+			        null,  // cdsisrolDes
+			        true,  // permisoAgente
+			        false, // porEscalamiento 
+			        fechaHoy,
+			        true  // sinGrabarDetalle
+			        );
+			
+			message = despacho.getMessage();
+			
 			mesaControlDAO.movimientoDetalleTramite(
 					flujo.getNtramite()
-					,new Date() //feinicio
+					,fechaHoy //feinicio
 					,null //cdclausu
 					,StringUtils.isBlank(coment) ? "Endoso autorizado sin observaciones" : Utils.join("Endoso autorizado: ",coment)
 					,cdusuari
@@ -7882,6 +7905,9 @@ public String retarificarEndosos()
 						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
+			if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+            }
 			success=true;
 		} catch(Exception ex) {
 			logger.error("error al guardar los datos de endoso de domicilio full",ex);
@@ -8329,6 +8355,9 @@ public String retarificarEndosos()
 							+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 							+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 				}
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 				success=true;
 			}
 			catch(Exception ex)
@@ -8676,6 +8705,9 @@ public String retarificarEndosos()
 						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
+			if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+            }
 			success=true;
 		} catch(Exception ex) {
 			error=ex.getMessage();
@@ -8997,7 +9029,9 @@ public String retarificarEndosos()
 						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
-			
+			if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+            }
 			success=true;
 		} catch(Exception ex) {
 			error=ex.getMessage();
@@ -9585,6 +9619,9 @@ public String retarificarEndosos()
 						+ "La p\u00f3liza reexpedida es "+nmpolizaNuevaPoliza+" con tr\u00e1mite "
 						+ "de emisi\u00f3n "+ntramiteNuevaPoliza;
 			}
+			if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+            }
 			success=true;
 			
 		} catch(Exception ex) {
@@ -10162,6 +10199,9 @@ public String retarificarEndosos()
 						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
+			if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+            }
 			success=true;
 			
 		} catch(Exception ex) {
@@ -10292,6 +10332,9 @@ public String retarificarEndosos()
 						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
 						+ "con n&uacute;mero de tr&aacute;mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
+			if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+            }
 			success=true;
 			
 		} catch(Exception ex) {
@@ -10668,7 +10711,9 @@ public String retarificarEndosos()
 									+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 						}
 			}
-				
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 				success=true;
 				
 			}
@@ -11049,6 +11094,9 @@ public String retarificarEndosos()
 						+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 						+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 			}
+			if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+            }
 			success=true;
 			
 		} catch(Exception ex) {
@@ -11706,7 +11754,9 @@ public String retarificarEndosos()
 					+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 					+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 				}
-				
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 				success=true;
 			}
 			catch(Exception ex)
@@ -12105,6 +12155,9 @@ public String retarificarEndosos()
 					+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 					+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 				}
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 				success=true;
 			}
 			catch(Exception ex)
@@ -12400,6 +12453,9 @@ public String retarificarEndosos()
 					+" se guard\u00f3 en mesa de control para autorizaci\u00f3n "
 					+ "con n\u00famero de tr\u00e1mite " + respConfirmacionEndoso.getNumeroTramite();
 				}
+				if (respConfirmacionEndoso.getRespuestaTurnado() != null) {
+                    mensaje = Utils.join(mensaje, ". ", respConfirmacionEndoso.getRespuestaTurnado().getMessage());
+                }
 				success=true;
 			}
 			catch(Exception ex)

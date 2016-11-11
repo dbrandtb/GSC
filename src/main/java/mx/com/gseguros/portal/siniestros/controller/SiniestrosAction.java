@@ -13,6 +13,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.json.JSONException;
+import org.apache.struts2.json.JSONUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -49,17 +60,6 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Operacion;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.json.JSONException;
-import org.apache.struts2.json.JSONUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class SiniestrosAction extends PrincipalCoreAction {
 	
@@ -5552,7 +5552,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							
 						}else{
 							banderaValidacion = "1";
-							mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el Límite permitido. <br/>";							
+							mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el Lï¿½mite permitido. <br/>";							
 						}
 					}
 				}
@@ -5828,7 +5828,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				this.params = params;
 				
 				if(cdpresta.equalsIgnoreCase("24104") && tipoproc.equalsIgnoreCase("1")){
-					logger.debug("No entra a la generación de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
+					logger.debug("No entra a la generaciï¿½n de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
 					HashMap<String, Object> paramsPagoDirecto = new HashMap<String, Object>();
 					paramsPagoDirecto.put("pv_ntramite_i",slist1.get(i).get("NTRAMITE"));
 					String montoTramite = siniestrosManager.obtieneMontoTramitePagoDirecto(paramsPagoDirecto);
@@ -5839,7 +5839,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					siniestrosManager.actualizaOTValorMesaControl(otvalor);
 					
 				}else{
-					logger.debug("entra a la generación de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
+					logger.debug("entra a la generaciï¿½n de los calculos ===> cdpresta :{} tipoProceso:{}",cdpresta,tipoproc);
 					generarCalculoSiniestros();
 				}
 			}

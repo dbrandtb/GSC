@@ -22,6 +22,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
@@ -37,6 +46,8 @@ import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
+import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
@@ -66,15 +77,6 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.ActionContext;
 
 /**
  * 
@@ -171,9 +173,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private SiniestrosManager  siniestrosManager;
+    
+    @Autowired
+    private ConsultasDAO consultasDAO;
 	
 	@Autowired
-    private ConsultasDAO consultasDAO;
+	private DespachadorManager despachadorManager;
 	
 	public static final String SUCURSAL_SALUD_NOVA = "1403";
 
@@ -2036,6 +2041,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 		boolean esFlotilla     = false;
 		tipoGrupoInciso = "I";
 		
+		Date fechaHoy = new Date();
+		
 		////// obtener parametros
 		if(success)
 		{
@@ -2120,102 +2127,23 @@ public class ComplementariosAction extends PrincipalCoreAction
 							mensajeRespuesta = mensajeRespuesta + " supera la edad de "+iAseguradoEdadInvalida.get("EDADMAXI")+" a&ntilde;os<br/>";
 						}
 					}
-					
-					/*Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
-					paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
-					paramsMesaControl.put("pv_cdramo_i"     , cdramo);
-					paramsMesaControl.put("pv_estado_i"     , estado);
-					paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
-					paramsMesaControl.put("pv_nmsuplem_i"   , "0");
-					paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
-					paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
-					paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.EMISION_EN_ESPERA.getCdtiptra());
-					paramsMesaControl.put("pv_ferecepc_i"   , new Date());
-					paramsMesaControl.put("pv_cdagente_i"   , null);
-					paramsMesaControl.put("pv_referencia_i" , null);
-					paramsMesaControl.put("pv_nombre_i"     , null);
-					paramsMesaControl.put("pv_festatus_i"   , new Date());
-					paramsMesaControl.put("pv_status_i"     , EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
-					paramsMesaControl.put("pv_comments_i"   , mensajeRespuesta);
-					paramsMesaControl.put("pv_nmsolici_i"   , null);
-					paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
-					paramsMesaControl.put("pv_otvalor01"    , cdusuari);
-					paramsMesaControl.put("pv_otvalor02"    , cdelemen);
-					paramsMesaControl.put("pv_otvalor03"    , ntramite);
-					paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
-					paramsMesaControl.put("pv_otvalor05"    , "EMISION");
-					paramsMesaControl.put("cdusuari"        , cdusuari);
-					paramsMesaControl.put("cdsisrol"        , cdsisrol);
-					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);*/
-					
-					/*
-					 * jtezva: 2015-12-29 B
-					 * Ahora ya no se crea el tramite nuevo
-					 * 
-					Map<String,String> valores = new LinkedHashMap<String,String>();
-					valores.put("otvalor01" , cdusuari);
-					valores.put("otvalor02" , cdelemen);
-					valores.put("otvalor03" , ntramite);
-					valores.put("otvalor04" , cdpersonSesion);
-					valores.put("otvalor05" , "EMISION");
-					
-					String ntramiteAutorizacion = mesaControlManager.movimientoTramite(
-							cdunieco
-							,cdramo
-							,estado
-							,nmpoliza
-							,"0"
-							,cdunieco
-							,cdunieco
-							,TipoTramite.EMISION_EN_ESPERA.getCdtiptra()
-							,new Date()
-							,null
-							,null
-							,null
-							,new Date()
-							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
-							,mensajeRespuesta
-							,null
-							,cdtipsit
-							,cdusuari
-							,cdsisrol
-							,null //swimpres
-							,null //cdtipflu
-							,null //cdflujomc
-							,valores, null
-							);
-					mensajeRespuesta = mensajeRespuesta + "<br/>Tr\u00e1mite de autorizaci\u00f3n: "+ntramiteAutorizacion;
-					* jtezva: 2015-12-29 B
-					*/
-					
-					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
-		        	parDmesCon.put("pv_feinicio_i"   , new Date());
-		        	parDmesCon.put("pv_cdclausu_i"   , null);
-		        	parDmesCon.put("pv_comments_i"   , "El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")");
-		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
-		        	parDmesCon.put("pv_cdmotivo_i"   , null);
-		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-		        	kernelManager.movDmesacontrol(parDmesCon);*/
-					mesaControlManager.movimientoDetalleTramite(
-							ntramite
-							,new Date()//feinicio
-							,null//cdclausu
-							
-							// jtezva: 2015-12-29 B
-							//,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")"
-							,mensajeRespuesta.replaceAll("<br/>", "\n").replaceAll("&ntilde;", "\u00f1")
-							// jtezva: 2015-12-29 B
-							
-							,cdusuari
-							,null//cdmotivo
-							,cdsisrol
-							,"S"//swagente
-							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
-							,false
-							);
-					
-		        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+		        	
+		        	RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+		        	        cdusuari,
+		        	        cdsisrol,
+		        	        ntramite,
+		        	        EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
+		        	        mensajeRespuesta.replaceAll("<br/>", "\n").replaceAll("&ntilde;", "\u00f1"),
+		        	        null,  // cdrazrecha
+		        	        null,  // cdusuariDes
+		        	        null,  // cdsisrolDes
+		        	        true,  // permisoAgente
+		        	        false, // porEscalamiento,
+		        	        fechaHoy,
+		        	        false  // sinGrabarDetalle
+		        	        );
+		        	
+		        	mensajeRespuesta = Utils.join(mensajeRespuesta, ". ", despacho.getMessage());
 		        	
 					success = false;
 				}
@@ -2238,102 +2166,23 @@ public class ComplementariosAction extends PrincipalCoreAction
 					necesitaAutorizacion=true;
 					panel1.put("necesitaAutorizacion" , "S");
 					mensajeRespuesta = "La p\u00f3liza se envi\u00f3 a autorizaci\u00f3n debido a que se cambio el cuadro de comisiones";
-					
-					/*Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
-					paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
-					paramsMesaControl.put("pv_cdramo_i"     , cdramo);
-					paramsMesaControl.put("pv_estado_i"     , estado);
-					paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
-					paramsMesaControl.put("pv_nmsuplem_i"   , "0");
-					paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
-					paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
-					paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.EMISION_EN_ESPERA.getCdtiptra());
-					paramsMesaControl.put("pv_ferecepc_i"   , new Date());
-					paramsMesaControl.put("pv_cdagente_i"   , null);
-					paramsMesaControl.put("pv_referencia_i" , null);
-					paramsMesaControl.put("pv_nombre_i"     , null);
-					paramsMesaControl.put("pv_festatus_i"   , new Date());
-					paramsMesaControl.put("pv_status_i"     , EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
-					paramsMesaControl.put("pv_comments_i"   , mensajeRespuesta);
-					paramsMesaControl.put("pv_nmsolici_i"   , null);
-					paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
-					paramsMesaControl.put("pv_otvalor01"    , cdusuari);
-					paramsMesaControl.put("pv_otvalor02"    , cdelemen);
-					paramsMesaControl.put("pv_otvalor03"    , ntramite);
-					paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
-					paramsMesaControl.put("pv_otvalor05"    , "EMISION");
-					paramsMesaControl.put("cdusuari"        , cdusuari);
-					paramsMesaControl.put("cdsisrol"        , cdsisrol);
-					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);*/
-					
-					/*
-					 * jtezva: 2015-12-29 B
-					 * Ahora ya no se crea el tramite nuevo
-					 * 
-					Map<String,String> valores = new LinkedHashMap<String,String>();
-					valores.put("otvalor01" , cdusuari);
-					valores.put("otvalor02" , cdelemen);
-					valores.put("otvalor03" , ntramite);
-					valores.put("otvalor04" , cdpersonSesion);
-					valores.put("otvalor05" , "EMISION");
-					
-					String ntramiteAutorizacion = mesaControlManager.movimientoTramite(
-							cdunieco
-							,cdramo
-							,estado
-							,nmpoliza
-							,"0"
-							,cdunieco
-							,cdunieco
-							,TipoTramite.EMISION_EN_ESPERA.getCdtiptra()
-							,new Date()
-							,null
-							,null
-							,null
-							,new Date()
-							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
-							,mensajeRespuesta
-							,null
-							,cdtipsit
-							,cdusuari
-							,cdsisrol
-							,null //swimpres
-							,null //cdtipflu
-							,null //cdflujomc
-							,valores, null
-							);
-					mensajeRespuesta = mensajeRespuesta + "<br/>Tr\u00e1mite de autorizaci\u00f3n: "+ntramiteAutorizacion;
-					* jtezva: 2015-12-29 B
-					*/
-					
-					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
-		        	parDmesCon.put("pv_feinicio_i"   , new Date());
-		        	parDmesCon.put("pv_cdclausu_i"   , null);
-		        	parDmesCon.put("pv_comments_i"   , "El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")");
-		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
-		        	parDmesCon.put("pv_cdmotivo_i"   , null);
-		        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
-		        	kernelManager.movDmesacontrol(parDmesCon);*/
-					mesaControlManager.movimientoDetalleTramite(
-							ntramite
-							,new Date()
-							,null
-							
-							// jtezva: 2015-12-29 B
-							//,"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")"
-							,mensajeRespuesta
-							// jtezva: 2015-12-29 B
-							
-							,cdusuari
-							,null
-							,cdsisrol
-							,"S"
-							,EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo()
-							,false
-							);
-					
-		        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+		        	
+		        	RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+		        	        cdusuari,
+		        	        cdsisrol,
+		        	        ntramite,
+		        	        EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
+		        	        mensajeRespuesta,
+		        	        null,  // cdrazrecha
+		        	        null,  // cdusuariDes
+		        	        null,  // cdsisrolDes
+		        	        true,  // permisoAgente
+		        	        false, // porEscalamiento
+		        	        fechaHoy,
+		        	        false  // sinGrabarDetalle
+		        	        );
+		        	
+		        	mensajeRespuesta = Utils.join(mensajeRespuesta, ". ", despacho.getMessage());
 		        	
 					success = false;
 				}
@@ -2407,8 +2256,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				try
 	            {
 	            	serviciosManager.grabarEvento(new StringBuilder("\nEmision")
-	            	    ,"EMISION"  //cdmodulo
-	            	    ,"EMISION"  //cdevento
+	            	    ,Constantes.MODULO_EMISION  //cdmodulo
+	            	    ,Constantes.EVENTO_EMISION  //cdevento
 	            	    ,new Date() //fecha
 	            	    ,cdusuari
 	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -3366,7 +3215,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String comentarios      = null;
 		String fechaEmision     = null;
 		Date   fechaEmisionDate = null;
-		Date   fechaDia         = new Date();
+		Date   fechaHoy         = new Date();
 		String cdperpag         = null;
 		UserVO us               = null;
 		String nmpolizaEmitida  = null;
@@ -3577,94 +3426,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 					}
 				}
 		
-		////// carpeta documentos
-	    /*	
-	    if(success)
-		{
-			try
-			{
-	            File carpeta = new File(rutaCarpeta);
-	            if(!carpeta.exists())
-	            {
-	            	logger.debug("no existe la carpeta::: "+rutaCarpeta);
-	            	carpeta.mkdir();
-	            	if(carpeta.exists())
-	            	{
-	            		logger.debug("carpeta creada");
-	            	}
-	            	else
-	            	{
-	            		logger.debug("carpeta NO creada");
-	            		success          = false;
-	            		mensajeRespuesta = "Error al crear la carpeta de documentos";
-	            	}
-	            }
-	            else
-	            {
-	            	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
-	            }
-			}
-			catch(Exception ex)
-			{
-				logger.error("error al crear la carpeta",ex);
-				mensajeRespuesta = ex.getMessage();
-				success          = false;
-			}
-		}
-		*/
-		
 		////// documentacion
 		if(success)
 		{
 			try
 			{
-				/*
-				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(
-						cdunieco
-						,cdramo
-						,"M"
-						,nmpolizaEmitida
-						,nmsuplemEmitida
-						,ntramite
-						);
-				
-				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-				for(Map<String,String> docu:listaDocu)
-				{
-					logger.debug("docu iterado: "+docu);
-					String descripc=docu.get("descripc");
-					String descripl=docu.get("descripl");
-					String url=this.getText("ruta.servidor.reports")
-							+ "?destype=cache"
-							+ "&desformat=PDF"
-							+ "&userid="+this.getText("pass.servidor.reports")
-							+ "&report="+descripl
-							+ "&paramform=no"
-							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-							+ "&p_unieco="+cdunieco
-							+ "&p_ramo="+cdramo
-							+ "&p_estado='M'"
-							+ "&p_poliza="+nmpolizaEmitida
-							+ "&p_suplem="+nmsuplemEmitida
-							+ "&desname="+rutaCarpeta+"/"+descripc;
-					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
-					{
-						// C R E D E N C I A L _ X X X X X X . P D F
-						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
-					}
-					logger.debug(Utils.log(
-							 "\n#################################"
-							,"\n###### Se solicita reporte ######"
-							+ "\na "+url);
-					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-					logger.debug(Utils.log(
-							,"\n###### reporte solicitado ######"
-							 "\n################################"
-							+ "");
-				}
-				*/
-				
 				documentosManager.generarDocumentosParametrizados(
 						cdunieco
 						,cdramo
@@ -3677,46 +3443,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,nmpoliza //nmsolici
 , null
 						);
-				
-				/*
-				String cdorddoc = emisionManager.insercionDocumentosParametrizados(
-	            		cdunieco
-	            		,cdramo
-	            		,"M"
-	            		,nmpolizaEmitida
-	            		,"0"
-	            		,nmsuplemEmitida
-	            		,"EMISION"
-	            		);
-	            logger.debug("cdorddoc: {}",cdorddoc);
-	            
-	            List<Map<String,String>> docsATransferir = cotizacionManager.generarDocumentosBaseDatos(
-	            		cdorddoc
-	            		,nmpoliza
-	            		,ntramite
-	            		);
-	            
-	            String rutaDocsBaseDatos = consultasManager.recuperarTparagen(ParametroGeneral.DIRECTORIO_REPORTES);
-	            logger.debug(Utils.join("\nrutaDocsBaseDatos:",rutaDocsBaseDatos));
-	            
-	            for(Map<String,String>doc:docsATransferir)
-	            {
-	            	try
-	            	{
-	            		String origen  = Utils.join(rutaDocsBaseDatos,doc.get("CDDOCUME"));
-	            		String destino = Utils.join(getText("ruta.documentos.poliza"),"/",ntramite,"/",doc.get("CDDOCUME"));
-	            		logger.debug(Utils.log("\nIntentando mover desde:",origen,",hacia:",destino));
-	            		FileUtils.moveFile(
-	            				new File(origen)
-	            				,new File(destino)
-	            				);
-	            	}
-	            	catch(Exception ex)
-	            	{
-	            		logger.error("Error al transferir archivo ",ex);
-	            	}
-	            }
-	            */
 				
 			}
 			catch(Exception ex)
@@ -3732,39 +3458,25 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
-				logger.debug("se inserta detalle nuevo para emision");
-	        	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
-	        	parDmesCon.put("pv_feinicio_i"   , fechaDia);
-	        	parDmesCon.put("pv_cdclausu_i"   , null);
-	        	parDmesCon.put("pv_comments_i"   , "La emisi\u00f3n del tr\u00e1mite se autoriz\u00f3 con las siguientes observaciones:<br/>"+comentarios);
-	        	parDmesCon.put("pv_cdusuari_i"   , us.getUser());
-	        	parDmesCon.put("pv_cdmotivo_i"   , null);
-	        	parDmesCon.put("pv_cdsisrol_i"   , us.getRolActivo().getClave());
-	        	kernelManager.movDmesacontrol(parDmesCon);*/
-				mesaControlManager.movimientoDetalleTramite(
-						ntramite
-						,fechaDia
-						,null//cdclausu
-						,Utils.join("La emisi\u00f3n del tr\u00e1mite se autoriz\u00f3 con las siguientes observaciones: ", 
-						    (StringUtils.isBlank(comentarios)
-						        ? "(sin observaciones)"
-						        : Utils.join("\n", comentarios)
-						    )
-						)
-						,us.getUser()
-						,null
-						,us.getRolActivo().getClave()
-						,swagente
-						,EstatusTramite.CONFIRMADO.getCodigo()
-						,true
-						);
-				
-				if(!procesoFlujo)
-				{
-					kernelManager.mesaControlUpdateStatus(ntramiteAut, EstatusTramite.CONFIRMADO.getCodigo());
-				}
-	        	
+				RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+				        us.getUser(),
+				        us.getRolActivo().getClave(),
+				        ntramite,
+				        EstatusTramite.CONFIRMADO.getCodigo(),
+				        Utils.join("La emisi\u00f3n del tr\u00e1mite se autoriz\u00f3 con las siguientes observaciones: ", 
+	                            (StringUtils.isBlank(comentarios)
+	                                ? "(sin observaciones)"
+	                                : Utils.join("\n", comentarios)
+	                            )
+	                        ),
+				        null, // cdrazrecha
+				        null, // cdusuariDes
+				        null, // cdsisrolDes
+				        "S".equals(swagente),
+				        false, // porEscalamiento
+				        fechaHoy,
+				        false  // sinGrabarDetalle
+				        );
 	        	mensajeRespuesta = "P\u00f3liza emitida: "+nmpoliexEmitida;
 			}
 			catch(Exception ex)
@@ -3772,14 +3484,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 				logger.error("error al guardar detalle de emision",ex);
 				mensajeRespuesta = ex.getMessage();
 				success          = false;
-			}
-		}
-		
-		if (success) {
-			try {
-				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
-			} catch (Exception ex) {
-				logger.error("Error al enviar correos de emision", ex);
 			}
 		}
 		
