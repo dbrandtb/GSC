@@ -164,18 +164,18 @@ public class DespachadorManagerImpl implements DespachadorManager {
 	   ALGORITMO:
 	SI EL DESTINO ES AGENTE:
 	    RECUPERO EL AGENTE Y SU SUCURSAL
-	    ENCONTRÉ: FIN
-	    NO ENCONTRÉ: ERROR!
-    SINO, SI NO ESTÁ QUEMADA LA BÚSQUEDA DE USUARIO ANTERIOR      
+	    ENCONTRO: FIN
+	    NO ENCONTRO: ERROR!
+    SINO, SI NO ESTA QUEMADA LA BUSQUEDA DE USUARIO ANTERIOR      
         BUSCO USUARIO ANTERIOR ACTIVO CON ROL ACTIVO CON SUCURSAL ACTIVA    
-        ENCONTRÉ: FIN   
-        NO ENCONTRÉ:    
+        ENCONTRO: FIN   
+        NO ENCONTRO:    
             QUEMO LA BUSQUEDA
 L           REINICIO
     SINO, SI TENGO SUCURSAL                       
         BUSCO EN ESA SUCURSAL                   
-        ENCONTRÉ: FIN                   
-        NO ENCONTRÉ:                    
+        ENCONTRO: FIN                   
+        NO ENCONTRO:                    
             SI SOY MATRIZ               
 A               LES DELEGO A NIVEL PRIMARIO ZONA C ENCONTRAR USUARIO Y SUCURSAL         
             SINO, SI EXISTE ESTATUS SUSTITUTO               
@@ -188,12 +188,12 @@ C               LES DELEGO A NIVEL INFERIOR ENCONTRAR USUARIO Y SUCURSAL
 D               PIDO AYUDA AL MISMO NIVEL PARA ENCONTRAR USUARIO Y SUCURSAL         
                 CON ESTATUS Y ROL ORIGINAL          
     SINO                        
-        BUSCO USUARIO Y SUCURSAL EN EL NIVEL ACTUAL SI NO ESTÁ QUEMADO                  
-        ENCONTRÉ: FIN                   
-        NO ENCONTRÉ:                    
-            SI SOY MATRIZ Y NIVEL PRIMARIO ZONA C NO ESTÁ QUEMADO               
+        BUSCO USUARIO Y SUCURSAL EN EL NIVEL ACTUAL SI NO ESTA QUEMADO                  
+        ENCONTRO: FIN                   
+        NO ENCONTRO:                    
+            SI SOY MATRIZ Y NIVEL PRIMARIO ZONA C NO ESTA QUEMADO               
 E               LES DELEGO A NIVEL PRIMARIO ZONA C ENCONTRAR USUARIO Y SUCURSAL         
-            SINO, SI EXISTE ESTATUS SUSTITUTO Y EL NIVEL NO ESTÁ QUEMADO                
+            SINO, SI EXISTE ESTATUS SUSTITUTO Y EL NIVEL NO ESTA QUEMADO                
 F               CAMBIO ESTATUS Y ROL            
                 VUELVO A INTENTAR EN EL NIVEL           
             SINO                
@@ -203,7 +203,7 @@ G                   LES DELEGO A NIVEL INFERIOR ENCONTRAR USUARIO Y SUCURSAL
                     CON ESTATUS Y ROL ORIGINAL      
                 SINO, SI TENGO NIVEL SUPERIOR           
                     SI EL NIVEL SUPERIOR ES MATRIZ      
-                        SI NIVEL PRIMARIO ZONA C NO ESTÁ QUEMADO    
+                        SI NIVEL PRIMARIO ZONA C NO ESTA QUEMADO    
 H                           DELEGO AL NIVEL PRIMARIO ZONA C CON ESTATUS Y ROL ORIGINAL
                         SINO    
 I                           ESCALO AL NIVEL SUPERIOR CON ESTATUS Y ROL ORIGINAL SIN ZONA
