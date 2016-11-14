@@ -8300,6 +8300,33 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		    compile();
 		}
 	}
+
+	
+	@Override
+	public void eliminaDocsCotiza(String cdunieco, String cdramo, String estado, String nmpoliza, String ntramite) throws Exception {
+	    
+	    Map<String,Object> params = new LinkedHashMap<String,Object>();
+	    params.put("pv_cdunieco_i" , cdunieco);
+	    params.put("pv_cdramo_i"   , cdramo);
+	    params.put("pv_estado_i"   , estado);
+	    params.put("pv_nmpoliza_i" , nmpoliza);
+	    params.put("pv_ntramite_i" , ntramite);
+	    ejecutaSP(new EliminaDocsCotiza(getDataSource()),params);
+	}
+	
+	protected class EliminaDocsCotiza extends StoredProcedure {
+	    protected EliminaDocsCotiza (DataSource dataSource) {
+	        super(dataSource,"P_DELETE_DOCS_COTIZA");
+	        declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o",OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o" ,OracleTypes.VARCHAR));
+	        compile();
+	    }
+	}
 	
 	
 	@Override
