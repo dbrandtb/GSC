@@ -82,6 +82,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			parametros.put("PV_CDBROKER_I", params.get("cdbroker"));
 			parametros.put("PV_CDEMPRESA_I", params.get("cdempresa"));
 			parametros.put("PV_ACCION_I", params.get("accion"));
+			parametros.put("PV_CDUNISLD_I", params.get("cdunisld"));
 			
 			Map<String, Object> result = ejecutaSP(new GuardaUsuario(getDataSource()), parametros);
 
@@ -121,6 +122,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			declareParameter(new SqlParameter("PV_CDBROKER_I", OracleTypes.VARCHAR));//DEBE SER NUMBER (6)
 			declareParameter(new SqlParameter("PV_CDEMPRESA_I", OracleTypes.VARCHAR));//DEBE SER TIPO , ASI SE DEFINE EN EL PROCEDURE
 			declareParameter(new SqlParameter("PV_ACCION_I", OracleTypes.VARCHAR));//DEBE SER TIPO VARCHAR, ASI SE DEFINE EN EL PROCEDURE
+			declareParameter(new SqlParameter("PV_CDUNISLD_I", OracleTypes.VARCHAR));//DEBE SER TIPO VARCHAR, ASI SE DEFINE EN EL PROCEDURE
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));//DEBE SER TIPO NUMBER
 			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
 			compile();
@@ -280,6 +282,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			usuarioVO.setCdrfc(rs.getString("CDRFC"));
 			usuarioVO.setDsEmail(rs.getString("DSEMAIL"));
 			usuarioVO.setCurp(rs.getString("CURP"));
+			usuarioVO.setCdunisld(rs.getString("CDUNISLD"));
 
 			usuarioVO.setCdrol(rs.getString("CDSISROL"));
 			usuarioVO.setEsAdmin(rs.getString("CDMODGRA"));
