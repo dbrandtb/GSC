@@ -370,7 +370,8 @@ function _4_onComplementariosAbiertoClick(rowIndex)
         }
         else if(agrupacion=='SOLO')
         {
-            Ext.create('Ext.form.Panel').submit(
+           /** Ya no aplica **/
+            /*  Ext.create('Ext.form.Panel').submit(
             {
                 url             : mesConUrlDatCom
                 ,standardSubmit : true
@@ -383,7 +384,7 @@ function _4_onComplementariosAbiertoClick(rowIndex)
                     ,'map1.ntramite' : record.get('ntramite')
                     ,cdtipsit : record.get('cdtipsit')
                 }
-            });
+            }); */
         }
         else
         {
