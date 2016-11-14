@@ -4773,6 +4773,9 @@ function _p52_removeEndpoint(id,tipo,clave)
     var ck = 'Borrando entidad';
     try
     {
+        if (confirm('¿Borrar?') !== true) {
+            return;
+        }
         _setLoading(true,_p52_panelDibujo);
         Ext.Ajax.request(
         {

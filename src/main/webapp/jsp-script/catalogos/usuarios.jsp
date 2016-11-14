@@ -237,6 +237,7 @@ Ext.apply(Ext.form.field.VTypes, {
                                                          'params.cdmodgra': record.get('esAdmin'),
                                                          'params.cdunieco': record.get('cdunieco'),
                                                          'params.cdunisld': record.get('cdunisld'),
+                                                         'params.swsusmat': record.get('swsusmat'),
                                                          'params.cdusuario': record.get('cdUsuario'),
                                                          'params.nombre': nombre,
                                                          'params.snombre': snombre,

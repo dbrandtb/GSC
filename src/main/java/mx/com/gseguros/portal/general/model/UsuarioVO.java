@@ -61,6 +61,9 @@ public class UsuarioVO implements Serializable {
      * cdempresa
      */
     private String cdempresa;
+    
+    private String swsusmat;
+    
     /**
      * @return the cdUsuario
      */
@@ -278,5 +281,13 @@ public class UsuarioVO implements Serializable {
 
     public void setCdunisld(String cdunisld) {
         this.cdunisld = cdunisld;
+    }
+
+    public String getSwsusmat() {
+        return swsusmat;
+    }
+
+    public void setSwsusmat(String swsusmat) {
+        this.swsusmat = swsusmat;
     }
 }
