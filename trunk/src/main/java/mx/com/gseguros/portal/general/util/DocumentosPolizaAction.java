@@ -185,8 +185,8 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 			
 		} catch (Exception e) {
 			logger.error("Error al regenerar el reporte "+ smap1, e);
-			addActionError(e.getMessage());
 			success = false;
+			respuesta = Utils.manejaExcepcion(e);
 		}
 		
 		return SUCCESS;
