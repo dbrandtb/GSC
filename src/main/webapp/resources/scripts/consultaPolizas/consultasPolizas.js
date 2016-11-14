@@ -1937,11 +1937,11 @@ Ext.onReady(function() {
                     if(jsonResponse.success){
                     	mensajeCorrecto('Aviso','Ejecuci&oacuten correcta al regenerar documentos.');
                     }else{
-                    	showMessage('Error', 'Error al regenerar documentos.', Ext.Msg.OK, Ext.Msg.ERROR);
+                    	showMessage('Error', 'Error al regenerar documentos. '+jsonResponse.respuesta, Ext.Msg.OK, Ext.Msg.ERROR);
                     }
                     
                 }else{
-                    showMessage('Error', 'Error al regenerar documentos.', Ext.Msg.OK, Ext.Msg.ERROR);
+                    showMessage('Error', 'Error de conexion al regenerar documentos.', Ext.Msg.OK, Ext.Msg.ERROR);
                 }
             }
         });
