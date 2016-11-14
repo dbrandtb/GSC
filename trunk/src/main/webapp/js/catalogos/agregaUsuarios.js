@@ -354,6 +354,39 @@ Ext.onReady(function() {
                                 
                             }
                         }
+                    },{
+                        xtype       : 'combo',
+                        name        : 'params.swsusmat',
+                        fieldLabel  : '&iquest;Es suscriptor matriz?',
+                        allowBlank  : false,
+                        valueField  : 'key',
+                        displayField: 'value',
+                        forceSelection: true,
+                        queryMode   :'local',
+                        store       : Ext.create('Ext.data.Store', {
+                            model : 'Generic',
+                            autoLoad : true,
+                            proxy : {
+                                type : 'ajax',
+                                url : _URL_CARGA_CATALOGO,
+                                extraParams : {
+                                    catalogo : Cat.Sino
+                                },
+                                reader : {
+                                    type : 'json',
+                                    root : 'lista'
+                                }
+                            },
+                            listeners: {
+                                load: function (){
+                                    if(editMode){
+                                        panelPersona.getForm().findField('params.swsusmat').setValue(_parametros.swsusmat);
+                                    }else {
+                                        panelPersona.getForm().findField('params.swsusmat').setValue("N");
+                                    }
+                                }
+                            }
+                        })
                     }
                     
                     ,{
