@@ -1434,7 +1434,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
                     ,"otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29","otvalor30"
                     ,"otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39","otvalor40"
                     ,"otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49","otvalor50"
-                    ,"contratante" , "cdusuari"
+                    ,"contratante" , "cdusuari", "swpolind"
             };
             declareParameter(new SqlOutParameter("pv_registro_o"  , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
