@@ -848,6 +848,17 @@ public interface CotizacionDAO {
 	public void insertaMpoligrup(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
 			String cdgrupo, String dsgrupo, String cdplan, String dsplanVariable, String cdcveplan, String nmsumaaseg, String nmdeducible,
 			String swmat, String swmed, String swee) throws Exception;
+
+	/**
+	 * Elimina el registro de los documentos de cotizacion de Tdocupol
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param ntramite TODO
+	 * @throws Exception
+	 */
+	public void eliminaDocsCotiza(String cdunieco, String cdramo, String estado, String nmpoliza, String ntramite) throws Exception;
 	
 	
 	/**
