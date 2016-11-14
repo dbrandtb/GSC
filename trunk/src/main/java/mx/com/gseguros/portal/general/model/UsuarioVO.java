@@ -36,6 +36,7 @@ public class UsuarioVO implements Serializable {
     private String esAgente;
     private String esAdmin;
     private String cdunieco;
+    private String cdunisld;
     
     /**
      * Para Agente, inicio vigencia y fin licencia
@@ -270,4 +271,12 @@ public class UsuarioVO implements Serializable {
 	public void setCdempresa(String cdempresa) {
 		this.cdempresa = cdempresa;
 	}
+
+    public String getCdunisld() {
+        return cdunisld;
+    }
+
+    public void setCdunisld(String cdunisld) {
+        this.cdunisld = cdunisld;
+    }
 }
