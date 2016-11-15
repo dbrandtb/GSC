@@ -4246,7 +4246,7 @@ Ext.onReady(function()
 	             select:function(combo,row){
 	                 
 	                 aplicaDxn(row[0].data.key);
-	                 
+	                 agregarAgenteDXN();
 	             }
 	         });
 	     }
