@@ -439,6 +439,7 @@ public interface EndososManager
 			,String cdsisrol
 			,UserVO usuarioSesion
 			,FlujoVO flujo
+			,String feefecto
 			)throws Exception;
 
 	

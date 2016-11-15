@@ -12964,6 +12964,7 @@ public String retarificarEndosos()
 			String nmsituac = smap1.get("nmsituac");
 			String cdtipsup = smap1.get("cdtipsup");
 			String ntramite = smap1.get("ntramite");
+			String feefecto = smap1.get("feefecto");
 			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
@@ -12992,6 +12993,7 @@ public String retarificarEndosos()
 					,cdsisrol
 					,usuarioSesion
 					,flujo
+					,feefecto
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
