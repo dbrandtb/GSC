@@ -1965,6 +1965,7 @@ public class EndososManagerImpl implements EndososManager
 			,String cdsisrol
 			,UserVO usuarioSesion
 			,FlujoVO flujo
+			,String feefecto
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -1982,6 +1983,7 @@ public class EndososManagerImpl implements EndososManager
 				,"\n@@@@@@ ntramiteEmi      = " , ntramiteEmi
 				,"\n@@@@@@ cdsisrol         = " , cdsisrol
 				,"\n@@@@@@ flujo            = " , flujo
+				,"\n@@@@@@ feefecto         = " , feefecto
 				));
 
 		ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
@@ -2001,7 +2003,7 @@ public class EndososManagerImpl implements EndososManager
 				
 			}
 			
-			Date fechaEndoso = new Date();
+			//Date fechaEndoso = new Date();
 			
 			paso = "Iniciando endoso";
 			logger.debug(paso);
@@ -2011,7 +2013,7 @@ public class EndososManagerImpl implements EndososManager
 					,cdramo
 					,estado
 					,nmpoliza
-					,fechaEndoso
+					,renderFechas.parse(feefecto)
 					,cdelemen
 					,cdusuari
 					,"END"
@@ -2059,7 +2061,7 @@ public class EndososManagerImpl implements EndososManager
 							,rec.get("DSNOMBRE1")
 							,rec.get("DSAPELLIDO")
 							,rec.get("DSAPELLIDO1")
-							,fechaEndoso
+							,renderFechas.parse(feefecto)//fechaEndoso
 							,rec.get("CDNACION")
 							,rec.get("CANALING")
 							,rec.get("CONDUCTO")
@@ -2126,7 +2128,7 @@ public class EndososManagerImpl implements EndososManager
 							,rec.get("DSNOMBRE1")
 							,rec.get("DSAPELLIDO")
 							,rec.get("DSAPELLIDO1")
-							,fechaEndoso
+							,renderFechas.parse(feefecto)//fechaEndoso
 							,rec.get("CDNACION")
 							,rec.get("CANALING")
 							,rec.get("CONDUCTO")
@@ -2175,7 +2177,7 @@ public class EndososManagerImpl implements EndososManager
 							,rec.get("DSNOMBRE1")
 							,rec.get("DSAPELLIDO")
 							,rec.get("DSAPELLIDO1")
-							,fechaEndoso
+							,renderFechas.parse(feefecto)//fechaEndoso
 							,rec.get("CDNACION")
 							,rec.get("CANALING")
 							,rec.get("CONDUCTO")
@@ -2199,7 +2201,7 @@ public class EndososManagerImpl implements EndososManager
 					,nsuplogi
 					,cdtipsup
 					,""//dscoment
-					,fechaEndoso
+					,renderFechas.parse(feefecto)//fechaEndoso
 					,null //cdtipsit
 					,flujo
 					,cdusuari
