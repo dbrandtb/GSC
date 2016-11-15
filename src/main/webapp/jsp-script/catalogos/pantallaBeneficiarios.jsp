@@ -155,10 +155,48 @@ Ext.onReady(function()
                         ,value : '<span style="color:white;">*Para editar un beneficiario haga doble clic sobre la fila</span>'
                     }
                 ]
-                ,buttonAlign : 'center'
+                ,bbar    :
+                [
+                    '->'
+                    ,{
+                        xtype     : 'form'
+                        ,itemId   : '_p32_formEndoso'
+                        ,layout   : 'hbox'
+                        ,defaults : { style : 'margin:5px;' }
+                        ,items    :
+                        [
+                            {
+                                xtype       : 'datefield'
+                                ,name       : 'fechaEndoso'
+                                ,fieldLabel : 'Fecha de efecto'
+                                ,value      : new Date()
+                                ,style      : 'margin:5px;margin-left:15px;'
+                                ,allowBlank : false
+                                ,hidden     : Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
+                                    ? true
+                                    : false
+                            }
+                            ,{
+                                xtype    : 'button'
+                                ,text     : Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
+                                    ? 'Guardar'
+                                    : 'Confirmar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/' + (
+                                    Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
+                                        ? 'disk.png'
+                                        : 'key.png'
+                                )
+                                ,handler : function(){ _p32_guardarClic(); }
+                            }
+                        ]
+                    }
+                    ,'->'
+                ]
+                /*,buttonAlign : 'center'
                 ,buttons     :
                 [
                     {
+                        xtype    : 'button'
                         text     : Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
                             ? 'Guardar'
                             : 'Confirmar'
@@ -169,7 +207,7 @@ Ext.onReady(function()
                         )
                         ,handler : function(){ _p32_guardarClic(); }
                     }
-                ]
+                ]*/
 //                 ,listeners :
 //                 {
 //                     afterrender : function()
@@ -439,6 +477,7 @@ function _p32_guardarClic(callback)
                 ,nmsituac : _p32_smap1.nmsituac
                 ,cdtipsup : _p32_smap1.cdtipsup
                 ,ntramite : _p32_smap1.ntramite
+                ,feefecto : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
             }
             ,slist1 : []
         };

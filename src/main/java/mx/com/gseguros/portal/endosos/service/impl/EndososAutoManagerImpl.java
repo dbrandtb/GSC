@@ -8681,14 +8681,14 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                                 ,cdramo
                                 ,estado
                                 ,nmpoliza
-                                ,nmsituac
-                                ,rec.get("CDROL")
+                                ,"0"//nmsituac
+                                ,"3"//rec.get("CDROL")
                                 ,rec.get("CDPERSON")
                                 ,nmsuplem
-                                ,rec.get("STATUS")
+                                ,"V"//rec.get("STATUS")
                                 ,rec.get("NMORDDOM")
                                 ,rec.get("SWRECLAM")
-                                ,rec.get("SWEXIPER")
+                                ,"S"//rec.get("SWEXIPER")
                                 ,rec.get("CDPARENT")
                                 ,rec.get("PORBENEF")
                                 ,"B"
@@ -8731,7 +8731,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                                 ,cdramo
                                 ,estado
                                 ,nmpoliza
-                                ,nmsituac
+                                ,"0"//nmsituac
                                 ,"3"//rec.get("CDROL")
                                 ,rec.get("CDPERSON")
                                 ,nmsuplem
