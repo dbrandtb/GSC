@@ -638,4 +638,6 @@ public interface ConsultasDAO
             String cdfunci,
             String cdramo,
             String cdtipsit) throws Exception;
+
+    public Map<String, String> obtieneUsuarioXAgente(String pv_cdagente_i) throws Exception;
 }

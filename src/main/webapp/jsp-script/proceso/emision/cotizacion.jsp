@@ -4241,7 +4241,15 @@ Ext.onReady(function()
      if(_0_smap1.SITUACION=='AUTO' && _0_smap1.cdtipsit!='AT' && _0_smap1.cdtipsit!='MC'){
 	     agregarAgenteDXN();
 	     
-	     
+	     if(_0_smap1.cdsisrol==RolSistema.SuscriptorAuto){
+	         _fieldByLabel('AGENTE').on({
+	             select:function(combo,row){
+	                 
+	                 aplicaDxn(row[0].data.key);
+	                 
+	             }
+	         });
+	     }
 	     
 	     _fieldByName("aux.otvalor08").getStore().filter([{filterFn: function(item) {
 	        
@@ -5398,18 +5406,26 @@ Ext.onReady(function()
         
     }
     
-    function aplicaDxn(){
-        Ext.Ajax.request(
+    function aplicaDxn(cdagente){
+        
+        var ck=''
+        try{
+	        _fieldByLabel("ADMINISTRADORA").clearValue();
+	        _fieldByLabel("RETENEDORA").clearValue();
+	        _mask("Validando DXN");
+	        Ext.Ajax.request(
                 {
                     url      : _0_urlAplicaDxn
                     ,params  :
                     { 
                         
-                        'smap1.cdtipsit' : _0_smap1.cdtipsit
+                        'smap1.cdtipsit' : _0_smap1.cdtipsit,
+                        'smap1.cdagente' : cdagente==undefined?"":cdagente
                     }
                     ,success : function(response)
                     {
-                        _0_panelPri.setLoading(false);
+                        
+                        _unmask();
                         var ck = 'Recuperando aplica dxn';
                         try
                         {
@@ -5419,6 +5435,8 @@ Ext.onReady(function()
                             {
                                 if((json.smap1.aplicaDxn+'')=='N'){
                                     _fieldById('fieldsetDxn').hide();
+                                }else{
+                                    _fieldById('fieldsetDxn').show();
                                 }
                                 
                             }
@@ -5434,10 +5452,14 @@ Ext.onReady(function()
                     }
                     ,failure : function()
                     {
-                        _0_panelPri.setLoading(false);
+                        
+                        _unmask();
                         errorComunicacion();
                     }
                 });
+        }catch(e){
+            debugError(e);
+        }
     }
 </script>
 </head>

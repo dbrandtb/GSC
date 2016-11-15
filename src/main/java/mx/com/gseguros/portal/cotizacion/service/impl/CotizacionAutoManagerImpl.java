@@ -4629,7 +4629,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
     public boolean aplicaDxn(
             String cdtipsit,
             String cdsisrol,
-            String cdusuari
+            String cdusuari,
+            String cdagente
             )throws Exception
     {
         logger.debug(Utils.log(
@@ -4644,8 +4645,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
         
         try
         {
-            paso = "Recuperando datos";
+            paso = "Obteniendo datos del agente";
             
+            if(cdagente!=null && !cdagente.trim().equals("")){
+                
+                Map<String,String> m=consultasDAO.obtieneUsuarioXAgente(cdagente);
+                cdusuari=m.get("CDUSUARI");
+                cdsisrol=RolSistema.AGENTE.getCdsisrol();
+            }
+            paso = "Recuperando datos";
             resp = cotizacionDAO.aplicaDxn(cdtipsit, cdsisrol, cdusuari);
             
         }
