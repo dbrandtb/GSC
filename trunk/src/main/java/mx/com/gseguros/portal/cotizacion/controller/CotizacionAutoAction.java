@@ -2070,12 +2070,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
          UserVO usuario = Utils.validateSession(session);
          
          String cdtipsit = smap1.get("cdtipsit")
+                ,cdagente = smap1.get("cdagente")
                 ,cdusuari = usuario.getUser()
                 ,cdsisrol = usuario.getRolActivo().getClave();
          
          Utils.validate(cdtipsit, "No se recibi\u00f3 clave de negocio");
          
-         smap1.put("aplicaDxn",cotizacionAutoManager.aplicaDxn(cdtipsit, cdsisrol, cdusuari)?"S":"N");
+         smap1.put("aplicaDxn",cotizacionAutoManager.aplicaDxn(cdtipsit, cdsisrol, cdusuari,cdagente)?"S":"N");
          exito=true;
          
      }

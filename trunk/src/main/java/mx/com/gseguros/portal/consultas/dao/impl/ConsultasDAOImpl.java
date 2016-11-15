@@ -5447,4 +5447,43 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
         }
     }
+    
+    @Override
+    public Map<String,String> obtieneUsuarioXAgente(String pv_cdagente_i) throws Exception
+    {
+        Map<String,String> params=new HashMap<String, String>();
+        params.put("pv_cdagente_i", pv_cdagente_i);
+        
+        
+        Map<String,Object>respuestaProcedure=ejecutaSP(new ObtieneUsuarioXAgente(getDataSource()), params);
+        List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+        if(lista.isEmpty()){
+            throw new ApplicationException("No hay datos para el agente");
+        }
+        
+        return lista.get(0);
+    }
+    
+    protected class ObtieneUsuarioXAgente extends StoredProcedure {
+        
+        protected ObtieneUsuarioXAgente(DataSource dataSource) {
+            
+            super(dataSource, "Pkg_CONSULTA2.P_GET_TUSUARIO_X_AGENTE");
+            declareParameter(new SqlParameter("pv_cdagente_i" , OracleTypes.VARCHAR));
+            
+            String[] cols = new String[]{
+                    "CDUSUARI",
+                    "DSUSUARI",
+                    "CDUNIECO",
+                    "CDPERSON",
+                    "CDUNISLD"
+                   
+            };
+            
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
