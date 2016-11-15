@@ -245,13 +245,12 @@ function _p30_cargarPolizaSIGS(sucursal, ramo, poliza)
                     json2['success'] = true;
                     // TODO cdper = json2.smap1.cdper;       //D00000000111005
                     // TODO cdperson = json2.smap1.cdperson; //530400
-                    if (!Ext.isEmpty(json2.smap1.mensajeError)) {
+                    if (!Ext.isEmpty(json2.smap1.mensajeError))
+                    {
                         mensajeError(json2.smap1.mensajeError);
                     }
-                    if (!Ext.isEmpty(json2.smap1.mensajeAviso)) {
-                        mensajeInfo(json2.smap1.mensajeAviso);
-                        llenandoCampos(transformaSigsEnIce(json2), '', true);
-                    } else {
+                    else
+                    {
                         llenandoCampos(transformaSigsEnIce(json2), '', true);
                     }
                 } catch (e) {
