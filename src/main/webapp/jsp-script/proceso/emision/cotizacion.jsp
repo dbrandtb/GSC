@@ -4241,7 +4241,7 @@ Ext.onReady(function()
      if(_0_smap1.SITUACION=='AUTO' && _0_smap1.cdtipsit!='AT' && _0_smap1.cdtipsit!='MC'){
 	     agregarAgenteDXN();
 	     
-	     if(_0_smap1.cdsisrol==RolSistema.SuscriptorAuto){
+	    
 	         _fieldByLabel('AGENTE').on({
 	             select:function(combo,row){
 	                 
@@ -4249,7 +4249,7 @@ Ext.onReady(function()
 	                 agregarAgenteDXN();
 	             }
 	         });
-	     }
+	     
 	     
 	     _fieldByName("aux.otvalor08").getStore().filter([{filterFn: function(item) {
 	        
