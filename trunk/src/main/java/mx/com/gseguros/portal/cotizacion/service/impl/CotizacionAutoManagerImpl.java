@@ -2009,9 +2009,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		{
 			if(noTarificar==false)
 			{
-				
 				Date fechaHoy = new Date();
-				
 				if(StringUtils.isBlank(nmpoliza))
 				{
 					paso = ("Generando numero de poliza");
@@ -2021,19 +2019,20 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					if(nmpoliex != null && !nmpoliex.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
 					{
 						flujoMesaControlManager.actualizaTramiteMC(
-								 nmpoliza 
+						         ntramite 
 								,cdunieco
 								,cdramo
 								,"W"//estado
-								,ntramite
+								,nmpoliza
 								,"21"//cdtiptra 
 								,cduniext
 								,renramo
 								,nmpoliex
 								);
 					}
-				}				
-				paso = ("Insertando maestro de poliza");
+				}		
+				
+ 				paso = ("Insertando maestro de poliza");
 				logger.debug("\nPaso: "+paso);
 				cotizacionDAO.movimientoPoliza(
 						cdunieco
