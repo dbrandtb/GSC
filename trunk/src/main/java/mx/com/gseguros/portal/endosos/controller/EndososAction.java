@@ -13002,12 +13002,15 @@ public String retarificarEndosos()
 		catch(Exception ex)
 		{
 			respuesta = Utils.manejaExcepcion(ex);
+            success=false;
+            error=ex.getMessage();
 		}
 		
 		logger.debug(Utils.log(
 				 "\n###### success   = " , success
 				,"\n###### exito     = " , exito
 				,"\n###### respuesta = " , respuesta
+				,"\n###### error     = " , error
 				,"\n###### guardarEndosoBeneficiarios ######"
 				,"\n########################################"
 				));
