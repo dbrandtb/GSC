@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -8598,7 +8599,145 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
             compile();
         }
-    }    
+    }  
+    
+    @Override
+    public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception
+    {
+        Map<String,Object> params = new LinkedHashMap<String,Object>();   
+        String[][] array = new String[incisosSigs.size()][];
+        
+        int i = 0;
+        for(Map<String,String> incisos : incisosSigs)
+        {
+            array[i++] = new String[]{
+                     incisos.get("cdplan")
+                    ,incisos.get("cdtipsit")
+                    ,incisos.get("nmsituac")
+                    ,incisos.get("parametros.pv_otvalor01")
+                    ,incisos.get("parametros.pv_otvalor02")
+                    ,incisos.get("parametros.pv_otvalor03")
+                    ,incisos.get("parametros.pv_otvalor04")
+                    ,incisos.get("parametros.pv_otvalor05")
+                    ,incisos.get("parametros.pv_otvalor06")
+                    ,incisos.get("parametros.pv_otvalor07")
+                    ,incisos.get("parametros.pv_otvalor08")
+                    ,incisos.get("parametros.pv_otvalor09")
+                    ,incisos.get("parametros.pv_otvalor10")
+                    ,incisos.get("parametros.pv_otvalor11")
+                    ,incisos.get("parametros.pv_otvalor12")
+                    ,incisos.get("parametros.pv_otvalor13")
+                    ,incisos.get("parametros.pv_otvalor14")
+                    ,incisos.get("parametros.pv_otvalor15")
+                    ,incisos.get("parametros.pv_otvalor16")
+                    ,incisos.get("parametros.pv_otvalor17")
+                    ,incisos.get("parametros.pv_otvalor18")
+                    ,incisos.get("parametros.pv_otvalor19")
+                    ,incisos.get("parametros.pv_otvalor20")
+                    ,incisos.get("parametros.pv_otvalor21")
+                    ,incisos.get("parametros.pv_otvalor22")
+                    ,incisos.get("parametros.pv_otvalor23")
+                    ,incisos.get("parametros.pv_otvalor24")
+                    ,incisos.get("parametros.pv_otvalor25")
+                    ,incisos.get("parametros.pv_otvalor26")
+                    ,incisos.get("parametros.pv_otvalor27")
+                    ,incisos.get("parametros.pv_otvalor28")
+                    ,incisos.get("parametros.pv_otvalor29")
+                    ,incisos.get("parametros.pv_otvalor30")
+                    ,incisos.get("parametros.pv_otvalor31")
+                    ,incisos.get("parametros.pv_otvalor32")
+                    ,incisos.get("parametros.pv_otvalor33")
+                    ,incisos.get("parametros.pv_otvalor34")
+                    ,incisos.get("parametros.pv_otvalor35")
+                    ,incisos.get("parametros.pv_otvalor36")
+                    ,incisos.get("parametros.pv_otvalor37")
+                    ,incisos.get("parametros.pv_otvalor38")
+                    ,incisos.get("parametros.pv_otvalor39")
+                    ,incisos.get("parametros.pv_otvalor40")
+                    ,incisos.get("parametros.pv_otvalor41")
+                    ,incisos.get("parametros.pv_otvalor42")
+                    ,incisos.get("parametros.pv_otvalor43")
+                    ,incisos.get("parametros.pv_otvalor44")
+                    ,incisos.get("parametros.pv_otvalor45")
+                    ,incisos.get("parametros.pv_otvalor46")
+                    ,incisos.get("parametros.pv_otvalor47")
+                    ,incisos.get("parametros.pv_otvalor48")
+                    ,incisos.get("parametros.pv_otvalor49")
+                    ,incisos.get("parametros.pv_otvalor50")
+                    ,incisos.get("parametros.pv_otvalor51")
+                    ,incisos.get("parametros.pv_otvalor52")
+                    ,incisos.get("parametros.pv_otvalor53")
+                    ,incisos.get("parametros.pv_otvalor54")
+                    ,incisos.get("parametros.pv_otvalor55")
+                    ,incisos.get("parametros.pv_otvalor56")
+                    ,incisos.get("parametros.pv_otvalor57")
+                    ,incisos.get("parametros.pv_otvalor58")
+                    ,incisos.get("parametros.pv_otvalor59")
+                    ,incisos.get("parametros.pv_otvalor60")
+                    ,incisos.get("parametros.pv_otvalor61")
+                    ,incisos.get("parametros.pv_otvalor62")
+                    ,incisos.get("parametros.pv_otvalor63")
+                    ,incisos.get("parametros.pv_otvalor64")
+                    ,incisos.get("parametros.pv_otvalor65")
+                    ,incisos.get("parametros.pv_otvalor66")
+                    ,incisos.get("parametros.pv_otvalor67")
+                    ,incisos.get("parametros.pv_otvalor68")
+                    ,incisos.get("parametros.pv_otvalor69")
+                    ,incisos.get("parametros.pv_otvalor70")
+                    ,incisos.get("parametros.pv_otvalor71")
+                    ,incisos.get("parametros.pv_otvalor72")
+                    ,incisos.get("parametros.pv_otvalor73")
+                    ,incisos.get("parametros.pv_otvalor74")
+                    ,incisos.get("parametros.pv_otvalor75")
+                    ,incisos.get("parametros.pv_otvalor76")
+                    ,incisos.get("parametros.pv_otvalor77")
+                    ,incisos.get("parametros.pv_otvalor78")
+                    ,incisos.get("parametros.pv_otvalor79")
+                    ,incisos.get("parametros.pv_otvalor80")
+                    ,incisos.get("parametros.pv_otvalor81")
+                    ,incisos.get("parametros.pv_otvalor82")
+                    ,incisos.get("parametros.pv_otvalor83")
+                    ,incisos.get("parametros.pv_otvalor84")
+                    ,incisos.get("parametros.pv_otvalor85")
+                    ,incisos.get("parametros.pv_otvalor86")
+                    ,incisos.get("parametros.pv_otvalor87")
+                    ,incisos.get("parametros.pv_otvalor88")
+                    ,incisos.get("parametros.pv_otvalor89")
+                    ,incisos.get("parametros.pv_otvalor90")
+                    ,incisos.get("parametros.pv_otvalor91")
+                    ,incisos.get("parametros.pv_otvalor92")
+                    ,incisos.get("parametros.pv_otvalor93")
+                    ,incisos.get("parametros.pv_otvalor94")
+                    ,incisos.get("parametros.pv_otvalor95")
+                    ,incisos.get("parametros.pv_otvalor96")
+                    ,incisos.get("parametros.pv_otvalor97")
+                    ,incisos.get("parametros.pv_otvalor98")
+                    ,incisos.get("parametros.pv_otvalor99")
+                    ,incisos.get("personalizado")
+            };
+        }
+        params.put("array" , new SqlArrayValue(array));
+        Map<String, Object> procRes = ejecutaSP(new validaDatosAutoSigs(getDataSource()),params);
+        String resultado = (String) procRes.get("pv_salida_o");
+        if (!StringUtils.isBlank(resultado))
+        {
+            throw new ApplicationException("resultado");
+        }
+        return null;
+    }
+    
+    protected class validaDatosAutoSigs extends StoredProcedure
+    {
+        protected validaDatosAutoSigs(DataSource dataSource)
+        {
+            super(dataSource,"P_RENO_VALIDA_AUTOS_SIGS");
+            declareParameter(new SqlParameter   ("array"       , OracleTypes.ARRAY    ,"LISTA_LISTAS_VARCHAR2"));
+            declareParameter(new SqlOutParameter("pv_salida_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
     
 	

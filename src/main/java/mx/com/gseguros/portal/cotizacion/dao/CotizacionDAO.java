@@ -909,4 +909,9 @@ public interface CotizacionDAO {
    public boolean aplicaDxn(String cdtipsit, String cdsisrol, String cdusuari) throws Exception;
    
    public String validaCertificadoGrupo(HashMap<String, Object> paramCertificado) throws Exception;
+   
+   /**
+    * Valida que los datos de incisos del sigs tengan correspondiente sicaps
+    */
+   public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception;
 }
