@@ -2739,6 +2739,38 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         debugError('error inofensivo al validar dependencia de 4eac ante 4hos',e);
                                                                     }
                                                                 }
+                                                                
+                                                              //4URM Y 4HOS
+                                                                if(_p21_smap1.cdsisrol!='COTIZADOR')
+                                                                {
+                                                                    try
+                                                                    {
+                                                                        if(miCdgarant=='4HOS'||miCdgarant=='4URM')
+                                                                        {
+                                                                            var cmpHos;
+                                                                            var cmpUrm;
+                                                                            if(miCdgarant=='4HOS')
+                                                                            {
+                                                                                cmpHos = me;
+                                                                                cmpUrm = me.up('form').up('panel').down('[cdgarant=4URM]').down('checkbox');
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                cmpHos = me.up('form').up('panel').down('[cdgarant=4HOS]').down('checkbox');
+                                                                                cmpUrm = me;
+                                                                            }
+                                                                            if(cmpHos.getValue()&&cmpUrm.getValue())
+                                                                            {
+                                                                                cmpHos.setValue(false);
+                                                                                mensajeWarning('Si seleccionaste la cobertura de Hozpitalizaci&oacute;n no puede incluir la cobertura de Urgencias M&eacute;dicas');
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    catch(e)
+                                                                    {
+                                                                        debugError('error inofensivo al validar dependencia de 4eac ante 4hos',e);
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
