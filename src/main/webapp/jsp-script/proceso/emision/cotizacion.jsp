@@ -4239,6 +4239,7 @@ Ext.onReady(function()
      //DXN custom
     
      if(_0_smap1.SITUACION=='AUTO' && _0_smap1.cdtipsit!='AT' && _0_smap1.cdtipsit!='MC'){
+         administradoraAgenteDXN();
 	     agregarAgenteDXN();
 	     
 	    
@@ -4247,6 +4248,7 @@ Ext.onReady(function()
 	                 
 	                 aplicaDxn(row[0].data.key);
 	                 agregarAgenteDXN();
+	                 administradoraAgenteDXN();
 	             }
 	         });
 	     
@@ -5459,6 +5461,17 @@ Ext.onReady(function()
                 });
         }catch(e){
             debugError(e);
+        }
+    }
+    
+    function administradoraAgenteDXN(){
+        try{
+            var cdagente=_fieldByLabel('AGENTE').getValue();
+            
+            _fieldByLabel('ADMINISTRADORA').store.proxy.extraParams['params.cdagente']=cdagente;
+            _fieldByLabel('ADMINISTRADORA').store.load();
+        }catch(e){
+            debugError(e)
         }
     }
 </script>

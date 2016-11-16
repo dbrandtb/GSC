@@ -1602,7 +1602,7 @@ function _p29_emitirClicComplementarios()
 		                        ,Ext.create('Ext.panel.Panel',{
 		                            id:'panelDatosAdicionales',//id16
 		                            name:'panelDatosAdicionales',
-		                            title:'Datos adicionales',
+		                            title:'Datos adicionales descuento por n&oacute;mina',
 		                            style:'margin:5px',
 		                            collapsible:true,
 		                            titleCollapse:true,

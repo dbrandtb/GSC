@@ -256,4 +256,6 @@ public interface CatalogosManager {
                                                         String pv_cdtipsit_i) throws Exception;
 	
 	public List<GenericVO> obtieneIdsCierres() throws Exception;
+
+    public List<GenericVO> obtieneAdministradoraXAgente(String pv_cdagente_i) throws Exception;
 }

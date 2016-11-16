@@ -181,5 +181,7 @@ public interface CatalogosDAO {
 	public List<GenericVO> obtieneClaveDescuentoSubRamo(String pv_numsuc_i, String pv_cveent_i,String pv_cdramo_i, String pv_cdtipsit_i)throws Exception;
 
 	public List<GenericVO> obtieneIdsCierres() throws Exception;
+
+    public List<GenericVO> obtieneAdminXAgente(String pv_cdagente_i) throws Exception;
 	
 }
