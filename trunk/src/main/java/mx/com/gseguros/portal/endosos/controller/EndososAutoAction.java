@@ -45,6 +45,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private Map<String,Item>         imap;
 	private List<Map<String,String>> slist1;
 	private PersonasManager          personasManager;
+	private String                   error;
 	
 	private FlujoVO flujo;
 	
@@ -2874,6 +2875,7 @@ public class EndososAutoAction extends PrincipalCoreAction
                String nmpoliza = smap1.get("nmpoliza");
                String feefecto = smap1.get("feefecto");
                String nmsituac = smap1.get("nmsituac");
+               String ntramite = smap1.get("ntramite");
                
                Utils.validate(cdtipsup  , "No se recibio el tipo de endoso");
                Utils.validate(tstamp    , "No se recibio el id de proceso");
@@ -2883,7 +2885,7 @@ public class EndososAutoAction extends PrincipalCoreAction
                Utils.validate(nmpoliza  , "No se recibio el numero de poliza");
                Utils.validate(feefecto  , "No se recibio la fecha de efecto"); 
                
-               ManagerRespuestaVoidVO resp = endososAutoManager.confirmaEndosoBeneficiariosVidaAuto(//endososAutoManager.confirmaEndosoBeneficiariosVidaAuto(
+               ManagerRespuestaVoidVO resp = endososAutoManager.confirmaEndosoBeneficiariosVidaAuto(
                        cdtipsup
                        ,tstamp
                        ,cdunieco 
@@ -2900,8 +2902,7 @@ public class EndososAutoAction extends PrincipalCoreAction
                        ,flujo
                        );
                
-               
-               success = true;
+               success         = resp.isExito();
                exito           = resp.isExito();
                respuesta       = resp.getRespuesta();
                respuestaOculta = resp.getRespuestaOculta();
@@ -2909,11 +2910,15 @@ public class EndososAutoAction extends PrincipalCoreAction
            catch(Exception ex)
            {
                respuesta = Utils.manejaExcepcion(ex);
+               success=false;
+               error=ex.getMessage();
            }
            
            logger.debug(Utils.log(
                     "\n###### success="   , success
+                   ,"\n###### exito="     , exito
                    ,"\n###### respuesta=" , respuesta
+                   ,"\n###### error    =" , error
                    ,"\n###### confirmaEndosoBeneficiariosVidaAuto ######"
                    ,"\n#################################################"
                    ));
