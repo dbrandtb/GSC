@@ -2404,6 +2404,9 @@ function _p28_ramo5AgenteSelect(comp,records)
         }
     });
     
+    //// DXN   
+    agregarAgenteDXN();
+    //////   
     debug('<_p28_ramo5AgenteSelect');
 }
 
