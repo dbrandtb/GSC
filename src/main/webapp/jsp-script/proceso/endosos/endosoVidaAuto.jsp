@@ -169,9 +169,10 @@ Ext.onReady(function()
                         [
                             {
                                 xtype       : 'datefield'
-                               //,itemId     : '_p36_fechaCmp'
+                                ,name       : 'fechaEndoso'
                                 ,fieldLabel : 'Fecha de efecto'
-                                ,value      : new Date() 
+                                ,value      : new Date()
+                                ,style      : 'margin:5px;margin-left:15px;'
                                 ,allowBlank : false
                             }
                             ,{
@@ -266,35 +267,6 @@ function _p32_cargarStore()
             ,'smap1.nmpoliza'     : _p32_smap1.nmpoliza
         }
     });
-   
-/*    if(0<_p32_store.getCount()){
-        _p32_cargarStore();
-        
-    } else {
-        centrarVentanaInterna(Ext.create('Ext.window.Window',
-            {
-                title        : 'Aviso'
-                ,modal       : true
-                ,buttonAlign : 'center'
-                ,width       : 520
-                ,resizable   : false
-                ,html        : '<div style="padding:5px;text-align:center;">No existe ningun beneficiario, ya que esta cobertura no esta amparada</div>'
-                ,buttonAlign : 'center'
-                ,buttons     :
-                [
-                    {
-                        text : 'Aceptar'
-                        ,handler : function(me)
-                        {
-                            me.up('window').destroy();
-                            marendNavegacion(2);
-                        }
-                    }
-                ]
-            }).show());//mensajeWarning('No existe ningun beneficiario, ya que esta cobertura no esta amparada');marendNavegacion(2);
-    }*/
-    
-    
 }
 
 function _p32_borrar()
@@ -500,7 +472,7 @@ function _p32_guardarClic(callback)
                 ,cdtipsup : _p32_smap1.cdtipsup
                 ,ntramite : _p32_smap1.ntramite
                 ,tstamp   : _p32_smap1.tstamp
-                ,feefecto : _p32_smap1.FEEFECTO
+                ,feefecto : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
             }
             ,slist1 : []
         };
@@ -515,7 +487,7 @@ function _p32_guardarClic(callback)
             json.flujo = _p32_flujo;
         }
         
-        debug('json a enviar:',json);
+        debug('jsonaenviar:',json);
         
         ck='Enviando peticion';
         _setLoading(true,_fieldById('_p32_grid'));
@@ -529,7 +501,9 @@ function _p32_guardarClic(callback)
                 var json2 = Ext.decode(response.responseText);
                 debug('### guardar:',json2);
                 
-                    var callbackRemesa = function()
+                if(json2.success){
+                	debug('confirmaEndosoBeneficiariosVidaAuto');
+                	var callbackRemesa = function()
                         {
                             try
                             {
@@ -558,7 +532,11 @@ function _p32_guardarClic(callback)
                                 ,callbackRemesa
                             );
                         });
-               
+                
+                } else {
+                	mensajeError(json2.error);
+                
+                }
             }
             ,failure  : function()
             {

@@ -1428,7 +1428,7 @@ public class PersonasManagerImpl implements PersonasManager
                 if(operacion==agregar)
                 {
                     personasDAO.movimientosMpersona(
-                            cdperson//rec.get("CDPERSON")
+                            rec.get("CDPERSON")
                             ,rec.get("CDTIPIDE")
                             ,rec.get("CDIDEPER")
                             ,rec.get("DSNOMBRE")
@@ -1463,7 +1463,7 @@ public class PersonasManagerImpl implements PersonasManager
                             ,nmpoliza
                             ,"0"
                             ,"3"
-                            ,cdperson//rec.get("CDPERSON")
+                            ,rec.get("CDPERSON")
                             ,"1"
                             ,"V"
                             ,rec.get("NMORDDOM")
@@ -1483,7 +1483,7 @@ public class PersonasManagerImpl implements PersonasManager
                             ,nmpoliza
                             ,"0"
                             ,rec.get("CDROL")
-                            ,cdperson//rec.get("CDPERSON")
+                            ,rec.get("CDPERSON")
                             ,"1"
                             ,rec.get("STATUS")
                             ,rec.get("NMORDDOM")
@@ -1495,7 +1495,7 @@ public class PersonasManagerImpl implements PersonasManager
                             );
                     
                     personasDAO.movimientosMpersona(
-                            cdperson//rec.get("CDPERSON")
+                            rec.get("CDPERSON")
                             ,rec.get("CDTIPIDE")
                             ,rec.get("CDIDEPER")
                             ,rec.get("DSNOMBRE")
@@ -1532,7 +1532,7 @@ public class PersonasManagerImpl implements PersonasManager
                             ,nmpoliza
                             ,"0"
                             ,rec.get("CDROL")
-                            ,cdperson//rec.get("CDPERSON")
+                            ,rec.get("CDPERSON")
                             ,"1"
                             ,rec.get("STATUS")
                             ,rec.get("NMORDDOM")
@@ -1544,7 +1544,7 @@ public class PersonasManagerImpl implements PersonasManager
                             );
                     
                     personasDAO.movimientosMpersona(
-                            cdperson//rec.get("CDPERSON")
+                            rec.get("CDPERSON")
                             ,rec.get("CDTIPIDE")
                             ,rec.get("CDIDEPER")
                             ,rec.get("DSNOMBRE")

@@ -8541,7 +8541,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	            ,String cdsisrol
 	            ,String cdelemen
 	            ,UserVO usuarioSesion
-	            ,List<Map<String,String>> incisos
+	            ,List<Map<String,String>> mpoliperMpersona
 	            ,FlujoVO flujo
 	            )throws Exception
 	    {
@@ -8559,41 +8559,16 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	                ,"\n@@@@@@ cdusuari=" , cdusuari
 	                ,"\n@@@@@@ cdsisrol=" , cdsisrol
 	                ,"\n@@@@@@ cdelemen=" , cdelemen
-	                ,"\n@@@@@@ incisos="  , incisos
+	                ,"\n@@@@@@ incisos="  , mpoliperMpersona
 	                ,"\n@@@@@@ flujo="    , flujo
 	                ));
 	        
 	        ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
-	        String paso = "Guardando datos temporales";
-	        logger.debug(paso);
+	        
+	        String paso = null;
 	        
 	        try
 	        {
-	            Date fechaEndoso = renderFechas.parse(feefecto);
-	            
-	            
-	            
-	            paso = "Confirmando endoso";
-	            logger.debug(paso);
-	            
-	            Map<String,Object> resParams = endososDAO.confirmarEndosoTvalositAuto(
-	                    cdtipsup
-	                    ,tstamp
-	                    ,cdunieco
-	                    ,cdramo
-	                    ,estado
-	                    ,nmpoliza
-	                    ,fechaEndoso
-	                    ,cdusuari
-	                    ,cdsisrol
-	                    ,cdelemen
-	                    );
-	            
-	            String nmsuplem        = (String)resParams.get("pv_nmsuplem_o");
-	            String ntramite        = (String)resParams.get("pv_ntramite_o");
-	            String tipoGrupoInciso = (String)resParams.get("pv_tipoflot_o");
-	            String nsuplogi        = (String)resParams.get("pv_nsuplogi_o");
-	            
 	            String usuarioCaptura =  null;
 	            
 	            if(usuarioSesion!=null){
@@ -8605,175 +8580,199 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	                
 	            }
 	            
-	            for(Map<String,String>rec:incisos)
-                {
-                    String mov    = rec.get("mov");
-                    int agregar   = 1;
-                    int eliminar  = 2;
-                    int operacion = 0;
-                    if(StringUtils.isNotBlank(mov))
-                    {
-                        if(mov.equals("+"))
-                        {
-                            operacion=agregar;
-                        }
-                        else if(mov.equals("-"))
-                        {
-                            operacion=eliminar;
-                        }
-                    }
-                    
-                    if(operacion==agregar)
-                    {
-                        logger.debug("Entro A Agregar");
-                        personasDAO.movimientosMpersona(
-                                rec.get("CDPERSON")
-                                ,rec.get("CDTIPIDE")
-                                ,rec.get("CDIDEPER")
-                                ,rec.get("DSNOMBRE")
-                                ,rec.get("CDTIPPER")
-                                ,rec.get("OTFISJUR")
-                                ,rec.get("OTSEXO")
-                                ,StringUtils.isNotBlank(rec.get("FENACIMI"))?
-                                        Utils.parse(rec.get("FENACIMI"))
-                                        :null
-                                ,rec.get("CDRFC")
-                                ,rec.get("DSEMAIL")
-                                ,rec.get("DSNOMBRE1")
-                                ,rec.get("DSAPELLIDO")
-                                ,rec.get("DSAPELLIDO1")
-                                ,fechaEndoso
-                                ,rec.get("CDNACION")
-                                ,rec.get("CANALING")
-                                ,rec.get("CONDUCTO")
-                                ,rec.get("PTCUMUPR")
-                                ,rec.get("RESIDENCIA")
-                                ,rec.get("NONGRATA")
-                                ,rec.get("CDIDEEXT")
-                                ,rec.get("CDESTCIV")
-                                ,rec.get("CDSUCEMI")
-                                ,usuarioCaptura
-                                ,Constantes.INSERT_MODE);
-                        
-                        endososDAO.movimientoMpoliperBeneficiario(
-                                cdunieco
-                                ,cdramo
-                                ,estado
-                                ,nmpoliza
-                                ,"0"//nmsituac
-                                ,"3"
-                                ,rec.get("CDPERSON")
-                                ,nmsuplem
-                                ,"V"
-                                ,rec.get("NMORDDOM")
-                                ,rec.get("SWRECLAM")
-                                ,"N" //swexiper
-                                ,rec.get("CDPARENT")
-                                ,rec.get("PORBENEF")
-                                ,"I"
-                                );
-                    }
-                    else if(operacion==eliminar)
-                    {
-                        logger.debug("Entro A eliminar");
-                        endososDAO.movimientoMpoliperBeneficiario(
-                                cdunieco
-                                ,cdramo
-                                ,estado
-                                ,nmpoliza
-                                ,"0"//nmsituac
-                                ,"3"//rec.get("CDROL")
-                                ,rec.get("CDPERSON")
-                                ,nmsuplem
-                                ,"V"//rec.get("STATUS")
-                                ,rec.get("NMORDDOM")
-                                ,rec.get("SWRECLAM")
-                                ,"S"//rec.get("SWEXIPER")
-                                ,rec.get("CDPARENT")
-                                ,rec.get("PORBENEF")
-                                ,"B"
-                                );
-                        
-                        personasDAO.movimientosMpersona(
-                                rec.get("CDPERSON")
-                                ,rec.get("CDTIPIDE")
-                                ,rec.get("CDIDEPER")
-                                ,rec.get("DSNOMBRE")
-                                ,rec.get("CDTIPPER")
-                                ,rec.get("OTFISJUR")
-                                ,rec.get("OTSEXO")
-                                ,StringUtils.isNotBlank(rec.get("FENACIMI"))?
-                                        Utils.parse(rec.get("FENACIMI"))
-                                        :null
-                                ,rec.get("CDRFC")
-                                ,rec.get("DSEMAIL")
-                                ,rec.get("DSNOMBRE1")
-                                ,rec.get("DSAPELLIDO")
-                                ,rec.get("DSAPELLIDO1")
-                                ,fechaEndoso
-                                ,rec.get("CDNACION")
-                                ,rec.get("CANALING")
-                                ,rec.get("CONDUCTO")
-                                ,rec.get("PTCUMUPR")
-                                ,rec.get("RESIDENCIA")
-                                ,rec.get("NONGRATA")
-                                ,rec.get("CDIDEEXT")
-                                ,rec.get("CDESTCIV")
-                                ,rec.get("CDSUCEMI")
-                                ,usuarioCaptura
-                                ,"B");
-                    }
-                    else
-                    {
-                        logger.debug("Entro A Actualizar");
-                        endososDAO.movimientoMpoliperBeneficiario(
-                                cdunieco
-                                ,cdramo
-                                ,estado
-                                ,nmpoliza
-                                ,"0"//nmsituac
-                                ,"3"//rec.get("CDROL")
-                                ,rec.get("CDPERSON")
-                                ,nmsuplem
-                                ,"V"
-                                ,rec.get("NMORDDOM")
-                                ,rec.get("SWRECLAM")
-                                ,"S"//rec.get("SWEXIPER")
-                                ,rec.get("CDPARENT")
-                                ,rec.get("PORBENEF")
-                                ,"U"
-                                );
-                        
-                        personasDAO.movimientosMpersona(
-                                rec.get("CDPERSON")
-                                ,rec.get("CDTIPIDE")
-                                ,rec.get("CDIDEPER")
-                                ,rec.get("DSNOMBRE")
-                                ,rec.get("CDTIPPER")
-                                ,rec.get("OTFISJUR")
-                                ,rec.get("OTSEXO")
-                                ,StringUtils.isNotBlank(rec.get("FENACIMI"))?
-                                        Utils.parse(rec.get("FENACIMI"))
-                                        :null
-                                ,rec.get("CDRFC")
-                                ,rec.get("DSEMAIL")
-                                ,rec.get("DSNOMBRE1")
-                                ,rec.get("DSAPELLIDO")
-                                ,rec.get("DSAPELLIDO1")
-                                ,fechaEndoso
-                                ,rec.get("CDNACION")
-                                ,rec.get("CANALING")
-                                ,rec.get("CONDUCTO")
-                                ,rec.get("PTCUMUPR")
-                                ,rec.get("RESIDENCIA")
-                                ,rec.get("NONGRATA")
-                                ,rec.get("CDIDEEXT")
-                                ,rec.get("CDESTCIV")
-                                ,rec.get("CDSUCEMI")
-                                ,usuarioCaptura
-                                ,Constantes.UPDATE_MODE);
-                    }
-                }
+	            //Date fechaEndoso = new Date();
+	            
+	            paso = "Iniciando endoso";
+	            logger.debug(paso);
+	            
+	            Map<String,Object> resParams = endososDAO.confirmarEndosoTvalositAuto(
+                        cdtipsup
+                        ,tstamp
+                        ,cdunieco
+                        ,cdramo
+                        ,estado
+                        ,nmpoliza
+                        ,renderFechas.parse(feefecto)
+                        ,cdusuari
+                        ,cdsisrol
+                        ,cdelemen
+                        );
+                
+                String nmsuplem        = (String)resParams.get("pv_nmsuplem_o");
+                String ntramite        = (String)resParams.get("pv_ntramite_o");
+                String tipoGrupoInciso = (String)resParams.get("pv_tipoflot_o");
+                String nsuplogi        = (String)resParams.get("pv_nsuplogi_o");
+                
+	            
+	            paso = "Iterando registros";
+	            logger.debug(paso);
+	            
+	            for(Map<String,String>rec:mpoliperMpersona)
+	            {
+	                String mov    = rec.get("mov");
+	                int agregar   = 1;
+	                int eliminar  = 2;
+	                int operacion = 0;
+	                if(StringUtils.isNotBlank(mov))
+	                {
+	                    if(mov.equals("+"))
+	                    {
+	                        operacion=agregar;
+	                    }
+	                    else if(mov.equals("-"))
+	                    {
+	                        operacion=eliminar;
+	                    }
+	                }
+	                
+	                if(operacion==agregar)
+	                {
+	                    personasDAO.movimientosMpersona(
+	                            rec.get("CDPERSON")
+	                            ,rec.get("CDTIPIDE")
+	                            ,rec.get("CDIDEPER")
+	                            ,rec.get("DSNOMBRE")
+	                            ,rec.get("CDTIPPER")
+	                            ,rec.get("OTFISJUR")
+	                            ,rec.get("OTSEXO")
+	                            ,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+	                                    Utils.parse(rec.get("FENACIMI"))
+	                                    :null
+	                            ,rec.get("CDRFC")
+	                            ,rec.get("DSEMAIL")
+	                            ,rec.get("DSNOMBRE1")
+	                            ,rec.get("DSAPELLIDO")
+	                            ,rec.get("DSAPELLIDO1")
+	                            ,renderFechas.parse(feefecto)//fechaEndoso
+	                            ,rec.get("CDNACION")
+	                            ,rec.get("CANALING")
+	                            ,rec.get("CONDUCTO")
+	                            ,rec.get("PTCUMUPR")
+	                            ,rec.get("RESIDENCIA")
+	                            ,rec.get("NONGRATA")
+	                            ,rec.get("CDIDEEXT")
+	                            ,rec.get("CDESTCIV")
+	                            ,rec.get("CDSUCEMI")
+	                            ,usuarioCaptura
+	                            ,Constantes.INSERT_MODE);
+	                    
+	                    endososDAO.movimientoMpoliperBeneficiario(
+	                            cdunieco
+	                            ,cdramo
+	                            ,estado
+	                            ,nmpoliza
+	                            ,"0"//nmsituac
+	                            ,"3"
+	                            ,rec.get("CDPERSON")
+	                            ,nmsuplem
+	                            ,"V"
+	                            ,rec.get("NMORDDOM")
+	                            ,rec.get("SWRECLAM")
+	                            ,"N" //swexiper
+	                            ,rec.get("CDPARENT")
+	                            ,rec.get("PORBENEF")
+	                            ,"I"
+	                            );
+	                }
+	                else if(operacion==eliminar)
+	                {
+	                    endososDAO.movimientoMpoliperBeneficiario(
+	                            cdunieco
+	                            ,cdramo
+	                            ,estado
+	                            ,nmpoliza
+	                            ,"0"//nmsituac
+	                            ,"3"//rec.get("CDROL")
+	                            ,rec.get("CDPERSON")
+	                            ,nmsuplem
+	                            ,"V"//rec.get("STATUS")
+	                            ,rec.get("NMORDDOM")
+	                            ,rec.get("SWRECLAM")
+	                            ,rec.get("SWEXIPER")
+	                            ,rec.get("CDPARENT")
+	                            ,rec.get("PORBENEF")
+	                            ,"B"
+	                            );
+	                    
+	                    personasDAO.movimientosMpersona(
+	                            rec.get("CDPERSON")
+	                            ,rec.get("CDTIPIDE")
+	                            ,rec.get("CDIDEPER")
+	                            ,rec.get("DSNOMBRE")
+	                            ,rec.get("CDTIPPER")
+	                            ,rec.get("OTFISJUR")
+	                            ,rec.get("OTSEXO")
+	                            ,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+	                                    Utils.parse(rec.get("FENACIMI"))
+	                                    :null
+	                            ,rec.get("CDRFC")
+	                            ,rec.get("DSEMAIL")
+	                            ,rec.get("DSNOMBRE1")
+	                            ,rec.get("DSAPELLIDO")
+	                            ,rec.get("DSAPELLIDO1")
+	                            ,renderFechas.parse(feefecto)//fechaEndoso
+	                            ,rec.get("CDNACION")
+	                            ,rec.get("CANALING")
+	                            ,rec.get("CONDUCTO")
+	                            ,rec.get("PTCUMUPR")
+	                            ,rec.get("RESIDENCIA")
+	                            ,rec.get("NONGRATA")
+	                            ,rec.get("CDIDEEXT")
+	                            ,rec.get("CDESTCIV")
+	                            ,rec.get("CDSUCEMI")
+	                            ,usuarioCaptura
+	                            ,"B");
+	                }
+	                else
+	                {
+	                    endososDAO.movimientoMpoliperBeneficiario(
+	                            cdunieco
+	                            ,cdramo
+	                            ,estado
+	                            ,nmpoliza
+	                            ,"0"//nmsituac
+	                            ,"3"//rec.get("CDROL")
+	                            ,rec.get("CDPERSON")
+	                            ,nmsuplem
+	                            ,"V"
+	                            ,rec.get("NMORDDOM")
+	                            ,rec.get("SWRECLAM")
+	                            ,rec.get("SWEXIPER")
+	                            ,rec.get("CDPARENT")
+	                            ,rec.get("PORBENEF")
+	                            ,"U"
+	                            );
+	                    
+	                    personasDAO.movimientosMpersona(
+	                            rec.get("CDPERSON")
+	                            ,rec.get("CDTIPIDE")
+	                            ,rec.get("CDIDEPER")
+	                            ,rec.get("DSNOMBRE")
+	                            ,rec.get("CDTIPPER")
+	                            ,rec.get("OTFISJUR")
+	                            ,rec.get("OTSEXO")
+	                            ,StringUtils.isNotBlank(rec.get("FENACIMI"))?
+	                                    Utils.parse(rec.get("FENACIMI"))
+	                                    :null
+	                            ,rec.get("CDRFC")
+	                            ,rec.get("DSEMAIL")
+	                            ,rec.get("DSNOMBRE1")
+	                            ,rec.get("DSAPELLIDO")
+	                            ,rec.get("DSAPELLIDO1")
+	                            ,renderFechas.parse(feefecto)//fechaEndoso
+	                            ,rec.get("CDNACION")
+	                            ,rec.get("CANALING")
+	                            ,rec.get("CONDUCTO")
+	                            ,rec.get("PTCUMUPR")
+	                            ,rec.get("RESIDENCIA")
+	                            ,rec.get("NONGRATA")
+	                            ,rec.get("CDIDEEXT")
+	                            ,rec.get("CDESTCIV")
+	                            ,rec.get("CDSUCEMI")
+	                            ,usuarioCaptura
+	                            ,Constantes.UPDATE_MODE);
+	                }
+	            }
 	            
 	            paso = "Recuperando tr\u00e1mite de emisi\u00f3n";
 	            logger.debug(paso);
@@ -8781,28 +8780,38 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	            Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
 	            String ntramiteEmi = datosPoliza.get("ntramite");
 	            
-	            String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
-	                    ntramiteEmi
-	                    ,cdunieco
-	                    ,cdramo
-	                    ,estado
-	                    ,nmpoliza
-	                    ,nmsuplem
-	                    ,cdtipsup
-	                    ,nsuplogi
-	                    ,null //dscoment
-	                    ,fechaEndoso
-	                    ,flujo
-	                    ,cdusuari
-	                    ,cdsisrol
-	                    ,false //confirmar
-	                    );
+	            endososDAO.confirmarEndosoB(
+                        cdunieco
+                        ,cdramo
+                        ,estado
+                        ,nmpoliza
+                        ,nmsuplem
+                        ,nsuplogi
+                        ,cdtipsup
+                        ,""//dscoment
+                        );
 	            
-	            /**
+	            String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
+                        ntramiteEmi
+                        ,cdunieco
+                        ,cdramo
+                        ,estado
+                        ,nmpoliza
+                        ,nmsuplem
+                        ,cdtipsup
+                        ,nsuplogi
+                        ,null //dscoment
+                        ,renderFechas.parse(feefecto)
+                        ,flujo
+                        ,cdusuari
+                        ,cdsisrol
+                        ,false //confirmar
+                        );
+	           /**
 	             * PARA LLAMAR WS SEGUN TIPO DE ENDOSO
 	             */
 	            if(TipoEndoso.SEGURO_VIDA_AUTO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-	                if(this.endosoBeneficiarioVidaAuto(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, cdusuari ,fechaEndoso)){
+	                if(this.endosoBeneficiarioVidaAuto(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, cdusuari ,renderFechas.parse(feefecto))){
 	                    logger.info("Endoso de Beneficiario Vida Auto exitoso...");
 	                }else{
 	                    logger.error("Error al ejecutar los WS de endoso de Beneficiario Vida Auto");
