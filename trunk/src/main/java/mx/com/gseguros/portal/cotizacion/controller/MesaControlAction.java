@@ -725,6 +725,13 @@ public class MesaControlAction extends PrincipalCoreAction
 							detalle.put("DSSISROL_FIN", detalle.get("DSSISROL_INI"));
 						}
 					}
+					// Si no tengo usuario fin pero tengo usuario destino
+					if (StringUtils.isBlank(detalle.get("CDUSUARI_FIN")) && StringUtils.isNotBlank(detalle.get("CDUSUARI_DEST"))) {
+					    detalle.put("CDUSUARI_FIN", detalle.get("CDUSUARI_DEST"));
+					    detalle.put("DSUSUARI_FIN", detalle.get("DSUSUARI_DEST"));
+					    detalle.put("CDSISROL_FIN", detalle.get("CDSISROL_DEST"));
+					    detalle.put("DSSISROL_FIN", detalle.get("DSSISROL_DEST"));
+					}
 				}
 			}
 			

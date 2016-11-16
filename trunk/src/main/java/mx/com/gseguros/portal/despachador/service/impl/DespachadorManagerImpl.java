@@ -689,7 +689,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 if (!esFinal && destino.isEncolado()) { // SI NADIE PUDO ATENDER LO ENCOLAMOS
                     paso = "Encolando tr\u00e1mite";
                     logger.debug(paso);
-                    throw new ApplicationException("No hay usuarios disponibles para atender el tr\u00e1imte");
+                    throw new ApplicationException("No hay usuarios disponibles para atender el tr\u00e1mite");
                 } else {
                     if (esFinal) { // EMITIDO
                         paso = "Actualizando tr\u00e1mite";

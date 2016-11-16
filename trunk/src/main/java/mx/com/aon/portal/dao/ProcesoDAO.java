@@ -3432,7 +3432,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerDetalleMesaControl(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_cons_det_mesactrl");
+			super(dataSource,"P_CONS_DET_MESACTRL");
 			declareParameter(new SqlParameter("pv_ntramite_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerDetalleMesaControlMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
@@ -3459,10 +3459,12 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 					,"COMMENTS"     , "CDUSUARI_INI" , "CDUSUARI_FIN"
 					,"usuario_ini"  , "usuario_fin"  , "cdmotivo"
 					,"SWAGENTE"
-					,"STATUS"       , "DSSTATUS"
-					,"CDSISROL_INI" , "DSSISROL_INI"
-					,"CDSISROL_FIN" , "DSSISROL_FIN"
-					,"DSUSUARI_INI" , "DSUSUARI_FIN"
+					,"STATUS"        , "DSSTATUS"
+					,"CDSISROL_INI"  , "DSSISROL_INI"
+					,"CDSISROL_FIN"  , "DSSISROL_FIN"
+					,"DSUSUARI_INI"  , "DSUSUARI_FIN"
+					,"CDUSUARI_DEST" , "CDSISROL_DEST"
+					,"DSUSUARI_DEST" , "DSSISROL_DEST"
 					};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
