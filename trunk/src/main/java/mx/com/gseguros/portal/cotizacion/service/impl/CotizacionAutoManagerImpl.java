@@ -3151,21 +3151,19 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				,"\n@@@@@@ Producto =" , tipoflot
 				,"\n@@@@@@ Negocio =" , negocio
 				));
-		
 		String paso = null;
 		
 		try
 		{ // 7,P
 			List<GenericVO> listCdtipsitXNegocio = catalogosManager.cargarTiposSituacionPorNegocioRamo5(negocio, tipoflot);
 			
-			logger.debug(Utils.log("Vils tipos de vehiculo: ",listCdtipsitXNegocio));
-			
 			if(listCdtipsitXNegocio.isEmpty())
 			{
-				slistPYME.clear();
-				return slistPYME;
+			    slistPYME.clear();
+			    throw new ApplicationException("Sin resultados de vehiculos acorde al negocio"+negocio+" y tipo de carga (PyME/Flotilla): "+tipoflot);
 			}
 			
+			logger.debug(Utils.log("Vils tipos de vehiculo: ",listCdtipsitXNegocio));
 			String autosValidos = " ";
 			for(GenericVO valido : listCdtipsitXNegocio)
 			{

@@ -993,7 +993,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             Utils.validate(slist1, "No se recibieron las situaciones mixtas");
             Utils.validate(slist2, "No se recibieron las situaciones base");
             Utils.validate(slist3, "No se recibieron las configuraciones de plan");
-                        
+            
             boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
             
             Map<String,String>tvalopol=new HashMap<String,String>();
@@ -1017,9 +1017,15 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                         ,"\n",parame.get("Mensaje")
                         ,"\n##################################"
                         ));
-            }else if(!parame.isEmpty() && nmpoliza== null && !parame.get("NMPOLIZA").equals("0"))
+            }
+            else if(!parame.isEmpty())
             {
-                nmpoliza = parame.get("NMPOLIZA");
+                if(nmpoliza== null && !parame.get("NMPOLIZA").equals("0"))
+                {nmpoliza = parame.get("NMPOLIZA");}
+                if(parame.get("CDTIPTRA").equals("21"))
+                {
+                    String detalles = cotizacionDAO.validaDatosAutoSigs(slist1);
+                }
             }
 
             ManagerRespuestaSlistSmapVO resp=cotizacionAutoManager.cotizarAutosFlotilla(
@@ -1181,14 +1187,19 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             
             //Elimina incisos que no correspondan al negocio seleccionado
             resp.setSlist(cotizacionAutoManager.validaExcelCdtipsitXNegocio(tipoflot,negocio,resp.getSlist()));
+            exito = !resp.getSlist().isEmpty();
+            if(!exito)
+            {
+                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio"+negocio+" y tipo de carga (PyME/Flotilla): "+tipoflot);
+            }            
             
             int lugarMensaje = resp.getSlist().size();
             Map<String, String> msn = resp.getSlist().get(lugarMensaje-1);
             
             if(msn.get("removidos") != null) 
             {
-            respuestaOculta =msn.get("removidos");
-            resp.getSlist().remove(lugarMensaje-1);
+                respuestaOculta =msn.get("removidos");
+                resp.getSlist().remove(lugarMensaje-1);
             }
             
             if(resp.getSlist().isEmpty())
