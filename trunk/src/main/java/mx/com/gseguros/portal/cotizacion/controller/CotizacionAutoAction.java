@@ -1025,6 +1025,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 if(parame.get("CDTIPTRA").equals("21"))
                 {
                     String detalles = cotizacionDAO.validaDatosAutoSigs(slist1);
+                    if(!detalles.isEmpty())
+                    throw new ApplicationException(detalles);
                 }
             }
 

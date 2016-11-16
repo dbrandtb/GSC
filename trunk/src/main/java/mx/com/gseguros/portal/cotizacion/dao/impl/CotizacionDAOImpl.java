@@ -8719,11 +8719,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
         params.put("array" , new SqlArrayValue(array));
         Map<String, Object> procRes = ejecutaSP(new validaDatosAutoSigs(getDataSource()),params);
         String resultado = (String) procRes.get("pv_salida_o");
-        if (!StringUtils.isBlank(resultado))
+        if (resultado==null)
         {
-            throw new ApplicationException("resultado");
+            resultado="";
         }
-        return null;
+        return resultado;
     }
     
     protected class validaDatosAutoSigs extends StoredProcedure

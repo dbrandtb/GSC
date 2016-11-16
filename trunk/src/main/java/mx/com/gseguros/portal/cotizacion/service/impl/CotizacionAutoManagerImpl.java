@@ -2030,7 +2030,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								,nmpoliex
 								);
 					}
-				}		
+				}
+				resp.getSmap().put("nmpoliza" , nmpoliza);
 				
  				paso = ("Insertando maestro de poliza");
 				logger.debug("\nPaso: "+paso);
