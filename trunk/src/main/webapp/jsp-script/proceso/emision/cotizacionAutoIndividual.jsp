@@ -1390,9 +1390,16 @@ Ext.onReady(function()
                                 if((_p28_negocio.DXN+'').trim()=='' || (_p28_negocio.DXN+'').trim()==0 || _p28_negocio.DXN==null )
                                 {
                                     _fieldById('fieldDXN').hide();
+                                    _fieldByLabel("ADMINISTRADORA").clearValue();
+                                    _fieldByLabel("RETENEDORA").clearValue();
                                 }else{
+                                    
+                                    agregarAgenteDXN();
+                                    administradoraAgenteDXN();
                                     _fieldById('fieldDXN').show();
                                 }
+                                
+                                
                                 
                                 plazoenanios = Number(json.smap1.LIMITE_SUPERIOR);
 //                              _fieldByName('FESOLICI').setMaxValue(Ext.Date.add(new Date(),Ext.Date.YEAR, Number(json.smap1.LIMITE_SUPERIOR)));
@@ -1530,6 +1537,7 @@ Ext.onReady(function()
     
     
     agregarAgenteDXN();
+    administradoraAgenteDXN();
     
     ////// custom //////
     
@@ -2406,6 +2414,7 @@ function _p28_ramo5AgenteSelect(comp,records)
     
     //// DXN   
     agregarAgenteDXN();
+    administradoraAgenteDXN();
     //////   
     debug('<_p28_ramo5AgenteSelect');
 }
@@ -5316,6 +5325,18 @@ function agregarAgenteDXN(){
     }
     
     
+}
+
+function administradoraAgenteDXN(){
+    
+    try{
+        var cdagente=_fieldByLabel('AGENTE').getValue();
+        
+        _fieldByLabel('ADMINISTRADORA').store.proxy.extraParams['params.cdagente']=cdagente;
+        _fieldByLabel('ADMINISTRADORA').store.load();
+    }catch(e){
+        debugError(e)
+    }
 }
 
 ////// funciones //////

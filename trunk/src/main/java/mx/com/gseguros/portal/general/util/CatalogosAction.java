@@ -1009,6 +1009,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case IDCIERRES:
                     lista = catalogosManager.obtieneIdsCierres();
                     break;
+				case ADMINISTRADORAXAGENTE:
+				    if(params == null){
+                        params = new HashMap<String,String>();
+                    }
+				    lista=catalogosManager.obtieneAdministradoraXAgente(params.get("cdagente"));
+				    break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

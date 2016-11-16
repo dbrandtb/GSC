@@ -2169,6 +2169,32 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             compile();
         }
     }
+    
+    @Override
+    public List<GenericVO> obtieneAdminXAgente(String pv_cdagente_i) throws Exception
+    {
+        Map<String,String> params=new HashMap<String, String>();
+        params.put("pv_cdagente_i", pv_cdagente_i);
+        
+        
+        
+        
+        Map<String, Object> resultado = ejecutaSP(new ObtieneAdminXAgente(getDataSource()), params);
+        return (List<GenericVO>) resultado.get("pv_registro_o");
+    }
+    
+    protected class ObtieneAdminXAgente extends StoredProcedure {
+        
+        protected ObtieneAdminXAgente(DataSource dataSource) {
+            
+            super(dataSource, "PKG_RETENEDORAS.P_GET_ADMINISTRADORAS_AGENTE");
+            declareParameter(new SqlParameter("pv_cdagente_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosPolMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 
 	@Override
 	public boolean guardaDescripcionCortaCobertura(String cdgarant, String descCorta) throws Exception{		

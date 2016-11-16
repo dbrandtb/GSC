@@ -2103,4 +2103,10 @@ public class CatalogosManagerImpl implements CatalogosManager {
         return catalogosDAO.obtieneClaveDescuentoSubRamo(pv_numsuc_i, pv_cveent_i, pv_cdramo_i, pv_cdtipsit_i);
     }
 	
+	@Override
+    public List<GenericVO> obtieneAdministradoraXAgente(String pv_cdagente_i) throws Exception  {      
+       
+        return catalogosDAO.obtieneAdminXAgente(pv_cdagente_i);
+    }
+	
 }
