@@ -1073,7 +1073,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 List<Map<String,String>> listaResultados= resp.getSlist();
                 String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                 logger.debug(Utils.log(paqYplan));
-                resp.setSlist(cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza));
+                resp.setSlist(cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza));
             }
             
             respuesta = resp.getRespuesta();
