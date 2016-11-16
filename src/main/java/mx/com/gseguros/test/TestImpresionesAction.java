@@ -29,10 +29,6 @@ import javax.print.attribute.standard.MediaSize;
 import javax.print.attribute.standard.MediaTray;
 import javax.print.attribute.standard.PrinterName;
 
-import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.gseguros.utils.Host;
-import mx.com.gseguros.utils.cmd.SystemCommandExecutor;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -42,6 +38,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+
+import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.gseguros.utils.Host;
+import mx.com.gseguros.utils.Utils;
+import mx.com.gseguros.utils.cmd.SystemCommandExecutor;
 
 @Controller
 @Scope("prototype")
@@ -56,6 +57,8 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 	private List<PrintService> printServices;
 	
 	private Map<String, String> params;
+	
+	private String respuesta;
 	
 	/**
 	 * Lista las impresoras disponibles desde el servidor
@@ -354,29 +357,39 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 			results={@Result(name="success", type="json")}
 	)
 	public String ejecutaComando2() throws Exception {
-		
-		List<String> commands = new ArrayList<String>();
-	    commands.add("/bin/sh");
-	    commands.add("-c");
-	    commands.add(params.get("comando"));
-	    //commands.add("ls -l /var/tmp | grep tmp");
-
-	    // execute the command
-	    SystemCommandExecutor commandExecutor = new SystemCommandExecutor(commands);
-	    logger.debug("Antes de ejecutar comando {}", params.get("comando"));
-	    int result = commandExecutor.executeCommand();
-		logger.debug("Despues de ejecutar comando {}", params.get("comando"));
-		logger.debug("The numeric result of the command was: " + result);
-
-	    // get the stdout and stderr from the command that was run
-	    StringBuilder stdout = commandExecutor.getStandardOutputFromCommand();
-	    StringBuilder stderr = commandExecutor.getStandardErrorFromCommand();
 	    
-	    // print the stdout and stderr
-	    logger.debug("STDOUT:");
-	    logger.debug(stdout.toString());
-	    logger.debug("STDERR:");
-	    logger.debug(stderr.toString());
+	    try {
+		
+    		List<String> commands = new ArrayList<String>();
+    	    commands.add("/bin/sh");
+    	    commands.add("-c");
+    	    commands.add(params.get("comando"));
+    	    //commands.add("ls -l /var/tmp | grep tmp");
+    
+    	    // execute the command
+    	    SystemCommandExecutor commandExecutor = new SystemCommandExecutor(commands);
+    	    logger.debug("Antes de ejecutar comando {}", params.get("comando"));
+    	    int result = commandExecutor.executeCommand();
+    		logger.debug("Despues de ejecutar comando {}", params.get("comando"));
+    		logger.debug("The numeric result of the command wasss: " + result);
+    
+    	    // get the stdout and stderr from the command that was run
+    	    StringBuilder stdout = commandExecutor.getStandardOutputFromCommand();
+    	    StringBuilder stderr = commandExecutor.getStandardErrorFromCommand();
+    	    
+    	    // print the stdout and stderr
+    	    logger.debug("STDOUT:");
+    	    logger.debug(stdout.toString());
+    	    logger.debug("STDERR:");
+    	    logger.debug(stderr.toString());
+    	    
+    	    params.put("result", String.valueOf(result));
+    	    params.put("stdout", stdout.toString());
+    	    params.put("stderr", stderr.toString());
+            
+        } catch(Exception ex) {
+            respuesta = Utils.manejaExcepcion(ex);
+        }
 		
 		return SUCCESS;
 	}
@@ -470,9 +483,16 @@ public class TestImpresionesAction extends PrincipalCoreAction {
 	public void setParams(Map<String, String> params) {
 		this.params = params;
 	}
+	
+	public String getRespuesta() {
+        return respuesta;
+    }
 
+    public void setRespuesta(String respuesta) {
+        this.respuesta = respuesta;
+    }
 
-	public List<PrintService> getPrintServices() {
+    public List<PrintService> getPrintServices() {
 		return printServices;
 	}
 
