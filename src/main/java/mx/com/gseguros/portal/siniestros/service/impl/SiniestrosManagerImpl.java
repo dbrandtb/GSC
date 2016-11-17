@@ -2492,7 +2492,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	@Override
 	public Map<String, Object> actualizaDatosGeneralesCopago(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String nmsituac, String nmsinies, String ntramite, String nfactura, String cdgarant,
-			String cdconval, String deducible, String copago, String nmcallcenter,String aplicaCambio, String accion) throws Exception {
+			String cdconval, String deducible, String copago, String nmcallcenter,String aplicaCambio, 
+			String feingreso,String feegreso, String cveEvento, String cveAlta,String accion) throws Exception {
 
 		HashMap<String,Object> params=new HashMap<String,Object>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -2510,6 +2511,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		params.put("pv_copago_i", 	copago);
 		params.put("pv_nmautser_i", nmcallcenter);
 		params.put("pv_swautori_i", aplicaCambio);
+		params.put("pv_feingreso_i", feingreso);
+		params.put("pv_feegreso_i", feegreso);
+		params.put("pv_cveEvento_i", cveEvento);
+		params.put("pv_cveAlta_i", cveAlta);		
 		params.put("pv_accion_i", accion);
 		log.debug("actualizaDatosGeneralesSiniestro params: "+params);
 		return siniestrosDAO.actualizaDatosGeneralesCopago(params);
@@ -2632,6 +2637,40 @@ public class SiniestrosManagerImpl implements SiniestrosManager
                 lista= new ArrayList<GenericVO>();
             }
             log.debug("getConsultaListaSubcobertura lista size: "+lista.size());
+            return lista;
+        } catch (DaoException daoExc) {
+            throw new Exception(daoExc.getMessage(), daoExc);
+        }
+    }
+    
+    @Override
+    public List<Map<String,String>> obtenerDatosValTipoEventoAlta(String cdramo, String cdtipsit, String cdgarant, String cdconval) throws Exception
+    {
+        Map<String,String> params = new HashMap<String,String>();
+        params.put("pv_cdramo_i"    , cdramo);
+        params.put("pv_cdtipsit_i"  , cdtipsit);
+        params.put("pv_cdgarant_i"  , cdgarant);
+        params.put("pv_cdconval_i"  , cdconval);
+        log.debug("obtenerDatosValTipoEventoAlta params: "+params);
+        List<Map<String,String>> lista = siniestrosDAO.obtenerDatosValTipoEventoAlta(params);
+        if(lista==null)
+        {
+            lista = new ArrayList<Map<String,String>>();
+        }
+        log.debug("lista: "+lista);
+        log.debug("obtenerDatosAutorizacionEspecial lista size: "+lista.size());
+        return lista;
+    }
+    
+    @Override
+    public List<GenericVO> getConsultaListaValidacionesGenerales() throws Exception {
+        try {
+            List<GenericVO> lista = siniestrosDAO.obtieneListadoValidacionesGrales();
+            if(lista==null)
+            {
+                lista= new ArrayList<GenericVO>();
+            }
+            log.debug("getConsultaListaSubcoberturaTotales lista size: "+lista.size());
             return lista;
         } catch (DaoException daoExc) {
             throw new Exception(daoExc.getMessage(), daoExc);

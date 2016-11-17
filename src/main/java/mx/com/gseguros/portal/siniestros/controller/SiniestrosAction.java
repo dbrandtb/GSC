@@ -364,7 +364,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											facturas.get(ii).get("NFACTURA"),       siniestrosAnterior.get(r).get("CDGARANT"),
 											siniestrosAnterior.get(r).get("CDCONVAL"), null,
 											null, null,//callcenter validar???
-											null, Constantes.INSERT_MODE);
+											null, null,null,null,null,Constantes.INSERT_MODE);
 									
 									
 									loadList = new ArrayList<HashMap<String,String>>();
@@ -498,7 +498,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								facturas.get(i).get("NFACTURA"),       siniestros.get(0).get("CDGARANT"),
 								siniestros.get(0).get("CDCONVAL"), null,
 								null, null,//callcenter validar???
-								null, Constantes.INSERT_MODE);
+								null, null, null, null,null, Constantes.INSERT_MODE);
 						
 						
 						loadList = new ArrayList<HashMap<String,String>>();
@@ -1648,7 +1648,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					params.get("nfactura"),null,
 					null,null,
 					null,null,
-					null,Constantes.DELETE_MODE);
+					null,null,null,null,null,Constantes.DELETE_MODE);
 			
 			HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
 				paramsTworkSin.put("pv_nmtramite_i",params.get("nmtramite"));
@@ -6063,6 +6063,20 @@ public class SiniestrosAction extends PrincipalCoreAction {
         success = true;
         return SUCCESS;
     }
+    
+    public String consultaDatosTipoEventoAlta(){
+        logger.debug("Entra a consultaDatosTipoEventoAlta params de entrada :{}",params);
+        try {
+            datosValidacion = siniestrosManager.obtenerDatosValTipoEventoAlta(params.get("cdramo"),params.get("cdtipsit"),params.get("cdgarant"),params.get("cdconval"));
+            logger.debug("Respuesta datosValidacion : {}", datosValidacion);
+        }catch( Exception e){
+            logger.error("Error al consultaDatosTipoEventoAlta del Siniestro : {}", e.getMessage(), e);
+            return SUCCESS;
+        }
+        success = true;
+        return SUCCESS;
+    }
+    
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;
