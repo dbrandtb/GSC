@@ -2017,12 +2017,13 @@ Ext.onReady(function()
                 ,itemId      : '_p25_poliza'
                 ,selType     : 'checkboxmodel'
                 ,store       : _p25_storePolizas                
-                ,minHeight   : 200
-                ,maxHeight   : 400
+                //,minHeight   : 200
+                //,maxHeight   : 400
+                ,height      : 400
                 ,columns     : itemsFormularioPolizaColumns
                 ,buttonAlign : 'center'
                 ,hidden		 : 'true'
-                ,autoScroll	 : true
+                //,autoScroll	 : true
                 ,buttons     :
                 [
                     {
@@ -2039,13 +2040,14 @@ Ext.onReady(function()
                 ,itemId      : '_p25_grid'
                 ,selType     : 'checkboxmodel'
                 ,store       : _p25_storePolizasMasivas
-                ,minHeight   : 200
-                ,maxHeight   : 400
+                //,minHeight   : 200
+                //,maxHeight   : 400
+                ,height      : 400
                 ,columns     : gridColumns
                 //,viewConfig  : viewConfigAutoSize
                 ,buttonAlign : 'center'
                 ,hidden		 : 'true'
-                ,autoScroll	 : true
+                ,autoScroll :  true
                 ,buttons     :
                 [
                     {
@@ -2062,8 +2064,9 @@ Ext.onReady(function()
                 ,itemId      : '_p25_gridCalendario'
                 ,selType     : 'checkboxmodel'
                 ,store       : _p25_storeCalendario
-                ,minHeight   : 200
-                ,maxHeight   : 400
+                //,minHeight   : 200
+                //,maxHeight   : 400
+                ,height      : 400
                 ,columns     : itemsCalendarioColumns
                 ,buttonAlign : 'center'
                 ,hidden		 : 'true'
@@ -2125,8 +2128,9 @@ Ext.onReady(function()
                 ,itemId      : '_p25_gridCondiciones'
                 ,selType     : 'checkboxmodel'
                 ,store       : _p25_storeCondiciones
-                ,minHeight   : 200
-                ,maxHeight   : 400
+                //,minHeight   : 200
+                //,maxHeight   : 400
+                ,height      : 400
                 ,columns     : itemsCondicionesColumns
                 ,buttonAlign : 'center'
                 ,hidden		 : 'true'
@@ -2558,6 +2562,7 @@ function _p25_renovarClic(button,e)
     });
     json['slist1'] = slist1;    
     debug('### renovar json params:',json);
+    _mask('Renovando...');
     //_fieldById('_p25_grid').setLoading(true);
     Ext.Ajax.request({
         url       : _p25_urlRenovarPolizasMasivasIndividuales
@@ -2568,9 +2573,11 @@ function _p25_renovarClic(button,e)
             debug('### renovar json response:',resp);
             if(resp.exito == true){
                 _fieldById('_p25_grid').getStore().removeAll();
+                _unMask();
                 mensajeCorrecto('Proceso completo','Se renovo con exito');
             }
             else{
+                _unMask();
                 mensajeError(resp.respuesta);
             }
             if(noRenova.length == 1){
@@ -2591,6 +2598,7 @@ function _p25_renovarClic(button,e)
         }
         ,failure  : function(){
             //_fieldById('_p25_grid').setLoading(false);
+            _unMask();
             errorComunicacion();
         }
     });
