@@ -1218,12 +1218,12 @@
 				
                 var comboTipoEventos = Ext.create('Ext.form.ComboBox', {
                     name:'idComboTipoEvento',           store: storeTiposEvento,      value:'1',      queryMode:'local',  
-                    displayField: 'value',              valueField: 'key',          editable:false,     allowBlank:false
+                    displayField: 'value',              valueField: 'key',          editable:false//,     allowBlank:false
                 });
                 
                 var comboAltaHospital = Ext.create('Ext.form.ComboBox', {
                     name:'idComboAltaHospital',     store: storeAltasHospital,  value:'1',      queryMode:'local',  
-                    displayField: 'value',          valueField: 'key',          editable:false,     allowBlank:false
+                    displayField: 'value',          valueField: 'key',          editable:false//,     allowBlank:false
                 });
                 
 				var cmbCausaSiniestro = Ext.create('Ext.form.ComboBox', {
@@ -1347,6 +1347,11 @@
                                     if(Ext.decode(response.responseText).datosValidacion != null){
                                         var jsonValidacionCober =Ext.decode(response.responseText).datosValidacion;
                                         debug("Valor de los datos de Respuesta para validaciones de alta =>",jsonValidacionCober[0]);
+                                        _11_aseguradoSeleccionado.set('CDTIPEVE','');
+                                        _11_aseguradoSeleccionado.set('CDTIPALT','');
+                                        storeAltasHospital.removeAll();
+                                        storeTiposEvento.removeAll();
+                                        
                                         if(+jsonValidacionCober[0].FLAGTIPALT > 0){
                                         	_11_aseguradoSeleccionado.set('FLAGTIPALT',jsonValidacionCober[0].FLAGTIPALT);
                                             storeAltasHospital.removeAll();
