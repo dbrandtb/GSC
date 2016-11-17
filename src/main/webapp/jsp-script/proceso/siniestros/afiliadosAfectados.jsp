@@ -1347,8 +1347,8 @@
                                     if(Ext.decode(response.responseText).datosValidacion != null){
                                         var jsonValidacionCober =Ext.decode(response.responseText).datosValidacion;
                                         debug("Valor de los datos de Respuesta para validaciones de alta =>",jsonValidacionCober[0]);
-                                        _11_aseguradoSeleccionado.set('CDTIPEVE','');
-                                        _11_aseguradoSeleccionado.set('CDTIPALT','');
+                                        _11_aseguradoSeleccionado.set('CDTIPEVE','0');
+                                        _11_aseguradoSeleccionado.set('CDTIPALT','0');
                                         storeAltasHospital.removeAll();
                                         storeTiposEvento.removeAll();
                                         
