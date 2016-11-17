@@ -2465,6 +2465,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 ,defaults   : { style : 'margin:5px;', labelWidth : 100 }
                                                 ,items      : hijos
                                                 ,cdgarant   : json.slist1[j].CDGARANT
+                                                ,hidden     : json.slist1[j].SWVISIBLE=='N'
                                                 ,tbar       :
                                                 [
                                                     {
