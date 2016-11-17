@@ -138,7 +138,10 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 					params.get("nfactura"),params.get("cdgarant"),
 					params.get("cdconval"),params.get("deducible"),
 					params.get("copago"),params.get("nmcallcenter"),
-					null,Constantes.INSERT_MODE);
+					null,
+					params.get("feingreso"),params.get("feegreso"),
+					params.get("cveEvento"),params.get("cveAlta"),
+					Constantes.INSERT_MODE);
 			String formatoFeEgreso;
 			if(params.get("feegreso").length() > 0){
 				formatoFeEgreso = params.get("feegreso").toString().substring(8,10)+"/"+params.get("feegreso").toString().substring(5,7)+"/"+params.get("feegreso").toString().substring(0,4);

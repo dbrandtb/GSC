@@ -603,4 +603,8 @@ public interface SiniestrosDAO {
     public List<Map<String,String>>cargaICDExcluidosAsegurados(Map<String,String> params) throws Exception;
 
     public List<GenericVO> obtieneListadoTipoEvento(String cdramo, String cdtipsit, String cdgarant, String reporte) throws Exception;
+    
+    public List<Map<String,String>> obtenerDatosValTipoEventoAlta(Map<String, String> params) throws Exception;
+    
+    public List<GenericVO> obtieneListadoValidacionesGrales() throws Exception;
 }

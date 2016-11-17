@@ -1015,6 +1015,9 @@ public class CatalogosAction extends PrincipalCoreAction {
                     }
 				    lista=catalogosManager.obtieneAdministradoraXAgente(params.get("cdagente"));
 				    break;
+				case VALIDACIONESGRALES:
+                    lista = siniestrosManager.getConsultaListaValidacionesGenerales();
+                    break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

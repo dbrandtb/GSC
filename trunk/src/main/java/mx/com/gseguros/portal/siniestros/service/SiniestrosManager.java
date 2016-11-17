@@ -717,7 +717,8 @@ public interface SiniestrosManager {
 
 	public Map<String, Object> actualizaDatosGeneralesCopago(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String nmsituac, String nmsinies, String ntramite, String nfactura, String cdgarant,
-			String cdconval, String deducible, String copago, String nmcallcenter,String aplicaCambio, String accion) throws Exception;
+			String cdconval, String deducible, String copago, String nmcallcenter,String aplicaCambio, String feingreso,
+			String feegreso, String cveEvento, String cveAlta,String accion) throws Exception;
 	
 	public String actualizarDeducibleCopagoConceptos(HashMap<String, Object> datosActualizacion) throws Exception;
 	
@@ -740,4 +741,8 @@ public interface SiniestrosManager {
     public List<Map<String,String>> cargaICDExcluidosAsegurados(Map<String,String> params) throws Exception;
 
     public List<GenericVO> getConsultaListaTipoEvento(String cdramo, String cdtipsit, String cdgarant, String reporte) throws Exception;
+
+    public List<Map<String, String>> obtenerDatosValTipoEventoAlta(String cdramo, String cdtipsit, String cdgarant, String cdconval) throws Exception;
+    
+    public List<GenericVO> getConsultaListaValidacionesGenerales() throws Exception;
 }
