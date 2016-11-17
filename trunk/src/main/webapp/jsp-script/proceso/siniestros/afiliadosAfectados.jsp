@@ -1347,9 +1347,7 @@
                                     if(Ext.decode(response.responseText).datosValidacion != null){
                                         var jsonValidacionCober =Ext.decode(response.responseText).datosValidacion;
                                         debug("Valor de los datos de Respuesta para validaciones de alta =>",jsonValidacionCober[0]);
-                                        alert("jsonValidacion[0] ==> "+jsonValidacionCober[0].FLAGTIPALT+" valor2 : "+jsonValidacionCober[0].FLAGTIPEVE);
                                         if(+jsonValidacionCober[0].FLAGTIPALT > 0){
-                                        	alert("1.- "+jsonValidacionCober[0].FLAGTIPALT);
                                         	_11_aseguradoSeleccionado.set('FLAGTIPALT',jsonValidacionCober[0].FLAGTIPALT);
                                             storeAltasHospital.removeAll();
                                             storeAltasHospital.load({
@@ -1363,7 +1361,6 @@
                                         }
                                         
                                         if(+jsonValidacionCober[0].FLAGTIPEVE > 0){
-                                        	alert("2.- "+jsonValidacionCober[0].FLAGTIPEVE);
                                         	_11_aseguradoSeleccionado.set('FLAGTIPEVE',jsonValidacionCober[0].FLAGTIPEVE);
                                             storeTiposEvento.removeAll();
                                             storeTiposEvento.load({
