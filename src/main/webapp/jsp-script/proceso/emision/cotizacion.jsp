@@ -1597,9 +1597,20 @@ function llenandoCampos (json)
                             cargaCotiza = true;
                             sinTarificar = !maestra&&!vencida ;
                             
-                            if (cargarXpoliza === true) { // Cuando es una renovacion importada de SIGS
+                            if (cargarXpoliza === true) 
+                            { // Cuando es una renovacion importada de SIGS
                                 sinTarificar = false;
                                 
+                                if(_0_smap1.cdramo=='6' || _0_smap1.cdramo=='16' || true)
+                                {   
+                                           if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
+                                        {
+                                                _0_recordClienteRecuperado = primerInciso;
+                                                debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
+                                        }
+                                    
+                                }
+                            
                                 var fesoliciCmp = _fieldByName('FESOLICI', null, true);
                                 if (!Ext.isEmpty(fesoliciCmp)
                                     && Ext.isEmpty(fesoliciCmp.getSubmitValue())
