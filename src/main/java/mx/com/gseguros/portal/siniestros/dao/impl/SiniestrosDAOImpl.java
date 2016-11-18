@@ -1181,6 +1181,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_reqautes_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmordina_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
@@ -1497,7 +1498,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					,"NMRECLAMO",			"COMMENAR",				"COMMENME"
 					,"AUTMEDIC",			"CDCAUSA",				"CDGARANT"
 					,"CDCONVAL",			"NMSINREF",				"SECTWORKSIN"
-					//,"COPAGO"
+					,"FEINGRESO",           "FEEGRESO",             "CDTIPEVE"
+					,"CDTIPALT"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4603,7 +4605,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					"NTRAMITE",			"CDUNIECO",			"CDRAMO",		"ESTADO",
 					"NMPOLIZA",			"NMSOLICI",			"NMSUPLEM",		"NMSITUAC",
 					"CDTIPSIT",			"CDPERSON",			"FEOCURRE",		"NMAUTSER",
-					"NFACTURA", 		"REQAUTES"
+					"NFACTURA", 		"REQAUTES",         "NMORDINA"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

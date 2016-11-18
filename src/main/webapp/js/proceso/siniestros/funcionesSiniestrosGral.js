@@ -13,15 +13,15 @@ function cargarPaginacion(ntramite,nfactura){
         }
     });
 }
-
+//1.- Regresar a Mesa de Control
 function _11_regresarMC() {
     debug('_11_regresarMC');
-Ext.create('Ext.form.Panel').submit({
-    url             : _URL_MESACONTROL
-    ,standardSubmit : true
-    ,params         : {
-        'smap1.gridTitle'       : 'Siniestros en espera'
-        ,'smap2.pv_cdtiptra_i'  : _11_params.CDTIPTRA
+    Ext.create('Ext.form.Panel').submit({
+        url             : _URL_MESACONTROL
+        ,standardSubmit : true
+        ,params         : {
+            'smap1.gridTitle'       : 'Siniestros en espera'
+            ,'smap2.pv_cdtiptra_i'  : _11_params.CDTIPTRA
         }
     });
 }
