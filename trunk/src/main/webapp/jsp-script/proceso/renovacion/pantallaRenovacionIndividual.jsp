@@ -143,7 +143,7 @@ Ext.onReady(function()
     Ext.define('_p25_modeloPoliza',
     {
         extend  : 'Ext.data.Model'
-        ,fields : [ <s:property value="imap.gridFields" escapeHtml="false" /> ]
+        ,fields : [ <s:property value="imap.itemsFormularioPolizaFields" escapeHtml="false" /> ]
     });
     
     Ext.define('_p25_modeloContratante',
@@ -155,7 +155,7 @@ Ext.onReady(function()
     Ext.define('_p25_modeloPolizasMasivas',
     {
         extend  : 'Ext.data.Model'
-        ,fields : [ <s:property value="imap.itemsFormularioPolizaFields" escapeHtml="false" /> ]
+        ,fields : [ <s:property value="imap.gridFields" escapeHtml="false" /> ]
     });
     
     Ext.define('_p25_modeloCondiciones',{
