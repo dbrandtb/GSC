@@ -673,10 +673,17 @@ public class RenovacionManagerImpl implements RenovacionManager
 //			generaTcartera(cdunieco, cdramo, nmpoliza, feefecto, feproren, nmsuplem, cdagente, cdperpag, cdcontra, cdmoneda);
 			Map<String,String> map = renovacionDAO.renuevaPolizaIndividual(cdunieco, cdramo, estado, nmpoliza, estadoNew, usuario);
 			//Map<String,String> flujomc = consultasDAO.recuperarDatosFlujoRenovacion(cdramo, "I");
+			paso = "enviando a recuperar datos flujo emision";
 			Map<String,String> flujomc = consultasDAO.recuperarDatosFlujoEmision(cdramo, "I");
+			logger.info(
+	                new StringBuilder()
+	                .append("\n###### flujomc=").append(flujomc));
+			paso = "enviando a actualizar flujo tramite";
 			consultasManager.actualizaFlujoTramite(map.get("ntramite"), flujomc.get("cdflujomc"), flujomc.get("cdtipflu"));
 //			logger.info(new StringBuilder().append("\n@@@@@@ flujomc=").append(flujomc).toString());
+			paso = "enviando a obtener poliza cdperson tramite";
 			List<Map<String, String>> slist = renovacionDAO.obtenerPolizaCdpersonTramite(map.get("ntramite"));
+			paso = "obteniendo cdtipsit inciso1";
 			String cdtipsit = endososDAO.recuperarCdtipsitInciso1(cdunieco, cdramo, estado, nmpoliza);
 			slist.get(0).put("cdtipsit",  cdtipsit);
 			slist.get(0).put("ntramite",  map.get("ntramite"));
