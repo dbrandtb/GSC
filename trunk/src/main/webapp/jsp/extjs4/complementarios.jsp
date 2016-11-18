@@ -1653,7 +1653,9 @@ function _p29_emitirClicComplementarios()
 			                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor08"]')[0].setReadOnly(true);
 			                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor09"]')[0].setReadOnly(true);
 			                                               
-			                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor03"]')[0].hide();
+			                                                if(Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor03"]')>0){
+			                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor03"]')[0].hide();
+			                                                }
 			                                                _fieldByLabel('CLAVE DESCUENTO').allowBlank=false;
 		                                                    _fieldByLabel('CLAVE DESCUENTO').clearInvalid();
 		                                                    _fieldByLabel('CLAVE DESCUENTO').store.load();
