@@ -172,6 +172,12 @@ Ext.onReady(function()
 		                    me.disable();
 		                    me.setText('Cargando...');
 		                    json.smap1['confirmar'] = 'no';
+		                    
+		                    if(!Ext.isEmpty(_p44_flujo))
+                            {
+                                json.flujo = _p44_flujo;
+                            }
+                            
 		                    Ext.Ajax.request(
 		                    {
 		                        url       : _p44_urlConfirmar
@@ -214,7 +220,13 @@ Ext.onReady(function()
 												,handler : 
 													function (me){
 														me.up('window').destroy();
-													    json.smap1['confirmar'] = 'si';						
+													    json.smap1['confirmar'] = 'si';		
+													    
+													    if(!Ext.isEmpty(_p44_flujo))
+                                                        {
+                                                            json.flujo = _p44_flujo;
+                                                        }
+                                                        
 														Ext.Ajax.request(
 										                    {
 										                        url       : _p44_urlConfirmar

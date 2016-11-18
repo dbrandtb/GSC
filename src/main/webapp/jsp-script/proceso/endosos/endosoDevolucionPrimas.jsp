@@ -384,6 +384,11 @@ Ext.onReady(function()
 																					me.up('window').destroy();
 																					jsonData.smap1['confirmar'] = 'si';
 																					
+																					if(!Ext.isEmpty(_p39_flujo))
+                                                                                    {
+                                                                                        jsonData.flujo = _p39_flujo;
+                                                                                    }
+																					
 																					Ext.Ajax.request(
 																						{
 																							url       : _p39_urlConfirmarEndoso

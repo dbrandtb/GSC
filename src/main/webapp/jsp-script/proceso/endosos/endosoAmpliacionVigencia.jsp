@@ -136,6 +136,12 @@ var _CONTEXT = '${ctx}';
 																	me.up('window').destroy();
 																	myMask.show();
 																	submitValues['smap1.confirmar']='si' ;
+																	
+																	if(!Ext.isEmpty(endAmpVigFlujo))
+                                                                    {
+                                                                        submitValues['flujo'] = endAmpVigFlujo;
+                                                                    }
+                                                                    
 																	Ext.Ajax.request(
 																		{
 												   						    url: guarda_Vigencia_Poliza,
