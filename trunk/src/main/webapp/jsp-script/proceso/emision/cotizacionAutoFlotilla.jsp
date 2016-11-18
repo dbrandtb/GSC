@@ -6783,6 +6783,11 @@ function _p30_confirmarEndoso()
 															storeTvalosit.each(function(record) {
 															            json2.slist1.push(record.data);
 															        });
+															        
+															if(!Ext.isEmpty(_p30_flujo)) {
+                                                                json.flujo = _p30_flujo;
+                                                            }       
+                                                            
 			                                                Ext.Ajax.request( {
 														            url       : _p30_urlConfirmarEndoso
 														           ,jsonData : json2

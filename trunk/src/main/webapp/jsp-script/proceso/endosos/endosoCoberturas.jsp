@@ -132,6 +132,11 @@ function endcobSumit(form,confirmar)
             	json.smap1.confirmar = 'si';
             	confirmar = 'si';
             	
+            	if(!Ext.isEmpty(_p3_flujo))
+                {
+                    json['flujo'] = _p3_flujo;
+                }
+            	
             	Ext.Ajax.request(
                     {
                         url       : endcobUrlGuardar
@@ -206,6 +211,10 @@ function endcobSumit(form,confirmar)
             }
             
             if(confirmar=='auto'){
+            	if(!Ext.isEmpty(_p3_flujo))
+                {
+                    json['flujo'] = _p3_flujo;
+                }
             	Ext.Ajax.request(
                     {
                         url       : endcobUrlGuardar

@@ -170,6 +170,7 @@ Ext.onReady(function()
                             {
                                 xtype       : 'datefield'
                                 ,name       : 'fechaEndoso'
+                                ,itemId     : '_p32_fechaCmp'
                                 ,fieldLabel : 'Fecha de efecto'
                                 ,value      : new Date()
                                 ,style      : 'margin:5px;margin-left:15px;'
@@ -205,6 +206,40 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    Ext.Ajax.request(
+    {
+        url      : _p32_urlRecuperacionSimple
+        ,params  :
+        {
+            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
+            ,'smap1.cdunieco'     : _p32_smap1.cdunieco
+            ,'smap1.cdramo'       : _p32_smap1.cdramo
+            ,'smap1.estado'       : _p32_smap1.estado
+            ,'smap1.nmpoliza'     : _p32_smap1.nmpoliza
+            ,'smap1.cdtipsup'     : _p32_smap1.cdtipsup
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug('### fechas:',json);
+            if(json.exito)
+            {
+                _fieldById('_p32_fechaCmp').setMinValue(json.smap1.FECHA_MINIMA);
+                _fieldById('_p32_fechaCmp').setMaxValue(json.smap1.FECHA_MAXIMA);
+                _fieldById('_p32_fechaCmp').setValue(json.smap1.FECHA_REFERENCIA);
+                _fieldById('_p32_fechaCmp').setReadOnly(json.smap1.EDITABLE=='N');
+                _fieldById('_p32_fechaCmp').isValid();
+            }
+            else
+            {
+                mensajeError(json.respuesta);
+            }
+        }
+        ,failure : function()
+        {
+            errorComunicacion();
+        }
+    });
     
     Ext.Ajax.request({
         url     : _p32_urlRecuperacionSimpleLista
@@ -472,7 +507,8 @@ function _p32_guardarClic(callback)
                 ,cdtipsup : _p32_smap1.cdtipsup
                 ,ntramite : _p32_smap1.ntramite
                 ,tstamp   : _p32_smap1.tstamp
-                ,feefecto : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
+               // ,feefecto : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
+                ,'feefecto' : Ext.Date.format(_fieldById('_p32_fechaCmp').getValue(),'d/m/Y')
             }
             ,slist1 : []
         };
