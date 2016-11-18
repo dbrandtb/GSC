@@ -1672,7 +1672,7 @@ function _p29_emitirClicComplementarios()
 			                                                _fieldByLabel('CURP').clearInvalid();
 		                                                    
 		                                                }
-	                                                    _fieldByName('panelDatosAdicionales').insert(0, {
+	                                                    _fieldByName('panelDatosAdicionales').insert(0, [{
 	                                                        xtype:'button',
 	                                                        text:'Buscar Empleado',
 	                                                          style: {
@@ -1680,12 +1680,56 @@ function _p29_emitirClicComplementarios()
 	                                                            marginTop: '10px',
 	                                                            marginBottom:'10px'
 	                                                        },
-	                                                        colspan: 2,
 	                                                         icon    : '${ctx}/resources/fam3icons/icons/zoom.png',
 	                                                         handler:function(){
 	                                                             ventanaBusquedaEmpleado();
 	                                                         }
-	                                                    });
+	                                                    },
+	                                                    {
+	                                                        xtype:'button',
+	                                                        text:'Limpiar Campos',
+	                                                        icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png',
+	                                                        style: {
+                                                                marginLeft:'10px',
+                                                                marginTop: '10px',
+                                                                marginBottom:'10px'
+                                                            },
+	                                                        handler:function(){
+	                                                           // alert("limpiar")
+	                                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor10"]')[0].setReadOnly(false);
+                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor11"]')[0].setReadOnly(false);
+                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor12"]')[0].setReadOnly(false);
+                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor13"]')[0].setReadOnly(false);
+                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor14"]')[0].setReadOnly(false);
+                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].setReadOnly(false);
+	                                                            
+	                                                            
+	                                                            _fieldByLabel("CLAVE EMPLEADO").setValue("");
+	                                                            _fieldByLabel("NOMBRE EMPLEADO").setValue("");
+	                                                            _fieldByLabel("APELLIDO PATERNO").setValue("");
+	                                                            _fieldByLabel("APELLIDO MATERNO").setValue("");
+	                                                            _fieldByLabel("RFC EMPLEADO").setValue("");
+	                                                            _fieldByLabel("CURP").setValue("");
+	                                                            
+	                                                           
+	                                                        }
+	                                                    }]
+	                                                    
+	                                                    );
+	                                                    
+	                                                    _fieldByLabel('CLAVE EMPLEADO').on(
+	                                                            {
+	                                                                'blur':function(){
+	                                                                    
+	                                                                    buscarEmpleado(
+	                                                                            
+	                                                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor08"]')[0].getValue()
+	                                                                            ,Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor09"]')[0].getValue()
+	                                                                            ,_fieldByLabel('CLAVE EMPLEADO').getValue()
+	                                                                            );
+	                                                                }
+	                                                            }        
+	                                                    );
 	                                                    
 	                                                    //campos variables
 	                                                    _mask("cargando datos");
@@ -3115,7 +3159,7 @@ function _p29_emitirClicComplementarios()
             	try{
 	                var ventana=Ext.create('Ext.window.Window',
 	                        {
-	                            title      : 'Recuperar cliente'
+	                            title      : 'Recuperar empleado'
 	                            ,modal     : true
 	                            ,width     : 600
 	                            ,height    : 400
@@ -3175,52 +3219,17 @@ function _p29_emitirClicComplementarios()
 	                                            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
 	                                            ,handler : function(button)
 	                                            {
-	                                                debug('recuperar empleado buscar');
-	                                                _mask('Buscando empleado');
-	                                                Ext.Ajax.request(
-	                                                        {
-	                                                             url     : url_buscar_empleado 
-	                                                            ,params :
-	                                                            {
-	                                                                 'params.administradora': _fieldByLabel('ADMINISTRADORA').getValue()
-	                                                                ,'params.retenedora'    : _fieldByLabel('RETENEDORA').getValue()
-	                                                                ,'params.clave_empleado'     : _fieldByName('no_empleado').getValue()
-	                                                                ,'params.rfc'     : _fieldByName('rfc').getValue()
-	                                                                ,'params.ap_paterno'     : _fieldByName('ap_paterno').getValue()
-	                                                                ,'params.ap_materno'     : _fieldByName('ap_materno').getValue()
-	                                                                ,'params.nombre'     : _fieldByName('nombre').getValue()
-	                                                            }
-	                                                            ,success : function(response)
-	                                                            {
-	                                                                _unmask();
-	                                                                var json = Ext.decode(response.responseText);
-	                                                                debug('### Response Boton Comprar:',json);
-	                                                                if(json.success ==  true)
-	                                                                {
-	                                                                    var ck = 'Decodificando respuesta al recuperar permisos de boton Comprar';
-	                                                                    try
-	                                                                    {
-	                                                                        //alert(json);
-	                                                                        debug("### respuesta ",json);
-	                                                                        _fieldByName("gridBuscaEmpleado").getStore().loadData(json.slist1);
-	                                                                        
-	                                                                    }
-	                                                                    catch(e)
-	                                                                    {
-	                                                                        manejaException(e,ck);
-	                                                                    }                    
-	                                                                }
-	                                                                else
-	                                                                {
-	                                                                    mensajeError(json.respuesta);
-	                                                                }
-	                                                            }
-	                                                            ,failure : function()
-	                                                            {
-	                                                                _unmask();
-	                                                                errorComunicacion();
-	                                                            }
-	                                                        });
+	                                                
+                                                    
+                                                    buscarEmpleado(
+                                                            _fieldByLabel('ADMINISTRADORA').getValue()
+                                                            ,_fieldByLabel('RETENEDORA').getValue()
+                                                            ,_fieldByName('no_empleado').getValue()
+                                                            ,_fieldByName('rfc').getValue()
+                                                            ,_fieldByName('ap_paterno').getValue()
+                                                            ,_fieldByName('ap_materno').getValue()
+                                                            ,_fieldByName('nombre').getValue()
+                                                            );
 	                                            }
 	                                        }
 	                                    ]
@@ -3248,6 +3257,14 @@ function _p29_emitirClicComplementarios()
 	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor13"]')[0].setValue(record.raw.apellido_m);
 	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor14"]')[0].setValue(record.raw.rfc);
 	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].setValue(record.raw.curp);
+	                                                               
+
+	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor10"]')[0].setReadOnly(true);
+                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor11"]')[0].setReadOnly(true);
+                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor12"]')[0].setReadOnly(true);
+                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor13"]')[0].setReadOnly(true);
+                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor14"]')[0].setReadOnly(true);
+                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].setReadOnly(true);
 	                                                
 	                                                ventana.destroy();
 	                                            }
@@ -3385,6 +3402,75 @@ function _p29_emitirClicComplementarios()
                     
                 }catch(e){
                     debugError(e)
+                }
+            }
+            
+            function buscarEmpleado(administradora,retenedora,ce,rfc,ap,am,nom){
+                try{
+	                debug('recuperar empleado buscar');
+	                if(!administradora || !retenedora || !ce){
+	                    return;
+	                }
+	                _fieldById('panelDatosAdicionales').setLoading(true);
+	             
+	                Ext.Ajax.request(
+                        {
+                             url     : url_buscar_empleado 
+                            ,params :
+                            {
+                                'params.administradora'   : administradora
+                                ,'params.retenedora'       : retenedora
+                                ,'params.clave_empleado'   : ce
+                                ,'params.rfc'              : rfc==undefined?"":rfc
+                                ,'params.ap_paterno'       : ap==undefined?"":ap
+                                ,'params.ap_materno'       : am==undefined?"":am
+                                ,'params.nombre'           : nom==undefined?"":nom
+                            }
+                            ,success : function(response)
+                            {
+                                _fieldById('panelDatosAdicionales').setLoading(false);
+                                var json = Ext.decode(response.responseText);
+                                debug('### Response Boton Comprar:',json);
+                                if(json.success ==  true)
+                                {
+                                    var ck = 'Decodificando respuesta al recuperar permisos de boton Comprar';
+                                    try
+                                    {
+                                        //alert(json);
+                                        debug("### respuesta ",json);
+                                        if(json.slist1.length>0){
+                                            if(Ext.ComponentQuery.query("[name=gridBuscaEmpleado]").length==0){
+                                                ventanaBusquedaEmpleado()
+                                            }
+                                            _fieldByName("gridBuscaEmpleado").getStore().loadData(json.slist1);
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor10"]')[0].setReadOnly(true);
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor11"]')[0].setReadOnly(true);
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor12"]')[0].setReadOnly(true);
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor13"]')[0].setReadOnly(true);
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor14"]')[0].setReadOnly(true);
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].setReadOnly(true);
+                                        }
+                                        
+                                        
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }                    
+                                }
+                                else
+                                {
+                                    mensajeError(json.respuesta);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                _fieldById('panelDatosAdicionales').setLoading(false);
+                                errorComunicacion();
+                            }
+                        });
+                }catch(e){
+                    debugError(e);
                 }
             }
 

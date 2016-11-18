@@ -180,16 +180,39 @@ Ext.onReady(function()
 	
 	
 	panelDxnItems.splice(0, 0,
+	        
+	        {
+	              xtype:'button',
+	              text:'Buscar Empleado',
+	              icon    : '${ctx}/resources/fam3icons/icons/zoom.png',
+	              handler:function(){
+	                  ventanaBusquedaEmpleado();
+	              }
+	          },
+	          {
+	              xtype:'button',
+                  text:'Limpiar Campos',
+                  icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png',
+                  handler:function(){
+                      _fieldByName("aux.otvalor10").setReadOnly(false);
+                      _fieldByName("aux.otvalor11").setReadOnly(false);
+                      _fieldByName("aux.otvalor12").setReadOnly(false);
+                      _fieldByName("aux.otvalor13").setReadOnly(false);
+                      _fieldByName("aux.otvalor14").setReadOnly(false);
+                      _fieldByName("aux.otvalor16").setReadOnly(false);
+                      
+                      _fieldByName("aux.otvalor10").setValue('');
+                      _fieldByName("aux.otvalor11").setValue('');
+                      _fieldByName("aux.otvalor12").setValue('');
+                      _fieldByName("aux.otvalor13").setValue('');
+                      _fieldByName("aux.otvalor14").setValue('');
+                      _fieldByName("aux.otvalor16").setValue('');
+                  }
+	          }
+	          
+	        
 		
-	    {
-            xtype:'button',
-            text:'Buscar Empleado',
-            colspan: 2,
-            icon    : '${ctx}/resources/fam3icons/icons/zoom.png',
-            handler:function(){
-                ventanaBusquedaEmpleado();
-            }
-        } );
+	     );
 	
 	
 	
@@ -359,18 +382,21 @@ Ext.onReady(function()
                                         debug('### Response :',json);
                                         if(json.success ==  true)
                                         {
-                                            var ck = 'Decodificando respuesta al recuperar permisos de boton Comprar';
+                                            var ck = 'Decodificando respuesta ';
                                             try
                                             {
                                                 ck="cargando datos";
                                                 
                                               
-                                                if(json.parametros.pv_otvalor08!=null &&
-                                                        (json.parametros.pv_otvalor08+'').trim()!=''
-                                                        && json.parametros.pv_otvalor08!='-1'){
-                                                    esDXN=true;
-                                                    _fieldByName("aux.otvalor08").setValue(json.parametros.pv_otvalor08);
-                                                    _fieldByName('aux.otvalor09').heredar(true, function(){
+                                                if(
+                                                           json.parametros.pv_otvalor08!=null 
+                                                        && (json.parametros.pv_otvalor08+'').trim()!=''
+                                                        && json.parametros.pv_otvalor08!='-1'
+                                                  ){
+                                                    
+	                                                    esDXN=true;
+	                                                    _fieldByName("aux.otvalor08").setValue(json.parametros.pv_otvalor08);
+	                                                    _fieldByName('aux.otvalor09').heredar(true, function(){
                                                         _fieldByName('aux.otvalor09').setValue(json.parametros.pv_otvalor09);
                                                         claveDescuentoDxn(_fieldByName("aux.otvalor08").getValue(),
                                                                           _fieldByName("aux.otvalor09").getValue(),
@@ -383,6 +409,20 @@ Ext.onReady(function()
                                                         });
                                                     });
                                                     
+	                                                // EFENTO PARA VERIFICAR SI YA EXISTE EL EMPLEADO
+	                                                
+	                                                _fieldByName("aux.otvalor10").on(
+	                                                        {
+	                                                            'blur':function(){
+	                                                                
+	                                                                buscarEmpleado(
+	                                                                        _fieldByName("aux.otvalor08").getValue()
+	                                                                        ,_fieldByName("aux.otvalor09").getValue()
+	                                                                        ,_fieldByName('aux.otvalor10').getValue()
+	                                                                        );
+	                                                            }
+	                                                        }        
+	                                                );
                                                     
                                                     
                                                     _fieldByName("aux.otvalor10").setValue(json.parametros.pv_otvalor10==null?"":json.parametros.pv_otvalor10);
@@ -1905,52 +1945,15 @@ function ventanaBusquedaEmpleado(){
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
 	                            ,handler : function(button)
 	                            {
-	                                debug('recuperar empleado buscar');
-	                                _mask('Buscando empleado');
-	                                Ext.Ajax.request(
-	                                        {
-	                                             url     : url_buscar_empleado 
-	                                            ,params :
-	                                            {
-	                                                 'params.administradora'   :_fieldByName("aux.otvalor08").getValue()
-	                                                ,'params.retenedora'       :_fieldByName("aux.otvalor09").getValue()
-	                                                ,'params.clave_empleado'     : _fieldByName('no_empleado').getValue()
-	                                                ,'params.rfc'     : _fieldByName('rfc').getValue()
-	                                                ,'params.ap_paterno'     : _fieldByName('ap_paterno').getValue()
-	                                                ,'params.ap_materno'     : _fieldByName('ap_materno').getValue()
-	                                                ,'params.nombre'     : _fieldByName('nombre').getValue()
-	                                            }
-	                                            ,success : function(response)
-	                                            {
-	                                            	_unmask();
-	                                                var json = Ext.decode(response.responseText);
-	                                                debug('### Response Boton Comprar:',json);
-	                                                if(json.success ==  true)
-	                                                {
-	                                                	var ck = 'Decodificando respuesta al recuperar permisos de boton Comprar';
-	                                                    try
-	                                                    {
-	                                                        //alert(json);
-	                                                        debug("### respuesta ",json);
-	                                                        _fieldByName("gridBuscaEmpleado").getStore().loadData(json.slist1);
-	                                                    	
-	                                                    }
-	                                                    catch(e)
-	                                                    {
-	                                                        manejaException(e,ck);
-	                                                    }                    
-	                                                }
-	                                                else
-	                                                {
-	                                                    mensajeError(json.respuesta);
-	                                                }
-	                                            }
-	                                            ,failure : function()
-	                                            {
-	                                            	_unmask();
-	                                                errorComunicacion();
-	                                            }
-	                                        });
+	                                buscarEmpleado(
+	                                        _fieldByName("aux.otvalor08").getValue()
+	                                        ,_fieldByName("aux.otvalor09").getValue()
+	                                        ,_fieldByName('no_empleado').getValue()
+	                                        ,_fieldByName('rfc').getValue()
+	                                        ,_fieldByName('ap_paterno').getValue()
+	                                        ,_fieldByName('ap_materno').getValue()
+	                                        ,_fieldByName('nombre').getValue()
+	                                        );
 	                            }
 	                        }
 	                    ]
@@ -1970,8 +1973,7 @@ function ventanaBusquedaEmpleado(){
 	                            ,handler : function(view,row,col,item,e,record)
 	                            {
 	                                debug('recuperar cliente handler record:',record);
-// 	                                _p28_recordClienteRecuperado=record;
-// 	                                nombre.setValue(record.raw.NOMBRECLI);
+	                                
                                                     _fieldByName("aux.otvalor10").setValue(record.raw.clave_empleado);
                                                     _fieldByName("aux.otvalor11").setValue(record.raw.nombre);
                                                     _fieldByName("aux.otvalor12").setValue(record.raw.apellido_p);
@@ -2097,6 +2099,74 @@ function claveDescuentoDxn(administradora,retenedora,cdramo,cdtipsit){
     }catch(e){
         debugError(e)
     }
+}
+
+function buscarEmpleado(administradora,retenedora,ce,rfc,ap,am,nom){
+    
+    debug('recuperar empleado buscar');
+    if(!administradora || !retenedora || !ce){
+        return;
+    }
+    _fieldById('_p29_dxnForm').setLoading(true);
+    Ext.Ajax.request(
+            {
+                 url     : url_buscar_empleado 
+                ,params :
+                {
+                     'params.administradora'   : administradora
+                    ,'params.retenedora'       : retenedora
+                    ,'params.clave_empleado'   : ce
+                    ,'params.rfc'              : rfc==undefined?"":rfc
+                    ,'params.ap_paterno'       : ap==undefined?"":ap
+                    ,'params.ap_materno'       : am==undefined?"":am
+                    ,'params.nombre'           : nom==undefined?"":nom
+                    
+                }
+                ,success : function(response)
+                {
+                    _fieldById('_p29_dxnForm').setLoading(false);
+                    var json = Ext.decode(response.responseText);
+                    debug('### Response Boton Comprar:',json);
+                    if(json.success ==  true)
+                    {
+                        var ck = 'Decodificando respuesta al recuperar permisos de boton Comprar';
+                        try
+                        {
+                            //alert(json);
+                            debug("### respuesta ",json);
+                            if(json.slist1.length>0){
+                                if(Ext.ComponentQuery.query("[name=gridBuscaEmpleado]").length==0){
+                                    ventanaBusquedaEmpleado()
+                                }
+	                            
+	                            _fieldByName("gridBuscaEmpleado").getStore().loadData(json.slist1);
+	                            _fieldByName("aux.otvalor10").setReadOnly(true);
+	                            _fieldByName("aux.otvalor11").setReadOnly(true);
+	                            _fieldByName("aux.otvalor12").setReadOnly(true);
+	                            _fieldByName("aux.otvalor13").setReadOnly(true);
+	                            _fieldByName("aux.otvalor14").setReadOnly(true);
+	                            _fieldByName("aux.otvalor16").setReadOnly(true);
+                            }
+                            
+                            
+                        }
+                        catch(e)
+                        {
+                            manejaException(e,ck);
+                        }                    
+                    }
+                    else
+                    {
+                        mensajeError(json.respuesta);
+                    }
+                }
+                ,failure : function()
+                {
+                    _fieldById('_p29_dxnForm').setLoading(false);
+                    errorComunicacion();
+                }
+            });
+    
 }
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
