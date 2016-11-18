@@ -1252,6 +1252,15 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	
 	            	smap1.put("ntramite",ntramite);
 	            	
+	            	String rolTrabajoStatus = despachadorManager.recuperarRolTrabajoEstatus(datosFlujo.get("cdtipflu"),
+	            	        datosFlujo.get("cdflujomc"), estatus);
+	            	String cdusuariDes = null,
+	            	       cdsisrolDes = null;
+	            	if (cdsisrol.equals(rolTrabajoStatus)) { // Cuando el tramite es para el mismo rol que tengo yo, es para mi y no para otro
+	            	    cdusuariDes = cdusuari;
+	            	    cdsisrolDes = cdsisrol;
+	            	}
+	            	
 	                RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
 	                        cdusuari,
 	                        cdsisrol,
@@ -1259,8 +1268,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                        estatus,
 	                        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
 	                        null,  // cdrazrecha
-	                        null,  // cdusuariDes
-	                        null,  // cdsisrolDes
+	                        cdusuariDes,
+	                        cdsisrolDes,
 	                        true,  // permisoAgente
 	                        false, // porEscalamiento
 	                        fechaHoy,

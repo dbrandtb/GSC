@@ -163,6 +163,7 @@ Ext.onReady(function()
                         ,itemId   : '_p32_formEndoso'
                         ,layout   : 'hbox'
                         ,defaults : { style : 'margin:5px;' }
+                        ,ui       :'footer'
                         ,items    :
                         [
                             {

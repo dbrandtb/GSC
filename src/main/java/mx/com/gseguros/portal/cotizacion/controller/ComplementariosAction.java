@@ -3112,7 +3112,22 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
-				logger.debug("se inserta detalle nuevo para emision");
+			    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+                        cdusuari,
+                        cdsisrol,
+                        ntramite,
+                        EstatusTramite.CONFIRMADO.getCodigo(),
+                        "El tr\u00e1mite se emiti\u00f3",
+                        null,  // cdrazrecha
+                        null,  // cdusuariDes
+                        null,  // cdsisrolDes
+                        true,  // permiso agente
+                        false, // porEscalamiento
+                        fechaHoy,
+                        false  // sinGrabarDetalle
+                        );
+			    
+				//logger.debug("se inserta detalle nuevo para emision");
 	        	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
 	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
 	        	parDmesCon.put("pv_feinicio_i"   , new Date());
@@ -3122,6 +3137,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	        	parDmesCon.put("pv_cdmotivo_i"   , null);
 	        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	        	kernelManager.movDmesacontrol(parDmesCon);*/
+				/*
 				mesaControlManager.movimientoDetalleTramite(
 						ntramite
 						,new Date()
@@ -3134,6 +3150,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						,EstatusTramite.CONFIRMADO.getCodigo()
 						,true
 						);
+				*/
 			}
 			catch(Exception ex)
 			{

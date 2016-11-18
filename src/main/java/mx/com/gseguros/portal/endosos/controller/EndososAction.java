@@ -6538,6 +6538,11 @@ public String retarificarEndosos()
 							,null
 							);
 					
+					boolean sinGrabarDetalle = true;
+					if (!respuesta.isConfirmado()) { // Cuando no esta confirmado hay que guardar el detalle para quien autoriza
+					    sinGrabarDetalle = false;
+					}
+					
 				    respuesta.setRespuestaTurnado(despachadorManager.turnarTramite(
 				            cdusuari,
 				            cdsisrol,
@@ -6550,7 +6555,7 @@ public String retarificarEndosos()
 				            true,  // permisoAgente
 				            false, // porEscalamiento
 				            fechaHoy,
-				            true   //sinGrabarDetalle
+				            sinGrabarDetalle
 				            ));
 					
 					// Si fue confirmado no asignamos numero de tramite:
