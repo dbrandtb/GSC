@@ -297,6 +297,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					paramsTworkSin.put("pv_cdtipsit_i",	msiniper.get(i).get("CDTIPSIT"));						paramsTworkSin.put("pv_cdperson_i",	msiniper.get(i).get("CDPERSON"));
 					paramsTworkSin.put("pv_feocurre_i",	renderFechas.parse(msiniper.get(i).get("FEOCURRE")));	paramsTworkSin.put("pv_nmautser_i",	msiniper.get(i).get("NMAUTSER"));
 					paramsTworkSin.put("pv_nfactura_i",	msiniper.get(i).get("NFACTURA"));						paramsTworkSin.put("pv_reqautes_i",	msiniper.get(i).get("REQAUTES"));
+					paramsTworkSin.put("pv_nmordina_i", msiniper.get(i).get("NMORDINA"));
 					siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 				}
 				
@@ -316,9 +317,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					
 					for(int ii=0; ii< facturas.size();ii++){
 						List<Map<String,String>> siniestrosAnterior = siniestrosManager.listaSiniestrosMsiniesTramite(params.get("pv_ntramite_i"),facturas.get(ii).get("NFACTURA"),null);
-						logger.debug("Valor del siniestrosAnterior :{}",siniestrosAnterior);
+						logger.debug("Pago Directo siniestros Anterior ==> :{}",siniestrosAnterior);
 						List<Map<String,String>> siniestrosNuevo = siniestrosManager.listaSiniestrosMsiniesTramite(msgResult,facturas.get(ii).get("NFACTURA"),null);
-						logger.debug("Valor del siniestrosNuevo :{}",siniestrosNuevo);
+						logger.debug("Pago Directo siniestros Nuevo ==> :{}",siniestrosNuevo);
 						
 						for(int r= 0; r< siniestrosAnterior.size(); r++)
 						{
@@ -360,13 +361,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											siniestrosNuevo.get(q).get("CDUNIECO"), siniestrosNuevo.get(q).get("CDRAMO"),
 											siniestrosNuevo.get(q).get("ESTADO"),   siniestrosNuevo.get(q).get("NMPOLIZA"),
 											siniestrosNuevo.get(q).get("NMSUPLEM"), siniestrosNuevo.get(r).get("NMSITUAC"),
-											siniestrosNuevo.get(q).get("NMSINIES"), msgResult,//params.get("pv_ntramite_i"),
+											siniestrosNuevo.get(q).get("NMSINIES"), msgResult,
 											facturas.get(ii).get("NFACTURA"),       siniestrosAnterior.get(r).get("CDGARANT"),
 											siniestrosAnterior.get(r).get("CDCONVAL"), null,
-											null, null,//callcenter validar???
-											null, null,null,null,null,Constantes.INSERT_MODE);
-									
-									
+											null, null,null, 
+											siniestrosAnterior.get(r).get("FEINGRESO"),siniestrosAnterior.get(r).get("FEEGRESO"),
+											siniestrosAnterior.get(r).get("CDTIPEVE"),siniestrosAnterior.get(r).get("CDTIPALT"),
+											Constantes.INSERT_MODE);									
 									loadList = new ArrayList<HashMap<String,String>>();
 									for(Map<String,String>map:lista) {
 										loadList.add((HashMap<String,String>)map);
@@ -465,8 +466,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					
 					//4.- Obtenemos los valores del siniestro Anterior
 					List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosMsiniesTramite(params.get("pv_ntramite_i"),null,null);
+					logger.debug("Pago Reembolso  siniestros Anterior ==> :{}",siniestros);
 					List<Map<String,String>> siniestroNuevo = siniestrosManager.listaSiniestrosMsiniesTramite(msgResult,null,null);
-					
+					logger.debug("Pago Reembolso  siniestros Nuevo ==> :{}",siniestroNuevo);
 					//5.- Actualizamos los valores de MSINIEST
 					siniestrosManager.actualizaDatosGeneralesSiniestro(
 							siniestroNuevo.get(0).get("CDUNIECO"),siniestroNuevo.get(0).get("CDRAMO"),
@@ -497,8 +499,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								siniestroNuevo.get(0).get("NMSINIES"), msgResult,
 								facturas.get(i).get("NFACTURA"),       siniestros.get(0).get("CDGARANT"),
 								siniestros.get(0).get("CDCONVAL"), null,
-								null, null,//callcenter validar???
-								null, null, null, null,null, Constantes.INSERT_MODE);
+								null, null,null, 
+								siniestros.get(0).get("FEINGRESO"),siniestros.get(0).get("FEEGRESO"),
+								siniestros.get(0).get("CDTIPEVE"),siniestros.get(0).get("CDTIPALT"),
+								Constantes.INSERT_MODE);
 						
 						
 						loadList = new ArrayList<HashMap<String,String>>();
@@ -1620,6 +1624,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			paramsTworkSin.put("pv_nmautser_i",	null);
 			paramsTworkSin.put("pv_nfactura_i",	params.get("nfactura"));
 			paramsTworkSin.put("pv_reqautes_i",	"0");
+			paramsTworkSin.put("pv_nmordina_i",  null);
 			siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 			mensaje = "Asegurado guardado";
 			success = true;

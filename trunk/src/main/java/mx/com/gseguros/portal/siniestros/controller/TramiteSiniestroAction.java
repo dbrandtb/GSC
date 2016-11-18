@@ -353,6 +353,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			paramsTworkSinPagRem.put("pv_nfactura_i",null);
 			paramsTworkSinPagRem.put("pv_nmautser_i",null);
 			paramsTworkSinPagRem.put("pv_reqautes_i",params.get("txtAutEspecial"));
+			paramsTworkSinPagRem.put("pv_nmordina_i",  null);
 			siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
 			
 			//Guardamos la informacion del asegurado
@@ -740,6 +741,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				paramsTworkSin.put("pv_nmautser_i",	null);
 				paramsTworkSin.put("pv_nfactura_i",	datosTablas.get(i).get("modFactura"));
 				paramsTworkSin.put("pv_reqautes_i", datosTablas.get(i).get("modtxtAutEspecial"));
+				paramsTworkSin.put("pv_nmordina_i",  null);
 				siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 				
 				//Guardamos la informacion del asegurado

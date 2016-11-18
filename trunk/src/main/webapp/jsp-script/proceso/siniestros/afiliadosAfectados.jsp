@@ -3262,7 +3262,7 @@
 					}
 				});
 
-				
+				/************    INICIA PROCESO PARA LA SOLICITUD DEL ALTA DE ASEGURADOS  ************/
 				gridPolizasAltaTramite= Ext.create('Ext.grid.Panel', {
 					id            : 'polizaGridAltaTramite',
 					store         : storeListadoPoliza,
@@ -3587,34 +3587,8 @@
 						}
 					]
 				});
+				/************    FINALIZA PROCESO PARA LA SOLICITUD DEL ALTA DE ASEGURADOS  ************/
 				
-				Ext.define('_11_WindowRechazoSiniestro', {
-					extend		 : 'Ext.window.Window'
-					,initComponent : function() {
-						debug('_11_WindowRechazoSiniestro initComponent');
-						Ext.apply(this, {
-							title		: 'Rechazo de tr&aacute;mite ==> '
-							,width	   : 600
-							,height	  : 350
-							,autoScroll  : true
-							,closeAction : 'hide'
-							,modal	   : true
-							,defaults	: { style : 'margin : 5px; ' }
-							,items	   : _11_formRechazo
-							,buttonAlign : 'center'
-							,buttons	 :
-							[
-								{
-									text	 : 'Rechazar'
-									,icon	: '${ctx}/resources/fam3icons/icons/delete.png'
-									,handler : _11_rechazoSiniestro
-								}
-							]
-						});
-						this.callParent();
-					}
-				});
-
 				Ext.define('_11_WindowPedirAut', {
 					extend		 : 'Ext.window.Window'
 					,initComponent : function() {
@@ -3711,7 +3685,7 @@
 					,initComponent : function() {
 						debug('_11_WindowPedirMsiniest initComponent');
 						Ext.apply(this, {
-							title		: 'Asociar Reclamaci&oacute;n ZZZZZ'
+							title		: 'Asociar Reclamaci&oacute;n'
 							,icon		: '${ctx}/resources/fam3icons/icons/tick.png'
 							,closeAction : 'hide'
 							,modal	   : true
@@ -3721,7 +3695,7 @@
 							,buttons	 :
 							[
 								{
-									text	 : 'Asociar Siniestro xxxxxxxxxxxx'
+									text	 : 'Asociar Siniestro'
 									,icon	: '${ctx}/resources/fam3icons/icons/disk.png'
 									,handler : _11_asociarMsiniestMaestro
 								}
@@ -3752,17 +3726,6 @@
 					}
 				});
 				
-				Ext.define('_11_FormRechazo', {
-					extend		 : 'Ext.form.Panel'
-					,initComponent : function() {
-						debug('_11_FormRechazo initComponent');
-						Ext.apply(this, {
-							border  : 0
-							,items  : _11_itemsRechazo
-						});
-						this.callParent();
-					}
-				});
 			/**FIN DE COMPONENTES***/
 			var venDocuTramite=Ext.create('Ext.window.Window', {
 						title		   : 'Documentos del tr&aacute;mite '
@@ -3847,14 +3810,11 @@
 				_11_formPedirMsiniest	= new _11_formPedirMsiniest();
 				_11_WindowPedirMsiniest	= new _11_WindowPedirMsiniest();
 				
-				_11_formRechazo		= new _11_FormRechazo();
-				_11_windowRechazoSiniestro = new _11_WindowRechazoSiniestro();
-				
 			/**FIN DE CONTENIDO***/
 			});
 
     ///////////////////////////////////////////INICIO DE LOS BOTONES //////////////////////////////////////////////////////////
-	//Revision de Documentos
+	//2.- Revision de Documentos del siniestro
 	function _11_revDocumentosWindow(){
 	    windowLoader = Ext.create('Ext.window.Window',{
 	        modal       : true,
@@ -3880,7 +3840,8 @@
 	    }).show();
 	    centrarVentanaInterna(windowLoader);
 	}
-	//Rechazar tramite
+	
+	//3.- Rechazar tramite
     function _11_rechazarTramiteSiniestro() {
         var motivoRechazo= Ext.create('Ext.form.ComboBox',{
             id:'motivoRechazo',			name:'smap1.cdmotivo',		fieldLabel: 'Motivo',		store: storeRechazos,
@@ -3985,7 +3946,7 @@
                                             'paramsO.pv_nmsolici_i' : null,
                                             'paramsO.pv_tipmov_i'   : _11_params.OTVALOR02,
                                             'paramsO.pv_ntramite_i' : _11_params.NTRAMITE,
-                                            'paramsO.tipopago' : _11_params.OTVALOR02
+                                            'paramsO.tipopago'      : _11_params.OTVALOR02
                                         },
                                         success: function(response, opt) {
                                             var jsonRes=Ext.decode(response.responseText);
@@ -4056,7 +4017,8 @@
         }).show();
         centrarVentana(windowLoader);
     }
-	//Turnar al area medica
+	
+    //4.- Turnar al area medica
 	function _11_turnarAreaMedica(){
 	    var comentariosText = Ext.create('Ext.form.field.TextArea', {
 	        fieldLabel: 'Observaciones'
@@ -4190,7 +4152,7 @@
 	    centrarVentana(windowLoader);
 	}
 	
-	//Solicitar Pago 
+	//5.- Solicitar Pago 
 	function _11_solicitarPago(){
 		//1.- Verificamos que el tramite ya esta pagado
 		if(_11_params.STATUS  == _STATUS_TRAMITE_CONFIRMADO){
@@ -4309,7 +4271,7 @@
 		}
 	}
 	
-	//Validamos si existe las Validaciones 
+	//5.1.- Validamos si existe coberturas que no cubre para su validacion
 	function _11_validaAseguroLimiteCoberturas(){
 		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
 		myMask.show();
@@ -4339,7 +4301,7 @@
 		});
 	}
 	
-	//Validamos si existe las Validaciones 
+	//5.2.- Validamos el monto total del importe de siniestro por asegurado 
 	function _11_validaImporteAseguradoTramite(){
 		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
 		myMask.show();
@@ -4369,7 +4331,8 @@
 			}
 		});
 	}
-	// Mostrar solicitud de pago 
+	
+	//5.3.- Mostrar solicitud de pago 
 	function _11_mostrarSolicitudPago(){
 		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
 		msgWindow = Ext.Msg.show({
@@ -4629,7 +4592,7 @@
 		centrarVentana(msgWindow);
 	}	
 	
-    //Turnar del Medico ajustdor al operador
+    //6.- Turnar del Medico ajustdor al operador
     function _11_retornarMedAjustadorAOperador(grid,rowIndex,colIndex) {
         Ext.Ajax.request({
             url     : _URL_P_MOV_MAUTSINI
@@ -4796,7 +4759,7 @@
         });
     }
     
-    //Historial dem tramite
+    //7.- Historial dem tramite
     function _11_historialTramite() {
         var window=Ext.create('Ext.window.Window', {
             title        : 'Detalles del tr&aacute;mite '+_11_params.NTRAMITE
@@ -4892,7 +4855,8 @@
         centrarVentanaInterna(window.show());
         Ext.getCmp('inputReadDetalleHtmlVisor').getToolbar().hide();
     }
-    //Devolver tramite
+    
+    //8.- Devolver tramite
     function _11_turnarDevolucionTramite(grid,rowIndex,colIndex){
         var comentariosText = Ext.create('Ext.form.field.TextArea', {
             fieldLabel: 'Observaciones'
@@ -4985,7 +4949,7 @@
         centrarVentana(windowLoader);
     }
 	
-    //Turnar Operador Reclamacion
+    //9.- Turnar Operador Reclamacion
 	function _11_turnarAreclamaciones(grid,rowIndex,colIndex){
 		//var record = grid.getStore().getAt(rowIndex);
 		Ext.Ajax.request({
@@ -5263,7 +5227,7 @@
 		});
 	}
     
-    //Generar contrarecibo
+    //10.- Generar contrarecibo
     function _11_GenerarContrarecibo(grid,rowIndex,colIndex){
         Ext.Ajax.request({
             url: _UrlGenerarContrarecibo,
@@ -5312,8 +5276,10 @@
         });
     }
     
-    ///////////////////////////////////////////FIN DE LOS BOTONES //////////////////////////////////////////////////////////
-	//1.-Agregar Facturas
+    ///////////////////////////////////////////FIN DE LOS BOTONES /////////////////////////////////////////////////////////////////
+	
+    ////////////////////////////////////  VALIDACIONES GENERALES DE LA APLICACION SINIESTROS  ////////////////////////////////////
+    //11.-Agregar Facturas
 	function _p11_agregarFacturas(){
 		windowLoader = Ext.create('Ext.window.Window',{
 			title         : 'Alta de Facturas',			buttonAlign  : 'center',		width        : 800
@@ -5350,9 +5316,9 @@
 			}
 		}).show();
 		centrarVentanaInterna(windowLoader);
-	}    
+	}
     
-    //2.- Eliminar Facturas
+    //12.- Eliminar Facturas
 	function _11_eliminarFactura(grid,rowindex){
 		_11_recordActivo = grid.getStore().getAt(rowindex);
  		centrarVentanaInterna(Ext.Msg.show({
@@ -5394,620 +5360,1210 @@
 	    }));
 	}
     
-	//3.- Editar Factura
-	function _11_editar(grid,rowindex){
-		_11_recordActivo = grid.getStore().getAt(rowindex);
-		debug("Valor de respuesta _11_recordActivo :) ====>>>> ",_11_recordActivo);
-		
-		_11_llenaFormulario();
-		modPolizasAltaTramite.show();
-		centrarVentanaInterna(modPolizasAltaTramite);
-	}
+    //13.- Agregar asegurados
+    function _p21_agregarAsegurado(){
+        centrarVentanaInterna(ventanaAgregarAsegurado.show());
+    }
 	
-	//4.- Funcion para obtenemos los totales pagados en la Factura
-	function obtenerTotalPagos(ntramite, nfactura){
-		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
-		myMask.show();
-		Ext.Ajax.request({
-			url	 : _URL_OBTENERSINIESTROSTRAMITE
-			,params:{
-				'smap.ntramite'   : ntramite ,
-				'smap.nfactura'   : nfactura
-			}
-			,success : function (response) {
-				var aseguradosTotales = Ext.decode(response.responseText).slist1;
-				debug("Valores totales ==> ",aseguradosTotales);
-				var totalPago = 0;
-				var subtotalFactura=0;
-		    	var ivaFactura=0;
-		    	var ivaRetFactura=0;
-		    	var isrFactura=0;
-		    	var impCedFactura=0;
-		    	var imporTotalFactura=0;
-		    	var resultadoTope = "";
-		    	var banderaValidacion = 0;
-		    	for(var i = 0; i < aseguradosTotales.length; i++) {
-		    		debug()
-		    		totalPago = 0;
-		    	   	var importeAseg = aseguradosTotales[i].IMPORTEASEG;
-		    	   	var ivaAseg     = aseguradosTotales[i].PTIVAASEG;
-		    	   	var ivaRete     = aseguradosTotales[i].PTIVARETASEG;
-			    	var isrAse      = aseguradosTotales[i].PTISRASEG;
-			    	var impCedul    = aseguradosTotales[i].PTIMPCEDASEG;
-			    	var totalPagoVa = aseguradosTotales[i].IMPORTETOTALPAGO;
-			    	
-			    	if(importeAseg.length > 0){
-		    	   		subtotalFactura = parseFloat(subtotalFactura) + parseFloat(importeAseg);
-		    	   	}else{
-		    	   		subtotalFactura = parseFloat(subtotalFactura) + parseFloat(totalPago);
-		    	   	}
-		    	    
-		    	   	if(ivaAseg.length > 0){
-		    	   		ivaFactura = parseFloat(ivaFactura) + parseFloat(ivaAseg);
-		    	   	}else{
-		    	   		ivaFactura = parseFloat(ivaFactura) + parseFloat(totalPago);
-		    	   	}
-			    	
-			    	if(ivaRete.length > 0){
-			    		ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(ivaRete);
-			    	}else{
-			    		ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(totalPago);
-			    	}
-			    	
-			    	if(isrAse.length > 0){
-			    		isrFactura = parseFloat(isrFactura) + parseFloat(isrAse);
-			    	}else{
-			    		isrFactura = parseFloat(isrFactura) + parseFloat(totalPago);
-			    	}
-			    	
-			    	if(impCedul.length > 0){
-			    		impCedFactura = parseFloat(impCedFactura) + parseFloat(impCedul);
-			    	}else{
-			    		impCedFactura = parseFloat(impCedFactura) + parseFloat(totalPago);
-			    	}
-			    	
-			    	if(totalPagoVa.length > 0){
-			    		imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPagoVa);
-			    	}else{
-			    		imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPago);
-			    	}
-			    	
-			    	
-			    	var limite = aseguradosTotales[i].LIMITE;
-			    	var importePagado = aseguradosTotales[i].IMPPAGCOB;
-					var importeDisponible = (+limite - +importePagado);
-					var importePagarAsegurado = aseguradosTotales[i].IMPORTETOTALPAGO; 
+    //14.- Generar Calculos
+    function _p21_generarCalculo(){
+        gridFacturaDirecto.setLoading(true);
+        Ext.Ajax.request( {
+            url  : _URL_GENERAR_CALCULO
+            ,params:{
+                'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue()
+            }
+            ,success : function (response) {
+                
+                Ext.Ajax.request({
+                    url  : _URL_VALIDA_IMP_ASEGSINIESTRO
+                    ,params:{
+                        'params.tipopago'  : _tipoPago,
+                        'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
+                        'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue()
+                    }
+                    ,success : function (response) {
+                        var validacionMensaje = Ext.decode(response.responseText).datosValidacion;
+                        var resultMsj= "";
+                        var banderaresultMsj = 0;
+                        if(validacionMensaje.length > 0){
+                            for(var i = 0; i < validacionMensaje.length; i++){
+                                banderaresultMsj = "1";
+                                resultMsj = resultMsj + 'El siniestro '+ validacionMensaje[i].SINIESTRO+' de la Factura '+validacionMensaje[i].FACTURA+ ' el importe es negativo. <br/>';
+                            }
+                            resultMsj = resultMsj+'Favor de corregir el importe para poder continuar.<br/>';
+                            
+                            if(banderaresultMsj == "1"){
+                                centrarVentanaInterna(mensajeWarning(resultMsj));
+                            }
+                        }                       
+                        gridFacturaDirecto.setLoading(false);
+                        cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                        
+                        panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
+                        panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
+                        obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
+                    },
+                    failure : function () {
+                        gridFacturaDirecto.setLoading(false);
+                        Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error de comunicaci&oacute;n',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        });
+                    }
+                });
+            },
+            failure : function () {
+                gridFacturaDirecto.setLoading(false);
+                Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
+        });     
+    }
+    
+    //15.- Eliminar asegurado seleccionado
+    function eliminarAsegurado(grid,rowIndex){
+        var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+        myMask.show();
+        if(_tipoPago == _TIPO_PAGO_DIRECTO){
+            var record = grid.getStore().getAt(rowIndex);
+            debug('record.eliminarAsegurado:',record.raw);
+            centrarVentanaInterna(Ext.Msg.show({
+                title: 'Aviso',
+                msg: '&iquest;Esta seguro que desea eliminar el asegurado?',
+                buttons: Ext.Msg.YESNO,
+                icon: Ext.Msg.QUESTION,
+                fn: function(buttonId, text, opt){
+                    if(buttonId == 'yes'){
+                        debug("VALOR DEL RECORD");
+                        debug(record);
+                        Ext.Ajax.request({
+                            url: _URL_ELIMINAR_ASEGURADO,
+                            params: {
+                                'params.nmtramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
+                                'params.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue(),
+                                'params.cdunieco'   : record.get('CDUNIECO'),
+                                'params.cdramo'     : record.get('CDRAMO'),
+                                'params.estado'     : record.get('ESTADO'),
+                                'params.nmpoliza'   : record.get('NMPOLIZA'),
+                                'params.nmsuplem'   : record.get('NMSUPLEM'),
+                                'params.nmsituac'   : record.get('NMSITUAC'),
+                                'params.cdtipsit'   : record.get('CDTIPSIT'),
+                                'params.cdperson'   : record.get('CDPERSON'),
+                                'params.feocurre'   : record.get('FEOCURRE'),
+                                'params.nmsinies'   : record.get('NMSINIES'),
+                                'params.accion'   : "0"
+                            },
+                            success: function(response) {
+                                var res = Ext.decode(response.responseText);
+                                if(res.success){
+                                    mensajeCorrecto('Aviso','Se ha eliminado con &eacute;xito.',function(){
+                                        banderaAsegurado = 0;
+                                        cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                                        
+                                        if(_cdtipoProceso =="1"){
+                                            panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
+                                            panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
+                                            obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
+                                            myMask.hide();
+                                        }else{
+                                            myMask.hide();
+                                        }   
+                                    });
+                                }else {
+                                    centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
+                                }
+                            },
+                            failure: function(){
+                                centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
+                            }
+                        });
+                    }
+                }
+            }));
+        }else{
+            centrarVentanaInterna(Ext.Msg.show({ 
+                title: 'Aviso',
+                msg: 'El asegurado no puede ser eliminado.',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.WARNING
+            }));
+        }
+    }
+    
+    //16.- Agregar Conceptos del Asegurado
+    function _p21_agregarConcepto() {
+        if(gridFacturaDirecto.getSelectionModel().hasSelection()){
+            var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
+            if(_11_params.CDRAMO != _RECUPERA){
+                var idReclamacion = recordFactura.get('NMSINIES');
+                valido = idReclamacion && idReclamacion>0;
+                if(valido){
+                    var idCobertura         = recordFactura.get('CDGARANT');
+                    var idSubcobertura      = recordFactura.get('CDCONVAL');
+                    var idcausaSiniestro    = recordFactura.get('CDCAUSA');
+                    var idICDP              = recordFactura.get('CDICD');
+                    
+                    if(recordFactura.get('CDGARANT').length > 0 && recordFactura.get('CDCONVAL').length > 0 && 
+                       recordFactura.get('CDCAUSA').length > 0 && recordFactura.get('CDICD').length > 0){
+                            banderaConcepto = "1";
+                            storeConceptos.add(new modelConceptos( {
+                                PTPRECIO : '0.00',
+                                DESTOPOR : '0.00',
+                                DESTOIMP : '0.00',
+                                CDUNIECO : recordFactura.get('CDUNIECO'),
+                                CDRAMO   : recordFactura.get('CDRAMO'),
+                                ESTADO   : recordFactura.get('ESTADO'),
+                                NMPOLIZA : recordFactura.get('NMPOLIZA'),
+                                NMSUPLEM : recordFactura.get('NMSUPLEM'),
+                                NMSITUAC : recordFactura.get('NMSITUAC'),
+                                AAAPERTU : recordFactura.get('AAAPERTU'),
+                                STATUS   : recordFactura.get('STATUS'),
+                                NMSINIES : recordFactura.get('NMSINIES'),
+                                PTPCIOEX : '0.00',
+                                DCTOIMEX : '0.00',
+                                PTIMPOEX : '0.00',
+                                CDGARANT : recordFactura.get('CDGARANT'),
+                                CDCONVAL : recordFactura.get('CDCONVAL')
+                            }));
+                            
+                    }else{
+                        mensajeWarning('Complemente la informaci&oacute;n del Asegurado');
+                    }
+                }else{
+                    mensajeWarning('Debes generar una autorizaci&oacute;n para el asegurado');
+                }
+            }else{
+                storeRecupera.add(new modelRecupera( {
+                    'NTRAMITE'  : panelInicialPral.down('[name=params.ntramite]').getValue() ,
+                    'NFACTURA'  : panelInicialPral.down('[name=params.nfactura]').getValue()
+                }));
+            }
+        }else{
+            centrarVentanaInterna(mensajeWarning("Debe seleccionar un asegurado para agregar sus conceptos"));
+        }
+    }
+    
+    //17.- Guardar Conceptos del asegurado
+    function _guardarConceptosxFactura(){
+        var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+        myMask.show();
+        var obtener = [];
+        if(_11_params.CDRAMO != _RECUPERA){
+            storeConceptos.each(function(record) {
+                obtener.push(record.data);
+            });
+            if(obtener.length <= 0){
+                centrarVentanaInterna(Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Se requiere al menos un concepto',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                }).defer(100));
+                storeConceptos.reload();
+                return false;
+            }else{
+                for(i=0;i < obtener.length;i++){
+                    if(obtener[i].IDCONCEP == null ||obtener[i].CDCONCEP == null ||obtener[i].PTMTOARA == null ||obtener[i].PTPRECIO == null ||obtener[i].CANTIDAD == null ||
+                        obtener[i].IDCONCEP == "" ||obtener[i].CDCONCEP == "" ||obtener[i].PTMTOARA == ""||obtener[i].PTPRECIO == "" || obtener[i].CANTIDAD ==""){
+                        centrarVentanaInterna(Ext.Msg.show({
+                            title:'Concepto',
+                            msg: 'Favor de introducir los campos requeridos en el concepto.',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.WARNING
+                        }).defer(100));
+                        return false;
+                    }
+                }
+                var submitValues={};
+                var formulario=panelInicialPral.form.getValues();
+                submitValues['params']=formulario;
+                var datosTablas = [];
+                var _11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+                
+                storeConceptos.each(function(record,index){
+                    datosTablas.push({
+                        cdunieco  : record.get('CDUNIECO')
+                        ,cdramo   : record.get('CDRAMO')
+                        ,estado   : record.get('ESTADO')
+                        ,nmpoliza : record.get('NMPOLIZA')
+                        ,nmsuplem : record.get('NMSUPLEM')
+                        ,nmsituac : record.get('NMSITUAC')
+                        ,aaapertu : record.get('AAAPERTU')
+                        ,status   : record.get('STATUS')
+                        ,nmsinies : record.get('NMSINIES')
+                        ,nfactura : panelInicialPral.down('[name=params.nfactura]').getValue()
+                        ,cdgarant : record.get('CDGARANT')
+                        ,cdconval : record.get('CDCONVAL')
+                        ,cdconcep : record.get('CDCONCEP')
+                        ,idconcep : record.get('IDCONCEP')
+                        ,cdcapita : record.get('CDCAPITA')
+                        ,nmordina : record.get('NMORDINA')
+                        ,cdmoneda : "001"
+                        ,ptprecio : record.get('PTPRECIO')
+                        ,cantidad : record.get('CANTIDAD')
+                        ,destopor : record.get('DESTOPOR')
+                        ,destoimp : record.get('DESTOIMP')
+                        ,ptimport : record.get('PTIMPORT')
+                        ,ptrecobr : record.get('PTRECOBR')
+                        ,nmapunte : record.get('NMAPUNTE')
+                        ,feregist : record.get('FEREGIST')
+                        ,operacion: "I"
+                        ,ptpcioex : record.get('PTPCIOEX')
+                        ,dctoimex : record.get('DCTOIMEX')
+                        ,ptimpoex : record.get('PTIMPOEX')
+                        ,mtoArancel : record.get('PTMTOARA')
+                        ,aplicaIVA : record.get('APLICIVA')
+                        ,ptIVA     : record.get('PTIVA')
+                    });
+                });
+                submitValues['datosTablas']=datosTablas;
+                panelInicialPral.setLoading(true);
+                Ext.Ajax.request( {
+                    url: _URL_GUARDA_CONCEPTO_TRAMITE,
+                    jsonData:Ext.encode(submitValues),
+                    success:function(response,opts){
+                        panelInicialPral.setLoading(false);
+                        var jsonResp = Ext.decode(response.responseText);
+                        if(jsonResp.success==true){
+                            panelInicialPral.setLoading(false);
+                            banderaConcepto = "0";
+                            storeConceptos.reload();
+                            
+                            if(_cdtipoProceso =="1"){
+                                cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                                panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
+                                panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
+                                obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
+                                myMask.hide();
+                            }else{
+                                myMask.hide();
+                            }
+                        }
+                    },
+                    failure:function(response,opts) {
+                        panelInicialPrincipal.setLoading(false);
+                        Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error de comunicaci&oacute;n',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        });
+                    }
+                });
+            }
+        }else{
+            storeRecupera.each(function(record) {
+                obtener.push(record.data);
+            });
+            if(obtener.length <= 0){
+                centrarVentanaInterna(Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Se requiere al menos una cobertura',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                }).defer(100));
+                storeRecupera.reload();
+                return false;
+            }else{
+                for(i=0;i < obtener.length;i++){
+                    if(obtener[i].CANTPORC == null ||obtener[i].CANTPORC == "" ){
+                        centrarVentanaInterna(Ext.Msg.show({
+                            title:'Concepto',
+                            msg: 'Favor de introducir los campos requeridos en el concepto.',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.WARNING
+                        }).defer(100));
+                        return false;
+                    }
+                }
+                var submitValues={};
+                var formulario=panelInicialPral.form.getValues();
+                submitValues['params']=formulario;
+                var datosTablas = [];
+                var _11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+                
+                storeRecupera.each(function(record,index){
+                    datosTablas.push({
+                        cantporc     : record.get('CANTPORC')
+                        ,cdconval    : record.get('CDCONVAL')
+                        ,cdgarant    : record.get('CDGARANT')
+                        ,esquemaaseg : record.get('ESQUEMAASEG')
+                        ,nfactura    : record.get('NFACTURA')
+                        ,ntramite    : record.get('NTRAMITE')
+                        ,ptimport    : record.get('PTIMPORT')
+                        ,sumaaseg    : record.get('SUMAASEG')
+                        ,operacion   : "I"
+                    });
+                });
+                submitValues['datosTablas']=datosTablas;
+                panelInicialPral.setLoading(true);
+                Ext.Ajax.request( {
+                    url: _URL_GUARDA_CONCEPTO_RECUPERA,
+                    jsonData:Ext.encode(submitValues),
+                    success:function(response,opts){
+                        panelInicialPral.setLoading(false);
+                        var jsonResp = Ext.decode(response.responseText);
+                        if(jsonResp.success==true){
+                            panelInicialPral.setLoading(false);
+                            //banderaConcepto = "0";
+                            storeRecupera.reload();
+                        }
+                    },
+                    failure:function(response,opts) {
+                        panelInicialPrincipal.setLoading(false);
+                        Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error de comunicaci&oacute;n',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        });
+                    }
+                });
+            }
+        }
+    }
+    
+    //18.- Ventana para la visualizacion de los ajestes medicos
+    function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
+        var record = grid.getStore().getAt(rowIndex);
+        var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
+            windowLoader = Ext.create('Ext.window.Window',{
+                modal       : true,
+                buttonAlign : 'center',
+                title       : 'Ajustes M&eacute;dico',
+                width       : 800,
+                height      : 450,
+                //autoScroll  : true,
+                loader      : {
+                    url     : _URL_AJUSTESMEDICOS,
+                    params  : {
+                        'params.ntramite'       : panelInicialPral.down('[name=params.ntramite]').getValue()
+                        ,'params.cdunieco'      : recordFactura.get('CDUNIECO')
+                        ,'params.cdramo'        : recordFactura.get('CDRAMO')
+                        ,'params.estado'        : recordFactura.get('ESTADO')
+                        ,'params.nmpoliza'      : recordFactura.get('NMPOLIZA')
+                        ,'params.nmsuplem'      : recordFactura.get('NMSUPLEM')
+                        ,'params.nmsituac'      : recordFactura.get('NMSITUAC')
+                        ,'params.aaapertu'      : recordFactura.get('AAAPERTU')
+                        ,'params.status'        : recordFactura.get('STATUS')
+                        ,'params.nmsinies'      : recordFactura.get('NMSINIES')
+                        ,'params.nfactura'      : panelInicialPral.down('[name=params.nfactura]').getValue()
+                        ,'params.cdgarant'      : record.get('CDGARANT')
+                        ,'params.cdconval'      : record.get('CDCONVAL')
+                        ,'params.cdconcep'      : record.get('CDCONCEP')
+                        ,'params.idconcep'      : record.get('IDCONCEP')
+                        ,'params.nmordina'      : record.get('NMORDINA')
+                        ,'params.precio'        : record.get('PTPRECIO')
+                        ,'params.cantidad'      : record.get('CANTIDAD')
+                        ,'params.descuentoporc' : record.get('DESTOPOR')
+                        ,'params.descuentonum'  : record.get('DESTOIMP')
+                        ,'params.importe'       : record.get('PTIMPORT')
+                        ,'params.ajusteMedi'    : record.get('TOTAJUSMED')
+                    },
+                    scripts  : true,
+                    loadMask : true,
+                    autoLoad : true,
+                    ajaxOptions: {
+                        method: 'POST'
+                    }
+                }
+                ,
+                listeners:{
+                    close:function(){
+                        if(true){
+                            //Actualizamos la información de la consulta del grid inferior
+                            storeConceptos.reload();
+                        }
+                    }
+                }
+            }).show();
+            centrarVentanaInterna(windowLoader);
+    }
+    
+    //19.-Revision de Documentos
+    function revisarDocumento(grid,rowIndex) {
+        var record = grid.getStore().getAt(rowIndex);
+        var valido = true;
+        Ext.Ajax.request( {
+            url : _11_URL_REQUIEREAUTSERV
+            ,params:{
+                'params.cobertura': null,
+                'params.subcobertura': null,
+                'params.cdramo': record.raw.CDRAMO,
+                'params.cdtipsit': record.raw.CDTIPSIT
+            }
+            ,success : function (response) {
+                var idReclamacion = record.raw.NMSINIES;
+                debug(idReclamacion);
+                valido = idReclamacion && idReclamacion>0;
+                if(!valido){
+                    //Preguntamos si esta seguro de generar el siniestro
+                    msgWindow = Ext.Msg.show({
+                        title: 'Aviso',
+                        msg: '&iquest;Desea asociar el asegurado con la autorizaci&oacute;n de Servicio ?',
+                        buttons: Ext.Msg.YESNO,
+                        icon: Ext.Msg.QUESTION,
+                        fn: function(buttonId, text, opt){
+                            if(buttonId == 'no'){
+                                var json = {
+                                    'params.ntramite'       : panelInicialPral.down('[name=params.ntramite]').getValue(),
+                                    'params.cdunieco'       : record.raw.CDUNIECO,
+                                    'params.cdramo'         : record.raw.CDRAMO,
+                                    'params.estado'         : record.raw.ESTADO,
+                                    'params.nmpoliza'       : record.raw.NMPOLIZA,
+                                    'params.nmsuplem'       : record.raw.NMSUPLEM,
+                                    'params.nmsituac'       : record.raw.NMSITUAC,
+                                    'params.cdtipsit'       : record.raw.CDTIPSIT,
+                                    'params.dateOcurrencia' : record.raw.FEOCURRE,
+                                    'params.nfactura'       : panelInicialPral.down('[name=params.nfactura]').getValue(),
+                                    'params.secAsegurado'   : record.raw.SECTWORKSIN
+                                };
+                                Ext.Ajax.request( {
+                                    url   : _11_URL_INICIARSINIESTROSINAUTSERV
+                                    ,params  : json
+                                    ,success : function(response) {
+                                        json = Ext.decode(response.responseText);
+                                        if(json.success==true){
+                                            _11_guardarInformacionAdicional();
+                                            mensajeCorrecto('Autorizaci&oacute;n',json.mensaje,function(){
+                                                storeAseguradoFactura.removeAll();
+                                                cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                                            });
+                                        }else{
+                                            mensajeError(json.mensaje);
+                                        }
+                                    }
+                                    ,failure : function() {
+                                        errorComunicacion();
+                                    }
+                                });
+                            }
+                            if(buttonId == 'yes'){
+                                var valido = true;
+                                var nAut = record.get('NoAutorizacion');
+                                valido = nAut && nAut>0;
+                                if(!valido){
+                                    _11_pedirAutorizacion(record);
+                                }
+                                debug('!_11_validaAutorizacion: ',valido?'si':'no');
+                                return valido;
+                            }
+                        }
+                    });
+                    centrarVentana(msgWindow);
+                }
+                
+                if(valido) {
+                    valido = record.get('VoBoAuto')!='n'&&record.get('VoBoAuto')!='N';
+                    if(!valido) {
+                        mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno autom&aacute;tico');
+                    }
+                }
+                
+                if(valido) {
+                windowLoader = Ext.create('Ext.window.Window',{
+                        modal      : true,
+                        buttonAlign : 'center',
+                        title: 'Informaci&oacute;n general',
+                        width      : 800,
+                        height    : 450,
+                        autoScroll  : true,
+                        loader    : {
+                            url  : _URL_TABBEDPANEL
+                            ,params      :
+                            {
+                                'params.ntramite'   : panelInicialPral.down('[name=params.ntramite]').getValue()
+                                ,'params.cdunieco'  : record.raw.CDUNIECO
+                                ,'params.cdramo'    : record.raw.CDRAMO
+                                ,'params.estado'    : record.raw.ESTADO
+                                ,'params.nmpoliza'  : record.raw.NMPOLIZA
+                                ,'params.nmsuplem'  : record.raw.NMSUPLEM
+                                ,'params.nmsituac'  : record.raw.NMSITUAC
+                                ,'params.aaapertu'  : record.raw.AAAPERTU
+                                ,'params.status'    : record.raw.STATUS
+                                ,'params.nmsinies'  : record.raw.NMSINIES
+                                ,'params.cdtipsit'  : record.raw.CDTIPSIT
+                                ,'params.cdrol'     : _CDROL
+                                ,'params.tipopago'  : _tipoPago
+                            },
+                            scripts  : true,
+                            loadMask : true,
+                            autoLoad : true,
+                            ajaxOptions: {
+                                method: 'POST'
+                            }
+                        }
+                    }).show();
+                    centrarVentanaInterna(windowLoader);
+                }
+            },
+            failure : function ()
+            {
+                Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
+        });
+    }
+    
+    //20.-Muestra el listado de las autorizaciones disponibles para el asegurado
+    function _11_pedirAutorizacion(record) {
+        _11_recordActivo = record;
+        _11_textfieldAsegurado.setValue(_11_recordActivo.get('NOMBRE'));
+        var params = {
+                'params.cdperson'   :   _11_recordActivo.get('CDPERSON')
+        };
+        cargaStorePaginadoLocal(storeListadoAutorizacion, _URL_LISTA_AUTSERVICIO, 'datosInformacionAdicional', params, function(options, success, response){
+            if(success){
+                var jsonResponse = Ext.decode(response.responseText);
+                if(jsonResponse.datosInformacionAdicional.length <= 0) {
+                    storeConceptos.removeAll();
+                    banderaConcepto = 0;
+                    banderaAsegurado = 0;
+                    storeAseguradoFactura.removeAll();
+                    cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                    centrarVentanaInterna(Ext.Msg.show({ 
+                        title: 'Aviso',
+                        msg: 'No existen autorizaci&oacute;n para el asegurado elegido.',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.WARNING
+                    }));
+                }else{
+                    _11_windowPedirAut.show();
+                    _11_textfieldNmautserv.setValue('');
+                    centrarVentanaInterna(_11_windowPedirAut);
+                }
+            }else{
+                Ext.Msg.show({
+                    title: 'Aviso',
+                    msg: 'Error al obtener los datos.',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                    });
+            }
+        });
+    }
+    
+    //21.- Asociar autorizacion de Servicio (la primera vez que entra )
+    function _11_asociarAutorizacion() {
+        var valido = _11_formPedirAuto.isValid();
+        if(!valido) {
+            datosIncompletos();
+        }
 
-					var validaTope = aseguradosTotales[i].VALTOTALCOB;
-					if( validaTope  == '1'){
-						debug("Limite ",limite, "importeDisponible",importeDisponible,"importePagarAsegurado",importePagarAsegurado);
-						if(+importeDisponible <=limite && +importePagarAsegurado <= importeDisponible){
-							//resultadoTope = resultadoTope + 'La Factura ' + nfactura + ' del siniestro '+ aseguradosTotales[i].NMSINIES+ ' Es éxitoso. <br/>';
-						}else{
-							banderaValidacion = 1;
-							resultadoTope = resultadoTope + 'El CR '+ntramite+' de Factura ' + nfactura + ' del siniestro '+ aseguradosTotales[i].NMSINIES+ ' Sobrepasa el límite permitido. <br/>';							
-						}
-					}
-		    	}
-		    	
-	    	    if(banderaValidacion == "1"){
-				    centrarVentanaInterna(mensajeWarning(resultadoTope));
-				}
-				
-		    	panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
-		    	panelComplementos.down('[name=params.ivaFac]').setValue(ivaFactura);
-		    	panelComplementos.down('[name=params.ivaRetFac]').setValue(ivaRetFactura);
-		    	panelComplementos.down('[name=params.isrFac]').setValue(isrFactura);
-		    	panelComplementos.down('[name=params.impCedularFac]').setValue(impCedFactura);
-		    	panelComplementos.down('[name=params.impPagarFac]').setValue(imporTotalFactura);
-			},
-			failure : function (){
-				Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				});
-			}
-		});
-		myMask.hide();
-    	return true;
-	}
-	
-	//5.- LLenamos el formulario de los detalles de la factura
-	function _11_llenaFormulario(){
-		var valorRequerido = true;
-		Ext.getCmp('historialCPT').disable();
-		obtenerTotalPagos(_11_recordActivo.get('ntramite'), _11_recordActivo.get('factura'));
-	
-		if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION){
-			gridEditorConceptos.hide();											// Grid De los conceptos  Ocultos
-			gridEditorCoberturaRecupera.hide();									// Grid De los conceptos  Recupera Ocultos
-			panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide(); 	// Aplica IVA oculto
-			panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();	// Sec. de IVA oculto
-			panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();	// Aplica IVA Retenido oculto
-			panelInicialPral.down('combo[name=params.swAplicaisr]').hide();
-			panelInicialPral.down('combo[name=params.swAplicaice]').hide();
-			if(_11_params.CDRAMO == _RECUPERA){
-				gridEditorCoberturaRecupera.show();								// Grid De los conceptos  Recupera visibles
-				panelInicialPral.down('[name=params.diasdedu]').hide();			// Dias deducible oculto
-				valorRequerido = true;
-			}else{
-				panelInicialPral.down('[name=params.diasdedu]').show();			// Dias deducible visible
-				valorRequerido = false;
-			}
-			
-		}else if(_tipoPago ==_TIPO_PAGO_REEMBOLSO){
-			gridEditorConceptos.show();											// Grid De los conceptos  visible
-			gridEditorCoberturaRecupera.hide();									// Grid De los conceptos  Recupera Ocultos
-			panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();	// Aplica IVA oculto
-			panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();	// Sec. de IVA oculto
-			panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();	// Aplica IVA Retenido oculto
-			panelInicialPral.down('[name=params.diasdedu]').hide();				// Dias deducible oculto
-			panelInicialPral.down('combo[name=params.swAplicaisr]').hide();
-			panelInicialPral.down('combo[name=params.swAplicaice]').hide();
-			valorRequerido = true;
-		}else{
-			gridEditorConceptos.show();											// Grid De los conceptos  visible
-			gridEditorCoberturaRecupera.hide();									// Grid De los conceptos  Recupera Ocultos
-			panelInicialPral.down('[name="parametros.pv_otvalor01"]').show();	// Aplica IVA
-			panelInicialPral.down('[name="parametros.pv_otvalor02"]').show();	// Sec. de IVA
-			panelInicialPral.down('[name="parametros.pv_otvalor03"]').show();	// Aplica IVA Retenido
-			panelInicialPral.down('[name=params.diasdedu]').hide();				// Dias deducible oculto
-			panelInicialPral.down('combo[name=params.swAplicaisr]').show();
-			panelInicialPral.down('combo[name=params.swAplicaice]').show();
-			valorRequerido = true;
-		}
-		
-		panelInicialPral.down('[name=params.contrarecibo]').setValue(_11_recordActivo.get('contraRecibo'));		// ContraRecibo
-		panelInicialPral.down('[name=params.ntramite]').setValue(_11_recordActivo.get('ntramite'));				// Tramite
-		panelInicialPral.down('[name=params.nfactura]').setValue(_11_recordActivo.get('factura'));				// No. Factura
-		panelInicialPral.down('[name=params.fefactura]').setValue(_11_recordActivo.get('fechaFactura')); 		// Fecha de Factura
-		panelInicialPral.down('[name=params.feegreso]').setValue(_11_recordActivo.get('fechaFactura'));         // Fecha Egreso
-		panelInicialPral.down('[name=params.diasdedu]').setValue(_11_recordActivo.get('diasdedu'));				// Dias Deducible
-		//De acuerdo al tipo de producto se valida si es o no requerido los dias de deducible
-		panelInicialPral.down('[name=params.diasdedu]').allowBlank = valorRequerido;
-		//Proveedor
-		storeProveedor.load();
-		panelInicialPral.down('combo[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
-		
-		panelInicialPral.down('combo[name=params.swAplicaisr]').setValue(_11_recordActivo.get('swisr'));
-		panelInicialPral.down('combo[name=params.swAplicaice]').setValue(_11_recordActivo.get('swice'));
-		
-		storeTipoAtencion.load({
-			params:{
-				'params.cdramo':_11_params.CDRAMO,
-				'params.cdtipsit':_cdtipAtencion,
-				'params.tipoPago':_tipoPago
-			}
-		});
-		panelInicialPral.down('combo[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));		// Tipo de servicio u atencion
-		panelInicialPral.down('[name=params.nfacturaOrig]').setValue(_11_recordActivo.get('factura'));			// No.de Factura original
-		//Valores de los descuentos Numerico y Porcentaje
-		if(_11_recordActivo.get('desctoNum').length == 0){
-			panelInicialPral.down('[name=params.descnume]').setValue("0.00");
-		}else{
-			panelInicialPral.down('[name=params.descnume]').setValue(_11_recordActivo.get('desctoNum'));
-		}
-		if(_11_recordActivo.get('desctoPorc').length == 0){
-			panelInicialPral.down('[name=params.descporc]').setValue("0.00");
-		}else{
-			panelInicialPral.down('[name=params.descporc]').setValue(_11_recordActivo.get('desctoPorc'));
-		}
-		
-		panelInicialPral.down('combo[name=params.tipoMoneda]').setValue(_11_recordActivo.get('cdmoneda'));		// Tipo de moneda
-		
-		// Validamos si el tipo de moneda es pesos o diferente de ello
-		if(_11_recordActivo.get('cdmoneda') =="001"){
-			panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
-			panelInicialPral.down('[name=params.tasacamb]').setValue("0.00");
-			panelInicialPral.down('[name=params.ptimporta]').setValue("0.00");
-			panelInicialPral.down('[name=params.tasacamb]').hide();
-			panelInicialPral.down('[name=params.ptimporta]').hide();
-			
-		}else{
-			panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
-			panelInicialPral.down('[name=params.tasacamb]').setValue(_11_recordActivo.get('tasaCambio'));
-			panelInicialPral.down('[name=params.ptimporta]').setValue(_11_recordActivo.get('ptimporta'));
-			panelInicialPral.down('[name=params.tasacamb]').show();
-			panelInicialPral.down('[name=params.ptimporta]').show();
-		}
-		
-		storeAseguradoFactura.removeAll();
-		cargarPaginacion(_11_recordActivo.get('ntramite'),_11_recordActivo.get('factura'));
-		
-		//Realizamos la consulta para validar la aplicacion de los IVA, Sec. del IVA y Aplicacion del IVA Retenido
-		Ext.Ajax.request({
-			url	 : _URL_DATOS_VALIDACION
-			,params:{
-				'params.ntramite'  : _11_recordActivo.get('ntramite')
-				,'params.nfactura' : _11_recordActivo.get('factura')
-				,'params.tipoPago' : _tipoPago
-			}
-			,success : function (response) {
-				if(Ext.decode(response.responseText).datosValidacion != null){
-					var aplicaIVA       = null;
-					var ivaRetenido     = null;
-					var ivaAntesDespues = null;
-					var autAR 			= null;
-					var autAM 			= null;
-					var commAR 			= null;
-					var commAM 			= null;
-					var json=Ext.decode(response.responseText).datosValidacion;
-					if(json.length > 0){
-						aplicaIVA = json[0].OTVALOR01;
-						ivaAntesDespues = json[0].OTVALOR02;
-						ivaRetenido = json[0].OTVALOR03;
-						
-						for(var i = 0; i < json.length; i++){
-							if(json[i].AREAAUTO =="ME"){
-								autAM = json[i].SWAUTORI;
-								commAM = json[i].COMENTARIOS;
-							}
-							if(json[i].AREAAUTO =="RE"){
-								autAR = json[i].SWAUTORI;
-								commAR = json[i].COMENTARIOS;
-							}
-						}
-					}
-					/*REALIZAMOS LA ASIGNACIÓN DE LAS VARIABLES*/
-					panelInicialPral.down('[name="params.autrecla"]').setValue("S");
-					panelInicialPral.down('[name="params.autrecla"]').hide();
-					if(aplicaIVA == null){
-						if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION || _tipoPago == _TIPO_PAGO_REEMBOLSO){
-							panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("N");
-						}else{
-							panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("S");
-						}
-					}else{
-						panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue(aplicaIVA);
-					}
-					if(ivaAntesDespues == null){
-						panelInicialPral.down('[name="parametros.pv_otvalor02"]').setValue("D");
-					}else{
-						panelInicialPral.down('[name="parametros.pv_otvalor02"]').setValue(ivaAntesDespues);
-					}
-					if(ivaRetenido == null){
-						panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue("N");
-					}else{
-						panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue(ivaRetenido);
-					}
-					
-					if(commAR == null){
-						panelInicialPral.down('[name="params.commenar"]').setValue(null);
-					}else{
-						panelInicialPral.down('[name="params.commenar"]').setValue(commAR);
-					}
-					if(autAM == null){
-						panelInicialPral.down('[name="params.autmedic"]').setValue(null);
-					}else{
-						panelInicialPral.down('[name="params.autmedic"]').setValue(autAM);
-					}
-					if(commAM == null){
-						panelInicialPral.down('[name="params.commenme"]').setValue(null);
-					}else{
-						panelInicialPral.down('[name="params.commenme"]').setValue(commAM);
-					}
-				}
-			},
-			failure : function (){
-				//me.up().up().setLoading(false);
-				Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				});
-			}
-		});
-		
-		storeCobertura.proxy.extraParams= {
-			'params.ntramite':_11_recordActivo.get('ntramite')
-			,'params.tipopago':_tipoPago
-			,catalogo		: _CATALOGO_COB_X_VALORES
-		};
-		
-		storeCobertura.load({
-			params:{
-				'params.ntramite':_11_recordActivo.get('ntramite'),
-				'params.tipopago':_tipoPago
-			}
-		});
-		
-		panelInicialPral.down('[name=params.cdgarant]').setValue(_11_recordActivo.get('cdgarant'));
-		
-		storeSubcobertura.load({
-			params:{
-				'params.cdgarant' :_11_recordActivo.get('params.cdgarant')
-			}
-		});
-		panelInicialPral.down('combo[name=params.cdconval]').setValue(_11_recordActivo.get('cdconval'));
-	}
-
-	//6.- Agregar asegurados
-	function _p21_agregarAsegurado(){
-		centrarVentanaInterna(ventanaAgregarAsegurado.show());
-	}
-	
-	//7.- Generar Calculos
-	function _p21_generarCalculo(){
-		gridFacturaDirecto.setLoading(true);
-		Ext.Ajax.request( {
-			url	 : _URL_GENERAR_CALCULO
-			,params:{
-				'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue()
-			}
-			,success : function (response) {
-				
-				Ext.Ajax.request({
-					url	 : _URL_VALIDA_IMP_ASEGSINIESTRO
-					,params:{
-						'params.tipopago'  : _tipoPago,
-		                'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
-		                'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue()
-					}
-					,success : function (response) {
-		                var validacionMensaje = Ext.decode(response.responseText).datosValidacion;
-		                var resultMsj= "";
-		                var banderaresultMsj = 0;
-		                if(validacionMensaje.length > 0){
-		                	for(var i = 0; i < validacionMensaje.length; i++){
-								banderaresultMsj = "1";
-								resultMsj = resultMsj + 'El siniestro '+ validacionMensaje[i].SINIESTRO+' de la Factura '+validacionMensaje[i].FACTURA+ ' el importe es negativo. <br/>';
-							}
-							resultMsj = resultMsj+'Favor de corregir el importe para poder continuar.<br/>';
-							
-							if(banderaresultMsj == "1"){
-								centrarVentanaInterna(mensajeWarning(resultMsj));
-							}
-		                }		                
-		                gridFacturaDirecto.setLoading(false);
-					 	cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-						
-						panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
-						panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
-						obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
-					},
-					failure : function () {
-						gridFacturaDirecto.setLoading(false);
-						Ext.Msg.show({
-							title:'Error',
-							msg: 'Error de comunicaci&oacute;n',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						});
-					}
-				});
-			},
-			failure : function () {
-				gridFacturaDirecto.setLoading(false);
-				Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				});
-			}
-		});		
-	}
-	
-	//8.-Revision de Documentos
-	function revisarDocumento(grid,rowIndex) {
-		var record = grid.getStore().getAt(rowIndex);
-		var valido = true;
-		Ext.Ajax.request( {
-			url	: _11_URL_REQUIEREAUTSERV
-			,params:{
-				'params.cobertura': null,
-				'params.subcobertura': null,
-				'params.cdramo': record.raw.CDRAMO,
-				'params.cdtipsit': record.raw.CDTIPSIT
-			}
-			,success : function (response) {
-				var idReclamacion = record.raw.NMSINIES;
-				debug(idReclamacion);
-				valido = idReclamacion && idReclamacion>0;
-				if(!valido){
-					//Preguntamos si esta seguro de generar el siniestro
-					msgWindow = Ext.Msg.show({
-						title: 'Aviso',
-						msg: '&iquest;Desea asociar el asegurado con la autorizaci&oacute;n de Servicio ?',
-						buttons: Ext.Msg.YESNO,
-						icon: Ext.Msg.QUESTION,
-						fn: function(buttonId, text, opt){
-							if(buttonId == 'no'){
-								var json = {
-									'params.ntramite'		: panelInicialPral.down('[name=params.ntramite]').getValue(),
-									'params.cdunieco'		: record.raw.CDUNIECO,
-									'params.cdramo'   		: record.raw.CDRAMO,
-									'params.estado'   		: record.raw.ESTADO,
-									'params.nmpoliza' 		: record.raw.NMPOLIZA,
-									'params.nmsuplem' 		: record.raw.NMSUPLEM,
-									'params.nmsituac' 		: record.raw.NMSITUAC,
-									'params.cdtipsit' 		: record.raw.CDTIPSIT,
-									'params.dateOcurrencia' : record.raw.FEOCURRE,
-									'params.nfactura' 		: panelInicialPral.down('[name=params.nfactura]').getValue(),
-									'params.secAsegurado'   : record.raw.SECTWORKSIN
-								};
-								Ext.Ajax.request( {
-									url	  : _11_URL_INICIARSINIESTROSINAUTSERV
-									,params  : json
-									,success : function(response) {
-										json = Ext.decode(response.responseText);
-										if(json.success==true){
-											_11_guardarInformacionAdicional();
-											mensajeCorrecto('Autorizaci&oacute;n',json.mensaje,function(){
-												storeAseguradoFactura.removeAll();
-												cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-											});
-										}else{
-											mensajeError(json.mensaje);
-										}
-									}
-									,failure : function() {
-										errorComunicacion();
-									}
-								});
-							}
-							if(buttonId == 'yes'){
-								var valido = true;
-								var nAut = record.get('NoAutorizacion');
-								valido = nAut && nAut>0;
-								if(!valido){
-									_11_pedirAutorizacion(record);
-								}
-								debug('!_11_validaAutorizacion: ',valido?'si':'no');
-								return valido;
-							}
-						}
-					});
-					centrarVentana(msgWindow);
-				}
-				
-				if(valido) {
-					valido = record.get('VoBoAuto')!='n'&&record.get('VoBoAuto')!='N';
-					if(!valido) {
-						mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno autom&aacute;tico');
-					}
-				}
-				
-				if(valido) {
-				windowLoader = Ext.create('Ext.window.Window',{
-						modal	   : true,
-						buttonAlign : 'center',
-						title: 'Informaci&oacute;n general',
-						width	   : 800,
-						height	  : 450,
-						autoScroll  : true,
-						loader	  : {
-							url	 : _URL_TABBEDPANEL
-							,params		 :
-							{
-								'params.ntramite'  	: panelInicialPral.down('[name=params.ntramite]').getValue()
-								,'params.cdunieco' 	: record.raw.CDUNIECO
-								,'params.cdramo'   	: record.raw.CDRAMO
-								,'params.estado'   	: record.raw.ESTADO
-								,'params.nmpoliza' 	: record.raw.NMPOLIZA
-								,'params.nmsuplem' 	: record.raw.NMSUPLEM
-								,'params.nmsituac' 	: record.raw.NMSITUAC
-								,'params.aaapertu' 	: record.raw.AAAPERTU
-								,'params.status'   	: record.raw.STATUS
-								,'params.nmsinies'	: record.raw.NMSINIES
-								,'params.cdtipsit' 	: record.raw.CDTIPSIT
-								,'params.cdrol'		: _CDROL
-								,'params.tipopago' 	: _tipoPago
-							},
-							scripts  : true,
-							loadMask : true,
-							autoLoad : true,
-							ajaxOptions: {
-								method: 'POST'
-							}
-						}
-					}).show();
-					centrarVentanaInterna(windowLoader);
-				}
-			},
-			failure : function ()
-			{
-				Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				});
-			}
-		});
-	}
-	//9.-Guarda la informacion Adicional - Siniestro sin autorizacion de servicio
-	function _11_guardarInformacionAdicional(){
-		panelInicialPral.form.submit({
-			waitMsg:'Procesando...',	
-			url: _URL_GUARDA_CAMBIOS_FACTURA,
-			failure: function(form, action) {
-				centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
-			},
-			success: function(form, action) {
-				storeAseguradoFactura.removeAll();
-				cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-			}
-		});
-	}
-	
-	//10.-Muestra el listado de las autorizaciones disponibles para el asegurado
-	function _11_pedirAutorizacion(record) {
-		_11_recordActivo = record;
-		_11_textfieldAsegurado.setValue(_11_recordActivo.get('NOMBRE'));
-		var params = {
-				'params.cdperson'	:	_11_recordActivo.get('CDPERSON')
-		};
-		cargaStorePaginadoLocal(storeListadoAutorizacion, _URL_LISTA_AUTSERVICIO, 'datosInformacionAdicional', params, function(options, success, response){
-			if(success){
-				var jsonResponse = Ext.decode(response.responseText);
-				if(jsonResponse.datosInformacionAdicional.length <= 0) {
-					storeConceptos.removeAll();
-					banderaConcepto = 0;
-					banderaAsegurado = 0;
-					storeAseguradoFactura.removeAll();
-					cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-					centrarVentanaInterna(Ext.Msg.show({ 
-						title: 'Aviso',
-						msg: 'No existen autorizaci&oacute;n para el asegurado elegido.',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.WARNING
-					}));
-				}else{
-					_11_windowPedirAut.show();
-					_11_textfieldNmautserv.setValue('');
-					centrarVentanaInterna(_11_windowPedirAut);
-				}
-			}else{
-				Ext.Msg.show({
-					title: 'Aviso',
-					msg: 'Error al obtener los datos.',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-					});
-			}
-		});
-	}
-	
-	/*11.- Guardamos los datos complementarios del Asegurado cuando realizamos 
-	       cambios del asegurado Causa Siniestro, ICD,Cobertura,Subcobertura
-  	*/
-	function guardarDatosComplementarios(grid,rowIndex){
-		var record = grid.getStore().getAt(rowIndex);
-		banderaAsegurado = 0;
-		guardaDatosComplementariosAsegurado(record, banderaAsegurado);
-	}
-	
-	function guardaDatosComplementariosAsegurado(record, banderaAsegurado){
-        debug("VALOR DEL RECORD ==> ",record);
-        var cdramo     = record.data.CDRAMO;
-        var idICD      = record.data.CDICD;
-        var idCdgarant = record.data.CDGARANT;
-        var idConval   = record.data.CDCONVAL;
-        var idcausa    = record.data.CDCAUSA;
-        var cdtipsit   = record.data.CDTIPSIT;
-        var tipoEvento = record.data.FLAGTIPEVE;
-        var tipoAlta   = record.data.FLAGTIPALT;
-        var fecha1 = Ext.Date.format(record.data.FEINGRESO, 'd/m/Y');
-        var fecha2 = Ext.Date.format(record.data.FEEGRESO, 'd/m/Y');
+        if(valido) {
+            var json = {
+                'params.nmautser'       : _11_textfieldNmautserv.getValue()
+                ,'params.nmpoliza'      : _11_recordActivo.get('NMPOLIZA')
+                ,'params.cdperson'      : _11_recordActivo.get('CDPERSON')
+                ,'params.ntramite'      : panelInicialPral.down('[name=params.ntramite]').getValue()
+                ,'params.nfactura'      : panelInicialPral.down('[name=params.nfactura]').getValue()
+                ,'params.feocurrencia'  : _11_recordActivo.get('FEOCURRE')
+                ,'params.cdunieco'      : _11_recordActivo.get('CDUNIECO')
+                ,'params.cdramo'        : _11_recordActivo.get('CDRAMO')
+                ,'params.estado'        : _11_recordActivo.get('ESTADO')
+                ,'params.cdpresta'      : panelInicialPral.down('combo[name=params.cdpresta]').getValue(),
+                'params.secAsegurado'   : _11_recordActivo.get('SECTWORKSIN')
+            };
+            
+            gridFacturaDirecto.setLoading(true);
+            _11_windowPedirAut.close();
+            Ext.Ajax.request( {
+                url   : _11_URL_INICIARSINIESTROTWORKSIN
+                ,params  : json
+                ,success : function(response) {
+                    json = Ext.decode(response.responseText);
+                    debug("Valor de respuesta del guardado ===>>",json);
+                    if(json.success==true) {
+                        _11_guardarInformacionAdicional();
+                        gridFacturaDirecto.setLoading(false);
+                        mensajeCorrecto('Autorizaci&oacute;n Servicio',json.mensaje,function(){
+                            storeAseguradoFactura.removeAll();
+                            cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                        });
+                    }
+                    else {
+                        gridFacturaDirecto.setLoading(false);
+                        mensajeError(json.mensaje);
+                    }
+                }
+                ,failure : function() {
+                    gridFacturaDirecto.setLoading(false);
+                    errorComunicacion();
+                }
+            });
+        }
+    }
+    
+    //22.- Llamado para asociar una autorizacion o modificacion
+    function _11_modificarAutorizacion(record){
+        _11_recordActivo = record;
+        debug('_11_recordActivo:',_11_recordActivo.data);
         
-        //alert(fecha1+"  "+fecha2);
+        _11_textfieldAseguradoMod.setValue(_11_recordActivo.get('NOMBRE'));
+        var params = {
+                'params.cdperson'   :   _11_recordActivo.get('CDPERSON')
+        };
+        cargaStorePaginadoLocal(storeListadoAutorizacion, _URL_LISTA_AUTSERVICIO, 'datosInformacionAdicional', params, function(options, success, response){
+            if(success){
+                var jsonResponse = Ext.decode(response.responseText);
+                if(jsonResponse.datosInformacionAdicional.length <= 0) {
+                    storeConceptos.removeAll();
+                    storeAseguradoFactura.removeAll();
+                    banderaConcepto = 0;
+                    banderaAsegurado = 0;
+                    cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                    centrarVentanaInterna(Ext.Msg.show({ 
+                        title: 'Aviso',
+                        msg: 'No existen autorizaci&oacute;n para el asegurado elegido.',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.WARNING
+                    }));
+                }else{
+                    _11_windowModificarAut.show();
+                    _11_textfieldNmautservMod.setValue('');
+                    centrarVentanaInterna(_11_windowModificarAut);
+                }
+            }else{
+                Ext.Msg.show({
+                    title: 'Aviso',
+                    msg: 'Error al obtener los datos.',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
+        });
+    }
+        
+    //23.- Asociar autorizacion Nueva
+    function _11_asociarAutorizacionNueva(){
+        var valido = _11_formModificarAuto.isValid();
+        if(!valido) {
+            datosIncompletos();
+        }else{
+            _11_windowModificarAut.close();
+            guardaCambiosAutorizacionServ(_11_aseguradoSeleccionado, _11_textfieldNmautservMod.getValue(),"0","1");
+        }
+    }
+    
+    //23.1.-Guardar cambios autorizacion nueva
+    function guardaCambiosAutorizacionServ(record, numeroAutorizacion, tipoProceso, actMisiniper){
+        debug("Valores de entrada para el guardado ",record);
+        debug("Numero de Autorizacion : ",numeroAutorizacion);
+        debug("Actualiza  actMisiniper : ",actMisiniper);
+        gridFacturaDirecto.setLoading(true);
+        Ext.Ajax.request({
+            url     : _URL_CONSULTA_AUTORIZACION_ESP
+            ,params : {
+                'params.nmautser'  : numeroAutorizacion
+            }
+            ,success : function (response) {
+                var jsonAutServ = Ext.decode(response.responseText).datosAutorizacionEsp;
+                debug("jsonAutServ.feingres ==> "+jsonAutServ.feingres);
+                debug("jsonAutServ.idTipoEvento ==> "+jsonAutServ.idTipoEvento);
+                
+                debug("VALOR DE RESPUESTA :: ",jsonAutServ);
+                //4.- 
+                _11_guardarDatosComplementario(
+                    record.data.CDUNIECO,
+                    record.data.CDRAMO,
+                    record.data.ESTADO,
+                    record.data.NMPOLIZA,
+                    record.data.NMSUPLEM,
+                    record.data.AAAPERTU,
+                    record.data.NMSINIES,
+                    record.data.FEOCURRE,
+                    record.data.NMSINREF,
+                    jsonAutServ.cdicd,
+                    record.data.CDICD2,
+                    jsonAutServ.cdcausa,
+                    jsonAutServ.cdgarant,
+                    jsonAutServ.cdconval,
+                    jsonAutServ.nmautser,
+                    record.data.CDPERSON,
+                    tipoProceso,
+                    record.data.COMPLEMENTO,
+                    record.data.NMSITUAC,
+                    null,
+                    null,
+                    record.data.NMCALLCENTER,
+                    actMisiniper,
+                    jsonAutServ.feingres,
+                    null,
+                    jsonAutServ.idTipoEvento,
+                    null
+                );
+                gridFacturaDirecto.setLoading(false);
+            },
+            failure : function (){
+                gridFacturaDirecto.setLoading(false);
+                centrarVentanaInterna(Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                }));
+            }
+        });
+    }
+    
+    //24.- Require autorizacion especial
+    function reqAutorizacionEspecial(ntramite, tipoPago, nfactura, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, nmsinies, cdperson, cdtipsit){
+        setTimeout(function(){
+            windowAutEsp = Ext.create('Ext.window.Window',{
+                modal       : true,
+                buttonAlign : 'center',
+                title: 'Autorizaci&oacute;n Especial',
+                autoScroll  : true,
+                items       : [
+                    panelModificacion = Ext.create('Ext.form.Panel', {
+                        bodyPadding: 5,
+                        items: [
+                            {   xtype: 'numberfield'
+                                ,fieldLabel: 'N&uacute;mero de autorizaci&oacute;n'
+                                ,name       : 'txtAutEspecial'
+                                ,allowBlank : false
+                            }
+                        ],
+                        buttonAlign:'center',
+                        buttons: [
+                            {
+                                text: 'Aceptar'
+                                ,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+                                ,buttonAlign : 'center',
+                                handler: function() {
+                                    if (panelModificacion.form.isValid()) {
+                                        var datos=panelModificacion.form.getValues();
+                                        Ext.Ajax.request({
+                                            url     : _URL_VALIDA_AUTESPECIFICA
+                                            ,params:{
+                                                'params.ntramite'  : ntramite,
+                                                'params.tipoPago'  : tipoPago,
+                                                'params.nfactura'  : nfactura,
+                                                'params.cdunieco'  : cdunieco,
+                                                'params.cdramo'    : cdramo,
+                                                'params.estado'    : estado,
+                                                'params.nmpoliza'  : nmpoliza,
+                                                'params.nmsuplem'  : nmsuplem,
+                                                'params.nmsituac'  : nmsituac,
+                                                'params.nmautesp'  : datos.txtAutEspecial,
+                                                'params.nmsinies'  : nmsinies
+                                            }
+                                            ,success : function (response){
+                                                if(Ext.decode(response.responseText).validacionGeneral =="1"){
+                                                    //Exito y debe de dejar  pasar                                                  
+                                                    mensajeCorrecto('&Eacute;XITO','Se ha asociado correctamente.',function(){
+                                                        windowAutEsp.close();
+                                                        cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                                                    });
+                                                }else{
+                                                    mensajeError("Autorizaci&oacute;n especial no valida para este tr&aacute;mite.");
+                                                }
+                                            },
+                                            failure : function (){
+                                                me.up().up().setLoading(false);
+                                                centrarVentanaInterna(Ext.Msg.show({
+                                                    title:'Error',
+                                                    msg: 'Error de comunicaci&oacute;n',
+                                                    buttons: Ext.Msg.OK,
+                                                    icon: Ext.Msg.ERROR
+                                                }));
+                                            }
+                                        });
+                                    }else {
+                                        Ext.Msg.show({
+                                            title: 'Aviso',
+                                            msg: 'Complete la informaci&oacute;n requerida',
+                                            buttons: Ext.Msg.OK,
+                                            icon: Ext.Msg.WARNING
+                                        });
+                                    }
+                                }
+                            },{
+                                text: 'Cancelar',
+                                icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+                                buttonAlign : 'center',
+                                handler: function() {
+                                    windowAutEsp.close();
+                                    cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                                }
+                            }
+                        ]
+                    })  
+                ],
+                listeners:{
+                     close:function(){
+                         if(true){
+                             cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                         }
+                     }
+                }
+            });
+            centrarVentana(windowAutEsp.show());
+        },100);
+        
+    }
+    
+    //25.- Editar Factura
+    function _11_editar(grid,rowindex){
+        _11_recordActivo = grid.getStore().getAt(rowindex);
+        debug("Valor de respuesta _11_recordActivo :) ====>>>> ",_11_recordActivo);
+        
+        _11_llenaFormulario();
+        modPolizasAltaTramite.show();
+        centrarVentanaInterna(modPolizasAltaTramite);
+    }
+    
+    //25.1.- LLenamos el formulario de los detalles de la factura
+    function _11_llenaFormulario(){
+        var valorRequerido = true;
+        Ext.getCmp('historialCPT').disable();
+        obtenerTotalPagos(_11_recordActivo.get('ntramite'), _11_recordActivo.get('factura'));
+    
+        if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION){
+            gridEditorConceptos.hide();                                         // Grid De los conceptos  Ocultos
+            gridEditorCoberturaRecupera.hide();                                 // Grid De los conceptos  Recupera Ocultos
+            panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();   // Aplica IVA oculto
+            panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();   // Sec. de IVA oculto
+            panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();   // Aplica IVA Retenido oculto
+            panelInicialPral.down('combo[name=params.swAplicaisr]').hide();
+            panelInicialPral.down('combo[name=params.swAplicaice]').hide();
+            if(_11_params.CDRAMO == _RECUPERA){
+                gridEditorCoberturaRecupera.show();                             // Grid De los conceptos  Recupera visibles
+                panelInicialPral.down('[name=params.diasdedu]').hide();         // Dias deducible oculto
+                valorRequerido = true;
+            }else{
+                panelInicialPral.down('[name=params.diasdedu]').show();         // Dias deducible visible
+                valorRequerido = false;
+            }
+            
+        }else if(_tipoPago ==_TIPO_PAGO_REEMBOLSO){
+            gridEditorConceptos.show();                                         // Grid De los conceptos  visible
+            gridEditorCoberturaRecupera.hide();                                 // Grid De los conceptos  Recupera Ocultos
+            panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();   // Aplica IVA oculto
+            panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();   // Sec. de IVA oculto
+            panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();   // Aplica IVA Retenido oculto
+            panelInicialPral.down('[name=params.diasdedu]').hide();             // Dias deducible oculto
+            panelInicialPral.down('combo[name=params.swAplicaisr]').hide();
+            panelInicialPral.down('combo[name=params.swAplicaice]').hide();
+            valorRequerido = true;
+        }else{
+            gridEditorConceptos.show();                                         // Grid De los conceptos  visible
+            gridEditorCoberturaRecupera.hide();                                 // Grid De los conceptos  Recupera Ocultos
+            panelInicialPral.down('[name="parametros.pv_otvalor01"]').show();   // Aplica IVA
+            panelInicialPral.down('[name="parametros.pv_otvalor02"]').show();   // Sec. de IVA
+            panelInicialPral.down('[name="parametros.pv_otvalor03"]').show();   // Aplica IVA Retenido
+            panelInicialPral.down('[name=params.diasdedu]').hide();             // Dias deducible oculto
+            panelInicialPral.down('combo[name=params.swAplicaisr]').show();
+            panelInicialPral.down('combo[name=params.swAplicaice]').show();
+            valorRequerido = true;
+        }
+        
+        panelInicialPral.down('[name=params.contrarecibo]').setValue(_11_recordActivo.get('contraRecibo'));     // ContraRecibo
+        panelInicialPral.down('[name=params.ntramite]').setValue(_11_recordActivo.get('ntramite'));             // Tramite
+        panelInicialPral.down('[name=params.nfactura]').setValue(_11_recordActivo.get('factura'));              // No. Factura
+        panelInicialPral.down('[name=params.fefactura]').setValue(_11_recordActivo.get('fechaFactura'));        // Fecha de Factura
+        panelInicialPral.down('[name=params.feegreso]').setValue(_11_recordActivo.get('fechaFactura'));         // Fecha Egreso
+        panelInicialPral.down('[name=params.diasdedu]').setValue(_11_recordActivo.get('diasdedu'));             // Dias Deducible
+        //De acuerdo al tipo de producto se valida si es o no requerido los dias de deducible
+        panelInicialPral.down('[name=params.diasdedu]').allowBlank = valorRequerido;
+        //Proveedor
+        storeProveedor.load();
+        panelInicialPral.down('combo[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
+        
+        panelInicialPral.down('combo[name=params.swAplicaisr]').setValue(_11_recordActivo.get('swisr'));
+        panelInicialPral.down('combo[name=params.swAplicaice]').setValue(_11_recordActivo.get('swice'));
+        
+        storeTipoAtencion.load({
+            params:{
+                'params.cdramo':_11_params.CDRAMO,
+                'params.cdtipsit':_cdtipAtencion,
+                'params.tipoPago':_tipoPago
+            }
+        });
+        panelInicialPral.down('combo[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));        // Tipo de servicio u atencion
+        panelInicialPral.down('[name=params.nfacturaOrig]').setValue(_11_recordActivo.get('factura'));          // No.de Factura original
+        //Valores de los descuentos Numerico y Porcentaje
+        if(_11_recordActivo.get('desctoNum').length == 0){
+            panelInicialPral.down('[name=params.descnume]').setValue("0.00");
+        }else{
+            panelInicialPral.down('[name=params.descnume]').setValue(_11_recordActivo.get('desctoNum'));
+        }
+        if(_11_recordActivo.get('desctoPorc').length == 0){
+            panelInicialPral.down('[name=params.descporc]').setValue("0.00");
+        }else{
+            panelInicialPral.down('[name=params.descporc]').setValue(_11_recordActivo.get('desctoPorc'));
+        }
+        
+        panelInicialPral.down('combo[name=params.tipoMoneda]').setValue(_11_recordActivo.get('cdmoneda'));      // Tipo de moneda
+        
+        // Validamos si el tipo de moneda es pesos o diferente de ello
+        if(_11_recordActivo.get('cdmoneda') =="001"){
+            panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
+            panelInicialPral.down('[name=params.tasacamb]').setValue("0.00");
+            panelInicialPral.down('[name=params.ptimporta]').setValue("0.00");
+            panelInicialPral.down('[name=params.tasacamb]').hide();
+            panelInicialPral.down('[name=params.ptimporta]').hide();
+            
+        }else{
+            panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
+            panelInicialPral.down('[name=params.tasacamb]').setValue(_11_recordActivo.get('tasaCambio'));
+            panelInicialPral.down('[name=params.ptimporta]').setValue(_11_recordActivo.get('ptimporta'));
+            panelInicialPral.down('[name=params.tasacamb]').show();
+            panelInicialPral.down('[name=params.ptimporta]').show();
+        }
+        
+        storeAseguradoFactura.removeAll();
+        cargarPaginacion(_11_recordActivo.get('ntramite'),_11_recordActivo.get('factura'));
+        
+        //Realizamos la consulta para validar la aplicacion de los IVA, Sec. del IVA y Aplicacion del IVA Retenido
+        Ext.Ajax.request({
+            url  : _URL_DATOS_VALIDACION
+            ,params:{
+                'params.ntramite'  : _11_recordActivo.get('ntramite')
+                ,'params.nfactura' : _11_recordActivo.get('factura')
+                ,'params.tipoPago' : _tipoPago
+            }
+            ,success : function (response) {
+                if(Ext.decode(response.responseText).datosValidacion != null){
+                    var aplicaIVA       = null;
+                    var ivaRetenido     = null;
+                    var ivaAntesDespues = null;
+                    var autAR           = null;
+                    var autAM           = null;
+                    var commAR          = null;
+                    var commAM          = null;
+                    var json=Ext.decode(response.responseText).datosValidacion;
+                    if(json.length > 0){
+                        aplicaIVA = json[0].OTVALOR01;
+                        ivaAntesDespues = json[0].OTVALOR02;
+                        ivaRetenido = json[0].OTVALOR03;
+                        
+                        for(var i = 0; i < json.length; i++){
+                            if(json[i].AREAAUTO =="ME"){
+                                autAM = json[i].SWAUTORI;
+                                commAM = json[i].COMENTARIOS;
+                            }
+                            if(json[i].AREAAUTO =="RE"){
+                                autAR = json[i].SWAUTORI;
+                                commAR = json[i].COMENTARIOS;
+                            }
+                        }
+                    }
+                    /*REALIZAMOS LA ASIGNACIÓN DE LAS VARIABLES*/
+                    panelInicialPral.down('[name="params.autrecla"]').setValue("S");
+                    panelInicialPral.down('[name="params.autrecla"]').hide();
+                    if(aplicaIVA == null){
+                        if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION || _tipoPago == _TIPO_PAGO_REEMBOLSO){
+                            panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("N");
+                        }else{
+                            panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("S");
+                        }
+                    }else{
+                        panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue(aplicaIVA);
+                    }
+                    if(ivaAntesDespues == null){
+                        panelInicialPral.down('[name="parametros.pv_otvalor02"]').setValue("D");
+                    }else{
+                        panelInicialPral.down('[name="parametros.pv_otvalor02"]').setValue(ivaAntesDespues);
+                    }
+                    if(ivaRetenido == null){
+                        panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue("N");
+                    }else{
+                        panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue(ivaRetenido);
+                    }
+                    
+                    if(commAR == null){
+                        panelInicialPral.down('[name="params.commenar"]').setValue(null);
+                    }else{
+                        panelInicialPral.down('[name="params.commenar"]').setValue(commAR);
+                    }
+                    if(autAM == null){
+                        panelInicialPral.down('[name="params.autmedic"]').setValue(null);
+                    }else{
+                        panelInicialPral.down('[name="params.autmedic"]').setValue(autAM);
+                    }
+                    if(commAM == null){
+                        panelInicialPral.down('[name="params.commenme"]').setValue(null);
+                    }else{
+                        panelInicialPral.down('[name="params.commenme"]').setValue(commAM);
+                    }
+                }
+            },
+            failure : function (){
+                //me.up().up().setLoading(false);
+                Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
+        });
+        
+        storeCobertura.proxy.extraParams= {
+            'params.ntramite':_11_recordActivo.get('ntramite')
+            ,'params.tipopago':_tipoPago
+            ,catalogo       : _CATALOGO_COB_X_VALORES
+        };
+        
+        storeCobertura.load({
+            params:{
+                'params.ntramite':_11_recordActivo.get('ntramite'),
+                'params.tipopago':_tipoPago
+            }
+        });
+        
+        panelInicialPral.down('[name=params.cdgarant]').setValue(_11_recordActivo.get('cdgarant'));
+        
+        storeSubcobertura.load({
+            params:{
+                'params.cdgarant' :_11_recordActivo.get('params.cdgarant')
+            }
+        });
+        panelInicialPral.down('combo[name=params.cdconval]').setValue(_11_recordActivo.get('cdconval'));
+    }
+    
+    //26.- Obtenemos la Suma Asegurada para Gastos Medicos Mayores
+    function obtenerSumaAseguradaMontoGastados (cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdgarant, cdconval, 
+            cdperson, nmsinref, totalConsumido, nmsinies, valSesion){
+        
+        if(valSesion =="1"){
+            //MULTISALUD INFONAVIT
+            panelComplementos.down('[name=params.sumaAsegurada]').hide();
+            panelComplementos.down('[name=params.sumaGastada]').hide();
+            panelComplementos.down('[name=params.sublimite]').show();
+            panelComplementos.down('[name=params.pagado]').show();
+            panelComplementos.down('[name=params.disponibleCob]').show();
+            Ext.Ajax.request({
+                url     :   _URL_VALIDACION_CONSULTA
+                ,params :   {
+                    'params.cdunieco'  : cdunieco,
+                    'params.cdramo'    : cdramo,
+                    'params.estado'    : estado,
+                    'params.nmpoliza'  : nmpoliza,
+                    'params.nmsuplem'  : nmsuplem,
+                    'params.nmsituac'  : nmsituac,
+                    'params.cdgarant'  : cdgarant,
+                    'params.cdconval'  : cdconval,
+                    'params.nmsinies'  : nmsinies
+                }
+                ,success : function (response){
+                    var jsonResp = Ext.decode(response.responseText);
+                    debug("Valor de Respuesta ===>",jsonResp);
+                    if(jsonResp.success == true){
+                        var infonavit = Ext.decode(response.responseText).datosInformacionAdicional[0];
+                        var consultasTotales = infonavit.NO_CONSULTAS;
+                        var limiteTotal      = infonavit.OTVALOR04;
+                        var maxConsulta      = infonavit.OTVALOR07;
+                        var diferenciador    = infonavit.OTVALOR15;
+                        panelComplementos.down('[name=params.sublimite]').setValue(limiteTotal);
+                        panelComplementos.down('[name=params.pagado]').setValue(infonavit.IMPGASTADOCOB);
+                        panelComplementos.down('[name=params.disponibleCob]').setValue(+limiteTotal - +infonavit.IMPGASTADOCOB);
+                    }else{
+                        maxconsultas = jsonResp.success;
+                        centrarVentanaInterna(Ext.Msg.show({
+                            title:'Error',
+                            msg: jsonRes.mensaje,
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        }));
+                    }
+                },
+                failure : function (){
+                    centrarVentanaInterna(Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error de comunicaci&oacute;n',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    }));
+                }
+            });
+            
+        }else if(valSesion =="2"){
+            // GASTOS MEDICOS MAYORES
+            panelComplementos.down('[name=params.sumaAsegurada]').show();
+            panelComplementos.down('[name=params.sumaGastada]').show();
+            panelComplementos.down('[name=params.sublimite]').hide();
+            panelComplementos.down('[name=params.pagado]').hide();
+            panelComplementos.down('[name=params.disponibleCob]').hide();
+            
+            Ext.Ajax.request( {
+                url  : _URL_OBTENER_SUMAASEGURADA
+                ,params:{
+                    'params.cdunieco'   : cdunieco
+                    ,'params.cdramo'    : cdramo
+                    ,'params.estado'    : estado
+                    ,'params.nmpoliza'  : nmpoliza
+                    ,'params.cdperson'  : cdperson
+                    ,'params.nmsinref'  : nmsinref
+                }
+                ,success : function (response){
+                    var jsonResponse  = Ext.decode(response.responseText).datosValidacion[0];
+                    var sumAsegurada  = jsonResponse.SUMA_ASEGURADA;
+                    var sumDisponible = jsonResponse.RESERVA_DISPONIBLE;
+                    
+                    var sumaConceptos = (+sumDisponible) - (+ totalConsumido);
+                    
+                    panelComplementos.down('[name=params.sumaAsegurada]').setValue(sumAsegurada);
+                    panelComplementos.down('[name=params.sumaGastada]').setValue(sumaConceptos);
+                },
+                failure : function () {
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error de comunicaci&oacute;n',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    });
+                }
+            });
+        }else{
+            //TODOS DIFERENTES
+            panelComplementos.down('[name=params.sumaAsegurada]').hide();
+            panelComplementos.down('[name=params.sumaGastada]').hide();
+            panelComplementos.down('[name=params.sublimite]').hide();
+            panelComplementos.down('[name=params.pagado]').hide();
+            panelComplementos.down('[name=params.disponibleCob]').hide();
+        }
+    }
+    
+    //27.- Guardamos los datos complementarios del Asegurado cuando realizamos cambios del asegurado Causa Siniestro, ICD,Cobertura,Subcobertura
+    function guardarDatosComplementarios(grid,rowIndex){
+        var record = grid.getStore().getAt(rowIndex);
+        banderaAsegurado = 0;
+        guardaDatosComplementariosAsegurado(record, banderaAsegurado);
+    }
+    
+    //27.1.- Realizamos la validacion con respecto al OTVALOR19 y otvalor20 del mapa de coberturas
+    function guardaDatosComplementariosAsegurado(record, banderaAsegurado){
+        debug("VALOR DEL RECORD ==> ",record);
+        var tipoEvento  = record.data.FLAGTIPEVE;
+        var tipoAlta    = record.data.FLAGTIPALT;
+        var fecha1      = Ext.Date.format(record.data.FEINGRESO, 'd/m/Y');
+        var fecha2      = Ext.Date.format(record.data.FEEGRESO, 'd/m/Y');
         var maxconsultas= true;
         var procesoVal  = true;
         var mensajeGral = "";
         if(tipoEvento =="1"){
-        	if(record.data.CDTIPEVE.length <= 0){
-        		procesoVal = false;
-        		mensajeGral = "Selecciona el tipo de Evento. <br/>";
-        	}
+            if(record.data.CDTIPEVE.length <= 0){
+                procesoVal = false;
+                mensajeGral = "Selecciona el tipo de Evento. <br/>";
+            }
         }
         
         if(tipoAlta =="1"){
-        	if(record.data.CDTIPALT.length <= 0){
-            	procesoVal = false;
+            if(record.data.CDTIPALT.length <= 0){
+                procesoVal = false;
                 mensajeGral = mensajeGral + "Selecciona el tipo de Alta. <br/>";
             }
             if(fecha1.length <= 0){
@@ -6015,7 +6571,7 @@
                 mensajeGral = mensajeGral + "La fecha de ingreso no puede ser vac&iacute;a. <br/>";
             }
             if(fecha2.length <= 0){
-            	procesoVal = false;
+                procesoVal = false;
                 mensajeGral = mensajeGral + "La fecha de egreso no puede ser vac&iacute;a. <br/>";
             }
             
@@ -6026,7 +6582,7 @@
         }
         
         if(procesoVal == true){
-        	if(fecha1.length > 0){
+            if(fecha1.length > 0){
                 if(fecha2 <= 0){
                     procesoVal = false;
                     mensajeGral = mensajeGral + "La fecha de egreso no puede ser vac&iacute;a. <br/>";
@@ -6039,1011 +6595,398 @@
         }
         
         if(procesoVal == false){
-        	mensajeWarning(mensajeGral);
+            mensajeWarning(mensajeGral);
         }else{
-        	guardaDatosComplementariosAsegurado2(record, banderaAsegurado);
+            guardaDatosComplementariosValidacionAsegurado(record, banderaAsegurado);
         }
 
-	}
-	//12.-Guardamos los datos complementarios del Asegurado
-	function guardaDatosComplementariosAsegurado2(record, banderaAsegurado){
-		debug("VALOR DEL RECORD ==> ",record);
-		
-		var cdramo     = record.data.CDRAMO;
-		var idICD      = record.data.CDICD;
-		var idCdgarant = record.data.CDGARANT;
-		var idConval   = record.data.CDCONVAL;
-		var idcausa    = record.data.CDCAUSA;
-		var cdtipsit   = record.data.CDTIPSIT;
-		var maxconsultas= true;
-		//Realizamos la validacion con la tabla de apoyo para saber si se realiza la validacion de las consultas
-		if(idICD.length > 0 && idCdgarant.length > 0 && idConval.length > 0 && idcausa.length > 0){
-			var valorRegistro = "1";
-			if(banderaAsegurado == "1"){
-				valorRegistro = "0";
-			}
-			
-			Ext.Ajax.request({
-				url     : _URL_VAL_CONDICIONGRAL
-				,params : {
-					'params.cdramo'   : cdramo,
-					'params.cdtipsit' : cdtipsit,
-					'params.causaSini': 'VALGRAL',
-					'params.cveCausa' : '1'
-				}
-				,success : function (response){
-					var datosExtras = Ext.decode(response.responseText);
-					
-					if(Ext.decode(response.responseText).datosInformacionAdicional != null){
-						var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
-						debug("cveCauSini.REQVALIDACION ==>",cveCauSini.REQVALIDACION,"cveCauSini.REQCONSULTAS ===>",cveCauSini.REQCONSULTAS);
-						if(cveCauSini.REQCONSULTAS =="S"){//2.- No. de Consultas
-							Ext.Ajax.request({
-								url		:	_URL_VALIDACION_CONSULTA
-								,params	:	{
-									'params.cdunieco'  : record.data.CDUNIECO,
-									'params.cdramo'    : record.data.CDRAMO,
-									'params.estado'    : record.data.ESTADO,
-									'params.nmpoliza'  : record.data.NMPOLIZA,
-									'params.nmsuplem'  : record.data.NMSUPLEM,
-									'params.nmsituac'  : record.data.NMSITUAC,
-									'params.cdgarant'  : record.data.CDGARANT,
-									'params.cdconval'  : record.data.CDCONVAL,
-									'params.nmsinies'  : record.data.NMSINIES
-								}
-								,success : function (response){
-									var jsonRes = Ext.decode(response.responseText);
-									debug("Valor de Respuesta ===>",jsonRes);
-									if(jsonRes.success == true){
-										var infonavit = Ext.decode(response.responseText).datosInformacionAdicional[0];
-										debug("infonavit 2 ===>",infonavit);
-										var consultasTotales = infonavit.NO_CONSULTAS;
-										var maxConsulta      = infonavit.OTVALOR07;
-										var diferenciador    = infonavit.OTVALOR15;
-										debug("consultasTotales 2 ==>",consultasTotales,"maxConsulta =>",maxConsulta);
-										debug("diferenciador 2 ==>",diferenciador);
-										
-										if(diferenciador == "MEI"){
-											if(+consultasTotales >= +maxConsulta){
-												maxconsultas = false;
-												centrarVentanaInterna(Ext.Msg.show({
-													   title: 'Aviso',
-													   msg: 'Se sobrepas&oacute; el n&uacute;mero m&aacute;ximo de servicios para este Asegurado.',
-													   buttons: Ext.Msg.OK,
-													   icon: Ext.Msg.WARNING
-												}));
-											}
-										}else{
-											if(+consultasTotales <= +maxConsulta){
-												maxconsultas = false;
-												centrarVentanaInterna(Ext.Msg.show({
-													   title: 'Aviso',
-													   msg: 'Se sobrepas&oacute; el n&uacote;mero m&aacute;ximo de servicios para este Asegurado.',
-													   buttons: Ext.Msg.OK,
-													   icon: Ext.Msg.WARNING
-												}));
-											}
-										}
-										
-										if(maxconsultas  == true){
-											//1.-
-											_11_guardarDatosComplementario(record.data.CDUNIECO,
-												record.data.CDRAMO,
-												record.data.ESTADO,
-												record.data.NMPOLIZA,
-												record.data.NMSUPLEM,
-												record.data.AAAPERTU,
-												record.data.NMSINIES,
-												record.data.FEOCURRE,
-												record.data.NMSINREF,
-												record.data.CDICD,
-												record.data.CDICD2,
-												record.data.CDCAUSA,
-												record.data.CDGARANT,
-												record.data.CDCONVAL,
-												record.data.NMAUTSER,
-												record.data.CDPERSON,
-												valorRegistro,
-												record.data.COMPLEMENTO,
-												record.data.NMSITUAC,
-												record.data.DEDUCIBLE,
-												record.data.COPAGO,
-												record.data.NMCALLCENTER,
-												"0",
-												Ext.Date.format(record.data.FEINGRESO, 'd/m/Y'),
+    }
+    
+    //27.2.-Guardamos los datos complementarios del Asegurado
+    function guardaDatosComplementariosValidacionAsegurado(record, banderaAsegurado){
+        debug("VALOR DEL RECORD ==> ",record);
+        
+        var cdramo     = record.data.CDRAMO;
+        var idICD      = record.data.CDICD;
+        var idCdgarant = record.data.CDGARANT;
+        var idConval   = record.data.CDCONVAL;
+        var idcausa    = record.data.CDCAUSA;
+        var cdtipsit   = record.data.CDTIPSIT;
+        var maxconsultas= true;
+        //Realizamos la validacion con la tabla de apoyo para saber si se realiza la validacion de las consultas
+        if(idICD.length > 0 && idCdgarant.length > 0 && idConval.length > 0 && idcausa.length > 0){
+            var valorRegistro = "1";
+            if(banderaAsegurado == "1"){
+                valorRegistro = "0";
+            }
+            
+            Ext.Ajax.request({
+                url     : _URL_VAL_CONDICIONGRAL
+                ,params : {
+                    'params.cdramo'   : cdramo,
+                    'params.cdtipsit' : cdtipsit,
+                    'params.causaSini': 'VALGRAL',
+                    'params.cveCausa' : '1'
+                }
+                ,success : function (response){
+                    var datosExtras = Ext.decode(response.responseText);
+                    
+                    if(Ext.decode(response.responseText).datosInformacionAdicional != null){
+                        var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
+                        debug("cveCauSini.REQVALIDACION ==>",cveCauSini.REQVALIDACION,"cveCauSini.REQCONSULTAS ===>",cveCauSini.REQCONSULTAS);
+                        if(cveCauSini.REQCONSULTAS =="S"){//2.- No. de Consultas
+                            Ext.Ajax.request({
+                                url     :   _URL_VALIDACION_CONSULTA
+                                ,params :   {
+                                    'params.cdunieco'  : record.data.CDUNIECO,
+                                    'params.cdramo'    : record.data.CDRAMO,
+                                    'params.estado'    : record.data.ESTADO,
+                                    'params.nmpoliza'  : record.data.NMPOLIZA,
+                                    'params.nmsuplem'  : record.data.NMSUPLEM,
+                                    'params.nmsituac'  : record.data.NMSITUAC,
+                                    'params.cdgarant'  : record.data.CDGARANT,
+                                    'params.cdconval'  : record.data.CDCONVAL,
+                                    'params.nmsinies'  : record.data.NMSINIES
+                                }
+                                ,success : function (response){
+                                    var jsonRes = Ext.decode(response.responseText);
+                                    debug("Valor de Respuesta ===>",jsonRes);
+                                    if(jsonRes.success == true){
+                                        var infonavit = Ext.decode(response.responseText).datosInformacionAdicional[0];
+                                        debug("infonavit 2 ===>",infonavit);
+                                        var consultasTotales = infonavit.NO_CONSULTAS;
+                                        var maxConsulta      = infonavit.OTVALOR07;
+                                        var diferenciador    = infonavit.OTVALOR15;
+                                        debug("consultasTotales 2 ==>",consultasTotales,"maxConsulta =>",maxConsulta);
+                                        debug("diferenciador 2 ==>",diferenciador);
+                                        
+                                        if(diferenciador == "MEI"){
+                                            if(+consultasTotales >= +maxConsulta){
+                                                maxconsultas = false;
+                                                centrarVentanaInterna(Ext.Msg.show({
+                                                       title: 'Aviso',
+                                                       msg: 'Se sobrepas&oacute; el n&uacute;mero m&aacute;ximo de servicios para este Asegurado.',
+                                                       buttons: Ext.Msg.OK,
+                                                       icon: Ext.Msg.WARNING
+                                                }));
+                                            }
+                                        }else{
+                                            if(+consultasTotales <= +maxConsulta){
+                                                maxconsultas = false;
+                                                centrarVentanaInterna(Ext.Msg.show({
+                                                       title: 'Aviso',
+                                                       msg: 'Se sobrepas&oacute; el n&uacote;mero m&aacute;ximo de servicios para este Asegurado.',
+                                                       buttons: Ext.Msg.OK,
+                                                       icon: Ext.Msg.WARNING
+                                                }));
+                                            }
+                                        }
+                                        
+                                        if(maxconsultas  == true){
+                                            //1.-
+                                            _11_guardarDatosComplementario(record.data.CDUNIECO,
+                                                record.data.CDRAMO,
+                                                record.data.ESTADO,
+                                                record.data.NMPOLIZA,
+                                                record.data.NMSUPLEM,
+                                                record.data.AAAPERTU,
+                                                record.data.NMSINIES,
+                                                record.data.FEOCURRE,
+                                                record.data.NMSINREF,
+                                                record.data.CDICD,
+                                                record.data.CDICD2,
+                                                record.data.CDCAUSA,
+                                                record.data.CDGARANT,
+                                                record.data.CDCONVAL,
+                                                record.data.NMAUTSER,
+                                                record.data.CDPERSON,
+                                                valorRegistro,
+                                                record.data.COMPLEMENTO,
+                                                record.data.NMSITUAC,
+                                                record.data.DEDUCIBLE,
+                                                record.data.COPAGO,
+                                                record.data.NMCALLCENTER,
+                                                "0",
+                                                Ext.Date.format(record.data.FEINGRESO, 'd/m/Y'),
                                                 Ext.Date.format(record.data.FEEGRESO, 'd/m/Y'),
                                                 record.data.CDTIPEVE,
                                                 record.data.CDTIPALT
-											);
-										}
-									}else{
-										maxconsultas = jsonRes.success;
-										centrarVentanaInterna(Ext.Msg.show({
-											title:'Error',
-											msg: jsonRes.mensaje,
-											buttons: Ext.Msg.OK,
-											icon: Ext.Msg.ERROR
-										}));
-									}
-								},
-								failure : function (){
-									centrarVentanaInterna(Ext.Msg.show({
-										title:'Error',
-										msg: 'Error de comunicaci&oacute;n',
-										buttons: Ext.Msg.OK,
-										icon: Ext.Msg.ERROR
-									}));
-								}
-							});
-						}else{
-							//2.-
-							_11_guardarDatosComplementario(record.data.CDUNIECO,
-								record.data.CDRAMO,
-								record.data.ESTADO,
-								record.data.NMPOLIZA,
-								record.data.NMSUPLEM,
-								record.data.AAAPERTU,
-								record.data.NMSINIES,
-								record.data.FEOCURRE,
-								record.data.NMSINREF,
-								record.data.CDICD,
-								record.data.CDICD2,
-								record.data.CDCAUSA,
-								record.data.CDGARANT,
-								record.data.CDCONVAL,
-								record.data.NMAUTSER,
-								record.data.CDPERSON,
-								valorRegistro,
-								record.data.COMPLEMENTO,
-								record.data.NMSITUAC,
-								record.data.DEDUCIBLE,
-								record.data.COPAGO,
-								record.data.NMCALLCENTER,
-								"0",
-								Ext.Date.format(record.data.FEINGRESO, 'd/m/Y'),
+                                            );
+                                        }
+                                    }else{
+                                        maxconsultas = jsonRes.success;
+                                        centrarVentanaInterna(Ext.Msg.show({
+                                            title:'Error',
+                                            msg: jsonRes.mensaje,
+                                            buttons: Ext.Msg.OK,
+                                            icon: Ext.Msg.ERROR
+                                        }));
+                                    }
+                                },
+                                failure : function (){
+                                    centrarVentanaInterna(Ext.Msg.show({
+                                        title:'Error',
+                                        msg: 'Error de comunicaci&oacute;n',
+                                        buttons: Ext.Msg.OK,
+                                        icon: Ext.Msg.ERROR
+                                    }));
+                                }
+                            });
+                        }else{
+                            //2.-
+                            _11_guardarDatosComplementario(record.data.CDUNIECO,
+                                record.data.CDRAMO,
+                                record.data.ESTADO,
+                                record.data.NMPOLIZA,
+                                record.data.NMSUPLEM,
+                                record.data.AAAPERTU,
+                                record.data.NMSINIES,
+                                record.data.FEOCURRE,
+                                record.data.NMSINREF,
+                                record.data.CDICD,
+                                record.data.CDICD2,
+                                record.data.CDCAUSA,
+                                record.data.CDGARANT,
+                                record.data.CDCONVAL,
+                                record.data.NMAUTSER,
+                                record.data.CDPERSON,
+                                valorRegistro,
+                                record.data.COMPLEMENTO,
+                                record.data.NMSITUAC,
+                                record.data.DEDUCIBLE,
+                                record.data.COPAGO,
+                                record.data.NMCALLCENTER,
+                                "0",
+                                Ext.Date.format(record.data.FEINGRESO, 'd/m/Y'),
                                 Ext.Date.format(record.data.FEEGRESO, 'd/m/Y'),
                                 record.data.CDTIPEVE,
                                 record.data.CDTIPALT
-							);
-						}
-					}
-				},failure : function (){
-					centrarVentanaInterna(Ext.Msg.show({
-						title:'Error',
-						msg: 'Error de comunicaci&oacute;n',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.ERROR
-					}));
-				}
-			});
-		}else{
-			mensajeWarning(
-				'Complemente la informaci&oacute;n del Asegurado');
-		}
-	}
-	
-	//13.- Guardar datos complementarios
-	//3.-
-	function _11_guardarDatosComplementario(cdunieco,cdramo, estado, nmpoliza, nmsuplem,
-										aaapertu, nmsinies,feocurre, nmreclamo, cdicd,
-										cdicd2,cdcausa, cdgarant,cdconval, nmautser,
-										cdperson, tipoProceso, complemento,nmsituac,
-										deducible, copago,nmcallcenter, actMisiniper,
-										fechaIngreso,fechaEgreso,cveEvento, cveAlta){
-		
-		debug("Datos de guardado 1 ===> ","cdunieco :"+cdunieco,"cdramo :"+cdramo, "estado :"+estado, "nmpoliza :"+nmpoliza);
-		debug("Datos de guardado 2 ===> ","nmsuplem :"+nmsuplem,"aaapertu :"+aaapertu, "nmsinies :"+nmsinies,"feocurre :"+feocurre);
-		debug("Datos de guardado 3 ===> ","nmreclamo :"+nmreclamo, "cdicd:"+cdicd,"cdicd2:"+cdicd2,"cdcausa:"+cdcausa);
-		debug("Datos de guardado 4 ===> ","cdgarant :"+cdgarant,"cdconval :"+cdconval, "nmautser :"+nmautser,"cdperson :"+cdperson);
-		debug("Datos de guardado 5 ===> ","tipoProceso :"+tipoProceso, "complemento :"+complemento,"nmsituac :"+nmsituac);
-		debug("Datos de guardado 6 ===> ","deducible :"+deducible, "copago :"+copago,"nmcallcenter :"+nmcallcenter, "actMisiniper :"+actMisiniper);
-		debug("Datos de guardado 7 ===> ","fechaIngreso :"+fechaIngreso, "fechaEgreso :"+fechaEgreso,"cveEvento :"+cveEvento, "cveAlta :"+cveAlta);
-		Ext.Ajax.request( {
-			url	 : _URL_ACTUALIZA_INFO_GRAL_SIN
-			,params:{
-				'params.cdunieco' 		: cdunieco,
-				'params.cdramo'   		: cdramo,
-				'params.estado'   		: estado,
-				'params.nmpoliza' 		: nmpoliza,
-				'params.nmsuplem' 		: nmsuplem,
-				'params.aaapertu'		: aaapertu,
-				'params.nmsinies' 		: nmsinies,
-				'params.feocurre' 		: feocurre,
-				'params.nmreclamo'		: nmreclamo,
-				'params.cdicd'    		: cdicd,
-				'params.cdicd2'   		: cdicd2,
-				'params.cdcausa'  		: cdcausa,
-				'params.ntramite' 		: panelInicialPral.down('[name=params.ntramite]').getValue(),
-				'params.cdgarant' 		: cdgarant,
-				'params.cdconval' 		: cdconval,
-				'params.nmautser' 		: nmautser,
-				'params.tipoPago' 		: _tipoPago,
-				'params.nfactura' 		: panelInicialPral.down('[name=params.nfactura]').getValue(),
-				'params.fefactura'		: panelInicialPral.down('[name=params.fefactura]').getValue(),
-				'params.cdtipser' 		: panelInicialPral.down('combo[name=params.cdtipser]').getValue(),
-				'params.cdpresta' 		: panelInicialPral.down('combo[name=params.cdpresta]').getValue(),
-				'params.ptimport' 		: panelInicialPral.down('[name=params.ptimport]').getValue(),
-				'params.descporc'     	: panelInicialPral.down('[name=params.descporc]').getValue(),
-				'params.descnume'     	: panelInicialPral.down('[name=params.descnume]').getValue(),
-				'params.tipoMoneda'   	: panelInicialPral.down('combo[name=params.tipoMoneda]').getValue(),
-				'params.tasacamb' 	  	: panelInicialPral.down('[name=params.tasacamb]').getValue(),
-				'params.ptimporta' 	  	: panelInicialPral.down('[name=params.ptimporta]').getValue(),
-				'params.feegreso' 	  	: panelInicialPral.down('[name=params.feegreso]').getValue(),
-				'params.diasdedu' 	  	: panelInicialPral.down('[name=params.diasdedu]').getValue(),
-				'params.dctonuex'     	: null,
-				'params.cdperson' 	  	: cdperson,
-				'params.tipoProceso'  	: tipoProceso,
-				'params.complemento'  	: complemento,
-				'params.actMisiniper'	: actMisiniper,
-				'params.nmsituac'	    : nmsituac,
-				'params.deducible'	    : deducible,
-				'params.copago'		    : copago,
-				'params.nmcallcenter'   : nmcallcenter,
-				'params.feingreso'      : fechaIngreso,
-				'params.feegreso'       : fechaEgreso,
-				'params.cveEvento'      : cveEvento,
-				'params.cveAlta'        : cveAlta
-			}
-			,success : function (response) {
-				banderaAsegurado = 0;
-				storeConceptos.removeAll();
-				cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-			},
-			failure : function () {
-				Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				});
-			}
-		});
-	}
-	
-	//14.- Eliminar asegurado seleccionado
-	function eliminarAsegurado(grid,rowIndex){
-		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
-		myMask.show();
-		if(_tipoPago == _TIPO_PAGO_DIRECTO){
-			var record = grid.getStore().getAt(rowIndex);
-			debug('record.eliminarAsegurado:',record.raw);
-			centrarVentanaInterna(Ext.Msg.show({
-				title: 'Aviso',
-				msg: '&iquest;Esta seguro que desea eliminar el asegurado?',
-				buttons: Ext.Msg.YESNO,
-				icon: Ext.Msg.QUESTION,
-				fn: function(buttonId, text, opt){
-					if(buttonId == 'yes'){
-						debug("VALOR DEL RECORD");
-						debug(record);
-						Ext.Ajax.request({
-							url: _URL_ELIMINAR_ASEGURADO,
-							params: {
-								'params.nmtramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
-								'params.nfactura'   : panelInicialPral.down('[name=params.nfactura]').getValue(),
-								'params.cdunieco'   : record.get('CDUNIECO'),
-								'params.cdramo'     : record.get('CDRAMO'),
-								'params.estado'     : record.get('ESTADO'),
-								'params.nmpoliza'   : record.get('NMPOLIZA'),
-								'params.nmsuplem'   : record.get('NMSUPLEM'),
-								'params.nmsituac'   : record.get('NMSITUAC'),
-								'params.cdtipsit'   : record.get('CDTIPSIT'),
-								'params.cdperson'   : record.get('CDPERSON'),
-								'params.feocurre'   : record.get('FEOCURRE'),
-								'params.nmsinies'   : record.get('NMSINIES'),
-								'params.accion'   : "0"
-							},
-							success: function(response) {
-								var res = Ext.decode(response.responseText);
-								if(res.success){
-									mensajeCorrecto('Aviso','Se ha eliminado con &eacute;xito.',function(){
-										banderaAsegurado = 0;
-										cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-										
-										if(_cdtipoProceso =="1"){
-											panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
-											panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
-											obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
-											myMask.hide();
-										}else{
-											myMask.hide();
-										}	
-									});
-								}else {
-									centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
-								}
-							},
-							failure: function(){
-								centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
-							}
-						});
-					}
-				}
-			}));
-		}else{
-			centrarVentanaInterna(Ext.Msg.show({ 
-				title: 'Aviso',
-				msg: 'El asegurado no puede ser eliminado.',
-				buttons: Ext.Msg.OK,
-				icon: Ext.Msg.WARNING
-			}));
-		}
-	}
-	
-	//15.- Agregar Conceptos del Asegurado
-	function _p21_agregarConcepto() {
-		if(gridFacturaDirecto.getSelectionModel().hasSelection()){
-			var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
-			if(_11_params.CDRAMO != _RECUPERA){
-				var idReclamacion = recordFactura.get('NMSINIES');
-				valido = idReclamacion && idReclamacion>0;
-				if(valido){
-					var idCobertura 		= recordFactura.get('CDGARANT');
-					var idSubcobertura 		= recordFactura.get('CDCONVAL');
-					var idcausaSiniestro 	= recordFactura.get('CDCAUSA');
-					var idICDP 				= recordFactura.get('CDICD');
-					
-					if(recordFactura.get('CDGARANT').length > 0 && recordFactura.get('CDCONVAL').length > 0 && 
-					   recordFactura.get('CDCAUSA').length > 0 && recordFactura.get('CDICD').length > 0){
-							banderaConcepto = "1";
-							storeConceptos.add(new modelConceptos( {
-								PTPRECIO : '0.00',
-								DESTOPOR : '0.00',
-								DESTOIMP : '0.00',
-								CDUNIECO : recordFactura.get('CDUNIECO'),
-								CDRAMO   : recordFactura.get('CDRAMO'),
-								ESTADO   : recordFactura.get('ESTADO'),
-								NMPOLIZA : recordFactura.get('NMPOLIZA'),
-								NMSUPLEM : recordFactura.get('NMSUPLEM'),
-								NMSITUAC : recordFactura.get('NMSITUAC'),
-								AAAPERTU : recordFactura.get('AAAPERTU'),
-								STATUS   : recordFactura.get('STATUS'),
-								NMSINIES : recordFactura.get('NMSINIES'),
-								PTPCIOEX : '0.00',
-								DCTOIMEX : '0.00',
-								PTIMPOEX : '0.00',
-								CDGARANT : recordFactura.get('CDGARANT'),
-								CDCONVAL : recordFactura.get('CDCONVAL')//,
-								//CANTIDAD : '1'
-							}));
-							
-					}else{
-						mensajeWarning('Complemente la informaci&oacute;n del Asegurado');
-					}
-				}else{
-					mensajeWarning('Debes generar una autorizaci&oacute;n para el asegurado');
-				}
-			}else{
-				storeRecupera.add(new modelRecupera( {
-					'NTRAMITE'	: panelInicialPral.down('[name=params.ntramite]').getValue() ,
-					'NFACTURA'	: panelInicialPral.down('[name=params.nfactura]').getValue()
-				}));
-			}
-		}else{
-			centrarVentanaInterna(mensajeWarning("Debe seleccionar un asegurado para agregar sus conceptos"));
-		}
-	}
-	
-	//16.- Guardar Conceptos del asegurado
-	function _guardarConceptosxFactura(){
-		var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
-		myMask.show();
-		var obtener = [];
-		if(_11_params.CDRAMO != _RECUPERA){
-			storeConceptos.each(function(record) {
-				obtener.push(record.data);
-			});
-			if(obtener.length <= 0){
-				centrarVentanaInterna(Ext.Msg.show({
-					title:'Error',
-					msg: 'Se requiere al menos un concepto',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				}).defer(100));
-				storeConceptos.reload();
-				return false;
-			}else{
-				for(i=0;i < obtener.length;i++){
-					if(obtener[i].IDCONCEP == null ||obtener[i].CDCONCEP == null ||obtener[i].PTMTOARA == null ||obtener[i].PTPRECIO == null ||obtener[i].CANTIDAD == null ||
-						obtener[i].IDCONCEP == "" ||obtener[i].CDCONCEP == "" ||obtener[i].PTMTOARA == ""||obtener[i].PTPRECIO == "" || obtener[i].CANTIDAD ==""){
-						centrarVentanaInterna(Ext.Msg.show({
-							title:'Concepto',
-							msg: 'Favor de introducir los campos requeridos en el concepto.',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.WARNING
-						}).defer(100));
-						return false;
-					}
-				}
-				var submitValues={};
-				var formulario=panelInicialPral.form.getValues();
-				submitValues['params']=formulario;
-				var datosTablas = [];
-				var _11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
-				//if(record.get('PTIVA'))
-				
-				storeConceptos.each(function(record,index){
-					datosTablas.push({
-						cdunieco  : record.get('CDUNIECO')
-						,cdramo   : record.get('CDRAMO')
-						,estado   : record.get('ESTADO')
-						,nmpoliza : record.get('NMPOLIZA')
-						,nmsuplem : record.get('NMSUPLEM')
-						,nmsituac : record.get('NMSITUAC')
-						,aaapertu : record.get('AAAPERTU')
-						,status   : record.get('STATUS')
-						,nmsinies : record.get('NMSINIES')
-						,nfactura : panelInicialPral.down('[name=params.nfactura]').getValue()
-						,cdgarant : record.get('CDGARANT')
-						,cdconval : record.get('CDCONVAL')
-						,cdconcep : record.get('CDCONCEP')
-						,idconcep : record.get('IDCONCEP')
-						,cdcapita : record.get('CDCAPITA')
-						,nmordina : record.get('NMORDINA')
-						,cdmoneda : "001"
-						,ptprecio : record.get('PTPRECIO')
-						,cantidad : record.get('CANTIDAD')
-						,destopor : record.get('DESTOPOR')
-						,destoimp : record.get('DESTOIMP')
-						,ptimport : record.get('PTIMPORT')
-						,ptrecobr : record.get('PTRECOBR')
-						,nmapunte : record.get('NMAPUNTE')
-						,feregist : record.get('FEREGIST')
-						,operacion: "I"
-						,ptpcioex : record.get('PTPCIOEX')
-						,dctoimex : record.get('DCTOIMEX')
-						,ptimpoex : record.get('PTIMPOEX')
-						,mtoArancel : record.get('PTMTOARA')
-						,aplicaIVA : record.get('APLICIVA')
-						,ptIVA 	   : record.get('PTIVA')
-					});
-				});
-				submitValues['datosTablas']=datosTablas;
-				panelInicialPral.setLoading(true);
-				Ext.Ajax.request( {
-					url: _URL_GUARDA_CONCEPTO_TRAMITE,
-					jsonData:Ext.encode(submitValues),
-					success:function(response,opts){
-						panelInicialPral.setLoading(false);
-						var jsonResp = Ext.decode(response.responseText);
-						if(jsonResp.success==true){
-							panelInicialPral.setLoading(false);
-							banderaConcepto = "0";
-							storeConceptos.reload();
-							
-							if(_cdtipoProceso =="1"){
-								cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-								panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
-								panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
-								obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
-								myMask.hide();
-							}else{
-								myMask.hide();
-							}
-						}
-					},
-					failure:function(response,opts) {
-						panelInicialPrincipal.setLoading(false);
-						Ext.Msg.show({
-							title:'Error',
-							msg: 'Error de comunicaci&oacute;n',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						});
-					}
-				});
-			}
-		}else{
-			storeRecupera.each(function(record) {
-				obtener.push(record.data);
-			});
-			if(obtener.length <= 0){
-				centrarVentanaInterna(Ext.Msg.show({
-					title:'Error',
-					msg: 'Se requiere al menos una cobertura',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				}).defer(100));
-				storeRecupera.reload();
-				return false;
-			}else{
-				for(i=0;i < obtener.length;i++){
-					if(obtener[i].CANTPORC == null ||obtener[i].CANTPORC == "" ){
-						centrarVentanaInterna(Ext.Msg.show({
-							title:'Concepto',
-							msg: 'Favor de introducir los campos requeridos en el concepto.',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.WARNING
-						}).defer(100));
-						return false;
-					}
-				}
-				var submitValues={};
-				var formulario=panelInicialPral.form.getValues();
-				submitValues['params']=formulario;
-				var datosTablas = [];
-				var _11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
-				
-				storeRecupera.each(function(record,index){
-					datosTablas.push({
-						cantporc     : record.get('CANTPORC')
-						,cdconval    : record.get('CDCONVAL')
-						,cdgarant    : record.get('CDGARANT')
-						,esquemaaseg : record.get('ESQUEMAASEG')
-						,nfactura    : record.get('NFACTURA')
-						,ntramite    : record.get('NTRAMITE')
-						,ptimport    : record.get('PTIMPORT')
-						,sumaaseg    : record.get('SUMAASEG')
-						,operacion   : "I"
-					});
-				});
-				submitValues['datosTablas']=datosTablas;
-				panelInicialPral.setLoading(true);
-				Ext.Ajax.request( {
-					url: _URL_GUARDA_CONCEPTO_RECUPERA,
-					jsonData:Ext.encode(submitValues),
-					success:function(response,opts){
-						panelInicialPral.setLoading(false);
-						var jsonResp = Ext.decode(response.responseText);
-						if(jsonResp.success==true){
-							panelInicialPral.setLoading(false);
-							//banderaConcepto = "0";
-							storeRecupera.reload();
-						}
-					},
-					failure:function(response,opts) {
-						panelInicialPrincipal.setLoading(false);
-						Ext.Msg.show({
-							title:'Error',
-							msg: 'Error de comunicaci&oacute;n',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						});
-					}
-				});
-			}
-		}
-	}
-	
-	//17.- Ventana para la visualizacion de los ajustes medicos
-	function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
-		var record = grid.getStore().getAt(rowIndex);
-		var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
-			windowLoader = Ext.create('Ext.window.Window',{
-				modal	   	: true,
-				buttonAlign : 'center',
-				title		: 'Ajustes M&eacute;dico',
-				width	   	: 800,
-				height	  	: 450,
-				//autoScroll  : true,
-				loader	  	: {
-					url	 	: _URL_AJUSTESMEDICOS,
-					params	: {
-						'params.ntramite'		: panelInicialPral.down('[name=params.ntramite]').getValue()
-						,'params.cdunieco'		: recordFactura.get('CDUNIECO')
-						,'params.cdramo'		: recordFactura.get('CDRAMO')
-						,'params.estado'		: recordFactura.get('ESTADO')
-						,'params.nmpoliza'		: recordFactura.get('NMPOLIZA')
-						,'params.nmsuplem'		: recordFactura.get('NMSUPLEM')
-						,'params.nmsituac'		: recordFactura.get('NMSITUAC')
-						,'params.aaapertu'		: recordFactura.get('AAAPERTU')
-						,'params.status'		: recordFactura.get('STATUS')
-						,'params.nmsinies'		: recordFactura.get('NMSINIES')
-						,'params.nfactura'		: panelInicialPral.down('[name=params.nfactura]').getValue()
-						,'params.cdgarant'		: record.get('CDGARANT')
-						,'params.cdconval'		: record.get('CDCONVAL')
-						,'params.cdconcep'		: record.get('CDCONCEP')
-						,'params.idconcep'		: record.get('IDCONCEP')
-						,'params.nmordina'		: record.get('NMORDINA')
-						,'params.precio'		: record.get('PTPRECIO')
-						,'params.cantidad'		: record.get('CANTIDAD')
-						,'params.descuentoporc'	: record.get('DESTOPOR')
-						,'params.descuentonum'	: record.get('DESTOIMP')
-						,'params.importe'		: record.get('PTIMPORT')
-						,'params.ajusteMedi'	: record.get('TOTAJUSMED')
-					},
-					scripts  : true,
-					loadMask : true,
-					autoLoad : true,
-					ajaxOptions: {
-						method: 'POST'
-					}
-				}
-				,
-				listeners:{
-					close:function(){
-						if(true){
-							//Actualizamos la información de la consulta del grid inferior
-							storeConceptos.reload();
-						}
-					}
-				}
-			}).show();
-			centrarVentanaInterna(windowLoader);
-	}
-	
-	//18.- Asociar autorizacion de Servicio (la primera vez que entra )
-	function _11_asociarAutorizacion() {
-		var valido = _11_formPedirAuto.isValid();
-		if(!valido) {
-			datosIncompletos();
-		}
+                            );
+                        }
+                    }
+                },failure : function (){
+                    centrarVentanaInterna(Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error de comunicaci&oacute;n',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    }));
+                }
+            });
+        }else{
+            mensajeWarning(
+                'Complemente la informaci&oacute;n del Asegurado');
+        }
+    }
+    
+    //27.3.- Guardar datos complementarios
+    function _11_guardarDatosComplementario(cdunieco,cdramo, estado, nmpoliza, nmsuplem,
+                                        aaapertu, nmsinies,feocurre, nmreclamo, cdicd,
+                                        cdicd2,cdcausa, cdgarant,cdconval, nmautser,
+                                        cdperson, tipoProceso, complemento,nmsituac,
+                                        deducible, copago,nmcallcenter, actMisiniper,
+                                        fechaIngreso,fechaEgreso,cveEvento, cveAlta){
+        
+        debug("Datos de guardado 1 ===> ","cdunieco :"+cdunieco,"cdramo :"+cdramo, "estado :"+estado, "nmpoliza :"+nmpoliza);
+        debug("Datos de guardado 2 ===> ","nmsuplem :"+nmsuplem,"aaapertu :"+aaapertu, "nmsinies :"+nmsinies,"feocurre :"+feocurre);
+        debug("Datos de guardado 3 ===> ","nmreclamo :"+nmreclamo, "cdicd:"+cdicd,"cdicd2:"+cdicd2,"cdcausa:"+cdcausa);
+        debug("Datos de guardado 4 ===> ","cdgarant :"+cdgarant,"cdconval :"+cdconval, "nmautser :"+nmautser,"cdperson :"+cdperson);
+        debug("Datos de guardado 5 ===> ","tipoProceso :"+tipoProceso, "complemento :"+complemento,"nmsituac :"+nmsituac);
+        debug("Datos de guardado 6 ===> ","deducible :"+deducible, "copago :"+copago,"nmcallcenter :"+nmcallcenter, "actMisiniper :"+actMisiniper);
+        debug("Datos de guardado 7 ===> ","fechaIngreso :"+fechaIngreso, "fechaEgreso :"+fechaEgreso,"cveEvento :"+cveEvento, "cveAlta :"+cveAlta);
+        Ext.Ajax.request( {
+            url  : _URL_ACTUALIZA_INFO_GRAL_SIN
+            ,params:{
+                'params.cdunieco'       : cdunieco,
+                'params.cdramo'         : cdramo,
+                'params.estado'         : estado,
+                'params.nmpoliza'       : nmpoliza,
+                'params.nmsuplem'       : nmsuplem,
+                'params.aaapertu'       : aaapertu,
+                'params.nmsinies'       : nmsinies,
+                'params.feocurre'       : feocurre,
+                'params.nmreclamo'      : nmreclamo,
+                'params.cdicd'          : cdicd,
+                'params.cdicd2'         : cdicd2,
+                'params.cdcausa'        : cdcausa,
+                'params.ntramite'       : panelInicialPral.down('[name=params.ntramite]').getValue(),
+                'params.cdgarant'       : cdgarant,
+                'params.cdconval'       : cdconval,
+                'params.nmautser'       : nmautser,
+                'params.tipoPago'       : _tipoPago,
+                'params.nfactura'       : panelInicialPral.down('[name=params.nfactura]').getValue(),
+                'params.fefactura'      : panelInicialPral.down('[name=params.fefactura]').getValue(),
+                'params.cdtipser'       : panelInicialPral.down('combo[name=params.cdtipser]').getValue(),
+                'params.cdpresta'       : panelInicialPral.down('combo[name=params.cdpresta]').getValue(),
+                'params.ptimport'       : panelInicialPral.down('[name=params.ptimport]').getValue(),
+                'params.descporc'       : panelInicialPral.down('[name=params.descporc]').getValue(),
+                'params.descnume'       : panelInicialPral.down('[name=params.descnume]').getValue(),
+                'params.tipoMoneda'     : panelInicialPral.down('combo[name=params.tipoMoneda]').getValue(),
+                'params.tasacamb'       : panelInicialPral.down('[name=params.tasacamb]').getValue(),
+                'params.ptimporta'      : panelInicialPral.down('[name=params.ptimporta]').getValue(),
+                'params.feegreso'       : panelInicialPral.down('[name=params.feegreso]').getValue(),
+                'params.diasdedu'       : panelInicialPral.down('[name=params.diasdedu]').getValue(),
+                'params.dctonuex'       : null,
+                'params.cdperson'       : cdperson,
+                'params.tipoProceso'    : tipoProceso,
+                'params.complemento'    : complemento,
+                'params.actMisiniper'   : actMisiniper,
+                'params.nmsituac'       : nmsituac,
+                'params.deducible'      : deducible,
+                'params.copago'         : copago,
+                'params.nmcallcenter'   : nmcallcenter,
+                'params.feingreso'      : fechaIngreso,
+                'params.feegreso'       : fechaEgreso,
+                'params.cveEvento'      : cveEvento,
+                'params.cveAlta'        : cveAlta
+            }
+            ,success : function (response) {
+                banderaAsegurado = 0;
+                storeConceptos.removeAll();
+                cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+            },
+            failure : function () {
+                Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
+        });
+    }
 
-		if(valido) {
-			var json = {
-				'params.nmautser'  : _11_textfieldNmautserv.getValue()
-				,'params.nmpoliza' : _11_recordActivo.get('NMPOLIZA')
-				,'params.cdperson' : _11_recordActivo.get('CDPERSON')
-				,'params.ntramite' : panelInicialPral.down('[name=params.ntramite]').getValue()
-				,'params.nfactura' : panelInicialPral.down('[name=params.nfactura]').getValue()
-				,'params.feocurrencia' : _11_recordActivo.get('FEOCURRE')
-				,'params.cdunieco' : _11_recordActivo.get('CDUNIECO')
-				,'params.cdramo' : _11_recordActivo.get('CDRAMO')
-				,'params.estado' : _11_recordActivo.get('ESTADO')
-				,'params.cdpresta' : panelInicialPral.down('combo[name=params.cdpresta]').getValue(),
-				'params.secAsegurado'  : _11_recordActivo.get('SECTWORKSIN')
-			};
-			
-			gridFacturaDirecto.setLoading(true);
-			_11_windowPedirAut.close();
-			Ext.Ajax.request( {
-				url	  : _11_URL_INICIARSINIESTROTWORKSIN
-				,params  : json
-				,success : function(response) {
-					json = Ext.decode(response.responseText);
-					debug("Valor de respuesta del guardado ===>>",json);
-					if(json.success==true) {
-						_11_guardarInformacionAdicional();
-						gridFacturaDirecto.setLoading(false);
-						mensajeCorrecto('Autorizaci&oacute;n Servicio',json.mensaje,function(){
-							storeAseguradoFactura.removeAll();
-							cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-						});
-					}
-					else {
-						gridFacturaDirecto.setLoading(false);
-						mensajeError(json.mensaje);
-					}
-				}
-				,failure : function() {
-					gridFacturaDirecto.setLoading(false);
-					errorComunicacion();
-				}
-			});
-		}
-	}
-	
-	//19.- Llamado para generar la autorizacion nueva
-	function _11_modificarAutorizacion(record){
-		_11_recordActivo = record;
-		debug('_11_recordActivo:',_11_recordActivo.data);
-		
-		_11_textfieldAseguradoMod.setValue(_11_recordActivo.get('NOMBRE'));
-		var params = {
-				'params.cdperson'	:	_11_recordActivo.get('CDPERSON')
-		};
-		cargaStorePaginadoLocal(storeListadoAutorizacion, _URL_LISTA_AUTSERVICIO, 'datosInformacionAdicional', params, function(options, success, response){
-			if(success){
-				var jsonResponse = Ext.decode(response.responseText);
-				if(jsonResponse.datosInformacionAdicional.length <= 0) {
-					storeConceptos.removeAll();
-					storeAseguradoFactura.removeAll();
-					banderaConcepto = 0;
-					banderaAsegurado = 0;
-					cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-					centrarVentanaInterna(Ext.Msg.show({ 
-						title: 'Aviso',
-						msg: 'No existen autorizaci&oacute;n para el asegurado elegido.',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.WARNING
-					}));
-				}else{
-					_11_windowModificarAut.show();
-					_11_textfieldNmautservMod.setValue('');
-					centrarVentanaInterna(_11_windowModificarAut);
-				}
-			}else{
-				Ext.Msg.show({
-					title: 'Aviso',
-					msg: 'Error al obtener los datos.',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-					});
-			}
-		});
-	}
-	
-	//20.- Asociar autorizacion Nueva
-	function _11_asociarAutorizacionNueva(){
-		var valido = _11_formModificarAuto.isValid();
-		if(!valido) {
-			datosIncompletos();
-		}else{
-			_11_windowModificarAut.close();
-			guardaCambiosAutorizacionServ(_11_aseguradoSeleccionado, _11_textfieldNmautservMod.getValue(),"0","1");
-		}
-	}
-	
-	//21.-Guardar cambios autorizacion nueva
-	function guardaCambiosAutorizacionServ(record, numeroAutorizacion, tipoProceso, actMisiniper){
-		debug("Valores de entrada para el guardado ",record);
-		debug("Numero de Autorizacion : ",numeroAutorizacion);
-		debug("Actualiza  actMisiniper : ",actMisiniper);
-		gridFacturaDirecto.setLoading(true);
-		Ext.Ajax.request({
-			url     : _URL_CONSULTA_AUTORIZACION_ESP
-			,params : {
-				'params.nmautser'  : numeroAutorizacion
-			}
-			,success : function (response) {
-				var jsonAutServ = Ext.decode(response.responseText).datosAutorizacionEsp;
-				debug("VALOR DE RESPUESTA :: ",jsonAutServ);
-				//4.- 
-				_11_guardarDatosComplementario(record.data.CDUNIECO,
-					record.data.CDRAMO,
-					record.data.ESTADO,
-					record.data.NMPOLIZA,
-					record.data.NMSUPLEM,
-					record.data.AAAPERTU,
-					record.data.NMSINIES,
-					record.data.FEOCURRE,
-					record.data.NMSINREF,
-					jsonAutServ.cdicd,
-					record.data.CDICD2,
-					jsonAutServ.cdcausa,
-					jsonAutServ.cdgarant,
-					jsonAutServ.cdconval,
-					jsonAutServ.nmautser,
-					record.data.CDPERSON,
-					tipoProceso,
-					record.data.COMPLEMENTO,
-					record.data.NMSITUAC,
-					record.data.NMCALLCENTER,
-					actMisiniper
-				);
-				gridFacturaDirecto.setLoading(false);
-				
-			},
-			failure : function (){
-				gridFacturaDirecto.setLoading(false);
-				centrarVentanaInterna(Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				}));
-			}
-		});
-	}
-	
-	//22.- Obtenemos la Suma Asegurada para Gastos Medicos Mayores
-	function obtenerSumaAseguradaMontoGastados (cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdgarant, cdconval, 
-			cdperson, nmsinref, totalConsumido, nmsinies, valSesion){
-		
-		if(valSesion =="1"){
-			//MULTISALUD INFONAVIT
-			panelComplementos.down('[name=params.sumaAsegurada]').hide();
-			panelComplementos.down('[name=params.sumaGastada]').hide();
-			panelComplementos.down('[name=params.sublimite]').show();
-			panelComplementos.down('[name=params.pagado]').show();
-			panelComplementos.down('[name=params.disponibleCob]').show();
-			Ext.Ajax.request({
-				url		:	_URL_VALIDACION_CONSULTA
-				,params	:	{
-					'params.cdunieco'  : cdunieco,
-					'params.cdramo'    : cdramo,
-					'params.estado'    : estado,
-					'params.nmpoliza'  : nmpoliza,
-					'params.nmsuplem'  : nmsuplem,
-					'params.nmsituac'  : nmsituac,
-					'params.cdgarant'  : cdgarant,
-					'params.cdconval'  : cdconval,
-					'params.nmsinies'  : nmsinies
-				}
-				,success : function (response){
-					var jsonResp = Ext.decode(response.responseText);
-					debug("Valor de Respuesta ===>",jsonResp);
-					if(jsonResp.success == true){
-						var infonavit = Ext.decode(response.responseText).datosInformacionAdicional[0];
-						var consultasTotales = infonavit.NO_CONSULTAS;
-						var limiteTotal      = infonavit.OTVALOR04;
-						var maxConsulta      = infonavit.OTVALOR07;
-						var diferenciador    = infonavit.OTVALOR15;
-						panelComplementos.down('[name=params.sublimite]').setValue(limiteTotal);
-						panelComplementos.down('[name=params.pagado]').setValue(infonavit.IMPGASTADOCOB);
-						panelComplementos.down('[name=params.disponibleCob]').setValue(+limiteTotal - +infonavit.IMPGASTADOCOB);
-					}else{
-						maxconsultas = jsonResp.success;
-						centrarVentanaInterna(Ext.Msg.show({
-							title:'Error',
-							msg: jsonRes.mensaje,
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						}));
-					}
-				},
-				failure : function (){
-					centrarVentanaInterna(Ext.Msg.show({
-						title:'Error',
-						msg: 'Error de comunicaci&oacute;n',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.ERROR
-					}));
-				}
-			});
-			
-		}else if(valSesion =="2"){
-			// GASTOS MEDICOS MAYORES
-			panelComplementos.down('[name=params.sumaAsegurada]').show();
-			panelComplementos.down('[name=params.sumaGastada]').show();
-			panelComplementos.down('[name=params.sublimite]').hide();
-			panelComplementos.down('[name=params.pagado]').hide();
-			panelComplementos.down('[name=params.disponibleCob]').hide();
-			
-			Ext.Ajax.request( {
-				url	 : _URL_OBTENER_SUMAASEGURADA
-				,params:{
-					'params.cdunieco' 	: cdunieco
-					,'params.cdramo'  	: cdramo
-					,'params.estado'  	: estado
-					,'params.nmpoliza' 	: nmpoliza
-					,'params.cdperson' 	: cdperson
-					,'params.nmsinref' 	: nmsinref
-				}
-				,success : function (response){
-					var jsonResponse  = Ext.decode(response.responseText).datosValidacion[0];
-					var sumAsegurada  = jsonResponse.SUMA_ASEGURADA;
-					var sumDisponible = jsonResponse.RESERVA_DISPONIBLE;
-					
-					var sumaConceptos = (+sumDisponible) - (+ totalConsumido);
-					
-					panelComplementos.down('[name=params.sumaAsegurada]').setValue(sumAsegurada);
-					panelComplementos.down('[name=params.sumaGastada]').setValue(sumaConceptos);
-				},
-				failure : function () {
-					Ext.Msg.show({
-						title:'Error',
-						msg: 'Error de comunicaci&oacute;n',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.ERROR
-					});
-				}
-			});
-		}else{
-			//TODOS DIFERENTES
-			panelComplementos.down('[name=params.sumaAsegurada]').hide();
-			panelComplementos.down('[name=params.sumaGastada]').hide();
-			panelComplementos.down('[name=params.sublimite]').hide();
-			panelComplementos.down('[name=params.pagado]').hide();
-			panelComplementos.down('[name=params.disponibleCob]').hide();
-		}
-	}
-	
-	//23.- Require autorizacion especial
-	function reqAutorizacionEspecial(ntramite, tipoPago, nfactura, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, nmsinies, cdperson, cdtipsit){
-		setTimeout(function(){
-			windowAutEsp = Ext.create('Ext.window.Window',{
-				modal       : true,
-				buttonAlign : 'center',
-				title: 'Autorizaci&oacute;n Especial',
-				autoScroll  : true,
-				items       : [
-					panelModificacion = Ext.create('Ext.form.Panel', {
-						bodyPadding: 5,
-						items: [
-							{	xtype: 'numberfield'
-								,fieldLabel: 'N&uacute;mero de autorizaci&oacute;n'
-								,name		: 'txtAutEspecial'
-								,allowBlank : false
-							}
-						],
-						buttonAlign:'center',
-						buttons: [
-							{
-								text: 'Aceptar'
-								,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
-								,buttonAlign : 'center',
-								handler: function() {
-									if (panelModificacion.form.isValid()) {
-										var datos=panelModificacion.form.getValues();
-										Ext.Ajax.request({
-											url     : _URL_VALIDA_AUTESPECIFICA
-											,params:{
-												'params.ntramite'  : ntramite,
-												'params.tipoPago'  : tipoPago,
-												'params.nfactura'  : nfactura,
-												'params.cdunieco'  : cdunieco,
-												'params.cdramo'    : cdramo,
-												'params.estado'    : estado,
-												'params.nmpoliza'  : nmpoliza,
-												'params.nmsuplem'  : nmsuplem,
-												'params.nmsituac'  : nmsituac,
-												'params.nmautesp'  : datos.txtAutEspecial,
-												'params.nmsinies'  : nmsinies
-												//'params.cdperson'  : cdperson,
-												//'params.cdtipsit'  : cdtipsit
-											}
-											,success : function (response){
-												if(Ext.decode(response.responseText).validacionGeneral =="1"){
-													//Exito y debe de dejar  pasar 
-													
-													mensajeCorrecto('&Eacute;XITO','Se ha asociado correctamente.',function(){
-														windowAutEsp.close();
-														cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-													});
-												}else{
-													mensajeError("Autorizaci&oacute;n especial no valida para este tr&aacute;mite.");
-												}
-											},
-											failure : function (){
-												me.up().up().setLoading(false);
-												centrarVentanaInterna(Ext.Msg.show({
-													title:'Error',
-													msg: 'Error de comunicaci&oacute;n',
-													buttons: Ext.Msg.OK,
-													icon: Ext.Msg.ERROR
-												}));
-											}
-										});
-									}else {
-										Ext.Msg.show({
-											title: 'Aviso',
-											msg: 'Complete la informaci&oacute;n requerida',
-											buttons: Ext.Msg.OK,
-											icon: Ext.Msg.WARNING
-										});
-									}
-								}
-							},{
-								text: 'Cancelar',
-								icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-								buttonAlign : 'center',
-								handler: function() {
-									windowAutEsp.close();
-									cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-								}
-							}
-						]
-					})  
-				],
-				listeners:{
-					 close:function(){
-						 if(true){
-							 cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
-						 }
-					 }
-				}
-			});
-			centrarVentana(windowAutEsp.show());
-		},100);
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-	function _11_rechazoSiniestro() {
-		debug('_11_rechazoSiniestro');
-		
-		var valido = _11_formRechazo.isValid();
-		if(!valido) {
-			datosIncompletos();
-		}
-		
-		if(valido){
-		}
-	}
-	
+    //14.1.- Funcion para obtener los totales pagados en el tramite-Factura
+    //15.1.- Funcion para obtener los totales pagados en el tramite-Factura despues de la eliminacion del asegurado
+    //17.1.- Funcion para obtener los totales al momento de guardar los conceptos 
+    function obtenerTotalPagos(ntramite, nfactura){
+        var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+        myMask.show();
+        Ext.Ajax.request({
+            url  : _URL_OBTENERSINIESTROSTRAMITE
+            ,params:{
+                'smap.ntramite'   : ntramite ,
+                'smap.nfactura'   : nfactura
+            }
+            ,success : function (response) {
+                var aseguradosTotales = Ext.decode(response.responseText).slist1;
+                debug("Valores totales ==> ",aseguradosTotales);
+                var totalPago = 0;
+                var subtotalFactura=0;
+                var ivaFactura=0;
+                var ivaRetFactura=0;
+                var isrFactura=0;
+                var impCedFactura=0;
+                var imporTotalFactura=0;
+                var resultadoTope = "";
+                var banderaValidacion = 0;
+                for(var i = 0; i < aseguradosTotales.length; i++) {
+                    debug()
+                    totalPago = 0;
+                    var importeAseg = aseguradosTotales[i].IMPORTEASEG;
+                    var ivaAseg     = aseguradosTotales[i].PTIVAASEG;
+                    var ivaRete     = aseguradosTotales[i].PTIVARETASEG;
+                    var isrAse      = aseguradosTotales[i].PTISRASEG;
+                    var impCedul    = aseguradosTotales[i].PTIMPCEDASEG;
+                    var totalPagoVa = aseguradosTotales[i].IMPORTETOTALPAGO;
+                    
+                    if(importeAseg.length > 0){
+                        subtotalFactura = parseFloat(subtotalFactura) + parseFloat(importeAseg);
+                    }else{
+                        subtotalFactura = parseFloat(subtotalFactura) + parseFloat(totalPago);
+                    }
+                    
+                    if(ivaAseg.length > 0){
+                        ivaFactura = parseFloat(ivaFactura) + parseFloat(ivaAseg);
+                    }else{
+                        ivaFactura = parseFloat(ivaFactura) + parseFloat(totalPago);
+                    }
+                    
+                    if(ivaRete.length > 0){
+                        ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(ivaRete);
+                    }else{
+                        ivaRetFactura = parseFloat(ivaRetFactura) + parseFloat(totalPago);
+                    }
+                    
+                    if(isrAse.length > 0){
+                        isrFactura = parseFloat(isrFactura) + parseFloat(isrAse);
+                    }else{
+                        isrFactura = parseFloat(isrFactura) + parseFloat(totalPago);
+                    }
+                    
+                    if(impCedul.length > 0){
+                        impCedFactura = parseFloat(impCedFactura) + parseFloat(impCedul);
+                    }else{
+                        impCedFactura = parseFloat(impCedFactura) + parseFloat(totalPago);
+                    }
+                    
+                    if(totalPagoVa.length > 0){
+                        imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPagoVa);
+                    }else{
+                        imporTotalFactura = parseFloat(imporTotalFactura) + parseFloat(totalPago);
+                    }
+                    
+                    var limite = aseguradosTotales[i].LIMITE;
+                    var importePagado = aseguradosTotales[i].IMPPAGCOB;
+                    var importeDisponible = (+limite - +importePagado);
+                    var importePagarAsegurado = aseguradosTotales[i].IMPORTETOTALPAGO; 
+
+                    var validaTope = aseguradosTotales[i].VALTOTALCOB;
+                    if( validaTope  == '1'){
+                        debug("Limite ",limite, "importeDisponible",importeDisponible,"importePagarAsegurado",importePagarAsegurado);
+                        if(+importeDisponible <=limite && +importePagarAsegurado <= importeDisponible){
+                            //resultadoTope = resultadoTope + 'La Factura ' + nfactura + ' del siniestro '+ aseguradosTotales[i].NMSINIES+ ' Es éxitoso. <br/>';
+                        }else{
+                            banderaValidacion = 1;
+                            resultadoTope = resultadoTope + 'El CR '+ntramite+' de Factura ' + nfactura + ' del siniestro '+ aseguradosTotales[i].NMSINIES+ ' Sobrepasa el límite permitido. <br/>';                            
+                        }
+                    }
+                }
+                
+                if(banderaValidacion == "1"){
+                    centrarVentanaInterna(mensajeWarning(resultadoTope));
+                }
+                
+                panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
+                panelComplementos.down('[name=params.ivaFac]').setValue(ivaFactura);
+                panelComplementos.down('[name=params.ivaRetFac]').setValue(ivaRetFactura);
+                panelComplementos.down('[name=params.isrFac]').setValue(isrFactura);
+                panelComplementos.down('[name=params.impCedularFac]').setValue(impCedFactura);
+                panelComplementos.down('[name=params.impPagarFac]').setValue(imporTotalFactura);
+            },
+            failure : function (){
+                Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
+        });
+        myMask.hide();
+        return true;
+    }
+    
+    //19.1.- Guarda la informacion Adicional - Siniestro sin autorizacion de servicio
+    //21.1.- Guardar siniestro con autorizacion de servicio
+    function _11_guardarInformacionAdicional(){
+        panelInicialPral.form.submit({
+            waitMsg:'Procesando...',    
+            url: _URL_GUARDA_CAMBIOS_FACTURA,
+            failure: function(form, action) {
+                centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
+            },
+            success: function(form, action) {
+                storeAseguradoFactura.removeAll();
+                cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+            }
+        });
+    }
+    
+
+    
+    ////////////////////////////////////  FIN VALIDACIONES GENERALES DE LA APLICACION SINIESTROS  ////////////////////////////////////
+	//.- 
 	function _11_asociarMsiniestMaestro(){		
 		debug("##### Record activo  #####",_11_recordActivo.data);
 		var valido = _11_formPedirMsiniest.isValid();
@@ -7087,8 +7030,7 @@
 		}
 	}
 	
-
-
+	//.- 
 	function _11_pedirMsiniestMaestro(grid,rowIndex)
 	{
 		//1.- Ver si esta ya tiene generado un siniestro
@@ -7159,12 +7101,6 @@
 		//}
 	}
 	
-	// (EGS)
-	function calculaEdad(){
-		var fecha = ''; 
-		fecha = fecha.concat(_fenacimi.substr(6,4),_fenacimi.substr(2,4),_fenacimi.substr(0,2));
-		_edad = calculaAniosTranscurridos(new Date(fecha),new Date());
-	}
 	//FIN DE FUNCIONES
 		</script>
 		<script type="text/javascript" src="${ctx}/js/proceso/siniestros/afiliadosAfectados.js?${now}"></script>
