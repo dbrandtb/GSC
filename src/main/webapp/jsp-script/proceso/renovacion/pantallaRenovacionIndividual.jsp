@@ -40,6 +40,7 @@ var winServicioAsistido;
 var winCambioPago;
 var winCambioDomicilio;
 var wineditarContratante;
+var winMensaje;
 var panCondicion;
 
 var pantallaValositParche = false;
@@ -847,7 +848,7 @@ Ext.onReady(function()
                                    handler	: function(){
                                 	   _p29_actualizarCotizacion(null);
                                 	   var winCambioPago = _fieldById('winCambioPago');                                	   
-                                	   tarifaFinal();                                		
+                                	   tarifaFinal();
                                 	}
                                  },
 	                        {
@@ -2158,7 +2159,8 @@ Ext.onReady(function()
   		    _fieldByName('tipo',form).setValue('AS');
   		}
   	});
- 	 	
+ 	
+    
   	_fieldByName('tipo',form).on(
   	{
   		change: function(me, newValue) {
@@ -2213,8 +2215,8 @@ Ext.onReady(function()
   					_fieldByName('cdperson',form).show();
   					_fieldByName('anio',form).hide();
   					_fieldByName('mes',form).hide();
-  					_fieldByName('fecini',form).setMinValue(new Date());
-  					_fieldByName('fecfin',form).setMinValue(new Date());
+  					//_fieldByName('fecini',form).setMinValue(new Date());
+  					//_fieldByName('fecfin',form).setMinValue(new Date());
   					_fieldById('_p25_contratante').hide();
   					_fieldById('_p25_poliza').hide();
   					_fieldById('_p25_grid').hide();
@@ -2236,6 +2238,18 @@ Ext.onReady(function()
 			debug('< Cambiando cdperson');  															
   		}
   	});
+    
+    _fieldByName('fecini',form).on(
+    {
+        blur : function(){
+            debug('> Cambiando fecini');
+            var fecini = _fieldByName('fecini',form);
+            var fecfin = _fieldByName('fecfin',form);
+            fecfin.setValue('');
+            fecfin.setMinValue(fecini.getValue());
+            debug('< Cambiando fecini');                                                              
+        }
+    });
     
 	_fieldByName('cdramo',form).on({
   		select : function(){
@@ -2573,11 +2587,11 @@ function _p25_renovarClic(button,e)
             debug('### renovar json response:',resp);
             if(resp.exito == true){
                 _fieldById('_p25_grid').getStore().removeAll();
-                _unMask();
+                _unmask();
                 mensajeCorrecto('Proceso completo','Se renovo con exito');
             }
             else{
-                _unMask();
+                _unmask();
                 mensajeError(resp.respuesta);
             }
             if(noRenova.length == 1){
@@ -2598,7 +2612,7 @@ function _p25_renovarClic(button,e)
         }
         ,failure  : function(){
             //_fieldById('_p25_grid').setLoading(false);
-            _unMask();
+            _unmask();
             errorComunicacion();
         }
     });
@@ -2671,7 +2685,7 @@ function _p25_ventanaAutoServicio(resRenova){
 	debug(resRenova);
 	winAutoServicio.resRenova = resRenova;
 	var dsTramite = _fieldById('dsTramite');
-	dsTramite.setValue('Se creo el tramite '+ resRenova['ntramite']);
+	dsTramite.setValue('Se cre\u00f3 el tramite '+ resRenova['ntramite']);
 	winAutoServicio.show();
 	debug('<_p25_ventanaAutoServicio');
 }
@@ -2766,11 +2780,13 @@ function _p29_actualizarCotizacion(callback){
            		debug('resp',resp);
            		if(resp.success==true)
                 {
-           			mensajeCorrecto('Aviso','Se ha actualizado con exito.');
+           		    mostrarMensajeVentana('Se ha actualizado con exito.');
+           			//mensajeCorrecto('Aviso','Se ha actualizado con exito.');
            			_unmask();
                 }
            		else{
-           			mensajeError('Error en la validacion de session');
+           		    mostrarMensajeVentana('Error en la validacion de session');
+           			//mensajeError('Error en la validacion de session');
            			_unmask();
            		}
        		},
@@ -3172,10 +3188,6 @@ function actualizaCalendario(record){
 	_fieldByName('mes',form).readOnly = true;	
 	panCalendario['operacion'] = 'A';
 	panCalendario.setTitle('Editar');
-	/*_fieldByName('feinicio', form).setMinValue(panCalendario.minDate);
-	_fieldByName('feinicio', form).setMaxValue(panCalendario.maxDate);
-	_fieldByName('fefinal',  form).setMinValue(panCalendario.minDate);
-	_fieldByName('fefinal',  form).setMaxValue(panCalendario.maxDate);*/
 	_fieldByName('feaplica', form).setMinValue(Ext.Date.add(panCalendario.maxDate, Ext.Date.DAY, 1));
 	panCalendario.show();
 	debug(panCalendario.down('form'));
@@ -3232,20 +3244,36 @@ function agregaCalendario(){
 	debug('feinicio',_fieldByName('feinicio', form));
 	_fieldByName('anio',form).setValue(_fieldByName('anio', formBusqueda).getValue());
 	_fieldByName('mes',form).setValue(_fieldByName('mes', formBusqueda).getValue());
-	/*_fieldByName('feinicio', form).setMinValue(panCalendario.minDate);
-	_fieldByName('feinicio', form).setMaxValue(panCalendario.maxDate);
-	_fieldByName('fefinal',  form).setMinValue(panCalendario.minDate);
-	_fieldByName('fefinal',  form).setMaxValue(panCalendario.maxDate);*/
 	_fieldByName('feaplica', form).setMinValue(Ext.Date.add(panCalendario.minDate, Ext.Date.MONTH, -2));
 	_fieldByName('feaplica', form).setMaxValue(Ext.Date.add(panCalendario.minDate, Ext.Date.DAY,   -1));
-	//_fieldByName('feaplica', form).setMaxValue(panCalendario.maxDate);
-	/*_fieldByName('feinicio', form).setValue(panCalendario.minDate);
-	_fieldByName('fefinal',  form).setValue(panCalendario.maxDate);*/
 	_fieldByName('feaplica', form).setValue(Ext.Date.add(panCalendario.minDate, Ext.Date.DAY,   -1));
 	_fieldByName('anio',form).readOnly = true;
 	_fieldByName('mes', form).readOnly = true;
 	panCalendario.show();
 	debug('<agregaCalendario');
+}
+
+ function mostrarMensajeVentana(mensaje){
+    var winMensaje = Ext.create('Ext.window.Window', {
+        title       : 'Mensaje',
+        itemId      : 'winMensaje',
+        layout      : 'fit',
+        closeAction : 'hide',
+        items       : [
+            Ext.create('Ext.panel.Panel', {
+                width       : 200,
+                html        : '<p align = "center">'+mensaje+'</p>',
+                buttons     :   [
+                    { 
+                        text    : 'Aceptar',
+                        handler : function(){
+                            _fieldById('winMensaje').close();
+                        }
+                    }
+                ]
+            })
+        ]
+    }).show();
 }
 ////// funciones //////
 </script>
