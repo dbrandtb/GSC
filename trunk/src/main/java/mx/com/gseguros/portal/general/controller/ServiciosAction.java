@@ -376,6 +376,7 @@ public class ServiciosAction extends PrincipalCoreAction
 					,ramo
 					,nmpoliex
 					,false
+					,true
 					);
 			
 			respuesta = Utils.join("OK,",ntramite);

@@ -361,6 +361,11 @@ function _9_confirmar()
 																                ,confirmar   : 'si'
 																            }
 																        }
+																        
+																        if(!Ext.isEmpty(_9_flujo)) {
+																            json1.flujo = _9_flujo;
+																        }
+																        
 																Ext.Ajax.request(
 																	        {
 																	            url       : _9_urlGuardar

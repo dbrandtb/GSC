@@ -224,7 +224,7 @@ public interface FlujoMesaControlManager
 			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
 			,String cdtipflu , String cdflujomc
 			,Map<String, String> valores
-			,String cdtipsup, String cduniext, String ramo, String nmpoliex, boolean origenMesa
+			,String cdtipsup, String cduniext, String ramo, String nmpoliex, boolean origenMesa, boolean inyectadoDesdeSigs
 			)throws Exception;
 	
 	public void actualizaTramiteMC(

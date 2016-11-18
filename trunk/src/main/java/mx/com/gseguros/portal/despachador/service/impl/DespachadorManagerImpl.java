@@ -855,4 +855,10 @@ K                   ENCOLAR CON DATOS ORIGINALES
         }
         return desc;
     }
+    
+    @Override
+    @Deprecated
+    public String recuperarRolTrabajoEstatus (String cdtipflu, String cdflujomc, String estatus) throws Exception {
+        return despachadorDAO.recuperarRolTrabajoEstatus(cdtipflu, cdflujomc, estatus);
+    }
 }
