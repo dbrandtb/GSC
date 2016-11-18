@@ -2104,9 +2104,7 @@ function claveDescuentoDxn(administradora,retenedora,cdramo,cdtipsit){
 function buscarEmpleado(administradora,retenedora,ce,rfc,ap,am,nom){
     
     debug('recuperar empleado buscar');
-    if(!administradora || !retenedora || !ce){
-        return;
-    }
+    
     _fieldById('_p29_dxnForm').setLoading(true);
     Ext.Ajax.request(
             {

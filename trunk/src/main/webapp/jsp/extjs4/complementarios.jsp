@@ -1653,7 +1653,7 @@ function _p29_emitirClicComplementarios()
 			                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor08"]')[0].setReadOnly(true);
 			                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor09"]')[0].setReadOnly(true);
 			                                               
-			                                                if(Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor03"]')>0){
+			                                                if(Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor03"]').length>0){
 			                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor03"]')[0].hide();
 			                                                }
 			                                                _fieldByLabel('CLAVE DESCUENTO').allowBlank=false;
@@ -3410,9 +3410,7 @@ function _p29_emitirClicComplementarios()
             function buscarEmpleado(administradora,retenedora,ce,rfc,ap,am,nom){
                 try{
 	                debug('recuperar empleado buscar');
-	                if(!administradora || !retenedora || !ce){
-	                    return;
-	                }
+	                
 	                _fieldById('panelDatosAdicionales').setLoading(true);
 	             
 	                Ext.Ajax.request(
