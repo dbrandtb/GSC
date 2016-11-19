@@ -3530,9 +3530,9 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 				                    		
 				                    		if( cdplanAnt != nvoCdplan /* solo cuando cambia el plan principal || dsplanAnt != nvoNombrePlan*/){
 				                    			
-				                    			recordGrupoEdit.set('ptsumaaseg','');
+				                    			var valorSAorig = recordGrupoEdit.get('ptsumaaseg');
 				                    			
-					                    		mensajeWarning('El plan del grupo '+recordGrupoEdit.get('letra')+ ' ha cambido. Seleccione una Suma asegurada');
+					                    		mensajeWarning('El plan del grupo '+recordGrupoEdit.get('letra')+ ' ha cambido. Verifique la Suma asegurada');
 					                    		gridGrupos.editingPlugin.startEdit(recordGrupoEdit,0);
 					                    		
 					                    		var indexSumAseg = 0;
@@ -3544,10 +3544,10 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 						                       		}
 						                       	});
 					                    		
-					                    		var comboPlan = gridGrupos.columns[indexSumAseg].getEditor(recordGrupoEdit);
+					                    		 var comboPlan = gridGrupos.columns[indexSumAseg].getEditor(recordGrupoEdit);
 					                    		setTimeout(function(){
-					                    			comboPlan.setValue('');
-					                        	},500);
+					                    			comboPlan.setValue(valorSAorig);
+					                        	},500); 
 				                    		}
 				                    	},250);
 				                    });
@@ -3650,8 +3650,8 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
 	                });
 	                
 	                var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
-	                texDsplanL.setValue('');
-	                recordGrpo.set('dsplanl','');
+	                texDsplanL.setValue(combo.getRawValue());
+	                //recordGrpo.set('dsplanl',combo.getRawValue());
 	                
 	                /**
 	                 * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
@@ -3667,7 +3667,34 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
                 _p21_semaforoPlanChange = true;
             }
         }));
+    }else if(Ext.isEmpty(oldValue)&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')&&_p21_semaforoPlanChange){
+        if(_p21_clasif == _p21_TARIFA_MODIFICADA){
+            /**
+             * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
+             * descripcion de plan que se esta editando
+             **/
+            
+            var gridGps =  combo.up().up(); 
+            var recordGrpo = gridGps.getSelectionModel().getLastSelected();
+            var indexDsplanL = 0;
+            
+            Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
+                if(columnGpo.dataIndex == "dsplanl"){
+                    indexDsplanL = indexCol;
+                    return false;
+                }
+            });
+            
+            var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
+            texDsplanL.setValue(combo.getRawValue());
+            //recordGrpo.set('dsplanl',combo.getRawValue());
+            
+            /**
+             * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
+             **/
+        }
     }
+    
     if(newValue+'x'!='x'&&_p21_clasif==_p21_TARIFA_LINEA&&_p21_smap1.LINEA_EXTENDIDA=='S')
     {
         _p21_estiloEditores(newValue);

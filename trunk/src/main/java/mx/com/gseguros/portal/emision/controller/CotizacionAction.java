@@ -8370,16 +8370,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		// Se inserta el maestro y detalle de los grupos:
 				try {
 				    
-				    try {
-                        /**
-                         * Elimina los documentos de cotizacion para cuando afectan datos de las caratulas no se visualicen documentos anteriores
-                         */
-                        cotizacionDAO.eliminaDocsCotiza(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, ntramite);
-                        
-                    } catch (Exception e) {
-                        logger.warn("No se eliminaron los documentos de cotizacion de la poliza: {}", e);
-                    }
-				    
 					try {
 					    cotizacionDAO.eliminarGrupos(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit);
 					} catch (Exception e) {
@@ -10812,6 +10802,16 @@ public class CotizacionAction extends PrincipalCoreAction
 				while(bloqueos>0);
 				
 				logger.debug(Utils.log("","Se termino el bloqueo"));
+				
+				try {
+                    /**
+                     * Elimina los documentos de cotizacion para cuando afectan datos de las caratulas no se visualicen documentos anteriores
+                     */
+                    cotizacionDAO.eliminaDocsCotiza(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, ntramite);
+                    
+                } catch (Exception e) {
+                    logger.warn("No se eliminaron los documentos de cotizacion de la poliza: {}", e);
+                }
 				
 				String urlReporteCotizacion=Utils.join(
 						  getText("ruta.servidor.reports")
