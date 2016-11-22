@@ -3433,7 +3433,7 @@ function _p29_emitirClicComplementarios()
                                 debug('### Response Boton Comprar:',json);
                                 if(json.success ==  true)
                                 {
-                                    var ck = 'Decodificando respuesta al recuperar permisos de boton Comprar';
+                                    var ck = 'Decodificando respuesta al  buscar empleado';
                                     try
                                     {
                                         //alert(json);
@@ -3449,6 +3449,10 @@ function _p29_emitirClicComplementarios()
                                             Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor13"]')[0].setReadOnly(true);
                                             Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor14"]')[0].setReadOnly(true);
                                             Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].setReadOnly(true);
+                                        }else{
+                                            if(Ext.ComponentQuery.query("[name=gridBuscaEmpleado]").length>0){
+                                                _fieldByName("gridBuscaEmpleado").getStore().removeAll();
+                                            }
                                         }
                                         
                                         

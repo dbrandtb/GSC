@@ -2127,11 +2127,12 @@ function buscarEmpleado(administradora,retenedora,ce,rfc,ap,am,nom){
                     debug('### Response Boton Comprar:',json);
                     if(json.success ==  true)
                     {
-                        var ck = 'Decodificando respuesta al recuperar permisos de boton Comprar';
+                        var ck = 'Decodificando respuesta buscar empleado';
                         try
                         {
                             //alert(json);
                             debug("### respuesta ",json);
+                            
                             if(json.slist1.length>0){
                                 if(Ext.ComponentQuery.query("[name=gridBuscaEmpleado]").length==0){
                                     ventanaBusquedaEmpleado()
@@ -2144,6 +2145,11 @@ function buscarEmpleado(administradora,retenedora,ce,rfc,ap,am,nom){
 	                            _fieldByName("aux.otvalor13").setReadOnly(true);
 	                            _fieldByName("aux.otvalor14").setReadOnly(true);
 	                            _fieldByName("aux.otvalor16").setReadOnly(true);
+                            }else{
+                                if(Ext.ComponentQuery.query("[name=gridBuscaEmpleado]").length>0){
+                                    _fieldByName("gridBuscaEmpleado").getStore().removeAll();
+                                }
+                                
                             }
                             
                             
