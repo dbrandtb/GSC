@@ -87,4 +87,6 @@ public interface EmisionDAO {
 	public void actualizarCdplanGrupo(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String cdgrupo, String cdplan) throws Exception;
 	
+	public Map<String, String> redireccionaReporteVidaAuto(Integer cdunieco, Integer cdramo,Integer nmpoliza, String tipoEndoso, String endoso) throws Exception;
+	
 }
