@@ -1953,6 +1953,13 @@ Ext.onReady(function()
     		    }
   			 }
   		},
+  		{
+  		    text    : 'Limpiar',
+  		    handler : function(me){
+  		        debug('me up',me.up('window').down('form'));
+  		        limpiarValoresCalendario(me.up('window').down('form'));
+  		    }
+  		},
   		{ 
   			text: 'Cancelar',
   			handler : function(){
@@ -1966,12 +1973,12 @@ Ext.onReady(function()
     
     Ext.create('Ext.panel.Panel',
     {
-        renderTo  : '_p25_divpri'
-        ,itemId   : 'formBusqueda'
-        ,defaults : { style : 'margin : 5px;' }
-        ,border   : 0
-        ,items    :
-        [
+        renderTo    : '_p25_divpri'
+        ,itemId     : 'formBusqueda'
+        ,defaults   : { style : 'margin : 5px;' }
+        ,border     : 0
+        ,autoScroll : true
+        ,items      : [
             Ext.create('Ext.form.Panel',{
                 title     : 'Buscar p&oacute;lizas a renovar'
                 ,itemId   : '_p25_busquedaForm'
@@ -2020,7 +2027,7 @@ Ext.onReady(function()
                 ,store       : _p25_storePolizas                
                 //,minHeight   : 200
                 //,maxHeight   : 400
-                ,height      : 400
+                ,height      : 200
                 ,columns     : itemsFormularioPolizaColumns
                 ,buttonAlign : 'center'
                 ,hidden		 : 'true'
@@ -2061,13 +2068,11 @@ Ext.onReady(function()
                 ]
             })
             ,Ext.create('Ext.grid.Panel',{
-                title        : 'Condiciones de calendario programada'
+                title        : 'Calendarizacion programada'
                 ,itemId      : '_p25_gridCalendario'
                 ,selType     : 'checkboxmodel'
                 ,store       : _p25_storeCalendario
-                //,minHeight   : 200
-                //,maxHeight   : 400
-                ,height      : 400
+                ,height      : 200
                 ,columns     : itemsCalendarioColumns
                 ,buttonAlign : 'center'
                 ,hidden		 : 'true'
@@ -2121,7 +2126,7 @@ Ext.onReady(function()
         					}
     						});
   		        		}
-  		    		}
+  		    		}  		    		
 				]
             })
             ,Ext.create('Ext.grid.Panel',{
@@ -2129,9 +2134,7 @@ Ext.onReady(function()
                 ,itemId      : '_p25_gridCondiciones'
                 ,selType     : 'checkboxmodel'
                 ,store       : _p25_storeCondiciones
-                //,minHeight   : 200
-                //,maxHeight   : 400
-                ,height      : 400
+                ,height      : 200
                 ,columns     : itemsCondicionesColumns
                 ,buttonAlign : 'center'
                 ,hidden		 : 'true'
@@ -2946,6 +2949,7 @@ function tarifaFinal(){
 			                                		_fieldById('botonEmitirPolizaFinal').disable();
 			                                		_fieldById('botonImprimirPolizaFinal').enable();
 			                                		_fieldById('botonEmitirPolizaFinalPreview').hide();
+			                                		_fieldById('venDocVenEmiBotCancelar').setText('Regresar a Menú Principal');
 			                                		_fieldById('numerofinalpoliza').setValue(list[0]['nmpoliex']);
 			                                	    mensajeCorrecto('Aviso',resp.respuesta);
 			                                	}
@@ -3055,8 +3059,13 @@ function tarifaFinal(){
 				                    text    : 'Cancelar',
 				                    icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
 				                    handler : function(){
-				                        var me=this;
-				                        me.up().up().destroy();
+				                        if (Ext.isEmpty(_fieldById('numerofinalpoliza').getValue()) === true){
+				                            var me=this;
+                                            me.up().up().destroy();
+				                        }
+				                        else{
+				                            location.reload();
+				                        }				                        
 				                    }
 				                }
 			    			]
@@ -3252,6 +3261,15 @@ function agregaCalendario(){
 	panCalendario.show();
 	debug('<agregaCalendario');
 }
+    
+ function limpiarValoresCalendario(form){
+    debug('>limpiarValoresCalendario', form);    
+    _fieldByName('cdunieco',form).setValue('');
+    _fieldByName('cdramo',  form).setValue('');
+    _fieldByName('feaplica',form).setValue('');
+    _fieldByName('dias',    form).setValue('');
+    debug('<limpiarValoresCalendario');
+ }
 
  function mostrarMensajeVentana(mensaje){
     var winMensaje = Ext.create('Ext.window.Window', {
