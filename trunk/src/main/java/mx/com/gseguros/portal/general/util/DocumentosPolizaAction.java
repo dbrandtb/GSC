@@ -132,7 +132,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	                   cdramo        = smap1.get("pv_cdramo_i"), 
 	                   estado        = smap1.get("pv_estado_i"),
 	                   nmpoliza      = smap1.get("pv_nmpoliza_i"), 
-	                   nmsuplem      = smap1.get("pv_nmsuplem_i"),
+	                   nmsuplem      = "999999999999999999",//smap1.get("pv_nmsuplem_i"),
 	                   nmtramite     = smap1.get("pv_nmtramite_i"),
 	                   nombreReporte = smap1.get("pv_cddocume_i").substring(0 , smap1.get("pv_cddocume_i").length()-3);
 	            
