@@ -570,7 +570,7 @@ function _p32_guardarClic(callback)
                         });
                 
                 } else {
-                	mensajeError(json2.error);
+                	mensajeError(json2.respuesta);
                 
                 }
             }
