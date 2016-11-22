@@ -1615,14 +1615,27 @@ function _p29_emitirClicComplementarios()
 		                            },
 		                            <s:property value="items" />
 		                            ,listeners:{
-		                                afterrender:function(me,op){
+		                                beforerender:function(me,op){
+		                                    if(Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="ADMINISTRADORA"]').length>0){ 
+                                                
+		                                        Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="ADMINISTRADORA"]')[0].getStore().filter(
+                                                        [
+                                                         {filterFn: function(item) {
+                                                               
+                                                                        return item.get("key") >= 1000 || item.get("key")==-1; 
+                                                                     }
+                                                         }
+                                                        ]);
+                                             }
+		                                }
+		                                ,afterrender:function(me,op){
 		                                   
 		                                    
 		                                        try{
 		                                          
 		                                           
 		                                                
-		                                                
+		                                               
 		                                                _fieldByLabel('CLAVE DESCUENTO').on({
                                                             boxready:function(){
                                                                 claveDescuentoDxn(_fieldByLabel('ADMINISTRADORA').getValue()
@@ -1698,20 +1711,29 @@ function _p29_emitirClicComplementarios()
                                                             },
 	                                                        handler:function(){
 	                                                           // alert("limpiar")
-	                                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor10"]')[0].setReadOnly(false);
-                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor11"]')[0].setReadOnly(false);
-                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor12"]')[0].setReadOnly(false);
-                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor13"]')[0].setReadOnly(false);
-                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor14"]')[0].setReadOnly(false);
-                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].setReadOnly(false);
+	                                                           try{
+		                                                            Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CLAVE EMPLEADO"]')[0].setReadOnly(false);
+	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="NOMBRE EMPLEADO"]')[0].setReadOnly(false);
+	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="APELLIDO PATERNO"]')[0].setReadOnly(false);
+	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="APELLIDO MATERNO"]')[0].setReadOnly(false);
+	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="RFC EMPLEADO"]')[0].setReadOnly(false);
+	                                                                
+		                                                            
+		                                                            
+		                                                            _fieldByLabel("CLAVE EMPLEADO").setValue("");
+		                                                            _fieldByLabel("NOMBRE EMPLEADO").setValue("");
+		                                                            _fieldByLabel("APELLIDO PATERNO").setValue("");
+		                                                            _fieldByLabel("APELLIDO MATERNO").setValue("");
+		                                                            _fieldByLabel("RFC EMPLEADO").setValue("");
+		                                                            
+		                                                            if(panDatComMap1.SITUACION == 'AUTO' ){
+		                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CURP"]')[0].setReadOnly(false);
+		                                                                _fieldByLabel("CURP").setValue("");
+		                                                            }
+	                                                           }catch(e){
+	                                                               debugError(e)
+	                                                           }
 	                                                            
-	                                                            
-	                                                            _fieldByLabel("CLAVE EMPLEADO").setValue("");
-	                                                            _fieldByLabel("NOMBRE EMPLEADO").setValue("");
-	                                                            _fieldByLabel("APELLIDO PATERNO").setValue("");
-	                                                            _fieldByLabel("APELLIDO MATERNO").setValue("");
-	                                                            _fieldByLabel("RFC EMPLEADO").setValue("");
-	                                                            _fieldByLabel("CURP").setValue("");
 	                                                            
 	                                                           
 	                                                        }
@@ -1724,63 +1746,63 @@ function _p29_emitirClicComplementarios()
 	                                                                'blur':function(){
 	                                                                    
 	                                                                    buscarEmpleado(
-	                                                                            
-	                                                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor08"]')[0].getValue()
-	                                                                            ,Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor09"]')[0].getValue()
+	                                                                             Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="ADMINISTRADORA"]')[0].getValue()
+	                                                                            ,Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="RETENEDORA"]')[0].getValue()
 	                                                                            ,_fieldByLabel('CLAVE EMPLEADO').getValue()
 	                                                                            );
 	                                                                }
 	                                                            }        
 	                                                    );
 	                                                    
-	                                                    //campos variables
-	                                                    _mask("cargando datos");
-	                                                    Ext.Ajax.request(
-	                                                            {
-	                                                               
-	                                                                 url     : url_admin_ret 
-	                                                                ,params :
-	                                                                {
-	                                                                    'smap1.administradora' :  _fieldByLabel('ADMINISTRADORA').getValue(),
-	                                                                    'smap1.retenedora' :    _fieldByLabel('RETENEDORA').getValue()
-	                                                                }
-	                                                                ,success : function(response)
-	                                                                {
-	                                                                    _unmask();
-	                                                                    var json2 = Ext.decode(response.responseText);
-	                                                                    debug('### Response --- :',json2);
-	                                                                    if(json2.slist1==null){
-	                                                                        json2.slist1=[]
-	                                                                    }
-	                                                                    json2.slist1.forEach(function(it,idx,arr){
-	                                                                      for(var i=17;i<22;i++)  {
-	                                                                          
-	                                                                        if((it['OTVALOR'+(i+5)]+'').trim()!='' && it['OTVALOR'+(i+5)]!=undefined && it['OTVALOR'+(i+5)]!=null){
-	                                                                            
-	                                                                            _fieldByName('panelDatosAdicionales').add({
-	                                                                                xtype      :'textfield',
-	                                                                                fieldLabel :it['OTVALOR'+(i+5)],
-	                                                                                name       :'parametros.pv_otvalor'+i,
-	                                                                                value      :tvalopol['parametros.pv_otvalor'+i]
-	                                                                            });
-	                                                                          
-	                                                                            
-	                                                                            
-	                                                                           
-	                                                                        }
-	                                                                      }
-	                                                                      
-	                                                                      
-	                                                                    });
-	                                                                    
-	                                                                }
-	                                                                ,failure : function()
-	                                                                {
-	                                                                    _unmask();
-	                                                                    errorComunicacion();
-	                                                                }
-	                                                            });
-		                                                
+	                                                    if(panDatComMap1.SITUACION == 'AUTO' ){
+		                                                    //campos variables
+		                                                    _mask("cargando datos");
+		                                                    Ext.Ajax.request(
+		                                                            {
+		                                                               
+		                                                                 url     : url_admin_ret 
+		                                                                ,params :
+		                                                                {
+		                                                                    'smap1.administradora' :  _fieldByLabel('ADMINISTRADORA').getValue(),
+		                                                                    'smap1.retenedora' :    _fieldByLabel('RETENEDORA').getValue()
+		                                                                }
+		                                                                ,success : function(response)
+		                                                                {
+		                                                                    _unmask();
+		                                                                    var json2 = Ext.decode(response.responseText);
+		                                                                    debug('### Response --- :',json2);
+		                                                                    if(json2.slist1==null){
+		                                                                        json2.slist1=[]
+		                                                                    }
+		                                                                    json2.slist1.forEach(function(it,idx,arr){
+		                                                                      for(var i=17;i<22;i++)  {
+		                                                                          
+		                                                                        if((it['OTVALOR'+(i+5)]+'').trim()!='' && it['OTVALOR'+(i+5)]!=undefined && it['OTVALOR'+(i+5)]!=null){
+		                                                                            
+		                                                                            _fieldByName('panelDatosAdicionales').add({
+		                                                                                xtype      :'textfield',
+		                                                                                fieldLabel :it['OTVALOR'+(i+5)],
+		                                                                                name       :'parametros.pv_otvalor'+i,
+		                                                                                value      :tvalopol['parametros.pv_otvalor'+i]
+		                                                                            });
+		                                                                          
+		                                                                            
+		                                                                            
+		                                                                           
+		                                                                        }
+		                                                                      }
+		                                                                      
+		                                                                      
+		                                                                    });
+		                                                                    
+		                                                                }
+		                                                                ,failure : function()
+		                                                                {
+		                                                                    _unmask();
+		                                                                    errorComunicacion();
+		                                                                }
+		                                                            });
+	                                                    }
 		                                           
 		                                            
 		                                            
@@ -3222,16 +3244,19 @@ function _p29_emitirClicComplementarios()
 	                                            ,handler : function(button)
 	                                            {
 	                                                
-                                                    
-                                                    buscarEmpleado(
-                                                            _fieldByLabel('ADMINISTRADORA').getValue()
-                                                            ,_fieldByLabel('RETENEDORA').getValue()
-                                                            ,_fieldByName('no_empleado').getValue()
-                                                            ,_fieldByName('rfc').getValue()
-                                                            ,_fieldByName('ap_paterno').getValue()
-                                                            ,_fieldByName('ap_materno').getValue()
-                                                            ,_fieldByName('nombre').getValue()
-                                                            );
+                                                   try{ 
+	                                                    buscarEmpleado(
+	                                                            _fieldByLabel('ADMINISTRADORA').getValue()
+	                                                            ,_fieldByLabel('RETENEDORA').getValue()
+	                                                            ,_fieldByName('no_empleado').getValue()
+	                                                            ,_fieldByName('rfc').getValue()
+	                                                            ,_fieldByName('ap_paterno').getValue()
+	                                                            ,_fieldByName('ap_materno').getValue()
+	                                                            ,_fieldByName('nombre').getValue()
+	                                                            );
+                                                   }catch(e){
+                                                       debugError(e);
+                                                   }
 	                                            }
 	                                        }
 	                                    ]
@@ -3253,20 +3278,24 @@ function _p29_emitirClicComplementarios()
 	                                                debug('recuperar cliente handler record:',record);
 	//                                              _p28_recordClienteRecuperado=record;
 	//                                              nombre.setValue(record.raw.NOMBRECLI);
-	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor10"]')[0].setValue(record.raw.clave_empleado);
-	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor11"]')[0].setValue(record.raw.nombre);
-	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor12"]')[0].setValue(record.raw.apellido_p);
-	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor13"]')[0].setValue(record.raw.apellido_m);
-	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor14"]')[0].setValue(record.raw.rfc);
-	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].setValue(record.raw.curp);
+	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CLAVE EMPLEADO"]')[0].setValue(record.raw.clave_empleado);
+	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="NOMBRE EMPLEADO"]')[0].setValue(record.raw.nombre);;
+	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="APELLIDO PATERNO"]')[0].setValue(record.raw.apellido_p);
+	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="APELLIDO MATERNO"]')[0].setValue(record.raw.apellido_m);
+	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="RFC EMPLEADO"]')[0].setValue(record.raw.rfc);
+	                                                                if(Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CURP"]').length>0){
+	                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CURP"]')[0].setValue(record.raw.curp);
+	                                                                }
 	                                                               
 
-	                                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor10"]')[0].setReadOnly(true);
-                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor11"]')[0].setReadOnly(true);
-                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor12"]')[0].setReadOnly(true);
-                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor13"]')[0].setReadOnly(true);
-                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor14"]')[0].setReadOnly(true);
-                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].setReadOnly(true);
+                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CLAVE EMPLEADO"]')[0].setReadOnly(true);
+                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="NOMBRE EMPLEADO"]')[0].setReadOnly(true);
+                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="APELLIDO PATERNO"]')[0].setReadOnly(true);
+                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="APELLIDO MATERNO"]')[0].setReadOnly(true);
+                                                                    Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="RFC EMPLEADO"]')[0].setReadOnly(true);
+                                                                    if(Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CURP"]').length>0){
+                                                                        Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CURP"]')[0].setReadOnly(true);
+                                                                    }
 	                                                
 	                                                ventana.destroy();
 	                                            }
@@ -3443,12 +3472,16 @@ function _p29_emitirClicComplementarios()
                                                 ventanaBusquedaEmpleado()
                                             }
                                             _fieldByName("gridBuscaEmpleado").getStore().loadData(json.slist1);
-                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor10"]')[0].setReadOnly(true);
-                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor11"]')[0].setReadOnly(true);
-                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor12"]')[0].setReadOnly(true);
-                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor13"]')[0].setReadOnly(true);
-                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor14"]')[0].setReadOnly(true);
-                                            Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor16"]')[0].setReadOnly(true);
+                                            
+                                            
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CLAVE EMPLEADO"]')[0].setReadOnly(true);
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="NOMBRE EMPLEADO"]')[0].setReadOnly(true);
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="APELLIDO PATERNO"]')[0].setReadOnly(true);
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="APELLIDO MATERNO"]')[0].setReadOnly(true);
+                                            Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="RFC EMPLEADO"]')[0].setReadOnly(true);
+                                            if(Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CURP"]').length>0){
+                                                Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CURP"]')[0].setReadOnly(true);
+                                            }
                                         }else{
                                             if(Ext.ComponentQuery.query("[name=gridBuscaEmpleado]").length>0){
                                                 _fieldByName("gridBuscaEmpleado").getStore().removeAll();
