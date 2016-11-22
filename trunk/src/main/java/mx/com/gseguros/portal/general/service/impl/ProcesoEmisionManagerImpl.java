@@ -974,14 +974,28 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			paso = "Insertando detalle de emisi�n";
 			logger.debug("se inserta detalle nuevo para emision");
 	        	
-	        mesaControlDAO.movimientoDetalleTramite(ntramite,new Date(),null,
-	        		"El tr\u00e1mite se emiti\u00f3",cdusuari,null,cdsisrol,"S", null, null, EstatusTramite.CONFIRMADO.getCodigo(),true);
-	        
+			RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+                    cdusuari,
+                    cdsisrol,
+                    ntramite,
+                    EstatusTramite.CONFIRMADO.getCodigo(),
+                    "El tr\u00e1mite se emiti\u00f3",
+                    null,  // cdrazrecha
+                    null,  // cdusuariDes
+                    null,  // cdsisrolDes
+                    true,  // permiso agente
+                    false, // porEscalamiento
+                    fechaHoy,
+                    false  // sinGrabarDetalle
+                    );
+			
+			/* jtezva 2016 nov 22: ya se manda con el despachador
 			try {
 				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
 			} catch (Exception ex) {
 				logger.error("Error al enviar correos de emision", ex);
 			}
+			*/
 			
 		} catch(Exception ex) {
 			Utils.generaExcepcion(ex, paso);

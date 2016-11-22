@@ -3160,6 +3160,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
+		/* jtezva 2016 nov 22: ya se manda con el despachador
 		if (success) {
 			try {
 				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
@@ -3167,6 +3168,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				logger.error("Error al enviar correos de emision", ex);
 			}
 		}
+		*/
 		
 		//Se actualiza valores en sigs de poliza original y emitida
 		if (success) 
