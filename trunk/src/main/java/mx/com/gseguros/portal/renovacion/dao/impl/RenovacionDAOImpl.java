@@ -434,7 +434,8 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 						//"cdmoneda",
 						"primas",
 						"descuento",
-						"extra_prima"
+						"extra_prima",
+						"nmpolant"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
