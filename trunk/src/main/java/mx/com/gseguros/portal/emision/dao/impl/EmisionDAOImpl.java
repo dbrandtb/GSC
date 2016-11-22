@@ -457,4 +457,42 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		}
 	}
 	
+	@Override
+    public Map<String, String> redireccionaReporteVidaAuto(Integer cdunieco, Integer cdramo,Integer nmpoliza, String tipoEndoso, String endoso) throws Exception {
+        Map<String, String> params= new LinkedHashMap<String, String>();
+        params.put("PV_CDUNIECO_I"   , cdunieco+"");
+        params.put("PV_CDRAMO_I"     , cdramo+"");
+        params.put("PV_NMPOLIZA_I"   , nmpoliza+"");
+        params.put("PV_CDDEVCIA_I"   , tipoEndoso);
+        params.put("PV_CDGESTOR_I"   , endoso);
+        Map<String,Object>procResult  = ejecutaSP(new redireccionaReporteVidaAuto(getDataSource()), params);
+        List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+        if(lista==null)
+        {
+            lista=new ArrayList<Map<String,String>>();
+        }
+        Utils.debugProcedure(logger, "redireccionaReporteVidaAuto", params,lista);
+        return lista.get(0);
+    }
+    
+    protected class redireccionaReporteVidaAuto extends StoredProcedure {
+        
+        String columnas[]=new String[]{
+                "cdunieco","cdramo","estado","nmpoliza","nmsuplem","nmsituac"
+                };
+        
+        protected redireccionaReporteVidaAuto (DataSource dataSource) {
+            super(dataSource, "P_REPORTE_VIDA_AUTO");
+            declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_NMPOLIZA_I" , OracleTypes.VARCHAR)); 
+            declareParameter(new SqlParameter("PV_CDDEVCIA_I" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("PV_CDGESTOR_I" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new GenericMapper(columnas)));
+            declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+	
 }
