@@ -29,6 +29,7 @@ import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
+import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
@@ -138,6 +139,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
+	
+	@Autowired
+    private PersonasManager personasManager;
 	
 	@Value("${caratula.impresion.autos.url}")
 	private String urlImpresionCaratula;
@@ -5495,33 +5499,28 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			logger.debug(">>>ntramite retornado de cancelacion: " +ntramite);
 			logger.debug(">>>tipoGrupoInciso retornado de cancelacion: " +tipoGrupoInciso);
 			
-			if(("si").equals(confirmar))
-			{
-					paso = "Realizando endoso en Web Service Autos";
-					logger.debug(paso);
-					
-					EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
-					if(aux == null || !aux.isExitoRecibos()){
-						logger.error("Error al ejecutar los WS de endoso para cancelacion de poliza de auto");
-						
-						boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
-						
-						if(aux!=null && aux.isEndosoSinRetarif()){
-				    		throw new ApplicationException("Endoso sin Tarifa. "+(endosoRevertido?"Endoso revertido exitosamente.":"Error al revertir el endoso"));
-				    	}
-						
-						if(endosoRevertido){
-							logger.error("Endoso revertido exitosamente.");
-							throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
-						}else{
-							logger.error("Error al revertir el endoso");
-							throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
-						}
-						
-					}
-					
-					ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, null);
+			paso = "Realizando endoso en Web Service Autos";
+			logger.debug(paso);
+			
+			EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
+			if(aux == null || !aux.isExitoRecibos()){
+				logger.error("Error al ejecutar los WS de endoso para cancelacion de poliza de auto");
+				
+				boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
+				
+				if(aux!=null && aux.isEndosoSinRetarif()){
+		    		throw new ApplicationException("Endoso sin Tarifa. "+(endosoRevertido?"Endoso revertido exitosamente.":"Error al revertir el endoso"));
+		    	}
+				
+				if(endosoRevertido){
+					logger.error("Endoso revertido exitosamente.");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
+				}else{
+					logger.error("Error al revertir el endoso");
+					throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
 				}
+				
+			}
 		}
 		catch(Exception ex)
 		{
@@ -8543,6 +8542,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	            ,UserVO usuarioSesion
 	            ,List<Map<String,String>> mpoliperMpersona
 	            ,FlujoVO flujo
+	            ,List<Map<String,String>>slist2
 	            )throws Exception
 	    {
 	        logger.debug(Utils.log(
@@ -8561,6 +8561,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	                ,"\n@@@@@@ cdelemen=" , cdelemen
 	                ,"\n@@@@@@ incisos="  , mpoliperMpersona
 	                ,"\n@@@@@@ flujo="    , flujo
+	                ,"\n@@@@@@ slist2="   , slist2
 	                ));
 	        
 	        ManagerRespuestaVoidVO resp=new ManagerRespuestaVoidVO(true);
@@ -8811,12 +8812,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	             * PARA LLAMAR WS SEGUN TIPO DE ENDOSO
 	             */
 	            if(TipoEndoso.SEGURO_VIDA_AUTO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-	                if(this.endosoBeneficiarioVidaAuto(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, cdusuari ,renderFechas.parse(feefecto))){
+	                //if(this.endosoBeneficiarioVidaAuto(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup, cdusuari ,renderFechas.parse(feefecto))){
+	                if(!true){
 	                    logger.info("Endoso de Beneficiario Vida Auto exitoso...");
 	                }else{
 	                    logger.error("Error al ejecutar los WS de endoso de Beneficiario Vida Auto");
-	                    
 	                    boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
+	                    personasManager.guardarBeneficiarios(cdunieco, cdramo, estado, nmpoliza, usuarioCaptura, slist2);
 	                    if(endosoRevertido){
 	                        logger.error("Endoso revertido exitosamente.");
 	                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
