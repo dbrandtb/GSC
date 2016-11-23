@@ -2739,21 +2739,21 @@ public class EndososAutoAction extends PrincipalCoreAction
             {   
                 paso = "Validando datos de entrada";
                 
-               // Utils.validate(smap1, "No se recibieron datos");
+               Utils.validate(smap1, "No se recibieron datos");
                 
                 EndososAction endososAction = new EndososAction();
                 endososAction.setEndososManager(endososManager);
                 endososAction.transformaEntrada(smap1, slist1, true);
                 
                //validados
-                String cdunieco    = "0"//smap1.get("cdunieco")
-                       ,cdramo     = "5"//smap1.get("cdramo")
-                       ,estado     = "M"//smap1.get("estado")
-                       ,nmpoliza   = "1906"//smap1.get("nmpoliza")
-                       ,nmsuplem   = "1"//smap1.get("nmsuplem")
+                String cdunieco    = smap1.get("cdunieco")
+                       ,cdramo     = smap1.get("cdramo")
+                       ,estado     = smap1.get("estado")
+                       ,nmpoliza   = smap1.get("nmpoliza")
+                       ,nmsuplem   = smap1.get("nmsuplem")
                        ,nmsituac   = "0"//smap1.get("nmsituac")
                        ,cdrolPipes = "3"//smap1.get("cdrolPipes")
-                       ,cdtipsup   = "1"//smap1.get("cdtipsup")
+                       ,cdtipsup   = smap1.get("cdtipsup")
                        ,ntramite   = smap1.get("ntramite");
                 
                 Utils.validate(
@@ -2866,7 +2866,6 @@ public class EndososAutoAction extends PrincipalCoreAction
                
                Utils.validate(smap1  , "No se recibieron datos");
                Utils.validate(slist1 , "No se recibieron datos de inciso");
-               
                String cdtipsup = smap1.get("cdtipsup");
                String tstamp   = smap1.get("tstamp");
                String cdunieco = smap1.get("cdunieco");
