@@ -576,7 +576,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 			String cdunieco,
 			String cdramo,
 			String estado,
-			String nmpoliza
+			String nmpoliza,
+			String cdusuari,
+			String cdsisrol
 			) throws Exception{
 		logger.debug(
 				new StringBuilder()
@@ -586,13 +588,20 @@ public class RenovacionManagerImpl implements RenovacionManager
 				.append("\n@@@@@@ cdramo=").append(cdramo)
 				.append("\n@@@@@@ estado=").append(estado)
 				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ cdusuari=").append(cdusuari)
+				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
 				.toString()
 				);
 		String paso = "";
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		String cdagente = null;
 		try{
+		    if(null != cdusuari){
+		        paso = "obteniendo agente "+cdusuari;
+		        cdagente = consultasDAO.recuperaAgentePoliza(cdunieco, cdramo, estado, nmpoliza, cdusuari);
+		    }
 			paso = "antes de obtener componentes de poliza";
-			List<Map<String,String>> listaPolizasRenovables = renovacionDAO.busquedaRenovacionIndividual(cdunieco, cdramo, estado, nmpoliza);
+			List<Map<String,String>> listaPolizasRenovables = renovacionDAO.busquedaRenovacionIndividual(cdunieco, cdramo, estado, nmpoliza, cdagente);
 			paso = "despues de obtener componentes de poliza";
 			resp.setSlist(listaPolizasRenovables);
 		}
@@ -620,7 +629,9 @@ public class RenovacionManagerImpl implements RenovacionManager
 			String fecfin,
 			String status,
 			String cdperson,
-			String retenedora
+			String retenedora,
+			String cdusuari,
+			String cdsisrol
 			) throws Exception{
 		String paso = "";
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
@@ -640,7 +651,8 @@ public class RenovacionManagerImpl implements RenovacionManager
 					fecfin, 
 					status,
 					cdperson,
-					retenedora);
+					retenedora,
+					cdusuari);
 			paso = "despues de obtener polizas masivas";
 			resp.setSlist(listaPolizasRenovables);
 		}

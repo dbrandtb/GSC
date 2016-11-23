@@ -522,4 +522,18 @@ public class ConsultasManagerImpl implements ConsultasManager
             String nmsituac)throws Exception {
 	    return consultasDAO.cargarMpoliperSituac(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac);
 	}
+	
+	@Override
+	public String recuperaAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String cdusuari) throws Exception{
+	    String paso = "";
+	    String cdagente = null;
+	    try{
+	        paso = "Antes de recuperar agente";
+	        cdagente = consultasDAO.recuperaAgentePoliza(cdunieco, cdramo, estado, nmpoliza, cdusuari);
+	    }
+	    catch(Exception ex){
+	        Utils.generaExcepcion(ex, paso);
+	    }
+	    return cdagente;
+	}
 }

@@ -28,7 +28,9 @@ public interface RenovacionManager
 			String cdunieco,
 			String cdramo,
 			String estado,
-			String nmpoliza
+			String nmpoliza,
+			String cdusuari,
+			String cdsisrol
 			) throws Exception;
 	public ManagerRespuestaSlistVO buscarPolizasRenovacionIndividualMasiva(
 			String cdunieco,
@@ -40,7 +42,9 @@ public interface RenovacionManager
 			String fecfin,
 			String status,
 			String cdperson,
-			String retenedora
+			String retenedora,
+			String cdusuari,
+			String cdsisrol
 			) throws Exception;
 	public ManagerRespuestaSlistVO renuevaPolizaIndividual(
 			String cdunieco,

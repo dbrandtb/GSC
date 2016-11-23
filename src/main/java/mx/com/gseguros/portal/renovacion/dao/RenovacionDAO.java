@@ -48,7 +48,8 @@ public interface RenovacionDAO
 			String cdunieco,
 			String cdramo,
 			String estado,
-			String nmpoliza)throws Exception;
+			String nmpoliza,
+			String cdagente)throws Exception;
 	
 	public List<Map<String,String>> busquedaRenovacionIndividualMasiva(
 			String cdunieco,
@@ -60,7 +61,8 @@ public interface RenovacionDAO
 			String fecfin,
 			String status,
 			String cdperson,
-			String retenedora)throws Exception;
+			String retenedora,
+			String cdusuari)throws Exception;
 	
 	public Map<String,String> renuevaPolizaIndividual(
 			String cdunieco,
