@@ -478,7 +478,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
     protected class redireccionaReporteVidaAuto extends StoredProcedure {
         
         String columnas[]=new String[]{
-                "cdunieco","cdramo","estado","nmpoliza","nmsuplem","nmsituac"
+                "p_unieco","p_ramo","p_estado","p_poliza","p_suplem","p_situac"
                 };
         
         protected redireccionaReporteVidaAuto (DataSource dataSource) {
