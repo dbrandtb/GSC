@@ -1378,17 +1378,15 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					);
 			
 			String nmsuplem        = (String) resParams.get("pv_nmsuplem_o");
-			String ntramite        = (String) resParams.get("pv_ntramite_o");
+			String ntramiteEmi     = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
 			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
 			
 			Date fechaHoy = new Date();
+			String ntramite = null;
 			
 			// JTEZVA - 11 NOV 2016 - SOLO CUANDO NO TENGO TRAMITE Y VOY A CONFIRMAR CREO UN TRAMITE
-			if (ntramite == null && flujo == null && "SI".equalsIgnoreCase(confirmar)) {
-    			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
-    			String ntramiteEmi = datosPoliza.get("ntramite");
-    			
+			if (flujo == null && "SI".equalsIgnoreCase(confirmar)) {
     			Map<String,String> valores = new HashMap<String,String>();
     			valores.put("otvalor01" , ntramiteEmi);
     			valores.put("otvalor02" , cdtipsup);
