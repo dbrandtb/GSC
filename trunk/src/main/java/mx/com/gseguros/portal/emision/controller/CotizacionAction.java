@@ -12759,6 +12759,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				for(Map<String,String> cob : coberturasPlanList){
 				    
 				    if("4EAC".equalsIgnoreCase(cob.get("CDGARANT"))) continue; //Para saltar la cobertura de Evento de Alto Costo
+				    if("4EE".equalsIgnoreCase(cob.get("CDGARANT")))  continue; //Para saltar la cobertura de Emergencia en el Extranjero y manejarla al ultimo
 				    
 					//si la cobertura esta en el plan original y no esta seleccionada en pantalla
 					if(Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA")) && !coberturasSel.containsKey(cob.get("CDGARANT"))){
@@ -12773,6 +12774,28 @@ public class CotizacionAction extends PrincipalCoreAction
 							ultimaGarantia = " CON "+cob.get("DSGARANT");
 						}
 				}
+				
+				// Se repite el for anterior solo para manejar la cobertura de Emergecnia en el Extranjero
+				for(Map<String,String> cob : coberturasPlanList){
+                    
+                    if("4EAC".equalsIgnoreCase(cob.get("CDGARANT"))) continue; //Para saltar la cobertura de Evento de Alto Costo
+                    if(!"4EE".equalsIgnoreCase(cob.get("CDGARANT"))) continue; //Para saltar las coberturas que no son Emergencia en el Extranjero
+                    
+                    logger.debug(" :::: Tratando la cobertura de Emergencia en el Etranjero luego de iterar todas las demas cobeturas :::: ");
+                    
+                    //si la cobertura esta en el plan original y no esta seleccionada en pantalla
+                    if(Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA")) && !coberturasSel.containsKey(cob.get("CDGARANT"))){
+                        sobrantes ++;
+                        nombreLargo.append(" -").append(StringUtils.isBlank(cob.get("DSGARANT_CORTA"))? cob.get("CDGARANT") : cob.get("DSGARANT_CORTA"));//TGARANTI
+                        ultimaGarantia = " SIN "+cob.get("DSGARANT");
+                        
+                    }else //si la cobertura se considera dentro del plan predefinido y se encuentra seleccionada en pantalla
+                        if(Constantes.NO.equalsIgnoreCase(cob.get("SWOBLIGA")) && coberturasSel.containsKey(cob.get("CDGARANT"))){
+                            faltantes ++;
+                            nombreLargo.append(" +").append(StringUtils.isBlank(cob.get("DSGARANT_CORTA"))? cob.get("CDGARANT") : cob.get("DSGARANT_CORTA"));//TGARANTI
+                            ultimaGarantia = " CON "+cob.get("DSGARANT");
+                        }
+                }
 				
 				//se agrega el plan a generar puntaje
 				PuntajeCoberturasPlanVO puntajePlan =  new PuntajeCoberturasPlanVO();
