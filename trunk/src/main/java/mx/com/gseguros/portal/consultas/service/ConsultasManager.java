@@ -177,4 +177,7 @@ public interface ConsultasManager
 	@Deprecated
 	public Map<String,String>cargarMpoliperSituac (String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem
             ,String nmsituac) throws Exception;
+	
+	public String recuperaAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String cdusuari) throws Exception;
+	
 }

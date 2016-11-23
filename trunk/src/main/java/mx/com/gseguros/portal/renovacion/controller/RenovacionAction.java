@@ -17,6 +17,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
+import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.renovacion.service.RenovacionManager;
 import mx.com.gseguros.utils.Utils;
@@ -362,7 +363,7 @@ public class RenovacionAction extends PrincipalCoreAction
 		success = true;
 		
 		//datos completos
-		try{	
+		try{
 			Utils.validate(smap1, "No se recibieron datos");
 			Utils.validate(smap1.get("cdunieco"), "No se recibio la oficina",
 						   smap1.get("cdramo")  , "No se recibio el producto",
@@ -371,10 +372,17 @@ public class RenovacionAction extends PrincipalCoreAction
 			String cdunieco = smap1.get("cdunieco");
 			String cdramo   = smap1.get("cdramo");
 			String estado   = smap1.get("estado");
-			String nmpoliza = smap1.get("nmpoliza");
-			
-			//proceso
-			ManagerRespuestaSlistVO managerResp = renovacionManager.buscarPolizasRenovacionIndividual(cdunieco, cdramo, estado, nmpoliza);
+			String nmpoliza = smap1.get("nmpoliza");			
+            String cdusuari  = null,
+                   cdsisrol  = null;
+            UserVO usuario = Utils.validateSession(session);
+            if(usuario.getRolActivo().getClave().equals(RolSistema.AGENTE.getCdsisrol())){
+                cdusuari  = usuario.getUser();
+                cdsisrol  = usuario.getRolActivo().getClave();
+            }
+            logger.info(new StringBuilder().append("\n###### cdusuari=").append(cdusuari).append("\n###### cdsisrol=").append(cdsisrol));
+            //proceso
+			ManagerRespuestaSlistVO managerResp = renovacionManager.buscarPolizasRenovacionIndividual(cdunieco, cdramo, estado, nmpoliza, cdsisrol, cdusuari);
 			logger.info(new StringBuilder().append("managerResp ").append(managerResp).toString());
 			slist1 			= managerResp.getSlist();
 			success         = managerResp.isExito();
@@ -424,6 +432,14 @@ public class RenovacionAction extends PrincipalCoreAction
 			String retenedora = smap1.get("retenedora");
 			String cdperson	  = smap1.get("cdperson");
 			//proceso
+			UserVO usuario = Utils.validateSession(session);
+			String cdusuari  = null,
+	               cdsisrol  = null;
+			if(usuario.getRolActivo().getClave().equals(RolSistema.AGENTE.getCdsisrol())){
+			    cdusuari  = usuario.getUser();
+		        cdsisrol  = usuario.getRolActivo().getClave();
+			}
+			logger.info(new StringBuilder().append("\n###### cdusuari=").append(cdusuari).append("\n###### cdsisrol=").append(cdsisrol));
 			managerResp = renovacionManager.buscarPolizasRenovacionIndividualMasiva(
 					cdunieco, 
 					cdramo, 
@@ -434,7 +450,9 @@ public class RenovacionAction extends PrincipalCoreAction
 					fecfin, 
 					status,
 					cdperson,
-					retenedora
+					retenedora,
+					cdusuari,
+					cdsisrol
 					);
 			logger.info(new StringBuilder().append("managerResp ").append(managerResp).toString());
 			slist1 			= managerResp.getSlist();
@@ -646,6 +664,14 @@ public class RenovacionAction extends PrincipalCoreAction
 		session=ActionContext.getContext().getSession();
 		try{
 			Utils.validate(slist1, "No se recibieron polizas a renovar");
+			logger.info(
+	                new StringBuilder()
+	                .append("\n###### cdunieco=").append(slist1.get(0).get("cdunieco"))
+	                .append("\n###### cdramo=").append(slist1.get(0).get("cdramo"))
+	                .append("\n###### estado=").append(slist1.get(0).get("estado"))
+	                .append("\n###### nmpoliza=").append(slist1.get(0).get("nmpoliza"))
+	                .toString()
+	                );
 			renovacionManager.renovarPolizasMasivasIndividuales(slist1);
 			exito = true;
 		}

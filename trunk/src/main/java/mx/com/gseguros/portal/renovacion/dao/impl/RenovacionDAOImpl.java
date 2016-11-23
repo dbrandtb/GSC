@@ -262,27 +262,20 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			String cdunieco,
 			String cdramo,
 			String estado,
-			String nmpoliza)throws Exception
+			String nmpoliza,
+			String cdagente)throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("cdunieco" , cdunieco);
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
+		params.put("cdagente" , cdagente);
 		Map<String,Object>procResult = ejecutaSP(new BusquedaRenovacionIndividual(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
-		if(lista==null)
-		{
+		if(lista==null){
 			lista=new ArrayList<Map<String,String>>();
 		}
-		logger.debug(
-				new StringBuilder()
-				.append("\n**************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_GET_DATOS_POLIZA ******")
-				.append("\n****** result=").append(lista)
-				.append("\n**************************************************") 
-				.toString()
-				);
 		return lista;
 	}
 	
@@ -295,6 +288,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
 			String[] cols=new String[]
 					{
 						"cdperson",
@@ -362,7 +356,8 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			String fecfin,
 			String status,
 			String cdperson,
-			String retenedora
+			String retenedora,
+			String cdusuari
 			)throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
@@ -376,20 +371,12 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		params.put("exclusion" , "N");
 		params.put("retenedora", retenedora);
 		params.put("use_exec"  , "N");
+		params.put("cdusuari"  , cdusuari);
 		Map<String,Object>procResult = ejecutaSP(new BusquedaRenovacionIndividualMasiva(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
-		if(lista==null)
-		{
+		if(lista==null){
 			lista=new ArrayList<Map<String,String>>();
 		}
-		logger.debug(
-				new StringBuilder()
-				.append("\n**************************************************")
-				.append("\n****** PKG_RENOVACION_IND.P_GET_DATOS_POL_MAS ******")
-				.append("\n****** result=").append(lista)
-				.append("\n**************************************************") 
-				.toString()
-				);
 		return lista;
 	}
 	
@@ -408,6 +395,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			declareParameter(new SqlParameter("cdperson"   , OracleTypes.VARCHAR));			
 			declareParameter(new SqlParameter("retenedora" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("exclusion"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"   , OracleTypes.VARCHAR));
 			String[] cols=new String[]
 					{
 						"cdperson",

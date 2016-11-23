@@ -640,4 +640,6 @@ public interface ConsultasDAO
             String cdtipsit) throws Exception;
 
     public Map<String, String> obtieneUsuarioXAgente(String pv_cdagente_i) throws Exception;
+    
+    public String recuperaAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String cdusuari) throws Exception;
 }

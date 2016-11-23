@@ -5486,4 +5486,35 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
         }
     }
+    
+    @Override
+    public String recuperaAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String cdusuari) throws Exception{
+        Map<String,String>params = new LinkedHashMap<String,String>();
+        params.put("cdunieco" , cdunieco);
+        params.put("cdramo"   , cdramo);
+        params.put("estado"   , estado);
+        params.put("nmpoliza" , nmpoliza);
+        params.put("cdusuari" , cdusuari);
+        Map<String,Object> procResult = ejecutaSP(new RecuperaAgentePoliza(getDataSource()),params);        
+        Map<String,String> salida     = new LinkedHashMap<String,String>();
+        String cdagente = (String)procResult.get("pv_cdagente_o");
+        return cdagente;
+    }
+        
+    protected class RecuperaAgentePoliza extends StoredProcedure
+    {
+        protected RecuperaAgentePoliza(DataSource dataSource)
+        {
+            super(dataSource,"P_GET_AGENTE_POLIZA");
+            declareParameter(new SqlParameter("cdunieco" ,        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   ,        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   ,        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" ,        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari" ,        OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdagente_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" ,  OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  ,  OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
