@@ -1629,21 +1629,28 @@ function _p29_emitirClicComplementarios()
                                              }
 		                                }
 		                                ,afterrender:function(me,op){
-		                                   
+		                                    
 		                                    
 		                                        try{
 		                                          
-		                                           
+		                                            if(inputCdtipsit=='MC' || inputCdtipsit=='AT'){
+                                                        me.hide();
+                                                        return;
+                                                    }
 		                                                
-		                                               
-		                                                _fieldByLabel('CLAVE DESCUENTO').on({
-                                                            boxready:function(){
-                                                                claveDescuentoDxn(_fieldByLabel('ADMINISTRADORA').getValue()
-                                                                        ,_fieldByLabel('ADMINISTRADORA').getValue()
-                                                                        ,inputCdramo
-                                                                        ,inputCdtipsit);
-                                                            }
-                                                        });
+		                                               try{
+			                                                _fieldByLabel('CLAVE DESCUENTO').on({
+	                                                            boxready:function(){
+	                                                                claveDescuentoDxn(_fieldByLabel('ADMINISTRADORA').getValue()
+	                                                                        ,_fieldByLabel('ADMINISTRADORA').getValue()
+	                                                                        ,inputCdramo
+	                                                                        ,inputCdtipsit);
+	                                                            }
+	                                                        });
+		                                               }catch(e){
+		                                                   debug("Error: no se estan filtrando las claves de descuento");
+		                                                   debugError(e);
+		                                               }
 		                                                
 		                                                if(panDatComMap1.SITUACION == 'AUTO' ){
 			                                                _fieldByLabel('RETENEDORA').fireEvent('blur',_fieldByLabel('RETENEDORA'));
