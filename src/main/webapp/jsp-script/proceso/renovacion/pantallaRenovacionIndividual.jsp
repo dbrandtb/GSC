@@ -312,7 +312,7 @@ Ext.onReady(function()
         				vertical	: false,
             			items       : [
                 			{
-                    			boxLabel   : 'Cambio en forma de pago, contratante y/o domicilio',
+                    			boxLabel   : 'Cambio en forma de pago y/o domicilio del contratante',
                     			name       : 'topping',
                     			inputValue : '1',
                     			itemId     : 'checkbox1',
@@ -323,6 +323,12 @@ Ext.onReady(function()
                     			name       : 'topping',
                     			inputValue : '2',
                     			itemId     : 'checkbox2'
+                			},
+                			{
+                			    boxLabel   : 'Mismas condiciones de renovacion',
+                                name       : 'topping',
+                                inputValue : '3',
+                                itemId     : 'checkbox3'
                 			}
             			]
     				}	
@@ -336,47 +342,168 @@ Ext.onReady(function()
     							if(_fieldById('itemRadio').getValue()['topping'] == 1){
     								_fieldById('winAutoServicio').close();
     								_p25_ventanaCambioFormaPago(this.up('window').resRenova);
-    							}else if(_fieldById('itemRadio').getValue()['topping'] == 2){
-    		                        Ext.Ajax.request(
-		                                {
-		                                    url     : _GLOBAL_COMP_URL_TURNAR
-		                                    ,params : {
-		                                    	'params.NTRAMITE'  : ntramite,
-		                                    	'params.CDTIPFLU'  : this.up('window').resRenova['cdtipflu'],
-		                                    	'params.CDFLUJOMC' : this.up('window').resRenova['cdflujomc'],
-		                                    	'params.STATUSOLD' : this.up('window').resRenova['estadomc'],
-		                                		'params.STATUSNEW' : '13'
-		                                    }
-		                                    ,success : function(response)
-		                                    {
-		                                        _unmask();
-		                                        var ck = '';
-		                                        try
-		                                        {
-		                                            var json = Ext.decode(response.responseText);
-		                                            debug('### turnar:',json);
-		                                            if(json.success)
-		                                            {
-		                                            	_iceMesaControl(ntramite);		                                                
-		                                            }
-		                                            else
-		                                            {
-		                                                mensajeError(json.message);
-		                                            }
-		                                        }
-		                                        catch(e)
-		                                        {
-		                                            manejaException(e,ck);
-		                                        }
-		                                    }
-		                                    ,failure : function()
-		                                    {
-		                                        _unmask();
-		                                        errorComunicacion(null,'Error al turnar tr\u00e1mite');
-		                                    }
-		                                });
     							}
-    						} 
+    							else if(_fieldById('itemRadio').getValue()['topping'] == 2){
+    		                        if (_GLOBAL_CDSISROL == RolSistema.Agente){
+    		                            var callbackNormal = function (callback) {
+    		                                mensajeCorrecto(
+    		                                    'Tr\u00e1mite generado',
+    		                                    'Se ha generado el tr\u00e1mite ' + ntramite +
+    		                                        ', favor de revisar los requisitos y subir sus documentos antes de turnar a SUSCRIPCI\u00d3N',
+    		                                    callback
+    		                                );
+    		                            };
+    		                            var mask, ck = 'Recuperando lista de requisitos';
+    		                            try {
+    		                                ck = 'Recuperando validaci\u00f3n ligada a requisitos';
+    		                                mask = _maskLocal(ck);
+    		                                Ext.Ajax.request({
+    		                                    url     : _GLOBAL_URL_RECUPERACION,
+    		                                    params  : {
+    		                                        'params.consulta' : 'RECUPERAR_VALIDACION_POR_CDVALIDAFK',
+    		                                        'params.ntramite' : ntramite,
+    		                                        'params.clave'    : '_CONFCOT'
+    		                                    },
+    		                                    success : function (response) {
+    		                                        mask.close();
+    		                                        var ck = 'Decodificando respuesta al recuperar validaci\u00f3n ligada a requisitos';
+    		                                        try {
+    		                                            var valida = Ext.decode(response.responseText);
+    		                                            debug('### validacion ligada a checklist:', valida);
+    		                                            if (valida.success === true) {
+    		                                                if (valida.list.length > 0) {
+    		                                                    _cargarAccionesEntidad(
+    		                                                        valida.list[0].CDTIPFLU,
+    		                                                        valida.list[0].CDFLUJOMC,
+    		                                                        valida.list[0].TIPOENT,
+    		                                                        valida.list[0].CDENTIDAD,
+    		                                                        valida.list[0].WEBID,
+    		                                                        function (acciones) {
+    		                                                            if (acciones.length > 0) {
+    		                                                                debug('acciones:', acciones);
+    		                                                                callbackNormal(function () {
+    		                                                                    _procesaAccion(
+    		                                                                        acciones[0].CDTIPFLU,
+    		                                                                        acciones[0].CDFLUJOMC,
+    		                                                                        acciones[0].TIPODEST,
+    		                                                                        acciones[0].CLAVEDEST,
+    		                                                                        acciones[0].WEBIDDEST,
+    		                                                                        acciones[0].AUX,
+    		                                                                        valida.params.ntramite,
+    		                                                                        valida.list[0].STATUS,
+    		                                                                        null, //cdunieco
+    		                                                                        null, //cdramo
+    		                                                                        null, //estado
+    		                                                                        null, //nmpoliza
+    		                                                                        null, //nmsituac
+    		                                                                        null, //nmsuplem
+    		                                                                        valida.list[0].cdusuari,
+    		                                                                        valida.list[0].cdsisrol,
+    		                                                                        null // callback
+    		                                                                    );
+    		                                                                });
+    		                                                            } else {
+    		                                                                callbackNormal();
+    		                                                            }
+    		                                                        }
+    		                                                    );
+    		                                                } else {
+    		                                                    callbackNormal();
+    		                                                }
+    		                                            } else {
+    		                                                mensajeError(json.message);
+    		                                            }
+    		                                        } catch (e) {
+    		                                            manejaException(e, ck);
+    		                                        }
+    		                                    },
+    		                                    failure : function () {
+    		                                        mask.close();
+    		                                        errorComunicacion(null, 'Error al recuperar validaci\u00f3n ligada a requisitos');
+    		                                    }
+    		                                });
+    		                            } catch (e) {
+    		                                manejaException(e, ck, mask);
+    		                                callbackNormal();
+    		                            }
+    		                        }
+    		                        else{  		                        
+	    		                        Ext.Ajax.request(
+			                                {
+			                                    url     : _GLOBAL_COMP_URL_TURNAR
+			                                    ,params : {
+			                                    	'params.NTRAMITE'  : ntramite,
+			                                    	'params.CDTIPFLU'  : this.up('window').resRenova['cdtipflu'],
+			                                    	'params.CDFLUJOMC' : this.up('window').resRenova['cdflujomc'],
+			                                    	'params.STATUSOLD' : this.up('window').resRenova['estadomc'],
+			                                		'params.STATUSNEW' : '13'
+			                                    }
+			                                    ,success : function(response)
+			                                    {
+			                                        _unmask();
+			                                        var ck = '';
+			                                        try
+			                                        {
+			                                            var json = Ext.decode(response.responseText);
+			                                            debug('### turnar:',json);
+			                                            if(json.success)
+			                                            {
+			                                            	_iceMesaControl(ntramite);		                                                
+			                                            }
+			                                            else
+			                                            {
+			                                                mensajeError(json.message);
+			                                            }
+			                                        }
+			                                        catch(e)
+			                                        {
+			                                            manejaException(e,ck);
+			                                        }
+			                                    }
+			                                    ,failure : function()
+			                                    {
+			                                        _unmask();
+			                                        errorComunicacion(null,'Error al turnar tr\u00e1mite');
+			                                    }
+			                                });
+    		                        }
+    							}
+    							else if(_fieldById('itemRadio').getValue()['topping'] == 3){
+    							     debug('resRenova',this.up('window').resRenova);
+    							     var window = this.up('window');
+    							     var resRenova = window.resRenova;
+    							     _mask('Generando renovaci\u00f3n');
+    							     Ext.Ajax.request({
+                                         url      : _p25_urlConfirmarPolizaIndividual,
+                                         params   : {
+                                             'params.cdunieco' : resRenova['cdunieco'],
+                                             'params.cdramo'   : resRenova['cdramo'],
+                                             'params.estado'   : resRenova['estado'],
+                                             'params.nmpoliza' : resRenova['nmpoliza'],
+                                             'params.nmsuplem' : resRenova['nmsuplem'],
+                                             'params.ntramite' : resRenova['ntramite'],
+                                             'params.cdperpag' : resRenova['cdperpag'],
+                                             'params.feefecto' : resRenova['feefecto']
+                                         },
+                                         success  : function(response){
+                                             _unmask();
+                                             var resp = Ext.decode(response.responseText);
+                                             var list = resp.slist1;
+                                             if(resp.success==true && list.length > 0){
+                                                 window.close();
+                                                 mensajeCorrecto('Aviso','Se gener\u00f3 la p\u00f3liza '+list[0]['nmpoliex']);
+                                             }
+                                             else{
+                                                 mensajeError(resp.respuesta);
+                                             }
+                                         },
+                                         failure  : function(){
+                                             _unmask();
+                                             errorComunicacion();
+                                         }
+                                     });
+    						    }
+    					    } 
     					},
     					{ 
     						text    : 'Cancelar',
@@ -470,7 +597,7 @@ Ext.onReady(function()
     
     _p25_clientePanel = Ext.create('Ext.panel.Panel',{
 		itemId     : '_p25_clientePanel',
-		title      : 'CLIENTE',
+		title      : 'Cambio de domicilio del contratante',
 		height     : 400,
 		autoScroll : true,
 		loader     :
@@ -519,7 +646,7 @@ Ext.onReady(function()
 						height     : 400,
 						autoScroll : true,
 						items	   : [
-							Ext.create('Ext.Button', {
+							/*Ext.create('Ext.Button', {
 							    text		: 'Editar contratante',
 							    handler		: function() {
 							    	_p25_loaderContratante(this.up('window').resRenova['cdpersoncon']);
@@ -530,7 +657,7 @@ Ext.onReady(function()
 							    handler		: function() {
 							    	_p25_loaderContratante('');
 							    }
-							}),
+							}),*/
 							_p25_clientePanel							
 						]
 					}),
@@ -604,7 +731,8 @@ Ext.onReady(function()
 	                                    readOnly	: true,       
 	                                    fieldLabel	: 'Poliza', 
 	                                    value		: '0',           
-	                                    style		:' margin:5px;' 
+	                                    style		:' margin:5px;',
+                                        hidden      : true 
 			                        },                       
 			                        {
 			                            xtype			: 'combo',
@@ -614,6 +742,7 @@ Ext.onReady(function()
 			                            displayField	: 'value',
 			                            valueField		: 'key',
 			                            readOnly		: true,
+                                        hidden          : true,
 			                            store			: Ext.create('Ext.data.Store', {
 			                                model		: 'Generic',
 			                                autoLoad	: true,
@@ -641,7 +770,8 @@ Ext.onReady(function()
 			                            fieldLabel	: 'Cotizaci&oacute;n',
 			                            style		: 'margin:5px;',
 			                            allowBlank	: false,
-			                            readOnly	: true
+			                            readOnly	: true,
+                                        hidden      : true
 			                        },
 			                        {
 			                            xtype		: 'datefield',
@@ -651,7 +781,8 @@ Ext.onReady(function()
 			                            allowBlank	: false,
 			                            style		: 'margin:5px;',
 			                            format		: 'd/m/Y',
-			                            readOnly	: true
+			                            readOnly	: true,
+                                        hidden      : true
 			                        },
 			                        {
 			                            xtype		: 'datefield',
@@ -666,7 +797,8 @@ Ext.onReady(function()
 			                            }, */
 			                            minValue : panDatComMap1.fechaMinEmi,
 	                                    maxValue : panDatComMap1.fechaMaxEmi,
-	                                    readOnly : true
+	                                    readOnly : true,
+                                        hidden   : true
 			                        },
 			                        {
 			                            xtype		: 'datefield',
@@ -676,7 +808,8 @@ Ext.onReady(function()
 			                            allowBlank	: false,
 			                            style		: 'margin:5px;',
 			                            format		: 'd/m/Y',
-			                            readOnly	: true
+			                            readOnly	: true,
+                                        hidden      : true
 			                        },
 			                        {
 			                            xtype			: 'combo',
@@ -709,7 +842,8 @@ Ext.onReady(function()
 			                            editable	: false,
 			                            queryMode	: 'local',
 			                            style		: 'margin:5px;',
-			                            allowBlank	: false
+			                            allowBlank	: false,
+                                        hidden      : true
 			                        },
 			                        {
 			                            xtype			: 'combo',
@@ -740,14 +874,16 @@ Ext.onReady(function()
 			                            queryMode	: 'local',
 			                            style		: 'margin:5px;',
 			                            allowBlank	: false,
-			                            readOnly 	: Number(panDatComMap1.cdramo)==16
+			                            readOnly 	: Number(panDatComMap1.cdramo)==16,
+                                        hidden      : false
 			                        },
 			                        {
 	                                    xtype	 	: 'textfield',
 	                                    name	  	: 'dsplan',
 	                                    readOnly  	: true,
 	                                    fieldLabel	: 'Plan',
-	                                    style		: 'margin:5px;'
+	                                    style		: 'margin:5px;',
+                                        hidden      : true
 	                                },
 			                        {
 	                                    xtype		: 'numberfield',
@@ -758,14 +894,16 @@ Ext.onReady(function()
 	                                    value		: 0,
 	                                    fieldLabel	: 'N&uacute;mero Renovaci&Oacute;n',
 	                                    style		: 'margin:5px;',
-	                                    readOnly	: true
+	                                    readOnly	: true,
+                                        hidden      : false
 	                                },
 			                        {
 	                                    xtype		: 'textfield',
 	                                    name		: 'nmpolant',
 	                                    fieldLabel	: 'P&oacute;liza Anterior',
 	                                    style		: 'margin:5px;',
-	                                    readOnly	: true
+	                                    readOnly	: true,
+                                        hidden      : true
 	                                }
 	                                ,{
 	                                    xtype           : 'combo',
@@ -805,7 +943,7 @@ Ext.onReady(function()
 	                                    })
 	                                }
 			                    ]
-			                }),
+			                })/*,
 			                Ext.create('Ext.panel.Panel',{
 			                	itemId			: 'panelDatosAdicionales',
 			                    title			: 'Datos adicionales',
@@ -819,7 +957,7 @@ Ext.onReady(function()
 			                        columns	: 3
 			                    },
 			                    items 			: itemsTatrisit
-			                })
+			                })*/
 				        ],
 				        buttons:	[
 	                        {
@@ -2713,9 +2851,9 @@ function _p25_ventanaCambioFormaPago(resRenova){
 			debug('resp',resp);
 			if(!Ext.isEmpty(resp.params.items)){
 				var items = Ext.decode(resp.params.items);
-				var panelDatosAdicionales = _fieldById('panelDatosAdicionales');
-				panelDatosAdicionales.removeAll();
-				panelDatosAdicionales.add(items);
+				//var panelDatosAdicionales = _fieldById('panelDatosAdicionales');
+				//panelDatosAdicionales.removeAll();
+				//panelDatosAdicionales.add(items);
 				_fieldById('winCambioPago').resRenova = resRenova;
 				wineditarContratante.show();
 				_p25_loaderContratante(resRenova['cdpersoncon']);
@@ -2750,7 +2888,7 @@ function _p25_loaderContratante(cdperson){
 function _p29_actualizarCotizacion(callback){
 	debug('>_p29_actualizarCotizacion');
 	var panelDatosPoliza 	  = _fieldById('panelDatosPoliza');
-	var panelDatosAdicionales = _fieldById('panelDatosAdicionales');
+	//var panelDatosAdicionales = _fieldById('panelDatosAdicionales');
 	var mapUpdate 	  		  = {};
 	
 	for(var i = 0; i < panelDatosPoliza.items.items.length; i++){
@@ -2758,10 +2896,10 @@ function _p29_actualizarCotizacion(callback){
 		mapUpdate['params.'+item.name] = item.value;
 	}
 	
-	for(var i = 0; i < panelDatosAdicionales.items.items.length; i++){
+	/*for(var i = 0; i < panelDatosAdicionales.items.items.length; i++){
 		var item = panelDatosAdicionales.items.items[i];
 		mapUpdate['params.'+item.name.replace('parametros.','')] = item.value;
-	}
+	}*/
 	
 	var panelDatos = _fieldById('panelDatos');
 	mapUpdate['params.cdunieco'] 	 = wineditarContratante.resRenova['cdunieco'];
@@ -2863,7 +3001,8 @@ function _p25_cargarValoresComplementarios(resRenova){
 	var tipoPoliza		= _fieldById('tipoPoliza');
 	var formaPagoPoliza = _fieldById('formaPagoPoliza');
 	tipoPoliza.getStore().load();
-	formaPagoPoliza.getStore().load({params : { 'catalogo' : 'FORMAS_PAGO_POLIZA_POR_RAMO_TIPSIT', 'params.cdramo' : resRenova['cdramo'], 'params.cdtipsit' : resRenova['cdtipsit']}});	
+	//formaPagoPoliza.getStore().load({params : { 'catalogo' : 'FORMAS_PAGO_POLIZA_POR_RAMO_TIPSIT', 'params.cdramo' : resRenova['cdramo'], 'params.cdtipsit' : resRenova['cdtipsit']}});	
+	formaPagoPoliza.getStore().load({params : { 'catalogo' : 'TIPOS_PAGO_POLIZA_SIN_DXN'}});
 	debug('<_p25_cargarValoresComplementarios');
 }
 
