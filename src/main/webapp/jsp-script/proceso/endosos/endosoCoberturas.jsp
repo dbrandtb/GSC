@@ -211,6 +211,7 @@ function endcobSumit(form,confirmar)
             }
             
             if(confirmar=='auto'){
+            	json.smap1.confirmar = 'auto';
             	if(!Ext.isEmpty(_p3_flujo))
                 {
                     json['flujo'] = _p3_flujo;
