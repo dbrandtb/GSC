@@ -3181,15 +3181,15 @@ public class ComplementariosAction extends PrincipalCoreAction
                     logger.debug(Utils.log(
                              "\nPoliza extraida del sigs"
                             ,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
-                            ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpoliza
+                            ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolizaEmitida
                             ));
-                    consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), cdunieco, cdramo, nmpoliza, us.getUser());
-                    
-                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, estado, nmpoliza, cdusuari);
+                    consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), cdunieco, cdramo, nmpolizaEmitida, us.getUser());
+                                        
+                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, estado, nmpolizaEmitida, cdusuari);
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
                           vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
-                    Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(parame.get("CDUNIECO"), parame.get("CDRAMO"), parame.get("NMPOLIZA"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                    Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(parame.get("CDUNIECO"), parame.get("CDRAMO"), nmpolizaEmitida,  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                 }
             } 
             catch (Exception ex) 
