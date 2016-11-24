@@ -347,6 +347,7 @@ function _9_confirmar()
 							     }
 							,buttons:[{
 										text    : 'Confirmar endoso'
+										,name    : 'endosoButton'
 										,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
 										,handler : function(me){
 																me.up('window').destroy();
@@ -437,6 +438,7 @@ function _9_confirmar()
 														}
 									   },{
 										text    : 'Documentos'
+										,name    : 'documentoButton'
 										,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
 										,handler  :function(){
 											 var numRand=Math.floor((Math.random()*100000)+1);

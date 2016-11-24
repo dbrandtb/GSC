@@ -233,7 +233,7 @@ function endcobSumit(form,confirmar)
                                             Ext.create('Ext.window.Window',
                                             {
                                                 title        : 'Tarifa final'
-                                                ,id          : 'tarifa'
+                                                ,itemId          : 'tarifa'
                                                 ,autoScroll  : true
                                                 ,modal       : true
                                                 ,buttonAlign : 'center'
@@ -258,9 +258,9 @@ function endcobSumit(form,confirmar)
                                                         ,autoLoad : true
                                                      }
                                                 ,buttons:[{
-                                                            text    : 'Confirmar endoso'
+                                                            text     : 'Confirmar endoso'
+                                                            ,name    : 'endosoButton'
                                                             ,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
-                                                            ,disable : true
                                                             ,handler : function(me){
                                                             	            var form=Ext.getCmp('endoso');
                                                                             debug('***json',json);
@@ -277,7 +277,8 @@ function endcobSumit(form,confirmar)
                                                                             marendNavegacion(2);
                                                                             }
                                                            },{
-                                                            text    : 'Documentos'
+                                                            text     : 'Documentos'
+                                                            ,name    : 'documentoButton'
                                                             ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
                                                             ,handler  :function(){
                                                                  var numRand=Math.floor((Math.random()*100000)+1);
