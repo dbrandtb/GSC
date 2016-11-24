@@ -2768,7 +2768,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                             {
                                                                                 
                                                                                 cmpHos.setValue(false);
-                                                                                mensajeWarning('Si seleccionaste la cobertura de Hozpitalizaci&oacute;n no puede incluir la cobertura de Urgencias M&eacute;dicas');
+                                                                                mensajeWarning('Si seleccionaste la cobertura de Hospitalizaci&oacute;n no puede incluir la cobertura de Urgencias M&eacute;dicas');
                                                                             }
                                                                         }
                                                                     }
