@@ -378,6 +378,7 @@ Ext.onReady(function()
 												     }
 												,buttons:[{
 															text    : 'Confirmar endoso'
+															,name    : 'endosoButton'
 															,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
 															,handler : function(me){
 																					_mask();
@@ -439,26 +440,27 @@ Ext.onReady(function()
 															}
 														   },{
 															text    : 'Documentos'
+															,name    : 'documentoButton'
 															,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
 															,handler  :function(){
-											 var numRand=Math.floor((Math.random()*100000)+1);
-	                                         debug(numRand);
-											 centrarVentanaInterna(Ext.create('Ext.window.Window', {
-											 	title          : 'Vista previa'
-										        ,width         : 700
-										        ,height        : 500
-										        ,collapsible   : true
-										        ,titleCollapse : true
-										        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-										                         +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+json.omap1.pdfEndosoNom_o+"\">"
-										                         +'</iframe>'
-										        ,listeners     : {
-										        	resize : function(win,width,height,opt){
-										                debug(width,height);
-										                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-										        }
-										      }}).show());
-										}
+                            											 var numRand=Math.floor((Math.random()*100000)+1);
+                            	                                         debug(numRand);
+                            											 centrarVentanaInterna(Ext.create('Ext.window.Window', {
+                            											 	title          : 'Vista previa'
+                            										        ,width         : 700
+                            										        ,height        : 500
+                            										        ,collapsible   : true
+                            										        ,titleCollapse : true
+                            										        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+                            										                         +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+json.omap1.pdfEndosoNom_o+"\">"
+                            										                         +'</iframe>'
+                            										        ,listeners     : {
+                            										        	resize : function(win,width,height,opt){
+                            										                debug(width,height);
+                            										                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+                            										        }
+                            										      }}).show());
+                            										}
 															,hidden   : _p39_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
 					                                        } ]
 										     }).show();  

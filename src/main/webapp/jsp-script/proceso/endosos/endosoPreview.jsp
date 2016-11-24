@@ -72,6 +72,11 @@ Ext.onReady(function()
                     ,buttons: Ext.Msg.OK
 					,icon: Ext.Msg.ERROR
                 });
+                var botonConfirmar =_fieldByName('endosoButton');
+                botonConfirmar.setDisabled(true);
+                
+                var botonDocumento=_fieldByName('documentoButton');
+                botonDocumento.setDisabled(true);
             } else {
             	Ext.create('Ext.grid.Panel',{
             		renderTo: '_p29_divpri'
