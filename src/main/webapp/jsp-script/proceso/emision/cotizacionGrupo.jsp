@@ -220,7 +220,7 @@ var _p21_editorNombrePlan=
     xtype       : 'textfield'
     ,allowBlank : true
     ,minLength  : 3
-    ,readOnly   : ([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? false : true
+    ,readOnly   : ([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? false : true
 };
 
 var _p21_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
@@ -2281,6 +2281,10 @@ function _p21_borrarGrupoClic(grid,rowIndex)
         }
     }));
     debug('<_p21_borrarGrupoClic');
+}
+
+function _verificaAprueba(){
+    return false;    
 }
 
 function _p21_editarGrupoClic(grid,rowIndex)
