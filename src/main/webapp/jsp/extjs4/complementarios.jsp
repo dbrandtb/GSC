@@ -1602,7 +1602,7 @@ function _p29_emitirClicComplementarios()
 		                        ,Ext.create('Ext.panel.Panel',{
 		                            id:'panelDatosAdicionales',//id16
 		                            name:'panelDatosAdicionales',
-		                            title:'Datos adicionales descuento por n&oacute;mina',
+		                            title:'Datos adicionales',
 		                            style:'margin:5px',
 		                            collapsible:true,
 		                            titleCollapse:true,
@@ -1634,7 +1634,7 @@ function _p29_emitirClicComplementarios()
 		                                        try{
 		                                          
 		                                            if(inputCdtipsit=='MC' || inputCdtipsit=='AT'){
-                                                        me.hide();
+                                                       
                                                         return;
                                                     }
 		                                                
@@ -1664,12 +1664,15 @@ function _p29_emitirClicComplementarios()
 			                                                }
 			                                                
 			                                                if(inputCdtipsit=='MC' || inputCdtipsit=='AT'){
-			                                                    me.hide();
+			                                                   
                                                                 return;
 			                                                }
 			                                                
-			                                                
-			                                                
+			                                                try{
+			                                                   me.setTitle('Datos adicionales descuento por n&oacute;mina');
+			                                                }catch(e){
+			                                                    debugError(e);
+			                                                }
 			                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor08"]')[0].setReadOnly(true);
 			                                                Ext.ComponentQuery.query('#panelDatosAdicionales [name="parametros.pv_otvalor09"]')[0].setReadOnly(true);
 			                                               
@@ -1748,7 +1751,8 @@ function _p29_emitirClicComplementarios()
 	                                                    
 	                                                    );
 	                                                    
-	                                                    _fieldByLabel('CLAVE EMPLEADO').on(
+	                                                    try{
+	                                                        Ext.ComponentQuery.query('#panelDatosAdicionales [fieldLabel="CLAVE EMPLEADO"]')[0].on(
 	                                                            {
 	                                                                'blur':function(){
 	                                                                    
@@ -1760,7 +1764,9 @@ function _p29_emitirClicComplementarios()
 	                                                                }
 	                                                            }        
 	                                                    );
-	                                                    
+	                                                    }catch(e){
+	                                                        debugError(e)
+	                                                    }
 	                                                    if(panDatComMap1.SITUACION == 'AUTO' ){
 		                                                    //campos variables
 		                                                    _mask("cargando datos");
