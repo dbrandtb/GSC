@@ -462,7 +462,7 @@ public class CotizacionAction extends PrincipalCoreAction
 									)
 							{
 								List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
-										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
 										,cdtipsit                              ,  "W"         , cdsisrol
 										,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "17");
 								temp.remove(tatriIte);
@@ -517,7 +517,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("21"))
 						{
 							List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
-									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
 									,cdtipsit                              ,  "W"         , cdsisrol
 									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "21");
 							temp.remove(tatriIte);
@@ -533,7 +533,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						if(tatriIte.getNameCdatribu().equalsIgnoreCase("30"))
 						{
 							List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
-									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
 									,cdtipsit                              ,  "W"         , cdsisrol
 									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "30");
 							temp.remove(tatriIte);
@@ -548,7 +548,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						if(tatriIte.getNameCdatribu().equalsIgnoreCase("31"))
 						{
 							List<ComponenteVO> componenteSustitutoListaAux = pantallasManager.obtenerComponentes(
-									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
 									,cdtipsit                              ,  "W"         , cdsisrol
 									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "31");
 							temp.remove(tatriIte);
@@ -590,7 +590,7 @@ public class CotizacionAction extends PrincipalCoreAction
 									)
 							{
 								List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
-										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
 										,cdtipsit                              ,  "W"         , cdsisrol
 										,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "32");
 								temp.remove(tatriIte);
@@ -626,7 +626,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					if(cdramo.equals(Ramo.AUTOS_FRONTERIZOS.getCdramo())) {
 						if(tatriIte.getNameCdatribu().equalsIgnoreCase("3")) {
 							List<ComponenteVO> componenteSustitutoListaAux = pantallasManager.obtenerComponentes(
-									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
 									,cdtipsit                              ,  "W"         , cdsisrol
 									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "3");
 							// Si se encuentra el componente lo reemplazamos:

@@ -1134,8 +1134,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	    try {
             respuesta=autosSIGSDAO.integraDxnAutos(datosEnviar);
         } catch (Exception e) {
-            logger.error("Error al enviar datos dxn");
-            logger.error(e);
+            logger.error("Error al enviar datos dxn {}",e);
+            
             return null;
             
         }
