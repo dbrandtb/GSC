@@ -1790,11 +1790,11 @@ function _p29_emitirClicComplementarios()
 		                                                                    json2.slist1.forEach(function(it,idx,arr){
 		                                                                      for(var i=17;i<22;i++)  {
 		                                                                          
-		                                                                        if((it['OTVALOR'+(i+5)]+'').trim()!='' && it['OTVALOR'+(i+5)]!=undefined && it['OTVALOR'+(i+5)]!=null){
+		                                                                        if((it['OTVALOR'+(i+6)]+'').trim()!='' && it['OTVALOR'+(i+6)]!=undefined && it['OTVALOR'+(i+6)]!=null){
 		                                                                            
 		                                                                            _fieldByName('panelDatosAdicionales').add({
 		                                                                                xtype      :'textfield',
-		                                                                                fieldLabel :it['OTVALOR'+(i+5)],
+		                                                                                fieldLabel :it['OTVALOR'+(i+6)],
 		                                                                                name       :'parametros.pv_otvalor'+i,
 		                                                                                value      :tvalopol['parametros.pv_otvalor'+i]
 		                                                                            });
