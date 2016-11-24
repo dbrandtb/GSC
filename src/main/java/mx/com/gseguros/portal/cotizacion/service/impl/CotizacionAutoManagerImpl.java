@@ -271,7 +271,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<ComponenteVO>sustitutos = pantallasDAO.obtenerComponentes(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra()
 					,cdunieco
-					,cdramo
+					,"|"+cdramo+"|"
 					,cdtipsit
 					,"I"
 					,cdsisrol
@@ -1477,7 +1477,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<ComponenteVO>sustitutos = pantallasDAO.obtenerComponentes(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra()
 					,cdunieco
-					,cdramo
+					,"|"+cdramo+"|"
 					,cdtipsit
 					,"C"
 					,cdsisrol
@@ -1649,7 +1649,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				List<ComponenteVO>sustitutosSituacion = pantallasDAO.obtenerComponentes(
 						TipoTramite.POLIZA_NUEVA.getCdtiptra()
 						,cdunieco
-						,cdramo
+						,"|"+cdramo+"|"
 						,cdtipsitIte
 						,"C"
 						,cdsisrol
