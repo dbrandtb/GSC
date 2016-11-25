@@ -51,6 +51,7 @@ Ext.override(Ext.form.NumberField,
 var _p21_urlObtenerCoberturas            = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"            />';
 var _p21_urlObtenerCoberturasColec       = '<s:url namespace="/emision"         action="obtenerCoberturasPlanColec"       />';
 var _p21_urlObtienePlanDefinitivo        = '<s:url namespace="/emision"         action="obtienePlanDefinitivo"       />';
+var _p21_urlLanzaAprobacionNombrePlan    = '<s:url namespace="/emision"         action="lanzaAprobacionNombrePlan"       />';
 var _p21_urlObtenerSumaAseguradaDefault  = '<s:url namespace="/emision"         action="obtenSumaAseguradosMedicamentos"  />';
 var _p21_urlObtenerHijosCobertura        = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"        />';
 var _p21_urlSubirCenso                   = '<s:url namespace="/emision"         action="subirCenso"                       />';
@@ -154,6 +155,8 @@ var cdmuniciDefinitivo;
 
 _defaultNmordomProspecto = undefined;// valor default del numero de domicilio del prospecto
 var nmorddomProspecto = _defaultNmordomProspecto; 
+
+var _faltaAprobarNombrePlan = false;
 
 var expande                 = function(){};
 
@@ -1656,6 +1659,11 @@ Ext.onReady(function()
                 debug('json response:',json);
                 if(json.exito)
                 {
+                    
+                    _faltaAprobarNombrePlan = ( !Ext.isEmpty(json.smap1) && !Ext.isEmpty(json.smap1.ESPERA_AUT_NOMPLAN_SUPERV) && "S" == json.smap1.ESPERA_AUT_NOMPLAN_SUPERV)? true : false;
+                        
+                    //alert('falta aprobar:' + _faltaAprobarNombrePlan);
+                    
                     for(var prop in json.params)
                     {
                         if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif'&&prop!='swexiper'&&prop!='nmorddom')
@@ -2284,6 +2292,42 @@ function _p21_borrarGrupoClic(grid,rowIndex)
 }
 
 function _verificaAprueba(){
+    
+    
+    if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) &&(_p21_clasif==_p21_TARIFA_MODIFICADA))
+    {
+        //alert('suscriptor');
+        var faltaAprobacion = _faltaAprobarNombrePlan;
+        
+        if(faltaAprobacion){
+            mensajeWarning('El Supervisor debe aprobar primero los cambios realizados a los nombres de plan editados.');    
+        }
+        
+        return faltaAprobacion;
+        
+    }else if(([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) &&(_p21_clasif==_p21_TARIFA_MODIFICADA)){
+        //alert('supervisor');
+        Ext.Ajax.request({
+            url     : _p21_urlLanzaAprobacionNombrePlan,
+            params  : {
+                'smap1.ntramite'    :  _p21_ntramite,
+                'smap1.tipobloqueo' : 'D'
+            },
+            success : function (response) {
+                var json=Ext.decode(response.responseText);
+                
+                if(!json.success){
+                    debugError('Error sin impacto al eliminar bloqueo para aprobacion de cambio de nombre de plan. ', json.respuesta);
+                }
+            },
+            failure : function () {
+                errorComunicacion(null, 'Error al lanzar validaci\u00f3n cambio de nombre plan');
+            }
+        }); 
+        
+        return false;
+    }
+    
     return false;    
 }
 
@@ -3526,6 +3570,7 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 				                    
 				                      recordGrupoEdit.set('cdplan',nvoCdplan);
 				                      recordGrupoEdit.set('dsplanl',nvoNombrePlan);
+				                      recordGrupoEdit.commit(false,['dsplanl']);
 				                    
 				                    mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',function(){         	
 				                   	 
@@ -3655,7 +3700,7 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
 	                
 	                var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
 	                texDsplanL.setValue(combo.getRawValue());
-	                //recordGrpo.set('dsplanl',combo.getRawValue());
+	                recordGrpo.commit(false,['dsplanl']);
 	                
 	                /**
 	                 * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
@@ -3691,7 +3736,7 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
             
             var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
             texDsplanL.setValue(combo.getRawValue());
-            //recordGrpo.set('dsplanl',combo.getRawValue());
+            recordGrpo.commit(false,['dsplanl']);
             
             /**
              * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
@@ -3822,7 +3867,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
             mensajeWarning(mensajeDeError,_p21_setActiveResumen);
         }
     }
-    
+
     if(valido)
     {
         var form=_p21_tabConcepto().down('[xtype=form]');
@@ -3893,6 +3938,42 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                         debug('### generar tramite:',json);
                         if(json.exito)
                         {
+                            
+                            if([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 
+                                    &&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N'))
+                            {
+                                var lanzaAprobacion = false;
+                                _p21_storeGrupos.each(function(record)
+                                {
+                                    if(record.dirty && !Ext.isEmpty(record.modified['dsplanl']) && record.modified['dsplanl'] != record.get('dsplanl'))
+                                    {
+                                       lanzaAprobacion = true;
+                                       //alert('lanza aprobacion ' +record.get('dsplanl')+'--'+ record.modified['dsplanl']);
+                                    }
+                                });
+                                
+                                if(lanzaAprobacion)
+                                {
+                                    Ext.Ajax.request({
+                                        url     : _p21_urlLanzaAprobacionNombrePlan,
+                                        params  : {
+                                            'smap1.ntramite'    :  _p21_ntramite,
+                                            'smap1.tipobloqueo' : 'B'
+                                        },
+                                        success : function (response) {
+                                            var json=Ext.decode(response.responseText);
+                                            
+                                            if(!json.success){
+                                                debugError('Error sin impacto al insertar bloqueo para aprobacion de cambio de nombre de plan, puede ya existir un bloqueo. ', json.respuesta);
+                                            }
+                                        },
+                                        failure : function () {
+                                            errorComunicacion(null, 'Error al lanzar validaci\u00f3n cambio de nombre plan');
+                                        }
+                                    });            
+                                }
+                            }
+                            
                             if((_p21_ntramite||_p21_ntramiteVacio) && _cotcol_smap1.modificarTodo === false)
                             {
                                 if(callback)

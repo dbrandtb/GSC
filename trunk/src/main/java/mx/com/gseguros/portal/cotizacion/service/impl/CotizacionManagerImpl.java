@@ -9870,6 +9870,32 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 
 	@Override
+	public boolean ejectutaBloqueoProcesoTramite(
+            String ntramite
+           ,String claveProceso
+           ,String cdrol
+           ,String descripcion
+           ,String valor
+           ,String operacion
+           )throws Exception
+	{
+	    return cotizacionDAO.ejectutaBloqueoProcesoTramite(
+	            ntramite
+	            ,claveProceso
+	            ,cdrol
+	            ,descripcion
+	            ,valor
+	            ,operacion
+	            );
+	}
+
+	@Override
+	public Map<String,String> consultaBloqueoProcesoTramite(String ntramite, String claveProceso)throws Exception
+	{
+	    return cotizacionDAO.consultaBloqueoProcesoTramite(ntramite,claveProceso);
+	}
+
+	@Override
 	public Map<String,String> obtieneDatosContratantePoliza(
 			String cdunieco
 			,String cdramo

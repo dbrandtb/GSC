@@ -6270,6 +6270,85 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 
 	@Override
+	public  boolean ejectutaBloqueoProcesoTramite(
+            String ntramite
+           ,String claveProceso
+           ,String cdrol
+           ,String descripcion
+           ,String valor
+           ,String operacion
+           )throws Exception
+	{
+	    Map<String,String> params = new LinkedHashMap<String,String>();
+	    params.put("pv_ntramite_i"    , ntramite);
+	    params.put("pv_tipoproceso_i" , claveProceso);
+	    params.put("pv_cdrol_i"         , cdrol);
+	    params.put("pv_descripcion_i" , descripcion);
+	    params.put("pv_valor_i"       , valor);
+	    params.put("pv_accion_i"      , operacion);
+	    
+	    ejecutaSP(new EjectutaBloqueoProcesoTramite(getDataSource()),params);
+	 
+	    return true;
+	}
+	
+	@Override
+    public Map<String, String> consultaBloqueoProcesoTramite(
+            String ntramite
+            ,String claveProceso
+            )throws Exception
+    {
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        params.put("pv_ntramite_i"    , ntramite);
+        params.put("pv_tipoproceso_i" , claveProceso);
+        Map<String,Object>       procRes = ejecutaSP(new ConsultaBloqueoProcesoTramite(getDataSource()),params);
+        List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+        
+        Map<String, String> resultado =  null;
+        if( lista !=null && !lista.isEmpty())
+        {
+            resultado  = lista.get(0);
+        }else{
+            resultado =  new HashMap<String, String>();
+        }
+        return resultado;
+    }
+    
+    protected class ConsultaBloqueoProcesoTramite extends StoredProcedure
+    {
+        protected ConsultaBloqueoProcesoTramite(DataSource dataSource)
+        {
+            super(dataSource,"P_CONSULTA_BLOQPROCTRA");
+            declareParameter(new SqlParameter("pv_ntramite_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_tipoproceso_i" , OracleTypes.VARCHAR));
+            String[] cols=new String[]{
+                    "NTRAMITE" , "TIPOPROCESO" , "ROL", "DESCRIPCION" , "VALOR"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+	
+	protected class EjectutaBloqueoProcesoTramite extends StoredProcedure
+	{
+	    protected EjectutaBloqueoProcesoTramite(DataSource dataSource)
+	    {
+	        super(dataSource,"P_MOV_BLOQPROCTRA");
+	        declareParameter(new SqlParameter("pv_ntramite_i"   , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_tipoproceso_i" , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_cdrol_i"   , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_descripcion_i"   , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_valor_i"   , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_accion_i"   , OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+	        compile();
+	    }
+	}
+
+	@Override
 	public List<Map<String,String>> obtieneDatosContratantePoliza(
 			String cdunieco
 			,String cdramo

@@ -75,6 +75,10 @@
            <result type="json" />
        </action>
 
+       <action name="lanzaAprobacionNombrePlan" class="CotizacionAction" method="lanzaAprobacionNombrePlan">
+           <result type="json" />
+       </action>
+       
        <action name="obtieneNombresCoberturasPlan" class="CotizacionAction" method="obtieneNombresCoberturasPlan">
            <result type="json" />
        </action>
