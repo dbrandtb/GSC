@@ -25,6 +25,8 @@ var _p54_store;
 var _p54_tamanioPag = 10;
 
 var _p54_windowNuevo;
+var _p54_windowFormBase;
+var _p54_formularios = [];
 ////// variables //////
 
 ////// overrides //////
@@ -48,7 +50,9 @@ Ext.define('ComboBox', {
 ////// overrides //////
 
 ////// componentes dinamicos //////
-_p54_filtroItemsDin = [ <s:property value="items.filtroItems" escapeHtml="false" /> ];
+var _p54_filtroItemsDin = [ <s:property value="items.filtroItems"    escapeHtml="false" /> ];
+var _p54_formBaseItems  = [ <s:property value="items.formBaseItems"  escapeHtml="false" /> ];
+var _p54_formFlujoItems = [ <s:property value="items.formFlujoItems" escapeHtml="false" /> ];
 
 _p54_filtroItems =
 [
@@ -141,7 +145,7 @@ Ext.onReady(function()
     ////// componentes //////
     _p54_windowNuevo = Ext.create('Ext.window.Window',
     {
-        title        : 'Agregar tr\u00e1mite'
+        title        : 'Registrar nuevo tr\u00e1mite'
         ,itemId      : '_p54_formNuevoTramite'
         ,icon        : '${icons}add.png'
         ,modal       : true
@@ -170,9 +174,10 @@ Ext.onReady(function()
                     ,{
                         text     : 'Limpiar'
                         ,icon    : '${icons}control_repeat_blue.png'
-                        ,handler : function()
-                        {
-                            _p54_windowNuevo.showNew();
+                        ,handler : function (me) {
+                            //_p54_windowNuevo.showNew();
+                            me.up('window').close();
+                            _p54_nuevoTramiteClic();
                         } 
                     }
                 ]
@@ -387,6 +392,98 @@ Ext.onReady(function()
             }
         }
     });
+    
+    _p54_windowFormBase = Ext.create('Ext.window.Window', {
+        title       : 'Registrar nuevo tr\u00e1mite',
+        closeAction : 'hide',
+        modal       : true,
+        border      : 0,
+        items       : [
+            Ext.create('Ext.form.Panel', {
+                border : 0,
+                items  : _p54_formBaseItems
+            })
+        ],
+        buttonAlign : 'center',
+        buttons     : [
+            {
+                text    : 'Continuar',
+                icon    : '${icons}accept.png',
+                handler : function (me) {
+                    if (me.up('window').down('form').getForm().isValid()) {
+                        _p54_mostrarFormulario(me, me.up('window').down('form').getForm().getValues());
+                    }
+                }
+            }, {
+                text    : 'Cancelar',
+                icon    : '${icons}cancel.png',
+                handler : function (me) {
+                    me.up('window').close();
+                }
+            }
+        ]
+    });
+    
+    (function () {
+        var ck = 'Construyendo formularios';
+        try {
+            var items = [];
+            for (var i = 0; i < _p54_formFlujoItems.length; i++) {
+                var item = _p54_formFlujoItems[i];
+                if (item.param4 !== 'CDTIPFLU'
+                    || item.param5 !== 'CDFLUJOMC'
+                    || Ext.isEmpty(item.value4)
+                    || Ext.isEmpty(item.value5)
+                    || typeof item.value4 !== 'number'
+                    || typeof item.value5 !== 'number'
+                    ) {
+                    debug('No se considera para los items de formularios:', item);
+                    continue;
+                }
+                var key = item.value4 + '_' + item.value5;
+                if (Ext.isEmpty(items[key])) {
+                    items[key] = [];
+                }
+                items[key].push(item);
+            }
+            debug('items:', items);
+            for (var key in items) {
+                _p54_formularios[key] = Ext.create('Ext.window.Window', {
+                    title       : 'Registrar nuevo tr\u00e1mite',
+                    modal       : true,
+                    border      : 0,
+                    closeAction : 'hide',
+                    items       : [
+                        Ext.create('Ext.form.Panel', {
+                            border : 0,
+                            layout : {
+                                type    : 'table',
+                                columns : 2
+                            },
+                            items : items[key]
+                        })
+                    ],
+                    buttonAlign : 'center',
+                    buttons     : [
+                        {
+                            text    : 'Guardar',
+                            icon    : '${icons}disk.png',
+                            handler : _p54_registrarTramite
+                        }, {
+                            text    : 'Cancelar',
+                            icon    : '${icons}cancel.png',
+                            handler : function (me) {
+                                me.up('window').close();
+                            }
+                        }
+                    ]
+                });
+            }
+            debug('_p54_formularios:', _p54_formularios);
+        } catch (e) {
+            debugError(e, ck);
+        }
+    })();
     ////// componentes //////
     
     ////// contenido //////
@@ -469,6 +566,7 @@ Ext.onReady(function()
                     ,{
                         text     : 'Reporte (pendiente)'
                         ,icon    : '${icons}printer.png'
+                        ,hidden  : true
                         ,handler : function(me)
                         {}
                     }
@@ -1290,6 +1388,42 @@ Ext.onReady(function()
             }
         }
     });
+    
+    (function () {
+        var ck = 'Configurando formulario de nuevo tr\u00e1mite';
+        try {
+            var cdtiptraCmp  = _p54_windowFormBase.down('[name=CDTIPTRA]'),
+                cdtipsupCmp  = _p54_windowFormBase.down('[name=CDTIPSUP]'),
+                swreqpolCmp  = _p54_windowFormBase.down('[name=SWREQPOL]'),
+                cdtipramCmp  = _p54_windowFormBase.down('[name=CDTIPRAM]'),
+                swgrupoCmp   = _p54_windowFormBase.down('[name=SWGRUPO]'),
+                cdtipfluCmp  = _p54_windowFormBase.down('[name=CDTIPFLU]'),
+                cdflujomcCmp = _p54_windowFormBase.down('[name=CDFLUJOMC]');
+            cdtipfluCmp.on({
+                select : function (me, records) {
+                    try {
+                        cdtiptraCmp.setValue(records[0].get('aux'));
+                        cdtipsupCmp.setValue(records[0].get('aux2'));
+                        swreqpolCmp.setValue(records[0].get('aux3'));
+                    } catch (e) {
+                        debugError(e);
+                    }
+                }
+            });
+            cdflujomcCmp.on({
+                select : function (me, records) {
+                    try {
+                        cdtipramCmp.setValue(records[0].get('aux'));
+                        swgrupoCmp.setValue(records[0].get('aux2'));
+                    } catch (e) {
+                        debugError(e);
+                    }
+                }
+            });
+        } catch (e) {
+            manejaException(e, ck);
+        }
+    })();
     ////// custom //////
     
     ////// loaders //////
@@ -1302,6 +1436,9 @@ function _p54_registrarTramite(bot)
     debug('_p54_registrarTramite');
     var mask, ck = 'Registrando tr\u00e1mite';
     var form = bot.up('form');
+    if (Ext.isEmpty(form)) {
+        form = bot.up('window').down('form');
+    }
     try
     {
         if(!form.isValid())
@@ -1626,6 +1763,79 @@ function _p54_cargarTramite(ntramite){
     });
     boton.handler(boton);
     debug('<_p54_cargarTramite');
+}
+
+function _p54_nuevoTramiteClic (me) {
+    debug('!_p54_nuevoTramiteClic args:', arguments);
+    _p54_windowFormBase.down('form').getForm().reset();
+    centrarVentanaInterna(_p54_windowFormBase.show());
+    _p54_windowFormBase.down('[name=CDTIPFLU]').focus();
+}
+
+function _p54_mostrarFormulario (boton, values) {
+    debug('!_p54_mostrarFormulario args:', arguments);
+    var ck = 'Mostrando formulario';
+    try {
+        boton.up('window').close();
+        var key = values.CDTIPFLU + '_' + values.CDFLUJOMC;
+        var window = _p54_formularios[key];
+        if (Ext.isEmpty(window)) {
+            if (['1_12'    , '1_141'   , '200_246' , '103_264',
+                 '1_120'   , '1_180'   , '1_181'   , '200_202',
+                 '103_220' , '103_240' , '103_241'].indexOf(key) === -1) { // Si no es ninguno de los iniciales no hay
+                throw 'No se encuentra configurado el formulario [' + key + ']';
+            }
+            _p54_mostrarFormularioPrimeraVersion(values);
+        } else {
+            window.down('form').getForm().reset();
+            centrarVentanaInterna(window.show());
+            for (var att in values) {
+                try {
+                    window.down('[name=' + att + ']').setValue(values[att]);
+                } catch (e) {
+                    debugError(e);
+                }
+            }
+            setTimeout(function () {
+                try {
+                    window.down('[name][hidden=false]').focus();
+                } catch (e) {
+                    debugError(e);
+                }
+            }, 500);
+        }
+    } catch (e) {
+        manejaException(e, ck);
+    }
+}
+
+function _p54_mostrarFormularioPrimeraVersion (values) {
+    debug('!_p54_mostrarFormularioPrimeraVersion args:', arguments);
+    var mask, ck = 'Inyectando formulario';
+    try {
+        _p54_windowNuevo.showNew();
+        mask = _maskLocal(ck);
+        var cdtipfluCmp = _p54_windowNuevo.down('[name=CDTIPFLU]');
+        cdtipfluCmp.setValue(values.CDTIPFLU);
+        cdtipfluCmp.fireEvent('select', cdtipfluCmp, [cdtipfluCmp.findRecordByValue(values.CDTIPFLU)]);
+        cdtipfluCmp.fireEvent('blur', cdtipfluCmp);
+        setTimeout(function () {
+            var cdflujomcCmp = _p54_windowNuevo.down('[name=CDFLUJOMC]');
+            cdflujomcCmp.setValue(values.CDFLUJOMC);
+            cdflujomcCmp.fireEvent('select', cdflujomcCmp, [cdflujomcCmp.findRecordByValue(values.CDFLUJOMC)]);
+            cdflujomcCmp.fireEvent('blur', cdflujomcCmp);
+            mask.close();
+            setTimeout(function () {
+                try {
+                    _p54_windowNuevo.down('[name][hidden=false]').focus();
+                } catch (e) {
+                    debugError(e);
+                }
+            }, 500);
+        }, 1000);
+    } catch (e) {
+        manejaException(e, ck, mask);
+    }
 }
 ////// funciones //////
 </script>

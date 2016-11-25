@@ -148,19 +148,21 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String swmultipol
 			,String cdtipsup
 			,String cdtipmod
+            ,String swexterno
 			)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ movimientoTtipflumc @@@@@@"
-				,"\n@@@@@@ accion="     , accion
-				,"\n@@@@@@ cdtipflu="   , cdtipflu
-				,"\n@@@@@@ dstipflu="   , dstipflu
-				,"\n@@@@@@ cdtiptra="   , cdtiptra
-				,"\n@@@@@@ swreqpol="   , swreqpol
-				,"\n@@@@@@ swmultipol=" , swmultipol
-				,"\n@@@@@@ cdtipsup="   , cdtipsup
-				,"\n@@@@@@ cdtipmod="   , cdtipmod
+				,"\n@@@@@@ accion     = " , accion
+				,"\n@@@@@@ cdtipflu   = " , cdtipflu
+				,"\n@@@@@@ dstipflu   = " , dstipflu
+				,"\n@@@@@@ cdtiptra   = " , cdtiptra
+				,"\n@@@@@@ swreqpol   = " , swreqpol
+				,"\n@@@@@@ swmultipol = " , swmultipol
+				,"\n@@@@@@ cdtipsup   = " , cdtipsup
+				,"\n@@@@@@ cdtipmod   = " , cdtipmod
+                ,"\n@@@@@@ swexterno  = " , swexterno
 				));
 		
 		String paso = "Guardando tr\u00E1mite";
@@ -178,6 +180,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,"S".equals(swreqpol) ? "S" : "N"
 					,cdtipsup
 					,cdtipmod
+					,"S".equals(swexterno) ? "S" : "N"
 					,accion
 					);
 		}
@@ -1736,6 +1739,30 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,"FORMULARIO"//seccion
 					,null //orden
 					);
+            
+            List<ComponenteVO> form_base = pantallasDAO.obtenerComponentes(
+                    agrupamc //cdtiptra
+                    ,null //cdunieco
+                    ,null //cdramo
+                    ,null //cdtipsit
+                    ,null //estado
+                    ,cdsisrol
+                    ,"MESA_CONTROL"//pantalla
+                    ,"FORM_BASE"//seccion
+                    ,null //orden
+                    );
+            
+            List<ComponenteVO> form_flujo = pantallasDAO.obtenerComponentes(
+                    agrupamc //cdtiptra
+                    ,null //cdunieco
+                    ,null //cdramo
+                    ,null //cdtipsit
+                    ,null //estado
+                    ,cdsisrol
+                    ,"MESA_CONTROL"//pantalla
+                    ,"FORM_FLUJO"//seccion
+                    ,null //orden
+                    );
 			
 			List<ComponenteVO> botones = pantallasDAO.obtenerComponentes(
 					agrupamc //cdtiptra
@@ -1767,6 +1794,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			gc.generaComponentes(form, true, false, true, false, false, false);
 			
 			items.put("formItems" , gc.getItems());
+            
+            gc.generaComponentes(form_base, true, false, true, false, false, false);
+            
+            items.put("formBaseItems" , gc.getItems());
+            
+            gc.generaComponentes(form_flujo, true, false, true, false, false, false);
+            
+            items.put("formFlujoItems" , gc.getItems());
 			
 			gc.generaComponentes(botones, true, false, false, false, false, true);
 			
@@ -1944,15 +1979,15 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Override
 	public String registrarTramite (
-			String cdunieco  , String cdramo   , String estado     , String nmpoliza
-			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
-			,Date ferecepc   , String cdagente , String referencia , String nombre
-			,Date festatus   , String status   , String comments   , String nmsolici
-			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
-			,String cdtipflu , String cdflujomc
-			,Map<String, String> valores
-			,String cdtipsup, String cduniext, String ramo, String nmpoliex, boolean origenMesa, boolean inyectadoDesdeSigs
-	) throws Exception {
+			String cdunieco , String cdramo    , String estado     , String nmpoliza,
+			String nmsuplem , String cdsucadm  , String cdsucdoc   , String cdtiptra,
+			Date ferecepc   , String cdagente  , String referencia , String nombre,
+			Date festatus   , String status    , String comments   , String nmsolici,
+			String cdtipsit , String cdusuari  , String cdsisrol   , String swimpres,
+			String cdtipflu , String cdflujomc ,
+			Map<String, String> valores,
+			String cdtipsup , String cduniext  , String ramo       , String nmpoliex,
+			boolean origenMesa, boolean inyectadoDesdeSigs) throws Exception {
 		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 				"\n@@@@@@ registrarTramite @@@@@@",
@@ -1984,7 +2019,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				"\n@@@@@@ ramo               = " , ramo,
 				"\n@@@@@@ nmpoliex           = " , nmpoliex,
 				"\n@@@@@@ origenMesa         = " , origenMesa,
-                "\n@@@@@@ inyectadoDesdeSigs = " , origenMesa
+                "\n@@@@@@ inyectadoDesdeSigs = " , inyectadoDesdeSigs
 		));
 		
 		String paso = null, ntramite = null;

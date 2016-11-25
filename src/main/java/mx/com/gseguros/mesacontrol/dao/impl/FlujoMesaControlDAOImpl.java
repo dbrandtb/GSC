@@ -78,7 +78,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			super(dataSource,"PKG_MESACONTROL.P_GET_TTIPFLUMC");
 			declareParameter(new SqlParameter("agrupamc" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipmod" , OracleTypes.VARCHAR));
-			String[] cols=new String[]{ "CDTIPFLU" , "DSTIPFLU", "CDTIPTRA","SWMULTIPOL","SWREQPOL","CDTIPSUP", "CDTIPMOD" };
+			String[] cols=new String[]{ "CDTIPFLU" , "DSTIPFLU", "CDTIPTRA","SWMULTIPOL","SWREQPOL","CDTIPSUP", "CDTIPMOD", "SWEXTERNO" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -695,6 +695,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String swreqpol
 			,String cdtipsup
 			,String cdtipmod
+            ,String swexterno
 			,String accion
 			)throws Exception
 	{
@@ -706,6 +707,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("swreqpol"   , swreqpol);
 		params.put("cdtipsup"   , cdtipsup);
 		params.put("cdtipmod"   , cdtipmod);
+        params.put("swexterno"  , swexterno);
 		params.put("accion"     , accion);
 		Map<String,Object> procRes = ejecutaSP(new MovimientoTtipflumcSP(getDataSource()),params);
 		
@@ -732,6 +734,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("swreqpol"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipmod"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swexterno"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdtipflu_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

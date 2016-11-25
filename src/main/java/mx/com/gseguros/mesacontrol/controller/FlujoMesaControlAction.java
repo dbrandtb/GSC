@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -372,7 +373,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,swreqpol   = params.get("SWREQPOL")
 			       ,swmultipol = params.get("SWMULTIPOL")
 			       ,cdtipsup   = params.get("CDTIPSUP")
-			       ,cdtipmod   = params.get("CDTIPMOD");
+			       ,cdtipmod   = params.get("CDTIPMOD")
+			       ,swexterno  = params.get("SWEXTERNO");
 			
 			Utils.validate(
 					accion     , "No se recibi\u00f3 la acci\u00f3n"
@@ -390,6 +392,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,swmultipol
 					,cdtipsup
 					,cdtipmod
+					,swexterno
 					);
 			
 			params.put("CDTIPFLU",cdtipflu);
@@ -1477,6 +1480,18 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Date ferecepc  = new Date()
 			     ,festatus = new Date();
 			
+			// Si hay otvalores se mandan
+			Map<String, String> otvalores = null;
+			for (int i = 1; i <= 50; i++) {
+			    String key = Utils.join("otvalor", StringUtils.leftPad(String.valueOf(i), 2, "0"));
+			    if (params.containsKey(key)) {
+			        if (otvalores == null) {
+			            otvalores = new HashMap<String, String>();
+			        }
+			        otvalores.put(key, params.get(key));
+			    }
+			}
+			
 			String ntramite = flujoMesaControlManager.registrarTramite(
 					cdsucdoc
 					,cdramo
@@ -1500,7 +1515,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,null //swimpres
 					,cdtipflu
 					,cdflujomc
-					,null
+					,otvalores
 					,cdtipsup
 					,cduniext
 					,ramo

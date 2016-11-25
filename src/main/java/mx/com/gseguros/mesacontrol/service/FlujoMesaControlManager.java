@@ -23,6 +23,7 @@ public interface FlujoMesaControlManager
 			,String swmultipol
 			,String cdtipsup
 			,String cdtipmod
+            ,String swexterno
 			)throws Exception;
 	
 	public String movimientoTflujomc(
@@ -217,15 +218,15 @@ public interface FlujoMesaControlManager
 			)throws Exception;
 	
 	public String registrarTramite(
-			String cdunieco  , String cdramo   , String estado     , String nmpoliza
-			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
-			,Date ferecepc   , String cdagente , String referencia , String nombre
-			,Date festatus   , String status   , String comments   , String nmsolici
-			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
-			,String cdtipflu , String cdflujomc
-			,Map<String, String> valores
-			,String cdtipsup, String cduniext, String ramo, String nmpoliex, boolean origenMesa, boolean inyectadoDesdeSigs
-			)throws Exception;
+            String cdunieco , String cdramo    , String estado     , String nmpoliza,
+            String nmsuplem , String cdsucadm  , String cdsucdoc   , String cdtiptra,
+            Date ferecepc   , String cdagente  , String referencia , String nombre,
+            Date festatus   , String status    , String comments   , String nmsolici,
+            String cdtipsit , String cdusuari  , String cdsisrol   , String swimpres,
+            String cdtipflu , String cdflujomc ,
+            Map<String, String> valores,
+            String cdtipsup , String cduniext  , String ramo       , String nmpoliex,
+            boolean origenMesa, boolean inyectadoDesdeSigs)throws Exception;
 	
 	public void actualizaTramiteMC(
 			  String nmpoliza ,String cdunieco ,String cdramo ,String estado  ,String ntramite

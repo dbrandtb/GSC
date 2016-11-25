@@ -207,7 +207,7 @@ public interface FlujoMesaControlDAO {
 	 * @throws Exception
 	 */
 	public String movimientoTtipflumc(String cdtipflu, String dstipflu, String cdtiptra,
-			String swmultipol, String swreqpol, String cdtipsup, String cdtipmod, String accion) throws Exception;
+			String swmultipol, String swreqpol, String cdtipsup, String cdtipmod, String swexterno, String accion) throws Exception;
 
 	/**
 	 * 
