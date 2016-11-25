@@ -231,10 +231,11 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
 	}
 	
 	@Override
-	public String recuperarSiguienteUsuarioCarrusel (String cdunidspch, String cdsisrol) throws Exception {
+	public String recuperarSiguienteUsuarioCarrusel (String cdunidspch, String cdsisrol, boolean soloUsuariomatriz) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
 		params.put("cdunidspch" , cdunidspch);
 		params.put("cdsisrol"   , cdsisrol);
+        params.put("swsusmat"   , soloUsuariomatriz ? "S" : "N");
 		Map<String, Object> procRes = ejecutaSP(new RecuperarSiguienteUsuarioCarruselSP(getDataSource()), params);
 		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
 		if (lista == null) {
@@ -278,6 +279,7 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
 			super(dataSource, "P_DSPCH_CARRUSEL");
 			declareParameter(new SqlParameter("cdunidspch" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swsusmat"   , OracleTypes.VARCHAR));
 			String[] cols = new String[] { "CDUSUARI", "SWULTIMO" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -287,10 +289,11 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
 	}
 	
 	@Override
-	public String recuperarSiguienteUsuarioCarga (String cdunidspch, String cdsisrol) throws Exception {
+	public String recuperarSiguienteUsuarioCarga (String cdunidspch, String cdsisrol, boolean soloUsuariomatriz) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
 		params.put("cdunidspch" , cdunidspch);
 		params.put("cdsisrol"   , cdsisrol);
+        params.put("swsusmat"   , soloUsuariomatriz ? "S" : "N");
 		Map<String, Object> procRes = ejecutaSP(new RecuperarSiguienteUsuarioCargaSP(getDataSource()), params);
 		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
 		if (lista == null) {
@@ -316,6 +319,7 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
 			super(dataSource, "P_DSPCH_CARGA");
 			declareParameter(new SqlParameter("cdunidspch" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swsusmat"   , OracleTypes.VARCHAR));
 			String[] cols = new String[] { "CDUSUARI", "NMTAREAS" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
