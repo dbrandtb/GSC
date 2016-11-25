@@ -74,6 +74,7 @@ import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoProcesoBloqueo;
 import mx.com.gseguros.portal.general.util.TipoRamo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -9617,6 +9618,32 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();
 		}
+		
+		try
+        {
+		    /**
+	         * Para consultar si este tramite esta en espera de validacion de cambio de nombre de plan para alguno de los grupos
+	         */
+		    
+		    //Se fija valor default N
+		    smap1.put("ESPERA_AUT_NOMPLAN_SUPERV", "N");
+		    
+	        Map<String, String> datosBloq = cotizacionManager.consultaBloqueoProcesoTramite(smap1.get("ntramite"), TipoProcesoBloqueo.AUTORIZAR_NOMPLAN_SUPERVISOR.getClaveProceso());
+	        if(datosBloq != null && !datosBloq.isEmpty()){
+	            if(datosBloq.containsKey("VALOR") && "B".equalsIgnoreCase(datosBloq.get("VALOR"))){
+	                smap1.put("ESPERA_AUT_NOMPLAN_SUPERV", "S");
+	            }
+	        }
+        }
+        catch(Exception ex)
+        {
+            long timestamp=System.currentTimeMillis();
+            logger.error("Error al cargar datos de aprobacion de cambio de nombre de plan."+timestamp,ex);
+            exito           = false;
+            respuesta       = "Error inesperado #"+timestamp;
+            respuestaOculta = ex.getMessage();
+        }
+		
 		logger.debug(""
 				+ "\n###### cargarDatosCotizacionGrupo ######"
 				+ "\n########################################"
@@ -12872,6 +12899,51 @@ public class CotizacionAction extends PrincipalCoreAction
 				+ "\n########################################"
 				);
 		return SUCCESS;
+	}
+
+	
+	
+	public String lanzaAprobacionNombrePlan()
+	{
+	    logger.debug(""
+	            + "\n########################################"
+	            + "\n###### lanzaAprobacionNombrePlan ######"
+	            + "\nsmap1:  "+smap1
+	            );
+	    
+	    try
+	    {
+	        
+	        Utils.validate(smap1    , "No hay parametros");
+	        
+	        String ntramite =  smap1.get("ntramite");
+	        String bloquear =  smap1.get("tipobloqueo");
+	        
+	        Utils.validate(ntramite, "No hay numero de tramite", bloquear, "No hay indicacion de bloqueo");
+	        
+	        UserVO usuario  = (UserVO) session.get("USUARIO");
+            String cdsisrol = usuario.getRolActivo().getClave();
+	        
+            /**
+             * Se lanza insercion de registro o eliminacion para bloqueo o desbloqueo
+             */
+            cotizacionManager.ejectutaBloqueoProcesoTramite(ntramite, TipoProcesoBloqueo.AUTORIZAR_NOMPLAN_SUPERVISOR.getClaveProceso(),
+                    cdsisrol, TipoProcesoBloqueo.AUTORIZAR_NOMPLAN_SUPERVISOR.getDescripcion(), bloquear,
+                    "D".equalsIgnoreCase(bloquear)? Constantes.DELETE_MODE : Constantes.INSERT_MODE);
+	        success = true;
+	        
+	    }
+        catch(Exception ex)
+        {
+            respuesta = Utils.manejaExcepcion(ex);
+            success =  false;
+        }
+	    logger.debug(""
+	            + "\n###### lanzaAprobacionNombrePlan ######"
+	            + "\n########################################"
+	            );
+	    
+	    return SUCCESS;
 	}
 
 	public String obtieneNombresCoberturasPlan()

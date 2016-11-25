@@ -778,6 +778,39 @@ public interface CotizacionManager
 			,String cdplan
 			)throws Exception;
 
+	/**
+	 * Metodo para insertar semaforos o bloqueos de procesos customizados, solo son requeridos
+	 * el numero de tramite y proceso, los demas valores son opcionales.
+	 * @param ntramite
+	 * @param tipoProceso
+	 * @param rol
+	 * @param descripcion
+	 * @param valor
+	 * @param operacion
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean ejectutaBloqueoProcesoTramite(
+	         String ntramite
+	        ,String claveProceso
+	        ,String cdrol
+	        ,String descripcion
+	        ,String valor
+	        ,String operacion
+	        )throws Exception;
+
+	/**
+	 * consulta bloqueo o semaforo de proceso de tramite
+	 * @param ntramite
+	 * @param claveProceso
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String,String> consultaBloqueoProcesoTramite(
+	        String ntramite
+	        ,String claveProceso
+	        )throws Exception;
+
 	public Map<String,String> obtieneDatosContratantePoliza(
 			String cdunieco
 			,String cdramo
