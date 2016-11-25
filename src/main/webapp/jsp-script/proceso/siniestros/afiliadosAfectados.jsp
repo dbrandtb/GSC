@@ -279,10 +279,10 @@
 						{type:'string',	name:'NMAUTESP'},		{type:'string',	name:'REQAUTESPECIAL'},
 						{type:'string',	name:'VALTOTALCOB'},	{type:'string',	name:'LIMITE'},
 						{type:'string',	name:'IMPPAGCOB'},		{type:'string',	name:'NMCALLCENTER'},
-						{type:'string',	name:'SECTWORKSIN'},
+						{type:'string',	name:'SECTWORKSIN'},    {type:'string', name:'SWFONSIN'},
 						{type:'string', name:'GENERO'},			{type:'string', name:'FENACIMI'},	// (EGS)
-						{type:'date',      name:'FEINGRESO',   dateFormat : 'd/m/Y'},
-						{type:'date',      name:'FEEGRESO',   dateFormat : 'd/m/Y'},
+						{type:'date',   name:'FEINGRESO',  dateFormat : 'd/m/Y'},
+						{type:'date',   name:'FEEGRESO',   dateFormat : 'd/m/Y'},
 						{type:'string', name:'CDTIPEVE'},       {type:'string', name:'CDTIPALT'},
 						{type:'string', name:'FLAGTIPEVE'},     {type:'string', name:'FLAGTIPALT'}
 					]
@@ -987,6 +987,20 @@
 				});
 				storeAplicaIVA.load();
 				
+                var storeAplicaFondo = Ext.create('Ext.data.JsonStore', {
+                    model:'Generic',
+                    proxy: {
+                        type: 'ajax',
+                        url: _URL_CATALOGOS,
+                        extraParams : {catalogo:_SINO},
+                        reader: {
+                            type: 'json',
+                            root: 'lista'
+                        }
+                    }
+                });
+                storeAplicaFondo.load();
+				
 // STORE PARA OBTENER EL LISTADO DE LOS ICD,CDT Y UB
 				var storeConceptosCatalogo = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
@@ -1459,7 +1473,12 @@
 					name:'params.idAplicaIVA',		store: storeAplicaIVA,		queryMode:'local',
 					displayField: 'value',		valueField: 'key',				editable:false,				allowBlank:false
 				});
-
+				
+                cmbAplicaFondo = Ext.create('Ext.form.ComboBox', {
+                    name:'params.idAplicaFondo',    store: storeAplicaFondo,    queryMode:'local',
+                    displayField: 'value',          valueField: 'key',          editable:false,             allowBlank:false
+                });
+                
 				cmbCveConcepto = Ext.create('Ext.form.ComboBox', {
 					name:'params.cdconcep',		store: storeConceptosCatalogo,		queryMode:'remote',
 					displayField: 'value',		valueField: 'key',					editable:true,				allowBlank:false,
@@ -1630,7 +1649,7 @@
 								header: 'Id<br/>Sini.',				dataIndex: 'NMSINIES',			width: 120 
 							},
 							{
-								header: '#<br/>Call Center',		dataIndex: 'NMCALLCENTER',		width: 70
+								header: '#<br/>Call Center',		dataIndex: 'NMCALLCENTER',		width: 70,    hidden : true
 								,editor: {
 									xtype: 'numberfield'
 								}
@@ -1661,6 +1680,20 @@
 							{
 								header: 'Nombre<br/>Asegurado',		dataIndex: 'NOMBRE'
 							},
+							{
+                                header: 'Aplica Fondo',             dataIndex: 'SWFONSIN' 
+                                ,editor : cmbAplicaFondo
+                                ,renderer        : function(v) {
+                                    var r=v;
+                                    if(v=='S'||v=='s') {
+                                        r='SI';
+                                    }
+                                    else if(v=='N'||v=='n'){
+                                        r='NO';
+                                    }
+                                    return r;
+                                }
+                            },
 							{
 								header: 'Causa <br/> Siniestro', 	dataIndex: 'CDCAUSA'
 								,editor : cmbCausaSiniestro
@@ -5972,8 +6005,8 @@
                 ,'params.cdunieco'      : _11_recordActivo.get('CDUNIECO')
                 ,'params.cdramo'        : _11_recordActivo.get('CDRAMO')
                 ,'params.estado'        : _11_recordActivo.get('ESTADO')
-                ,'params.cdpresta'      : panelInicialPral.down('combo[name=params.cdpresta]').getValue(),
-                'params.secAsegurado'   : _11_recordActivo.get('SECTWORKSIN')
+                ,'params.cdpresta'      : panelInicialPral.down('combo[name=params.cdpresta]').getValue()
+                ,'params.secAsegurado'  : _11_recordActivo.get('SECTWORKSIN')
             };
             
             gridFacturaDirecto.setLoading(true);
@@ -6101,7 +6134,8 @@
                     jsonAutServ.feingres,
                     null,
                     jsonAutServ.idTipoEvento,
-                    null
+                    null,
+                    record.data.APLICFONDO
                 );
                 gridFacturaDirecto.setLoading(false);
             },
@@ -6684,6 +6718,7 @@
                                         
                                         if(maxconsultas  == true){
                                             //1.-
+                                        	debug("Caso ===> 1 : ",record.data);
                                             _11_guardarDatosComplementario(record.data.CDUNIECO,
                                                 record.data.CDRAMO,
                                                 record.data.ESTADO,
@@ -6710,7 +6745,8 @@
                                                 Ext.Date.format(record.data.FEINGRESO, 'd/m/Y'),
                                                 Ext.Date.format(record.data.FEEGRESO, 'd/m/Y'),
                                                 record.data.CDTIPEVE,
-                                                record.data.CDTIPALT
+                                                record.data.CDTIPALT,
+                                                record.data.SWFONSIN
                                             );
                                         }
                                     }else{
@@ -6734,6 +6770,7 @@
                             });
                         }else{
                             //2.-
+                        	debug("Caso ===>2 : ",record.data);
                             _11_guardarDatosComplementario(record.data.CDUNIECO,
                                 record.data.CDRAMO,
                                 record.data.ESTADO,
@@ -6760,7 +6797,8 @@
                                 Ext.Date.format(record.data.FEINGRESO, 'd/m/Y'),
                                 Ext.Date.format(record.data.FEEGRESO, 'd/m/Y'),
                                 record.data.CDTIPEVE,
-                                record.data.CDTIPALT
+                                record.data.CDTIPALT,
+                                record.data.SWFONSIN
                             );
                         }
                     }
@@ -6785,7 +6823,7 @@
                                         cdicd2,cdcausa, cdgarant,cdconval, nmautser,
                                         cdperson, tipoProceso, complemento,nmsituac,
                                         deducible, copago,nmcallcenter, actMisiniper,
-                                        fechaIngreso,fechaEgreso,cveEvento, cveAlta){
+                                        fechaIngreso,fechaEgreso,cveEvento, cveAlta, aplicFondo){
         
         debug("Datos de guardado 1 ===> ","cdunieco :"+cdunieco,"cdramo :"+cdramo, "estado :"+estado, "nmpoliza :"+nmpoliza);
         debug("Datos de guardado 2 ===> ","nmsuplem :"+nmsuplem,"aaapertu :"+aaapertu, "nmsinies :"+nmsinies,"feocurre :"+feocurre);
@@ -6838,7 +6876,8 @@
                 'params.feingreso'      : fechaIngreso,
                 'params.feegreso'       : fechaEgreso,
                 'params.cveEvento'      : cveEvento,
-                'params.cveAlta'        : cveAlta
+                'params.cveAlta'        : cveAlta,
+                'params.aplicFondo'     : aplicFondo
             }
             ,success : function (response) {
                 banderaAsegurado = 0;

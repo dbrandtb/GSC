@@ -347,7 +347,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											siniestrosAnterior.get(r).get("CDICD2"),  siniestrosAnterior.get(r).get("CDCAUSA"),
 											siniestrosAnterior.get(r).get("CDGARANT"),siniestrosAnterior.get(r).get("CDCONVAL"),
 											siniestrosAnterior.get(r).get("NMAUTSER"),siniestrosAnterior.get(r).get("CDPERSON"),"1",
-											siniestrosAnterior.get(r).get("NMRECLAMO"));
+											siniestrosAnterior.get(r).get("NMRECLAMO"),siniestrosAnterior.get(r).get("SWFONSIN"));
 									
 									List<Map<String,String>>lista = siniestrosManager.P_GET_MSINIVAL(
 											siniestrosAnterior.get(r).get("CDUNIECO"), siniestrosAnterior.get(r).get("CDRAMO"), 
@@ -479,7 +479,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							siniestros.get(0).get("CDICD2"),siniestros.get(0).get("CDCAUSA"),
 							siniestros.get(0).get("CDGARANT"),siniestros.get(0).get("CDCONVAL"),
 							siniestros.get(0).get("NMAUTSER"),siniestroNuevo.get(0).get("CDPERSON"),"1",
-							siniestroNuevo.get(0).get("NMRECLAMO"));
+							siniestroNuevo.get(0).get("NMRECLAMO"), siniestros.get(0).get("SWFONSIN"));
 					
 					for(int i=0; i< facturas.size();i++){
 						//6.- Obtenemos los valores de MSINIVAL por facturas
@@ -1722,6 +1722,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			slist1 = siniestrosManager.listaSiniestrosTramite2(smap.get("ntramite"),smap.get("nfactura"));
 			success=true;
 			mensaje="Siniestros obtenidos";
+			logger.debug("VALOR DE RESPUESTA ==> :{}",slist1);
 		}
 		catch(Exception ex) {
 			logger.debug("error al obtener siniestros de tramite : {}", ex.getMessage(), ex);
