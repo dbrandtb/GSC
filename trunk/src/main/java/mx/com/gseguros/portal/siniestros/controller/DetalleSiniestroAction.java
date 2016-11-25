@@ -121,7 +121,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				params.get("cdicd2"), params.get("cdcausa"),
 				params.get("cdgarant"), params.get("cdconval"),
 				valor, params.get("cdperson"), params.get("tipoProceso"),
-				params.get("complemento"));
+				params.get("complemento"), params.get("aplicFondo"));
 			//2.- Actualizamos la informacion de MSINIVAL
 			siniestrosManager.actualizaDatosGeneralesConceptos(
 					params.get("cdunieco"), params.get("cdramo"),
@@ -150,7 +150,8 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			}
 			String formatoFechaFactura = params.get("fefactura").toString().substring(8,10)+"/"+params.get("fefactura").toString().substring(5,7)+"/"+params.get("fefactura").toString().substring(0,4);
 			Date dFeFactura = renderFechas.parse(formatoFechaFactura);
-			Date dFeEgreso = renderFechas.parse(formatoFeEgreso); 
+			//Date dFeEgreso = renderFechas.parse(formatoFeEgreso); 
+			Date dFeEgreso = renderFechas.parse(formatoFechaFactura); 
 			
 			siniestrosManager.guardaListaFacturaSiniestro(params.get("ntramite"), params.get("nfactura"), dFeFactura , params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"),params.get("tipoMoneda"),params.get("tasacamb"),params.get("ptimporta"),params.get("dctonuex"),dFeEgreso, params.get("diasdedu"),null,null, null);
 			success = true;
