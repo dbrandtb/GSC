@@ -147,7 +147,7 @@ Ext.define('VentanaReasignaTramite',
                             window.setLoading(true);
                             Ext.Ajax.request(
                             {
-                                url     : _GLOBAL_COMP_URL_ACTUALIZAR_STATUS_TRAMITE
+                                url     : _GLOBAL_URL_REASIGNAR_TRAMITE_INDV
                                 ,params :
                                 {
                                     'smap1.ntramite'         : window1.ntramite
@@ -171,8 +171,7 @@ Ext.define('VentanaReasignaTramite',
                                             window1.close();
                                             Ext.ComponentQuery.query('[xtype=button][text=Buscar]')[0].handler();
                                             mensajeCorrecto('Tr&aacute;mite reasignado'
-                                                ,'El tr&aacute;mite '+window1.ntramite
-                                                    +' ha sido asignado a '+json2.smap1.nombreUsuarioDestino
+                                                ,json2.smap1.nombreUsuarioDestino
                                                 ,function()
                                                 {
                                                     _mask('Redireccionando');
