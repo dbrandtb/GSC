@@ -579,6 +579,72 @@ public class MesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
+
+	public String reasignarTramiteIndividual()
+	{
+	    logger.debug(Utils.log(
+	            "\n########################################",
+	            "\n########################################",
+	            "\n###### reasignarTramiteIndividual ######",
+	            "\n######                            ######"
+	            ));
+	    logger.debug("smap1: "+smap1);
+	    try
+	    {
+	        
+	        Utils.validate(smap1, "No hay datos para reasignar tramite");
+	        
+            UserVO usuario = Utils.validateSession(session);
+            String cdusuari = usuario.getUser(),
+                   cdsisrol = usuario.getRolActivo().getClave();
+            Date fechaHoy = new Date();
+            
+	        String statusNuevo=smap1.get("status");
+	        String ntramite=smap1.get("ntramite");
+	        String comments=smap1.get("comments");
+	        String cdmotivo=smap1.get("cdmotivo");
+	        String mostrarAgente=smap1.get("swagente");
+	        
+	        String rolDestino     = smap1.get("rol_destino");
+	        String usuarioDestino = smap1.get("usuario_destino");
+	        //boolean paraUsuario = StringUtils.isNotBlank(rolDestino);
+	        
+            
+            RespuestaTurnadoVO reasignado = despachadorManager.turnarTramite(
+                    cdusuari, 
+                    cdsisrol, 
+                    ntramite, 
+                    statusNuevo, 
+                    Utils.join("Se ha reasignado el tr\u00e1mite con las siguientes observaciones: ", comments), 
+                    cdmotivo,  // cdrazrecha 
+                    usuarioDestino,  // cdusuariDes 
+                    rolDestino,  // cdsisrolDes 
+                    Constantes.SI.equalsIgnoreCase(mostrarAgente), // permisoAgente 
+                    false, // porEscalamiento 
+                    fechaHoy, 
+                    false  // sinGrabarDetalle
+                    );
+            
+            logger.debug(Utils.log("Tr\u00e1mite reasignado. ", reasignado.getMessage()));
+            
+            smap1.put("nombreUsuarioDestino" , reasignado.getMessage());
+	        
+	        success=true;
+	        
+	    } catch(Exception ex) {
+	        success=false;
+	        logger.error("error al actualizar status de tramite de mesa de control",ex);
+	        mensaje=ex.getMessage();
+	    }
+	    logger.debug(Utils.log(
+	            "\n######                            ######",
+	            "\n###### reasignarTramiteIndividual ######",
+	            "\n########################################",
+	            "\n########################################"
+	            ));
+	    return SUCCESS;
+	}
+
 	////////////////////////////////////////////////
 	////// actualizar status de tramite de mc //////
 	/*////////////////////////////////////////////*/
