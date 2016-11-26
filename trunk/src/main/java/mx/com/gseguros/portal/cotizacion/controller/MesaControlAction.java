@@ -615,7 +615,7 @@ public class MesaControlAction extends PrincipalCoreAction
                     cdsisrol, 
                     ntramite, 
                     statusNuevo, 
-                    Utils.join("Se ha reasignado el tr\u00e1mite con las siguientes observaciones: ", comments), 
+                    comments, 
                     cdmotivo,  // cdrazrecha 
                     usuarioDestino,  // cdusuariDes 
                     rolDestino,  // cdsisrolDes 
