@@ -6548,7 +6548,9 @@ public String retarificarEndosos()
 				            cdsisrol,
 				            ntramiteGenerado, 
 				            estatusTramite,
-				            "La fecha de efecto del endoso supera la fecha permitida",
+				            respuesta.isConfirmado()
+				                ? Utils.join("Se confirma el endoso ", nsuplogi)
+				                : "La fecha de efecto del endoso supera la fecha permitida",
 				            null,  // cdrazrecha
 				            null,  // cdusuariDes
 				            null,  // cdsisrolDes
