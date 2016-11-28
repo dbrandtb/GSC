@@ -89,7 +89,8 @@ itemsEditarPago.push({
 							_p25_ventanaCambioDomicilio();
 						} 
 					});
-itemsCondicionesColumns.push({ 
+
+/*itemsCondicionesColumns.push({ 
 	xtype      : 'actioncolumn',
 	itemId     : 'buttonEditarCondicion',
 	icon       : '${ctx}/resources/fam3icons/icons/arrow_refresh.png',
@@ -99,7 +100,8 @@ itemsCondicionesColumns.push({
 		debug('actualizar condicion',record.data);
 		actualizaCondicion(record);
 	}
-});
+});*/
+
 itemsCondicionesColumns.push({
 	xtype      : 'actioncolumn',
 	itemId     : 'buttonBorrarCondicion',
@@ -111,6 +113,7 @@ itemsCondicionesColumns.push({
 		borraCondicion(record);
 	}
 });
+
 itemsCalendarioColumns.push({ 
 	xtype      : 'actioncolumn',
 	itemId     : 'buttonEditarCalendario',
@@ -118,10 +121,11 @@ itemsCalendarioColumns.push({
 	tooltip    : 'Actualizar',
 	arrowAlign : 'bottom',
 	handler    : function(view,	rowIndex, colIndex, item, e, record){
-		debug('actualizar',record.data);
+		debug('actualizar',record.data);		
 		actualizaCalendario(record);
 	}
 });
+
 itemsCalendarioColumns.push({
 	xtype      : 'actioncolumn',
 	itemId     : 'buttonBorrarCalendario',
@@ -312,24 +316,24 @@ Ext.onReady(function()
         				vertical	: false,
             			items       : [
                 			{
+                                boxLabel   : 'Mismas condiciones de renovacion',
+                                name       : 'topping',
+                                inputValue : '3',
+                                itemId     : 'checkbox3',
+                                checked    : true
+                            },
+                			{
                     			boxLabel   : 'Cambio en forma de pago y/o domicilio del contratante',
                     			name       : 'topping',
                     			inputValue : '1',
-                    			itemId     : 'checkbox1',
-                    			checked	   : true
+                    			itemId     : 'checkbox1'
                 			},
                 			{
-                    			boxLabel   : 'Inclusion de coberturas',
+                    			boxLabel   : 'Otros cambios',
                     			name       : 'topping',
                     			inputValue : '2',
                     			itemId     : 'checkbox2'
-                			},
-                			{
-                			    boxLabel   : 'Mismas condiciones de renovacion',
-                                name       : 'topping',
-                                inputValue : '3',
-                                itemId     : 'checkbox3'
-                			}
+                			}                			
             			]
     				}	
     			],
@@ -362,7 +366,7 @@ Ext.onReady(function()
     		                                    params  : {
     		                                        'params.consulta' : 'RECUPERAR_VALIDACION_POR_CDVALIDAFK',
     		                                        'params.ntramite' : ntramite,
-    		                                        'params.clave'    : '_CONFCOT'
+    		                                        'params.clave'    : '_CONFREN'
     		                                    },
     		                                    success : function (response) {
     		                                        mask.close();
@@ -436,7 +440,7 @@ Ext.onReady(function()
 			                                    	'params.CDTIPFLU'  : this.up('window').resRenova['cdtipflu'],
 			                                    	'params.CDFLUJOMC' : this.up('window').resRenova['cdflujomc'],
 			                                    	'params.STATUSOLD' : this.up('window').resRenova['estadomc'],
-			                                		'params.STATUSNEW' : '13'
+			                                		'params.STATUSNEW' : '43'
 			                                    }
 			                                    ,success : function(response)
 			                                    {
@@ -470,7 +474,8 @@ Ext.onReady(function()
     							}
     							else if(_fieldById('itemRadio').getValue()['topping'] == 3){
     							     debug('resRenova',this.up('window').resRenova);
-    							     var window = this.up('window');
+    							     tarifaFinalMismasCondiciones(this.up('window').resRenova);
+    							     /*var window = this.up('window');
     							     var resRenova = window.resRenova;
     							     _mask('Generando renovaci\u00f3n');
     							     Ext.Ajax.request({
@@ -501,7 +506,7 @@ Ext.onReady(function()
                                              _unmask();
                                              errorComunicacion();
                                          }
-                                     });
+                                     });*/
     						    }
     					    } 
     					},
@@ -892,10 +897,10 @@ Ext.onReady(function()
 	                                    maxValue	: 99,
 	        							minValue	: 0,
 	                                    value		: 0,
-	                                    fieldLabel	: 'N&uacute;mero Renovaci&Oacute;n',
+	                                    fieldLabel	: 'N&uacute;mero Renovaci&oacute;n',
 	                                    style		: 'margin:5px;',
 	                                    readOnly	: true,
-                                        hidden      : false
+                                        hidden      : true
 	                                },
 			                        {
 	                                    xtype		: 'textfield',
@@ -1968,7 +1973,7 @@ Ext.onReady(function()
   					}
   					i++;
   				}
-  				params['params.operacion'] = panCondicion['operacion'];//'A';
+  				params['params.operacion'] = panCondicion['operacion'];
   				var _p25_gridCondiciones   = _fieldById('_p25_gridCondiciones');
   				params['params.nmperiod']  = _p25_gridCondiciones.nmperiod;
   				params['params.cdunieco']  = _p25_gridCondiciones.cdunieco;
@@ -2032,63 +2037,59 @@ Ext.onReady(function()
 		buttons: [{
   			text	: 'Guardar',
   			handler : function(me){
+  			    var formBusqueda = _fieldById('_p25_busquedaForm');
+                _fieldByName('anio',formBusqueda).readOnly = false;
+                _fieldByName('mes', formBusqueda).readOnly = false;
   				var _p25_calendario = _fieldById('_p25_calendario');
-  				debug(_p25_calendario.form.getValues());  				
-  				if((_fieldByName('dias',_p25_calendario).getValue()) > 0){
-  				  debug(_fieldByName('dias',_p25_calendario).getValue());
-  				  _fieldByName('feinicio',_p25_calendario).setValue(
-  				       Ext.Date.add(
-  				          _fieldByName('feaplica',_p25_calendario).getValue(), 
-  				          Ext.Date.DAY, 
-  				          1)
-  				  );
-  				  
-  				  _fieldByName('fefinal',_p25_calendario).setValue(
-                      Ext.Date.add(
-                         _fieldByName('feaplica',_p25_calendario).getValue(), 
-                         Ext.Date.DAY,
-                         _fieldByName('dias',_p25_calendario).getValue()
-                      )
-                  );
-                  var datos = _p25_calendario.form.getValues();
-  				  var params = {};
-  				  debug('_p25_calendario.form',_p25_calendario.form);
-  				  var i = 0;
-  				  for(var k in datos){
-  					 debug('datos[k]',datos[k]);
-  					 params['params.'+k] = datos[k];
-  					 i++;
-  				  }
-  				  params['params.operacion'] = panCalendario['operacion'];
-  				  params['params.nmperiod']  = panCalendario.nmperiod;
-  				  debug('params',params);
-  				  _mask('Guardando cambios');
-  				  Ext.Ajax.request({
-        	          url       : _p25_urlMovimientoCalendario,
-        			  params    : params,
-        			  success  : function(response){
-	                      _unmask();
-	            		  var resp = Ext.decode(response.responseText);
-	            		  debug('resp',resp);	            		
-	            		  if(resp.exito == true){
-	            		     mensajeCorrecto('Mensaje','Guardado con exito');
-	            		 	 var _p25_gridCalendario = _fieldById('_p25_gridCalendario');
-	            			 _p25_gridCalendario.store.reload();
-	            			 me.up('window').close();
-	            		  }
-	        			  else{
-	        		          mensajeError(resp.respuesta);
-	        			  }
-        			  },
-        			  failure  : function(){
-        			      _unmask();
-            			  errorComunicacion();
-                      }
-    			  });
-    		    }
-    		    else{
-    		      mensajeError('Defina el n\u00famero de d\u00edas de renovaci\u00f3n');
-    		    }
+  				debug('_p25_calendario',_p25_calendario.form.getValues());
+  				var desde     = _fieldByName('feinicio',_p25_calendario).getValue();
+  				var hasta     = _fieldByName('fefinal',_p25_calendario).getValue();
+  				var feaplica  = _fieldByName('feaplica',_p25_calendario).getValue();
+  				var anio;
+  				var mes;
+  				if(!Ext.isEmpty(desde)){
+  				    anio = desde.getFullYear(); 
+  				    mes  = desde.getMonth();  
+  				}  				
+  				var inicio    = toDate(anio, mes+1, 1);
+  				var fin       = Ext.Date.add(inicio, Ext.Date.MONTH, 1);
+  				fin           = Ext.Date.add(fin,    Ext.Date.DAY,  -1);
+  				debug('inicio',inicio);
+  				debug('desde', desde);
+  				debug(Ext.Date.isEqual(inicio,desde));
+  				debug('fin',   fin);
+  				debug('hasta', hasta);
+  				debug(Ext.Date.isEqual(fin,hasta));
+  				if(Ext.Date.isEqual(inicio,desde) == false || Ext.Date.isEqual(fin,hasta) == false){
+  				    centrarVentanaInterna(Ext.MessageBox.confirm('Atencion', 'No esta seleccionando un mes completo<br>¿Desea continuar?', function(btn){
+                        if(btn === 'yes'){
+                            debug('diferencia', daydiff(desde, feaplica));
+                            if((daydiff(desde, feaplica)) > 45 || (daydiff(desde, feaplica)) < -45){
+                                centrarVentanaInterna(Ext.MessageBox.confirm('Atencion', 'F. Ejecucion fuera de rango por 45 dias<br>¿Desea continuar?', function(btn){
+                                    if(btn === 'yes'){
+                                        guardarCalendario();
+                                    }
+                                }));
+                            }
+                            else{
+                                guardarCalendario();
+                            }
+                        }                        
+                    }));
+  				}
+  				else{
+  				    debug('diferencia', daydiff(desde, feaplica));
+                    if((daydiff(desde, feaplica)) > 45 || (daydiff(desde, feaplica)) < -45){
+                        centrarVentanaInterna(Ext.MessageBox.confirm('Atencion', 'F. Ejecucion fuera de rango por 45 dias<br>¿Desea continuar?', function(btn){
+                            if(btn === 'yes'){
+                                guardarCalendario();
+                            }
+                         }));
+                    }
+                    else{
+                        guardarCalendario();
+                    }  
+  				}  				
   			 }
   		},
   		{
@@ -2101,6 +2102,9 @@ Ext.onReady(function()
   		{ 
   			text: 'Cancelar',
   			handler : function(){
+  			    var formBusqueda = _fieldById('_p25_busquedaForm');
+                _fieldByName('anio',formBusqueda).readOnly = false;
+                _fieldByName('mes', formBusqueda).readOnly = false;
   				this.up('window').close();
   			} 
   		}]
@@ -2222,48 +2226,54 @@ Ext.onReady(function()
                 ,bbar			: [
   		    		{ 
   		        		xtype   : 'button', 
-  		        		text    : 'Agregar',
+  		        		text    : 'Agregar fecha',
   		        		handler : function(){
   		        			agregaCalendario();
   		        		}
   		    		},
   		    		{
   		        		xtype   : 'button', 
-  		        		text    : 'Condiciones',
+  		        		text    : 'Exclusiones',
+  		        		//handler : mostrarCondiciones()
   		        		handler : function(){
   		        			var _p25_gridCalendario = _fieldById('_p25_gridCalendario');
-  		        			debug('_p25_gridCalendario',_p25_gridCalendario.getSelectionModel().getSelection()[0].raw);
-  		        			var calen = _p25_gridCalendario.getSelectionModel().getSelection()[0].raw;
-  		        			_p25_storeCondiciones.load({
-    						params    :	{
-    							'smap1.nmperiod' : calen['nmperiod'],
-    							'smap1.cdunieco' : calen['cdunieco'],
-    							'smap1.cdramo'   : calen['cdramo'],
-    							'smap1.anio'     : calen['anio'],
-    							'smap1.mes'      : calen['mes']
-    						},
-    						callback :  function(recordsCon, opCon, successCon){
-            					debug('entro a callback');
-            					if(successCon){
-            						var respCon = Ext.decode(opCon.response.responseText);
-            						debug('respCon',respCon);
-                					if(respCon.exito != true){
-                    					mensajeWarning('No hay resultados');
-                					}
-                					else{
-                    					var _p25_gridCondiciones 	  = _fieldById('_p25_gridCondiciones');
-                    					_p25_gridCondiciones.nmperiod = calen['nmperiod'];
-                    					_p25_gridCondiciones.cdunieco = calen['cdunieco'];
-                    					_p25_gridCondiciones.cdramo   = calen['cdramo'];
-                						_fieldById('_p25_gridCondiciones').show();
-                					}
-            					}
-            					else{
-                					mensajeError(opCon.getError());
-            					}
-        					}
-    						});
-  		        		}
+  		        			if(_p25_gridCalendario.getSelectionModel().hasSelection()){
+	  		        			debug('_p25_gridCalendario',_p25_gridCalendario.getSelectionModel().getSelection()[0].raw);
+	  		        			var calen = _p25_gridCalendario.getSelectionModel().getSelection()[0].raw;
+	  		        			_p25_storeCondiciones.load({
+	    						params    :	{
+	    							'smap1.nmperiod' : calen['nmperiod'],
+	    							'smap1.cdunieco' : calen['cdunieco'],
+	    							'smap1.cdramo'   : calen['cdramo'],
+	    							'smap1.anio'     : calen['anio'],
+	    							'smap1.mes'      : calen['mes']
+	    						},
+	    						callback :  function(recordsCon, opCon, successCon){
+	            					debug('entro a callback');
+	            					if(successCon){
+	            						var respCon = Ext.decode(opCon.response.responseText);
+	            						debug('respCon',respCon);
+	                					if(respCon.exito != true){
+	                    					mensajeWarning('No hay resultados');
+	                					}
+	                					else{
+	                    					var _p25_gridCondiciones 	  = _fieldById('_p25_gridCondiciones');
+	                    					_p25_gridCondiciones.nmperiod = calen['nmperiod'];
+	                    					_p25_gridCondiciones.cdunieco = calen['cdunieco'];
+	                    					_p25_gridCondiciones.cdramo   = calen['cdramo'];
+	                						_fieldById('_p25_gridCondiciones').show();
+	                					}
+	            					}
+	            					else{
+	                					mensajeError(opCon.getError());
+	            					}
+	        					}
+	    						});
+  		        			}
+  		        			else{
+  		        			    mensajeWarning('Debe seleccionar un registro');
+  		        			}
+  		        		} 
   		    		}  		    		
 				]
             })
@@ -2280,7 +2290,7 @@ Ext.onReady(function()
                 ,bbar			: [
   		    		{ 
   		        		xtype   : 'button', 
-  		        		text    : 'Agregar condicion',
+  		        		text    : 'Agregar exclusi\u00f3n',
   		        		handler : function(){
   		        			agregaCondicion();
   		        		}
@@ -2293,95 +2303,95 @@ Ext.onReady(function()
     
     ////// custom //////
     var form = _fieldById('_p25_busquedaForm');
-    _fieldByName('tipo',form).getStore().on(
-  	{
-  		load : function(me)
-	    {
-  		    _fieldByName('tipo',form).setValue('AS');
-  		}
-  	});
- 	
     
-  	_fieldByName('tipo',form).on(
-  	{
-  		change: function(me, newValue) {
-  				if(me.getValue() == 'AS' || me.getValue() == 'SA'){
-  					_fieldByName('fecini',form).hide();
-  					_fieldByName('fecfin',form).hide();
-  					_fieldByName('status',form).hide();
-  					_fieldByName('cdunieco',form).show();
-  					_fieldByName('cdramo',form).show();
-  					_fieldByName('nmpoliza',form).show();
-  					_fieldByName('cdtipsit',form).hide();
-  					_fieldByName('administradora',form).hide();
-  					_fieldByName('retenedora',form).hide();
-  					_fieldByName('cdperson',form).hide();
-  					_fieldByName('anio',form).hide();
-  					_fieldByName('mes',form).hide();
-  					_fieldById('_p25_contratante').hide();
-  					_fieldById('_p25_poliza').hide();
-  					_fieldById('_p25_grid').hide();
-  					_fieldById('_p25_gridCalendario').hide();
-  					_fieldById('_p25_gridCondiciones').hide();
-  					form.doLayout();
-  				}else if(me.getValue() == 'P'){
-  					_fieldByName('fecini',form).hide();
-  					_fieldByName('fecfin',form).hide();
-  					_fieldByName('status',form).hide();
-  					_fieldByName('cdunieco',form).hide();
-  					_fieldByName('cdramo',form).hide();
-  					_fieldByName('nmpoliza',form).hide();
-  					_fieldByName('cdtipsit',form).hide();
-  					_fieldByName('administradora',form).hide();
-  					_fieldByName('retenedora',form).hide();
-  					_fieldByName('cdperson',form).hide();
-  					_fieldByName('anio',form).show();
-  					_fieldByName('mes',form).show();
-  					_fieldById('_p25_contratante').hide();
-  					_fieldById('_p25_poliza').hide();
-  					_fieldById('_p25_grid').hide();
-  					_fieldById('_p25_gridCalendario').hide();
-  					_fieldById('_p25_gridCondiciones').hide();
-  					form.doLayout();
-  				}else if(me.getValue() == 'M'){
-  					_fieldByName('fecini',form).show();
-  					_fieldByName('fecfin',form).show();
-  					_fieldByName('status',form).hide();
-  					_fieldByName('cdunieco',form).show();
-  					_fieldByName('cdramo',form).show();
-  					_fieldByName('nmpoliza',form).hide();
-  					_fieldByName('cdtipsit',form).show();
-  					_fieldByName('administradora',form).show();
-  					_fieldByName('retenedora',form).show();
-  					_fieldByName('cdperson',form).show();
-  					_fieldByName('anio',form).hide();
-  					_fieldByName('mes',form).hide();
-  					//_fieldByName('fecini',form).setMinValue(new Date());
-  					//_fieldByName('fecfin',form).setMinValue(new Date());
-  					_fieldById('_p25_contratante').hide();
-  					_fieldById('_p25_poliza').hide();
-  					_fieldById('_p25_grid').hide();
-  					_fieldById('_p25_gridCalendario').hide();
-  					_fieldById('_p25_gridCondiciones').hide();
-  					form.doLayout();
-  				}
+    _fieldByName('tipo',form).getStore().on({
+        load : function(me){
+  		    _fieldByName('tipo',form).setValue('AS');
+  		    if(_GLOBAL_CDSISROL == RolSistema.Agente){
+  		        _fieldByName('tipo',form).readOnly = true;
+  		    }
+  	    }
+  	});
+  	    
+  	_fieldByName('tipo',form).on({
+  	    change: function(me, newValue) {
+  		    if(me.getValue() == 'AS' || me.getValue() == 'SA'){
+  			    _fieldByName('fecini',form).hide();
+  				_fieldByName('fecfin',form).hide();
+  				_fieldByName('status',form).hide();
+  				_fieldByName('cdunieco',form).show();
+  				_fieldByName('cdramo',form).show();
+  				_fieldByName('nmpoliza',form).show();
+  				_fieldByName('cdtipsit',form).hide();
+  				_fieldByName('administradora',form).hide();
+  				_fieldByName('retenedora',form).hide();
+  				_fieldByName('cdperson',form).hide();
+  				_fieldByName('anio',form).hide();
+  				_fieldByName('mes',form).hide();
+  				_fieldById('_p25_contratante').hide();
+  				_fieldById('_p25_poliza').hide();
+  				_fieldById('_p25_grid').hide();
+  				_fieldById('_p25_gridCalendario').hide();
+  				_fieldById('_p25_gridCondiciones').hide();
+  				form.doLayout();
+  		    }
+  		    else if(me.getValue() == 'P'){
+  			    _fieldByName('fecini',form).hide();
+  				_fieldByName('fecfin',form).hide();
+  				_fieldByName('status',form).hide();
+  				_fieldByName('cdunieco',form).hide();
+  				_fieldByName('cdramo',form).hide();
+  				_fieldByName('nmpoliza',form).hide();
+  				_fieldByName('cdtipsit',form).hide();
+  				_fieldByName('administradora',form).hide();
+  				_fieldByName('retenedora',form).hide();
+  				_fieldByName('cdperson',form).hide();
+  				_fieldByName('anio',form).show();
+  				_fieldByName('mes',form).show();
+  				_fieldById('_p25_contratante').hide();
+  				_fieldById('_p25_poliza').hide();
+  				_fieldById('_p25_grid').hide();
+  				_fieldById('_p25_gridCalendario').hide();
+  				_fieldById('_p25_gridCondiciones').hide();
+  				form.doLayout();
   			}
+  			else if(me.getValue() == 'M'){
+  			    _fieldByName('fecini',form).show();
+  				_fieldByName('fecfin',form).show();
+  				_fieldByName('status',form).hide();
+  				_fieldByName('cdunieco',form).show();
+  				_fieldByName('cdramo',form).show();
+  				_fieldByName('nmpoliza',form).hide();
+  				_fieldByName('cdtipsit',form).show();
+  				_fieldByName('administradora',form).show();
+  				_fieldByName('retenedora',form).show();
+  				_fieldByName('cdperson',form).show();
+  				_fieldByName('anio',form).hide();
+  				_fieldByName('mes',form).hide();
+  				//_fieldByName('fecini',form).setMinValue(new Date());
+  				//_fieldByName('fecfin',form).setMinValue(new Date());
+  				_fieldById('_p25_contratante').hide();
+  				_fieldById('_p25_poliza').hide();
+  				_fieldById('_p25_grid').hide();
+  				_fieldById('_p25_gridCalendario').hide();
+  				_fieldById('_p25_gridCondiciones').hide();
+  				form.doLayout();
+  		    }
+  	    }
   	});
   	
-  	_fieldByName('cdunieco',form).on(
-  	{
-  		select : function(){
-  			debug('> Cambiando cdperson');
-  			var cdperson = _fieldByName('cdperson',form);
-  			cdperson.store.proxy.extraParams['params.cdunieco'] = _fieldByName('cdunieco',form).getValue();
-  			cdperson.store.proxy.extraParams['params.cdramo']   = _fieldByName('cdramo',form).getValue(); 
-  			debug(cdperson.store.extraParams);
-			debug('< Cambiando cdperson');  															
-  		}
-  	});
+  	_fieldByName('cdunieco',form).on({
+  	    select : function(){
+  		    debug('> Cambiando cdperson');
+  		    var cdperson = _fieldByName('cdperson',form);
+  		    cdperson.store.proxy.extraParams['params.cdunieco'] = _fieldByName('cdunieco',form).getValue();
+  		    cdperson.store.proxy.extraParams['params.cdramo']   = _fieldByName('cdramo',form).getValue(); 
+  		    debug(cdperson.store.extraParams);
+		    debug('< Cambiando cdperson');  															
+  	    }
+    });
     
-    _fieldByName('fecini',form).on(
-    {
+    _fieldByName('fecini',form).on({
         blur : function(){
             debug('> Cambiando fecini');
             var fecini = _fieldByName('fecini',form);
@@ -2420,17 +2430,30 @@ Ext.onReady(function()
   		}
   	});
   	
-    _fieldById('_p25_grid').getSelectionModel().on(
-    {
+  	_fieldByName('mes',form).getStore().on({
+        load : function(me){
+            debug('cargando meses');
+            me.insert(0,new Generic({key:'-1',value:'TODOS'}));
+            _fieldByName('mes',form).setValue('-1');
+        }
+    });
+  	
+    _fieldById('_p25_grid').getSelectionModel().on({
         selectionChange : _p25_gridSelectionChange
     });
     
-    _fieldById('_p25_poliza').getSelectionModel().on(
-    {
+    _fieldById('_p25_poliza').getSelectionModel().on({
         selectionChange : _p25_polizaSelectionChange
     });
+    
+    _fieldById('_p25_gridCalendario').getSelectionModel().on({
+        selectionChange : function(){
+            mostrarCondiciones();
+        }
+    });    
      
-     var formCondicion = panCondicion.down('form');	 
+     var formCondicion = panCondicion.down('form');
+     
 	 _fieldByName('criterio',formCondicion).on({
   	     select : function(me){
   		     debug('> Cambiando criterio',me.getValue());
@@ -2443,6 +2466,109 @@ Ext.onReady(function()
 			 debug('< Cambiando criterio');
   	     }
   	 });
+	 
+	 var formCalendario = panCalendario.down('form');
+	 
+	 _fieldByName('mes',formCalendario).on({
+         blur : function(me){
+             debug('> Cambiando mes',me.getValue());
+             var anio     = _fieldByName('anio',formCalendario).getValue();
+             var feinicio = toDate(anio, me.getValue()    , 1);
+             _fieldByName('feinicio',formCalendario).setValue(feinicio);
+             feinicio = Ext.Date.add(feinicio, Ext.Date.DAY, -1);
+             _fieldByName('feaplica',formCalendario).setValue(feinicio);             
+             feinicio = Ext.Date.add(feinicio, Ext.Date.MONTH, 1);
+             _fieldByName('fefinal', formCalendario).setValue(feinicio);
+             debug('< Cambiando mes');
+         }
+     });
+
+	 _fieldByName('feaplica',formCalendario).on({
+         blur : function(me){
+             debug('> Cambiando feinicio',me.getValue());
+             var feaplica = _fieldByName('feaplica',formCalendario).getValue();
+             var fecha = toDate(feaplica.getFullYear(), feaplica.getMonth()+1,  1); //new Date(feaplica.getFullYear(), feaplica.getMonth()+1,  1);
+             _fieldByName('feinicio',formCalendario).setMinValue(fecha);
+             _fieldByName('fefinal', formCalendario).setMinValue(fecha);
+             _fieldByName('feinicio',formCalendario).setValue(fecha);
+             _fieldByName('fefinal', formCalendario).setValue('');
+             debug('< Cambiando feinicio');
+         }
+     });
+     
+     _fieldByName('feinicio',formCalendario).on({
+         blur : function(me){
+             debug('> Cambiando feinicio',me.getValue());
+             _fieldByName('fefinal',formCalendario).setMinValue(_fieldByName('feinicio',formCalendario).getValue());
+             _fieldByName('fefinal',formCalendario).setValue('');
+             debug('< Cambiando feinicio');
+         }
+     });
+     
+     _fieldByName('cdunieco',formCalendario).getStore().on({
+        load : function(me){
+            me.insert(0,new Generic({key:'-1',value:'TODOS'}));
+            _fieldByName('cdunieco', formCalendario).setValue('-1');
+        }
+     });     
+     
+     _fieldByName('cdramo',formCalendario).getStore().on({
+        load : function(me){
+            me.insert(0,new Generic({key:'-1',value:'TODOS'}));
+            _fieldByName('cdramo', formCalendario).setValue('-1');
+        }
+     });
+     
+     var formCondicion = panCondicion.down('form');
+     
+     _fieldByName('valor',formCondicion).on({
+         blur : function(me){
+             var criterio = _fieldByName('criterio',formCondicion).rawValue;
+             var campo    = _fieldByName('campo',   formCondicion).getValue();             
+             debug('criterio',criterio);
+             debug('campo',   campo);
+             if(campo === 'FEPROREN'){
+                 debug('es fecha',isValidDate(me.getValue()));
+                 if(!isValidDate(me.getValue())){
+                     _fieldByName('valor',   formCondicion).setValue()
+                     mensajeError('El valor de fecha no es valido (DD/MM/YYYY)');
+                 }
+             }
+             debug('< Validando valor');
+         }
+     });
+     
+     _fieldByName('valor2',formCondicion).on({
+         blur : function(me){
+             var criterio = _fieldByName('criterio',formCondicion).rawValue;
+             var campo    = _fieldByName('campo',   formCondicion).getValue();
+             if(campo === 'FEPROREN'){
+                 //debug('es fecha',isValidDate(me.getValue()));
+                 if(!isValidDate(me.getValue())){
+                     _fieldByName('valor2',   formCondicion).setValue()
+                     mensajeError('El valor de fecha no es valido (DD/MM/YYYY)');
+                 }
+                 else{
+                     var valor  = _fieldByName('valor',  formCondicion).getValue();
+                     var valor2 = _fieldByName('valor2',  formCondicion).getValue();
+                     if(!Ext.isEmpty(valor)){
+                         var feciniArr = valor.split('/');
+                         var fecfinArr = valor2.split('/');
+                         var fecini = toDate(feciniArr[2],feciniArr[1],feciniArr[0]);  //new Date(feciniArr[2],feciniArr[1],feciniArr[0]);
+                         var fecfin = toDate(fecfinArr[2],fecfinArr[1],fecfinArr[0]);  //new Date(fecfinArr[2],fecfinArr[1],fecfinArr[0]);
+                         debug('fecini',fecini);
+                         debug('fecfin',fecfin);
+                         if(fecini > fecfin){
+                             _fieldByName('valor2',  formCondicion).setValue('');
+                             mensajeError('La segunda fecha debe ser mayor o igual a la primera');
+                         }    
+                     }
+                 }
+             }
+             debug('< Validando valor');
+         }
+     });
+     
     ////// custom //////
     
     ////// loaders //////
@@ -2558,7 +2684,8 @@ function _p25_buscarClic(button,e)
     	_p25_ultimosParams =
     	{
     		'smap1.anio'    : _fieldByName('anio', form).getValue(),
-    		'smap1.mes'		: _fieldByName('mes' , form).getValue()
+    		'smap1.mes'		: _fieldByName('mes' , form).getValue() == -1 ? null : _fieldByName('mes' , form).getValue()
+    		
     	};    	
     	_p25_storeCalendario.load({
     		params    :	_p25_ultimosParams,
@@ -2571,10 +2698,10 @@ function _p25_buscarClic(button,e)
                     	mensajeWarning(resp.respuesta);
                 	}
                 	else{
-                		var minDate = Ext.Date.parse("01/"+_fieldByName('mes' , form).getValue()+"/"+_fieldByName('anio', form).getValue(), "d/m/Y");
-    					var maxDate = Ext.Date.getLastDateOfMonth(minDate);
-    					panCalendario.minDate  = minDate;
-    					panCalendario.maxDate  = maxDate;
+                		//var minDate = Ext.Date.parse("01/"+_fieldByName('mes' , form).getValue()+"/"+_fieldByName('anio', form).getValue(), "d/m/Y");
+    					//var maxDate = Ext.Date.getLastDateOfMonth(minDate);
+    					//panCalendario.minDate  = minDate;
+    					//panCalendario.maxDate  = maxDate;
     					_p25_selectionCharge(tipo);
                 	}
             	}
@@ -2817,7 +2944,7 @@ function _p25_limpiarFiltros(button,e)
   	_fieldByName('retenedora',form).setValue('');
   	_fieldByName('cdperson',form).setValue('');
   	_fieldByName('anio',form).setValue('');
-  	_fieldByName('mes',form).setValue('');
+  	//_fieldByName('mes',form).setValue('');
     debug('<_p25_limpiarFiltros');
 }
 
@@ -3002,7 +3129,7 @@ function _p25_cargarValoresComplementarios(resRenova){
 	var formaPagoPoliza = _fieldById('formaPagoPoliza');
 	tipoPoliza.getStore().load();
 	//formaPagoPoliza.getStore().load({params : { 'catalogo' : 'FORMAS_PAGO_POLIZA_POR_RAMO_TIPSIT', 'params.cdramo' : resRenova['cdramo'], 'params.cdtipsit' : resRenova['cdtipsit']}});	
-	formaPagoPoliza.getStore().load({params : { 'catalogo' : 'TIPOS_PAGO_POLIZA_SIN_DXN'}});
+	formaPagoPoliza.getStore().load({params : { 'catalogo' : 'TIPOS_PAGO_POLIZA_SIN_DXN_MULTIANUAL'}});
 	debug('<_p25_cargarValoresComplementarios');
 }
 
@@ -3018,19 +3145,17 @@ function tarifaFinal(){
 	debug('wineditarContratante',wineditarContratante);
 	_mask('Preparando para confirmar');
 	Ext.Ajax.request({
-        url     : urlRecotizar
-        ,params :
-        {
+        url     : urlRecotizar,
+        params :{
             'panel1.nmpoliza'   : wineditarContratante.resRenova['nmpoliza'],
             cdunieco            : wineditarContratante.resRenova['cdunieco'],
             cdramo              : wineditarContratante.resRenova['cdramo'],
             cdtipsit            : wineditarContratante.resRenova['cdtipsit'],
             'panel1.notarifica' : ( Number(wineditarContratante.resRenova['cdramo'])==16 || Number(wineditarContratante.resRenova['cdramo'])==6 || Number(wineditarContratante.resRenova['cdramo'])==5 ) ? 'si' : '',
             'panel1.renovacion' : 'S'
-        }
-        ,success : function(response)
-        {
-            _unmask();            
+        },
+        success : function(response){
+            _unmask();
             var json=Ext.decode(response.responseText);
             debug('json ',json);
             if(!Ext.isEmpty(json.slist1)){
@@ -3260,9 +3385,9 @@ function borraCondicion(record){
   	for(var k in datos){
   		params['params.'+k] = datos[k]; 
   	}
-  	params['params.nmperiod']  = _p25_condiciones.nmperiod;
-  	params['params.cdunieco']  = _p25_condiciones.cdunieco;
-  	params['params.cdramo']    = _p25_condiciones.cdramo;
+  	params['params.nmperiod']  = record.data['nmperiod'];
+  	params['params.cdunieco']  = record.data['cdunieco'];
+  	params['params.cdramo']    = record.data['cdramo'];
   	params['params.operacion'] = 'B';
   	debug('params',params);
   	_mask('Eliminando condicion');
@@ -3293,18 +3418,19 @@ function borraCondicion(record){
 function agregaCondicion(){
 	debug('>agregaCondicion');
 	panCondicion['operacion'] = 'I';
-	panCondicion.setTitle('Agregar condicion');
+	panCondicion.setTitle('Agregar exclusi\u00f3n');
 	var form = panCondicion.down('form');
 	debug(_fieldByName('anio',form));
-	var formBusqueda = _fieldById('_p25_busquedaForm');
-	debug('formBusqueda',formBusqueda);
-	debug('año',_fieldByName('anio', formBusqueda).getValue());
-	_fieldByName('anio',form).setValue(_fieldByName('anio', formBusqueda).getValue());
-	_fieldByName('mes',form).setValue(_fieldByName('mes', formBusqueda).getValue());
-	_fieldByName('anio',form).readOnly = true;
-	_fieldByName('mes',form).readOnly = true;
-	_fieldByName('campo',form).readOnly = false;	
-	_fieldByName('valor2',form).readOnly = false;
+	var data = _fieldById('_p25_gridCalendario').getSelectionModel().getSelection()[0].data;
+	debug('data',data);
+	_fieldByName('anio',     form).setValue(data['anio']);
+	_fieldByName('mes',      form).setValue(data['mes']);
+	_fieldByName('nmperiod', form).setValue(data['nmperiod']);
+	_fieldByName('anio',     form).readOnly = true;
+	_fieldByName('mes',      form).readOnly = true;
+	_fieldByName('nmperiod', form).readOnly = true;
+	_fieldByName('campo',    form).readOnly = false;	
+	_fieldByName('valor2',   form).readOnly = false;
 	panCondicion.show();
 	debug('<agregaCondicion');
 }
@@ -3333,13 +3459,22 @@ function actualizaCalendario(record){
 	panCalendario.nmperiod = record.raw['nmperiod'];
 	var form = panCalendario.down('form');
 	_fieldByName('anio',form).readOnly = true;
-	_fieldByName('mes',form).readOnly = true;	
+	_fieldByName('mes', form).readOnly = true;	
 	panCalendario['operacion'] = 'A';
 	panCalendario.setTitle('Editar');
-	_fieldByName('feaplica', form).setMinValue(Ext.Date.add(panCalendario.maxDate, Ext.Date.DAY, 1));
+	_fieldByName('feaplica', form).setMinValue(Ext.Date.add(new Date(), Ext.Date.DAY, 1));
 	panCalendario.show();
-	debug(panCalendario.down('form'));
-	panCalendario.down('form').loadRecord(record);
+	debug('panCalendario',form);
+	form.loadRecord(record);
+	var cdunieco = _fieldByName('cdunieco', form);
+	if(Ext.isEmpty(cdunieco.getValue())){
+	    _fieldByName('cdunieco', form).setValue('-1');
+	}
+	var cdramo = _fieldByName('cdramo', form);
+    if(Ext.isEmpty(cdramo.getValue())){
+        _fieldByName('cdramo', form).setValue('-1');
+    }
+	var _p25_gridCalendario = _fieldById('_p25_gridCalendario');
 	_p25_gridCalendario.store.reload;
 	debug('<actualizaCalendario',record);
 }
@@ -3391,13 +3526,24 @@ function agregaCalendario(){
 	debug('formBusqueda',formBusqueda);
 	debug('feinicio',_fieldByName('feinicio', form));
 	_fieldByName('anio',form).setValue(_fieldByName('anio', formBusqueda).getValue());
-	_fieldByName('mes',form).setValue(_fieldByName('mes', formBusqueda).getValue());
-	_fieldByName('feaplica', form).setMinValue(Ext.Date.add(panCalendario.minDate, Ext.Date.MONTH, -2));
-	_fieldByName('feaplica', form).setMaxValue(Ext.Date.add(panCalendario.minDate, Ext.Date.DAY,   -1));
-	_fieldByName('feaplica', form).setValue(Ext.Date.add(panCalendario.minDate, Ext.Date.DAY,   -1));
-	_fieldByName('anio',form).readOnly = true;
-	_fieldByName('mes', form).readOnly = true;
-	panCalendario.show();
+	if(!Ext.isEmpty(_fieldByName('mes', formBusqueda).getValue()) && _fieldByName('mes', formBusqueda).getValue() != -1){
+	   _fieldByName('mes',form).setValue(_fieldByName('mes', formBusqueda).getValue());
+	   _fieldByName('mes',form).readOnly = true;
+	   var anio     = _fieldByName('anio',form).getValue();
+       var feinicio = toDate(anio, _fieldByName('mes',form).getValue(), 1);
+       _fieldByName('feinicio',form).setValue(feinicio);
+       feinicio = Ext.Date.add(feinicio, Ext.Date.DAY, -1);
+       _fieldByName('feaplica',form).setValue(feinicio);             
+       feinicio = Ext.Date.add(feinicio, Ext.Date.MONTH, 1);
+       _fieldByName('fefinal', form).setValue(feinicio);
+	}
+	else{
+	   _fieldByName('mes',form).readOnly = false;
+	}
+	_fieldByName('feaplica', form).setMinValue(Ext.Date.add(new Date(), Ext.Date.DAY,   1));	
+	_fieldByName('anio',formBusqueda).readOnly = true;
+	_fieldByName('mes', formBusqueda).readOnly = true;
+	panCalendario.show();	
 	debug('<agregaCalendario');
 }
     
@@ -3406,7 +3552,8 @@ function agregaCalendario(){
     _fieldByName('cdunieco',form).setValue('');
     _fieldByName('cdramo',  form).setValue('');
     _fieldByName('feaplica',form).setValue('');
-    _fieldByName('dias',    form).setValue('');
+    _fieldByName('feinicio',form).setValue('');
+    _fieldByName('fefinal', form).setValue('');
     debug('<limpiarValoresCalendario');
  }
 
@@ -3432,6 +3579,325 @@ function agregaCalendario(){
         ]
     }).show();
 }
+
+ function mostrarCondiciones(){
+    var _p25_gridCalendario = _fieldById('_p25_gridCalendario');
+    if(_p25_gridCalendario.getSelectionModel().hasSelection()){
+        debug('_p25_gridCalendario',_p25_gridCalendario.getSelectionModel().getSelection()[0].raw);
+        var calen = _p25_gridCalendario.getSelectionModel().getSelection()[0].raw;
+        _p25_storeCondiciones.load({
+        params    : {
+            'smap1.nmperiod' : calen['nmperiod'],
+            'smap1.cdunieco' : calen['cdunieco'],
+            'smap1.cdramo'   : calen['cdramo'],
+            'smap1.anio'     : calen['anio'],
+            'smap1.mes'      : calen['mes']
+        },
+        callback :  function(recordsCon, opCon, successCon){
+            debug('entro a callback');
+            if(successCon){
+                var respCon = Ext.decode(opCon.response.responseText);
+                debug('respCon',respCon);
+                if(respCon.exito != true){
+                    mensajeWarning('No hay resultados');
+                }
+                else{
+                    var _p25_gridCondiciones      = _fieldById('_p25_gridCondiciones');
+                    _p25_gridCondiciones.nmperiod = calen['nmperiod'];
+                    _p25_gridCondiciones.cdunieco = calen['cdunieco'];
+                    _p25_gridCondiciones.cdramo   = calen['cdramo'];
+                    _fieldById('_p25_gridCondiciones').show();
+                }
+            }
+            else{
+                mensajeError(opCon.getError());
+            }
+        }
+        });
+    }
+    else{
+        mensajeWarning('Debe seleccionar un registro');
+    }
+ }
+ 
+ function daydiff(first, second) {
+     return Math.round((second-first)/(1000*60*60*24));
+ }
+ 
+ function guardarCalendario(){
+     var _p25_calendario = _fieldById('_p25_calendario');
+     var datos = _p25_calendario.form.getValues();
+     var params = {};
+     debug('_p25_calendario.form',_p25_calendario.form);
+     var i = 0;
+     for(var k in datos){
+         debug('datos[k]',datos[k]);
+         params['params.'+k] = datos[k];
+         i++;
+     }
+     params['params.operacion'] = panCalendario['operacion'];
+     params['params.nmperiod']  = panCalendario.nmperiod;     
+     params['params.cdunieco']  = params['params.cdunieco'] == -1 ? null : params['params.cdunieco'];
+     params['params.cdramo']    = params['params.cdramo']   == -1 ? null : params['params.cdramo'];
+     debug('params',params);
+     _mask('Guardando cambios');
+     Ext.Ajax.request({
+         url       : _p25_urlMovimientoCalendario,
+         params    : params,
+         success  : function(response){
+             _unmask();
+             var resp = Ext.decode(response.responseText);
+             debug('resp',resp);                     
+             if(resp.exito == true){
+                 mensajeCorrecto('Mensaje','Guardado con exito');
+                 var _p25_gridCalendario = _fieldById('_p25_gridCalendario');
+                 _p25_gridCalendario.store.reload();
+                 panCalendario.close();
+             }
+             else{
+                 mensajeError(resp.respuesta);
+             }
+         },
+         failure  : function(){
+             _unmask();
+             errorComunicacion();
+         }
+     });
+ }
+ 
+ function isValidDate(date){
+     debug('>isValidDate',date);
+     var isDate = false;
+     var dateArr = date.split('/');
+     if(dateArr.length === 3){
+        isDate = Ext.Date.isValid(dateArr[2],dateArr[1],dateArr[0]);
+     }
+     debug('<isValidDate',isDate);
+     return isDate;
+ }
+ 
+ function tarifaFinalMismasCondiciones(resRenova){
+     debug('>tarifaFinalMismasCondiciones',resRenova);
+     _mask('Preparando para confirmar');
+     Ext.Ajax.request({
+         url     : urlRecotizar,
+         params :{
+             'panel1.nmpoliza'   : resRenova['nmpoliza'],
+             cdunieco            : resRenova['cdunieco'],
+             cdramo              : resRenova['cdramo'],
+             cdtipsit            : resRenova['cdtipsit'],
+             'panel1.notarifica' : ( Number(resRenova['cdramo'])==16 || Number(resRenova['cdramo'])==6 || Number(resRenova['cdramo'])==5 ) ? 'si' : '',
+             'panel1.renovacion' : 'S'
+         },
+         success : function(response){
+             _unmask();
+             var json=Ext.decode(response.responseText);
+             debug('json ',json);
+             if(!Ext.isEmpty(json.slist1)){
+                 if(json.slist1.length > 0){
+                     datos = [];
+                     for(var i = 0; i < json.slist1.length; i++){
+                         datos.push({
+                             AGRUPADOR : json.slist1[i]['parentesco'],
+                             COBERTURA : json.slist1[i]['Nombre_garantia'],
+                             PRIMA     : json.slist1[i]['Importe']
+                         });
+                     }
+                     debug('datos ',datos);
+                     Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTarifa');
+                     new VentanaTarifa({
+                         title   : 'TARIFA DEL ENDOSO',
+                         datos   : datos,
+                         buttons : [
+                             {
+                                 xtype      : 'textfield',
+                                 itemId     : 'numerofinalpoliza',
+                                 fieldLabel : 'N&uacute;mero de poliza',
+                                 readOnly   : true
+                             },
+                             {
+                                 xtype     : 'button',
+                                 itemId    : 'botonEmitirPolizaFinal',
+                                 text      : 'Emitir',
+                                 icon      : contexto+'/resources/fam3icons/icons/award_star_gold_3.png',
+                                 handler   : function(){
+                                     _mask('Emitiendo Poliza');
+                                     var panDatComBotonRetarificar = _fieldById('panDatComBotonRetarificar');
+                                     var panDatComBotonGuardar     = _fieldById('panDatComBotonGuardar');
+                                     panDatComBotonRetarificar.disable();
+                                     panDatComBotonGuardar.disable();
+                                     Ext.Ajax.request({
+                                         url      : _p25_urlConfirmarPolizaIndividual,
+                                         params   : {
+                                             'params.cdunieco' : resRenova['cdunieco'],
+                                             'params.cdramo'   : resRenova['cdramo'],
+                                             'params.estado'   : resRenova['estado'],
+                                             'params.nmpoliza' : resRenova['nmpoliza'],
+                                             'params.nmsuplem' : resRenova['nmsuplem'],
+                                             'params.ntramite' : resRenova['ntramite'],
+                                             'params.cdperpag' : resRenova['cdperpag'],
+                                             'params.feefecto' : resRenova['feefecto']
+                                         },
+                                         success  : function(response){
+                                             _unmask();
+                                             var resp = Ext.decode(response.responseText);
+                                             var list = resp.slist1;
+                                             if(resp.success==true && list.length > 0){
+                                                 resRenova['nmpolizaNew'] = list[0]['nmpolizaNew'];
+                                                 resRenova['nmsuplemNew'] = list[0]['nmsuplemNew'];
+                                                 _fieldById('botonEmitirPolizaFinal').disable();
+                                                 _fieldById('botonImprimirPolizaFinal').enable();
+                                                 _fieldById('botonEmitirPolizaFinalPreview').hide();
+                                                 _fieldById('venDocVenEmiBotCancelar').setText('Regresar a Menú Principal');
+                                                 _fieldById('numerofinalpoliza').setValue(list[0]['nmpoliex']);
+                                                 mensajeCorrecto('Aviso',resp.respuesta);
+                                             }
+                                             else{
+                                                 mensajeError(resp.respuesta);
+                                             }
+                                         },
+                                         failure  : function(){
+                                             _unmask();
+                                             errorComunicacion();
+                                         }
+                                     });
+                                 }
+                             },
+                             {
+                                 xtype    : 'button',
+                                 itemId   : 'botonImprimirPolizaFinal',
+                                 text     : 'Imprimir',
+                                 icon     : contexto+'/resources/fam3icons/icons/printer.png',
+                                 disabled : true,
+                                 handler  : function(me){
+                                     debug(wineditarContratante.resRenova);
+                                     var callbackRemesa = function(){
+                                         Ext.create('Ext.window.Window',{
+                                             title       : 'Documentos del tr&aacute;mite '+ wineditarContratante.resRenova['ntramite'],
+                                             modal       : true,
+                                             buttonAlign : 'center',
+                                             width       : 600,
+                                             height      : 400,
+                                             autoScroll  : true,
+                                             cls         : 'VENTANA_DOCUMENTOS_CLASS',
+                                             loader      : {
+                                                 url       : panDatComUrlDoc2,
+                                                 params   : {
+                                                     'smap1.nmpoliza' : resRenova['nmpolizaNew'],
+                                                     'smap1.cdunieco' : resRenova['cdunieco'],
+                                                     'smap1.cdramo'   : resRenova['cdramo'],
+                                                     'smap1.estado'   : 'M',
+                                                     'smap1.nmsuplem' : '0',
+                                                     'smap1.ntramite' : resRenova['ntramite'],
+                                                     'smap1.nmsolici' : resRenova['nmsolici'],
+                                                     'smap1.tipomov'  : '0'
+                                                 },
+                                                 scripts  : true,
+                                                 autoLoad : true
+                                             }
+                                         }).show();
+                                     };
+                                     _generarRemesaClic(
+                                         false,
+                                         resRenova['cdunieco'],
+                                         resRenova['cdramo'],
+                                         'M',
+                                         resRenova['nmpolizaNew'],
+                                         callbackRemesa);
+                                 }
+                             },
+                             {
+                                 xtype   : 'button',
+                                 itemId  : 'botonEmitirPolizaFinalPreview',
+                                 text    : 'Vista previa',
+                                 icon    : '${ctx}/resources/fam3icons/icons/zoom.png',
+                                 hidden  : panDatComMap1.cdramo=='6',
+                                 handler : function(){
+                                     var nombre_caratula = getNombreReporteCaratura(resRenova['cdtipsit']);
+                                     var me=this;
+                                     var urlRequestImpCotiza=urlServidorReports
+                                     +'?destype=cache'
+                                     +"&desformat=PDF"
+                                     +"&report="+nombre_caratula
+                                     +"&paramform=no"
+                                     +"&userid="+complerepSrvUsr
+                                     +"&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+                                     +'&p_unieco='+resRenova['cdunieco']
+                                     +'&p_estado=W'
+                                     +'&p_ramo='+resRenova['cdramo']
+                                     +'&p_poliza='+resRenova['nmpoliza']
+                                     debug(urlRequestImpCotiza);
+                                     var numRand=Math.floor((Math.random()*100000)+1);
+                                     debug(numRand);
+                                     var windowVerDocu=Ext.create('Ext.window.Window',{
+                                         title          : 'Vista previa'
+                                         ,width         : 700
+                                         ,height        : 500
+                                         ,collapsible   : true
+                                         ,titleCollapse : true
+                                         ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+                                             +'src="'+compleUrlViewDoc+"?contentType=application/pdf&url="+encodeURIComponent(urlRequestImpCotiza)+"\">"
+                                             +'</iframe>'
+                                         ,listeners     : {
+                                             resize : function(win,width,height,opt){
+                                                 debug(width,height);
+                                                 $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+                                             }
+                                         }
+                                     }).show();
+                                     windowVerDocu.center();
+                                 }
+                             },
+                             {
+                                 xtype   : 'button',
+                                 itemId  : 'venDocVenEmiBotCancelar',
+                                 text    : 'Cancelar',
+                                 icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
+                                 handler : function(){
+                                     if (Ext.isEmpty(_fieldById('numerofinalpoliza').getValue()) === true){
+                                         var me=this;
+                                         me.up().up().destroy();
+                                     }
+                                     else{
+                                         location.reload();
+                                     }                                       
+                                 }
+                             }
+                         ]
+                     }).mostrar();
+                 }
+             }
+             else{
+                 mensajeError(json.mensajeRespuesta);
+             }
+         },
+         failure : function(){
+             _unmask();
+             Ext.Msg.show({
+                 title:'Error',
+                 msg: 'Error de comunicaci&oacute;n',
+                 buttons: Ext.Msg.OK,
+                 icon: Ext.Msg.ERROR
+             });
+         }
+     });
+     debug('<tarifaFinalMismasCondiciones');
+ }
+ 
+ function toDate(year, month, day){
+     debug('>toDate');
+     var fecha;
+     try{
+        var mes = Number(month)-1;
+        fecha = new Date(year, mes, day);
+     }
+     catch(err){
+        debug('error al convertir fecha',err);
+        return null;
+     } 
+     return fecha;
+     debug('<toDate');
+ }
 ////// funciones //////
 </script>
 </head>

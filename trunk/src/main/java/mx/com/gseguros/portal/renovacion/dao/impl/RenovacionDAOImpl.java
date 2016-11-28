@@ -329,7 +329,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 						"renovada",
 						"pagada",
 						"dsplan",
-						"antiguedad",
+						"feantiguedad",
 						"aseg_edad_val", 
 						"cdmoneda",
 						"primas",
@@ -418,7 +418,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 						"renovada",
 						"pagada",
 						"dsplan",
-						"antiguedad",
+						"feantiguedad",
 						"aseg_edad_val",
 						//"cdmoneda",
 						"primas",
@@ -801,9 +801,11 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 					,"cdramo"
 					,"anio"
 					,"mes"
+					,"feaplica"
 					,"criterio"
 					,"campo"
 					,"valor"
+					,"valor2"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
