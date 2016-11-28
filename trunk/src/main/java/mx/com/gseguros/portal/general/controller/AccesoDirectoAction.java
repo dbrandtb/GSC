@@ -56,8 +56,9 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	public static final String IMPRESION_DOCUMENTOS    = "impresionDocumentos";
 	public static final String IMPRESION_RECIBOS       = "impresionRecibos";
 	public static final String MENU_PRINCIPAL          = "menuPrincipal";
-	public static final String MESA_CONTROL_AGENTES = "mesaControlAgentes";
-
+	public static final String MESA_CONTROL_AGENTES    = "mesaControlAgentes";
+	public static final String REDIRECT_SIMPLE         = "redirectSimple";
+	
 	/**
 	 * Success property
 	 */
@@ -158,6 +159,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| FLUJO_MESA_CONTROL.equals(acceso)
 				|| IMPRESION_DOCUMENTOS.equals(acceso)
 				|| IMPRESION_RECIBOS.equals(acceso)
+				|| REDIRECT_SIMPLE.equals(acceso)
 				) {
 			
 			// Patch para traducir el rol, ya que el portal manda un codigo: 

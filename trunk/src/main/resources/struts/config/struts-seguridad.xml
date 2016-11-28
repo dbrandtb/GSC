@@ -194,6 +194,10 @@
                 <param name="namespace">/consultas</param>
                 <param name="actionName">pantallaExplotacionRecibos</param>
             </result>
+            <result name="redirectSimple" type="redirectAction">
+                <param name="namespace">${params.namespace}</param>
+                <param name="actionName">${params.actionName}</param>
+            </result>
         </action>
         
         <action name="descargaDocInline" class="documentosPolizaAction" method="descargaDocumento">
