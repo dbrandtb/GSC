@@ -795,7 +795,7 @@ function descargarPDF(btn){
 				             });
 					
 					_setLoading(true,layout);
-					
+					_mask('Descargando PDF...');
 					Ext.Ajax.request(
 				             {
 				                 url      : _GLOBAL_URL_ESPERAR_DESCARGA_LOTE
@@ -812,7 +812,8 @@ function descargarPDF(btn){
 				                 }
 				                 ,success : function(response)
 				                 {
-				                     _setLoading(false,layout);
+				                     
+				                     _unmask();
 				                     var ck = 'Decodificando respuesta al imprimir';
 				                     try
 				                     {
@@ -872,6 +873,7 @@ function descargarPDF(btn){
 				                 }
 				                 ,failure  : function()
 				                 {
+				                     _unmask();
 				                	 winSpread.removeAll();
 	     	                    		winSpread.add(generaLayout(tpdocum,false));
 	     	                    		winSpread.show();
