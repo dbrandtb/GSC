@@ -382,7 +382,7 @@ public class RenovacionAction extends PrincipalCoreAction
             }
             logger.info(new StringBuilder().append("\n###### cdusuari=").append(cdusuari).append("\n###### cdsisrol=").append(cdsisrol));
             //proceso
-			ManagerRespuestaSlistVO managerResp = renovacionManager.buscarPolizasRenovacionIndividual(cdunieco, cdramo, estado, nmpoliza, cdsisrol, cdusuari);
+			ManagerRespuestaSlistVO managerResp = renovacionManager.buscarPolizasRenovacionIndividual(cdunieco, cdramo, estado, nmpoliza, cdusuari, cdsisrol);
 			logger.info(new StringBuilder().append("managerResp ").append(managerResp).toString());
 			slist1 			= managerResp.getSlist();
 			success         = managerResp.isExito();
@@ -725,9 +725,20 @@ public class RenovacionAction extends PrincipalCoreAction
 		exito = false;
 		try{
 			Utils.validate(params, "No se recibieron parametros de entrada");
-			Utils.validate(params.get("anio"),"No se recibio el año",
-						   params.get("mes") ,"No se recibio el mes",
-						   params.get("operacion") ,"No se recibio la operacion");
+			if(params.get("operacion").equals("I")){
+			    Utils.validate(params.get("anio"),      "No se recibio el año",
+                               params.get("mes") ,      "No se recibio el mes",
+                               params.get("operacion") ,"No se recibio la operacion",
+                               params.get("valor"),     "No se recibio valor");
+			    if(params.get("criterio").equals("between")){
+			        Utils.validate(params.get("valor2"), "No se recibio segundo valor");
+			    }
+			}
+			else{
+    			Utils.validate(params.get("anio"),"No se recibio el año",
+    						   params.get("mes") ,"No se recibio el mes",
+    						   params.get("operacion") ,"No se recibio la operacion");
+			}
 			String nmperiod  = params.get("nmperiod");
 			String cdunieco  = params.get("cdunieco");
 			String cdramo    = params.get("cdramo");
@@ -758,8 +769,8 @@ public class RenovacionAction extends PrincipalCoreAction
 		List<Map<String, String>> slist = new ArrayList<Map<String,String>>();
 		try{
 			Utils.validate(smap1, "No se recibieron parametros de entrada");
-			Utils.validate(smap1.get("anio"),"No se recibio el año",
-						   smap1.get("mes"),"No se recibio el mes");
+			Utils.validate(smap1.get("anio"),"No se recibio el año"/*,
+						   smap1.get("mes"),"No se recibio el mes"*/);
 			String anio = smap1.get("anio");
 			String mes  = smap1.get("mes");
 			slist = renovacionManager.obtenerCalendarizacionRenovacionIndividual(anio, mes);
@@ -789,7 +800,7 @@ public class RenovacionAction extends PrincipalCoreAction
 			else{
 				Utils.validate(params.get("feinicio"),"No se recibio la fecha de inicio",
 							   params.get("fefinal") ,"No se recibio la fecha fin",
-							   params.get("fefinal") ,"No se recibio la fecha de ejecucion");
+							   params.get("feaplica") ,"No se recibio la fecha de ejecucion");
 			}
 			String nmperiod  = params.get("nmperiod");
 			String anio      = params.get("anio");
