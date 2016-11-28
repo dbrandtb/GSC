@@ -3183,18 +3183,27 @@ public class ComplementariosAction extends PrincipalCoreAction
                             ,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
                             ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolizaEmitida
                             ));
-                    consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), cdunieco, cdramo, nmpolizaEmitida, us.getUser());
-                                        
+                    
+//                    try {
+                        consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), cdunieco, cdramo, nmpolizaEmitida, us.getUser());
+//                    } catch (Exception e) {
+//                        mensajeRespuesta = "La poliza ya se habia emitido con anterioridad";
+//                    }
+                    
                     Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
                           vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
-                    Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(parame.get("CDUNIECO"), parame.get("CDRAMO"), nmpolizaEmitida,  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+//                    try {
+                        Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(parame.get("CDUNIECO"), parame.get("CDRAMO"), nmpolizaEmitida,  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+//                    } catch (Exception e) {
+//                        mensajeRespuesta = "La poliza no se logró registrar en el identificador de renovaciones";
+//                    }
                 }
             } 
             catch (Exception ex) 
             {
-                success = false;
+//                mensajeRespuesta = "Emitida pero sin registro en sistema sigs";
                 logger.error("Error actualizando segrenovaciones_renovada", ex);
             }
         }

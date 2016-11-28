@@ -119,6 +119,14 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 logger.debug(Utils.log("", "smap1 creado=", smap1));
                 
                 renovacion = TipoTramite.RENOVACION.getCdtiptra().equals(tramite.get("CDTIPTRA"));
+                
+                if(renovacion && !tramite.get("RENPOLIEX").isEmpty())
+                {
+                    smap1.put("renovacion","S");
+                    smap1.put("RENUNIEXT" ,tramite.get("RENUNIEXT"));
+                    smap1.put("RENRAMO"   ,tramite.get("RENRAMO")  );
+                    smap1.put("RENPOLIEX" ,tramite.get("RENPOLIEX"));
+                }   
                 logger.debug("Es renovacion = {}", renovacion);
             }
             
@@ -152,6 +160,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     );
             
             smap1.putAll((Map<String,String>)resp.get("smap"));
+            
             imap = (Map<String,Item>)resp.get("items");
             
             exito = true;

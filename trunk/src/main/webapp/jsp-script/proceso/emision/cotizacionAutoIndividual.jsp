@@ -509,10 +509,12 @@ Ext.onReady(function()
                         ,sinOverride : true
                         ,labelWidth  : 170
                         ,style       : 'margin:5px;margin-left:15px;'//'margin:5px;margin-left:15px;width:20px !important;'
+                        ,value       : !Ext.isEmpty(_p28_smap1.RENUNIEXT) ? _p28_smap1.RENUNIEXT : ''
                         ,listeners   :
                         {
                             change : _p28_nmpolizaChange
                         }
+                        ,readOnly    :  true 
                     }
                    ,{
                             xtype       : 'numberfield'
@@ -522,10 +524,12 @@ Ext.onReady(function()
                            ,sinOverride : true                   
                            ,labelWidth  : 170
                            ,style       : 'margin:5px;margin-left:15px;'//'width : 30px !important;'
+                           ,value       : !Ext.isEmpty(_p28_smap1.RENRAMO) ? _p28_smap1.RENRAMO : ''
                            ,listeners   :
                            {
                                change : _p28_nmpolizaChange
                            }
+                           ,readOnly    :  true 
                       }
                      ,{
                           xtype       : 'numberfield'
@@ -535,10 +539,12 @@ Ext.onReady(function()
                          ,sinOverride : true                 
                          ,labelWidth  : 170
                          ,style       : 'margin:5px;margin-left:15px;'//'width : 50px !important;'
+                         ,value       : !Ext.isEmpty(_p28_smap1.RENPOLIEX) ? _p28_smap1.RENPOLIEX : ''
                          ,listeners   :
                          {
                              change : _p28_nmpolizaChange
                          }
+                         ,readOnly    :  true
                    }
                   ,{
                          xtype   : 'button'
@@ -547,6 +553,7 @@ Ext.onReady(function()
                         ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
                         ,style   : 'margin-right'
                         ,handler : _p28_cargarPoliza
+                        ,hidden  : true
                   }
                ]
             }
@@ -566,7 +573,7 @@ Ext.onReady(function()
           ,width  : 435
           ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
           ,items  : _p28_panel7Items
-          ,hidden : true
+          ,hidden : (Ext.isEmpty(_p28_flujo) && _p28_smap1.renovacion+'x'!='Sx')
     }
    ,{
          xtype   : 'fieldset'
@@ -724,7 +731,6 @@ Ext.onReady(function()
     ////// custom //////
     
     //dxn
-   
     
     _fieldByName("aux.otvalor08").getStore().filter([{filterFn: function(item) {
         
@@ -2254,8 +2260,6 @@ Ext.onReady(function()
         }
         //agente
         
-        
-        
         // ORDENANDO items del formulario
         
         var itIzq=_fieldById('_p28_form').items.items[0].items.items;
@@ -2284,7 +2288,6 @@ Ext.onReady(function()
         itIzq.splice(idxVeh+1, 1);
         
         debug("->>",idxVeh,itIzq);
-        
         
         // ORDENANDO
         
@@ -2390,22 +2393,12 @@ Ext.onReady(function()
 //                         _fieldByName('parametros.pv_otvalor19').isValid();
 //                     }
 //                 });
-        
-                
-                
-       
-        
-        
     }    
-    
-    
     
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
     
-    
     //obigatorio si hay administradora
-    
     
     agregarAgenteDXN();
     administradoraAgenteDXN();
@@ -2631,9 +2624,7 @@ function _p28_cotizar(sinTarificar)
             return ;
         }
     }
-    
-    
-    
+
     var panelpri = _fieldById('_p28_panelpri');
     var form     = _fieldById('_p28_form');
     var valido   = form.isValid();
@@ -2926,14 +2917,8 @@ function _p28_cotizar(sinTarificar)
                     var administradora=_fieldByName("aux.otvalor08");
                     var retenedora=_fieldByName("aux.otvalor09");
                     
-                    
-                    
-                    
-                    
                     if(retenedora.getValue()!=null && retenedora.getValue()!="-1" && retenedora.getValue()!=""){
                         var fpago=getFormaPago(administradora.getValue(),retenedora.getValue());
-
-                        
                         
                         var i;
                         for(i in formasPago){
@@ -2988,12 +2973,22 @@ function _p28_cotizar(sinTarificar)
                                     select       : _p28_tarifaSelect
                                     ,afterrender : function(me)
                                     {
+//                                         if(cargarXpoliza)
+//                                         {
+//                                             getCellSelector: function() 
+//                                             {
+//                                                 return '.' + Ext.baseCSSPrefix + 'grid-cell-' + this.getItemId();
+//                                             }
+//                                         }   
+                                        
                                         if(!Ext.isEmpty(_p28_flujo)) // && sinTarificar !== true)
                                         {
                                             _p28_actualizarCotizacionTramite(_p28_actualizarSwexiperTramite);
                                         }
                                     }
                                 }
+//                                ,selType = cellModel
+                               
                             })
                             ,_p28_formDescuento
                             ,Ext.create('Ext.panel.Panel',
@@ -4282,6 +4277,7 @@ function llenandoCampos(json)
                                            {
                                                if(json.smap1.CDTIPTRA+'x' == '21x')
                                                {
+                                                   cargarXpoliza= true;
                                                    if(json.smap1.NMPOLIZA+'x' != '0X')
                                                    {
                                                        _fieldByName('nmpoliza').semaforo=true;
@@ -4306,7 +4302,6 @@ function llenandoCampos(json)
                                         }
                                    });
                         }
-                       
                     });
                 }
                 // ramo 6
@@ -4325,7 +4320,6 @@ function llenandoCampos(json)
                     if('MC'!=(_p28_smap1.cdtipsit+'')){
                         _0_obtenerClaveGSPorAuto();
                     }
-                    
                     
                     form.loadRecord(primerInciso);
                         if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
@@ -4468,12 +4462,7 @@ function llenandoCampos(json)
                                         }
                                    });
                         }
-                    
-                    
-                    
                 }
-                
-                
                 // ramo 6
             }
         };
@@ -4729,7 +4718,11 @@ function _p28_coberturas()
 function _p28_tarifaSelect(selModel, record, row, column, eOpts)
 {
     var gridTarifas = _fieldById('_p28_gridTarifas').down('grid');
-    debug('column:',column);
+    debug('vil selModel:',selModel);
+    debug('vil record:',record);
+    debug('vil row:',row);
+    debug('vil column:',column);
+    debug('vil eOpts:',eOpts);
     if(column>0)
     {
         column = (column * 2) -1;
@@ -6274,8 +6267,7 @@ function _p28_recuperarPolizaSIGS()
 }
 
 function mensajeCorrectoTarifas(titulo,mensaje,funcion)
-{//VILS
-    
+{
     if(!Ext.isEmpty(funcion))
     {
         var tmpMensajeEmergente=Ext.Msg.show({
