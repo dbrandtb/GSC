@@ -22,6 +22,7 @@ import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONUtil;
@@ -162,6 +163,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			}
 			
 		}catch(Exception e){
+			mensaje = Utils.manejaExcepcion(e);	//(EGS)
 			logger.error("Error en actualizaDatosGeneralesSiniestro {}", e.getMessage(), e);
 		}
 		return SUCCESS;
