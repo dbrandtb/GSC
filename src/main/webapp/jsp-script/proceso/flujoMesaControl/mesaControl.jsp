@@ -670,7 +670,7 @@ Ext.onReady(function()
                                         xtype       : 'displayfield'
                                         ,fieldLabel : 'COTIZACI\u00D3N'
                                         ,value      : _NVL(record.get('NMSOLICI'), 0)
-                                        ,hidden     : [1, 21].indexOf(Number(record.get('CDTIPTRA'))) === -1
+                                        ,hidden     : [1, 21, 22].indexOf(Number(record.get('CDTIPTRA'))) === -1
                                     }
                                     ,{
                                         xtype       : 'displayfield'
