@@ -6879,15 +6879,20 @@
                 'params.cveAlta'        : cveAlta,
                 'params.aplicFondo'     : aplicFondo
             }
-            ,success : function (response) {
+            ,success : function(response, opts) {	//(EGS)
                 banderaAsegurado = 0;
                 storeConceptos.removeAll();
                 cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
             },
-            failure : function () {
+            failure : function(response, opts) {	//(EGS)
+            	
+            	var obj = Ext.decode(response.responseText);	//(EGS)
+            	var mensaje = obj.mensaje;	//(EGS)
+        		debug(obj.mensaje);	//(EGS)
+            	
                 Ext.Msg.show({
                     title:'Error',
-                    msg: 'Error de comunicaci&oacute;n',
+                    msg: Ext.isEmpty(mensaje) ? 'Error de comunicaci&oacute;n' : mensaje,	//(EGS)
                     buttons: Ext.Msg.OK,
                     icon: Ext.Msg.ERROR
                 });
