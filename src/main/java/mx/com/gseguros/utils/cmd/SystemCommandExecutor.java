@@ -80,6 +80,8 @@ public class SystemCommandExecutor
     try
     {
       ProcessBuilder pb = new ProcessBuilder(commandInformation);
+      //logger.info("command env={}", pb.environment());
+      //logger.info("command directory={}", pb.directory());      
       Process process = pb.start();
 
       // you need this if you're going to write something to the command's input stream
