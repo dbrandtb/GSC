@@ -387,16 +387,6 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
             Utils.validate(params.get("cdplan"),     "No existe el par\u00E1metro params.cdplan");
             Utils.validate(params.get("nmorddom"),   "No existe el par\u00E1metro params.nmorddom");
             Utils.validate(params.get("cdagrupa"),   "No existe el par\u00E1metro params.cdagrupa");
-            Utils.validate(params.get("otvalor01"),  "No existe el par\u00E1metro params.otvalor01");
-            Utils.validate(params.get("otvalor02"),  "No existe el par\u00E1metro params.otvalor02");
-            Utils.validate(params.get("otvalor03"),  "No existe el par\u00E1metro params.otvalor03");
-            Utils.validate(params.get("otvalor04"),  "No existe el par\u00E1metro params.otvalor04");
-            Utils.validate(params.get("otvalor05"),  "No existe el par\u00E1metro params.otvalor05");
-            Utils.validate(params.get("otvalor06"),  "No existe el par\u00E1metro params.otvalor06");
-            Utils.validate(params.get("otvalor07"),  "No existe el par\u00E1metro params.otvalor07");
-            Utils.validate(params.get("otvalor08"),  "No existe el par\u00E1metro params.otvalor08");
-            Utils.validate(params.get("otvalor09"),  "No existe el par\u00E1metro params.otvalor09");
-            Utils.validate(params.get("otvalor10"),  "No existe el par\u00E1metro params.otvalor10");
             
             String dsnombre1 = StringUtils.isNotBlank(params.get("dsnombre1")) ? params.get("dsnombre1") : ""; 
             
