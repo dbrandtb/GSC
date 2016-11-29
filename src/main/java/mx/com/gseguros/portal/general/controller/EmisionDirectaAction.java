@@ -61,6 +61,7 @@ public class EmisionDirectaAction extends PrincipalCoreAction
     	String cdtipsit = null;
 		String nmpoliza = null;
 		String nmsuplemEmi = null;
+		String polizaremota = null;
 		
 		try {
 			// Se validan datos:
@@ -79,6 +80,7 @@ public class EmisionDirectaAction extends PrincipalCoreAction
         	cdramo   = params.get("cdramo");
         	cdtipsit = params.get("cdtipsit");
 			nmpoliza = params.get("nmpoliza");
+			polizaremota = params.get("polizaremota");
 			String estado   = "W";
 			boolean esFlotilla = StringUtils.isNotBlank(params.get("flotilla"))
 					&&params.get("flotilla").equalsIgnoreCase("si");
@@ -90,7 +92,7 @@ public class EmisionDirectaAction extends PrincipalCoreAction
 			String cveusuariocaptura = params.get("cveusuariocaptura");
 			
 			Map<String, String> result = procesoEmisionServiceImpl.emitir(cdunieco, cdramo, estado, nmpoliza, 
-					cdtipsit, ntramite, params.get("cdusuari"), params.get("cdsisrol"), params.get("cdelemento"), cveusuariocaptura, esFlotilla, tipoGrupoInciso);
+					cdtipsit, ntramite, params.get("cdusuari"), params.get("cdsisrol"), params.get("cdelemento"), cveusuariocaptura, esFlotilla, tipoGrupoInciso, polizaremota);
 			
 			nmsuplemEmi =  result.get("nmsuplem");
 			

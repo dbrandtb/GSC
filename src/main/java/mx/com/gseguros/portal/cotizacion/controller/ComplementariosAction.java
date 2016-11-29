@@ -2411,7 +2411,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.RECIPERA_INDIVIDUAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.RECUPERA_INDIVIDUAL.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())
 							))
 					{
@@ -3416,7 +3416,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					if( success && (cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-							||cdtipsit.equalsIgnoreCase(TipoSituacion.RECIPERA_INDIVIDUAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.RECUPERA_INDIVIDUAL.getCdtipsit())
 							||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit())
 							))
 					{

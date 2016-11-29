@@ -111,7 +111,7 @@ var TipoSituacion = {
     SaludVital            : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SALUD_VITAL.cdtipsit" />',
     PickUpCarga           : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@PICK_UP_CARGA.cdtipsit" />',
     PickUpParticular      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@PICK_UP_PARTICULAR.cdtipsit" />',
-    RecuperaIndividual    : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECIPERA_INDIVIDUAL.cdtipsit" />',
+    RecuperaIndividual    : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECUPERA_INDIVIDUAL.cdtipsit" />',
     RecuperaColectivo     : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECUPERA_COLECTIVO.cdtipsit" />',
     TractoCamionesArmados : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TRACTOCAMIONES_ARMADOS.cdtipsit" />'
  };

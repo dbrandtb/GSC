@@ -33,6 +33,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	public EmisionVO emitir(String cdusuari, String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String nmsituac, String nmsuplem, String cdelemento, String cdcia, String cdplan, String cdperpag, 
 			String cdperson, Date fecha, String ntramite) throws Exception {
+	    
 		EmisionVO emision = new EmisionVO();
 		
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
@@ -59,14 +60,8 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		emision.setEsDxN((String)resultado.get("pv_esdxn_o"));
 		emision.setMessage((String)resultado.get("pv_message"));
 		emision.setCdideper((String)resultado.get("pv_cdideper_o"));
-//		wrapperResultados.getItemMap().put("nmpoliza", map.get("pv_nmpoliza_o"));
-//		wrapperResultados.getItemMap().put("nmpoliex", map.get("pv_nmpoliex_o"));
-//		wrapperResultados.getItemMap().put("nmsuplem", map.get("pv_nmsuplem_o"));
-//		wrapperResultados.getItemMap().put("esdxn", map.get("pv_esdxn_o"));
-//		wrapperResultados.getItemMap().put("CDIDEPER", map.get("pv_cdideper_o"));
 		return emision;
 	}
-	
 	
 	protected class ProcesoEmisionGeneralSP extends StoredProcedure {
 		
@@ -96,6 +91,72 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 			declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
 		}
+	}
+	
+	
+    @Override
+    public EmisionVO emitirPolizaRemotaRecupera(String cdusuari, String cdunieco, String cdramo, String estado, String nmpoliza, 
+            String nmsituac, String nmsuplem, String cdelemento, String cdcia, String cdplan, String cdperpag, 
+            String cdperson, Date fecha, String ntramite, String polizaremota) throws Exception {
+        
+        EmisionVO emision = new EmisionVO();
+        
+        Map<String, Object> params = new LinkedHashMap<String, Object>();
+        params.put("pv_cdusuari" , cdusuari);
+        params.put("pv_cdunieco" , cdunieco);
+        params.put("pv_cdramo"   , cdramo);
+        params.put("pv_estado"   , estado);
+        params.put("pv_nmpoliza" , nmpoliza);
+        params.put("pv_nmsituac" , nmsituac);
+        params.put("pv_nmsuplem" , nmsuplem);
+        params.put("pv_cdelement", cdelemento);
+        params.put("pv_cdcia"    , cdcia);
+        params.put("pv_cdplan"   , cdplan);
+        params.put("pv_cdperpag" , cdperpag);
+        params.put("pv_cdperson" , cdperson);
+        params.put("pv_fecha"    , fecha);
+        params.put("pv_ntramite" , ntramite);
+        params.put("pv_poliza_remota_i" , polizaremota);
+        
+        Map<String,Object> resultado = ejecutaSP(new EmisionRemotaRecuperaSP(getDataSource()), params);
+        
+        emision.setNmpoliza((String)resultado.get("pv_nmpoliza_o"));
+        emision.setNmpoliex((String)resultado.get("pv_nmpoliex_o"));
+        emision.setNmsuplem((String)resultado.get("pv_nmsuplem_o"));
+        emision.setEsDxN((String)resultado.get("pv_esdxn_o"));
+        emision.setMessage((String)resultado.get("pv_message"));
+        emision.setCdideper((String)resultado.get("pv_cdideper_o"));
+        return emision;
+    }
+	
+	protected class EmisionRemotaRecuperaSP extends StoredProcedure {
+	    
+	    protected EmisionRemotaRecuperaSP(DataSource dataSource) {
+	        super(dataSource, "PKG_EMISION.P_EMISION_REMOTA_RECUPERA");
+            declareParameter(new SqlParameter("pv_cdusuari",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdunieco",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo",        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado",        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsituac",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsuplem",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdelement",     OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdcia",         OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdplan",        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdperpag",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdperson",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_fecha",         OracleTypes.DATE));
+            declareParameter(new SqlParameter("pv_ntramite",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_poliza_remota_i",OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmpoliza_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmpoliex_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmsuplem_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_esdxn_o",    OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_message",    OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdideper_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+	    }
 	}
 	
 	

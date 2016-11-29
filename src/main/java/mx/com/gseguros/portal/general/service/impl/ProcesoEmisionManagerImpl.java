@@ -18,7 +18,6 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.WSEmisionAutoException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
-import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
@@ -152,9 +151,6 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	private EmisionManager emisionManager;
 	
 	@Autowired
-	private FlujoMesaControlManager flujoMesaControlManager;
-	
-	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
 	@Autowired
@@ -163,7 +159,8 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	@Override
 	public Map<String, String> emitir(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String cdtipsit, String ntramite, String cdusuari, String cdsisrol, String cdelemento,
-			String cveusuariocaptura, boolean esFlotilla, String tipoGrupoInciso) throws Exception {
+            String cveusuariocaptura, boolean esFlotilla, String tipoGrupoInciso, String polizaremota)
+            throws Exception {
 		
 		Map<String, String> result = new HashMap<String, String>();
 		
@@ -229,7 +226,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			
 			
 			if(!necesitaAutorizacion) {
-				paso = "Validando cuadro de comisi�n natural";
+				paso = "Validando cuadro de comisi\u00f3n natural";
 				boolean cuadroNatural = cotizacionDAO.validarCuadroComisionNatural(cdunieco, cdramo, estado, nmpoliza);
 				
 				if(!cuadroNatural) {
@@ -269,10 +266,19 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			////// emision
 			paso = "Emitiendo poliza";
 			
-			EmisionVO emision = emisionDAO.emitir(cdusuari, cdunieco, cdramo, estado, nmpoliza, 
-					"1", "0", cdelemento, cdunieco, null, cdperpag, 
-					cdpersonSesion, new Date(), ntramite);
-			logger.debug("emision obtenida " + emision);
+			EmisionVO emision = null;
+			if(cdramo.equals(Ramo.RECUPERA.getCdramo()) && cdtipsit.equals(TipoSituacion.RECUPERA_INDIVIDUAL.getCdtipsit())) {
+			    // Caso especial para Recupera Individual:
+			    emision = emisionDAO.emitirPolizaRemotaRecupera(cdusuari, cdunieco, cdramo, estado, nmpoliza, 
+                    "1", "0", cdelemento, cdunieco, null, cdperpag, 
+                    cdpersonSesion, new Date(), ntramite, polizaremota);
+			} else {
+			    
+			    emision = emisionDAO.emitir(cdusuari, cdunieco, cdramo, estado, nmpoliza, 
+                    "1", "0", cdelemento, cdunieco, null, cdperpag, 
+                    cdpersonSesion, new Date(), ntramite);
+			}
+			logger.debug("Emision obtenida: " + emision);
 			
 			String nmpolizaEmitida = emision.getNmpoliza();
 			String nmpoliexEmitida = emision.getNmpoliex();
@@ -419,7 +425,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			if( cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
 					||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
 					||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
-					||cdtipsit.equalsIgnoreCase(TipoSituacion.RECIPERA_INDIVIDUAL.getCdtipsit())
+					||cdtipsit.equalsIgnoreCase(TipoSituacion.RECUPERA_INDIVIDUAL.getCdtipsit())
 					||cdtipsit.equalsIgnoreCase(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit()) ) {
 				
 				paso = "Invocando WS de recibos";
@@ -988,14 +994,6 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
                     fechaHoy,
                     false  // sinGrabarDetalle
                     );
-			
-			/* jtezva 2016 nov 22: ya se manda con el despachador
-			try {
-				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
-			} catch (Exception ex) {
-				logger.error("Error al enviar correos de emision", ex);
-			}
-			*/
 			
 		} catch(Exception ex) {
 			Utils.generaExcepcion(ex, paso);
