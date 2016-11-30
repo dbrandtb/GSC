@@ -2697,7 +2697,13 @@ function _procesaAccion(
 	                                                        handler : function (me) {
 	                                                            me.up('window').close();
 	                                                        }
-	                                                    }
+	                                                    }, {
+                                                            text    : 'RECARGAR',
+                                                            icon    : _GLOBAL_DIRECTORIO_ICONOS + 'control_repeat_blue.png',
+                                                            handler : function (me) {
+                                                                me.up('window').recargar();
+                                                            }
+                                                        }
 	                                                ],
 	                                                recargar : function () {
 	                                                    debug('>WINDOW_REVISION_DOCUMENTOS recargar');
@@ -3427,40 +3433,22 @@ function subirArchivoDesdeRevision (row) {
 function marcarRequisitoDesdeRevision (row, checked, dsdato) {
     debug('>marcarRequisitoDesdeRevision args:', arguments);
     
-    var mask, ck = 'Marcando requisito desde revisi\u00f3n';
+    var ck = 'Marcando requisito desde revisi\u00f3n';
     try {
         var win    = _fieldById('WINDOW_REVISION_DOCUMENTOS'),
             flujo  = win.flujo,
             record = win.down('grid[tipo=REQ]').getStore().getAt(row);
-        mask = _maskLocal(ck);
-        Ext.Ajax.request({
-            url     : _GLOBAL_URL_MARCAR_REQUISITO,
-            params  : {
+        _request({
+            mask       : ck,
+            url        : _GLOBAL_URL_MARCAR_REQUISITO,
+            background : true,
+            params     : {
                 'params.cdtipflu'  : flujo.cdtipflu,
                 'params.cdflujomc' : flujo.cdflujomc,
                 'params.ntramite'  : flujo.ntramite,
                 'params.cdrequisi' : record.get('CLAVE'),
                 'params.swactivo'  : checked === true ? 'S' : 'N',
                 'params.dsdato'    : dsdato
-            },
-            success : function (response) {
-                mask.close();
-                var ck = 'Decodificando respuesta al marcar requisito';
-                try {
-                    var json = Ext.decode(response.responseText);
-                    debug('### marcar requisito:', json);
-                    if (json.success === true) {
-                        win.recargar();
-                    } else {
-                        mensajeError(json.message);
-                    }
-                } catch (e) {
-                    manejaException(e, ck);
-                }
-            },
-            failure : function () {
-                mask.close();
-                errorComunicacion(null, 'Error al marcar requisito');
             }
         });
     } catch(e) {
@@ -3801,10 +3789,11 @@ function _obtenerComponentes (params, callback, callbackError) {
 /* JTEZVA 29 NOVIEMBRE 2016
 ABREVIATURA PARA EXT.AJAX.REQUEST()
 RECIBE OBJETO PARAMS CON LOS ATRIBUTOS:
-mask -> texto para mostrar (opcional)
+mask (opcional) -> texto para mostrar
 url
 params
-success -> funcion que se invoca si sale bien, se le manda el json
+success function (opcional)   -> funcion que se invoca si sale bien, se le manda el json
+background boolean (opcional) -> Si la peticion no debe robar el focus de la pantalla
 LANZA ERROR!
 */
 function _request(params) {
@@ -3812,7 +3801,10 @@ function _request(params) {
     var mask, ck;
     try {
         ck = params.mask || 'Cargando...';
-        mask = _maskLocal(ck);
+        var background = true === params.background;
+        mask = background
+            ? {close : function () {}}
+            : _maskLocal(ck);
         Ext.Ajax.request({
             url     : params.url,
             params  : params.params,
@@ -3825,8 +3817,10 @@ function _request(params) {
                     if (true !== json.success) {
                         throw json.message || 'La petici\u00f3n no fue exitosa';
                     }
-                    ck = 'Ejecutando callback posterior al request';
-                    params.success(json);
+                    if (typeof params.success === 'function') {
+                        ck = 'Ejecutando callback posterior al request';
+                        params.success(json);
+                    }
                 } catch (e) {
                     manejaException(e, ck);
                 }
