@@ -2721,6 +2721,32 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "guardarVentanaDatosTramite",
+            results = { @Result(name="success", type="json") }
+            )
+	public String guardarVentanaDatosTramite () {
+	    logger.debug(Utils.log(
+	            "\n########################################",
+	            "\n###### guardarVentanaDatosTramite ######",
+	            "\n###### params = ", params));
+	    try {
+	        Utils.validateSession(session);
+	        Utils.validate(params, "No se recibieron datos de ventana de datos de tr\u00e1mite");
+	        String ntramite = params.get("ntramite");
+	        Utils.validate(ntramite, "Falta ntramite");
+	        flujoMesaControlManager.guardarVentanaDatosTramite(ntramite, params);
+	        success = true;
+	    } catch (Exception ex) {
+	        message = Utils.manejaExcepcion(ex);
+	    }
+        logger.debug(Utils.log(
+                "\n###### success = " , success,
+                "\n###### message = " , message,
+                "\n###### guardarVentanaDatosTramite ######",
+                "\n########################################"));
+	    return SUCCESS;
+	}
+	
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
 	                                                      //

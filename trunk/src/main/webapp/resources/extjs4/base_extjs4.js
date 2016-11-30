@@ -609,32 +609,45 @@ function checkBool(valor,mensaje)
     }
 }
 
-function manejaException(e,ck,compLoading)
-{
-    if(typeof e == 'string')
-    {
+// Se usa en un controlador final para que la exception no mate al navegador y muestre aviso
+// e           -> Exception o string con aviso (ejemplo exception: a is not a function. Ejemplo aviso: 'Falta la sucursal')
+// ck          -> paso (ej: 'Sacando raiz cuadrada')
+// compLoading -> componente que se quedó en loading o ventana emergente de mascara de 'Cargando...'
+function manejaException (e, ck, compLoading) {
+    if (typeof e === 'string') {
         mensajeWarning(e);
-    }
-    else
-    {
-        debugError('!exception:',e);
-        
-        try
-        {
+    } else {
+        debugError(e);
+        try {
             compLoading.setLoading(false);
-        }
-        catch(e){}
-        
-        try
-        {
-            if(compLoading.maskLocal === true)
-            {
+        } catch (e) {}
+        try {
+            if (compLoading.maskLocal === true) {
                 compLoading.close(); // para cuando es un mask del metodo _maskLocal
             }
-        }
-        catch(e){}
-        
-        mensajeError('Error '+(ck.toLowerCase()));
+        } catch (e) {}
+        mensajeError('Error ' + ((ck || 'del sistema').toLowerCase()));
+    }
+}
+
+// Se usa en un proceso intermedio para controlar la exception pero vuelve a aventar la exception para ser manejada por un controlador final
+// e           -> Exception o string con aviso (ejemplo exception: a is not a function. Ejemplo aviso: 'Falta la sucursal')
+// ck          -> paso (ej: 'Sacando raiz cuadrada')
+// compLoading -> componente que se quedó en loading o ventana emergente de mascara de 'Cargando...'
+function generaException (e, ck, compLoading) {
+    if (typeof e === 'string') {
+        throw e;
+    } else {
+        debugError(e);
+        try {
+            compLoading.setLoading(false);
+        } catch (e) {}
+        try {
+            if (compLoading.maskLocal === true) {
+                compLoading.close(); // para cuando es un mask del metodo _maskLocal
+            }
+        } catch (e) {}
+        throw 'Error ' + ((ck || 'del sistema').toLowerCase());
     }
 }
 
@@ -3678,6 +3691,153 @@ function inIframe () {
         return window.self !== window.top;
     } catch (e) {
         return true;
+    }
+}
+
+/* JTEZVA 29 NOVIEMBRE 2016
+FUNCION QUE RECUPERA COMPONENTES DE LA TABLA TCONFCMP
+LOS REGRESA YA CONSTRUIDOS EN UN OBJETO CON PROPIEDADES .fields .items .columns .buttons
+LANZA ERROR!
+parametros en el objeto de entrada params:
+    cdtiptra
+    cdunieco
+    cdramo
+    cdtipsit
+    estado
+    pantalla
+    seccion
+    orden
+    fields  boolean
+    items   boolean
+    columns boolean
+    buttons boolean
+*/
+function _obtenerComponentes (params, callback, callbackError) {
+    debug('_obtenerComponentes args:', arguments);
+    var mask, ck = 'Recuperando componentes';
+    try {
+        if (Ext.isEmpty(params)) {
+            throw 'Faltan los par\u00e1metros para recuperar componentes';
+        }
+        if (Ext.isEmpty(callback)) {
+            throw 'Faltan el callback para recuperar componentes';
+        }
+        if (typeof callback !== 'function') {
+            throw 'El callback para recuperar componentes debe ser una funci\u00f3n';
+        }
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url     : _GLOBAL_URL_OBTENER_COMPONENTES,
+            params  : {
+                'params.cdtiptra' : params.cdtiptra || '',
+                'params.cdunieco' : params.cdunieco || '',
+                'params.cdramo'   : params.cdramo   || '',
+                'params.cdtipsit' : params.cdtipsit || '',
+                'params.estado'   : params.estado   || '',
+                'params.pantalla' : params.pantalla || '',
+                'params.seccion'  : params.seccion  || '',
+                'params.orden'    : params.orden    || '',
+                'params.fields'   : true === params.fields  ? 'S' : 'N',
+                'params.items'    : true === params.items   ? 'S' : 'N',
+                'params.columns'  : true === params.columns ? 'S' : 'N',
+                'params.buttons'  : true === params.buttons ? 'S' : 'N'
+            },
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta al recuperar componentes';
+                try {
+                    var json = Ext.decode(response.responseText);
+                    debug('AJAX recuperar componentes:', json);
+                    if (true !== json.success) {
+                        throw json.message;
+                    }
+                    var componentes = {
+                        fields  : [],
+                        items   : [],
+                        columns : [],
+                        buttons : []
+                    };
+                    if (true === params.fields) {
+                        ck = 'Decodificando fields';
+                        componentes.fields = Ext.decode('[' + json.params.fields + ']');
+                    }
+                    if (true === params.items) {
+                        ck = 'Decodificando items';
+                        componentes.items = Ext.decode('[' + json.params.items + ']');
+                    }
+                    if (true === params.columns) {
+                        ck = 'Decodificando columns';
+                        componentes.columns = Ext.decode('[' + json.params.columns + ']');
+                    }
+                    if (true === params.buttons) {
+                        ck = 'Decodificando buttons';
+                        componentes.buttons = Ext.decode('[' + json.params.buttons + ']');
+                    }
+                    ck = 'Invocando callback con componentes recuperados';
+                    callback(componentes);
+                } catch (e) {
+                    manejaException(e, ck);
+                    try {
+                        callbackError();
+                    } catch (e) {}
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al recuperar componentes');
+                try {
+                    callbackError();
+                } catch (e) {}
+            }
+        });
+    } catch (e) {
+        generaException(e, ck, mask);
+        try {
+            callbackError();
+        } catch (e) {}
+    }
+}
+
+/* JTEZVA 29 NOVIEMBRE 2016
+ABREVIATURA PARA EXT.AJAX.REQUEST()
+RECIBE OBJETO PARAMS CON LOS ATRIBUTOS:
+mask -> texto para mostrar (opcional)
+url
+params
+success -> funcion que se invoca si sale bien, se le manda el json
+LANZA ERROR!
+*/
+function _request(params) {
+    debug('_request args:', arguments);
+    var mask, ck;
+    try {
+        ck = params.mask || 'Cargando...';
+        mask = _maskLocal(ck);
+        Ext.Ajax.request({
+            url     : params.url,
+            params  : params.params,
+            success : function (response) {
+                mask.close();
+                var ck = 'Decodificando respuesta posterior al proceso: ' + ((params.mask || 'enviando petici\00f3n').toLowerCase());
+                try {
+                    var json = Ext.decode(response.responseText);
+                    debug('AJAX ...' + params.url.slice(-50) + ' json:', json);
+                    if (true !== json.success) {
+                        throw json.message || 'La petici\u00f3n no fue exitosa';
+                    }
+                    ck = 'Ejecutando callback posterior al request';
+                    params.success(json);
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error ' + (params.mask || 'de red al comunicarse con el servidor').toLowerCase());
+            }
+        });
+    } catch (e) {
+        generaException(e, ck, mask);
     }
 }
 

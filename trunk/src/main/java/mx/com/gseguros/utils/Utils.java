@@ -670,6 +670,9 @@ public class Utils
     
     public static Date parse(String fecha) throws Exception
     {
+        if (fecha == null) {
+            return null;
+        }
     	return renderFechas.parse(fecha);
     }
     
