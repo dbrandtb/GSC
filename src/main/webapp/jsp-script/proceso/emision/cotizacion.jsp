@@ -1393,6 +1393,8 @@ function llenandoCampos (json)
          debug('fechaHoy='    , fechaHoy);
          debug('fechaLimite=' , fechaLimite);
          debug('vencida='     , vencida, '.');
+         
+         
     
          _0_limpiar();
     
@@ -1574,6 +1576,16 @@ function llenandoCampos (json)
                         
                         if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
                             
+                            if(json.slist1[0].OTVALOR02 == '1')
+                            {
+                                var me  =_fieldLikeLabel('TIPO VALOR');
+                                var record = me.findRecordByValue('1');
+                                if(!record)
+                                    {
+	                                _fieldLikeLabel('TIPO VALOR').store.add({key:'1',value:'Valor Convenido'});
+	                                _fieldLikeLabel('TIPO VALOR').setValue('1');
+                                    }
+                            }
 //                         	if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
                         	if(RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol))
                             {
