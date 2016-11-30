@@ -574,9 +574,13 @@ K                   ENCOLAR CON DATOS ORIGINALES
                             );
                 }
                 
-                paso = "Enviando correos configurados";
-                logger.debug(paso);
-                flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento);
+                try {
+                    paso = "Enviando correos configurados";
+                    logger.debug(paso);
+                    flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento);
+                } catch (Exception ex) {
+                    logger.debug("Error al enviar correos de estatus al turnar", ex);
+                }
                 
                 /////////////////////////////////////////////////////////////////////
                 ////// JAIME: ACTUALIZA EN SIGS QUE LA POLIZA SE PUEDA RENOVAR //////
@@ -738,9 +742,13 @@ K                   ENCOLAR CON DATOS ORIGINALES
                                     );
                         }
                         
-                        paso = "Enviando correos configurados";
-                        logger.debug(paso);
-                        flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento);
+                        try {
+                            paso = "Enviando correos configurados";
+                            logger.debug(paso);
+                            flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento);
+                        } catch (Exception ex) {
+                            logger.error("Error al mandar correos de estatus al turnar", ex);
+                        }
                     } else { // EN SUSCRIPCION o APROBADO
                         paso = "Actualizando tr\u00e1mite";
                         logger.debug(paso);
@@ -802,9 +810,13 @@ K                   ENCOLAR CON DATOS ORIGINALES
                                     );
                         }
                         
-                        paso = "Enviando correos configurados";
-                        logger.debug(paso);
-                        flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento);
+                        try {
+                            paso = "Enviando correos configurados";
+                            logger.debug(paso);
+                            flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento);
+                        } catch (Exception ex) {
+                            logger.error("Error al enviar correos de estatus al turnar", ex);
+                        }
                     }
                 }
             }

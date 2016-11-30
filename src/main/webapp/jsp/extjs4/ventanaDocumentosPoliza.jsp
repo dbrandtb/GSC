@@ -574,7 +574,7 @@ Ext.onReady(function()
                                 ,buttonOnly : false
                                 ,width      : 450
                                 ,name       : 'file'
-                                ,cAccept    : ['jpg','png','gif','zip','pdf','rar','jpeg','doc','docx','xls','xlsx','ppt','pptx']
+                                ,cAccept    : ['jpg','png','gif','zip','pdf','rar','jpeg','doc','docx','xls','xlsx','ppt','pptx', 'msg']
                                 ,listeners  :
                                 {
                                     change : function(me)

@@ -3609,4 +3609,508 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			compile();
 		}
 	}
+	
+	@Override
+	public void guardarVentanaDatosTramite (String ntramite,
+            boolean swcdunieco,
+            boolean swcdramo,
+            boolean swestado,
+            boolean swnmpoliza,
+            boolean swnmsuplem,
+            boolean swnmsolici,
+            boolean swcdsucadm,
+            boolean swcdsucdoc,
+            boolean swcdsubram,
+            boolean swcdtiptra,
+            boolean swferecepc,
+            boolean swcdagente,
+            boolean swreferencia,
+            boolean swnombre,
+            boolean swfecstatu,
+            boolean swstatus,
+            boolean swcomments,
+            boolean swcdtipsit,
+            boolean swotvalor01,
+            boolean swotvalor02,
+            boolean swotvalor03,
+            boolean swotvalor04,
+            boolean swotvalor05,
+            boolean swotvalor06,
+            boolean swotvalor07,
+            boolean swotvalor08,
+            boolean swotvalor09,
+            boolean swotvalor10,
+            boolean swotvalor11,
+            boolean swotvalor12,
+            boolean swotvalor13,
+            boolean swotvalor14,
+            boolean swotvalor15,
+            boolean swotvalor16,
+            boolean swotvalor17,
+            boolean swotvalor18,
+            boolean swotvalor19,
+            boolean swotvalor20,
+            boolean swotvalor21,
+            boolean swotvalor22,
+            boolean swotvalor23,
+            boolean swotvalor24,
+            boolean swotvalor25,
+            boolean swotvalor26,
+            boolean swotvalor27,
+            boolean swotvalor28,
+            boolean swotvalor29,
+            boolean swotvalor30,
+            boolean swotvalor31,
+            boolean swotvalor32,
+            boolean swotvalor33,
+            boolean swotvalor34,
+            boolean swotvalor35,
+            boolean swotvalor36,
+            boolean swotvalor37,
+            boolean swotvalor38,
+            boolean swotvalor39,
+            boolean swotvalor40,
+            boolean swotvalor41,
+            boolean swotvalor42,
+            boolean swotvalor43,
+            boolean swotvalor44,
+            boolean swotvalor45,
+            boolean swotvalor46,
+            boolean swotvalor47,
+            boolean swotvalor48,
+            boolean swotvalor49,
+            boolean swotvalor50,
+            boolean swswimpres,
+            boolean swcdtipflu,
+            boolean swcdflujomc,
+            boolean swcdusuari,
+            boolean swcdtipsup,
+            boolean swswvispre,
+            boolean swcdpercli,
+            boolean swrenuniext,
+            boolean swrenramo,
+            boolean swrenpoliex,
+            boolean swsworigenmesa,
+            boolean swcdrazrecha,
+            boolean swcdunidspch,
+            String cdunieco,
+            String cdramo,
+            String estado,
+            String nmpoliza,
+            String nmsuplem,
+            String nmsolici,
+            String cdsucadm,
+            String cdsucdoc,
+            String cdsubram,
+            String cdtiptra,
+            String ferecepc,
+            String cdagente,
+            String referencia,
+            String nombre,
+            String fecstatu,
+            String status,
+            String comments,
+            String cdtipsit,
+            String otvalor01,
+            String otvalor02,
+            String otvalor03,
+            String otvalor04,
+            String otvalor05,
+            String otvalor06,
+            String otvalor07,
+            String otvalor08,
+            String otvalor09,
+            String otvalor10,
+            String otvalor11,
+            String otvalor12,
+            String otvalor13,
+            String otvalor14,
+            String otvalor15,
+            String otvalor16,
+            String otvalor17,
+            String otvalor18,
+            String otvalor19,
+            String otvalor20,
+            String otvalor21,
+            String otvalor22,
+            String otvalor23,
+            String otvalor24,
+            String otvalor25,
+            String otvalor26,
+            String otvalor27,
+            String otvalor28,
+            String otvalor29,
+            String otvalor30,
+            String otvalor31,
+            String otvalor32,
+            String otvalor33,
+            String otvalor34,
+            String otvalor35,
+            String otvalor36,
+            String otvalor37,
+            String otvalor38,
+            String otvalor39,
+            String otvalor40,
+            String otvalor41,
+            String otvalor42,
+            String otvalor43,
+            String otvalor44,
+            String otvalor45,
+            String otvalor46,
+            String otvalor47,
+            String otvalor48,
+            String otvalor49,
+            String otvalor50,
+            String swimpres,
+            String cdtipflu,
+            String cdflujomc,
+            String cdusuari,
+            String cdtipsup,
+            String swvispre,
+            String cdpercli,
+            String renuniext,
+            String renramo,
+            String renpoliex,
+            String sworigenmesa,
+            String cdrazrecha,
+            String cdunidspch) throws Exception {
+	    Map<String, Object> params = new LinkedHashMap<String, Object>();
+	    params.put("ntramite", ntramite);
+	    params.put("swcdunieco", swcdunieco ? "S" : "N");
+	    params.put("swcdramo", swcdramo ? "S" : "N");
+	    params.put("swestado", swestado ? "S" : "N");
+	    params.put("swnmpoliza", swnmpoliza ? "S" : "N");
+	    params.put("swnmsuplem", swnmsuplem ? "S" : "N");
+	    params.put("swnmsolici", swnmsolici ? "S" : "N");
+	    params.put("swcdsucadm", swcdsucadm ? "S" : "N");
+	    params.put("swcdsucdoc", swcdsucdoc ? "S" : "N");
+	    params.put("swcdsubram", swcdsubram ? "S" : "N");
+	    params.put("swcdtiptra", swcdtiptra ? "S" : "N");
+	    params.put("swferecepc", swferecepc ? "S" : "N");
+	    params.put("swcdagente", swcdagente ? "S" : "N");
+	    params.put("swreferencia", swreferencia ? "S" : "N");
+	    params.put("swnombre", swnombre ? "S" : "N");
+	    params.put("swfecstatu", swfecstatu ? "S" : "N");
+	    params.put("swstatus", swstatus ? "S" : "N");
+	    params.put("swcomments", swcomments ? "S" : "N");
+	    params.put("swcdtipsit", swcdtipsit ? "S" : "N");
+	    params.put("swotvalor01", swotvalor01 ? "S" : "N");
+	    params.put("swotvalor02", swotvalor02 ? "S" : "N");
+	    params.put("swotvalor03", swotvalor03 ? "S" : "N");
+	    params.put("swotvalor04", swotvalor04 ? "S" : "N");
+	    params.put("swotvalor05", swotvalor05 ? "S" : "N");
+	    params.put("swotvalor06", swotvalor06 ? "S" : "N");
+	    params.put("swotvalor07", swotvalor07 ? "S" : "N");
+	    params.put("swotvalor08", swotvalor08 ? "S" : "N");
+	    params.put("swotvalor09", swotvalor09 ? "S" : "N");
+	    params.put("swotvalor10", swotvalor10 ? "S" : "N");
+	    params.put("swotvalor11", swotvalor11 ? "S" : "N");
+	    params.put("swotvalor12", swotvalor12 ? "S" : "N");
+	    params.put("swotvalor13", swotvalor13 ? "S" : "N");
+	    params.put("swotvalor14", swotvalor14 ? "S" : "N");
+	    params.put("swotvalor15", swotvalor15 ? "S" : "N");
+	    params.put("swotvalor16", swotvalor16 ? "S" : "N");
+	    params.put("swotvalor17", swotvalor17 ? "S" : "N");
+	    params.put("swotvalor18", swotvalor18 ? "S" : "N");
+	    params.put("swotvalor19", swotvalor19 ? "S" : "N");
+	    params.put("swotvalor20", swotvalor20 ? "S" : "N");
+	    params.put("swotvalor21", swotvalor21 ? "S" : "N");
+	    params.put("swotvalor22", swotvalor22 ? "S" : "N");
+	    params.put("swotvalor23", swotvalor23 ? "S" : "N");
+	    params.put("swotvalor24", swotvalor24 ? "S" : "N");
+	    params.put("swotvalor25", swotvalor25 ? "S" : "N");
+	    params.put("swotvalor26", swotvalor26 ? "S" : "N");
+	    params.put("swotvalor27", swotvalor27 ? "S" : "N");
+	    params.put("swotvalor28", swotvalor28 ? "S" : "N");
+	    params.put("swotvalor29", swotvalor29 ? "S" : "N");
+	    params.put("swotvalor30", swotvalor30 ? "S" : "N");
+	    params.put("swotvalor31", swotvalor31 ? "S" : "N");
+	    params.put("swotvalor32", swotvalor32 ? "S" : "N");
+	    params.put("swotvalor33", swotvalor33 ? "S" : "N");
+	    params.put("swotvalor34", swotvalor34 ? "S" : "N");
+	    params.put("swotvalor35", swotvalor35 ? "S" : "N");
+	    params.put("swotvalor36", swotvalor36 ? "S" : "N");
+	    params.put("swotvalor37", swotvalor37 ? "S" : "N");
+	    params.put("swotvalor38", swotvalor38 ? "S" : "N");
+	    params.put("swotvalor39", swotvalor39 ? "S" : "N");
+	    params.put("swotvalor40", swotvalor40 ? "S" : "N");
+	    params.put("swotvalor41", swotvalor41 ? "S" : "N");
+	    params.put("swotvalor42", swotvalor42 ? "S" : "N");
+	    params.put("swotvalor43", swotvalor43 ? "S" : "N");
+	    params.put("swotvalor44", swotvalor44 ? "S" : "N");
+	    params.put("swotvalor45", swotvalor45 ? "S" : "N");
+	    params.put("swotvalor46", swotvalor46 ? "S" : "N");
+	    params.put("swotvalor47", swotvalor47 ? "S" : "N");
+	    params.put("swotvalor48", swotvalor48 ? "S" : "N");
+	    params.put("swotvalor49", swotvalor49 ? "S" : "N");
+	    params.put("swotvalor50", swotvalor50 ? "S" : "N");
+	    params.put("swswimpres", swswimpres ? "S" : "N");
+	    params.put("swcdtipflu", swcdtipflu ? "S" : "N");
+	    params.put("swcdflujomc", swcdflujomc ? "S" : "N");
+	    params.put("swcdusuari", swcdusuari ? "S" : "N");
+	    params.put("swcdtipsup", swcdtipsup ? "S" : "N");
+	    params.put("swswvispre", swswvispre ? "S" : "N");
+	    params.put("swcdpercli", swcdpercli ? "S" : "N");
+	    params.put("swrenuniext", swrenuniext ? "S" : "N");
+	    params.put("swrenramo", swrenramo ? "S" : "N");
+	    params.put("swrenpoliex", swrenpoliex ? "S" : "N");
+	    params.put("swsworigenmesa", swsworigenmesa ? "S" : "N");
+	    params.put("swcdrazrecha", swcdrazrecha ? "S" : "N");
+	    params.put("swcdunidspch", swcdunidspch ? "S" : "N");
+	    params.put("cdunieco", cdunieco);
+	    params.put("cdramo", cdramo);
+	    params.put("estado", estado);
+	    params.put("nmpoliza", nmpoliza);
+	    params.put("nmsuplem", nmsuplem);
+	    params.put("nmsolici", nmsolici);
+	    params.put("cdsucadm", cdsucadm);
+	    params.put("cdsucdoc", cdsucdoc);
+	    params.put("cdsubram", cdsubram);
+	    params.put("cdtiptra", cdtiptra);
+	    params.put("ferecepc", Utils.parse(ferecepc));
+	    params.put("cdagente", cdagente);
+	    params.put("referencia", referencia);
+	    params.put("nombre", nombre);
+	    params.put("fecstatu", Utils.parse(fecstatu));
+	    params.put("status", status);
+	    params.put("comments", comments);
+	    params.put("cdtipsit", cdtipsit);
+	    params.put("otvalor01", otvalor01);
+	    params.put("otvalor02", otvalor02);
+	    params.put("otvalor03", otvalor03);
+	    params.put("otvalor04", otvalor04);
+	    params.put("otvalor05", otvalor05);
+	    params.put("otvalor06", otvalor06);
+	    params.put("otvalor07", otvalor07);
+	    params.put("otvalor08", otvalor08);
+	    params.put("otvalor09", otvalor09);
+	    params.put("otvalor10", otvalor10);
+	    params.put("otvalor11", otvalor11);
+	    params.put("otvalor12", otvalor12);
+	    params.put("otvalor13", otvalor13);
+	    params.put("otvalor14", otvalor14);
+	    params.put("otvalor15", otvalor15);
+	    params.put("otvalor16", otvalor16);
+	    params.put("otvalor17", otvalor17);
+	    params.put("otvalor18", otvalor18);
+	    params.put("otvalor19", otvalor19);
+	    params.put("otvalor20", otvalor20);
+	    params.put("otvalor21", otvalor21);
+	    params.put("otvalor22", otvalor22);
+	    params.put("otvalor23", otvalor23);
+	    params.put("otvalor24", otvalor24);
+	    params.put("otvalor25", otvalor25);
+	    params.put("otvalor26", otvalor26);
+	    params.put("otvalor27", otvalor27);
+	    params.put("otvalor28", otvalor28);
+	    params.put("otvalor29", otvalor29);
+	    params.put("otvalor30", otvalor30);
+	    params.put("otvalor31", otvalor31);
+	    params.put("otvalor32", otvalor32);
+	    params.put("otvalor33", otvalor33);
+	    params.put("otvalor34", otvalor34);
+	    params.put("otvalor35", otvalor35);
+	    params.put("otvalor36", otvalor36);
+	    params.put("otvalor37", otvalor37);
+	    params.put("otvalor38", otvalor38);
+	    params.put("otvalor39", otvalor39);
+	    params.put("otvalor40", otvalor40);
+	    params.put("otvalor41", otvalor41);
+	    params.put("otvalor42", otvalor42);
+	    params.put("otvalor43", otvalor43);
+	    params.put("otvalor44", otvalor44);
+	    params.put("otvalor45", otvalor45);
+	    params.put("otvalor46", otvalor46);
+	    params.put("otvalor47", otvalor47);
+	    params.put("otvalor48", otvalor48);
+	    params.put("otvalor49", otvalor49);
+	    params.put("otvalor50", otvalor50);
+	    params.put("swimpres", swimpres);
+	    params.put("cdtipflu", cdtipflu);
+	    params.put("cdflujomc", cdflujomc);
+	    params.put("cdusuari", cdusuari);
+	    params.put("cdtipsup", cdtipsup);
+	    params.put("swvispre", swvispre);
+	    params.put("cdpercli", cdpercli);
+	    params.put("renuniext", renuniext);
+	    params.put("renramo", renramo);
+	    params.put("renpoliex", renpoliex);
+	    params.put("sworigenmesa", sworigenmesa);
+	    params.put("cdrazrecha", cdrazrecha);
+	    params.put("cdunidspch", cdunidspch);
+	    ejecutaSP(new GuardarVentanaDatosTramiteSP(getDataSource()), params);
+	}
+    
+    protected class GuardarVentanaDatosTramiteSP extends StoredProcedure {
+        protected GuardarVentanaDatosTramiteSP (DataSource dataSource) {
+            super(dataSource,"P_COMP_SAVE_VENT_DATOS_TRAMITE");
+            declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdramo" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swestado" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swnmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swnmsuplem" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swnmsolici" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdsucadm" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdsucdoc" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdsubram" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdtiptra" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swferecepc" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdagente" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swreferencia" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swnombre" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swfecstatu" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swstatus" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcomments" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdtipsit" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor01" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor02" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor03" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor04" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor05" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor06" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor07" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor08" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor09" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor10" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor11" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor12" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor13" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor14" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor15" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor16" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor17" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor18" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor19" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor20" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor21" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor22" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor23" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor24" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor25" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor26" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor27" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor28" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor29" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor30" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor31" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor32" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor33" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor34" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor35" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor36" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor37" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor38" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor39" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor40" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor41" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor42" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor43" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor44" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor45" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor46" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor47" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor48" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor49" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swotvalor50" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swswimpres" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdtipflu" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdflujomc" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdtipsup" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swswvispre" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdpercli" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swrenuniext" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swrenramo" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swrenpoliex" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swsworigenmesa" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdrazrecha" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swcdunidspch" , OracleTypes.VARCHAR));
+            
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsolici" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsucadm" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsucdoc" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsubram" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtiptra" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("ferecepc" , OracleTypes.DATE));
+            declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("referencia" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nombre" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("fecstatu" , OracleTypes.DATE));
+            declareParameter(new SqlParameter("status" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("comments" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor01" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor02" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor03" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor04" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor05" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor06" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor07" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor08" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor09" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor10" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor11" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor12" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor13" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor14" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor15" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor16" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor17" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor18" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor19" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor20" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor21" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor22" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor23" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor24" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor25" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor26" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor27" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor28" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor29" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor30" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor31" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor32" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor33" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor34" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor35" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor36" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor37" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor38" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor39" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor40" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor41" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor42" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor43" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor44" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor45" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor46" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor47" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor48" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor49" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("otvalor50" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swimpres" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipflu" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("swvispre" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdpercli" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("renuniext" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("renramo" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("renpoliex" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("sworigenmesa" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdrazrecha" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdunidspch" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
