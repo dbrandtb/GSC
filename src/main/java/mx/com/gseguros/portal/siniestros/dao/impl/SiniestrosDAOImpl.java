@@ -5618,6 +5618,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdgarant_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdconval_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsinies_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swfonsin_i",   OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"NO_CONSULTAS", "MONTO", "IMPGASTADOCOB", "OTVALOR04","OTVALOR07", "OTVALOR15","OTVALOR16"
 			};

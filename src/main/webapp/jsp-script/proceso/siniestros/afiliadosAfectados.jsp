@@ -2257,7 +2257,8 @@
 													obtenerSumaAseguradaMontoGastados (
 														record.get('CDUNIECO'), record.get('CDRAMO'),record.get('ESTADO'),record.get('NMPOLIZA'), 
 														record.get('NMSUPLEM'), record.get('NMSITUAC'), record.get('CDGARANT'), record.get('CDCONVAL'),
-														record.get('CDPERSON'), record.get('NMSINREF'), totalConsumido, record.get('NMSINIES'), record.get('VALTOTALCOB'));
+														record.get('CDPERSON'), record.get('NMSINREF'), totalConsumido, record.get('NMSINIES'), 
+														record.get('VALTOTALCOB'), record.get('SWFONSIN'));
 												},
 												failure : function () {
 													Ext.Msg.show({
@@ -6470,7 +6471,7 @@
     
     //26.- Obtenemos la Suma Asegurada para Gastos Medicos Mayores
     function obtenerSumaAseguradaMontoGastados (cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdgarant, cdconval, 
-            cdperson, nmsinref, totalConsumido, nmsinies, valSesion){
+            cdperson, nmsinref, totalConsumido, nmsinies, valSesion, aplicaFondo){
         
         if(valSesion =="1"){
             //MULTISALUD INFONAVIT
@@ -6490,7 +6491,8 @@
                     'params.nmsituac'  : nmsituac,
                     'params.cdgarant'  : cdgarant,
                     'params.cdconval'  : cdconval,
-                    'params.nmsinies'  : nmsinies
+                    'params.nmsinies'  : nmsinies,
+                    'params.swfonsin'  : aplicaFondo
                 }
                 ,success : function (response){
                     var jsonResp = Ext.decode(response.responseText);
@@ -6680,7 +6682,8 @@
                                     'params.nmsituac'  : record.data.NMSITUAC,
                                     'params.cdgarant'  : record.data.CDGARANT,
                                     'params.cdconval'  : record.data.CDCONVAL,
-                                    'params.nmsinies'  : record.data.NMSINIES
+                                    'params.nmsinies'  : record.data.NMSINIES,
+                                    'params.swfonsin'  : record.data.SWFONSIN
                                 }
                                 ,success : function (response){
                                     var jsonRes = Ext.decode(response.responseText);

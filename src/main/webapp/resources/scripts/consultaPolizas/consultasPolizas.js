@@ -878,11 +878,28 @@ Ext.onReady(function() {
                     var values = panelBusqueda.down('form').getForm().getValues();
                     
                     values['params.nmsituac']=record.get('nmsituac');
-                    
-                    _reporteEdoCta(values);//cdunieco,cdramo, cdperson, nmpoliza
+                    values['params.swfonsin']= "N";
+                    _reporteEdoCta(values,"Estado de Cuenta");//cdunieco,cdramo, cdperson, nmpoliza
                 }
                 	
                 
+            },
+            {
+                xtype        : 'actioncolumn',
+                icon         : _CONTEXT+'/resources/fam3icons/icons/page_white_database.png',
+                tooltip      : 'Edo. Cuenta aplicaci&oacute;n Fondo',
+                width        : 20,
+                handler      : function(grid,rowIndex)
+                {
+                    var record = grid.getStore().getAt(rowIndex);
+//                    debug('record cdperson ==> :',record,record.get('cdperson'));
+                    var values = panelBusqueda.down('form').getForm().getValues();
+                    
+                    values['params.nmsituac']=record.get('nmsituac');
+                    values['params.swfonsin']= "S";
+                    
+                    _reporteEdoCta(values,"Estado de Cuenta aplicaci&oacute;n Fondo");//cdunieco,cdramo, cdperson, nmpoliza
+                }
             },
             {text:'Plan',dataIndex:'dsplan',width:90 , align:'left'},
             {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:80 , align:'left'},
@@ -1847,7 +1864,7 @@ Ext.onReady(function() {
     }
     
 //Genera reporte de Siniestros
-    function _reporteEdoCta(values)
+    function _reporteEdoCta(values, nombre)
     {
     	debug('iniciando reporte...');
     	debug(_reporteEdoCtaSin);
@@ -1861,6 +1878,7 @@ Ext.onReady(function() {
                 + '&p_poliza='      + values['params.nmpoliza']
                 + '&p_situac='      + values['params.nmsituac']
                 + '&p_suplem='      + values['params.suplemento']
+                + '&p_swfonsin='    + values['params.swfonsin']
         		+ "&desformat=PDF"
         		+ "&userid="        + _reportsServerUser
         		+ "&report="        + _reporteEdoCtaSin
@@ -1871,7 +1889,7 @@ Ext.onReady(function() {
         debug(numRand);
         var windowVerRep = Ext.create('Ext.window.Window',
         {
-            title          : 'Estado de Cuenta'
+            title          : nombre
             ,width         : 800
             ,height        : 550
             ,collapsible   : true
