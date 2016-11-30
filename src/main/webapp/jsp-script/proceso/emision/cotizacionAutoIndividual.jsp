@@ -4065,6 +4065,11 @@ function llenandoCampos(json)
         var primerInciso = new _p28_formModel(json.slist1[0]);
         if(_p28_smap1.cdramo=='5' )
         {
+             if(json.slist1[0].OTVALOR12 == '1' &&  _fieldLikeLabel('TIPO VALOR').findRecord('1','VALOR CONVENIDO')==false)
+            {
+                _fieldLikeLabel('TIPO VALOR').store.add({key:'1',value:'VALOR CONVENIDO'});
+                _fieldLikeLabel('TIPO VALOR').setValue('1');
+            }
             primerInciso.set('parametros.pv_otvalor14','S');
         }
         if(_p28_smap1.cdramo=='6' )
