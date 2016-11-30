@@ -2755,7 +2755,12 @@ function _p25_renovarPolizaClic(button,e)
     }
     else{
     	sePuedeRenovar = false;
-    	mensaje = mensaje+'La p\u00F3liza ya est\u00E1 renovada '+pol['nmpolant']+'<br/>';
+    	if(pol['renovada'] == 'SI'){
+    	    mensaje = mensaje+'La p\u00F3liza ya est\u00E1 renovada '+pol['nmpolant']+'<br/>';
+    	}
+    	else{
+    	    mensaje = mensaje+'La p\u00F3liza est\u00E1 en proceso de renovaci\u00F3n'+'<br/>';
+    	}
     }        
     debug('sePuedeRenovar',sePuedeRenovar);
     if(sePuedeRenovar == true){
