@@ -36,7 +36,7 @@ public interface CatalogosManager {
 	
 	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String idPadre) throws Exception;
 
-	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String idPadre, String cdGarant, String cdSisrol) throws Exception; // se agrega parámetro cdSisrol para considerar restricciones por rol (EGS)
+	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String idPadre, String cdGarant, String cdSisrol) throws Exception; // se agrega parï¿½metro cdSisrol para considerar restricciones por rol (EGS)
 	
 	public List<GenericVO> obtieneAtributosRol(String cdAtribu, String cdTipSit ,String cdRamo, String valAnt, String cdRol) throws Exception;
 	
@@ -232,7 +232,7 @@ public interface CatalogosManager {
     
     public List<GenericVO> recuperarTipsitPorRamoPorTipogrupo(String cdramo, String tipogrupo) throws Exception;
     
-    public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception;
+    public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, String vigente) throws Exception;
     
     public List<GenericVO> recuperarMotivosRechazo (String ntramite) throws Exception;
     

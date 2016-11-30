@@ -1155,9 +1155,12 @@ Ext.onReady(function()
                                                             params : {
                                                                 'params.cdramo'   : json.params.CDRAMO,
                                                                 'params.cdtipsit' : json.params.CDTIPSIT,
+                                                                'params.vigente'  : '*'
+                                                                /* JTEZVA 30 NOV 2016 RAFA PIDE MOSTRAR TODOS
                                                                 'params.vigente'  : json.params.STATUSPOL === 'VIGENTE'
                                                                     ? 'S'
                                                                     : 'N'
+                                                                */
                                                             }
                                                         });
 	                                                }
