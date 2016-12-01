@@ -72,6 +72,15 @@ var _URL_EXISTE_COBERTURA				= '<s:url namespace="/siniestros" 	action="consulta
 var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	action="consultaInfCausaSiniestroProducto" />';
 var _URL_VALIDA_COBASEGURADOS			= '<s:url namespace="/siniestros" 	action="validaLimiteCoberturaAsegurados"/>';
 var _URL_VALIDA_IMPASEGURADOSINIESTRO	= '<s:url namespace="/siniestros" 	action="validaImporteTramiteAsegurados"/>';
+var _0_urlRutaReporte                   = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser                = '<s:text name="pass.servidor.reports" />';
+var _0_reporteContraRecibo              = '<s:text name="rdf.siniestro.contrarecibo.nombre" />';
+
+var _0_reporteRechazoReembolso          = '<s:text name="rdf.siniestro.cartarechazo.reembolso.nombre"/>';
+var _0_reporteRechazoDirecto            = '<s:text name="rdf.siniestro.cartarechazo.pagodirecto.nombre" />';
+
+var _0_urlEnviarCorreo                  = '<s:url namespace="/general"         action="enviaCorreo"/>';
+
 var windowLoader;
 var msgWindow;
 
@@ -280,6 +289,224 @@ var msgWindow;
 			}
 		});
 	}
+	
+	
+    function enviarCorreoContraRecibo(grid,rowIndex,colIndex){
+        var record = grid.getStore().getAt(rowIndex);
+        Ext.create('Ext.window.Window',
+        {
+            title : 'Enviar Contra-Recibo'
+            ,width : 550
+            ,modal : true
+            ,height : 150
+            ,buttonAlign : 'center'
+            ,bodyPadding : 5
+            ,items :
+            [
+                {
+                    xtype       : 'textfield'
+                    ,id         : '_0_idInputCorreos'
+                    ,fieldLabel : 'Correo(s)'
+                    ,emptyText  : 'Correo(s) separados por ;'
+                    ,labelWidth : 100
+                    ,allowBlank : false
+                    ,blankText  : 'Introducir correo(s) separados por ;'
+                    ,width      : 500
+                }
+            ]
+            ,buttons :
+            [
+                {
+                    text : 'Enviar'
+                    ,icon : _CONTEXT+'/resources/fam3icons/icons/accept.png'
+                    ,handler : function()
+                    {
+                        var me = this;
+                        if (Ext.getCmp('_0_idInputCorreos').getValue().length > 0
+                                &&Ext.getCmp('_0_idInputCorreos').getValue() != 'Correo(s) separados por ;')
+                        {
+                            me.up().up().setLoading(true);
+                            Ext.Ajax.request(
+                            {
+                                url : _0_urlEnviarCorreo
+                                ,params :
+                                {
+                                    to : Ext.getCmp('_0_idInputCorreos').getValue(),
+                                    urlArchivo : _0_urlRutaReporte
+                                                 + '?p_usuario='      + "rherdez"
+                                                 + "&p_TRAMITE="      + record.get('ntramite')
+                                                 + '&destype=cache'
+                                                 + "&desformat=PDF"
+                                                 + "&userid="         + _0_reportsServerUser
+                                                 + "&ACCESSIBLE=YES"
+                                                 + "&report="         + _0_reporteContraRecibo
+                                                 + "&paramform=no",
+                                    nombreArchivo : 'Contrarecibo_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf',
+                                    asunto:'Contra-Recibo',
+                                    mensaje :'Estimado(a) cliente,anexamos a este e-mail el contrarecibo de su(s) factura(s)  y nos ponemos a sus apreciables órdenes.'
+                                },
+                                callback : function(options,success,response)
+                                {
+                                    me.up().up().setLoading(false);
+                                    if (success)
+                                    {
+                                        var json = Ext.decode(response.responseText);
+                                        if (json.success == true)
+                                        {
+                                            me.up().up().destroy();
+                                            Ext.Msg.show(
+                                            {
+                                                title : 'Correo enviado'
+                                                ,msg : 'El correo ha sido enviado'
+                                                ,buttons : Ext.Msg.OK
+                                            });
+                                        }
+                                        else
+                                        {
+                                            mensajeError('Error al enviar');
+                                        }
+                                    }
+                                    else
+                                    {
+                                        errorComunicacion();
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
+                            mensajeWarning('Introduzca al menos un correo');
+                        }
+                    }
+                }
+                ,
+                {
+                    text     : 'Cancelar'
+                    ,icon    : _CONTEXT+'/resources/fam3icons/icons/cancel.png'
+                    ,handler : function()
+                    {
+                        this.up().up().destroy();
+                    }
+                }
+            ]
+        }).show();
+        Ext.getCmp('_0_idInputCorreos').focus();
+    }
+    
+    function enviarCartaRechazoReclamo(grid,rowIndex,colIndex){
+        var record = grid.getStore().getAt(rowIndex);
+        if(record.get('status') != _STATUS_TRAMITE_RECHAZADO){
+            mensajeWarning('Este tr&aacute;mite no se encuentra rechazado!');
+            return;
+        }
+        
+        Ext.create('Ext.window.Window',
+        {
+            title : 'Enviar Carta Rechazo Contra-Recibo'
+            ,width : 550
+            ,modal : true
+            ,height : 150
+            ,buttonAlign : 'center'
+            ,bodyPadding : 5
+            ,items :
+            [
+                {
+                    xtype       : 'textfield'
+                    ,id         : '_0_idInputCorreos'
+                    ,fieldLabel : 'Correo(s)'
+                    ,emptyText  : 'Correo(s) separados por ;'
+                    ,labelWidth : 100
+                    ,allowBlank : false
+                    ,blankText  : 'Introducir correo(s) separados por ;'
+                    ,width      : 500
+                }
+            ]
+            ,buttons :
+            [
+                {
+                    text : 'Enviar'
+                    ,icon : _CONTEXT+'/resources/fam3icons/icons/accept.png'
+                    ,handler : function()
+                    {
+                        var me = this;
+                        var nombreRDF = null;
+                        if (Ext.getCmp('_0_idInputCorreos').getValue().length > 0
+                                &&Ext.getCmp('_0_idInputCorreos').getValue() != 'Correo(s) separados por ;')
+                        {
+                            me.up().up().setLoading(true);
+                            
+                            if(record.get('parametros.pv_otvalor02') =="1"){
+                            	nombreRDF =_0_reporteRechazoDirecto;
+                            }else{
+                            	nombreRDF =_0_reporteRechazoReembolso;
+                            }
+                            
+                            Ext.Ajax.request(
+                            {
+                                url : _0_urlEnviarCorreo
+                                ,params :
+                                {
+                                    to : Ext.getCmp('_0_idInputCorreos').getValue(),
+                                    urlArchivo : _0_urlRutaReporte
+                                                 + '?p_usuario='      + "rherdez"
+                                                 + "&p_ntramite="      + record.get('ntramite')
+                                                 + '&destype=cache'
+                                                 + "&desformat=PDF"
+                                                 + "&userid="         + _0_reportsServerUser
+                                                 + "&ACCESSIBLE=YES"
+                                                 + "&report="         + nombreRDF
+                                                 + "&paramform=no",
+                                    nombreArchivo : 'Rechazo_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf',
+                                    asunto:'Rechazo Contra-Recibo',
+                                    mensaje :'Estimado(a) cliente,anexamos a este e-mail el rechazo del contrarecibo de su(s) factura(s)  y nos ponemos a sus apreciables órdenes.'
+                                },
+                                callback : function(options,success,response)
+                                {
+                                    me.up().up().setLoading(false);
+                                    if (success)
+                                    {
+                                        var json = Ext.decode(response.responseText);
+                                        if (json.success == true)
+                                        {
+                                            me.up().up().destroy();
+                                            Ext.Msg.show(
+                                            {
+                                                title : 'Correo enviado'
+                                                ,msg : 'El correo ha sido enviado'
+                                                ,buttons : Ext.Msg.OK
+                                            });
+                                        }
+                                        else
+                                        {
+                                            mensajeError('Error al enviar');
+                                        }
+                                    }
+                                    else
+                                    {
+                                        errorComunicacion();
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
+                            mensajeWarning('Introduzca al menos un correo');
+                        }
+                    }
+                }
+                ,
+                {
+                    text     : 'Cancelar'
+                    ,icon    : _CONTEXT+'/resources/fam3icons/icons/cancel.png'
+                    ,handler : function()
+                    {
+                        this.up().up().destroy();
+                    }
+                }
+            ]
+        }).show();
+        Ext.getCmp('_0_idInputCorreos').focus();
+    }
 	
 	function turnarAreclamaciones(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);

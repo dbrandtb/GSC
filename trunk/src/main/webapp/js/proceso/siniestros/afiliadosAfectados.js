@@ -105,6 +105,7 @@ Ext.onReady(function() {
 				,icon    : _CONTEXT+'/resources/fam3icons/icons/folder_table.png'
 				,handler : _11_revDocumentosWindow
 				,hidden  : _11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO
+				,hidden  : true
 			},
 			{
 				text     : 'Rechazar Tr&aacute;mite'

@@ -923,10 +923,12 @@ Ext.onReady(function() {
                 panelRechazarReclamaciones.down('[name=smap1.comments]').setValue('');
                 storeIncisosRechazos.removeAll();
                 storeIncisosRechazos.load({
-                    params: {
-                        'params.pv_cdmotivo_i' : records[0].get('key')
-                    }
-                });
+                     params: {
+                        'params.pv_cdmotivo_i' : records[0].get('key'),
+                        'params.pv_cdramo_i'   : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+                        'params.pv_cdtipsit_i' : panelInicialPral.down('combo[name=pv_cdtipsit_i]').getValue()
+                     }
+                 });
             }
         }
     });
@@ -2058,322 +2060,345 @@ Ext.onReady(function() {
             }
         ],
         buttonAlign:'center',
-        buttons: [{
-            id:'botonCotizar',
-            icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
-            text: 'Guardar cambios',
-            handler: function() {
-                var form = this.up('form').getForm();
-                
-                if (form.isValid()){
-                    retornaMC = "1";
-                    guardarInformacionAdicional();
-                }
-                else{
-                    Ext.Msg.show({
-                        title:'Datos incompletos',
-                        msg: 'Favor de introducir todos los campos requeridos',
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.Msg.WARNING
-                    });
-                }
-            }
-        },
-        {
-            text:'Checklist',
-            icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/application_view_list.png',
-            handler:function()
-            {
-                verificarFacturaAsegurado(); //Cheklist
-                windowLoader = Ext.create('Ext.window.Window',{
-                    modal       : true,
-                    buttonAlign : 'center',
-                    width       : 600,
-                    height      : 400,
-                    autoScroll  : true,
-                    loader      : {
-                        url     : _UrlRevisionDocsSiniestro,
-                        params  : {
-                            'params.nmTramite'  : panelInicialPral.down('[name=idNumTramite]').getValue(),
-                            'params.cdTipoPago' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
-                            'params.cdTipoAtencion'  : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
-                            'params.tieneCR'  : !Ext.isEmpty(null)
-                        },
-                        scripts  : true,
-                        loadMask : true,
-                        autoLoad : true,
-                        ajaxOptions: {
-                            method: 'POST'
-                        }
-                    }
-                }).show();
-                centrarVentana(windowLoader);
-            }
-        },
-        {
-            text:'Generar Contra-Recibo',
-            icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/page_white_edit.png',
-            handler:function()
-            {
-                verificarFacturaAsegurado(); //Contra-Recibo
-                Ext.Ajax.request({
-                    url: _UrlGenerarContrarecibo,
-                    params: {
-                        'paramsO.pv_cdunieco_i' : panelInicialPral.down('combo[name=cmbOficReceptora]').getValue(),
-                        'paramsO.pv_cdramo_i'   : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
-                        'paramsO.pv_estado_i'   : panelInicialPral.down('[name="estado"]').getValue(),
-                        'paramsO.pv_nmpoliza_i' : panelInicialPral.down('[name="polizaAfectada"]').getValue(),
-                        'paramsO.pv_nmsuplem_i' : panelInicialPral.down('[name="idNmsuplem"]').getValue(),
-                        'paramsO.pv_ntramite_i' : panelInicialPral.down('[name="idNumTramite"]').getValue(),
-                        'paramsO.pv_nmsolici_i' : panelInicialPral.down('[name="idNmsolici"]').getValue(),
-                        'paramsO.pv_cdtippag_i' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
-                        'paramsO.pv_cdtipate_i' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
-                        'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
-                        'paramsO.pv_pagoAut_i'  : "0" //pago Normal 
-                    },
-                    success: function(response, opt) {
-                        var jsonRes=Ext.decode(response.responseText);
-                        if(jsonRes.success == true){
-                            //loadMcdinStore();
-                            var numRand=Math.floor((Math.random()*100000)+1);
-                            var windowVerDocu=Ext.create('Ext.window.Window',
-                            {
-                                title          : 'Contrarecibo de Documentos del Siniestro'
-                                ,width         : 700
-                                ,height        : 500
-                                ,collapsible   : true
-                                ,titleCollapse : true
-                                ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-                                                    +'src="'+panDocUrlViewDoc+'?subfolder=' + panelInicialPral.down('[name="idNumTramite"]').getValue() + '&filename=' + 'Contra_Recibo_Siniestro.pdf' +'">'
-                                                    +'</iframe>'
-                                ,listeners     :
-                                {
-                                    resize : function(win,width,height,opt){
-                                        $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-                                    }
-                                }
-                            }).show();
-                            windowVerDocu.center();
-                        }else {
-                                mensajeError(jsonRes.msgResult);
-                        }
-                    },
-                    failure: function(){
-                        mensajeError('No se pudo generar contrarecibo.');
-                    }
-                });
-            }
-        },
-        {
-            text:'Subir Documentos',
-            icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/folder_go.png',
-            handler:function()
-            {
-                verificarFacturaAsegurado(); //Subir Documento
-                windowLoader = Ext.create('Ext.window.Window',{
-                    modal       : true,
-                    buttonAlign : 'center',
-                    title       : 'Documentos del siniestro',
-                    width       : 600,
-                    height      : 400,
-                    autoScroll  : true,
-                    cls         : 'VENTANA_DOCUMENTOS_CLASS',
-                    loader      : {
-                        url     : _UrlDocumentosPoliza,
-                        params  : {
-                            'smap1.ntramite'  : panelInicialPral.down('[name=idNumTramite]').getValue()
-                            ,'smap1.cdtippag' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
-                            ,'smap1.cdtipate' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue()
-                            ,'smap1.cdtiptra' : _TIPO_TRAMITE_SINIESTRO
-                            ,'smap1.cdunieco' : null
-                            ,'smap1.cdramo'   : panelInicialPral.down('combo[name=cmbRamos]').getValue()
-                            ,'smap1.estado'   : null
-                            ,'smap1.nmpoliza' : null
-                            ,'smap1.nmsuplem' : '0'
-                            ,'smap1.nmsolici' : ''
-                            ,'smap1.tipomov'  : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
-                        },
-                        scripts  : true,
-                        loadMask : true,
-                        autoLoad : true,
-                        ajaxOptions: {
-                            method: 'POST'
-                        }
-                    }
-                }).show();
-                centrarVentana(windowLoader);
-            }
-        },
-        {
-            text:'Turnar ',
-            icon:_CONTEXT+'/resources/fam3icons/icons/group_go.png',
-            handler:function()
-            {
-                verificarFacturaAsegurado(); //Turnar
-                turnarAreclamaciones();
-            }
-        },
-        {
-            text:'Rechazar Tr&aacute;mite',
-            icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-            handler:function()
-            {
-                verificarFacturaAsegurado(); //Rechazar tramite
-                panelRechazarReclamaciones= Ext.create('Ext.form.Panel', {
-                    id: 'panelRechazarReclamaciones',
-                    width: 650,
-                    url: _URL_ActualizaStatusTramite,
-                    bodyPadding: 5,
-                    items: [
-                        motivoRechazo,incisosRechazo,textoRechazo,{
-                            xtype       : 'radiogroup'
-                            ,fieldLabel : 'Mostrar al agente'
-                            ,columns    : 2
-                            ,width      : 250
-                            ,style      : 'margin:5px;'
-                            ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
-                            ,items      :
-                            [
-                                {
-                                    boxLabel    : 'Si'
-                                    ,itemId     : 'SWAGENTE2'
-                                    ,name       : 'SWAGENTE2'
-                                    ,inputValue : 'S'
-                                    ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
-                                }
-                                ,{
-                                    boxLabel    : 'No'
-                                    ,name       : 'SWAGENTE2'
-                                    ,inputValue : 'N'
-                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
-                                }
-                            ]
-                        }
-                    ],
-                    buttonAlign:'center',
-                    buttons: [{
-                        text: 'Rechazar'
-                        ,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
-                        ,buttonAlign : 'center',
+        buttons:[{
+                xtype :'panel',
+                defaults : { style : 'margin:5px' },
+                border   : 0,
+                width    : 750,
+                ui       :'footer',
+                items    : [
+                    {
+                        id:'botonCotizar',
+                        icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+                        xtype   : 'button',
+                        text: 'Guardar cambios',
                         handler: function() {
-                            if (panelRechazarReclamaciones.form.isValid()) {
-                                panelRechazarReclamaciones.form.submit({
-                                    waitMsg:'Procesando...',
-                                    params: {
-                                        'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(), 
-                                        'smap1.status'   : _RECHAZADO
-                                        ,'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
-                                    },
-                                    failure: function(form, action) {
-                                        Ext.Msg.show({
-                                            title: 'ERROR',
-                                            msg: 'Error al Rechazar.',
-                                            buttons: Ext.Msg.OK,
-                                            icon: Ext.Msg.ERROR
-                                        });
-                                    },
-                                    success: function(form, action) {
-                                        var respuesta = Ext.decode(action.response.responseText);
-                                        if(respuesta.success==true){
-                                            windowLoader.close();
-                                            /*Se cierra y se tiene que mandar a la  MC*/
-                                            Ext.Ajax.request({
-                                                url: _UrlGeneraCartaRechazo,
-                                                params: {
-                                                    'paramsO.pv_cdunieco_i' : null,
-                                                    'paramsO.pv_cdramo_i'   : null,
-                                                    'paramsO.pv_estado_i'   : null,
-                                                    'paramsO.pv_nmpoliza_i' : null,
-                                                    'paramsO.pv_nmsuplem_i' : null,
-                                                    'paramsO.pv_nmsolici_i' : null,
-                                                    'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
-                                                    'paramsO.pv_ntramite_i' : panelInicialPral.down('[name=idNumTramite]').getValue(),
-                                                    'paramsO.tipopago' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
-                                                },
-                                                success: function(response, opt) {
-                                                    var jsonRes=Ext.decode(response.responseText);
-                                                    if(jsonRes.success == true){    
-                                                        var numRand=Math.floor((Math.random()*100000)+1);
-                                                        var windowVerDocu=Ext.create('Ext.window.Window',
-                                                        {
-                                                            title          : 'Carta de Rechazo del Siniestro'
-                                                            ,width         : 700
-                                                            ,height        : 500
-                                                            ,collapsible   : true
-                                                            ,titleCollapse : true
-                                                            ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-                                                                                +'src="'+panDocUrlViewDoc+'?subfolder=' + panelInicialPral.down('[name=idNumTramite]').getValue() + '&filename=' + nombreReporteRechazo +'">'
-                                                                                +'</iframe>'
-                                                            ,listeners     :
-                                                            {
-                                                                resize : function(win,width,height,opt){
-                                                                    $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-                                                                }
-                                                            }
-                                                        });
-                                                    }else {
-                                                        mensajeError('Error al generar la carta de rechazo.');
-                                                    }
-                                                },
-                                                failure: function(){
-                                                    mensajeError('Error al generar la carta de rechazo.');
-                                                }
-                                            });
-                                            mensajeCorrecto('&Eacute;XITO','Se ha rechazado correctamente.',function(){
-                                                windowLoader.close();
-                                                Ext.create('Ext.form.Panel').submit(
-                                                {
-                                                    url     : _p12_urlMesaControl
-                                                    ,standardSubmit : true
-                                                    ,params         :
-                                                    {
-                                                        'smap1.gridTitle'      : 'Siniestros en espera'
-                                                        ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
-                                                    }
-                                                });
-                                            });
-                                            
-                                        }else {
-                                            Ext.Msg.show({
-                                                title: 'ERROR',
-                                                msg: 'Error al Rechazar.',
-                                                buttons: Ext.Msg.OK,
-                                                icon: Ext.Msg.ERROR
-                                            });
-                                        }
-                                    }
-                                });
-                            } else {
+                            var form = this.up('form').getForm();
+                            
+                            if (form.isValid()){
+                                retornaMC = "1";
+                                guardarInformacionAdicional();
+                            }
+                            else{
                                 Ext.Msg.show({
-                                    title: 'Aviso',
-                                    msg: 'Complete la informaci&oacute;n requerida',
+                                    title:'Datos incompletos',
+                                    msg: 'Favor de introducir todos los campos requeridos',
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.Msg.WARNING
                                 });
                             }
                         }
                     },{
-                        text: 'Cancelar',
-                        icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-                        buttonAlign : 'center',
-                        handler: function() {
-                            windowLoader.close();
+                        text:'Checklist',
+                        icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/application_view_list.png',
+                        xtype   : 'button',
+                        handler:function()
+                        {
+                            verificarFacturaAsegurado(); //Cheklist
+                            windowLoader = Ext.create('Ext.window.Window',{
+                                modal       : true,
+                                buttonAlign : 'center',
+                                width       : 600,
+                                height      : 400,
+                                autoScroll  : true,
+                                loader      : {
+                                    url     : _UrlRevisionDocsSiniestro,
+                                    params  : {
+                                        'params.nmTramite'  : panelInicialPral.down('[name=idNumTramite]').getValue(),
+                                        'params.cdTipoPago' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+                                        'params.cdTipoAtencion'  : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
+                                        'params.tieneCR'  : !Ext.isEmpty(null)
+                                    },
+                                    scripts  : true,
+                                    loadMask : true,
+                                    autoLoad : true,
+                                    ajaxOptions: {
+                                        method: 'POST'
+                                    }
+                                }
+                            }).show();
+                            centrarVentana(windowLoader);
+                        }
+                    },
+                    {
+                        text:'Generar Contra-Recibo',
+                        xtype   : 'button',
+                        icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/page_white_edit.png',
+                        handler:function()
+                        {
+                            verificarFacturaAsegurado(); //Contra-Recibo
+                            Ext.Ajax.request({
+                                url: _UrlGenerarContrarecibo,
+                                params: {
+                                    'paramsO.pv_cdunieco_i' : panelInicialPral.down('combo[name=cmbOficReceptora]').getValue(),
+                                    'paramsO.pv_cdramo_i'   : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+                                    'paramsO.pv_estado_i'   : panelInicialPral.down('[name="estado"]').getValue(),
+                                    'paramsO.pv_nmpoliza_i' : panelInicialPral.down('[name="polizaAfectada"]').getValue(),
+                                    'paramsO.pv_nmsuplem_i' : panelInicialPral.down('[name="idNmsuplem"]').getValue(),
+                                    'paramsO.pv_ntramite_i' : panelInicialPral.down('[name="idNumTramite"]').getValue(),
+                                    'paramsO.pv_nmsolici_i' : panelInicialPral.down('[name="idNmsolici"]').getValue(),
+                                    'paramsO.pv_cdtippag_i' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+                                    'paramsO.pv_cdtipate_i' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
+                                    'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+                                    'paramsO.pv_pagoAut_i'  : "0" //pago Normal 
+                                },
+                                success: function(response, opt) {
+                                    var jsonRes=Ext.decode(response.responseText);
+                                    if(jsonRes.success == true){
+                                        //loadMcdinStore();
+                                        var numRand=Math.floor((Math.random()*100000)+1);
+                                        var windowVerDocu=Ext.create('Ext.window.Window',
+                                        {
+                                            title          : 'Contrarecibo de Documentos del Siniestro'
+                                            ,width         : 700
+                                            ,height        : 500
+                                            ,collapsible   : true
+                                            ,titleCollapse : true
+                                            ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+                                                                +'src="'+panDocUrlViewDoc+'?subfolder=' + panelInicialPral.down('[name="idNumTramite"]').getValue() + '&filename=' + 'Contra_Recibo_Siniestro.pdf' +'">'
+                                                                +'</iframe>'
+                                            ,listeners     :
+                                            {
+                                                resize : function(win,width,height,opt){
+                                                    $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+                                                }
+                                            }
+                                        }).show();
+                                        windowVerDocu.center();
+                                    }else {
+                                            mensajeError(jsonRes.msgResult);
+                                    }
+                                },
+                                failure: function(){
+                                    mensajeError('No se pudo generar contrarecibo.');
+                                }
+                            });
+                        }
+                    },
+                    {
+                        text:'Enviar Contra-Recibo',
+                        icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_edit.png',
+                        xtype   : 'button',
+                        handler:function()
+                        {
+                            _0_mail();
+                        }
+                    },
+                    {
+                        text:'Subir Documentos',
+                        icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/folder_go.png',
+                        xtype   : 'button',
+                        handler:function()
+                        {
+                            verificarFacturaAsegurado(); //Subir Documento
+                            windowLoader = Ext.create('Ext.window.Window',{
+                                modal       : true,
+                                buttonAlign : 'center',
+                                title       : 'Documentos del siniestro',
+                                width       : 600,
+                                height      : 400,
+                                autoScroll  : true,
+                                cls         : 'VENTANA_DOCUMENTOS_CLASS',
+                                loader      : {
+                                    url     : _UrlDocumentosPoliza,
+                                    params  : {
+                                        'smap1.ntramite'  : panelInicialPral.down('[name=idNumTramite]').getValue()
+                                        ,'smap1.cdtippag' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+                                        ,'smap1.cdtipate' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue()
+                                        ,'smap1.cdtiptra' : _TIPO_TRAMITE_SINIESTRO
+                                        ,'smap1.cdunieco' : null
+                                        ,'smap1.cdramo'   : panelInicialPral.down('combo[name=cmbRamos]').getValue()
+                                        ,'smap1.estado'   : null
+                                        ,'smap1.nmpoliza' : null
+                                        ,'smap1.nmsuplem' : '0'
+                                        ,'smap1.nmsolici' : ''
+                                        ,'smap1.tipomov'  : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+                                    },
+                                    scripts  : true,
+                                    loadMask : true,
+                                    autoLoad : true,
+                                    ajaxOptions: {
+                                        method: 'POST'
+                                    }
+                                }
+                            }).show();
+                            centrarVentana(windowLoader);
+                        }
+                    },
+                    {
+                        text:'Turnar ',
+                        icon:_CONTEXT+'/resources/fam3icons/icons/group_go.png',
+                        xtype   : 'button',
+                        handler:function()
+                        {
+                            verificarFacturaAsegurado(); //Turnar
+                            turnarAreclamaciones();
+                        }
+                    },
+                    {
+                        text:'Rechazar Tr&aacute;mite',
+                        icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+                        xtype   : 'button',
+                        handler:function()
+                        {
+                            verificarFacturaAsegurado(); //Rechazar tramite
+                            panelRechazarReclamaciones= Ext.create('Ext.form.Panel', {
+                                id: 'panelRechazarReclamaciones',
+                                width: 650,
+                                url: _URL_ActualizaStatusTramite,
+                                bodyPadding: 5,
+                                items: [
+                                    motivoRechazo,incisosRechazo,textoRechazo,{
+                                        xtype       : 'radiogroup'
+                                        ,fieldLabel : 'Mostrar al agente'
+                                        ,columns    : 2
+                                        ,width      : 250
+                                        ,style      : 'margin:5px;'
+                                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
+                                        ,items      :
+                                        [
+                                            {
+                                                boxLabel    : 'Si'
+                                                ,itemId     : 'SWAGENTE2'
+                                                ,name       : 'SWAGENTE2'
+                                                ,inputValue : 'S'
+                                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
+                                            }
+                                            ,{
+                                                boxLabel    : 'No'
+                                                ,name       : 'SWAGENTE2'
+                                                ,inputValue : 'N'
+                                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                            }
+                                        ]
+                                    }
+                                ],
+                                buttonAlign:'center',
+                                buttons: [{
+                                    text: 'Rechazar'
+                                    ,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+                                    ,buttonAlign : 'center',
+                                    handler: function() {
+                                        if (panelRechazarReclamaciones.form.isValid()) {
+                                            panelRechazarReclamaciones.form.submit({
+                                                waitMsg:'Procesando...',
+                                                params: {
+                                                    'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(), 
+                                                    'smap1.status'   : _RECHAZADO
+                                                    ,'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
+                                                },
+                                                failure: function(form, action) {
+                                                    Ext.Msg.show({
+                                                        title: 'ERROR',
+                                                        msg: 'Error al Rechazar.',
+                                                        buttons: Ext.Msg.OK,
+                                                        icon: Ext.Msg.ERROR
+                                                    });
+                                                },
+                                                success: function(form, action) {
+                                                    var respuesta = Ext.decode(action.response.responseText);
+                                                    if(respuesta.success==true){
+                                                        windowLoader.close();
+                                                        /*Se cierra y se tiene que mandar a la  MC*/
+                                                        Ext.Ajax.request({
+                                                            url: _UrlGeneraCartaRechazo,
+                                                            params: {
+                                                                'paramsO.pv_cdunieco_i' : null,
+                                                                'paramsO.pv_cdramo_i'   : null,
+                                                                'paramsO.pv_estado_i'   : null,
+                                                                'paramsO.pv_nmpoliza_i' : null,
+                                                                'paramsO.pv_nmsuplem_i' : null,
+                                                                'paramsO.pv_nmsolici_i' : null,
+                                                                'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
+                                                                'paramsO.pv_ntramite_i' : panelInicialPral.down('[name=idNumTramite]').getValue(),
+                                                                'paramsO.tipopago' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue()
+                                                            },
+                                                            success: function(response, opt) {
+                                                                var jsonRes=Ext.decode(response.responseText);
+                                                                if(jsonRes.success == true){    
+                                                                    var numRand=Math.floor((Math.random()*100000)+1);
+                                                                    var windowVerDocu=Ext.create('Ext.window.Window',
+                                                                    {
+                                                                        title          : 'Carta de Rechazo del Siniestro'
+                                                                        ,width         : 700
+                                                                        ,height        : 500
+                                                                        ,collapsible   : true
+                                                                        ,titleCollapse : true
+                                                                        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+                                                                                            +'src="'+panDocUrlViewDoc+'?subfolder=' + panelInicialPral.down('[name=idNumTramite]').getValue() + '&filename=' + nombreReporteRechazo +'">'
+                                                                                            +'</iframe>'
+                                                                        ,listeners     :
+                                                                        {
+                                                                            resize : function(win,width,height,opt){
+                                                                                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }else {
+                                                                    mensajeError('Error al generar la carta de rechazo.');
+                                                                }
+                                                            },
+                                                            failure: function(){
+                                                                mensajeError('Error al generar la carta de rechazo.');
+                                                            }
+                                                        });
+                                                        mensajeCorrecto('&Eacute;XITO','Se ha rechazado correctamente.',function(){
+                                                            windowLoader.close();
+                                                            Ext.create('Ext.form.Panel').submit(
+                                                            {
+                                                                url     : _p12_urlMesaControl
+                                                                ,standardSubmit : true
+                                                                ,params         :
+                                                                {
+                                                                    'smap1.gridTitle'      : 'Siniestros en espera'
+                                                                    ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
+                                                                }
+                                                            });
+                                                        });
+                                                        
+                                                    }else {
+                                                        Ext.Msg.show({
+                                                            title: 'ERROR',
+                                                            msg: 'Error al Rechazar.',
+                                                            buttons: Ext.Msg.OK,
+                                                            icon: Ext.Msg.ERROR
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            Ext.Msg.show({
+                                                title: 'Aviso',
+                                                msg: 'Complete la informaci&oacute;n requerida',
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.WARNING
+                                            });
+                                        }
+                                    }
+                                },{
+                                    text: 'Cancelar',
+                                    icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+                                    buttonAlign : 'center',
+                                    handler: function() {
+                                        windowLoader.close();
+                                    }
+                                }
+                                ]
+                            });
+                            windowLoader = Ext.create('Ext.window.Window',
+                            {
+                                title           : 'Rechazar Tr&aacute;mite'
+                                ,modal          : true
+                                ,buttonAlign    : 'center'
+                                ,items          :
+                                [
+                                    panelRechazarReclamaciones
+                                ]
+                            }).show();
+                            centrarVentana(windowLoader);
                         }
                     }
-                    ]
-                });
-                windowLoader = Ext.create('Ext.window.Window',
-                {
-                    title           : 'Rechazar Tr&aacute;mite'
-                    ,modal          : true
-                    ,buttonAlign    : 'center'
-                    ,items          :
-                    [
-                        panelRechazarReclamaciones
-                    ]
-                }).show();
-                centrarVentana(windowLoader);
-            }
+                ]
         }]
     });
 
@@ -3442,6 +3467,110 @@ Ext.onReady(function() {
             }
         }
     }
+    
+    function _0_mail()
+    {
+        Ext.create('Ext.window.Window',
+        {
+            title : 'Enviar Contra-Recibo'
+            ,width : 550
+            ,modal : true
+            ,height : 150
+            ,buttonAlign : 'center'
+            ,bodyPadding : 5
+            ,items :
+            [
+                {
+                    xtype       : 'textfield'
+                    ,id         : '_0_idInputCorreos'
+                    ,fieldLabel : 'Correo(s)'
+                    ,emptyText  : 'Correo(s) separados por ;'
+                    ,labelWidth : 100
+                    ,allowBlank : false
+                    ,blankText  : 'Introducir correo(s) separados por ;'
+                    ,width      : 500
+                }
+            ]
+            ,buttons :
+            [
+                {
+                    text : 'Enviar'
+                    ,icon : _CONTEXT+'/resources/fam3icons/icons/accept.png'
+                    ,handler : function()
+                    {
+                        var me = this;
+                        if (Ext.getCmp('_0_idInputCorreos').getValue().length > 0
+                                &&Ext.getCmp('_0_idInputCorreos').getValue() != 'Correo(s) separados por ;')
+                        {
+                            debug('Se va a enviar cotizacion');
+                            me.up().up().setLoading(true);
+                            Ext.Ajax.request(
+                            {
+                                url : _0_urlEnviarCorreo
+                                ,params :
+                                {
+                                    to : Ext.getCmp('_0_idInputCorreos').getValue(),
+                                    urlArchivo : _0_urlRutaReporte
+                                                 + '?p_usuario='      + "rherdez"
+                                                 + "&p_TRAMITE=" + panelInicialPral.down('[name=idNumTramite]').getValue()
+                                                 + '&destype=cache'
+                                                 + "&desformat=PDF"
+                                                 + "&userid="        + _0_reportsServerUser
+                                                 + "&ACCESSIBLE=YES"
+                                                 + "&report="        + _0_reporteContraRecibo
+                                                 + "&paramform=no",
+                                    nombreArchivo : 'Contrarecibo_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf',
+                                    asunto:'Contra-Recibo',
+                                    mensaje :'Estimado(a) cliente,anexamos a este e-mail el contrarecibo de su(s) factura(s)  y nos ponemos a sus apreciables órdenes.'
+                                },
+                                callback : function(options,success,response)
+                                {
+                                    me.up().up().setLoading(false);
+                                    if (success)
+                                    {
+                                        var json = Ext.decode(response.responseText);
+                                        if (json.success == true)
+                                        {
+                                            me.up().up().destroy();
+                                            Ext.Msg.show(
+                                            {
+                                                title : 'Correo enviado'
+                                                ,msg : 'El correo ha sido enviado'
+                                                ,buttons : Ext.Msg.OK
+                                            });
+                                        }
+                                        else
+                                        {
+                                            mensajeError('Error al enviar');
+                                        }
+                                    }
+                                    else
+                                    {
+                                        errorComunicacion();
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
+                            mensajeWarning('Introduzca al menos un correo');
+                        }
+                    }
+                }
+                ,
+                {
+                    text     : 'Cancelar'
+                    ,icon    : _CONTEXT+'/resources/fam3icons/icons/cancel.png'
+                    ,handler : function()
+                    {
+                        this.up().up().destroy();
+                    }
+                }
+            ]
+        }).show();
+        Ext.getCmp('_0_idInputCorreos').focus();
+    }
+    
     
     function turnarAreclamaciones(){
         Ext.Ajax.request({
