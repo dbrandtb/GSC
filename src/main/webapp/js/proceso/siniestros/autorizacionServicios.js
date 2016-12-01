@@ -1501,7 +1501,7 @@ Ext.onReady(function() {
 			'Ext.form.*'
 		],
 		xtype: 'cell-editing',
-		title: 'Tabulaci&oacute;n tr&aacute;tamiento m&eacute;dico',
+		title: 'Tabulaci&oacute;n tratamiento m&eacute;dico',
 		frame: false,
 		initComponent: function(){
 			this.cellEditing = new Ext.grid.plugin.CellEditing({
@@ -1531,7 +1531,7 @@ Ext.onReady(function() {
 				},
 				tbar: [{
 					icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
-					text: 'Agregar tr&aacute;tamiento m&eacute;dico',
+					text: 'Agregar tratamiento m&eacute;dico',
 					scope: this,
 					handler: this.onAddClick
 				}]
@@ -2221,7 +2221,8 @@ Ext.onReady(function() {
 			tratamiento,				//22.- Tratamiento
 			//23.- Observaciones
 			{	colspan:2					,xtype : 'textareafield'				,fieldLabel : 'Observaciones'		,id       : 'observaciones'
-				,labelWidth	 : 170			,name  :'dsobserv'						,width      : 700					,height   : 70		 			
+				,labelWidth	 : 170			,name  :'dsobserv'						,width      : 700					,height   : 70
+				,value : ''                 ,hidden: true
 			},
 			//24.- Notas Internas
 			{	colspan:2					,xtype       : 'textareafield'			,fieldLabel : 'Notas internas'		,id       : 'notaInterna'
