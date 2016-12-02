@@ -958,4 +958,6 @@ public interface FlujoMesaControlDAO {
 	        String sworigenmesa,
 	        String cdrazrecha,
 	        String cdunidspch) throws Exception;
+	
+	public String recuperarCdatribuPorDsatribuTatriflumc (String cdtipflu, String cdflujomc, String dsatribu) throws Exception;
 }

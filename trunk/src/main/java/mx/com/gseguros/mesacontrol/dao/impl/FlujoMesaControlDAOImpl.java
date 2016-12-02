@@ -4113,4 +4113,28 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
             compile();
         }
     }
+    
+    @Override
+    public String recuperarCdatribuPorDsatribuTatriflumc (String cdtipflu, String cdflujomc, String dsatribu) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("cdtipflu"  , cdtipflu);
+        params.put("cdflujomc" , cdflujomc);
+        params.put("dsatribu"  , dsatribu);
+        Map<String, Object> procRes = ejecutaSP(new RecuperarCdatribuPorDsatribuTatriflumcSP(getDataSource()), params);
+        String cdatribu = (String) procRes.get("pv_cdatribu_o");
+        return cdatribu;
+    }
+    
+    protected class RecuperarCdatribuPorDsatribuTatriflumcSP extends StoredProcedure {
+        protected RecuperarCdatribuPorDsatribuTatriflumcSP (DataSource dataSource) {
+            super(dataSource,"P_MESA_GET_CDATRIBU_TATRIFLUMC");
+            declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("dsatribu"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdatribu_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
