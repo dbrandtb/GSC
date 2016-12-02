@@ -2070,10 +2070,42 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					cdtipend = consultasDAO.recuperarTtipsupl(cdtipsup).get("CDTIPEND");
 				}
 				
+				String ramoGS = null;
+				
+				// RECUPERAMOS EL RAMO DESDE UN OTVALOR SI EL FLUJO ES EXTERNO
+			    paso = "Recuperando tipos de flujo";
+			    logger.debug(paso);
+			    List<Map<String, String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc("PRINCIPAL", "1");
+			    Map<String, String> tipoFlujo = null;
+			    for (Map<String, String> ite : tiposFlujo) {
+			        if (cdtipflu.equals(ite.get("CDTIPFLU"))) {
+			            tipoFlujo = ite;
+			            break;
+			        }
+			    }
+			    if (tipoFlujo == null) {
+			        throw new ApplicationException("No se encuentra el tipo de flujo");
+			    }
+			    boolean externo = "S".equals(tipoFlujo.get("SWEXTERNO"));
+			    if (externo) {
+			        String cdatribu = flujoMesaControlDAO.recuperarCdatribuPorDsatribuTatriflumc(cdtipflu, cdflujomc, "RAMO");
+			        if (StringUtils.isNotBlank(cdatribu)) {
+			            String key = Utils.join("otvalor", StringUtils.leftPad(cdatribu, 2, "0"));
+			            String valor = valores.get(key);
+			            if (StringUtils.isNotBlank(valor)) {
+			                ramoGS = valor;
+			            }
+			        }
+			    }
+				
+				if (StringUtils.isBlank(ramoGS)) {
+				    ramoGS = consultasDAO.obtieneSubramoGS(cdramo, cdtipsit);
+				}
+				
 				if (!"B".equals(cdtipend)) {
 					autosSIGSDAO.validarAgenteParaNuevoTramite(
 						cdagente,
-						consultasDAO.obtieneSubramoGS(cdramo, cdtipsit),
+						ramoGS,
 						cdtipend
 					);
 				} else {
