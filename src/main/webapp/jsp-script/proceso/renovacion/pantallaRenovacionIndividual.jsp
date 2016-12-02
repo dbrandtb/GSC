@@ -142,7 +142,10 @@ itemsCalendarioColumns.push({
 
 Ext.onReady(function()
 {
-    Ext.Ajax.timeout = 15*60*1000;    
+    Ext.Ajax.timeout = 10*60*1000;
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
     ////// modelos //////
     Ext.define('_p25_modeloPoliza',
     {
@@ -348,129 +351,7 @@ Ext.onReady(function()
     								_p25_ventanaCambioFormaPago(this.up('window').resRenova);
     							}
     							else if(_fieldById('itemRadio').getValue()['topping'] == 2){
-    		                        if (_GLOBAL_CDSISROL == RolSistema.Agente){
-    		                            var callbackNormal = function (callback) {
-    		                                mensajeCorrecto(
-    		                                    'Tr\u00e1mite generado',
-    		                                    'Se ha generado el tr\u00e1mite ' + ntramite +
-    		                                        ', favor de revisar los requisitos y subir sus documentos antes de turnar a SUSCRIPCI\u00d3N',
-    		                                    callback
-    		                                );
-    		                            };
-    		                            var mask, ck = 'Recuperando lista de requisitos';
-    		                            try {
-    		                                ck = 'Recuperando validaci\u00f3n ligada a requisitos';
-    		                                mask = _maskLocal(ck);
-    		                                Ext.Ajax.request({
-    		                                    url     : _GLOBAL_URL_RECUPERACION,
-    		                                    params  : {
-    		                                        'params.consulta' : 'RECUPERAR_VALIDACION_POR_CDVALIDAFK',
-    		                                        'params.ntramite' : ntramite,
-    		                                        'params.clave'    : '_CONFREN'
-    		                                    },
-    		                                    success : function (response) {
-    		                                        mask.close();
-    		                                        var ck = 'Decodificando respuesta al recuperar validaci\u00f3n ligada a requisitos';
-    		                                        try {
-    		                                            var valida = Ext.decode(response.responseText);
-    		                                            debug('### validacion ligada a checklist:', valida);
-    		                                            if (valida.success === true) {
-    		                                                if (valida.list.length > 0) {
-    		                                                    _cargarAccionesEntidad(
-    		                                                        valida.list[0].CDTIPFLU,
-    		                                                        valida.list[0].CDFLUJOMC,
-    		                                                        valida.list[0].TIPOENT,
-    		                                                        valida.list[0].CDENTIDAD,
-    		                                                        valida.list[0].WEBID,
-    		                                                        function (acciones) {
-    		                                                            if (acciones.length > 0) {
-    		                                                                debug('acciones:', acciones);
-    		                                                                callbackNormal(function () {
-    		                                                                    _procesaAccion(
-    		                                                                        acciones[0].CDTIPFLU,
-    		                                                                        acciones[0].CDFLUJOMC,
-    		                                                                        acciones[0].TIPODEST,
-    		                                                                        acciones[0].CLAVEDEST,
-    		                                                                        acciones[0].WEBIDDEST,
-    		                                                                        acciones[0].AUX,
-    		                                                                        valida.params.ntramite,
-    		                                                                        valida.list[0].STATUS,
-    		                                                                        null, //cdunieco
-    		                                                                        null, //cdramo
-    		                                                                        null, //estado
-    		                                                                        null, //nmpoliza
-    		                                                                        null, //nmsituac
-    		                                                                        null, //nmsuplem
-    		                                                                        valida.list[0].cdusuari,
-    		                                                                        valida.list[0].cdsisrol,
-    		                                                                        null // callback
-    		                                                                    );
-    		                                                                });
-    		                                                            } else {
-    		                                                                callbackNormal();
-    		                                                            }
-    		                                                        }
-    		                                                    );
-    		                                                } else {
-    		                                                    callbackNormal();
-    		                                                }
-    		                                            } else {
-    		                                                mensajeError(json.message);
-    		                                            }
-    		                                        } catch (e) {
-    		                                            manejaException(e, ck);
-    		                                        }
-    		                                    },
-    		                                    failure : function () {
-    		                                        mask.close();
-    		                                        errorComunicacion(null, 'Error al recuperar validaci\u00f3n ligada a requisitos');
-    		                                    }
-    		                                });
-    		                            } catch (e) {
-    		                                manejaException(e, ck, mask);
-    		                                callbackNormal();
-    		                            }
-    		                        }
-    		                        else{  		                        
-	    		                        Ext.Ajax.request(
-			                                {
-			                                    url     : _GLOBAL_COMP_URL_TURNAR
-			                                    ,params : {
-			                                    	'params.NTRAMITE'  : ntramite,
-			                                    	'params.CDTIPFLU'  : this.up('window').resRenova['cdtipflu'],
-			                                    	'params.CDFLUJOMC' : this.up('window').resRenova['cdflujomc'],
-			                                    	'params.STATUSOLD' : this.up('window').resRenova['estadomc'],
-			                                		'params.STATUSNEW' : '43'
-			                                    }
-			                                    ,success : function(response)
-			                                    {
-			                                        _unmask();
-			                                        var ck = '';
-			                                        try
-			                                        {
-			                                            var json = Ext.decode(response.responseText);
-			                                            debug('### turnar:',json);
-			                                            if(json.success)
-			                                            {
-			                                            	_iceMesaControl(ntramite);		                                                
-			                                            }
-			                                            else
-			                                            {
-			                                                mensajeError(json.message);
-			                                            }
-			                                        }
-			                                        catch(e)
-			                                        {
-			                                            manejaException(e,ck);
-			                                        }
-			                                    }
-			                                    ,failure : function()
-			                                    {
-			                                        _unmask();
-			                                        errorComunicacion(null,'Error al turnar tr\u00e1mite');
-			                                    }
-			                                });
-    		                        }
+    							    turnar(ntramite);    		                        
     							}
     							else if(_fieldById('itemRadio').getValue()['topping'] == 3){
     							     debug('resRenova',this.up('window').resRenova);
@@ -2651,7 +2532,7 @@ function _p25_buscarClic(button,e)
     		callback :  function(records, op, success){
             	debug('entro a callback');
             	debug('op ',op);
-            	debug('records ',records);            	
+            	debug('records ',records);	
             	if(success){
             		_unmask();
             		var response = Ext.decode(op.response.responseText);
@@ -2670,7 +2551,7 @@ function _p25_buscarClic(button,e)
             	}
             	else{
             		_unmask();
-                	mensajeError(op.getError());
+            		errorComunicacion(null);
             	}
         	}
     	});    	
@@ -2756,7 +2637,7 @@ function _p25_renovarPolizaClic(button,e)
     else{
     	sePuedeRenovar = false;
     	if(pol['renovada'] == 'SI'){
-    	    mensaje = mensaje+'La p\u00F3liza ya est\u00E1 renovada '+pol['nmpolant']+'<br/>';
+    	    mensaje = mensaje+'La p\u00F3liza ya est\u00E1 renovada '+pol['nmpoliex']+'<br/>';
     	}
     	else{
     	    mensaje = mensaje+'La p\u00F3liza est\u00E1 en proceso de renovaci\u00F3n'+'<br/>';
@@ -3167,11 +3048,11 @@ function tarifaFinal(){
             	if(json.slist1.length > 0){
 			            datos = [];
 			            for(var i = 0; i < json.slist1.length; i++){
-			            	datos.push({
-			            	    AGRUPADOR : json.slist1[i]['parentesco'],
-			        			COBERTURA : json.slist1[i]['Nombre_garantia'],
-			        			PRIMA     : json.slist1[i]['Importe']
-			        		});
+			                datos.push({
+			                    AGRUPADOR : json.slist1[i]['parentesco'],
+			        		    COBERTURA : json.slist1[i]['Nombre_garantia'],
+			        		    PRIMA     : json.slist1[i]['Importe']
+			        	    });
 			            }
 			            debug('datos ',datos);
 			            Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTarifa');
@@ -3342,7 +3223,15 @@ function tarifaFinal(){
             	}
             }
             else{
-            	mensajeError(json.mensajeRespuesta);
+            	if(json.mensajeRespuesta === 'Favor de verificar los datos adicionales correspondientes al Descuento por Nómina'){            	    
+            	    mostrarMensajeVentana('El tramite # ' + wineditarContratante.resRenova['ntramite'] + ' se turnara a suscripción para completar información DXN.');
+            	    setTimeout(function(){ 
+            	        turnar(wineditarContratante.resRenova['ntramite']) 
+            	    }, 3000);
+            	}
+            	else{
+            	    mensajeError(json.mensajeRespuesta);
+            	}
             }
         }
         ,failure : function()
@@ -3902,6 +3791,130 @@ function agregaCalendario(){
      } 
      return fecha;
      debug('<toDate');
+ }
+ 
+ function turnar(ntramite){
+     if (_GLOBAL_CDSISROL == RolSistema.Agente){
+         var callbackNormal = function (callback) {
+             mensajeCorrecto(
+                 'Tr\u00e1mite generado',
+                 'Se ha generado el tr\u00e1mite ' + ntramite +
+                     ', favor de revisar los requisitos y subir sus documentos antes de turnar a SUSCRIPCI\u00d3N',
+                     callback
+                 );
+             };
+             var mask, ck = 'Recuperando lista de requisitos';
+             try {
+                 ck = 'Recuperando validaci\u00f3n ligada a requisitos';
+                 mask = _maskLocal(ck);
+                 Ext.Ajax.request({
+                     url     : _GLOBAL_URL_RECUPERACION,
+                         params  : {
+                         'params.consulta' : 'RECUPERAR_VALIDACION_POR_CDVALIDAFK',
+                         'params.ntramite' : ntramite,
+                         'params.clave'    : '_CONFREN'
+                     },
+                     success : function (response) {
+                         mask.close();
+                         var ck = 'Decodificando respuesta al recuperar validaci\u00f3n ligada a requisitos';
+                         try {
+                             var valida = Ext.decode(response.responseText);
+                             debug('### validacion ligada a checklist:', valida);
+                             if (valida.success === true) {
+                                 if (valida.list.length > 0) {
+                                     _cargarAccionesEntidad(
+                                         valida.list[0].CDTIPFLU,
+                                         valida.list[0].CDFLUJOMC,
+                                         valida.list[0].TIPOENT,
+                                         valida.list[0].CDENTIDAD,
+                                         valida.list[0].WEBID,
+                                         function (acciones) {
+                                             if (acciones.length > 0) {
+                                                 debug('acciones:', acciones);
+                                                 callbackNormal(function () {
+                                                     _procesaAccion(
+                                                         acciones[0].CDTIPFLU,
+                                                         acciones[0].CDFLUJOMC,
+                                                         acciones[0].TIPODEST,
+                                                         acciones[0].CLAVEDEST,
+                                                         acciones[0].WEBIDDEST,
+                                                         acciones[0].AUX,
+                                                         valida.params.ntramite,
+                                                         valida.list[0].STATUS,
+                                                         null, //cdunieco
+                                                         null, //cdramo
+                                                         null, //estado
+                                                         null, //nmpoliza
+                                                         null, //nmsituac
+                                                         null, //nmsuplem
+                                                         valida.list[0].cdusuari,
+                                                         valida.list[0].cdsisrol,
+                                                         null // callback
+                                                     );
+                                                 });
+                                             } 
+                                             else {
+                                                 callbackNormal();
+                                             }
+                                         }
+                                     );
+                                 } 
+                                 else {
+                                     callbackNormal();
+                                 }
+                             } 
+                             else {
+                                 mensajeError(json.message);
+                             }
+                         } 
+                         catch (e) {
+                             manejaException(e, ck);
+                         }
+                     },
+                     failure : function () {
+                         mask.close();
+                         errorComunicacion(null, 'Error al recuperar validaci\u00f3n ligada a requisitos');
+                     }
+                 });
+             } 
+             catch (e) {
+                 manejaException(e, ck, mask);
+                 callbackNormal();
+             }
+         }
+         else{                               
+             Ext.Ajax.request({
+                 url     : _GLOBAL_COMP_URL_TURNAR
+                 ,params : {
+                     'params.NTRAMITE'  : ntramite,
+                     'params.CDTIPFLU'  : wineditarContratante.resRenova['cdtipflu'],
+                     'params.CDFLUJOMC' : wineditarContratante.resRenova['cdflujomc'],
+                     'params.STATUSOLD' : wineditarContratante.resRenova['estadomc'],
+                     'params.STATUSNEW' : '43'
+                 }
+                 ,success : function(response){
+                     _unmask();
+                     var ck = '';
+                     try{
+                         var json = Ext.decode(response.responseText);
+                         debug('### turnar:',json);
+                         if(json.success){
+                             _iceMesaControl(ntramite);                                                      
+                         }
+                         else{
+                             mensajeError(json.message);
+                         }
+                     }
+                     catch(e){
+                         manejaException(e,ck);
+                     }
+                 }
+                 ,failure : function(){
+                       _unmask();
+                       errorComunicacion(null,'Error al turnar tr\u00e1mite');
+                 }
+             });
+         }
  }
 ////// funciones //////
 </script>
