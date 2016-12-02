@@ -330,6 +330,35 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         var recordsAux = [];
         for(var i in json.slist2)
         {
+        	if(_p30_smap1.cdramo=='5')
+            {
+               if('|AF|PU|'.lastIndexOf('|'+json.slist2[i].CDTIPSIT+'|')!=-1)
+                {
+                    if(json.slist2[i]['parametros.pv_otvalor02'] == '1')
+                    {
+                          var me  =_fieldById('_p30_tatrisitParcialForm'+json.slist2[i].CDTIPSIT).down('[fieldLabel=TIPO VALOR]')
+                          var record = me.findRecordByValue('1');
+                          if(!record)
+                          {
+                                _fieldById('_p30_tatrisitParcialForm'+json.slist2[i].CDTIPSIT).down('[fieldLabel=TIPO VALOR]').store.add({key:'1',value:'Valor Convenido'});
+                                _fieldById('_p30_tatrisitParcialForm'+json.slist2[i].CDTIPSIT).down('[fieldLabel=TIPO VALOR]').setValue('1');
+                          }
+                    }
+                }
+                else
+                {
+                    if(json.slist2[i]['parametros.pv_otvalor12'] == '1')
+                    {
+                          var me  =_fieldById('_p30_tatrisitParcialForm'+json.slist2[i].CDTIPSIT).down('[fieldLabel=TIPO VALOR]')
+                          var record = me.findRecordByValue('1');
+                          if(!record)
+                          {
+                                _fieldById('_p30_tatrisitParcialForm'+json.slist2[i].CDTIPSIT).down('[fieldLabel=TIPO VALOR]').store.add({key:'1',value:'Valor Convenido'});
+                                _fieldById('_p30_tatrisitParcialForm'+json.slist2[i].CDTIPSIT).down('[fieldLabel=TIPO VALOR]').setValue('1');
+                          }
+                    }
+                }
+            }
             recordsAux.push(new _p30_modelo(json.slist2[i]));
         }
         _p30_store.add(recordsAux);
