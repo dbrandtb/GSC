@@ -210,7 +210,7 @@ Ext.onReady(function()
                                         'params.cdtipram'   	: form.getValues()['cdtipram']
                                         ,'params.cduniecos' 	: cduniecos
                                         ,'params.feproces'  	: Ext.Date.format(new Date(), 'd/m/Y')
-                                        ,'params.feimpres'  	: Ext.Date.format(new Date((new Date().getFullYear()),form.getValues()['mes'], 0), 'd/m/Y')
+                                        ,'params.feimpres'  	: Ext.Date.format(new Date((form.getValues()['anio']),form.getValues()['mes'], 0), 'd/m/Y')
                                         ,'params.tiporeciboimp' : form.getValues()['tiporeciboimp'] 
                                     }
                                     ,function()
