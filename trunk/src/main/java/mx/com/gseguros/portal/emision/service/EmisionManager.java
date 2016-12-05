@@ -1,9 +1,11 @@
 package mx.com.gseguros.portal.emision.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 
 public interface EmisionManager
@@ -61,5 +63,9 @@ public interface EmisionManager
 	public boolean revierteEmision(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem);
 	
 	public String generarLigasDocumentosEmisionLocalesIce (String ntramite) throws Exception;
+
+	public ManagerRespuestaSlistVO procesarCargaMasivaRecupera(String cdramo, String cdtipsit, String respetar, File excel)throws Exception;
+	
+	
 	
 }

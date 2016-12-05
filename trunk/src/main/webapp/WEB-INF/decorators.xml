@@ -130,13 +130,19 @@
         <pattern>/jsp-script/proceso/emision/cotizacionGrupo2.jsp</pattern>
         <pattern>/jsp-script/proceso/emision/cotizacionAutoIndividual.jsp</pattern>
         <pattern>/jsp-script/proceso/emision/cotizacionAutoFlotilla.jsp</pattern>
+        
+        <pattern>/jsp-script/proceso/emision/cargarExcel.jsp</pattern>
+        
         <pattern>/jsp-script/proceso/emision/emisionAutoIndividual.jsp</pattern>
         <pattern>/jsp-script/proceso/emision/emisionAutoFlotilla.jsp</pattern>
         <pattern>/emision/cotizacion.action</pattern>
         <pattern>/emision/cotizacionGrupo.action</pattern>
         <pattern>/emision/cotizacionGrupo2.action</pattern>
         <pattern>/emision/cotizacionAutoIndividual.action</pattern>
+        <pattern>/emision/cargarExcel.action</pattern>
+        
         <pattern>/emision/cotizacionAutoFlotilla.action</pattern>
+        
         <pattern>/emision/emisionAutoIndividual.action</pattern>
         <pattern>/emision/emisionAutoFlotilla.action</pattern>
         

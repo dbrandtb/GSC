@@ -1,13 +1,28 @@
 package mx.com.gseguros.portal.emision.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.dao.impl.ConsultaPolizasDAOSISAImpl.ConsultaDatosPolizaSP;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
@@ -16,11 +31,23 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.ServletActionContext;
+import org.apache.woden.ErrorReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.SqlReturnResultSet;
+import org.springframework.jdbc.object.StoredProcedure;
+import org.springframework.util.SystemPropertyUtils;
 
 public class EmisionManagerImpl implements EmisionManager
 {
@@ -35,6 +62,10 @@ public class EmisionManagerImpl implements EmisionManager
 	
 	@Autowired
 	private EmisionDAO emisionDAO;
+	
+	@Autowired
+	@Qualifier("consultasDAOICEImpl")
+	private ConsultasPolizaDAO consultasPolizaDAO;
 	
 	@Value("${url.descargar.documentos}")
 	private String urlDescargarDocumentosLibre;
@@ -289,4 +320,196 @@ public class EmisionManagerImpl implements EmisionManager
 		return ligas;
 	}
 	
+	//SILVIA 
+	@Override
+	public ManagerRespuestaSlistVO procesarCargaMasivaRecupera(String cdramo,String cdtipsit,String respetar,File excel)throws Exception
+	//,String tipoflot
+	{
+		String errores="";
+		String polizas="";
+		String campo="";
+		double cambio=0;
+		int entero=0;
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ procesarCargaMasivaRecupera @@@@@@")
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ respetar=").append(respetar)
+				.append("\n@@@@@@ excel=")   .append(excel)
+				.toString()
+				);
+		
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		resp.setSlist(new ArrayList<Map<String,String>>());
+		
+		String paso = null;
+		
+		try
+		{
+			//paso = "Recuperando parametrizacion de excel para COTIFLOT";
+			//List<Map<String,String>>config=cotizacionDAO.cargarParametrizacionExcel("COTIFLOT",cdramo,cdtipsit);
+			//logger.debug("LISTA DE MAPAS "+Utils.log(config));
+			
+			paso = "Instanciando mapa buffer de tablas de apoyo";
+			Map<String,List<Map<String,String>>> buffer        = new HashMap<String,List<Map<String,String>>>();
+			Map<String,String>                   bufferTiposit = new HashMap<String,String>();
+			
+			paso = "Iniciando procesador de hoja de calculo";
+			FileInputStream input       = new FileInputStream(excel);
+			XSSFWorkbook    workbook    = new XSSFWorkbook(input);
+			XSSFSheet       sheet       = workbook.getSheetAt(0);
+			Iterator<Row>   rowIterator = sheet.iterator();
+			StringBuilder   sb;
+			
+			paso = "Iterando filas";
+			int fila = 1;
+			String[] columnas=new String[]{
+					  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+					,"AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ"
+					,"BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ"
+			};
+			while (rowIterator.hasNext()) 
+            {
+				fila = fila + 1;
+				paso = new StringBuilder("Iterando fila ").append(fila).toString();
+				logger.debug("PASO: "+paso);
+				Row row = rowIterator.next();
+				
+				if(fila==2)
+				{
+					row = rowIterator.next();
+				}
+				logger.debug("este "+Utils.isRowEmpty(row));
+				if(Utils.isRowEmpty(row))
+				{
+					break;
+				}
+				sb = new StringBuilder();
+				
+				Map<String,String>record=new LinkedHashMap<String,String>();
+				resp.getSlist().add(record);
+				int numeroPol = 0;
+				int col = 0;
+				for(int i= 0;i<=17;i++)
+				{
+					
+					PolizaAseguradoVO datos = new PolizaAseguradoVO();
+					System.out.println("es la i: "+i);
+					col  = i;
+					Cell cell = row.getCell(i);
+					
+					if(i == 2){
+						String poliza = cell.toString().trim();
+						double numPol = Double.parseDouble(poliza);
+						numeroPol = (int) numPol;
+					}
+					
+					if(cell.getCellType() == cell.CELL_TYPE_NUMERIC)
+						logger.debug("CELDA NUMERO: "+String.format("%.2f", cell.getNumericCellValue())+"  "+i);
+					else
+						logger.debug("CELDA: "+cell+"  "+i);
+					
+					///VALIDAR QUE NO EXISTA POLIZA EN MPOLIZAS///
+					if(i == 2){
+						int ban = 0;
+						datos.setCdunieco("1000");
+						datos.setCdramo("1");
+						datos.setEstado("M");
+						datos.setNmpoliza(cell.toString().trim());
+						//System.out.println("LOS DATOS"+datos);
+//						List<PolizaDTO> resultado = emisionDAO.existePoliza(datos);
+						List<PolizaDTO> datosPolizas = consultasPolizaDAO.obtieneDatosPoliza(datos);
+						for(PolizaDTO t:datosPolizas){
+							errores = errores + "POLIZA EXISTENTE";
+							polizas = polizas + numeroPol;
+							resp.setRespuesta(errores);
+							resp.setRespuestaOculta(polizas);
+							resp.setExito(false);
+							//i = 17;
+						}	
+					}
+					if(i == 7){
+						if(!cell.toString().trim().equals("RI")){
+							errores = errores + "PRODUCTO VALIDO SOLO PARA RECUPERA INDIVIDUAL (RI)";
+							polizas = polizas + numeroPol;
+							resp.setRespuesta(errores);
+							resp.setRespuestaOculta(polizas);
+							resp.setExito(false);
+							//i = 17;
+						}
+					}
+					if(i == 9){
+						String esq=cell.toString().trim();
+						double esq1 = Double.parseDouble(esq);
+						int esquema = (int) esq1;
+						if(esquema != 20 && esquema != 50 && esquema != 100){
+							errores = errores + "VALOR PARA ESQUEMA (20/50/100)";
+							polizas = polizas + numeroPol;
+							resp.setRespuesta(errores);
+							resp.setRespuestaOculta(polizas);
+							resp.setExito(false);
+							//i = 17;
+						}
+					}
+					if(i == 10){
+						if(!cell.toString().trim().equals("T")){
+							errores = errores + "VALOR PARA PARENTESCO OBLIGATORIO (T)";
+							polizas = polizas + numeroPol;
+							resp.setRespuesta(errores);
+							resp.setRespuestaOculta(polizas);
+							resp.setExito(false);
+							//i = 17;
+						}
+					}
+					if(i == 13){
+						if((!cell.toString().trim().equals("H")) && (!cell.toString().trim().equals("M"))){
+							errores = errores + "SEXO INCORRECTO (H/M)|";
+							polizas = polizas + numeroPol;
+							resp.setRespuesta(errores);
+							resp.setRespuestaOculta(polizas);
+							resp.setExito(false);
+							//i = 17;
+						}  
+					}
+					
+					if(cell.getCellType() == cell.CELL_TYPE_NUMERIC){
+						if(i != 14 && i !=15){
+							if(i == 11 || i == 16){
+								campo = cell.toString().trim();
+								SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MMM-yyyy");
+								SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+								campo = sdf2.format(sdf1.parse(campo));
+								
+							}else{
+								campo = String.format("%.2f", cell.getNumericCellValue());
+								cambio = Double.parseDouble(campo);
+								entero = (int) cambio;
+								campo = String.valueOf(entero);
+							}
+						}else{
+							campo = String.format("%.2f", cell.getNumericCellValue());
+						}
+						record.put(String.valueOf(i),campo);
+					}else
+						record.put(String.valueOf(i),cell.toString().trim());
+				}
+				//logger.debug(sb.toString());
+            }
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		logger.debug(resp.getRespuesta());
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ procesarCargaMasivaFlotilla @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
 }

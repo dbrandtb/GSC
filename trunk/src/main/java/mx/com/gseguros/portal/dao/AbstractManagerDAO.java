@@ -36,6 +36,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
     	long inicio = System.currentTimeMillis();
     	logger.info("##### CALLING SP {} {}", storedProcedure.getSql(), parameters);
 		Map<String, Object> mapResult = storedProcedure.execute(parameters);
+		logger.info("resulset", mapResult);
 		long tfinal = System.currentTimeMillis();
 		logger.info("##### FINISH  SP {} IN {} SECS", storedProcedure.getSql(), (tfinal - inicio) / 1000d);
 		
