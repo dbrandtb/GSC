@@ -557,6 +557,9 @@
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
             <result type="json" />
+        </action>
+         <action name="procesarCargaMasivaRecuperaInd" class="CotizacionAction" method="procesarCargaMasivaRecuperaInd">
+            <result name="success" type="json" />
         </action>      
     </package>
     
