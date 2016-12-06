@@ -5327,6 +5327,20 @@ function _p52_cargarModelado()
                                     });
                                     con.cdaccion = ite.CDACCION;
                                     _p52_cargando = false;
+                                    
+                                    // JTEZVA 2016 12 05
+                                    con.dsaccion = ite.DSACCION;
+                                    con.escuchador = true;
+                                    con.bind('mouseover', function (conn) {
+                                        debug('mouseover args:', arguments);
+                                        conn.addOverlay(['Label', { label: conn.dsaccion || '(vacio)', location:0.1, id: "connLabel"} ]);
+                                        conn.addOverlay(['Label', { label: conn.dsaccion || '(vacio)', location:0.9, id: "connLabel2"} ]);
+                                    });
+                                    con.bind('mouseout', function (conn) {
+                                        debug('mouseout args:', arguments);
+                                        conn.removeOverlay("connLabel");
+                                        conn.removeOverlay("connLabel2");
+                                    });
                                 }
                             }
                         }
@@ -5541,6 +5555,7 @@ function _p52_cargarDatosRevision(cdrevisi)
     try
     {
         var grid = _fieldById('_p52_gridRevDoc');
+        grid.getView().features[0].collapseAll();
         grid.store.each(function(record)
         {
             record.set('SWLISTA'  , false);
@@ -5548,6 +5563,7 @@ function _p52_cargarDatosRevision(cdrevisi)
         });
         
         grid = _fieldById('_p52_gridRevReq');
+        grid.getView().features[0].collapseAll();
         grid.store.each(function(record)
         {
             record.set('SWLISTA'  , false);

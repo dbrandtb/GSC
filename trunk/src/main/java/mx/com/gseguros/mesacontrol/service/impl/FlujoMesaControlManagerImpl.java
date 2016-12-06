@@ -1160,91 +1160,71 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public void guardarCoordenadas(
-			String cdtipflu
-			,String cdflujomc
-			,List<Map<String,String>>list
-			)throws Exception
-	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ guardarCoordenadas @@@@@@"
-				,"\n@@@@@@ cdtipflu="  , cdtipflu
-				,"\n@@@@@@ cdflujomc=" , cdflujomc
-				,"\n@@@@@@ list="      , list
-				));
-
+	public void guardarCoordenadas (String cdtipflu, String cdflujomc, List<Map<String,String>>list) throws Exception {
+		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				               "\n@@@@@@ guardarCoordenadas @@@@@@",
+				               "\n@@@@@@ cdtipflu  = " , cdtipflu,
+				               "\n@@@@@@ cdflujomc = " , cdflujomc,
+				               "\n@@@@@@ list      = " , list));
 		String paso = "Guardando coordenadas";
-		try
-		{
-			for(Map<String,String>entidad:list)
-			{
-				flujoMesaControlDAO.actualizaCoordenadas(
-						cdtipflu
-						,cdflujomc
-						,entidad.get("tipo")
-						,entidad.get("clave")
-						,entidad.get("webid")
-						,entidad.get("xpos")
-						,entidad.get("ypos")
-						);
+		try {
+		    List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
+			for (Map<String, String> entidad : list) {
+			    Map<String, String> coor = new HashMap<String, String>();
+			    coor.put("cdtipflu"  , cdtipflu);
+			    coor.put("cdflujomc" , cdflujomc);
+			    coor.put("tipo"      , entidad.get("tipo"));
+			    coor.put("clave"     , entidad.get("clave"));
+			    coor.put("webid"     , entidad.get("webid"));
+			    coor.put("xpos"      , entidad.get("xpos"));
+			    coor.put("ypos"      , entidad.get("ypos"));
+			    lista.add(coor);
 			}
-		}
-		catch(Exception ex)
-		{
+			if (lista.size() > 0) {
+			    flujoMesaControlDAO.actualizaCoordenadasLote(lista);
+			}
+		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ guardarCoordenadas @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
+		logger.debug(Utils.log("\n@@@@@@ guardarCoordenadas @@@@@@",
+		                       "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
 	
 	@Override
 	public String ejecutaValidacion(
 			FlujoVO flujo
 			,String cdvalidafk
-			)throws Exception
-	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ ejecutaValidacion @@@@@@"
-				,"\n@@@@@@ flujo="      , flujo
-				,"\n@@@@@@ cdvalidafk=" , cdvalidafk
-				));
-		
-		String salida = null
-		       ,paso  = null;
-		
-		try
-		{
-			paso = "Ejecutando validaci\u00f3n";
-			logger.debug(paso);
-			
-			salida = flujoMesaControlDAO.ejecutaValidacion(
-					flujo.getNtramite()
-					,flujo.getStatus()
-					,flujo.getCdunieco()
-					,flujo.getCdramo()
-					,flujo.getEstado()
-					,flujo.getNmpoliza()
-					,flujo.getNmsituac()
-					,flujo.getNmsuplem()
-					,cdvalidafk
-					);
-		}
-		catch(Exception ex)
-		{
+			)throws Exception {
+		logger.debug("{}", Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				                     "\n@@@@@@ ejecutaValidacion @@@@@@",
+				                     "\n@@@@@@ flujo="      , flujo,
+				                     "\n@@@@@@ cdvalidafk=" , cdvalidafk));
+		String salida = null,
+		       paso   = null;
+		try {
+		    paso = "Ejecutando validaci\u00f3n";
+		    logger.debug("{}", paso);
+		    if ("_LOADAUX".equals(cdvalidafk)) { // PARA RECUPERAR OTVALOR DE TMESACONTROL CON DSATRIBU LIKE '%AUXILIAR%FLUJO%'
+		        salida = mesaControlDAO.recuperarOtvalorTramitePorDsatribu(flujo.getNtramite(), "AUXILIAR%FLUJO");
+		    } else {
+    			logger.debug(paso);
+    			salida = flujoMesaControlDAO.ejecutaValidacion(
+    					flujo.getNtramite(),
+    					flujo.getStatus(),
+    					flujo.getCdunieco(),
+    					flujo.getCdramo(),
+    					flujo.getEstado(),
+    					flujo.getNmpoliza(),
+    					flujo.getNmsituac(),
+    					flujo.getNmsuplem(),
+    					cdvalidafk);
+		    }
+		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ salida=",salida
-				,"\n@@@@@@ ejecutaValidacion @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-		
+		logger.debug("{}", Utils.log("\n@@@@@@ salida = ", salida,
+				                     "\n@@@@@@ ejecutaValidacion @@@@@@",
+				                     "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 		return salida;
 	}
 	
@@ -1327,38 +1307,24 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public void guardarDatosRevision(
-			String cdtipflu
-			,String cdflujomc
-			,String cdrevisi
-			,String dsrevisi
-			,String accion
-			,String webid
-			,String xpos
-			,String ypos
-			,List<Map<String,String>>list
-			)throws Exception
-	{
+	public void guardarDatosRevision (String cdtipflu, String cdflujomc, String cdrevisi, String dsrevisi, String accion, String webid,
+	        String xpos, String ypos, List<Map<String,String>>list) throws Exception {
 		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ guardarDatosRevision @@@@@@"
-				,"\n@@@@@@ cdtipflu="  , cdtipflu
-				,"\n@@@@@@ cdflujomc=" , cdflujomc
-				,"\n@@@@@@ cdrevisi="  , cdrevisi
-				,"\n@@@@@@ dsrevisi="  , dsrevisi
-				,"\n@@@@@@ accion="    , accion
-				,"\n@@@@@@ webid="     , webid
-				,"\n@@@@@@ xpos="      , xpos
-				,"\n@@@@@@ ypos="      , ypos
-				,"\n@@@@@@ list="      , list
-				));
-		
+		        "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				"\n@@@@@@ guardarDatosRevision @@@@@@",
+				"\n@@@@@@ cdtipflu="  , cdtipflu,
+				"\n@@@@@@ cdflujomc=" , cdflujomc,
+				"\n@@@@@@ cdrevisi="  , cdrevisi,
+				"\n@@@@@@ dsrevisi="  , dsrevisi,
+				"\n@@@@@@ accion="    , accion,
+				"\n@@@@@@ webid="     , webid,
+				"\n@@@@@@ xpos="      , xpos,
+				"\n@@@@@@ ypos="      , ypos,
+				"\n@@@@@@ list="      , list));
 		String paso = null;
-		try
-		{
+		try {
 			paso = "Guardando datos de revisi\u00f3n";
 			logger.debug(paso);
-			
 			flujoMesaControlDAO.movimientoTflurev(
 					cdtipflu
 					,cdflujomc
@@ -1369,47 +1335,48 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,ypos
 					,accion
 					);
-			
 			paso = "Guardando documentos";
 			logger.debug(paso);
-			
-			for(Map<String,String>ite : list)
-			{
+			List<Map<String, String>> listaReq = new ArrayList<Map<String, String>>(),
+			                          listaDoc = new ArrayList<Map<String, String>>();
+			for (Map<String, String> ite : list) {
 				String tipo = ite.get("TIPO");
 				if ("DOC".equals(tipo)) {
-					flujoMesaControlDAO.movimientoTflurevdoc(
-							cdtipflu
-							,cdflujomc
-							,cdrevisi
-							,ite.get("CDDOCUME")
-							,ite.get("SWOBLIGA")
-							,ite.get("SWLISTA")
-							,"I"
-							);
+				    Map<String, String> doc = new HashMap<String, String>();
+				    doc.put("cdtipflu"  , cdtipflu);
+				    doc.put("cdflujomc" , cdflujomc);
+				    doc.put("cdrevisi"  , cdrevisi);
+				    doc.put("cddocume"  , ite.get("CDDOCUME"));
+				    doc.put("swobliga"  , "S".equals(ite.get("SWOBLIGA")) ? "S" : "N");
+				    doc.put("swlista"   , "S".equals(ite.get("SWLISTA"))  ? "S" : "N");
+				    doc.put("accion"    , "I");
+					listaDoc.add(doc);
 				} else if ("REQ".equals(tipo)) {
-					flujoMesaControlDAO.movimientoTflurevreq(
-							cdtipflu
-							,cdflujomc
-							,cdrevisi
-							,ite.get("CDREQUISI")
-							,ite.get("SWOBLIGA")
-							,ite.get("SWLISTA")
-							,"I"
-							);
+				    Map<String, String> req = new HashMap<String, String>();
+                    req.put("cdtipflu"  , cdtipflu);
+                    req.put("cdflujomc" , cdflujomc);
+                    req.put("cdrevisi"  , cdrevisi);
+                    req.put("cdrequisi" , ite.get("CDREQUISI"));
+                    req.put("swobliga"  , "S".equals(ite.get("SWOBLIGA")) ? "S" : "N");
+                    req.put("swlista"   , "S".equals(ite.get("SWLISTA"))  ? "S" : "N");
+                    req.put("accion"    , "I");
+                    listaReq.add(req);
 				} else {
 					throw new ApplicationException("El dato en la lista de datos de revisi\u00f3n no tiene un tipo v\u00e1lido");
 				}
 			}
-		}
-		catch(Exception ex)
-		{
+			if (listaDoc.size() > 0) {
+			    flujoMesaControlDAO.movimientoTflurevdocLote(listaDoc);
+			}
+			if (listaReq.size() > 0) {
+                flujoMesaControlDAO.movimientoTflurevreqLote(listaReq);
+            }
+		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
-		
 		logger.debug(Utils.log(
-				 "\n@@@@@@ guardarDatosRevision @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
+		        "\n@@@@@@ guardarDatosRevision @@@@@@",
+		        "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
 	
 	@Override
@@ -1557,45 +1524,27 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public void guardarDatosAccion(
-			String cdtipflu
-			,String cdflujomc
-			,String cdaccion
-			,String dsaccion
-			,String accion
-			,String idorigen
-			,String iddestin
-			,String cdvalor
-			,String cdicono
-			,String swescala
-			,String aux
-			,List<Map<String,String>>list
-			)throws Exception
-	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ guardarDatosAccion @@@@@@"
-				,"\n@@@@@@ cdtipflu="  , cdtipflu
-				,"\n@@@@@@ cdflujomc=" , cdflujomc
-				,"\n@@@@@@ cdaccion="  , cdaccion
-				,"\n@@@@@@ dsaccion="  , dsaccion
-				,"\n@@@@@@ accion="    , accion
-				,"\n@@@@@@ idorigen="  , idorigen
-				,"\n@@@@@@ iddestin="  , iddestin
-				,"\n@@@@@@ cdvalor="   , cdvalor
-				,"\n@@@@@@ cdicono="   , cdicono
-				,"\n@@@@@@ swescala="  , swescala
-				,"\n@@@@@@ aux="       , aux
-				,"\n@@@@@@ list="      , list
-				));
-		
+	public void guardarDatosAccion (String cdtipflu, String cdflujomc, String cdaccion, String dsaccion,
+			String accion, String idorigen, String iddestin, String cdvalor, String cdicono, String swescala,
+			String aux, List<Map<String,String>>list) throws Exception {
+		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+				               "\n@@@@@@ guardarDatosAccion @@@@@@",
+				               "\n@@@@@@ cdtipflu  = " , cdtipflu,
+				               "\n@@@@@@ cdflujomc = " , cdflujomc,
+				               "\n@@@@@@ cdaccion  = " , cdaccion,
+				               "\n@@@@@@ dsaccion  = " , dsaccion,
+				               "\n@@@@@@ accion    = " , accion,
+				               "\n@@@@@@ idorigen  = " , idorigen,
+				               "\n@@@@@@ iddestin  = " , iddestin,
+				               "\n@@@@@@ cdvalor   = " , cdvalor,
+				               "\n@@@@@@ cdicono   = " , cdicono,
+				               "\n@@@@@@ swescala  = " , swescala,
+				               "\n@@@@@@ aux       = " , aux,
+				               "\n@@@@@@ list      = " , list));
 		String paso = null;
-		
-		try
-		{
+		try {
 			paso = "Guardando datos de acci\u00f3n";
 			logger.debug(paso);
-			
 			flujoMesaControlDAO.movimientoTfluacc(
 					cdtipflu
 					,cdflujomc
@@ -1607,33 +1556,29 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,iddestin
 					,"S".equals(swescala) ? "S" : "N"
 					,aux
-					,accion
-					);
-			
+					,accion);
 			paso = "Guardando permisos";
 			logger.debug(paso);
-			
-			for(Map<String,String>ite : list)
-			{
-				flujoMesaControlDAO.movimientoTfluaccrol(
-						cdtipflu
-						,cdflujomc
-						,cdaccion
-						,ite.get("CDSISROL")
-						,"S".equals(ite.get("SWPERMISO")) ? "S" : "N"
-						,"I"
-						);
+			List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
+			for (Map<String,String>ite : list) {
+			    Map<String, String> obj = new HashMap<String, String>();
+			    obj.put("cdtipflu"  , cdtipflu);
+			    obj.put("cdflujomc" , cdflujomc);
+			    obj.put("cdaccion"  , cdaccion);
+			    obj.put("cdsisrol"  , ite.get("CDSISROL"));
+			    obj.put("swpermiso" , "S".equals(ite.get("SWPERMISO")) ? "S" : "N");
+			    obj.put("accion"    , "I");
+			    lista.add(obj);
 			}
-		}
-		catch(Exception ex)
-		{
+			if (lista.size() > 0)
+			{
+			    flujoMesaControlDAO.movimientoTfluaccrolLote(lista);
+			}
+		} catch( Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ guardarDatosAccion @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
+		logger.debug(Utils.log("\n@@@@@@ guardarDatosAccion @@@@@@",
+				               "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
 	
 	@Override
@@ -3907,5 +3852,21 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
         logger.debug(Utils.log(
                 "\n@@@@@@ guardarVentanaDatosTramite @@@@@@",
                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+	}
+	
+	@Override
+	public void guardarAuxiliarFlujo (String ntramite, String auxiliar) throws Exception {
+	    logger.debug("{}", Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+	                                 "\n@@@@@@ guardarAuxiliarFlujo @@@@@@",
+	                                 "\n@@@@@@ ntramite = ", ntramite, ", auxiliar = ", auxiliar));
+	    String paso = "Guardando auxiliar";
+	    logger.debug("{}", paso);
+	    try {
+	        mesaControlDAO.actualizarOtvalorTramitePorDsatribu(ntramite, "AUXILIAR%FLUJO", auxiliar, "U");
+	    } catch (Exception ex) {
+	        Utils.generaExcepcion(ex, paso);
+	    }
+	    logger.debug("{}", Utils.log("\n@@@@@@ guardarAuxiliarFlujo @@@@@@",
+	                                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
 }

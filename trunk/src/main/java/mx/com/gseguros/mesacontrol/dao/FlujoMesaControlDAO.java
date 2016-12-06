@@ -960,4 +960,12 @@ public interface FlujoMesaControlDAO {
 	        String cdunidspch) throws Exception;
 	
 	public String recuperarCdatribuPorDsatribuTatriflumc (String cdtipflu, String cdflujomc, String dsatribu) throws Exception;
+	
+	public void movimientoTfluaccrolLote (List<Map<String, String>> lista) throws Exception;
+    
+    public void actualizaCoordenadasLote (List<Map<String, String>> lista) throws Exception;
+    
+    public void movimientoTflurevdocLote (List<Map<String, String>> lista) throws Exception;
+    
+    public void movimientoTflurevreqLote (List<Map<String, String>> lista) throws Exception;
 }
