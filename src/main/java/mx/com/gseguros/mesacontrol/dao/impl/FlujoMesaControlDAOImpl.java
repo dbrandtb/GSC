@@ -4137,4 +4137,129 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
             compile();
         }
     }
+    
+    @Override
+    public void movimientoTfluaccrolLote (List<Map<String, String>> lista) throws Exception {
+        String[][] array = new String[lista.size()][];
+        int i = 0;
+        for (Map<String, String> obj : lista) {
+            array[i++] = new String[]{
+                    obj.get("cdtipflu"),
+                    obj.get("cdflujomc"),
+                    obj.get("cdaccion"),
+                    obj.get("cdsisrol"),
+                    obj.get("swpermiso"),
+                    obj.get("accion")
+            };
+        }
+        Map<String, Object> params = new LinkedHashMap<String, Object>();
+        params.put("array", new SqlArrayValue(array));
+        ejecutaSP(new MovimientoTfluaccrolLoteSP(getDataSource()),params);
+    }
+    
+    protected class MovimientoTfluaccrolLoteSP extends StoredProcedure {
+        protected MovimientoTfluaccrolLoteSP (DataSource dataSource) {
+            super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUACCROL_LOTE");
+            declareParameter(new SqlParameter("array", OracleTypes.ARRAY, "LISTA_LISTAS_VARCHAR2"));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public void actualizaCoordenadasLote (List<Map<String, String>> lista) throws Exception {
+        String[][] array = new String[lista.size()][];
+        int i = 0;
+        for (Map<String, String> obj : lista) {
+            array[i++] = new String[]{
+                    obj.get("cdtipflu"),
+                    obj.get("cdflujomc"),
+                    obj.get("tipo"),
+                    obj.get("clave"),
+                    obj.get("webid"),
+                    obj.get("xpos"),
+                    obj.get("ypos")
+            };
+        }
+        Map<String, Object> params = new LinkedHashMap<String, Object>();
+        params.put("array", new SqlArrayValue(array));
+        ejecutaSP(new ActualizaCoordenadasLoteSP(getDataSource()),params);
+    }
+    
+    protected class ActualizaCoordenadasLoteSP extends StoredProcedure
+    {
+        protected ActualizaCoordenadasLoteSP(DataSource dataSource)
+        {
+            super(dataSource,"PKG_MESACONTROL.P_ACTUALIZA_COORDS_LOTE");
+            declareParameter(new SqlParameter("array", OracleTypes.ARRAY, "LISTA_LISTAS_VARCHAR2"));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public void movimientoTflurevdocLote (List<Map<String, String>> lista) throws Exception {
+        String[][] array = new String[lista.size()][];
+        int i = 0;
+        for (Map<String, String> obj : lista) {
+            array[i++] = new String[]{
+                    obj.get("cdtipflu"),
+                    obj.get("cdflujomc"),
+                    obj.get("cdrevisi"),
+                    obj.get("cddocume"),
+                    obj.get("swobliga"),
+                    obj.get("swlista"),
+                    obj.get("accion")
+            };
+        }
+        Map<String, Object> params = new LinkedHashMap<String, Object>();
+        params.put("array", new SqlArrayValue(array));
+        ejecutaSP(new MovimientoTflurevdocLoteSP(getDataSource()),params);
+    }
+    
+    protected class MovimientoTflurevdocLoteSP extends StoredProcedure
+    {
+        protected MovimientoTflurevdocLoteSP(DataSource dataSource)
+        {
+            super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUREVDOC_LOTE");
+            declareParameter(new SqlParameter("array", OracleTypes.ARRAY, "LISTA_LISTAS_VARCHAR2"));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public void movimientoTflurevreqLote (List<Map<String, String>> lista) throws Exception {
+        String[][] array = new String[lista.size()][];
+        int i = 0;
+        for (Map<String, String> obj : lista) {
+            array[i++] = new String[]{
+                    obj.get("cdtipflu"),
+                    obj.get("cdflujomc"),
+                    obj.get("cdrevisi"),
+                    obj.get("cdrequisi"),
+                    obj.get("swobliga"),
+                    obj.get("swlista"),
+                    obj.get("accion")
+            };
+        }
+        Map<String, Object> params = new LinkedHashMap<String, Object>();
+        params.put("array", new SqlArrayValue(array));
+        ejecutaSP(new MovimientoTflurevreqLoteSP(getDataSource()),params);
+    }
+    
+    protected class MovimientoTflurevreqLoteSP extends StoredProcedure
+    {
+        protected MovimientoTflurevreqLoteSP(DataSource dataSource)
+        {
+            super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUREVREQ_LOTE");
+            declareParameter(new SqlParameter("array", OracleTypes.ARRAY, "LISTA_LISTAS_VARCHAR2"));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }

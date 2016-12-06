@@ -409,4 +409,6 @@ public interface FlujoMesaControlManager
 	public Map<String,String> tramiteMC(String ntramite, String nmpoliza, String cdunieco, String cdramo, String cdtipsit) throws Exception;
 	
 	public void guardarVentanaDatosTramite (String ntramite, Map<String, String> datos) throws Exception;
+	
+	public void guardarAuxiliarFlujo (String ntramite, String auxiliar) throws Exception;
 }

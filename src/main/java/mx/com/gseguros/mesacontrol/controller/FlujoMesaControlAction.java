@@ -2747,6 +2747,29 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	    return SUCCESS;
 	}
 	
+	@Action(value   = "guardarAuxiliarFlujo",
+            results = { @Result(name="success", type="json") }
+            )
+	public String guardarAuxiliarFlujo () {
+	    logger.debug(Utils.log("\n##################################",
+	                           "\n###### guardarAuxiliarFlujo ######",
+	                           "\n###### flujo = ", flujo));
+	    try {
+	        Utils.validateSession(session);
+	        Utils.validate(flujo, "Faltan los datos del flujo");
+	        Utils.validate(flujo.getAux(), "Falta auxiliar");
+	        flujoMesaControlManager.guardarAuxiliarFlujo(flujo.getNtramite(), flujo.getAux());
+	        success = true;
+	    } catch (Exception ex) {
+	        message = Utils.manejaExcepcion(ex);
+	    }
+        logger.debug(Utils.log("\n###### success = " , success,
+                               "\n###### message = " , message,
+                               "\n###### guardarAuxiliarFlujo ######",
+                               "\n##################################"));
+	    return SUCCESS;
+	}
+	
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
 	                                                      //
