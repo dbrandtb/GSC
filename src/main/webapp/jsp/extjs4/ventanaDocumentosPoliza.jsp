@@ -54,6 +54,7 @@ var panDocInputNmsuplem  = '<s:property value="smap1.nmsuplem" />';
 var panDocInputNtramite  = '<s:property value="smap1.ntramite" />';
 var panDocInputNmsolici  = '<s:property value="smap1.nmsolici" />';
 var panDocInputTipoMov   = '<s:property value="smap1.tipomov" />';
+var panDocInputTipTra    = '<s:property value="smap1.cdtiptra" />';
 var panDocStoreDoc;
 var panDocGridDocu;
 var panDocContexto       = '${ctx}';
@@ -68,6 +69,10 @@ var panDocUrlFusionar    = '<s:url namespace ="/documentos" action="fusionarDocu
 var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec"              />';
 var _URLregeneraReporte  = '<s:url namespace ="/documentos" action="regeneraReporte"             />';
 var panDocUrlDetalleTra  = '<s:url namespace="/mesacontrol" action="movimientoDetalleTramite"    />';
+var urlDocumentosXFamilia   = '<s:url namespace ="/documentos" action="documentosXFamilia"          />';
+var urlEjecutaFusionFam   = '<s:url namespace ="/documentos" action="ejecutaFusionFam"          />';
+
+
 
 var panDocUrlActualizarNombreDocumento = '<s:url namespace="/documentos" action="actualizarNombreDocumento" />';
 var panDocUrlBorrarDocumento           = '<s:url namespace="/documentos" action="borrarDocumento"           />';
@@ -79,6 +84,7 @@ debug('panDocSmap1:', panDocSmap1);
 
 var panDocStoreConfigDocs;
 var urlComboDocumentos = '<s:url namespace="/siniestros" action="loadListaDocumentos" />';
+var email=false;
 /*//////////////////////*/
 ////// variables    //////
 //////////////////////////
@@ -205,6 +211,122 @@ function panDocBorrarClic(row,confir)
             ,failure : errorComunicacion
         });
     }
+}
+
+function fusionarXfamilia(){
+    try{
+        
+        var paramsEnviar={
+                 'smap1.cdunieco'  : panDocInputCdunieco
+                ,'smap1.cdramo'    : panDocInputCdramo
+                ,'smap1.estado'    : panDocInputEstado
+                ,'smap1.nmpoliza'  : panDocInputNmpoliza
+                ,'smap1.nmsuplem'  : panDocInputNmsuplem
+            }
+        if(email){
+            paramsEnviar['smap1.email']=email;
+        }
+	    Ext.Ajax.request(
+	    {
+	        url     : urlDocumentosXFamilia
+	        ,params : paramsEnviar
+	        
+	        ,success : function(response)
+	        {
+	            var json=Ext.decode(response.responseText);
+	            debug('### borrar:',json);
+	            if(json.exito)
+	            {
+	                var respuesta=json.respuesta;
+	                debug(respuesta)
+	                if(email){
+	                    json.smap1.userEmail=email;
+	                }
+	                
+	                if(respuesta==null){
+	                    ejecutaFusionFam(json.smap1.userEmail);
+	                }else if (respuesta=="W"){
+	                    mensajeWarning("Ya hay  un proceso de fusi&oacute;n, por favor espere")
+	                }else if (respuesta=="F"){
+	                    Ext.Msg.confirm("Ejecutar Fusi&oacute;n"
+	                                   ,"Ya se ha ejecutado este proceso"+
+	                                    " ¿Quieres ejecutar de nuevo el proceso de fusi&oacute;n por titular?"
+	                                   ,function(opc){ 
+	                                        if(opc!="yes") return; 
+	                                        
+	                                        ejecutaFusionFam(json.smap1.userEmail);
+	                                        
+	                                    });
+	                }
+	                
+	                panDocStoreDoc.load();
+	            }
+	            else
+	            {
+	                mensajeError(json.respuesta);
+	            }
+	        }
+	        ,failure : errorComunicacion
+	    });
+    }catch(e){
+        debugError(e);
+    }
+}
+
+function ejecutaFusionFam(email){
+    
+    try{
+        
+        var paramsEnviar={
+                 'smap1.cdunieco'  : panDocInputCdunieco
+                ,'smap1.cdramo'    : panDocInputCdramo
+                ,'smap1.estado'    : panDocInputEstado
+                ,'smap1.nmpoliza'  : panDocInputNmpoliza
+                ,'smap1.nmsuplem'  : panDocInputNmsuplem
+                ,'smap1.tipoMov'   : panDocInputTipoMov
+                ,'smap1.cdTipTra'  : panDocInputTipTra
+                
+                
+                
+                
+            }
+        
+        if(email){
+            paramsEnviar['smap1.email']=email;
+        }
+        
+        
+        Ext.Ajax.request(
+        {
+            url     : urlEjecutaFusionFam
+            ,params : paramsEnviar
+            
+            ,success : function(response)
+            {
+                var json=Ext.decode(response.responseText);
+                debug('### borrar:',json);
+                if(json.exito)
+                {
+                    debug(json.respuesta)
+                    panDocStoreDoc.load();
+                    
+                }
+                else
+                {
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure : errorComunicacion
+        });
+        debug("Documentos por familia ejecutado ...");
+        mensajeInfo("El proceso de fusi&oacute;n se inici&oacute;, "    + 
+                "cuando termine el proceso se notificar&aacute; " + 
+                "al siguiente correo: "+email);
+    }catch(e){
+        debugError(e);
+        mensajeError("No se pudo iniciar el proceso de fusi&oacute;n ");
+    }
+    
 }
 /*//////////////////////*/
 ////// funciones    //////
@@ -1058,7 +1180,14 @@ Ext.onReady(function()
                                         }
 			                        ]
 			                    }
-			                }                                        
+			                }
+			                ,{
+			                    xtype    : 'button'
+			                   ,text     : 'Fucionar por familia'
+			                   ,handler  : fusionarXfamilia
+			                   ,icon     : '${ctx}/resources/fam3icons/icons/pdf.png'
+			                        
+			                }
                         ]
                     }
                 ]

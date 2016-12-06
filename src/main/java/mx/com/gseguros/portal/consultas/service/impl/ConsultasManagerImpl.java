@@ -1,7 +1,12 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,9 +17,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -22,16 +30,25 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
+import mx.com.gseguros.utils.DocumentosUtils;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
 @Service
 public class ConsultasManagerImpl implements ConsultasManager
 {
 	private static Logger logger = Logger.getLogger(ConsultasManagerImpl.class);
+	
+	@Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;
+	
+	@Value("${ruta.documentos.temporal}")
+    private String rutaDocumentosTemporal;
 	
 	@Autowired
 	private ConsultasDAO consultasDAO;
@@ -45,6 +62,9 @@ public class ConsultasManagerImpl implements ConsultasManager
 	@Autowired
 	private PantallasDAO pantallasDAO;
 	
+	@Autowired
+	private MailService mailService;
+
 	@Override
 	public List<Map<String,String>> consultaDinamica(ObjetoBD objetoBD,LinkedHashMap<String,Object>params) throws Exception
 	{
@@ -536,4 +556,278 @@ public class ConsultasManagerImpl implements ConsultasManager
 	    }
 	    return cdagente;
 	}
+	
+	@Override
+    public String documentosXFamilia(String pv_cdunieco_i,
+                                                 String pv_cdramo_i,
+                                                 String pv_estado_i,
+                                                 String pv_nmpoliza_i, 
+                                                 String pv_nmsuplem_i,
+                                                 String pv_cdusuari)
+    {
+        long stamp = System.currentTimeMillis();
+        logger.debug(Utils.log(
+                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                ,"\n@@@@@@ documentosXFamilia @@@@@@"
+                ,"\n@@@@@@ pv_cdunieco_i=" , pv_cdunieco_i
+                ,"\n@@@@@@ pv_cdramo_i="   , pv_cdramo_i
+                ,"\n@@@@@@ pv_estado_i="   , pv_estado_i
+                ,"\n@@@@@@ pv_nmpoliza_i=" , pv_nmpoliza_i
+                ,"\n@@@@@@ pv_nmsuplem_i=" , pv_nmsuplem_i
+                ,"\n@@@@@@ pv_cdusuari="   , pv_cdusuari
+                ));
+        
+        String resp=null;
+        
+        try
+        {
+            resp = consultasDAO.verificaFusFamilia(pv_cdunieco_i
+                                                    , pv_cdramo_i
+                                                    , pv_estado_i
+                                                    , pv_nmpoliza_i
+                                                    , pv_nmsuplem_i
+                                                    , pv_cdusuari);
+        }
+        catch(Exception ex)
+        {
+            logger.error(Utils.join("Error al verificar fusfamilia #"),ex);
+        }
+        
+        logger.debug(Utils.log(
+                 "\n@@@@@@ resp=" , resp
+                ,"\n@@@@@@ documentosXFamilia @@@@@@"
+                ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                ));
+        return resp;
+    }
+	
+	@Override
+    public void ejecutaFusionFam(  String pv_cdunieco_i,
+                                   String pv_cdramo_i,
+                                   String pv_estado_i,
+                                   String pv_nmpoliza_i, 
+                                   String pv_nmsuplem_i,
+                                   String pv_tipoMov_i,
+                                   String pv_cdtiptra_i,
+                                   UserVO usuario)
+    {
+        long stamp = System.currentTimeMillis();
+        logger.debug(Utils.log(
+                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                ,"\n@@@@@@ ejecutaFusionFam @@@@@@"
+                ,"\n@@@@@@ pv_cdunieco_i=" , pv_cdunieco_i
+                ,"\n@@@@@@ pv_cdramo_i="   , pv_cdramo_i
+                ,"\n@@@@@@ pv_estado_i="   , pv_estado_i
+                ,"\n@@@@@@ pv_nmpoliza_i=" , pv_nmpoliza_i
+                ,"\n@@@@@@ pv_nmsuplem_i=" , pv_nmsuplem_i
+                ));
+        
+        List<Map<String,String>> titulares=null;
+        String paso="";
+        try
+        {
+            paso="Actualizando el estado de tfuslock";
+            consultasDAO.actualizaEstadoTFusLock(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, "W");
+            
+            paso="Obteniendo titulares";
+            titulares = consultasDAO.titularesFus( pv_cdunieco_i
+                                                 , pv_cdramo_i
+                                                 , pv_estado_i
+                                                 , pv_nmpoliza_i
+                                                 , pv_nmsuplem_i);
+            
+            for(Map<String,String> tit: titulares){
+                List<File>files = new ArrayList<File>();
+                // traemos los docs y hacemos un for
+                List<Map<String,String>> documentos = consultasDAO.docsXTitular(pv_cdunieco_i
+                                                                                , pv_cdramo_i
+                                                                                , pv_estado_i
+                                                                                , pv_nmpoliza_i
+                                                                                , pv_nmsuplem_i
+                                                                                , tit.get("nmsitaux"));
+                logger.debug(Utils.log("Titular: ",tit,
+                                       "\nDocumentos: ",documentos));
+                if(documentos.isEmpty()){
+                    logger.warn("No hay documentos que fusionar");
+                    continue;
+                }
+                paso="Ordenando documentos ";
+                logger.debug(Utils.join("Documentos sin ordenar: ",documentos));
+                documentos.sort(new Comparator<Map<String,String>>() {
+                    
+                    
+                    @Override
+                    public int compare(Map<String, String> o1, Map<String, String> o2) {
+                        String dsdocume1=o1.get("dsdocume");
+                        String dsdocume2=o2.get("dsdocume");
+                        
+                        if(dsdocume1==null)
+                            return -1;
+                        
+                        String []tipos=new String[]{"C","RCL","CB","OS","OSE","IM","IME","CR","OTRO"};
+                        List<String> lTipos=Arrays.asList(tipos);
+                        logger.debug(Utils.join("___----__>",dsdocume1));
+                        dsdocume1=tipo(dsdocume1);
+                        logger.debug(Utils.join("2___----__>",dsdocume1));
+                        logger.debug(Utils.join("___----__>",dsdocume2));
+                        dsdocume2=tipo(dsdocume2);
+                        logger.debug(Utils.join("2___----__>",dsdocume2));
+                        
+                        if( lTipos.indexOf(dsdocume1)>lTipos.indexOf(dsdocume2)){
+                            return 1;
+                        }else if(lTipos.indexOf(dsdocume1)==lTipos.indexOf(dsdocume2)){
+                            return 0;
+                        }
+                        return -1;
+                    }
+                    
+                    private String tipo(String dsdocume){
+                        if(dsdocume.contains("CERTIFICADO") || dsdocume.matches("^.*CAR.TULA.*$")){
+                            return "C";
+                        }else if(dsdocume.matches("(?i)^.*Relaci.n.*COBERTURAS.*L.MITES.*")){
+                            return "RCL";
+                        }else if(dsdocume.contains("CARTA")){
+                            return "CB";
+                        }else if(dsdocume.matches("^.*ORDEN.*SERVICIO((?!(ESPECIALISTA)).)*$")){
+                            return "OS";
+                        }else if(dsdocume.matches("^.*ORDEN.*SERVICIO.*ESPECIALISTA.*$")){
+                            return "OSE";
+                        }else if(dsdocume.matches("^.*INFORME.*M.DICO((?!(ESPECIALISTA)).)*$")){
+                            return "IM";
+                        }else if(dsdocume.matches("^.*INFORME.*M.DICO.*ESPECIALISTA.*$")){
+                            return "IME";
+                        }else if(dsdocume.contains("CREDENCIAL")){
+                            return "CR";
+                        }else{
+                            return "OTRO";
+                        }
+                    }
+                    
+                });
+                logger.debug(Utils.join("Documentos ordenados: ",documentos));
+                String ntramite = "";
+                for(Map<String,String> archivo:documentos){
+                    
+                    ntramite = archivo.get("ntramite");
+                    String cddocume = archivo.get("cddocume");
+                    String dsdocume = archivo.get("dsdocume");
+                    String filePath = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",cddocume);
+                    String nmpoliza = archivo.get("nmpoliza");
+                    logger.debug(Utils.log("\ntramite,archivo=",ntramite,",",cddocume));
+                    
+                    if(cddocume.toLowerCase().indexOf("://")!=-1)
+                    {
+                        paso = "Descargando archivo remoto";
+                        cddocume=cddocume.replaceAll("\\s", "").trim();
+                        logger.debug(paso);
+                        long timestamp = System.currentTimeMillis();
+                        long rand      = new Double(1000d*Math.random()).longValue();
+                        filePath       = Utils.join(
+                                rutaDocumentosTemporal
+                                ,"/poliza_"    , archivo.get("nmpoliza")
+                                ,"nmsupleme_"  , archivo.get("nmsupleme")
+                                ,"_dsdocume_"  , archivo.get("dsdocume")
+                                ,"_tramite_" , ntramite
+                                ,"_t_"       , timestamp , "_" , rand
+                                ,".pdf"
+                                );
+                        
+                        
+                        
+                        File local = new File(filePath);
+                        
+                        try{
+                            InputStream remoto = HttpUtil.obtenInputStream(cddocume.replace("https","http").replace("HTTPS","HTTP"));
+                            FileUtils.copyInputStreamToFile(remoto, local);
+                        }catch(ConnectException ex){
+                            logger.error("Error al descargar documento: ",ex);
+                            
+                        }catch(Exception ex){
+                            logger.error("Error al descargar documento: ",ex);
+                        }
+                    }
+                    files.add(new File(filePath));
+                }
+                paso="Obteniendo cdideext";
+                
+               
+                String nmsitaux= consultasDAO.obtieneNmsituaext(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, tit.get("nmsitaux"));
+                logger.debug("Respuesta obtieneNmsituaext: "+nmsitaux);
+                paso="Fusionando documentos";
+                File fusionado = DocumentosUtils.mixPdf(files,new File(Utils.join(
+                        rutaDocumentosPoliza
+                        ,"/",ntramite
+                        ,"/F_",tit.get("nmsitaux"),"_"
+                        ,pv_cdunieco_i
+                        ,"-",pv_cdramo_i
+                        ,"-",pv_nmpoliza_i
+                        ,"-",nmsitaux
+                        ,".pdf"
+                        )));
+                
+                paso="guardando en tdocupolfus";
+                consultasDAO.movTdocupolFus(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, null, ntramite, new Date()
+                        , Utils.join("F_",tit.get("nmsitaux"),"_",pv_cdunieco_i
+                        ,"-",pv_cdramo_i
+                        ,"-",pv_nmpoliza_i
+                        ,"-",nmsitaux
+                        ,".pdf")
+                        , Utils.join(" ",pv_cdunieco_i
+                                ,"-",pv_cdramo_i
+                                ,"-",pv_nmpoliza_i
+                                ,"-",nmsitaux
+                                ,"")
+                        , pv_tipoMov_i
+                        , null
+                        , pv_cdtiptra_i
+                        , null
+                        , null
+                        , null
+                        , null
+                        , null
+                        , null
+                        , usuario.getUser()
+                        , usuario.getRolActivo().getClave());
+                consultasDAO.actualizaEstadoTFusLock(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, "F");
+                
+                        
+
+            }
+            consultasDAO.actualizaEstadoTFusLock(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, "F");
+            
+            String [] to    = new String[]{usuario.getEmail()};
+            String asunto   = "FUSIONAR POR TITULAR TERMINADO";
+            String mensaje  = Utils.join(
+                                            "Estimado(a): ",usuario.getName()
+                                           ,"<br /><br />"
+                                           ,"Le notificamos que la fusi&oacute;n de documentos por titulares de la p&oacute;liza: "
+                                           ,pv_nmpoliza_i
+                                           ,!pv_nmsuplem_i.trim().equals("0")?" y endoso: "+pv_nmsuplem_i:""
+                                           ," ha finalizado."
+                                           ,"<br /><br />Saludos cordiales."
+                                        );
+            //consultasDAO.actualizaEstadoTFusLock(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, "F");
+            mailService.enviaCorreo(to, null, null, asunto, mensaje, new String[0], true);
+            
+            
+        }
+        catch(Exception ex)
+        {
+            logger.error(Utils.join("Error al verificar fusfamilia #"),ex);
+        }
+        
+        logger.debug(Utils.log(
+                 "\n@@@@@@ "
+                ,"\n@@@@@@ ejecutaFusionFam @@@@@@"
+                ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                ));
+       
+    }
+	
+	public static void main(String []args){
+        System.out.println("Hello World");
+        boolean a= "EMISIÓN DE LA POLIZA- FAM (1) INFORME MÉDICO DE MEDICINA PREVENTIVA PAG 1".matches("^.*INFORME.*M.DICO((?!(ESPECIALISTA)).)*$");
+     
+         System.out.println("-"+a);
+     }
 }
