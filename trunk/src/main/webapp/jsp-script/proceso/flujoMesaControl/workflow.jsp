@@ -4060,14 +4060,28 @@ Ext.onReady(function()
     {
         toolkit = jsPlumb.getInstance(
         {
-            Container            : 'canvasdiv'
-            ,Endpoint            : ['Dot',{radius:7}]
-            ,ConnectionOverlays  : [ [ 'PlainArrow' , { location : 1 } ] ]
-            ,Connector           : 'StateMachine'
-            //,Connector           : 'Flowchart'
-            ,ReattachConnections : false
-            ,HoverPaintStyle     : { strokeStyle   : 'red' , lineWidth    : 5 }
-            ,EndpointHoverStyle  : { outlineColor  : 'red' , outlineWidth : 1 }
+            Container           : 'canvasdiv',
+            Endpoint            : ['Dot',{radius:7}],
+            ConnectionOverlays  : [ [ 'PlainArrow' , { location : 1, width : 15, length : 15 } ] ],
+            Connector           : 'StateMachine',
+            //Connector         : 'Flowchart',
+            ReattachConnections : false,
+            PaintStyle          : {
+                strokeStyle : 'rgba(67, 85, 135, 0.4)',
+                lineWidth   : 4
+            },
+            HoverPaintStyle    : {
+                strokeStyle : 'rgba(255, 0, 0, 0.8)',
+                lineWidth   : 5
+            },
+            EndpointStyle       : {
+                fillStyle     : 'rgba(67, 85, 135, 0.4)',
+                outlineColor  : 'rgba(67, 85, 135, 0.4)'
+            },
+            EndpointHoverStyle : {
+                fillStyle    : 'rgba(255, 0, 0, 0.8)',
+                outlineColor : 'rgba(255, 0, 0, 0.8)'
+            }
         });
         
         toolkit.bind('click',function(con)
@@ -5333,8 +5347,20 @@ function _p52_cargarModelado()
                                     con.escuchador = true;
                                     con.bind('mouseover', function (conn) {
                                         debug('mouseover args:', arguments);
-                                        conn.addOverlay(['Label', { label: conn.dsaccion || '(vacio)', location:0.1, id: "connLabel"} ]);
-                                        conn.addOverlay(['Label', { label: conn.dsaccion || '(vacio)', location:0.9, id: "connLabel2"} ]);
+                                        conn.addOverlay(['Label',
+                                            {
+                                                label    : '<span style="background:white;">' + (conn.dsaccion || '(vacio)') + '</span>',
+                                                location : 0.1,
+                                                id       : "connLabel"
+                                            }
+                                        ]);
+                                        conn.addOverlay(['Label',
+                                            {
+                                                label    : '<span style="background:white;">' + (conn.dsaccion || '(vacio)') + '</span>',
+                                                location : 0.9,
+                                                id       : "connLabel2"
+                                            }
+                                        ]);
                                     });
                                     con.bind('mouseout', function (conn) {
                                         debug('mouseout args:', arguments);
