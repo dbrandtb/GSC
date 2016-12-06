@@ -8667,7 +8667,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 
     protected class ValidaCertificadoGrupo extends StoredProcedure {
         protected ValidaCertificadoGrupo(DataSource dataSource) {
-            super(dataSource, "PKG_SESA.P_VALIDA_TITULAR_VIGENTE");
+            super(dataSource, "PKG_SESAS.P_VALIDA_TITULAR_VIGENTE");
             declareParameter(new SqlParameter("pv_cdunieco_i",   OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
