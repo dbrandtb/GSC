@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -653,7 +655,8 @@ public class ConsultasManagerImpl implements ConsultasManager
                 }
                 paso="Ordenando documentos ";
                 logger.debug(Utils.join("Documentos sin ordenar: ",documentos));
-                documentos.sort(new Comparator<Map<String,String>>() {
+                
+                Collections.sort(documentos,new Comparator<Map<String,String>>() {
                     
                     
                     @Override
