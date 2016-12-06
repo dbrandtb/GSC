@@ -190,12 +190,19 @@ public class DocumentosUtils
 			long timestamp = System.currentTimeMillis();
 			long rand = new Double(1000d*Math.random()).longValue();
 			
-			File ot=new File(blanco.getAbsoluteFile().getParent()+"\\"+
-					input.getName().substring(
-							0, input.getName().indexOf(".")
-							)+"_dplx_"+timestamp+rand+".pdf");
+			File ot=new File(blanco
+        			        .getAbsoluteFile()
+        			        .getParent()
+        			        +Constantes.SEPARADOR_ARCHIVO
+        			        +input.getName()
+        			        .substring(
+        			                0, input.getName().indexOf(".")
+        			                )
+        			        +"_dplx_"
+        			        +timestamp+rand
+        			        +".pdf");
 			
-			
+
 			return mixPdf(fus,ot); 
 			
 		} catch (Exception e) {
@@ -209,12 +216,14 @@ public class DocumentosUtils
 		Document document= new Document();
 		PdfCopy copy;
 		try {
+		    logger.debug("lista de archivos: {}",pdfs);
 			copy = new PdfCopy(document, new FileOutputStream(salida));
 		
 			document.open();
 			PdfReader reader;
 			int n;
 			for(File doc: pdfs){
+			    logger.debug("Uniendo archivo: {}",doc.getAbsolutePath());
 				reader=new PdfReader(doc.getAbsolutePath());
 				n=reader.getNumberOfPages();
 				for(int page=0;page<n;){
@@ -228,7 +237,7 @@ public class DocumentosUtils
 		} catch (Exception e) {
 			logger.error("Error en mixPdf: ",e);
 		}
-		
+		logger.debug("Archivo fusionado: {}",salida);
 		return salida;
 		
 	}
@@ -291,13 +300,31 @@ public class DocumentosUtils
 		return exito;
 	}
 	
+	public static boolean verificaPDF(File pdf){
+	    
+	    try{
+	        PdfReader reader=new PdfReader(pdf.getAbsolutePath());
+	        boolean res=!reader.isRebuilt(); 
+	        logger.debug("Verificando arcivo {} :"+res,pdf.getAbsolutePath());
+	        return res;
+	        
+	    }catch(Exception e){
+	        logger.debug("Error al verificar pdf: {}",e);
+	        return false;
+	    }
+	    
+	    
+	}
+	
 	
 //	public static void main(String []args)throws Exception{
 //		
 //		List<File> l=new ArrayList();
-//		l.add(new File("c:\\RES\\horizontal.pdf"));
-//		l.add(new File("c:\\RES\\lo.pdf"));
-//		mixPdf(l, new File("c:\\RES\\slm.pdf"));
+//		l.add(new File("C:\\Users\\Biosnet.16\\Desktop\\basura\\lote_4529_remesa_440457_tramite_394544_t_1480534101908_135.pdf"));//malo
+//		l.add(new File("C:\\Users\\Biosnet.16\\Desktop\\basura\\lote_4529_remesa_440458_tramite_300059_t_1480533657476_545.pdf"));
+//		mixPdf(l, new File("c:\\Users\\Biosnet.16\\Desktop\\basura\\slm.pdf"));
+//		System.out.println("yaaa");
+//		System.out.println(verificaPDF(new File("c:\\Users\\Biosnet.16\\Desktop\\basura\\lotesdsd_4529_remesa_440458_tramite_300059_t_1480533657476_545.pdf")));
 //		
 //	}
 }
