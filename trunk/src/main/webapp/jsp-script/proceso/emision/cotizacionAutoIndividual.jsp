@@ -930,24 +930,23 @@ Ext.onReady(function()
                 }); 
         
         //agente
-        if(_p28_smap1.cdsisrol=='EJECUTIVOCUENTA')
-        {
-            agente.setValue(_p28_smap1.cdagente);
-            agente.setReadOnly(true);
-            _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
-        }
-        else (
-                '|PROMOTORAUTO'.lastIndexOf(_p28_smap1.cdsisrol)!=-1
-                &&
-                RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) 
-             )
-            /* if(_p28_smap1.cdsisrol=='PROMOTORAUTO'||_p28_smap1.cdsisrol=='SUSCRIAUTO') */
-        {
-            agente.on(
-            {
-                'select' : _p28_ramo5AgenteSelect
-            });
-        }
+       if(_p28_smap1.cdsisrol=='EJECUTIVOCUENTA')
+       {
+           agente.setValue(_p28_smap1.cdagente);
+           agente.setReadOnly(true);
+           _p28_ramo5AgenteSelect(agente,_p28_smap1.cdagente);
+       }
+       else if(
+               RolSistema.PromotorAuto === _p28_smap1.cdsisrol
+               ||
+               RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) 
+              )
+       {
+           agente.on(
+           {
+               'select' : _p28_ramo5AgenteSelect
+           });
+       }
         //agente
         
         //cliente nuevo
