@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
@@ -179,5 +180,16 @@ public interface ConsultasManager
             ,String nmsituac) throws Exception;
 	
 	public String recuperaAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String cdusuari) throws Exception;
+
+    public String documentosXFamilia(String pv_cdunieco_i, 
+                                        String pv_cdramo_i, 
+                                        String pv_estado_i, 
+                                        String pv_nmpoliza_i,
+                                        String pv_nmsuplem_i, 
+                                        String pv_cdusuari);
+
+    public void ejecutaFusionFam(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i, String pv_nmpoliza_i,
+            String pv_nmsuplem_i,String pv_tipoMov_i,
+            String pv_cdtiptra_i, UserVO usuario);
 	
 }
