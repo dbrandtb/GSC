@@ -1801,7 +1801,7 @@ function _0_cotizar(boton)
 //     		 if(rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')==-1)
 	         if(!RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol))
        		 {
-       			 _0_smap1['cdsisrol'] ='SUSCRIAUTO';
+       			 _0_smap1['cdsisrol'] =RolSistema.SuscriptorAuto;
        		 }
        	  
         	 if(!Ext.isEmpty(cdagenteCotiza))
@@ -4681,7 +4681,7 @@ Ext.onReady(function()
         var folio  = _fieldByName('parametros.pv_otvalor16');
         
         //agente
-        if((_0_smap1.cdsisrol=='PROMOTORAUTO'
+        if((_0_smap1.cdsisrol== RolSistema.PromotorAuto
             ||
             //_0_smap1.cdsisrol=='SUSCRIAUTO'
 //           (rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1)
