@@ -2276,7 +2276,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				File f=new File(filePath);
 				logger.debug("Verificando si existe el archivo");
 				
-				if(!f.exists()){
+				if(!f.exists() || !DocumentosUtils.verificaPDF(f)){
 					
 					if(cdtipram.trim().equals("10")){
 						
@@ -2290,7 +2290,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					
 					f=new File(filePath);
 					
-					if(!f.exists()){
+					if(!f.exists() || !DocumentosUtils.verificaPDF(f)){
 						
 						
 						logger.debug(Utils.join("\n@@@@No existe el archivo: ",
@@ -2542,7 +2542,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 					rand      = new Double(1000d*Math.random()).longValue();
 					filePath       = Utils.join(
 							rutaDocumentosTemporal
-							,"_tramite_" , ntramite
+							,"/_tramite_" , ntramite
 							,"_t_"       , timestamp , "_" , rand
 							,".pdf"
 							);
@@ -2582,7 +2582,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			
 			File fusionado = DocumentosUtils.mixPdf(files, new File(Utils.join(
 							rutaDocumentosTemporal
-							,"layout"
+							,"/layout"
 							,"_fusion_papel_" , hoja
 							,"_t_"            , System.currentTimeMillis()
 							,".pdf"
