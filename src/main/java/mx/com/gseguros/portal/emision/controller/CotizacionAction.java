@@ -1,9 +1,7 @@
 package mx.com.gseguros.portal.emision.controller;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
@@ -31,14 +29,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.jcraft.jsch.Buffer;
 import com.opensymphony.xwork2.ActionContext;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
@@ -82,8 +78,6 @@ import mx.com.gseguros.portal.general.util.TipoProcesoBloqueo;
 import mx.com.gseguros.portal.general.util.TipoRamo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
-import mx.com.gseguros.portal.general.validacionformato.CampoVO;
-import mx.com.gseguros.portal.general.validacionformato.ValidadorFormatoContext;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
@@ -138,13 +132,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private String limit;
 	private String total;
 	private String saMed;
-    private File                     	     excel;
-    private String                   		 excelFileName;
-    private String                   		 excelContentType;
-	private GenericVO 						 resultado;
-    private String 							 fileNameError;
 	
-
 	@Autowired
 	private EmisionManager emisionManager;
 	
@@ -177,9 +165,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
-	
-    @Autowired
-	private ValidadorFormatoContext validadorFormatoContext;
 	
 	public CotizacionAction()
 	{
@@ -13367,225 +13352,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	        return SUCCESS;
 	    }
 	   
-	public String procesarCargaMasivaRecuperaInd() {
-		String cdperson = "";
-		String sucursal = "";
-		String poliza = "";
-		String nombre1 = "";
-		String nombre2 = "";
-		String apePat = "";
-		String apeMat = "";
-		String producto = "";
-		String cve_plan = "";
-		String esq_suma_ase = "";
-		String parentesco = "";
-		String f_nacimiento = "";
-		String RFC = "";
-		String sexo = "";
-		String peso = "";
-		String estatura = "";
-		String fecinivig = "";
-		String membresia = "";
-		String mensaje = "";
-		logger.debug(Utils.log("", "\n#########################################",
-				"\n###### procesarCargaMasivaRecupera ######", "\n###### smap1=", smap1, "\n###### excel=", excel,
-				"\n###### excelFileName=", excelFileName, "\n###### excelContentType=", excelContentType));
-
-		try {
-			logger.debug(Utils.log("", "Validando datos de entrada"));
-
-			Utils.validate(smap1, "No se recibieron datos");
-
-			String cdramo = smap1.get("cdramo"), cdtipsit = smap1.get("cdtipsit"), respetar = smap1.get("tomarMasiva"),
-					tipoflot = smap1.get("tipoflot"),
-					cdsisrol = ((UserVO) session.get("USUARIO")).getRolActivo().getClave(),
-					negocio = smap1.get("negocio");
-
-			logger.debug(Utils.join("\n VILS tipoflot=", tipoflot, "\n VILS cdsisrol=", cdsisrol, "\n VILS negociol=",
-					negocio));
-
-			Utils.validate(cdramo, "No se recibi\u00f3 el producto", cdtipsit, "No se recibi\u00f3 la modalidad",
-					negocio, "No se recibio negocio");
-
-			Utils.validate(excel, "No se recibi\u00f3 el archivo");
-
-			logger.debug("ANTES DE HACER LA IMPLEMENTACION");
-
-			String fileNameIn = "C://RES//docs//tmp//Libro1.xlsx";
-			List<CampoVO> campos = new ArrayList<CampoVO>();
-			campos.add(new CampoVO(CampoVO.NUMERICO, 1, 100, false)); // 1
-			campos.add(new CampoVO(CampoVO.NUMERICO, 1, 100, true)); // 2
-			campos.add(new CampoVO(CampoVO.NUMERICO, 1, 100, false)); // 3
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, false)); // 4
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true)); // 5
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, false)); // 6
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true)); // 7
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true)); // 8
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true)); // 9
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true)); // 10
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true)); // 11
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, false)); // 12
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, false)); // 13
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, false)); // 14
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true)); // 15
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true)); // 16
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true)); // 17
-			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, false)); // 18
-			// Nombre del archivo de errores (si los hay):
-			String fullNameArchErrValida = getText("ruta.documentos.temporal") + Constantes.SEPARADOR_ARCHIVO
-					+ "conversion_" + System.currentTimeMillis() + "_err.txt";
-
-			File archErrVal = validadorFormatoContext.ejecutaValidacionesFormato(new File(fileNameIn), campos,
-					fullNameArchErrValida, ValidadorFormatoContext.Strategy.VALIDACION_EXCEL);
-			if (archErrVal != null && archErrVal.length() > 0) {
-				String msjeError = "Archivo tiene errores de formato";
-				resultado = new GenericVO("1", msjeError);
-				fileNameError = archErrVal.getName();
-				throw new ApplicationException(msjeError);
-			} else {
-				logger.debug("TERMINA PROCESO" + campos);
-				exito = true;
-				ManagerRespuestaSlistVO resp = emisionManager.procesarCargaMasivaRecupera(cdramo, cdtipsit, respetar,
-						excel);// ,tipoflot
-				logger.debug(resp.getRespuesta() + "####" + resp.getRespuestaOculta());
-				if (resp.getRespuesta() == "" || resp.getRespuesta() == null) {
-					int tam = resp.getSlist().size();
-					for (int i = 0; i <= tam - 1; i++) {
-						for (Entry<String, String> en : resp.getSlist().get(i).entrySet()) {
-							System.out.println(en.getValue() + "VALOR" + en.getKey());
-							switch (Integer.parseInt(en.getKey())) {
-							case 0:
-								cdperson = en.getValue();
-								break;
-							case 1:
-								sucursal = en.getValue();
-								break;
-							case 2:
-								poliza = en.getValue();
-								break;
-							case 3:
-								nombre1 = en.getValue();
-								break;
-							case 4:
-								nombre2 = en.getValue();
-								break;
-							case 5:
-								apePat = en.getValue();
-								break;
-							case 6:
-								apeMat = en.getValue();
-								break;
-							case 7:
-								producto = en.getValue();
-								break;
-							case 8:
-								cve_plan = en.getValue();
-								break;
-							case 9:
-								esq_suma_ase = en.getValue();
-								break;
-							case 10:
-								parentesco = en.getValue();
-								break;
-							case 11:
-								f_nacimiento = en.getValue();
-								break;
-							case 12:
-								RFC = en.getValue();
-								break;
-							case 13:
-								sexo = en.getValue();
-								break;
-							case 14:
-								peso = en.getValue();
-								break;
-							case 15:
-								estatura = en.getValue();
-								break;
-							case 16:
-								fecinivig = en.getValue();
-								break;
-							case 17:
-								membresia = en.getValue();
-								// llamar a generaPoliza
-								System.out.println("ENTRANDO ....");
-								 mensaje = generarPoliza(cdperson, sucursal, poliza,
-								 nombre1, nombre2, apePat, apeMat, producto,
-								 cve_plan, esq_suma_ase, parentesco,
-								 f_nacimiento,
-								 RFC, sexo, peso, estatura, fecinivig,
-								 membresia);
-								 System.out.println("ES EL MENSAJE FINAL: "+mensaje);
-								break;
-							}
-						}
-					}
-				}else{
-					File fileErrors = new File(fullNameArchErrValida);
-					System.out.println("MMM"+fullNameArchErrValida);
-					System.out.println("RUTA DEL ARCHIVO"+fileErrors.getPath());
-					BufferedWriter writerErrors = new BufferedWriter( new FileWriter(fileErrors));
-					writerErrors.write(
-							new StringBuilder()
-								.append(resp.getRespuesta()+"\n").append(" POLIZA "+resp.getRespuestaOculta()+"\n").toString());	
-					writerErrors.flush();
-					writerErrors.close();
-					throw new ApplicationException(resp.getRespuesta()+" NUMERO "+resp.getRespuestaOculta());
-				}
-				// java.util.List<java.util.Map<String,String>> iter =
-				// resp.getSlist();
-				// while (iter.iterator() != null) {
-				// System.out.println(iter.);
-				// }
-			}
-		} catch (Exception ex) {
-			// respuesta = Utils.manejaExcepcion(ex);
-			logger.debug("manejador de exepciones" + ex);
-		}
-
-		logger.debug("", "\n###### exito=", exito, "\n###### slist1=", slist1,
-				"\n###### procesarCargaMasivaFlotilla ######", "\n#########################################");
-		return SUCCESS;
-	}
-	
-	   @SuppressWarnings("unchecked")
-		public String generarPoliza(String cdperson, String sucursal, String poliza, String nombre1, 
-				                               String nombre2, String apePat,String apeMat,String producto,
-				                               String cve_plan,String esq_suma_aseg,String parentesco,String f_nacimiento,
-				                               String RFC,String sexo,String peso,String estatura,String fecinivig,String membresia)
-			{
-		   String mensaje = "";
-				logger.debug(Utils.log(
-						 "\n###############################"
-						,"\n###### cargar por Poliza ######"
-						,"\n###### smap1 = " , smap1
-						));
-				ArrayList<String> resultados = new ArrayList<String>();
-				try
-				{
-					String params      = Utils.join("cdperson=",cdperson,"&sucursal=",sucursal,"&poliza=",poliza,"&nombre1=",nombre1,
-													"&nombre2=",nombre2,"&apePat=",apePat,"&apeMat=",apeMat,"&producto=",producto,
-													"&cvePlan=",cve_plan,"&esqSumaAseg=",esq_suma_aseg,"&parentesco=",parentesco,
-													"&fNacimiento=",f_nacimiento,"&rfc=",RFC,"&sexo=",sexo,"&peso=",peso,
-													"&estatura=",estatura,"&fecinivig=",fecinivig,"&membresia=",membresia);
-						  mensaje =HttpUtil.sendPost(getText("sigs.generarPolizaRecupera.url"),params);
-//						HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
-//						Map<String,String>parametros = (Map<String,String>)someObject.get("params");
-//						
-//						String resultado = parametros.get("exito");
-					if(mensaje != null){
-						return mensaje;
-					}
-//						resultados.add(resultado);
-						logger.debug("ENTRO ");
-				}
-				catch (Exception ex)
-				{
-					respuesta = Utils.manejaExcepcion(ex);
-				}
-				return mensaje;
-			}   
 	   
+	  
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
@@ -13790,43 +13559,4 @@ public class CotizacionAction extends PrincipalCoreAction
 		this.saMed = saMed;
 	}
 	
-	public File getExcel() {
-		return excel;
-	}
-
-	public void setExcel(File excel) {
-		this.excel = excel;
-	}
-
-	public String getExcelFileName() {
-		return excelFileName;
-	}
-
-	public void setExcelFileName(String excelFileName) {
-		this.excelFileName = excelFileName;
-	}
-
-	public String getExcelContentType() {
-		return excelContentType;
-	}
-
-	public void setExcelContentType(String excelContentType) {
-		this.excelContentType = excelContentType;
-	}
-	
-	public GenericVO getResultado() {
-		return resultado;
-	}
-
-	public void setResultado(GenericVO resultado) {
-		this.resultado = resultado;
-	}
-
-	public String getFileNameError() {
-		return fileNameError;
-	}
-
-	public void setFileNameError(String fileNameError) {
-		this.fileNameError = fileNameError;
-	}
 }
