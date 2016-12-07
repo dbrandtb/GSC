@@ -1183,7 +1183,7 @@ Ext.onReady(function()
 			                }
 			                ,{
 			                    xtype    : 'button'
-			                   ,text     : 'Fucionar por familia'
+			                   ,text     : 'Fusionar por familia'
 			                   ,handler  : fusionarXfamilia
 			                   ,icon     : '${ctx}/resources/fam3icons/icons/pdf.png'
 			                   ,hidden   : _GLOBAL_CDSISROL=='SUPERVISOR' || _GLOBAL_CDSISROL=='GERENTEOPEMI'?false:true
