@@ -64,7 +64,41 @@ public interface EmisionManager
 	
 	public String generarLigasDocumentosEmisionLocalesIce (String ntramite) throws Exception;
 
-	public ManagerRespuestaSlistVO procesarCargaMasivaRecupera(String cdramo, String cdtipsit, String respetar, File excel)throws Exception;
+	/**
+	 * 
+	 * @param excel nombre del archivo que se va a validar
+	 * @return
+	 * @throws Exception
+	 */
+	public ManagerRespuestaSlistVO procesarCargaMasivaRecupera(File excel)throws Exception;
+
+	/**
+	 * Invoca servicio que genera una poliza de Recupera Individual
+	 * 
+	 * @param cdperson codigo de la persona
+	 * @param sucursal 
+	 * @param poliza poliza proporcionada por el cliente
+	 * @param nombre1 primer nombre del asegurado 
+	 * @param nombre2 segundo nombre del asegurado
+	 * @param apePat apellido paterno del asegurado
+	 * @param apeMat apellido materno del asegurado
+	 * @param producto identificador del producto
+	 * @param cve_plan numero del plan
+	 * @param esq_suma_ase esquema de suma asegurada
+	 * @param parentesco parentesco con el aasegurado
+	 * @param f_nacimiento fecha de nacimiento del asegurado
+	 * @param rFC rfc del asegurado
+	 * @param sexo sexo del asegurado
+	 * @param peso peso del asegurado
+	 * @param estatura estatura del asegurado
+	 * @param fecinivig  fecha de inicio de vigencia de la poliza
+	 * @param membresia 
+	 * @return
+	 */
+	public String generarPoliza(String cdperson, String sucursal, String poliza, String nombre1, String nombre2,
+			String apePat, String apeMat, String producto, String cve_plan, String esq_suma_ase, String parentesco,
+			String f_nacimiento, String rFC, String sexo, String peso, String estatura, String fecinivig,
+			String membresia);
 	
 	
 	
