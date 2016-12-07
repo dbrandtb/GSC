@@ -14,6 +14,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
@@ -290,7 +291,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		}
 
 		logger.debug(Utils.log(
-				 "\n###### ventanaDocumentosPoliza ######"
+				 "\n###### ventanaDocumentosPoliza ######",smap1
 				,"\n#####################################"
 				));
 		return SUCCESS;
@@ -506,6 +507,137 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
                 );
 	    return SUCCESS;
 	}
+	
+	public String documentosXFamilia(){
+	    logger.debug(
+                new StringBuilder()
+                .append("\n##################################")
+                .append("\n###### documentosXFamilia ######")
+                .append("\n###### smap1=").append(smap1)
+                .toString()
+                );
+        
+        success = true;
+        exito   = true;
+        
+       
+        try
+        {
+            UserVO usuario = (UserVO)session.get("USUARIO");
+            String pv_cdunieco_i  = smap1.get("cdunieco");
+            String pv_cdramo_i    = smap1.get("cdramo");
+            String pv_estado_i    = smap1.get("estado");
+            String pv_nmpoliza_i  = smap1.get("nmpoliza"); 
+            String pv_nmsuplem_i  = smap1.get("nmsuplem");
+            String pv_cdusuari    = usuario.getUser();
+            
+            Utils.validate( pv_cdunieco_i    ,"No se recibió pv_cdunieco_i ",
+                            pv_cdramo_i      ,"No se recibió pv_cdramo_i   ",
+                            pv_estado_i      ,"No se recibió pv_estado_i   ",
+                            pv_nmpoliza_i    ,"No se recibió pv_nmpoliza_i ",
+                            pv_nmsuplem_i    ,"No se recibió pv_nmsuplem_i ",
+                            pv_cdusuari      ,"No se recibió pv_cdusuari   ");
+            
+           respuesta = consultasManager.documentosXFamilia(pv_cdunieco_i,
+                                                pv_cdramo_i,
+                                                pv_estado_i, 
+                                                pv_nmpoliza_i, 
+                                                pv_nmsuplem_i, 
+                                                pv_cdusuari);
+           smap1.put("userEmail", usuario.getEmail());
+            
+            
+            
+            
+        }
+        catch(Exception ex)
+        {
+            long timestamp  = System.currentTimeMillis();
+            exito           = false;
+            respuesta       = "Datos incompletos #"+timestamp;
+            respuestaOculta = ex.getMessage();
+            logger.error(respuesta,ex);
+        }
+        
+        
+        
+        logger.debug(
+                new StringBuilder()
+                .append("\n###### smap1=").append(smap1)
+                .append("\n###### documentosXFamilia   ######")
+                .append("\n##################################")
+                .toString()
+                );
+        return SUCCESS;
+	}
+	
+	public String ejecutaFusionFam(){
+        logger.debug(
+                new StringBuilder()
+                .append("\n##################################")
+                .append("\n###### ejecutaFusionFam ######")
+                .append("\n###### smap1=").append(smap1)
+                .toString()
+                );
+        
+        success = true;
+        exito   = true;
+        
+       
+        try
+        {
+            UserVO usuario = (UserVO)session.get("USUARIO");
+            String pv_cdunieco_i  = smap1.get("cdunieco");
+            String pv_cdramo_i    = smap1.get("cdramo");
+            String pv_estado_i    = smap1.get("estado");
+            String pv_nmpoliza_i  = smap1.get("nmpoliza"); 
+            String pv_nmsuplem_i  = smap1.get("nmsuplem");
+            String pv_tipoMov_i   = smap1.get("tipoMov");
+            String pv_cdtiptra_i  = smap1.get("cdTipTra");
+            String pv_nmsituac_i  = smap1.get("nmsituac");
+            
+            Utils.validate( pv_cdunieco_i    ,"No se recibió pv_cdunieco_i ",
+                            pv_cdramo_i      ,"No se recibió pv_cdramo_i   ",
+                            pv_estado_i      ,"No se recibió pv_estado_i   ",
+                            pv_nmpoliza_i    ,"No se recibió pv_nmpoliza_i ",
+                            pv_nmsuplem_i    ,"No se recibió pv_nmsuplem_i ");
+            
+            usuario.setEmail(smap1.get("email"));
+            
+            consultasManager.ejecutaFusionFam  ( pv_cdunieco_i,
+                                                            pv_cdramo_i,
+                                                            pv_estado_i, 
+                                                            pv_nmpoliza_i, 
+                                                            pv_nmsuplem_i,
+                                                            pv_tipoMov_i,
+                                                            pv_cdtiptra_i,
+                                                            usuario);
+            
+            
+            
+            
+        }
+        catch(Exception ex)
+        {
+            long timestamp  = System.currentTimeMillis();
+            exito           = false;
+            respuesta       = "Datos incompletos #"+timestamp;
+            respuestaOculta = ex.getMessage();
+            logger.error(respuesta,ex);
+        }
+        
+        
+        
+        logger.debug(
+                new StringBuilder()
+                .append("\n###### smap1=").append(smap1)
+                .append("\n###### ejecutaFusionFam     ######")
+                .append("\n##################################")
+                .toString()
+                );
+        return SUCCESS;
+    }
+	 
 	
 	//Getters and setters:
 	
