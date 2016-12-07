@@ -32,6 +32,7 @@ import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -1212,7 +1213,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
     					flujo.getNtramite(),
     					flujo.getStatus(),
     					flujo.getCdunieco(),
-    					flujo.getCdramo(),
+    					//flujo.getCdramo(),
+    					Ramo.MESA_CONTROL.getCdramo(),
     					flujo.getEstado(),
     					flujo.getNmpoliza(),
     					flujo.getNmsituac(),
