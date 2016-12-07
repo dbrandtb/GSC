@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.emision.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,12 +10,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.json.JSONUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
-import mx.com.gseguros.portal.consultas.dao.impl.ConsultaPolizasDAOSISAImpl.ConsultaDatosPolizaSP;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
@@ -29,31 +36,17 @@ import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.struts2.ServletActionContext;
-import org.apache.woden.ErrorReporter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlReturnResultSet;
-import org.springframework.jdbc.object.StoredProcedure;
-import org.springframework.util.SystemPropertyUtils;
 
 public class EmisionManagerImpl implements EmisionManager
 {
 	private Map<String,Object> session;
 	
 	private static Logger logger = LoggerFactory.getLogger(EmisionManagerImpl.class);
+	
+	@Value("${sigs.generarPolizaRecupera.url}")
+	private String urlGeneraPolizaRecupera;
 	
 	private PantallasDAO pantallasDAO;
 	
@@ -322,21 +315,17 @@ public class EmisionManagerImpl implements EmisionManager
 	
 	//SILVIA 
 	@Override
-	public ManagerRespuestaSlistVO procesarCargaMasivaRecupera(String cdramo,String cdtipsit,String respetar,File excel)throws Exception
-	//,String tipoflot
+	public ManagerRespuestaSlistVO procesarCargaMasivaRecupera(File excel)throws Exception
 	{
 		String errores="";
 		String polizas="";
 		String campo="";
 		double cambio=0;
 		int entero=0;
-		logger.info(
+		logger.debug(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.append("\n@@@@@@ procesarCargaMasivaRecupera @@@@@@")
-				.append("\n@@@@@@ cdramo=")  .append(cdramo)
-				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
-				.append("\n@@@@@@ respetar=").append(respetar)
 				.append("\n@@@@@@ excel=")   .append(excel)
 				.toString()
 				);
@@ -348,14 +337,6 @@ public class EmisionManagerImpl implements EmisionManager
 		
 		try
 		{
-			//paso = "Recuperando parametrizacion de excel para COTIFLOT";
-			//List<Map<String,String>>config=cotizacionDAO.cargarParametrizacionExcel("COTIFLOT",cdramo,cdtipsit);
-			//logger.debug("LISTA DE MAPAS "+Utils.log(config));
-			
-			paso = "Instanciando mapa buffer de tablas de apoyo";
-			Map<String,List<Map<String,String>>> buffer        = new HashMap<String,List<Map<String,String>>>();
-			Map<String,String>                   bufferTiposit = new HashMap<String,String>();
-			
 			paso = "Iniciando procesador de hoja de calculo";
 			FileInputStream input       = new FileInputStream(excel);
 			XSSFWorkbook    workbook    = new XSSFWorkbook(input);
@@ -365,11 +346,6 @@ public class EmisionManagerImpl implements EmisionManager
 			
 			paso = "Iterando filas";
 			int fila = 1;
-			String[] columnas=new String[]{
-					  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-					,"AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ"
-					,"BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ"
-			};
 			while (rowIterator.hasNext()) 
             {
 				fila = fila + 1;
@@ -394,9 +370,8 @@ public class EmisionManagerImpl implements EmisionManager
 				int col = 0;
 				for(int i= 0;i<=17;i++)
 				{
-					
+					paso = "Columna numero: "+i;
 					PolizaAseguradoVO datos = new PolizaAseguradoVO();
-					System.out.println("es la i: "+i);
 					col  = i;
 					Cell cell = row.getCell(i);
 					
@@ -418,8 +393,6 @@ public class EmisionManagerImpl implements EmisionManager
 						datos.setCdramo("1");
 						datos.setEstado("M");
 						datos.setNmpoliza(cell.toString().trim());
-						//System.out.println("LOS DATOS"+datos);
-//						List<PolizaDTO> resultado = emisionDAO.existePoliza(datos);
 						List<PolizaDTO> datosPolizas = consultasPolizaDAO.obtieneDatosPoliza(datos);
 						for(PolizaDTO t:datosPolizas){
 							errores = errores + "POLIZA EXISTENTE";
@@ -427,7 +400,6 @@ public class EmisionManagerImpl implements EmisionManager
 							resp.setRespuesta(errores);
 							resp.setRespuestaOculta(polizas);
 							resp.setExito(false);
-							//i = 17;
 						}	
 					}
 					if(i == 7){
@@ -437,7 +409,6 @@ public class EmisionManagerImpl implements EmisionManager
 							resp.setRespuesta(errores);
 							resp.setRespuestaOculta(polizas);
 							resp.setExito(false);
-							//i = 17;
 						}
 					}
 					if(i == 9){
@@ -450,7 +421,6 @@ public class EmisionManagerImpl implements EmisionManager
 							resp.setRespuesta(errores);
 							resp.setRespuestaOculta(polizas);
 							resp.setExito(false);
-							//i = 17;
 						}
 					}
 					if(i == 10){
@@ -460,7 +430,6 @@ public class EmisionManagerImpl implements EmisionManager
 							resp.setRespuesta(errores);
 							resp.setRespuestaOculta(polizas);
 							resp.setExito(false);
-							//i = 17;
 						}
 					}
 					if(i == 13){
@@ -470,7 +439,6 @@ public class EmisionManagerImpl implements EmisionManager
 							resp.setRespuesta(errores);
 							resp.setRespuestaOculta(polizas);
 							resp.setExito(false);
-							//i = 17;
 						}  
 					}
 					
@@ -495,7 +463,6 @@ public class EmisionManagerImpl implements EmisionManager
 					}else
 						record.put(String.valueOf(i),cell.toString().trim());
 				}
-				//logger.debug(sb.toString());
             }
 		}
 		catch(Exception ex)
@@ -511,5 +478,44 @@ public class EmisionManagerImpl implements EmisionManager
 				.toString()
 				);
 		return resp;
+	}
+	
+	public String generarPoliza(String cdperson, String sucursal, String poliza, String nombre1, String nombre2,
+			String apePat, String apeMat, String producto, String cve_plan, String esq_suma_aseg, String parentesco,
+			String f_nacimiento, String RFC, String sexo, String peso, String estatura, String fecinivig,
+			String membresia) {
+		
+		String mensaje = "";
+		boolean exito;
+		ArrayList<String> resultados = new ArrayList<String>();
+		try {
+			
+//			String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",
+//					tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
+//					  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
+//					HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
+//					Map<String,String>parametros = (Map<String,String>)someObject.get("params");
+//					String formpagSigs = parametros.get("formpagSigs");
+//					paquetesYFormaPago.add(formpagSigs);
+//					paquetesYFormaPago.addAll(1,someObject.get("paquetes"));
+//					logger.debug(Utils.log(paquetesYFormaPago));
+//			
+			
+			String params = Utils.join("cdperson=", cdperson, "&sucursal=", sucursal, "&poliza=", poliza, "&nombre1=",
+					nombre1, "&nombre2=", nombre2, "&apePat=", apePat, "&apeMat=", apeMat, "&producto=", producto,
+					"&cvePlan=", cve_plan, "&esqSumaAseg=", esq_suma_aseg, "&parentesco=", parentesco, "&fNacimiento=",
+					f_nacimiento, "&rfc=", RFC, "&sexo=", sexo, "&peso=", peso, "&estatura=", estatura, "&fecinivig=",
+					fecinivig, "&membresia=", membresia), respuestaWS = HttpUtil.sendPost(urlGeneraPolizaRecupera, params);
+					HashMap<String, String> someObject = (HashMap<String, String>)JSONUtil.deserialize(respuestaWS);
+					//exito = someObject.get("mensaje");
+					mensaje = someObject.get("mensaje");
+			if (mensaje != null) {
+				return mensaje;
+			}
+			logger.debug("ENTRO ");
+		} catch (Exception ex) {
+			mensaje = Utils.manejaExcepcion(ex);
+		}
+		return mensaje;
 	}
 }
