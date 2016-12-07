@@ -1186,6 +1186,7 @@ Ext.onReady(function()
 			                   ,text     : 'Fucionar por familia'
 			                   ,handler  : fusionarXfamilia
 			                   ,icon     : '${ctx}/resources/fam3icons/icons/pdf.png'
+			                   ,hidden   : _GLOBAL_CDSISROL=='SUPERVISOR' || _GLOBAL_CDSISROL=='GERENTEOPEMI'?false:true
 			                        
 			                }
                         ]
