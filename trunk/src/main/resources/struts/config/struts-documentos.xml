@@ -68,7 +68,14 @@
         <action name="borrarDocumento" class="beanSubirArchivo" method="borrarDocumento">
             <result name="success" type="json" />
         </action>
-
+        
+        <action name="documentosXFamilia" class="documentosPolizaAction" method="documentosXFamilia">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="ejecutaFusionFam" class="documentosPolizaAction" method="ejecutaFusionFam">
+            <result name="success" type="json" />
+        </action>
 	</package>
 
 </struts>
