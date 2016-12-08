@@ -2430,6 +2430,102 @@ Ext.onReady(function()
                                 ,hidden      : true
                                 ,border      : 0
                                 ,buttonAlign : 'center'
+                                ,tools       : [
+                                    {
+                                        type    : 'unpin',
+                                        tooltip : 'Copiar datos',
+                                        handler : function (event, toolEl, owner, tool) {
+                                            var ck = 'Copiando propiedades de estatus';
+                                            try {
+                                                var panel = tool.up('panel');
+                                                debug('panel:', panel);
+                                                var store = panel.down('grid').getStore();
+                                                var roles = {};
+                                                store.each(function (record) {
+                                                    roles[record.get('CDSISROL')] = {
+                                                        SWVER     : record.get('SWVER'),
+                                                        SWVERDEF  : record.get('SWVERDEF'),
+                                                        SWTRABAJO : record.get('SWTRABAJO'),
+                                                        SWCOMPRA  : record.get('SWCOMPRA'),
+                                                        SWREASIG  : record.get('SWREASIG')
+                                                    };
+                                                });
+                                                var props = {
+                                                    roles : roles
+                                                };
+                                                var names = [
+                                                    'TIMEWRN1H',
+                                                    'TIMEWRN1M',
+                                                    'TIMEWRN2H',
+                                                    'TIMEWRN2M',
+                                                    'TIMEMAXH',
+                                                    'TIMEMAXM',
+                                                    'CDTIPASIG',
+                                                    'STATUSOUT',
+                                                    'CDETAPA',
+                                                    'SWFINNODE'
+                                                ];
+                                                var values = panel.down('form').getValues();
+                                                debug('values:', values);
+                                                for (var i = 0; i < names.length; i++) {
+                                                    var name = names[i];
+                                                    props[name] = values[name];
+                                                }
+                                                debug('props:', props);
+                                                var encode = Ext.encode(props);
+                                                debug('encode:', encode);
+                                                executeCopy(encode);
+                                            } catch (e) {
+                                                manejaException(e, ck);
+                                            }
+                                        }
+                                    }, {
+                                        type    : 'pin',
+                                        tooltip : 'Pegar datos',
+                                        handler : function (event, toolEl, owner, tool) {
+                                            var ck = 'Pegando propiedades de estatus';
+                                            try {
+                                                var encode = window.prompt("Pegar: Ctrl+V, Enter");
+                                                if (Ext.isEmpty(encode)) {
+                                                    return;
+                                                }
+                                                debug('encode:', encode);
+                                                var decode = Ext.decode(encode);
+                                                debug('decode:', decode);
+                                                var panel = tool.up('panel');
+                                                debug('panel:', panel);
+                                                var names = [
+                                                    'TIMEWRN1H',
+                                                    'TIMEWRN1M',
+                                                    'TIMEWRN2H',
+                                                    'TIMEWRN2M',
+                                                    'TIMEMAXH',
+                                                    'TIMEMAXM',
+                                                    'STATUSOUT',
+                                                    'CDETAPA',
+                                                    'SWFINNODE'
+                                                ];
+                                                for (var i = 0; i < names.length; i++) {
+                                                    var name = names[i];
+                                                    panel.down('[name=' + name + ']').setValue(decode[name]);
+                                                }
+                                                if (!Ext.isEmpty(decode.CDTIPASIG)) {
+                                                    Ext.ComponentQuery.query('[name=CDTIPASIG][inputValue=1]')[0].setValue(decode.CDTIPASIG);
+                                                }
+                                                var store = panel.down('grid').getStore();
+                                                store.each(function (record) {
+                                                    record.set('SWVER'     , decode.roles[record.get('CDSISROL')].SWVER     || false);
+                                                    record.set('SWVERDEF'  , decode.roles[record.get('CDSISROL')].SWVERDEF  || false);
+                                                    record.set('SWTRABAJO' , decode.roles[record.get('CDSISROL')].SWTRABAJO || false);
+                                                    record.set('SWCOMPRA'  , decode.roles[record.get('CDSISROL')].SWCOMPRA  || false);
+                                                    record.set('SWREASIG'  , decode.roles[record.get('CDSISROL')].SWREASIG  || false);
+                                                });
+                                            } catch (e) {
+                                                manejaException(e, ck);
+                                            }
+                                        }
+                                    }
+                                ]
                                 ,buttons     :
                                 [
                                     {
@@ -3716,6 +3812,77 @@ Ext.onReady(function()
                                 ,title       : 'ACCI\u00D3N'
                                 ,hidden      : true
                                 ,buttonAlign : 'center'
+                                ,tools       : [
+                                    {
+                                        type    : 'unpin',
+                                        tooltip : 'Copiar datos',
+                                        handler : function (event, toolEl, owner, tool) {
+                                            var ck = 'Copiando propiedades de conector';
+                                            try {
+                                                var panel = tool.up('panel');
+                                                debug('panel:', panel);
+                                                var iconos = $('[name=iconoaccion]:checked');
+                                                var icono = '';
+                                                if (iconos.length > 0) {
+                                                    icono = iconos[0].value;
+                                                }
+                                                var store = panel.down('grid').getStore();
+                                                var roles = {};
+                                                store.each(function (record) {
+                                                    roles[record.get('CDSISROL')] = record.get('SWPERMISO');
+                                                });
+                                                var props = {
+                                                    DSACCION : panel.down('[name=DSACCION]').getValue(),
+                                                    CDVALOR  : panel.down('[name=CDVALOR]').getValue(),
+                                                    AUX      : panel.down('[name=AUX]').getValue(),
+                                                    SWESCALA : panel.down('[name=SWESCALA]').getValue(),
+                                                    ICONO    : icono,
+                                                    roles    : roles
+                                                };
+                                                debug('props:', props);
+                                                var encode = Ext.encode(props);
+                                                debug('encode:', encode);
+                                                executeCopy(encode);
+                                            } catch (e) {
+                                                manejaException(e, ck);
+                                            }
+                                        }
+                                    }, {
+                                        type    : 'pin',
+                                        tooltip : 'Pegar datos',
+                                        handler : function (event, toolEl, owner, tool) {
+                                            var ck = 'Pegando propiedades de conector';
+                                            try {
+                                                var encode = window.prompt("Pegar: Ctrl+V, Enter");
+                                                if (Ext.isEmpty(encode)) {
+                                                    return;
+                                                }
+                                                debug('encode:', encode);
+                                                var decode = Ext.decode(encode);
+                                                debug('decode:', decode);
+                                                var panel = tool.up('panel');
+                                                debug('panel:', panel);
+                                                panel.down('[name=DSACCION]').setValue(decode.DSACCION);
+                                                panel.down('[name=CDVALOR]').setValue(decode.CDVALOR);
+                                                panel.down('[name=AUX]').setValue(decode.AUX);
+                                                panel.down('[name=SWESCALA]').setValue(decode.SWESCALA);
+                                                var store = panel.down('grid').getStore();
+                                                store.each(function (record) {
+                                                    record.set('SWPERMISO', decode.roles[record.get('CDSISROL')] || false);
+                                                });
+                                                if (!Ext.isEmpty(decode.ICONO)) {
+                                                    var iconos = $('[name=iconoaccion][value=' + decode.ICONO + ']');
+                                                    if (iconos.length > 0) {
+                                                        iconos[0].focus();
+                                                        iconos[0].checked = true;
+                                                    }
+                                                }
+                                            } catch (e) {
+                                                manejaException(e, ck);
+                                            }
+                                        }
+                                    }
+                                ]
                                 ,buttons     :
                                 [
                                     {
@@ -5349,14 +5516,14 @@ function _p52_cargarModelado()
                                         debug('mouseover args:', arguments);
                                         conn.addOverlay(['Label',
                                             {
-                                                label    : '<span style="background:white;">' + (conn.dsaccion || '(vacio)') + '</span>',
+                                                label    : '<span style="background:white;font-size:8px;">' + (conn.dsaccion || '(vacio)') + '</span>',
                                                 location : 0.1,
                                                 id       : "connLabel"
                                             }
                                         ]);
                                         conn.addOverlay(['Label',
                                             {
-                                                label    : '<span style="background:white;">' + (conn.dsaccion || '(vacio)') + '</span>',
+                                                label    : '<span style="background:white;font-size:8px;">' + (conn.dsaccion || '(vacio)') + '</span>',
                                                 location : 0.9,
                                                 id       : "connLabel2"
                                             }
@@ -6442,3 +6609,4 @@ function _p52_numberContainsSubstrInStr(subStr, str){
 <div id="_p52_divpri" style="height:740px;border:1px solid #CCCCCC;"></div>
 </body>
 </html>
+// MAXIMO DE UN PARAMETRO VARCHAR PARA UNA EXPRESION: #PL['F_CONSULTA_DINAMICA';&VNUMTRA;'12345678901234567890123456789012345678901234567890123456X']

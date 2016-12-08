@@ -3835,6 +3835,19 @@ function _request(params) {
     }
 }
 
+// funcion para copiar texto al portapapeles, origen:
+// http://stackoverflow.com/questions/25099409/copy-to-clipboard-as-plain-text
+// text -> texto a copiar
+function executeCopy (text) {
+    var input = document.createElement('textarea');
+    document.body.appendChild(input);
+    input.value = text;
+    input.focus();
+    input.select();
+    document.execCommand('Copy');
+    input.remove();
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////
