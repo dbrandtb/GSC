@@ -1477,6 +1477,7 @@
                 cmbAplicaFondo = Ext.create('Ext.form.ComboBox', {
                     name:'params.idAplicaFondo',    store: storeAplicaFondo,    queryMode:'local',
                     displayField: 'value',          valueField: 'key',          editable:false,             allowBlank:false
+                    ,readOnly    : _CDROL ==  _OPERADOR_REC
                 });
                 
 				cmbCveConcepto = Ext.create('Ext.form.ComboBox', {
