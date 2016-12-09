@@ -545,7 +545,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
                             paso = "Usando archivo local descargado";
 
                             sb.append("\n").append(paso);
-
+                            sb.append(Utils.join("\nEl archivo: ",cddocume," ya existe, se usará :",archivo.get("descargadoEn")));
                             filePath = archivo.get("descargadoEn");
 
                             if (StringUtils.isBlank(filePath)) {
@@ -1515,8 +1515,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 
                     if (cddocume.toLowerCase().indexOf("://") != -1) {
                         paso = "Usando archivo local descargado";
-
+                        
                         sb.append("\n").append(paso);
+                        sb.append(Utils.join("\nEl archivo: ",cddocume," ya existe, se usará :",archivo.get("descargadoEn")));
 
                         filePath = archivo.get("descargadoEn");
 
@@ -1728,6 +1729,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
                         paso = "Usando archivo local descargado";
 
                         sb.append("\n").append(paso);
+                        sb.append(Utils.join("\nEl archivo: ",cddocume," ya existe, se usará :",archivo.get("descargadoEn")));
 
                         filePath = archivo.get("descargadoEn");
 
