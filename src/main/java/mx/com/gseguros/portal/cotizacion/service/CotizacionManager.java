@@ -1164,5 +1164,7 @@ public interface CotizacionManager
             throws Exception;
 
     public String validaCertificadoGrupo(HashMap<String, Object> paramCertificado)throws Exception;
+    
+    public void guardaDatosAgenteSecundarioSigs(String ntramite,String agt_sec, String porc_part) throws Exception;
 	
 }
