@@ -2690,7 +2690,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 								visible = Constantes.NO;
 							}
 							
-							parametros = "?9999,0,"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",0,0,,"+reciboIt.get("NUMREC");
+							//parametros = "?9999,0,"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",0,0,,"+reciboIt.get("NUMREC"); // PARAMS RECIBO ANTERIORES
+							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,"+reciboIt.get("NUMREC");
 							
 							logger.debug("URL Generada para Recibo "+reciboIt.get("NUMREC")+": "+ urlRecibo + parametros);
 							
