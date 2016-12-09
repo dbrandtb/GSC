@@ -2222,7 +2222,6 @@ Ext.onReady(function() {
 			//23.- Observaciones
 			{	colspan:2					,xtype : 'textareafield'				,fieldLabel : 'Observaciones'		,id       : 'observaciones'
 				,labelWidth	 : 170			,name  :'dsobserv'						,width      : 700					,height   : 70
-				,value : ''                 ,hidden: true
 			},
 			//24.- Notas Internas
 			{	colspan:2					,xtype       : 'textareafield'			,fieldLabel : 'Notas internas'		,id       : 'notaInterna'
