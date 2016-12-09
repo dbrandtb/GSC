@@ -303,9 +303,10 @@ public class DocumentosUtils
 	public static boolean verificaPDF(File pdf){
 	    
 	    try{
+	        logger.debug("Verificando arcivo {}:"+pdf.getAbsolutePath());
 	        PdfReader reader=new PdfReader(pdf.getAbsolutePath());
 	        boolean res=!reader.isRebuilt(); 
-	        logger.debug("Verificando arcivo {} :"+res,pdf.getAbsolutePath());
+	        logger.debug("Resultado Verificando arcivo {} :"+res,pdf.getAbsolutePath());
 	        return res;
 	        
 	    }catch(Exception e){
