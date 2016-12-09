@@ -1635,6 +1635,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			String cdideperCli = smap1.get("cdideperCli");
 			String fromSigs    = smap1.get("cargarXpoliza");
 			String ntramite    = smap1.get("ntramite");
+			String agentesec    = smap1.get("AGENTESEC");
+			String porcensec    = smap1.get("PORCENSEC");
+			
 			ArrayList<String> planSigs= new ArrayList<String>();
 			for(Map<String, String> inciso:slist1)
 			{
@@ -1699,33 +1702,45 @@ public class CotizacionAction extends PrincipalCoreAction
 					,parame.get("RENPOLIEX")
 					,ntramite
 					);
-			if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null)
-	    		{
-		             List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
-		            		cdusuari
-		            		,cdunieco
-		            		,cdramo
-		            		,"W"
-		            		,resp.getSmap().get("nmpoliza")
-		            		,cdelemen
-		            		,cdtipsit
-		            		);
-		             logger.debug("listaResultados: "+listaResultados);
-			     
-			        	ArrayList<String> paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsit, null);
-			        	String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza"), cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-			        	logger.debug(Utils.log(paqYplan));
-			        	resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
-	    		}
-			resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
 			if(exito)
 			{
-				smap1.putAll(resp.getSmap());
-				slist2=resp.getSlist();
+			    if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null)
+			    {
+			        List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
+			                cdusuari
+			                ,cdunieco
+			                ,cdramo
+			                ,"W"
+			                ,resp.getSmap().get("nmpoliza")
+			                ,cdelemen
+			                ,cdtipsit
+			                );
+			        logger.debug("listaResultados: "+listaResultados);
+			        
+			        ArrayList<String> paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsit, null);
+			        String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza"), cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+			        logger.debug(Utils.log(paqYplan));
+			        resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
+			    }
+			    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
+			    
+			    exito           = resp.isExito();
+	            respuesta       = resp.getRespuesta();
+	            respuestaOculta = resp.getRespuestaOculta();
+	            
+	            if(exito)
+	            {
+	                if(StringUtils.isNotBlank(porcensec) && StringUtils.isNotBlank(agentesec))
+	                {
+	                    cotizacionManager.guardaDatosAgenteSecundarioSigs(ntramite, agentesec, porcensec);
+	                }
+    				smap1.putAll(resp.getSmap());
+    				slist2=resp.getSlist();
+	            }
 			}
 			success = exito;
 			error   = respuesta;

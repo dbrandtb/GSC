@@ -11173,49 +11173,13 @@ public class CotizacionManagerImpl implements CotizacionManager
         return "";
         
     }
-	
 
-	
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	////////////////  GETTERS Y SETTERS  ////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	
-	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
-		this.cotizacionDAO = cotizacionDAO;
-	}
-
-	public void setPantallasDAO(PantallasDAO pantallasDAO) {
-		this.pantallasDAO = pantallasDAO;
-	}
-
-	public void setPersonasDAO(PersonasDAO personasDAO) {
-		this.personasDAO = personasDAO;
-	}
-
-	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
-		this.mesaControlDAO = mesaControlDAO;
-	}
-
-	public void setConsultasDAO(ConsultasDAO consultasDAO) {
-		this.consultasDAO = consultasDAO;
-	}
-
-	@Override
-	public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
-			String promotoria, String cdagente, String cdtipsit, String cdatribu) throws Exception {
-		return cotizacionDAO.obtieneValidacionDescuentoR6(tipoUnidad, uso, zona,
-				promotoria, cdagente, cdtipsit, cdatribu);
-	}
+    @Override
+    public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
+            String promotoria, String cdagente, String cdtipsit, String cdatribu) throws Exception {
+        return cotizacionDAO.obtieneValidacionDescuentoR6(tipoUnidad, uso, zona,
+                promotoria, cdagente, cdtipsit, cdatribu);
+    }
 
     @Override
     public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception {
@@ -11251,5 +11215,51 @@ public class CotizacionManagerImpl implements CotizacionManager
     public String validaCertificadoGrupo(HashMap<String, Object> paramCertificado) throws Exception {
         return cotizacionDAO.validaCertificadoGrupo(paramCertificado);
     }
+    
+    public void guardaDatosAgenteSecundarioSigs(String ntramite,String agt_sec, String porc_part) throws Exception {
+        String paso = "Actualizando Otvalor mesa de control";
+        try {
+            paso = "Insertando Agente Secundario";
+            mesaControlDAO.actualizarOtvalorTramitePorDsatribu(ntramite, "AUX%CLAVE%AGENTE%SECUNDARIO", agt_sec, "I");
+            paso = "Insertando Porcentaje Participacion Agente Secundario";
+            mesaControlDAO.actualizarOtvalorTramitePorDsatribu(ntramite, "AUX%PARTICIPACI%N%AGENTE%SECUNDARIO", porc_part, "I");
+        } 
+        catch(Exception ex)
+        {
+            Utils.generaExcepcion(ex, paso);
+        }
+    }
+	
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	////////////////  GETTERS Y SETTERS  ////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	
+	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
+		this.cotizacionDAO = cotizacionDAO;
+	}
+
+	public void setPantallasDAO(PantallasDAO pantallasDAO) {
+		this.pantallasDAO = pantallasDAO;
+	}
+
+	public void setPersonasDAO(PersonasDAO personasDAO) {
+		this.personasDAO = personasDAO;
+	}
+
+	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
+		this.mesaControlDAO = mesaControlDAO;
+	}
+
+	public void setConsultasDAO(ConsultasDAO consultasDAO) {
+		this.consultasDAO = consultasDAO;
+	}
+    
+    /////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////
+    ////////////////  GETTERS Y SETTERS  ////////////////
+    /////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////
 
 }

@@ -142,6 +142,12 @@ var plazoenanios;
 
 Ext.onReady(function()
 {
+    
+    Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
+    
     //INICIO DE THOUSAND SEPARATOR 
     Ext.util.Format.thousandSeparator=",";
     Ext.define("Ext.override.ThousandSeparatorNumberField", {
@@ -287,7 +293,7 @@ Ext.onReady(function()
      
     //_grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p28_smap1.cdramo);
 
-    Ext.Ajax.timeout = 3*60*1000;
+//     Ext.Ajax.timeout = 3*60*1000;
  
     ////// modelos //////
     Ext.define('_p28_modeloRecuperado',
@@ -555,6 +561,38 @@ Ext.onReady(function()
                         ,handler : _p28_cargarPoliza
                         ,hidden  : true
                   }
+                  ,{
+                      xtype       : 'textfield'
+                     ,itemId      : '_p28_agenteSec'
+                     ,fieldLabel  : 'AGENTESEC'
+                     ,name        : 'agenteSec'                   
+                     ,sinOverride : true                   
+                     ,labelWidth  : 170
+                     ,style       : 'margin:5px;margin-left:15px;'//'width : 30px !important;'
+                     ,value       : ''
+                     ,listeners   :
+                     {
+                         change : _p28_nmpolizaChange
+                     }
+                     ,readOnly    :  true 
+                     ,hidden      :  true
+                   }
+                  ,{
+                      xtype       : 'textfield'
+                     ,itemId      : '_p28_porcenSec'
+                     ,fieldLabel  : 'PORCENSEC'
+                     ,name        : 'porcenSec'                   
+                     ,sinOverride : true                   
+                     ,labelWidth  : 170
+                     ,style       : 'margin:5px;margin-left:15px;'//'width : 30px !important;'
+                     ,value       : ''
+                     ,listeners   :
+                     {
+                         change : _p28_nmpolizaChange
+                     }
+                     ,readOnly    :  true 
+                     ,hidden      :  true
+                   }
                ]
             }
          ];
@@ -2111,7 +2149,7 @@ Ext.onReady(function()
                                 {
                                     type    : 'ajax'
                                     ,url    : _p28_urlRecuperarCliente
-                                    ,timeout: 240000
+                                    ,timeout: 2400000
                                     ,reader :
                                     {
                                         type  : 'json'
@@ -2709,6 +2747,8 @@ function _p28_cotizar(sinTarificar)
         if(cargarXpoliza)
         {
             json.smap1.cargarXpoliza= 'S';
+            json.smap1.AGENTESEC= _fieldLikeLabel('AGENTESEC').getValue();
+            json.smap1.PORCENSEC= _fieldLikeLabel('PORCENSEC').getValue();
         }
         debug('json a enviar para cotizar:',json);
         panelpri.setLoading(true);
@@ -3415,7 +3455,7 @@ function _p28_ramo5ClienteChange(combcl)
                             {
                                 type    : 'ajax'
                                 ,url    : _p28_urlRecuperarCliente
-                                ,timeout: 240000
+                                ,timeout: 2400000
                                 ,reader :
                                 {
                                     type  : 'json'
@@ -3594,7 +3634,7 @@ function _p28_ramo5ClienteChange(combcl)
                             {
                                 type    : 'ajax'
                                 ,url    : _p28_urlRecuperarCliente
-                                ,timeout: 240000
+                                ,timeout: 2400000
                                 ,reader :
                                 {
                                     type  : 'json'
@@ -3843,9 +3883,6 @@ function _p28_cargarSumaAseguradaRamo5(clave,modelo,callback)
         }
     });
     debug('<_p28_cargarSumaAseguradaRamo5');
-
-
-
 }
 
 function _p28_cargar(boton)
@@ -3928,7 +3965,6 @@ function _p28_cargarPoliza(boton)
                       {
                           var json=Ext.decode(response.responseText);
                           debug("valoresCampos: ",json);
-                          
                           if(Ext.isEmpty(json.smap1.valoresCampos))
                           {
                               throw 'No se encontraron datos para renovar';
@@ -3997,6 +4033,19 @@ function llenandoCampos(json)
         debug('vencida='     , vencida,'.');
 
         _p28_limpiar();
+        
+        if(!Ext.isEmpty(json.smap1.agenteSec) && !Ext.isEmpty(json.smap1.porcenSec))
+                          {
+                              _fieldLikeLabel('AGENTESEC').semaforo=true;
+                              _fieldLikeLabel('AGENTESEC').setValue(json.smap1.agenteSec);
+                              _fieldLikeLabel('AGENTESEC').semaforo=false;
+                              _p28_nmpolizaChange(_fieldLikeLabel('AGENTESEC'));
+                              
+                              _fieldLikeLabel('PORCENSEC').semaforo=true;
+                              _fieldLikeLabel('PORCENSEC').setValue(json.smap1.porcenSec);
+                              _fieldLikeLabel('PORCENSEC').semaforo=false;
+                              _p28_nmpolizaChange(_fieldLikeLabel('PORCENSEC'));
+                          }
 
         var iniVig = Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y').getTime();
         var finVig = Ext.Date.parse(json.smap1.FEPROREN,'d/m/Y').getTime();
