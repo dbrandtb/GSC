@@ -1036,17 +1036,16 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					}
 				}
 				
-				//Parametro1:  9999: Recibo
-				//Parametro2:  Modalidad casi siempre va en 0
-				//Parametro3:  Sucursal
-				//Parametro4:  Ramo (213 o 214)
-				//Parametro5:  Poliza
-				//Parametro6:  Tramite(poner 0)
-				//Parametro7:  Numero de endoso (Cuando es poliza nueva poner 0)
-				//Parametro8:  Tipo de endoso (Si es vacio no enviar nada en otro caso poner A o D segun sea el caso)
-				//Parametro9:  Numero de recibo (1,2,3..segun la forma de pago) Para nuestro caso es siempre el 1
 				
-					String parametros = "?9999,"+modalidad+","+sucursal+","+cdtipsitGS+","+nmpoliza+",0,"+numEndoso+","+tipoEndoso+","+recibo.getNumRec();
+    				//Parametro1:  Sucursal
+                    //Parametro2:  Ramo (213 o 214)
+                    //Parametro3:  Poliza
+                    //Parametro4:  Tipo de endoso (Si es vacio no enviar nada en otro caso poner A o D segun sea el caso)
+                    //Parametro5:  Numero de endoso (Cuando es poliza nueva poner 0)
+                    //Parametro6:  Numero de recibo (1,2,3..segun la forma de pago) Para nuestro caso es siempre el 1
+					//String parametros = "?9999,"+modalidad+","+sucursal+","+cdtipsitGS+","+nmpoliza+",0,"+numEndoso+","+tipoEndoso+","+recibo.getNumRec(); // PARAMS RECIBO ANTERIORES
+					String parametros = "?"+sucursal+","+cdtipsitGS+","+nmpoliza+",,0,"+recibo.getNumRec();
+					
 					logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
 					
 					mesaControlDAO.guardarDocumento

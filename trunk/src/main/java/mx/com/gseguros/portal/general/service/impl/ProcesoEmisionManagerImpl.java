@@ -609,7 +609,8 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							visible = Constantes.NO;
 						}
 						
-						parametros = "?9999,0,"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",0,0,,"+reciboIt.get("NUMREC");
+						//parametros = "?9999,0,"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",0,0,,"+reciboIt.get("NUMREC"); // PARAMS RECIBO ANTERIORES
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,"+reciboIt.get("NUMREC");
 						
 						logger.debug("URL Generada para Recibo "+reciboIt.get("NUMREC")+": "+ urlRecibo + parametros);
 						
