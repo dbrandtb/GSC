@@ -683,4 +683,11 @@ public interface EndososManager
     		,String dscoment
     		)throws Exception;
 	
+	public void BeneficiarioVida_M(
+	        String cdunieco
+            ,String cdramo
+            ,String estado
+            ,String nmpoliza
+            ,String nmsuplem
+            )throws Exception;
 }

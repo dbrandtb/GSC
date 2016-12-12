@@ -869,4 +869,6 @@ public interface EndososDAO
 
     public List<Map<String,String>> endosoBeneficiariosVidaAuto(Map<String, String> params)throws Exception;
     
+    public void conviertePuntoMuertoMpoliperBeneficiarioVida (String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
+    
 }

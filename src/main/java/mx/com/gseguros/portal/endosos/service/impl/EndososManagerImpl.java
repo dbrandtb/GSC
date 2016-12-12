@@ -4468,4 +4468,34 @@ public class EndososManagerImpl implements EndososManager
 		
 		return respuesta;
 	}
+	
+	@Override
+    public void BeneficiarioVida_M(
+            String cdunieco
+            ,String cdramo
+            ,String estado
+            ,String nmpoliza
+            ,String nmsuplem) throws Exception
+    {
+        logger.info(
+                new StringBuilder()
+                .append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+                .append("\n@@@@@@ BeneficiarioVida_M @@@@@@")
+                .append("\n@@@@@@ cdunieco=").append(cdunieco)
+                .append("\n@@@@@@ cdramo=")  .append(cdramo)
+                .append("\n@@@@@@ estado=")  .append(estado)
+                .append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+                .append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+                .toString()
+                );
+        
+        endososDAO.conviertePuntoMuertoMpoliperBeneficiarioVida(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+        
+        logger.info(
+                new StringBuilder()
+                .append("\n@@@@@@ BeneficiarioVida_M @@@@@@")
+                .append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+                .toString()
+                );
+    }
 }

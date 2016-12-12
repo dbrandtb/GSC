@@ -6345,5 +6345,34 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
             compile();
         }
     }
+    /**  pv_cdunieco_i     
+         pv_cdramo_i       
+         pv_estado_i       
+         pv_nmpoliza_i     
+         pv_nmsuplem_i
+     */
+    public void conviertePuntoMuertoMpoliperBeneficiarioVida (String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception {
+        Map<String,String>params = new LinkedHashMap<String,String>();
+        params.put("cdunieco" , cdunieco);
+        params.put("cdramo"   , cdramo);
+        params.put("estado"   , estado);
+        params.put("nmpoliza" , nmpoliza);
+        params.put("nmsuplem" , nmsuplem);
+        ejecutaSP(new conviertePuntoMuertoMpoliperBeneficiario(this.getDataSource()), params);
+    }
+    
+    protected class conviertePuntoMuertoMpoliperBeneficiario extends StoredProcedure {
+        protected conviertePuntoMuertoMpoliperBeneficiario(DataSource dataSource) {
+            super(dataSource, "PKG_CONSULTA2.P_SET_ENDOSO_VIDA_BAJA");
+            declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"      ,OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"      , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsuplem"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 	    
 }
