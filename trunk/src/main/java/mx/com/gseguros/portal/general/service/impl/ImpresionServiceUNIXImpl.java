@@ -57,43 +57,6 @@ public class ImpresionServiceUNIXImpl implements ImpresionService {
 		// Se valida la existencia del documento a imprimir:
 		validaExistenciaDocumento(documento);
 		
-		///////VERIFICAR IMPRESORA
-		List<String> cmd = new ArrayList<String>();
-		cmd.add("/bin/sh");
-		cmd.add("-c");
-		
-		/*
-		 * lpstat -p | grep -i "[impresora].*disabled" | while read a b c; do /usr/sbin/cupsenable $b; done
-		 */
-		StringBuilder sb = new StringBuilder("lpstat")
-		        .append(" -p | grep -i \"").append(nombreImpresora).append(".*disabled\"")
-		        .append(" | while read a b c; do /usr/sbin/cupsenable $b; done");
-		
-		cmd.add(sb.toString());
-		logger.debug("Comando a ejecutar: "+sb.toString());
-		
-		SystemCommandExecutor sce = new SystemCommandExecutor(cmd);
-		
-		int res = sce.executeCommand();
-		
-		StringBuilder out = sce.getStandardOutputFromCommand();
-		StringBuilder err = sce.getStandardErrorFromCommand();
-		        
-		logger.debug("Resultado numerico del comando {} : {}", sb, res);
-		
-		// print the stdout and stderr:
-        logger.debug("STDOUT:");
-        logger.debug(out.toString());
-        logger.debug("STDERR:");
-        logger.debug(err.toString());
-        
-        // Si el resultado es distinto de cero o hay contenido en la salida de error, lanzamos una excepcion:
-        if(res != 0 || StringUtils.isNotBlank(err)) {
-            throw new Exception(err.toString());
-        }
-		
-		///////VERIFICAR IMPRESORA
-		
 		// Generamos el comando a invocar:
 	    List<String> commands = new ArrayList<String>();
 	    commands.add("/bin/sh");
