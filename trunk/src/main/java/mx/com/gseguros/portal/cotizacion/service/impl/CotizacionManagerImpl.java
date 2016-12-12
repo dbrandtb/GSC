@@ -6314,7 +6314,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            if(resp.isExito())
 	            {
 					resp.setExito(
-						/*FTPSUtils.upload
+						FTPSUtils.upload
 						(
 							dominioServerLayout,
 							usuarioServerLayout,
@@ -6322,7 +6322,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 							archivoTxt.getAbsolutePath(),
 							new StringBuilder(direcServerLayout).append("/").append(nombreCenso).toString()
 						)
-						&&*/FTPSUtils.upload
+						&&FTPSUtils.upload
 						(
 							dominioServerLayouts2,
 							usuarioServerLayout,
