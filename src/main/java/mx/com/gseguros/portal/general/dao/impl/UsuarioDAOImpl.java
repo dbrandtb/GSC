@@ -82,8 +82,6 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			parametros.put("PV_CDBROKER_I", params.get("cdbroker"));
 			parametros.put("PV_CDEMPRESA_I", params.get("cdempresa"));
 			parametros.put("PV_ACCION_I", params.get("accion"));
-			parametros.put("PV_CDUNISLD_I", params.get("cdunisld"));
-            parametros.put("PV_SWSUSMAT_I", "S".equalsIgnoreCase(params.get("swsusmat")) ? "S" : "N");
 			
 			Map<String, Object> result = ejecutaSP(new GuardaUsuario(getDataSource()), parametros);
 
@@ -123,8 +121,6 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			declareParameter(new SqlParameter("PV_CDBROKER_I", OracleTypes.VARCHAR));//DEBE SER NUMBER (6)
 			declareParameter(new SqlParameter("PV_CDEMPRESA_I", OracleTypes.VARCHAR));//DEBE SER TIPO , ASI SE DEFINE EN EL PROCEDURE
 			declareParameter(new SqlParameter("PV_ACCION_I", OracleTypes.VARCHAR));//DEBE SER TIPO VARCHAR, ASI SE DEFINE EN EL PROCEDURE
-			declareParameter(new SqlParameter("PV_CDUNISLD_I", OracleTypes.VARCHAR));//DEBE SER TIPO VARCHAR, ASI SE DEFINE EN EL PROCEDURE
-            declareParameter(new SqlParameter("PV_SWSUSMAT_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));//DEBE SER TIPO NUMBER
 			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
 			compile();
@@ -284,7 +280,6 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			usuarioVO.setCdrfc(rs.getString("CDRFC"));
 			usuarioVO.setDsEmail(rs.getString("DSEMAIL"));
 			usuarioVO.setCurp(rs.getString("CURP"));
-			usuarioVO.setCdunisld(rs.getString("CDUNISLD"));
 
 			usuarioVO.setCdrol(rs.getString("CDSISROL"));
 			usuarioVO.setEsAdmin(rs.getString("CDMODGRA"));
@@ -308,7 +303,6 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			 * Se agrega el campo CDEMPRESA
 			 */
 			usuarioVO.setCdempresa(rs.getString("CDEMPRESA"));
-			usuarioVO.setSwsusmat(rs.getString("SWSUSMAT"));
 			return usuarioVO;
         }
     }
@@ -476,7 +470,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class InsertaActualizaImpresora extends StoredProcedure {
 
 		protected InsertaActualizaImpresora(DataSource dataSource) {
-			super(dataSource, "Pkg_Tabapoyo.P_INSERTA_ACTUALIZA_IMPRESORA");
+			super(dataSource, "Pkg_Tabapoyo_cesar.P_INSERTA_ACTUALIZA_IMPRESORA");
 			
 			declareParameter(new SqlParameter("pv_nombre_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ip_i", OracleTypes.VARCHAR));

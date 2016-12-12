@@ -54,7 +54,6 @@ var panDocInputNmsuplem  = '<s:property value="smap1.nmsuplem" />';
 var panDocInputNtramite  = '<s:property value="smap1.ntramite" />';
 var panDocInputNmsolici  = '<s:property value="smap1.nmsolici" />';
 var panDocInputTipoMov   = '<s:property value="smap1.tipomov" />';
-var panDocInputTipTra    = '<s:property value="smap1.cdtiptra" />';
 var panDocStoreDoc;
 var panDocGridDocu;
 var panDocContexto       = '${ctx}';
@@ -69,10 +68,6 @@ var panDocUrlFusionar    = '<s:url namespace ="/documentos" action="fusionarDocu
 var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec"              />';
 var _URLregeneraReporte  = '<s:url namespace ="/documentos" action="regeneraReporte"             />';
 var panDocUrlDetalleTra  = '<s:url namespace="/mesacontrol" action="movimientoDetalleTramite"    />';
-var urlDocumentosXFamilia   = '<s:url namespace ="/documentos" action="documentosXFamilia"          />';
-var urlEjecutaFusionFam   = '<s:url namespace ="/documentos" action="ejecutaFusionFam"          />';
-
-
 
 var panDocUrlActualizarNombreDocumento = '<s:url namespace="/documentos" action="actualizarNombreDocumento" />';
 var panDocUrlBorrarDocumento           = '<s:url namespace="/documentos" action="borrarDocumento"           />';
@@ -84,7 +79,6 @@ debug('panDocSmap1:', panDocSmap1);
 
 var panDocStoreConfigDocs;
 var urlComboDocumentos = '<s:url namespace="/siniestros" action="loadListaDocumentos" />';
-var email=false;
 /*//////////////////////*/
 ////// variables    //////
 //////////////////////////
@@ -92,18 +86,10 @@ var email=false;
 //////////////////////////
 ////// funciones    //////
 /*//////////////////////*/
-function callbackDocumentoSubidoPoliza(mensajeRespuesta)
+function callbackDocumentoSubidoPoliza()
 {
     Ext.getCmp('panDocWinPopupAddDoc').destroy();
     panDocStoreDoc.load();
-    if( !Ext.isEmpty(mensajeRespuesta) ) {
-    	Ext.Msg.show({
-	       	title:'Error',
-		    msg: 'Error al subir el archivo: ' + mensajeRespuesta,
-		    buttons: Ext.Msg.OK,
-		    icon: Ext.Msg.ERROR
-		});
-    }
 }
 
 function panDocEditarClic(row)
@@ -212,122 +198,6 @@ function panDocBorrarClic(row,confir)
         });
     }
 }
-
-function fusionarXfamilia(){
-    try{
-        
-        var paramsEnviar={
-                 'smap1.cdunieco'  : panDocInputCdunieco
-                ,'smap1.cdramo'    : panDocInputCdramo
-                ,'smap1.estado'    : panDocInputEstado
-                ,'smap1.nmpoliza'  : panDocInputNmpoliza
-                ,'smap1.nmsuplem'  : panDocInputNmsuplem
-            }
-        if(email){
-            paramsEnviar['smap1.email']=email;
-        }
-	    Ext.Ajax.request(
-	    {
-	        url     : urlDocumentosXFamilia
-	        ,params : paramsEnviar
-	        
-	        ,success : function(response)
-	        {
-	            var json=Ext.decode(response.responseText);
-	            debug('### borrar:',json);
-	            if(json.exito)
-	            {
-	                var respuesta=json.respuesta;
-	                debug(respuesta)
-	                if(email){
-	                    json.smap1.userEmail=email;
-	                }
-	                
-	                if(respuesta==null){
-	                    ejecutaFusionFam(json.smap1.userEmail);
-	                }else if (respuesta=="W"){
-	                    mensajeWarning("Ya hay  un proceso de fusi&oacute;n, por favor espere")
-	                }else if (respuesta=="F"){
-	                    Ext.Msg.confirm("Ejecutar Fusi&oacute;n"
-	                                   ,"Ya se ha ejecutado este proceso"+
-	                                    " ¿Quieres ejecutar de nuevo el proceso de fusi&oacute;n por titular?"
-	                                   ,function(opc){ 
-	                                        if(opc!="yes") return; 
-	                                        
-	                                        ejecutaFusionFam(json.smap1.userEmail);
-	                                        
-	                                    });
-	                }
-	                
-	                panDocStoreDoc.load();
-	            }
-	            else
-	            {
-	                mensajeError(json.respuesta);
-	            }
-	        }
-	        ,failure : errorComunicacion
-	    });
-    }catch(e){
-        debugError(e);
-    }
-}
-
-function ejecutaFusionFam(email){
-    
-    try{
-        
-        var paramsEnviar={
-                 'smap1.cdunieco'  : panDocInputCdunieco
-                ,'smap1.cdramo'    : panDocInputCdramo
-                ,'smap1.estado'    : panDocInputEstado
-                ,'smap1.nmpoliza'  : panDocInputNmpoliza
-                ,'smap1.nmsuplem'  : panDocInputNmsuplem
-                ,'smap1.tipoMov'   : panDocInputTipoMov
-                ,'smap1.cdTipTra'  : panDocInputTipTra
-                
-                
-                
-                
-            }
-        
-        if(email){
-            paramsEnviar['smap1.email']=email;
-        }
-        
-        
-        Ext.Ajax.request(
-        {
-            url     : urlEjecutaFusionFam
-            ,params : paramsEnviar
-            
-            ,success : function(response)
-            {
-                var json=Ext.decode(response.responseText);
-                debug('### borrar:',json);
-                if(json.exito)
-                {
-                    debug(json.respuesta)
-                    panDocStoreDoc.load();
-                    
-                }
-                else
-                {
-                    mensajeError(json.respuesta);
-                }
-            }
-            ,failure : errorComunicacion
-        });
-        debug("Documentos por familia ejecutado ...");
-        mensajeInfo("El proceso de fusi&oacute;n se inici&oacute;, "    + 
-                "cuando termine el proceso se notificar&aacute; " + 
-                "al siguiente correo: "+email);
-    }catch(e){
-        debugError(e);
-        mensajeError("No se pudo iniciar el proceso de fusi&oacute;n ");
-    }
-    
-}
 /*//////////////////////*/
 ////// funciones    //////
 //////////////////////////
@@ -358,7 +228,6 @@ Ext.onReady(function()
             ,'nmsituac'
             ,'nmcertif'
             ,'cdmoddoc'
-            ,'tramite_endoso'
         ]
     });
     
@@ -397,7 +266,7 @@ Ext.onReady(function()
             			r=0;
             		else
             			r=1;
-            		debug(nmsuplemA,nmsuplemB,r);
+            		//debug(nmsuplemA,nmsuplemB,r);
             		return r;
             	}
             }
@@ -418,7 +287,6 @@ Ext.onReady(function()
                 ,'smap1.pv_ntramite_i'   : panDocInputNtramite
                 ,'smap1.pv_nmsuplem_i'   : panDocInputNmsuplem
                 ,'smap1.pv_dsdocume_i'   : null
-                ,'smap1.usuariosPrimero' : panDocSmap1.usuariosPrimero
             }
             ,type        : 'ajax'
             ,reader      :
@@ -662,7 +530,6 @@ Ext.onReady(function()
                         border       : 0
                         ,url         : panDocUrlUploadDoc
                         ,buttonAlign : 'center'
-                        ,defaults    : { style : 'margin : 5px;' }
                         ,items       :
                         [
                             {
@@ -681,13 +548,11 @@ Ext.onReady(function()
                                 ,value      : new Date()
                                 ,fieldLabel : 'Fecha'
                             }
-                            <s:if test='%{!(""+smap1.lista).equals("")}'>,<s:property value="items.comboDocs" escapeHtml="false" /></s:if>
                             ,{
                             	xtype       : 'textfield'
                             	,fieldLabel : 'Descripci&oacute;n'
                             	,name       : 'smap1.descripcion'
                            		,width      : 450
-                           		,value      : _NVL(panDocSmap1.dsdocumeParasubir)
                             }
                             ,{
                                 xtype       : 'filefield'
@@ -696,7 +561,7 @@ Ext.onReady(function()
                                 ,buttonOnly : false
                                 ,width      : 450
                                 ,name       : 'file'
-                                ,cAccept    : ['jpg','png','gif','zip','pdf','rar','jpeg','doc','docx','xls','xlsx','ppt','pptx', 'msg']
+                                ,cAccept    : ['jpg','png','gif','zip','pdf','rar','jpeg','doc','docx','xls','xlsx','ppt','pptx']
                                 ,listeners  :
                                 {
                                     change : function(me)
@@ -767,16 +632,6 @@ Ext.onReady(function()
                                     debug(button.up().up().getForm().getValues());
                                     button.setDisabled(true);
                                     
-                                    try {
-                                        var comps = Ext.ComponentQuery.query('[name]', button.up('window'));
-                                        debug('comps:', comps, '.');
-                                        for (var i = 0; i < comps.length; i++) {
-                                            comps[i].setReadOnly(true);
-                                        }
-                                        button.up('window').down('[name=file]').hide();
-                                    } catch (e) {
-                                        debugError('error al poner readonly=true todos', e);
-                                    }
                                     
                                     Ext.getCmp('panDocBotCanDoc').setDisabled(true);
                                     Ext.create('Ext.form.Panel').submit(
@@ -804,7 +659,6 @@ Ext.onReady(function()
                                         	,'smap1.tipomov'        : panDocInputTipoMov
                                         	,'smap1.cdtiptra'       : panDocSmap1.cdtiptra
                                         	,'smap1.callbackFn'     : 'callbackDocumentoSubidoPoliza'
-                                        	,'smap1.cddocumeRevisi' : _NVL(panDocSmap1.cddocumeParasubir)
                                        	}
                                     });
                                 }
@@ -819,35 +673,8 @@ Ext.onReady(function()
                                 }
                             }
                         ]
-                        ,listeners :
-                        {
-                            afterrender : function(me)
-                            {
-                                <s:if test='%{!(""+smap1.lista).equals("")}'>
-                                me.down('[name=smap1.cddocumeFlujo]').on(
-                                {
-                                    select : function(me,records)
-                                    {
-                                        me.up('form').down('[name=smap1.descripcion]').setValue(records[0].get('value'));
-                                    }
-                                });
-                                </s:if>
-                            }
-                        }
                     })
-                ],
-                listeners : {
-                    destroy : function (me) {
-                        debug('VentanaDocumentos > Agregar documento > destroy!');
-                        if (!Ext.isEmpty(panDocSmap1.cddocumeParasubir))
-                        {
-                            var ventanaDocuPadre = _fieldById('_c2_instance');
-                            debug('ventanaDocuPadre:',ventanaDocuPadre,'.');
-                            ventanaDocuPadre.windowRevisi.recargar();
-                            ventanaDocuPadre.destroy();
-                        }
-                    }
-                }
+                ]
             }).show();
             centrarVentanaInterna(windowAgregarDocu);
         }
@@ -1035,7 +862,7 @@ Ext.onReady(function()
 	                        }
 	                    ],
 	                ftype:'groupingsummary',
-	                startCollapsed : true
+	                startCollapsed :false
 	            }]
                 ,dockedItems :
                 [
@@ -1180,15 +1007,7 @@ Ext.onReady(function()
                                         }
 			                        ]
 			                    }
-			                }
-			                ,{
-			                    xtype    : 'button'
-			                   ,text     : 'Fusionar por familia'
-			                   ,handler  : fusionarXfamilia
-			                   ,icon     : '${ctx}/resources/fam3icons/icons/pdf.png'
-			                   ,hidden   : _GLOBAL_CDSISROL=='SUPERVISOR' || _GLOBAL_CDSISROL=='GERENTEOPEMI'?false:true
-			                        
-			                }
+			                }                                        
                         ]
                     }
                 ]
@@ -1310,19 +1129,6 @@ Ext.onReady(function()
                                     }
                                 });
                				}
-                		}
-                	},
-                	afterrender : function (me) {
-                        debug('VentanaDocumentos afterrender!');
-                        if (!Ext.isEmpty(panDocSmap1.cddocumeParasubir)) {
-                            var mask = _maskLocal();
-                            setTimeout(
-                                function() {
-                                    mask.close();
-                                    me.onAddClick();
-                                },
-                                1000
-                            );
                         }
                     }
                 }
@@ -1463,7 +1269,7 @@ Ext.onReady(function()
     ////// contenido    //////
     /*//////////////////////*/
     panDocGridDocu=new PanDocGridDocu();
-    panDocGridDocu.render('pan_doc_maindiv<s:property value="smap1.random" />');
+    panDocGridDocu.render('pan_doc_maindiv');
     //Ext.getCmp('venDocMenuSupBotGenConrec').hide();
     /*//////////////////////*/
     ////// contenido    //////
@@ -1477,4 +1283,4 @@ Ext.onReady(function()
     //////////////////////////
 });
 </script>
-<div id="pan_doc_maindiv<s:property value="smap1.random" />" style="height:1000px;border:1px solid #999999;"></div>
+<div id="pan_doc_maindiv" style="height:1000px;border:1px solid #999999;"></div>

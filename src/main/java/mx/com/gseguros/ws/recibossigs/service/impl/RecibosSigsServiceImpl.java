@@ -253,9 +253,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			/**
 			 * La url no contempla endosos pues es solo para la emision.
 			 */
-			//String parametros = "?9999,"+modalidad+","+sucursal+","+cdtipsitGS+","+nmpoliza+",0,0,,"+cont; // PARAMS RECIBO ANTERIORES
-			String parametros = "?"+sucursal+","+cdtipsitGS+","+nmpoliza+",,0,"+cont;
-			
+			String parametros = "?9999,"+modalidad+","+sucursal+","+cdtipsitGS+","+nmpoliza+",0,0,,"+cont;
 			logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
 			
 			//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
@@ -293,7 +291,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 						,"0"
 						,Documento.RECIBO
 						,null
-						,null, false
+						,null
 						);
 				
 			} catch (Exception e) {

@@ -3,15 +3,10 @@
 <script>
 	var _CONTEXT = '${ctx}';
 	var asegAlterno                      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
-	var smap2Alterno                      = <s:property value="%{convertToJSON('smap2')}" escapeHtml="false" />;
-	var guarda_Aseg_alterno              = '<s:url namespace="/endosos" action="guardarEndosoAseguradoAlterno" />';
+	var guarda_Aseg_alterno              = '<s:url namespace="/endosos" action=" guardarEndosoAseguradoAlterno" />';
 	var _pAsegAlte_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"             />';
 	
-	var endAseAltflujo = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
-	
 	debug('asegAlterno :',asegAlterno);
-	debug('smap2Alterno :',smap2Alterno);
-	debug('endAseAltflujo:',endAseAltflujo);
 	
 	Ext.onReady(function() {
 		
@@ -42,7 +37,7 @@
 			        name		: 'asegAlt',
 			        width		: 600,
 			        labelWidth	: 150,
-			        value 		: smap2Alterno.AsegAlterno,
+			        value 		: asegAlterno.OTVALOR02,
 			        allowBlank	: false
 		    	}
 	    	]
@@ -58,14 +53,9 @@
 					if (formPanel.form.isValid()) {
                         // Realizamos el proceso de guardado
 						var submitValues={};
-						asegAlterno.ASEG_ALTERNO = panelInicialPral.down('[name="asegAlt"]').getValue();
+						asegAlterno.OTVALOR02 = panelInicialPral.down('[name="asegAlt"]').getValue();
 						asegAlterno.FEINIVAL  = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
         				submitValues['smap1']= asegAlterno;
-        				
-        				if(!Ext.isEmpty(endAseAltflujo))
-        				{
-        				    submitValues['flujo'] = endAseAltflujo;
-        				}
         				
         				Ext.Ajax.request(
    						{
@@ -75,24 +65,9 @@
    						    	myMask.hide();
    						    	panelInicialPral.setLoading(false);
    						         var jsonResp = Ext.decode(response.responseText);
-   						         
-   						         var callbackRemesa = function()
-   						         {
-   						             //usa codigo del marcoEndososAuto.jsp
-                                     marendNavegacion(2);
-   						         };
-   						         
-   						         mensajeCorrecto("Endoso",jsonResp.respuesta,function()
-   						         {
-   						             _generarRemesaClic(
-   						                 true
-   						                 ,asegAlterno.CDUNIECO
-   						                 ,asegAlterno.CDRAMO
-   						                 ,asegAlterno.ESTADO
-   						                 ,asegAlterno.NMPOLIZA
-   						                 ,callbackRemesa
-   						             );
-   						         });
+   						         mensajeCorrecto("Endoso",jsonResp.respuesta,null);
+   						         //usa codigo del marcoEndososAuto.jsp
+                                 marendNavegacion(2);
    						    },
    						    failure:function(response,opts)
    						    {
@@ -158,6 +133,5 @@
 		////// loaders //////
             	
     });
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="maindivHist" style="height:1000px;"></div>

@@ -85,17 +85,6 @@ public class SuplementoVO implements Serializable{
 	 */
 	private String switchConvenios;
 	
-	/*
-	 * Codigo de Sesion por rol
-	 * */
-	private String cdsisrol;
-	
-	public String getCdsisrol() {
-		return cdsisrol;
-	}
-	public void setCdsisrol(String cdsisrol) {
-		this.cdsisrol = cdsisrol;
-	}
 	public String getNmsuplem() {
 		return nmsuplem;
 	}

@@ -21,7 +21,6 @@ public interface EndososManager
     public List<Map<String,String>>  retarificarEndosos(Map<String,String>params ) throws Exception;
     @Deprecated
     public Map<String, String>       confirmarEndosoB(Map<String, String> params)             throws Exception;
-    
     public Map<String,String>        guardarEndosoDomicilio(Map<String,Object>params)         throws Exception;    
     public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception;
     
@@ -65,13 +64,10 @@ public interface EndososManager
 	/**
 	 * PKG_ENDOSOS.P_ENDOSO_INICIA
 	 */
-	@Deprecated
 	public Map<String,String>        iniciarEndoso(Map<String,String>params)                  throws Exception;
-	
 	/**
 	 * PKG_ENDOSOS.P_ENDOSO_INICIA
 	 */
-	@Deprecated
 	public Map<String,String>        iniciarEndoso(
 			String cdunieco
 			,String cdramo
@@ -82,7 +78,6 @@ public interface EndososManager
 			,String cdusuari
 			,String proceso
 			,String cdtipsup) throws Exception;
-	
 	/**
 	 * PKG_SATELITES.P_INSERTA_TWORKSUP_END
 	 * @param accion TODO
@@ -214,7 +209,6 @@ public interface EndososManager
 			,String nmsuplem
 			,String cdtipsup) throws Exception;
 	
-	@Deprecated
 	public List<Map<String, String>> obtenerValositUltimaImagen(
 			String cdunieco
 			,String cdramo
@@ -406,7 +400,6 @@ public interface EndososManager
 			,String cdusuari
 			,String cdtipsup);
 	public ManagerRespuestaSmapVO cargarTvalositTitular(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem);
-	
 	public ManagerRespuestaVoidVO guardarEndosoAtributosSituacionGeneral(
 			String cdunieco
 			,String cdramo
@@ -422,8 +415,7 @@ public interface EndososManager
 			,String rutaDocsPoliza
 			,String rutaServReports
 			,String passServReports
-			,FlujoVO flujo
-			)throws Exception;
+			);
 	
 	public ManagerRespuestaVoidVO guardarEndosoBeneficiarios(
 			String cdunieco
@@ -440,16 +432,6 @@ public interface EndososManager
 			,UserVO usuarioSesion
 			,FlujoVO flujo
 			,String feefecto
-			)throws Exception;
-
-	
-	public void guardaAseguradoAlterno(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String nmsuplem
-			,String aseguradoAlterno
 			)throws Exception;
 	
 	/**
@@ -578,7 +560,6 @@ public interface EndososManager
 			,List<String> incisos
 			,String cdtipsitPrimerInciso
 			,String nmsolici
-			,FlujoVO flujo
 			)throws Exception;
 	
 	public String confirmarEndosoBajaFamilia(
@@ -600,7 +581,6 @@ public interface EndososManager
 			,List<String> incisos
 			,String cdtipsitPrimerInciso
 			,String nmsolici
-			,FlujoVO flujo
 			)throws Exception;
 	
 	@Deprecated
@@ -670,17 +650,5 @@ public interface EndososManager
 		String nmpoliza,
 		String cdtipsit,
 		int    numSituac) throws Exception;
-	
-	@Deprecated
-	public void confirmarEndosoB(
-    		String cdunieco
-    		,String cdramo
-    		,String estado
-    		,String nmpoliza
-    		,String nmsuplem
-    		,String nsuplogi
-    		,String cdtipsup
-    		,String dscoment
-    		)throws Exception;
 	
 }

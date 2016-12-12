@@ -2,6 +2,7 @@ package mx.com.gseguros.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,16 +10,12 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.RectangleReadOnly;
@@ -31,7 +28,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 public class DocumentosUtils
 {
-	private final static Logger logger = LoggerFactory.getLogger(DocumentosUtils.class);
+	private final static Logger logger = Logger.getLogger(DocumentosUtils.class);
 	
 	public static File fusionarDocumentosPDF(List<File>origen,File destino)
 	{
@@ -52,7 +49,7 @@ public class DocumentosUtils
 			resp=new File(destino.getCanonicalPath());
 		}catch(Exception ex)
 		{
-			logger.error("Error al fusionarDocumentosPDF: ", ex);
+			logger.error(ex);
 		}
 		return resp;
 	}
@@ -131,7 +128,7 @@ public class DocumentosUtils
 	      document.close();
 	      outputStream.close();
 	    } catch (Exception e) {
-	      logger.error("Error en concatPDFs: ", e);
+	      logger.error(e);
 	    } finally {
 	      if (document.isOpen())
 	        document.close();
@@ -139,7 +136,7 @@ public class DocumentosUtils
 	        if (outputStream != null)
 	          outputStream.close();
 	      } catch (IOException ioe) {
-	        logger.error("Error en concatPDFs:: ", ioe);
+	        logger.error(ioe);
 	      }
 	    }
 	  }
@@ -161,8 +158,12 @@ public class DocumentosUtils
 			outputStream.flush();
 			outputStream.close();
 			
-		} catch (Exception e) {
-			logger.error("Error en pdfBlanco: ", e);
+		} catch (FileNotFoundException e) {
+			logger.error(e);
+		} catch (DocumentException e) {
+			logger.error(e);
+		} catch (IOException e) {
+			logger.error(e);
 		}
 		return output;
 
@@ -190,23 +191,19 @@ public class DocumentosUtils
 			long timestamp = System.currentTimeMillis();
 			long rand = new Double(1000d*Math.random()).longValue();
 			
-			File ot=new File(blanco
-        			        .getAbsoluteFile()
-        			        .getParent()
-        			        +Constantes.SEPARADOR_ARCHIVO
-        			        +input.getName()
-        			        .substring(
-        			                0, input.getName().indexOf(".")
-        			                )
-        			        +"_dplx_"
-        			        +timestamp+rand
-        			        +".pdf");
+			File ot=new File(blanco.getAbsoluteFile().getParent()+"\\"+
+					input.getName().substring(
+							0, input.getName().indexOf(".")
+							)+"_dplx_"+timestamp+rand+".pdf");
 			
-
+			
 			return mixPdf(fus,ot); 
 			
-		} catch (Exception e) {
-			logger.error("Error en blancoParaDuplex: ", e);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e);
+		}  catch (IOException e) {
+			logger.error(e);
 		}
 		return null;
 	}
@@ -216,14 +213,12 @@ public class DocumentosUtils
 		Document document= new Document();
 		PdfCopy copy;
 		try {
-		    logger.debug("lista de archivos: {}",pdfs);
 			copy = new PdfCopy(document, new FileOutputStream(salida));
 		
 			document.open();
 			PdfReader reader;
 			int n;
 			for(File doc: pdfs){
-			    logger.debug("Uniendo archivo: {}",doc.getAbsolutePath());
 				reader=new PdfReader(doc.getAbsolutePath());
 				n=reader.getNumberOfPages();
 				for(int page=0;page<n;){
@@ -234,98 +229,30 @@ public class DocumentosUtils
 			}
 			document.close();
 		
-		} catch (Exception e) {
-			logger.error("Error en mixPdf: ",e);
+		} catch (FileNotFoundException e) {
+			logger.error(e);
+		} catch (DocumentException e) {
+			
+			logger.error(e);
+		} catch (IOException e) {
+		
+			logger.error(e);
+		}catch(ExceptionConverter e){
+			logger.error(e);
+		}catch(Exception e){
+			logger.error(e);
 		}
-		logger.debug("Archivo fusionado: {}",salida);
+		
 		return salida;
 		
 	}
 	
-	
-	/**
-	 * Genera un documento de Excel en base a los parámetros de la lista
-	 * @param lista					
-	 * @param nombreArchivo   Nombre del archivo a generar
-	 * @param incluyeEncabezado true si se requiere agregar un registro con el nombre de los encabezados, false si no
-	 * @return
-	 */
-	public static boolean generaExcel(List<Map<String, String>> lista, String nombreArchivo, boolean incluyeEncabezado) {
-		
-		boolean exito = false;
-		
-		try {
-		 // Generar archivo en Excel en ruta temporal
-	        if(lista != null && lista.size() > 0) {
-	                            
-	            SXSSFWorkbook wb = new SXSSFWorkbook(); 
-	            wb.setCompressTempFiles(true);
-	            SXSSFSheet sh = (SXSSFSheet) wb.createSheet();
-	            sh.setRandomAccessWindowSize(100);// keep 100 rows in memory, exceeding rows will be flushed to disk
-	            
-	            int rownum = 0;
-	            // Incluimos el encabezado de las columnas:
-	            if(incluyeEncabezado && lista != null && lista.size() > 0) {
-	                Map<String, String> map = lista.get(0);
-	                Row row = sh.createRow(rownum);
-	                int cellnum = 0;
-	                for (Map.Entry<String, String> entry : map.entrySet()){
-	                    Cell cell = row.createCell(cellnum);
-	                    cell.setCellValue(entry.getKey());
-	                    cellnum++;
-	                }
-	                rownum ++;
-	            }
-	            // Generamos los datos en el archivo:
-	            for (Map<String, String> map : lista) {
-	                Row row = sh.createRow(rownum);
-	                int cellnum = 0;
-	                for (Map.Entry<String, String> entry : map.entrySet()){
-	                    Cell cell = row.createCell(cellnum);
-	                    cell.setCellValue(entry.getValue());
-	                    cellnum++;
-	                }
-	                rownum ++;
-	            }
-	            FileOutputStream out = new FileOutputStream(nombreArchivo);
-	            wb.write(out);
-	            out.close();
-	        } else {
-	            logger.warn("No hay datos para exportar el archivo {}", nombreArchivo);
-	        }
-	        exito = true;
-        } catch (Exception e) {
-            logger.error("Error al exportar datos al archivo {}", nombreArchivo, e);
-        }
-		return exito;
-	}
-	
-	public static boolean verificaPDF(File pdf){
-	    
-	    try{
-	        logger.debug("Verificando arcivo {}:"+pdf.getAbsolutePath());
-	        PdfReader reader=new PdfReader(pdf.getAbsolutePath());
-	        boolean res=!reader.isRebuilt(); 
-	        logger.debug("Resultado Verificando arcivo {} :"+res,pdf.getAbsolutePath());
-	        return res;
-	        
-	    }catch(Exception e){
-	        logger.debug("Error al verificar pdf: {}",e);
-	        return false;
-	    }
-	    
-	    
-	}
-	
-	
 //	public static void main(String []args)throws Exception{
 //		
 //		List<File> l=new ArrayList();
-//		l.add(new File("C:\\Users\\Biosnet.16\\Desktop\\basura\\lote_4529_remesa_440457_tramite_394544_t_1480534101908_135.pdf"));//malo
-//		l.add(new File("C:\\Users\\Biosnet.16\\Desktop\\basura\\lote_4529_remesa_440458_tramite_300059_t_1480533657476_545.pdf"));
-//		mixPdf(l, new File("c:\\Users\\Biosnet.16\\Desktop\\basura\\slm.pdf"));
-//		System.out.println("yaaa");
-//		System.out.println(verificaPDF(new File("c:\\Users\\Biosnet.16\\Desktop\\basura\\lotesdsd_4529_remesa_440458_tramite_300059_t_1480533657476_545.pdf")));
+//		l.add(new File("c:\\RES\\horizontal.pdf"));
+//		l.add(new File("c:\\RES\\lo.pdf"));
+//		mixPdf(l, new File("c:\\RES\\slm.pdf"));
 //		
 //	}
 }

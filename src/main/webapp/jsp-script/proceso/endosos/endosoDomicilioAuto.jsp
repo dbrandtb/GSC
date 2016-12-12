@@ -14,7 +14,6 @@ var inputCduniecop4        = '<s:property value="smap1.CDUNIECO" />';
 var inputCdramop4          = '<s:property value="smap1.CDRAMO" />';
 var inputEstadop4          = '<s:property value="smap1.ESTADO" />';
 var inputNmpolizap4        = '<s:property value="smap1.NMPOLIZA" />';
-var inputNmsuplemp4        = '<s:property value="smap1.NMSUPLEM" />';
 var inputCdpersonp4        = '<s:property value="smap1.CDPERSON" />';
 var inputCdrfcp4           = '<s:property value="smap1.CDRFC" escapeHtml="false" />';
 var inputAsegurado         = '<s:property value="smap1.DSNOMBRE" escapeHtml="false" /> <s:property value="smap1.DSNOMBRE1" escapeHtml="false" /> <s:property value="smap1.DSAPELLIDO" escapeHtml="false" /> <s:property value="smap1.DSAPELLIDO1" escapeHtml="false" />';
@@ -23,7 +22,7 @@ var inputNtramite          = '<s:property value="smap1.NTRAMITE" />';
 var tipoFlotilla           = '<s:property value="smap1.TIPOFLOT" />';
 var inputFechaInicio       = new Date();
 var urlRegresarp4          = '<s:url namespace="/"        action="editarAsegurados" />';
-var urlCargarp4            = '<s:url namespace="/catalogos"  action="obtenerDomicilioContratante" />';
+var urlCargarp4            = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
 var urlGuardarp4           = '<s:url namespace="/endosos" action="guardarEndosoDomicilioAuto" />';
 var enddomUrlDoc           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
 var _ComboColoniasUrl      = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
@@ -44,10 +43,6 @@ debug('inputCdpersonp4'        , inputCdpersonp4);
 debug('inputCdrfcp4'           , inputCdrfcp4);
 debug('inputCdtipsit'          , inputCdtipsit);
 debug('inputNtramite'          , inputNtramite);
-
-var _endDomAuto_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-debug('_endDomAuto_flujo:',_endDomAuto_flujo);
-
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -283,54 +278,31 @@ Ext.onReady(function(){
                     if(this.up().up().getForm().isValid())
                     {
                         var panelMask = new Ext.LoadMask('maindivp4', {msg:"Confirmando..."});
-                        
-                        var paramsSubmit =
-                        {
-                            'smap1.pv_cdunieco' : inputCduniecop4,
-                            'smap1.pv_cdramo'   : inputCdramop4,
-                            'smap1.pv_estado'   : inputEstadop4,
-                            'smap1.pv_nmpoliza' : inputNmpolizap4,
-                            'smap1.pv_nmsuplem_i': inputNmsuplemp4,
-                            'smap1.pv_nmsituac' : '0',
-                            'smap1.pv_cdperson' : inputCdpersonp4,
-                            'smap1.pv_cdrol'    : '1',
-                            'smap1.NMORDDOM'    : _nmOrdDomEnd().getValue(),
-                            'smap1.TIPOFLOT'    : tipoFlotilla,
-                            'smap1.NTRAMITE'    : inputNtramite,
-                            'smap2.cdtipsit'    : inputCdtipsit,
-                            'smap3.cdperson'    : inputCdpersonp4,
-                            'smap3.calle'       : datosIniciales.data['smap1.DSDOMICI'],
-                            'smap3.cp'          : datosIniciales.data['smap1.CODPOSTAL'],
-                            'smap3.numext'      : datosIniciales.data['smap1.NMNUMERO'],
-                            'smap3.numint'      : datosIniciales.data['smap1.NMNUMINT'],
-                            'smap3.cdedo'       : datosIniciales.data['smap1.CDEDO'],
-                            'smap3.cdmunici'    : datosIniciales.data['smap1.CDMUNICI'],
-                            'smap3.cdcoloni'    : datosIniciales.data['smap1.CDCOLONI']
-                        };
-                        
-                        if(!Ext.isEmpty(_endDomAuto_flujo))
-                        {
-                            paramsSubmit['flujo.ntramite']  = _endDomAuto_flujo.ntramite;
-                            paramsSubmit['flujo.status']    = _endDomAuto_flujo.status;
-                            paramsSubmit['flujo.cdtipflu']  = _endDomAuto_flujo.cdtipflu;
-                            paramsSubmit['flujo.cdflujomc'] = _endDomAuto_flujo.cdflujomc;
-                            paramsSubmit['flujo.webid']     = _endDomAuto_flujo.webid;
-                            paramsSubmit['flujo.tipoent']   = _endDomAuto_flujo.tipoent;
-                            paramsSubmit['flujo.claveent']  = _endDomAuto_flujo.claveent;
-                            paramsSubmit['flujo.cdunieco']  = _endDomAuto_flujo.cdunieco;
-                            paramsSubmit['flujo.cdramo']    = _endDomAuto_flujo.cdramo;
-                            paramsSubmit['flujo.estado']    = _endDomAuto_flujo.estado;
-                            paramsSubmit['flujo.nmpoliza']  = _endDomAuto_flujo.nmpoliza;
-                            paramsSubmit['flujo.nmsituac']  = _endDomAuto_flujo.nmsituac;
-                            paramsSubmit['flujo.nmsuplem']  = _endDomAuto_flujo.nmsuplem;
-                            paramsSubmit['flujo.aux']       = _endDomAuto_flujo.aux;
-                        }
-                        
 						panelMask.show();
                         this.up().up().getForm().submit(
                         {
-                            params   : paramsSubmit
-                            ,success : function(response,opts)
+                            params:
+                            {
+                                'smap1.pv_cdunieco' : inputCduniecop4,
+                                'smap1.pv_cdramo'   : inputCdramop4,
+                                'smap1.pv_estado'   : inputEstadop4,
+                                'smap1.pv_nmpoliza' : inputNmpolizap4,
+                                'smap1.pv_nmsituac' : '0',
+                                'smap1.pv_cdperson' : inputCdpersonp4,
+                                'smap1.pv_cdrol'    : '1',
+                                'smap1.TIPOFLOT'    : tipoFlotilla,
+                                'smap1.NTRAMITE'    : inputNtramite,
+                                'smap2.cdtipsit'    : inputCdtipsit,
+                                'smap3.cdperson'    : inputCdpersonp4,
+                                'smap3.calle'       : datosIniciales.data['smap1.DSDOMICI'],
+                                'smap3.cp'          : datosIniciales.data['smap1.CODPOSTAL'],
+                                'smap3.numext'      : datosIniciales.data['smap1.NMNUMERO'],
+                                'smap3.numint'      : datosIniciales.data['smap1.NMNUMINT'],
+                                'smap3.cdedo'       : datosIniciales.data['smap1.CDEDO'],
+                                'smap3.cdmunici'    : datosIniciales.data['smap1.CDMUNICI'],
+                                'smap3.cdcoloni'    : datosIniciales.data['smap1.CDCOLONI']
+                            },
+                            success:function(response,opts)
                             {
                                 panelMask.hide();
                                 var json=Ext.decode(opts.response.responseText);
@@ -341,28 +313,12 @@ Ext.onReady(function(){
                                 /*//////////////////////////////*/
                                 ////// usa codigo del padre //////
                                 //////////////////////////////////
-                                
-                                var callbackRemesa = function()
-                                {
-                                    marendNavegacion(2);
-                                };
-                                
                                 Ext.Msg.show({
                                     title:'Endoso generado',
                                     msg: json.mensaje,
                                     buttons: Ext.Msg.OK
-                                    ,fn    : function()
-                                    {
-                                        _generarRemesaClic(
-                                            true
-                                            ,inputCduniecop4
-                                            ,inputCdramop4
-                                            ,inputEstadop4
-                                            ,inputNmpolizap4
-                                            ,callbackRemesa
-                                        );
-                                    }
                                 });
+                                marendNavegacion(2);
                             },
                             failure:function(response,opts)
                             {
@@ -396,7 +352,6 @@ Ext.onReady(function(){
                         ,width       : 600
                         ,height      : 400
                         ,autoScroll  : true
-                        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                         ,loader      :
                         {
                             url       : enddomUrlDoc
@@ -482,10 +437,8 @@ Ext.onReady(function(){
                 'smap1.pv_cdramo_i'     : inputCdramop4,
                 'smap1.pv_estado_i'     : inputEstadop4,
                 'smap1.pv_nmpoliza_i'   : inputNmpolizap4,
-                'smap1.pv_nmsuplem_i'   : inputNmsuplemp4,
-                'smap1.pv_nmsituac_i'   : '0',
+                'smap1.pv_nmsituac_i'   : '1',
                 'smap1.pv_cdperson_i'   : inputCdpersonp4,
-                'smap1.pv_nmorddom_i'   : '',// obtiene el asignado a la poliza
                 'smap1.pv_cdrol_i'      : '1',
                 'smap1.nombreAsegurado' : '',
                 'smap1.cdrfc'           : inputCdrfcp4,
@@ -538,10 +491,10 @@ Ext.onReady(function(){
     });
     
     
-    _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
-    _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
-    _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00F1\u00D10-9-\s]*$/;
-    _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras, espacios y guiones';
+    _fieldByName('smap1.NMNUMERO').regex = /^[A-Za-z0-9-\s]*$/;
+    _fieldByName('smap1.NMNUMERO').regexText = 'Solo d&iacute;gitos, letras y guiones';
+    _fieldByName('smap1.NMNUMINT').regex = /^[A-Za-z0-9-\s]*$/;
+    _fieldByName('smap1.NMNUMINT').regexText = 'Solo d&iacute;gitos, letras y guiones';
     
     Ext.ComponentQuery.query('[name=smap1.NMTELEFO]')[Ext.ComponentQuery.query('[name=smap1.NMTELEFO]').length-1].hide();
     
@@ -586,9 +539,6 @@ Ext.onReady(function(){
     //////////////////////
     
     
-    function _nmOrdDomEnd(){
-	    return Ext.ComponentQuery.query('[name=smap1.NMORDDOM]')[Ext.ComponentQuery.query('[name=smap1.NMORDDOM]').length-1];
-	}
     function _codPosEnd(){
 	    return Ext.ComponentQuery.query('[name=smap1.CODPOSTAL]')[Ext.ComponentQuery.query('[name=smap1.CODPOSTAL]').length-1];
 	}
@@ -603,7 +553,6 @@ Ext.onReady(function(){
 	}
 
 });
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <%--
     </head>

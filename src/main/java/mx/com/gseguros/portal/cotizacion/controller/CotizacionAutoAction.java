@@ -3,19 +3,21 @@ package mx.com.gseguros.portal.cotizacion.controller;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.model.FlujoVO;
-import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
-import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
@@ -25,22 +27,12 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
-import mx.com.gseguros.portal.general.util.TipoTramite;
-import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.json.JSONUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class CotizacionAutoAction extends PrincipalCoreAction
 {
     private static final long   serialVersionUID = -5890606583100529056L;
-    private static final Logger logger           = LoggerFactory.getLogger(CotizacionAutoAction.class);
+	private static final Logger logger           = Logger.getLogger(CotizacionAutoAction.class);
     
     private CotizacionAutoManager cotizacionAutoManager;
     
@@ -61,16 +53,10 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     @Autowired
     private ConsultasManager consultasManager;
     
-    private FlujoVO flujo;
-    
-    @Autowired
-    private FlujoMesaControlManager flujoMesaControlManager;
     
     @Autowired
     private CotizacionManager cotizacionManager;
     
-    @Autowired
-    private CotizacionDAO  cotizacionDAO;
 
     /**
      * Constructor que se asegura de que el action tenga sesion
@@ -87,7 +73,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 ,"\n######################################"
                 ,"\n###### cotizacionAutoIndividual ######"
                 ,"\n###### smap1=" , smap1
-                ,"\n###### flujo=" , flujo
                 ));
         
         String result = ERROR;
@@ -96,39 +81,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         {
             UserVO usuario = Utils.validateSession(session);
             
-            boolean renovacion = false;
-            
-            if(flujo!=null)
-            {
-                logger.debug(Utils.log("", "se va a crear el smap1 porque se entra desde flujo=", smap1));
-                
-                smap1 = new HashMap<String,String>();
-                smap1.put("ntramite" , flujo.getNtramite());
-                smap1.put("cdunieco" , flujo.getCdunieco());
-                smap1.put("cdramo"   , flujo.getCdramo());
-                
-                logger.debug(Utils.log("", "recuperando tramite"));
-                
-                Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
-                
-                Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
-                logger.debug(Utils.log("", "tramite=", tramite));
-                
-                smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
-                
-                logger.debug(Utils.log("", "smap1 creado=", smap1));
-                
-                renovacion = TipoTramite.RENOVACION.getCdtiptra().equals(tramite.get("CDTIPTRA"));
-                
-                if(renovacion && !tramite.get("RENPOLIEX").isEmpty())
-                {
-                    smap1.put("renovacion","S");
-                    smap1.put("RENUNIEXT" ,tramite.get("RENUNIEXT"));
-                    smap1.put("RENRAMO"   ,tramite.get("RENRAMO")  );
-                    smap1.put("RENPOLIEX" ,tramite.get("RENPOLIEX"));
-                }   
-                logger.debug("Es renovacion = {}", renovacion);
-            }
             
             String cdusuari  = usuario.getUser()
                    ,cdsisrol = usuario.getRolActivo().getClave();
@@ -148,22 +100,26 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,cdtipsit , "No se recibi\u00f3 la modalidad"
                     );
             
-            Map<String,Object> resp = cotizacionAutoManager.cotizacionAutoIndividual(
+			ManagerRespuestaImapSmapVO resp = cotizacionAutoManager.cotizacionAutoIndividual(
                     ntramite
                     ,cdunieco
                     ,cdramo
                     ,cdtipsit
                     ,cdusuari
                     ,cdsisrol
-                    ,flujo
-                    ,renovacion
                     );
             
-            smap1.putAll((Map<String,String>)resp.get("smap"));
-            
-            imap = (Map<String,Item>)resp.get("items");
-            
-            exito = true;
+			exito     = resp.isExito();
+			respuesta = resp.getRespuesta();
+			
+			if(!exito)
+			{
+				throw new ApplicationException(respuesta);
+			}
+			
+			smap1.putAll(resp.getSmap());
+			imap = resp.getImap();
+			
             
             result = SUCCESS;
         }
@@ -289,7 +245,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         logger.debug(Utils.log(""
                 ,"\n###################################"
                 ,"\n###### emisionAutoIndividual ######"
-                ,"\n###### flujo=" , flujo
                 ,"\n###### smap1=" , smap1
                 ));
         
@@ -299,44 +254,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         {
             UserVO usuario = Utils.validateSession(session);
             
-            if(flujo!=null && smap1==null)
-            {
-                smap1 = new HashMap<String,String>();
-                smap1.put("cdunieco" , flujo.getCdunieco());
-                smap1.put("cdramo"   , flujo.getCdramo());
-                smap1.put("estado"   , flujo.getEstado());
-                
-                logger.debug(Utils.log("", "recuperando tramite"));
-                
-                Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
-                
-                Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
-                logger.debug(Utils.log("", "tramite=", tramite));
-                
-                smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
-                
-                smap1.put("nmpoliza" , tramite.get("NMSOLICI"));
-                
-                smap1.put("ntramite" , flujo.getNtramite());
-                
-                smap1.put("swexiper" , cotizacionManager.recuperarOtvalorTramitePorDsatribu(flujo.getNtramite(), "SWEXIPER"));
-                
-                logger.debug(Utils.log("", "smap1 creado=", smap1));
-                
-            }
-            
-            //si viene de la pantalla de cotizacion hay que recuperar los atributos de la pantalla actual
-            if(flujo!=null)
-            {
-                if("RECUPERAR".equals(flujo.getAux()))
-                {
-                    //se recibieron 3 propiedades de una pantalla anterior, hay que actualizarlas
-                    logger.debug("flujo antes de actualizar sus 3 propiedades de pantalla nueva={}",flujo);
-                    flujoMesaControlManager.recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(flujo);
-                    
-                    logger.debug("flujo despues de actualizar sus 3 propiedades de pantalla nueva={}",flujo);
-                }
-            }
+			
             
             Utils.validate(smap1, "No se recibieron datos");
             
@@ -828,7 +746,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 ,"\n####################################"
                 ,"\n###### cotizacionAutoFlotilla ######"
                 ,"\n###### smap1=", smap1
-                ,"\n###### flujo=", flujo
                 ));
         
         String result = ERROR;
@@ -840,43 +757,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             String cdusuari  = usuario.getUser()
                    ,cdsisrol = usuario.getRolActivo().getClave();
             
-            boolean renovacion = false;
-            
-            if(flujo!=null
-                &&
-                (
-                    smap1==null
-                    ||!"MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen"))
-                )
-            )//si hay flujo y (o no hay mapa o hay mapa pero no vengo de endosos)
-            {
-                //EN ENDOSO NO SE BOORA PORQUE
-                //TRAE DATOS DEL MARCO
-                
-                logger.debug(Utils.log("FLUJO: se creara el mapa porque viene de flujo y no es endoso (es emision)"));
-                
-                smap1 = new HashMap<String,String>();
-                
-                smap1.put("cdunieco" , flujo.getCdunieco());
-                smap1.put("cdramo"   , flujo.getCdramo());
-                smap1.put("cdtipsit" , "AR");
-                smap1.put("ntramite" , flujo.getNtramite());
-                smap1.put("tipoflot" , flujo.getAux().split(",")[0].split(":")[1]); //primer split= tipoflot:P onComprar:16', segundo split tipoflot P
-                
-                logger.debug(Utils.log("", "el mapa creado desde flujo es=", smap1));
-                
-                Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
-                
-                Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
-                logger.debug(Utils.log("", "tramite=", tramite));
-                
-                renovacion = TipoTramite.RENOVACION.getCdtiptra().equals(tramite.get("CDTIPTRA"));
-                logger.debug("Es renovacion = {}", renovacion);
-            }
-            else
-            {
-                logger.debug("FLUJO: No entra porque no es flujo o porque es flujo de endoso");
-            }
+			
             
             Utils.validate(smap1, "No se recibieron datos");
             
@@ -915,8 +796,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,ntramite
                     ,tipoflot
                     ,"S".equals(endoso)
-                    ,flujo
-                    ,renovacion
                     );
             
             exito     = resp.isExito();
@@ -954,7 +833,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 ,"\n###### slist1=" , slist1
                 ,"\n###### slist2=" , slist2
                 ,"\n###### slist3=" , slist3
-                ,"\n###### flujo="  , flujo
                 ));
         
         try
@@ -982,11 +860,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                    ,cdideperCli = smap1.get("cdideperCli")
                    ,tipoflot    = smap1.get("tipoflot");
             
-            String ntramite ="";
-            if(flujo!=null && !flujo.getNtramite().isEmpty())
-            {
-                ntramite = flujo.getNtramite();
-            }
+			
                 
             Utils.validate(
                     cdunieco  , "No se recibi\u00f3 la sucursal"
@@ -1017,27 +891,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 }
             }
             
-            Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmpoliza, cdunieco, cdramo, cdtipsit);
-            if(parame.get("Mensaje")!=null)
-            {
-                logger.debug(Utils.log(
-                         "\n##################################"
-                        ,"\n###### cotizarAutosFlotilla ######"
-                        ,"\n",parame.get("Mensaje")
-                        ,"\n##################################"
-                        ));
-            }
-            else if(!parame.isEmpty())
-            {
-                if(nmpoliza== null && !parame.get("NMPOLIZA").equals("0"))
-                {nmpoliza = parame.get("NMPOLIZA");}
-                if(parame.get("CDTIPTRA").equals("21"))
-                {
-                    String detalles = cotizacionDAO.validaDatosAutoSigs(slist1);
-                    if(!detalles.isEmpty())
-                    throw new ApplicationException(detalles);
-                }
-            }
 
             ManagerRespuestaSlistSmapVO resp=cotizacionAutoManager.cotizarAutosFlotilla(
                     cdusuari
@@ -1052,7 +905,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,fefin
                     ,cdagente
                     ,cdpersonCli
-                    ,nmorddomCli
                     ,cdideperCli
                     ,slist1
                     ,slist2
@@ -1060,32 +912,17 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,noTarificar
                     ,tipoflot
                     ,tvalopol
-                    ,usuario
-                    ,parame.get("RENUNIEXT")
-                    ,parame.get("RENRAMO")
-                    ,parame.get("RENPOLIEX")
-                    ,ntramite
                     );
             
             exito     = resp.isExito();
+			respuesta = resp.getRespuesta();
+			
             if(!exito)
             {
                 throw new ApplicationException(respuesta);
             }
             
-            if(!parame.isEmpty() && parame.get("Mensaje")==null && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 )
-            {
-                List<String> cdtipsits = new ArrayList<String>();
-                for(Map<String,String> tipsit: slist1) 
-                {cdtipsits.add(tipsit.get("cdtipsit"));}
-                ArrayList<String> paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsits, null);
-                List<Map<String,String>> listaResultados= resp.getSlist();
-                String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-                logger.debug(Utils.log(paqYplan));
-                resp.setSlist(cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza));
-            }
-            
-            respuesta = resp.getRespuesta();
+			
            
             smap1.putAll(resp.getSmap());
             slist1 = resp.getSlist();
@@ -1198,11 +1035,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             
             //Elimina incisos que no correspondan al negocio seleccionado
             resp.setSlist(cotizacionAutoManager.validaExcelCdtipsitXNegocio(tipoflot,negocio,resp.getSlist()));
-            exito = !resp.getSlist().isEmpty();
-            if(!exito)
-            {
-                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio"+negocio+" y tipo de carga (PyME/Flotilla): "+tipoflot);
-            }            
+			
             
             int lugarMensaje = resp.getSlist().size();
             Map<String, String> msn = resp.getSlist().get(lugarMensaje-1);
@@ -1215,7 +1048,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             
             if(resp.getSlist().isEmpty())
             {   
-                respuestaOculta="No se agregarï¿½n los incisos por no corresponder al negocio seleccionado.";
+				respuestaOculta="No se agregarón los incisos por no corresponder al negocio seleccionado.";
                 return SUCCESS;
             }
             
@@ -1259,8 +1092,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             Utils.validate(smap1, "No se recibieron datos");
             
             String cdramo      = smap1.get("cdramo")
-                   ,nmpoliza   = smap1.get("nmpoliza")
-                   ,ntramiteIn = smap1.get("ntramiteIn");
+			       ,nmpoliza = smap1.get("nmpoliza");
+			
             
             Utils.validate(
                     cdramo    , "No se recibi\u00f3 el producto"
@@ -1271,7 +1104,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             String cdusuari  = usuario.getUser()
                    ,cdsisrol = usuario.getRolActivo().getClave();
             
-            ManagerRespuestaSlist2SmapVO resp = cotizacionAutoManager.cargarCotizacionAutoFlotilla(cdramo,nmpoliza,cdusuari,cdsisrol,ntramiteIn);
+			ManagerRespuestaSlist2SmapVO resp = cotizacionAutoManager.cargarCotizacionAutoFlotilla(cdramo,nmpoliza,cdusuari,cdsisrol);
             
             exito     = resp.isExito();
             respuesta = resp.getRespuesta();
@@ -1305,7 +1138,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 ,"\n#################################"
                 ,"\n###### emisionAutoFlotilla ######"
                 ,"\n###### smap1=", smap1
-                ,"\n###### flujo=", flujo
                 ));
         
         String result = ERROR;
@@ -1317,48 +1149,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             String cdusuari = usuario.getUser()
                    ,cdsisrol = usuario.getRolActivo().getClave();
             
-            if(flujo!=null  && smap1==null) //cuando viene desde la mesa de control
-            {
-                logger.debug(Utils.log("", "se creara el mapa porque viene de flujo"));
-                
-                smap1 = new HashMap<String,String>();
-                
-                smap1.put("cdunieco" , flujo.getCdunieco());
-                smap1.put("cdramo"   , flujo.getCdramo());
-                smap1.put("cdtipsit" , "AR");
-                smap1.put("estado"   , flujo.getEstado());
-                
-                logger.debug(Utils.log("", "recuperando tramite"));
-                
-                Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
-                
-                Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
-                logger.debug(Utils.log("", "tramite=", tramite));
-                
-                smap1.put("nmpoliza" , tramite.get("NMSOLICI"));
-                
-                smap1.put("ntramite" , flujo.getNtramite());
-                
-                smap1.put("tipoflot" , flujo.getAux());
-                
-                smap1.put("swexiper" , cotizacionManager.recuperarOtvalorTramitePorDsatribu(flujo.getNtramite(), "SWEXIPER"));
-                
-                logger.debug(Utils.log("", "el mapa creado desde flujo es=", smap1));
-                
-            }
-            
-            //si viene de la pantalla de cotizacion hay que recuperar los atributos de la pantalla actual
-            if(flujo!=null)
-            {
-                if("RECUPERAR".equals(flujo.getAux()))
-                {
-                    //se recibieron 3 propiedades de una pantalla anterior, hay que actualizarlas
-                    logger.debug("flujo antes de actualizar sus 3 propiedades de pantalla nueva={}",flujo);
-                    flujoMesaControlManager.recuperarPropiedadesDePantallaComponenteActualPorConexionSinPermisos(flujo);
-                    
-                    logger.debug("flujo despues de actualizar sus 3 propiedades de pantalla nueva={}",flujo);
-                }
-            }
             
             Utils.validate(smap1, "No se recibieron datos");
             
@@ -1709,8 +1499,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,nmpoliza
                     ,nmsuplem
                     ,nmsituac
-                    ,slist1
-                    ,usuarioSesion);
+					,slist1);
+			
             
             exito     = resp.isExito();
             respuesta = resp.getRespuesta();
@@ -1792,7 +1582,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 ));
         
         String paso = null;
-        
+		int i= 0;
+		
         try
         {
             paso = "Validando datos de entrada";
@@ -1847,144 +1638,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         return SUCCESS;
     }
 
-    public String obtieneValidacionDescuentoR6()
-    {
-        logger.debug(Utils.log(""
-                ,"\n##########################################"
-                ,"\n###### obtieneValidacionDescuentoR6 ######"
-                ,"\n###### smap1=", smap1
-                ));
-        
-        String paso = null;
-        
-        try
-        {
-            paso = "Validando datos de entrada";
-            logger.debug(Utils.log("","paso=",paso));
-            
-            Utils.validate(smap1, "No se recibieron datos del auto");
-            
-            String tipoUnidad     = smap1.get("tipoUnidad")
-            ,uso = smap1.get("uso")
-            ,cdagente = smap1.get("cdagente")
-            ,cdtipsit = smap1.get("cdtipsit")
-            ,cdatribu = smap1.get("cdatribu");
-            
-            Utils.validate(
-                    tipoUnidad     , "No se recibi\u00f3 la tipoUnidad"
-                    ,uso       , "No se recibi\u00f3 el uso"
-                    ,cdagente  , "No se recibi\u00f3 el cdagente"
-                    ,cdtipsit  , "No se recibi\u00f3 el cdtipsit"
-                    ,cdatribu  , "No se recibi\u00f3 el cdatribu"
-                    );
-            
-            smap1 = cotizacionManager.obtieneValidacionDescuentoR6(tipoUnidad, uso, "9",
-                    "13", cdagente, cdtipsit, cdatribu);
-            
-            logger.debug("Valores maximo y minimo de descuento ramo 6 --->"+smap1);
-            
-        }
-        catch(Exception ex)
-        {
-            respuesta = Utils.manejaExcepcion(ex);
-        }
-        
-        logger.debug(Utils.log(""
-                ,"\n###### obtieneValidacionDescuentoR6 ######"
-                ,"\n##########################################"
-                ));
-        return SUCCESS;
-    }
-    
-    public ArrayList<String> cargarPoliza(String cdunieco, String cdramo, String cdpoliza, String tipoflot, List<String> cdtipsit, String cargaCot)
-    {
-        logger.debug(Utils.log(
-                 "\n###############################"
-                ,"\n######## cargarPoliza #########"
-                ,"\n###### smap1 = " , smap1
-                ));
-        if(cargaCot == null)
-        {
-            cargaCot="N";
-        }
-        ArrayList<String> paquetesYFormaPago = new ArrayList<String>();
-        try
-        {
-            String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-                  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
-                HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
-                Map<String,String>parametros = (Map<String,String>)someObject.get("params");
-                String formpagSigs = parametros.get("formpagSigs");
-                paquetesYFormaPago.add(formpagSigs);
-                paquetesYFormaPago.addAll(1,someObject.get("paquetes"));
-                logger.debug(Utils.log(paquetesYFormaPago));
-        }
-        catch (Exception ex)
-        {
-            respuesta = Utils.manejaExcepcion(ex);
-        }
-        return paquetesYFormaPago;
-    }
-
- public String modificaPrimasFlotillas(String ntramite, List<Map<String, String>> listaResultados, Integer formpagSigs, ArrayList<String> paquete, String cdunieco, String cdramo, String nmpoliza, String cdtipsit, String renuniext, String renramo, String renpoliex) throws Exception
-    {
-        String mensaje = "Modificacion de primas según sigs";
-            try
-            {       int i = 0;
-                    String mnprima = null;
-                    paquete.remove(0);
-//                  Ciclamos paquetes devueltos del ice con relacion a los paquetes devueltos del sigs
-                    logger.debug(Utils.log("Forma de pago sigs :",formpagSigs));
-//                  for(String paq:paquete)
-//                  {   
-                        for(Map<String,String>res:listaResultados)
-                        {   
-                            String dsperpag = res.get("DSPERPAG");
-//                          String cdperpag   = res.get("CDPERPAG");
-                            if (formpagSigs == 1 && dsperpag.contains("Contado/Anual"))// && paquete.get(i).trim().equals(cdperpag.trim()))
-                            {
-                                formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
-                                mnprima = res.get("PRIMA");break;
-                            }
-                            else if ( (formpagSigs == 2 || formpagSigs == 5) && dsperpag.contains("Semestral"))// && paquete.get(i).trim().equals(cdperpag.trim()))
-                            {
-                                formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
-                                mnprima = res.get("PRIMA");break;
-                            }
-                            else if ( (formpagSigs == 3 || formpagSigs == 6) && dsperpag.contains("Trimestral"))// && paquete.get(i).trim().equals(cdperpag.trim()))
-                            {
-                                formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
-                                mnprima = res.get("PRIMA");break;
-                            }
-                            else if ( (formpagSigs == 4 || formpagSigs == 7) && dsperpag.contains("Mensual"))// && paquete.get(i).trim().equals(cdperpag.trim()))
-                            {
-                                formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
-                                mnprima = res.get("PRIMA");break;
-                            }
-                        }
-//                  }
-                    try
-                    {
-                        String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
-                               mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
-                        if(mensaje != null)
-                        {
-                            return mensaje;
-                        }   
-                        logger.debug(Utils.log("\n WS consumido con exito: "));//,mensaje
-                        return mensaje;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(Utils.manejaExcepcion(ex));
-                    }
-            }
-            catch (Exception ex)
-            {
-                Utils.generaExcepcion(ex, mensaje);
-            }
-        return "mensaje";
-    }
     
     
  public String obtieneFormaPago()
@@ -2114,35 +1767,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
      return SUCCESS;
  }
  
- @SuppressWarnings("unchecked")
- public String datosFlujo() throws Exception
- {
-     logger.debug(Utils.log(""
-             ,"\n######################################"
-             ,"\n###### getdatosFlujo ######"
-             ,"\n###### flujo=" , flujo
-             ));
-     String result = ERROR;
-     try
-     {
-         smap1 = new HashMap<String,String>();
-         Map<String, Object> tramiteObj = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
-         smap1.putAll((Map<String,String>)tramiteObj.get("TRAMITE"));
-         exito = true;
-     }
-     catch(Exception ex)
-     {
-         exito=false;
-         respuesta = Utils.manejaExcepcion(ex);
-     }
-     logger.debug(Utils.log(""
-             ,"\n###### exito="  , exito
-             ,"\n###### result=" , result
-             ,"\n###### getdatosFlujo ######"
-             ,"\n###########################"
-             ));
-     return SUCCESS;
- }
  
      /*
      * Getters y setters
@@ -2249,13 +1873,5 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
     public void setExcelContentType(String excelContentType) {
         this.excelContentType = excelContentType;
-    }
-
-    public FlujoVO getFlujo() {
-        return flujo;
-    }
-
-    public void setFlujo(FlujoVO flujo) {
-        this.flujo = flujo;
     }
 }

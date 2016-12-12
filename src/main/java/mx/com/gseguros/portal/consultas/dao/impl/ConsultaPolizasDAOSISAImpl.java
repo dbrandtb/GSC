@@ -343,7 +343,7 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 	public class CopagosPolizaMapper implements RowMapper<CopagoVO> {
 		public CopagoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
 			CopagoVO copago = new CopagoVO();
-			copago.setOrden(rs.getString("ORDEN"));
+			copago.setOrden(rs.getInt("ORDEN"));
 			copago.setDescripcion(rs.getString("descripcion"));
 			copago.setValor(rs.getString("valor"));
 			copago.setAgrupador("");
@@ -455,6 +455,9 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 				return datosPlan;
 			}
 		}
+		
+		
+		
 	
 		//Datos del contratante
 		@Override
@@ -829,10 +832,12 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 
 	// Recibos del Agente
 	@Override
-	public List<ReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza)	throws Exception {
+	public List<ReciboAgenteVO> obtieneRecibosAgente(PolizaVO poliza)
+			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmpoliza_i", poliza.getIcodpoliza());
-		Map<String, Object> mapResult = ejecutaSP(new ConsultaRecibosAgenteSP(getDataSource()), params);
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaRecibosAgenteSP(
+				getDataSource()), params);
 		return (List<ReciboAgenteVO>) mapResult.get("rs");
 	}
 
@@ -940,12 +945,4 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

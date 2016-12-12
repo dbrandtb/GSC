@@ -21,17 +21,6 @@
         <%@ include file="/resources/jsp-script/util/catalogos.jsp"%>
         <script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js?${now}"></script>
         <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js?${now}"></script>
-        <script type="text/javascript" src="${ctx}/resources/scripts/util/rfc.js?${now}"></script>
-        <style>
-		.green {
-		    border-left: 2px solid green;
-		    border-right: 2px solid green;
-		}       
-		.red {
-		    border-left: 2px solid red;
-		    border-right: 2px solid red;
-		}
-        </style>
         <decorator:head />
         <!-- EL custom_overrides.js DEBE SER INCLUIDO DESPUES DE LOS SCRIPTS PROPIOS DE CADA JSP -->
         <script type="text/javascript" src="${ctx}/resources/scripts/util/custom_overrides.js?${now}"></script>

@@ -15,22 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.json.JSONUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.ActionContext;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -39,13 +23,9 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
-import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
-import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
-import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
-import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
@@ -54,10 +34,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
-import mx.com.gseguros.portal.cotizacion.model.PuntajeCoberturasPlanVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
-import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
-import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
@@ -74,8 +51,6 @@ import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
-import mx.com.gseguros.portal.general.util.TipoProcesoBloqueo;
-import mx.com.gseguros.portal.general.util.TipoRamo;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
@@ -93,6 +68,21 @@ import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleValue_Struc;
 import mx.com.gseguros.ws.nada.service.NadaService;
 import mx.com.gseguros.ws.tipocambio.client.axis2.TipoCambioWSServiceStub.ResponseTipoCambio;
 import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
 
 public class CotizacionAction extends PrincipalCoreAction
 {
@@ -157,15 +147,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	@Autowired
 	private EndososManager           endososManager;
 	
-	@Autowired
-	private CotizacionDAO  cotizacionDAO;
-	
-	@Autowired
-	private ConsultasPolizaManager consultasPolizaManager;
-	
-	@Autowired
-	private DespachadorManager despachadorManager;
-	
 	public CotizacionAction()
 	{
 		logger.debug("new CotizacionAction");
@@ -200,8 +181,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdusuari    = null;
 		String cdsisrol    = null;
 		
-		boolean renovacion = false;
-		
 		if(flujo!=null)
 		{
 			try
@@ -210,27 +189,12 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.put("ntramite" , flujo.getNtramite());
 				smap1.put("cdunieco" , flujo.getCdunieco());
 				smap1.put("cdramo"   , flujo.getCdramo());
-				
-				logger.debug("Se recuperan datos del tramite accediendo por flujo");
-				
-				Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
-				
-				Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
-				
-				cdagente = tramite.get("CDAGENTE");
-				
-				cdtipsit = tramite.get("CDTIPSIT");
-				
-				logger.debug("CDAGENTE={}",cdagente);
-
-				smap1.put("cdagente" , cdagente);
-				
-				smap1.put("cdtipsit" , cdtipsit);
-				
+				smap1.put("cdtipsit" ,
+						((Map<String,String>)(flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(new StringBuilder(), flujo))
+						    .get("TRAMITE"))
+						    .get("CDTIPSIT")
+						);
 				logger.debug(Utils.log("\nsmap1 recuperado de flujo=",smap1));
-				
-				renovacion = TipoTramite.RENOVACION.getCdtiptra().equals(tramite.get("CDTIPTRA"));
-				logger.debug("Es renovacion = {}", renovacion);
 			}
 			catch(Exception ex)
 			{
@@ -323,7 +287,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            }
 	            else
 	            {
-	            	throw new ApplicationException("No se ha parametrizado la situacion en ttipram");
+	            	throw new Exception("No se ha parametrizado la situacion en ttipram");
 	            }
 	        }
 	        catch(Exception ex)
@@ -333,7 +297,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	        	respuestaOculta = ex.getMessage();
 	        	logger.error(respuesta,ex);
 	        	
-	        	this.addActionError("No se ha parametrizado el tipo de situación para el producto #"+timestamp);
+	        	this.addActionError("No se ha parametrizado el tipo de situacion para el producto #"+timestamp);
 	        	smap1.put("SITUACION"  , "PERSONA");
 	        	smap1.put("AGRUPACION" , "SOLO");
 	        }
@@ -387,7 +351,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		        	//para presentar en pantalla
 		        	if(tatriIte.getSwpresen().equalsIgnoreCase("S"))
 		        	{
-		        		logger.debug("Se agrega como campo de cotizacion = {}", tatriIte.getNameCdatribu());
 		        		temp.add(tatriIte);
 		        	}
 		        	//cuanto no van en pantalla
@@ -402,19 +365,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		        				tatriIte.setOculto(true);
 		        				temp.add(tatriIte);
 		        			}
-		        		}
-		        		
-		        		if ( // Mostramos campos complementarios, la condicion es la misma que dentro
-							        // del metodo CotizacionAutoManagerImpl.emisionAutoIndividual
-		        				    // y del metodo CotizacionAutoManagerImpl.cotizacionAutoIndividual
-							        // deben mantenerse iguales
-		        				renovacion &&
-		        				(StringUtils.isBlank(tatriIte.getSwtarifi())||tatriIte.getSwtarifi().equalsIgnoreCase("N"))
-		        		) {
-		        			logger.debug("Se agrega como campo de complementarios = {}", tatriIte.getNameCdatribu());
-		        			temp.add(tatriIte);
-		        		} else {
-		        			logger.debug("No se agrega = {}", tatriIte.getNameCdatribu());
 		        		}
 		        	}
 		        	
@@ -463,34 +413,12 @@ public class CotizacionAction extends PrincipalCoreAction
 									)
 							{
 								List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
-										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
+										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
 										,cdtipsit                              ,  "W"         , cdsisrol
 										,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "17");
 								temp.remove(tatriIte);
 								componenteSustitutoListaAux.get(0).setSwsuscri("N");
 								temp.add(componenteSustitutoListaAux.get(0));
-								
-								if(flujo!=null) //entra por flujo y solo puede haber un agente
-								{
-									ComponenteVO agente = componenteSustitutoListaAux.get(0);
-									
-									if(StringUtils.isNotBlank(agente.getCatalogo()))
-									{
-										logger.debug("Se encontro y modifico el campo agente por venir de flujo: {}",agente);
-										agente.setCatalogo("CATALOGO_CERRADO");
-										agente.setQueryParam(null);
-										agente.setParamName1(Utils.join("'params._",cdagente,"'"));
-										agente.setParamValue1(Utils.join("'",cotizacionManager.cargarNombreAgenteTramite(smap1.get("ntramite")),"'"));
-										agente.setParamName2(null);
-										agente.setParamValue2(null);
-										agente.setParamName3(null);
-										agente.setParamValue3(null);
-										agente.setParamName4(null);
-										agente.setParamValue4(null);
-										agente.setParamName5(null);
-										agente.setParamValue5(null);
-									}
-								}
 							}
 						}
 						//clave gs
@@ -518,7 +446,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						else if(tatriIte.getNameCdatribu().equalsIgnoreCase("21"))
 						{
 							List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
-									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
 									,cdtipsit                              ,  "W"         , cdsisrol
 									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "21");
 							temp.remove(tatriIte);
@@ -534,7 +462,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						if(tatriIte.getNameCdatribu().equalsIgnoreCase("30"))
 						{
 							List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
-									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
 									,cdtipsit                              ,  "W"         , cdsisrol
 									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "30");
 							temp.remove(tatriIte);
@@ -549,7 +477,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						if(tatriIte.getNameCdatribu().equalsIgnoreCase("31"))
 						{
 							List<ComponenteVO> componenteSustitutoListaAux = pantallasManager.obtenerComponentes(
-									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
 									,cdtipsit                              ,  "W"         , cdsisrol
 									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "31");
 							temp.remove(tatriIte);
@@ -591,34 +519,12 @@ public class CotizacionAction extends PrincipalCoreAction
 									)
 							{
 								List<ComponenteVO>componenteSustitutoListaAux=pantallasManager.obtenerComponentes(
-										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
+										TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
 										,cdtipsit                              ,  "W"         , cdsisrol
 										,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "32");
 								temp.remove(tatriIte);
 								componenteSustitutoListaAux.get(0).setSwsuscri("N");
 								temp.add(componenteSustitutoListaAux.get(0));
-								
-								if(flujo!=null) //cuando entra por mesa de control ya debe haber agente
-								{
-									ComponenteVO agente = componenteSustitutoListaAux.get(0);
-									
-									if(StringUtils.isNotBlank(agente.getCatalogo()))
-									{
-										logger.debug("Se encontro y modifico el campo agente por venir de flujo: {}",agente);
-										agente.setCatalogo("CATALOGO_CERRADO");
-										agente.setQueryParam(null);
-										agente.setParamName1(Utils.join("'params._",cdagente,"'"));
-										agente.setParamValue1(Utils.join("'",cotizacionManager.cargarNombreAgenteTramite(smap1.get("ntramite")),"'"));
-										agente.setParamName2(null);
-										agente.setParamValue2(null);
-										agente.setParamName3(null);
-										agente.setParamValue3(null);
-										agente.setParamName4(null);
-										agente.setParamValue4(null);
-										agente.setParamName5(null);
-										agente.setParamValue5(null);
-									}
-								}
 							}
 						}
 					}
@@ -627,7 +533,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					if(cdramo.equals(Ramo.AUTOS_FRONTERIZOS.getCdramo())) {
 						if(tatriIte.getNameCdatribu().equalsIgnoreCase("3")) {
 							List<ComponenteVO> componenteSustitutoListaAux = pantallasManager.obtenerComponentes(
-									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , "|"+cdramo+"|"
+									TipoTramite.POLIZA_NUEVA.getCdtiptra() , null         , cdramo
 									,cdtipsit                              ,  "W"         , cdsisrol
 									,"COTIZACION_CUSTOM"                   , "SUSTITUTOS" , "3");
 							// Si se encuentra el componente lo reemplazamos:
@@ -711,7 +617,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				else
 				{
-					throw new ApplicationException(
+					throw new Exception(
 							new StringBuilder()
 							.append("No se han definido las validaciones en VALIDACIONES_COTIZA>")
 							.append(gc.isEsMovil()?"MOVIL":"DESKTOP")
@@ -784,7 +690,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				else
 				{
-					throw new ApplicationException("No se han definido atributos en COTIZACION_CUSTOM>CDATRIBU_DERECHO");
+					throw new Exception("No se han definido atributos en COTIZACION_CUSTOM>CDATRIBU_DERECHO");
 				}
 			}
 			catch(Exception ex)
@@ -959,156 +865,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
-
-	public String webServiceNadaEndosos()
-	{
-		logger.debug(""
-				+ "\n##################################"
-				+ "\n###### webServiceNadaEdosos ######"
-				);
-		logger.debug("smap1: "+smap1);
-		
-		String  vim                  = null;
-		success                      = true;
-		VehicleValue_Struc datosAuto = null;
-		String cdunieco                = null;
-		String cdramo                = null;
-		String nmpoliza                = null;
-		String cdtipsit              = null;
-		String tipoVehiculo          = null;
-		String nmsituac              = null;
-		String nmsuplem              = null;
-		
-		//revisar numero de serie
-		if(success)
-		{
-			
-			success = smap1!=null&&StringUtils.isNotBlank(vim=smap1.get("vim"))
-					&&StringUtils.isNotBlank(cdunieco=smap1.get("cdunieco"))
-					&&StringUtils.isNotBlank(cdramo=smap1.get("cdramo"))
-					&&StringUtils.isNotBlank(nmpoliza=smap1.get("nmpoliza"))
-					&&StringUtils.isNotBlank(cdtipsit=smap1.get("cdtipsit"))
-					&&StringUtils.isNotBlank(tipoVehiculo=smap1.get("tipoveh"))
-					&&StringUtils.isNotBlank(nmsituac=smap1.get("nmsituac"))
-					&&StringUtils.isNotBlank(nmsuplem=smap1.get("nmsuplem"))
-					;
-			logger.debug("Vils tipo de vehiculo: "+ tipoVehiculo);
-			if(!success)
-			{
-				error="No se recibi\u00f3 el n\u00famero de serie";
-				logger.error(error);
-			}
-		}
-		
-		//obtener factor convenido
-		if(success)
-		{
-			try
-			{
-				LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
-				params.put("param1",cdramo);
-				params.put("param2",cdtipsit);
-				Map<String,String>factor=storedProceduresManager.procedureMapCall(
-						ObjetoBD.OBTIENE_FACTOR_CONVENIDO.getNombre(), params, null);
-				smap1.putAll(factor);
-			}
-			catch(Exception ex)
-			{
-				logger.warn("error SIN IMPACTO FUNCIONAL al obtener factor convenido o el factor no se encuentra",ex);
-				smap1.put("FACTOR_MIN","0");
-				smap1.put("FACTOR_MAX","0");
-			}
-		}
-		
-		if(success)
-		{
-			try
-			{
-				ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
-        		if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
-        		{
-        			smap1.put("PRECIO_DOLAR", rtc.getTipoCambio().getVenCam().doubleValue()+"");
-        		}
-			}
-			catch(Exception ex)
-			{
-				logger.warn("error SIN IMPACTO FUNCIONAL al obtener factor convenido o el factor no se encuentra",ex);
-				smap1.put("FACTOR_MIN","0");
-				smap1.put("FACTOR_MAX","0");
-			}
-		}
-		
-		//llamar web service
-		if(success)
-		{
-			datosAuto = nadaService.obtieneDatosAutomovilNADA(vim);
-			success   = datosAuto!=null;
-			if(!success)
-			{
-				error="No se encontr\u00f3 informaci\u00f3n para el n\u00famero de serie";
-				logger.error(error);
-				/*parche
-				datosAuto = new VehicleValue_Struc();
-				datosAuto.setVehicleYear(1);
-				datosAuto.setSeriesDescr("a");
-				datosAuto.setBodyDescr("b");
-				datosAuto.setAvgTradeIn(BigDecimal.valueOf(123d));
-				datosAuto.setMakeDescr("c");
-				success=true;*/
-			}
-		}
-		
-		int tipoValorVehiculo = 3;
-		String codigoPostal =  null;
-		
-		if(success){
-			
-			try{
-				codigoPostal = cotizacionManager.obtieneCodigoPostalAutomovil(cdunieco,cdramo,"M",nmpoliza,nmsituac,nmsuplem);
-				logger.debug("Tipo de Valor de auto a tomar: "+ tipoValorVehiculo);
-			}catch(Exception ex){
-				logger.error("Error al consultar el tipo de valor del automovil segun CP y tipo auto",ex);
-				success = false;
-			}
-		}
-		
-		if(success){
-			
-			try{
-				tipoValorVehiculo = cotizacionManager.obtieneTipoValorAutomovil(codigoPostal,tipoVehiculo);
-				logger.debug("Tipo de Valor de auto a tomar: "+ tipoValorVehiculo);
-			}catch(Exception ex){
-				logger.error("Error al consultar el tipo de valor del automovil segun CP y tipo auto",ex);
-				success = false;
-			}
-		}
-		
-		//datos regresados
-		if(success)
-		{
-			smap1.put("AUTO_ANIO"        , datosAuto.getVehicleYear()+"");
-			smap1.put("AUTO_DESCRIPCION" , datosAuto.getSeriesDescr()+" "+datosAuto.getBodyDescr());
-			
-			logger.debug("AvgTradeIn:" + datosAuto.getAvgTradeIn().toString());
-			logger.debug("TradeIn:"    + datosAuto.getAvgTradeIn().toString());
-			
-			String precioAuto = null;
-			if(tipoValorVehiculo == 1 || tipoValorVehiculo == 0){
-				precioAuto = datosAuto.getAvgTradeIn().toString();
-			} else if(tipoValorVehiculo == 2){
-				precioAuto = datosAuto.getTradeIn().toString();				
-			}
-			
-			smap1.put("AUTO_PRECIO", precioAuto);
-			smap1.put("AUTO_MARCA", datosAuto.getMakeDescr());
-		}
-		
-		logger.debug(""
-				+ "\n###### webServiceNada ######"
-				+ "\n############################"
-				);
-		return SUCCESS;
-	}
 	
 	public String emitirColectivo()
 	{
@@ -1173,11 +929,11 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					if(Ramo.SERVICIO_PUBLICO.getCdramo().equals(cdramo) || Ramo.AUTOS_FRONTERIZOS.getCdramo().equals(cdramo))
 					{
-						respuesta = "Favor de verificar y guardar correctamente la direcci\u00f3n y datos del contratante.";
+						respuesta = "Favor de verificar y guardar correctamente la direcci&oacute;n y datos del contratante.";
 					}
 					else
 					{
-						respuesta = "Favor de verificar la direcci\u00f3n de los siguientes asegurados:<br/>";
+						respuesta = "Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
 						// f a v o r
 						//0 1 2 3 4 5
 						if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
@@ -1282,8 +1038,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				try
 	            {
 	            	serviciosManager.grabarEvento(new StringBuilder("\nEmision")
-	            	    ,Constantes.MODULO_EMISION  //cdmodulo
-	            	    ,Constantes.EVENTO_EMISION  //cdevento
+	            	    ,"EMISION"  //cdmodulo
+	            	    ,"EMISION"  //cdevento
 	            	    ,new Date() //fecha
 	            	    ,cdusuari
 	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -1316,13 +1072,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		,ntramite
 	            		,nmpoliza //nmsolici
 	            		);
-				
-				// JTEZVA 2016 09 09 se mandan avisos cuando se emite si estan configurados
-				try {
-					flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrol, false);
-				} catch (Exception ex) {
-					logger.error("Error al enviar correos de emision", ex);
-				}
 	            
 				//-------------------------------------
 				paso = "Insertando detalle de emision";
@@ -1337,8 +1086,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						,cdsisrol
 						,"S"
-						,EstatusTramite.CONFIRMADO.getCodigo()
-						,true
+						//,EstatusTramite.CONFIRMADO.getCodigo()
+						//,true
 						);
 				
 				//---------------------------------------------
@@ -1614,43 +1363,37 @@ public class CotizacionAction extends PrincipalCoreAction
 				,"\n###### cotizar ######"
 				,"\n###### smap1=",smap1
 				));
+		
 		try
 		{
 			logger.debug("Validando datos para cotizar");
-
+			
+			Utils.validate(smap1, "No se recibieron datos para cotizar");
+			
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String cdtipsit = smap1.get("cdtipsit");
+			
+			String cdagente = smap1.get("cdagenteAux");
+			
+			Utils.validate(session                , "No hay sesion");
+			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			String cdusuari = usuario.getUser();
 			String cdelemen = usuario.getEmpresa().getElementoId();
 			
-			Utils.validate(session                , "No hay sesion");
-			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
-			
-			Utils.validate(smap1, "No se recibieron datos para cotizar");
-			String cdunieco    = smap1.get("cdunieco");
-			String cdramo      = smap1.get("cdramo");
-			String cdtipsit    = smap1.get("cdtipsit");
-			String cdagente    = smap1.get("cdagenteAux");
-			String cdpersonCli = smap1.get("cdpersonCli");
-			String nmorddomCli = smap1.get("nmorddomCli");
-			String cdideperCli = smap1.get("cdideperCli");
-			String fromSigs    = smap1.get("cargarXpoliza");
-			String ntramite    = smap1.get("ntramite");
-			String agentesec    = smap1.get("AGENTESEC");
-			String porcensec    = smap1.get("PORCENSEC");
-			
-			ArrayList<String> planSigs= new ArrayList<String>();
-			for(Map<String, String> inciso:slist1)
-			{
-			  planSigs.add(inciso.get("planSigs"));
-			}
 			Utils.validate(slist1, "No se recibieron datos de incisos");
 			String nmpoliza = slist1.get(0).get("nmpoliza");
 			String feini    = slist1.get(0).get("feini");
 			String fefin    = slist1.get(0).get("fefin");
 			String fesolici = slist1.get(0).get("FESOLICI");
-	
+			
+			String cdpersonCli = smap1.get("cdpersonCli");
+			String cdideperCli = smap1.get("cdideperCli");
+			
 			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
-			boolean conIncisos  = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
+			
+			boolean conIncisos = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
 			
 			Map<String,String>tvalopol=new HashMap<String,String>();
 			for(Entry<String,String>en:slist1.get(0).entrySet())
@@ -1664,18 +1407,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 			}
 			
-			if(fromSigs==null)fromSigs="N";
-			Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmpoliza, cdunieco, cdramo, cdtipsit);
-			if(parame.get("Mensaje")!=null)
-			{
-				logger.debug(Utils.log(
-						 "\n#######################"
-						,"\n###### cotizar ######"
-						,"\n",parame.get("Mensaje")
-						,"\n######################"
-						));
-			}
-			
 			ManagerRespuestaSlistSmapVO resp=cotizacionManager.cotizar(
 					cdunieco
 					,cdramo
@@ -1687,7 +1418,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					,fefin
 					,fesolici
 					,cdpersonCli
-					,nmorddomCli
 					,cdideperCli
 					,noTarificar
 					,conIncisos
@@ -1695,53 +1425,28 @@ public class CotizacionAction extends PrincipalCoreAction
 					,smap1.containsKey("movil")
 					,tvalopol
 					,cdagente
-					,usuario	
-					,fromSigs
-					,parame.get("RENUNIEXT")
-					,parame.get("RENRAMO")
-					,parame.get("RENPOLIEX")
-					,ntramite
 					);
-			
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
 			if(exito)
 			{
-			    if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null)
-			    {
-			        List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
-			                cdusuari
-			                ,cdunieco
-			                ,cdramo
-			                ,"W"
-			                ,resp.getSmap().get("nmpoliza")
-			                ,cdelemen
-			                ,cdtipsit
-			                );
-			        logger.debug("listaResultados: "+listaResultados);
-			        
-			        ArrayList<String> paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsit, null);
-			        String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza"), cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-			        logger.debug(Utils.log(paqYplan));
-			        resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
-			    }
-			    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
-			    
-			    exito           = resp.isExito();
-	            respuesta       = resp.getRespuesta();
-	            respuestaOculta = resp.getRespuestaOculta();
-	            
-	            if(exito)
-	            {
-	                if(StringUtils.isNotBlank(porcensec) && StringUtils.isNotBlank(agentesec))
-	                {
-	                    cotizacionManager.guardaDatosAgenteSecundarioSigs(ntramite, agentesec, porcensec);
-	                }
-    				smap1.putAll(resp.getSmap());
-    				slist2=resp.getSlist();
-	            }
+				smap1.putAll(resp.getSmap());
+				slist2=resp.getSlist();
+				
+				/*
+				// Cambio en ramo 5 para poner la prima en cero de los planes mensuales "4L", "3A" y "5B": 
+				for (int i = 0; i < slist2.size(); i++) {
+					if (Integer.parseInt(slist2.get(i).get("CDPERPAG").trim()) == 1 && Integer.parseInt(cdramo.trim())==5) {
+						slist2.get(i).put("MNPRIMA4L","0");
+						slist2.get(i).put("MNPRIMA3A","0");
+						slist2.get(i).put("MNPRIMA5B","0");
+						break;
+					}
+				}
+				*/
 			}
+			
 			success = exito;
 			error   = respuesta;
 		}
@@ -1759,93 +1464,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	 public String modificaPrimas(String ntramite, List<Map<String, String>> listaResultados, Integer formpagSigs, ArrayList<String> paquete, String cdunieco, String cdramo, String nmpoliza, String cdtipsit, String renuniext, String renramo, String renpoliex) throws Exception
-	    {
-	    	String mensaje = "Error Modificacion de primas seg�n sigs";
-	    		try
-				{		int i = 0;
-						String mnprima = null;
-						paquete.remove(0);
-						if(paquete.size()==1)
-						{i=0;}
-						logger.debug(Utils.log("Forma de pago sigs :",formpagSigs));
-			            for(Map<String,String>res:listaResultados)
-			            {	
-			            	String dsperpag = res.get("DSPERPAG");
-			            	String cdplan   = res.get("CDPLAN");
-			            	if (formpagSigs == 1 && dsperpag.contains("Contado/Anual") && paquete.get(i).trim().equals(cdplan.trim()))
-			            	{
-			            		formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
-			            		mnprima = res.get("MNPRIMA");break;
-		        			}
-			        		else if ( (formpagSigs == 2 || formpagSigs == 5) && dsperpag.contains("Semestral") && paquete.get(i).trim().equals(cdplan.trim()))
-		        			{
-			        			formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
-			        			mnprima = res.get("MNPRIMA");break;
-		        			}
-			        		else if ( (formpagSigs == 3 || formpagSigs == 6) && dsperpag.contains("Trimestral") && paquete.get(i).trim().equals(cdplan.trim()))
-		        			{
-			        			formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
-			        			mnprima = res.get("MNPRIMA");break;
-		        			}
-			        		else if ( (formpagSigs == 4 || formpagSigs == 7) && dsperpag.contains("Mensual") && paquete.get(i).trim().equals(cdplan.trim()))
-		        			{
-			        			formpagSigs = Integer.parseInt(res.get("CDPERPAG"));
-			        			mnprima = res.get("MNPRIMA");break;
-		        			}
-			            }
-			            try
-			    		{
-			    			String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
-			    				   mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
-			    			if(mensaje != null)
-			    			{
-			    				return mensaje;
-			    			}	
-			    			logger.debug(Utils.log("\n WS consumido con exito: "));//,mensaje
-			    			return mensaje;
-			    		}
-			    		catch (Exception ex)
-			    		{
-			    			throw new Exception(Utils.manejaExcepcion(ex));
-			    		}
-				}
-				catch (Exception ex)
-				{
-					Utils.generaExcepcion(ex, mensaje);
-				}
-			return "mensaje";
-	    }
-	 @SuppressWarnings("unchecked")
-	public ArrayList<String> cargarPoliza(String cdunieco, String cdramo, String cdpoliza, String tipoflot, String cdtipsit, String cargaCot)
-		{
-			logger.debug(Utils.log(
-					 "\n###############################"
-					,"\n###### cargar por Poliza ######"
-					,"\n###### smap1 = " , smap1
-					));
-			if(cargaCot == null)
-			{
-				cargaCot="N";
-			}
-			ArrayList<String> paquetesYFormaPago = new ArrayList<String>();
-			try
-			{
-				String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-					  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
-					HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
-					Map<String,String>parametros = (Map<String,String>)someObject.get("params");
-					String formpagSigs = parametros.get("formpagSigs");
-					paquetesYFormaPago.add(formpagSigs);
-					paquetesYFormaPago.addAll(1,someObject.get("paquetes"));
-					logger.debug(Utils.log(paquetesYFormaPago));
-			}
-			catch (Exception ex)
-			{
-				respuesta = Utils.manejaExcepcion(ex);
-			}
-			return paquetesYFormaPago;
-		}
 	/*
 	public String cotizarOld()
 	{
@@ -2538,11 +2156,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String cargarCotizacion()
 	{
-		logger.debug(Utils.log(
-				"\n##############################",
-				"\n###### cargarCotizacion ######",
-				"\n###### smap1 = ", smap1
-				));
+		logger.debug(""
+				+ "\n##############################"
+				+ "\n###### cargarCotizacion ######"
+				);
+		logger.debug("smap1: "+smap1);
 		success = true;
 		
 		String cdunieco = smap1.get("cdunieco");
@@ -2550,8 +2168,9 @@ public class CotizacionAction extends PrincipalCoreAction
 		String estado   = "W";
 		String cdtipsit = smap1.get("cdtipsit");
 		String nmpoliza = smap1.get("nmpoliza");
-		
-		String ntramiteIn = smap1.get("ntramiteIn");
+		logger.debug("cdramo: "+cdramo);
+		logger.debug("cdtipsit: "+cdtipsit);
+		logger.debug("nmpoliza: "+nmpoliza);
 		
 		UserVO usuario  = (UserVO)session.get("USUARIO");
 		String cdusuari = usuario.getUser();
@@ -2576,24 +2195,13 @@ public class CotizacionAction extends PrincipalCoreAction
 				if(tipoSituacion.get("SITUACION").equals("PERSONA")
 						&&datosParaComplementar.containsKey("NTRAMITE"))
 				{
-					throw new ApplicationException("La cotizaci\u00f3n ya se encuentra en tr\u00e1mite de emisi\u00f3n");
+					throw new Exception("La cotizaci\u00f3n ya se encuentra en tr\u00e1mite de emisi\u00f3n");
 				}
 				/*
 				 * cuando se encuentra cdunieco y ntramite y es auto, se mandara a datos complementarios
 				 */
 				else
 				{
-					/*
-					 * 
-					 * 
-					 * JTEZVA MIERCOLES 10 AGOSTO 2016
-					 * ESTE BLOQUE DEBE TENER LA MISMA LOGICA QUE EL BLOQUE FINAL EN
-					 * CotizacionAutoManagerImpl.cargarCotizacionAutoFlotilla()
-					 * 
-					 * EL BLOQUE COMPLETO DE ELSE IF
-					 * 
-					 * 
-					 */
 					if(datosParaComplementar.containsKey("ESTADO")
 							&&datosParaComplementar.containsKey("NMPOLIZA")
 							)//para clonar emitidas
@@ -2604,33 +2212,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 					else if(datosParaComplementar.containsKey("CDUNIECO_RECUPERADO"))//para normales
 					{
-						if (
-							"S".equals(datosParaComplementar.get("LIGADA")) &&
-							(
-								StringUtils.isBlank(ntramiteIn) ||
-								!ntramiteIn.equals(datosParaComplementar.get("NTRAMITE_LIGADO"))
-							)
-						) { // Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
-							String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ",
-									datosParaComplementar.get("NTRAMITE_LIGADO"));
-							
-							Map<String, String> tramite = siniestrosManager.obtenerTramiteCompleto(datosParaComplementar.get("NTRAMITE_LIGADO"));
-							String status = tramite.get("STATUS");
-							
-							String dsstatus = cotizacionManager.recuperarDescripcionEstatusTramite(status);
-							error = Utils.join(error, " (estatus: '", dsstatus, "')");
-							
-							logger.debug(Utils.log("cotizacion ligada al tramite ", datosParaComplementar.get("NTRAMITE_LIGADO"),
-									", status ", status, "."));
-							
-							if (EstatusTramite.RECHAZADO.getCodigo().equals(status)) {
-								error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite");
-							} else {
-								error = Utils.join(error, ", favor de acceder desde mesa de control");
-							}
-							
-							throw new ApplicationException(error);
-						}
 						cdunieco = datosParaComplementar.get("CDUNIECO_RECUPERADO");
 						smap1.put("CDUNIECO" , cdunieco);
 					}
@@ -2638,44 +2219,6 @@ public class CotizacionAction extends PrincipalCoreAction
 							&&datosParaComplementar.containsKey("CDUNIECO")
 							)//para complementar/clonar tramite
 					{
-						String ntramiteCot = datosParaComplementar.get("NTRAMITE");
-						Map<String, String> tramiteCot = siniestrosManager.obtenerTramiteCompleto(ntramiteCot);
-						String statusTramiteCot = tramiteCot.get("STATUS");
-						
-						String dsstatusTramiteCot = cotizacionManager.recuperarDescripcionEstatusTramite(statusTramiteCot);
-						
-						if (StringUtils.isBlank(ntramiteIn)) { // entran desde cotizacion abierta
-							if ("S".equals(datosParaComplementar.get("SWORIGENMESA"))) { // intentar recuperar uno de tramite creado en mesa
-								String error = Utils.join(
-										"Esta cotizaci\u00f3n pertenece al tr\u00e1mite ",
-										ntramiteCot,
-										" (estatus: '", dsstatusTramiteCot, "')");
-								if (EstatusTramite.RECHAZADO.getCodigo().equals(statusTramiteCot)) {
-									error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite");
-								} else {
-									error = Utils.join(error, ", favor de acceder desde mesa de control");
-								}
-								
-								throw new ApplicationException(error);
-							}
-						} else { // entran desde un tramite
-							if (ntramiteIn.equals(ntramiteCot)) { // es del mismo tramite
-								String error = Utils.join("Esta cotizaci\u00f3n se encuentra confirmada para este tr\u00e1mite (", ntramiteCot
-										,", estatus: '", dsstatusTramiteCot,"'), favor de acceder desde mesa de control para complementarla");
-								throw new ApplicationException(error);
-							} else { // intentan recuperar de otro tramite
-								String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ", ntramiteCot,
-										" (estatus: '", dsstatusTramiteCot, "')");
-								
-								if (EstatusTramite.RECHAZADO.getCodigo().equals(statusTramiteCot)) {
-									error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite"); // de otro que esta cancelado
-								} else {
-									error = Utils.join(error, ", favor de acceder desde mesa de control"); // de otro activo
-								}
-								
-								throw new ApplicationException(error);
-							}
-						}
 						cdunieco = datosParaComplementar.get("CDUNIECO");
 					}
 					smap1.putAll(datosParaComplementar);
@@ -2703,18 +2246,10 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramsObtenerTvalosit.put("param5" , nmpoliza);
 				paramsObtenerTvalosit.put("param6" , cdusuari);
 				paramsObtenerTvalosit.put("param7" , cdsisrol);
-//				slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
-//				if(slist1==null||slist1.size()==0)
-//				{
-					if((cdramo.contains("6") || cdramo.contains("16")) && cdsisrol.contains("EJECUTIVOCUENTA"))
-					{
-						paramsObtenerTvalosit.put("param7" , "SUSCRIAUTO");
-					}
-					slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
-//				}
+				slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
 				if(slist1==null||slist1.size()==0)
 				{
-					throw new ApplicationException("No se puede cargar la cotizaci\u00f3n");
+					throw new Exception("No se puede cargar la cotizaci\u00f3n");
 				}
 				for(Map<String,String>iInciso:slist1)
 				{
@@ -2998,16 +2533,14 @@ public class CotizacionAction extends PrincipalCoreAction
 						parametros.put("param21"                  , null);
 						parametros.put("param22"                  , null);
 						parametros.put("param23"                  , null);
-						parametros.put("param24"                  , null);
-						parametros.put("param25_pv_accion_i"      , "I");
+						parametros.put("param24_pv_accion_i"      , "I");
 						String[] tipos=new String[]{
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 								"VARCHAR","VARCHAR","VARCHAR","DATE",
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
 								"VARCHAR","DATE"   ,"VARCHAR","VARCHAR",
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
-								"VARCHAR"
+								"VARCHAR","VARCHAR","VARCHAR","VARCHAR"
 						};
 						storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
 					}
@@ -3059,19 +2592,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					 */
 					if(StringUtils.isNotBlank(cdIdeperAseg) && !"0".equalsIgnoreCase(cdIdeperAseg) && !"0L".equalsIgnoreCase(cdIdeperAseg)){
 						try{
-							
-							UserVO usuario = (UserVO) session.get("USUARIO");
-							String usuarioCaptura =  null;
-							
-							if(usuario!=null){
-								if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
-									usuarioCaptura = usuario.getClaveUsuarioCaptura();
-								}else{
-									usuarioCaptura = usuario.getCodigoPersona();
-								}
-								
-							}
-							
 							WrapperResultados result = kernelManager.existeDomicilioContratante(cdIdeperAseg, aseg.get("cdperson"));
 							
 							if(result != null && result.getItemMap() != null && result.getItemMap().containsKey("EXISTE_DOMICILIO")){
@@ -3129,9 +2649,6 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
 							    			paramDomicil.put("pv_nmnumero_i", cliDom.getNumeroCli());
 							    			paramDomicil.put("pv_nmnumint_i", null);
-							    			paramDomicil.put("pv_cdtipdom_i", "1");
-							    			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
-							    			paramDomicil.put("pv_swactivo_i", Constantes.SI);
 							    			paramDomicil.put("pv_accion_i", "I");
 
 							    			kernelManager.pMovMdomicil(paramDomicil);
@@ -3151,15 +2668,54 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			
 							    			paramValoper.put("pv_otvalor01", cliDom.getCveEle());
 							    			paramValoper.put("pv_otvalor02", cliDom.getPasaporteCli());
+							    			paramValoper.put("pv_otvalor03", null);
+							    			paramValoper.put("pv_otvalor04", null);
+							    			paramValoper.put("pv_otvalor05", null);
+							    			paramValoper.put("pv_otvalor06", null);
+							    			paramValoper.put("pv_otvalor07", null);
 							    			paramValoper.put("pv_otvalor08", cliDom.getOrirecCli());
+							    			paramValoper.put("pv_otvalor09", null);
+							    			paramValoper.put("pv_otvalor10", null);
 							    			paramValoper.put("pv_otvalor11", cliDom.getNacCli());
+							    			paramValoper.put("pv_otvalor12", null);
+							    			paramValoper.put("pv_otvalor13", null);
+							    			paramValoper.put("pv_otvalor14", null);
+							    			paramValoper.put("pv_otvalor15", null);
+							    			paramValoper.put("pv_otvalor16", null);
+							    			paramValoper.put("pv_otvalor17", null);
+							    			paramValoper.put("pv_otvalor18", null);
+							    			paramValoper.put("pv_otvalor19", null);
 							    			paramValoper.put("pv_otvalor20", (cliDom.getOcuPro() > 0) ? Integer.toString(cliDom.getOcuPro()) : "0");
+							    			paramValoper.put("pv_otvalor21", null);
+							    			paramValoper.put("pv_otvalor22", null);
+							    			paramValoper.put("pv_otvalor23", null);
+							    			paramValoper.put("pv_otvalor24", null);
 							    			paramValoper.put("pv_otvalor25", cliDom.getCurpCli());
+							    			paramValoper.put("pv_otvalor26", null);
+							    			paramValoper.put("pv_otvalor27", null);
+							    			paramValoper.put("pv_otvalor28", null);
+							    			paramValoper.put("pv_otvalor29", null);
+							    			paramValoper.put("pv_otvalor30", null);
+							    			paramValoper.put("pv_otvalor31", null);
+							    			paramValoper.put("pv_otvalor32", null);
+							    			paramValoper.put("pv_otvalor33", null);
+							    			paramValoper.put("pv_otvalor34", null);
+							    			paramValoper.put("pv_otvalor35", null);
+							    			paramValoper.put("pv_otvalor36", null);
+							    			paramValoper.put("pv_otvalor37", null);
 							    			paramValoper.put("pv_otvalor38", cliDom.getTelefonoCli());
 							    			paramValoper.put("pv_otvalor39", cliDom.getMailCli());
-							    			
-							    			paramValoper.put("pv_otvalor51", cliDom.getFaxCli());
-							    			paramValoper.put("pv_otvalor52", cliDom.getCelularCli());
+							    			paramValoper.put("pv_otvalor40", null);
+							    			paramValoper.put("pv_otvalor41", null);
+							    			paramValoper.put("pv_otvalor42", null);
+							    			paramValoper.put("pv_otvalor43", null);
+							    			paramValoper.put("pv_otvalor44", null);
+							    			paramValoper.put("pv_otvalor45", null);
+							    			paramValoper.put("pv_otvalor46", null);
+							    			paramValoper.put("pv_otvalor47", null);
+							    			paramValoper.put("pv_otvalor48", null);
+							    			paramValoper.put("pv_otvalor49", null);
+							    			paramValoper.put("pv_otvalor50", null);
 							    			
 							    			kernelManager.pMovTvaloper(paramValoper);
 							    			
@@ -3202,163 +2758,111 @@ public class CotizacionAction extends PrincipalCoreAction
 				,"\n###### flujo=" , flujo
 				));
 		
-		String cdramo         = null
-		       ,cdtipsit      = null
-		       ,ntramite      = null
-		       ,ntramiteVacio = null
-		       ,status        = null
-		       ,cdusuari      = null
-		       ,cdsisrol      = null
-		       ,nombreUsuario = null
-		       ,cdagente      = null
-		       ,paso          = null
-		       ,result        = ERROR;
+		success = true;
+		exito   = true;
+		
+		String cdramo        = null;
+		String cdtipsit      = null;
+		String ntramite      = null;
+		String ntramiteVacio = null;
+		String status        = null;
+		String cdusuari      = null;
+		String cdsisrol      = null;
+		String nombreUsuario = null;
+		String cdagente      = null;
 		
 		//datos completos
 		try
 		{
-			try
+			if(smap1==null)
 			{
-				if(flujo!=null)
-				{
-					paso = "Recuperando datos del flujo";
-					logger.debug(Utils.log("", "paso=", paso));
-					
-					smap1 = new HashMap<String,String>();
-					smap1.put("cdunieco" , flujo.getCdunieco());
-					smap1.put("cdramo"   , flujo.getCdramo());
-					
-					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
-					
-					Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
-					
-					String nmsolici = tramite.get("NMSOLICI");
-					if(StringUtils.isBlank(nmsolici))
-					{
-						nmsolici = "0";
-					}
-					
-					smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
-					smap1.put("estado"   , flujo.getEstado());
-					smap1.put("ntramite" , flujo.getNtramite());
-					smap1.put("cdagente" , tramite.get("CDAGENTE"));
-					smap1.put("status"   , flujo.getStatus());
-					smap1.put("sincenso" , tramite.get("OTVALOR02"));
-					smap1.put("cdtipsup" , tramite.get("CDTIPSUP"));
-					
-					if ("M".equals(flujo.getEstado())) {
-						smap1.put("nmpoliza" , flujo.getNmpoliza());
-					} else if(Integer.parseInt(nmsolici) > 0) {
-						smap1.put("nmpoliza" , nmsolici);
-					} else {
-						smap1.put("nmpoliza" , "");
-						smap1.put("ntramite" , "");
-						smap1.put("ntramiteVacio" , flujo.getNtramite());
-					}
-					
-                    if(tramite.get("CDTIPSUP").equalsIgnoreCase(TipoEndoso.RENOVACION.getCdTipSup().toString())){
-                        PolizaAseguradoVO polizaAseguradoVO = new PolizaAseguradoVO();
-                        polizaAseguradoVO.setCdunieco(smap1.get("cdunieco"));
-                        polizaAseguradoVO.setCdramo(smap1.get("cdramo"));
-                        polizaAseguradoVO.setEstado(smap1.get("estado"));
-                        polizaAseguradoVO.setNmpoliza(smap1.get("nmpoliza"));
-                        List<PolizaDTO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
-                        if (lista != null && !lista.isEmpty()) {
-                            smap1.put("nmpolant" , lista.get(0).getNmpolant());
-                            consultasManager.copiarArchivosRenovacionColectivo(smap1.get("cdunieco"), smap1.get("cdramo"), "M", Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"", 
-                                    tramite.get("NTRAMITE"), this.getText("ruta.documentos.poliza"));
-                        }else{
-                            smap1.put("nmpolant" , "");
-                        }
-                    }else{
-                        smap1.put("nmpolant" , "");
-                    }
-                    logger.debug(Utils.log("","datos recuperados del flujo smap1=",smap1));
-				}
-				
-				paso = "Verificando datos completos";
-				logger.debug(Utils.log("", "paso=", paso));
-				
-				Utils.validate(smap1, "No se recibieron datos");
-				
-				cdramo   = smap1.get("cdramo");
-				cdtipsit = smap1.get("cdtipsit");
-				
-				Utils.validate(
-						cdramo    , "No hay cdramo"
-						,cdtipsit , "No hay cdtipsit"
-						);
-				
-				ntramite      = smap1.get("ntramite");
-				ntramiteVacio = smap1.get("ntramiteVacio");
-				status        = smap1.get("status");
-				cdagente      = smap1.get("cdagente");
-				
-				if(StringUtils.isBlank(status))
-				{
-					status = "0";
-				}
-				
-				paso = "Verificando datos de sesi\u00f3n";
-				logger.debug(Utils.log("", "paso=", paso));
-				
-				UserVO usuario = Utils.validateSession(session);
-				
-				cdusuari      = usuario.getUser();
-				cdsisrol      = usuario.getRolActivo().getClave();
-				nombreUsuario = usuario.getName();
-				
-				if(RolSistema.SUSCRIPTOR_TECNICO_ESPECIALISTA.getCdsisrol().equals(cdsisrol))
-				{
-					cdsisrol = RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol();
-				}
-				
-				smap1.put("cdsisrol" , cdsisrol);
-				smap1.put("cdusuari" , cdusuari);
-				
-				if ((RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)
-						||RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol)
-						||RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
-						&& "17".equals(status)) {
-					status = "24"; // devolucion
-					smap1.put("status", status);
-				}
-				
-				paso = "Invocando proceso";
-				logger.debug(Utils.log("", "paso=", paso));
-				
-				ManagerRespuestaImapSmapVO resp = cotizacionManager.pantallaCotizacionGrupo(
-						cdramo
-						,cdtipsit
-						,ntramite
-						,ntramiteVacio
-						,status
-						,cdusuari
-						,cdsisrol
-						,nombreUsuario
-						,cdagente
-						);
-				exito           = resp.isExito();
-				respuesta       = resp.getRespuesta();
-				
-				if(!exito)
-				{
-					throw new ApplicationException(respuesta);
-				}
-				
-				smap1.putAll(resp.getSmap());
-				imap=resp.getImap();
-				
-				result = SUCCESS;
+				throw new ApplicationException("No se recibieron datos");
 			}
-			catch(Exception ex)
+			cdramo   = smap1.get("cdramo");
+			cdtipsit = smap1.get("cdtipsit");
+			if(StringUtils.isBlank(cdramo))
 			{
-				Utils.generaExcepcion(ex, paso);
+				throw new ApplicationException("No se recibio el ramo");
 			}
+			if(StringUtils.isBlank(cdtipsit))
+			{
+				throw new ApplicationException("No se recibio la modalidad");
+			}
+			ntramite      = smap1.get("ntramite");
+			ntramiteVacio = smap1.get("ntramiteVacio");
+			status        = smap1.get("status");
+			cdagente      = smap1.get("cdagente");
+			if(StringUtils.isBlank(status))
+			{
+				status = "0";
+			}
+			
+			if(session==null)
+			{
+				throw new ApplicationException("No hay sesion");
+			}
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			if(usuario==null)
+			{
+				throw new ApplicationException("No hay usuario en la sesion");
+			}
+			cdusuari      = usuario.getUser();
+			cdsisrol      = usuario.getRolActivo().getClave();
+			nombreUsuario = usuario.getName();
+			
+			if(RolSistema.SUSCRIPTOR_TECNICO_ESPECIALISTA.getCdsisrol().equals(cdsisrol))
+			{
+				cdsisrol = RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol();
+			}
+			
+			smap1.put("cdsisrol" , cdsisrol);
+			smap1.put("cdusuari" , cdusuari);
+		}
+		catch(ApplicationException ax)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString();
+			respuestaOculta = ax.getMessage();
+			logger.error(respuesta,ax);
 		}
 		catch(Exception ex)
 		{
-			respuesta = Utils.manejaExcepcion(ex);
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = new StringBuilder("Error al validar datos #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		
+		//proceso
+		if(exito)
+		{
+			ManagerRespuestaImapSmapVO resp = cotizacionManager.pantallaCotizacionGrupo(
+					cdramo
+					,cdtipsit
+					,ntramite
+					,ntramiteVacio
+					,status
+					,cdusuari
+					,cdsisrol
+					,nombreUsuario
+					,cdagente
+					);
+			exito           = resp.isExito();
+			respuesta       = resp.getRespuesta();
+			respuestaOculta = resp.getRespuestaOculta();
+			if(exito)
+			{
+				smap1.putAll(resp.getSmap());
+				imap=resp.getImap();
+			}
+		}
+		
+		String result = SUCCESS;
+		if(!exito)
+		{
+			result = ERROR;
 		}
 		
 		logger.debug(Utils.log(""
@@ -3376,103 +2880,33 @@ public class CotizacionAction extends PrincipalCoreAction
 				,"\n#####################################"
 				,"\n###### pantallaCotizacionGrupo ######"
 				,"\n###### smap1=", smap1
-				,"\n###### flujo=", flujo
 				));
 		
-		imap = new HashMap<String,Item>();
+		success = true;
+		exito   = true;
+		imap    = new HashMap<String,Item>();
 		
-		String cdramo         = null
-		       ,cdtipsit      = null
-		       ,ntramite      = null
-		       ,ntramiteVacio = null
-		       ,status        = null
-		       ,cdusuari      = null
-		       ,cdsisrol      = null
-		       ,nombreUsuario = null
-		       ,nombreAgente  = null
-		       ,cdAgente      = null
-		       ,paso          = null
-		       ,result        = ERROR;
+		String cdramo        = null;
+		String cdtipsit      = null;
+		String ntramite      = null;
+		String ntramiteVacio = null;
+		String status        = null;
 		
-		try
+		//datos completos
+		if(exito)
 		{
 			try
 			{
-				if(flujo!=null)
+				cdramo        = smap1.get("cdramo");
+				cdtipsit      = smap1.get("cdtipsit");
+				if(StringUtils.isBlank(cdramo))
 				{
-					paso = "Recuperando datos del flujo";
-					logger.debug(Utils.log("", "paso=", paso));
-					
-					smap1 = new HashMap<String,String>();
-					smap1.put("cdunieco" , flujo.getCdunieco());
-					smap1.put("cdramo"   , flujo.getCdramo());
-					
-					Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
-					logger.debug("Valor de recuperacion ==> :{}",datosFlujo);
-					
-					
-					Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
-					logger.debug("Valor de tramite ==> :{}",tramite);
-					
-					
-					
-					String nmsolici = tramite.get("NMSOLICI");
-					if(StringUtils.isBlank(nmsolici))
-					{
-						nmsolici = "0";
-					}
-					
-					smap1.put("cdtipsit" , tramite.get("CDTIPSIT"));
-					smap1.put("estado"   , flujo.getEstado());
-					smap1.put("ntramite" , flujo.getNtramite());
-					smap1.put("cdagente" , tramite.get("CDAGENTE"));
-					smap1.put("status"   , flujo.getStatus());
-					smap1.put("sincenso" , tramite.get("OTVALOR02"));
-					smap1.put("cdtipsup" , tramite.get("CDTIPSUP"));
-					
-					if ("M".equals(flujo.getEstado())) {
-						smap1.put("nmpoliza" , flujo.getNmpoliza());
-					} else if (Integer.parseInt(nmsolici) > 0) {
-						smap1.put("nmpoliza" , nmsolici);
-					} else {
-						smap1.put("nmpoliza" , "");
-						smap1.put("ntramite" , "");
-						smap1.put("ntramiteVacio" , flujo.getNtramite());
-					}
-					
-					if(tramite.get("CDTIPSUP").equalsIgnoreCase(TipoEndoso.RENOVACION.getCdTipSup().toString())){
-						PolizaAseguradoVO polizaAseguradoVO = new PolizaAseguradoVO();
-						polizaAseguradoVO.setCdunieco(smap1.get("cdunieco"));
-						polizaAseguradoVO.setCdramo(smap1.get("cdramo"));
-						polizaAseguradoVO.setEstado(smap1.get("estado"));
-						polizaAseguradoVO.setNmpoliza(smap1.get("nmpoliza"));
-						List<PolizaDTO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
-						if (lista != null && !lista.isEmpty()) {
-							smap1.put("nmpolant" , lista.get(0).getNmpolant());
-							consultasManager.copiarArchivosRenovacionColectivo(smap1.get("cdunieco"), smap1.get("cdramo"), "M", Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"", 
-                                    tramite.get("NTRAMITE"), this.getText("ruta.documentos.poliza"));
-						}else{
-							smap1.put("nmpolant" , "");
-						}
-					}else{
-						smap1.put("nmpolant" , "");
-					}
-					logger.debug(Utils.log("","datos recuperados del flujo smap1=",smap1));
+					throw new Exception("No hay cdramo");
 				}
-				
-				paso = "Verificando datos completos";
-				logger.debug(Utils.log("", "paso=", paso));
-				
-				Utils.validate(smap1, "No se recibieron datos");
-				
-				cdramo   = smap1.get("cdramo");
-				cdtipsit = smap1.get("cdtipsit");
-				
-				Utils.validate(
-						cdramo    , "No hay cdramo"
-						,cdtipsit , "No hay cdtipsit"
-						);
-				
+				if(StringUtils.isBlank(cdtipsit))
+				{
+					throw new Exception("No hay cdtipsit");
+				}
 				ntramite      = smap1.get("ntramite");
 				ntramiteVacio = smap1.get("ntramiteVacio");
 				status        = smap1.get("status");
@@ -3480,11 +2914,27 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					status = "0";
 				}
-				
-				//datos sesion
-				paso = "Verificando datos de sesi\u00f3n";
-				logger.debug(Utils.log("", "paso=", paso));
-				UserVO usuario  = Utils.validateSession(session);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Datos incompletos #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		String cdusuari      = null;
+		String cdsisrol      = null;
+		String nombreUsuario = null;
+		
+		//datos sesion
+		if(exito)
+		{
+			try
+			{
+				UserVO usuario  = (UserVO) session.get("USUARIO");
 				cdusuari        = usuario.getUser();
 				cdsisrol        = usuario.getRolActivo().getClave();
 				
@@ -3495,26 +2945,32 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				nombreUsuario   = usuario.getName();
 				
-				smap1.put("cdsisrol" , cdsisrol);
+				smap1.put("cdsisrol",cdsisrol);
 				smap1.put("cdusuari" , cdusuari);
-				
-				if ((RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)
-						||RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol)
-						||RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
-						&& "17".equals(status)) {
-					status = "24"; // devolucion
-					smap1.put("status", status);
-				}
-				
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener datos del usuario #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+
+		String nombreAgente  = null;
+		String cdAgente      = null;
+		
+		//datos del agente
+		if(exito)
+		{
+			try
+			{
 				//si entran por agente
-				paso = "Recuperando datos del agente";
-				logger.debug(Utils.log("", "paso=", paso));
 				if(StringUtils.isBlank(ntramite)&&StringUtils.isBlank(ntramiteVacio))
 				{
-					DatosUsuario datUsu = kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);
-					
+					DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);
 	        		String cdunieco = datUsu.getCdunieco();
-	        		
 	        		smap1.put("cdunieco",cdunieco);
 	        		
 	        		cdAgente     = datUsu.getCdagente();
@@ -3526,11 +2982,25 @@ public class CotizacionAction extends PrincipalCoreAction
 					cdAgente     = smap1.get("cdagente");
 					nombreAgente = cotizacionManager.cargarNombreAgenteTramite(StringUtils.isNotBlank(ntramite)?ntramite:ntramiteVacio);
 				}
-				
-				//generando componentes
-				paso = "Generando componentes";
-				logger.debug(Utils.log("", "paso=", paso));
-				GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener datos del agente #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+			
+		GeneradorCampos gc = null;
+		
+		//generar componentes
+		if(exito)
+		{
+			try
+			{
+				gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
 				List<ComponenteVO>columnaEditorPlan=pantallasManager.obtenerComponentes(
 						null, null, null,
@@ -3647,64 +3117,364 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					imap.put("botones" , null);
 				}
-				
-				//obtener permisos
-				paso = "Recuperando persmisos de pantalla";
-				logger.debug(Utils.log("", "paso=", paso));
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al generar componentes #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//obtener permisos
+		if(exito)
+		{
+			try
+			{
 				smap1.put("status",status);
 				smap1.putAll(cotizacionManager.cargarPermisosPantallaGrupo(cdsisrol, status));
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener permisos #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//obtener configuraciones
+		/*
+		if(exito)
+		{
+			try
+			{
+				List<Map<String,String>>cols=cotizacionManager.cargarConfiguracionGrupo(cdramo, cdtipsit);
 				
-				//campos para asegurados
-				paso = "Recuperando campos de asegurados";
-				logger.debug(Utils.log("", "paso=", paso));
-				if(smap1.containsKey("ASEGURADOS")
-						&& StringUtils.isNotBlank(smap1.get("ASEGURADOS"))
-						&& smap1.get("ASEGURADOS").equals("S")
-				)
+				List<ComponenteVO>compsColBase   = new ArrayList<ComponenteVO>();
+				List<ComponenteVO>compsColNoBase = new ArrayList<ComponenteVO>();
+				
+				Item baseCols     = new Item("basecols"    ,null,Item.ARR);
+				Item noBaseCols   = new Item("nobasecols"  ,null,Item.ARR);
+				Item baseFields   = new Item("basefields"  ,null,Item.ARR);
+				Item noBaseFields = new Item("nobasefields",null,Item.ARR);
+				
+				for(Map<String,String>iCol:cols)
 				{
-					List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
-							null  , null , null
-							,cdtipsit , null , cdsisrol
-							,"COTIZACION_GRUPO", "ASEGURADOS", null);
-					gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
-					imap.put("aseguradosColumns" , gc.getColumns());
-					imap.put("aseguradosFields"  , gc.getFields());
+					String tipo   = iCol.get("TIPO");
+					String base   = iCol.get("BASE");
+					String nombre = iCol.get("NOMBRE");
+					if(StringUtils.isBlank(nombre))
+					{
+						throw new ApplicationException(
+								new StringBuilder()
+								.append("El componente no tiene nombre")
+								.toString()
+								);
+					}
+					if(StringUtils.isBlank(tipo))
+					{
+						throw new ApplicationException(
+								new StringBuilder()
+								.append("El componente no tiene tipo ")
+								.append(nombre)
+								.toString()
+								);
+					}
+					if(StringUtils.isBlank(base))
+					{
+						throw new ApplicationException(
+								new StringBuilder()
+								.append("El componente no tiene base ")
+								.append(nombre)
+								.toString()
+								);
+					}
+					ComponenteVO comp = null;
+					if(tipo.equals(ConfiguracionGrupo.TIPO_ATRIBUTO)
+							||tipo.equals(ConfiguracionGrupo.TIPO_DOBLE)
+							)
+					{
+						String cdatrisit = iCol.get("CDATRISIT");
+						if(StringUtils.isBlank(cdatrisit))
+						{
+							throw new ApplicationException(
+									new StringBuilder()
+									.append("El componente no esta ligado a un atributo de situacion  ")
+									.append(nombre)
+									.toString()
+									);
+						}
+						comp=cotizacionManager.cargarComponenteTatrisit(cdtipsit,cdusuari,cdatrisit);
+						comp.setColumna(Constantes.SI);
+						
+						GeneradorCampos gec=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+						gec.setCdtipsit(cdtipsit);
+						List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
+						aux.add(comp);
+						gec.generaComponentes(aux, true, true, false, true, true, false);
+						if(base.equals(Constantes.SI))
+						{
+							baseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+							baseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+							compsColBase.add(comp);
+						}
+						else
+						{
+							noBaseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+							noBaseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+							compsColNoBase.add(comp);
+						}
+					}
+					else if(tipo.equals(ConfiguracionGrupo.TIPO_COBERTURA))
+					{
+						String tipogar = iCol.get("TIPOGAR");
+						if(StringUtils.isBlank(tipogar))
+						{
+							throw new ApplicationException(
+									new StringBuilder()
+									.append("El componente no tiene tipo de cobertura ")
+									.append(nombre)
+									.toString()
+									);
+						}
+						if(tipogar.equals(ConfiguracionGrupo.TIPOGAR_VALOR))
+						{
+							String cdgarant  = iCol.get("CDGARANT");
+							String cdatrigar = iCol.get("CDATRIGAR");
+							if(StringUtils.isBlank(cdgarant))
+							{
+								throw new ApplicationException(
+										new StringBuilder()
+										.append("El componente no tiene codigo de cobertura ")
+										.append(nombre)
+										.toString()
+										);
+							}
+							if(StringUtils.isBlank(cdatrigar))
+							{
+								throw new ApplicationException(
+										new StringBuilder()
+										.append("El componente no tiene codigo de atributo ")
+										.append(nombre)
+										.toString()
+										);
+							}
+							comp=cotizacionManager.cargarComponenteTatrigar(cdramo,cdtipsit,cdgarant,cdatrigar);
+							comp.setColumna(Constantes.SI);
+							
+							GeneradorCampos gec=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+							gec.setCdtipsit(cdtipsit);
+							gec.setCdgarant(cdgarant);
+							gec.setCdramo(cdramo);
+							List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
+							aux.add(comp);
+							gec.generaComponentes(aux, true, true, false, true, true, false);
+							if(base.equals(Constantes.SI))
+							{
+								baseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+								baseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+								compsColBase.add(comp);
+							}
+							else
+							{
+								noBaseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+								noBaseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+								compsColNoBase.add(comp);
+							}
+						}
+						else if(tipogar.equals(ConfiguracionGrupo.TIPOGAR_INSERCION))
+						{
+							String etiqueta = iCol.get("ETIQUETA");
+							if(StringUtils.isBlank(etiqueta))
+							{
+								throw new ApplicationException(
+										new StringBuilder()
+										.append("El componente no tiene etiqueta ")
+										.append(nombre)
+										.toString()
+										);
+							}
+							List<ComponenteVO>listaAux=pantallasManager.obtenerComponentes(
+									null                , null         , null
+									,null               , null         , null
+									,"COTIZACION_GRUPO" , "COMBO_SINO" , null);
+							comp=listaAux.get(0);
+							comp.setLabel(etiqueta);
+							comp.setColumna(Constantes.SI);
+							
+							GeneradorCampos gec=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+							List<ComponenteVO>aux=new ArrayList<ComponenteVO>();
+							aux.add(comp);
+							gec.generaComponentes(aux, true, true, false, true, true, false);
+							if(base.equals(Constantes.SI))
+							{
+								baseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+								baseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+								compsColBase.add(comp);
+							}
+							else
+							{
+								noBaseFields.add(new Item(null,gec.getFields(),Item.OBJ));
+								noBaseCols.add(new Item(null,gec.getColumns(),Item.OBJ));
+								compsColNoBase.add(comp);
+							}
+						}
+						else
+						{
+							throw new ApplicationException(
+									new StringBuilder()
+									.append("El tipo de cobertura no es correcto ")
+									.append(nombre)
+									.toString()
+									);
+						}
+					}
+					else
+					{
+						throw new ApplicationException(
+								new StringBuilder()
+								.append("El tipo de componente no es correcto ")
+								.append(nombre)
+								.toString()
+								);
+					}
 				}
 				
-				//campos para extraprimas
-				paso = "Recuperando campos de extraprimas";
-				logger.debug(Utils.log("", "paso=", paso));
-				if(smap1.containsKey("EXTRAPRIMAS")
-						&& StringUtils.isNotBlank(smap1.get("EXTRAPRIMAS"))
-						&& smap1.get("EXTRAPRIMAS").equals("S")
-				)
+				if(compsColBase.size()>0)
 				{
-					List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
-							null  , null , null
-							,null , null , cdsisrol
-							,"COTIZACION_GRUPO", "EXTRAPRIMAS", null);
-					gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
-					imap.put("extraprimasColumns" , gc.getColumns());
-					imap.put("extraprimasFields"  , gc.getFields());
+					gc.generaComponentes(compsColBase, true, true, false, true, true, false);
+					imap2.put("colsBaseFields"  , baseFields);
+					imap2.put("colsBaseColumns" , baseCols);
+				}
+				else
+				{
+					imap2.put("colsBaseFields"  , null);
+					imap2.put("colsBaseColumns" , null);
 				}
 				
-				//campos para recuperados (asegurados)
-				paso = "Recuperando campos de asegurados recuperados";
-				logger.debug(Utils.log("", "paso=", paso));
-				if(smap1.containsKey("ASEGURADOS_EDITAR")
-						&& StringUtils.isNotBlank(smap1.get("ASEGURADOS_EDITAR"))
-						&& smap1.get("ASEGURADOS_EDITAR").equals("S")
-				)
+				if(compsColNoBase.size()>0)
 				{
-					List<ComponenteVO>componentesRecuperados=pantallasManager.obtenerComponentes(
-							null  , null , null
-							,null , null , cdsisrol
-							,"COTIZACION_GRUPO", "RECUPERADOS", null);
-					gc.generaComponentes(componentesRecuperados, true, true, false, true, true, false);
-					imap.put("recuperadosColumns" , gc.getColumns());
-					imap.put("recuperadosFields"  , gc.getFields());
+					gc.generaComponentes(compsColNoBase, true, true, false, true, true, false);
+					imap2.put("colsNoBaseFields"  , noBaseFields);
+					imap2.put("colsNoBaseColumns" , noBaseCols);
+				}
+				else
+				{
+					imap2.put("colsNoBaseFields"  , null);
+					imap2.put("colsNoBaseColumns" , null);
 				}
 				
+				logger.debug(
+						new StringBuilder()
+						.append("\nColumnas base=").append(compsColBase)
+						.append("\nColumnas no base=").append(compsColNoBase)
+						.toString()
+						);
+			}
+			catch(ApplicationException aex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append(aex.getMessage()).append(" #").append(timestamp).toString();
+				respuestaOculta = aex.getMessage();
+				logger.error(respuesta,aex);
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener configuraciones #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		*/
+		
+		//campos para asegurados
+		if(exito && smap1.containsKey("ASEGURADOS")
+				 && StringUtils.isNotBlank(smap1.get("ASEGURADOS"))
+				 && smap1.get("ASEGURADOS").equals("S"))
+		{
+			try
+			{
+				List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
+						null  , null , null
+						,cdtipsit , null , cdsisrol
+						,"COTIZACION_GRUPO", "ASEGURADOS", null);
+				gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
+				imap.put("aseguradosColumns" , gc.getColumns());
+				imap.put("aseguradosFields"  , gc.getFields());
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener componentes de asegurados #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//campos para extraprimas
+		if(exito && smap1.containsKey("EXTRAPRIMAS")
+				 && StringUtils.isNotBlank(smap1.get("EXTRAPRIMAS"))
+				 && smap1.get("EXTRAPRIMAS").equals("S"))
+		{
+			try
+			{
+				List<ComponenteVO>componentesExtraprimas=pantallasManager.obtenerComponentes(
+						null  , null , null
+						,null , null , cdsisrol
+						,"COTIZACION_GRUPO", "EXTRAPRIMAS", null);
+				gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
+				imap.put("extraprimasColumns" , gc.getColumns());
+				imap.put("extraprimasFields"  , gc.getFields());
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener componentes de extraprimas #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		//campos para recuperados (asegurados)
+		if(exito && smap1.containsKey("ASEGURADOS_EDITAR")
+				 && StringUtils.isNotBlank(smap1.get("ASEGURADOS_EDITAR"))
+				 && smap1.get("ASEGURADOS_EDITAR").equals("S"))
+		{
+			try
+			{
+				List<ComponenteVO>componentesRecuperados=pantallasManager.obtenerComponentes(
+						null  , null , null
+						,null , null , cdsisrol
+						,"COTIZACION_GRUPO", "RECUPERADOS", null);
+				gc.generaComponentes(componentesRecuperados, true, true, false, true, true, false);
+				imap.put("recuperadosColumns" , gc.getColumns());
+				imap.put("recuperadosFields"  , gc.getFields());
+			}
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = new StringBuilder().append("Error al obtener componentes de recuperados #").append(timestamp).toString();
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		if(exito)
+		{
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
+		}
+		
 				try
 				{
 					smap1.put("customCode" , consultasManager.recuperarCodigoCustom("21", cdsisrol));
@@ -3714,18 +3484,10 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.put("customCode" , "/* error */");
 					logger.error("Error sin impacto funcional al recuperar codigo custom",ex);
 				}
-				
-				/////////////////
-				result = SUCCESS;
-			}
-			catch(Exception ex)
-			{
-				Utils.generaExcepcion(ex, paso);
-			}
-		}
-		catch(Exception ex)
+		String result = SUCCESS;
+		if(!exito)
 		{
-			respuesta = Utils.manejaExcepcion(ex);
+			result = ERROR;
 		}
 		
 		logger.debug(Utils.log(""
@@ -3765,6 +3527,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
+				/*
 				if(flujo!=null)
 				{
 					paso = "Recuperando datos del flujo";
@@ -3804,6 +3567,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					logger.debug(Utils.log("","datos recuperados del flujo smap1=",smap1));
 				}
+				*/
 				
 				paso = "Verificando datos completos";
 				logger.debug(Utils.log("", "paso=", paso));
@@ -4117,38 +3881,19 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			success = true;
 			exito   = true;
-			List<ComponenteVO>componentesTatrigar;
-			
-			if(TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase(smap1.get("cdtipsup"))){
-			    String nmpolant = smap1.get("nmpolant");
-			    Map<String,String>params=new HashMap<String,String>();
-			    params.put("pv_cdunieco_i"   , Integer.parseInt(nmpolant.substring(0,4))+"");
-			    params.put("pv_cdramo_i"     , smap1.get("cdramo"));
-			    params.put("pv_estado_i"     , "M");
-			    params.put("pv_nmpoliza_i"   , Integer.parseInt(nmpolant.substring(7,13))+"");
-			    params.put("pv_cdgrupo_i"    , smap1.get("cdgrupo"));
-			    params.put("pv_cdplan_i"     , smap1.get("cdplan"));
-			    params.put("pv_sexo_i"       , "H");
-			    params.put("pv_cdtipsit_i"   , smap1.get("cdtipsit"));
-			    params.put("pv_cdgarant_i"   , smap1.get("cdgarant"));
-			    params.put("pv_cdatrivar_i"  , smap1.get("cdatrivar"));
-			    componentesTatrigar=cotizacionManager.obtenerAtributosPolizaOriginal(params);
-			    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
-			}else{
-			    Map<String,String>params=new HashMap<String,String>();
-	            params.put("pv_cdramo_i"    , smap1.get("cdramo"));
-	            params.put("pv_cdtipsit_i"  , smap1.get("cdtipsit"));
-	            params.put("pv_cdgarant_i"  , smap1.get("cdgarant"));
-	            params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
-	            componentesTatrigar=kernelManager.obtenerTatrigar(params);
-			}
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("pv_cdramo_i"    , smap1.get("cdramo"));
+			params.put("pv_cdtipsit_i"  , smap1.get("cdtipsit"));
+			params.put("pv_cdgarant_i"  , smap1.get("cdgarant"));
+			params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
+			List<ComponenteVO>componentesTatrigar=kernelManager.obtenerTatrigar(params);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-            gc.setCdramo(smap1.get("cdramo"));
-            gc.setCdtipsit(smap1.get("cdtipsit"));
-            gc.setCdgarant(smap1.get("cdgarant"));
-            gc.generaComponentes(componentesTatrigar, false, true, true, false, false, false);
-            respuesta       = gc.getItems().toString();
-            respuestaOculta = gc.getFields().toString();
+			gc.setCdramo(smap1.get("cdramo"));
+			gc.setCdtipsit(smap1.get("cdtipsit"));
+			gc.setCdgarant(smap1.get("cdgarant"));
+			gc.generaComponentes(componentesTatrigar, false, true, true, false, false, false);
+			respuesta       = gc.getItems().toString();
+			respuestaOculta = gc.getFields().toString();
 		}
 		catch(Exception ex)
 		{
@@ -4247,7 +3992,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdideext_       = null;
 		String nmpolant        = null;
 		String nmrenova        = null;
-		String estatuRenovacion= null;
 		
 		String nombreCensoConfirmado = null;
 		
@@ -4285,7 +4029,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdideext_       = smap1.get("cdideext_");
 			nmpolant        = smap1.get("nmpolant");
 			nmrenova        = smap1.get("nmrenova");
-			estatuRenovacion= smap1.get("estatusRenovacion");
 			
 			nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
@@ -4324,94 +4067,46 @@ public class CotizacionAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
-			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
-			ManagerRespuestaSmapVO resp =  null;
-			
-			if(StringUtils.isBlank(nombreCensoConfirmado)){
-				 resp = cotizacionManager.subirCensoCompleto(
-						cdunieco
-						,cdramo
-						,nmpoliza
-						,feini
-						,fefin
-						,cdperpag
-						,pcpgocte
-						,rutaDocsTemp
-						,censoTimestamp
-						,getText("dominio.server.layouts")
-						,getText("user.server.layouts")
-						,getText("pass.server.layouts")
-						,getText("directorio.server.layouts")
-						,cdtipsit
-						,cdusuari
-						,cdsisrol
-						,cdagente
-						,codpostalCli
-						,cdedoCli
-						,cdmuniciCli
-						,olist1
-						,clasif
-						,LINEA_EXTENDIDA
-						,cdpersonCli
-						,nombreCli
-						,rfcCli
-						,dsdomiciCli
-						,nmnumeroCli
-						,nmnumintCli
-						,ntramite
-						,ntramiteVacio
-						,cdelemen
-						,nombreCensoConfirmado
-						,cdideper_
-						,cdideext_
-						,nmpolant
-						,nmrenova
-						,usuarioSesion
-						);
-			}else{
-				resp = cotizacionManager.confirmarCensoCompleto(
-						cdunieco
-						,cdramo
-						,nmpoliza
-						,feini
-						,fefin
-						,cdperpag
-						,pcpgocte
-						,rutaDocsTemp
-						,censoTimestamp
-						,getText("dominio.server.layouts")
-						,getText("user.server.layouts")
-						,getText("pass.server.layouts")
-						,getText("directorio.server.layouts")
-						,cdtipsit
-						,cdusuari
-						,cdsisrol
-						,cdagente
-						,codpostalCli
-						,cdedoCli
-						,cdmuniciCli
-						,olist1
-						,clasif
-						,LINEA_EXTENDIDA
-						,cdpersonCli
-						,nombreCli
-						,rfcCli
-						,dsdomiciCli
-						,nmnumeroCli
-						,nmnumintCli
-						,ntramite
-						,ntramiteVacio
-						,cdelemen
-						,nombreCensoConfirmado
-						,cdideper_
-						,cdideext_
-						,nmpolant
-						,nmrenova
-						,usuarioSesion
-						,estatuRenovacion
-						);
-			}
-			
+			ManagerRespuestaSmapVO resp = cotizacionManager.subirCensoCompleto(
+					cdunieco
+					,cdramo
+					,nmpoliza
+					,feini
+					,fefin
+					,cdperpag
+					,pcpgocte
+					,rutaDocsTemp
+					,censoTimestamp
+					,getText("dominio.server.layouts")
+					,getText("user.server.layouts")
+					,getText("pass.server.layouts")
+					,getText("directorio.server.layouts")
+					,cdtipsit
+					,cdusuari
+					,cdsisrol
+					,cdagente
+					,codpostalCli
+					,cdedoCli
+					,cdmuniciCli
+					,olist1
+					,clasif
+					,LINEA_EXTENDIDA
+					,cdpersonCli
+					,nombreCli
+					,rfcCli
+					,dsdomiciCli
+					,nmnumeroCli
+					,nmnumintCli
+					,ntramite
+					,ntramiteVacio
+					,cdelemen
+					,nombreCensoConfirmado
+					,cdideper_
+					,cdideext_
+					,nmpolant
+					,nmrenova
+					,(UserVO)session.get("USUARIO")
+					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();
@@ -4430,14 +4125,15 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
-	public String subirCensoCompleto3() {
+	public String subirCensoCompleto3()
+	{
 		this.session=ActionContext.getContext().getSession();
 		logger.debug(Utils.log(
-			 "\n#################################"
-			,"\n###### subirCensoCompleto3 ######"
-			,"\n###### smap1="  , smap1
-			,"\n###### olist1=" , olist1
-		));
+				 "\n################################"
+				,"\n###### subirCensoCompleto3 ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### olist1=" , olist1
+				));
 		
 		success = true;
 		exito   = true;
@@ -4471,11 +4167,83 @@ public class CotizacionAction extends PrincipalCoreAction
 		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
 		
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
+		
+		//mpolizas
+		/*if(exito)
+		{
+			try
+			{
+				Map<String,String>mapaMpolizas=new HashMap<String,String>(0);
+	            mapaMpolizas.put("pv_cdunieco"  , cdunieco);
+	            mapaMpolizas.put("pv_cdramo"    , cdramo);
+	            mapaMpolizas.put("pv_estado"    , estado);
+	            mapaMpolizas.put("pv_nmpoliza"  , nmpoliza);
+	            mapaMpolizas.put("pv_nmsuplem"  , nmsuplem);
+	            mapaMpolizas.put("pv_status"    , "V");
+	            mapaMpolizas.put("pv_swestado"  , "0");
+	            mapaMpolizas.put("pv_nmsolici"  , null);
+	            mapaMpolizas.put("pv_feautori"  , null);
+	            mapaMpolizas.put("pv_cdmotanu"  , null);
+	            mapaMpolizas.put("pv_feanulac"  , null);
+	            mapaMpolizas.put("pv_swautori"  , "N");
+	            mapaMpolizas.put("pv_cdmoneda"  , "001");
+	            mapaMpolizas.put("pv_feinisus"  , null);
+	            mapaMpolizas.put("pv_fefinsus"  , null);
+	            mapaMpolizas.put("pv_ottempot"  , "R");
+	            mapaMpolizas.put("pv_feefecto"  , feini);
+	            mapaMpolizas.put("pv_hhefecto"  , "12:00");
+	            mapaMpolizas.put("pv_feproren"  , fefin);
+	            mapaMpolizas.put("pv_fevencim"  , null);
+	            mapaMpolizas.put("pv_nmrenova"  , StringUtils.isBlank(nmrenova) ? "0" : nmrenova);
+	            mapaMpolizas.put("pv_ferecibo"  , null);
+	            mapaMpolizas.put("pv_feultsin"  , null);
+	            mapaMpolizas.put("pv_nmnumsin"  , "0");
+	            mapaMpolizas.put("pv_cdtipcoa"  , "N");
+	            mapaMpolizas.put("pv_swtarifi"  , "A");
+	            mapaMpolizas.put("pv_swabrido"  , null);
+	            mapaMpolizas.put("pv_feemisio"  , renderFechas.format(fechaHoy));
+	            mapaMpolizas.put("pv_cdperpag"  , cdperpag);
+	            mapaMpolizas.put("pv_nmpoliex"  , null);
+	            mapaMpolizas.put("pv_nmcuadro"  , "P1");
+	            mapaMpolizas.put("pv_porredau"  , "100");
+	            mapaMpolizas.put("pv_swconsol"  , "S");
+	            mapaMpolizas.put("pv_nmpolant"  , nmpolant);
+	            mapaMpolizas.put("pv_nmpolnva"  , null);
+	            mapaMpolizas.put("pv_fesolici"  , renderFechas.format(fechaHoy));
+	            mapaMpolizas.put("pv_cdramant"  , null);
+	            mapaMpolizas.put("pv_cdmejred"  , null);
+	            mapaMpolizas.put("pv_nmpoldoc"  , null);
+	            mapaMpolizas.put("pv_nmpoliza2" , null);
+	            mapaMpolizas.put("pv_nmrenove"  , null);
+	            mapaMpolizas.put("pv_nmsuplee"  , null);
+	            mapaMpolizas.put("pv_ttipcamc"  , null);
+	            mapaMpolizas.put("pv_ttipcamv"  , null);
+	            mapaMpolizas.put("pv_swpatent"  , null);
+	            mapaMpolizas.put("pv_pcpgocte"  , pcpgocte);
+	            mapaMpolizas.put("pv_tipoflot"  , "F");
+	            mapaMpolizas.put("pv_agrupador" , null);
+	            mapaMpolizas.put("pv_accion"    , "U");
+	            kernelManager.insertaMaestroPolizas(mapaMpolizas);
+			}
+			catch(Exception ex)
+			{
+				long etimestamp = System.currentTimeMillis();
+				logger.error(etimestamp+" error mpolizas",ex);
+				respuesta       = "Error al cotizar #"+etimestamp;
+				respuestaOculta = ex.getMessage();
+				exito           = false;
+			}
+		}*/
+		
 		boolean pagoRepartido = false;
-		if(exito){
-			try{
+		if(exito)
+		{
+			try
+			{
 				pagoRepartido = cotizacionManager.validaPagoPolizaRepartido(cdunieco,cdramo,estado,nmpoliza);
-			} catch(Exception ex){
+			}
+			catch(Exception ex)
+			{
 				respuesta       = Utils.join("Error al recuperar reparto de pago #",System.currentTimeMillis());
 				respuestaOculta = ex.getMessage();
 				exito           = false;
@@ -4484,10 +4252,14 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		boolean pideNumCliemte = false;
-		if(exito){
-			try{
+		if(exito)
+		{
+			try
+			{
 				pideNumCliemte = consultasManager.validaClientePideNumeroEmpleado(cdunieco,cdramo,estado,nmpoliza);
-			} catch(Exception ex){
+			}
+			catch(Exception ex)
+			{
 				respuesta       = Utils.join("Error al recuperar parametrizacion de numero de empleado por cliente");
 				respuestaOculta = ex.getMessage();
 				exito           = false;
@@ -4497,7 +4269,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		String nombreCenso = null;
 		
-		if(exito&&StringUtils.isBlank(nombreCensoConfirmado)){
+		if(exito&&StringUtils.isBlank(nombreCensoConfirmado))
+		{
 			FileInputStream input       = null;
 			Workbook        workbook    = null;
 			Sheet           sheet       = null;
@@ -4505,7 +4278,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			File            archivoTxt  = null;
 			PrintStream     output      = null;
 			
-			try{
+			try
+			{	
 				input       = new FileInputStream(censo);
 				workbook    = WorkbookFactory.create(input);
 				sheet       = workbook.getSheetAt(0);
@@ -4513,7 +4287,9 @@ public class CotizacionAction extends PrincipalCoreAction
 				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
 				archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
 				output      = new PrintStream(archivoTxt);
-			} catch(Exception ex){
+			}
+			catch(Exception ex)
+			{
 				long etimestamp = System.currentTimeMillis();
 				exito           = false;
 				respuesta       = "Error al procesar censo #"+etimestamp;
@@ -4521,19 +4297,21 @@ public class CotizacionAction extends PrincipalCoreAction
 				logger.error(respuesta,ex);
 			}
 			
-			if(exito&&workbook.getNumberOfSheets()!=1) {
+			if(exito&&workbook.getNumberOfSheets()!=1)
+			{
 				long etimestamp = System.currentTimeMillis();
 				exito           = false;
 				respuesta       = "Favor de revisar el n\u00famero de hojas del censo #"+etimestamp;
 				logger.error(respuesta);
 			}
 			
-			if(exito){
+			if(exito)
+			{
 				//Iterate through each rows one by one
 				logger.debug(""
-					+ "\n##############################################"
-					+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
-				);
+						+ "\n##############################################"
+						+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+						);
 				
 	            Iterator<Row> rowIterator        = sheet.iterator();
 	            int           fila               = 0;
@@ -4550,7 +4328,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	            
 				boolean[] gruposValidos = new boolean[olist1.size()];
 				
-	            while (rowIterator.hasNext()&&exito) {
+	            while (rowIterator.hasNext()&&exito) 
+	            {
 	                Row           row            = rowIterator.next();
 	                Date          auxDate        = null;
 	                Cell          auxCell        = null;
@@ -4558,569 +4337,618 @@ public class CotizacionAction extends PrincipalCoreAction
 	                StringBuilder bufferLineaStr = new StringBuilder();
 	                boolean       filaBuena      = true;
 	                
-	                if(Utils.isRowEmpty(row)) {
+	                if(Utils.isRowEmpty(row))
+	                {
 	                	break;
 	                }
 	                
 	                fila        = fila + 1;
 	                filasLeidas = filasLeidas + 1;
 	                
-	                String parentesco      = null;
-	                String dependiente     = null;
-	                String nombre          = "";
-	                double cdgrupo         = -1d;
-	                int total              = 1;
-	                String dsnombre        = null;
-	                String dsnombre1       = null;
-	                String dsapellido      = null;
-	                String dsapellido1     = null;
-	                String genero          = null;
-	                String fechaNacAfectad = null;
-	                int errorSubcobertura  = 0;
-	                String banCertificado  = "0";
+	                String parentesco = null;
+	                String dependiente = null;
+	                String nombre     = "";
+	                double cdgrupo    = -1d;
 	                //GRUPO
-	                try {
+	                try
+                	{
 	                	cdgrupo = row.getCell(0).getNumericCellValue();
-		                logger.debug("GRUPO: "+(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"));
-		                bufferLinea.append(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
-                	} catch(Exception ex) {
+		                logger.debug("GRUPO: "+(
+		                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
+		                		));
+		                bufferLinea.append(
+		                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
 	                }
 	                
-	                //CERTIFICADO
-	                try {
-	                    auxCell=row.getCell(1);
-	                    dependiente = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|";
-	                    if(auxCell!=null){
-	                        HashMap<String, Object> paramCertificado = new HashMap<String, Object>();
-                            paramCertificado.put("pv_cdunieco_i", cdunieco);
-                            paramCertificado.put("pv_cdramo_i"  , cdramo);
-                            paramCertificado.put("pv_estado_i"  , estado);
-                            paramCertificado.put("pv_nmpoliza_i", nmpoliza);
-                            paramCertificado.put("pv_nmsitaux_i", String.format("%.0f",auxCell.getNumericCellValue()));
-                            String certificadoValido = cotizacionManager.validaCertificadoGrupo(paramCertificado);
-                            
-                            if(certificadoValido.equalsIgnoreCase("s")){
-                                logger.debug("CERTIFICADO: "+dependiente);
-                                bufferLinea.append(dependiente);
-                            }else{
-                                //mandamos excepcion
-                                banCertificado = "1";
-                                throw new ApplicationException("No es valido");
-                            }
-	                    }else{
-	                        logger.debug("CERTIFICADO: "+dependiente);
-	                        bufferLinea.append(dependiente);
-	                    }
-	                } catch(Exception ex) {
-	                    logger.error("error al leer dependiente como numero, se intentara como string:",ex);
-	                    try {
-	                        dependiente = row.getCell(1).getStringCellValue()+"|";
-	                        if("|".equals(dependiente)) {
-	                            dependiente = "0|";
-	                            logger.debug("CERTIFICADO: "+dependiente);
-	                            bufferLinea.append(dependiente);
-	                        }else{
-	                            HashMap<String, Object> paramCertificado = new HashMap<String, Object>();
-                                paramCertificado.put("pv_cdunieco_i", cdunieco);
-                                paramCertificado.put("pv_cdramo_i"  , cdramo);
-                                paramCertificado.put("pv_estado_i"  , estado);
-                                paramCertificado.put("pv_nmpoliza_i", nmpoliza);
-                                paramCertificado.put("pv_nmsitaux_i", row.getCell(1).getStringCellValue());
-                                String certificadoValido = cotizacionManager.validaCertificadoGrupo(paramCertificado);
-                                
-                                if(certificadoValido.equalsIgnoreCase("s")){
-                                    logger.debug("CERTIFICADO: "+dependiente);
-                                    bufferLinea.append(dependiente);
-                                }else{
-                                    //mandamos excepcion
-                                    banCertificado = "1";
-                                    throw new ApplicationException("No es valido");
-                                }
-	                        }
-	                        
-	                    } catch(Exception ex2) {
-	                        logger.error("error dependiente:",ex2);
-	                        filaBuena = false;
-	                        if(banCertificado.equalsIgnoreCase("1")){
-	                            bufferErroresCenso.append(Utils.join("Error el titular no se encuentra vigente, en el campo 'Certificado' (B) de la fila ",fila," "));
-	                        }else{
-	                            bufferErroresCenso.append(Utils.join("Error en el campo 'Certificado' (B) de la fila ",fila," "));
-	                        }
-	                    }
-	                } finally {
-	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+	                try
+                	{
+		                auxCell=row.getCell(1);
+		                
+		                dependiente = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|";
+		                
+		                logger.debug("DEPENDIENTE: "+dependiente);
+		                bufferLinea.append(dependiente);
 	                }
-	                
+	                catch(Exception ex)
+	                {
+	                	logger.error("error al leer dependiente como numero, se intentara como string:",ex);
+	                	try
+	                	{
+	                		dependiente = row.getCell(1).getStringCellValue()+"|";
+	                		
+	                		if("|".equals(dependiente))
+	                		{
+	                			dependiente = "0|";
+	                		}
+	                		
+	                		logger.debug("DEPENDIENTE: "+dependiente);
+			                bufferLinea.append(dependiente);
+	                	}
+		                catch(Exception ex2)
+		                {
+		                	logger.error("error dependiente:",ex2);
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Dependiente' (B) de la fila ",fila," "));
+		                }
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+	                }
+	                //DEPENDIENTE
+	                /*try
+                	{
+	                	logger.debug("DEPENDIENTE: "+(
+                			String.format("%.0f",row.getCell(1).getNumericCellValue())+"|"
+                		));
+	                	
+	                	bufferLinea.append(
+	                		String.format("%.0f",row.getCell(1).getNumericCellValue())+"|"
+                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Dependiente' (B) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+	                }*/
+
 	                //PARENTESCO
-	                try {
+	                try
+                	{
 	                	parentesco = row.getCell(2).getStringCellValue();
-	                	if(!"T".equalsIgnoreCase(parentesco) &&!"C".equalsIgnoreCase(parentesco)
+	                	if(!"T".equalsIgnoreCase(parentesco)
+	                			&&!"C".equalsIgnoreCase(parentesco)
 	                			&&!"H".equalsIgnoreCase(parentesco)
 	                			&&!"P".equalsIgnoreCase(parentesco)
-	                			&&!"D".equalsIgnoreCase(parentesco)) {
+	                			&&!"D".equalsIgnoreCase(parentesco)
+	                			)
+	                	{
 	                		throw new ApplicationException("El parentesco no se reconoce [T,C,H,P,D]");
 	                	}
-	                	logger.debug("PARENTESCO: "+(row.getCell(2).getStringCellValue()+"|"));
-		                bufferLinea.append(parentesco+"|");
-                	} catch(Exception ex) {
+
+	                	logger.debug("PARENTESCO: "+(
+	                		row.getCell(3).getStringCellValue()+"|"
+                		));
+	                	
+		                bufferLinea.append(
+		                		parentesco+"|"
+		                		);
+		                
+		                /*if(fila==1&&!"T".equals(parentesco))
+		                {
+		                	throw new ApplicationException("La primer fila debe ser titular");
+		                }*/
+		                
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
-	                	if(fila==1) {
+	                	if(fila==1)
+	                	{
 	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (C) de la fila ",fila," la primer fila debe ser titular, se excluir\u00e1n las filas hasta el siguiente titular "));
-	                	}else {
+	                	}
+	                	else
+	                	{
 	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (C) de la fila ",fila," "));
 	                	}
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
 	                }
-	                
 	                //PATERNO
-	                try {
-		                logger.debug("PATERNO: "+(row.getCell(3).getStringCellValue()+"|"));
-		                bufferLinea.append(row.getCell(3).getStringCellValue()+"|");
+	                try
+                	{
+		                logger.debug("PATERNO: "+(
+		                		row.getCell(3).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(3).getStringCellValue()+"|"
+		                		);
+		                
 		                nombre = Utils.join(nombre,row.getCell(3).getStringCellValue()," ");
-		                dsapellido = row.getCell(3).getStringCellValue();
-                	} catch(Exception ex) {
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (D) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
 	                }
-	                
 	                //MATERNO
-	                try {
-		                logger.debug("MATERNO: "+(row.getCell(4).getStringCellValue()+"|"));
-		                bufferLinea.append(row.getCell(4).getStringCellValue()+"|");
+	                try
+                	{
+		                logger.debug("MATERNO: "+(
+		                		row.getCell(4).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(4).getStringCellValue()+"|"
+		                		);
 		                nombre = Utils.join(nombre,row.getCell(4).getStringCellValue()," ");
-		                dsapellido1 = row.getCell(4).getStringCellValue();
-                	} catch(Exception ex) {
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (E) de la fila ",fila," "));
-	                }finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
 	                }
-	                
 	                //PRIMER NOMBRE
-	                try {
-		                logger.debug("NOMBRE: "+(row.getCell(5).getStringCellValue()+"|"));
-		                bufferLinea.append(row.getCell(5).getStringCellValue()+"|");
+	                try
+                	{
+		                logger.debug("NOMBRE: "+(
+		                		row.getCell(5).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(5).getStringCellValue()+"|"
+		                		);
 		                nombre = Utils.join(nombre,row.getCell(5).getStringCellValue()," ");
-		                dsnombre = row.getCell(5).getStringCellValue();
-                	} catch(Exception ex) {
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (F) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
 	                }
-	                
 	                //SEGUNDO NOMBRE
-	                try {
+	                try
+                	{
 		                auxCell=row.getCell(6);
-		                logger.debug("SEGUNDO NOMBRE: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+		                logger.debug("SEGUNDO NOMBRE: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
 		                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
-		                dsnombre1 = auxCell!=null?auxCell.getStringCellValue():"";
-		                if("T".equals(parentesco)||!"0|".equals(dependiente)) {
+		                
+		                if("T".equals(parentesco)||!"0|".equals(dependiente))
+		                {
 		                	nFamilia++;
 		                	familias.put(nFamilia,"");
 		                	estadoFamilias.put(nFamilia,true);
 		                	titulares.put(nFamilia,nombre);
 		                }
-                	} catch(Exception ex) {
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (G) de la fila ",fila," "));
-	                } finally  {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
 	                }
-	                
 	                //SEXO
-	                try {
+	                try
+                	{
 	                	String sexo = row.getCell(7).getStringCellValue();
 	                	if(!"H".equalsIgnoreCase(sexo)
 	                			&&!"M".equalsIgnoreCase(sexo)
-	                	) {
+	                	)
+	                	{
 	                		throw new ApplicationException("No se reconoce el sexo [H,M]");
 	                	}
-	                	genero = row.getCell(7).getStringCellValue();
-		                logger.debug("SEXO: "+(sexo+"|"));
-		                bufferLinea.append(sexo+"|");
-                	} catch(Exception ex) {
+		                logger.debug("SEXO: "+(
+		                		sexo+"|"
+		                		));
+		                bufferLinea.append(
+		                		sexo+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (H) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
 	                }
-	                
 	                //FECHA NACIMIENTO
-	                try {
+	                try
+                	{
 		                auxDate=row.getCell(8).getDateCellValue();
-		                logger.debug(Utils.log("�auxDate: ",auxDate));
-		                if(auxDate!=null) {
+		                if(auxDate!=null)
+		                {
 		                	Calendar cal = Calendar.getInstance();
 		                	cal.setTime(auxDate);
-		                	if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900) { //ELP
+		                	if(cal.get(Calendar.YEAR)>2100
+		                			||cal.get(Calendar.YEAR)<1900
+		                			)
+		                	{
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
-		                logger.debug("FECHA NACIMIENTO: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
-		                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
-		                fechaNacAfectad = auxDate!=null?renderFechas.format(auxDate):"";
-                	} catch(Exception ex) {
+		                logger.debug("FECHA NACIMIENTO: "+(
+		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+		                			));
+		                bufferLinea.append(
+		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+		                			);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (I) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
 	                }
-	                
-	                //validamos asegurados duplicados
-                    try {
-                        auxCell=row.getCell(6);
-                        if(dsapellido!= null && dsapellido1 != null && dsnombre != null && genero != null && fechaNacAfectad!= null && total <= 1){
-                            logger.debug("Entra a la validacion de asegurados duplicados ==> :{} :{} :{} :{} :{} :{} ",dsapellido,dsapellido,dsnombre,dsnombre1,genero,fechaNacAfectad);
-                            total = total+1;
-                            HashMap<String, Object> paramPersona = new HashMap<String, Object>();
-                            paramPersona.put("pv_cdunieco_i",   cdunieco );
-                            paramPersona.put("pv_cdramo_i",     cdramo);
-                            paramPersona.put("pv_estado_i",     estado);
-                            paramPersona.put("pv_nmpoliza_i",   nmpoliza );
-                            paramPersona.put("pv_dsnombre_i",   dsnombre);
-                            paramPersona.put("pv_dsnombre1_i",  dsnombre1);
-                            paramPersona.put("pv_dsapellido_i", dsapellido);
-                            paramPersona.put("pv_dsapellido1_i",dsapellido1);
-                            paramPersona.put("pv_genero_i",     genero);
-                            paramPersona.put("pv_fenacimi_i",   renderFechas.parse(fechaNacAfectad));
-                            logger.debug("Valor a enviar paramPersona ==> :{}",paramPersona);
-                            
-                            String duplicadoAseg = cotizacionManager.obtenerAseguradoDuplicado(paramPersona);
-                            logger.debug("Existe Duplicados ==> :{}",duplicadoAseg);
-                            if(Integer.parseInt(duplicadoAseg) == 1){
-                                throw new Exception("El asegurado esta duplicado");
-                            }
-                        }
-                    } catch(Exception ex) {
-                        filaBuena = false;
-                        logger.debug("Existe Duplicados ==> :{}",ex);
-                        bufferErroresCenso.append(Utils.join("Error el asegurado se encuentra duplicado en la fila ",fila," "));
-                    } finally {
-                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
-                    }
-	                
 	                //CODIGO POSTAL
-	                try {
-		                logger.debug("COD POSTAL: "+(String.format("%.0f",row.getCell(9).getNumericCellValue())+"|"));
-		                bufferLinea.append(String.format("%.0f",row.getCell(9).getNumericCellValue())+"|");
-                	} catch(Exception ex2) {
+	                try
+                	{
+		                logger.debug("COD POSTAL: "+(
+		                		String.format("%.0f",row.getCell(9).getNumericCellValue())+"|"
+		                		));
+		                bufferLinea.append(
+		                		String.format("%.0f",row.getCell(9).getNumericCellValue())+"|"
+		                		);
+                	}
+	                catch(Exception ex2)
+	                {
 	                	logger.warn("error al leer codigo postal como numero, se intentara como string:",ex2);
-	                	try {
+	                	try
+	                	{
 	                		logger.debug("COD POSTAL: "+row.getCell(9).getStringCellValue()+"|");
 			                bufferLinea.append(row.getCell(9).getStringCellValue()+"|");
-	                	} catch(Exception ex) {
+	                	}
+		                catch(Exception ex)
+		                {
 		                	filaBuena = false;
 		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (J) de la fila ",fila," "));
 		                }
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
 	                }
-	                
 	                //ESTADO
-	                try {
-		                logger.debug("ESTADO: "+(row.getCell(10).getStringCellValue()+"|"));
-		                bufferLinea.append(row.getCell(10).getStringCellValue()+"|");
-                	} catch(Exception ex) {
+	                try
+                	{
+		                logger.debug("ESTADO: "+(
+		                		row.getCell(10).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(10).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado' (K) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
 	                }
-	                
 	                //MUNICIPIO
-	                try {
-		                logger.debug("MUNICIPIO: "+(row.getCell(11).getStringCellValue()+"|"));
-		                bufferLinea.append(row.getCell(11).getStringCellValue()+"|");
-                	} catch(Exception ex){
+	                try
+                	{
+		                logger.debug("MUNICIPIO: "+(
+		                		row.getCell(11).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(11).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Municipio' (L) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
 	                }
-	                
 	                //COLONIA
-	                try {
-		                logger.debug("COLONIA: "+(row.getCell(12).getStringCellValue()+"|"));
-		                bufferLinea.append(row.getCell(12).getStringCellValue()+"|");
-                	} catch(Exception ex) {
+	                try
+                	{
+		                logger.debug("COLONIA: "+(
+		                		row.getCell(12).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(12).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Colonia' (M) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
 	                }
-	                
 	                //CALLE
-	                try {
-		                logger.debug("CALLE: "+(row.getCell(13).getStringCellValue()+"|"));
-		                bufferLinea.append(row.getCell(13).getStringCellValue()+"|");
-                	} catch(Exception ex) {
+	                try
+                	{
+		                logger.debug("CALLE: "+(
+		                		row.getCell(13).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(13).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Calle' (N) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
 	                }
-	                
 	                //NUM. EXTERIOR
-	                try {
+	                try
+                	{
 	                	String numExt = extraerStringDeCelda(row.getCell(14));
-	                	if(StringUtils.isBlank(numExt)) {
+	                	if(StringUtils.isBlank(numExt))
+	                	{
 	                		throw new ApplicationException("Falta numero exterior");
 	                	}
 		                logger.debug("NUM EXT: "+numExt);
 		                bufferLinea.append(Utils.join(numExt,"|"));
-                	} catch(Exception ex){
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (O) de la fila ",fila," "));
-	                } finally{
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
 	                }
-	                
 	                //NUM. INTERIOR
-	                try {
+	                try
+                	{
 	                	String numInt = extraerStringDeCelda(row.getCell(15));
 		                logger.debug("NUM INT: "+numInt);
 		                bufferLinea.append(Utils.join(numInt,"|"));
-                	} catch(Exception ex) {
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero interior' (P) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
 	                }
-	                
 	                //RFC
-	                try {
+	                try
+                	{
 	                	auxCell=row.getCell(16);
-	                	logger.debug("RFC: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+	                	
+		                logger.debug("RFC: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+		                
 		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 		                
-		                if((auxCell==null||StringUtils.isBlank(auxCell.getStringCellValue()))
+		                if(
+		                		(auxCell==null||StringUtils.isBlank(auxCell.getStringCellValue()))
 		                		&&pagoRepartido
-		                		&&"T".equals(parentesco)){
+		                		&&"T".equals(parentesco)
+		                )
+		                {
 		                	throw new ApplicationException("Sin rfc para un titular en pago repartido");
 		                }
-                	} catch(Exception ex) {
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'RFC' (Q) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
 	                }
-	                
 	                //CORREO
-	                try {
+	                try
+                	{
 		                auxCell=row.getCell(17);
-		                logger.debug("CORREO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
+		                logger.debug("CORREO: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (R) de la fila ",fila," "));
-	                } finally {
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (Q) de la fila ",fila," "));
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(17)),"-"));
 	                }
-	                
 	                //TELEFONO
-	                try{
+	                try
+                	{
 		                auxCell=row.getCell(18);
-		                logger.debug("TELEFONO: "+( auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
-		                bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
-                	} catch(Exception ex) {
+		                logger.debug("TELEFONO: "+(
+		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono' (S) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
-	                
-                    //IDENTIDAD NO.DE EMPLEADO
-	                try {
+               
+	                try
+                	{
 		                auxCell=row.getCell(19);
-		                logger.debug("IDENTIDAD: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                
-		                if(cdunieco.equalsIgnoreCase("1403")){
-		                	if(auxCell!=null){
-		                		//Validamos que en verdad
-		                		String identidad = auxCell.getStringCellValue();
-		                		String identidadModificada[] = identidad.split("\\-");
-		                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
-		                		logger.debug("Seccion 1 IDENTIDAD : {}",seccion1);
-		                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
-		                		logger.debug("Seccion 2 IDENTIDAD : {}",seccion2);
-		                		
-		                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
-		                			bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
-		                		}else{
-		                			//mandamos excepcion
-			                		throw new ApplicationException("No es numero");
-		                		}		                		
-		                	}else{
-		                		//mandamos excepcion
-		                		throw new ApplicationException("La identidad no puede ser null");
-		                	}
-		                }else{
-		                	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-		                }
-                	} catch(Exception ex) {
+		                logger.debug("IDENTIDAD: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	logger.debug("Valor del EX ===>"+ex);
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (T) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
-	                
-	                //FECHA DE RECONOCIMIENTO DE ANTIGUEDAD
-	                try {
+	                //RECONOCIMIENTO
+	                try
+                	{
 		                auxDate=row.getCell(20)!=null?row.getCell(20).getDateCellValue():null;
-		                if(auxDate!=null) {
+		                if(auxDate!=null)
+		                {
 		                	Calendar cal = Calendar.getInstance();
 		                	cal.setTime(auxDate);
-		                	if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900){
+		                	if(cal.get(Calendar.YEAR)>2100
+		                			||cal.get(Calendar.YEAR)<1900
+		                			)
+		                	{
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
-		                logger.debug("FECHA RECONOCIMIENTO ANTIGUEDAD  ===>: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
-		                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
-                	} catch(Exception ex) {
+		                logger.debug("FECHA RECONOCIMIENTO ANTIGUEDAD  ===>: "+(
+		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+		                			));
+		                bufferLinea.append(
+		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+		                			);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
 	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (U) de la fila ",fila," "));
-	                } finally {
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(20)),"-"));
 	                }
-	                
-	                //OCUPACION
-	                try {
+	                //ESTADO CIVIL
+	                try
+                	{
 		                auxCell=row.getCell(21);
-		                logger.debug("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
+		                logger.debug("ESTADO CIVIL: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ocupaci&oacute;n' (V) de la fila ",fila," "));
-	                } finally {
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado Civil' (V) de la fila ",fila," "));
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(21)),"-"));
 	                }
-	                
-	                //EXT. OCUPACIONAL
-	                try {
-		                auxCell=row.getCell(22);
-		                logger.debug("EXT. OCUPACIONAL: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
+	                //FECHA EGRESO
+	                try
+                	{
+		                auxDate=row.getCell(22)!=null?row.getCell(22).getDateCellValue():null;
+		                if(auxDate!=null)
+		                {
+		                	Calendar cal = Calendar.getInstance();
+		                	cal.setTime(auxDate);
+		                	if(cal.get(Calendar.YEAR)>2100
+		                			||cal.get(Calendar.YEAR)<1900
+		                			)
+		                	{
+		                		throw new ApplicationException("El anio de la fecha no es valido");
+		                	}
+		                }
+		                logger.debug("FECHA DE INGRESO  ===>: "+(
+		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+		                			));
+		                bufferLinea.append(
+		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
+		                			);
+                	}
+	                catch(Exception ex)
+	                {
+	                	logger.debug("Valor del Error ===> "+ex);
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ext. Ocupacional' (W) de la fila ",fila," "));
-	                } finally {
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha Ingreso ' (W) de la fila ",fila," "));
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(22)),"-"));
 	                }
-	                
-	                //PESO
-	                try {
+	                //UBICACION
+	                try
+                	{
 		                auxCell=row.getCell(23);
-		                logger.debug("PESO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
+		                logger.debug("UBICACION: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (X) de la fila ",fila," "));
-	                } finally {
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (X) de la fila ",fila," "));
+	                }
+	                finally
+	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(23)),"-"));
 	                }
 	                
-	                //ESTATURA
-	                try {
-		                auxCell=row.getCell(24);
-		                logger.debug("ESTATURA: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (Y) de la fila ",fila," "));
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(24)),"-"));
-	                }
-	                
-	                //EXT. SOBREPESO
-	                try {
-		                auxCell=row.getCell(25);
-		                logger.debug("EXT. SOBREPESO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ext. Sobrepeso' (Z) de la fila ",fila," "));
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(25)),"-"));
-	                }
-	                //ESTADO CIVIL
-	                try {
-		                auxCell=row.getCell(26);
-		                logger.debug("ESTADO CIVIL: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado Civil' (AA) de la fila ",fila," "));
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(26)),"-"));
-	                }
-	                
-	                //FECHA INGRESO
-	                try {
-		                auxDate=row.getCell(27)!=null?row.getCell(27).getDateCellValue():null;
-		                if(auxDate!=null) {
-		                	Calendar cal = Calendar.getInstance();
-		                	cal.setTime(auxDate);
-		                	if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900) {
-		                		throw new ApplicationException("El anio de la fecha no es valido");
-		                	}
-		                }
-		                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha Ingreso ' (AB) de la fila ",fila," "));
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(27)),"-"));
-	                }
-
-	                //ID SISA
-	                try {
-		                logger.debug("ID SISA: "+(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|"));
-		                bufferLinea.append(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|");
-                	} catch(Exception ex2) {
-	                	logger.warn("error al leer el peso, se intentara como string:",ex2);
-	                	try {
-	                		auxCell=row.getCell(28);
-			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Id. SISA' (AC) de la fila ",fila," "));
-		                }
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(28)),"-"));
-	                }
-	                
-	                //PLAZA
-	                try {
-		                auxCell=row.getCell(29);
-		                logger.debug("PLAZA: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (AD) de la fila ",fila," "));
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(29)),"-"));
-	                }
-	                
-	                //ID ASEGURADO
-	                try {
-		                auxCell=row.getCell(30);
-		                logger.debug("ID ASEGURADO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' (AE) de la fila ",fila," "));
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(30)),"-"));
-	                }
 	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
 	                if(filaBuena)
@@ -5302,7 +5130,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		if(exito)
 		{
-			logger.debug(Utils.log("########################user ",user));
 			tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject aux=this.tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolEndoso(
 					clasif    , LINEA      , LINEA_EXTENDIDA
 					,cdunieco , cdramo     , nmpoliza
@@ -5329,10 +5156,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		if(exito)
 		{
-			respuesta       = Utils.join("Se han complementado los asegurados",
-			        StringUtils.isBlank(respuesta)
-    			        ? ""
-    			        : Utils.join(". ", respuesta));
+			respuesta       = "Se han complementado los asegurados";
 			respuestaOculta = "Todo OK";
 		}
 		
@@ -5342,8 +5166,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
-	
-	
 	
 	public String subirCensoCompleto()
 	{
@@ -5381,36 +5203,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		String fefin            = smap1.get("fefin");
 		String nmpolant         = smap1.get("nmpolant");
 		String nmrenova         = smap1.get("nmrenova");
-		String esRenovacion		= smap1.get("esRenovacion");
+		
 		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
 		
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
-		
-		
-		if(exito&&StringUtils.isNotBlank(nombreCensoConfirmado)){
-			try
-			{
-				Map<String,String> smapCenso =  new HashMap<String, String>();
-				
-				smapCenso.putAll(getSmap1());
-				new ConfirmaCensoConcurrente1(smapCenso,this).start();
-			}
-			catch(Exception ex)
-			{
-				long etimestamp = System.currentTimeMillis();
-				logger.error(etimestamp+" error mpolizas",ex);
-				respuesta       = "Error al cotizar #"+etimestamp;
-				respuestaOculta = ex.getMessage();
-				exito           = false;
-			}
-			
-			logger.debug(""
-					+ "\n###### subirCensoCompleto ######"
-					+ "\n################################"
-					);
-			return SUCCESS;
-			
-		}
 		
 		//mpolizas
 		if(exito)
@@ -5512,7 +5308,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		String nombreCenso = null;
-		int    filasError=0;
 		
 		if(exito&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
@@ -5564,10 +5359,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            StringBuilder bufferErroresCenso = new StringBuilder();
 	            int           filasLeidas        = 0;
 	            int           filasProcesadas    = 0;
-	                          filasError         = 0;
-	                          
-  	            Map<Integer,List<Map<String,String>>> listaFamilias = new HashMap<Integer, List<Map<String,String>>>(); 
-	            List<Map<String,String>>             filasFamilia = new ArrayList<Map<String,String>>(); 
+	            int           filasError         = 0;
 	            
 	            Map<Integer,String>  familias       = new LinkedHashMap<Integer,String>();
 				Map<Integer,Boolean> estadoFamilias = new LinkedHashMap<Integer,Boolean>();
@@ -5585,47 +5377,18 @@ public class CotizacionAction extends PrincipalCoreAction
 	                StringBuilder bufferLineaStr = new StringBuilder();
 	                boolean       filaBuena      = true;
 	                
-	                String parentesco   = null;
-                    String apellidoP    = null;
-                    String apellidoM    = null;
-                    String nombre1      = null;
-                    String nombre2      = null;
-                    String sexo         = null;
-                    String fechaNac     = null;
-                    String codpostal    = null;
-                    String estado       = null;
-                    String municipio    = null;
-                    String colonia      = null;
-                    String calle        = null;
-                    String numExt       = null;
-                    String numInt       = null;
-                    String rfcAsegurado = null;
-                    String emailAseg    = null;
-                    String telefono     = null;
-                    String identidad    = null;
-                    String fecanti      = null;
-                    String ocupacion    = null;
-                    String extOcupacion = null;
-                    String peso         = null;
-                    String estatura     = null;
-                    String extSobrepeso = null;
-                    String estadoCivil  = null;
-                    String feingreso    = null;
-                    String idSisa       = null;
-                    String plaza        = null;
-                    String cveAsegurado = null;
-                    String dependiente = null;
-                    
 	                if(Utils.isRowEmpty(row))
 	                {
 	                	break;
 	                }
 	                
-	                fila               = fila + 1;
-	                filasLeidas        = filasLeidas + 1;
-	                String nombre      = "";
-	                double cdgrupo     = -1d;
-	              //GRUPO
+	                fila        = fila + 1;
+	                filasLeidas = filasLeidas + 1;
+	                
+	                String parentesco = null;
+	                String nombre     = "";
+	                double cdgrupo    = -1d;
+	                
 	                try
                 	{
 	                	cdgrupo = row.getCell(0).getNumericCellValue();
@@ -5635,60 +5398,20 @@ public class CotizacionAction extends PrincipalCoreAction
 		                bufferLinea.append(
 		                		String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"
 		                		);
-		                
-		                if(cdgrupo>olist1.size())
-		                {
-		                	bufferErroresCenso.append(Utils.join("Grupo no permitido: ",cdgrupo," (grupos: ",olist1.size(),") en la fila ",fila," "));
-		                	throw new ApplicationException("El grupo de excel no existe");
-		                }
                 	}
 	                catch(Exception ex)
 	                {
-	                	try{
-	                		cdgrupo = Double.parseDouble(row.getCell(0).getStringCellValue());
-			                logger.debug("GRUPO: "+(row.getCell(0).getStringCellValue()+"|"));
-			                bufferLinea.append(row.getCell(0).getStringCellValue()+"|");
-			                if(cdgrupo>olist1.size())
-			                {
-			                	bufferErroresCenso.append(Utils.join("Grupo no permitido: ",cdgrupo," (grupos: ",olist1.size(),") en la fila ",fila," "));
-			                	throw new ApplicationException("El grupo de excel no existe");
-			                }
-	                	}catch (Exception e) {
-							filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
-						}
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
 	                }
-	              //CERTIFICADO
-	                try {
-		                auxCell=row.getCell(1);
-		                dependiente = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|";
-		                logger.debug("CERTIFICADO: "+dependiente);
-		                bufferLinea.append(dependiente);
-	                } catch(Exception ex) {
-	                	logger.error("error al leer dependiente como numero, se intentara como string:",ex);
-	                	try {
-	                		dependiente = row.getCell(1).getStringCellValue()+"|";
-	                		if("|".equals(dependiente)) {
-	                			dependiente = "0|";
-	                		}
-	                		logger.debug("CERTIFICADO: "+dependiente);
-			                bufferLinea.append(dependiente);
-	                	} catch(Exception ex2) {
-		                	logger.error("error dependiente:",ex2);
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Certificado' (B) de la fila ",fila," "));
-		                }
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
-	                }
-	              //PARENTESCO
+	                
 	                try
                 	{
-	                	parentesco = row.getCell(2).getStringCellValue();
+	                	parentesco = row.getCell(1).getStringCellValue();
 	                	if(!"T".equalsIgnoreCase(parentesco)
 	                			&&!"C".equalsIgnoreCase(parentesco)
 	                			&&!"H".equalsIgnoreCase(parentesco)
@@ -5716,120 +5439,111 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	filaBuena = false;
 	                	if(fila==1)
 	                	{
-	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (c) de la fila ",fila," la primer fila debe ser titular, se excluir\u00e1n las filas hasta el siguiente titular "));
+	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," la primer fila debe ser titular, se excluir\u00e1n las filas hasta el siguiente titular "));
 	                	}
 	                	else
 	                	{
-	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (c) de la fila ",fila," "));
+	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," "));
 	                	}
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+	                }
+	                
+	                try
+                	{
+		                logger.debug("PATERNO: "+(
+		                		row.getCell(2).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(2).getStringCellValue()+"|"
+		                		);
+		                
+		                nombre = Utils.join(nombre,row.getCell(2).getStringCellValue()," ");
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (C) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
 	                }
-	              //PATERNO
+	                
 	                try
                 	{
-		                logger.debug("PATERNO: "+(
+		                logger.debug("MATERNO: "+(
 		                		row.getCell(3).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
 		                		row.getCell(3).getStringCellValue()+"|"
 		                		);
-		                apellidoP = row.getCell(3).getStringCellValue();
 		                nombre = Utils.join(nombre,row.getCell(3).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (D) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (D) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
 	                }
-	              //MATERNO
+	                
 	                try
                 	{
-		                logger.debug("MATERNO: "+(
+		                logger.debug("NOMBRE: "+(
 		                		row.getCell(4).getStringCellValue()+"|"
 		                		));
 		                bufferLinea.append(
 		                		row.getCell(4).getStringCellValue()+"|"
 		                		);
-		                apellidoM = row.getCell(4).getStringCellValue();
 		                nombre = Utils.join(nombre,row.getCell(4).getStringCellValue()," ");
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (E) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (E) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
 	                }
-	              //PRIMER NOMBRE
+	                
 	                try
                 	{
-		                logger.debug("NOMBRE: "+(
-		                		row.getCell(5).getStringCellValue()+"|"
-		                		));
-		                bufferLinea.append(
-		                		row.getCell(5).getStringCellValue()+"|"
-		                		);
-		                nombre1 = row.getCell(5).getStringCellValue();
-		                nombre = Utils.join(nombre,row.getCell(5).getStringCellValue()," ");
-                	}
-	                catch(Exception ex)
-	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (F) de la fila ",fila," "));
-	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
-	                }
-	              //SEGUNDO NOMBRE 
-	                try
-                	{
-		                auxCell=row.getCell(6);
+		                auxCell=row.getCell(5);
 		                logger.debug("SEGUNDO NOMBRE: "+(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		));
 		                bufferLinea.append(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		);
-		                nombre2 = auxCell!=null?auxCell.getStringCellValue():"";
 		                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
 		                
 		                if("T".equals(parentesco))
 		                {
-		                	if(nFamilia > 0){
-		                		listaFamilias.put(nFamilia, filasFamilia);
-		                		filasFamilia = new ArrayList<Map<String,String>>(); 
-		                	}
-		                	
 		                	nFamilia++;
 		                	familias.put(nFamilia,"");
 		                	estadoFamilias.put(nFamilia,true);
 		                	titulares.put(nFamilia,nombre);
-		                	
 		                }
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (G) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (F) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
 	                }
-	              //SEXO
+	                
 	                try
                 	{
-	                	sexo = row.getCell(7).getStringCellValue();
+	                	String sexo = row.getCell(6).getStringCellValue();
 	                	if(!"H".equalsIgnoreCase(sexo)
 	                			&&!"M".equalsIgnoreCase(sexo)
 	                	)
@@ -5846,17 +5560,16 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (H) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (G) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
 	                }
-	              //FECHA NACIMIENTO
+	                
 	                try
                 	{
-	                	// Primer intento, se tratara el campo como Date:
-	                	auxDate=row.getCell(8).getDateCellValue();
+		                auxDate=row.getCell(7).getDateCellValue();
 		                if(auxDate!=null)
 		                {
 		                	Calendar cal = Calendar.getInstance();
@@ -5868,11 +5581,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
-		                
-                        fechaNac = auxDate!=null?
-                                renderFechas.format(auxDate)
-                                :"";
-        						
 		                logger.debug("FECHA NACIMIENTO: "+(
 		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
 		                			));
@@ -5880,38 +5588,23 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
 		                			);
                 	}
-	                catch(Exception ex){
-	                	// Segundo intento, se tratara el campo como String:
-	                	try {
-							auxDate= renderFechas.parse(row.getCell(8).getStringCellValue());
-							if(auxDate!=null) {
-			                	Calendar cal = Calendar.getInstance();
-			                	cal.setTime(auxDate);
-			                	if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900) {
-			                		throw new ApplicationException("El anio de la fecha no es valido");
-			                	}
-			                }
-							fechaNac = auxDate!=null?renderFechas.format(auxDate):"";
-			                logger.debug("FECHA NACIMIENTO: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
-			                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
-		                } catch (Exception e) {
-							filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (I) de la fila ",fila," "));
-						}
-                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (H) de la fila ",fila," "));
+	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
 	                }
-	              //CODIGO POSTAL
+	                
 	                try
                 	{
 		                logger.debug("COD POSTAL: "+(
-		                		String.format("%.0f",row.getCell(9).getNumericCellValue())+"|"
+		                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
 		                		));
-		                codpostal = String.format("%.0f",row.getCell(9).getNumericCellValue());
 		                bufferLinea.append(
-		                		String.format("%.0f",row.getCell(9).getNumericCellValue())+"|"
+		                		String.format("%.0f",row.getCell(8).getNumericCellValue())+"|"
 		                		);
                 	}
 	                catch(Exception ex2)
@@ -5919,27 +5612,44 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	logger.warn("error al leer codigo postal como numero, se intentara como string:",ex2);
 	                	try
 	                	{
-	                		logger.debug("COD POSTAL: "+row.getCell(9).getStringCellValue()+"|");
-	                		codpostal = row.getCell(9).getStringCellValue();
-			                bufferLinea.append(row.getCell(9).getStringCellValue()+"|");
+	                		logger.debug("COD POSTAL: "+row.getCell(8).getStringCellValue()+"|");
+			                bufferLinea.append(row.getCell(8).getStringCellValue()+"|");
 	                	}
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (J) de la fila ",fila," "));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (I) de la fila ",fila," "));
 		                }
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
+	                }
+	                
+	                try
+                	{
+		                logger.debug("ESTADO: "+(
+		                		row.getCell(9).getStringCellValue()+"|"
+		                		));
+		                bufferLinea.append(
+		                		row.getCell(9).getStringCellValue()+"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado' (J) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
 	                }
-	              //ESTADO
+	                
 	                try
                 	{
-		                logger.debug("ESTADO: "+(
+		                logger.debug("MUNICIPIO: "+(
 		                		row.getCell(10).getStringCellValue()+"|"
 		                		));
-		                estado = row.getCell(10).getStringCellValue();
 		                bufferLinea.append(
 		                		row.getCell(10).getStringCellValue()+"|"
 		                		);
@@ -5947,19 +5657,18 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado' (K) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Municipio' (K) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
 	                }
-	              //MUNICIPIO
+	                
 	                try
                 	{
-		                logger.debug("MUNICIPIO: "+(
+		                logger.debug("COLONIA: "+(
 		                		row.getCell(11).getStringCellValue()+"|"
 		                		));
-		                municipio = row.getCell(11).getStringCellValue();
 		                bufferLinea.append(
 		                		row.getCell(11).getStringCellValue()+"|"
 		                		);
@@ -5967,19 +5676,18 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Municipio' (L) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Colonia' (L) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
 	                }
-	              //COLONIA
+	                
 	                try
                 	{
-		                logger.debug("COLONIA: "+(
+		                logger.debug("CALLE: "+(
 		                		row.getCell(12).getStringCellValue()+"|"
 		                		));
-		                colonia = row.getCell(12).getStringCellValue();
 		                bufferLinea.append(
 		                		row.getCell(12).getStringCellValue()+"|"
 		                		);
@@ -5987,89 +5695,55 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Colonia' (M) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Calle' (M) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
 	                }
-	              //CALLE
+	                
 	                try
                 	{
-		                logger.debug("CALLE: "+(
-		                		row.getCell(13).getStringCellValue()+"|"
-		                		));
-		                calle = row.getCell(13).getStringCellValue();
-		                bufferLinea.append(
-		                		row.getCell(13).getStringCellValue()+"|"
-		                		);
+	                	String numExt = extraerStringDeCelda(row.getCell(13));
+	                	if(StringUtils.isBlank(numExt))
+	                	{
+	                		throw new ApplicationException("Falta numero exterior");
+	                	}
+		                logger.debug("NUM EXT: "+numExt);
+		                bufferLinea.append(Utils.join(numExt,"|"));
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Calle' (N) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (N) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
 	                }
-	              //NUM. EXTERIOR
-                    try
-                    {
-                        numExt = String.format("%.0f",row.getCell(14).getNumericCellValue())+"";
-                        if(StringUtils.isBlank(numExt))
-                        {
-                            throw new ApplicationException("Falta numero exterior");
-                        }
-                        bufferLinea.append(String.format("%.0f",row.getCell(14).getNumericCellValue())+"|");
-                    }
-                    catch(Exception ex2)
-                    {
-                        logger.warn("error al leer el No. exterior, se intentara como string:",ex2);
-                        try
-                        {
-                            numExt = row.getCell(14).getStringCellValue();
-                            if(StringUtils.isBlank(numExt))
-                            {
-                                throw new ApplicationException("Falta numero exterior");
-                            }
-                            bufferLinea.append(row.getCell(14).getStringCellValue()+"|");
-                        }
-                        catch(Exception ex)
-                        {
-                            filaBuena = false;
-                            bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (O) de la fila ",fila," "));
-                        }
-                    }
-                    finally
-                    {
-                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
-                    }
 	                
-                    
-	              //NUM. INTERIOR
 	                try
                 	{
-	                	numInt = extraerStringDeCelda(row.getCell(15));
+	                	String numInt = extraerStringDeCelda(row.getCell(14));
 		                logger.debug("NUM INT: "+numInt);
 		                bufferLinea.append(Utils.join(numInt,"|"));
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero interior' (P) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero interior' (O) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
 	                }
-	              //RFC
+	                
 	                try
                 	{
-	                	auxCell=row.getCell(16);
+	                	auxCell=row.getCell(15);
 	                	
 		                logger.debug("RFC: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                rfcAsegurado = auxCell!=null?auxCell.getStringCellValue():"";
+		                
 		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
 		                
 		                if(
@@ -6084,20 +5758,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'RFC' (Q) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'RFC' (P) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
 	                }
-	              //CORREO
+	                
 	                try
                 	{
-		                auxCell=row.getCell(17);
+		                auxCell=row.getCell(16);
 		                logger.debug("CORREO: "+(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		));
-		                emailAseg = auxCell!=null?auxCell.getStringCellValue():"";
 		                bufferLinea.append(
 		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
 		                		);
@@ -6105,90 +5778,62 @@ public class CotizacionAction extends PrincipalCoreAction
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (R) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (Q) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
+	                }
+	                
+	                try
+                	{
+		                auxCell=row.getCell(17);
+		                logger.debug("TELEFONO: "+(
+		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono' (R) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(17)),"-"));
 	                }
-	              //TELEFONO
+	                
 	                try
                 	{
 		                auxCell=row.getCell(18);
-		                logger.debug("TELEFONO: "+(
-		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-		                		));
-		                telefono = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue()):"";
-		                bufferLinea.append(
-		                		auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"
-		                		);
-                	}
-	                catch(Exception ex){
-	                	try {
-	                		logger.warn("error al leer telefono como numero, se intentara como string:",ex);
-			                auxCell=row.getCell(18);
-			                logger.debug("TELEFONO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-			                telefono = auxCell!=null?auxCell.getStringCellValue():"";
-			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-	                	}
-		                catch(Exception e){
-		                	filaBuena = false;
-		                	logger.debug("Valor de e:{}",e);
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono' (S) de la fila ",fila," "));
-		                }
-	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
-	                }
-	              //IDENTIDAD NO.DE EMPLEADO
-	                try
-                	{
-		                auxCell=row.getCell(19);
 		                if(pideNumCliemte&&
 		                		(auxCell==null||auxCell.getStringCellValue()==null||StringUtils.isBlank(auxCell.getStringCellValue()))
 		                )
 		                {
 		                	throw new ApplicationException("Necesito el numero de empleado");
 		                }
-		                if(cdunieco.equalsIgnoreCase("1403")){
-		                	if(auxCell!=null){
-		                		//Validamos que en verdad
-		                		identidad = auxCell.getStringCellValue();
-		                		String identidadModificada[] = identidad.split("\\-");
-		                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
-		                		logger.debug("Seccion 1 IDENTIDAD : {}",seccion1);
-		                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
-		                		logger.debug("Seccion 2 IDENTIDAD : {}",seccion2);
-		                		
-		                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
-		                			bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
-		                		}else{
-		                			//mandamos excepcion
-			                		throw new ApplicationException("No es numero");
-		                		}		                		
-		                	}else{
-		                		//mandamos excepcion
-		                		throw new ApplicationException("La identidad no puede ser null");
-		                	}
-		                }else{
-		                    identidad = auxCell!=null?auxCell.getStringCellValue():"";
-		                	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-		                }
+		                logger.debug("IDENTIDAD: "+(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		));
+		                bufferLinea.append(
+		                		auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+		                		);
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (T) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (S) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
 	                }
-	              //FECHA DE RECONOCIMIENTO DE ANTIGUEDAD
+	                
 	                try
                 	{
-		                auxDate=row.getCell(20)!=null?row.getCell(20).getDateCellValue():null;
+		                auxDate=row.getCell(19)!=null?row.getCell(19).getDateCellValue():null;
 		                if(auxDate!=null)
 		                {
 		                	Calendar cal = Calendar.getInstance();
@@ -6200,9 +5845,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
-		                
-		                fecanti = auxDate!=null?renderFechas.format(auxDate):"";
-        						
 		                logger.debug("FECHA RECONOCIMIENTO ANTIGUEDAD: "+(
 		                		auxDate!=null?renderFechas.format(auxDate)+"|":"|"
 		                			));
@@ -6212,369 +5854,85 @@ public class CotizacionAction extends PrincipalCoreAction
                 	}
 	                catch(Exception ex)
 	                {
-	                	// Segundo intento, se tratara el campo como String:
-	                	try {
-							auxDate= renderFechas.parse(row.getCell(20).getStringCellValue());
-							if(auxDate!=null) {
-			                	Calendar cal = Calendar.getInstance();
-			                	cal.setTime(auxDate);
-			                	if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900) {
-			                		throw new ApplicationException("El anio de la fecha no es valido");
-			                	}
-			                }
-							fecanti = auxDate!=null?renderFechas.format(auxDate):"";
-			                logger.debug("FECHA RECONOCIMIENTO ANTIGUEDAD: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
-			                bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
-		                } catch (Exception e) {
-							filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (U) de la fila ",fila," "));
-						}
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (T) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(20)),"-"));
-	                }
-	              //OCUPACION
-	                try {
-		                auxCell=row.getCell(21);
-		                logger.debug("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                ocupacion = auxCell!=null?auxCell.getStringCellValue() :"";
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ocupaci&oacute;n' (V) de la fila ",fila," "));
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(21)),"-"));
-	                }
-	              //EXT. OCUPACIONAL
-                	try {
-	                	auxCell=row.getCell(22);
-		                logger.debug("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-		                extOcupacion = auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue()):"";
-		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
-	                } catch(Exception ex) {
-	                    logger.error("error al leer la extraprima de ocupaci�n como numero, se intentara como string:",ex);
-	                    try {
-	                    	auxCell=row.getCell(22);
-			                logger.debug("EXTRAPRIMA OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-			                extOcupacion = auxCell!=null?auxCell.getStringCellValue():"";
-			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-	                        
-	                    } catch(Exception ex2) {
-	                        logger.error("error extraprima ocupacion:",ex2);
-	                        filaBuena = false;
-	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (W) de la fila ",fila," "));
-	                    }
-	                } finally {
-	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(22)),"-"));
-	                }
-
-            	//PESO
-                	try {
-	                	auxCell=row.getCell(23);
-		                logger.debug("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-		                peso = auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue()):"";
-		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
-	                } catch(Exception ex) {
-	                    logger.error("error al leer el peso como numero, se intentara como string:",ex);
-	                    try {
-	                    	auxCell=row.getCell(23);
-			                logger.debug("PESO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-			                peso =auxCell!=null?auxCell.getStringCellValue():"";
-			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-	                        
-	                    } catch(Exception ex2) {
-	                        logger.error("error peso:",ex2);
-	                        filaBuena          = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (X) de la fila ",fila," "));
-	                    }
-	                } finally {
-	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(23)),"-"));
-	                }
-                	
-            	//ESTATURA
-                	try {
-	                	auxCell=row.getCell(24);
-		                logger.debug("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-		                estatura = auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue()):"";
-		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
-	                } catch(Exception ex) {
-	                    logger.error("error al leer la estatura como numero, se intentara como string:",ex);
-	                    try {
-	                    	auxCell=row.getCell(24);
-			                logger.debug("ESTATURA: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-			                estatura = auxCell!=null?auxCell.getStringCellValue():"";
-			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-	                        
-	                    } catch(Exception ex2) {
-	                        logger.error("error estatura:",ex2);
-	                        filaBuena          = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (y) de la fila ",fila," "));
-	                    }
-	                } finally {
-	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(24)),"-"));
-	                }
-	              //EXT. SOBREPESO
-                	try {
-	                	auxCell=row.getCell(25);
-		                logger.debug("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
-		                extSobrepeso = auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue()):"";
-		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
-	                } catch(Exception ex) {
-	                    logger.error("error al leer la extraprima como numero, se intentara como string:",ex);
-	                    try {
-	                    	auxCell=row.getCell(25);
-			                logger.debug("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-			                extSobrepeso = auxCell!=null?auxCell.getStringCellValue():"";
-			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-	                        
-	                    } catch(Exception ex2) {
-	                        logger.error("error estatura:",ex2);
-	                        filaBuena          = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (z) de la fila ",fila," "));
-	                    }
-	                } finally {
-	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(25)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
 	                
-	              //ESTADO CIVIL
-	                try
+                	try
                 	{
-	                	estadoCivil = row.getCell(26).getStringCellValue();
-	                	
-	                	//TODO: quitar cdtipsit estatico y ponerlo por subramo
-	                	if("SSI".equals(cdtipsit)&&StringUtils.isBlank(estadoCivil))
-	                	{
-	                		throw new ApplicationException("El estado civil es obligatorio");
-	                	}
-	                	
-	                	if(StringUtils.isNotBlank(estadoCivil))
-	                	{
-		                	if(
-        						!estadoCivil.equals("C")
-        						&&!estadoCivil.equals("S")
-        						&&!estadoCivil.equals("D")
-        						&&!estadoCivil.equals("V")
-        						&&!estadoCivil.equals("O")
-	                		)
-	                		{
-	                			throw new ApplicationException("El estado civil no se reconoce [C, S, D, V, O]");
-	                		}
-	                	}
-	                	
-		                logger.debug(
-		                		new StringBuilder("EDO CIVIL: ")
-		                		.append(estadoCivil)
-		                		.append("|")
-		                		.toString()
-		                		);
-		                bufferLinea.append(
-		                		new StringBuilder(estadoCivil)
-		                		.append("|")
-		                		.toString()
-		                		);
-                	}
+		                auxCell=row.getCell(20);
+		                logger.debug("EXTRAPRIMA OCUPACION: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+	                }
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado civil' (AA) de la fila ",fila," "));
+	                	filaBuena          = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (U) de la fila ",fila," "));
 	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(26)),"-"));
-	                }
-	                
-                  //FECHA INGRESO
-                    try
-                    {
-                        logger.debug("Entra como Fecha ==>");
-                        auxDate=row.getCell(27)!=null?row.getCell(27).getDateCellValue():null;
-                        if(auxDate!=null)
-                        {
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(auxDate);
-                            if(cal.get(Calendar.YEAR)>2100||cal.get(Calendar.YEAR)<1900)
-                            {
-                                throw new ApplicationException("El anio de la fecha de ingreso no es valido");
-                            }
-                        }
-                        
-                        feingreso = auxDate!=null?renderFechas.format(auxDate):"";
-                        
-                        logger.debug(new StringBuilder("FECHA INGRESO EMPLEADO: ").append(auxDate!=null?renderFechas.format(auxDate):"").append("|").toString());
-                        bufferLinea.append(auxDate!=null?new StringBuilder(renderFechas.format(auxDate)).append("|").toString():"|");
-                    }
-                    catch(Exception ex)
-                    {
-                        // Segundo intento, se tratara el campo como String:
-                        try {
-                            auxDate= ((extraerStringDeCelda(row.getCell(27))!=null) && 
-                                        StringUtils.isNotBlank(extraerStringDeCelda(row.getCell(27)))) ?
-                                                renderFechas.parse(extraerStringDeCelda(row.getCell(27))):
-                                                null;
-                            if(auxDate!=null) {
-                                Calendar cal = Calendar.getInstance();
-                                cal.setTime(auxDate);
-                                if(cal.get(Calendar.YEAR)>2100 ||cal.get(Calendar.YEAR)<1900) {
-                                    throw new ApplicationException("El anio de la fecha no es valido");
-                                }
-                            }
-                            feingreso = auxDate!=null?renderFechas.format(auxDate):"";
-                            logger.debug("FECHA INGRESO EMPLEADO: "+(auxDate!=null?renderFechas.format(auxDate)+"|":"|"));
-                            bufferLinea.append(auxDate!=null?renderFechas.format(auxDate)+"|":"|");
-                        } catch (Exception e) {
-                            logger.debug("Valor del Error => "+e);
-                            filaBuena = false;
-                            bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (AB) de la fila ",fila," "));
-                        }
-                    }
                     finally
                     {
-                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(27)),"-"));
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(8)),"-"));
                     }
-                    
-	              //ID SISA
-	                try {
-		                logger.debug("ID SISA: "+(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|"));
-		                idSisa = String.format("%.0f",row.getCell(28).getNumericCellValue());
-		                bufferLinea.append(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|");
-                	} catch(Exception ex2) {
-	                	logger.warn("error al leer la clave de SISA, se intentara como string:",ex2);
-	                	try {
-	                		auxCell=row.getCell(28);
-	                		idSisa = auxCell!=null?auxCell.getStringCellValue():"";
-			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Id. SISA' (AC) de la fila ",fila," "));
-		                }
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(28)),"-"));
-	                }
-	              //PLAZA
-	                try
+	                
+                	try
                 	{
-		                auxCell=row.getCell(29);
-		                logger.debug(
-		                		new StringBuilder("PLAZA: ")
-		                		.append(
-		                				auxCell!=null?
-		                						auxCell.getStringCellValue()
-		                						:""
-		                		)
-		                		.append("|")
-		                		.toString()
-		                		);
-		                plaza = auxCell!=null?auxCell.getStringCellValue():"";
-		                bufferLinea.append(
-		                		auxCell!=null?
-		                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-		                				:"|"
-		                		);
-                	}
+		                auxCell=row.getCell(21);
+		                logger.debug("PESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+	                }
 	                catch(Exception ex)
 	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Plaza' (AD) de la fila ",fila," "));
+	                	filaBuena          = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (V) de la fila ",fila," "));
 	                }
-	                finally
+                    finally
+                    {
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(9)),"-"));
+                    }
+	                
+	                try
+                	{
+		                auxCell=row.getCell(22);
+		                logger.debug("ESTATURA: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
+	                }
+	                catch(Exception ex)
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(29)),"-"));
+	                	filaBuena          = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (W) de la fila ",fila," "));
 	                }
-	              //ID. ASEGURADO
-	                try{
-		                auxCell=row.getCell(30);
-		                logger.debug(
-	                		new StringBuilder("ID. ASEGURADO: ").append( auxCell!=null? auxCell.getStringCellValue() :"") .append("|").toString()
-                		);
-		                cveAsegurado = auxCell!=null?auxCell.getStringCellValue():"";
-		                bufferLinea.append(auxCell!=null?new StringBuilder(auxCell.getStringCellValue()).append("|").toString():"|");
-                	}
-	                catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' (AE) de la fila ",fila," "));
-	                }
-	                finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(30)),"-"));
-	                } 
+                    finally
+                    {
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(10)),"-"));
+                    }
 	                
-	                //TRAMITE
-	                if(TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase(esRenovacion)){
-		                try {
-		                	String tramiteRe= row.getCell(31).getStringCellValue();
-		                	if(tramiteRe!=null){
-			                	if(!ntramite.equalsIgnoreCase(tramiteRe)){
-	                                throw new ApplicationException("El tramite no concuerda");
-	                            }
-			                }else{
-	                            throw new ApplicationException("El tramite no puede ser null");
-	                        }
-	                	}
-		                catch(Exception ex) {
-		                	try {
-		                		String tramiteRe= String.format("%.0f",row.getCell(31).getNumericCellValue())+"";
-		                		if(tramiteRe!=null){
-				                	if(!ntramite.equalsIgnoreCase(tramiteRe)){
-		                                throw new ApplicationException("El tramite no concuerda");
-		                            }
-				                }else{
-		                            throw new ApplicationException("El tramite no puede ser null");
-		                        }
-			                } catch (Exception e) {
-								filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Tr�mite' (AF) de la fila ",fila," "));
-							}
-		                }
-		                finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(31)),"-"));
-		                }
+	                try
+                	{
+		                auxCell=row.getCell(23);
+		                logger.debug("EXTRAPRIMA SOBREPESO: "+(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|"));
+		                bufferLinea.append(auxCell!=null?String.format("%.2f",auxCell.getNumericCellValue())+"|":"|");
 	                }
+	                catch(Exception ex)
+	                {
+	                	filaBuena          = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (X) de la fila ",fila," "));
+	                }
+                    finally
+                    {
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(11)),"-"));
+                    }
 	                
-	              	logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
+	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
 	                if(filaBuena)
 	                {
-	                    familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
+	                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
 	                	filasProcesadas = filasProcesadas + 1;
 	                	gruposValidos[((int)cdgrupo)-1]=true;
-	                	
-
-	                	Map<String,String> params =  new HashMap<String, String>();
-    					
-	                	params.put("pv_cdunieco_i"       , cdunieco);
-    					params.put("pv_cdramo_i"         , cdramo);
-    					params.put("pv_estado_i"         , "W");
-    					params.put("pv_nmpoliza_i"       , nmpoliza);
-    					params.put("pv_cdgrupo_i"        , String.format("%.0f",cdgrupo));
-    					params.put("pv_parentesco_i"     , parentesco);
-    					params.put("pv_dsapellido_i"     , apellidoP);
-    					params.put("pv_dsapellido1_i"    , apellidoM);
-    					params.put("pv_dsnombre_i"       , nombre1);
-    					params.put("pv_dsnombre1_i"      , nombre2);
-    					params.put("pv_otsexo_i"         , sexo);
-    					params.put("pv_fenacimi_i"       , fechaNac);
-    					params.put("pv_cdpostal_i"       , codpostal);
-    					params.put("pv_dsestado_i"       , estado);
-    					params.put("pv_dsmunicipio_i"    , municipio);
-    					params.put("pv_dscolonia_i"      , colonia);
-    					params.put("pv_dsdomici_i"       , calle);
-    					params.put("pv_nmnumero_i"       , numExt);
-    					params.put("pv_nmnumint_i"       , numInt);
-    					params.put("pv_cdrfc_i"          , rfcAsegurado);
-    					params.put("pv_dsemail_i"        , emailAseg);
-    					params.put("pv_nmtelefo_i"       , telefono);
-    					params.put("pv_identidad_i"      , identidad);
-    					params.put("pv_fecantig_i"       , fecanti);
-    					params.put("pv_expocupacion_i"   , extOcupacion);
-    					params.put("pv_peso_i"           , peso);
-    					params.put("pv_estatura_i"       , estatura);
-    					params.put("pv_expsobrepeso_i"   , extSobrepeso);
-    					params.put("pv_edocivil_i"       , estadoCivil);
-    					params.put("pv_feingresoempleo_i", feingreso);
-    					params.put("pv_plaza_i"          , plaza);
-    					params.put("pv_idasegurado_i"    , cveAsegurado);
-    					filasFamilia.add(params);
-	    					
 	                }
 	                else
 	                {
@@ -6588,13 +5946,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	}
 	                }
 	                
-	                if(cdgrupo>0d && cdgrupo<=olist1.size())
+	                if(cdgrupo>0d)
 	                {
 	                	logger.debug(Utils.log("cdgrupo=",cdgrupo,", valido=",gruposValidos[((int)cdgrupo)-1]));
-	                }
-	                else
-	                {
-	                	logger.debug(Utils.log("cdgrupo=",cdgrupo,", !no se puede imprimir valido"));
 	                }
 	            }
 	            
@@ -6653,30 +6007,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.put("filasLeidas"     , Integer.toString(filasLeidas));
 					smap1.put("filasProcesadas" , Integer.toString(filasProcesadas));
 					smap1.put("filasErrores"    , Integer.toString(filasError));
-					
-					if(nFamilia > 0 && !filasFamilia.isEmpty()){
-	            		listaFamilias.put(nFamilia, filasFamilia);
-	            		
-	            		try
-	    				{
-	            			for(Entry<Integer, List<Map<String,String>>> entry : listaFamilias.entrySet())
-	            			{
-	            				Integer numFam = entry.getKey();
-	            				
-	            				if(estadoFamilias.containsKey(numFam) && estadoFamilias.get(numFam)){
-	            					
-	            					for(Map<String,String> paramsElemFam: listaFamilias.get(numFam)){
-	            						cotizacionManager.insertaRegistroInfoCenso(paramsElemFam);
-	            					}
-	            				}
-	            			}
-	    				}
-	    	            catch(Exception ex)
-	    	            {
-	    	            	logger.error("Error al insetar registro de censo", ex);
-	    	            }
-	            		
-	            	}
 				}
 	            
 	            if(exito)
@@ -6730,13 +6060,80 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 	            }
 				
+				if(exito)
+				{
+					try
+					{
+						String cdedo         = smap1.get("cdedo");
+						String cdmunici      = smap1.get("cdmunici");
+						String cdplanes[]    = new String[5];
+						
+						for(Map<String,Object>iGrupo:olist1)
+						{
+							String  cdgrupo      = (String)iGrupo.get("letra");
+							String  cdplan       = (String)iGrupo.get("cdplan");
+							Integer indGrupo     = Integer.valueOf(cdgrupo);
+							cdplanes[indGrupo-1] = cdplan;
+						}
+						
+						cotizacionManager.guardarCensoCompletoMultisalud(nombreCenso
+								,cdunieco    , cdramo      , "W"
+								,nmpoliza    , cdedo       , cdmunici
+								,cdplanes[0] , cdplanes[1] , cdplanes[2]
+								,cdplanes[3] , cdplanes[4] , "N"
+								);
+					}
+					catch(Exception ex)
+					{
+						long etimestamp = System.currentTimeMillis();
+						exito           = false;
+						respuesta       = "Error al guardar los datos #"+etimestamp;
+						respuestaOculta = ex.getMessage();
+						logger.error(respuesta,ex);
+						
+					}
+				}
 			}
 		}
 		
 		if(exito&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			smap1.put("nombreCensoParaConfirmar", nombreCenso);
+			exito     = true;
 			respuesta = Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]");
+			logger.debug(respuesta);
+			return SUCCESS;
+		}
+		
+		if(exito)
+		{
+			tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject aux=this.tvalositSigsvdefTvalogarContratanteTramiteSigsvalipol(
+					clasif    , LINEA      , LINEA_EXTENDIDA
+					,cdunieco , cdramo     , nmpoliza
+					,cdtipsit , hayTramite , hayTramiteVacio
+					,user     , cdelemento , ntramiteVacio
+					,true     , null/*ntramite*/, null/*cdagente*/
+					,false //sincenso
+					,false //censoAtrasado
+					,false //resubirCenso
+					,cdperpag
+					,cdsisrol
+					,false
+					,false //asincrono
+					,null
+					,null
+					,null
+					,true //censoCompleto
+					);
+			exito           = aux.exito;
+			respuesta       = aux.respuesta;
+			respuestaOculta = aux.respuestaOculta;
+		}
+		
+		if(exito)
+		{
+			respuesta       = "Se han complementado los asegurados";
+			respuestaOculta = "Todo OK";
 		}
 		
 		logger.debug(""
@@ -6813,7 +6210,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		boolean resubirCenso  = false;
 		boolean complemento   = false;
 		boolean asincrono     = false;
-		boolean duplicar      = false;
 		
 		//datos de entrada
 		try
@@ -6883,8 +6279,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
 			asincrono = StringUtils.isNotBlank(smap1.get("asincrono"))&&smap1.get("asincrono").equalsIgnoreCase("si");
-			
-			duplicar = "S".equals(smap1.get("duplicar"));
 		}
 		catch(ApplicationException ax)
 		{
@@ -6954,7 +6348,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					,nmpolant
 					,StringUtils.isBlank(nmrenova) ? "0" : nmrenova
 					,usuarioSesion
-					,duplicar
 					);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -7042,8 +6435,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			String nmpolant  = smap1.get("nmpolant")
 			       ,nmrenova = smap1.get("nmrenova");
 			
-			boolean duplicar = "S".equals(smap1.get("duplicar"));
-			
 			logger.debug(Utils.log(
 					"\ninTimestamp: " , inTimestamp
 					,"\nclasif: "     , clasif
@@ -7053,7 +6444,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{
 				//nmpoliza
-				if(StringUtils.isBlank(nmpoliza) || duplicar)
+				if(StringUtils.isBlank(nmpoliza))
 				{
 					paso = "Generando n\u00f1mero de p\u00f3liza";
 					logger.debug(paso);
@@ -7197,7 +6588,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				logger.debug("35.-VALOR DE SWEXIPER : "+ exiper);
 				
 				//enviar archivo
-				if((!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
+				if((!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
 				{
 					paso = "Procesando censo";
 					logger.debug(paso);
@@ -7758,11 +7149,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					if(clasif.equals(LINEA)&&nSituac>49)
 					{
-						//se condiciona por rol lanzar la excepcion, para que guarde las coberturas sin necesidad de editar subgrupo, para roles restringidos (EGS)
-						if(!(RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
-								&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)){
-							throw new ApplicationException("No se permiten m\u00e1s de 49 asegurados");
-						}
+						throw new ApplicationException("No se permiten m\u00e1s de 49 asegurados");
 					}
 					else if(!clasif.equals(LINEA)&&nSituac<50)
 					{
@@ -7806,7 +7193,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				}
 				
 				//pl censo
-				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar)
+				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)
 				{
 					paso = "Ejecutando procedimiento de censo";
 					logger.debug(paso);
@@ -7862,7 +7249,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 				}
 				
-				if((!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar)
+				if((!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)
 						&&StringUtils.isBlank(nombreCensoConfirmado)
 				)
 				{
@@ -7876,7 +7263,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					return SUCCESS;
 				}
-				logger.debug(Utils.log("########################user 2 ",user));
+				
 				tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject aux = this.tvalositSigsvdefTvalogarContratanteTramiteSigsvalipol(
 							clasif    , LINEA         , LINEA_EXTENDIDA
 							,cdunieco , cdramo        , nmpoliza
@@ -7885,8 +7272,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,false    , ntramite      , cdagente
 							,sincenso , censoAtrasado , resubirCenso
 							,cdperpag , cdsisrol      , complemento
-							,asincrono,cdmunici,cdedo,codpostal,false, //censoCompleto
-							duplicar
+							,asincrono,cdmunici,cdedo,codpostal,false //censoCompleto
 							);
 				if(!aux.exito)
 				{
@@ -7895,10 +7281,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				if(StringUtils.isBlank(respuesta))
 				{
-					respuesta = Utils.join("Se gener\u00f3 el tr\u00e1mite ", smap1.get("ntramite"),
-					        StringUtils.isBlank(respuesta)
-    					        ? ""
-    					        : Utils.join(". ", respuesta));
+					respuesta = "Se gener\u00f3 el tr\u00e1mite "+smap1.get("ntramite");
 				}
 			}
 			catch(Exception ex)
@@ -7950,7 +7333,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String cdedo
 			,String codpostal
 			,boolean censoCompleto
-			,boolean duplicar
 			)
 	{
 		logger.debug(Utils.log(
@@ -7979,32 +7361,11 @@ public class CotizacionAction extends PrincipalCoreAction
 				,"\n## complemento="          , complemento
 				,"\n## asincrono="            , asincrono
 				,"\n## censoCompleto="        , censoCompleto
-				,"\n## duplicar="             , duplicar
 				));
+		
 		tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject resp =
 				new tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject();
 		resp.exito = true;
-		
-		// Actualizar plan de mpolisit
-		if (resp.exito && (
-			RolSistema.SUSCRIPTOR_TECNICO.getCdsisrol().equals(cdsisrol) ||
-			RolSistema.SUPERVISOR_TECNICO_SALUD.getCdsisrol().equals(cdsisrol) ||
-			RolSistema.SUBDIRECTOR_SALUD.getCdsisrol().equals(cdsisrol) ||
-			RolSistema.DIRECTOR_SALUD.getCdsisrol().equals(cdsisrol)
-		)) {
-			try {
-				for (Map<String,Object> iGrupo : olist1) {
-					String cdgrupo = (String)iGrupo.get("letra"),
-					       cdplan  = (String)iGrupo.get("cdplan");
-					cotizacionManager.actualizarCdplanGrupo(cdunieco, cdramo, "W", nmpoliza, "0", cdgrupo, cdplan);
-				}
-			} catch (Exception ex) {
-				long timestamp = System.currentTimeMillis();
-				resp.exito = false;
-				resp.respuesta = Utils.join("Error al actualizar plan de grupos #", timestamp);
-				logger.error(resp.respuesta, ex);
-			}
-		}
 		
 		//tvalosit
 		logger.debug("1.- Valor de resp.exito ===>"+resp.exito);
@@ -8153,7 +7514,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		logger.debug("8.- Valor de resp.exito : {} hayTramite:{} hayTramiteVacio:{}",resp.exito,hayTramite,hayTramiteVacio);
 		if(resp.exito
-				&&(!hayTramite||hayTramiteVacio||duplicar)
+				&&(!hayTramite||hayTramiteVacio)
 				&&
 				(
 					RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)
@@ -8171,7 +7532,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		logger.debug("10.- resp.exito : {} hayTramite: {} hayTramiteVacio: {} censoAtrasado: {} resubirCenso: {} complemento:{} asincrono:{} ",resp.exito, 
 				hayTramite,hayTramiteVacio,censoAtrasado,resubirCenso,complemento,asincrono);
 		
-		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto||duplicar)&&asincrono==false)
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto)&&asincrono==false)
 		{
 			try
 			{
@@ -8203,8 +7564,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 	            	logger.debug("12.- Entra a serviciosManager.grabarEvento");
 	            	serviciosManager.grabarEvento(new StringBuilder("\nCotizacion grupo")
-	            	    ,Constantes.MODULO_COTIZACION //cdmodulo
-	            	    ,Constantes.EVENTO_COTIZAR     //cdevento
+	            	    ,"COTIZACION" //cdmodulo
+	            	    ,"COTIZA"     //cdevento
 	            	    ,new Date()   //fecha
 	            	    ,cdusuari
 	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -8255,9 +7616,6 @@ public class CotizacionAction extends PrincipalCoreAction
 						
 						//ASISTENCIA INTERNACIONAL VIAJES --AHORA MEDICAMENTOS
 						String asisinte = (String)iGrupo.get("asisinte");
-						if (StringUtils.isBlank(asisinte)) {
-							asisinte = "0";
-						}
 						cdgarant = "4MED";
 						logger.debug("16.- Asistente :{}",Integer.parseInt(asisinte));
 						if(Integer.parseInt(asisinte)>0)
@@ -8386,41 +7744,14 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		
-		// Se inserta el maestro y detalle de los grupos:
-				try {
-				    
-					try {
-					    cotizacionDAO.eliminarGrupos(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit);
-					} catch (Exception e) {
-						logger.warn("No se eliminaron los grupos de la poliza: {}", e);
-					}
-					for(Map<String,Object> grupoIte : olist1) {
-						logger.debug("grupoIte=={}", grupoIte);
-						// Guardar el maestro de grupos mpoligrup:
-						cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("nombre"), (String)grupoIte.get("cdplan"),(String)grupoIte.get("dsplanl"), null, "0", "0", Constantes.NO, Constantes.NO, Constantes.NO);
-						// Guardar el detalle de grupos mgrupogar:
-						cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("cdplan"), "0");
-					}
-				} catch(Exception ex) {
-					long timestamp = System.currentTimeMillis();
-		        	resp.exito = false;
-		        	resp.respuesta = new StringBuilder("Error al guardar grupos de la poliza #").append(timestamp).toString();
-		        	resp.respuestaOculta = ex.getMessage();
-		        	logger.error(resp.respuesta,ex);
-				}
-		
-		
 		//contratante
 		logger.debug("28.- Valor de resp.exito:{}",resp.exito);
 		
 		logger.debug("29,30,31,32,33,34,35,36,37.- XXX Se Quito insercion de contratante MOV_MPERSONA,MDOMICIL");
 		
-		Date fechaHoy = new Date();
-		
 		//tramite
 		logger.debug("38.- resp.exito:{} hayTramite:{} hayTramiteVacio: {} censoAtrasado: {}",resp.exito,hayTramite,hayTramiteVacio,censoAtrasado);
-		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||duplicar))
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado))
 		{
 			try
 			{
@@ -8430,16 +7761,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					Map<String,String> valores = new LinkedHashMap<String,String>();
 					valores.put("otvalor01" , clasif);
 					valores.put("otvalor02" , sincenso ? "S" : "N");
-					
-					logger.debug("40.- consultasManager.recuperarDatosFlujoEmision");
-					Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(cdramo,"C");
-
-					String estatus = EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo();
-					try {
-            			estatus = flujoMesaControlManager.recuperarEstatusDefectoRol(cdsisrol);
-            		} catch (Exception ex) {
-            			logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
-            		}
 					
 					//logger.debug("");
 					logger.debug("41.- mesaControlManager.movimientoTramite");
@@ -8452,45 +7773,35 @@ public class CotizacionAction extends PrincipalCoreAction
 							,cdunieco
 							,cdunieco
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,fechaHoy
+							,new Date()
 							,cdagente
 							,null
 							,null
-							,fechaHoy
-							,estatus
+							,new Date()
+							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
 							,null
 							,nmpoliza
 							,cdtipsit
 							,cdusuari
 							,cdsisrol
 							,null //swimpres
-	            			,datosFlujo.get("cdtipflu")
-	            			,datosFlujo.get("cdflujomc")
-							,valores
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null
+							,null //cdtipflu
+							,null //cdflujomc
+							,valores, null
 							);
 					smap1.put("ntramite",ntramiteNew);
 					
+					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	            	parDmesCon.put("pv_ntramite_i"   , ntramiteNew);
+	            	parDmesCon.put("pv_feinicio_i"   , new Date());
+	            	parDmesCon.put("pv_cdclausu_i"   , null);
+	            	parDmesCon.put("pv_comments_i"   , "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente");
+	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+	            	parDmesCon.put("pv_cdmotivo_i"   , null);
+	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
+	            	kernelManager.movDmesacontrol(parDmesCon);*/
 					logger.debug("42.- mesaControlManager.movimientoDetalleTramite");
 					
-					RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-					        cdusuari,
-					        cdsisrol,
-					        ntramiteNew,
-					        estatus,
-					        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
-					        null,  // cdrazrecha
-					        null,  // cdusuariDes
-					        null,  // cdsisrolDes
-					        true,  // permisoAgente
-					        false, // porEscalamiento
-					        fechaHoy,
-					        false  //sinGrabarDetalle
-					        );
-					resp.respuesta = despacho.getMessage();
-					
-					/* JTEZVA 7 sep 2016
-					 * el tramite no se turna por lo que no lleva doble detalle
 					mesaControlManager.movimientoDetalleTramite(
 							ntramiteNew
 							,new Date()
@@ -8500,23 +7811,21 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,cdsisrol
 							,"S"
-							,estatus
-							,false
+							//,EstatusTramite.PENDIENTE.getCodigo()
+							//,false
 							);
-					*/
 	            	
-	            	/* ya no turna, solo lo crea y ya JTEZVA 2016 09 02
-	            	 * smap1.put("nombreUsuarioDestino"
+	            	smap1.put("nombreUsuarioDestino"
 	            			,cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
-	            			);*/
+	            			);
 	            	
 	            	try
 		            {
 	            		logger.debug("43.- serviciosManager.grabarEvento");
 		            	serviciosManager.grabarEvento(new StringBuilder("\nNuevo tramite grupo")
-		            	    ,Constantes.MODULO_EMISION               //cdmodulo
-		            	    ,Constantes.EVENTO_GENERAR_TRAMITE_GRUPO //cdevento
-		            	    ,fechaHoy   //fecha
+		            	    ,"EMISION"    //cdmodulo
+		            	    ,"GENTRAGRUP" //cdevento
+		            	    ,new Date()   //fecha
 		            	    ,cdusuari
 		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
 		            	    ,ntramiteNew
@@ -8550,24 +7859,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					params.put("pv_otvalor02_i" , sincenso ? "S" : "N");
 					logger.debug("46.- siniestrosManager.actualizaOTValorMesaControl");
 					siniestrosManager.actualizaOTValorMesaControl(params);
-					
-					if (duplicar) {
-					    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-					            cdusuari,
-					            cdsisrol,
-					            ntramite,
-					            EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
-					            Utils.join("Se duplica la cotizaci\u00f3n para generar la nueva solicitud ", nmpoliza),
-					            null,  // cdrazrecha
-					            null,  // cdusuariDes
-					            null,  // cdsisrolDes
-					            true,  // permisoAgente
-					            false, // porEscalamiento
-					            fechaHoy,
-					            false  // sinGrabarDetalle
-					            );
-					    resp.respuesta = despacho.getMessage();
-					}
 				}
 			}
 			catch(Exception ex)
@@ -8582,7 +7873,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		//mpoliage
 		logger.debug("47.- resp.exito: {} hayTramite:{} hayTramiteVacio:{} ",resp.exito,hayTramite,hayTramiteVacio);
-		if(resp.exito&&(!hayTramite||hayTramiteVacio||duplicar))
+		if(resp.exito&&(!hayTramite||hayTramiteVacio))
 		{
 			try
 			{
@@ -8641,7 +7932,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{
 				//cotizacionManager.movimientoTbloqueo(cdunieco, cdramo, "W", nmpoliza, "-8", Constantes.DELETE_MODE);
-				logger.debug(Utils.log("cdusuari", cdusuari, "cdsisrol", cdsisrol));
+				
 				logger.debug("50.- cotizacionManager.ejecutaTarificacionConcurrente");
 				cotizacionManager.ejecutaTarificacionConcurrente(
 	            		cdunieco
@@ -8652,8 +7943,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	            		,"0"
 	            		,"1"
 	            		,cdperpag
-	            		,cdusuari
-	            		,cdsisrol
 	            		);
 			}
 			catch(Exception ex)
@@ -8684,9 +7973,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					,LINEA_EXTENDIDA
 					,olist1
 					,cdtipsit
-					,cdusuari
-					,cdsisrol
-					,duplicar
 					);
 		}
 		
@@ -8756,6 +8042,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				.append("\n## asincrono: ")           .append(asincrono)
 				.toString()
 				);
+		
 		tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject resp =
 				new tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject();
 		resp.exito = true;
@@ -8957,8 +8244,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 	            	logger.debug("12.- Entra a serviciosManager.grabarEvento");
 	            	serviciosManager.grabarEvento(new StringBuilder("\nCotizacion grupo")
-	            	    ,Constantes.MODULO_COTIZACION //cdmodulo
-	            	    ,Constantes.EVENTO_COTIZAR     //cdevento
+	            	    ,"COTIZACION" //cdmodulo
+	            	    ,"COTIZA"     //cdevento
 	            	    ,new Date()   //fecha
 	            	    ,cdusuari
 	            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -9009,9 +8296,6 @@ public class CotizacionAction extends PrincipalCoreAction
 						
 						//ASISTENCIA INTERNACIONAL VIAJES --AHORA MEDICAMENTOS
 						String asisinte = (String)iGrupo.get("asisinte");
-						if (StringUtils.isBlank(asisinte)) {
-							asisinte = "0";
-						}
 						cdgarant = "4MED";
 						logger.debug("16.- Asistente :{}",Integer.parseInt(asisinte));
 						if(Integer.parseInt(asisinte)>0)
@@ -9293,17 +8577,8 @@ public class CotizacionAction extends PrincipalCoreAction
 					valores.put("otvalor02" , sincenso ? "S" : "N");
 					
 					logger.debug("40.- consultasManager.recuperarDatosFlujoEmision");
-					Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(cdramo,"C");
-					
-					String estatus = EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo();
-                    try {
-                        estatus = flujoMesaControlManager.recuperarEstatusDefectoRol(cdsisrol);
-                    } catch (Exception ex) {
-                        logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
-                    }
-					
-					Date fechaHoy = new Date();
-					
+					//Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(cdramo,"C");
+
 					//logger.debug("");
 					logger.debug("41.- mesaControlManager.movimientoTramite");
 					String ntramiteNew = mesaControlManager.movimientoTramite(
@@ -9315,45 +8590,36 @@ public class CotizacionAction extends PrincipalCoreAction
 							,cdunieco
 							,cdunieco
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,fechaHoy
+							,new Date()
 							,cdagente
 							,null
 							,null
-							,fechaHoy
-							,estatus
+							,new Date()
+							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
 							,null
 							,nmpoliza
 							,cdtipsit
 							,cdusuari
 							,cdsisrol
 							,null //swimpres
-	            			,datosFlujo.get("cdtipflu")
-	            			,datosFlujo.get("cdflujomc")
+	            			,null
+	            			,null
 							,valores
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
 							);
 					smap1.put("ntramite",ntramiteNew);
 					
+					/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	            	parDmesCon.put("pv_ntramite_i"   , ntramiteNew);
+	            	parDmesCon.put("pv_feinicio_i"   , new Date());
+	            	parDmesCon.put("pv_cdclausu_i"   , null);
+	            	parDmesCon.put("pv_comments_i"   , "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente");
+	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+	            	parDmesCon.put("pv_cdmotivo_i"   , null);
+	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
+	            	kernelManager.movDmesacontrol(parDmesCon);*/
 					logger.debug("42.- mesaControlManager.movimientoDetalleTramite");
 					
-					RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-                            cdusuari,
-                            cdsisrol,
-                            ntramiteNew,
-                            estatus,
-                            "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
-                            null,  // cdrazrecha
-                            null,  // cdusuariDes
-                            null,  // cdsisrolDes
-                            true,  // permisoAgente
-                            false, // porEscalamiento
-                            fechaHoy,
-                            false  //sinGrabarDetalle
-                            );
-					resp.respuesta = despacho.getMessage();
-					
-					/* JTEZVA 7 sep 2016
-                     * el tramite no se turna por lo que no lleva doble detalle
 					mesaControlManager.movimientoDetalleTramite(
 							ntramiteNew
 							,new Date()
@@ -9363,21 +8629,20 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,cdsisrol
 							,"S"
-							,EstatusTramite.PENDIENTE.getCodigo()
-							,false
+							//,EstatusTramite.PENDIENTE.getCodigo()
+							//,false
 							);
 	            	
 	            	smap1.put("nombreUsuarioDestino"
 	            			,cotizacionManager.turnaPorCargaTrabajo(ntramiteNew,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
 	            			);
-	            	*/
 	            	
 	            	try
 		            {
 	            		logger.debug("43.- serviciosManager.grabarEvento");
 		            	serviciosManager.grabarEvento(new StringBuilder("\nNuevo tramite grupo")
-		            	    ,Constantes.MODULO_EMISION               //cdmodulo
-		            	    ,Constantes.EVENTO_GENERAR_TRAMITE_GRUPO //cdevento
+		            	    ,"EMISION"    //cdmodulo
+		            	    ,"GENTRAGRUP" //cdevento
 		            	    ,new Date()   //fecha
 		            	    ,cdusuari
 		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -9540,9 +8805,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					,LINEA_EXTENDIDA
 					,olist1
 					,cdtipsit
-					,cdusuari
-					,cdsisrol
-					,false // duplicar
 					);
 		}
 		
@@ -9637,32 +8899,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();
 		}
-		
-		try
-        {
-		    /**
-	         * Para consultar si este tramite esta en espera de validacion de cambio de nombre de plan para alguno de los grupos
-	         */
-		    
-		    //Se fija valor default N
-		    smap1.put("ESPERA_AUT_NOMPLAN_SUPERV", "N");
-		    
-	        Map<String, String> datosBloq = cotizacionManager.consultaBloqueoProcesoTramite(smap1.get("ntramite"), TipoProcesoBloqueo.AUTORIZAR_NOMPLAN_SUPERVISOR.getClaveProceso());
-	        if(datosBloq != null && !datosBloq.isEmpty()){
-	            if(datosBloq.containsKey("VALOR") && "B".equalsIgnoreCase(datosBloq.get("VALOR"))){
-	                smap1.put("ESPERA_AUT_NOMPLAN_SUPERV", "S");
-	            }
-	        }
-        }
-        catch(Exception ex)
-        {
-            long timestamp=System.currentTimeMillis();
-            logger.error("Error al cargar datos de aprobacion de cambio de nombre de plan."+timestamp,ex);
-            exito           = false;
-            respuesta       = "Error inesperado #"+timestamp;
-            respuestaOculta = ex.getMessage();
-        }
-		
 		logger.debug(""
 				+ "\n###### cargarDatosCotizacionGrupo ######"
 				+ "\n########################################"
@@ -9693,7 +8929,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			if(smap1==null)
 			{
-				throw new ApplicationException("No se recibieron datos");
+				throw new Exception("No se recibieron datos");
 			}
 			cdunieco = smap1.get("cdunieco");
 			cdramo   = smap1.get("cdramo");
@@ -9827,7 +9063,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			if(smap1==null)
 			{
-				throw new ApplicationException("No se recibieron datos");
+				throw new Exception("No se recibieron datos");
 			}
 			cdunieco = smap1.get("cdunieco");
 			cdramo   = smap1.get("cdramo");
@@ -9912,7 +9148,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			if(smap1==null)
 			{
-				throw new ApplicationException("No se recibieron datos");
+				throw new Exception("No se recibieron datos");
 			}
 			cdunieco = smap1.get("cdunieco");
 			cdramo   = smap1.get("cdramo");
@@ -10849,16 +10085,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				logger.debug(Utils.log("","Se termino el bloqueo"));
 				
-				try {
-                    /**
-                     * Elimina los documentos de cotizacion para cuando afectan datos de las caratulas no se visualicen documentos anteriores
-                     */
-                    cotizacionDAO.eliminaDocsCotiza(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, ntramite);
-                    
-                } catch (Exception e) {
-                    logger.warn("No se eliminaron los documentos de cotizacion de la poliza: {}", e);
-                }
-				
 				String urlReporteCotizacion=Utils.join(
 						  getText("ruta.servidor.reports")
 						, "?p_unieco="      , cdunieco
@@ -10878,7 +10104,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                    , "&paramform=no"
 	                    );
 				
-				String nombreArchivoCotizacion = Utils.join("cotizacion_",nmpoliza,".pdf")
+				String nombreArchivoCotizacion = "cotizacion.pdf"
 				       ,pathArchivoCotizacion  = Utils.join(
 				    		   getText("ruta.documentos.poliza")
 				    		   ,"/" , ntramite
@@ -10897,7 +10123,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,"0"
 						,new Date()
 						,nombreArchivoCotizacion
-						,Utils.join("COTIZACI\u00d3N EN RESUMEN (",nmpoliza,")")
+						,"COTIZACI\u00d3N EN RESUMEN"
 						,nmpoliza
 						,ntramite
 						,"1"
@@ -10907,7 +10133,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						,null
 						,null
-						,null, false
+						,null
 						);
 				
 				String urlReporteCotizacion2=Utils.join(
@@ -10928,7 +10154,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						, "&paramform=no"
 	                  );
 				
-				String nombreArchivoCotizacion2 = Utils.join("cotizacion2_",nmpoliza,".pdf")
+				String nombreArchivoCotizacion2 = "cotizacion2.pdf"
 				       ,pathArchivoCotizacion2  = Utils.join(
 				    		   getText("ruta.documentos.poliza")
 				    		   ,"/" , ntramite
@@ -10947,7 +10173,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,"0"
 						,new Date()
 						,nombreArchivoCotizacion2
-						,Utils.join("COTIZACI\u00d3N A DETALLE (",nmpoliza,")")
+						,"COTIZACI\u00d3N A DETALLE"
 						,nmpoliza
 						,ntramite
 						,"1"
@@ -10957,13 +10183,57 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						,null
 						,null
-						,null, false
+						,null
 						);
 				
-				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit TMS:
+				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit MSC y TMS:
 				if (Ramo.MULTISALUD.getCdramo().equals(cdramo)
+						&& !TipoSituacion.MULTISALUD_COLECTIVO.getCdtipsit().equals(cdtipsit)
 						&& !TipoSituacion.TRADICIONALES_MEGASALUD.getCdtipsit().equals(cdtipsit))
 				{
+					//excel resumen
+					Map<String,String> paramsResumen = new LinkedHashMap<String,String>();
+					paramsResumen.put("pv_cdunieco_i" , cdunieco);
+					paramsResumen.put("pv_cdramo_i"   , cdramo);
+					paramsResumen.put("pv_estado_i"   , estado);
+					paramsResumen.put("pv_nmpoliza_i" , nmpoliza);
+					paramsResumen.put("pv_nmsuplem_i" , "0");
+					paramsResumen.put("pv_cdperpag_i" , cdperpag);
+					paramsResumen.put("pv_cdusuari_i" , cdusuari);
+					
+					InputStream excel = reportesManager.obtenerDatosReporte(Reporte.SALUD_COLECTIVO_RESUMEN_COTIZACION.getCdreporte()
+							,cdusuari
+							,paramsResumen
+							);
+					
+					String nombreResumen = Utils.join("RESUMEN_COTIZACION",TipoArchivo.XLS.getExtension());
+					
+					FileUtils.copyInputStreamToFile(excel, new File(Utils.join(
+									getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreResumen
+					)));
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,estado
+							,"0"
+							,"0"
+							,new Date()
+							,nombreResumen
+							,"RESUMEN DE COTIZACI\u00d3N (EXCEL)"
+							,nmpoliza
+							,ntramite
+							,"1"
+							,null
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,null
+							,null
+							,null
+							,null
+							
+							);
+					
 					//pdf resumen
 					String urlReporteResumenCotizacion=Utils.join(
 							  getText("ruta.servidor.reports")
@@ -10982,7 +10252,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		                    , "&paramform=no"
 		                    );
 					
-					String nombreArchivoResumenCotizacion = Utils.join("resumen_cotizacion_col_",nmpoliza,".pdf")
+					String nombreArchivoResumenCotizacion = "resumen_cotizacion_col.pdf"
 					       ,pathArchivoResumenCotizacion  = Utils.join(
 					    		   getText("ruta.documentos.poliza")
 					    		   ,"/" , ntramite
@@ -10999,7 +10269,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,"0"
 							,new Date()
 							,nombreArchivoResumenCotizacion
-							,Utils.join("RESUMEN DE COTIZACI\u00d3N (PDF) (",nmpoliza,")")
+							,"RESUMEN DE COTIZACI\u00d3N (PDF)"
 							,nmpoliza
 							,ntramite
 							,"1"
@@ -11009,7 +10279,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,null
 							,null
 							,null
-							,null, false
+							,null
 							);
 					
 					//exceles grupos
@@ -11030,7 +10300,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								,paramsGrupo
 								);
 						
-						String nombreCotGrupo = Utils.join("COTIZACION_GRUPO_",i,"_",nmpoliza,TipoArchivo.XLS.getExtension());
+						String nombreCotGrupo = Utils.join("COTIZACION_GRUPO_",i,TipoArchivo.XLS.getExtension());
 						
 						FileUtils.copyInputStreamToFile(excelGrupo, new File(Utils.join(
 										getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreCotGrupo
@@ -11044,7 +10314,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								,"0"
 								,new Date()
 								,nombreCotGrupo
-								,Utils.join("COTIZACI\u00d3N GRUPO ",i, " (",nmpoliza,")")
+								,Utils.join("COTIZACI\u00d3N GRUPO ",i)
 								,nmpoliza
 								,ntramite
 								,"1"
@@ -11054,7 +10324,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								,null
 								,null
 								,null
-								,null, false
+								,null
 								);
 					}
 				}
@@ -11078,34 +10348,38 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String cargarCduniecoAgenteAuto () {
-		logger.debug(Utils.log(
-				"\n######################################",
-				"\n###### cargarCduniecoAgenteAuto ######",
-				"\n###### smap1 = ", smap1
-		));
-		try {
-			
-			Utils.validate(smap1, "No se recibieron datos");
-			
-			String cdagente  = smap1.get("cdagente"),
-					cdtipram = smap1.get("cdtipram");
-			
-			if (StringUtils.isBlank(cdtipram)) {
-				cdtipram = TipoRamo.AUTOS.getCdtipram();
-			}
-			
-			smap1.put("cdunieco",cotizacionManager.cargarCduniecoAgenteAuto(cdagente, cdtipram));
-			success = true;
-			exito = true;
-		} catch(Exception ex) {
-			respuesta  = Utils.manejaExcepcion(ex);
+	public String cargarCduniecoAgenteAuto()
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n######################################")
+				.append("\n###### cargarCduniecoAgenteAuto ######")
+				.append("\nsmap1 ")
+				.append(smap1)
+				.toString()
+				);
+		success = true;
+		exito   = true;
+		try
+		{
+			smap1.put("cdunieco",cotizacionManager.cargarCduniecoAgenteAuto(smap1.get("cdagente")));
 		}
-		logger.debug(Utils.log(
-				"\n###### smap1 = ", smap1,
-				"\n###### cargarCduniecoAgenteAuto ######",
-				"\n######################################"
-				));
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			exito           = false;
+			respuesta       = "Error al obtener sucursal del agente #"+timestamp;
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		logger.debug(
+				new StringBuilder()
+				.append("\nsmap1 ")
+				.append(smap1)
+				.append("\n###### cargarCduniecoAgenteAuto ######")
+				.append("\n######################################")
+				.toString()
+				);
 		return SUCCESS;
 	}
 	
@@ -11166,7 +10440,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				EmAdmfolId agente = agentePorFolioService.obtieneAgentePorFolioSucursal(folio,cdunieco,cdramo,cdsisrol,cdusuari,idusu,cdtipsit);
 				if(agente==null)
 				{
-					throw new ApplicationException("No existe el agente");
+					throw new Exception("No existe el agente");
 				}
 				smap1.put("cdagente",String.valueOf(agente.getNumAge()));
 			}
@@ -11221,15 +10495,15 @@ public class CotizacionAction extends PrincipalCoreAction
 				clave5     = smap1.get("clave5");
 				if(StringUtils.isBlank(sParametro))
 				{
-					throw new ApplicationException("No se especifica el parametro");
+					throw new Exception("No se especifica el parametro");
 				}
 				if(StringUtils.isBlank(cdramo))
 				{
-					throw new ApplicationException("No se especifica el ramo");
+					throw new Exception("No se especifica el ramo");
 				}
 				if(StringUtils.isBlank(cdtipsit))
 				{
-					throw new ApplicationException("No se especifica la situacion");
+					throw new Exception("No se especifica la situacion");
 				}
 			}
 			catch(Exception ex)
@@ -11250,7 +10524,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				parametro = ParametroCotizacion.valueOf(sParametro);
 				if(parametro==null)
 				{
-					throw new ApplicationException("El parametro no se encuentra en el enum");
+					throw new Exception("El parametro no se encuentra en el enum");
 				}
 			}
 			catch(Exception ex)
@@ -11338,7 +10612,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			clavegs  = smap1.get("clavegs");
 			cdtipsit = smap1.get("cdtipsit");
 			tipoUnidad = smap1.get("tipounidad");
-			if(StringUtils.isBlank(cdramo))
+			if(StringUtils.isBlank(clavegs))
 			{
 				throw new ApplicationException("No se recibio el ramo");
 			}
@@ -11427,11 +10701,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			modelo = smap1.get("modelo");
 			if(StringUtils.isBlank(cdramo))
 			{
-				throw new ApplicationException("No se recibio el ramo");
+				throw new Exception("No se recibio el ramo");
 			}
 			if(StringUtils.isBlank(modelo))
 			{
-				throw new ApplicationException("No se recibio el modelo");
+				throw new Exception("No se recibio el modelo");
 			}
 		}
 		catch(Exception ex)
@@ -11508,23 +10782,23 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdtipsit = smap1.get("cdtipsit");
 			if(StringUtils.isBlank(cdsisrol))
 			{
-				throw new ApplicationException("No se recibio el rol");
+				throw new Exception("No se recibio el rol");
 			}
 			if(StringUtils.isBlank(modelo)||modelo.length()!=4)
 			{
-				throw new ApplicationException("No se recibio el modelo");
+				throw new Exception("No se recibio el modelo");
 			}
 			if(StringUtils.isBlank(version))
 			{
-				throw new ApplicationException("No se recibio la version");
+				throw new Exception("No se recibio la version");
 			}
 			if(StringUtils.isBlank(cdramo))
 			{
-				throw new ApplicationException("No se recibio el ramo");
+				throw new Exception("No se recibio el ramo");
 			}
 			if(StringUtils.isBlank(cdtipsit))
 			{
-				throw new ApplicationException("No se recibio la situacion");
+				throw new Exception("No se recibio la situacion");
 			}
 		}
 		catch(Exception ex)
@@ -11613,7 +10887,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					||StringUtils.isBlank(icd)
 					)
 			{
-				throw new ApplicationException("Dato requerido no encontrado");
+				throw new Exception("Dato requerido no encontrado");
 			}
 		}
 		catch(Exception ex)
@@ -11701,7 +10975,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					||StringUtils.isBlank(nmsuplem)
 					)
 			{
-				throw new ApplicationException("Dato requerido no encontrado");
+				throw new Exception("Dato requerido no encontrado");
 			}
 		}
 		catch(Exception ex)
@@ -11797,7 +11071,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					||StringUtils.isBlank(icd)
 					)
 			{
-				throw new ApplicationException("Dato requerido no encontrado");
+				throw new Exception("Dato requerido no encontrado");
 			}
 		}
 		catch(Exception ex)
@@ -12729,291 +12003,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
-
-	public String obtienePlanDefinitivo()
-	{
-		logger.debug(""
-				+ "\n########################################"
-				+ "\n###### obtienePlanDefinitivo ######"
-				+ "\nsmap1:  "+smap1
-				+ "\nslist1: "+slist1
-				);
-		
-		String planSeleccionado = null;
-		String nombrePlanLargo  = null;
-		
-		try
-		{
-			
-			/**
-			 * Se obtiene lista de coberturas seleccionadas en pantalla
-			 */
-			Map<String,String> coberturasSel = new HashMap<String, String>();
-			
-			for(Map<String,String> cobSel:slist1){
-			    
-			    if("4EAC".equalsIgnoreCase(cobSel.get("amparada"))) continue; //Para saltar la cobertura de Evento de Alto Costo
-			    
-				if(Constantes.SI.equalsIgnoreCase(cobSel.get("amparada"))){
-					coberturasSel.put(cobSel.get("cdgarant"), cobSel.get("cdgarant"));
-				}
-			}
-			
-			/**
-			 * Se obtiene la lista de planes a iterar del producto 
-			 */
-			
-			LinkedHashMap<String,Object>param=new LinkedHashMap<String,Object>();
-			param.put("param1",smap1.get("cdramo"));
-			param.put("param2",smap1.get("cdtipsit"));
-			List<Map<String,String>>listaPlanes=storedProceduresManager.procedureListCall(
-					ObjetoBD.OBTIENE_PLANES_X_PRODUCTO.getNombre(), param, null);
-			
-			logger.debug("Lista de planes obtenidos: "+ listaPlanes);
-			
-			HashMap<String, PuntajeCoberturasPlanVO> puntajeCoberturas = new HashMap<String, PuntajeCoberturasPlanVO>();
-			
-			int puntajeMenorSeparacion = 999999999;
-			
-			/**
-			 * Por cada uno de los planes del prodcto se calcula el puntaje para decidir el plan con menos coberturas a sumar
-			 * y a restar. sumando preferentemente
-			 */
-			
-			String cdplanOrig = smap1.get("cdplan");
-			String dsplanOrig = "";
-			
-			for(Map<String,String> plan : listaPlanes){
-				
-				if(StringUtils.isNotBlank(cdplanOrig) && cdplanOrig.equalsIgnoreCase(plan.get("CDPLAN"))){
-					dsplanOrig = plan.get("DSPLAN");
-				}
-				
-				//Coberturas del plan
-				List<Map<String,String>> coberturasPlanList = cotizacionManager.obtieneCobeturasNombrePlan(smap1.get("cdramo"),smap1.get("cdtipsit"),plan.get("CDPLAN"));
-				
-				//Coberturas sobrantes o faltantes del plan original 
-
-				int faltantes = 0; //coberturas faltantes a sumar del plan iterado para igualar el plan seleccionado
-				int sobrantes = 0; //coberturas sobrantes a restar del plan iterado para igualar el plan seleccionado
-				
-				StringBuilder nombreLargo = new StringBuilder(plan.get("DSPLAN"));
-				
-				String ultimaGarantia = null;
-				
-				
-				for(Map<String,String> cob : coberturasPlanList){
-				    
-				    if("4EAC".equalsIgnoreCase(cob.get("CDGARANT"))) continue; //Para saltar la cobertura de Evento de Alto Costo
-				    if("4EE".equalsIgnoreCase(cob.get("CDGARANT")))  continue; //Para saltar la cobertura de Emergencia en el Extranjero y manejarla al ultimo
-				    
-					//si la cobertura esta en el plan original y no esta seleccionada en pantalla
-					if(Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA")) && !coberturasSel.containsKey(cob.get("CDGARANT"))){
-						sobrantes ++;
-						nombreLargo.append(" -").append(StringUtils.isBlank(cob.get("DSGARANT_CORTA"))? cob.get("CDGARANT") : cob.get("DSGARANT_CORTA"));//TGARANTI
-						ultimaGarantia = " SIN "+cob.get("DSGARANT");
-						
-					}else //si la cobertura se considera dentro del plan predefinido y se encuentra seleccionada en pantalla
-						if(Constantes.NO.equalsIgnoreCase(cob.get("SWOBLIGA")) && coberturasSel.containsKey(cob.get("CDGARANT"))){
-							faltantes ++;
-							nombreLargo.append(" +").append(StringUtils.isBlank(cob.get("DSGARANT_CORTA"))? cob.get("CDGARANT") : cob.get("DSGARANT_CORTA"));//TGARANTI
-							ultimaGarantia = " CON "+cob.get("DSGARANT");
-						}
-				}
-				
-				// Se repite el for anterior solo para manejar la cobertura de Emergecnia en el Extranjero
-				for(Map<String,String> cob : coberturasPlanList){
-                    
-                    if("4EAC".equalsIgnoreCase(cob.get("CDGARANT"))) continue; //Para saltar la cobertura de Evento de Alto Costo
-                    if(!"4EE".equalsIgnoreCase(cob.get("CDGARANT"))) continue; //Para saltar las coberturas que no son Emergencia en el Extranjero
-                    
-                    logger.debug(" :::: Tratando la cobertura de Emergencia en el Etranjero luego de iterar todas las demas cobeturas :::: ");
-                    
-                    //si la cobertura esta en el plan original y no esta seleccionada en pantalla
-                    if(Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA")) && !coberturasSel.containsKey(cob.get("CDGARANT"))){
-                        sobrantes ++;
-                        nombreLargo.append(" -").append(StringUtils.isBlank(cob.get("DSGARANT_CORTA"))? cob.get("CDGARANT") : cob.get("DSGARANT_CORTA"));//TGARANTI
-                        ultimaGarantia = " SIN "+cob.get("DSGARANT");
-                        
-                    }else //si la cobertura se considera dentro del plan predefinido y se encuentra seleccionada en pantalla
-                        if(Constantes.NO.equalsIgnoreCase(cob.get("SWOBLIGA")) && coberturasSel.containsKey(cob.get("CDGARANT"))){
-                            faltantes ++;
-                            nombreLargo.append(" +").append(StringUtils.isBlank(cob.get("DSGARANT_CORTA"))? cob.get("CDGARANT") : cob.get("DSGARANT_CORTA"));//TGARANTI
-                            ultimaGarantia = " CON "+cob.get("DSGARANT");
-                        }
-                }
-				
-				//se agrega el plan a generar puntaje
-				PuntajeCoberturasPlanVO puntajePlan =  new PuntajeCoberturasPlanVO();
-				puntajePlan.setCdplan(plan.get("CDPLAN"));
-				puntajePlan.setDsplan(plan.get("DSPLAN"));
-				
-				if( (faltantes == 0 && sobrantes == 1) || (faltantes == 1 && sobrantes == 0)){
-					puntajePlan.setDsplanLargo(plan.get("DSPLAN")+ultimaGarantia);
-				}else{
-					puntajePlan.setDsplanLargo(nombreLargo.toString());
-				}
-				
-				
-				puntajePlan.setCoberturasAquitar(sobrantes);
-				puntajePlan.setCoberturasAagregar(faltantes);
-				puntajePlan.setTotalCoberturasDif(faltantes+sobrantes);
-				
-				puntajeCoberturas.put(plan.get("CDPLAN"), puntajePlan);
-				
-				if((faltantes+sobrantes) < puntajeMenorSeparacion){
-					puntajeMenorSeparacion = faltantes+sobrantes;
-				}
-				
-			}
-			logger.debug("PLan Resumen:::::"+puntajeCoberturas);
-			logger.debug("Puntaje Menor Separacion:::::"+puntajeMenorSeparacion);
-			
-			//Se seleccionan los planes con menor puntaje absoluto
-			HashMap<String, PuntajeCoberturasPlanVO> planesMenorPuntaje = new HashMap<String, PuntajeCoberturasPlanVO>();
-			
-			for(String plan : puntajeCoberturas.keySet()){
-				PuntajeCoberturasPlanVO planIt = puntajeCoberturas.get(plan);
-				if(planIt.getTotalCoberturasDif() == puntajeMenorSeparacion){
-					planesMenorPuntaje.put(plan, puntajeCoberturas.get(plan));
-				}
-			}
-			
-			
-			//De los planes con menor puntaje abosuluto se obtiene el que tenga la menor cantidad de coberturas negativas (a quitar)
-			PuntajeCoberturasPlanVO planMasProximo = null;
-			int menorCoberturasAquitar = 999999999;
-			
-			for(String plan : planesMenorPuntaje.keySet()){
-				PuntajeCoberturasPlanVO planIt = planesMenorPuntaje.get(plan);
-				
-				if(planIt.getCoberturasAquitar() < menorCoberturasAquitar){
-					menorCoberturasAquitar = planIt.getCoberturasAquitar();
-					planMasProximo = planIt;
-				}
-			}
-			
-			logger.debug("Puntaje Menor Coberturas a Quitar:::::"+menorCoberturasAquitar);
-			logger.debug("Plan mas proximo Elegido ::::: "+planMasProximo);
-			
-			smap1.put("NVO_CDPLAN", planMasProximo.getCdplan());
-			smap1.put("NVO_DSPLAN", planMasProximo.getDsplan());
-			smap1.put("DSPLAN_ORIG", dsplanOrig);
-			smap1.put("NVO_NOMBRE", planMasProximo.getDsplanLargo());
-			
-			success = true;
-			exito   = true;
-			 
-		}
-		catch(Exception ex)
-		{
-			long timestamp=System.currentTimeMillis();
-			logger.error(timestamp+" error al obtener coberturas plan", ex);
-			respuesta       = "Error inesperado #"+timestamp;
-			respuestaOculta = ex.getMessage();
-			exito           = false;
-		}
-		logger.debug(""
-				+ "\n###### obtienePlanDefinitivo ######"
-				+ "\n########################################"
-				);
-		return SUCCESS;
-	}
-
-	
-	
-	public String lanzaAprobacionNombrePlan()
-	{
-	    logger.debug(""
-	            + "\n########################################"
-	            + "\n###### lanzaAprobacionNombrePlan ######"
-	            + "\nsmap1:  "+smap1
-	            );
-	    
-	    try
-	    {
-	        
-	        Utils.validate(smap1    , "No hay parametros");
-	        
-	        String ntramite =  smap1.get("ntramite");
-	        String bloquear =  smap1.get("tipobloqueo");
-	        
-	        Utils.validate(ntramite, "No hay numero de tramite", bloquear, "No hay indicacion de bloqueo");
-	        
-	        UserVO usuario  = (UserVO) session.get("USUARIO");
-            String cdsisrol = usuario.getRolActivo().getClave();
-	        
-            /**
-             * Se lanza insercion de registro o eliminacion para bloqueo o desbloqueo
-             */
-            cotizacionManager.ejectutaBloqueoProcesoTramite(ntramite, TipoProcesoBloqueo.AUTORIZAR_NOMPLAN_SUPERVISOR.getClaveProceso(),
-                    cdsisrol, TipoProcesoBloqueo.AUTORIZAR_NOMPLAN_SUPERVISOR.getDescripcion(), bloquear,
-                    "D".equalsIgnoreCase(bloquear)? Constantes.DELETE_MODE : Constantes.INSERT_MODE);
-	        success = true;
-	        
-	    }
-        catch(Exception ex)
-        {
-            respuesta = Utils.manejaExcepcion(ex);
-            success =  false;
-        }
-	    logger.debug(""
-	            + "\n###### lanzaAprobacionNombrePlan ######"
-	            + "\n########################################"
-	            );
-	    
-	    return SUCCESS;
-	}
-
-	public String obtieneNombresCoberturasPlan()
-	{
-	    logger.debug(""
-	            + "\n########################################"
-	            + "\n###### obtieneNombresCoberturasPlan ######"
-	            + "\nsmap1:  "+smap1
-	            );
-	    
-	    slist1 = new ArrayList<Map<String,String>>();
-	    
-	    try
-	    {
-	            
-            //Coberturas del plan
-            List<Map<String,String>> coberturasPlanList = cotizacionManager.obtieneCobeturasNombrePlan(smap1.get("cdramo"),smap1.get("cdtipsit"),smap1.get("cdplan"));
-            
-            logger.debug("coberturas de la busqiueda:::"+coberturasPlanList);
-            
-            for(Map<String,String> cob : coberturasPlanList){
-                if("4EAC".equalsIgnoreCase(cob.get("CDGARANT"))) continue; //Para saltar la cobertura de Evento de Alto Costo
-                if(StringUtils.isBlank(smap1.get("cdplan")) || Constantes.SI.equalsIgnoreCase(cob.get("SWOBLIGA"))){
-                    Map<String,String> cobertura =  new HashMap<String, String>();
-                    cobertura.put("CDGARANT", cob.get("CDGARANT"));
-                    cobertura.put("DSGARANT", cob.get("DSGARANT"));
-                    cobertura.put("DSGARANT_CORTA", StringUtils.isBlank(cob.get("DSGARANT_CORTA"))? "" : cob.get("DSGARANT_CORTA"));
-                    slist1.add(cobertura);    
-                }
-            }
-            
-            logger.debug("Coberturas obtenidas para edicion de Nombre:::"+slist1);
-	        
-	        success = true;
-	        exito   = true;
-	        
-	    }
-	    catch(Exception ex)
-	    {
-	        long timestamp=System.currentTimeMillis();
-	        logger.error(timestamp+" error al obtener coberturas plan", ex);
-	        respuesta       = "Error inesperado #"+timestamp;
-	        respuestaOculta = ex.getMessage();
-	        exito           = false;
-	    }
-	    logger.debug(""
-	            + "\n###### obtieneNombresCoberturasPlan ######"
-	            + "\n########################################"
-	            );
-	    return SUCCESS;
-	}
 	
 	public String restaurarRespaldoCenso()
 	{
@@ -13101,137 +12090,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	private class ConfirmaCensoConcurrente1 extends Thread
-    {
-		private Map<String,String> smap1;
-		private CotizacionAction   cotAction;
-    	
-    	private UserVO usuarioSesion;
-    	List<Map<String,Object>>grupos;
-    	
-    	public ConfirmaCensoConcurrente1(Map<String,String> parametros, CotizacionAction cotAction) {
-    		this.smap1 = parametros;
-    		this.cotAction =  cotAction;
-    	}
-    	
-    	@Override
-    	public void run()
-    	{
-    		try
-    		{
-    			
-    			boolean success = true;
-    			boolean exito   = true;
-    			
-    			String censoTimestamp   = smap1.get("timestamp");
-    			String clasif           = smap1.get("clasif");
-    			String LINEA_EXTENDIDA  = smap1.get("LINEA_EXTENDIDA");
-    			String cdunieco         = smap1.get("cdunieco");
-    			String cdtipsit         = smap1.get("cdtipsit");
-    			String cdramo           = smap1.get("cdramo");
-    			String nmpoliza         = smap1.get("nmpoliza");
-    			String cdperpag         = smap1.get("cdperpag");
-    			String pcpgocte         = smap1.get("pcpgocte");
-    			UserVO usuario          = (UserVO)session.get("USUARIO");
-    			String user             = usuario.getUser();
-    			String cdelemento       = usuario.getEmpresa().getElementoId();
-    			String cdsisrol         = usuario.getRolActivo().getClave();
-    			final String LINEA      = "1";
-    			String ntramite         = smap1.get("ntramite");
-    			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
-    			String ntramiteVacio    = smap1.get("ntramiteVacio");
-    			boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
-    			Date fechaHoy           = new Date();
-    			String feini            = smap1.get("feini");
-    			String fefin            = smap1.get("fefin");
-    			String nmpolant         = smap1.get("nmpolant");
-    			String nmrenova         = smap1.get("nmrenova");
-    			
-    			String estatuRenovacion = smap1.get("estatusRenovacion");
-    			String esRenovacion		= smap1.get("esRenovacion");
-    			
-    			String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
-    			String nombreCenso= nombreCensoConfirmado;
-    			
-    			
-    			mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_TARIFA.getCodigo());
-    				try
-    				{
-						String cdedo         = smap1.get("cdedo");
-						String cdmunici      = smap1.get("cdmunici");
-						String cdplanes[]    = new String[5];
-						
-						for(Map<String,Object>iGrupo:olist1)
-						{
-							String  cdgrupo      = (String)iGrupo.get("letra");
-							String  cdplan       = (String)iGrupo.get("cdplan");
-							Integer indGrupo     = Integer.valueOf(cdgrupo);
-							cdplanes[indGrupo-1] = cdplan;
-						}
-						
-						cotizacionManager.guardarCensoCompletoMultisalud(nombreCenso
-								,cdunieco    , cdramo      , "W"
-								,nmpoliza    , cdedo       , cdmunici
-								,cdplanes[0] , cdplanes[1] , cdplanes[2]
-								,cdplanes[3] , cdplanes[4] , "N"
-								);
-					}
-    				catch(Exception ex)
-    				{
-    					long timestamp = System.currentTimeMillis();
-    					throw new ApplicationException(new StringBuilder("Error al ejecutar procedimiento del censo #").append(timestamp).toString());
-    				}
-    				
-    			
-    			try
-    			{
-    				logger.debug(Utils.log("########################user 5",user));
-    				tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject aux=cotAction.tvalositSigsvdefTvalogarContratanteTramiteSigsvalipol(
-    						clasif    , LINEA      , LINEA_EXTENDIDA
-    						,cdunieco , cdramo     , nmpoliza
-    						,cdtipsit , hayTramite , hayTramiteVacio
-    						,user     , cdelemento , ntramiteVacio
-    						,true     , null/*ntramite*/, null/*cdagente*/
-    						,false //sincenso
-    						,false //censoAtrasado
-    						,false //resubirCenso
-    						,cdperpag
-    						,cdsisrol
-    						,false
-    						,false //asincrono
-    						,null
-    						,null
-    						,null
-    						,true //censoCompleto
-    						,false // duplicar
-    						);
-    				exito     = aux.exito;
-    				respuesta = StringUtils.isBlank(aux.respuesta)
-    				        ? ""
-    				        : aux.respuesta;
-    				respuestaOculta = aux.respuestaOculta;
-    			}
-    			catch(Exception ex)
-    			{
-    				long timestamp = System.currentTimeMillis();
-    				throw new ApplicationException(new StringBuilder("Error al ejecutar procesoColectivoInterno al confirmar censo concurrente #").append(timestamp).toString());
-    			}
-    			
-    			long stamp = System.currentTimeMillis();
-    			logger.debug(Utils.log(stamp,"Mandando el tramite a estatus completo despues de subir censo cocurrente y proceso colectivo interno"));
-    			
-    			if(estatuRenovacion.equalsIgnoreCase(EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())){
-    				mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
-    			}else{
-    				mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
-    			}
-    		}
-    		catch(Exception ex)
-    		{
-    			logger.error("Error en confirmar censo concurrente", ex);
-    		}
-    	}
-    }
 	
 	public String consultaExtraprimaOcup() throws Exception {
 		
@@ -13247,33 +12105,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String obtenSumaAseguradosMedicamentos()
-	{
-		logger.debug(""
-				+ "\n#############################################"
-				+ "\n###### obtenSumaAseguradosMedicamentos ######"
-				+ "\nsmap1: "+smap1
-				);
-		try
-		{
-			success = true;
-			exito   = true;
-			saMed =  cotizacionManager.obtenSumaAseguradosMedicamentos(smap1.get("cdramo"),smap1.get("cdtipsit"),"4MED");
-		}
-		catch(Exception ex)
-		{
-			long timestamp=System.currentTimeMillis();
-			logger.error(timestamp+" error al obtener la suma asegurada pr defecto", ex);
-			respuesta       = "Error inesperado #"+timestamp;
-			respuestaOculta = ex.getMessage();
-			exito           = false;
-		}
-		logger.debug(""
-				+ "\n###### obtenSumaAseguradosMedicamentos ######"
-				+ "\n#############################################"
-				);
-		return SUCCESS;
-	}
 	
 	
 	
@@ -13319,95 +12150,59 @@ public class CotizacionAction extends PrincipalCoreAction
 	}
 	
 	
-	public String guardaEmpleados(){
-        logger.debug(""
-                + "\n########################################"
-                + "\n###### guardaEmpleados ######"+smap1
-                + "\nparams: "+params
-                );
-        try
-        {
-            
-            success = true;
-            exito   = true;
-            String pv_numsuc_i=  params.get("administradora");
-            String pv_cveent_i=  params.get("retenedora");
-            String pv_cveemp_i=  params.get("clave");
-            String pv_nomemp_i=  params.get("nombre");
-            String pv_apaterno_i=  params.get("apaterno");
-            String pv_amaterno_i=  params.get("amaterno");
-            String pv_rfc_i=  params.get("rfc");
-            String pv_curp_i=  params.get("curp");
-            String pv_usuario_i=  params.get("usuario");
-            String pv_feregist_i=  params.get("nombre");
-            UserVO usuario=(UserVO)session.get("USUARIO");
-            String cdusuario=usuario.getUser();
-           cotizacionManager.guardaEmpleado(pv_numsuc_i,
-                   pv_cveent_i,
-                   pv_cveemp_i, 
-                   pv_nomemp_i, 
-                   pv_apaterno_i,
-                   pv_amaterno_i,
-                   pv_rfc_i, 
-                   pv_curp_i, 
-                   cdusuario, 
-                   null,
-                   null)
-           ;
-        }
-        catch(Exception ex)
-        {
-            long timestamp=System.currentTimeMillis();
-            logger.error(timestamp+" error al obtener coberturas plan", ex);
-            respuesta       = "Error inesperado #"+timestamp;
-            respuestaOculta = ex.getMessage();
-            exito           = false;
-        }
-        logger.debug(""
-                + "\n###### guardaEmpleados ######"
-                + "\n########################################"
-                );
-        return SUCCESS;
-    }
+	   public String guardaEmpleados()
+	    {
+	        logger.debug(""
+	                + "\n########################################"
+	                + "\n###### guardaEmpleados ######"+smap1
+	                + "\nparams: "+params
+	                );
+	        try
+	        {
+	            
+	            success = true;
+	            exito   = true;
+	            String pv_numsuc_i=  params.get("administradora");
+	            String pv_cveent_i=  params.get("retenedora");
+	            String pv_cveemp_i=  params.get("clave");
+	            String pv_nomemp_i=  params.get("nombre");
+	            String pv_apaterno_i=  params.get("apaterno");
+	            String pv_amaterno_i=  params.get("amaterno");
+	            String pv_rfc_i=  params.get("rfc");
+	            String pv_curp_i=  params.get("curp");
+	            String pv_usuario_i=  params.get("usuario");
+	            String pv_feregist_i=  params.get("nombre");
+	            UserVO usuario=(UserVO)session.get("USUARIO");
+	            String cdusuario=usuario.getUser();
+	           cotizacionManager.guardaEmpleado(pv_numsuc_i,
+	                   pv_cveent_i,
+	                   pv_cveemp_i, 
+	                   pv_nomemp_i, 
+	                   pv_apaterno_i,
+	                   pv_amaterno_i,
+	                   pv_rfc_i, 
+	                   pv_curp_i, 
+	                   cdusuario, 
+	                   null,
+	                   null)
+	           ;
+	        }
+	        catch(Exception ex)
+	        {
+	            long timestamp=System.currentTimeMillis();
+	            logger.error(timestamp+" error al obtener coberturas plan", ex);
+	            respuesta       = "Error inesperado #"+timestamp;
+	            respuestaOculta = ex.getMessage();
+	            exito           = false;
+	        }
+	        logger.debug(""
+	                + "\n###### guardaEmpleados ######"
+	                + "\n########################################"
+	                );
+	        return SUCCESS;
+	    }
 	   
-	public String refrescarCensoColectivo() {
-        logger.debug(Utils.log(
-                 "\n#####################################"
-                ,"\n###### refrescarCensoColectivo ######"
-                ,"\n###### smap1=" , smap1
-                ));
-        
-        try{
-            Utils.validateSession(session);
-            
-            Utils.validate(smap1, "No se recibieron datos");
-            
-            String cdunieco  = smap1.get("cdunieco")
-                   ,cdramo   = smap1.get("cdramo")
-                   ,estado   = smap1.get("estado")
-                   ,nmpolant = smap1.get("nmpolant");
-            
-            Utils.validate(
-                    cdunieco  , "No se recibi\u00f3 la sucursal"
-                    ,cdramo   , "No se recibi\u00f3 el producto"
-                    ,estado   , "No se recibi\u00f3 el estado"
-                    ,nmpolant , "No se recibi\u00f3 el nmpolant"
-                    );
-            
-            //cotizacionManager.refrescarCensoColectivo(cdunieco,cdramo,estado,Integer.parseInt(nmpolant.substring(7,13))+"");
-            success = true;
-        } catch(Exception ex){
-            respuesta = Utils.manejaExcepcion(ex);
-        }
-        
-        logger.debug(Utils.log(
-                 "\n###### success="   , success
-                ,"\n###### respuesta=" , respuesta
-                ,"\n###### borrarRespaldoCenso ######"
-                ,"\n#################################"
-                ));
-        return SUCCESS;
-    }
+	   
 	  
 	
 	///////////////////////////////
@@ -13605,13 +12400,4 @@ public class CotizacionAction extends PrincipalCoreAction
 	public void setTotal(String total) {
 		this.total = total;
 	}
-
-	public String getSaMed() {
-		return saMed;
-	}
-
-	public void setSaMed(String saMed) {
-		this.saMed = saMed;
-	}
-	
 }

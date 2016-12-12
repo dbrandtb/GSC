@@ -162,8 +162,7 @@ public interface EndososDAO
             a.porparti,
             nombre,
             cdsucurs,
-            nmcuadro,
-            descripl
+			nmcuadro
      */
     public List<Map<String,String>> obtenerAgentesEndosoAgente(Map<String, String> params)     throws Exception;
 
@@ -369,6 +368,7 @@ public interface EndososDAO
     public List<Map<String,String>> obtieneDatosEndBeneficiario(Map<String, String> params)throws Exception;
     public List<Map<String,String>> obtieneDatosEndAseguradoAlterno(Map<String, String> params)throws Exception;
     public List<Map<String,String>> obtieneDatosEndAdaptacionesRC(Map<String, String> params)throws Exception;
+	public List<Map<String,String>> obtieneDatosEndVigencia(Map<String, String> params)throws Exception;
     public List<Map<String,String>> obtieneDatosEndTextoLibre(Map<String, String> params)throws Exception;
     public void actualizaNumeroEndosSigs(Map<String, String> params)throws Exception;
     
@@ -405,7 +405,6 @@ public interface EndososDAO
             ,String nmrecibo
             ,String nmimpres
             ,String cdusuari
-            ,String cdsisrol
             ,String cdtipsup
             )throws Exception;
     

@@ -10,13 +10,7 @@ import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
-import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
-import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.DocumentosUtils;
@@ -25,7 +19,6 @@ import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class DocumentosPolizaAction extends PrincipalCoreAction {
@@ -53,15 +46,6 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	private int reintentoRegeneraRepore = 1;// variable para solo reintentar la regeneracion de reporte una vez 
 	
 	private ConsultasManager consultasManager;
-	
-	private Map<String,Item> items;
-	
-	private Map<String,Item> imap;
-	
-	private Map<String, String> params;
-	
-	@Autowired
-	private PantallasManager pantallasManager;
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
@@ -133,7 +117,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	                   cdramo        = smap1.get("pv_cdramo_i"), 
 	                   estado        = smap1.get("pv_estado_i"),
 	                   nmpoliza      = smap1.get("pv_nmpoliza_i"), 
-	                   nmsuplem      = "999999999999999999",//smap1.get("pv_nmsuplem_i"),
+                       nmsuplem      = "999999999999999999",//smap1.get("pv_nmsuplem_i"),
 	                   nmtramite     = smap1.get("pv_nmtramite_i"),
 	                   nombreReporte = smap1.get("pv_cddocume_i").substring(0 , smap1.get("pv_cddocume_i").length()-3);
 	            
@@ -238,8 +222,6 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 			smap1.put("cdtiptra","1");
 		}
 		
-		smap1.put("random", String.format("%.0f", Math.random()*10000d));
-		
 		if(smap1.containsKey("ntramite")
 				&&"1".equals(smap1.get("cdtiptra"))
 				&&session!=null
@@ -268,30 +250,9 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 				smap1.put("readOnly" , "");
 			}
 		}
-		
-		String proceso = smap1.get("lista");
-		if(StringUtils.isNotBlank(proceso))
-		{
-			items = new HashMap<String,Item>();
-			
-			List<ComponenteVO> comboDocs = pantallasManager.recuperarComboDocs(proceso);
-			
-			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			
-			try
-			{
-				gc.generaComponentes(comboDocs, true, false, true, false, false, false);
-				items.put("comboDocs",gc.getItems());
-			}
-			catch(Exception ex)
-			{
-				logger.error(Utils.join("Error al generar combo de docs #",System.currentTimeMillis()),ex);
-			}
-			
-		}
 
 		logger.debug(Utils.log(
-				 "\n###### ventanaDocumentosPoliza ######",smap1
+				 "\n###### ventanaDocumentosPoliza ######"
 				,"\n#####################################"
 				));
 		return SUCCESS;
@@ -398,7 +359,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	/**
 	 * Genera la ruta del archivo a descargar en base a los parametros recibidos
 	 * 
-	 * @param ruta Ruta a utilizar, si es null se usarï¿½ una ruta default
+	 * @param ruta Ruta a utilizar, si es null se usarÃ¯Â¿Â½ una ruta default
 	 * @param subcarpeta Subcarpeta del archivo, si es null se omite
 	 * @param filename Nombre del archivo a descargar
 	 * @return Ruta absoluta del archivo a descargar 
@@ -443,201 +404,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		return contentType;
 	}
 	
-	public String iniciarPantallaTrafudoc(){
-	    logger.info(
-                new StringBuilder()
-                .append("\n###### iniciarPantallaTrafudoc ######")
-                .append("\n################################")
-                .toString()
-                );
-	    String respuesta = "";
-	    String cdsisrol  = "";
-	    try{
-	        UserVO usuario = (UserVO)session.get("USUARIO");
-            if(usuario == null){
-                throw new ApplicationException("No hay usuario en sesion");
-            }
-            cdsisrol = usuario.getRolActivo().getClave();
-            ManagerRespuestaImapVO managerResponse = consultasManager.pantallaTrafudoc(cdsisrol);
-            exito           = managerResponse.isExito();
-            respuesta       = managerResponse.getRespuesta();
-            respuestaOculta = managerResponse.getRespuestaOculta();
-            if(exito){
-                setImap(managerResponse.getImap());
-            }
-	    }
-	    catch(Exception ex){
-	        respuesta = Utils.manejaExcepcion(ex);
-	    }
-	    logger.info(
-                new StringBuilder()
-                .append("\n###### iniciarPantallaTrafudoc ######")
-                .append("\n################################")
-                .toString()
-                );
-	    return SUCCESS;
-	}
 	
-	public String obtenerCursorTrafudoc(){
-	    logger.info(
-                new StringBuilder()
-                .append("\n###### obtenerCursorTrafudoc ######")
-                .append("\n###### params = ").append(params)
-                .append("\n################################")
-                .toString()
-                );
-	    String respuesta = "";
-	    try{
-	        String cdfunci  = params.get("cdfunci");
-	        String cdramo   = params.get("cdramo");
-	        String cdtipsit = params.get("cdtipsit");
-	        slist1 = consultasManager.obtenerCursorTrafudoc(cdfunci, cdramo, cdtipsit);
-	        success = true;
-	        respuesta = "Operacion realizada con exito";
-	    }
-	    catch(Exception ex){
-	        respuesta = Utils.manejaExcepcion(ex);
-	    }
-	    logger.info(
-                new StringBuilder()
-                .append("\n###### obtenerCursorTrafudoc ######")
-                .append("\n###### slist1").append(slist1)
-                .append("\n################################")
-                .toString()
-                );
-	    return SUCCESS;
-	}
-	
-	public String documentosXFamilia(){
-	    logger.debug(
-                new StringBuilder()
-                .append("\n##################################")
-                .append("\n###### documentosXFamilia ######")
-                .append("\n###### smap1=").append(smap1)
-                .toString()
-                );
-        
-        success = true;
-        exito   = true;
-        
-       
-        try
-        {
-            UserVO usuario = (UserVO)session.get("USUARIO");
-            String pv_cdunieco_i  = smap1.get("cdunieco");
-            String pv_cdramo_i    = smap1.get("cdramo");
-            String pv_estado_i    = smap1.get("estado");
-            String pv_nmpoliza_i  = smap1.get("nmpoliza"); 
-            String pv_nmsuplem_i  = smap1.get("nmsuplem");
-            String pv_cdusuari    = usuario.getUser();
-            
-            Utils.validate( pv_cdunieco_i    ,"No se recibió pv_cdunieco_i ",
-                            pv_cdramo_i      ,"No se recibió pv_cdramo_i   ",
-                            pv_estado_i      ,"No se recibió pv_estado_i   ",
-                            pv_nmpoliza_i    ,"No se recibió pv_nmpoliza_i ",
-                            pv_nmsuplem_i    ,"No se recibió pv_nmsuplem_i ",
-                            pv_cdusuari      ,"No se recibió pv_cdusuari   ");
-            
-           respuesta = consultasManager.documentosXFamilia(pv_cdunieco_i,
-                                                pv_cdramo_i,
-                                                pv_estado_i, 
-                                                pv_nmpoliza_i, 
-                                                pv_nmsuplem_i, 
-                                                pv_cdusuari);
-           smap1.put("userEmail", usuario.getEmail());
-            
-            
-            
-            
-        }
-        catch(Exception ex)
-        {
-            long timestamp  = System.currentTimeMillis();
-            exito           = false;
-            respuesta       = "Datos incompletos #"+timestamp;
-            respuestaOculta = ex.getMessage();
-            logger.error(respuesta,ex);
-        }
-        
-        
-        
-        logger.debug(
-                new StringBuilder()
-                .append("\n###### smap1=").append(smap1)
-                .append("\n###### documentosXFamilia   ######")
-                .append("\n##################################")
-                .toString()
-                );
-        return SUCCESS;
-	}
-	
-	public String ejecutaFusionFam(){
-        logger.debug(
-                new StringBuilder()
-                .append("\n##################################")
-                .append("\n###### ejecutaFusionFam ######")
-                .append("\n###### smap1=").append(smap1)
-                .toString()
-                );
-        
-        success = true;
-        exito   = true;
-        
-       
-        try
-        {
-            UserVO usuario = (UserVO)session.get("USUARIO");
-            String pv_cdunieco_i  = smap1.get("cdunieco");
-            String pv_cdramo_i    = smap1.get("cdramo");
-            String pv_estado_i    = smap1.get("estado");
-            String pv_nmpoliza_i  = smap1.get("nmpoliza"); 
-            String pv_nmsuplem_i  = smap1.get("nmsuplem");
-            String pv_tipoMov_i   = smap1.get("tipoMov");
-            String pv_cdtiptra_i  = smap1.get("cdTipTra");
-            String pv_nmsituac_i  = smap1.get("nmsituac");
-            
-            Utils.validate( pv_cdunieco_i    ,"No se recibió pv_cdunieco_i ",
-                            pv_cdramo_i      ,"No se recibió pv_cdramo_i   ",
-                            pv_estado_i      ,"No se recibió pv_estado_i   ",
-                            pv_nmpoliza_i    ,"No se recibió pv_nmpoliza_i ",
-                            pv_nmsuplem_i    ,"No se recibió pv_nmsuplem_i ");
-            
-            usuario.setEmail(smap1.get("email"));
-            
-            consultasManager.ejecutaFusionFam  ( pv_cdunieco_i,
-                                                            pv_cdramo_i,
-                                                            pv_estado_i, 
-                                                            pv_nmpoliza_i, 
-                                                            pv_nmsuplem_i,
-                                                            pv_tipoMov_i,
-                                                            pv_cdtiptra_i,
-                                                            usuario);
-            
-            
-            
-            
-        }
-        catch(Exception ex)
-        {
-            long timestamp  = System.currentTimeMillis();
-            exito           = false;
-            respuesta       = "Datos incompletos #"+timestamp;
-            respuestaOculta = ex.getMessage();
-            logger.error(respuesta,ex);
-        }
-        
-        
-        
-        logger.debug(
-                new StringBuilder()
-                .append("\n###### smap1=").append(smap1)
-                .append("\n###### ejecutaFusionFam     ######")
-                .append("\n##################################")
-                .toString()
-                );
-        return SUCCESS;
-    }
-	 
 	
 	//Getters and setters:
 	
@@ -742,29 +509,5 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	public void setConsultasManager(ConsultasManager consultasManager) {
 		this.consultasManager = consultasManager;
 	}
-
-	public Map<String, Item> getItems() {
-		return items;
-	}
-
-	public void setItems(Map<String, Item> items) {
-		this.items = items;
-	}
-
-    public Map<String,Item> getImap() {
-        return imap;
-    }
-
-    public void setImap(Map<String,Item> imap) {
-        this.imap = imap;
-    }
-
-    public Map<String, String> getParams() {
-        return params;
-    }
-
-    public void setParams(Map<String, String> params) {
-        this.params = params;
-    }
 	
 }

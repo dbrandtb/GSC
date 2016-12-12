@@ -2,36 +2,31 @@ package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
-import mx.com.gseguros.portal.consultas.model.PagedMapList;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2VO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
-import mx.com.gseguros.portal.general.dao.IndicadoresDAO;
-import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
-import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
-public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager {
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager
+{
+	private Map<String,Object>session;
 	
-	private final static Logger logger = LoggerFactory.getLogger(RecuperacionSimpleManagerImpl.class);
+	private final static Logger logger=LoggerFactory.getLogger(RecuperacionSimpleManagerImpl.class);
 	
 	private ConsultasDAO  consultasDAO;
 	private CotizacionDAO cotizacionDAO;
@@ -43,10 +38,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 	@Autowired
 	private MesaControlDAO mesaControlDAO;
 	
-	@Autowired
-	private IndicadoresDAO indicadoresDAO;
-	
-	@Deprecated
 	@Override
 	public ManagerRespuestaSmapVO recuperacionSimple(
 			RecuperacionSimple proc
@@ -131,29 +122,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				String otclave  = params.get("otclave");
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("otvalor",consultasDAO.recuperarValorAtributoUnico(cdtipsit,cdatribu,otclave));
-			}
-			else if(proc.equals(RecuperacionSimple.RECUPERAR_DSATRIBUS_TATRIPOL))
-			{
-				String        cdramo       = params.get("cdramo");
-				List<String>  listaNombres = consultasDAO.recuperarDescripcionAtributosProducto(cdramo);
-				StringBuilder sb           = new StringBuilder();
-				boolean       primero      = true;
-				for(String nombre:listaNombres)
-				{
-					if(primero)
-					{
-						sb.append(Utils.join("CVE_P_"    , nombre));
-						sb.append(Utils.join("@#@DES_P_" , nombre));
-						primero = false;
-					}
-					else
-					{
-						sb.append(Utils.join("@#@CVE_P_" , nombre));
-						sb.append(Utils.join("@#@DES_P_" , nombre));
-					}
-				}
-				resp.setSmap(new HashMap<String,String>());
-				resp.getSmap().put("listaNombres",sb.toString());
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_DSATRIBUS_TATRISIT))
 			{
@@ -259,7 +227,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 		return resp;
 	}
 	
-	@Deprecated
 	@Override
 	public ManagerRespuestaSlist2VO recuperacionSimpleLista(
 			RecuperacionSimple proc
@@ -392,7 +359,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				//Se agregan campos para Filtrado por Fecha de Inicio y Fecha de fin
 				String finicio   = params.get("finicio");
 				String ffin      = params.get("ffin");
-				resp.setSlist(consultasDAO.recuperarPolizasEndosables(cdunieco,cdramo,estado,nmpoliza,nmpoliex,ramo,cdagente,statusVig,finicio,ffin,cdsisrol));
+				resp.setSlist(consultasDAO.recuperarPolizasEndosables(cdunieco,cdramo,estado,nmpoliza,nmpoliex,ramo,cdagente,statusVig,finicio,ffin));
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_HISTORICO_POLIZA))
 			{
@@ -428,47 +395,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 						,dsatribu
 						,otvalor
 						));
-				
-				if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo) && params.containsKey("atrPol") && Constantes.SI.equalsIgnoreCase(params.get("atrPol"))){
-					
-					if(resp.getSlist() !=null && !resp.getSlist().isEmpty()){
-						
-						List<Map<String,String>> lista = consultasDAO.recuperarDatosIncisoEnNivelPoliza(
-								cdunieco
-								,cdramo
-								,estado
-								,nmpoliza
-						);
-						logger.debug("Lista de atributos a agregar" + lista);
-						
-						if(lista!= null && !lista.isEmpty()){
-							Map<String,String> atrsPol = lista.get(0);
-							
-							Iterator<Entry<String, String>> itAtrs = atrsPol.entrySet().iterator();
-							while(itAtrs.hasNext())
-							{
-								Entry<String,String> atr = (Map.Entry<String, String>) itAtrs.next();
-								String llave = atr.getKey();
-								String valor = atr.getValue();
-								
-								if(llave.startsWith("DSATRIBU")){
-									llave = llave.replace("DSATRIBU", "DSATRIBU1");
-								}else if(llave.startsWith("DSVALOR")){
-									llave = llave.replace("DSVALOR", "DSVALOR1");
-								}else if(llave.startsWith("OTVALOR")){
-									llave = llave.replace("OTVALOR", "OTVALOR1");
-								}
-
-								resp.getSlist().get(0).put(llave, valor);
-								
-							}
-						}
-						
-						logger.debug("Lista de atributos despues de agregar" + resp.getSlist());
-					}
-					
-				}
-				
 			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_GRUPOS_POLIZA))
 			{
@@ -520,14 +446,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				String nmpoliza = params.get("nmpoliza");
 				resp.setSlist(consultasDAO.recuperarRevisionColectivos(cdunieco, cdramo, estado, nmpoliza));
 			}
-			else if(proc.equals(RecuperacionSimple.RECUPERAR_REVISION_COLECTIVOS_FINAL))
-			{
-				String cdunieco = params.get("cdunieco");
-				String cdramo   = params.get("cdramo");
-				String estado   = params.get("estado");
-				String nmpoliza = params.get("nmpoliza");
-				resp.setSlist(consultasDAO.recuperarRevisionColectivosFinal(cdunieco, cdramo, estado, nmpoliza));
-			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_REVISION_COLECTIVOS_ENDOSOS))
 			{
 				String cdunieco = params.get("cdunieco");
@@ -574,7 +492,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				,"\n@@@@@@ params="   , params
 				,"\n@@@@@@ usuario="  , usuario
 				));
-		Map<String,String> mapa = new LinkedHashMap<String,String>();
+		Map<String,String> mapa = new HashMap<String,String>();
 		String             paso = "Recuperando datos";
 		try
 		{
@@ -631,7 +549,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			{
 				paso = "Recuperando permisos de bot\u00f3n";
 				logger.debug(Utils.log(""," paso: ",paso));
-				@SuppressWarnings("unused")
 				String cdtipsit = params.get("cdtipsit");
 				mapa.put("ACTIVAR_BOTON" , consultasDAO.recuperarPermisoBotonEnviarCenso(cdsisrol));
 			}
@@ -644,68 +561,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 						 cdtipsit , "No se recibio el parametro cdtipsit"
 						);
 				mapa.put("ACTIVAR_BOTON_COMPRAR" , consultasDAO.recuperarPermisoBotonEmitir(cdsisrol,cdusuari,cdtipsit));
-			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_CDUNIEXT_POR_LLAVE_POLIZA))
-			{
-				paso = "Recuperando cduniext";
-				logger.debug(paso);
-				
-				mapa.put("cduniext" , consultasDAO.recuperarCduniextPorLlavePoliza(
-						params.get("cdunieco"),
-						params.get("cdramo"),
-						params.get("estado"),
-						params.get("nmpoliza")
-						));
-			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_FLUJO_POR_DESCRIPCION))
-			{
-				String descripcion = params.get("descripcion");
-				
-				paso = "Recuperando flujo por descripcion";
-				
-				logger.debug(Utils.log(paso, " descripcion = ", descripcion));
-				
-				mapa = flujoMesaControlDAO.recuperarFlujoPorDescripcion(params.get("descripcion"));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_SI_ES_CDRAMO_DE_SALUD)) {
-				String cdramo = params.get("cdramo");
-				if (StringUtils.isNotBlank(cdramo)) {
-					mapa.put(
-						"salud",
-						consultasDAO.esProductoSalud(cdramo)
-							? "S"
-							: "N"
-					);
-				} else {
-					mapa.put("salud", "N");
-				}
-			} else if(consulta.equals(RecuperacionSimple.RECUPERAR_TABLERO_INDICADORES)) {
-				paso = "Recuperando tablero de indicadores";
-				logger.debug(paso);
-				
-				Map<String, String> res = indicadoresDAO.obtieneDashInicial(params.get("idcierre"),
-						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"),
-						params.get("tipotramite"), params.get("cdagente"));
-				
-				Map<String, String> res2 = indicadoresDAO.obtieneDashPendientes(params.get("idcierre"),
-						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"),
-						params.get("tipotramite"), params.get("cdagente"));
-				
-				mapa.putAll(res);
-				mapa.putAll(res2);
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_CORREO_EMISION_TRAMITE)) {
-				paso = "Recuperando correo de emisi\u00f3n";
-				logger.debug(paso);
-				String ntramite = params.get("ntramite");
-				if (StringUtils.isNotBlank(ntramite)) {
-					mapa.put("correo", Utils.cambiaGuionesBajosPorAcentosHtml(consultasDAO.recuperarCorreoEmisionTramite(ntramite)));
-				} else {
-					mapa.put("correo", "");
-				}
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_ASEGURADO_COMPLETO_ENDOSO_ALTA)) {
-				mapa = endososDAO.recuperarAseguradoCompletoEndosoAlta(params.get("cdunieco"), params.get("cdramo"), params.get("estado"),
-						params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_PERSONA_ENDOSO_ALTA)) {
-				mapa = endososDAO.recuperarPersonaEndosoAlta(params.get("cdperson"));
 			}
 		}
 		catch(Exception ex)
@@ -949,10 +804,12 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TTIPFLUMC))
 			{	
+				String agrupamc = null;
 				if(params!=null)
 				{
-					lista = flujoMesaControlDAO.recuperaTtipflumc(params.get("agrupamc"), params.get("cdtipmod"));
+					agrupamc = params.get("agrupamc");
 				}
+				lista = flujoMesaControlDAO.recuperaTtipflumc(agrupamc);
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TESTADOMC))
 			{	
@@ -989,10 +846,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TDOCUME))
 			{
 				lista = flujoMesaControlDAO.recuperaTdocume();
-			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TREQUISI))
-			{
-				lista = flujoMesaControlDAO.recuperaTrequisi();
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TICONOS))
 			{
@@ -1155,170 +1008,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				
 				lista = consultasDAO.llenaCombo(cdunieco, cdramo, estado, nmpoliza);
 			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TTIPFLUROL))
-			{
-				paso = "Recuperando permisos de tr\u00e1mite por rol";
-				logger.debug(paso);
-				
-				String cdtipflu = params.get("cdtipflu");
-				
-				Utils.validate(cdtipflu, "No se recibi\u00f3 el tr\u00e1mite");
-				
-				lista = flujoMesaControlDAO.recuperarTtipflurol(cdtipflu);
-			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUJOROL))
-			{
-				paso = "Recuperando permisos de proceso por rol";
-				logger.debug(paso);
-				
-				String cdtipflu    = params.get("cdtipflu")
-						,cdflujomc = params.get("cdflujomc");
-				
-				Utils.validate(
-						cdtipflu   , "No se recibi\u00f3 el tr\u00e1mite"
-						,cdflujomc , "No se recibi\u00f3 el proceso"
-						);
-				
-				lista = flujoMesaControlDAO.recuperarTflujorol(cdtipflu,cdflujomc);
-			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TFLUMAIL))
-			{
-				paso = "Recuperando permisos de proceso por rol";
-				logger.debug(paso);
-				
-				String cdtipflu  = params.get("cdtipflu"),
-					   cdflujomc = params.get("cdflujomc"),
-					   cdmail    = params.get("cdmail");
-				
-				Utils.validate(
-						cdtipflu   , "No se recibi\u00f3 el tr\u00e1mite"
-						,cdflujomc , "No se recibi\u00f3 el proceso"
-						,cdmail    , "No se recibi\u00f3 el codigo de mail"
-						);
-				
-				lista = flujoMesaControlDAO.recuperaTflumail(cdtipflu, cdflujomc, cdmail);
-			}
-			else if(consulta.equals(RecuperacionSimple.RECUPERAR_TVARMAIL))
-			{
-				paso = "Recuperando permisos de proceso por rol";
-				logger.debug(paso);
-							
-				lista = flujoMesaControlDAO.recuperaTvarmailSP();
-			}
-			else if (consulta.equals(RecuperacionSimple.RECUPERAR_MPOLIZAS_POR_PARAMETROS_VARIABLES)) {
-				String cdunieco = params.get("cdunieco"),
-						cdramo  = params.get("cdramo"),
-						estado  = params.get("estado"),
-						nmpoliza = params.get("nmpoliza"),
-						nmsuplem = params.get("nmsuplem"),
-						nmsolici = params.get("nmsolici"),
-						cdramant = params.get("cdramant");
-				lista = consultasDAO.cargarMpolizasPorParametrosVariables(
-						cdunieco,
-						cdramo,
-						estado,
-						nmpoliza,
-						nmsuplem, 
-						nmsolici,
-						cdramant
-				);
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_REQUISITOS_DATOS_TRAMITE)) {
-				lista = flujoMesaControlDAO.recuperarRequisitosDatosTramite(params.get("ntramite"));
-			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_POR_LINEA_NEGOCIO) ) {
-				
-				lista = indicadoresDAO.obtieneTramitesPorLineaNegocio(params.get("idcierre"), params.get("cdetapa"),
-						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
-				
-			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_LINEANEGOCIO_POR_RAMO) ) {
-				
-				PagedMapList paged = indicadoresDAO.obtieneTramitesLineaNegocioPorRamo(params.get("idcierre"), params.get("cdetapa"),
-						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", "1");
-				
-				PagedMapList paged2 = indicadoresDAO.obtieneTramitesLineaNegocioPorRamo(params.get("idcierre"), params.get("cdetapa"),
-                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", Long.toString(paged.getTotalItems()));
-				
-				lista = paged2.getRangeList();
-				
-			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_LINEA_NEGOCIO) ) {
-				
-				PagedMapList paged = indicadoresDAO.obtieneDetalleLineaNegocio(params.get("idcierre"), params.get("cdetapa"),
-						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", "1");
-				
-				PagedMapList paged2 = indicadoresDAO.obtieneDetalleLineaNegocio(params.get("idcierre"), params.get("cdetapa"),
-                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", Long.toString(paged.getTotalItems()));
-				
-				lista =  paged2.getRangeList();
-				
-			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_SUCURSAL) ) {
-				
-				lista = indicadoresDAO.obtieneLineaNegocioPorSucursal(params.get("idcierre"), params.get("cdetapa"),
-						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
-				
-			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_USUARIO) ) {
-				
-			    PagedMapList paged = indicadoresDAO.obtieneLineaNegocioPorUsuario(params.get("idcierre"), params.get("cdetapa"),
-						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", "1");
-			    PagedMapList paged2 = indicadoresDAO.obtieneLineaNegocioPorUsuario(params.get("idcierre"), params.get("cdetapa"),
-                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", Long.toString(paged.getTotalItems()));
-			    
-			    lista =  paged2.getRangeList();
-			    
-			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_POR_TIPO) ) {
-				
-			    PagedMapList paged = indicadoresDAO.obtieneTramitesPorTipo(params.get("idcierre"), params.get("cdetapa"),
-						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", "1");
-			    PagedMapList paged2 = indicadoresDAO.obtieneTramitesPorTipo(params.get("idcierre"), params.get("cdetapa"),
-                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", Long.toString(paged.getTotalItems()));
-				
-			    lista =  paged2.getRangeList();
-			    
-			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS) ) {
-				
-				PagedMapList paged = indicadoresDAO.obtieneTramitesPendientesPorDia(params.get("idcierre"),
-						params.get("cdunieco"), params.get("lineaNegocio"), params.get("cdramo"),
-						params.get("tipotramite"), params.get("cdagente"), params.get("numdias"), "0", "1");
-
-				PagedMapList paged2 = indicadoresDAO.obtieneTramitesPendientesPorDia(params.get("idcierre"),
-                        params.get("cdunieco"), params.get("lineaNegocio"), params.get("cdramo"),
-                        params.get("tipotramite"), params.get("cdagente"), params.get("numdias"), "0", Long.toString(paged.getTotalItems()));
-				
-				lista =  paged2.getRangeList();
-				
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_TODAS_SUCURSALES)) {
-				lista = flujoMesaControlDAO.recuperarTodasSucursales();
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_VALIDACION_POR_CDVALIDAFK)) {
-				lista = flujoMesaControlDAO.recuperarValidacionPorCdvalidafk(params.get("ntramite"), params.get("clave"));
-				for (Map<String, String> i : lista) {
-					i.put("cdusuari", cdusuari);
-					i.put("cdsisrol", cdsisrol);
-				}
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COTIZACIONES_COLECTIVAS_APROBADAS)) {
-				lista = flujoMesaControlDAO.recuperarCotizacionesColectivasAprobadas(params.get("ntramite"));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_ASEGURADOS_ENDOSO_ALTA)) {
-				lista = endososDAO.recuperarAseguradosEndosoAlta(params.get("cdunieco"), params.get("cdramo"), params.get("estado"),
-						params.get("nmpoliza"), params.get("nmsuplem"));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_PERSONAS_FISICAS_POR_RFC_MULTIPLE_DOMICILIO)) {
-				lista = endososDAO.recuperarPersonasFisicasPorRFCMultipleDomicilio(params.get("rfc"));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_BUSQUEDA_ASEGURADOS_END_COBERTURAS)) {
-				lista = endososDAO.buscarAseguradosEndosoCoberturas(params.get("cdunieco"), params.get("cdramo"),
-						params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"), params.get("cadena"));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_AMPARADAS_CONFIRMADAS)) {
-				lista = endososDAO.recuperarCoberturasAmparadasConfirmadas(params.get("cdunieco"), params.get("cdramo"),
-						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_DISPONIBLES)) {
-				lista = endososDAO.recuperarCoberturasDisponibles(params.get("cdunieco"), params.get("cdramo"),
-						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"),
-						usuario.getRolActivo().getClave());
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_AGREGADAS)) {
-				lista = endososDAO.recuperarCoberturasAgregadas(params.get("cdunieco"), params.get("cdramo"),
-						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_ASEGURADOS_AFECTADOS_END_COBERTURAS)) {
-				lista = endososDAO.recuperarAseguradosAfectadosEndosoCoberturas(params.get("cdunieco"), params.get("cdramo"),
-						params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_BORRADAS)) {
-				lista = endososDAO.recuperarCoberturasBorradas(params.get("cdunieco"), params.get("cdramo"),
-						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"));
-			}
 		}
 		catch(Exception ex)
 		{
@@ -1330,64 +1019,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return lista;
-	}
-
-	
-	@Override
-	public PagedMapList recuperarListaPaginada(
-	        String cdusuari
-	        ,String cdsisrol
-	        ,RecuperacionSimple consulta
-	        ,Map<String,String> params
-	        ,String start
-            ,String limit
-	        ,UserVO usuario
-	        )throws Exception
-	{
-	    logger.debug(Utils.log(""
-	            ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-	            ,"\n@@@@@@ recuperarListaPaginada @@@@@@"
-	            ,"\n@@@@@@ cdusuari=" , cdusuari
-	            ,"\n@@@@@@ cdsisrol=" , cdsisrol
-	            ,"\n@@@@@@ consulta=" , consulta
-	            ,"\n@@@@@@ params="   , params
-	            ,"\n@@@@@@ start="    , start
-	            ,"\n@@@@@@ limit="    , limit
-	            ,"\n@@@@@@ usuario="  , usuario
-	            ));
-	    
-	    PagedMapList lista =  null;
-	    String paso  = "Recuperando datos";
-	    try
-	    {
-	        if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS_LP) ) {
-                
-                lista = indicadoresDAO.obtieneTramitesPendientesPorDia(params.get("idcierre"),
-                        params.get("cdunieco"), params.get("lineaNegocio"), params.get("cdramo"),
-                        params.get("tipotramite"), params.get("cdagente"), params.get("numdias"), start, limit);
-                
-            }else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_USUARIO_LP) ) {
-                
-                lista = indicadoresDAO.obtieneLineaNegocioPorUsuario(params.get("idcierre"), params.get("cdetapa"),
-                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), start, limit);
-                
-            }else if( consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_LINEA_NEGOCIO_LP) ) {
-                
-                lista = indicadoresDAO.obtieneDetalleLineaNegocio(params.get("idcierre"), params.get("cdetapa"),
-                        params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), start, limit);
-                
-            }
-	    }
-	    catch(Exception ex)
-	    {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-	    logger.debug(Utils.log(""
-	            ,"\n@@@@@@ lista Pagianda=", (lista==null|| lista.getRangeList() ==  null)? "null" : lista.getRangeList().size()
-	                    ,"\n@@@@@@ recuperarLista @@@@@@"
-	                    ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-	            ));
-	    return lista;
 	}
 	
 	//////////////////////////////////////////////////////////////

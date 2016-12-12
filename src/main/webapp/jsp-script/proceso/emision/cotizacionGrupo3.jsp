@@ -267,8 +267,8 @@ var listaSinPadre = [];
 Ext.onReady(function()
 {
 
-    /*_grabarEvento('COTIZACION','ACCCOTIZA'
-                  ,_p21_ntramiteVacio?_p21_ntramiteVacio:(_p21_ntramite?_p21_ntramite:''),_p21_smap1.cdunieco,_p21_smap1.cdramo);*/
+    _grabarEvento('COTIZACION','ACCCOTIZA'
+                  ,_p21_ntramiteVacio?_p21_ntramiteVacio:(_p21_ntramite?_p21_ntramite:''),_p21_smap1.cdunieco,_p21_smap1.cdramo);
 
     Ext.Ajax.timeout = 60*60*1000;
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
@@ -980,26 +980,7 @@ Ext.onReady(function()
                             }
                         ]
                         ,buttonAlign : 'center'
-                        ,buttons:[{
-                            xtype :'panel',
-                            defaults : { style : 'margin:5px' },
-                            border   : 0,
-                            width    : 950,
-                            ui       :'footer',
-                            items    : [
-                                <s:if test='%{getImap().get("botones")!=null}'>
-                                    <s:property value="imap.botones" />,
-                                </s:if>
-                                {
-                                    text     : 'Limpiar'
-                                    ,xtype   : 'button'
-                                    ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                                    ,handler : _p21_cotizarNueva
-                                    ,hidden  : _p21_ntramite ? true : false
-                                }
-                            ]
-                        }]
-                        /*,buttons     :
+                        ,buttons     :
                         [
                             <s:if test='%{getImap().get("botones")!=null}'>
                                 <s:property value="imap.botones" />,
@@ -1010,7 +991,7 @@ Ext.onReady(function()
                                 ,handler : _p21_cotizarNueva
                                 ,hidden  : _p21_ntramite ? true : false
                             }
-                        ]*/
+                        ]
                     })
                 ]
             }
@@ -1112,7 +1093,6 @@ Ext.onReady(function()
             ,titleCollapse  : true
             ,startCollapsed : true
             ,resizable      : false
-            ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
             ,loader         :
             {
                 scripts   : true
@@ -2027,9 +2007,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                 ,'smap1.cdplan'   : record.get('cdplan')
                                 ,'smap1.cdgarant' : json.slist1[i].CDGARANT
                                 ,'smap1.indice'   : i
-                                ,'smap1.cdtipsup'  : null
-                                ,'smap1.nmpolant'  : null
-                                ,'smap1.cdgrupo'   : null
                             }
                             ,success : function(response)
                             {
@@ -3942,8 +3919,6 @@ function _p21_reload(json,status,nmpoliza)
             ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
             ,'smap1.cdagente' : _fieldByName('cdagente').getValue()
             ,'smap1.status'   : Ext.isEmpty(status) ? _p21_smap1.status : status
-            ,'smap1.cdtipsup' : null
-            ,'smap1.nmpolant' : null
         }
     });
     debug('<_p21_reload');
@@ -4000,7 +3975,6 @@ function _p21_turnar(status,titulo,closable)
                 ,columns    : 2
                 ,width      : 250
                 ,style      : 'margin:5px;'
-                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                 ,items      :
                 [
                     {
@@ -4008,13 +3982,12 @@ function _p21_turnar(status,titulo,closable)
                         ,itemId     : 'SWAGENTE'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'S'
-                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                     }
                     ,{
                         boxLabel    : 'No'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'N'
-                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                        ,checked    : true
                     }
                 ]
             }
@@ -4091,7 +4064,7 @@ function _p21_turnar(status,titulo,closable)
                                             
                                             if(json.smap1.ASYNC=='S')
                                             {
-                                                mensajeTurnado = 'El tr\u00e1mite '+_p21_smap1.ntramite+' qued\u00f3 en espera y ser\u00e1 procesado posteriormente';
+                                                mensajeTurnado = 'El tr\u00e1mite qued\u00f3 en espera y ser\u00e1 procesado posteriormente';
                                             }
                                         
                                             mensajeCorrecto('Tr&aacute;mite guardado'
@@ -5521,7 +5494,6 @@ function _p21_emitir2(ventana,button)
 	                                ,height     : 400
 	                                ,autoScroll : true
 	                                ,modal      : true
-	                                ,cls        : 'VENTANA_DOCUMENTOS_CLASS'
 	                                ,loader     :
 	                                {
 	                                    scripts   : true

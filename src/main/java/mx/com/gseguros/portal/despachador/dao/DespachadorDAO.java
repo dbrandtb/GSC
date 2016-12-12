@@ -21,9 +21,9 @@ public interface DespachadorDAO {
 	
 	public String recuperarUsuarioParaRegresarTramite (String ntramite, String cdunidspch, String cdsisrol) throws Exception;
 	
-	public String recuperarSiguienteUsuarioCarrusel (String cdunidspch, String cdsisrol, boolean soloUsuariomatriz) throws Exception;
+	public String recuperarSiguienteUsuarioCarrusel (String cdunidspch, String cdsisrol) throws Exception;
 	
-	public String recuperarSiguienteUsuarioCarga (String cdunidspch, String cdsisrol, boolean soloUsuariomatriz) throws Exception;
+	public String recuperarSiguienteUsuarioCarga (String cdunidspch, String cdsisrol) throws Exception;
 	
 	public List<Map<String, String>> recuperarSucursalesParaEscalamiento (String cdtipflu, String cdflujomc, String zona, int nivel,
 			String cdsisrol) throws Exception;

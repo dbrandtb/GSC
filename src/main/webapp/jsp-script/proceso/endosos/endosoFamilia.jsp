@@ -27,10 +27,6 @@ var _p48_storeRespaldo;
 var _p48_storeMov;
 var _p48_nfamilia = 0;
 var _p48_storeFamilia;
-
-var _p48_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p48_flujo:',_p48_flujo);
 ////// variables //////
 
 ////// overrides //////
@@ -398,12 +394,6 @@ Ext.onReady(function()
                                         {
                                             datos.list.push({nmsituac:record.get('NMSITUAC')});
                                         });
-                                        
-                                        if(!Ext.isEmpty(_p48_flujo))
-                                        {
-                                            datos.flujo = _p48_flujo;
-                                        }
-                                        
                                         debug('datos para confirmar:',datos);
                                         
                                         _setLoading(true,_fieldById('_p48_panelpri'));

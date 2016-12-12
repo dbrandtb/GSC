@@ -28,9 +28,6 @@ var _p29_urlObtieneValNumeroSerie          = '<s:url namespace="/emision"    act
 var _p31_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p31_smap1:',_p31_smap1);
 
-var _p31_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-debug('_p31_flujo:',_p31_flujo);
-
 var _p22_parentCallback         = false;
 var _p22_parentCallbackCallback = false;
 
@@ -313,41 +310,7 @@ Ext.onReady(function()
     
     var panelesPrincipales =
     [
-            Ext.create('Ext.panel.Panel',
-            {
-                itemId       : '_p31_panelFlujo'
-                ,title       : 'ACCIONES'
-                ,hidden      : Ext.isEmpty(_p31_flujo)
-                ,buttonAlign : 'left'
-                ,buttons     : []
-                ,listeners   :
-                {
-                    afterrender : function(me)
-                    {
-                        if(!Ext.isEmpty(_p31_flujo))
-                        {
-                            _cargarBotonesEntidad(
-                                _p31_flujo.cdtipflu
-                                ,_p31_flujo.cdflujomc
-                                ,_p31_flujo.tipoent
-                                ,_p31_flujo.claveent
-                                ,_p31_flujo.webid
-                                ,me.itemId//callback
-                                ,_p31_flujo.ntramite
-                                ,_p31_flujo.status
-                                ,_p31_flujo.cdunieco
-                                ,_p31_flujo.cdramo
-                                ,_p31_flujo.estado
-                                ,_p31_flujo.nmpoliza
-                                ,_p31_flujo.nmsituac
-                                ,_p31_flujo.nmsuplem
-                                ,null//callbackDespuesProceso
-                            );
-                        }
-                    }
-                }
-            })
-            ,Ext.create('Ext.form.Panel',
+            Ext.create('Ext.form.Panel',
             {
                 itemId    : '_p31_polizaForm'
                 ,title    : 'DATOS DE P&Oacute;LIZA'
@@ -425,9 +388,6 @@ Ext.onReady(function()
                 url       : _p31_urlPantallaCliente
                 ,scripts  : true
                 ,autoLoad : false
-                ,ajaxOptions: {
-		                            method: 'POST'
-		                     }
             }
         })
         ,Ext.create('Ext.panel.Panel',
@@ -452,7 +412,6 @@ Ext.onReady(function()
                 ,{
                     text     : 'Nueva'
                     ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                    ,hidden  : !Ext.isEmpty(_p31_flujo)
                     ,handler : _p31_nuevaClic
                 }
             ]
@@ -481,7 +440,6 @@ Ext.onReady(function()
         ,titleCollapse  : true
         ,startCollapsed : true
         ,resizable      : false
-        ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
         ,loader         :
         {
             scripts   : true
@@ -602,15 +560,12 @@ Ext.onReady(function()
                         'smap1.cdideper' : json.smap1.cdideper,
                         'smap1.cdideext' : json.smap1.cdideext,
                         'smap1.esSaludDanios' : 'D',
-                        'smap1.polizaEnEmision': 'S',
                         'smap1.esCargaClienteNvo' :(Ext.isEmpty(json.smap1.cdperson)? 'S' : 'N' ),
                         'smap1.cargaCP' : json.smap1.cdpostal,
                         'smap1.cargaTipoPersona' : json.smap1.otfisjur,
                         'smap1.cargaSucursalEmi' : _p31_smap1.cdunieco,
 	                    'smap1.cargaFenacMin' : _aplicaCobVida?_FechaMinEdad:'',
-	                    'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:'',
-	                    'smap1.tomarUnDomicilio' : 'S',
-	                    'smap1.cargaOrdDomicilio' : json.smap1.nmorddom
+	                    'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:''
                     }
                 });
                 
@@ -728,7 +683,7 @@ function _p31_loadCallback()
     });
 }
 
-function _p31_personaSaved(json)
+function _p31_personaSaved()
 {
     debug('>_p31_personaSaved');
     Ext.Ajax.request(
@@ -742,10 +697,10 @@ function _p31_personaSaved(json)
             ,'smap1.nmpoliza' : _p31_smap1.nmpoliza
             ,'smap1.nmsituac' : '0'
             ,'smap1.cdrol'    : '1'
-            ,'smap1.cdperson' : json.smap1.CDPERSON
+            ,'smap1.cdperson' : _p22_fieldCdperson().getValue()
             ,'smap1.nmsuplem' : '0'
             ,'smap1.status'   : 'V'
-            ,'smap1.nmorddom' : json.smap1.NMORDDOM
+            ,'smap1.nmorddom' : '1'
             ,'smap1.accion'   : 'I'
             ,'smap1.swexiper' : _SWexiper
         }
@@ -755,6 +710,7 @@ function _p31_personaSaved(json)
             debug('### mpoliper:',json);
             if(json.exito)
             {
+                _p22_fieldCdperson().mpoliper=true;
                 if(!Ext.isEmpty(_p22_parentCallbackCallback))
                 {
                     _p22_parentCallbackCallback();
@@ -828,7 +784,7 @@ function _p31_guardar(callback)
     
     if(valido)
     {
-        valido = _fieldByName('_p22_formBusqueda').hidden;
+        valido = _fieldById('_p22_formBusqueda').hidden;
         if(!valido)
         {
             mensajeWarning('Falta registrar un cliente');
@@ -891,7 +847,7 @@ function _p31_guardar(callback)
                 }
             });
         };
-        _fieldByName('_p22_botonGuardar').handler();
+        _fieldById('_p22_botonGuardar').handler();
     }
     
     debug('<_p31_guardar');
@@ -1102,18 +1058,6 @@ function _p31_mostrarVistaPrevia()
                                                                         ,msg     : 'El correo ha sido enviado'
                                                                         ,buttons : Ext.Msg.OK
                                                                         ,icon    : 'x-message-box-ok'
-                                                                        ,fn      : function()
-                                                                        {
-                                                                            _generarRemesaClic(
-                                                                                false
-                                                                                ,_p31_smap1.cdunieco
-                                                                                ,_p31_smap1.cdramo
-                                                                                ,'M'
-                                                                                ,_p31_smap1.nmpolizaEmitida
-                                                                                ,function(){}
-                                                                                ,'S'
-                                                                            );
-                                                                        }
                                                                     });
                                                                 }
                                                                 else
@@ -1152,9 +1096,7 @@ function _p31_mostrarVistaPrevia()
                                 ,text     : 'Imprimir'
                                 ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
                                 ,disabled : true
-                                ,handler  : function(me)
-                                {
-                                    var callbackRemesa = function()
+                                    ,handler  : function()
                                     {
                                         centrarVentanaInterna(Ext.create('Ext.window.Window',
                                         {
@@ -1164,7 +1106,6 @@ function _p31_mostrarVistaPrevia()
                                             ,width       : 600
                                             ,height      : 400
                                             ,autoScroll  : true
-                                            ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                                             ,loader      :
                                             {
                                                 url       : _p31_urlDocumentosPoliza
@@ -1183,15 +1124,6 @@ function _p31_mostrarVistaPrevia()
                                                 ,autoLoad : true
                                             }
                                         }).show());
-                                    };
-                                    _generarRemesaClic(
-                                        false
-                                        ,_p31_smap1.cdunieco
-                                        ,_p31_smap1.cdramo
-                                        ,'M'
-                                        ,_p31_smap1.nmpolizaEmitida
-                                        ,callbackRemesa
-                                    );
                                 }
                             }
                             ,{
@@ -1211,22 +1143,7 @@ function _p31_mostrarVistaPrevia()
                                 ,text     : 'Nueva'
                                 ,icon     : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
                                 ,disabled : true
-                                ,hidden   : !Ext.isEmpty(_p31_flujo)
                                 ,handler  : function(){ _p31_nuevaClic(); }
-                            }
-							,{
-                                itemId   : '_p31_botonMesaControl'
-                                ,xtype   : 'button'
-                                ,text    : 'Mesa de control'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
-                                ,hidden  : Ext.isEmpty(_p31_flujo)
-                                ,handler : function(){
-                                	_mask('Redireccionando...');
-                                	Ext.create('Ext.form.Panel').submit({
-                                		standardSubmit : true
-                                		,url           : _GLOBAL_COMP_URL_MCFLUJO
-                                		}); 	
-                                	} 
                             }
                         ]
                     })
@@ -1403,7 +1320,7 @@ function _p31_emitirFinal(me)
                 if(json.retryWS){
                 	
                 	_p31_smap1.nmpolizaEmitida=json.panel2.nmpoliza;
-                	debug("_p31_smap1.nmpolizaEmitida, en reintento WS:" , _p31_smap1.nmpolizaEmitida);
+                	debug("_p29_smap1.nmpolizaEmitida, en reintento WS:" , _p31_smap1.nmpolizaEmitida);
                 	
                     _fieldById('_p31_botonEmitirPolizaFinal').hide();
                     _fieldById('_p31_botonCancelarEmision').setDisabled(true);
@@ -1677,9 +1594,7 @@ function _p31_editarAutoAceptar(bot)
         _fieldById('_p31_gridIncisos').getSelectionModel().deselectAll();
     }
 }
-
 ////// funciones //////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body><div id="_p31_divpri" style="height:1000px;"></div></body>

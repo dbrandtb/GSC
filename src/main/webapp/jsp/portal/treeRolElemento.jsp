@@ -57,7 +57,7 @@
 <script type="text/javascript">
 Ext.onReady(function(){
 	
-	//_grabarEvento('SEGURIDAD','ACCTREE');
+	_grabarEvento('SEGURIDAD','ACCTREE');
 	
     /*
     *	Si viene en sesión MessageConf != null, es porque tiene un único rol y no está completa la configuración para esa cuenta.
@@ -164,7 +164,7 @@ Ext.onReady(function(){
                                         waitConfig:{interval:100}
                                     }
                                 );
-                                //_grabarEvento('SEGURIDAD','TREESELECT');
+                                _grabarEvento('SEGURIDAD','TREESELECT');
                                 window.location.replace(_ACTION_PORTAL);
                             }
                             else

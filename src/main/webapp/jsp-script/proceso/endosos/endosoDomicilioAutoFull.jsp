@@ -33,10 +33,9 @@ _5_smap1:
 */
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _5_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
-var _5_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 
-var _5_urlLoadMdomicil = '<s:url namespace="/catalogos"  action="obtenerDomicilioContratante" />';
-var _5_urlGuardar      = '<s:url namespace="/endosos"    action="guardarEndosoDomicilioAutoFull" />';
+var _5_urlLoadMdomicil = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
+var _5_urlGuardar      = '<s:url namespace="/endosos" action="guardarEndosoDomicilioAutoFull" />';
 
 var _5_panelLectura;
 var _5_formDomicil;
@@ -48,7 +47,6 @@ var _5_panelPri;
 var datosIniciales;
 
 debug('_5_smap1:',_5_smap1);
-debug('_5_flujo:',_5_flujo);
 
 
 var _p5_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple" />';
@@ -156,7 +154,6 @@ Ext.onReady(function()
 			Ext.apply(this,
 			{
 				title      : 'Datos de p&oacute;liza'
-				,hidden: true
 				,layout    :
                 {
                     type     : 'table'
@@ -229,10 +226,8 @@ Ext.onReady(function()
             ,'smap1.pv_cdramo_i'      : _5_smap1.CDRAMO
             ,'smap1.pv_estado_i'      : _5_smap1.ESTADO
             ,'smap1.pv_nmpoliza_i'    : _5_smap1.NMPOLIZA
-            ,'smap1.pv_nmsuplem_i'    : _5_smap1.NMSUPLEM
             ,'smap1.pv_nmsituac_i'    : _5_smap1.nmsituac
             ,'smap1.pv_cdperson_i'    : _5_smap1.cdperson
-            ,'smap1.pv_nmorddom_i'    : ''// obtiene el asignado a la poliza
             ,'smap1.pv_cdrol_i'       : _5_smap1.cdrol
             ,'smap1.nombreAsegurado'  : ''
             ,'smap1.cdrfc'            : _5_smap1.cdrfc
@@ -247,13 +242,7 @@ Ext.onReady(function()
 	    	
 	    	datosIniciales = json.smap1;
 	    	
-			_fieldByName('CDEDO',_5_formDomicil).forceSelection = false;
-			_fieldByName('CDMUNICI',_5_formDomicil).forceSelection = false;
-			_fieldByName('CDCOLONI',_5_formDomicil).forceSelection = false;
-	    	
 	    	_5_formDomicil.loadRecord(new _5_modeloDomicil(json.smap1));
-	    	
-	    	heredarPanel(_5_formDomicil);
 	    	
 	    	debug('codpost:',_codPosEnd());
 	    	debug('colonia:',_comboColoniasEnd());
@@ -265,17 +254,6 @@ Ext.onReady(function()
                 params :
                 {
                     'params.cp' : _codPosEnd().getValue()
-                },
-                callback: function (){
-                	_fieldByName('CDEDO',_5_formDomicil).forceSelection = true;
-					_fieldByName('CDMUNICI',_5_formDomicil).forceSelection = true;
-					_fieldByName('CDCOLONI',_5_formDomicil).forceSelection = true;
-					
-					try{
-						_5_formDomicil.doLayout();
-					}catch(e){
-						debugError('No se pudo hacer dolayut a panel de domicilio',e);
-					}
                 }
             });
 	    	//cargar colonia
@@ -447,12 +425,6 @@ function _5_confirmar(boton)
 					}
 					//,parametros : _5_panelTatriper.getValues()
 				};
-				
-				if(!Ext.isEmpty(_5_flujo))
-				{
-				    json.flujo = _5_flujo;
-				}
-				
 				debug('datos a enviar:',json);
 				var panelMask = new Ext.LoadMask('divEndDomCP', {msg:"Confirmando..."});
 				panelMask.show();
@@ -501,8 +473,10 @@ function _5_confirmar(boton)
 
 }
 
+
 Ext.ComponentQuery.query('[name=NMTELEFO]')[Ext.ComponentQuery.query('[name=NMTELEFO]').length-1].hide();
 Ext.ComponentQuery.query('[name=NMTELEFO]')[Ext.ComponentQuery.query('[name=NMTELEFO]').length-1].maxLength = 100;
+
 
 function _codPosEnd(){
     return Ext.ComponentQuery.query('[name=CODPOSTAL]')[Ext.ComponentQuery.query('[name=CODPOSTAL]').length-1];

@@ -24,8 +24,6 @@ smap1:
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _35_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-var _35_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
 var _35_formLectura;
 var _35_formContratante;
 var _35_panelPri;
@@ -38,8 +36,6 @@ var _35_urlGuardar     = '<s:url namespace="/endosos" action="guardarEndosoRfcCl
 var _35_urlLoadContratantes = '<s:url namespace="/endosos" action="cargarContratantesEndosoContratante" />';
 
 debug('_35_smap1:',_35_smap1);
-
-debug('_35_flujo:',_35_flujo);
 
 var nombreInicial;
 
@@ -414,12 +410,6 @@ function _35_confirmar()
             }
             ,slist1 : slist1
         }
-        
-        if(!Ext.isEmpty(_35_flujo))
-        {
-            json.flujo = _35_flujo;
-        }
-        
         debug('datos que se enviaran:',json);
         
         var panelMask = new Ext.LoadMask('_35_divPri', {msg:"Confirmando..."});
@@ -436,32 +426,19 @@ function _35_confirmar()
                 debug('datos recibidos:',json);
                 if(json.success==true)
                 {
-                    var callbackRemesa = function()
-                    {
-                        //////////////////////////////////
-                        ////// usa codigo del padre //////
-                        /*//////////////////////////////*/
-                        marendNavegacion(2);
+                    mensajeCorrecto('Endoso generado',json.mensaje);
                     
-    //                    if(!Ext.isEmpty(destruirContLoaderPersona)){
-    //							destruirContLoaderPersona();	                                
-    //	                }
-                        /*//////////////////////////////*/
-                        ////// usa codigo del padre //////
-                        //////////////////////////////////
-                    };
+                    //////////////////////////////////
+                    ////// usa codigo del padre //////
+                    /*//////////////////////////////*/
+                    marendNavegacion(2);
                     
-                    mensajeCorrecto('Endoso generado',json.mensaje,function()
-                    {
-                        _generarRemesaClic(
-                            true
-                            ,_35_smap1.CDUNIECO
-                            ,_35_smap1.CDRAMO
-                            ,_35_smap1.ESTADO
-                            ,_35_smap1.NMPOLIZA
-                            ,callbackRemesa
-                        );
-                    });
+//                    if(!Ext.isEmpty(destruirContLoaderPersona)){
+//							destruirContLoaderPersona();	                                
+//	                }
+                    /*//////////////////////////////*/
+                    ////// usa codigo del padre //////
+                    //////////////////////////////////
                 }
                 else
                 {
@@ -478,6 +455,5 @@ function _35_confirmar()
 };
 ////// funciones //////
 ///////////////////////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="_35_divPri" style="height:1000px;"></div>

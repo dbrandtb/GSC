@@ -30,8 +30,8 @@ var panCanInputFecha;
 
 Ext.onReady(function()
 {
-    Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
-    
+	Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
+	
     ////// modelos //////
     ////// modelos //////
     
@@ -114,49 +114,49 @@ Ext.onReady(function()
                                             {
                                                 _setLoading(true,form);
                                                 Ext.Ajax.request(
-                                                {
-                                                    url      : _p43_urlConfirmar
-                                                    ,params  :
-                                                    {
-                                                        'smap1.cdunieco'  : _p43_smap1.CDUNIECO
-                                                        ,'smap1.cdramo'   : _p43_smap1.CDRAMO
-                                                        ,'smap1.estado'   : _p43_smap1.ESTADO
-                                                        ,'smap1.nmpoliza' : _p43_smap1.NMPOLIZA
-                                                        ,'smap1.cdrazon'  : _fieldByName('cdrazon').getValue()
-                                                        ,'smap1.feefecto' : _p43_smap1.FEEFECTO
-                                                        ,'smap1.fevencim' : _p43_smap1.FEVENCIM
-                                                        ,'smap1.fecancel' : Ext.Date.format(_fieldByName('fecancel').getValue(),'d/m/Y')
-                                                        ,'smap1.cdtipsup' : _p43_smap1.cdtipsup
-                                                    }
-                                                    ,success : function(response)
-                                                    {
-                                                        _setLoading(false,form);
-                                                        var ck = 'Decodificando respuesta al cancelar';
-                                                        try
-                                                        {
-                                                            var json = Ext.decode(response.responseText);
-                                                            debug('### confirmar:',json);
-                                                            if(json.success)
-                                                            {
-                                                                mensajeCorrecto('Endoso generado','Endoso generado');
-                                                                marendNavegacion(2);
-                                                            }
-                                                            else
-                                                            {
-                                                                mensajeError(json.respuesta);
-                                                            }
-                                                        }
-                                                        catch(e)
-                                                        {
-                                                            manejaException(e,ck);
-                                                        }
-                                                    }
-                                                    ,failure : function()
-                                                    {
-                                                        _setLoading(false,form);
-                                                        errorComunicacion(null,'Error cancelando');
-                                                    }
-                                                });
+					                            {
+					                                url      : _p43_urlConfirmar
+					                                ,params  :
+					                                {
+					                                    'smap1.cdunieco'  : _p43_smap1.CDUNIECO
+					                                    ,'smap1.cdramo'   : _p43_smap1.CDRAMO
+					                                    ,'smap1.estado'   : _p43_smap1.ESTADO
+					                                    ,'smap1.nmpoliza' : _p43_smap1.NMPOLIZA
+					                                    ,'smap1.cdrazon'  : _fieldByName('cdrazon').getValue()
+					                                    ,'smap1.feefecto' : _p43_smap1.FEEFECTO
+					                                    ,'smap1.fevencim' : _p43_smap1.FEVENCIM
+					                                    ,'smap1.fecancel' : Ext.Date.format(_fieldByName('fecancel').getValue(),'d/m/Y')
+					                                    ,'smap1.cdtipsup' : _p43_smap1.cdtipsup
+					                                }
+					                                ,success : function(response)
+					                                {
+					                                    _setLoading(false,form);
+					                                    var ck = 'Decodificando respuesta al cancelar';
+					                                    try
+					                                    {
+					                                        var json = Ext.decode(response.responseText);
+					                                        debug('### confirmar:',json);
+					                                        if(json.success)
+					                                        {
+					                                            mensajeCorrecto('Endoso generado','Endoso generado');
+					                                            marendNavegacion(2);
+					                                        }
+					                                        else
+					                                        {
+					                                            mensajeError(json.respuesta);
+					                                        }
+					                                    }
+					                                    catch(e)
+					                                    {
+					                                        manejaException(e,ck);
+					                                    }
+					                                }
+					                                ,failure : function()
+					                                {
+					                                    _setLoading(false,form);
+					                                    errorComunicacion(null,'Error cancelando');
+					                                }
+					                            });
                                             }
                                             else
                                             {
@@ -230,30 +230,30 @@ Ext.onReady(function()
     
     
     comboMotivoCanc.addListener('select',function(combo,records){
-        var nue = records[0].get('key');
-        comboMotivocambio(comboMotivoCanc,nue);
-        
+    	var nue = records[0].get('key');
+    	comboMotivocambio(comboMotivoCanc,nue);
+    	
     });
     comboMotivocambio(comboMotivoCanc,'9');
     
     
     function comboMotivocambio(combo,nue){
-    
-        debug('>comboMotivocambio:', nue);
-        
-        if(nue=='9'){
+	
+    	debug('>comboMotivocambio:', nue);
+    	
+    	if(nue=='9'){
             combo.setValue('9');
             panCanInputFecha.setValue(new Date());
             panCanInputFecha.setReadOnly(true);
             _p43_smap1.cdtipsup = '53';
-        }
-        else if(nue=='25'){
-            combo.setValue('25');
-            panCanInputFecha.setValue(_p43_smap1.FEEFECTO);
+    	}
+    	else if(nue=='25'){
+    		combo.setValue('25');
+    		panCanInputFecha.setValue(_p43_smap1.FEEFECTO);
             panCanInputFecha.setReadOnly(false);
             _p43_smap1.cdtipsup = '52';
-        }
-        else if(nue=='31'){
+    	}
+    	else if(nue=='31'){
             combo.setValue('31');
             panCanInputFecha.setValue(_p43_smap1.FEEFECTO);
             panCanInputFecha.setReadOnly(false);
@@ -262,10 +262,10 @@ Ext.onReady(function()
         
         debug('<comboMotivocambio');
 }
-    
+	
 });
 
-    
+	
 
 ////// funciones //////
 ////// funciones //////

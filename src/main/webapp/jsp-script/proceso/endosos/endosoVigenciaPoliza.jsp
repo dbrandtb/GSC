@@ -3,8 +3,8 @@
 <script>
 	var _CONTEXT = '${ctx}';
 	var asegAlterno              = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false"               />;
-	var guarda_Aseg_alterno      = '<s:url namespace="/endosos"      action="guardarEndosoAseguradoAlterno"       />';
-	var guarda_Vigencia_Poliza   = '<s:url namespace="/endosos"      action="guardarEndosoVigenciaPoliza"         />';
+	var guarda_Aseg_alterno      = '<s:url namespace="/endosos" action=" guardarEndosoAseguradoAlterno"           />';
+	var guarda_Vigencia_Poliza   = '<s:url namespace="/endosos" action=" guardarEndosoVigenciaPoliza"             />';
 	var endVigPolFlujo           = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false"               />;
 	
 	debug('asegAlterno  -->:',asegAlterno);
@@ -75,23 +75,25 @@
 	        				asegAlterno.FEPROREN = Ext.Date.format(panelInicialPral.down('[name="feFin"]').getValue(),'d/m/Y');
 	        				asegAlterno.FEINIVAL = Ext.Date.format(panelInicialPral.down('[name="feInival"]').getValue(),'d/m/Y');
 	        				submitValues['smap1']= asegAlterno;
-	        				
-	        				if(!Ext.isEmpty(endVigPolFlujo))
+							
+							if(!Ext.isEmpty(endVigPolFlujo))
 	        				{
 	        				    submitValues['flujo'] = endVigPolFlujo;
 	        				}
-	        				Ext.Ajax.request( {
+							Ext.Ajax.request( {
 		   						    url: guarda_Vigencia_Poliza,
 		   						    jsonData: Ext.encode(submitValues),
 		   						    success:function(response,opts){
 		   						    	 myMask.hide();
 		   						    	 panelInicialPral.setLoading(false);
 		   						         var jsonResp = Ext.decode(response.responseText);
+
 		   						      	 
 		   						      	 var callbackRemesa = function()
 		   						      	 {
 		   						      	     //usa codigo del marcoEndososAuto.jsp
 		   						      	     marendNavegacion(2);
+
 		   						      	 };
 		   						      	 
 		   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
@@ -113,6 +115,9 @@
 		   						            msg: 'Error de comunicaci&oacute;n',
 		   						            buttons: Ext.Msg.OK,
 		   						            icon: Ext.Msg.ERROR
+
+
+
 		   						        });
 		   						    }
 		   						});
@@ -129,6 +134,6 @@
 			}]
 		});
     });
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>	
 </script>
 <div id="maindivHist" style="height:1000px;"></div>

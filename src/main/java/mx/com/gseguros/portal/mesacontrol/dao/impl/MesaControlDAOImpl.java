@@ -9,13 +9,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.StoredProcedure;
-
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
@@ -24,14 +17,28 @@ import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.StoredProcedure;
+
 public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaControlDAO
 {
-	private static final Logger logger = LoggerFactory.getLogger(MesaControlDAOImpl.class);
+	private static final Logger logger = Logger.getLogger(MesaControlDAOImpl.class);
 	
 	public String cargarCdagentePorCdusuari(String cdusuari)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdusuari" , cdusuari);
+		logger.debug(
+				new StringBuilder()
+				.append("\n****************************************************")
+				.append("\n****** PKG_CONSULTA.P_GET_CDAGENTE_X_CDUSUARI ******")
+				.append("\n****** params=").append(params)
+				.append("\n****************************************************")
+				.toString()
+				);
 		Map<String,Object>resultado=this.ejecutaSP(new CargarCdagentePorCdusuari(getDataSource()), params);
 		return (String)resultado.get("pv_cdagente_o");
 	}
@@ -50,16 +57,16 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	}
 	
 	@Override
-	public String movimientoMesaControl (
-			String cdunieco  , String cdramo   , String estado     , String nmpoliza,
-			String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra,
-			Date ferecepc   , String cdagente , String referencia , String nombre,
-			Date festatus   , String status   , String comments   , String nmsolici,
-			String cdtipsit , String cdusuari , String cdsisrol   , String swimpres,
-			String cdtipflu , String cdflujomc,
-			Map<String, String> valores,
-			String cdtipsup , String renuniext , String renramo , String renpoliex, boolean origenMesa,
-			String cdunidspch) throws Exception {
+	public String movimientoMesaControl(
+			String cdunieco  , String cdramo   , String estado     , String nmpoliza
+			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
+			,Date ferecepc   , String cdagente , String referencia , String nombre
+			,Date festatus   , String status   , String comments   , String nmsolici
+			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
+			,String cdtipflu , String cdflujomc
+			,Map<String, String> valores, String cdtipsup
+			)throws Exception
+	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
 		params.put("cdunieco"  , cdunieco);
 		params.put("cdramo"    , cdramo);
@@ -84,31 +91,40 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("cdtipflu"  , cdtipflu);
 		params.put("cdflujomc" , cdflujomc);
 		params.put("cdtipsup"  , cdtipsup);
-		params.put("renuniext" , renuniext);
-		params.put("renramo"   , renramo);
-		params.put("renpoliex" , renpoliex);
 		
-		params.put("sworigenmesa" , origenMesa ? "S" : "N");
-		params.put("cdunidspch" , cdunidspch);
-		
-		if (valores==null) {
+		if(valores==null)
+		{
 			valores = new LinkedHashMap<String,String>();
 		}
 		
-		for (int i=1; i <= 50; i++) {
+		for(int i=1; i <= 50; i++)
+		{
 			String key    = Utils.join("otvalor",StringUtils.leftPad(String.valueOf(i),2,"0"));
 			String pv_key = Utils.join("pv_",key);
-			if (!valores.containsKey(key)) {
+			if(!valores.containsKey(key))
+			{
 				valores.put(key,valores.get(pv_key));
 			}
 		}
+		
 		params.putAll(valores);
+
+		logger.debug(
+				new StringBuilder()
+				.append("\n**********************************************")
+				.append("\n****** PKG_SATELITES2.P_MOV_MESACONTROL ******")
+				.append("\n****** params=").append(params)
+				.append("\n**********************************************")
+				.toString()
+				);
 		Map<String,Object>procResult=ejecutaSP(new MovimientoMesaControl(getDataSource()),params);
 		return String.valueOf(procResult.get("pv_tramite_o"));
 	}
 	
-	protected class MovimientoMesaControl extends StoredProcedure {
-		protected MovimientoMesaControl (DataSource dataSource) {
+	protected class MovimientoMesaControl extends StoredProcedure
+	{
+		protected MovimientoMesaControl(DataSource dataSource)
+		{
 			super(dataSource,"PKG_SATELITES2.P_MOV_MESACONTROL");
 			declareParameter(new SqlParameter("cdunieco"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"     , OracleTypes.VARCHAR));
@@ -118,11 +134,11 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("cdsucadm"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsucdoc"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtiptra"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("ferecepc"   , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("ferecepc"   , OracleTypes.DATE));
 			declareParameter(new SqlParameter("cdagente"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("referencia" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nombre"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("festatus"   , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("festatus"   , OracleTypes.DATE));
 			declareParameter(new SqlParameter("status"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("comments"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsolici"   , OracleTypes.VARCHAR));
@@ -183,54 +199,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("renuniext"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("renramo"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("renpoliex"  , OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlParameter("sworigenmesa" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdunidspch"   , OracleTypes.VARCHAR));
-			
 			declareParameter(new SqlOutParameter("pv_tramite_o" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public void actualizaNmpolizaMesaControl(
-			  String ntramite ,String cdunieco ,String cdramo ,String estado  ,String nmpoliza
-			 ,String cdtiptra ,String renuniext ,String renramo   ,String renpoliex
-			)throws Exception
-	{
-		Map<String,Object>params=new LinkedHashMap<String,Object>();
-		params.put("pv_ntramite_i" , ntramite);
-		params.put("pv_cdunieco_i" , cdunieco);
-		params.put("pv_cdramo_i"   , cdramo);
-		params.put("pv_estado_i"   , estado);
-		params.put("pv_nmpoliza_i" , nmpoliza);
-		params.put("pv_cdtiptra_i" , cdtiptra);
-		params.put("pv_renuniext_i", renuniext);
-		params.put("pv_renramo_i"  , renramo);
-		params.put("pv_renpoliex_i", renpoliex);
-		ejecutaSP(new actualizaNmpolizaMesaControl(getDataSource()),params);
-		
-	}
-	
-	protected class actualizaNmpolizaMesaControl extends StoredProcedure
-	{
-		protected actualizaNmpolizaMesaControl(DataSource dataSource)
-		{
-			super(dataSource,"PKG_SATELITES2.P_UPDATE_NMPOLIZA_MC");
-			declareParameter(new SqlParameter("pv_ntramite_i"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdtiptra_i"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_renuniext_i"  , OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_renramo_i"    , OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_renpoliex_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
 			compile();
@@ -249,8 +218,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			,String swagente
 			,String cdusuariDest
 			,String cdsisrolDest
-			,String status
-			,boolean cerrado
 			)throws Exception
 	{
 		Map<String,Object>params=new LinkedHashMap<String,Object>();
@@ -264,8 +231,14 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("swagente"     , swagente);
 		params.put("cdusuariDest" , cdusuariDest);
 		params.put("cdsisrolDest" , cdsisrolDest);
-		params.put("status"       , status);
-		params.put("cerrado"      , cerrado ? "S" : "N");
+		logger.debug(
+				new StringBuilder()
+				.append("\n**********************************************")
+				.append("\n****** PKG_SATELITES2.P_MOV_DMESACONTROL ******")
+				.append("\n****** params=").append(params)
+				.append("\n**********************************************")
+				.toString()
+				);
 		ejecutaSP(new MovimientoDetalleTramite(getDataSource()),params);
 	}
 	
@@ -284,8 +257,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("swagente"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuariDest" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrolDest" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("status"       , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cerrado"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -298,6 +269,14 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("nmsolici" , nmsolici);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*********************************************")
+				.append("\n****** PKG_SATELITES.P_UPDATE_NMSOLICI ******")
+				.append("\n****** params=").append(params)
+				.append("\n*********************************************")
+				.toString()
+				);
 		ejecutaSP(new ActualizarNmsoliciTramite(getDataSource()),params);
 	}
 	
@@ -338,6 +317,16 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 		
 		params.putAll(valores);
+
+		logger.debug(
+				new StringBuilder()
+				.append("\n**********************************************")
+				.append("\n****** PKG_SATELITES.p_upd_tmesacontrol ******")
+				.append("\n****** params=").append(params)
+				.append("\n**********************************************")
+				.toString()
+				);
+		
 		ejecutaSP(new ActualizaValoresTramite(getDataSource()),params);
 	}
 	
@@ -429,6 +418,12 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsolici" , nmsolici);
+		logger.debug(Utils.log(
+				 "\n*********************************************************"
+				,"\n****** PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR ******"
+				,"\n****** params=",params
+				,"\n*********************************************************"
+				));
 		Map<String,Object>procResult     = ejecutaSP(new CargarTramitesPorParametrosVariables(getDataSource()),params);
 		List<Map<String,String>>registro = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(registro==null)
@@ -439,7 +434,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 				 "\n*********************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , registro
-				,"\n****** cargarTramitesPorParametrosVariables ...P_GET_TMESACONTROL_X_PAR_VAR ******"
+				,"\n****** PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR ******"
 				,"\n*********************************************************"
 				));
 		return registro;
@@ -467,7 +462,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 					,"OTVALOR21","OTVALOR22","OTVALOR23","OTVALOR24","OTVALOR25","OTVALOR26" ,"OTVALOR27","OTVALOR28","OTVALOR29","OTVALOR30"
 					,"OTVALOR31","OTVALOR32","OTVALOR33","OTVALOR34","OTVALOR35","OTVALOR36" ,"OTVALOR37","OTVALOR38","OTVALOR39","OTVALOR40"
 					,"OTVALOR41","OTVALOR42","OTVALOR43","OTVALOR44","OTVALOR45","OTVALOR46" ,"OTVALOR47","OTVALOR48","OTVALOR49","OTVALOR50"
-					,"SWORIGENMESA"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -482,6 +476,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("cdusuari" , cdusuari);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_INSERTA_CONTRARECIBO", params);
 		ejecutaSP(new GuardarRegistroContrarecibo(getDataSource()),params);
 	}
 	
@@ -505,6 +500,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("ntramite" , ntramite);
 		params.put("cddocume" , cddocume);
 		params.put("nuevo"    , nuevo);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_UPD_TDOCUPOL_DSDOCUME", params);
 		ejecutaSP(new ActualizarNombreDocumento(getDataSource()),params);
 	}
 	
@@ -528,6 +524,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("ntramite" , ntramite);
 		params.put("cddocume" , cddocume);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_BORRAR_TDOCUPOL", params);
 		ejecutaSP(new BorrarDocumento(getDataSource()),params);
 	}
 	
@@ -560,6 +557,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_nmsuplem_i" , nmsuplem);
 		params.put("pv_codpostal_i", cdpos);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_ELIMINA_MDOMICIL_ASEGURADOS", params);
 		ejecutaSP(new BorraDomicilioAsegSiCodposCambia(getDataSource()),params);
 	}
 	
@@ -585,7 +583,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
 			String swvisible, String codidocu, String cdtiptra, String cdorddoc
-			,Documento documento, String cdusuari, String cdsisrol, boolean sustituir) throws Exception {
+			,Documento documento, String cdusuari, String cdsisrol) throws Exception {
 		
 		HashMap<String, Object> params =  new HashMap<String, Object>();
 		params.put("pv_cdunieco_i"  , cdunieco);
@@ -606,7 +604,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("cdmoddoc"       , documento!=null ? documento.getCdmoddoc() : null);
 		params.put("cdusuari"       , cdusuari);
 		params.put("cdsisrol"       , cdsisrol);
-		params.put("sustituir"      , sustituir ? "S" : "N");
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_MOV_DOCUMENTOS", params);
 		ejecutaSP(new GuardarDocumentoPolizaSP(getDataSource()), params);
 	}
 	
@@ -631,14 +629,12 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("cdmoddoc"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"       , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("sustituir"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
 	
-	/*
 	@Override
 	public String turnaPorCargaTrabajo(
 			String ntramite
@@ -666,7 +662,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			compile();
 		}
 	}
-	*/
 	
 	@Override
 	public void validarAntesDeTurnar(
@@ -716,10 +711,10 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		protected ActualizaStatusMesaControlSP(DataSource dataSource) {
 			
 			super(dataSource,"PKG_SATELITES.P_UPDATE_STATUS_MC");
-    		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
-    		declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
     		compile();
 		}
 	}
@@ -809,7 +804,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("recuperarTramites ...P_OBTIENE_MESACONTROL lista=",lista));
+		logger.debug(Utils.log("****** PKG_SATELITES2.P_OBTIENE_MESACONTROL lista=",lista));
 		return lista;
 	}
 	
@@ -909,7 +904,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		Map<String,Boolean> result    = new HashMap<String,Boolean>();
 		result.put("preguntar" , "S".equals(preguntar));
 		result.put("marcado"   , "S".equals(marcado));
-		logger.debug(Utils.log("marcarImpresionOperacion ...P_MARCA_IMPRESION_OPE result=",result));
+		logger.debug(Utils.log("\n****** PKG_SATELITES2.P_MARCA_IMPRESION_OPE result=",result));
 		return result;
 	}
 	
@@ -1158,7 +1153,13 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 	}
 
-
+	/*******************************************************************/
+	/*  Se agrega pkg_db_report.P_REVERSA_STATUS_IMPRESO
+	 * 	para realizar el reverso de impresion 
+	 *  para que dado un trámite que ya haya sido impreso,
+	 *   actualizar el mismo como "pendiente por imprimir", 
+	 * 
+	 */
 	@Override
 	public void regeneraReverso(String ntramite, String cdsisrol,String cdusuari) throws Exception{
 		
@@ -1189,256 +1190,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		}
 	}
 	
+	/*******************************************************************/
 	
-	@Override
-	public void actualizarOtvalorTramitePorDsatribu(
-			String ntramite
-			,String dsatribu
-			,String otvalor
-			,String accion
-			)throws Exception
-	{
-		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("ntramite" , ntramite);
-		params.put("dsatribu" , dsatribu);
-		params.put("otvalor"  , otvalor);
-		params.put("accion"   , accion);
-		Map<String,Object> procRes = ejecutaSP(new ActualizarOtvalorTramitePorDsatribuSP(getDataSource()),params);
-		
-		String error = (String)procRes.get("pv_error_o");
-		
-		if(StringUtils.isNotBlank(error))
-		{
-			throw new ApplicationException(error);
-		}
-	}
 	
-	protected class ActualizarOtvalorTramitePorDsatribuSP extends StoredProcedure
-	{
-		protected ActualizarOtvalorTramitePorDsatribuSP(DataSource dataSource)
-		{
-			super(dataSource,"P_MOV_VALOR_MC_X_DSATRIBU");
-			
-			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("dsatribu" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-			
-			compile();
-		}
-	}
-	
-	@Override
-	public String recuperarOtvalorTramitePorDsatribu(
-			String ntramite
-			,String dsatribu
-			)throws Exception
-	{
-		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("ntramite" , ntramite);
-		params.put("dsatribu" , dsatribu);
-		Map<String,Object> procRes = ejecutaSP(new RecuperarOtvalorTramitePorDsatribuSP(getDataSource()),params);
-		
-		String error    = (String)procRes.get("pv_error_o")
-		       ,otvalor = (String)procRes.get("pv_otvalor_o");
-		
-		if(StringUtils.isNotBlank(error))
-		{
-			throw new ApplicationException(error);
-		}
-		
-		if(StringUtils.isBlank(otvalor))
-		{
-			otvalor = "";
-		}
-		
-		logger.debug("OTVALOR RECUPERADO CON DSATRIBU {} PARA TRAMITE {} = {}",dsatribu,ntramite,otvalor);
-		
-		return otvalor;
-	}
-	
-	protected class RecuperarOtvalorTramitePorDsatribuSP extends StoredProcedure
-	{
-		protected RecuperarOtvalorTramitePorDsatribuSP(DataSource dataSource)
-		{
-			super(dataSource,"P_GET_VALOR_MC_X_DSATRIBU");
-			
-			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("dsatribu" , OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_otvalor_o" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_error_o"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
-			
-			compile();
-		}
-	}
-	
-	@Override
-	public void actualizarNmsuplemTramite(String ntramite, String nmsuplem) throws Exception
-	{
-		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("ntramite" , ntramite);
-		params.put("nmsuplem" , nmsuplem);
-		Map<String,Object> procRes = ejecutaSP(new ActualizarNmsuplemTramiteSP(getDataSource()),params);
-		
-		String error = (String)procRes.get("pv_error_o");
-		
-		if(StringUtils.isNotBlank(error))
-		{
-			throw new ApplicationException(error);
-		}
-	}
-	
-	protected class ActualizarNmsuplemTramiteSP extends StoredProcedure
-	{
-		protected ActualizarNmsuplemTramiteSP(DataSource dataSource)
-		{
-			super(dataSource,"P_ACTUALIZA_NMSUPLEM_TRAMITE");
-			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public void borrarNmsoliciTramite(String ntramite) throws Exception
-	{
-		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("ntramite" , ntramite);
-		ejecutaSP(new BorrarNmsoliciTramiteSP(getDataSource()),params);
-	}
-	
-	protected class BorrarNmsoliciTramiteSP extends StoredProcedure
-	{
-		protected BorrarNmsoliciTramiteSP(DataSource dataSource)
-		{
-			super(dataSource,"PKG_SATELITES2.P_BORRA_NMSOLICI_TRAMITE");
-			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public void concatenarAlInicioDelUltimoDetalle(String ntramite, String comentario, String cdmodulo, String cdevento) throws Exception {
-		Map<String, String> params = new LinkedHashMap<String, String>();
-		params.put("ntramite"   , ntramite);
-		params.put("comentario" , comentario);
-		params.put("cdmodulo"   , cdmodulo);
-		params.put("cdevento"   , cdevento);
-		ejecutaSP(new ConcatenarAlInicioDelUltimoDetalleSP(getDataSource()), params);
-	}
-	
-	protected class ConcatenarAlInicioDelUltimoDetalleSP extends StoredProcedure
-	{
-		protected ConcatenarAlInicioDelUltimoDetalleSP(DataSource dataSource)
-		{
-			super(dataSource,"P_ACT_DETALLE_MC_AL_INICIO");
-			declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("comentario" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdmodulo"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdevento"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public List<Map<String, String>> obtenerMesaControl(String cdunieco, String ntramite, String cdramo, String nmpoliza, String estado, String cdagente, String status, String cdtipsit, String fedesde, String fehasta, 
-            String cdrol, String cdtiptra, String contrarecibo, String tipoPago, String nfactura, String cdpresta, String cdusuari, String cdtipram, String lote, String tipolote,     
-            String tipoimpr, String cdusuari_busq, String dscontra) throws Exception{
-	    Map<String, String> params = new LinkedHashMap<String, String>();
-	    params.put("pv_cdunieco_i",     cdunieco);
-	    params.put("pv_ntramite_i",     ntramite);
-	    params.put("pv_cdramo_i",       cdramo);
-	    params.put("pv_nmpoliza_i",     nmpoliza);
-	    params.put("pv_estado_i",       estado);
-	    params.put("pv_cdagente_i",     cdagente);    
-	    params.put("pv_status_i",       status);      
-	    params.put("pv_cdtipsit_i",     cdtipsit);    
-	    params.put("pv_fedesde_i",      fedesde);     
-	    params.put("pv_fehasta_i",      fehasta);     
-	    params.put("pv_cdrol_i",        cdrol);       
-	    params.put("pv_cdtiptra_i",     cdtiptra);    
-	    params.put("pv_contrarecibo_i", contrarecibo);
-	    params.put("pv_tipoPago_i",     tipoPago);    
-	    params.put("pv_nfactura_i",     nfactura);    
-	    params.put("pv_cdpresta_i",     cdpresta);    
-	    params.put("pv_cdusuari_i",     cdusuari);    
-	    params.put("cdtipram",          cdtipram);         
-	    params.put("lote",              lote);             
-	    params.put("tipolote",          tipolote);         
-	    params.put("tipoimpr",          tipoimpr);         
-	    params.put("cdusuari_busq",     cdusuari_busq);    
-	    params.put("dscontra",          dscontra);
-	    Map<String,Object> procResult     = ejecutaSP(new ObtenerMesaControl(getDataSource()),params);
-        List<Map<String,String>> registro = (List<Map<String,String>>)procResult.get("pv_registro_o");
-        if(registro == null){
-            registro = new ArrayList<Map<String,String>>();
-        }
-        logger.debug(Utils.log(
-                 "\n*********************************************************"
-                ,"\n****** params="   , params
-                ,"\n****** registro=" , registro
-                ,"\n****** obtenerMesaControl ...P_GET_TMESACONTROL_X_PAR_VAR ******"
-                ,"\n*********************************************************"
-                ));
-        return registro;
-	}
-	
-	protected class ObtenerMesaControl extends StoredProcedure{
-        protected ObtenerMesaControl(DataSource dataSource){
-            super(dataSource,"P_OBTIENE_MESACONTROL1");
-            declareParameter(new SqlParameter("pv_cdunieco_i"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_ntramite_i"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i"       , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmpoliza_i"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_estado_i"       , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdagente_i"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_status_i"       , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdtipsit_i"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_fedesde_i"      , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_fehasta_i"      , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdrol_i"        , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdtiptra_i"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_contrarecibo_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_tipoPago_i"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nfactura_i"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdpresta_i"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdusuari_i"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdtipram"          , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("lote"              , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("tipolote"          , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("tipoimpr"          , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdusuari_busq"     , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("dscontra"          , OracleTypes.VARCHAR));
-            String[] cols=new String[]{
-                    "ntramite"     , "cdunieco" , "cdramo"   , "dsramo"        , "estado"     , "nmpoliza"
-                    ,"nmsolici"    , "cdsucadm" , "dssucadm" , "cdsucdoc"      , "dssucdoc"   , "cdsubram"
-                    ,"cdtiptra"    , "ferecepc" , "cdagente" , "Nombre_agente" , "referencia" , "nombre"
-                    ,"fecstatu"    , "status"   , "comments" , "cdtipsit"      , "comi"       , "prima_neta"
-                    ,"prima_total" , "nmsuplem"
-                    ,"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09","otvalor10"
-                    ,"otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19","otvalor20"
-                    ,"otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29","otvalor30"
-                    ,"otvalor31","otvalor32","otvalor33","otvalor34","otvalor35","otvalor36","otvalor37","otvalor38","otvalor39","otvalor40"
-                    ,"otvalor41","otvalor42","otvalor43","otvalor44","otvalor45","otvalor46","otvalor47","otvalor48","otvalor49","otvalor50"
-                    ,"contratante" , "cdusuari", "swpolind"
-            };
-            declareParameter(new SqlOutParameter("pv_registro_o"  , OracleTypes.CURSOR, new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
-        }
-    }
 }
