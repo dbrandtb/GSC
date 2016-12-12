@@ -91,6 +91,7 @@ var _p25_urlGuardarConfig4TVALAT        = '<s:url namespace="/emision"         a
 var _p25_urlRecuperacion                = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
 var _p25_urlRestaurarRespaldoCenso      = '<s:url namespace="/emision"         action="restaurarRespaldoCenso"           />';
 var _p25_urlBorrarRespaldoCenso         = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
+var _p25_urlRefrescarCensoColectivo     = '<s:url namespace="/emision"         action="refrescarCensoColectivo"          />';
 var _p25_urlconsultaExtraprimOcup       = '<s:url namespace="/emision"         action="consultaExtraprimaOcup"            />';
 var _p25_urlReporte                     = '<s:url namespace="/consultasPoliza" action="consultaIncisosPoliza" />';
 
@@ -2815,6 +2816,10 @@ function _p25_rfcBlur(field)
                                     ]
                                 }
                                 ,{
+                                    header     : 'ID. Asegurado'
+                                    ,dataIndex : 'CLAVECLI'
+                                    ,flex      : 1
+                                },{
                                     header     : 'RFC'
                                     ,dataIndex : 'RFCCLI'
                                     ,flex      : 1
@@ -7228,7 +7233,6 @@ function _p25_exportarExcelCensoFinal(){
         }
     });
 }
-
 ////// funciones //////
 <%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
 </script>

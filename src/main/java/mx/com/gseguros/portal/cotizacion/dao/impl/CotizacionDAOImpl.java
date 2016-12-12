@@ -8817,6 +8817,32 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             compile();
         }
     }
+    
+    @Override
+    public void refrescarCensoColectivo( String cdunieco,String cdramo,String estado, String nmpoliza)throws Exception
+    {
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        params.put("pv_cdunieco_i" , cdunieco);
+        params.put("pv_cdramo_i"   , cdramo);
+        params.put("pv_estado_i"   , estado);
+        params.put("pv_nmpoliza_i" , nmpoliza);
+        ejecutaSP(new RefrescarCensoColectivo(getDataSource()),params);
+    }
+    
+    protected class RefrescarCensoColectivo extends StoredProcedure
+    {
+        protected RefrescarCensoColectivo(DataSource dataSource)
+        {
+            super(dataSource,"");
+            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
     
 	

@@ -833,4 +833,71 @@ public class ConsultasManagerImpl implements ConsultasManager
      
          System.out.println("-"+a);
      }
+	
+    public boolean copiarArchivosRenovacionColectivo(String cduniecoOrigen, String cdramoOrigen, String estadoOrigen, 
+            String nmpolizaOrigen, String ntramiteDestino, String rutaDocumentos)throws Exception{
+        logger.debug("copiarArchivosRenovacionColectivo =====> ");
+        //copiar documentos de usuario
+        List<Map<String,String>>iPolizaUserDocs=renovacionDAO.cargarDocumentosSubidosPorUsuario(cduniecoOrigen,cdramoOrigen,estadoOrigen,nmpolizaOrigen);
+        for(Map<String,String>iUserDoc:iPolizaUserDocs)
+        {
+            String ntramiteAnt = iUserDoc.get("ntramite");
+            String cddocume    = iUserDoc.get("cddocume");
+            
+            File carpeta=new File(rutaDocumentos + "/" + ntramiteDestino);
+            logger.debug("Valor de la carpeta ==> "+carpeta);
+            
+            if(!carpeta.exists()){
+                logger.debug("no existe la carpeta::: "+ntramiteDestino);
+                carpeta.mkdir();
+                if(carpeta.exists()){
+                    logger.debug("carpeta creada");
+                } else {
+                    logger.debug("carpeta NO creada");
+                }
+            } else {
+                logger.debug("existe la carpeta::: "+ntramiteDestino);
+            }
+            
+            File doc = new File(
+                    new StringBuilder(rutaDocumentos)
+                    .append("/")
+                    .append(ntramiteAnt)
+                    .append("/")
+                    .append(cddocume)
+                    .toString()
+                    );
+            
+            logger.debug("Valor doc ==>"+doc);
+            File newDoc = new File(
+                    new StringBuilder(rutaDocumentos)
+                    .append("/")
+                    .append(ntramiteDestino)
+                    .append("/")
+                    .append(cddocume)
+                    .toString()
+                    );
+            
+            logger.debug("Valor newDoc ==>"+newDoc);
+            if(doc!=null&&doc.exists())
+            {
+                try
+                {
+                    FileUtils.copyFile(doc, newDoc);
+                }
+                catch(Exception ex)
+                {
+                    logger.error("Error copiando archivo de usuario",ex);
+                }
+            }
+            else
+            {
+                logger.error(new StringBuilder("No existe el documento").append(doc).toString());
+            }
+        }        
+        /*consultasDAO.copiaDocumentosTdocupol(cduniecoOrigen, cdramoOrigen, estadoOrigen, 
+                nmpolizaOrigen, ntramiteDestino);*/
+        
+        return true;
+    }
 }

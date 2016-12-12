@@ -557,7 +557,11 @@
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
             <result type="json" />
-        </action>      
+        </action>
+        
+        <action name="refrescarCensoColectivo" class="CotizacionAction" method="refrescarCensoColectivo">
+            <result name="success" type="json" />
+        </action>
     </package>
     
 </struts>

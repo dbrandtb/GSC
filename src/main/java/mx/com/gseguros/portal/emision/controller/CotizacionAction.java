@@ -3265,6 +3265,8 @@ public class CotizacionAction extends PrincipalCoreAction
                         List<PolizaDTO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
                         if (lista != null && !lista.isEmpty()) {
                             smap1.put("nmpolant" , lista.get(0).getNmpolant());
+                            consultasManager.copiarArchivosRenovacionColectivo(smap1.get("cdunieco"), smap1.get("cdramo"), "M", Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"", 
+                                    tramite.get("NTRAMITE"), this.getText("ruta.documentos.poliza"));
                         }else{
                             smap1.put("nmpolant" , "");
                         }
@@ -3447,6 +3449,8 @@ public class CotizacionAction extends PrincipalCoreAction
 						List<PolizaDTO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
 						if (lista != null && !lista.isEmpty()) {
 							smap1.put("nmpolant" , lista.get(0).getNmpolant());
+							consultasManager.copiarArchivosRenovacionColectivo(smap1.get("cdunieco"), smap1.get("cdramo"), "M", Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"", 
+                                    tramite.get("NTRAMITE"), this.getText("ruta.documentos.poliza"));
 						}else{
 							smap1.put("nmpolant" , "");
 						}
@@ -13315,59 +13319,95 @@ public class CotizacionAction extends PrincipalCoreAction
 	}
 	
 	
-	   public String guardaEmpleados()
-	    {
-	        logger.debug(""
-	                + "\n########################################"
-	                + "\n###### guardaEmpleados ######"+smap1
-	                + "\nparams: "+params
-	                );
-	        try
-	        {
-	            
-	            success = true;
-	            exito   = true;
-	            String pv_numsuc_i=  params.get("administradora");
-	            String pv_cveent_i=  params.get("retenedora");
-	            String pv_cveemp_i=  params.get("clave");
-	            String pv_nomemp_i=  params.get("nombre");
-	            String pv_apaterno_i=  params.get("apaterno");
-	            String pv_amaterno_i=  params.get("amaterno");
-	            String pv_rfc_i=  params.get("rfc");
-	            String pv_curp_i=  params.get("curp");
-	            String pv_usuario_i=  params.get("usuario");
-	            String pv_feregist_i=  params.get("nombre");
-	            UserVO usuario=(UserVO)session.get("USUARIO");
-	            String cdusuario=usuario.getUser();
-	           cotizacionManager.guardaEmpleado(pv_numsuc_i,
-	                   pv_cveent_i,
-	                   pv_cveemp_i, 
-	                   pv_nomemp_i, 
-	                   pv_apaterno_i,
-	                   pv_amaterno_i,
-	                   pv_rfc_i, 
-	                   pv_curp_i, 
-	                   cdusuario, 
-	                   null,
-	                   null)
-	           ;
-	        }
-	        catch(Exception ex)
-	        {
-	            long timestamp=System.currentTimeMillis();
-	            logger.error(timestamp+" error al obtener coberturas plan", ex);
-	            respuesta       = "Error inesperado #"+timestamp;
-	            respuestaOculta = ex.getMessage();
-	            exito           = false;
-	        }
-	        logger.debug(""
-	                + "\n###### guardaEmpleados ######"
-	                + "\n########################################"
-	                );
-	        return SUCCESS;
-	    }
+	public String guardaEmpleados(){
+        logger.debug(""
+                + "\n########################################"
+                + "\n###### guardaEmpleados ######"+smap1
+                + "\nparams: "+params
+                );
+        try
+        {
+            
+            success = true;
+            exito   = true;
+            String pv_numsuc_i=  params.get("administradora");
+            String pv_cveent_i=  params.get("retenedora");
+            String pv_cveemp_i=  params.get("clave");
+            String pv_nomemp_i=  params.get("nombre");
+            String pv_apaterno_i=  params.get("apaterno");
+            String pv_amaterno_i=  params.get("amaterno");
+            String pv_rfc_i=  params.get("rfc");
+            String pv_curp_i=  params.get("curp");
+            String pv_usuario_i=  params.get("usuario");
+            String pv_feregist_i=  params.get("nombre");
+            UserVO usuario=(UserVO)session.get("USUARIO");
+            String cdusuario=usuario.getUser();
+           cotizacionManager.guardaEmpleado(pv_numsuc_i,
+                   pv_cveent_i,
+                   pv_cveemp_i, 
+                   pv_nomemp_i, 
+                   pv_apaterno_i,
+                   pv_amaterno_i,
+                   pv_rfc_i, 
+                   pv_curp_i, 
+                   cdusuario, 
+                   null,
+                   null)
+           ;
+        }
+        catch(Exception ex)
+        {
+            long timestamp=System.currentTimeMillis();
+            logger.error(timestamp+" error al obtener coberturas plan", ex);
+            respuesta       = "Error inesperado #"+timestamp;
+            respuestaOculta = ex.getMessage();
+            exito           = false;
+        }
+        logger.debug(""
+                + "\n###### guardaEmpleados ######"
+                + "\n########################################"
+                );
+        return SUCCESS;
+    }
 	   
-	   
+	public String refrescarCensoColectivo() {
+        logger.debug(Utils.log(
+                 "\n#####################################"
+                ,"\n###### refrescarCensoColectivo ######"
+                ,"\n###### smap1=" , smap1
+                ));
+        
+        try{
+            Utils.validateSession(session);
+            
+            Utils.validate(smap1, "No se recibieron datos");
+            
+            String cdunieco  = smap1.get("cdunieco")
+                   ,cdramo   = smap1.get("cdramo")
+                   ,estado   = smap1.get("estado")
+                   ,nmpolant = smap1.get("nmpolant");
+            
+            Utils.validate(
+                    cdunieco  , "No se recibi\u00f3 la sucursal"
+                    ,cdramo   , "No se recibi\u00f3 el producto"
+                    ,estado   , "No se recibi\u00f3 el estado"
+                    ,nmpolant , "No se recibi\u00f3 el nmpolant"
+                    );
+            
+            //cotizacionManager.refrescarCensoColectivo(cdunieco,cdramo,estado,Integer.parseInt(nmpolant.substring(7,13))+"");
+            success = true;
+        } catch(Exception ex){
+            respuesta = Utils.manejaExcepcion(ex);
+        }
+        
+        logger.debug(Utils.log(
+                 "\n###### success="   , success
+                ,"\n###### respuesta=" , respuesta
+                ,"\n###### borrarRespaldoCenso ######"
+                ,"\n#################################"
+                ));
+        return SUCCESS;
+    }
 	  
 	
 	///////////////////////////////

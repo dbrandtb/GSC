@@ -2246,3 +2246,96 @@ function _p25_borrarDetalleGrupoClic (grid,rowIndex) {
         }
     ));
 }
+
+function _p21_RefrescarCensoColectivo(){
+    Ext.Ajax.request( {
+        url      : _p21_urlRefrescarCensoColectivo
+        ,params  : {
+            'smap1.cdunieco'  : _p21_smap1.cdunieco
+            ,'smap1.cdramo'   : _p21_smap1.cdramo
+            ,'smap1.estado'   : 'M'
+            ,'smap1.nmpolant' : _p21_smap1.nmpolant
+        }
+        ,success : function(response) {
+            _unmask();
+            try {
+                var jsonCensoCol = Ext.decode(response.responseText);
+                debug('### _p21_RefrescarCensoColectivo resp:',jsonCensoCol);
+                if(jsonCensoCol.success==true) {
+                    centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','Se actualizo el censo de renovaci&oacute;n'));
+                }
+                else {
+                    centrarVentanaInterna(mensajeError(jsonBorr.respuesta));
+                }
+            }catch(e){
+                manejaException(e,ck);
+            }
+        }
+        ,failure : function(){
+            _unmask();
+            errorComunicacion(null,'Error al refrescar el Censo.');
+        }
+    });
+}
+
+function _p25_RefrescarCensoColectivo(){
+    Ext.Ajax.request( {
+        url      : _p25_urlRefrescarCensoColectivo
+        ,params  : {
+            'smap1.cdunieco'  : _p25_smap1.cdunieco
+            ,'smap1.cdramo'   : _p25_smap1.cdramo
+            ,'smap1.estado'   : 'M'
+            ,'smap1.nmpolant' : _p25_smap1.nmpolant
+        }
+        ,success : function(response) {
+            _unmask();
+            try {
+                var jsonCensoCol = Ext.decode(response.responseText);
+                debug('### _p25_urlRefrescarCensoColectivo resp:',jsonCensoCol);
+                if(jsonCensoCol.success==true)
+                {
+                    centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','Se actualizo el censo de renovaci&oacute;n'));
+                }
+                else
+                {
+                    centrarVentanaInterna(mensajeError(jsonBorr.respuesta));
+                }
+            }catch(e){
+                manejaException(e,ck);
+            }
+        }
+        ,failure : function(){
+            _unmask();
+            errorComunicacion(null,'Error al refrescar el Censo.');
+        }
+    });
+}
+
+function _p21_exportarExcelCensoFinal(){
+    Ext.create('Ext.form.Panel').submit({
+        standardSubmit : true,
+        url:_p21_urlReporte,
+        params: {
+            'params.cdunieco'          : _p21_smap1.cdunieco
+            ,'params.cdramo'           : _p21_smap1.cdramo
+            ,'params.estado'           : _p21_smap1.estado
+            ,'params.nmpolizaAnterior' : _p21_smap1.nmpoliza
+            ,'params.ntramite'         : _p21_smap1.ntramite
+            ,'params.exportar' : true
+        },
+        success: function(form, action) {
+            
+        },
+        failure: function(form, action){
+            switch (action.failureType){
+                case Ext.form.action.Action.CONNECT_FAILURE:
+                    Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+                    break;
+                case Ext.form.action.Action.SERVER_INVALID:
+                case Ext.form.action.Action.LOAD_FAILURE:
+                    Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+                    break;
+           }
+        }
+    });
+}

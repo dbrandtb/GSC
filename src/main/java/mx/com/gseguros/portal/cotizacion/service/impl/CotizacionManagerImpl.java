@@ -11230,6 +11230,11 @@ public class CotizacionManagerImpl implements CotizacionManager
         }
     }
 	
+    @Override
+    public void refrescarCensoColectivo(String cdunieco, String cdramo, String estado, String nmpoliza)throws Exception
+    {
+        cotizacionDAO.refrescarCensoColectivo(cdunieco,cdramo,estado,nmpoliza);
+    }
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////
