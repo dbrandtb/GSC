@@ -6345,12 +6345,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
             compile();
         }
     }
-    /**  pv_cdunieco_i     
-         pv_cdramo_i       
-         pv_estado_i       
-         pv_nmpoliza_i     
-         pv_nmsuplem_i
-     */
+
     public void conviertePuntoMuertoMpoliperBeneficiarioVida (String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception {
         Map<String,String>params = new LinkedHashMap<String,String>();
         params.put("cdunieco" , cdunieco);

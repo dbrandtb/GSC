@@ -869,6 +869,15 @@ public interface EndososDAO
 
     public List<Map<String,String>> endosoBeneficiariosVidaAuto(Map<String, String> params)throws Exception;
     
+    /**
+     * Modifica el beneficiario para asignarle el estatus a M en la tabla MPOLIPER
+     * @param cdunieco
+     * @param cdramo
+     * @param estado
+     * @param nmpoliza
+     * @param nmsuplem
+     * @throws Exception
+     */
     public void conviertePuntoMuertoMpoliperBeneficiarioVida (String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
     
 }
