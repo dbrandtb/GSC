@@ -97,6 +97,9 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	@Value("${rdf.impresion.remesa}")
 	private String nombreReporteRemesa;
 	
+	@Value("${pdf.impresion.remesa.nombre}")
+	private String nombreRemesaPdf;
+	
 	@Autowired
 	@Qualifier("consultasDAOICEImpl")
 	private ConsultasPolizaDAO consultasPolizaDAO;
@@ -2207,7 +2210,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
                         mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
                     }
                     
-                    if(cddocume.equals("remesa.pdf")){
+                    if(nombreRemesaPdf.equals(cddocume)){
                         try{
                                 String urlReporteCotizacion = Utils.join(
                                         rutaServidorReports
@@ -2225,7 +2228,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
                               String pathRemesa=Utils.join(
                                       rutaDocumentosPoliza
                                       ,"/",ntramite
-                                      ,"/remesa.pdf"
+                                      ,"/",nombreRemesaPdf
                                       );
                               
                               HttpUtil.generaArchivo(urlReporteCotizacion, pathRemesa);
