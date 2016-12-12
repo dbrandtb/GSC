@@ -947,4 +947,6 @@ public interface CotizacionDAO {
     * Valida que los datos de incisos del sigs tengan correspondiente sicaps
     */
    public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception;
+
+   public void refrescarCensoColectivo(String cdunieco, String cdramo, String estado, String nmpoliza)throws Exception;
 }

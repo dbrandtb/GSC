@@ -191,5 +191,8 @@ public interface ConsultasManager
     public void ejecutaFusionFam(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i, String pv_nmpoliza_i,
             String pv_nmsuplem_i,String pv_tipoMov_i,
             String pv_cdtiptra_i, UserVO usuario);
+    
+    public boolean copiarArchivosRenovacionColectivo(String cduniecoOrigen, String cdramoOrigen, String estadoOrigen, 
+            String nmpolizaOrigen, String ntramiteDestino, String rutaDocumentosDestino)throws Exception;
 	
 }
