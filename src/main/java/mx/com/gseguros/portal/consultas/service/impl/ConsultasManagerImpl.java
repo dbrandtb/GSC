@@ -1,6 +1,8 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.ConnectException;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +38,7 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.utils.DocumentosUtils;
@@ -66,6 +70,21 @@ public class ConsultasManagerImpl implements ConsultasManager
 	
 	@Autowired
 	private MailService mailService;
+
+	@Autowired
+    private MesaControlDAO mesaControlDAO;
+	
+	@Value("${pass.servidor.reports}")
+    private String passServidorReports;
+    
+    @Value("${rdf.impresion.remesa}")
+    private String nombreReporteRemesa;
+    
+    @Value("${pdf.impresion.remesa.nombre}")
+    private String nombreRemesaPdf;
+    
+    @Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
 
 	@Override
 	public List<Map<String,String>> consultaDinamica(ObjetoBD objetoBD,LinkedHashMap<String,Object>params) throws Exception
@@ -647,6 +666,15 @@ public class ConsultasManagerImpl implements ConsultasManager
                                                                                 , pv_nmpoliza_i
                                                                                 , pv_nmsuplem_i
                                                                                 , tit.get("nmsitaux"));
+                paso="Regenera y descarga documentos";
+                
+                regeneraDocs(documentos, new File(Utils.join(rutaDocumentosTemporal,"/Errores_fusion_familia_",pv_cdunieco_i
+                                                                                ,"_", pv_cdramo_i
+                                                                                ,"_", pv_estado_i
+                                                                                ,"_", pv_nmpoliza_i
+                                                                                ,"_", pv_nmsuplem_i
+                                                                                ,"_", tit.get("nmsitaux"))), pv_cdramo_i, new AtomicBoolean(false), null, null);
+                
                 logger.debug(Utils.log("Titular: ",tit,
                                        "\nDocumentos: ",documentos));
                 if(documentos.isEmpty()){
@@ -669,12 +697,7 @@ public class ConsultasManagerImpl implements ConsultasManager
                         
                         String []tipos=new String[]{"C","RCL","CB","OS","OSE","IM","IME","CR","OTRO"};
                         List<String> lTipos=Arrays.asList(tipos);
-                        logger.debug(Utils.join("___----__>",dsdocume1));
-                        dsdocume1=tipo(dsdocume1);
-                        logger.debug(Utils.join("2___----__>",dsdocume1));
-                        logger.debug(Utils.join("___----__>",dsdocume2));
-                        dsdocume2=tipo(dsdocume2);
-                        logger.debug(Utils.join("2___----__>",dsdocume2));
+                       
                         
                         if( lTipos.indexOf(dsdocume1)>lTipos.indexOf(dsdocume2)){
                             return 1;
@@ -827,13 +850,6 @@ public class ConsultasManagerImpl implements ConsultasManager
        
     }
 	
-	public static void main(String []args){
-        System.out.println("Hello World");
-        boolean a= "EMISIÓN DE LA POLIZA- FAM (1) INFORME MÉDICO DE MEDICINA PREVENTIVA PAG 1".matches("^.*INFORME.*M.DICO((?!(ESPECIALISTA)).)*$");
-     
-         System.out.println("-"+a);
-     }
-	
     public boolean copiarArchivosRenovacionColectivo(String cduniecoOrigen, String cdramoOrigen, String estadoOrigen, 
             String nmpolizaOrigen, String ntramiteDestino, String rutaDocumentos)throws Exception{
         logger.debug("copiarArchivosRenovacionColectivo =====> ");
@@ -900,4 +916,201 @@ public class ConsultasManagerImpl implements ConsultasManager
         
         return true;
     }
+    
+    
+    
+    /**
+     * Recibe una lista de documentos para regenerarlos en el caso de que no existan o esten corruptos
+     * 
+     * @param documentos Documentos a verificar, si no existen o estan corruptos se regeneraran
+     * @param archivoErrrores  Archivo de errores con la lista de documentos que se intentaron regenerar y fallaron
+     * @param cdtipram Tipo de Ramo
+     * @param hayErrores Indica si se escribieron errores en el archivo de errores
+     * @param lote      Numero de lote (opcional)
+     * @param cdusuari  Usuario que ejecuta el proceso (opcional)
+     * @return Lista de archivos correctos (ya existentes y regenerados exitosamente)
+     * @throws Exception
+     */
+    private List<Map<String, String>> regeneraDocs(List<Map<String, String>> documentos, File archivoErrrores,
+            String cdramo, AtomicBoolean hayErrores, String lote, String cdusuari) throws Exception {
+        
+        logger.debug(Utils.join("@@@@@@@@@@@@@@@@@@@@@@@@"
+                               ,"@@@@@ regeneraDocs"
+                               ,"@@@@@ documentos = ", documentos
+                              , "@@@@@ cdramo = ", cdramo));
+        List<Map<String, String>> docsExisten = new ArrayList<Map<String, String>>();
+        try{
+    
+            descargaUrl(documentos);
+            BufferedWriter bw = new BufferedWriter(new FileWriter(archivoErrrores, true));
+            bw.append("POLIZA,DOCUMENTO,DESCRIPCION\r\n");
+            // bw.close();
+    
+            for (Map<String, String> archivo : documentos) {
+    
+                String ntramite = archivo.get("ntramite");
+                String cddocume = archivo.get("cddocume");
+                String dsdocume = archivo.get("dsdocume");
+                String nmpoliza = archivo.get("nmpoliza");
+                String filePath = Utils.join(rutaDocumentosPoliza, "/", ntramite, "/", cddocume);
+                boolean existe = true;
+                logger.debug(Utils.join("\ntramite,archivo=", ntramite, ",", cddocume));
+    
+                if (cddocume.toLowerCase().indexOf("://") != -1) {
+    
+                    logger.debug("Usando archivo local descargado");
+    
+                    filePath = archivo.get("descargadoEn");
+    
+                    if (StringUtils.isBlank(filePath)) {
+    
+                        logger.error(Utils.join("Error en descarga-: ", cddocume));
+                        continue;
+                    }
+    
+                }
+                File f = new File(filePath);
+                logger.debug("Verificando si existe el archivo");
+    
+                if (!f.exists() || !DocumentosUtils.verificaPDF(f)) {
+    
+                    if (consultasDAO.esProductoSalud(cdramo)) {
+    
+                        String dirTramite = Utils.join(rutaDocumentosPoliza, "/", ntramite, "/");
+                        logger.debug(Utils.join("\n@@@@ Creando directorio : ", dirTramite));
+                        File dir = new File(dirTramite);
+                        dir.mkdirs();
+                        logger.debug("Regenerando Docs");
+                        mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
+                    }
+                    
+                    if(lote!= null && cdusuari!=null && nombreRemesaPdf.equals(cddocume)){
+                        try{
+                                String urlReporteCotizacion = Utils.join(
+                                        rutaServidorReports
+                                      , "?p_lote="     , lote
+                                      , "&p_usr_imp="  , cdusuari
+                                      , "&p_ntramite=" , ntramite
+                                      , "&destype=cache"
+                                      , "&desformat=PDF"
+                                      , "&userid="        , passServidorReports
+                                      , "&ACCESSIBLE=YES"
+                                      , "&report="        , nombreReporteRemesa
+                                      , "&paramform=no"
+                                      );
+                              
+                              String pathRemesa=Utils.join(
+                                      rutaDocumentosPoliza
+                                      ,"/",ntramite
+                                      ,"/",nombreRemesaPdf
+                                      );
+                              
+                              HttpUtil.generaArchivo(urlReporteCotizacion, pathRemesa);
+                        }catch(Exception e){
+                            logger.debug(Utils.join("Error tratando de regenerar remesa lote:",lote," tramite: ",ntramite));
+                        }
+                    }
+                    
+                    
+    
+                    f = new File(filePath);
+    
+                    if (!f.exists() || !DocumentosUtils.verificaPDF(f)) {
+    
+                        logger.error(Utils.join("\n@@@@No existe el archivo: ", filePath, "\n", archivo));
+                        existe = false;
+    
+                    }
+    
+                }
+    
+                if (!existe) {
+                    logger.debug("Escribiendo errores");
+                    bw.append(Utils.join(nmpoliza == null ? "" : nmpoliza, ",\"", cddocume, "\"", ",\"", dsdocume, "\"",
+                            "\r\n"));
+    
+                    hayErrores.set(true);
+    
+                } else {
+    
+                    docsExisten.add(archivo);
+                }
+    
+            }
+            bw.close();
+        }catch(Exception e){
+            Utils.generaExcepcion(e, "Error regenerando documentos");
+        }
+        
+        logger.debug(Utils.log(
+                
+                "\n@@@@@@ regeneraDocs @@@@@@"
+               ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+               ));
+
+        return docsExisten;
+    }   
+    
+    /**
+     * Descarga si hay archivos remotos en la lista y agrega un campo
+     * [descargadoEn] que contiene la ruta del archivo local ya descargado.
+     * 
+     * @param original
+     */
+    private void descargaUrl(List<Map<String, String>> original) {
+        
+        String paso = "";
+        
+        logger.debug(Utils.join("\nLista de entrada a descargaUrl: ", original));
+
+        for (Map<String, String> archivo : original) {
+            try {
+                String ntramite = archivo.get("ntramite");
+                String cddocume = archivo.get("cddocume");
+                String dsdocume = archivo.get("dsdocume");
+                String filePath = Utils.join(rutaDocumentosPoliza, "/", ntramite, "/", cddocume);
+                String nmpoliza = archivo.get("nmpoliza");
+
+                logger.debug(Utils.log("\ntramite,archivo=", ntramite, ",", cddocume));
+
+                if (cddocume.toLowerCase().indexOf("://") != -1) {
+                    
+                    paso = "Descargando archivo remoto";
+                    cddocume = cddocume.replaceAll("\\s", "").trim();
+                    logger.debug(paso);
+                    long timestamp = System.currentTimeMillis();
+                    long rand = new Double(1000d * Math.random()).longValue();
+                    filePath = Utils.join(rutaDocumentosTemporal, "/Descargado", "_remesa_", archivo.get("remesa"),
+                            "_tramite_", ntramite, "_t_", timestamp, "_", rand, ".pdf");
+
+                    archivo.put("descargadoEn", filePath);
+
+                    File local = new File(filePath);
+
+                    try {
+                        paso = "guardando en local";
+                        InputStream remoto = HttpUtil
+                                .obtenInputStream(cddocume.replace("https", "http").replace("HTTPS", "HTTP"));
+                        FileUtils.copyInputStreamToFile(remoto, local);
+                        logger.debug(Utils.join("\nArchivo remoto: ", cddocume, " Archivo local: ", filePath));
+                    } catch (ConnectException ex) {
+                        logger.error(Utils.join("Error al descargar documento : ", cddocume), ex);
+
+                    } catch (Exception ex) {
+                        logger.error("Error en descargaUrl: ", ex);
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Error descargando url");
+
+            }
+
+           
+        }
+
+    }
+
+	
+	
+
 }
