@@ -39,6 +39,40 @@ Ext.define('VentanaActualizarDatosTramite',
             try {
                 me.down('form').add(comps.items);
                 comps.items[0].focus();
+                ck = 'Recuperando datos de tr\u00e1mite';
+                _request({
+                    mask   : ck,
+                    url    : _GLOBAL_URL_VALIDACION_MONTAR_DATOS,
+                    params : {
+                        'flujo.cdtipflu'  : me.cdtipflu,
+                        'flujo.cdflujomc' : me.cdflujomc,
+                        'flujo.tipoent'   : me.tipoent,
+                        'flujo.claveent'  : me.claveent,
+                        'flujo.webid'     : me.webid,
+                        'flujo.ntramite'  : me.ntramite,
+                        'flujo.status'    : me.status,
+                        'flujo.cdunieco'  : me.cdunieco,
+                        'flujo.cdramo'    : me.cdramo,
+                        'flujo.estado'    : me.estado,
+                        'flujo.nmpoliza'  : me.nmpoliza,
+                        'flujo.nmsituac'  : me.nmsituac,
+                        'flujo.nmsuplem'  : me.nmsuplem
+                    },
+                    success : function (json) {
+                        var ck = 'Cargando valores del tr\u00e1mite';
+                        try {
+                            for (var att in json.datosTramite.TRAMITE) {
+                                try {
+                                    if (!Ext.isEmpty(json.datosTramite.TRAMITE[att])) {
+                                        me.down('[name*=' + (att.toLowerCase()) + ']').setValue(json.datosTramite.TRAMITE[att]);
+                                    }
+                                } catch (e) {}
+                            }
+                        } catch (e) {
+                            manejaException(e, ck);
+                        }
+                    }
+                });
             } catch (e) {
                 manejaException(e, ck);
             }
@@ -82,51 +116,7 @@ Ext.define('VentanaActualizarDatosTramite',
                     icon    : _GLOBAL_DIRECTORIO_ICONOS + 'disk.png',
                     handler : me.guardarClic
                 }
-            ],
-            listeners : {
-                afterrender : function (me) {
-                    debug('_c8_instance afterrender!');
-                    var ck;
-                    try {
-                        ck = 'Recuperando datos de tr\u00e1mite';
-                        _request({
-                            mask   : ck,
-                            url    : _GLOBAL_URL_VALIDACION_MONTAR_DATOS,
-                            params : {
-                                'flujo.cdtipflu'  : me.cdtipflu,
-                                'flujo.cdflujomc' : me.cdflujomc,
-                                'flujo.tipoent'   : me.tipoent,
-                                'flujo.claveent'  : me.claveent,
-                                'flujo.webid'     : me.webid,
-                                'flujo.ntramite'  : me.ntramite,
-                                'flujo.status'    : me.status,
-                                'flujo.cdunieco'  : me.cdunieco,
-                                'flujo.cdramo'    : me.cdramo,
-                                'flujo.estado'    : me.estado,
-                                'flujo.nmpoliza'  : me.nmpoliza,
-                                'flujo.nmsituac'  : me.nmsituac,
-                                'flujo.nmsuplem'  : me.nmsuplem
-                            },
-                            success : function (json) {
-                                var ck = 'Cargando valores del tr\u00e1mite';
-                                try {
-                                    for (var att in json.datosTramite.TRAMITE) {
-                                        try {
-                                            if (!Ext.isEmpty(json.datosTramite.TRAMITE[att])) {
-                                                me.down('[name*=' + (att.toLowerCase()) + ']').setValue(json.datosTramite.TRAMITE[att]);
-                                            }
-                                        } catch (e) {}
-                                    }
-                                } catch (e) {
-                                    manejaException(e, ck);
-                                }
-                            }
-                        });
-                    } catch (e) {
-                        manejaException(e, ck);
-                    }
-                }
-            }
+            ]
         });
         _obtenerComponentes(
             {
