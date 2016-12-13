@@ -2722,7 +2722,7 @@ function _p29_emitirClicComplementarios()
                                   				var json=Ext.decode(response.responseText);
                                   				if(json.exito!=true)
                                   				{
-                                  					if(sesionDsrol!='SUSCRIAUTO'){
+                                  					if(!RolSistema.puedeSuscribirAutos(sesionDsrol)/*sesionDsrol!='SUSCRIAUTO'*/){
                                   						//mensajeError(json.respuesta);
                                   						mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
                                   						 _fieldById('panDatComBotonRetarificar').setDisabled(true);//Deshabilita el boton

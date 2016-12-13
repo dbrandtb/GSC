@@ -4,8 +4,8 @@
     ///////////////////////
     //////variables //////
     /*///////////////////*/
-    var CD_ROL_SUSCRIPTOR       = 'SUSCRIPTOR';
-    var CD_ROL_SUSCRIPTOR_AUTO  = 'SUSCRIAUTO';
+    var CD_ROL_SUSCRIPTOR       = 'SUSCRIPTOR';//|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|
+    var CD_ROL_SUSCRIPTOR_AUTO  = 'SUSCRIAUTO';//|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|
     var CD_ROL_ACTUAL           = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
     var CD_RAMO_AUTOS_RESIDENTES= '5';
     var storeCoberturasActuales_p3;
