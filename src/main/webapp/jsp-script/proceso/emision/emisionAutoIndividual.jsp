@@ -1208,12 +1208,12 @@ function _p29_mostrarVistaPrevia()
                                         }
                                     ]
                                     ,ftype          : 'groupingsummary'
-                                    ,startCollapsed : _p29_smap1.cdsisrol!='SUSCRIAUTO'
+                                    ,startCollapsed : !RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol)//_p29_smap1.cdsisrol!='SUSCRIAUTO'
                                     ,listeners      :
                                     {
                                         groupexpand : function(view,node,group)
                                         {
-                                            if(_p29_smap1.cdsisrol!='SUSCRIAUTO')
+                                            if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
                                             {
                                                 this.collapseAll();
                                             }
