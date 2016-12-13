@@ -2797,11 +2797,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									nextNextCellValue = "";
 								}
 							}
-							if(cellValue.equals("72100014"))
-							{
-							    String lala = "";
-		                        logger.debug(Utils.log("valor=",lala));
-							}
 							String llaveBufferTiposit = Utils.join(orCdtipsit,"-",cellValue,"-",nextCellValue,"-",nextNextCellValue);
 							String cdtipsitProc       = null;
 							if(bufferTiposit.containsKey(llaveBufferTiposit))
