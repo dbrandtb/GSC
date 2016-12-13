@@ -136,7 +136,9 @@ var _CONTEXT = '${ctx}';
 																	var myMask1 = _maskLocal();
 																	me.up('window').destroy();
 																	myMask.show();
-																	submitValues['smap1.confirmar']='si' ;
+																	//submitValues['smap1.confirmar']='si' ;
+																	paramsEntrada.confirmar = 'si';
+                                                                    submitValues['smap1']= paramsEntrada;
 																	
 																	if(!Ext.isEmpty(endAmpVigFlujo))
                                                                     {
