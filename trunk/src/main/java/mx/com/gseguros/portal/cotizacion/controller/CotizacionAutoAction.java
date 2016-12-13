@@ -1170,20 +1170,20 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                    ,negocio  = smap1.get("negocio");
             
             logger.debug(Utils.join(
-                    "\n VILS tipoflot="  , tipoflot
-                    ,"\n VILS cdsisrol=" , cdsisrol
-                    ,"\n VILS negociol=" , negocio
+                     "\ntipoflot=" , tipoflot
+                    ,"\ncdsisrol=" , cdsisrol
+                    ,"\nnegociol=" , negocio
                     ));
 
             Utils.validate(
-                    cdramo    , "No se recibi\u00f3 el producto"
+                     cdramo   , "No se recibi\u00f3 el producto"
                     ,cdtipsit , "No se recibi\u00f3 la modalidad"
-                    ,negocio, "No se recibio negocio"
+                    ,negocio  , "No se recibio negocio"
                     );
             
             Utils.validate(excel, "No se recibi\u00f3 el archivo");
             
-            ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaFlotilla(cdramo,cdtipsit,respetar,excel);//,tipoflot
+            ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaFlotilla(cdramo,cdtipsit,respetar,excel,tipoflot);//,tipoflot
             
             exito     = resp.isExito();
             respuesta = resp.getRespuesta();
@@ -1191,6 +1191,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             if(!exito)
             {
                 throw new ApplicationException(respuesta);
+            }
+            
+            if(resp.getSlist().size()>50 && tipoflot.equals("P"))
+            {
+                respuestaOculta="Incisos maximos permitidos 50";
+                return SUCCESS;
             }
 
             //Pone vacio en los valores desc/rec de la lista
@@ -1201,7 +1207,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             exito = !resp.getSlist().isEmpty();
             if(!exito)
             {
-                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio"+negocio+" y tipo de carga (PyME/Flotilla): "+tipoflot);
+                if(tipoflot.equals("P"))
+                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio seleccionado y Autos PyMES.");
+                else if(tipoflot.equals("F"))
+                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio seleccionado y Autos Flotilla.");
+                else
+                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio seleccionado.");
             }            
             
             int lugarMensaje = resp.getSlist().size();
