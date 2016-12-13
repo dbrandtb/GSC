@@ -155,7 +155,7 @@ public interface CotizacionAutoManager
 			,String ntramite
 			);
 	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc) throws Exception;
-	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel)throws Exception;
+	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception;
 	public ManagerRespuestaSlist2SmapVO cargarCotizacionAutoFlotilla(
 			String cdramo
 			,String nmpoliza

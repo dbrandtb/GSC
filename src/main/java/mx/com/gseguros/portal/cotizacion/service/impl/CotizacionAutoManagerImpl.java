@@ -2583,7 +2583,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	}
 	
 	@Override
-	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel)throws Exception
+	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception
 	//,String tipoflot
 	{
 		logger.info(
@@ -2629,6 +2629,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			while (rowIterator.hasNext()) 
             {
 				fila = fila + 1;
+				
+				if(fila>51 && tipoflot.equals("P"))
+	            {
+				    throw new ApplicationException(Utils.join("Para PyMES 50 son los incisos maximos permitidos."));
+	            }
+				
 				paso = new StringBuilder("Iterando fila ").append(fila).toString();
 				Row row = rowIterator.next();
 				
@@ -3161,7 +3167,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			if(listCdtipsitXNegocio.isEmpty())
 			{
 			    slistPYME.clear();
-			    throw new ApplicationException("Sin resultados de vehiculos acorde al negocio"+negocio+" y tipo de carga (PyME/Flotilla): "+tipoflot);
 			}
 			
 			logger.debug(Utils.log("Vils tipos de vehiculo: ",listCdtipsitXNegocio));
