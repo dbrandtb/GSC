@@ -3026,6 +3026,13 @@ public class EndososAction extends PrincipalCoreAction
 					
 					if(smap1.get("confirmar").equalsIgnoreCase("si"))
 					{
+					    paso = "Asigando status Mpoliper a M";
+                        logger.debug(paso);
+                        endososManager.BeneficiarioVida_M((String)omap1.get("pv_cdunieco_i")
+                                                        , (String)omap1.get("pv_cdramo_i")
+                                                        , (String)omap1.get("pv_estado_i")
+                                                        , (String)omap1.get("pv_nmpoliza_i")
+                                                        , "0");
 					    
 					// Si el endoso fue confirmado:
 					if(respConfirmacionEndoso.isConfirmado()) {
