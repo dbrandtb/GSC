@@ -3074,7 +3074,12 @@ Ext.onReady(function() {
 					valorCopago = copagoOrig;
 				}
 				if(tipoCopago =="$"){
-					Ext.getCmp('idCopagoFin').setValue("$"+valorCopago +" y "+ Ext.getCmp('idPorcIncremento').getValue() +"%");
+					if(+Ext.getCmp('idPorcIncremento').getValue() > 0){
+						Ext.getCmp('idCopagoFin').setValue("$"+valorCopago +" y "+ Ext.getCmp('idPorcIncremento').getValue() +"%");
+					}else{
+						Ext.getCmp('idCopagoFin').setValue(valorCopago);
+					}
+					
 					return true;
 				}
 				if(tipoCopago =="%"){
