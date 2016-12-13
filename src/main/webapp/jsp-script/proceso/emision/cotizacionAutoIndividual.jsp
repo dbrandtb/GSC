@@ -1065,6 +1065,7 @@ Ext.onReady(function()
         //Cambia Atributos campo Fecha de nacimiento dependiendo del seguro de vida
         if(!Ext.isEmpty(_fieldByLabel('SEGURO DE VIDA',null,true)))
         {
+            _fieldByLabel('SEGURO DE VIDA').allowBlank=false;
             _fieldByLabel('SEGURO DE VIDA').on(
                             {
                                 select : _p28_atributoNacimientoContratante
@@ -4522,8 +4523,6 @@ function llenandoCampos(json)
         panelpri.setLoading(true);
         if( _p28_smap1.cdramo+'x'=='5x'
             &&
-           'PROMOTORAUTO'.lastIndexOf(_p28_smap1.cdsisrol)==-1
-            &&
             RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) 
           )            
         {
@@ -4545,7 +4544,6 @@ function llenandoCampos(json)
                     else
                     {
                         _p28_ramo5AgenteSelect(agente,primerInciso.get('parametros.pv_otvalor01'));
-                        _fieldLikeLabel()
                     }
                     renderiza();
                 }
