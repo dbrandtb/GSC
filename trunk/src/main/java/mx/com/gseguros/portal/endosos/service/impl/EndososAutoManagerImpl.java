@@ -5891,6 +5891,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						}
 					}
 					
+                   valores.put("pv_nmsuplem_o",propWS.getNmsuplem());
+                   valores.put("pv_nsuplogi_o",propWS.getNsuplogi());
+
 					if(("no").equals(confirmar)){
 						Date fechaHoy = new Date();
 						paso = "Realizando PDF de Vista Previa de Autos";
@@ -5923,9 +5926,28 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						HttpUtil.generaArchivo(url,rutaTempEndoso+"/"+pdfEndosoNom);
 						
 						valores.put("pdfEndosoNom_o",pdfEndosoNom);
+						//Se agrega variable para controlar la vista previa
+						valores.put("pv_tarifica","SI");
 						
 					}
 					
+					if(TipoEndoso.CAMBIO_TIPO_SERVICIO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup) && ("no").equals(confirmar)){
+					    Map<String,String>paramDetallePoliza=new LinkedHashMap<String,String>(0);
+			            paramDetallePoliza.put("pv_cdunieco_i" , cdunieco);
+			            paramDetallePoliza.put("pv_cdramo_i"   , cdramo);
+			            paramDetallePoliza.put("pv_estado_i"   , estado);
+			            paramDetallePoliza.put("pv_nmpoliza_i" , nmpoliza);
+			            paramDetallePoliza.put("pv_nmsuplem_i",  propWS.getNmsuplem());
+					    List<Map<String,String>> lista=endososDAO.retarificarEndosos(paramDetallePoliza);
+					    
+					    valores.put("pv_tarifica",lista.size()<=0?"NO":"SI");
+					    if(lista.size()<=0 &&"NO".equals(valores.get("pv_tarifica"))){
+					        paso = "Realizando sacaendoso, cuando la lista es Null";
+					        logger.debug(paso);
+					        endososDAO.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, propWS.getNsuplogi(), propWS.getNmsuplem());
+					    }
+					    
+					}
 					if(("si").equals(confirmar))
 						{
 						if(TipoEndoso.CAMBIO_TIPO_SERVICIO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
@@ -6022,10 +6044,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 					}
 				}
-					
-					valores.put("pv_nmsuplem_o",propWS.getNmsuplem());
-					valores.put("pv_nsuplogi_o",propWS.getNsuplogi());
-					
 		}
 		catch(Exception ex)
 		{
