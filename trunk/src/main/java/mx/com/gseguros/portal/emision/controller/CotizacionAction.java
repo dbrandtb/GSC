@@ -1708,7 +1708,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = resp.getRespuestaOculta();
 			if(exito)
 			{
-			    if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null)
+			    if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null && !cdtipsit.equals("PC") && !cdtipsit.equals("CR"))
 			    {
 			        List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
 			                cdusuari
@@ -2708,7 +2708,7 @@ public class CotizacionAction extends PrincipalCoreAction
 //				{
 					if((cdramo.contains("6") || cdramo.contains("16")) && cdsisrol.contains("EJECUTIVOCUENTA"))
 					{
-						paramsObtenerTvalosit.put("param7" , "SUSCRIAUTO");
+						paramsObtenerTvalosit.put("param7" , "SUSCRIAUTO");// ???
 					}
 					slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
 //				}
