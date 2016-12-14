@@ -187,7 +187,6 @@ Ext.onReady(function()
 		                        	var json2 = Ext.decode(response.responseText);
 		                        	debug('### response: ',response);
 		                        	debug('### json2: ',json2);
-		                        	debug('### json2.smap2: ',json2.smap2);
 		                        	
 		                        	if(!Ext.isEmpty(json2) && !Ext.isEmpty(json2.smap2) && !Ext.isEmpty(json2.smap2.pv_tarifica) && json2.smap2.pv_tarifica == 'SI'){
 		                        		var win = Ext.create('Ext.window.Window',
