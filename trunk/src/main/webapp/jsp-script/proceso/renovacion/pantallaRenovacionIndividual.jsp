@@ -3667,7 +3667,7 @@ function agregaCalendario(){
                                      debug(wineditarContratante.resRenova);
                                      var callbackRemesa = function(){
                                          Ext.create('Ext.window.Window',{
-                                             title       : 'Documentos del tr&aacute;mite '+ wineditarContratante.resRenova['ntramite'],
+                                             title       : 'Documentos del tr&aacute;mite '+ resRenova['ntramite'],
                                              modal       : true,
                                              buttonAlign : 'center',
                                              width       : 600,
