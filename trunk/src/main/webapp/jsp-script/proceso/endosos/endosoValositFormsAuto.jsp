@@ -187,87 +187,89 @@ Ext.onReady(function()
 		                        	var json2 = Ext.decode(response.responseText);
 		                        	debug('### response: ',response);
 		                        	debug('### json2: ',json2);
-		                        	
-		                        	if(!Ext.isEmpty(json2) && !Ext.isEmpty(json2.smap2) && !Ext.isEmpty(json2.smap2.pv_tarifica) && json2.smap2.pv_tarifica == 'SI'){
-		                        		var win = Ext.create('Ext.window.Window',
-                                                    {
-                                                        title        : 'Tarifa final'
-                                                        ,id          : 'tarifa'
-                                                        ,autoScroll  : true
-                                                        ,modal       : true
-                                                        ,buttonAlign : 'center'
-                                                        ,width       : 600
-                                                        ,height      : 550
-                                                        ,defaults    : { width: 650 }
-                                                        ,closable    : false
-                                                        ,autoScroll  : true
-                                                        ,loader      :
-                                                            {
-                                                                url       : url_PantallaPreview
-                                                                ,params   :
-                                                                    {
-                                                                        'smap4.nmpoliza'  : _p44_smap1.NMPOLIZA
-                                                                        ,'smap4.cdunieco' : _p44_smap1.CDUNIECO
-                                                                        ,'smap4.cdramo'   : _p44_smap1.CDRAMO
-                                                                        ,'smap4.estado'   : _p44_smap1.ESTADO
-                                                                        ,'smap4.nmsuplem' : json2.smap2.pv_nmsuplem_o
-                                                                        ,'smap4.nsuplogi' : json2.smap2.pv_nsuplogi_o
-                                                                    }
-                                                                ,scripts  : true
-                                                                ,autoLoad : true
-                                                             }
-                                                        ,buttons:[{
-                                                                    text    : 'Confirmar endoso'
-                                                                    ,name    : 'endosoButton'
-                                                                    ,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
-                                                                    ,handler : 
-                                                                        function (me){
-                                                                            me.up('window').destroy();
-                                                                            confirmar
-                                                                       }
-                                                                       
-                                                                   },
-                                                                   {
-                                                                    text    : 'Cancelar'
-                                                                    ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                                                                    ,handler : function (me){
-                                                                                    me.up('window').destroy();
-                                                                                    marendNavegacion(2);
-                                                                                    }
-                                                                 },{
-                                                                    text    : 'Documentos'
-                                                                    ,name    : 'documentoButton'
-                                                                    ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
-                                                                    ,handler  :function(){
-                                                                 var numRand=Math.floor((Math.random()*100000)+1);
-                                                                 debug(numRand);
-                                                                 centrarVentanaInterna(Ext.create('Ext.window.Window', {
-                                                                    title          : 'Vista previa'
-                                                                    ,width         : 700
-                                                                    ,height        : 500
-                                                                    ,collapsible   : true
-                                                                    ,titleCollapse : true
-                                                                    ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-                                                                                     +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+json2.smap2.pdfEndosoNom_o+"\">"
-                                                                                     +'</iframe>'
-                                                                    ,listeners     : {
-                                                                        resize : function(win,width,height,opt){
-                                                                            debug(width,height);
-                                                                            $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-                                                                    }
-                                                                  }}).show());
-                                                            }
-                                                                    ,hidden   : _p44_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
-                                                                    } ]
-                                                     });
-                                        win.show();
+		                        	if(json2.success==true){
+		                        		debug('Entrando a respuesta success correcto');
+		                        		if(!Ext.isEmpty(json2) && !Ext.isEmpty(json2.smap2) && !Ext.isEmpty(json2.smap2.pv_tarifica) && json2.smap2.pv_tarifica == 'SI'){
+                                            var win = Ext.create('Ext.window.Window',
+                                                        {
+                                                            title        : 'Tarifa final'
+                                                            ,id          : 'tarifa'
+                                                            ,autoScroll  : true
+                                                            ,modal       : true
+                                                            ,buttonAlign : 'center'
+                                                            ,width       : 600
+                                                            ,height      : 550
+                                                            ,defaults    : { width: 650 }
+                                                            ,closable    : false
+                                                            ,autoScroll  : true
+                                                            ,loader      :
+                                                                {
+                                                                    url       : url_PantallaPreview
+                                                                    ,params   :
+                                                                        {
+                                                                            'smap4.nmpoliza'  : _p44_smap1.NMPOLIZA
+                                                                            ,'smap4.cdunieco' : _p44_smap1.CDUNIECO
+                                                                            ,'smap4.cdramo'   : _p44_smap1.CDRAMO
+                                                                            ,'smap4.estado'   : _p44_smap1.ESTADO
+                                                                            ,'smap4.nmsuplem' : json2.smap2.pv_nmsuplem_o
+                                                                            ,'smap4.nsuplogi' : json2.smap2.pv_nsuplogi_o
+                                                                        }
+                                                                    ,scripts  : true
+                                                                    ,autoLoad : true
+                                                                 }
+                                                            ,buttons:[{
+                                                                        text    : 'Confirmar endoso'
+                                                                        ,name    : 'endosoButton'
+                                                                        ,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
+                                                                        ,handler : 
+                                                                            function (me){
+                                                                                me.up('window').destroy();
+                                                                                confirmar();
+                                                                           }
+                                                                           
+                                                                       },
+                                                                       {
+                                                                        text    : 'Cancelar'
+                                                                        ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                                                                        ,handler : function (me){
+                                                                                        me.up('window').destroy();
+                                                                                        marendNavegacion(2);
+                                                                                        }
+                                                                     },{
+                                                                        text    : 'Documentos'
+                                                                        ,name    : 'documentoButton'
+                                                                        ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+                                                                        ,handler  :function(){
+                                                                     var numRand=Math.floor((Math.random()*100000)+1);
+                                                                     debug(numRand);
+                                                                     centrarVentanaInterna(Ext.create('Ext.window.Window', {
+                                                                        title          : 'Vista previa'
+                                                                        ,width         : 700
+                                                                        ,height        : 500
+                                                                        ,collapsible   : true
+                                                                        ,titleCollapse : true
+                                                                        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+                                                                                         +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+json2.smap2.pdfEndosoNom_o+"\">"
+                                                                                         +'</iframe>'
+                                                                        ,listeners     : {
+                                                                            resize : function(win,width,height,opt){
+                                                                                debug(width,height);
+                                                                                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+                                                                        }
+                                                                      }}).show());
+                                                                }
+                                                                        ,hidden   : _p44_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
+                                                                        } ]
+                                                         });
+                                            win.show();
+                                        } else {
+                                            debug('confirmando directamente');
+                                            confirmar();
+                                        }
 		                        	} else {
-		                        		debug('confirmando directamente');
-		                        		confirmar();
+		                        		debug('Entrando a respuesta de error: ',json2.respuesta);
+		                        		mensajeError(json2.respuesta);
 		                        	}
-									
-							     
-							     								
 								}
 		                        ,failure  : function()
 		                        {
