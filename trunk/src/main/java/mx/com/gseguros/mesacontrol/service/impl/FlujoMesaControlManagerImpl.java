@@ -3871,4 +3871,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	    logger.debug("{}", Utils.log("\n@@@@@@ guardarAuxiliarFlujo @@@@@@",
 	                                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
+	
+	@Override
+	@Deprecated
+	public List<Map<String,String>> recuperaTtipflumc(String agrupamc, String cdtipmod) throws Exception {
+	    return flujoMesaControlDAO.recuperaTtipflumc(agrupamc, cdtipmod);
+	}
 }

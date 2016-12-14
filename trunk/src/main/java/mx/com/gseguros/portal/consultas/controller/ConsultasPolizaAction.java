@@ -25,7 +25,9 @@ import org.springframework.stereotype.Controller;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.ValidationDataException;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
@@ -56,6 +58,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.Utils;
@@ -167,6 +170,11 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	 */
 	private InputStream inputStream;
 	
+	@Autowired
+	private SiniestrosManager siniestrosManager;
+	
+	@Autowired
+	private FlujoMesaControlManager flujoMesaControlManager;
 
 	/**
 	 * Metodo de entrada a consulta de polizas
@@ -177,7 +185,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		// Obtenemos el rol de sistema del usuario en sesion:
 		UserVO usuario = (UserVO) session.get("USUARIO");
 		String cdRolSistema = usuario.getRolActivo().getClave();
-		// Si es consulta de información, no tendra permiso de ver todo:
+		// Si es consulta de informaciï¿½n, no tendra permiso de ver todo:
 		if (cdRolSistema.equals(RolSistema.CONSULTA_INFORMACION.getCdsisrol())) {
 			usuarioCallCenter = true;
 		}
@@ -365,12 +373,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Obtiene los datos del histórico de una póliza
+	 * Obtiene los datos del histï¿½rico de una pï¿½liza
 	 * 
 	 * @return String result
 	 */
 	public String consultaDatosHistorico() {
-		logger.debug(" **** Entrando a consultaDatosHistórico ****");
+		logger.debug(" **** Entrando a consultaDatosHistï¿½rico ****");
 		mensajeRes = "";
 		try {
 			PolizaAseguradoVO poliza = new PolizaAseguradoVO();
@@ -447,7 +455,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 					poliza, asegurado);
 			success = true;
 		} catch (Exception e) {
-			logger.error("Error al obtener las cláusulas de la póliza", e);
+			logger.error("Error al obtener las clï¿½usulas de la pï¿½liza", e);
 			return SUCCESS;
 		}
 		success = true;
@@ -455,7 +463,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Obtiene el histórico de farmacia
+	 * Obtiene el histï¿½rico de farmacia
 	 * 
 	 * @return String result
 	 */
@@ -480,7 +488,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 					.obtieneHistoricoFarmacia(poliza, asegurado);
 			success = true;
 		} catch (Exception e) {
-			logger.error("Error al obtener el histórico de farmacia", e);
+			logger.error("Error al obtener el histï¿½rico de farmacia", e);
 			return SUCCESS;
 		}
 		success = true;
@@ -785,7 +793,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Obtiene las coberturas básicas
+	 * Obtiene las coberturas bï¿½sicas
 	 * 
 	 * @return String result
 	 */
@@ -876,7 +884,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Entrada a la pantalla histórico de farmacia <br/>
+	 * Entrada a la pantalla histï¿½rico de farmacia <br/>
 	 * Sirve para propagar los parametros del atributo params a la pantalla
 	 * 
 	 * @return
@@ -898,7 +906,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Entrada a la pantalla Aviso Hospitalización <br/>
+	 * Entrada a la pantalla Aviso Hospitalizaciï¿½n <br/>
 	 * Sirve para propagar los parametros del atributo params a la pantalla
 	 * 
 	 * @return
@@ -1112,19 +1120,43 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 				      ,nmpoliza = params.get("nmpoliza")
 				      ,ntramite = params.get("numtra");
 					
-				Utils.validate(
-						 cdunieco, "No se recibi\u00f3 la sucursal"
-						,cdramo  , "No se recibi\u00f3 el ramo"
-						,nmpoliza, "No se recibi\u00f3 la poliza"
-						,ntramite, "No se recibi\u00f3 el numero de tramite"
-						);
+				Utils.validate(ntramite, "No se recibi\u00f3 el numero de tramite");
 				
-				consultasPolizaManager.actualizaTramiteMC(new PolizaVO( cdunieco
-																	    ,cdramo 
-																	    ,null
-																	    ,nmpoliza
-																	    ,ntramite)
-																		,"1");//En proceso
+				boolean externo = false;
+				String paso = null;
+				try {
+				    paso = "Recuperando tr\u00e1mite";
+				    logger.debug(paso);
+				    Map<String, String> tramite = siniestrosManager.obtenerTramiteCompleto(ntramite);
+				    
+				    String cdtipflu  = tramite.get("CDTIPFLU"),
+				           cdflujomc = tramite.get("CDFLUJOMC");
+				    
+				    paso = "Recuperando propiedades de tipo de tr\u00e1mite";
+				    logger.debug(paso);
+				    List<Map<String, String>> tiposFlujo = flujoMesaControlManager.recuperaTtipflumc("PRINCIPAL", "1");
+				    Map<String, String> ttipflumc = null;
+				    for(Map<String, String> tipoFlujo : tiposFlujo) {
+				        if (cdtipflu.equals(tipoFlujo.get("CDTIPFLU"))) {
+				            ttipflumc = tipoFlujo;
+				            break;
+				        }
+				    }
+				    if (ttipflumc == null) {
+				        throw new ApplicationException("No hay tipo de tr\u00e1mite");
+				    }
+				    externo = "S".equals(ttipflumc.get("SWEXTERNO"));
+				} catch (Exception ex) {
+				    Utils.generaExcepcion(ex, paso);
+				}
+				
+				if (externo == false) {
+				    Utils.validate(cdunieco , "No se recibi\u00f3 la sucursal",
+                                   cdramo   , "No se recibi\u00f3 el ramo",
+                                   nmpoliza , "No se recibi\u00f3 la poliza");
+				    
+    				consultasPolizaManager.actualizaTramiteMC(new PolizaVO(cdunieco, cdramo, null, nmpoliza, ntramite), "1");//En proceso
+				}
 				logger.debug(Utils.log(
 						 "\n###### actualizaEstatusTramiteMCsigs ######"
 						,"\n###########################################"

@@ -411,4 +411,7 @@ public interface FlujoMesaControlManager
 	public void guardarVentanaDatosTramite (String ntramite, Map<String, String> datos) throws Exception;
 	
 	public void guardarAuxiliarFlujo (String ntramite, String auxiliar) throws Exception;
+	
+	@Deprecated
+	public List<Map<String,String>> recuperaTtipflumc(String agrupamc, String cdtipmod) throws Exception;
 }
