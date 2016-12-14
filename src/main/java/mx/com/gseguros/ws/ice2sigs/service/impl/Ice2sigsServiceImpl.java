@@ -1044,7 +1044,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
                     //Parametro5:  Numero de endoso (Cuando es poliza nueva poner 0)
                     //Parametro6:  Numero de recibo (1,2,3..segun la forma de pago) Para nuestro caso es siempre el 1
 					//String parametros = "?9999,"+modalidad+","+sucursal+","+cdtipsitGS+","+nmpoliza+",0,"+numEndoso+","+tipoEndoso+","+recibo.getNumRec(); // PARAMS RECIBO ANTERIORES
-					String parametros = "?"+sucursal+","+cdtipsitGS+","+nmpoliza+",,0,"+recibo.getNumRec();
+					String parametros = "?"+sucursal+","+cdtipsitGS+","+nmpoliza+","+tipoEndoso+","+numEndoso+","+recibo.getNumRec();
 					
 					logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
 					
