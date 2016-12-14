@@ -556,6 +556,7 @@ Ext.onReady(function()
     
     ////// loaders //////
     _p34_recuperarTipoEndosoFlujo();
+    _p34_recuperarEndosoAltaAseguradosSaludCol();
     ////// loaders //////
 });
 
@@ -2081,6 +2082,100 @@ function marendNavegacion(nivel)
         }
     }
     debug('<marendNavegacion');
+}
+
+/*
+Esta funcion se crea para el endoso de alta de asegurados de salud colectivo:
+1) Se entra al marco directo o desde mesa de control
+2) Se entra por primera vez al endoso de alta de asegurados de salud colectivo
+3) En el endoso de alta de asegurados se sube un excel, y despues de subirlo hace un submit a esta pantalla, enviando los siguientes atributos:
+    a) smap1.cdunieco
+    b) smap1.cdramo
+    c) smap1.estado
+    d) smap1.nmpoliza
+    e) smap1.recuperarEndosoAltaAseguradosSaludCol = 'S'
+4) Cuando este marco encuentra esa bandera (recuperarEndosoAltaAseguradosSaludCol) encendida (=== 'S') entonces hace lo siguiente (esta funcion nueva):
+    4.1 Manda a cargar la poliza con cdunieco, cdramo, estado y nmpoliza recibidos en smap1
+    4.2 Manda a cargar los endosos
+    4.3 Vuelve a abrir el endoso de alta de asegurados
+*/
+function _p34_recuperarEndosoAltaAseguradosSaludCol () {
+    debug('_p34_recuperarEndosoAltaAseguradosSaludCol');
+    if ('S' === _p34_smap1.recuperarEndosoAltaAseguradosSaludCol && Ext.isEmpty(_p34_flujo)) {
+        debug('_p34_recuperarEndosoAltaAseguradosSaludCol entro a recuperar');
+        var ck = 'Recuperando datos para continuar endoso de alta de asegurados';
+        try {
+	        _p34_recuperarDatosPoliza(
+	            _p34_smap1.cdunieco,
+	            _p34_smap1.cdramo,
+	            _p34_smap1.estado,
+	            _p34_smap1.nmpoliza,
+	            function (poliza) {
+	                debug('callback despues de poliza:',poliza,'.');
+	                var ck = 'Decodificando respuesta al recuperar p\00f3liza para continuar alta de asegurados';
+	                try {
+	                    var form = _fieldById('_p34_formBusq');
+	                    var hid = Ext.ComponentQuery.query('[hidden=true]',form);
+	                    /* jtezva ¿para que?
+	                    for (var i = 0; i < hid.length; i++) {
+	                        hid[i].show();
+	                    }
+	                    */
+	                    _fieldByName('cdunieco',form).setValue(Ext.isEmpty(poliza.CDUNIEXT) ? _p34_smap1.cdunieco : poliza.CDUNIEXT);
+	                    _fieldByName('cdramo',form).setValue(_p34_smap1.cdramo);
+	                    _fieldByName('nmpoliza',form).setValue(_p34_smap1.nmpoliza);
+	                    _fieldByName('finicio',form).setValue('01/01/1900');
+	                    _fieldByName('ffin',form).setValue('01/01/2500');
+	                    _fieldByName('ramo',form).forceSelection = false;
+	                    _fieldByName('ramo',form).setValue(poliza.RAMO);
+	                    /* jtezva ¿para que?
+	                    form.hide();
+	                    */
+	                    _p34_polizas(
+	                        function () {
+	                            debug('callback despues de cargar poliza desde flujo');
+	                            var ck = 'Seleccionando p\u00f3liza';
+	                            try {
+	                                if (_p34_storePolizas.getCount() === 0) {
+	                                    throw 'No se encuentra la p\u00f3liza para continuar el alta de asegurados';
+	                                }
+	                                _fieldById('_p34_gridPolizas').getSelectionModel().select([_p34_storePolizas.getAt(0)]);
+	                                // ^ Seleccionamos una poliza
+	                                _p34_botonEndososPolizaClic(function () { // Abrimos los endosos de poliza
+	                                    if (_p34_storeEndosos.getCount() === 0) {
+	                                        throw 'No se encuentran endosos para continuar el alta de asegurados';
+	                                    }
+	                                    var recordEndosoAltaAsegurados = -1;
+	                                    var records = _p34_storeEndosos.getRange();
+	                                    for (var i = 0; i < records.length; i++) {
+	                                        var record = records[i];
+	                                        if (Number(record.get('CDTIPSUP')) === 9) {
+	                                            recordEndosoAltaAsegurados = record;
+	                                            break;
+	                                        }
+	                                    }
+	                                    if (recordEndosoAltaAsegurados === -1) {
+	                                        throw 'No se encuentra el endoso de alta de asegurados para continuar';
+	                                    }
+	                                    var grid = _fieldById('_p34_gridEndosos');
+	                                    //cellclick : function(view, td, cellIndex, record)
+	                                    grid.fireEvent('cellclick', grid.getView(), null, null, recordEndosoAltaAsegurados);
+	                                    // ^ Abrimos ese endosos para poliza
+	                                });
+	                            } catch (e) {
+	                                manejaException(e, ck);
+	                            }
+	                        }
+	                    );
+	                } catch (e) {
+	                    manejaException(e, ck);
+	                }
+	            }
+	        );
+	    } catch (e) {
+	        manejaException(e, ck);
+	    }
+    }
 }
 
 function _p34_recuperarPolizaIncisosFlujo()

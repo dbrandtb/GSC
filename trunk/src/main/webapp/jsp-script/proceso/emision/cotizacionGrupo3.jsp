@@ -90,6 +90,7 @@ var _p21_urlComplementoCotizacion        = '<s:url namespace="/emision"         
 var _p21_urlRecuperacion                 = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
 var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
 var _p21_urlRestaurarRespaldoCenso       = '<s:url namespace="/emision"         action="restaurarRespaldoCenso"           />';
+var _p21_urlMarcoEndosos                 = '<s:url namespace="/endosos"         action="marcoEndosos"                     />';
 
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
@@ -3962,13 +3963,40 @@ function _p21_mesacontrol(json)
         }
     });
 }
-function _p21_recarga(status,titulo,closable){
-	mensajeCorrecto('Asegurados'
-            ,'Asegurado guardado correctamente.'
-            ,function()
-        {
+function _p21_recarga (status, titulo, closable) {
+	mensajeCorrecto('Asegurados',
+	    'Asegurado guardado correctamente.',
+	    function () {
+			/*
+			Se comenta a peticion de Angeles. Ahora debo abrir el marco de endosos y volver a abrir la pantalla de endoso de alta de incisos.
+			Puede venir con flujo o sin flujo y no debe perder los datos.
 			marendNavegacion(2);
-        });
+			*/
+			var mask, ck = 'Recargando ventana para continuar endoso de alta de asegurados';
+			try {
+			    var params = {
+			        'smap1.cdunieco'                              : _p21_smap1.cdunieco,
+			        'smap1.cdramo'                                : _p21_smap1.cdramo,
+			        'smap1.estado'                                : _p21_smap1.estado,
+			        'smap1.nmpoliza'                              : _p21_smap1.nmpoliza,
+			        'smap1.recuperarEndosoAltaAseguradosSaludCol' : 'S'
+			    };
+			    try {
+			        if (!Ext.isEmpty(_p48_flujo)) {
+			            params = _flujoToParams(_p48_flujo, params);
+			        }
+			    } catch (e) {}
+			    mask = _maskLocal(ck);
+			    Ext.create('Ext.form.Panel').submit({
+			        url            : _p21_urlMarcoEndosos,
+			        standardSubmit : true,
+			        params         : params
+			    });
+			} catch (e) {
+			    manejaException(e, ck, mask);
+			}
+        }
+    );
 }
 
 
