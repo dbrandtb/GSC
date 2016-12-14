@@ -1207,13 +1207,15 @@ Ext.onReady(function()
                 			{
                 				var nom=record.get('cddocume');
                 				debug(nom);
-                				var salida=false;
+                				var esDocumentoExterno = false;
                                 if(nom&&nom.length>4)
                                 {
                                     var http=nom.substr(0,4);
                                     if(http=='http')
                                     {
-                                    	salida=true;
+                                    	esDocumentoExterno = true;
+                                    	debug('es documento externo');
+                                    	/*
                                     	var numRand=Math.floor((Math.random()*100000)+1);
                                         debug('numRand b: ',numRand);
                                     	var windowVerDocu=Ext.create('Ext.window.Window',
@@ -1236,9 +1238,19 @@ Ext.onReady(function()
                                         }).show();
                                         windowVerDocu.center();
                                         //window.open(,'_blank','width=800,height=600');
+                                        */
+                                    	
+                                    	// Se muestra el documento en un iframe:
+                                    	debug('Documento en iframe: ', nom);
+                                    	Ext.create('Ext.form.Panel').submit({
+                                    	   url : nom,
+                                    	   standardSubmit : true,
+                                    	   target : '_blank'
+                                        });
+                                        
                                     }
                                 }
-                                if(!salida)
+                                if(!esDocumentoExterno)
                                 {
                                     this.onViewClick(record);
                                 }
@@ -1354,6 +1366,7 @@ Ext.onReady(function()
         }
         ,onViewClick:function(record)
         {
+        	debug('Se lanza onViewClick', record);
         	var numRand=Math.floor((Math.random()*100000)+1);
             debug('numRand a: ',numRand);
         	
