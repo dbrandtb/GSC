@@ -1065,7 +1065,6 @@ Ext.onReady(function()
         //Cambia Atributos campo Fecha de nacimiento dependiendo del seguro de vida
         if(!Ext.isEmpty(_fieldByLabel('SEGURO DE VIDA',null,true)))
         {
-            _fieldByLabel('SEGURO DE VIDA').allowBlank=false;
             _fieldByLabel('SEGURO DE VIDA').on(
                             {
                                 select : _p28_atributoNacimientoContratante
