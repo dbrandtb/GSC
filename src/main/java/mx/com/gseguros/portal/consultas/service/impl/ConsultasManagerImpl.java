@@ -777,31 +777,29 @@ public class ConsultasManagerImpl implements ConsultasManager
                 paso="Obteniendo cdideext";
                 
                
-                String nmsitaux= consultasDAO.obtieneNmsituaext(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, tit.get("nmsitaux"));
-                logger.debug("Respuesta obtieneNmsituaext: "+nmsitaux);
+                String nmsituaext= consultasDAO.obtieneNmsituaext(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, tit.get("nmsitaux"));
+                logger.debug("Respuesta obtieneNmsituaext: "+nmsituaext);
                 paso="Fusionando documentos";
-                File fusionado = DocumentosUtils.mixPdf(files,new File(Utils.join(
+                
+                String nombreArchivo=Utils.join(
                         rutaDocumentosPoliza
                         ,"/",ntramite
-                        ,"/F_",tit.get("nmsitaux"),"_"
+                        ,"/F_"//,tit.get("nmsitaux"),"_" //quitar nmsitaux y abajo tambien
                         ,pv_cdunieco_i
                         ,"-",pv_cdramo_i
                         ,"-",pv_nmpoliza_i
-                        ,"-",nmsitaux
+                        ,"-",String.format("%09d", Integer.parseInt(nmsituaext))
                         ,".pdf"
-                        )));
+                        );
+                File fusionado = DocumentosUtils.mixPdf(files,new File(nombreArchivo));
                 
                 paso="guardando en tdocupolfus";
                 consultasDAO.movTdocupolFus(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, null, ntramite, new Date()
-                        , Utils.join("F_",tit.get("nmsitaux"),"_",pv_cdunieco_i
-                        ,"-",pv_cdramo_i
-                        ,"-",pv_nmpoliza_i
-                        ,"-",nmsitaux
-                        ,".pdf")
+                        , nombreArchivo
                         , Utils.join(" ",pv_cdunieco_i
                                 ,"-",pv_cdramo_i
                                 ,"-",pv_nmpoliza_i
-                                ,"-",nmsitaux
+                                ,"-",nmsituaext
                                 ,"")
                         , pv_tipoMov_i
                         , null
