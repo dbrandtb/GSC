@@ -47,6 +47,10 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 	
 	private String detalleRespuesta;
 	
+	private static final String PORREDAU_DEFAULT = "0";
+	
+	private static final String PORPARTI_DEFAULT = "100";
+	
 	/**
 	 * Lista que recibe los valores del grid de vehículos para flotillas
 	 */
@@ -194,6 +198,10 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
         	
         	String swrenovacion = "S".equals(params.get("swrenovacion")) ? "S" : "N";
         	
+        	//DBB
+        	String porparti = StringUtils.isNotBlank(params.get("porparti")) ? params.get("porparti") : PORPARTI_DEFAULT;
+        	String porredau = StringUtils.isNotBlank(params.get("porredau")) ? params.get("porredau") : PORREDAU_DEFAULT;
+        	        	
         	// Se llenan datos:
     		boolean esFlotilla  = StringUtils.isNotBlank(params.get("flotilla"))&&params.get("flotilla").equalsIgnoreCase("si");
     		String tipoflot    = params.get("tipoflot");
@@ -208,7 +216,8 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     				esFlotilla, tipoflot, params.get("cdpersonCli"), params.get("cdideperCli"),
     				getText("rdf.cotizacion.nombre."+params.get("cdtipsit")),
     				getText("rdf.cotizacion.flot.nombre."+params.get("cdtipsit")), userVO,
-    				swrenovacion, params.get("sucursal"), params.get("ramo"), params.get("poliza")
+    				swrenovacion, params.get("sucursal"), params.get("ramo"), params.get("poliza"), 
+    				porparti, porredau
     				);
     		
     		params.put("ntramite", ntramite);

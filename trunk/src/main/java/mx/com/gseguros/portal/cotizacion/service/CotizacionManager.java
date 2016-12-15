@@ -891,6 +891,8 @@ public interface CotizacionManager
 	 * @param nombreReporteCotizacion
 	 * @param nombreReporteCotizacionFlot
 	 * @param swdesdesigs TODO
+	 * @param porredau 
+	 * @param porparti 
 	 * @return ntramite Numero de tramite creado
 	 * @throws Exception
 	 */
@@ -919,7 +921,9 @@ public interface CotizacionManager
 			String swrenovacion,
 			String sucursal,
 			String ramo,
-			String poliza
+			String poliza, 
+			String porparti, 
+			String porredau
 	) throws Exception;
 	
 	@Deprecated
