@@ -96,7 +96,7 @@ import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
 
 public class CotizacionAction extends PrincipalCoreAction
 {
-//prueba
+
 	private static final long       serialVersionUID = 3237792502541753915L;
 	private static final Logger     logger           = LoggerFactory.getLogger(CotizacionAction.class);
 	private static SimpleDateFormat renderFechas     = new SimpleDateFormat("dd/MM/yyyy"); 
