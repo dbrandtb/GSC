@@ -2316,12 +2316,13 @@ function _p21_exportarExcelCensoFinal(){
         standardSubmit : true,
         url:_p21_urlReporte,
         params: {
-            'params.cdunieco'          : _p21_smap1.cdunieco
-            ,'params.cdramo'           : _p21_smap1.cdramo
-            ,'params.estado'           : _p21_smap1.estado
-            ,'params.nmpolizaAnterior' : _p21_smap1.nmpoliza
-            ,'params.ntramite'         : _p21_smap1.ntramite
-            ,'params.exportar' : true
+        	cdreporte : 'REPEXC021'
+            ,'params.cdunieco'   : _p21_smap1.cdunieco
+            ,'params.cdramo'     : _p21_smap1.cdramo
+            ,'params.estado'     : _p21_smap1.estado
+            ,'params.nmpoliza'   : _p21_smap1.nmpoliza
+            ,'params.ntramite'   : _p21_smap1.ntramite
+            ,'params.exportar'   : true
         },
         success: function(form, action) {
             
