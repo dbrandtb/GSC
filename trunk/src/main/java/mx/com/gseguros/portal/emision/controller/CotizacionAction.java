@@ -1708,7 +1708,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = resp.getRespuestaOculta();
 			if(exito)
 			{
-			    if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null && !cdtipsit.equals("PC") && !cdtipsit.equals("CR"))
+			    if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null && !cdtipsit.equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit()) && !cdtipsit.equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit()))
 			    {
 			        List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
 			                cdusuari
