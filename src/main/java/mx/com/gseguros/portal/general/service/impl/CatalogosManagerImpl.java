@@ -1395,7 +1395,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		
 		List<GenericVO> lista = new ArrayList<GenericVO>();
-		List<Map<String,String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc(agrupamc, String.valueOf(TipoModelado.FLUJOS_PROCESOS.getCdtipmod()));
+		List<Map<String,String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc(agrupamc);
 		for(Map<String,String>tipoFlujo:tiposFlujo)
 		{
 			lista.add(new GenericVO(
@@ -1907,7 +1907,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, String vigente) throws Exception
+	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"

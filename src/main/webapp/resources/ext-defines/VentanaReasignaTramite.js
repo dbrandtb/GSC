@@ -109,7 +109,6 @@ Ext.define('VentanaReasignaTramite',
                     ,columns    : 2
                     ,width      : 250
                     ,style      : 'margin:5px;'
-                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                     ,items      :
                     [
                         {
@@ -117,13 +116,12 @@ Ext.define('VentanaReasignaTramite',
                             ,itemId     : 'SWAGENTE'
                             ,name       : 'SWAGENTE'
                             ,inputValue : 'S'
-                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                         }
                         ,{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE'
                             ,inputValue : 'N'
-                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                            ,checked    : true
                         }
                     ]
                 }
@@ -147,7 +145,7 @@ Ext.define('VentanaReasignaTramite',
                             window.setLoading(true);
                             Ext.Ajax.request(
                             {
-                                url     : _GLOBAL_URL_REASIGNAR_TRAMITE_INDV
+                                url     : _GLOBAL_COMP_URL_ACTUALIZAR_STATUS_TRAMITE
                                 ,params :
                                 {
                                     'smap1.ntramite'         : window1.ntramite
@@ -171,7 +169,8 @@ Ext.define('VentanaReasignaTramite',
                                             window1.close();
                                             Ext.ComponentQuery.query('[xtype=button][text=Buscar]')[0].handler();
                                             mensajeCorrecto('Tr&aacute;mite reasignado'
-                                                ,json2.smap1.nombreUsuarioDestino
+                                                ,'El tr&aacute;mite '+window1.ntramite
+                                                    +' ha sido asignado a '+json2.smap1.nombreUsuarioDestino
                                                 ,function()
                                                 {
                                                     _mask('Redireccionando');

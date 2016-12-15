@@ -33,29 +33,6 @@ public interface EmisionDAO {
 			String nmsituac, String nmsuplem, String cdelemento, String cdcia, String cdplan, String cdperpag, 
 			String cdperson, Date fecha, String ntramite) throws Exception;
 	
-	/**
-	 * Emision remota para RECUPERA Individual
-	 * @param cdusuari
-	 * @param cdunieco
-	 * @param cdramo
-	 * @param estado
-	 * @param nmpoliza
-	 * @param nmsituac
-	 * @param nmsuplem
-	 * @param cdelemento
-	 * @param cdcia
-	 * @param cdplan
-	 * @param cdperpag
-	 * @param cdperson
-	 * @param fecha
-	 * @param ntramite
-	 * @return Datos de la emision
-	 * @throws Exception
-	 */
-	public EmisionVO emitirPolizaRemotaRecupera(String cdusuari, String cdunieco, String cdramo, String estado, String nmpoliza, 
-            String nmsituac, String nmsuplem, String cdelemento, String cdcia, String cdplan, String cdperpag, 
-            String cdperson, Date fecha, String ntramite, String polizaremota) throws Exception;
-	
 
 	/**
 	 * Actualiza el numero de poliza externo para una poliza de autos
@@ -95,21 +72,8 @@ public interface EmisionDAO {
 	
 	public void mostrarRecibosImpresosListaDeListas(List<DocumentoReciboParaMostrarDTO> lista)throws Exception;
 	
-	public void movimientoClienteTramite(String ntramite, String cdperson, String accion) throws Exception;
-	
-	public void validarDocumentoTramite (String ntramite, String cddocume) throws Exception;
-	
-	public String recuperarTramiteCotizacion (String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
-	
-	public void bloquearProceso (String cdproceso, boolean bloquear, String cdusuari, String cdsisrol) throws Exception;
-	
 	public void revierteEmision(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
-	
-	public List<Map<String, String>> recuperarDocumentosGeneradosPorParametrizacion (String ntramite) throws Exception;
-	
-	public void actualizarCdplanGrupo(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsuplem, String cdgrupo, String cdplan) throws Exception;
-	
-	public Map<String, String> redireccionaReporteVidaAuto(Integer cdunieco, Integer cdramo,Integer nmpoliza, String tipoEndoso, String endoso) throws Exception;
-	
+    
+    public Map<String, String> redireccionaReporteVidaAuto(Integer cdunieco, Integer cdramo,Integer nmpoliza, String tipoEndoso, String endoso) throws Exception;
+    
 }

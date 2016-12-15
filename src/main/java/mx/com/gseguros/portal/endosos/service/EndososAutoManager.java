@@ -82,7 +82,6 @@ public interface EndososAutoManager
 			,String cdelemen
 			,UserVO usuarioSesion
 			,List<Map<String,String>> incisos
-			,FlujoVO flujo
 			)throws Exception;
 	
 	/**
@@ -134,8 +133,6 @@ public interface EndososAutoManager
 			,String fecha
 			,UserVO usuarioSesion
 			,boolean devolver
-			,String cdsisrol
-			,FlujoVO flujo
 			)throws Exception;
 
 	public void guardarEndosoDespago(
@@ -148,9 +145,6 @@ public interface EndososAutoManager
 			,String nmimpres
 			,String cdtipsup
 			,UserVO usuarioSesion
-			,String cdusuari
-			,String cdsisrol
-			,FlujoVO flujo
 			)throws Exception;
 	
 	
@@ -180,7 +174,6 @@ public interface EndososAutoManager
 			,Date dFechaEndoso
 			,String aseguradoAlterno
 			,String cdsisrol
-			,FlujoVO flujo
 			)throws Exception;
 	
 	public void guardarEndosoVigenciaPoliza(
@@ -199,9 +192,8 @@ public interface EndososAutoManager
 			,String feproren
 			,String nmsuplemOriginal
 			,String cdsisrol
-			,FlujoVO flujo
 			)throws Exception;
-	
+
 	public void guardarEndosoTextoLibre(
 			String cdunieco
 			,String cdramo
@@ -219,7 +211,6 @@ public interface EndososAutoManager
 			,List<Map<String,String>> situaciones
 			,String dslinea
 			,String cdsisrol
-			,FlujoVO flujo
 			)throws Exception;
 	
 	public void validarEndosoAnterior(
@@ -312,7 +303,6 @@ public interface EndososAutoManager
 			,String nmsuplem
 			,String cdelemen
 			,UserVO usuarioSesion
-			,FlujoVO flujo
 			)throws Exception;
 
 	public void confirmarEndosoRehabilitacionSalud(
@@ -335,7 +325,6 @@ public interface EndososAutoManager
 			,String nmsuplem
 			,String cdelemen
 			,UserVO usuarioSesion
-			,FlujoVO flujo
 			)throws Exception;
 	
 	public Map<String,Item> endosoCancelacionAuto(
@@ -366,7 +355,6 @@ public interface EndososAutoManager
 			,String cdelemen
 			,Date   fechainicio
 			,UserVO usuarioSesion
-			,FlujoVO flujo
 			)throws Exception;
 	
 	public Map<String,Object> guardarEndosoDevolucionPrimas(
@@ -508,111 +496,14 @@ public interface EndososAutoManager
 			,String nmimpres
 			,String cdtipsup
 			,UserVO usuarioSesion
-			,String cdusuari
-			,String cdsisrol
-			,FlujoVO flujo
 			)throws Exception;
 
-	public int guardarEndosoNombreRFCFecha(String cdunieco, String cdramo, String estado, String nmpoliza,
+	public void guardarEndosoNombreRFCFecha(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String cdperson, String cdtipide, String cdideper, String dsnombre, String cdtipper, String otfisjur,
 			String otsexo, Date fechaNacimiento, String cdrfc, String dsemail, String dsnombre1, String dsapellido,
 			String dsapellido1, String feingreso, String cdnacion, String canaling, String conducto, String ptcumupr,
 			String residencia, String nongrata, String cdideext, String cdestciv, String cdsucemi, String cdusuari,
-			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso, String tipoPantalla,
-			String codigoCliExt,String sucursalEnt,String ramoEntrada,String polizaEnt, String cdpersonNew, String dsnombreComp,
-			String tramite, String numsuplemen, String urlCaratula, UserVO usuarioSesion, FlujoVO flujo)throws Exception;
-	
-	public int guardarEndosoDomicilioNoSICAPS(String tipoPantalla, String sucursalEnt, String ramoEntrada,
-			String polizaEnt, String codigoCliExt, String cdpersonNew, String codigoPostal, String cveEstado,
-			String estado, String cveEdoSISG, String cveMinicipio, String municipio, String cveMunSISG,
-			String cveColonia, String colonia, String calle, String numExterior, String numInterior, String cdusuari,
-			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso,
-			String urlCaratula, String telefono1, String telefono2, String telefono3, UserVO usuarioSesion)throws Exception;
-	
-	public void sacaEndosoFlujo(FlujoVO flujo) throws Exception;
-	
-	public void validacionSigsAgente (String cdagente, String cdramo, String cdtipsit, String cdtipend) throws Exception;
-	
-	public Map<String, String> guardarFechaEfectoEndosoPendiente (String cdunieco, String cdramo, String estado,
-			String nmpoliza, String fecha, String cdelemen, String cdusuari, String proceso, String cdtipsup) throws Exception;
-	
-	public Map<String, String> recuperarDatosEndosoPendiente (String cdunieco, String cdramo, String estado,
-			String nmpoliza, String cdtipsup) throws Exception;
-	
-	public Map<String, Object> endosoAltaAsegurados(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String cdusuari, String cdsisrol, String status) throws Exception;
-	
-	public String guardarAseguradoParaEndosoAlta (
-			String cdunieco,
-			String cdramo,
-			String estado,
-			String nmpoliza,
-			String cdusuari,
-			String cdsisrol,
-			String accion,
-			String nombre,
-			String nombre2,
-			String apat,
-			String amat,
-			String sexo,
-			String fenacimi,
-			String rfc,
-			String nacional,
-			String edocivil,
-			String feingreso,
-			String cdperson,
-			String cdtipide,
-			String cdideper,
-			String cdtipper,
-			String dsemail,
-			String canaling,
-			String conducto,
-			String ptcumupr,
-			String residencia,
-			String nongrata,
-			String cdideext,
-			String cdsucemi,
-			String otfisjur,
-			String nmsituac,
-			String cdrol,
-			String nmorddom,
-			String swreclam,
-			String swexiper,
-			String nmsuplem,
-			String nsuplogi,
-			String fesolici,
-			String feendoso,
-			Map<String, String> valosit
-			) throws Exception;
-	
-	public List<Map<String, String>> tarificarEndosoAltaAsegurados (String cdusuari, String cdelemen, String cdunieco,
-			String cdramo, String estado, String nmpoliza, String nmsuplem, String feinival) throws Exception;
-	
-	public Map<String, String> confirmarEndosoSaludFlujo (String cdusuari, String cdsisrol, String cdelemen,
-			String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza,
-			String status, String nmsuplem, String nsuplogi, Date fesolici, Date feinival, boolean autoriza,
-			String cdtipsup, UserVO usuario) throws Exception;
-	
-	public Map<String, Object> endosoCoberturasFlujo (String cdunieco, String cdramo, String estado, String nmpoliza,
-			String cdusuari, String cdsisrol, String status) throws Exception;
-	
-	public void agregarCoberturaEndosoCoberturas (String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1, String otvalor1,
-			String cdatribu2, String otvalor2, String cdatribu3, String otvalor3, String cdtipsit) throws Exception;
-	
-	public void quitarCoberturaAgregadaEndCob (String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1,
-			String cdatribu2, String cdatribu3, String cdtipsit) throws Exception;
-	
-	public void eliminarCoberturaEndosoCoberturas (String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsituac, String cdgarant, String nmsuplem, String cdtipsit) throws Exception;
-	
-	public void restaurarCoberturaEliminadaEndCob (String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsituac, String cdgarant, String nmsuplem, String cdatribu1,
-			String cdatribu2, String cdatribu3, String cdtipsit) throws Exception;
-	
-	public List<Map<String, String>> tarificarEndosoCoberturasFlujo (String cdusuari, String cdelemen, String cdunieco,
-			String cdramo, String estado, String nmpoliza, String nmsuplem, String feinival, String cdtipsup) throws Exception;
+			String cdsisrol, String cdelemen, String cdtipsup, String fechaEndoso, Date dFechaEndoso)throws Exception;
 	
 	public Map<String,Item> pantallaBeneficiariosAutoVida(String cdunieco,String cdramo,String estado,String cdsisrol,String cdtipsup)throws Exception;
 	

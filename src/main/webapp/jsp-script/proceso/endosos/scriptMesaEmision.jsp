@@ -43,7 +43,6 @@ function _4_onFolderClick(rowIndex)
         ,width       : 600
         ,height      : 400
         ,autoScroll  : true
-        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
         ,loader      :
         {
             url       : mesConUrlDocu
@@ -370,8 +369,7 @@ function _4_onComplementariosAbiertoClick(rowIndex)
         }
         else if(agrupacion=='SOLO')
         {
-           /** Ya no aplica **/
-            /*  Ext.create('Ext.form.Panel').submit(
+            Ext.create('Ext.form.Panel').submit(
             {
                 url             : mesConUrlDatCom
                 ,standardSubmit : true
@@ -384,7 +382,7 @@ function _4_onComplementariosAbiertoClick(rowIndex)
                     ,'map1.ntramite' : record.get('ntramite')
                     ,cdtipsit : record.get('cdtipsit')
                 }
-            }); */
+            });
         }
         else
         {

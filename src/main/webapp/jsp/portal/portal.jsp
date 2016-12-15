@@ -329,7 +329,7 @@
 	            debugError('Error al grabar evento',cdmodulo,cdevento,e);
 	        }
 	    };
-	    //_grabarEvento('GENERAL','INICIO');
+	    _grabarEvento('GENERAL','INICIO');
 	
 		LoadPage('/jsp/portal/mainBody.jsp');
 	</script>

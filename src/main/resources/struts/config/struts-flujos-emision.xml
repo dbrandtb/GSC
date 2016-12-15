@@ -75,10 +75,6 @@
            <result type="json" />
        </action>
 
-       <action name="lanzaAprobacionNombrePlan" class="CotizacionAction" method="lanzaAprobacionNombrePlan">
-           <result type="json" />
-       </action>
-       
        <action name="obtieneNombresCoberturasPlan" class="CotizacionAction" method="obtieneNombresCoberturasPlan">
            <result type="json" />
        </action>
@@ -557,11 +553,7 @@
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
             <result type="json" />
-        </action>
-        
-        <action name="refrescarCensoColectivo" class="CotizacionAction" method="refrescarCensoColectivo">
-            <result name="success" type="json" />
-        </action>
+        </action>      
     </package>
     
 </struts>

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -33,11 +32,6 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSal
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGS;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.DirCli;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.DirCliRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.DireccionClienteGeneralGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.DireccionClienteGeneralGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.DireccionClienteGeneralGSResponseE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGS;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE;
@@ -177,45 +171,6 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 				logger.debug("Resultado ejecucion de WS clienteGeneralGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
-		} catch (Exception re) {
-			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
-		}
-		
-		return resWS;
-	}
-	
-
-	private WrapperResultadosWS ejecutaDomicilioClienteGeneralGS(Operacion operacion, DirCli direccionCliente) throws Exception {
-		
-		DirCliRespuesta resultado = null;
-		WrapperResultadosWS resWS = new WrapperResultadosWS();
-		ServicioGSServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT_EXTENDED);
-		
-		DireccionClienteGeneralGSResponseE RespuestaGS = null;
-		
-		DireccionClienteGeneralGS direccionClienteS = new DireccionClienteGeneralGS();
-		direccionClienteS.setArg0(operacion.getCodigo());
-		direccionClienteS.setArg1(direccionCliente);
-		
-		DireccionClienteGeneralGSE direccionClienteE = new DireccionClienteGeneralGSE();
-		direccionClienteE.setDireccionClienteGeneralGS(direccionClienteS);
-		
-		try {
-			RespuestaGS = stubGS.direccionClienteGeneralGS(direccionClienteE);
-			resultado = RespuestaGS.getDireccionClienteGeneralGSResponse().get_return();
-			resWS.setResultadoWS(resultado);
-			resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
-			logger.debug("Resultado ejecucion de WS direccionClienteGeneralGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 		} catch (Exception re) {
 			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 		}
@@ -503,31 +458,11 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				usuario = userVO.getUser();
 			}
 			
-/**
- * PROBABLEMETE SE USE:
- */
-//			int usuarioCap = 0;
-//			String usuarioCaptura = null;
-//			try{
-//				if(StringUtils.isNotBlank(userVO.getClaveUsuarioCaptura())){
-//					usuarioCaptura = userVO.getClaveUsuarioCaptura();
-//				}else{
-//					usuarioCaptura = userVO.getCodigoPersona();
-//				}
-//				usuarioCap =  Integer.parseInt(usuarioCaptura);
-//				
-//			}catch(Exception e){
-//				logger.error("<<<<>>>> Error Al obtener el Usuario de Captura <<<<>>>>, se envia 0, usuarioCaptura:" +  usuarioCaptura, e);
-//			}
-//			
-//			cliente.setUsucapCli(usuarioCap);
-			
 			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave Compania: " + cliente.getClaveCia());
 			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave Externa: " + cliente.getNumeroExterno());
 			logger.debug(">>>>>>> Ejecutando WS Cliente General RFC: " + cliente.getRfcCli());
 			
-			logger.debug("Clave de cliente cdperson: "+ cliente.getClaveCli());
-			logger.debug("Clave de usuarioCaptura: "  + cliente.getUsucapCli());
+			logger.debug("Fuera de la clase de mapeo numero de cliente cdperson: "+ cliente.getClaveCli());
 			
 			try{
 				
@@ -588,200 +523,6 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		}
 		
 		return clientesRespuesta;
-	}
-
-	
-	public boolean ejecutaWSdireccionClienteGeneral(String cdperson, String compania, List<Map<String,String>> direccionesCliSave, List<Map<String,String>> direccionesCliUpdate, boolean sinCodigoWS, UserVO userVO) {
-		
-		logger.debug("######### Entrado al envio de direcciones para Web Service de Domicilio #########");
-		logger.debug("#### cdperson: " + cdperson);
-		logger.debug("#### compania: " + compania);
-		
-		WrapperResultados result = null;
-		DirCli direccionCliente = null;
-		
-		if(StringUtils.isBlank(cdperson)){
-			logger.error("Error en envio de Direcciones, cdperson nulo");
-			return false;
-		}
-		if(StringUtils.isBlank(compania)){
-			logger.error("Error en envio de Direcciones, compania nula");
-			return false;
-		}
-		
-		if((direccionesCliSave == null || direccionesCliSave.isEmpty())  &&  (direccionesCliUpdate == null || direccionesCliUpdate.isEmpty())){
-			logger.warn("Alerta, No hay direcciones a insertar o acutalizar para enviar al Web Service Domicilios de Cliente");
-			return true;
-		}
-		
-		List<Map<String,String>> direccionesTodas = new ArrayList<Map<String,String>>();
-		
-		for(Map<String,String> dir : direccionesCliSave){
-			dir.put("OPERACION", Constantes.INSERT_MODE);
-		}
-		
-		for(Map<String,String> dir : direccionesCliUpdate){
-			if(sinCodigoWS){
-				/**
-				 * Si el cliente no se habia registrado y ya hay direcciones en la base de datos por actualizar
-				 * se mandan en modo insert para el Web Service d Domicilios
-				 * 
-				 */
-				dir.put("OPERACION", Constantes.INSERT_MODE);
-			}else{
-				dir.put("OPERACION", Constantes.UPDATE_MODE);
-			}
-			
-		}
-		
-		direccionesTodas.addAll(direccionesCliUpdate);
-		direccionesTodas.addAll(direccionesCliSave);
-		
-		
-		Ice2sigsService.Operacion op = null;
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdperson_i", cdperson);
-		params.put("pv_compania_i", compania);
-		
-		for(Map<String,String> direccionCliIt : direccionesTodas){
-			
-			try {
-				
-				params.put("pv_nmorddom_i", direccionCliIt.get("NMORDDOM"));
-				
-				result = kernelManager.obtenDatosDomicilioGeneralWSporCdperson(params);
-				direccionCliente = ((ArrayList<DirCli>) result.getItemList()).get(0);
-				
-			} catch (Exception e1) {
-				logger.error("Error en llamar al PL de obtencion de ejecutaWSdireccionClienteGeneral",e1);
-				return false;
-			}	
-			
-			
-			if(Constantes.UPDATE_MODE.equalsIgnoreCase(direccionCliIt.get("OPERACION"))){
-				op =  Ice2sigsService.Operacion.ACTUALIZA;
-			}else{
-				op =  Ice2sigsService.Operacion.INSERTA;
-			}
-			
-			logger.debug("********************* Entrando a Ejecuta WSdireccionClienteGeneral ******************************");
-			logger.debug("********************* Operacion a Realizar: " + op);
-			
-			DirCliRespuesta direccionRespuesta = null;
-			WrapperResultadosWS resultWS = null;
-			
-			
-			direccionCliente.setCveCia(compania);
-			direccionCliente.setNumDir(Integer.parseInt(direccionCliIt.get("NMORDDOM")));
-			
-			String usuarioCaptura = null;
-			if(userVO!=null){
-				if(StringUtils.isNotBlank(userVO.getClaveUsuarioCaptura())){
-					usuarioCaptura = userVO.getClaveUsuarioCaptura();
-				}else{
-					usuarioCaptura = userVO.getCodigoPersona();
-				}
-				
-			}
-			direccionCliente.setUsuCap(usuarioCaptura);
-
-			String usuario = "SIN USUARIO";
-			if(userVO != null){
-				usuario = userVO.getUser();
-			}
-			
-			try{
-				resultWS = ejecutaDomicilioClienteGeneralGS(op, direccionCliente);
-				direccionRespuesta = (DirCliRespuesta) resultWS.getResultadoWS();
-				
-				logger.debug("XML de entrada: " + resultWS.getXmlIn());
-				
-				if (Estatus.EXITO.getCodigo() != direccionRespuesta.getCodigo() 
-						&& Estatus.LLAVE_DUPLICADA.getCodigo() != direccionRespuesta.getCodigo()) {
-					logger.error("Error al guardar domicilio: "+direccionCliIt);
-					
-					if(Estatus.LLAVE_INEXISTENTE.getCodigo() == direccionRespuesta.getCodigo() 
-							&& Constantes.UPDATE_MODE.equalsIgnoreCase(direccionCliIt.get("OPERACION"))){
-
-						//Reintenta la operacion en modo INSERT
-						try{
-							resultWS = ejecutaDomicilioClienteGeneralGS(Ice2sigsService.Operacion.INSERTA, direccionCliente);
-							direccionRespuesta = (DirCliRespuesta) resultWS.getResultadoWS();
-							
-						}catch(WSException e){
-							logger.error("Error al ejecutar WSdireccionClienteGeneral cdperson modo Reintenta INSERTA: " + cdperson , e);
-							logger.error("Error al guardar domicilio: "+direccionCliIt);
-							logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
-							return false;
-//							if (Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo()){
-//								try {
-//									kernelManager.movBitacobro(
-//											(String) params.get("pv_cdunieco_i"),
-//											(String) params.get("pv_cdramo_i"),
-//											(String) params.get("pv_estado_i"),
-//											(String) params.get("pv_nmpoliza_i"), 
-//											(String) params.get("pv_nmsuplem_i"), 
-//											Ice2sigsService.TipoError.ErrWScliCx.getCodigo(), 
-//											"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
-//											usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteGeneralGS",
-//											e.getPayload(), null);
-//								} catch (Exception e1) {
-//									logger.error("Error al insertar en bitacora", e1);
-//								}
-//							}
-							
-						}catch (Exception e){
-							logger.error("Error al ejecutar WSdireccionClienteGeneral cdperson modo Reintenta INSERTA: " + cdperson , e);
-							return false;
-						}
-					}else{
-						return false;
-					}
-					
-//					try {
-//						kernelManager.movBitacobro(
-//								(String) params.get("pv_cdunieco_i"),
-//								(String) params.get("pv_cdramo_i"),
-//								(String) params.get("pv_estado_i"),
-//								(String) params.get("pv_nmpoliza_i"),
-//								(String) params.get("pv_nmsuplem_i"), 
-//								Ice2sigsService.TipoError.ErrWScli.getCodigo(),
-//								direccionRespuesta.getCodigo() + " - " + direccionRespuesta.getMensaje(),
-//								usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteGeneralGS",
-//								resultWS.getXmlIn(), Integer.toString(direccionRespuesta.getCodigo()));
-//					} catch (Exception e1) {
-//						logger.error("Error al insertar en bitacora", e1);
-//					}
-				}
-			}catch(WSException e){
-				logger.error("Error al ejecutar WSdireccionClienteGeneral cdperson: " + cdperson , e);
-				logger.error("Error al guardar domicilio: "+direccionCliIt);
-				logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
-				return false;
-//				if (Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo()){
-//					try {
-//						kernelManager.movBitacobro(
-//								(String) params.get("pv_cdunieco_i"),
-//								(String) params.get("pv_cdramo_i"),
-//								(String) params.get("pv_estado_i"),
-//								(String) params.get("pv_nmpoliza_i"), 
-//								(String) params.get("pv_nmsuplem_i"), 
-//								Ice2sigsService.TipoError.ErrWScliCx.getCodigo(), 
-//								"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
-//								usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteGeneralGS",
-//								e.getPayload(), null);
-//					} catch (Exception e1) {
-//						logger.error("Error al insertar en bitacora", e1);
-//					}
-//				}
-				
-			}catch (Exception e){
-				logger.error("Error al ejecutar WSdireccionClienteGeneral cdperson: " + cdperson , e);
-				return false;
-			}
-		}
-		
-		return true;
 	}
 
 	
@@ -1065,7 +806,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
-							,Documento.RECIBO, null, null, false
+							,Documento.RECIBO, null, null
 							);
 				//}
 			}catch(Exception e){
@@ -1110,7 +851,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				if(reclamo.getNumPol() == 0){
 					logger.debug("Sin datos para ejecutaWSreclamo.");
 					res.setSuccess(false);
-					res.setMensaje("Alguno de los reclamos no tiene la informaci\u00f3n necesaria para solicitar el pago.");
+					res.setMensaje("Alguno de los reclamos no tiene la informaci&oacute;n necesaria para solicitar el pago.");
 					return res;
 				}
 				
@@ -1156,14 +897,14 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 							}
 							
 							res.setSuccess(false);
-							res.setMensaje("Error al enviar alg\u00fan Reclamo para la solicitud de Pago. Intente nuevamente.");
+							res.setMensaje("Error al enviar alg&uacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
 						}
 					}
 					
 				}catch(WSException e){
 					logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
 					res.setSuccess(false);
-					res.setMensaje("Error al enviar alg\u00fan Reclamo para la solicitud de Pago. Intente nuevamente.");
+					res.setMensaje("Error al enviar alg&uacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
 					logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
 					try {
 						kernelManager.movBitacobro(
@@ -1184,7 +925,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				}catch (Exception e){
 					logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
 					res.setSuccess(false);
-					res.setMensaje("Error al enviar alg\u00fan Reclamo para la solicitud de Pago. Intente nuevamente.");
+					res.setMensaje("Error al enviar alg&uacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
 				}
 			}
 		}else {

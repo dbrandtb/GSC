@@ -9,11 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-
-import com.opensymphony.xwork2.ActionContext;
-
 import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
@@ -28,7 +23,11 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utils;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  *
@@ -637,12 +636,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
                 "pv_otvalor11","pv_otvalor12","pv_otvalor13","pv_otvalor14","pv_otvalor15","pv_otvalor16","pv_otvalor17","pv_otvalor18","pv_otvalor19","pv_otvalor20",
                 "pv_otvalor21","pv_otvalor22","pv_otvalor23","pv_otvalor24","pv_otvalor25","pv_otvalor26","pv_otvalor27","pv_otvalor28","pv_otvalor29","pv_otvalor30",
                 "pv_otvalor31","pv_otvalor32","pv_otvalor33","pv_otvalor34","pv_otvalor35","pv_otvalor36","pv_otvalor37","pv_otvalor38","pv_otvalor39","pv_otvalor40",
-                "pv_otvalor41","pv_otvalor42","pv_otvalor43","pv_otvalor44","pv_otvalor45","pv_otvalor46","pv_otvalor47","pv_otvalor48","pv_otvalor49","pv_otvalor50",
-                "pv_otvalor51","pv_otvalor52","pv_otvalor53","pv_otvalor54","pv_otvalor55","pv_otvalor56","pv_otvalor57","pv_otvalor58","pv_otvalor59","pv_otvalor60",
-                "pv_otvalor61","pv_otvalor62","pv_otvalor63","pv_otvalor64","pv_otvalor65","pv_otvalor66","pv_otvalor67","pv_otvalor68","pv_otvalor69","pv_otvalor70",
-                "pv_otvalor71","pv_otvalor72","pv_otvalor73","pv_otvalor74","pv_otvalor75","pv_otvalor76","pv_otvalor77","pv_otvalor78","pv_otvalor79","pv_otvalor80",
-                "pv_otvalor81","pv_otvalor82","pv_otvalor83","pv_otvalor84","pv_otvalor85","pv_otvalor86","pv_otvalor87","pv_otvalor88","pv_otvalor89","pv_otvalor90",
-                "pv_otvalor91","pv_otvalor92","pv_otvalor93","pv_otvalor94","pv_otvalor95","pv_otvalor96","pv_otvalor97","pv_otvalor98","pv_otvalor99"
+                "pv_otvalor41","pv_otvalor42","pv_otvalor43","pv_otvalor44","pv_otvalor45","pv_otvalor46","pv_otvalor47","pv_otvalor48","pv_otvalor49","pv_otvalor50"
 		};
     	for(String key:inputKeys)
     	{
@@ -871,11 +865,45 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		{
 			parameters.put("pv_cdsisrol_i" , ((UserVO)ActionContext.getContext().getSession().get("USUARIO")).getRolActivo().getClave());
 		}
+		log.debug("### kernel sustituto obtenerDocumentosPoliza parameters: "+parameters);
+		log.debug(
+				new StringBuilder()
+				.append("\n*******************************************")
+				.append("\n****** PKG_CONSULTA.P_Get_documentos ******")
+				.append("\n****** params=").append(parameters)
+				.append("\n*******************************************")
+				.toString()
+				);
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_DOCUMENTOS_POLIZA);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
-        log.debug(Utils.log("### kernel sustituto obtenerDocumentosPoliza lista : ", lista));
+        log.debug("### kernel sustituto obtenerDocumentosPoliza lista size: "+lista.size());
         return lista;
 	}
+	
+	/*
+	public List<Map<String, String>> obtenerListaDocumentos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String ntramite
+			) throws ApplicationException
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_ntramite_i" , ntramite);
+		log.debug("### kernel sustituto obtenerListaDocumentos parameters: "+params);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.OBTENER_LISTA_DOC_POLIZA_NUEVA);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.info("### kernel sustituto obtenerListaDocumentos lista: "+lista);
+        return lista;
+	}
+	*/
 	
 	public WrapperResultados insertaMaestroHistoricoPoliza(Map<String, Object> param) throws ApplicationException
 	{
@@ -1048,9 +1076,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 			{
 				params.put("cdusuari_busq" , null);
 			}
-			if(!params.containsKey("dscontra")){
-                params.put("dscontra" , null);
-            }
 		}
 		
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.LOAD_MESA_CONTROL);
@@ -1162,12 +1187,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 				ProcesoDAO.OBTIENE_DATOS_CLIENTE_GENERAL_X_CDPERSON);
 		return result;
 	}
-	public WrapperResultados obtenDatosDomicilioGeneralWSporCdperson(HashMap<String,Object> params) throws ApplicationException
-	{
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ProcesoDAO.OBTIENE_DATOS_DOMICILIO_GENERAL_X_CDPERSON);
-		return result;
-	}
 	
 	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException
 	{
@@ -1259,14 +1278,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	{
 		log.debug("### kernel sustituto buscarRFC map: "+params);
 		
-		if(!params.containsKey("pv_rfc_i"))
-		{
-			params.put("pv_rfc_i", "");
-		}
-		if(!params.containsKey("pv_cdperson_i"))
-		{
-			params.put("pv_cdperson_i", "");
-		}
 		
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.BUSCAR_RFC);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);

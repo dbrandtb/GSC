@@ -17,28 +17,15 @@ public class GenericMapper implements RowMapper
 	private String[] columnas;
 	private List<String> columnas2;
 	private final static Logger logger = Logger.getLogger(GenericMapper.class);
-	private boolean fechaConHora;
 	
     public GenericMapper(String[] columnas)
     {
     	this.columnas=columnas;
     }
-	
-    public GenericMapper(String[] columnas, boolean fechaConHora)
-    {
-    	this.columnas     = columnas;
-    	this.fechaConHora = fechaConHora;
-    }
     
     public GenericMapper(List<String> columnas2)
     {
     	this.columnas2=columnas2;
-    }
-    
-    public GenericMapper(List<String> columnas2, boolean fechaConHora)
-    {
-    	this.columnas2    = columnas2;
-    	this.fechaConHora = fechaConHora;
     }
 
     public Object mapRow(ResultSet rs, int rowNum) throws SQLException
@@ -91,14 +78,7 @@ public class GenericMapper implements RowMapper
 			{
 				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe")||col!=null&&col.substring(0,2).equalsIgnoreCase("ff"))
 				{
-					if(fechaConHora)
-					{
-						map.put(col,Utils.formateaFechaConHora(rs.getString(col)));
-					}
-					else
-					{
-						map.put(col,Utils.formateaFecha(rs.getString(col)));
-					}
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{
@@ -110,16 +90,9 @@ public class GenericMapper implements RowMapper
 		{
 			for(String col:columnas2)
 			{
-				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe")||col!=null&&col.substring(0,2).equalsIgnoreCase("ff"))
+				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
 				{
-					if(fechaConHora)
-					{
-						map.put(col,Utils.formateaFechaConHora(rs.getString(col)));
-					}
-					else
-					{
-						map.put(col,Utils.formateaFecha(rs.getString(col)));
-					}
+					map.put(col,Utils.formateaFecha(rs.getString(col)));
 				}
 				else
 				{

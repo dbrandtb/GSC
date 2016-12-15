@@ -34,8 +34,6 @@ _5_smap1:
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _5_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-var _5_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
 var _5_urlLoadMdomicil = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
 var _5_urlGuardar      = '<s:url namespace="/endosos" action="guardarEndosoDomicilioFull" />';
 
@@ -47,7 +45,6 @@ var _5_fieldFechaEndoso;
 var _5_panelPri;
 
 debug('_5_smap1:',_5_smap1);
-debug('_5_flujo:',_5_flujo);
 //////variables //////
 //////////////////////
 
@@ -344,12 +341,6 @@ function _5_confirmar(boton)
 			}
 			//,parametros : _5_panelTatriper.getValues()
 		};
-		
-		if(!Ext.isEmpty(_5_flujo))
-		{
-		    json.flujo = _5_flujo;
-		}
-		
 		debug('datos a enviar:',json);
 		_setLoading(true,_5_panelPri);
 		Ext.Ajax.request(

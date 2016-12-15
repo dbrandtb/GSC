@@ -1,18 +1,13 @@
 package mx.com.gseguros.utils;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 
@@ -183,59 +178,12 @@ public class HttpUtil {
 		in.close();
 		logger.debug("Respuesta GET --> " + response.toString());
 	}
-	*/
 
 	public static void main(String[] args) throws Exception {
     //for (int i = 0; i <= 5; i++) {
-//			HttpRequestUtil.generaReporte("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CARATULA.rdf&paramform=no&p_unieco=1&p_cdramo=2&p_estado='W'&p_poliza=1250&desname=/opt/ice/gseguros/documentos/1250/CARATULA.pdf", "E:\\poliza.pdf");
+			HttpRequestUtil.generaReporte("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CARATULA.rdf&paramform=no&p_unieco=1&p_cdramo=2&p_estado='W'&p_poliza=1250&desname=/opt/ice/gseguros/documentos/1250/CARATULA.pdf", "E:\\poliza.pdf");
     //}
-		HttpUtil.sendPost("http://10.1.21.142:8080/wsCAS/rest/usuarios/getIdUsuByLogin","login=A1");
 	}
-	
-	
-	public static String sendPost(String url, String params) throws Exception {
-		
-		logger.debug(Utils.log("sendPost url=",url,",params=",params));
-		
-		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-		//add reuqest header
-		con.setRequestMethod("POST");
-		//con.setRequestProperty("User-Agent", USER_AGENT);
-		//con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-		String urlParameters = params;
-		
-		// Send post request
-		con.setDoOutput(true);
-		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-		wr.writeBytes(urlParameters);
-		wr.flush();
-		wr.close();
-
-		int responseCode = con.getResponseCode();
-		logger.debug(Utils.log("sendPost Sending 'POST' request to URL : ",url));
-		logger.debug(Utils.log("sendPost Post parameters : ", urlParameters));
-		logger.debug(Utils.log("sendPost Response Code : ",responseCode));
-
-		if(responseCode < 200 || responseCode>=300) {
-			throw new ApplicationException(Utils.join("Codigo de respuesta erroneo: ",responseCode));
-		}
-		BufferedReader in = new BufferedReader(
-		       new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-		
-		//print result
-		logger.debug(Utils.log("sendPost response=",response.toString()));
-		return response.toString();
-		
-	}
+	*/
 
 }

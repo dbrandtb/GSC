@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -22,6 +19,9 @@ import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Utils;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * 
@@ -170,7 +170,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPO_BUSQUEDA_RENOVACION_INDIVIDUAL:
 				case CRITERIOS_RENOVACION_INDIVIDUAL:	
 				case CATALOGO_TRAFUDOC_CDFUNCI:
-				case TIPOS_PAGO_POLIZA_SIN_DXN_MULTIANUAL:    
 				case TAPOYO:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
@@ -212,7 +211,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case TATRIGAR:
 					//lista = catalogosManager.obtieneAtributosGarantia(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdgarant"));
-					// se agrega parï¿½metro cdSisrol para considerar restricciones por rol (EGS)
+					// se agrega parámetro cdSisrol para considerar restricciones por rol (EGS)
 					lista = catalogosManager.obtieneAtributosGarantia(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdgarant"),((UserVO) session.get("USUARIO")).getRolActivo().getClave());
 					break;
 				case TATRIPER:
@@ -953,9 +952,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 						lista = catalogosManager.recuperarTiposDeEndosoPorCdramoPorCdtipsit(
 							params.get("cdramo"),
 							params.get("cdtipsit"),
-							StringUtils.isNotBlank(params.get("vigente"))
-							    ? params.get("vigente")
-							    : "N"
+							"S".equals(params.get("vigente"))
 					    );
 					}
 					break;
@@ -1018,7 +1015,7 @@ public class CatalogosAction extends PrincipalCoreAction {
                     }
 				    lista=catalogosManager.obtieneAdministradoraXAgente(params.get("cdagente"));
 				    break;
-				case VALIDACIONESGRALES:
+                case VALIDACIONESGRALES:
                     lista = siniestrosManager.getConsultaListaValidacionesGenerales();
                     break;
 				default:
