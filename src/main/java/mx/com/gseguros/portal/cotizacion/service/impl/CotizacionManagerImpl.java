@@ -7839,7 +7839,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			String cdplan, String cdperpag, String cdusuari, String cdsisrol, String cdelemen,
 			boolean esFlotilla, String tipoflot, String cdpersonCli, String cdideperCli,
 			String nombreReporteCotizacion, String nombreReporteCotizacionFlot, UserVO usuarioSesion,
-			String swrenovacion, String sucursal, String ramo, String poliza) throws Exception {
+			String swrenovacion, String sucursal, String ramo, String poliza, String porparti, String porredau) throws Exception {
     	
     	String paso = null;
     	
@@ -7881,7 +7881,7 @@ public class CotizacionManagerImpl implements CotizacionManager
         	
         	//mpoliage
             paso = "Ligando la poliza al agente";
-        		String cesionComision = "0";
+        		String cesionComision = porredau;
         		Map<String,String> tipoSituacion = cotizacionDAO.cargarTipoSituacion(cdramo, cdtipsit);
         		
         		if(tipoSituacion.get("SITUACION").equals("AUTO")) {
@@ -7890,7 +7890,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                 
                 cotizacionDAO.movimientoMpoliage(cdunieco, cdramo, "W", nmpoliza, 
             			cdagente, "0", "V", "1", cesionComision, nmcuadro, null, 
-            			"I", StringUtils.isNotBlank(ntramite) ? ntramite : null, "100");
+            			"I", StringUtils.isNotBlank(ntramite) ? ntramite : null, porparti);
         	
             // Actualizando la cesion de comision:
             paso = "Actualizando la cesion de comision";
