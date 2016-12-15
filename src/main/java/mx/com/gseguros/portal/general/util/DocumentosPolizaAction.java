@@ -638,6 +638,38 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
         return SUCCESS;
     }
 	 
+	/**
+	 * Crea una carpeta en el servidor de aplicaciones
+	 * 
+	 * @param path ruta donde se desea crear la carpeta 
+	 * @return 
+	 */
+	public void crearCarpeta(){
+		try {
+	        success = true;	        
+	        Utils.validate(params.get("path"), "No se recibio el parametro params.path");
+	        path =params.get("path");
+	        logger.debug("path recibido: "+path);	
+	        File   carpeta        = new File(path);
+	        boolean creado = false;
+			
+			if(!carpeta.exists())
+            {
+            	logger.debug("No existe la carpeta: "+carpeta);
+            	creado = carpeta.mkdir();
+            	if (creado) {
+            		logger.info("###### Carpeta: " + carpeta.toString() + " creada con exito ######");
+            	} else {
+            		throw new Exception("Error al crear la carpeta") ;
+            	}            	
+            } else {
+            	logger.info("La carpeta: "+carpeta+" ya existe");
+            }
+			
+		} catch (Exception e) {
+			respuesta = Utils.manejaExcepcion(e);
+		}
+	}
 	
 	//Getters and setters:
 	
