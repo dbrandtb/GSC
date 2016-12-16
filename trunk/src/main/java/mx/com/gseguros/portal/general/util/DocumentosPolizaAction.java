@@ -644,7 +644,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	 * @param path ruta donde se desea crear la carpeta 
 	 * @return 
 	 */
-	public void crearCarpeta(){
+	public void creaCarpeta(){
 		try {
 	        success = true;	        
 	        Utils.validate(params.get("path"), "No se recibio el parametro params.path");
