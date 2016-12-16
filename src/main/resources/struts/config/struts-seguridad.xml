@@ -210,7 +210,7 @@
         </action>
         
         <!-- crear carpeta desde Base de Datos -->
-        <action name="crearCarpeta" class="documentosPolizaAction" method="crearCarpeta">
+        <action name="creaCarpeta" class="documentosPolizaAction" method="creaCarpeta">
             <result name="success" type="json" />
         </action>
         
