@@ -948,5 +948,5 @@ public interface CotizacionDAO {
     */
    public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception;
 
-   public void refrescarCensoColectivo(String cdunieco, String cdramo, String estado, String nmpoliza)throws Exception;
+   public void refrescarCensoColectivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsolici)throws Exception;
 }
