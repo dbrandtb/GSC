@@ -2418,7 +2418,8 @@ function _procesaAccion(
                                                                         },
                                                                         edit : function(me, event) {
                                                                             var checked = !Ext.isEmpty(event.value) && !Ext.isEmpty(event.value.trim());
-                                                                            marcarRequisitoDesdeRevision(event.rowIdx, checked, event.value.trim());
+                                                                            marcarRequisitoDesdeRevision(event.rowIdx, checked, event.value.trim(),
+                                                                                _fieldById('WINDOW_REVISION_DOCUMENTOS').down('[activable]'));
                                                                         }
                                                                     }
                                                                 })
@@ -2460,7 +2461,8 @@ function _procesaAccion(
                                                                             }
                                                                         },
                                                                         checkchange : function (me, row, checked) {
-                                                                            marcarRequisitoDesdeRevision(row, checked);
+                                                                            marcarRequisitoDesdeRevision(row, checked, '',
+                                                                                _fieldById('WINDOW_REVISION_DOCUMENTOS').down('[activable]'));
                                                                         }
                                                                     }
                                                                 }, {
@@ -2587,10 +2589,11 @@ function _procesaAccion(
 	                                                        }
 	                                                    }*/
 	                                                    {
-	                                                        text     : 'CONFIRMAR Y CONTINUAR',
-	                                                        icon     : _GLOBAL_DIRECTORIO_ICONOS + 'control_fastforward_blue.png',
-	                                                        disabled : numSalidas === 0 || faltanDocs === true || aux === 'LECTURA' || aux === 'INICIAL',
-	                                                        handler  : function (me) {
+	                                                        text      : 'CONFIRMAR Y CONTINUAR',
+	                                                        icon      : _GLOBAL_DIRECTORIO_ICONOS + 'control_fastforward_blue.png',
+	                                                        disabled  : numSalidas === 0 || faltanDocs === true || aux === 'LECTURA' || aux === 'INICIAL',
+	                                                        activable : numSalidas > 0 && 'LECTURA' !== aux && 'INICIAL' !== aux,
+	                                                        handler   : function (me) {
 	                                                            centrarVentanaInterna(Ext.MessageBox.confirm(
 	                                                                'Confirmar',
 	                                                                'La revisi\u00f3n de requisitos no se podr\u00e1 modificar posteriormente\u0020\u00BFDesea continuar?',
@@ -2697,13 +2700,16 @@ function _procesaAccion(
 	                                                        handler : function (me) {
 	                                                            me.up('window').close();
 	                                                        }
-	                                                    }, {
+	                                                    }
+	                                                    /* jtezva 16 dic 2016 se quita
+	                                                    , {
                                                             text    : 'RECARGAR',
                                                             icon    : _GLOBAL_DIRECTORIO_ICONOS + 'control_repeat_blue.png',
                                                             handler : function (me) {
                                                                 me.up('window').recargar();
                                                             }
                                                         }
+                                                        */
 	                                                ],
 	                                                recargar : function () {
 	                                                    debug('>WINDOW_REVISION_DOCUMENTOS recargar');
@@ -3430,7 +3436,7 @@ function subirArchivoDesdeRevision (row) {
     }
 }
 
-function marcarRequisitoDesdeRevision (row, checked, dsdato) {
+function marcarRequisitoDesdeRevision (row, checked, dsdato, botonConfirmar) {
     debug('>marcarRequisitoDesdeRevision args:', arguments);
     
     var ck = 'Marcando requisito desde revisi\u00f3n';
@@ -3449,6 +3455,72 @@ function marcarRequisitoDesdeRevision (row, checked, dsdato) {
                 'params.cdrequisi' : record.get('CLAVE'),
                 'params.swactivo'  : checked === true ? 'S' : 'N',
                 'params.dsdato'    : dsdato
+            },
+            success    : function (json) {
+                try {
+                    if (true !== botonConfirmar.activable) {
+                        return;
+                    }
+                    try {
+                        botonConfirmar.setLoading(false);
+                        clearTimeout(botonConfirmar.funcionActualizarEstado);
+                    } catch (e) {}
+                    botonConfirmar.setLoading(true);
+                    botonConfirmar.funcionActualizarEstado = setTimeout(function () {
+                        var ck = 'Recuperando estado de la lista de comprobaci\u00f3n';
+                        try {
+                            var win = botonConfirmar.up('window');
+                            _request({
+                                mask       : ck,
+                                url        : _GLOBAL_URL_REVISION,
+                                background : true,
+                                params     : {
+                                    'flujo.cdtipflu'  : win.flujo.cdtipflu,
+                                    'flujo.cdflujomc' : win.flujo.cdflujomc,
+                                    'flujo.tipoent'   : win.flujo.tipodest,
+                                    'flujo.claveent'  : win.flujo.clavedest,
+                                    'flujo.webid'     : win.flujo.webiddest,
+                                    'flujo.ntramite'  : win.flujo.ntramite,
+                                    'flujo.status'    : win.flujo.status,
+                                    'flujo.cdunieco'  : win.flujo.cdunieco,
+                                    'flujo.cdramo'    : win.flujo.cdramo,
+                                    'flujo.estado'    : win.flujo.estado,
+                                    'flujo.nmpoliza'  : win.flujo.nmpoliza,
+                                    'flujo.nmsituac'  : win.flujo.nmsituac,
+                                    'flujo.nmsuplem'  : win.flujo.nmsuplem
+                                },
+                                success : function (json) {
+                                    botonConfirmar.setLoading(false);
+                                    var ck = 'Actualizando estado de la lista de comprobaci\u00f3n';
+                                    try {
+                                        var faltanDocs = false;
+                                        for (var i = 0; i < json.list.length; i++) {
+                                            if (json.list[i].SWOBLIGA === 'S' && json.list[i].SWACTIVO !== 'S') {
+                                                faltanDocs = true;
+                                                break;
+                                            }
+                                        }
+                                        if (faltanDocs === false) {
+                                            botonConfirmar.enable();
+                                        } else {
+                                            botonConfirmar.disable();
+                                        }
+                                    } catch (e) {
+                                        manejaException(e, ck);
+                                    } 
+                                },
+                                failure : function () {
+                                    debugError('callback de error al actualizar estado de checklist');
+                                    botonConfirmar.setLoading(false);
+                                }
+                            });
+                        } catch (e) {
+                            manejaException(e, ck);
+                        }
+                    }, 1000);
+                } catch (e) {
+                    debugError('Error al actualizar estado del boton de confirmar check', e);
+                }
             }
         });
     } catch(e) {
@@ -3794,6 +3866,7 @@ url
 params
 success function (opcional)   -> funcion que se invoca si sale bien, se le manda el json
 background boolean (opcional) -> Si la peticion no debe robar el focus de la pantalla
+failure function (opcional)   -> funcion que se invoca si hay error
 LANZA ERROR!
 */
 function _request(params) {
@@ -3822,11 +3895,17 @@ function _request(params) {
                         params.success(json);
                     }
                 } catch (e) {
+                    try {
+                        params.failure();
+                    } catch (e) {}
                     manejaException(e, ck);
                 }
             },
             failure : function () {
                 mask.close();
+                try {
+                    params.failure();
+                } catch (e) {}
                 errorComunicacion(null, 'Error ' + (params.mask || 'de red al comunicarse con el servidor').toLowerCase());
             }
         });

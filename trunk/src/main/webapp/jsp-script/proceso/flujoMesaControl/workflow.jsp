@@ -4253,7 +4253,17 @@ Ext.onReady(function()
         
         toolkit.bind('click',function(con)
         {
-            debug('dblclick con:',con);
+            debug('toolkit.bind.click con:',con);
+            if (con.type === 'Dot') {
+                return alert('Debe seleccionar la flecha, no el punto');
+            }
+            try {
+                document.getElementById('spanUltimoEditado').remove();
+            } catch (e) {}
+            con.addOverlay(['Label', {
+                label    : '<span id="spanUltimoEditado" style="background:green;color:white;font-size:8px;">EDITADO</span>',
+                location : 0.5
+            }]);
             _p52_editEndpoint(con,'A',con.cdaccion);
         });
         
@@ -5511,7 +5521,6 @@ function _p52_cargarModelado()
                                     
                                     // JTEZVA 2016 12 05
                                     con.dsaccion = ite.DSACCION;
-                                    con.escuchador = true;
                                     con.bind('mouseover', function (conn) {
                                         debug('mouseover args:', arguments);
                                         conn.addOverlay(['Label',
