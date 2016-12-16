@@ -668,13 +668,18 @@ public class ConsultasManagerImpl implements ConsultasManager
                                                                                 , tit.get("nmsitaux"));
                 paso="Regenera y descarga documentos";
                 
+                
+                
+                try{
                 regeneraDocs(documentos, new File(Utils.join(rutaDocumentosTemporal,"/Errores_fusion_familia_",pv_cdunieco_i
                                                                                 ,"_", pv_cdramo_i
                                                                                 ,"_", pv_estado_i
                                                                                 ,"_", pv_nmpoliza_i
                                                                                 ,"_", pv_nmsuplem_i
                                                                                 ,"_", tit.get("nmsitaux"))), pv_cdramo_i, new AtomicBoolean(false), null, null);
-                
+                }catch(Exception e){
+                    logger.equals("Error regenerando docs");
+                }
                 logger.debug(Utils.log("Titular: ",tit,
                                        "\nDocumentos: ",documentos));
                 if(documentos.isEmpty()){
@@ -775,12 +780,16 @@ public class ConsultasManagerImpl implements ConsultasManager
                     files.add(new File(filePath));
                 }
                 paso="Obteniendo cdideext";
-                
-               
-                String nmsituaext= consultasDAO.obtieneNmsituaext(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, tit.get("nmsitaux"));
-                logger.debug("Respuesta obtieneNmsituaext: "+nmsituaext);
-                paso="Fusionando documentos";
-                
+                String nmsituaext="-";
+               try{
+                   
+                    nmsituaext= consultasDAO.obtieneNmsituaext(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, tit.get("nmsitaux"));
+                    logger.debug("Respuesta obtieneNmsituaext: "+nmsituaext);
+                    
+               }catch(Exception e){
+                   logger.error("Error obteniendo nmsituaext");
+               }
+               paso="Fusionando documentos";
                 String nombreArchivo=Utils.join(
                         rutaDocumentosPoliza
                         ,"/",ntramite
@@ -788,18 +797,23 @@ public class ConsultasManagerImpl implements ConsultasManager
                         ,pv_cdunieco_i
                         ,"-",pv_cdramo_i
                         ,"-",pv_nmpoliza_i
-                        ,"-",String.format("%09d", Integer.parseInt(nmsituaext))
+                        ,"-",StringUtils.leftPad(nmsituaext, 10, "0")
                         ,".pdf"
                         );
+                
                 File fusionado = DocumentosUtils.mixPdf(files,new File(nombreArchivo));
                 
                 paso="guardando en tdocupolfus";
                 consultasDAO.movTdocupolFus(pv_cdunieco_i, pv_cdramo_i, pv_estado_i, pv_nmpoliza_i, pv_nmsuplem_i, null, ntramite, new Date()
-                        , nombreArchivo
+                        , Utils.join("F_",pv_cdunieco_i
+                        ,"-",pv_cdramo_i
+                        ,"-",pv_nmpoliza_i
+                        ,"-",StringUtils.leftPad(nmsituaext, 10, "0")
+                        ,".pdf")
                         , Utils.join(" ",pv_cdunieco_i
                                 ,"-",pv_cdramo_i
                                 ,"-",pv_nmpoliza_i
-                                ,"-",nmsituaext
+                                ,"-",StringUtils.leftPad(nmsituaext, 10, "0")
                                 ,"")
                         , pv_tipoMov_i
                         , null
