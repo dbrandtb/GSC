@@ -13385,16 +13385,19 @@ public class CotizacionAction extends PrincipalCoreAction
             String cdunieco  = smap1.get("cdunieco")
                    ,cdramo   = smap1.get("cdramo")
                    ,estado   = smap1.get("estado")
-                   ,nmpolant = smap1.get("nmpolant");
+                   ,nmpolant = smap1.get("nmpolant")
+                   ,ntramite = smap1.get("ntramite");
             
             Utils.validate(
                     cdunieco  , "No se recibi\u00f3 la sucursal"
                     ,cdramo   , "No se recibi\u00f3 el producto"
                     ,estado   , "No se recibi\u00f3 el estado"
                     ,nmpolant , "No se recibi\u00f3 el nmpolant"
+                    ,ntramite , "No se recibi\u00f3 el tr&aacute;mite"
                     );
+            HashMap<String,String> params = (HashMap<String, String>) siniestrosManager.obtenerTramiteCompleto(ntramite);
             
-            //cotizacionManager.refrescarCensoColectivo(cdunieco,cdramo,estado,Integer.parseInt(nmpolant.substring(7,13))+"");
+            cotizacionManager.refrescarCensoColectivo(cdunieco,cdramo,estado,Integer.parseInt(nmpolant.substring(7,13))+"",params.get("NMSOLICI"));
             success = true;
         } catch(Exception ex){
             respuesta = Utils.manejaExcepcion(ex);

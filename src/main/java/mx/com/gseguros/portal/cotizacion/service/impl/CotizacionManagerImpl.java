@@ -6103,35 +6103,21 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(29)),"-"));
 	                }
 	              //ID ASEGURADO
-	                try
-                	{
-		                auxCell=row.getCell(30);
-		                logger.debug(
-		                		new StringBuilder("ID ASEGURADO: ")
-		                		.append(
-		                				auxCell!=null?
-		                						auxCell.getStringCellValue()
-		                						:""
-		                		)
-		                		.append("|")
-		                		.toString()
-		                		);
-		                bufferLinea.append(
-		                		auxCell!=null?
-		                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-		                				:"|"
-		                		);
-                	}
-	                catch(Exception ex)
-	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' (AE) de la fila ",fila," "));
-	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(30)),"-"));
-	                }
-	                
+                    try {
+                        logger.debug("ID. ASEGURADO: "+(String.format("%.0f",row.getCell(30).getNumericCellValue())+"|"));
+                        bufferLinea.append(String.format("%.0f",row.getCell(30).getNumericCellValue())+"|");
+                    } catch(Exception ex2) {
+                        logger.warn("error al leer Id. Asegurado, se intentara como string:",ex2);
+                        try {
+                            auxCell=row.getCell(30);
+                            bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+                        } catch(Exception ex) {
+                            filaBuena = false;
+                            bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' (AE) de la fila ",fila," "));
+                        }
+                    } finally {
+                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(30)),"-"));
+                    }
 	                /* nuevos para SSI fin */
 	                
 	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
@@ -11231,9 +11217,9 @@ public class CotizacionManagerImpl implements CotizacionManager
     }
 	
     @Override
-    public void refrescarCensoColectivo(String cdunieco, String cdramo, String estado, String nmpoliza)throws Exception
+    public void refrescarCensoColectivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsolici)throws Exception
     {
-        cotizacionDAO.refrescarCensoColectivo(cdunieco,cdramo,estado,nmpoliza);
+        cotizacionDAO.refrescarCensoColectivo(cdunieco,cdramo,estado,nmpoliza,nmsolici);
     }
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////

@@ -1686,10 +1686,12 @@ Ext.onReady(function()
         if(_p25_smap1.cdtipsup  == _TIPO_SITUACION_RENOVACION){
             Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
             Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].show();
+            Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].show();
             Ext.ComponentQuery.query('button[text=Complementar]')[0].hide();
         }else{
             Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
             Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].hide();
+            Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].hide();
             Ext.ComponentQuery.query('button[text=Complementar]')[0].show();
         }
     }

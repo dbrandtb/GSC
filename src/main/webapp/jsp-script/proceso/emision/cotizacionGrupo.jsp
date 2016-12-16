@@ -846,7 +846,7 @@ Ext.onReady(function()
                         [
                             {
                                 xtype   : 'fieldset'
-                                ,title  : '<span style="font:bold 14px Calibri;">DATOS DEL CONTRATANTE</span>'
+                                ,title  : '<span style="font:bold 14px Calibri;">DATOS DEL CONTRATANTE :)</span>'
                                 ,hidden: (_p21_smap1.cdsisrol=='SUSCRIPTOR'&& (_p21_smap1.status-0==19 || _p21_smap1.status-0==21 || _p21_smap1.status-0==23) ) ? true :false
                                 ,disabled : ( !Ext.isEmpty(_p21_smap1.estado) && _p21_smap1.estado == 'M' )   
                                 ,layout :
@@ -1451,10 +1451,12 @@ Ext.onReady(function()
     	if(_p21_cdtipsup  == _TIPO_SITUACION_RENOVACION){
     		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].show();
+    		Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Complementar]')[0].hide();
     	}else{
     		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].hide();
+    		Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Complementar]')[0].show();
     	}
     }

@@ -8819,13 +8819,14 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     }
     
     @Override
-    public void refrescarCensoColectivo( String cdunieco,String cdramo,String estado, String nmpoliza)throws Exception
+    public void refrescarCensoColectivo( String cdunieco,String cdramo,String estado, String nmpoliza, String nmsolici)throws Exception
     {
         Map<String,String> params = new LinkedHashMap<String,String>();
         params.put("pv_cdunieco_i" , cdunieco);
         params.put("pv_cdramo_i"   , cdramo);
         params.put("pv_estado_i"   , estado);
         params.put("pv_nmpoliza_i" , nmpoliza);
+        params.put("pv_nmpolnew_i" , nmsolici);
         ejecutaSP(new RefrescarCensoColectivo(getDataSource()),params);
     }
     
@@ -8833,11 +8834,12 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     {
         protected RefrescarCensoColectivo(DataSource dataSource)
         {
-            super(dataSource,"");
+            super(dataSource,"PKG_RENOVA.P_REFRESCA_POLIZA_A_RENOVAR");
             declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpolnew_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             compile();

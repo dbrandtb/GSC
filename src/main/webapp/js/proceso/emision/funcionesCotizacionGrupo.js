@@ -2248,6 +2248,7 @@ function _p25_borrarDetalleGrupoClic (grid,rowIndex) {
 }
 
 function _p21_RefrescarCensoColectivo(){
+	debug("_p21_smap1 ==>",_p21_smap1);
     Ext.Ajax.request( {
         url      : _p21_urlRefrescarCensoColectivo
         ,params  : {
@@ -2255,6 +2256,7 @@ function _p21_RefrescarCensoColectivo(){
             ,'smap1.cdramo'   : _p21_smap1.cdramo
             ,'smap1.estado'   : 'M'
             ,'smap1.nmpolant' : _p21_smap1.nmpolant
+            ,'smap1.ntramite' : _p21_smap1.ntramite
         }
         ,success : function(response) {
             _unmask();
@@ -2286,6 +2288,7 @@ function _p25_RefrescarCensoColectivo(){
             ,'smap1.cdramo'   : _p25_smap1.cdramo
             ,'smap1.estado'   : 'M'
             ,'smap1.nmpolant' : _p25_smap1.nmpolant
+            ,'smap1.ntramite' : _p25_smap1.ntramite
         }
         ,success : function(response) {
             _unmask();
