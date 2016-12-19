@@ -137,6 +137,7 @@ var _p28_negocio                 = null;
 
 // var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 var plazoenanios;
+var gridTarifas;
 ////// variables //////
 
 
@@ -2989,7 +2990,7 @@ function _p28_cotizar(sinTarificar)
                     
          ///////////////// DXN /////////////////////////////
                     
-                    var gridTarifas=Ext.create('Ext.panel.Panel',
+                    gridTarifas=Ext.create('Ext.panel.Panel',
                     {
                         itemId : '_p28_gridTarifas'
                         ,items :
@@ -3014,7 +3015,7 @@ function _p28_cotizar(sinTarificar)
                                     {
 //                                         if(cargarXpoliza)
 //                                         {
-//                                             getCellSelector: function() 
+//                                             getCellSelector: function(me) 
 //                                             {
 //                                                 return '.' + Ext.baseCSSPrefix + 'grid-cell-' + this.getItemId();
 //                                             }
@@ -4118,6 +4119,9 @@ function llenandoCampos(json)
                 _fieldLikeLabel('TIPO VALOR').store.add({key:'1',value:'VALOR CONVENIDO'});
                 _fieldLikeLabel('TIPO VALOR').setValue('1');
             }
+            else{
+             	_fieldLikeLabel('TIPO VALOR').setValue('2');
+                }
             primerInciso.set('parametros.pv_otvalor14','S');
         }
         if(_p28_smap1.cdramo=='6' )
@@ -4522,7 +4526,9 @@ function llenandoCampos(json)
         panelpri.setLoading(true);
         if( _p28_smap1.cdramo+'x'=='5x'
             &&
-            RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol) 
+            (RolSistema.puedeSuscribirAutos(_p28_smap1.cdsisrol)
+            ||
+            RolSistema.PromotorAuto === _p28_smap1.cdsisrol)
           )            
         {
             var agente  = _fieldByName('parametros.pv_otvalor01');
