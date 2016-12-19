@@ -419,7 +419,8 @@ public class RenovacionAction extends PrincipalCoreAction
 		try{	
 			Utils.validate(smap1, "No se recibieron datos");
 			Utils.validate(smap1.get("fecini")  , "No se recibio la fecha inicio",
-					   	   smap1.get("fecfin")  , "No se recibio la fecha fin"
+					   	   smap1.get("fecfin")  , "No se recibio la fecha fin",
+					   	   smap1.get("cdramo")  , "No se recibio el producto"
 					);
 			String cdunieco   = smap1.get("cdunieco");
 			String cdramo     = smap1.get("cdramo");
@@ -664,15 +665,7 @@ public class RenovacionAction extends PrincipalCoreAction
 		session=ActionContext.getContext().getSession();
 		try{
 			Utils.validate(slist1, "No se recibieron polizas a renovar");
-			logger.info(
-	                new StringBuilder()
-	                .append("\n###### cdunieco=").append(slist1.get(0).get("cdunieco"))
-	                .append("\n###### cdramo=").append(slist1.get(0).get("cdramo"))
-	                .append("\n###### estado=").append(slist1.get(0).get("estado"))
-	                .append("\n###### nmpoliza=").append(slist1.get(0).get("nmpoliza"))
-	                .toString()
-	                );
-			renovacionManager.renovarPolizasMasivasIndividuales(slist1);
+//			renovacionManager.renovarPolizasMasivasIndividuales(slist1);
 			exito = true;
 		}
 		catch(Exception ex){
