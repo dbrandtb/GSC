@@ -274,7 +274,9 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         _p30_smap1.cdunieco=json.smap1.CDUNIECO;
         
         var maestra=json.smap1.ESTADO=='M';
-        
+
+        _p30_limpiar();
+
         var fesolici    = Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
         var fechaHoy    = Ext.Date.clearTime(new Date());
         var fechaLimite = Ext.Date.add(fechaHoy,Ext.Date.DAY,-1*(json.smap1.diasValidos-0));
@@ -284,19 +286,21 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         debug('fechaLimite=' , fechaLimite);
         debug('vencida='     , vencida , '.');
         
-        _p30_limpiar();
-        
-        var iniVig = Ext.Date.parse(json.smap1.FEINI,'d/m/Y').getTime();
-        var finVig = Ext.Date.parse(json.smap1.FEFIN,'d/m/Y').getTime();
+        if(!Ext.isEmpty(json.smap1.FEINI) && !Ext.isEmpty(json.smap1.FEFIN))
+        {
+            var iniVig = Ext.Date.parse(json.smap1.FEINI,'d/m/Y');
+            var finVig = Ext.Date.parse(json.smap1.FEFIN,'d/m/Y');
+            _fieldByName('feini').setValue(iniVig);
+            _fieldByName('fefin').setValue(finVig);
+        }
+        else
+        {
+            _fieldByName('feini').setValue(new Date());
+        }
+
         var milDif = finVig-iniVig;
         var diaDif = milDif/(1000*60*60*24);
         debug('diaDif:',diaDif);
-        
-        /*if(!maestra&&!vencida)
-        {
-            _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEINI,'d/m/Y'));
-        }*/
-        _fieldByName('feini').setValue(new Date());
         _fieldByName('fefin').setValue
         (
             Ext.Date.add
