@@ -375,12 +375,12 @@ public class MovimientosManagerImpl implements MovimientosManager
 		{
 			if(movimiento.equals(Movimiento.AGREGAR_FAMILIA))
 			{
-				Utils.validate(params.get("FEPROREN") , "No hay fecha de inicio");
+				Utils.validate(params.get("FEEFECTO") , "No hay fecha de inicio");
 				Utils.validate(params.get("cdtipsup") , "No hay clave de endoso");
 				
 				String cdusuari = usuario.getUser();
 				String cdelemen = usuario.getEmpresa().getElementoId();
-				Date   fechaEnd = Utils.parse(params.get("FEPROREN"));
+				Date   fechaEnd = Utils.parse(params.get("FEEFECTO"));
 				String cdunieco = params.get("CDUNIECO");
 				String cdramo   = params.get("CDRAMO");
 				String estado   = params.get("ESTADO");

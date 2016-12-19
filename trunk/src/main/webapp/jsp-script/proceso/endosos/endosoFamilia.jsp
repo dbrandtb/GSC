@@ -1030,6 +1030,7 @@ function _p48_agregarFamClic()
             ,NMPOLIZA             : _p48_params.NMPOLIZA
             ,cdtipsup             : _p48_params.cdtipsup
             ,FEPROREN             : _p48_params.FEPROREN
+            ,FEEFECTO             : _p48_params.FEEFECTO
             ,movimiento           : 'AGREGAR_FAMILIA'
     };
     
