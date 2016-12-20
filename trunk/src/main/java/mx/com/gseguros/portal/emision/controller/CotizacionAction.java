@@ -1708,6 +1708,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = resp.getRespuestaOculta();
 			if(exito)
 			{
+			    String columna="",fila="";//pauete
 			    if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null && !cdtipsit.equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit()) && !cdtipsit.equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit()))
 			    {
 			        List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
@@ -1722,12 +1723,48 @@ public class CotizacionAction extends PrincipalCoreAction
 			        logger.debug("listaResultados: "+listaResultados);
 			        
 			        ArrayList<String> paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsit, null);
+			        //pre sonbreado
+    	             columna = paqYplan.get(1);//forma Pago
+    	             fila= paqYplan.get(0);//pauete
 			        String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza"), cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
 			        logger.debug(Utils.log(paqYplan));
 			        resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
+			        
+	                if(columna.equals("1P"))                              {columna="1";}//PRESTIGIO
+	                else if(columna.equals("1A") || columna.equals("2A")) {columna="2";}//CONFORT AMPLIA
+	                else if(columna.equals("3A"))                         {columna="3";}//CONFORT AMPLIA S/ROBO
+	                else if(columna.equals("2L") || columna.equals("4L")) {columna="4";}//CONFORT LIMITA
+	                else if(columna.equals("5B") || columna.equals("3B")) {columna="5";}//CONFORT BASICA
+//	                else if(fila.equals("5BP"))                     {resp.getSmap().put("columna", "");}//CONFORT BASICA PLUS
+	                
+	                if(fila.equals("12"))      {fila="0";}//  Contado/Anual\r\n" + 
+	                else if(fila.equals("1"))  {fila="1";}//  Mensual\r\n" + 
+	                else if(fila.equals("63")) {fila="2";}//  Semestral\r\n" + 
+	                else if(fila.equals("3"))  {fila="3";}//  Trimestra\r\n" + 
+	                else if(fila.equals("61")) {fila="3";}//  Trimestral\r\n" + 
+	                else if(fila.equals("98")) {fila="";}//  Contado/Anual\r\n" + 
+	                else if(fila.equals("2"))  {fila="";}//  DXN Anual\r\n" + 
+	                else if(fila.equals("4"))  {fila="";}//  MENSUAL6\r\n" + 
+	                else if(fila.equals("5"))  {fila="";}//  ANUAL04\r\n" + 
+	                else if(fila.equals("6"))  {fila="";}//  DXN Quincenal\r\n" + 
+	                else if(fila.equals("7"))  {fila="";}//  DXN Catorcenal\r\n" + 
+	                else if(fila.equals("8"))  {fila="";}//  DXN Mensual\r\n" + 
+	                else if(fila.equals("9"))  {fila="";}//  DXN 16 Dias\r\n" + 
+	                else if(fila.equals("10")) {fila="";}//  DXN Semanal\r\n" + 
+	                else if(fila.equals("11")) {fila="";}//  DXN Decenal\r\n" + 
+	                else if(fila.equals("13")) {fila="";}//  Multianual\r\n" + 
+	                else if(fila.equals("14")) {fila="";}//  Mendual S/RF\r\n" + 
+	                else if(fila.equals("62")) {fila="";}//  Semanal\r\n" + 
+	                else if(fila.equals("64")) {fila="";}//  Contado\r\n" + 
+	                else if(fila.equals("97")) {fila="";}//  SEMESTRAL A\r\n" + 
 			    }
 			    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
-			    
+			    if(!fila.isEmpty() && !columna.isEmpty())
+			    {
+			        resp.getSmap().put("fila", fila);
+			        resp.getSmap().put("columna", columna);
+			        
+			    }
 			    exito           = resp.isExito();
 	            respuesta       = resp.getRespuesta();
 	            respuestaOculta = resp.getRespuestaOculta();
