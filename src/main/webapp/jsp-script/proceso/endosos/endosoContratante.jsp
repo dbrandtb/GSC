@@ -43,10 +43,6 @@ var _p22_parentCallback = false;
 var _contratanteSaved = false;
 
 debug('_35_smap1:',_35_smap1);
-
-var _p35_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p35_flujo:',_p35_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -418,13 +414,7 @@ function _35_confirmar()
                 cdpersonNvoContr : datosContr.cdperson
             }
             ,slist1 : slist1
-        };
-        
-        if(!Ext.isEmpty(_p35_flujo))
-        {
-            json.flujo = _p35_flujo;
         }
-        
         debug('datos que se enviaran:',json);
         _setLoading(true,_35_panelPri);
         Ext.Ajax.request(

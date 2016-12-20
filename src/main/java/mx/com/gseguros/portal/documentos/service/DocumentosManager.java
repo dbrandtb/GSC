@@ -53,6 +53,6 @@ public interface DocumentosManager
 			,String cdorddoc
 			,Documento documento
 			,String cdusuari
-			,String cdsisrol, boolean sustituir
+			,String cdsisrol
 			)throws Exception;
 }

@@ -1,15 +1,15 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.portal.model.UserVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
-import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
-import mx.com.gseguros.portal.consultas.dao.impl.ConsultasDAOImpl;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
@@ -33,12 +33,6 @@ import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
 import mx.com.gseguros.utils.Utils;
-import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
-import net.sf.jasperreports.engine.util.LinkedMap;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
@@ -49,20 +43,13 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 	@Qualifier("consultasDAOICEImpl")
 	private ConsultasPolizaDAO consultasPolizaDAOICE;
 	
-	@Autowired
-	@Qualifier("consultasDAOSISAImpl")
-	private ConsultasPolizaDAO consultasPolizaDAOSISA;
-
 //	@Autowired
-//	@Qualifier("consultasAseguradoDAOSIGSImpl")
-//	private IConsultasAseguradoDAO consultasAseguradoDAOSIGS;
-	
-	@Autowired
-	private AutosSIGSDAO autosDAOSIGS;
-	
-	@Autowired
+//	@Qualifier("consultasDAOSISAImpl")
+//	private ConsultasPolizaDAO consultasPolizaDAOSISA;
+    
+    @Autowired
     private CotizacionDAO cotizacionDAO;
-	
+    
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
@@ -522,38 +509,17 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
 		return consultasPolizaDAOICE.obtieneNmsituacContratantePoliza(cdunieco, cdramo, cdestado, nmpoliza);
 	}
 
-	@Deprecated
-	@Override
-	public void actualizaTramiteMC(PolizaVO poliza,String estra) throws Exception{
-	autosDAOSIGS.actualizaTramiteMC(poliza,estra);
-	}
-	
-	@Override
-	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception{
-	autosDAOSIGS.actualizaTramiteEmisionMC(inNumsuc,inNumram,inNumpol,inRensuc,inRenram,inRenpol,inUsuario);
-	}
-	
-	@Override
-	public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,Date vInicioVigencia,Date vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception {
-           return autosDAOSIGS.spIdentificaRenovacion(inNumsuc, inNumram, inNumpol, vFechaEmision, vInicioVigencia, vFinVigencia, inRensuc, inRenram, inRenpol);
-    }
-	
+
 	@Override
 	public Map<String, String> obtieneDatosLigasRecibosPoliza(String cdunieco, String cdramo, String cdestado,
 			String nmpoliza, String nmsuplem) throws Exception {
 		return consultasPolizaDAOICE.obtieneDatosLigasRecibosPoliza(cdunieco, cdramo, cdestado, nmpoliza, nmsuplem);
 	}
-	
-	@Override
-    public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza)
-            throws Exception {
-		return consultasPolizaDAOICE.consultaIncisosPoliza(cdunieco, cdramo, estado, nmpoliza);
-	}
-	
-	@Override
+    
+    @Override
     public Map<String, String> obtieneTvalopol(String cdunieco, String cdramo, String estado, String nmpoliza)
             throws Exception {
         return cotizacionDAO.cargarTvalopol(cdunieco, cdramo, estado, nmpoliza);
     }
-	
+    
 }

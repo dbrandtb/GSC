@@ -26,7 +26,6 @@ smap1:
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _9_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-var _9_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 
 var _9_formLectura;
 var _9_formFormaPago;
@@ -41,7 +40,6 @@ var _9_urlRecuperacionSimple = '<s:url namespace="/emision"         action="recu
 var _p30_urlViewDoc          = '<s:url namespace="/documentos"      action="descargaDocInline"      />';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 debug('_9_smap1:',_9_smap1);
-debug('_9_flujo:',_9_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -298,11 +296,6 @@ function _9_confirmar()
             }
         }
         
-        if(!Ext.isEmpty(_9_flujo))
-        {
-            json.flujo = _9_flujo;
-        }
-        
         debug('datos que se enviaran:',json);
         
         var panelMask = new Ext.LoadMask('_9_divPri', {msg:"Confirmando..."});
@@ -362,11 +355,6 @@ function _9_confirmar()
 																                ,confirmar   : 'si'
 																            }
 																        }
-																        
-																        if(!Ext.isEmpty(_9_flujo)) {
-																            json1.flujo = _9_flujo;
-																        }
-																        
 																Ext.Ajax.request(
 																	        {
 																	            url       : _9_urlGuardar

@@ -20,9 +20,6 @@
         <action name="actualizarStatusTramite" method="actualizarStatusTramite" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
-        <action name="reasignarTramiteIndividual" method="reasignarTramiteIndividual" class="MesaControlAction">
-            <result name="success" type="json" />
-        </action>
         <action name="turnarAutorizacionServicio" method="turnarAutorizacionServicio" class="MesaControlAction">
             <result name="success" type="json" />
         </action>

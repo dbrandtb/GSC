@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.cotizacion.service;
 
 import java.io.File;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -260,7 +259,7 @@ public interface CotizacionManager
 	@Deprecated
 	public Map<String,String>cargarTipoSituacion(String cdramo,String cdtipsit)throws Exception;
 	
-	public String cargarCduniecoAgenteAuto(String cdagente, String cdtipram)throws Exception;
+	public String cargarCduniecoAgenteAuto(String cdagente)throws Exception;
 	
 	public Map<String,String>obtenerDatosAgente(String cdagente,String cdramo)throws Exception;
 	
@@ -412,19 +411,19 @@ public interface CotizacionManager
 			,String nmpolant
 			,String nmrenova
 			,UserVO usuarioSesion
-			,boolean duplicar
 			);
 	
 	public ManagerRespuestaSlistVO obtenerTiposSituacion();
 	
-	public List<Map<String,String>>cargarAseguradosExtraprimas2(
+	public ManagerRespuestaSlistVO cargarAseguradosExtraprimas2(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
 			,String cdgrupo
-			)throws Exception;
+			);
+	
 	/**
 	 **************guardarValoresSituaciones**************
 	 *****************************************************
@@ -517,50 +516,6 @@ public interface CotizacionManager
 			,String nmrenova
 			,UserVO usuarioSesion
 			);
-
-	public ManagerRespuestaSmapVO confirmarCensoCompleto(
-			String cdunieco
-			,String cdramo
-			,String nmpoliza
-			,String feini
-			,String fefin
-			,String cdperpag
-			,String pcpgocte
-			,String rutaDocsTemp
-			,String censoTimestamp
-			,String dominioServerLayout
-			,String usuarioServerLayout
-			,String passwordServerLayout
-			,String direcServerLayout
-			,String cdtipsit
-			,String cdusuari
-			,String cdsisrol
-			,String cdagente
-			,String codpostalCli
-			,String cdedoCli
-			,String cdmuniciCli
-			,List<Map<String,Object>>grupos
-			,String clasif
-			,String LINEA_EXTENDIDA
-			,String cdpersonCli
-			,String nombreCli
-			,String rfcCli
-			,String dsdomiciCli
-			,String nmnumeroCli
-			,String nmnumintCli
-			,String ntramite
-			,String ntramiteVacio
-			,String cdelemen
-			,String nombreCensoConfirmado
-			,String cdideper_
-			,String cdideext_
-			,String nmpolant
-			,String nmrenova
-			,UserVO usuarioSesion
-			,String estatuRenovacion
-			);
-	
-	
 	public ManagerRespuestaVoidVO validarCambioZonaGMI(
 			String cdunieco
 			,String cdramo
@@ -618,7 +573,6 @@ public interface CotizacionManager
 			,String fefin
 			,String fesolici
 			,String cdpersonCli
-			,String nmorddomCli
 			,String cdideperCli
 			,boolean noTarificar
 			,boolean conIncisos
@@ -626,16 +580,8 @@ public interface CotizacionManager
 			,boolean flagMovil
 			,Map<String,String>tvalopol
 			,String cdagente
-			,UserVO usuarioSesion
-			,String fromSigs
-			,String cduniext
-			,String renramo
-			,String nmpolie
-			,String ntramite
 			)throws Exception;
 	
-	
-	public ManagerRespuestaSlistSmapVO cotizarContinuacion(String nmpoliza,  String cdunieco, String cdramo, String cdelemen, String cdtipsit, String nmpoliza2, boolean flagMovil)throws Exception;
 	
 	public boolean validaDomicilioCotizacionTitular(Map<String,String> params)throws Exception;
 	
@@ -698,8 +644,6 @@ public interface CotizacionManager
 			,String nmsituac
 			,String tipotari
 			,String cdperpag
-			,String cdusuari
-			,String cdsisrol
 			)throws Exception;
 	
 	@Deprecated
@@ -746,14 +690,12 @@ public interface CotizacionManager
 			,String nmpoliza
 			)throws Exception;
 	
-	/*
 	@Deprecated
 	public String turnaPorCargaTrabajo(
 			String ntramite
 			,String cdsisrol
 			,String status
 			)throws Exception;
-	*/
 	
 	public String guardarConfiguracionGarantias(
 			String cdramo
@@ -771,45 +713,6 @@ public interface CotizacionManager
 			,String cdplan
 			,String cdsisrol
 			)throws Exception;
-
-	public List<Map<String,String>> obtieneCobeturasNombrePlan(
-			String cdramo
-			,String cdtipsit
-			,String cdplan
-			)throws Exception;
-
-	/**
-	 * Metodo para insertar semaforos o bloqueos de procesos customizados, solo son requeridos
-	 * el numero de tramite y proceso, los demas valores son opcionales.
-	 * @param ntramite
-	 * @param tipoProceso
-	 * @param rol
-	 * @param descripcion
-	 * @param valor
-	 * @param operacion
-	 * @return
-	 * @throws Exception
-	 */
-	public boolean ejectutaBloqueoProcesoTramite(
-	         String ntramite
-	        ,String claveProceso
-	        ,String cdrol
-	        ,String descripcion
-	        ,String valor
-	        ,String operacion
-	        )throws Exception;
-
-	/**
-	 * consulta bloqueo o semaforo de proceso de tramite
-	 * @param ntramite
-	 * @param claveProceso
-	 * @return
-	 * @throws Exception
-	 */
-	public Map<String,String> consultaBloqueoProcesoTramite(
-	        String ntramite
-	        ,String claveProceso
-	        )throws Exception;
 
 	public Map<String,String> obtieneDatosContratantePoliza(
 			String cdunieco
@@ -863,9 +766,6 @@ public interface CotizacionManager
 			,String LINEA_EXTENDIDA
 			,List<Map<String,Object>> olist1
 			,String cdtipsit
-			,String cdusuari
-			,String cdsisrol
-			,boolean duplicar
 			);
 	
 	/**
@@ -890,13 +790,10 @@ public interface CotizacionManager
 	 * @param cdideperCli
 	 * @param nombreReporteCotizacion
 	 * @param nombreReporteCotizacionFlot
-	 * @param swdesdesigs TODO
-	 * @param porredau 
-	 * @param porparti 
 	 * @return ntramite Numero de tramite creado
 	 * @throws Exception
 	 */
-	public String procesoComprarCotizacion (
+	public String procesoComprarCotizacion(
 			String comprarCdunieco,
 			String comprarCdramo,
 			String comprarNmpoliza,
@@ -916,15 +813,7 @@ public interface CotizacionManager
 			String cdpersonCli,
 			String cdideperCli,
 			String nombreReporteCotizacion,
-			String nombreReporteCotizacionFlot,
-			UserVO usuarioSesion,
-			String swrenovacion,
-			String sucursal,
-			String ramo,
-			String poliza, 
-			String porparti, 
-			String porredau
-	) throws Exception;
+			String nombreReporteCotizacionFlot) throws Exception;
 	
 	@Deprecated
 	public List<Map<String,String>> recuperarListaDocumentosParametrizados(
@@ -1011,51 +900,6 @@ public interface CotizacionManager
 			String nombreArchivo
 			)throws Exception;
 	
-	@Deprecated
-	public void movimientoTbloqueo(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String nmsituac
-			,String accion
-			)throws Exception;
-	
-	/**
-	 * ACTUALIZA UN OTVALOR USANDO UN LIKE %+dsatribu+%
-	 * @param ntramite
-	 * @param dsatribu
-	 * @param otvalor
-	 * @param accion (I,U,D) Insert, Update, Delete
-	 * @throws Exception
-	 */
-	public void actualizarOtvalorTramitePorDsatribu(
-			String ntramite
-			,String dsatribu
-			,String otvalor
-			,String accion
-			)throws Exception;
-	
-	/**
-	 * RECUPERA UN OTVALOR USANDO UN LIKE %+dsatribu+%
-	 * @param ntramite
-	 * @param dsatribu
-	 * @return otvalor
-	 * @throws Exception
-	 */
-	public String recuperarOtvalorTramitePorDsatribu(
-			String ntramite
-			,String dsatribu
-			)throws Exception;
-	
-	/**
-	 * Guarda censo informativo
-	 * @param params
-	 * @throws Exception
-	 */
-	public void insertaRegistroInfoCenso(Map<String, String> params)
-			throws Exception;
-	
 	/**
 	 * 
 	 * @param cdtipsit
@@ -1089,21 +933,6 @@ public interface CotizacionManager
 			,String limit
 			)throws Exception;
 	
-	public String obtenSumaAseguradosMedicamentos(
-			String cdramo,
-			String cdtipsit,
-			String cdgarant
-			)throws Exception;
-	
-	public String recuperarDescripcionEstatusTramite (String status) throws Exception;
-	
-	@Deprecated
-	// LOS METODOS DE MANAGER SIN LOGICA QUE SOLO INVOCAN A UN DAO DEBEN DEJAR DE USARSE
-	public void actualizarCdplanGrupo(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsuplem, String cdgrupo, String cdplan) throws Exception;
-
-	public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
-			String promotoria, String cdagente, String cdtipsit, String cdatribu) throws Exception;
 	public Map<String,String> obtieneFormapago(String administradora,String retenedora) throws Exception;
 	public List<Map<String,String>>cargarAseguradosExtraprimas(
 			String cdunieco
@@ -1120,57 +949,8 @@ public interface CotizacionManager
     public String guardaEmpleado(String pv_numsuc_i, String pv_cveent_i, String pv_cveemp_i, String pv_nomemp_i,
             String pv_apaterno_i, String pv_amaterno_i, String pv_rfc_i, String pv_curp_i, String pv_usuario_i,
             String pv_feregist_i, String pv_accion_i) throws Exception;
-
-	public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception;
 	
-	public String obtenerAseguradoDuplicado(HashMap<String, Object> paramPersona) throws Exception;
 
     public List<Map<String, String>> obtieneRetAdmin(String administradora, String retenedora) throws Exception;
     
-    /**
-     * Agrega un asegurado y lo asigna a una poliza
-     * @param cdunieco
-     * @param cdramo
-     * @param estado
-     * @param nmpoliza
-     * @param nmsuplem
-     * @param feefecto
-     * @param dsnombre
-     * @param dsnombre1
-     * @param paterno
-     * @param materno
-     * @param cdrfc
-     * @param sexo
-     * @param fenacimi
-     * @param cdestciv
-     * @param dsocupacion
-     * @param cdtipsit
-     * @param cdplan
-     * @param nmorddom
-     * @param cdagrupa
-     * @param otvalor01
-     * @param otvalor02
-     * @param otvalor03
-     * @param otvalor04
-     * @param otvalor05
-     * @param otvalor06
-     * @param otvalor07
-     * @param otvalor08
-     * @param otvalor09
-     * @param otvalor10
-     * @throws Exception
-     */
-    public void agregarAsegurado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
-            String feefecto, String dsnombre, String dsnombre1, String paterno, String materno, String cdrfc,
-            String sexo, String fenacimi, String cdestciv, String dsocupacion, String cdtipsit, String cdplan,
-            String nmorddom, String cdagrupa, String otvalor01, String otvalor02, String otvalor03, String otvalor04,
-            String otvalor05, String otvalor06, String otvalor07, String otvalor08, String otvalor09, String otvalor10)
-            throws Exception;
-
-    public String validaCertificadoGrupo(HashMap<String, Object> paramCertificado)throws Exception;
-    
-    public void guardaDatosAgenteSecundarioSigs(String ntramite,String agt_sec, String porc_part) throws Exception;
-    
-    public void refrescarCensoColectivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsolici)throws Exception;
-	
 }

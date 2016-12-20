@@ -12,11 +12,9 @@ var _p37_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperaci
 ////// variables //////
 var _p37_smap1  = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 var _p37_slist1 = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
-var _p37_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
 
 debug('_p37_smap1:'  , _p37_smap1);
 debug('_p37_slist1:' , _p37_slist1);
-debug('_p37_flujo:'  , _p37_flujo);
 
 var _p37_store;
 ////// variables //////
@@ -246,22 +244,14 @@ function _p37_confirmar(boton)
     
     boton.setDisabled(true);
     boton.setText('Cargando...');
-    
-    var jsonData =
-    {
-        smap1   : _p37_smap1
-        ,slist1 : _p37_slist1
-    };
-    
-    if(!Ext.isEmpty(_p37_flujo))
-    {
-        jsonData.flujo = _p37_flujo;
-    }
-    
     Ext.Ajax.request(
     {
         url       : _p37_urlConfirmar
-        ,jsonData : jsonData
+        ,jsonData :
+        {
+            smap1   : _p37_smap1
+            ,slist1 : _p37_slist1
+        }
         ,success  : function(response)
         {
             boton.setText('Confirmar');
@@ -270,21 +260,8 @@ function _p37_confirmar(boton)
             debug('### confirmar:',json);
             if(json.success)
             {
-                var callbackRemesa = function()
-                {
-                    marendNavegacion(2);
-                };
-                mensajeCorrecto('Endoso generado',json.respuesta,function()
-                {
-                    _generarRemesaClic(
-                        true
-                        ,_p37_smap1.CDUNIECO
-                        ,_p37_smap1.CDRAMO
-                        ,_p37_smap1.ESTADO
-                        ,_p37_smap1.NMPOLIZA
-                        ,callbackRemesa
-                    );
-                });
+                marendNavegacion(2);
+                mensajeCorrecto('Endoso generado',json.respuesta);
             }
             else
             {
@@ -345,7 +322,6 @@ function _p37_renderer(valor,mapeo,view)
     return valor;
 }
 ////// funciones //////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body><div id="_p37_divpri" style="height:500px;border:1px solid #999999;"></div></body>

@@ -78,7 +78,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 				success = creaSesionDeUsuario(user);
 			} else {
 				logger.info("El usuario {} no existe o la clave es incorrecta.", user);
-				errorMessage = "El usuario no existe o la contraseï¿½a es incorrecta";
+				errorMessage = "El usuario no existe o la contraseña es incorrecta";
 			}
 			return SUCCESS;
 
@@ -102,7 +102,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 					if(!validPass){
 						((SessionMap) session).invalidate();
 						logger.info("Password Incorrecto!!! {}/{}", user, password);
-						errorMessage = "El usuario no existe o la contraseï¿½a es incorrecta";
+						errorMessage = "El usuario no existe o la contraseña es incorrecta";
 					}else {
 						logger.info("Password Correcto, redireccionando a menu de Roles...");
 						success = true;
@@ -117,6 +117,10 @@ public class AutenticacionAction extends PrincipalCoreAction {
 			} 
 			return SUCCESS;
 
+		/*} catch (AuthenticationException ax) {
+			logger.info(ax.getMessage());
+			errorMessage = "Error en el proceso de validaci&oacute;n de usuario, detalle: " + ax.getMessage();
+			return SUCCESS;*/
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 			errorMessage = "Error en el proceso de validaci\u00f3n de usuario, detalle: " + ex.getMessage();

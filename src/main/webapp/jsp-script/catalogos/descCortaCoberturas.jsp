@@ -152,14 +152,6 @@ Ext.onReady(function(){
                     callback : function(){
                         modalidades.setValue(TipoSituacion.MultisaludColectivo);
                         modalidades.setReadOnly(true);
-                        
-                        coberturasStore.load({
-                            params:{
-                                'smap1.cdramo'   : productos.getValue(),
-                                'smap1.cdtipsit' : modalidades.getValue(),
-                                'smap1.cdplan'   : planes.getValue()
-                            }
-                        });
                     }
                 });
 	        }
@@ -175,7 +167,6 @@ Ext.onReady(function(){
         buttons: [{
             text: 'Buscar',
             icon    : '${ctx}/resources/fam3icons/icons/zoom.png',
-            hidden: true,//Para cargar inmediatamente MSC
             handler: function(btn, e) {
                 var form = this.up('form').getForm();
                 if (form.isValid()) {
@@ -201,7 +192,6 @@ Ext.onReady(function(){
         {
                 text: 'Limpiar',
                 icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png',
-                hidden: true,//Para cargar inmediatamente MSC
                 handler: function(btn, e) {
                     panelBusqueda.getForm().reset();
                 }
@@ -264,8 +254,8 @@ Ext.onReady(function(){
 	                     xtype: 'textfield',
 	                     regex: /^[a-zA-Z0-9]+$/,
 	                     regexText: 'Solo letras y numeros',
-                         maxLength  : 6,
-                         maxLengthText: 'Longitud m&aacute;xima de 6 caracteres',
+                         maxLength  : 5,
+                         maxLengthText: 'Longitud m&aacute;xima de 5 caracteres',
                          allowBlank : true
                          
 	                 }

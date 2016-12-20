@@ -545,7 +545,7 @@ public interface SiniestrosManager {
 			,String cdmotivo
 			,String cdclausu
 			,String swagente
-			,Long stamp, boolean enviarCorreos
+			,Long stamp
 			) throws Exception;
 	
 	public void turnarAutServicio(

@@ -27,10 +27,6 @@ var _p48_storeRespaldo;
 var _p48_storeMov;
 var _p48_nfamilia = 0;
 var _p48_storeFamilia;
-
-var _p48_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p48_flujo:',_p48_flujo);
 ////// variables //////
 
 ////// overrides //////
@@ -398,12 +394,6 @@ Ext.onReady(function()
                                         {
                                             datos.list.push({nmsituac:record.get('NMSITUAC')});
                                         });
-                                        
-                                        if(!Ext.isEmpty(_p48_flujo))
-                                        {
-                                            datos.flujo = _p48_flujo;
-                                        }
-                                        
                                         debug('datos para confirmar:',datos);
                                         
                                         _setLoading(true,_fieldById('_p48_panelpri'));
@@ -482,41 +472,6 @@ Ext.onReady(function()
                         ,icon    : '${icons}cancel.png'
                         ,hidden  : true
                         ,handler : _p48_cancelarEndosoClic
-                    }, {
-                        text    : 'Imprimir',
-                        icon    : '${ctx}/resources/fam3icons/icons/printer.png',
-                        handler : function () {
-                            centrarVentanaInterna(Ext.create('Ext.window.Window', {
-                                title       : 'Documentos',
-                                modal       : true,
-                                buttonAlign : 'center',
-                                width       : 600,
-                                height      : 400,
-                                autoScroll  : true,
-                                cls         : 'VENTANA_DOCUMENTOS_CLASS',
-                                loader      : {
-                                    url    : _GLOBAL_COMP_URL_VENTANA_DOCS,
-                                    params : {
-                                        'smap1.cdunieco' : _p48_params.CDUNIECO,
-                                        'smap1.cdramo'   : _p48_params.CDRAMO,
-                                        'smap1.estado'   : _p48_params.ESTADO,
-                                        'smap1.nmpoliza' : _p48_params.NMPOLIZA,
-                                        'smap1.nmsuplem' : '0',
-                                        'smap1.ntramite' : _p48_params.NTRAMITE || (!Ext.isEmpty(_p48_flujo) ? _p48_flujo.ntramite : ''),
-                                        'smap1.nmsolici' : '',
-                                        'smap1.tipomov'  : '0'
-                                    },
-                                    scripts  : true,
-                                    autoLoad : true
-                                }
-                            }).show());
-                        }
-                    }, {
-                        text    : 'Regresar a mesa de control',
-                        icon    : '${icons}house.png',
-                        handler : function (me) {
-                            _iceMesaControl();
-                        }
                     }
                 ]
                 ,listeners :

@@ -164,12 +164,6 @@ Ext.onReady(function()
 																						_mask();
 																						me.up('window').destroy();
 																						jsonConfirmar.smap1['confirmar'] = 'si';
-																						
-																						if(!Ext.isEmpty(_p38_flujo))
-                                                                                        {
-                                                                                            jsonConfirmar.flujo = _p38_flujo;
-                                                                                        }
-                                                                                        
 																						 Ext.Ajax.request(
 																			                    {
 																			                        url       : _p38_urlConfirmarEndoso
@@ -556,7 +550,7 @@ Ext.onReady(function()
             ,success : function(response)
             {
                 var json=Ext.decode(response.responseText);
-                debug('### obtener rango aÃ±os response:',json);
+                debug('### obtener rango años response:',json);
                 if(json.exito)
                 {
                     var limiteInferior = json.smap1.P1VALOR-0;
