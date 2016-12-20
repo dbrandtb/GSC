@@ -137,7 +137,6 @@ var _p28_negocio                 = null;
 
 // var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 var plazoenanios;
-var gridTarifas;
 ////// variables //////
 
 
@@ -2990,7 +2989,7 @@ function _p28_cotizar(sinTarificar)
                     
          ///////////////// DXN /////////////////////////////
                     
-                    gridTarifas=Ext.create('Ext.panel.Panel',
+                   var gridTarifas=Ext.create('Ext.panel.Panel',
                     {
                         itemId : '_p28_gridTarifas'
                         ,items :
@@ -3013,14 +3012,19 @@ function _p28_cotizar(sinTarificar)
                                     select       : _p28_tarifaSelect
                                     ,afterrender : function(me)
                                     {
-//                                         if(cargarXpoliza)
-//                                         {
-//                                             getCellSelector: function(me) 
-//                                             {
-//                                                 return '.' + Ext.baseCSSPrefix + 'grid-cell-' + this.getItemId();
-//                                             }
-//                                         }   
-                                        
+                                        if(!Ext.isEmpty(json.smap1.columna) && !Ext.isEmpty(json.smap1.fila))
+                                        {
+	                                        var gridTarifas = _fieldById('_p28_gridTarifas').down('grid');
+	                                        var sm = gridTarifas.getSelectionModel();
+	                                        try{
+	                                            if(sm.select({row:Number(json.smap1.fila),column:Number(json.smap1.columna)}))
+	                                             {
+	                                                sm.select({row:Number(json.smap1.fila),column:Number(json.smap1.columna)});
+	                                             }
+	                                         }catch(e) {
+	                                           debug("Excede rango fuera de la cuadricula de tarifas");
+	                                         }
+                                        }
                                         if(!Ext.isEmpty(_p28_flujo)) // && sinTarificar !== true)
                                         {
                                             _p28_actualizarCotizacionTramite(_p28_actualizarSwexiperTramite);
@@ -4774,11 +4778,6 @@ function _p28_coberturas()
 function _p28_tarifaSelect(selModel, record, row, column, eOpts)
 {
     var gridTarifas = _fieldById('_p28_gridTarifas').down('grid');
-    debug('vil selModel:',selModel);
-    debug('vil record:',record);
-    debug('vil row:',row);
-    debug('vil column:',column);
-    debug('vil eOpts:',eOpts);
     if(column>0)
     {
         column = (column * 2) -1;
