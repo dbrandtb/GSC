@@ -968,8 +968,17 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                    ,cdelemen = usuario.getEmpresa().getElementoId();
             
             Utils.validate(smap1, "No se recibieron datos de poliza");
+            String ntramite ="";
+            if(flujo!=null && !flujo.getNtramite().isEmpty())
+            {
+                if(smap1.get("cdunieco")== null || smap1.get("cdunieco").isEmpty())
+                {
+                    smap1.put("cdunieco",flujo.getCdunieco());
+                }
+                ntramite = flujo.getNtramite();
+            }
             
-            String cdunieco     = smap1.get("cdunieco")
+            String  cdunieco     = smap1.get("cdunieco")
                    ,cdramo      = smap1.get("cdramo")
                    ,cdtipsit    = smap1.get("cdtipsit")
                    ,estado      = smap1.get("estado")
@@ -982,14 +991,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                    ,cdideperCli = smap1.get("cdideperCli")
                    ,tipoflot    = smap1.get("tipoflot");
             
-            String ntramite ="";
-            if(flujo!=null && !flujo.getNtramite().isEmpty())
-            {
-                ntramite = flujo.getNtramite();
-            }
                 
             Utils.validate(
-                    cdunieco  , "No se recibi\u00f3 la sucursal"
+                     cdunieco , "No se recibi\u00f3 la sucursal"
                     ,cdramo   , "No se recibi\u00f3 el producto"
                     ,cdtipsit , "No se recibi\u00f3 la modalidad"
                     ,estado   , "No se recibi\u00f3 el estado"
