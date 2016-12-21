@@ -1211,14 +1211,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
     			logger.debug(paso);
     			salida = flujoMesaControlDAO.ejecutaValidacion(
     					flujo.getNtramite(),
-    					flujo.getStatus(),
-    					flujo.getCdunieco(),
-    					//flujo.getCdramo(),
+    					"", // flujo.getCdunieco()
     					Ramo.MESA_CONTROL.getCdramo(),
-    					flujo.getEstado(),
-    					flujo.getNmpoliza(),
-    					flujo.getNmsituac(),
-    					flujo.getNmsuplem(),
+    					"", // flujo.getEstado(),
+    					"", // flujo.getNmpoliza(),
+    					"", // flujo.getNmsituac(),
+    					"", // flujo.getNmsuplem(),
     					cdvalidafk);
 		    }
 		} catch (Exception ex) {

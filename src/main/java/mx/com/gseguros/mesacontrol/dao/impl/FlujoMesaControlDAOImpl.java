@@ -1783,21 +1783,10 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	
 	//TODO: NO SE ESTA USANDO
 	@Override
-	public String ejecutaValidacion(
-			String ntramite
-			,String status
-			,String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String nmsituac
-			,String nmsuplem
-			,String cdvalidafk
-			)throws Exception
-	{
+	public String ejecutaValidacion(String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac,
+	        String nmsuplem, String cdvalidafk) throws Exception {
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("ntramite"   , ntramite);
-		params.put("status"     , status);//<<< NO SE USA
+		//params.put("status"     , status);//<<< NO SE USA
 		params.put("cdunieco"   , cdunieco);
 		params.put("cdramo"     , cdramo);
 		params.put("estado"     , estado);
@@ -1805,6 +1794,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("nmsituac"   , nmsituac);
 		params.put("nmsuplem"   , nmsuplem);
 		params.put("cdvalidafk" , cdvalidafk);
+		params.put("ntramite"   , ntramite);
 		
 		Map<String,Object> procRes = ejecutaSP(new EjecutaValidacionSP(getDataSource()),params);
 		
