@@ -39,6 +39,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
+import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
@@ -165,6 +166,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
+	
+	@Autowired
+    private PersonasManager personasManager;
 	
 	public CotizacionAction()
 	{
@@ -3148,22 +3152,36 @@ public class CotizacionAction extends PrincipalCoreAction
 							    			}
 							    		}*/
 							    		
+							    		
+							    		String codPosImp = cliDom.getCodposCli();
+			                            if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
+			                                codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
+			                            }
+			                            
 							    		if(cliDom != null){
 							    			HashMap<String,String> paramDomicil = new HashMap<String, String>();
 							    			paramDomicil.put("pv_cdperson_i", (String)aseg.get("cdperson"));
 							    			paramDomicil.put("pv_nmorddom_i", "1");
 							    			paramDomicil.put("pv_msdomici_i", cliDom.getCalleCli());
 							    			paramDomicil.put("pv_nmtelefo_i", cliDom.getTelefonoCli());
-							    			paramDomicil.put("pv_cdpostal_i", cliDom.getCodposCli());
+							    			paramDomicil.put("pv_cdpostal_i", codPosImp);
 							    			
 							    			String edoAdosPos = Integer.toString(cliDom.getEstadoCli());
 							    			if(edoAdosPos.length() ==  1){
 							    				edoAdosPos = "0"+edoAdosPos;
 							    			}
 							    			
-							    			paramDomicil.put("pv_cdedo_i",    cliDom.getCodposCli()+edoAdosPos);
-							    			paramDomicil.put("pv_cdmunici_i", null/*cliDom.getMunicipioCli()*/);
-							    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
+							    			HashMap<String,String> paramsMunCol = new HashMap<String, String>();
+				                            paramsMunCol.put("pv_cdpostal_i", codPosImp);
+				                            paramsMunCol.put("pv_cdedo_i",    edoAdosPos);
+				                            paramsMunCol.put("pv_dsmunici_i", cliDom.getMunicipioCli());
+				                            paramsMunCol.put("pv_dscoloni_i", cliDom.getColoniaCli());
+				                            
+				                            Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
+							    			
+							    			paramDomicil.put("pv_cdedo_i",    codPosImp+edoAdosPos);
+							    			paramDomicil.put("pv_cdmunici_i", munycol.get("CDMUNICI"));
+							    			paramDomicil.put("pv_cdcoloni_i", munycol.get("CDCOLONI"));
 							    			paramDomicil.put("pv_nmnumero_i", cliDom.getNumeroCli());
 							    			paramDomicil.put("pv_nmnumint_i", null);
 							    			paramDomicil.put("pv_cdtipdom_i", "1");

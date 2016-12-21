@@ -36,6 +36,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
+import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ConfiguracionCoberturaDTO;
@@ -121,6 +122,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
+	
+	@Autowired
+    private PersonasManager personasManager;
 	
 	@Override
 	public void movimientoTvalogarGrupo(
@@ -7363,6 +7367,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 							    		nacionalidad = "002";
 							    	}
 							    	
+							    	String codPosImp = cli.getCodposCli();
+	                                if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
+	                                    codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
+	                                }
+							    	
 						    		//GUARDAR MPERSONA
 						    		
 									personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
@@ -7374,11 +7383,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 					    			if(edoAdosPos2.length() ==  1){
 					    				edoAdosPos2 = "0"+edoAdosPos2;
 					    			}
+					    			
+					    			HashMap<String,String> paramsMunCol = new HashMap<String, String>();
+	                                paramsMunCol.put("pv_cdpostal_i", codPosImp);
+	                                paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
+	                                paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
+	                                paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
+	                                
+	                                Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
 						    		
 						    		//GUARDAR DOMICILIO
 					    			
 					    			personasDAO.movimientosMdomicil(newCdPerson, "1", cli.getCalleCli(), cli.getTelefonoCli()
-						    				, cli.getCodposCli(), cli.getCodposCli()+edoAdosPos2, null/*cliDom.getMunicipioCli()*/, null/*cliDom.getColoniaCli()*/
+						    				, codPosImp, codPosImp+edoAdosPos2, munycol.get("CDMUNICI"), munycol.get("CDCOLONI")
 						    				, cli.getNumeroCli(), null
 						    				,"1" // domicilio personal default
 											,usuarioCaptura
@@ -8162,9 +8179,22 @@ public class CotizacionManagerImpl implements CotizacionManager
     		    				edoAdosPos2 = "0"+edoAdosPos2;
     		    			}
     		    			
+    		    			String codPosImp = cli.getCodposCli();
+                            if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
+                                codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
+                            }
+                            
+                            HashMap<String,String> paramsMunCol = new HashMap<String, String>();
+                            paramsMunCol.put("pv_cdpostal_i", codPosImp);
+                            paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
+                            paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
+                            paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
+                            
+                            Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
+    		    			
     		    			personasDAO.movimientosMdomicil(newCdPerson,"1", cli.getCalleCli() +" "+ cli.getNumeroCli()
-    		    					,cli.getTelefonoCli(), cli.getCodposCli(), cli.getCodposCli()+edoAdosPos2
-    		    					,null, null, cli.getNumeroCli(), null
+    		    					,cli.getTelefonoCli(), codPosImp, codPosImp+edoAdosPos2
+    		    					,munycol.get("CDMUNICI"), munycol.get("CDCOLONI"), cli.getNumeroCli(), null
     		    					,"1" // domicilio personal default
 									,usuarioCaptura
 									,Constantes.SI  //domicilio activo

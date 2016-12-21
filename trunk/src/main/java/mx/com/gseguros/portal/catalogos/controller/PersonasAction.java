@@ -382,11 +382,16 @@ public class PersonasAction extends PrincipalCoreAction
     				edoAdosPos2 = "0"+edoAdosPos2;
     			}
     			
-    			long timestamp=System.currentTimeMillis();
+    			String codPosImp = cliImport.getCodposCli();
+                if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
+                    codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
+                }
+
+                long timestamp=System.currentTimeMillis();
     			
     			logger.debug("Canal de Ingreso:" + cliImport.getCanconCli());
     			
-    			params.put("pv_cdpostal_i", cliImport.getCodposCli());
+    			params.put("pv_cdpostal_i", codPosImp);
     			params.put("pv_cdedo_i",    edoAdosPos2);
     			params.put("pv_dsmunici_i", cliImport.getMunicipioCli());
     			params.put("pv_dscoloni_i", cliImport.getColoniaCli());
@@ -401,8 +406,8 @@ public class PersonasAction extends PrincipalCoreAction
     			Map<String,String> domicilioImp = new HashMap<String,String>();
     			
     			domicilioImp.put("NMORDDOM",null);
-    			domicilioImp.put("CODPOSTAL", cliImport.getCodposCli());
-    			domicilioImp.put("CDEDO", cliImport.getCodposCli()+edoAdosPos2);
+    			domicilioImp.put("CODPOSTAL", codPosImp);
+    			domicilioImp.put("CDEDO", codPosImp+edoAdosPos2);
     			domicilioImp.put("CDMUNICI",munycol.get("CDMUNICI"));
     			domicilioImp.put("CDCOLONI",munycol.get("CDCOLONI"));
     			domicilioImp.put("DSDOMICI",cliImport.getCalleCli());
@@ -598,11 +603,16 @@ public class PersonasAction extends PrincipalCoreAction
 	    				edoAdosPos2 = "0"+edoAdosPos2;
 	    			}
 	    			
+	    			String codPosImp = cliImport.getCodposCli();
+	                if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
+	                    codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
+	                }
+	    			
 	    			long timestamp=System.currentTimeMillis();
 	    			
 	    			logger.debug("Canal de Ingreso:" + cliImport.getCanconCli());
 	    			
-	    			params.put("pv_cdpostal_i", cliImport.getCodposCli());
+	    			params.put("pv_cdpostal_i", codPosImp);
 	    			params.put("pv_cdedo_i",    edoAdosPos2);
 	    			params.put("pv_dsmunici_i", cliImport.getMunicipioCli());
 	    			params.put("pv_dscoloni_i", cliImport.getColoniaCli());
@@ -617,8 +627,8 @@ public class PersonasAction extends PrincipalCoreAction
 	    			Map<String,String> domicilioImp = new HashMap<String,String>();
 	    			
 	    			domicilioImp.put("NMORDDOM",null);
-	    			domicilioImp.put("CODPOSTAL", cliImport.getCodposCli());
-	    			domicilioImp.put("CDEDO", cliImport.getCodposCli()+edoAdosPos2);
+	    			domicilioImp.put("CODPOSTAL", codPosImp);
+	    			domicilioImp.put("CDEDO",     codPosImp+edoAdosPos2);
 	    			domicilioImp.put("CDMUNICI",munycol.get("CDMUNICI"));
 	    			domicilioImp.put("CDCOLONI",munycol.get("CDCOLONI"));
 	    			domicilioImp.put("DSDOMICI",cliImport.getCalleCli());
