@@ -34,6 +34,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
+import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
@@ -87,6 +88,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     @Autowired
     private MesaControlManager mesaControlManager;
+    
+    @Autowired
+    private PersonasManager personasManager;
     
     //Constantes de catalogos
     public static final String cdatribuSexo                         ="1";
@@ -1710,16 +1714,31 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				    			paramDomicil.put("pv_nmorddom_i", "1");
 				    			paramDomicil.put("pv_msdomici_i", cli.getCalleCli() +" "+ cli.getNumeroCli());
 				    			paramDomicil.put("pv_nmtelefo_i", cli.getTelefonoCli());
-				    			paramDomicil.put("pv_cdpostal_i", cli.getCodposCli());
+				    			
+				    			String codPosImp = cli.getCodposCli();
+				    			if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
+				    			    codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
+				    			}
+				    			
+				    			paramDomicil.put("pv_cdpostal_i", codPosImp);
 				    			
 				    			String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
 				    			if(edoAdosPos2.length() ==  1){
 				    				edoAdosPos2 = "0"+edoAdosPos2;
 				    			}
 				    			
-				    			paramDomicil.put("pv_cdedo_i",    cli.getCodposCli()+edoAdosPos2);
-				    			paramDomicil.put("pv_cdmunici_i", null/*cliDom.getMunicipioCli()*/);
-				    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
+				    			HashMap<String,String> paramsMunCol = new HashMap<String, String>();
+				    			paramsMunCol.put("pv_cdpostal_i", codPosImp);
+				    			paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
+				    			paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
+				    			paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
+				                
+				                Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
+				    			
+				                
+				    			paramDomicil.put("pv_cdedo_i",    codPosImp+edoAdosPos2);
+				    			paramDomicil.put("pv_cdmunici_i", munycol.get("CDMUNICI"));
+				    			paramDomicil.put("pv_cdcoloni_i", munycol.get("CDCOLONI"));
 				    			paramDomicil.put("pv_nmnumero_i", cli.getNumeroCli());
 				    			paramDomicil.put("pv_nmnumint_i", null);
 				    			paramDomicil.put("pv_cdtipdom_i", "1");

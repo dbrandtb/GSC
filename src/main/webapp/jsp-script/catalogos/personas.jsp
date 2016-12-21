@@ -3900,6 +3900,9 @@ function agregaEditaDomicilio(editMode, recordCargar){
 					    	}
 					    }
 					    
+					    if(!_fieldByName('CODPOSTAL',formDomicilio).isValid()){
+					    	_fieldByName('CODPOSTAL',formDomicilio).setReadOnly(false);
+					    }
 					    if(!_fieldByName('NMNUMERO',formDomicilio).isValid()){
 					    	_fieldByName('NMNUMERO',formDomicilio).setReadOnly(false);
 					    }
