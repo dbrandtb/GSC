@@ -85,4 +85,6 @@
     
     <bean id="despachadorDAOImpl" class="mx.com.gseguros.portal.despachador.dao.impl.DespachadorDAOImpl" parent="abstractManagerDAO"/>
     
+    <bean id="templateDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.TemplateDAOImpl" parent="abstractManagerDAO"/>
+    
 </beans>
