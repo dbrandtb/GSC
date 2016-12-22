@@ -241,5 +241,10 @@ var TipoFlotilla = {
 	        
 }
 
+// Catalogo de Tipos de Unidad:
+var TipoUnidad = {
+    Fronterizo  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoUnidad@FRONTERIZO.clave" />'
+};
+
 
 </script>
