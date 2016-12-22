@@ -1113,11 +1113,10 @@ function _p34_incisos(nivel,recordNivel,cols,padre,callback)
 			                                    	    }
 			                                    	    ,extraParams:
 			                                    	    {
-			                                    	        catalogo           : 'RECUPERAR_LISTA_FILTRO_PROPIEDADDES_INCISO'
-			                                    	        ,'params.cdunieco' : recordPoliza.get('CDUNIECO')
-			                                    	        ,'params.cdramo' : recordPoliza.get('CDRAMO')
-			                                    	        ,'params.estado' : recordPoliza.get('ESTADO')
-			                                    	        ,'params.nmpoliza' : recordPoliza.get('NMPOLIZA')
+			                                    	        catalogo           : 'RECUPERAR_LISTA_FILTRO_PROPIEDAD_INCISO'
+                                                            ,'params.cdramo'   :  recordPoliza.get('CDRAMO')
+                                                            ,'params.cdtipsit' :  recordPoliza.get('CDTIPSIT')
+                                                            ,'params.nivel'    :  "I"
 			                                    	    }
 			                                    	}
 				                                    ,listeners :
