@@ -2284,4 +2284,41 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
         }
     }
     
+    public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit,String nivel) throws Exception
+    {
+        logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+                               "\n@@@@@@ recuperarListaFiltroPropiedadInciso @@@@@@",
+                               "\n@@@@@@ cdramo ",cdramo,"\n"));
+        
+        HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
+        params.put("pv_cdramo_i", cdramo);
+        params.put("pv_cdtipsit_i", cdtipsit);
+        params.put("pv_nivel_i", nivel);
+        Map<String,Object>       procRes    = ejecutaSP(new RecuperarListaFiltroPropiedadInciso(getDataSource()), params);
+        List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
+        logger.debug(Utils.log(listaMapas));
+        List<GenericVO>          lista      = new ArrayList<GenericVO>();
+        if(listaMapas!=null)
+        {
+            for(Map<String,String> mapa : listaMapas)
+            {
+                lista.add(new GenericVO(mapa.get("dsatribu"),mapa.get("dsatribu")));
+            }
+        }
+        return lista;
+    }
+    protected class RecuperarListaFiltroPropiedadInciso extends StoredProcedure
+    {
+        protected RecuperarListaFiltroPropiedadInciso(DataSource dataSource)
+        {
+            super(dataSource,"PKG_CONSULTA_PRUEBA.P_GET_LISTA_FILTROS");
+            declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nivel_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"dsatribu"})));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
