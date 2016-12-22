@@ -19,10 +19,6 @@ import java.util.regex.Pattern;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.exception.ValidationDataException;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -31,6 +27,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.ValidationDataException;
 
 /**
  * Utiler&iacute;as para validar datos de la aplicacion
@@ -227,12 +227,14 @@ public class Utils
 		}
 	}
 
+	@Deprecated
 	public static void validate(StringBuilder sb, String cadena, String mensaje) throws ValidationDataException {
 		if(StringUtils.isBlank(cadena)) {
 			throw new ValidationDataException(mensaje,sb.toString());
 		}
 	}
 	
+	@Deprecated
 	public static void validate(StringBuilder sb, String... args) throws ValidationDataException
 	{
 		for(int i=0;i<args.length;i=i+2)
@@ -241,6 +243,7 @@ public class Utils
 		}
 	}
 	
+	@Deprecated
 	public static void validate(StringBuilder sb, Map<?,?> map, String mensaje) throws ValidationDataException {
 		if(MapUtils.isEmpty(map)) {
 			throw new ValidationDataException(mensaje,sb.toString());
@@ -602,6 +605,7 @@ public class Utils
 		return concat;
 	}
 	
+	@Deprecated
 	public static void debugProcedure(org.apache.log4j.Logger logger2,String storedProcedureName,Map<String,?>params)
     {
 		return;
@@ -618,6 +622,7 @@ public class Utils
 		);*/
     }
     
+	@Deprecated
     public static void debugProcedure(org.apache.log4j.Logger logger2,String storedProcedureName,Map<String,?>params,List<?>lista)
     {
     	return;
@@ -635,6 +640,7 @@ public class Utils
     	);*/
     }
 	
+	@Deprecated
 	public static void debugProcedure(Logger logger2,String storedProcedureName,Map<String,?>params)
     {
 		return;
@@ -651,6 +657,7 @@ public class Utils
 		);*/
     }
     
+	@Deprecated
     public static void debugProcedure(Logger logger2,String storedProcedureName,Map<String,?>params,List<?>lista)
     {
     	return;
