@@ -3,6 +3,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<script type="text/javascript" src="${ctx}/resources/extjs4/plugins/pagingpersistence/pagingselectionpersistence.js?${now}"></script>
+
 <script>
 ////// urls //////
 var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"            />'
@@ -137,6 +140,7 @@ Ext.onReady(function()
                 type           : 'json'
                 ,root          : 'list'
                 ,totalProperty : 'total'
+                ,idProperty    : 'NTRAMITE'
             }
         }
     });
@@ -548,9 +552,14 @@ Ext.onReady(function()
                                 
                                 _p54_store.proxy.extraParams = _formValuesToParams(values);
                                 _p54_grid.down('pagingtoolbar').moveFirst();
+                                
+                                var gridTramites = _fieldById('_p54_grid');
+                                gridTramites.deslectAllPersistedSelection();
+                                
                             }
                             catch(e)
                             {
+                                debugError(e);
                                 manejaException(e,ck);
                             }
                         }
@@ -589,15 +598,27 @@ Ext.onReady(function()
                         ,displayInfo : true
                     }
                 ]
-                ,selModel  :
-                {
-                    type           : 'rowmodel'
-                    ,allowDeselect : true
-                }
+                ,selModel: Ext.create('Ext.selection.CheckboxModel', {mode: 'MULTI', allowDeselect: true, checkOnly: true,
+                    listeners: {
+                        beforeselect : function(chk, record, index, eOpts){
+                            if(Ext.isEmpty(record.get('CDETAPA')) || record.get('CDETAPA') != '2'){
+                                showMessage("Aviso","Este tr\u00e1mite no puede seleccionarse puesto que no se encuetra en proceso para poder ser reasignado.", Ext.Msg.OK, Ext.Msg.INFO);                               
+                                return false;
+                            }
+                        }
+                    }
+                })
+                ,plugins: [{ptype : 'pagingselectpersist'}]
                 ,listeners :
                 {
-                    select : function(grid,record)
+                 cellclick( cellsel, td, cellIndex, record, tr, rowIndex, e, eOpts )
                     {
+                     //Se cambia evento a Cellclick en vez de select y solo se permite seleccionar a la primer fila
+                     // se carga ventana de tranite en el evento de cellclick fuera del checkbox
+                     if(cellIndex == 0){
+                         return true;
+                     }
+                     
                         var ck = 'Invocando acciones de proceso';
                         try
                         {
@@ -1840,6 +1861,146 @@ function _p54_mostrarFormularioPrimeraVersion (values) {
         manejaException(e, ck, mask);
     }
 }
+
+function _btnReasigna(btn){
+    var gridTramites = _fieldById('_p54_grid');
+    var tramitesReasignar = gridTramites.getPersistedSelection();
+    
+    debug('Persistent selection: ' , tramitesReasignar);
+    
+    if(tramitesReasignar.length <= 0){
+        showMessage("Aviso","No hay tr\u00e1mites seleccionados para reasignar.", Ext.Msg.OK, Ext.Msg.INFO);
+        return;
+    }
+    
+    _ventanaReasignarTramites(tramitesReasignar);   
+}
+
+function _ventanaReasignarTramites(tramitesR){
+    
+    var _URL_CARGA_CATALOGO   = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+    var _CAT_ZONAS_REASIGNAR  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ZONAS_SUCURSALES"/>';
+    var _UrlReasignarTramites = '<s:url namespace="/mesacontrol"    action="reasignarTramitesBloque" />';
+    
+    
+    var zonasReasigStore = Ext.create('Ext.data.Store',
+            {
+                autoLoad : true
+                ,model   : 'Generic'
+                ,proxy   :
+                {
+                    type        : 'ajax'
+                        ,url        : _URL_CARGA_CATALOGO
+                        ,extraParams: {catalogo:_CAT_ZONAS_REASIGNAR}
+                        ,reader     :
+                        {
+                            type  : 'json'
+                            ,root : 'lista'
+                        }
+                }
+            });
+    
+    var gridZonasReasig = Ext.create('Ext.grid.Panel',
+            {
+            title : 'Seleccione una zona para reasignar los tr\u00e1mites seleccionados.'
+            ,height : 240
+            ,store : zonasReasigStore
+            ,columns :
+            [ { header     : 'C&oacute;digo Zona' , dataIndex : 'key', flex: 1, hidden: true},
+              { header     : 'Nombre de la Zona' , dataIndex : 'value', flex: 3}
+            ]
+        });
+    
+    
+        var windowReasignar = Ext.create('Ext.window.Window', {
+              modal:true,
+              height : 320,
+              width  : 420,
+              border: false,
+              items: [gridZonasReasig],
+              bodyStyle:'padding:5px;',
+              buttonAlign : 'center',
+              buttons:[
+               {
+                     text: 'Reasignar tr\u00e1mites',
+                     icon:'${icons}user_go.png',
+                     handler: function() {
+                         
+                         var selModel =  gridZonasReasig.getSelectionModel();
+                         if(selModel.hasSelection()){
+                             var record = selModel.getLastSelected();
+                             
+                             var tramitesMsg = '';
+                             var tramitesReasig = [];
+                             
+                             Ext.Array.each(tramitesR,function(tramiteR, indexTram){
+                                 tramitesReasig.push(tramiteR.data);
+                                 if(Ext.isEmpty(tramitesMsg)){
+                                     tramitesMsg = tramitesMsg + tramiteR.get('NTRAMITE');
+                                 }else{
+                                     tramitesMsg = tramitesMsg + ', ' + tramiteR.get('NTRAMITE');                                         
+                                 }
+                                 
+                             });
+                             
+                             centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se reasignar\u00e1n los tr\u00e1mites: '+ tramitesMsg+'<br> A la zona: '+record.get('value')+' <br>¿Desea continuar?', function(btn)
+                              {
+                                  if(btn === 'yes')
+                                  {
+                                      mask = _maskLocal('Reasignando tr\u00e1mites...');
+                                      Ext.Ajax.request({
+                                          url    : _UrlReasignarTramites,
+                                          jsonData : {
+                                              slist1 : tramitesReasig,
+                                              smap1  : {
+                                                  'ZONA_REASIG': record.get('key')
+                                              }
+                                          },
+                                          success : function (response) {
+                                              mask.close();
+                                              var ck = 'Decodificando respuesta al reasignar tramites';
+                                              try {
+                                                  var json = Ext.decode(response.responseText);
+                                                  debug('### respuesta reasingacion:', json, '.');
+                                                  
+                                                  if (json.success === true) {
+                                                      
+                                                      mensajeCorrecto('Aviso','Se ha reasignado correctamente.'+json.smap1.resultadosReasignacion);
+                                                      windowReasignar.close();
+                                                      
+                                                      var gridTramites = _fieldById('_p54_grid');
+                                                      gridTramites.deslectAllPersistedSelection();
+                                                      gridTramites.getStore().reload();
+                                                      
+                                                      
+                                                  } else {
+                                                      mensajeError(json.mensaje);
+                                                  }
+                                                  
+                                              } catch (e) {
+                                                  manejaException(e, ck);
+                                              }
+                                          },
+                                          failure : function () {
+                                              mask.close();
+                                              errorComunicacion(null, 'Error al reasignar tr\u00e1mites.');
+                                          }
+                                      });
+                                  }
+                              }));
+                             
+                         }else{
+                             showMessage("Aviso","Debe seleccionar una zona.", Ext.Msg.OK, Ext.Msg.INFO);
+                         }
+                         
+                     }
+               }
+              ]
+              });
+            windowReasignar.show();
+}
+
+
 ////// funciones //////
 </script>
 

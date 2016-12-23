@@ -832,7 +832,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	    return result;
 	}
 	
-	private String recuperarDescripcionEstatus (String status) throws Exception {
+	public String recuperarDescripcionEstatus (String status) throws Exception {
 	    String desc = null, paso = null;
 	    try {
 	        paso = "Recuperando los estatus";
@@ -851,7 +851,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	    return desc;
 	}
     
-    private String recuperarDescripcionRol (String cdsisrol) throws Exception {
+    public String recuperarDescripcionRol (String cdsisrol) throws Exception {
         String desc = null, paso = null;
         try {
             paso = "Recuperando los roles";
@@ -874,5 +874,93 @@ K                   ENCOLAR CON DATOS ORIGINALES
     @Deprecated
     public String recuperarRolTrabajoEstatus (String cdtipflu, String cdflujomc, String estatus) throws Exception {
         return despachadorDAO.recuperarRolTrabajoEstatus(cdtipflu, cdflujomc, estatus);
+    }
+    
+    @Override
+    public RespuestaDespachadorVO despacharPorZona (String ntramite, String zonaDespacho) throws Exception {
+        logger.debug(Utils.log(
+                "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+                "\n@@@@@@ despacharPorZona @@@@@@",
+                "\n@@@@@@ ntramite     = " , ntramite,
+                "\n@@@@@@ zonaDespacho = " , zonaDespacho));
+        
+        String paso = null;
+        RespuestaDespachadorVO result = null;
+        
+        try {
+            
+            paso = "Recuperando datos de tr\u00e1mite";
+            logger.debug(paso);
+            
+            Map<String, String> datosTramite = siniestrosDAO.obtenerTramiteCompleto(ntramite);
+            String cdtipflu   = datosTramite.get("CDTIPFLU"),
+                   cdflujomc  = datosTramite.get("CDFLUJOMC"),
+                   cdramo     = datosTramite.get("CDRAMO"),
+                   cdtipsit   = datosTramite.get("CDTIPSIT"),
+                   cdunidspch = null,
+                   status     = datosTramite.get("STATUS"),
+                   nivel      = ConstantesDespachador.NIVEL_PRIMARIO;
+            
+            
+            paso = "Recuperando tipo de producto";
+            logger.debug(paso);
+            String cdtipram = despachadorDAO.recuperarCdtipramFlujo(cdtipflu, cdflujomc);
+            
+            paso = "Recuperando rol destino";
+            logger.debug(paso);
+            String cdsisrol = despachadorDAO.recuperarRolTrabajoEstatus(cdtipflu, cdflujomc, status);
+            
+            Utils.validate(cdsisrol, "El estatus no tiene un rol encargado");
+            
+            
+            paso = "Entrando al algoritmo";
+            logger.debug(paso);
+            StringBuilder sb = new StringBuilder(Utils.log(
+                    "\n================================================",
+                    "\n= Entrando a algoritmo de despacho, originales:",
+                    "\n= cdtipram:  " , cdtipram,
+                    "\n= cdtipflu:  " , cdtipflu,
+                    "\n= cdflujomc: " , cdflujomc,
+                    "\n= ntramite:  " , ntramite,
+                    "\n= status:    " , status,
+                    "\n= cdsisrol:  " , cdsisrol,
+                    "\n= cdunieco:  " , cdunidspch,
+                    "\n= cdramo:    " , cdramo,
+                    "\n= cdtipsit:  " , cdtipsit,
+                    "\n= nivel:     " , nivel,
+                    "\n= zona:      " , zonaDespacho));
+            
+            
+            Map<String, Map<String, Boolean>> quemados = new LinkedHashMap<String, Map<String, Boolean>>();
+            quemados.put(ConstantesDespachador.ZONA_MATRIZ          , new LinkedHashMap<String, Boolean>());
+            quemados.put(ConstantesDespachador.ZONA_NORESTE         , new LinkedHashMap<String, Boolean>());
+            quemados.put(ConstantesDespachador.ZONA_NOROESTE        , new LinkedHashMap<String, Boolean>());
+            quemados.put(ConstantesDespachador.ZONA_CENTRO          , new LinkedHashMap<String, Boolean>());
+            quemados.put(ConstantesDespachador.ZONA_ACC_BAJIO       , new LinkedHashMap<String, Boolean>());
+            quemados.put(ConstantesDespachador.ZONA_SUR             , new LinkedHashMap<String, Boolean>());
+            
+            HashMap<String,Boolean> mapaComodin = new LinkedHashMap<String, Boolean>();
+            mapaComodin.put(ConstantesDespachador.NIVEL_COMODIN_USUARIO, new Boolean(true));
+             
+            quemados.put(ConstantesDespachador.ZONA_COMODIN_USUARIO , mapaComodin);
+            
+            result = this.despachar(cdtipram, cdtipflu, cdflujomc, ntramite, cdramo, cdtipsit, zonaDespacho, nivel, cdunidspch, status, cdsisrol,
+                    zonaDespacho, nivel, cdunidspch, status, cdsisrol, quemados, sb);
+            
+            logger.debug(sb.toString());
+            
+        } catch (Exception ex) {
+            Utils.generaExcepcion(ex, paso);
+        }
+        logger.debug(Utils.log(
+                "\n@@@@@@ result = ", result,
+                "\n@@@@@@ despacharPorZona @@@@@@",
+                "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+        return result;
+    }
+    
+    @Override
+    public String recuperarNombreUsuario (String cdusuari) throws Exception {
+        return despachadorDAO.recuperarNombreUsuario(cdusuari);
     }
 }
