@@ -3748,6 +3748,10 @@ function agregaEditaDomicilio(editMode, recordCargar){
 	
 	debug('Editar Domicilio para recordCargar',editMode);
 	
+	if(editMode && recordCargar.get('CODPOSTAL') == '00000' ){
+	    recordCargar.set('CODPOSTAL','000000');// Para ver cuando un cdigo postal importado viene en cero.
+	}
+	
 	var windowDomicilio;
 
 	var formDomicilio = Ext.create('Ext.form.Panel',
