@@ -562,6 +562,11 @@
         <action name="refrescarCensoColectivo" class="CotizacionAction" method="refrescarCensoColectivo">
             <result name="success" type="json" />
         </action>
+        
+        <action name="cargarAseguradosFiltroGrupoPag" class="CotizacionAction" method="cargarAseguradosFiltroGrupoPag">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
     
 </struts>

@@ -38,6 +38,7 @@ import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.model.AseguradosFiltroVO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ConfiguracionCoberturaDTO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -11251,6 +11252,73 @@ public class CotizacionManagerImpl implements CotizacionManager
     {
         cotizacionDAO.refrescarCensoColectivo(cdunieco,cdramo,estado,nmpoliza,nmsolici);
     }
+    
+	public AseguradosFiltroVO cargarAseguradosFiltroGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			//,String nmsitaux
+			,String start
+			,String limit
+			,String filtro
+			,String valorFiltro)throws Exception
+	{
+		String paso = null;
+    	AseguradosFiltroVO asegurados = new AseguradosFiltroVO();
+		
+        try {
+    		
+    		logger.info(""
+				+ "\n#######################################"
+				+ "\n###### cargarAseguradosGrupoImpl ######"
+				+ "\ncdunieco "+cdunieco
+				+ "\ncdramo "+cdramo
+				+ "\nestado "+estado
+				+ "\nnmpoliza "+nmpoliza
+				+ "\nnmsuplem "+nmsuplem
+				//+ "\ncdgrupo "+cdgrupo
+				//+ "\nnmsitaux "+nmsitaux
+				+ "\nfiltro "+filtro
+				+ "\nvalorFiltro "+valorFiltro
+				+ "\nstart "+start
+				+ "\nlimit "+limit
+				);
+
+        	HashMap<String,String>params=new HashMap<String,String>();
+			paso = "Seteando parametros antes de llamar al metodo cargarAseguradosFiltroGrupo";
+			logger.debug(paso);
+			
+			params.put("pv_cdunieco_i"   , cdunieco);
+			params.put("pv_cdramo_i"   , cdramo);
+			params.put("pv_estado_i"   , estado);
+			params.put("pv_nmpoliza_i" , nmpoliza);
+			params.put("pv_nmsuplem_i" , nmsuplem);
+			params.put("pv_cdgrupo_i"  , cdgrupo);
+			//params.put("pv_nmsitaux_i"  , nmsitaux);
+			params.put("pv_start_i"  , start);
+			params.put("pv_limit_i"  , limit);
+			params.put("pv_dsatribu_i"  , filtro);
+			params.put("pv_otvalor_i"  , valorFiltro);
+			
+			//asegurados = consultasAseguradoFiltroDAO.cargarAseguradosFiltroGrupo(params);
+			
+			asegurados = cotizacionDAO.cargarAseguradosFiltroGrupo(params);
+			paso = "Despues de llamar al metodo cargarAseguradosFiltroGrupo";
+			logger.debug(paso);
+			
+			logger.info(""
+					+ "\nlista size "+asegurados.getTotal()
+					+ "\n###### cargarAseguradosFiltroGrupo ######"
+					+ "\n#########################################"
+					);
+        } catch (Exception ex) {
+            Utils.generaExcepcion(ex, paso);
+        }
+		return asegurados;
+	}
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////

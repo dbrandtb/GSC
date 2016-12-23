@@ -25,6 +25,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 import mx.com.aon.portal.dao.ObtieneTatriperMapper;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.model.AseguradosFiltroVO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ConfiguracionCoberturaDTO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -8845,6 +8846,74 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             compile();
         }
     }
+    
+    @Override
+	//public void cargarAseguradosFiltroGrupo(HashMap<String,String> params)throws Exception
+	public AseguradosFiltroVO cargarAseguradosFiltroGrupo (HashMap<String,String> params)throws Exception
+	{
+
+		Map<String,Object>respuesta   = ejecutaSP(new CargarAseguradosFiltroGrupoSP(getDataSource()),params);
+		
+		AseguradosFiltroVO aseguradosFiltro = new AseguradosFiltroVO ();		
+		List<Map<String,String>>lista = (List<Map<String,String>>)respuesta.get("pv_registro_o");
+		
+		int total = Integer.parseInt(respuesta.get("pv_num_o").toString());
+		aseguradosFiltro.setTotal(total);
+
+		aseguradosFiltro.setAsegurados(lista);
+
+		logger.debug("viendo el contenido de aseguradosFiltro " + "lista.size() " + lista.size() + " isempty " +aseguradosFiltro.getAsegurados().isEmpty() + " total " + aseguradosFiltro.getTotal());
+
+		return aseguradosFiltro;
+	}
+	
+	
+	protected class CargarAseguradosFiltroGrupoSP extends StoredProcedure
+	{
+		protected CargarAseguradosFiltroGrupoSP(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA_PRUEBA.P_GET_ASEGURADOS_GRUPO_FILTRO");
+			//super(dataSource,"PKG_CONSULTA_PRUEBA.P_GET_ASEGURADOS_GRUPO_FILTRO");
+			
+			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgrupo_i"  , OracleTypes.VARCHAR));
+			//declareParameter(new SqlParameter("pv_nmsitaux_i"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_start_i"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_limit_i"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_dsatribu_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor_i"  , OracleTypes.VARCHAR));  
+			declareParameter(new SqlOutParameter("pv_num_o"  , OracleTypes.NUMERIC));
+			
+			String[] cols = new String[]{
+					"CDGRUPO"
+					,"NMSITUAC"
+					,"CDPERSON"
+					,"PARENTESCO"
+					,"NOMBRE"
+					,"SEGUNDO_NOMBRE"
+					,"APELLIDO_PATERNO"
+					,"APELLIDO_MATERNO"
+					,"FECHA_NACIMIENTO"
+					,"SEXO"
+					,"NACIONALIDAD"
+					,"RFC"
+					,"CDROL"
+					,"SWEXIPER"
+					,"CDIDEPER"
+					,"FAMILIA"
+					,"TITULAR"
+					,"FEANTIGU"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}	
 }
     
 	

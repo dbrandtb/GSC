@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.consultas.model.AseguradosFiltroVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
@@ -1173,4 +1174,17 @@ public interface CotizacionManager
     
     public void refrescarCensoColectivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsolici)throws Exception;
 	
+	public AseguradosFiltroVO cargarAseguradosFiltroGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			//,String nmsitaux
+			,String filtro
+			,String valorFiltro
+			,String start
+			,String limit)throws Exception;
+
 }

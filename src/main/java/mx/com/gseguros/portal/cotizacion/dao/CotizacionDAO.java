@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.model.AseguradosFiltroVO;
 import mx.com.gseguros.portal.cotizacion.model.ConfiguracionCoberturaDTO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.PInsertaTbasvalsitDTO;
@@ -949,4 +950,23 @@ public interface CotizacionDAO {
    public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception;
 
    public void refrescarCensoColectivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsolici)throws Exception;
+   
+	/**
+    * Metodo para consultar los asegurados por grupo luego de aplicar el filtro de busqueda
+    * @param cdunieco
+    * @param cdramo
+    * @param estado
+    * @param nmpoliza
+    * @param nmsuplem
+    * @param cdgrupo
+    * @param numsitaux
+    * @paran start
+    * @param limit
+    * @param filtro
+    * @param valorFiltro
+    * @return
+    * @throws Exception
+    */
+
+	public AseguradosFiltroVO cargarAseguradosFiltroGrupo(HashMap<String, String> params) throws Exception;	
 }
