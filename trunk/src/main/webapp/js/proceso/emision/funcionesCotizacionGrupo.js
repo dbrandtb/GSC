@@ -2343,3 +2343,50 @@ function _p21_exportarExcelCensoFinal(){
         }
     });
 }
+
+function _p21_crearVentanaClausulas()
+{
+    debug('>_p21_crearVentanaClausulas<');
+    
+    _ventanaClausulas = Ext.create('Ext.window.Window',
+    {
+        title   : 'Exclusiones/Extraprimas (Cl&aacute;usulas)'
+        ,width  : 800
+        ,height : 500
+        ,modal  : true
+        ,loader : {
+                url       : _p21_urlEditarExclusiones
+                ,params   :
+                {
+                    'smap1.pv_cdunieco'      : _p21_smap1.cdunieco
+                    ,'smap1.pv_cdramo'       : _p21_smap1.cdramo
+                    ,'smap1.pv_estado'       : _p21_smap1.estado
+                    ,'smap1.pv_nmpoliza'     : _p21_smap1.nmpoliza
+                    ,'smap1.pv_nmsituac'     : '0'
+                    ,'smap1.pv_nmsuplem'     : Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem
+                    ,'smap1.pv_cdperson'     : ''
+                    ,'smap1.pv_cdrol'        : ''
+                    ,'smap1.nombreAsegurado' : 'POLIZA'
+                    ,'smap1.cdrfc'           : ''
+                }
+                ,scripts  : true
+                ,autoLoad : true
+            }
+        /*,loader :
+        {
+            scripts   : true
+            ,autoLoad : true
+            ,url      : _p21_urlPantallaClausulasPoliza
+            ,params   :
+            {
+                'smap1.cdunieco'  : _p21_smap1.cdunieco
+                ,'smap1.cdramo'   : _p21_smap1.cdramo
+                ,'smap1.estado'   : _p21_smap1.estado
+                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                ,'smap1.nmsuplem' : Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem
+            }
+        }*/
+    }).show();
+    
+    centrarVentanaInterna(_ventanaClausulas);
+}

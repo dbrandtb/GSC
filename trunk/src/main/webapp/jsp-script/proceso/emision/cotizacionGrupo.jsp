@@ -99,6 +99,10 @@ var _p21_urlRestaurarRespaldoCenso       = '<s:url namespace="/emision"         
 var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
 var _p21_urlRefrescarCensoColectivo      = '<s:url namespace="/emision"         action="refrescarCensoColectivo"          />';
 var _p21_urlReporte                 	 = '<s:url namespace="/consultasPoliza" action="consultaIncisosPoliza" />';
+
+var _p21_urlCargarAseguradosFiltroGrupoPag     = '<s:url namespace="/emision"         action="cargarAseguradosFiltroGrupoPag"		  />';
+var _p21_filtroGrupoPag     = 'NOMBRE ASEGURADO';
+
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
     ,_cotcol_urlPantallaActTvalosit = '<s:url namespace="/tvalosit" action="includes/pantallaActTvalosit" />'
@@ -6997,52 +7001,47 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     	                [
     	                    {
     	                        xtype       : 'textfield'
+    	                        ,itemId     : 'textFieldBuscar'+record.get('letra') 
     	                        ,fieldLabel : '<span style="color:white;">Buscar:</span>'
     	                        ,timeoutFn  : ''
-    	                        ,listeners  :
-    	                        {
-    	                            change : function(comp,val)
-    	                            {
-    	                                var timeoutFn = function()
-    	                                {
-    	                                    debug('asegurados filtro change:',val);
-    	                                    var grid = comp.up('grid');
-    	                                    debug('grid:',grid);
-    	                                    var filterFn = '';
-    	                                    if(Ext.isEmpty(val))
-    	                                    {
-    	                                        filterFn = function(rec)
-    	                                        {
-    	                                            debug('funcion true');
-    	                                            return true;
-    	                                        };
-    	                                    }
-    	                                    else
-    	                                    {
-    	                                        filterFn = function(record, id)
-    			                                {
-    			                                    var nombre  = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
-    			                                    var nombre2 = record.get('SEGUNDO_NOMBRE').toUpperCase().replace(/ /g,'');
-    			                                    var apat    = record.get('APELLIDO_PATERNO').toUpperCase().replace(/ /g,'');
-    			                                    var amat    = record.get('APELLIDO_MATERNO').toUpperCase().replace(/ /g,'');
-    			                                    
-    			                                    var filtro = val.toUpperCase().replace(/ /g,'');
-    			                                    var posNombre = (nombre+nombre2+apat+amat).lastIndexOf(filtro);
-    			                                    
-    			                                    if(posNombre > -1)
-    			                                    {
-    			                                        return true;
-    			                                    }
-    			                                    else
-    			                                    {
-    			                                        return false;
-    			                                    }
-    			                                };
-    			                            }		                            
-    	                                };                                
-    	                                clearTimeout(comp.timeoutFn);
-    	                                comp.timeoutFn = setTimeout(timeoutFn,3000);
-    	                            }
+    	                    }, //CODIGO DEL BOTON BUSCAR
+    	                    {
+    	                    	//agregar boton buscar
+    	                    	xtype : 'button',
+    	                        text: 'Buscar',
+    	                        handler : function() {
+    	                        	var store = this.up('grid').getStore();
+    	                        	debug('grid',store);
+								    
+    	                        	store.proxy.url = _p21_urlCargarAseguradosFiltroGrupoPag;
+								    var nombreField = 'textFieldBuscar'+record.get('letra');
+								    debug('nombreField', nombreField);
+								    var valorFiltro = this.up('grid').down().getComponent(nombreField).getValue();
+								    
+								    debug('_p21_filtroGrupoPag',_p21_filtroGrupoPag);
+								    debug('valorFiltro',valorFiltro);
+								    
+								    //recargo el store
+								    store.load({
+										proxy:
+										{
+										    url         : _p21_urlCargarAseguradosFiltroGrupoPag
+											
+										}
+										,params   :
+										{
+											'smap1.filtro'         :  _p21_filtroGrupoPag
+											,'smap1.valorFiltro'   :  valorFiltro
+										}	
+										,reader      :
+		    	   						{
+		    	   							type             : 'json'
+		    	   							,root            : 'slist1'
+		    	   							,successProperty : 'success'
+		    	   							,messageProperty : 'respuesta'
+		    	   							,totalProperty   : 'total'
+		    	   						}
+									});
     	                        }
     	                    }
     	                ]
@@ -7058,7 +7057,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     	                    ,proxy      :
     	                    {
     	                        type         : 'ajax'
-    	   						/* ,url         : _p21_urlCargarAseguradosGrupo */
+    	   				        /* ,url         : _p21_urlCargarAseguradosGrupo */
     	   						,url         : _p21_urlCargarAseguradosGrupoPag
     	   						,callbackKey : 'callback'
     	   						,extraParams :
@@ -7590,53 +7589,6 @@ function _p21_editarExclusiones(grid,row)
         }
     });
     debug('<_p21_editarExclusiones');
-}
-
-function _p21_crearVentanaClausulas()
-{
-    debug('>_p21_crearVentanaClausulas<');
-    
-    _ventanaClausulas = Ext.create('Ext.window.Window',
-    {
-        title   : 'Exclusiones/Extraprimas (Cl&aacute;usulas)'
-        ,width  : 800
-        ,height : 500
-        ,modal  : true
-        ,loader : {
-                url       : _p21_urlEditarExclusiones
-                ,params   :
-                {
-                    'smap1.pv_cdunieco'      : _p21_smap1.cdunieco
-                    ,'smap1.pv_cdramo'       : _p21_smap1.cdramo
-                    ,'smap1.pv_estado'       : _p21_smap1.estado
-                    ,'smap1.pv_nmpoliza'     : _p21_smap1.nmpoliza
-                    ,'smap1.pv_nmsituac'     : '0'
-                    ,'smap1.pv_nmsuplem'     : Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem
-                    ,'smap1.pv_cdperson'     : ''
-                    ,'smap1.pv_cdrol'        : ''
-                    ,'smap1.nombreAsegurado' : 'POLIZA'
-                    ,'smap1.cdrfc'           : ''
-                }
-                ,scripts  : true
-                ,autoLoad : true
-            }
-        /*,loader :
-        {
-            scripts   : true
-            ,autoLoad : true
-            ,url      : _p21_urlPantallaClausulasPoliza
-            ,params   :
-            {
-                'smap1.cdunieco'  : _p21_smap1.cdunieco
-                ,'smap1.cdramo'   : _p21_smap1.cdramo
-                ,'smap1.estado'   : _p21_smap1.estado
-                ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-                ,'smap1.nmsuplem' : Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem
-            }
-        }*/
-    }).show();
-    
-    centrarVentanaInterna(_ventanaClausulas);
 }
 
 /*

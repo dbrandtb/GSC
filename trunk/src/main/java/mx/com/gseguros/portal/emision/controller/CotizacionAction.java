@@ -24,6 +24,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,7 @@ import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
+import mx.com.gseguros.portal.consultas.model.AseguradosFiltroVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
@@ -13467,6 +13470,82 @@ public class CotizacionAction extends PrincipalCoreAction
         return SUCCESS;
     }
 	  
+	/*
+    @Action(value   = "cargarAseguradosFiltroGrupoPag",
+            results = {
+                @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+                @Result(name="success" , location="/jsp-script/proceso/templates/template.jsp")
+            })
+    */
+	public String cargarAseguradosFiltroGrupoPag()
+	{
+		try
+			{
+				// validar sesion
+		        UserVO usuarioSesion = Utils.validateSession(session);
+		        
+		        Utils.validate(smap1, "No hay datos");        
+				//message = "Correcto";
+				logger.info(""
+						+ "\n############################################"
+						+ "\n###### cargarAseguradosFiltroGrupoPag ######");
+				
+				//AseguradosFiltroVO asegurados=consultasAseguradoFiltroManager.cargarAseguradosFiltroGrupo(
+				AseguradosFiltroVO asegurados=cotizacionManager.cargarAseguradosFiltroGrupo(
+						smap1.get("cdunieco")
+						,smap1.get("cdramo")
+						,smap1.get("estado")
+						,smap1.get("nmpoliza")
+						,smap1.get("nmsuplem")
+						,smap1.get("cdgrupo")
+						//,params.get("nmsitaux")
+						//,params.get("start")
+						//,params.get("limit")
+						,start
+						,limit
+						,smap1.get("filtro")
+						,smap1.get("valorFiltro")
+						);
+			
+				slist1 = asegurados.getAsegurados();
+				total = String.valueOf(asegurados.getTotal());
+				
+				for(Map<String,String>iAsegurado:slist1)
+			    {
+			    	String tpl = null;
+			    	if(StringUtils.isBlank(iAsegurado.get("TITULAR"))){
+			    		tpl = "Asegurados";
+			    	} else {
+			    		tpl = new StringBuilder()
+			    		        .append("Familia (")
+			    		        .append(iAsegurado.get("FAMILIA"))
+			    		        .append(") de ")
+    			    		    .append(iAsegurado.get("TITULAR"))
+			    		        .toString();
+			    	}
+			    	iAsegurado.put("AGRUPADOR",
+			    			new StringBuilder()
+			    	            .append(StringUtils.leftPad(iAsegurado.get("FAMILIA"),3,"0"))
+			    	            .append("_")
+			    	            .append(tpl)
+			    	            .toString());
+			    }
+				success = true;
+				exito= true;
+ 
+			}
+			catch(Exception e)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al cargar los asegurados del grupo #"+timestamp;
+				respuestaOculta = e.getMessage();
+				logger.error(respuesta,e);
+				//message = Utils.manejaExcepcion(e);
+			}
+		return SUCCESS;
+	}
+
 	
 	///////////////////////////////
 	////// getters y setters //////
