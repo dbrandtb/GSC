@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.mesacontrol.dao.impl.FlujoMesaControlDAOImpl;
+
 public interface FlujoMesaControlDAO {
 
 	/**
@@ -959,4 +961,8 @@ public interface FlujoMesaControlDAO {
     public void movimientoTflurevdocLote (List<Map<String, String>> lista) throws Exception;
     
     public void movimientoTflurevreqLote (List<Map<String, String>> lista) throws Exception;
+    
+    public void pruebaGuardarObjeto (FlujoMesaControlDAOImpl.AlvaroObj objeto) throws Exception;
+    
+    public void pruebaGuardarLista (List<FlujoMesaControlDAOImpl.AlvaroObj> lista) throws Exception;
 }

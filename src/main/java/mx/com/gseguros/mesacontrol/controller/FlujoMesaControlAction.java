@@ -2769,6 +2769,46 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
                                "\n##################################"));
 	    return SUCCESS;
 	}
+    
+    @Action(value   = "pruebaGuardarObjeto",
+            results = { @Result(name="success", type="json") }
+            )
+    public String pruebaGuardarObjeto () {
+        logger.debug(Utils.log("\n#################################",
+                               "\n###### pruebaGuardarObjeto ######",
+                               "\n###### flujo = ", flujo));
+        try {
+            flujoMesaControlManager.pruebaGuardarObjeto();
+            success = true;
+        } catch (Exception ex) {
+            message = Utils.manejaExcepcion(ex);
+        }
+        logger.debug(Utils.log("\n###### success = " , success,
+                               "\n###### message = " , message,
+                               "\n###### pruebaGuardarObjeto ######",
+                               "\n#################################"));
+        return SUCCESS;
+    }
+	
+	@Action(value   = "pruebaGuardarLista",
+            results = { @Result(name="success", type="json") }
+            )
+    public String pruebaGuardarLista () {
+        logger.debug(Utils.log("\n################################",
+                               "\n###### pruebaGuardarLista ######",
+                               "\n###### flujo = ", flujo));
+        try {
+            flujoMesaControlManager.pruebaGuardarLista();
+            success = true;
+        } catch (Exception ex) {
+            message = Utils.manejaExcepcion(ex);
+        }
+        logger.debug(Utils.log("\n###### success = " , success,
+                               "\n###### message = " , message,
+                               "\n###### pruebaGuardarLista ######",
+                               "\n################################"));
+        return SUCCESS;
+    }
 	
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
