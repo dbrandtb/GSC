@@ -3887,9 +3887,9 @@ function agregaCalendario(){
                  url     : _GLOBAL_COMP_URL_TURNAR
                  ,params : {
                      'params.NTRAMITE'  : ntramite,
-                     'params.CDTIPFLU'  : wineditarContratante.resRenova['cdtipflu'],
-                     'params.CDFLUJOMC' : wineditarContratante.resRenova['cdflujomc'],
-                     'params.STATUSOLD' : wineditarContratante.resRenova['estadomc'],
+                     'params.CDTIPFLU'  : winAutoServicio.resRenova['cdtipflu'],
+                     'params.CDFLUJOMC' : winAutoServicio.resRenova['cdflujomc'],
+                     'params.STATUSOLD' : winAutoServicio.resRenova['estadomc'],
                      'params.STATUSNEW' : '43'
                  }
                  ,success : function(response){
