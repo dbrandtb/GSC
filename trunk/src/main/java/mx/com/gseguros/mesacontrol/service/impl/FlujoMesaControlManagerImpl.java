@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.mesacontrol.dao.impl.FlujoMesaControlDAOImpl;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
@@ -3874,5 +3875,57 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	@Deprecated
 	public List<Map<String,String>> recuperaTtipflumc(String agrupamc, String cdtipmod) throws Exception {
 	    return flujoMesaControlDAO.recuperaTtipflumc(agrupamc, cdtipmod);
+	}
+    
+    @Override
+    public void pruebaGuardarObjeto () throws Exception {
+        String paso = null;
+        try {
+            paso = "Creando objeto";
+            FlujoMesaControlDAOImpl.AlvaroObj obj1 = new FlujoMesaControlDAOImpl.AlvaroObj();
+            obj1.setCdunieco(1000);
+            obj1.setCdramo(2);
+            obj1.setEstado("W");
+            obj1.setNmpoliza(123456);
+            
+            paso = "Enviando objeto";
+            flujoMesaControlDAO.pruebaGuardarObjeto(obj1);
+        } catch (Exception ex) {
+            Utils.generaExcepcion(ex, paso);
+        }
+    }
+	
+	@Override
+	public void pruebaGuardarLista () throws Exception {
+	    String paso = null;
+	    try {
+	        paso = "Creando lista";
+	        List<FlujoMesaControlDAOImpl.AlvaroObj> lista = new ArrayList<FlujoMesaControlDAOImpl.AlvaroObj>();
+	        FlujoMesaControlDAOImpl.AlvaroObj obj1 = new FlujoMesaControlDAOImpl.AlvaroObj();
+            obj1.setCdunieco(1001);
+            obj1.setCdramo(2);
+            obj1.setEstado("W");
+            obj1.setNmpoliza(123);
+            lista.add(obj1);
+            
+            FlujoMesaControlDAOImpl.AlvaroObj obj2 = new FlujoMesaControlDAOImpl.AlvaroObj();
+            obj2.setCdunieco(1002);
+            obj2.setCdramo(4);
+            obj2.setEstado("M");
+            obj2.setNmpoliza(456);
+            lista.add(obj2);
+            
+            FlujoMesaControlDAOImpl.AlvaroObj obj3 = new FlujoMesaControlDAOImpl.AlvaroObj();
+            obj3.setCdunieco(1003);
+            obj3.setCdramo(7);
+            obj3.setEstado("W");
+            obj3.setNmpoliza(789);
+            lista.add(obj3);
+            
+            paso = "Enviando lista";
+            flujoMesaControlDAO.pruebaGuardarLista(lista);
+	    } catch (Exception ex) {
+	        Utils.generaExcepcion(ex, paso);
+	    }
 	}
 }

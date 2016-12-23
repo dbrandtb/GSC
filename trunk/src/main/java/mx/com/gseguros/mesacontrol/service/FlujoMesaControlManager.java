@@ -414,4 +414,8 @@ public interface FlujoMesaControlManager
 	
 	@Deprecated
 	public List<Map<String,String>> recuperaTtipflumc(String agrupamc, String cdtipmod) throws Exception;
+    
+    public void pruebaGuardarObjeto () throws Exception;
+	
+	public void pruebaGuardarLista () throws Exception;
 }

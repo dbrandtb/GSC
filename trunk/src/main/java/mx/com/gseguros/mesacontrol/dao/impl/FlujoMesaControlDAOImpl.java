@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
+import org.springframework.data.jdbc.support.oracle.SqlStructValue;
 import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -4248,6 +4249,76 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
         {
             super(dataSource,"PKG_MESACONTROL.P_MOV_TFLUREVREQ_LOTE");
             declareParameter(new SqlParameter("array", OracleTypes.ARRAY, "LISTA_LISTAS_VARCHAR2"));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    public static class AlvaroObj {
+        private int cdunieco, cdramo, nmpoliza;
+        private String estado;
+        public int getCdunieco() {
+            return cdunieco;
+        }
+        public void setCdunieco(int cdunieco) {
+            this.cdunieco = cdunieco;
+        }
+        public int getCdramo() {
+            return cdramo;
+        }
+        public void setCdramo(int cdramo) {
+            this.cdramo = cdramo;
+        }
+        public int getNmpoliza() {
+            return nmpoliza;
+        }
+        public void setNmpoliza(int nmpoliza) {
+            this.nmpoliza = nmpoliza;
+        }
+        public String getEstado() {
+            return estado;
+        }
+        public void setEstado(String estado) {
+            this.estado = estado;
+        }
+    }
+    
+    @Override
+    public void pruebaGuardarObjeto (AlvaroObj objeto) throws Exception {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("pv_objeto_i", new SqlStructValue<AlvaroObj>(objeto));
+        ejecutaSP(new PruebaGuardarObjetoSP(getDataSource()), params);
+    }
+    
+    protected class PruebaGuardarObjetoSP extends StoredProcedure {
+        protected PruebaGuardarObjetoSP (DataSource dataSource) {
+            super(dataSource,"P_MESA_RECIBE_OBJETO");
+            declareParameter(new SqlParameter("pv_objeto_i", OracleTypes.STRUCT, "ALVAROOBJ"));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    // http://stackoverflow.com/questions/26773736/pass-array-as-input-parameter-to-an-oracle-stored-procedure-using-simple-jdbc-ca
+    // https://manthapavankumar.wordpress.com/2013/10/19/handling-oracle-stored-procedures-with-arrays-or-table-types-in-spring/
+    public void pruebaGuardarLista (List<AlvaroObj> lista) throws Exception {
+        Map<String, Object> params = new HashMap<String, Object>();
+        AlvaroObj[] array = new AlvaroObj[lista.size()];
+        int i = 0;
+        for (AlvaroObj obj : lista) {
+            array[i++] = obj;
+        }
+        params.put("pv_lista_i", new SqlArrayValue<AlvaroObj>(array, "ALVAROOBJ"));
+        ejecutaSP(new PruebaGuardarListaSP(getDataSource()), params);
+    }
+    
+    protected class PruebaGuardarListaSP extends StoredProcedure {
+        protected PruebaGuardarListaSP (DataSource dataSource) {
+            super(dataSource,"P_MESA_RECIBE_LISTA");
+            declareParameter(new SqlParameter("pv_lista_i", OracleTypes.ARRAY, "ALVAROTABLE"));
             declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             compile();
