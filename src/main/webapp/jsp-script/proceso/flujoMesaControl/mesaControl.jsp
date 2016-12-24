@@ -602,7 +602,7 @@ Ext.onReady(function()
                     listeners: {
                         beforeselect : function(chk, record, index, eOpts){
                             if(Ext.isEmpty(record.get('CDETAPA')) || record.get('CDETAPA') != '2'){
-                                showMessage("Aviso","Este tr\u00e1mite no puede seleccionarse puesto que no se encuetra en proceso para poder ser reasignado.", Ext.Msg.OK, Ext.Msg.INFO);                               
+                                showMessage("Reasignar tr\u00e1mite - Aviso","Este tr\u00e1mite no puede seleccionarse puesto que no se encuetra en proceso para poder ser reasignado.", Ext.Msg.OK, Ext.Msg.INFO);                               
                                 return false;
                             }
                         }
@@ -1687,7 +1687,9 @@ function _p54_mostrarCheckDocumentosInicial (ntramite) {
             var _p54_grid = _fieldById('_p54_grid');
             _p54_grid.getSelectionModel().deselectAll();
             debug('select', indexRecord, '.');
-            _p54_grid.getSelectionModel().select(indexRecord);
+            
+            _p54_grid.fireEvent('cellclick',null, null, 1, _p54_store.getAt(indexRecord));
+            //_p54_grid.getSelectionModel().select(indexRecord);
             
             ck = 'Recuperando checklist de documentos';
             mask = _maskLocal(ck);
