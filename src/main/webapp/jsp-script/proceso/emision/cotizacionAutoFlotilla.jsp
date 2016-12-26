@@ -1120,7 +1120,11 @@ Ext.onReady(function()
         {
             itemId      : '_p30_grid'
             ,title      : 'INCISOS'
-            ,tbar       : _p30_gridTbarItems
+            ,tbar       : {
+                layout: 'anchor',
+                defaults: { margin:'2 2 0 0' },
+                items: _p30_gridTbarItems
+            }
             ,bbar       :
             [
                 {
@@ -1491,7 +1495,7 @@ Ext.onReady(function()
                 }
             ]
             ,columns    : _p30_gridCols
-            ,height     : 300
+            ,height     : 330
             ,store      : _p30_store
             ,selModel   :
             {
