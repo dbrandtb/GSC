@@ -7,6 +7,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
+import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 
 public interface Ice2sigsService {
 
@@ -136,4 +137,29 @@ public interface Ice2sigsService {
 	 */
 	public RespuestaVO ejecutaWSreclamosTramite(String ntramite, Ice2sigsService.Operacion op, boolean async, UserVO userVO);
 	
+	/**
+	 * Ejecuta WS para actualizar informacion del folio consolidado en SIGS
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param sucursal
+	 * @param ntramite
+	 * @param async
+	 * @param userVO
+	 * @param reciboWrapper
+	 * @return
+	 */
+	public boolean ejecutaWSrecibos(
+	           String cdunieco, 
+	           String cdramo, 
+	           String estado, 
+	           String nmpoliza, 
+	           String nmsuplem,
+	           String sucursal, 
+	           String ntramite, 
+	           boolean async, 
+	           UserVO userVO, 
+	           ReciboWrapper reciboWrapper);
 }

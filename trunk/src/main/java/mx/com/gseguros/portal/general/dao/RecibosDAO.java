@@ -25,4 +25,19 @@ public interface RecibosDAO {
 	 */
 	public List<DetalleReciboVO> obtieneDetalleRecibo(Map<String, Object> params) throws Exception;
 
+	public List<Map<String, String>> obtenerDatosRecibosSISA(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+	
+	public String consolidarRecibos(List<Map<String, String>> lista) throws Exception;
+	
+	public void desconsolidarRecibos(String folio) throws Exception;
+	
+	public List<DetalleReciboVO> obtieneDetalleReciboSISA(String cdunieco, 
+	        String cdramo, 
+            String estado, 
+            String nmpoliza,
+            String nmrecibo,
+            String nmfolcon) throws Exception;
+	
+	public List<Map<String, String>> obtenerInfoRecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String nmrecibo, String nmsuplem) throws Exception;
+	
 }

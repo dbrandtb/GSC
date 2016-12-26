@@ -283,7 +283,16 @@
                 </param>
             </result>
         </action>
-        
+        <action name="obtenerDatosRecibosSISA" class="ConsultasPolizaAction"
+            method="obtenerDatosRecibosSISA">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    loadList.*,
+                    success
+                </param>
+            </result>
+        </action>
 	</package>
 
 </struts>
