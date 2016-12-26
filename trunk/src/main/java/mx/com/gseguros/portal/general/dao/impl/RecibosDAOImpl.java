@@ -10,6 +10,15 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.StoredProcedure;
+
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.dao.RecibosDAO;
@@ -21,14 +30,9 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 import oracle.jdbc.driver.OracleTypes;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.StoredProcedure;
-
 public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
+    
+    private static final Logger logger = LoggerFactory.getLogger(RecibosDAOImpl.class);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -310,21 +314,21 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
             if(cal != null){
                 recibo.setFecEmi(cal);
             }else{
-                logger.error("NO SE PUDO PARSEAR LA FECHA fecEmi !!! " + rs.getString("fecEmi"));
+                logger.warn("NO SE PUDO PARSEAR LA FECHA fecEmi !!! " + rs.getString("fecEmi"));
             }
             
             cal = Utils.getCalendarTimeZone0(rs.getString("fecIni"), Constantes.FORMATO_FECHA);
             if(cal != null){
                 recibo.setFecIni(cal);
             }else{
-                logger.error("NO SE PUDO PARSEAR LA FECHA fecIni !!! " + rs.getString("fecIni"));
+                logger.warn("NO SE PUDO PARSEAR LA FECHA fecIni !!! " + rs.getString("fecIni"));
             }
         
             cal = Utils.getCalendarTimeZone0(rs.getString("fecPag"), Constantes.FORMATO_FECHA);
             if(cal != null){
                 recibo.setFecPag(cal);
             }else{
-                logger.error("NO SE PUDO PARSEAR LA FECHA fecPag se envia 01/01/1900 !!! " + rs.getString("fecPag"));
+                logger.warn("NO SE PUDO PARSEAR LA FECHA fecPag se envia 01/01/1900 !!! " + rs.getString("fecPag"));
                 recibo.setFecPag(Utils.getCalendarTimeZone0("01/01/1900", Constantes.FORMATO_FECHA));
             }
             
@@ -332,14 +336,14 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
             if(cal != null){
                 recibo.setFecSta(cal);
             }else{
-                logger.error("NO SE PUDO PARSEAR LA FECHA fecSta !!! " + rs.getString("fecSta"));
+                logger.warn("NO SE PUDO PARSEAR LA FECHA fecSta !!! " + rs.getString("fecSta"));
             }
             
             cal = Utils.getCalendarTimeZone0(rs.getString("fecTer"), Constantes.FORMATO_FECHA);
             if(cal != null){
                 recibo.setFecTer(cal);
             }else{
-                logger.error("NO SE PUDO PARSEAR LA FECHA fecTer !!! " + rs.getString("fecTer"));
+                logger.warn("NO SE PUDO PARSEAR LA FECHA fecTer !!! " + rs.getString("fecTer"));
             }
                 
                 
