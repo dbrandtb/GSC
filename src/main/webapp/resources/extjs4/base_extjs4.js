@@ -2506,11 +2506,11 @@ function _procesaAccion(
                                                                 {
                                                                     text      : 'DOCUMENTO',
                                                                     dataIndex : 'DESCRIP',
-                                                                    flex      : 1
+                                                                    flex      : 70
                                                                 }, {
                                                                     text      : 'OBLIGATORIO',
                                                                     dataIndex : 'SWOBLIGA',
-                                                                    width     : 100,
+                                                                    flex      : 13,
                                                                     renderer  : function (v)
                                                                     {
                                                                         var r = '';
@@ -2522,7 +2522,7 @@ function _procesaAccion(
                                                                 }, {
                                                                     text      : 'CARGADO',
                                                                     dataIndex : 'SWACTIVO',
-                                                                    width     : 100,
+                                                                    flex      : 10,
                                                                     renderer  : function (v, md, rec)
                                                                     {
                                                                         var r = '';
@@ -2535,7 +2535,7 @@ function _procesaAccion(
                                                                         return r;
                                                                     }
                                                                 }, {
-                                                                    width     : 30,
+                                                                    flex      : 7,
                                                                     dataIndex : 'SWACTIVO',
                                                                     renderer  : function (v, md, rec, row)
                                                                     {
