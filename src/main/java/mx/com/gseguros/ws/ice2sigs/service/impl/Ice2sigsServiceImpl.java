@@ -56,9 +56,12 @@ import mx.com.gseguros.ws.model.WrapperResultadosWS;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.apache.xpath.operations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Ice2sigsServiceImpl implements Ice2sigsService {
 	
@@ -1196,7 +1199,117 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 
 		return res;
 	}
+	
+   @Override
+   public boolean ejecutaWSrecibos(
+           String cdunieco, 
+           String cdramo, 
+           String estado, 
+           String nmpoliza, 
+           String nmsuplem,
+           String sucursal, 
+           String ntramite, 
+           boolean async, 
+           UserVO userVO, 
+           ReciboWrapper reciboWrapper) {
+        
+        boolean allInserted = true;
+        String cdtipsit = null;
+        String cdtipsitGS = null;
+        
+        logger.debug("*** Entrando a metodo Recibos WS ice2sigs, para la poliza: " + nmpoliza + " sucursal: " + sucursal + "***");
+        
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pv_cdunieco_i", cdunieco);
+        params.put("pv_cdramo_i", cdramo);
+        params.put("pv_estado_i", estado);
+        params.put("pv_nmpoliza_i", nmpoliza);
+        params.put("pv_nmsuplem_i", nmsuplem);
+        params.put("pv_ntramite_i", ntramite);	        
+        WrapperResultadosWS resultWS = null;
 
+        String usuario = "SIN USUARIO";
+        if(userVO != null){
+            usuario = userVO.getUser();
+        }
+        
+        if(async){
+            params.put("USUARIO", usuario);
+        }
+        
+        boolean comisionAgentes = false;
+        Recibo recibo = reciboWrapper.getRecibo();
+        Operacion operacion = Operacion.valueOf(reciboWrapper.getOperacion());
+        
+        if(recibo.getNumAgt() == -2){
+            comisionAgentes = true;
+        }
+        
+        try{	                
+            if(async){
+                // Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
+                HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
+                paramsBitacora.putAll(params);
+                paramsBitacora.put("NumRec", recibo.getNumRec());
+                paramsBitacora.put("TipEnd", recibo.getTipEnd());
+                paramsBitacora.put("NumEnd", recibo.getNumEnd());	                    
+                ejecutaReciboGS(operacion, recibo, paramsBitacora, async);
+            }else{
+                resultWS = ejecutaReciboGS(operacion, recibo, null, async);
+                ReciboRespuesta respuesta = (ReciboRespuesta) resultWS.getResultadoWS();
+                logger.debug("Resultado al ejecutar el WS Recibo: " + recibo.getNumRec() + " >>>" + respuesta.getCodigo() + " - " + respuesta.getMensaje());
+                logger.debug("XML de entrada: " + resultWS.getXmlIn());
+                if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
+                    logger.error("Guardando en bitacora el estatus");                    
+                    if(Estatus.LLAVE_DUPLICADA.getCodigo() != respuesta.getCodigo() ){
+                        allInserted =  false;
+                    }
+                    try {
+                        kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
+                                (String) params.get("pv_cdramo_i"),
+                                (String) params.get("pv_estado_i"),
+                                (String) params.get("pv_nmpoliza_i"),
+                                (String) params.get("pv_nmsuplem_i"),
+                                Ice2sigsService.TipoError.ErrWSrec.getCodigo(),
+                                "Error Recibo " + recibo.getNumRec() + 
+                                " TipEnd: "     + recibo.getTipEnd() + 
+                                " NumEnd: "     + recibo.getNumEnd() + 
+                                " >>> " + 
+                                respuesta.getCodigo() + " - "+ respuesta.getMensaje(),
+                                usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
+                                resultWS.getXmlIn(), Integer.toString(respuesta.getCodigo()));
+                    } catch (Exception e1) {
+                        logger.error("Error al insertar en Bitacora", e1);
+                    }
+                }
+            }
+        }catch(WSException e){
+            allInserted =  false;	                
+            logger.error("Error al insertar recibo: "+recibo.getNumRec()+" tramite: "+ntramite);
+            logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
+//            try {
+//                kernelManager.movBitacobro(
+//                        (String) params.get("pv_cdunieco_i"),
+//                        (String) params.get("pv_cdramo_i"),
+//                        (String) params.get("pv_estado_i"),
+//                        (String) params.get("pv_nmpoliza_i"),
+//                        (String) params.get("pv_nmsuplem_i"),
+//                        Ice2sigsService.TipoError.ErrWSrecCx.getCodigo(),
+//                        "Error Recibo " + recibo.getNumRec() + " TipEnd: " + recibo.getTipEnd() + " NumEnd: " + recibo.getNumEnd()
+//                                + " Msg: " + e.getMessage() + " ***Cause: "
+//                                + e.getCause(),
+//                         usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
+//                         e.getPayload(), null);
+//            } catch (Exception e1) {
+//                logger.error("Error al insertar en Bitacora", e1);
+//            }
+        }catch (Exception e){
+            allInserted =  false;
+            logger.error("Error Excepcion al insertar recibo: "+recibo.getNumRec()+" tramite: "+ntramite,e);
+        }
+        return allInserted;
+   }
+	
 	public String getEndpoint() {
 		return endpoint;
 	}

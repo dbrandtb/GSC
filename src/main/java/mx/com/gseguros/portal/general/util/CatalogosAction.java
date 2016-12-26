@@ -170,7 +170,8 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPO_BUSQUEDA_RENOVACION_INDIVIDUAL:
 				case CRITERIOS_RENOVACION_INDIVIDUAL:	
 				case CATALOGO_TRAFUDOC_CDFUNCI:
-				case TIPOS_PAGO_POLIZA_SIN_DXN_MULTIANUAL:    
+				case TIPOS_PAGO_POLIZA_SIN_DXN_MULTIANUAL:
+				case CATALOGO_ESTADOS_RECIBO:
 				case ZONAS_SUCURSALES:
 				case TAPOYO:
 					lista = catalogosManager.getTmanteni(cat);
