@@ -30,6 +30,9 @@ var _p54_tamanioPag = 10;
 var _p54_windowNuevo;
 var _p54_windowFormBase;
 var _p54_formularios = [];
+
+var _p54_btnReasigna = _p54_params.BTN_REASIGNAR == 'S'? true:false;
+
 ////// variables //////
 
 ////// overrides //////
@@ -611,7 +614,7 @@ Ext.onReady(function()
                 ,plugins: [{ptype : 'pagingselectpersist'}]
                 ,listeners :
                 {
-                 cellclick( cellsel, td, cellIndex, record, tr, rowIndex, e, eOpts )
+                 cellclick : function ( cellsel, td, cellIndex, record, tr, rowIndex, e, eOpts )
                     {
                      //Se cambia evento a Cellclick en vez de select y solo se permite seleccionar a la primer fila
                      // se carga ventana de tranite en el evento de cellclick fuera del checkbox
@@ -733,6 +736,9 @@ Ext.onReady(function()
             })
         ]
     });
+    
+    
+    
     ////// contenido //////
     
     ////// custom //////
@@ -742,6 +748,10 @@ Ext.onReady(function()
     
     var _p54_grid = _fieldById('_p54_grid');
     
+    if(!_p54_btnReasigna){
+        _p54_grid.headerCt.items.getAt(0).hide();
+    }
+ 
     var cdtipfluCmp    = _fieldByName('CDTIPFLU'  , _p54_windowNuevo),
         cdflujoCmp     = _fieldByName('CDFLUJOMC' , _p54_windowNuevo),
         cdtiptraCmp    = _fieldByName('CDTIPTRA'  , _p54_windowNuevo),

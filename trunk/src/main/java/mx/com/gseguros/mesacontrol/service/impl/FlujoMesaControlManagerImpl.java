@@ -1641,6 +1641,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				));
 		Map<String,Object> result = new HashMap<String,Object>();
+		Map<String,String> mapa = new HashMap<String,String>();
+		
 		String             paso   = null;
 		try
 		{
@@ -1722,6 +1724,16 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,null //orden
 					);
 			
+			boolean btnReasigna = false;
+			if(botones!=null && !botones.isEmpty()){
+			   for(ComponenteVO btn : botones){
+			       if("REASIGNA".equalsIgnoreCase(btn.getNameCdatribu())){
+			           btnReasigna =  true;
+			       }
+			   }
+			}
+			mapa.put("BTN_REASIGNAR", btnReasigna?"S":"N");
+			
 			paso = "Generando componentes";
 			logger.debug(paso);
 			
@@ -1753,7 +1765,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			items.put("botonesGrid" , gc.getButtons());
 			
-			Map<String,String> mapa = new HashMap<String,String>();
+			
 			if(cdsisrol.equals(RolSistema.AGENTE.getCdsisrol()))
 			{
 				mapa.put("CDAGENTE" , mesaControlDAO.cargarCdagentePorCdusuari(cdusuari));
