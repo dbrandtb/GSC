@@ -1021,6 +1021,15 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 }
             }
             
+            if(tvalopol.get("otvalor05").contains("PESOS"))
+            {
+                tvalopol.put("otvalor05","1");
+            }
+            else
+            {
+                tvalopol.put("otvalor05","2");
+            }
+            
             Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmpoliza, cdunieco, cdramo, cdtipsit);
             if(parame.get("Mensaje")!=null)
             {

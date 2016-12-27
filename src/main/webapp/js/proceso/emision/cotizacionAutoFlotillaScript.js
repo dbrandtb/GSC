@@ -37,7 +37,9 @@ function transformaSigsEnIce (sigs) {
             'parametros.pv_nmsuplem': '0',
             //parametros.pv_otvalorXY
             'parametros.pv_status': 'V',
-            'parametros.pv_swreduci': null
+            'parametros.pv_swreduci': null,
+            'cambio': sigs.smap1.tvalopol_4,
+            'moneda': sigs.smap1.tvalopol_5
         },
         slist2: [],
         success: true,
@@ -310,7 +312,7 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
                 ,diaDif
             )
         );
-        
+                
         if(maestra)
         {
             _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
@@ -332,10 +334,25 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         
         ck='Recuperando incisos base';
         var recordsAux = [];
-        for(var i in json.slist2)
+    	if(_p30_smap1.cdramo=='5')
         {
-        	if(_p30_smap1.cdramo=='5')
-            {
+           var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
+           if(itemsTatripol[1].fieldLabel == "MONEDA")
+           {
+           	  if(json.smap1.moneda == '1')
+           	  {
+              itemsTatripol[1].setValue('PESOS');
+              itemsTatripol[0].setValue(json.smap1.cambio)
+           	  }
+              else
+              {
+              itemsTatripol[1].setValue('DOLARES');
+              itemsTatripol[0].setValue(json.smap1.cambio)
+              }
+           }
+           
+           for(var i in json.slist2)
+           {
                if('|AF|PU|'.lastIndexOf('|'+json.slist2[i].CDTIPSIT+'|')!=-1)
                 {
                     if(json.slist2[i]['parametros.pv_otvalor02'] == '1')
@@ -362,8 +379,8 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
                           }
                     }
                 }
-            }
             recordsAux.push(new _p30_modelo(json.slist2[i]));
+            }
         }
         _p30_store.add(recordsAux);
         
