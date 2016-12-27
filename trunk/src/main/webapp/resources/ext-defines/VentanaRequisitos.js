@@ -3,7 +3,7 @@ Ext.define('VentanaRequisitos',
     extend         : 'Ext.window.Window'
     ,itemId        : '_c5_instance'
     ,closeAction   : 'destroy'
-    ,autoScroll    : true
+    //,autoScroll    : true
     ,collapsible   : true
     ,titleCollapse : true
     ,cls           : 'VENTANA_DOCUMENTOS_CLASS'
@@ -25,8 +25,8 @@ Ext.define('VentanaRequisitos',
             items : [
                 {
                     xtype       : 'grid',
-                    width       : 450,
-                    height      : 250,
+                    width       : 650,
+                    height      : 300,
                     autoScroll  : true,
                     columnLines : true,
                     selType    : 'cellmodel',
@@ -42,7 +42,7 @@ Ext.define('VentanaRequisitos',
                         {
                             text      : 'Requisito',
                             dataIndex : 'DSREQUISI',
-                            width     : 300
+                            flex      : 1
                         }, {
                             text      : 'Valor',
                             dataIndex : 'DSDATO',
