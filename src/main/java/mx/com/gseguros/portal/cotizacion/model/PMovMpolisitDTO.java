@@ -1,5 +1,8 @@
 package mx.com.gseguros.portal.cotizacion.model;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * ESPEJO DE PKG_SATELITES.P_MOV_MPOLISIT		
  * @author jair
@@ -99,20 +102,9 @@ public class PMovMpolisitDTO
 		        };
 	}
 
-	
-	
     @Override
     public String toString() {
-        return "PMovMpolisitDTO [cdunieco=" + cdunieco + ", cdramo=" + cdramo
-                + ", estado=" + estado + ", nmpoliza=" + nmpoliza
-                + ", nmsituac=" + nmsituac + ", nmsuplem=" + nmsuplem
-                + ", status=" + status + ", cdtipsit=" + cdtipsit
-                + ", swreduci=" + swreduci + ", cdagrupa=" + cdagrupa
-                + ", cdestado=" + cdestado + ", fefecsit=" + fefecsit
-                + ", fecharef=" + fecharef + ", cdgrupo=" + cdgrupo
-                + ", nmsituaext=" + nmsituaext + ", nmsitaux=" + nmsitaux
-                + ", nmsbsitext=" + nmsbsitext + ", cdplan=" + cdplan
-                + ", cdasegur=" + cdasegur + ", accion=" + accion + "]\n";
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
     }
 
     public String getNmsituac() {
