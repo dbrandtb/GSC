@@ -6,6 +6,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1949,7 +1951,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		return resp;
 	}
 	
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public ManagerRespuestaSlistSmapVO cotizarAutosFlotilla(
 			String cdusuari
 			,String cdsisrol
@@ -2169,9 +2172,28 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							,"30"                        //cdasegur
 							,"I"                         //accion
 							));
-				}
+		 		}
+		 	//ORDENAMOS LOS INCISOS
+			logger.debug("Lista mpolisit:\n"+listaPMovMpolisit.toString());
+		    Collections.sort(listaPMovMpolisit,new Comparator<PMovMpolisitDTO>()
+	         {
+	            public int compare(PMovMpolisitDTO a,PMovMpolisitDTO b)
+	            {
+	                int comp=0;
+	                if( Integer.parseInt(((PMovMpolisitDTO)a).getNmsituac()) < Integer.parseInt(((PMovMpolisitDTO)b).getNmsituac()))
+	                {
+	                    comp=-1;
+	                }
+	                else if(Integer.parseInt(((PMovMpolisitDTO)a).getNmsituac())>Integer.parseInt(((PMovMpolisitDTO)b).getNmsituac()))
+	                {
+	                    comp=1;
+	                }
+                    return comp;
+	            }
+	         });
+
 				paso = ("Insertando maestros de situacion en lote");
-				logger.debug("\nPaso: "+paso);
+				logger.debug("\nPaso: "+paso+listaPMovMpolisit.toString());
 				cotizacionDAO.movimientoMpolisitLote(listaPMovMpolisit);
 				logger.debug(Utils.log("Tiempo en mpolisit=",(System.currentTimeMillis()-inicioMpolisit)/1000d));
 			}
@@ -2246,8 +2268,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			logger.debug("\nPaso: "+paso);
 			cotizacionDAO.movimientoTbasvalsitLote(listaPInsertaTbasvalsit);
 			logger.debug(Utils.log("Tiempo en tbasvalsit=",(System.currentTimeMillis()-inicioTbasvalsit)/1000d));
-			
-			
 			
 			if(noTarificar==false)
 			{
@@ -2747,31 +2767,31 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							
 							sb.append(">").append(orCdtipsit);
 							String cellValue         = null;
-							Cell   nextCell          = row.getCell(col+1);
+							Cell   nextCell          = row.getCell(col+1);//TIPO SERVICIO
 							String nextCellValue     = null;
-							Cell   nextNextCell      = row.getCell(col+2);
+							Cell   nextNextCell      = row.getCell(col+2);//TIPO USO
 							String nextNextCellValue = null;
 							try
-							{
-								cellValue = cell.getStringCellValue();
-							}
-							catch(Exception ex)
-							{
-								sb.append("(E)");
-								try
-								{
-									double num = cell.getNumericCellValue();
-									cellValue  = String.format("%.0f",num);
-								}
-								catch(Exception ex2)
-								{
-									sb.append("(E)");
-									throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
-								}
-							}
+                            {
+                                cellValue = cell.getStringCellValue();
+                            }
+                            catch(Exception ex)
+                            {
+                                sb.append("(E)");
+                                try
+                                {
+                                    double num = cell.getNumericCellValue();
+                                    cellValue  = String.format("%.0f",num);
+                                }
+                                catch(Exception ex2)
+                                {
+                                    sb.append("(E)");
+                                    throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+                                }
+                            }
 							try
 							{
-								nextCellValue = nextCell.getStringCellValue();
+								nextCellValue = nextCell.getStringCellValue();//TIPO SERVICIO
 								if(!nextCellValue.isEmpty())
 								{
 									int firstWord = nextCellValue.indexOf(" ");
@@ -2787,6 +2807,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 //										System.out.println("Segunda palabra:"+secondWord);
 									}
 								}
+								
+//								paso = Utils.join("Recuperando tipo de situacion de la fila ",fila," Sistituyendo dato servicio del layout por el de BD segun tipo de uso y Amis");
+//								String servicio = consultasDAO.recuperarServicioXNegocioYAmis(cdtipram, tipolote)
+								
 							}
 							catch(Exception ex)
 							{
