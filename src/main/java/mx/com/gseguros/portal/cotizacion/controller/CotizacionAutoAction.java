@@ -1077,7 +1077,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 throw new ApplicationException(respuesta);
             }
             
-            if(!parame.isEmpty() && parame.get("Mensaje")==null && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 )
+            if(!parame.isEmpty() && parame.get("Mensaje")==null && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 && parame.get("RENPOLIEX")!=null && !parame.get("RENPOLIEX").isEmpty())
             {
                 List<String> cdtipsits = new ArrayList<String>();
                 for(Map<String,String> tipsit: slist1) 
