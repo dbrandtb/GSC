@@ -339,14 +339,14 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
            var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
            if(itemsTatripol[1].fieldLabel == "MONEDA")
            {
-           	  if(json.smap1.moneda == '1')
+           	  if(json.smap1.moneda == '2')
            	  {
-              itemsTatripol[1].setValue('PESOS');
+              itemsTatripol[1].setValue('DOLARES');
               itemsTatripol[0].setValue(json.smap1.cambio)
            	  }
               else
               {
-              itemsTatripol[1].setValue('DOLARES');
+              itemsTatripol[1].setValue('PESOS');
               itemsTatripol[0].setValue(json.smap1.cambio)
               }
            }

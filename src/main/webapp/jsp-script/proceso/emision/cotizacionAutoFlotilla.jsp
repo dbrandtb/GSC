@@ -4791,6 +4791,20 @@ function _p30_cotizar(sinTarificar)
                                     select       : _p30_tarifaSelect
                                     ,afterrender : function(me)
                                     {
+                                        if(!Ext.isEmpty(json.smap1.columna) && !Ext.isEmpty(json.smap1.fila))
+                                        {
+                                            var gridTarifas = _fieldById('_p30_gridTarifas').down('grid');
+                                            var sm = gridTarifas.getSelectionModel();
+                                            try{
+                                                if(sm.select({row:Number(json.smap1.fila),column:Number(json.smap1.columna)}))
+                                                 {
+                                                    sm.select({row:Number(json.smap1.fila),column:Number(json.smap1.columna)});
+                                                 }
+                                             }catch(e) {
+                                               debug("Excede rango fuera de la cuadricula de tarifas");
+                                             }
+                                        }
+                                        
                                         if(!Ext.isEmpty(_p30_flujo)) // && !sinTarificar===true)
                                         {
                                             _p30_actualizarCotizacionTramite(_p30_actualizarSwexiperTramite);
