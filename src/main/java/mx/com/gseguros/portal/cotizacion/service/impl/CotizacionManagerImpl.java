@@ -11319,6 +11319,147 @@ public class CotizacionManagerImpl implements CotizacionManager
         }
 		return asegurados;
 	}
+	
+	@Override
+	public List<Map<String,String>>cargarAseguradosFiltroExtraprimas(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			,String start
+			,String limit
+			,String filtro
+			,String valorFiltro)throws Exception
+	{
+		logger.debug(""
+				+ "\n#########################################"
+				+ "\n###### cargarAseguradosFiltroExtraprimas ######"
+				+ "\ncdunieco "+cdunieco
+				+ "\ncdramo "+cdramo
+				+ "\nestado "+estado
+				+ "\nnmpoliza "+nmpoliza
+				+ "\nnmsuplem "+nmsuplem
+				+ "\ncdgrupo "+cdgrupo
+				+ "\nstart "+start
+				+ "\nlimit "+limit
+				+ "\nfiltro "+filtro
+				+ "\nvalorFiltro "+valorFiltro
+				);
+		
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdgrupo"  , cdgrupo);
+		params.put("start"    , start);
+		params.put("limit"    , limit);
+		params.put("pv_dsatribu_i"    , filtro);
+		params.put("pv_otvalor_i"    , valorFiltro);
+		List<Map<String,String>> lista = cotizacionDAO.cargarAseguradosFiltroExtraprimas(params);		
+		logger.debug(""
+				+ "\nlista size "+lista.size()
+				+ "\n###### cargarAseguradosFiltroExtraprimas ######"
+				+ "\n#########################################"
+				);
+		return lista;
+	}
+	
+	@Override
+	public List<Map<String,String>> cargarAseguradosFiltroExtraprimas2(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdgrupo
+			,String start
+			,String limit
+			,String filtro
+			,String valorFiltro
+			) throws Exception
+	{
+		logger.info(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cargarAseguradosFiltroExtraprimas2 @@@@@@"
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdramo="   , cdramo
+				,"\n@@@@@@ estado="   , estado
+				,"\n@@@@@@ nmpoliza=" , nmpoliza
+				,"\n@@@@@@ nmsuplem=" , nmsuplem
+				,"\n@@@@@@ cdgrupo="  , cdgrupo
+				,"\n@@@@@@ start="  , start
+				,"\n@@@@@@ limit="  , limit
+				,"\n@@@@@@ filtro="  ,filtro
+				,"\n@@@@@@ valorFiltro="  , valorFiltro
+				));
+		
+		List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
+		
+		String paso = "Recuperando asegurados extraprima con filtro";
+		
+		//cargar situaciones grupo
+		try
+		{
+			List<Map<String,String>>situaciones=cotizacionDAO.cargarSituacionesFiltroGrupo(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplem
+					,cdgrupo
+					,start
+					,limit
+					,filtro
+					,valorFiltro);
+			
+			for(Map<String,String>situacion:situaciones)
+		    {
+		    	String tpl = null;
+		    	if(StringUtils.isBlank(situacion.get("titular")))
+		    	{
+		    		tpl = "Asegurados";
+		    	}
+		    	else
+		    	{
+		    		tpl = Utils.join(
+		    				"Familia (" , situacion.get("familia") , ") de " , situacion.get("titular")
+		    				);
+		    	}
+		    	situacion.put("agrupador",
+		    			Utils.join(StringUtils.leftPad(situacion.get("familia"),3,"0") , "_" , tpl)
+		    			);
+		    	
+		    	Map<String,String>editada=new HashMap<String,String>();
+		    	for(Entry<String,String>en:situacion.entrySet())
+		    	{
+		    		String key = en.getKey();
+		    		if(StringUtils.isNotBlank(key)
+		    				&&key.length()>"otvalor".length()
+		    				&&key.substring(0, "otvalor".length()).equals("otvalor")
+		    				)
+		    		{
+		    			editada.put(new StringBuilder("parametros.pv_").append(key).toString(),en.getValue());
+		    		}
+		    		else
+		    		{
+		    			editada.put(key,en.getValue());
+		    		}
+		    	}
+		    	lista.add(editada);
+		    }
+		}
+		catch(ApplicationException ax)
+		{
+			Utils.generaExcepcion(ax, paso);
+		}
+		
+		return lista;
+	}
+	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////

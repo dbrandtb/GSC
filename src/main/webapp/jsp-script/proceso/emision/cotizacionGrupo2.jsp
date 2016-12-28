@@ -95,6 +95,10 @@ var _p25_urlRefrescarCensoColectivo     = '<s:url namespace="/emision"         a
 var _p25_urlconsultaExtraprimOcup       = '<s:url namespace="/emision"         action="consultaExtraprimaOcup"            />';
 var _p25_urlReporte                     = '<s:url namespace="/consultasPoliza" action="consultaIncisosPoliza" />';
 
+var _p21_urlCargarAseguradosFiltroGrupoPag     = '<s:url namespace="/emision"         action="cargarAseguradosFiltroGrupoPag"      />';
+var _p21_urlCargarAseguradosFiltroExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosFiltroExtraprimas2"   />';
+var _p21_filtroGrupoPag     = 'NOMBRE ASEGURADO';
+
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
     ,_cotcol_urlPantallaActTvalosit = '<s:url namespace="/tvalosit" action="includes/pantallaActTvalosit" />'
@@ -5076,49 +5080,44 @@ function _p25_revisarAseguradosClic(grid,rowIndex)
                         xtype       : 'textfield'
                         ,fieldLabel : '<span style="color:white;">Buscar:</span>'
                         ,timeoutFn  : ''
-                        ,listeners  :
-                        {
-                            change : function(comp,val)
-                            {
-                                var timeoutFn = function()
-                                {
-                                    debug('extraprimas filtro change:',val);
-                                    var grid = comp.up('grid');
-                                    debug('grid:',grid);
-                                    var filterFn = '';
-                                    if(Ext.isEmpty(val))
-                                    {
-                                        filterFn = function(rec)
-                                        {
-                                            debug('funcion true');
-                                            return true;
-                                        };
-                                    }
-                                    else
-                                    {
-                                        filterFn = function(record)
-                                        {
-                                            var nombre = record.get('nombre').toUpperCase().replace(/ /g,'');
-                                            var filtro = val.toUpperCase().replace(/ /g,'');
-                                            var posNombre = nombre.lastIndexOf(filtro);
-                                            
-                                            debug('filtro result:',posNombre > -1);
-                                            
-                                            if(posNombre > -1)
-                                            {
-                                                return true;
-                                            }
-                                            else
-                                            {
-                                                return false;
-                                            }
-                                        };
-                                    }
-                                };
-                                
-                                clearTimeout(comp.timeoutFn);
-                                comp.timeoutFn = setTimeout(timeoutFn,3000);
-                            }
+                        ,itemId     : 'textFieldBuscar'+record.get('letra')
+                    }
+                    ,{
+                    	//agregar boton buscar extraprimas
+                    	xtype : 'button',
+                        text: 'Buscar',
+                        handler : function() {
+                        	var store = this.up('grid').getStore();
+                        	debug('grid',store);
+						    
+                        	store.proxy.url = _p21_urlCargarAseguradosFiltroExtraprimas;
+						    var nombreField = 'textFieldBuscar'+record.get('letra');
+						    debug('nombreField', nombreField);
+						    var valorFiltro = this.up('grid').down().getComponent(nombreField).getValue();
+						    debug('_p21_urlCargarAseguradosFiltroExtraprimas',_p21_urlCargarAseguradosFiltroExtraprimas);
+						    debug('valorFiltro',valorFiltro);
+						    
+						    //recargo el store
+						    store.load({
+								proxy:
+								{
+								    url         : _p21_urlCargarAseguradosFiltroExtraprimas
+									
+								}
+								,params   :
+								{
+									'smap1.filtro'         :  _p21_filtroGrupoPag
+									,'smap1.valorFiltro'   :  valorFiltro
+								}	
+								,reader      :
+    	   						{
+    	   							type             : 'json'
+    	   							,root            : 'slist1'
+    	   							,successProperty : 'success'
+    	   							,messageProperty : 'respuesta'
+    	   							,totalProperty   : 'total'
+    	   						}
+							});
                         }
                     }
                     <s:if test='%{getImap().containsKey("extraprimasColumns")&&getImap().get("extraprimasColumns")!=null}'>
@@ -6066,54 +6065,47 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
                 [
                     {
                         xtype       : 'textfield'
+	                    ,itemId     : 'textFieldBuscar'+record.get('letra') 
                         ,fieldLabel : '<span style="color:white;">Buscar:</span>'
                         ,timeoutFn  : ''
-                        ,listeners  :
-                        {
-                            change : function(comp,val)
-                            {
-                                var timeoutFn = function()
-                                {
-                                    debug('asegurados filtro change:',val);
-                                    var grid = comp.up('grid');
-                                    debug('grid:',grid);
-                                    var filterFn = '';
-                                    if(Ext.isEmpty(val))
-                                    {
-                                        filterFn = function(rec)
-                                        {
-                                            debug('funcion true');
-                                            return true;
-                                        };
-                                    }
-                                    else
-                                    {
-                                        filterFn = function(record, id)
-                                        {
-                                            var nombre  = record.get('NOMBRE').toUpperCase().replace(/ /g,'');
-                                            var nombre2 = record.get('SEGUNDO_NOMBRE').toUpperCase().replace(/ /g,'');
-                                            var apat    = record.get('APELLIDO_PATERNO').toUpperCase().replace(/ /g,'');
-                                            var amat    = record.get('APELLIDO_MATERNO').toUpperCase().replace(/ /g,'');
-                                            
-                                            var filtro = val.toUpperCase().replace(/ /g,'');
-                                            var posNombre = (nombre+nombre2+apat+amat).lastIndexOf(filtro);
-                                            
-                                            if(posNombre > -1)
-                                            {
-                                                return true;
-                                            }
-                                            else
-                                            {
-                                                return false;
-                                            }
-                                        };
-                                    }
-                                    
-                                };
-                                
-                                clearTimeout(comp.timeoutFn);
-                                comp.timeoutFn = setTimeout(timeoutFn,3000);
-                            }
+                    },
+                    {
+                    	//agregar boton buscar
+                    	xtype : 'button',
+                        text: 'Buscar',
+                        handler : function() {
+                        	var store = this.up('grid').getStore();
+                        	debug('grid',store);
+						    
+                        	store.proxy.url = _p21_urlCargarAseguradosFiltroGrupoPag;
+						    var nombreField = 'textFieldBuscar'+record.get('letra');
+						    debug('nombreField', nombreField);
+						    var valorFiltro = this.up('grid').down().getComponent(nombreField).getValue();
+						    
+						    debug('_p21_filtroGrupoPag',_p21_filtroGrupoPag);
+						    debug('valorFiltro',valorFiltro);
+						    
+						    //recargo el store
+						    store.load({
+								proxy:
+								{
+								    url         : _p21_urlCargarAseguradosFiltroGrupoPag
+									
+								}
+								,params   :
+								{
+									'smap1.filtro'         :  _p21_filtroGrupoPag
+									,'smap1.valorFiltro'   :  valorFiltro
+								}	
+								,reader      :
+    	   						{
+    	   							type             : 'json'
+    	   							,root            : 'slist1'
+    	   							,successProperty : 'success'
+    	   							,messageProperty : 'respuesta'
+    	   							,totalProperty   : 'total'
+    	   						}
+							});
                         }
                     }
                 ]
