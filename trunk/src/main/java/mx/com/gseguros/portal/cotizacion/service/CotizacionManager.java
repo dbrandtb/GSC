@@ -1187,4 +1187,28 @@ public interface CotizacionManager
 			,String start
 			,String limit)throws Exception;
 
+	public List<Map<String, String>> cargarAseguradosFiltroExtraprimas(
+			String cdunieco
+			, String cdramo
+			, String estado
+			, String nmpoliza
+			, String nmsuplem
+			, String cdgrupo
+			, String start
+			, String limit
+			, String filtro
+			, String valorFiltro) throws Exception;
+
+	public List<Map<String, String>> cargarAseguradosFiltroExtraprimas2(
+			String cdunieco
+			, String cdramo
+			, String estado
+			, String nmpoliza
+			, String nmsuplem
+			, String cdgrupo
+			, String start
+			, String limit
+			, String filtro
+			, String valorFiltro) throws Exception;
+
 }

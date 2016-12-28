@@ -969,4 +969,19 @@ public interface CotizacionDAO {
     */
 
 	public AseguradosFiltroVO cargarAseguradosFiltroGrupo(HashMap<String, String> params) throws Exception;	
+	
+	public List<Map<String,String>>cargarAseguradosFiltroExtraprimas(Map<String,String>params)throws Exception;
+
+	public List<Map<String, String>> cargarSituacionesFiltroGrupo(
+			String cdunieco
+			, String cdramo
+			, String estado
+			, String nmpoliza
+			, String nmsuplem
+			, String cdgrupo
+			, String start
+			, String limit
+			, String filtro
+			, String valorFiltro) throws Exception;
+
 }

@@ -10250,13 +10250,14 @@ public class CotizacionAction extends PrincipalCoreAction
 						,estado   = null
 						,nmpoliza = null
 						,nmsuplem = null
-						,cdgrupo  = null;				
+						,cdgrupo  = null;
 				cdunieco = smap1.get("cdunieco");
 				cdramo   = smap1.get("cdramo");
 				estado   = smap1.get("estado");
 				nmpoliza = smap1.get("nmpoliza");
 				nmsuplem = smap1.get("nmsuplem");
 				cdgrupo  = smap1.get("cdgrupo");
+				
 				Utils.validate(
 						cdunieco  , "No se recibio la sucursal"
 						,cdramo   , "No se recibio el producto"
@@ -13556,7 +13557,209 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 
+	/** 
+	 *************cargarAseguradosExtraprimas****************
+	 ********************************************************
+	 **Carga los valores de asegurados y 
+	 **la informacion a nivel de situacion 
+	 **como lo son las extraprimas, ademas  
+	 **de agruparlos por familia para el
+	 **ramo multialud colectivo (MSC)
+	 * @return
+	 */
+	public String cargarAseguradosFiltroExtraprimas()
+	{
+		logger.debug(""
+				+ "\n###############################################"
+				+ "\n###### cargarAseguradosFiltroExtraprimas ######"
+				+ "\nsmap1: "+smap1
+				);
+		success = true;
+		exito   = true;
+		
+		if(exito)
+		{
+			try
+			{
+				Utils.validateSession(session);				
+				Utils.validate(smap1 , "No se recibieron datos");				
+				String cdunieco  = null
+						,cdramo   = null
+						,estado   = null
+						,nmpoliza = null
+						,nmsuplem = null
+						,cdgrupo  = null
+						,filtro   = null
+						,valorFiltro = null;				
+				cdunieco = smap1.get("cdunieco");
+				cdramo   = smap1.get("cdramo");
+				estado   = smap1.get("estado");
+				nmpoliza = smap1.get("nmpoliza");
+				nmsuplem = smap1.get("nmsuplem");
+				cdgrupo  = smap1.get("cdgrupo");
+				filtro  = smap1.get("filtro");
+				valorFiltro  = smap1.get("valorFiltro");
+				Utils.validate(
+						cdunieco  , "No se recibio la sucursal"
+						,cdramo   , "No se recibio el producto"
+						,estado   , "No se recibio el estado"
+						,nmpoliza , "No se recibio el numero de cotizacion"
+						,nmpoliza , "No se recibio el numero de cotizacion"
+						,nmpoliza , "No se recibio el numero de cotizacion"
+						,nmsuplem , "No se recibio el suplemento"
+						,cdgrupo  , "No se recibio la clave de grupo"
+						,filtro  , "No se recibio la clave de filtro"
+						//,valorFiltro  , "No se recibio la clave de valorFiltro"
+				);		
+				smap1.put("start", start);
+				smap1.put("limit", limit);
+			    slist1 = cotizacionManager.cargarAseguradosFiltroExtraprimas(
+			    		cdunieco
+			    		,cdramo
+			    		,estado
+			    		,nmpoliza
+			    		,nmsuplem
+			    		,cdgrupo
+			    		,start
+			    		,limit
+			    		,filtro
+			    		,valorFiltro
+			    		);
+			    for(Map<String,String>iAsegurado:slist1){
+			    	String tpl = null;
+			    	if(StringUtils.isBlank(iAsegurado.get("TITULAR"))){
+			    		tpl = "Asegurados";
+			    	}
+			    	else
+			    	{
+			    		tpl = new StringBuilder()
+	    	                    .append("Familia (")
+	    	                    .append(iAsegurado.get("FAMILIA"))
+	    	                    .append(") de ")
+	    	                    .append(iAsegurado.get("TITULAR"))
+	    	            		.toString();
+			    	}
+			    	iAsegurado.put("AGRUPADOR",
+			    			new StringBuilder()
+			    	            .append(StringUtils.leftPad(iAsegurado.get("FAMILIA"),3,"0"))
+			    	            .append("_")
+			    	            .append(tpl)
+			    	            .toString());
+			    }
+			    
+			    Map<String,String> total = null;
+			    if (slist1.size()>1){
+			    	total=slist1.remove(slist1.size()-1);
+				this.total = total.get("total");
+			    }
+						
+				exito   = true;
+				success = true;
+			}	
+			catch(Exception ex)
+			{
+				long timestamp  = System.currentTimeMillis();
+				exito           = false;
+				respuesta       = "Error al cargar extraprimas #"+timestamp;
+				respuestaOculta = ex.getMessage();
+				logger.error(respuesta,ex);
+			}
+		}
+		
+		logger.debug(""
+				+ "\n###### cargarAseguradosFiltroExtraprimas ######"
+				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
 	
+	/**
+	 ****************************************************
+	 ************cargarAseguradosExtraprimas2************
+	 ****************************************************
+	 **Paginado de la asegurados que muestra 
+	 **los valores por situacion como extraprimas,
+	 **ademas de agruparlos por familia.
+	 ****************************************************
+	 * @return
+	 */
+	public String cargarAseguradosFiltroExtraprimas2()
+	{
+		logger.debug(Utils.log(
+				 "\n##########################################"
+				,"\n###### cargarAseguradosFiltroExtraprimas2 ######"
+				,"\n###### smap1=" , smap1
+				));
+			
+		//datos completos
+		try
+		{
+			Utils.validateSession(session);
+			
+			Utils.validate(smap1 , "No se recibieron datos");
+			
+			String cdunieco  = null
+					,cdramo   = null
+					,estado   = null
+					,nmpoliza = null
+					,nmsuplem = null
+					,cdgrupo  = null
+					,filtro = null
+					,valorFiltro = null;
+			
+			cdunieco = smap1.get("cdunieco");
+			cdramo   = smap1.get("cdramo");
+			estado   = smap1.get("estado");
+			nmpoliza = smap1.get("nmpoliza");
+			nmsuplem = smap1.get("nmsuplem");
+			cdgrupo  = smap1.get("cdgrupo");
+			filtro  = smap1.get("filtro");
+			valorFiltro  = smap1.get("valorFiltro");
+			
+			Utils.validate(
+					cdunieco  , "No se recibio la sucursal"
+					,cdramo   , "No se recibio el producto"
+					,estado   , "No se recibio el estado"
+					,nmpoliza , "No se recibio el numero de cotizacion"
+					,nmsuplem , "No se recibio el suplemento"
+					,cdgrupo  , "No se recibio la clave de grupo"
+					,filtro  , "No se recibio la clave de filtro"
+					//,valorFiltro  , "No se recibio la clave de valorFiltro"
+			);		
+			smap1.put("start", start);
+			smap1.put("limit", limit);				
+			
+		    slist1 = cotizacionManager.cargarAseguradosFiltroExtraprimas2(
+		    		cdunieco
+		    		,cdramo
+		    		,estado
+		    		,nmpoliza
+		    		,nmsuplem
+		    		,cdgrupo
+		    		,start
+		    		,limit
+		    		,filtro
+		    		,valorFiltro
+		    		);
+		    
+		    
+		    Map<String,String> total = null;
+		    if (slist1.size()>1){
+		    	total=slist1.remove(slist1.size()-1);
+			this.total = total.get("total");
+		    }
+		
+			exito   = true;
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			respuesta = Utils.manejaExcepcion(ex);
+		}
+		
+		return SUCCESS;
+	}
+		
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/

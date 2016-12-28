@@ -100,7 +100,8 @@ var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         
 var _p21_urlRefrescarCensoColectivo      = '<s:url namespace="/emision"         action="refrescarCensoColectivo"          />';
 var _p21_urlReporte                 	 = '<s:url namespace="/consultasPoliza" action="consultaIncisosPoliza" />';
 
-var _p21_urlCargarAseguradosFiltroGrupoPag     = '<s:url namespace="/emision"         action="cargarAseguradosFiltroGrupoPag"		  />';
+var _p21_urlCargarAseguradosFiltroGrupoPag     = '<s:url namespace="/emision"         action="cargarAseguradosFiltroGrupoPag"      />';
+var _p21_urlCargarAseguradosFiltroExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosFiltroExtraprimas"   />';
 var _p21_filtroGrupoPag     = 'NOMBRE ASEGURADO';
 
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
@@ -6687,7 +6688,8 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
                         xtype       : 'textfield'
                         ,fieldLabel : '<span style="color:white;">Buscar:</span>'
                         ,timeoutFn  : ''
-                        ,listeners  :
+                        ,itemId     : 'textFieldBuscar'+record.get('letra')
+                        /*,listeners  :
                         {
                             change : function(comp,val)
                             {
@@ -6731,6 +6733,44 @@ function _p21_revisarAseguradosClic(grid,rowIndex)
 		                        clearTimeout(comp.timeoutFn);
 		                        comp.timeoutFn = setTimeout(timeoutFn,3000);
                             }
+                        }*/
+                    }
+                    ,{
+                    	//agregar boton buscar extraprimas
+                    	xtype : 'button',
+                        text: 'Buscar',
+                        handler : function() {
+                        	var store = this.up('grid').getStore();
+                        	debug('grid',store);
+						    
+                        	store.proxy.url = _p21_urlCargarAseguradosFiltroExtraprimas;
+						    var nombreField = 'textFieldBuscar'+record.get('letra');
+						    debug('nombreField', nombreField);
+						    var valorFiltro = this.up('grid').down().getComponent(nombreField).getValue();
+						    debug('_p21_urlCargarAseguradosFiltroExtraprimas',_p21_urlCargarAseguradosFiltroExtraprimas);
+						    debug('valorFiltro',valorFiltro);
+						    
+						    //recargo el store
+						    store.load({
+								proxy:
+								{
+								    url         : _p21_urlCargarAseguradosFiltroExtraprimas
+									
+								}
+								,params   :
+								{
+									'smap1.filtro'         :  _p21_filtroGrupoPag
+									,'smap1.valorFiltro'   :  valorFiltro
+								}	
+								,reader      :
+    	   						{
+    	   							type             : 'json'
+    	   							,root            : 'slist1'
+    	   							,successProperty : 'success'
+    	   							,messageProperty : 'respuesta'
+    	   							,totalProperty   : 'total'
+    	   						}
+							});
                         }
                     }
                     ,{
@@ -7004,7 +7044,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     	                        ,itemId     : 'textFieldBuscar'+record.get('letra') 
     	                        ,fieldLabel : '<span style="color:white;">Buscar:</span>'
     	                        ,timeoutFn  : ''
-    	                    }, //CODIGO DEL BOTON BUSCAR
+    	                    }, 
     	                    {
     	                    	//agregar boton buscar
     	                    	xtype : 'button',
