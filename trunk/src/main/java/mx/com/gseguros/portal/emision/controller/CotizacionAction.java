@@ -1715,28 +1715,38 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = resp.getRespuestaOculta();
 			if(exito)
 			{
+			    ArrayList<String> paqYplan = new ArrayList<String>();
 			    String columna="",fila="";//pauete
-			    if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null && !cdtipsit.equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit()) && !cdtipsit.equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit()))
+			    if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null)
 			    {
-			        List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
-			                cdusuari
-			                ,cdunieco
-			                ,cdramo
-			                ,"W"
-			                ,resp.getSmap().get("nmpoliza")
-			                ,cdelemen
-			                ,cdtipsit
-			                );
-			        logger.debug("listaResultados: "+listaResultados);
-			        
-			        ArrayList<String> paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsit, null);
-			        //pre sonbreado
-    	             columna = paqYplan.get(1);//forma Pago
-    	             fila= paqYplan.get(0);//pauete
-			        String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza"), cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-			        logger.debug(Utils.log(paqYplan));
-			        resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
-			        
+			        if(!cdtipsit.equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit()) && !cdtipsit.equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit()))
+			        {
+			            List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
+	                            cdusuari
+	                            ,cdunieco
+	                            ,cdramo
+	                            ,"W"
+	                            ,resp.getSmap().get("nmpoliza")
+	                            ,cdelemen
+	                            ,cdtipsit
+	                            );
+	                    logger.debug("listaResultados: "+listaResultados);
+	                    
+	                     paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsit, null);
+	                    //pre sonbreado
+	                     columna = paqYplan.get(1);//forma Pago
+	                     fila= paqYplan.get(0);//paquete
+	                    String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza"), cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+	                    logger.debug(Utils.log(paqYplan));
+	                    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
+			        }
+			        if(paqYplan.isEmpty())
+			        {  
+			            paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsit, null);
+			        }//pre sonbreado
+                    columna = paqYplan.get(1);//forma Pago
+                    fila= paqYplan.get(0);//paquete
+			      
 	                if(columna.equals("1P"))                              {columna="1";}//PRESTIGIO
 	                else if(columna.equals("1A") || columna.equals("2A")) {columna="2";}//CONFORT AMPLIA
 	                else if(columna.equals("3A"))                         {columna="3";}//CONFORT AMPLIA S/ROBO

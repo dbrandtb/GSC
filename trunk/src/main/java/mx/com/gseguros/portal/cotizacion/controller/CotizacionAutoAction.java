@@ -1021,13 +1021,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 }
             }
             
-            if(tvalopol.get("otvalor05").contains("PESOS"))
+            if(tvalopol.get("otvalor05").contains("DOLARES"))
             {
-                tvalopol.put("otvalor05","1");
+                tvalopol.put("otvalor05","2");
             }
             else
             {
-                tvalopol.put("otvalor05","2");
+                tvalopol.put("otvalor05","1");
             }
             
             Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmpoliza, cdunieco, cdramo, cdtipsit);
@@ -1086,12 +1086,44 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 throw new ApplicationException(respuesta);
             }
             
+            String columna="",fila="";//pauete
             if(!parame.isEmpty() && parame.get("Mensaje")==null && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 && parame.get("RENPOLIEX")!=null && !parame.get("RENPOLIEX").isEmpty())
             {
                 List<String> cdtipsits = new ArrayList<String>();
                 for(Map<String,String> tipsit: slist1) 
                 {cdtipsits.add(tipsit.get("cdtipsit"));}
+                
                 ArrayList<String> paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsits, null);
+                columna = paqYplan.get(1);//forma Pago
+                fila= paqYplan.get(0);//paquete
+                if(columna.equals("1P"))                              {columna="1";}//PRESTIGIO
+                else if(columna.equals("1A") || columna.equals("2A")) {columna="1";}//CONFORT AMPLIA
+                else if(columna.equals("3A"))                         {columna="1";}//CONFORT AMPLIA S/ROBO
+                else if(columna.equals("2L") || columna.equals("4L")) {columna="1";}//CONFORT LIMITA
+                else if(columna.equals("5B") || columna.equals("3B")) {columna="1";}//CONFORT BASICA
+//              else if(fila.equals("5BP"))                     {resp.getSmap().put("columna", "");}//CONFORT BASICA PLUS
+                
+                if(fila.equals("12"))      {fila="0";}//  Contado/Anual\r\n" + 
+                else if(fila.equals("2"))  {fila="1";}//  DXN Anual\r\n" + 
+                else if(fila.equals("10")) {fila="2";}//  DXN Semanal\r\n" + 
+                else if(fila.equals("1"))  {fila="3";}//  Mensual\r\n" + 
+                else if(fila.equals("13")) {fila="4";}//  Multianual\r\n" + 
+                else if(fila.equals("63")) {fila="6";}//  Semestral\r\n" + 
+                else if(fila.equals("3"))  {fila="7";}//  Trimestra\r\n" + 
+                else if(fila.equals("8"))  {fila="0";}//  DXN Mensual\r\n" + 
+                else if(fila.equals("61")) {fila="0";}//  Trimestral\r\n" + 
+                else if(fila.equals("98")) {fila="0";}//  Contado/Anual\r\n" + 
+                else if(fila.equals("4"))  {fila="0";}//  MENSUAL6\r\n" + 
+                else if(fila.equals("5"))  {fila="0";}//  ANUAL04\r\n" + 
+                else if(fila.equals("6"))  {fila="0";}//  DXN Quincenal\r\n" + 
+                else if(fila.equals("7"))  {fila="0";}//  DXN Catorcenal\r\n" + 
+                else if(fila.equals("9"))  {fila="0";}//  DXN 16 Dias\r\n" + 
+                else if(fila.equals("11")) {fila="0";}//  DXN Decenal\r\n" + 
+                else if(fila.equals("14")) {fila="0";}//  Mendual S/RF\r\n" + 
+                else if(fila.equals("62")) {fila="0";}//  Semanal\r\n" + 
+                else if(fila.equals("64")) {fila="0";}//  Contado\r\n" + 
+                else if(fila.equals("97")) {fila="0";}//  SEMESTRAL A\r\n" 
+                
                 List<Map<String,String>> listaResultados= resp.getSlist();
                 String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                 logger.debug(Utils.log(paqYplan));
@@ -1101,6 +1133,11 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             respuesta = resp.getRespuesta();
            
             smap1.putAll(resp.getSmap());
+            if(!fila.isEmpty() && !columna.isEmpty())
+            {
+                smap1.put("fila", fila);
+                smap1.put("columna", columna);
+            }
             slist1 = resp.getSlist();
         }
         catch(Exception ex)
