@@ -5565,7 +5565,7 @@ function _p30_comprar()
         ,comprarCdperpag       : _p30_selectedTarifa.get('CDPERPAG')
         ,comprarCdramo         : _p30_smap1.cdramo
         ,comprarCdciaaguradora : '20'
-        ,comprarCdunieco       : _p30_smap1.cdunieco
+        ,comprarCdunieco       : Ext.isEmpty(_p30_smap1.cdunieco) ? _p30_flujo.cdunieco : _p30_smap1.cdunieco
         ,cdtipsit              : _p30_smap1.cdtipsit
         ,'smap1.fechaInicio'   : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
         ,'smap1.fechaFin'      : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
@@ -5594,7 +5594,8 @@ function _p30_comprar()
         paramsComprar['flujo.nmsituac']  = _p30_flujo.nmsituac;
         paramsComprar['flujo.nmsuplem']  = _p30_flujo.nmsuplem;
     }
-    
+    debug('### Comprar:',paramsComprar);
+
     Ext.Ajax.request(
     {
         url      : _p30_urlComprar
