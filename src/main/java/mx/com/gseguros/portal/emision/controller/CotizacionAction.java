@@ -1743,9 +1743,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			        if(paqYplan.isEmpty())
 			        {  
 			            paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsit, null);
+			            columna = paqYplan.get(1);//forma Pago
+			            fila= paqYplan.get(0);//paquete
 			        }//pre sonbreado
-                    columna = paqYplan.get(1);//forma Pago
-                    fila= paqYplan.get(0);//paquete
 			      
 	                if(columna.equals("1P"))                              {columna="1";}//PRESTIGIO
 	                else if(columna.equals("1A") || columna.equals("2A")) {columna="2";}//CONFORT AMPLIA
