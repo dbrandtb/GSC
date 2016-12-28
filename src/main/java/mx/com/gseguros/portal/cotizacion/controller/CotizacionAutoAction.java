@@ -1103,26 +1103,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 else if(columna.equals("5B") || columna.equals("3B")) {columna="1";}//CONFORT BASICA
 //              else if(fila.equals("5BP"))                     {resp.getSmap().put("columna", "");}//CONFORT BASICA PLUS
                 
-                if(fila.equals("12"))      {fila="0";}//  Contado/Anual\r\n" + 
-                else if(fila.equals("2"))  {fila="1";}//  DXN Anual\r\n" + 
-                else if(fila.equals("10")) {fila="2";}//  DXN Semanal\r\n" + 
-                else if(fila.equals("1"))  {fila="3";}//  Mensual\r\n" + 
-                else if(fila.equals("13")) {fila="4";}//  Multianual\r\n" + 
-                else if(fila.equals("63")) {fila="6";}//  Semestral\r\n" + 
-                else if(fila.equals("3"))  {fila="7";}//  Trimestra\r\n" + 
-                else if(fila.equals("8"))  {fila="0";}//  DXN Mensual\r\n" + 
-                else if(fila.equals("61")) {fila="0";}//  Trimestral\r\n" + 
-                else if(fila.equals("98")) {fila="0";}//  Contado/Anual\r\n" + 
-                else if(fila.equals("4"))  {fila="0";}//  MENSUAL6\r\n" + 
-                else if(fila.equals("5"))  {fila="0";}//  ANUAL04\r\n" + 
-                else if(fila.equals("6"))  {fila="0";}//  DXN Quincenal\r\n" + 
-                else if(fila.equals("7"))  {fila="0";}//  DXN Catorcenal\r\n" + 
-                else if(fila.equals("9"))  {fila="0";}//  DXN 16 Dias\r\n" + 
-                else if(fila.equals("11")) {fila="0";}//  DXN Decenal\r\n" + 
-                else if(fila.equals("14")) {fila="0";}//  Mendual S/RF\r\n" + 
-                else if(fila.equals("62")) {fila="0";}//  Semanal\r\n" + 
-                else if(fila.equals("64")) {fila="0";}//  Contado\r\n" + 
-                else if(fila.equals("97")) {fila="0";}//  SEMESTRAL A\r\n" 
+                if(fila.equals("1"))      {fila="0";}//  Contado/Anual\r\n" + 
+                else if(fila.equals("4")) {fila="3";}//  Mensual\r\n" + 
+                else if(fila.equals("7")) {fila="3";}//  Mensual\r\n" + 
+                else if(fila.equals("2")) {fila="6";}//  Semestral\r\n" +
+                else if(fila.equals("5")) {fila="6";}//  Semestral\r\n" +
+                else if(fila.equals("3")) {fila="7";}//  Trimestra\r\n" + 
+                else if(fila.equals("6")) {fila="7";}//  Trimestral\r\n" + 
                 
                 List<Map<String,String>> listaResultados= resp.getSlist();
                 String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));

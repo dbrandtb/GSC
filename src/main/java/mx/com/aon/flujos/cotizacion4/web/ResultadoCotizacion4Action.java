@@ -860,6 +860,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     			,"\n###### comprar cotizacion ######"
     			,"\n###### smap1=" , smap1
     			,"\n###### flujo=" , flujo
+    			,"\n###### comprarNmpoliza=" , comprarNmpoliza
+    			,"\n###### comprarCdplan=" , comprarCdplan
+    			,"\n###### comprarCdperpag=" , comprarCdperpag
+    			,"\n###### comprarCdramo=" , comprarCdramo
+    			,"\n###### comprarCdciaaguradora=" , comprarCdciaaguradora
+    			,"\n###### comprarCdunieco=" , comprarCdunieco
+    			,"\n###### cdtipsit=" , cdtipsit
     			));
     	
     	exito   = true;
