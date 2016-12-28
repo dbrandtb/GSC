@@ -918,6 +918,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     					&&StringUtils.isNotBlank(comprarCdperpag)
     					&&smap1!=null;
     			
+    			logger.debug(Utils.log("Parametros compra:::: ","comprarCdunieco: ",comprarCdunieco,", comprarCdramo: ",comprarCdramo,", cdtipsit: ",cdtipsit,
+    			        ", comprarNmpoliza: ",comprarNmpoliza,", comprarCdciaaguradora: ",comprarCdciaaguradora,", comprarCdplan: ",comprarCdplan, ", comprarCdperpag: ",comprarCdperpag));
+    			
     			if(completos)
     			{
     				ntramite    = smap1.get("ntramite");
