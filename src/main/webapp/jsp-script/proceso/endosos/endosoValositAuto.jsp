@@ -254,6 +254,7 @@ Ext.onReady(function()
 		                                };
 		                                _p36_store.each(function(record){
 		                                    var valores = {};
+		                                    
 		                                    for(var key in record.data)
 		                                    {
 		                                        var value=record.data[key];
@@ -354,8 +355,8 @@ Ext.onReady(function()
 											Ext.Ajax.request({
 			                                	url     : _p29_urlObtieneValNumeroSerie,
 			                                	params :{
-													'smap1.numSerie'  : numSerie
-													,'smap1.feini'    : new Date()
+												'smap1.numSerie'  : numSerie
+												,'smap1.feini'    : new Date()
 												},
 												success : function(response){
 													var jsonNumSerie=Ext.decode(response.responseText);

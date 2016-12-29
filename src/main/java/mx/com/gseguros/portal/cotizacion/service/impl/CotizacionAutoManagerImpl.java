@@ -51,6 +51,7 @@ import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
@@ -64,6 +65,8 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleValue_Struc;
 import mx.com.gseguros.ws.nada.service.NadaService;
+import mx.com.gseguros.ws.tipocambio.client.axis2.TipoCambioWSServiceStub.ResponseTipoCambio;
+import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -127,6 +130,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	@Autowired
 	private SiniestrosDAO siniestrosDAO;
+	
+	@Autowired
+	private TipoCambioDolarGSService tipoCambioService;
 	
 	@Autowired
     private PersonasManager personasManager;
@@ -269,6 +275,24 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				} else {
 					logger.debug("No se agrega = {}", tatri.getNameCdatribu());
 				}
+				
+				///Para agregar funcionalidad similar a FRONTERIZOS en SERVICIO PUBLICO 
+				if("AT".equals(cdtipsit) && tatri.getNameCdatribu().equals("34")){
+				    
+				    ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
+                    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
+                    {
+                        tatri.setOculto(true);
+                        tatri.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
+                    }
+				}
+				
+				int cdatribu=Integer.parseInt(tatri.getNameCdatribu());
+				if("AT".equals(cdtipsit) && cdatribu>34 && cdatribu<=38){
+				    tatri.setOculto(true);
+				}
+				
+				
 			}
 			
 			tatrisit = aux;
@@ -657,6 +681,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				{
 					aux.add(tatri);
 				}
+				//para poder ver el numero de serie para el cdtipsit AT en emision
+				else if(tatri.getNameCdatribu().equals("35") && cdtipsit.equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())){
+	                        
+	              aux.add(tatri);
+	              
+	           }
+				
+				
 			}
 			tatrisit=aux;
 			

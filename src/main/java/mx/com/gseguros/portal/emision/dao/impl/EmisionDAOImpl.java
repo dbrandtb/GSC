@@ -13,6 +13,8 @@ import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
+import mx.com.gseguros.portal.emision.dao.impl.EmisionDAOImpl.InsertarMpoliimp;
+import mx.com.gseguros.portal.emision.dao.impl.EmisionDAOImpl.ObtieneDatosWsCotizacionServPublico;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
@@ -552,6 +554,156 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
             declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new GenericMapper(columnas)));
             declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public List<Map<String,String>> obtieneDatosWsCotizacionServPublico( String pv_cdunieco_i
+                                                    ,String pv_cdramo_i
+                                                    ,String pv_estado_i
+                                                    ,String pv_nmpoliza_i
+                                                    ,String pv_nmsuplem_i
+                                                    ,String pv_tipoend_i
+                                                    ,String pv_numend_i
+                                                    )throws Exception
+    {
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        
+        params.put("pv_cdunieco_i" , pv_cdunieco_i);
+        params.put("pv_cdramo_i"   , pv_cdramo_i);
+        params.put("pv_estado_i" , pv_estado_i);
+        params.put("pv_nmpoliza_i"   , pv_nmpoliza_i);
+        params.put("pv_nmsuplem_i" , pv_nmsuplem_i);
+        params.put("pv_tipoend_i"     , pv_tipoend_i);
+        params.put("pv_numend_i" , pv_numend_i);
+        
+       
+        Map<String,Object>procResult     = ejecutaSP(new ObtieneDatosWsCotizacionServPublico(getDataSource()),params);
+        List<Map<String,String>>registro = (List<Map<String,String>>)procResult.get("pv_registro_o");
+        return registro;
+    }
+    
+    protected class ObtieneDatosWsCotizacionServPublico extends StoredProcedure
+    {
+        protected ObtieneDatosWsCotizacionServPublico(DataSource dataSource)
+        {
+            super(dataSource, "PKG_CONSULTA.P_WS_COTIZACION_SERV_PUBLICO");
+            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_tipoend_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_numend_i"     , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+                    "idNegocio"
+                    ,"vigencia"
+                    ,"idAgente"
+                    ,"sucursal"
+                    ,"numPoliza"
+                    ,"ramo"
+                    ,"sucursalEmisora"
+                    ,"numEndoso"
+                    ,"tipoEndoso"
+                    ,"idMotivoEndoso"
+                    ,"cve_cli"
+                    ,"codigo"
+                    ,"idDireccion"
+                    ,"cveUsuarioCaptura"
+                    ,"descuentoAgente"
+                    ,"descuentoCliente"
+                    ,"descuentoFacultamiento"
+                    ,"porcentajeCesionComision"
+                    ,"idAgenteCompartido"
+                    ,"porcenComisionAgente2"
+                    ,"idEstatusCotizacion"
+                    ,"tipoProducto"
+                    ,"tipoProductoSpecified"
+                    ,"tipoServicio"
+                    ,"versionTarifa"
+                    ,"inicioVigencia"
+                    ,"inicioVigenciaSpecified"
+                    ,"finVigencia"
+                    ,"moneda"
+                    ,"renueva"
+                    ,"formaPago"
+                    ,"polizaTracto"
+                    ,"derechoPoliza"
+                    ,"iva"
+                    ,"pagoSubsecuente"
+                    ,"primaNeta"
+                    ,"primerPago"
+                    ,"recargoPagoFraccionado"
+                    ,"contarPAI"
+                    ,"nombreAlterno"
+                    ,"idTarifa"
+                    ,"udi"
+                    ,"multianual"
+                    ,"periodoGracia"
+                    ,"fondoEspecial"
+                    ,"nmsolici"
+                    ,"tipoCotizacion"
+                    ,"f1"
+                    ,"f2"
+                    ,"f3"
+                    ,"porcentajeBono"
+                    ,"idProveedorUdi"
+                    ,"tipoProveedorUdi"
+                    ,"idTipoValor"
+                    ,"modelo"
+                    ,"numMotor"
+                    ,"numSerie"
+                    ,"numPlacas"
+                    ,"numEconomico"
+                    ,"numOcupantes"
+                    ,"sarcvdias"
+                    ,"beneficiarioPref"
+                    ,"tipVehiCA"
+                    ,"tipoVehiculo"
+                    ,"tipoVehiculoSpecified"
+                    ,"valor"
+                    ,"conductor"
+                    ,"primaNetaInc"
+                    ,"aseguradoAlterno"
+                    ,"idTipoCarga"
+                    ,"adaptaciones"
+                    ,"equipoEspecial"
+                    ,"numSerieValido"
+                    ,"situacionRiesgo"
+                    ,"descripcion"
+                    ,"versionTarifaInc"
+                    ,"idConfiguracionPaquete"
+                    ,"seleccionado"
+                    ,"fechaFactura"
+                    ,"idCobertura"
+                    ,"idCoberturaSpecified"
+                    ,"seleccionadoCob"
+                    ,"deducible"
+                    ,"suma_asegurada"
+                    ,"prima_bruta"
+                    ,"prima_netaCob"
+                    ,"comision"
+                    ,"nmsituac"
+                    ,"numFolio"
+                    ,"vigencia"
+                    ,"idBanco"
+                    ,"mesesSinIntereses"
+                    ,"idOrigenSolicitud"
+                    ,"tipoUso"
+                    ,"clavegs"
+                    ,"amis"
+                    ,"derechoAgente"
+                    ,"derechoPromotor"
+                    ,"montoCedido"
+                    ,"cilindraje"
+                    ,"descuentoInciso"
+                    
+            };
+            
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             compile();
         }
     }
