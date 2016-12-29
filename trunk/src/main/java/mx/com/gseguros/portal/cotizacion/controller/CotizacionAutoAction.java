@@ -340,7 +340,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             
             Utils.validate(smap1, "No se recibieron datos");
             
-            String cdunieco = (StringUtils.isNotBlank(smap1.get("cdunieco")) ? smap1.get("cdunieco") : flujo.getCdunieco())
+            // Asignamos valor a smap1.cdunieco si viene vacio: 
+            if(StringUtils.isBlank(smap1.get("cdunieco"))) {
+                smap1.put("cdunieco", flujo.getCdunieco());
+                logger.debug("Nuevo valor de smap1.cdunieco: {}", smap1.get("cdunieco"));
+            }
+            String cdunieco = smap1.get("cdunieco")
                    ,cdramo   = smap1.get("cdramo")
                    ,cdtipsit = smap1.get("cdtipsit")
                    ,estado   = smap1.get("estado")
@@ -1410,7 +1415,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             
             Utils.validate(smap1, "No se recibieron datos");
             
-            String cdunieco = (StringUtils.isNotBlank(smap1.get("cdunieco")) ? smap1.get("cdunieco") : flujo.getCdunieco())
+            // Asignamos valor a smap1.cdunieco si viene vacio: 
+            if(StringUtils.isBlank(smap1.get("cdunieco"))) {
+                smap1.put("cdunieco", flujo.getCdunieco());
+                logger.debug("Nuevo valor de smap1.cdunieco: {}", smap1.get("cdunieco"));
+            }
+            String cdunieco = smap1.get("cdunieco")
                    ,cdramo   = smap1.get("cdramo")
                    ,cdtipsit = smap1.get("cdtipsit")
                    ,estado   = smap1.get("estado")
