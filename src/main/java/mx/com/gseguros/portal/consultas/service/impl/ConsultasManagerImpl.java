@@ -1122,7 +1122,21 @@ public class ConsultasManagerImpl implements ConsultasManager
 
     }
 
-	
-	
+    @Override
+    public String recuperarDstipsupPorCdtipsup(String cdtipsup) throws Exception{
+        return consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup);
+    }
+    
+    @Override
+    public String recuperarTramitePorNmsuplem(
+            String cdunieco
+            ,String cdramo
+            ,String estado
+            ,String nmpoliza
+            ,String nmsuplem
+            )throws Exception{
+        return consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
+                
+    }
 
 }

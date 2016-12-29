@@ -27,6 +27,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
@@ -45,6 +46,7 @@ import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
+import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
@@ -136,6 +138,12 @@ public class EndososAction extends PrincipalCoreAction
 	
 	@Autowired
 	private SiniestrosManager  siniestrosManager;
+
+	@Autowired
+	private EmisionManager    emisionManager;
+	
+	@Autowired
+    private FlujoMesaControlManager flujoMesaControlManager;
 	
 	private boolean exito           = false;
 	private String  respuesta;
@@ -13057,21 +13065,14 @@ public String retarificarEndosos()
 			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+",,0,"+ numEnd+",0";
 			logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 	
-			//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-			//paramsR.put("pv_cdunieco_i", cdunieco);
-			//paramsR.put("pv_cdramo_i",   cdramo);
-			//paramsR.put("pv_estado_i",   estado);
-			//paramsR.put("pv_nmpoliza_i", nmpoliza);
-			//paramsR.put("pv_nmsuplem_i", nmsuplem);
-			//paramsR.put("pv_feinici_i",  new Date());
-			//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-			//paramsR.put("pv_dsdocume_i", "Car\u00e1tula de P\u00f3liza");
-			//paramsR.put("pv_nmsolici_i", nmpoliza);
-			//paramsR.put("pv_ntramite_i",  ntramite);
-			//paramsR.put("pv_tipmov_i",    cdtipsup);
-			//paramsR.put("pv_swvisible_i", Constantes.SI);
+			String dstipsup = consultasManager.recuperarDstipsupPorCdtipsup(cdtipsup);
+            
+            StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
+                    "<br>Estimado(a) cliente,<br/><br/>").append(
+                    "Anexamos a este e-mail la documentaci\u00f3n del endoso de '").append(dstipsup).append("' realizado con GENERAL DE SEGUROS.<br/>").append(
+                    "Para visualizar los documentos favor de dar click en el link correspondiente.<br/>");
 			
-			//kernelManager.guardarArchivo(paramsR);
+			mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlCaratula).append(parametros).append("\">Car\u00e1tula de p\u00f3liza</a>");
 			
 			documentosManager.guardarDocumento(
 					cdunieco
@@ -13093,6 +13094,26 @@ public String retarificarEndosos()
 					,null
 					,null, false
 					);
+			
+			mensajeEmail.append(emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite));
+            
+            mensajeEmail.append("<br/><br/><br/>Agradecemos su preferencia.<br/>").append(
+                    "General de Seguros<br/>").append(
+                    "</span>");
+            
+            try {
+                String ntramiteEndoso =  consultasManager.recuperarTramitePorNmsuplem(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+                
+                flujoMesaControlManager.guardarMensajeCorreoEmision(
+                        ntramiteEndoso,
+                        Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail.toString())
+                );
+                
+                logger.debug("Enviando correos configurados");
+                flujoMesaControlManager.mandarCorreosStatusTramite(ntramiteEndoso, RolSistema.SUSCRIPTOR_AUTO.getCdsisrol(), false);
+            } catch (Exception ex) {
+                logger.debug("Error al enviar correos de estatus al turnar", ex);
+            }
 			
 		} catch (Exception e) {
 			logger.error("Error al generar la Caratula tipo B para el tipo de endoso: " + cdtipsup,e);
@@ -13140,6 +13161,13 @@ public String retarificarEndosos()
 				return false;
 			}
 			
+			String dstipsup = consultasManager.recuperarDstipsupPorCdtipsup(cdtipsup);
+			
+			StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
+                    "<br>Estimado(a) cliente,<br/><br/>").append(
+                    "Anexamos a este e-mail la documentaci\u00f3n del endoso de '").append(dstipsup).append("' realizado con GENERAL DE SEGUROS.<br/>").append(
+                    "Para visualizar los documentos favor de dar click en el link correspondiente.<br/>");
+			
 			for(Map<String,String> endosoIt : listaEndosos){
 				if(StringUtils.isNotBlank(endosoIt.get("IMPRIMIR")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("IMPRIMIR"))){
 
@@ -13174,22 +13202,7 @@ public String retarificarEndosos()
 					 */
 					parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-					
-					//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-					//paramsR.put("pv_cdunieco_i", cdunieco);
-					//paramsR.put("pv_cdramo_i",   cdramo);
-					//paramsR.put("pv_estado_i",   estado);
-					//paramsR.put("pv_nmpoliza_i", nmpoliza);
-					//paramsR.put("pv_nmsuplem_i", nmsuplem);
-					//paramsR.put("pv_feinici_i",  new Date());
-					//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-					//paramsR.put("pv_dsdocume_i", "Car\u00e1tula de P\u00f3liza ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")");
-					//paramsR.put("pv_nmsolici_i", nmpoliza);
-					//paramsR.put("pv_ntramite_i", ntramite);
-					//paramsR.put("pv_tipmov_i",   cdtipsup);
-					//paramsR.put("pv_swvisible_i", Constantes.SI);
-					
-					//kernelManager.guardarArchivo(paramsR);
+					mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlCaratula).append(parametros).append("\">Car\u00e1tula de p\u00f3liza</a>");
 					
 					documentosManager.guardarDocumento(
 							cdunieco
@@ -13244,6 +13257,10 @@ public String retarificarEndosos()
 							
 							logger.debug("URL Generada para Recibo "+reciboIt.get("NUMREC")+": "+ urlRecibo + parametros);
 							
+							if(Constantes.SI.equalsIgnoreCase(visible)){
+                                mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlRecibo).append(parametros).append("\">Recibo ").append(reciboIt.get("NUMREC")).append(" provisional de primas</a>");
+                            }
+							
 							documentosManager.guardarDocumento(
 									cdunieco
 									,cdramo
@@ -13277,10 +13294,7 @@ public String retarificarEndosos()
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 						
-						//paramsR.put("pv_cddocume_i", urlAp + parametros);
-						//paramsR.put("pv_dsdocume_i", "AP");
-						
-						//kernelManager.guardarArchivo(paramsR);
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlAp).append(parametros).append("\">Anexo cobertura de AP</a>");
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -13312,10 +13326,7 @@ public String retarificarEndosos()
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 						
-						//paramsR.put("pv_cddocume_i", urlCaic + parametros);
-						//paramsR.put("pv_dsdocume_i", "CAIC");
-						
-						//kernelManager.guardarArchivo(paramsR);
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlCaic).append(parametros).append("\">Anexo de cobertura RC USA</a>");
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -13347,6 +13358,8 @@ public String retarificarEndosos()
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para AEUA Inciso 1: "+ urlAeua + parametros);
 						
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlAeua).append(parametros).append("\">Asistencia en Estados Unidos y Canad\u00E1</a>");
+						
 						documentosManager.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -13376,10 +13389,7 @@ public String retarificarEndosos()
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
 						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
 						
-						//paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
-						//paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
-						
-						//kernelManager.guardarArchivo(paramsR);
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlIncisosFlot).append(parametros).append("\">Relaci\u00f3n de Incisos Flotillas</a>");
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -13452,6 +13462,8 @@ public String retarificarEndosos()
 										parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
 										logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 										
+										mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlTarjIdent).append(parametros).append("\">Tarjeta de Identificaci\u00f3n. ").append(desdeInciso).append(" - ").append(hastaInciso).append(" de ").append(numeroIncisos).append("</a>");
+										
 										documentosManager.guardarDocumento(
 												cdunieco
 												,cdramo
@@ -13481,6 +13493,8 @@ public String retarificarEndosos()
 									
 									parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
 									logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+									
+									mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlTarjIdent).append(parametros).append("\">Tarjeta de Identificaci\u00f3n.").append("</a>");
 									
 									documentosManager.guardarDocumento(
 											cdunieco
@@ -13515,6 +13529,8 @@ public String retarificarEndosos()
 							parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+numeroInciso;
 							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 							
+							mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlTarjIdent).append(parametros).append("\">Tarjeta de Identificaci\u00f3n.").append("</a>");
+							
 							documentosManager.guardarDocumento(
 									cdunieco
 									,cdramo
@@ -13543,6 +13559,8 @@ public String retarificarEndosos()
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("REDUCEGS")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("REDUCEGS"))){
 						
+					    mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.getText("manual.agente.txtinfocobredgs")).append("\">Reduce GS</a>");
+					    
 						documentosManager.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -13570,6 +13588,8 @@ public String retarificarEndosos()
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("GESTORIA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("GESTORIA"))){
 						
+					    mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.getText("manual.agente.txtinfocobgesgs")).append("\">Gestoria GS</a>");
+					    
 						documentosManager.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -13637,6 +13657,8 @@ public String retarificarEndosos()
 								,null
 								,null, false
 								);
+						
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.getText("manual.agente.condgralescobsegvida")).append("\">Condiciones Generales Seguro de Vida</a>");
 
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -13661,6 +13683,26 @@ public String retarificarEndosos()
 					}
 				}
 			}
+			
+			mensajeEmail.append(emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite));
+			
+			mensajeEmail.append("<br/><br/><br/>Agradecemos su preferencia.<br/>").append(
+                    "General de Seguros<br/>").append(
+                    "</span>");
+			
+			try {
+                String ntramiteEndoso =  consultasManager.recuperarTramitePorNmsuplem(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+                
+                flujoMesaControlManager.guardarMensajeCorreoEmision(
+                        ntramiteEndoso,
+                        Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail.toString())
+                );
+                
+                logger.debug("Enviando correos configurados");
+                flujoMesaControlManager.mandarCorreosStatusTramite(ntramiteEndoso, RolSistema.SUSCRIPTOR_AUTO.getCdsisrol(), false);
+            } catch (Exception ex) {
+                logger.debug("Error al enviar correos de estatus al turnar", ex);
+            }
 			
 		} catch (Exception e) {
 			logger.error("Error al generar las Caratulas de endoso: " + cdtipsup, e);

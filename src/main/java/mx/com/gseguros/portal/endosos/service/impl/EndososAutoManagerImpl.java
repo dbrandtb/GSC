@@ -26,6 +26,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
@@ -43,6 +44,7 @@ import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
+import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.endosos.model.PropiedadesDeEndosoParaWS;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
@@ -116,9 +118,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	private RehabilitacionDAO rehabilitacionDAO;
 	
 	@Autowired
-	private MesaControlManager mesaControlManager;
-	
-	@Autowired
 	private DocumentosManager documentosManager;
 	
 	@Autowired
@@ -135,13 +134,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	private AutosSIGSDAO autosSIGSDAO;
 		
 	@Autowired
-	private FlujoMesaControlDAO flujoMesaControlDAO;
-	
-	@Autowired
 	private DespachadorManager despachadorManager;
 	
 	@Autowired
-    private PersonasManager personasManager;
+    private EmisionManager    emisionManager;
+    
+    @Autowired
+    private FlujoMesaControlManager flujoMesaControlManager;
 	
 	@Value("${caratula.impresion.autos.url}")
 	private String urlImpresionCaratula;
@@ -2737,6 +2736,16 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String parametros = null;
 			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+",,0,"+ numEndoso+",0";
 			logger.debug("URL Generada para Caratula: "+ urlImpresionCaratulaEndosoB + parametros);
+			
+			String dstipsup = consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup);
+            
+            StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
+                    "<br>Estimado(a) cliente,<br/><br/>").append(
+                    "Anexamos a este e-mail la documentaci\u00f3n del endoso de '").append(dstipsup).append("' realizado con GENERAL DE SEGUROS.<br/>").append(
+                    "Para visualizar los documentos favor de dar click en el link correspondiente.<br/>");
+            
+            mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlImpresionCaratulaEndosoB).append(parametros).append("\">Car\u00e1tula de p\u00f3liza</a>");
+			
 			mesaControlDAO.guardarDocumento(
 					cdunieco
 					,cdramo
@@ -2755,6 +2764,26 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					,"0"
 					,Documento.EXTERNO_CARATULA_B, null, null, false
 					);
+			
+			mensajeEmail.append(emisionManager.generarLigasDocumentosEmisionLocalesIce(nmtramite));
+            
+            mensajeEmail.append("<br/><br/><br/>Agradecemos su preferencia.<br/>").append(
+                    "General de Seguros<br/>").append(
+                    "</span>");
+            
+            try {
+                String ntramiteEndoso =  consultasDAO.recuperarTramitePorNmsuplem(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+                
+                flujoMesaControlManager.guardarMensajeCorreoEmision(
+                        ntramiteEndoso,
+                        Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail.toString())
+                );
+                
+                logger.debug("Enviando correos configurados");
+                flujoMesaControlManager.mandarCorreosStatusTramite(ntramiteEndoso, RolSistema.SUSCRIPTOR_AUTO.getCdsisrol(), false);
+            } catch (Exception ex) {
+                logger.debug("Error al enviar correos de estatus al turnar", ex);
+            }
 		
 		}catch(Exception e){
 			logger.error("Error al guardar la caratula de endoso B",e);
@@ -3770,6 +3799,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				return false;
 			}
 			
+			String dstipsup = consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup);
+            
+            StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
+                    "<br>Estimado(a) cliente,<br/><br/>").append(
+                    "Anexamos a este e-mail la documentaci\u00f3n del endoso de '").append(dstipsup).append("' realizado con GENERAL DE SEGUROS.<br/>").append(
+                    "Para visualizar los documentos favor de dar click en el link correspondiente.<br/>");
+			
 			for(Map<String,String> endosoIt : listaEndosos){
 				if(StringUtils.isNotBlank(endosoIt.get("IMPRIMIR")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("IMPRIMIR"))){
 					
@@ -3802,6 +3838,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					
 					parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
+					
+					mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlCaratula).append(parametros).append("\">Car\u00e1tula de p\u00f3liza</a>");
+					
 					mesaControlDAO.guardarDocumento(
 							cdunieco
 							,cdramo
@@ -3851,6 +3890,11 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                             parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+(StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+reciboIt.get("NUMREC");
 							
 							logger.debug("URL Generada para Recibo "+reciboIt.get("NUMREC")+": "+ urlRecibo + parametros);
+							
+							if(Constantes.SI.equalsIgnoreCase(visible)){
+                                mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlRecibo).append(parametros).append("\">Recibo ").append(reciboIt.get("NUMREC")).append(" provisional de primas</a>");
+                            }
+							
 							mesaControlDAO.guardarDocumento(
 									cdunieco
 									,cdramo
@@ -3878,6 +3922,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					if(StringUtils.isNotBlank(endosoIt.get("AP")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("AP"))){
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
+						
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlAp).append(parametros).append("\">Anexo cobertura de AP</a>");
+						
 						mesaControlDAO.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -3905,6 +3952,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					if(StringUtils.isNotBlank(endosoIt.get("CAIC")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("CAIC"))){
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
+						
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlCaic).append(parametros).append("\">Anexo de cobertura RC USA</a>");
+						
 						mesaControlDAO.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -3931,6 +3981,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					if(StringUtils.isNotBlank(endosoIt.get("AEUA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("AEUA"))){
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
 						logger.debug("URL Generada para AEUA Inciso 1: "+ urlAeua + parametros);
+						
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlAeua).append(parametros).append("\">Asistencia en Estados Unidos y Canad\u00E1</a>");
+						
 						mesaControlDAO.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -3958,6 +4011,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						 */
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
 						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
+						
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlIncisosFlot).append(parametros).append("\">Relaci\u00f3n de Incisos Flotillas</a>");
+						
 						mesaControlDAO.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -4027,6 +4083,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 										parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
 										logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 										
+										mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlTarjIdent).append(parametros).append("\">Tarjeta de Identificaci\u00f3n. ").append(desdeInciso).append(" - ").append(hastaInciso).append(" de ").append(numeroIncisos).append("</a>");
+										
 										mesaControlDAO.guardarDocumento(
 												cdunieco
 												,cdramo
@@ -4054,6 +4112,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 									
 									parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
 									logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
+									
+									mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlTarjIdent).append(parametros).append("\">Tarjeta de Identificaci\u00f3n.").append("</a>");
 									
 									mesaControlDAO.guardarDocumento(
 											cdunieco
@@ -4086,6 +4146,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 							parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+numeroInciso;
 							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 							
+							mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlTarjIdent).append(parametros).append("\">Tarjeta de Identificaci\u00f3n.").append("</a>");
+							
 							mesaControlDAO.guardarDocumento(
 									cdunieco
 									,cdramo
@@ -4112,6 +4174,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					 * Para cobertura de reduce GS
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("REDUCEGS")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("REDUCEGS"))){
+					    
+					    mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlImpresionCobReduceGS).append("\">Reduce GS</a>");
+					    
 						mesaControlDAO.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -4137,6 +4202,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("GESTORIA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("GESTORIA"))){
 						
+					    mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlImpresionCobGestoriaGS).append("\">Gestoria GS</a>");
+					    
 						mesaControlDAO.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -4199,6 +4266,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,"0"
 								,Documento.EXTERNO_ESPECIF_SEGURO_VIDA, null, null, false
 								);
+						
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlImpresionCondicionesSegVida).append("\">Condiciones Generales Seguro de Vida</a>");
 
 						mesaControlDAO.guardarDocumento(
 								cdunieco
@@ -4222,6 +4291,25 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				}
 			}
 			
+			mensajeEmail.append(emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite));
+            
+            mensajeEmail.append("<br/><br/><br/>Agradecemos su preferencia.<br/>").append(
+                    "General de Seguros<br/>").append(
+                    "</span>");
+            
+            try {
+                String ntramiteEndoso =  consultasDAO.recuperarTramitePorNmsuplem(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+                
+                flujoMesaControlManager.guardarMensajeCorreoEmision(
+                        ntramiteEndoso,
+                        Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail.toString())
+                );
+                
+                logger.debug("Enviando correos configurados");
+                flujoMesaControlManager.mandarCorreosStatusTramite(ntramiteEndoso, RolSistema.SUSCRIPTOR_AUTO.getCdsisrol(), false);
+            } catch (Exception ex) {
+                logger.debug("Error al enviar correos de estatus al turnar", ex);
+            }
 			
 		}catch(Exception ex){
 			logger.error("Error al ejecutar caratula endoso con tarifa, para tipo de endoso: " + cdtipsup, ex);
