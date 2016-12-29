@@ -194,5 +194,30 @@ public interface ConsultasManager
     
     public boolean copiarArchivosRenovacionColectivo(String cduniecoOrigen, String cdramoOrigen, String estadoOrigen, 
             String nmpolizaOrigen, String ntramiteDestino, String rutaDocumentosDestino)throws Exception;
-	
+
+    /**
+     * Recupera la descripcion de un tipo de suplemento
+     * @param cdtipsup
+     * @return
+     * @throws Exception
+     */
+    public String recuperarDstipsupPorCdtipsup(String cdtipsup) throws Exception;
+    
+    /**
+     * Recupera tramite de endoso
+     * @param cdunieco
+     * @param cdramo
+     * @param estado
+     * @param nmpoliza
+     * @param nmsuplem
+     * @return
+     * @throws Exception
+     */
+    public String recuperarTramitePorNmsuplem(
+            String cdunieco
+            ,String cdramo
+            ,String estado
+            ,String nmpoliza
+            ,String nmsuplem
+            )throws Exception;
 }
