@@ -4041,7 +4041,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>atrixcam=new ArrayList<Map<String,String>>();
 		List<Map<String,String>>atrirang=new ArrayList<Map<String,String>>();
 	
-		if(cdtipsit.contains("AF") || cdtipsit.contains("PU"))
+		if(cdtipsit.contains("AF") || cdtipsit.contains("PU") ||(submarca.equals("00000") && clavegs.equals("00000")))
 		{
 			try 
 			{

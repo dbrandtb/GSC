@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import javax.sql.DataSource;
 
@@ -2745,7 +2746,45 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					map.put("DES_"+dsatribu, map.get("DSVALOR"+StringUtils.leftPad(String.valueOf(i), 2, "0")));
 				}
 			}
+			if(map.get("DES_MODELO")==null && map.get("DES_MODELO__FRONTERIZO_")!=null){
+			    String modelo=map.get("DES_MODELO__FRONTERIZO_");
+	            map.put("DES_MODELO", modelo);
+	            map.put("CLV_MODELO", modelo);
+	            String key =getKeyByValue(map, "MODELO").substring(8);
+	            logger.debug("key: -> "+key);
+                map.put("OTVALOR"+key,modelo);
+                map.put("DSVALOR"+key,modelo);
+	        }
+			if(map.get("DES_MARCA")==null && map.get("DES_MARCA__FRONTERIZO_")!=null){
+			    String marca = map.get("DES_MARCA__FRONTERIZO_");
+                map.put("DES_MARCA", marca );
+                map.put("CLV_MARCA", marca);
+                String keyMarca =getKeyByValue(map, "MARCA").substring(8);
+                map.put("OTVALOR"+keyMarca,marca);
+                map.put("DSVALOR"+keyMarca,marca);
+            }
+			if(map.get("DES_VERSION")==null && map.get("DES_VERSION__FRONTERIZO_")!=null){
+			    String version = map.get("DES_VERSION__FRONTERIZO_");
+                map.put("DES_VERSION", version);
+                map.put("CLV_VERSION", version);
+                String key =getKeyByValue(map, "VERSION").substring(8);
+                map.put("OTVALOR"+key,version);
+                map.put("DSVALOR"+key,version);
+            }
+			
 		}
+		logger.debug("lista--> "+lista);
+		
+		
+	}
+	
+	private <T, E> T getKeyByValue(Map<T, E> map, E value) {
+	    for (Entry<T, E> entry : map.entrySet()) {
+	        if (Objects.equals(value, entry.getValue())) {
+	            return entry.getKey();
+	        }
+	    }
+	    return null;
 	}
 	
 	@Override
