@@ -2077,51 +2077,6 @@ Ext.onReady(function()
             });
         }
         
-        //auto combo
-        if(_0_smap1.cdtipsit+'x'=='ATx')
-        {
-            _fieldByName('parametros.pv_otvalor22').on(
-            {
-                'select' : function(comp,arr)
-                {
-                    debug('auto seleccionado:',arr[0]);
-                    var value    = arr[0].get('value');
-                    var splt     = value.split(' - ');
-                    var tipo     = splt[1];
-                    var marca    = splt[2];
-                    var submarca = splt[3];
-                    var modelo   = splt[4];
-                    var version  = splt[5];
-                    debug('tipo:',tipo);
-                    debug('marca:',marca);
-                    debug('submarca:',submarca);
-                    debug('modelo:',modelo);
-                    debug('version:',version);
-                    
-                    _fieldByLabel('TIPO DE UNIDAD').setValue(_fieldByLabel('TIPO DE UNIDAD').findRecord('value',tipo));
-                    _fieldByLabel('MARCA').heredar(true,function()
-                    {
-                        _fieldByLabel('MARCA').setValue(_fieldByLabel('MARCA').findRecord('value',marca));
-                        _fieldByLabel('SUBMARCA').heredar(true,function()
-                        {
-                            _fieldByLabel('SUBMARCA').setValue(_fieldByLabel('SUBMARCA').findRecord('value',submarca));
-                            _fieldByLabel('MODELO').heredar(true,function()
-                            {
-                                _fieldByLabel('MODELO').setValue(_fieldByLabel('MODELO').findRecord('value',modelo));
-                                _fieldByLabel('VERSION').heredar(true,function()
-                                {
-                                    _fieldByLabel('VERSION').setValue(_fieldByLabel('VERSION').findRecord('value',version));    
-                                    _0_obtenerSumaAseguradaRamo6(true);                        
-                                });
-                            });
-                        });
-                    });
-                    
-                    _0_cargarNumPasajerosAuto();
-                }
-            });
-        }
-        
         //version
         if(_0_smap1.cdtipsit+'x'=='ATx')
         {
@@ -2262,6 +2217,8 @@ Ext.onReady(function()
             {
                 'select' : function(comp,arr)
                 {
+                    
+                    var tmp=_fieldByName('parametros.pv_otvalor22').getValue()
                     debug('auto seleccionado:',arr[0]);
                     var value    = arr[0].get('value');
                     var splt     = value.split(' - ');
@@ -2295,6 +2252,8 @@ Ext.onReady(function()
                         });
                     });
                     
+                   
+                    _fieldByName('parametros.pv_otvalor22').setValue(tmp)
                     _0_cargarNumPasajerosAuto();
                 }
             });
@@ -3131,11 +3090,19 @@ function _p28_cotizar(sinTarificar)
 function _p28_bloquear(b)
 {
     debug('>_p28_bloquear:',b);
-    var comps=Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_form'));
     
+    var comps=Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_form'));
     for(var i=0;i<comps.length;i++)
     {
         comps[i].setReadOnly(b);
+    }
+    
+    if(TipoSituacion.ServicioPublicoAuto==_p28_smap1.cdtipsit && b==false){
+	    Ext.ComponentQuery
+	    .query('[name=parametros.pv_otvalor36],[name=parametros.pv_otvalor37],[name=parametros.pv_otvalor38],[name=parametros.pv_otvalor34]')
+	    .forEach(function(it,idx){
+	        it.setReadOnly(!RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol));
+	    });
     }
     
     _fieldById('_p28_botonera').setDisabled(b);
@@ -6391,17 +6358,28 @@ function _0_obtenerClaveGSPorAuto()
         }
         ,callback : function(records)
         {
+            var dat=Ext.ComponentQuery.query('[fieldLabel="VERSION"],[fieldLabel="TIPO DE UNIDAD"],[fieldLabel="MARCA"],[fieldLabel="SUBMARCA"],[fieldLabel="MODELO"]')
+            for(i in dat){
+                debug("->",dat[i].getValue())
+                if(Ext.isEmpty(dat[i].getValue())){
+                    return;
+                }
+            }
+            
             debug('callback records:',records);
+            debug('### ',_fieldByLabel('TIPO DE UNIDAD'),_fieldByLabel('TIPO DE UNIDAD').getValue());
+            
             var valor=_fieldByLabel('VERSION').getValue()
                 +' - '+_fieldByLabel('TIPO DE UNIDAD').findRecord('key',_fieldByLabel('TIPO DE UNIDAD').getValue()).get('value')
                 +' - '+_fieldByLabel('MARCA').findRecord('key',_fieldByLabel('MARCA').getValue()).get('value')
                 +' - '+_fieldByLabel('SUBMARCA').findRecord('key',_fieldByLabel('SUBMARCA').getValue()).get('value')
                 +' - '+_fieldByLabel('MODELO').findRecord('key',_fieldByLabel('MODELO').getValue()).get('value')
                 +' - '+_fieldByLabel('VERSION').findRecord('key',_fieldByLabel('VERSION').getValue()).get('value');
-            debug('valor para el auto:',valor);
+            debug('valor para el auto->:',valor);
             _fieldByName('parametros.pv_otvalor22').setValue(
                 _fieldByName('parametros.pv_otvalor22').findRecord('value',valor)
             );
+           
             _0_cargarNumPasajerosAuto();
         }
     });
@@ -6421,6 +6399,7 @@ function _0_cargarNumPasajerosAuto()
         }
         ,success : function(response)
         {
+           
             var ijson=Ext.decode(response.responseText);
             debug('### obtener auto por clave gs:',ijson);
             if(ijson.exito)
@@ -6509,15 +6488,7 @@ function administradoraAgenteDXN(){
 function tipoUnidadFronteriza(){
     //_fieldByName('parametros.pv_otvalor35').maxLength=17;
     
-    //PERMITIMOS EDICION IGUAL QUE EN AF
     
-    Ext.ComponentQuery
-    .query('[name=parametros.pv_otvalor36],[name=parametros.pv_otvalor37],[name=parametros.pv_otvalor38],[name=parametros.pv_otvalor34]')
-    .forEach(function(it,idx){
-        it.setReadOnly(!((_0_smap1.cdtipsit == TipoSituacion.AutosFronterizos || _0_smap1.cdtipsit == TipoSituacion.AutosPickUp) 
-                && 
-                RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol)));
-    });
     
     
     _fieldByName('parametros.pv_otvalor35').on({
@@ -6525,13 +6496,21 @@ function tipoUnidadFronteriza(){
     });
     
     _fieldByLabel('TIPO DE UNIDAD').on({
-        select:function(me,opc){
+        change:function(me,opc){
             // 13 = TIPO UNIDAD FRONTERIZO
             if(me.getValue()==13){
-                _fieldById('_p28_fieldsetVehiculo').add({
-                    xtype       : 'hiddenfield'
-                    ,name        : 'aux.otvalor01'
-                })
+//                 _fieldById('_p28_fieldsetVehiculo').add({
+//                     xtype       : 'hiddenfield'
+//                     ,name        : 'aux.otvalor01'
+//                 })
+
+                //PERMITIMOS EDICION IGUAL QUE EN AF
+			    Ext.ComponentQuery
+			    .query('[name=parametros.pv_otvalor36],[name=parametros.pv_otvalor37],[name=parametros.pv_otvalor38],[name=parametros.pv_otvalor34]')
+			    .forEach(function(it,idx){
+			        it.setReadOnly(!RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol));
+			    });
+                
                 _fieldByName('parametros.pv_otvalor22').allowBlank=true;
                 _fieldByName('parametros.pv_otvalor02').allowBlank=true;
                 _fieldByName('parametros.pv_otvalor03').allowBlank=true;
@@ -6555,8 +6534,8 @@ function tipoUnidadFronteriza(){
                 _fieldByName('parametros.pv_otvalor38').show();
                 
             }else{
-                if(Ext.ComponentQuery.query('[name="aux.otvalor01"]').length!=0)
-                   _fieldById('_p28_fieldsetVehiculo').remove(_fieldByName('aux.otvalor01'));
+//                 if(Ext.ComponentQuery.query('[name="aux.otvalor01"]').length!=0)
+//                    _fieldById('_p28_fieldsetVehiculo').remove(_fieldByName('aux.otvalor01'));
                 _fieldByName('parametros.pv_otvalor22').allowBlank=false;
                 _fieldByName('parametros.pv_otvalor02').allowBlank=false;
                 _fieldByName('parametros.pv_otvalor03').allowBlank=false;
@@ -6585,19 +6564,19 @@ function tipoUnidadFronteriza(){
             _fieldByName('parametros.pv_otvalor03'),
             _fieldByName('parametros.pv_otvalor04'),
             _fieldByName('parametros.pv_otvalor05'),
-            
+            _fieldByName('parametros.pv_otvalor25'),
             _fieldByName('parametros.pv_otvalor35'),
             _fieldByName('parametros.pv_otvalor36'),
             _fieldByName('parametros.pv_otvalor37'),
             _fieldByName('parametros.pv_otvalor38')]
             
-//             arr.forEach(function(it,i){
-//                 if(it.xtype=='combobox'){
-//                     it.clearValue();
-//                 }else{
-//                     it.setValue(null);
-//                 }
-//             });
+            arr.forEach(function(it,i){
+                if(it.xtype=='combobox'){
+                    it.clearValue();
+                }else{
+                    it.setValue(null);
+                }
+            });
         }
     })
     
@@ -6623,7 +6602,6 @@ function fronterizos()
 //     }
     debug('>llamando a nada:',vim);
     _0_formAgrupados.setLoading(true);
-    _fieldByName('aux.otvalor01').setValue(vim);
     Ext.Ajax.request(
     {
         url     : _0_urlNada
@@ -6683,19 +6661,17 @@ function fronterizos()
             else
             {
                 //parche para RAMO 16 (FRONTERIZOS) con rol SUSCRIPTOR AUTO, no se lanza la validación:
-                if(_0_smap1.cdramo == Ramo.AutosFronterizos && 
-                        //_0_smap1.cdsisrol == 'SUSCRIAUTO'
-//                      rolesSuscriptores.lastIndexOf('|'+_0_smap1.cdsisrol+'|')!=-1  
+                if(
                         RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol)
                         ) {
                     // Si no obtuvo datos el servicio "NADA", reseteamos valores:
-                    _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setValue();
-                    _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue();
-                    _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setValue();
-                    _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setValue();
-                    _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMinValue();
-                    _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMaxValue();
-                    _0_formAgrupados.down('[name=parametros.pv_otvalor26]').setValue();
+                   Ext.ComponentQuery.query('[name=parametros.pv_otvalor36]').setValue();
+                   Ext.ComponentQuery.query('[name=parametros.pv_otvalor37]').setValue();
+                   Ext.ComponentQuery.query('[name=parametros.pv_otvalor38]').setValue();
+                   Ext.ComponentQuery.query('[name=parametros.pv_otvalor25]').setValue();
+                   Ext.ComponentQuery.query('[name=parametros.pv_otvalor25]').setMinValue();
+                   Ext.ComponentQuery.query('[name=parametros.pv_otvalor25]').setMaxValue();
+                    
                 } else {
                     mensajeError(json.error);
                 }

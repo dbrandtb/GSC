@@ -687,8 +687,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	              aux.add(tatri);
 	              
 	           }
-				
-				
+				else if(tatri.getNameCdatribu().equals("1") && cdtipsit.equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())){
+				    tatri.setOculto(true);
+				    aux.add(tatri);
+				}
 			}
 			tatrisit=aux;
 			
