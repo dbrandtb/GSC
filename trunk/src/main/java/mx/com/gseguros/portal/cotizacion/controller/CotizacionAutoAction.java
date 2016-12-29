@@ -340,7 +340,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             
             Utils.validate(smap1, "No se recibieron datos");
             
-            String cdunieco = smap1.get("cdunieco")
+            String cdunieco = (StringUtils.isNotBlank(smap1.get("cdunieco")) ? smap1.get("cdunieco") : flujo.getCdunieco())
                    ,cdramo   = smap1.get("cdramo")
                    ,cdtipsit = smap1.get("cdtipsit")
                    ,estado   = smap1.get("estado")
@@ -1410,7 +1410,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             
             Utils.validate(smap1, "No se recibieron datos");
             
-            String cdunieco = smap1.get("cdunieco")
+            String cdunieco = (StringUtils.isNotBlank(smap1.get("cdunieco")) ? smap1.get("cdunieco") : flujo.getCdunieco())
                    ,cdramo   = smap1.get("cdramo")
                    ,cdtipsit = smap1.get("cdtipsit")
                    ,estado   = smap1.get("estado")
