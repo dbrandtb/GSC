@@ -2780,7 +2780,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	
 	private <T, E> T getKeyByValue(Map<T, E> map, E value) {
 	    for (Entry<T, E> entry : map.entrySet()) {
-	        if (Objects.equals(value, entry.getValue())) {
+	        if (value.equals(entry.getValue())) {
 	            return entry.getKey();
 	        }
 	    }
