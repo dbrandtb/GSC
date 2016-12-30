@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +85,8 @@ public class GenericMapper implements RowMapper
     			}
     		}
     	}
-		Map<String,String> map=new HashMap<String,String>(0);
+		//Map<String,String> map=new HashMap<String,String>(0);
+    	LinkedHashMap<String,String> map=new LinkedHashMap<String,String>(0);
 		if(columnas!=null)
 		{
 			for(String col:columnas)
