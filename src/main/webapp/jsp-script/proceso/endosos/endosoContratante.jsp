@@ -198,7 +198,7 @@ Ext.onReady(function()
 					                'smap1.cdperson' : '',
 					                'smap1.cdideper' : '',
 					                'smap1.cdideext' : '',
-					                'smap1.esSaludDanios' : 'S',
+					                'smap1.esSaludDanios' : _35_smap1.CDRAMO != '1'?'S':'D',//Modo danios para Recupera
 					                'smap1.esCargaClienteNvo' : 'N' ,
 					                'smap1.ocultaBusqueda' : 'S' ,
 					                'smap1.cargaCP' : '',
@@ -229,7 +229,7 @@ Ext.onReady(function()
 						                'smap1.cdperson' : '',
 						                'smap1.cdideper' : '',
 						                'smap1.cdideext' : '',
-						                'smap1.esSaludDanios' : 'S',
+						                'smap1.esSaludDanios' : _35_smap1.CDRAMO != '1'?'S':'D',//Modo danios para Recupera
 						                'smap1.esCargaClienteNvo' : 'N' ,
 						                'smap1.ocultaBusqueda' : 'S' ,
 						                'smap1.cargaCP' : '',
