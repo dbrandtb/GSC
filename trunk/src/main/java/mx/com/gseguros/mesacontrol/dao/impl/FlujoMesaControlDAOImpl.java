@@ -2380,7 +2380,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
-			throw new ApplicationException(Utils.join("No existe la p\u00f3liza para la sucursal ",cduniext," y el ramo ",ramo));
+		    throw new ApplicationException("La p\u00f3liza no se encuentra registrada en SICAPS. Por favor generar el tr\u00E1mite con el tipo: RENOVACI\u00D3N NO SICAPS.");
 		}
 		else if(lista.size()>1)
 		{
