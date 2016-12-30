@@ -1333,13 +1333,13 @@
 		    ////// loaders //////
 		    ////// loaders //////
 			
-			/*
+			
 			var task = Ext.TaskManager.start({
 			    run: buscar,
 			    //interval: 60000 //tiempo en milisegundos 
 			    interval: 600000 //10 minutos
 			});
-			*/
+			
 			
 		});
 		
