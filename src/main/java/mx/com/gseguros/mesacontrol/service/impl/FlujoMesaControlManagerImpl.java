@@ -2075,6 +2075,13 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
             logger.debug(paso);
             cdsucadm = despachadorDAO.recuperarSucursalUsuarioPorTipoTramite(cdusuari, cdflujomc);
 			
+            paso = "Recuperando cdunieco del agente";
+            logger.debug(paso);
+            //Se toma el cdunieco del agente en vez del que esta en la pantalla
+            String cdtipram=consultasDAO.recuperarTipoRamoPorCdramo(cdramo);
+            cdunieco = cotizacionDAO.cargarCduniecoAgenteAuto(cdagente, cdtipram);
+            cdsucdoc = cdunieco;
+            
 			paso = "Registrando tr\u00e1mite";
 			logger.debug(paso);
 			
