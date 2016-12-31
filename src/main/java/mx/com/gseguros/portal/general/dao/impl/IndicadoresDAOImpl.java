@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -41,7 +42,8 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 		map.put("ingresados", (String)mapResult.get("pv_tramites_ingr_o"));
 		map.put("procesados", (String)mapResult.get("pv_tramites_proc_o"));
 		map.put("pendientes", (String)mapResult.get("pv_tramites_pend_o"));
-		map.put("eficacia",   (String)mapResult.get("pv_eficacia_o"));
+		//map.put("eficacia",   (String)mapResult.get("pv_eficacia_o"));
+		map.put("eficacia",   StringUtils.isNotBlank((String)mapResult.get("pv_eficacia_o")) ? (String)mapResult.get("pv_eficacia_o") : "0");
 		return map;
 	}
 	
