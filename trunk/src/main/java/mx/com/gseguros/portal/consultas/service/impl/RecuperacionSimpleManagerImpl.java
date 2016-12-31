@@ -1272,7 +1272,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				
 			    lista =  paged2.getRangeList();
 			    
-			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS) ) {
+			//} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS) ) {
+			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_HORAS) ) {
 				
 				PagedMapList paged = indicadoresDAO.obtieneTramitesPendientesPorDia(params.get("idcierre"),
 						params.get("cdunieco"), params.get("lineaNegocio"), params.get("cdramo"),
@@ -1360,7 +1361,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 	    String paso  = "Recuperando datos";
 	    try
 	    {
-	        if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS_LP) ) {
+	        //if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS_LP) ) {
+	    	if( consulta.equals(RecuperacionSimple.RECUPERAR_TRAMITES_PENDIENTES_POR_HORAS_LP) ) {
                 
                 lista = indicadoresDAO.obtieneTramitesPendientesPorDia(params.get("idcierre"),
                         params.get("cdunieco"), params.get("lineaNegocio"), params.get("cdramo"),
