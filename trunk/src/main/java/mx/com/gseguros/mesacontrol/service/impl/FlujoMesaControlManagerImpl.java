@@ -2368,7 +2368,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public Map<String, Object> ejecutaRevision(FlujoVO flujo)throws Exception
+	public Map<String, Object> ejecutaRevision(FlujoVO flujo, String cduser, String cdrol)throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2389,6 +2389,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,flujo.getCdflujomc()
 					,flujo.getClaveent()
 					,flujo.getNtramite()
+					,cduser
+					,cdrol
 					);
 		}
 		catch(Exception ex)

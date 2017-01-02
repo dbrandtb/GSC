@@ -1806,11 +1806,13 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				));
 		try
 		{
-			Utils.validateSession(session);
+			UserVO usuario = Utils.validateSession(session);
+			String cdusuari = usuario.getUser();
+            String cdsisrol = usuario.getRolActivo().getClave();
 			
 			Utils.validate(flujo  , "No se recibieron datos del flujo");
 			
-			Map<String, Object> result = flujoMesaControlManager.ejecutaRevision(flujo);
+			Map<String, Object> result = flujoMesaControlManager.ejecutaRevision(flujo, cdusuari, cdsisrol);
 			
 			list = (List<Map<String, String>>) result.get("lista");
 			

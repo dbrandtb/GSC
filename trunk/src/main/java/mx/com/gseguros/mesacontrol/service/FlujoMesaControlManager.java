@@ -248,7 +248,7 @@ public interface FlujoMesaControlManager
 			,String cdsisrol
 			)throws Exception;
 	
-	public Map<String, Object> ejecutaRevision(FlujoVO flujo)throws Exception;
+	public Map<String, Object> ejecutaRevision(FlujoVO flujo, String cduser, String cdrol)throws Exception;
 	
 	/*
 	JTEZVA 1 NOV 2016 SE DEJA DE USAR
