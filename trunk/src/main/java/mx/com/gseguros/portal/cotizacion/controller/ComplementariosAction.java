@@ -3187,17 +3187,18 @@ public class ComplementariosAction extends PrincipalCoreAction
                             ));
                     
 //                    try {
-                        consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), cdunieco, cdramo, nmpolizaEmitida, us.getUser());
+                   Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
+                   consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("NMPOLIEX"), us.getUser());
 //                    } catch (Exception e) {
 //                        mensajeRespuesta = "La poliza ya se habia emitido con anterioridad";
 //                    }
                     
-                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
                           vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
 //                    try {
-                        Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(parame.get("CDUNIECO"), parame.get("CDRAMO"), nmpolizaEmitida,  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                        Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("NMPOLIEX"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                        
 //                    } catch (Exception e) {
 //                        mensajeRespuesta = "La poliza no se logró registrar en el identificador de renovaciones";
 //                    }
