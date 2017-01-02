@@ -900,7 +900,8 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"fevencim" , "nmrenova" , "ferecibo" , "feultsin" , "nmnumsin" , "cdtipcoa" , "swtarifi"
             		,"swabrido" , "feemisio" , "cdperpag" , "nmpoliex" , "nmcuadro" , "porredau" , "swconsol"
             		,"nmpolant" , "nmpolnva" , "fesolici" , "cdramant" , "cdmejred" , "nmpoldoc" , "nmpoliza2"
-            		,"nmrenove" , "nmsuplee" , "ttipcamc" , "ttipcamv" , "swpatent" , "cdagente"
+            		,"nmrenove" , "nmsuplee" , "ttipcamc" , "ttipcamv" , "swpatent" , "cdagente" , "ramo"
+            		,"cduniext"
     	            };
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
@@ -1918,9 +1919,16 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	String valor = (String) procResult.get("pv_cdtipsit_o");
     	if(StringUtils.isBlank(valor))
     	{
-    		throw new ApplicationException(
-    				Utils.join("No se encuentra tipo de situacion con ",param1,", ",param2," y ",param3," en la fila ",fila)
-    				);
+//    		
+//    	}
+//    	else if(){
+//    	    
+//    	}
+//    	else
+//    	{
+    	    throw new ApplicationException(
+                    Utils.join("No se encuentra tipo de situacion con ",param1,", ",param2," y ",param3," en la fila ",fila)
+                    );
     	}
     	return valor;
     }
@@ -5872,4 +5880,35 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
         }
     }
     
+//    @Override
+//    public String recuperarServicioXNegocioYAmis(
+//            String cdtipram
+//            ,String tipolote
+//            ) throws Exception
+//    {
+//        Map<String,String> params = new LinkedHashMap<String,String>();
+//        params.put("cdtipram" , cdtipram);
+//        params.put("tipolote" , tipolote);
+//        Map<String,Object> procRes = ejecutaSP(new recuperarServicioXNegocioYAmis(getDataSource()),params);
+//        String             impdis  = (String)procRes.get("pv_impdis_o");
+//        if(StringUtils.isBlank(impdis))
+//        {
+//            throw new ApplicationException("Error al recuperar impresiones disponibles");
+//        }
+//        return impdis;
+//    }
+//    
+//    protected class recuperarServicioXNegocioYAmis extends StoredProcedure
+//    {
+//        protected recuperarServicioXNegocioYAmis(DataSource dataSource)
+//        {
+//            super(dataSource,"");
+//            declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
+//            declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
+//            declareParameter(new SqlOutParameter("pv_impdis_o" , OracleTypes.VARCHAR));
+//            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+//            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+//            compile();
+//        }
+//    }
 }
