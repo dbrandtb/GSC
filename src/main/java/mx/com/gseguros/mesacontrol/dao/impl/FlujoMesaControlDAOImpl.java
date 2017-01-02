@@ -1891,6 +1891,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String cdflujomc
 			,String cdrevisi
 			,String ntramite
+			,String cduser
+			,String cdrol
 			)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
@@ -1898,6 +1900,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("cdflujomc" , cdflujomc);
 		params.put("cdrevisi"  , cdrevisi);
 		params.put("ntramite"  , ntramite);
+		params.put("cduser"    , cduser);
+		params.put("cdrol"     , cdrol);
 		Map<String,Object>       procRes = ejecutaSP(new RecuperarDocumentosRevisionFaltantesSP(getDataSource()),params);
 		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null)
@@ -1923,6 +1927,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdrevisi"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("ntramite"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cduser"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdrol"  , OracleTypes.VARCHAR));
 			String cols[]=new String[]{
 					"TIPO", "CLAVE" , "DESCRIP", "SWLISTA", "SWOBLIGA", "SWACTIVO", "SWPIDEDATO", "DSDATO"
 			};

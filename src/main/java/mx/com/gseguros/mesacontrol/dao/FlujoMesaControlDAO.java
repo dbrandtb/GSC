@@ -569,6 +569,8 @@ public interface FlujoMesaControlDAO {
 			,String cdflujomc
 			,String cdrevisi
 			,String ntramite
+			,String cduser
+			,String cdrol
 			)throws Exception;
 	
 	public void actualizarStatusTramite(
