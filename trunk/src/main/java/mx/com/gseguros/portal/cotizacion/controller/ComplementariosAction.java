@@ -3188,7 +3188,7 @@ public class ComplementariosAction extends PrincipalCoreAction
                     
 //                    try {
                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
-                   consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("NMPOLIEX"), us.getUser());
+                   consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
 //                    } catch (Exception e) {
 //                        mensajeRespuesta = "La poliza ya se habia emitido con anterioridad";
 //                    }
@@ -3197,7 +3197,7 @@ public class ComplementariosAction extends PrincipalCoreAction
                     Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
                           vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
 //                    try {
-                        Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("NMPOLIEX"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                        Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                         
 //                    } catch (Exception e) {
 //                        mensajeRespuesta = "La poliza no se logró registrar en el identificador de renovaciones";
