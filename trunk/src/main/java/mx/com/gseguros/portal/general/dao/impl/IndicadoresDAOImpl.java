@@ -42,7 +42,6 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 		map.put("ingresados", (String)mapResult.get("pv_tramites_ingr_o"));
 		map.put("procesados", (String)mapResult.get("pv_tramites_proc_o"));
 		map.put("pendientes", (String)mapResult.get("pv_tramites_pend_o"));
-		//map.put("eficacia",   (String)mapResult.get("pv_eficacia_o"));
 		map.put("eficacia",   StringUtils.isNotBlank((String)mapResult.get("pv_eficacia_o")) ? (String)mapResult.get("pv_eficacia_o") : "0");
 		return map;
 	}
@@ -259,11 +258,12 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			String[] cols=new String[]{
             		"CDETAPA"
             		,"ETAPA"
+            		,"TIPO_FLUJO"
             		,"NTRAMITE"
             		,"FECHA_RECEP_TRAMITE"
             		,"FECHA_DESDE"
-            		,"CDUNIECO"
-            		,"DSUNIECO"
+            		,"SUCURSAL"
+            		,"DS_SUCURSAL"
             		,"CD_TIPO_TRAMITE"
             		,"TIPO_TRAMITE"
             		,"CD_LINEA_NEGOCIO"
@@ -326,8 +326,8 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			declareParameter(new SqlParameter("pv_tipotramite_i",  OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdagente_i",     OracleTypes.VARCHAR));
 			String[] cols=new String[]{
-            		"CDUNIECO"
-            		,"DSUNIECO"
+					"SUCURSAL"
+            		,"DS_SUCURSAL"
             		,"SALUD"
             		,"AUTOS"
             };
@@ -498,11 +498,12 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			String[] cols=new String[]{
             		"CDETAPA"
             		,"ETAPA"
+            		,"TIPO_FLUJO"
             		,"NTRAMITE"
             		,"FECHA_RECEP_TRAMITE"
             		,"FECHA_DESDE"
-            		,"CDUNIECO"
-            		,"DSUNIECO"
+            		,"SUCURSAL"
+            		,"DS_SUCURSAL"
             		,"CD_TIPO_TRAMITE"
             		,"TIPO_TRAMITE"
             		,"CD_LINEA_NEGOCIO"
