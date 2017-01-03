@@ -93,8 +93,6 @@
 		    Ext.define('IdRamoPadreModel', {
                 extend: 'Ext.data.Model',
                 fields: [
-                    //{type:'string', name:'CDSUBRAM'},
-                    //{type:'string', name:'DESCRIPCION'}
                     {type:'string', name:'key'},
                     {type:'string', name:'value'}
                 ]
@@ -103,8 +101,6 @@
 		    Ext.define('IdRamosModel', {
                 extend: 'Ext.data.Model',
                 fields: [
-                    //{type:'string', name:'CDSUBRAM'},
-                    //{type:'string', name:'DESCRIPCION'}
                     {type:'string', name:'key'},
                     {type:'string', name:'value'}
                 ]
@@ -178,8 +174,8 @@
 		    Ext.define('TramitesLineaNegocioPorSucursalModel', {
 		        extend: 'Ext.data.Model',
 		        fields: [
-		            {type:'string', name:'CDUNIECO'},
-		            {type:'string', name:'DSUNIECO'},
+		            {type:'string', name:'SUCURSAL'},
+		            {type:'string', name:'DS_SUCURSAL'},
 		            {type:'string', name:'SALUD'},
 		            {type:'string', name:'AUTOS'}
 		        ]
@@ -203,8 +199,8 @@
 		            {type:'string', name:'NTRAMITE'},
 		            {type:'string', name:'FECHA_RECEP_TRAMITE'},
 		            {type:'string', name:'FECHA_DESDE'},
-		            {type:'string', name:'CDUNIECO'},
-		            {type:'string', name:'DSUNIECO'},
+		            {type:'string', name:'SUCURSAL'},
+		            {type:'string', name:'DS_SUCURSAL'},
 		            {type:'string', name:'CD_TIPO_TRAMITE'},
 		            {type:'string', name:'TIPO_TRAMITE'},
 		            {type:'string', name:'CD_LINEA_NEGOCIO'},
@@ -241,7 +237,7 @@
 		            {type:'string', name:'CDAGENTE'},
 		            {type:'string', name:'CDETAPA'},
 		            {type:'string', name:'CDRAMO'},
-		            {type:'string', name:'CDUNIECO'},
+		            {type:'string', name:'SUCURSAL'},
 		            {type:'string', name:'NMPOLIZA'},
 		            {type:'string', name:'NMSOLICI'},
 		            {type:'string', name:'CDUSUARI_ACT'},
@@ -296,6 +292,12 @@
 		                ,root : 'lista'
 		            }
 		            //,autoLoad : true
+		        }
+		    });
+		    
+		    storeCierres.load({
+		        callback: function(){
+		            idcierres.setValue('0');
 		        }
 		    });
     
@@ -1029,11 +1031,11 @@
 									{
                                         text     : 'C\u00F3digo Sucursal',
                                         flex     : 2,
-                                        dataIndex: 'CDUNIECO'
+                                        dataIndex: 'SUCURSAL'
                                     },{
                                         text     : 'Sucursal', 
                                         flex     : 5,
-                                        dataIndex: 'DSUNIECO'
+                                        dataIndex: 'DS_SUCURSAL'
                                     },{
                                         text     : 'Total Salud', 
                                         flex     : 3,
@@ -1141,7 +1143,7 @@
 						store: storeTramitesPendientesPorDias,
 						columns: [
 							{text: 'Tramite',         dataIndex: 'NTRAMITE'},
-							{text: 'Sucursal',        dataIndex: 'CDUNIECO'},
+							{text: 'Sucursal',        dataIndex: 'SUCURSAL'},
 							{text: 'Ramo',            dataIndex: 'DSRAMO'},
 							{text: 'Usuario inicial', dataIndex: 'CDUSUARI_CREA'},
 							{text: 'Usuario actual',  dataIndex: 'CDUSUARI_ACT'},
@@ -1305,8 +1307,8 @@
 							//{text: 'C\u00F3digo', dataIndex: 'CDETAPA'},
 							//{text: 'C\u00F3digo', dataIndex: 'CDRAMO'},
 							{text: 'Ramo',              dataIndex: 'DSRAMO'},
-							{text: 'CD Sucursal',       dataIndex: 'CDUNIECO'},
-							{text: 'Sucursal',          dataIndex: 'DSUNIECO'},
+							{text: 'CD Sucursal',       dataIndex: 'SUCURSAL'},
+							{text: 'Sucursal',          dataIndex: 'DS_SUCURSAL'},
 							{text: 'Poliza',            dataIndex: 'NMPOLIZA'},
 							{text: 'No. Solicitud',     dataIndex: 'NMSOLICI'},
 							{text: 'CD Usuario inicia', dataIndex: 'CDUSUARI_ACT'},
