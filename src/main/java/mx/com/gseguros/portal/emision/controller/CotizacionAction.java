@@ -6501,7 +6501,7 @@ public class CotizacionAction extends PrincipalCoreAction
                         bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(27)),"-"));
                     }
                     
-	              //ID SISA
+                    //ID SISA
 	                try {
 		                logger.debug("ID SISA: "+(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|"));
 		                idSisa = String.format("%.0f",row.getCell(28).getNumericCellValue());
@@ -6519,7 +6519,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                } finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(28)),"-"));
 	                }
-	              //PLAZA
+	                //PLAZA
 	                try
                 	{
 		                auxCell=row.getCell(29);
@@ -6549,14 +6549,12 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(29)),"-"));
 	                }
-	              //ID. ASEGURADO
+	                //ID. ASEGURADO
 	                try{
-		                auxCell=row.getCell(30);
-		                logger.debug(
-	                		new StringBuilder("ID. ASEGURADO: ").append( auxCell!=null? auxCell.getStringCellValue() :"") .append("|").toString()
-                		);
-		                cveAsegurado = auxCell!=null?auxCell.getStringCellValue():"";
-		                bufferLinea.append(auxCell!=null?new StringBuilder(auxCell.getStringCellValue()).append("|").toString():"|");
+		                auxCell = row.getCell(30);
+		                cveAsegurado = Utils.getCellValue(auxCell);
+		                logger.debug("ID. ASEGURADO: {}|", cveAsegurado);
+		                bufferLinea.append(cveAsegurado).append("|").toString();
                 	}
 	                catch(Exception ex) {
 	                	filaBuena = false;
