@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -518,4 +519,10 @@ public class EmisionManagerImpl implements EmisionManager
 		}
 		return mensaje;
 	}
+	
+	
+	public void insertaBitacora(Date fecha, String nombre, int polizas, String rango, String usuario) throws Exception {
+			consultasPolizaDAO.insertaBitacora(fecha, nombre, polizas, rango, usuario);
+	}
+	
 }
