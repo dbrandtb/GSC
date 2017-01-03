@@ -2610,7 +2610,7 @@ function _p28_cotizar(sinTarificar)
             json.smap1.PORCENSEC= _fieldLikeLabel('PORCENSEC').getValue();
         }
         debug('json a enviar para cotizar:',json);
-        return ;
+
         panelpri.setLoading(true);
         Ext.Ajax.request(
         {
