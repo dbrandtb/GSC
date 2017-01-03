@@ -1606,10 +1606,7 @@ Ext.onReady(function()
         }catch(e){
             debugError(e)
         }
-        
-        
-        
-        
+
         //PARCHE PARA TOUPPERCASE EN TEXTFIELDS
         
         Ext.ComponentQuery.query('[xtype=textfield]').forEach(function(item,idx,arr){
@@ -1955,7 +1952,7 @@ Ext.onReady(function()
                         url      : _p28_urlCargarParametros
                         ,params  :
                         {
-                            'smap1.parametro' : 'NUMERO_PASAJEROS_SERV_PUBL'
+                             'smap1.parametro' : 'NUMERO_PASAJEROS_SERV_PUBL'
                             ,'smap1.cdramo'   : _0_smap1.cdramo
                             ,'smap1.cdtipsit' : _0_smap1.cdtipsit
                             ,'smap1.clave4'   : valArray[0].data.key
@@ -1969,7 +1966,7 @@ Ext.onReady(function()
                             if(json.exito)
                             {
                                 _fieldByName('parametros.pv_otvalor04').setValue(json.smap1.P1VALOR);
-                                 _fieldByName('parametros.pv_otvalor04').setMinValue(json.smap1.P2VALOR);
+                                _fieldByName('parametros.pv_otvalor04').setMinValue(json.smap1.P2VALOR);
                                 _fieldByName('parametros.pv_otvalor04').setMaxValue(json.smap1.P3VALOR);
                                 _fieldByName('parametros.pv_otvalor22').setValue(json.smap1.P4VALOR);
                                 _fieldByName('parametros.pv_otvalor04').isValid();
@@ -2103,6 +2100,7 @@ Ext.onReady(function()
        /////SOLO AUTOS SERVICIO PUBLICO///////
        if(_p28_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
            tipoUnidadFronteriza();
+           _fieldByName('parametros.pv_otvalor35').allowBlank=true;
        }
            
        
@@ -3484,6 +3482,7 @@ function _p28_ramo5ClienteChange(combcl)
                                             }
                                         });
                                     }
+                                    
                                 }
                             }
                         ]
@@ -6498,7 +6497,7 @@ function tipoUnidadFronteriza(){
     });
     
     _fieldByLabel('TIPO DE UNIDAD').on({
-        change:function(me,opc){
+        select:function(me,opc){
             // 13 = TIPO UNIDAD FRONTERIZO
             if(me.getValue()==13){
 //                 _fieldById('_p28_fieldsetVehiculo').add({
