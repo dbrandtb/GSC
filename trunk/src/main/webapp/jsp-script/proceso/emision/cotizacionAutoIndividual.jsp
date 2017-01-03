@@ -623,7 +623,7 @@ Ext.onReady(function()
           ,width  : 435
           ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
           ,items  : _p28_panel7Items
-          ,hidden : (Ext.isEmpty(_p28_flujo) && _p28_smap1.renovacion+'x'!='Sx')
+          ,hidden : !Ext.isEmpty(_p28_flujo) ? (_p28_flujo.cdflujomc != 220 && _p28_flujo.cdtipflu != 103) : true // || _p28_smap1.renovacion+'x'!='Sx'
     }
    ,{
          xtype   : 'fieldset'
@@ -2523,6 +2523,7 @@ function _p28_cotizar(sinTarificar)
     var panelpri = _fieldById('_p28_panelpri');
     var form     = _fieldById('_p28_form');
     var valido   = form.isValid();
+    debug('p28_form:',_fieldById('_p28_form'));
     if(!valido)
     {
         datosIncompletos();
@@ -2609,6 +2610,7 @@ function _p28_cotizar(sinTarificar)
             json.smap1.PORCENSEC= _fieldLikeLabel('PORCENSEC').getValue();
         }
         debug('json a enviar para cotizar:',json);
+        return ;
         panelpri.setLoading(true);
         Ext.Ajax.request(
         {
