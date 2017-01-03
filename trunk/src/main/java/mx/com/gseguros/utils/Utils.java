@@ -729,6 +729,25 @@ public class Utils
         return true;
     }
     
+    
+    /**
+     * Obtiene el valor de una celda como String
+     * 
+     * @param celda Celda que contiene el valor
+     * @return Valor de la celda, o cadena vacia en caso de error
+     */
+    public static String getCellValue(Cell celda) {
+        String strValor = "";
+        try {
+            celda.setCellType(Cell.CELL_TYPE_STRING);
+            strValor = celda.getStringCellValue();
+        } catch (Exception e) {
+            logger.warn("Error al obtener valor de la celda, se devuelve cadena vacia", e);
+        }
+        return strValor;
+    }
+    
+    
     public static String NVL(String origen, String reemplazo)
     {
     	if(StringUtils.isBlank(origen))
