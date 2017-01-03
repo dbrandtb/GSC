@@ -607,6 +607,7 @@ Ext.onReady(function()
 	    .forEach(function(it,idx){
 	        if(_fieldByLabel('TIPO DE UNIDAD').getValue()==TipoUnidad.Fronterizo)
 	            it.setReadOnly(!RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol));
+	            it.fireEvent('blur');
 	    });
     }
     //codigo dinamico recuperado de la base de datos
