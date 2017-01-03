@@ -307,7 +307,8 @@ var _p30_panel7Items =
         {
            type    : 'table'
           ,columns : 1
-          ,style   : 'width:10px !important;'
+          ,style   : 'width:7px !important;'
+          ,align   : 'right'
        }
        ,border : 0
        ,items  :
@@ -319,11 +320,13 @@ var _p30_panel7Items =
                 ,name        : 'sucursal'               
                 ,sinOverride : true
                 ,labelWidth  : 170
-                ,style       : 'margin:5px;margin-left:15px;'//'margin:5px;margin-left:15px;width:20px !important;'
+                ,style       : 'margin:0px;margin-left:5px;'//'margin:5px;margin-left:15px;width:20px !important;'
+                ,value       : !Ext.isEmpty(_p30_smap1.renuniext) ? _p30_smap1.renuniext : ''
                 ,listeners   :
                 {
                     change : _p30_nmpolizaChange
                 }
+                ,readOnly    :  true 
             }
            ,{
                     xtype       : 'numberfield'
@@ -332,11 +335,13 @@ var _p30_panel7Items =
                    ,name        : 'ramo'                   
                    ,sinOverride : true                   
                    ,labelWidth  : 170
-                   ,style       : 'margin:5px;margin-left:15px;'//'width : 30px !important;'
+                   ,style       : 'margin:0px;margin-left:5px;'//'width : 30px !important;'
+                   ,value       : !Ext.isEmpty(_p30_smap1.renramo) ? _p30_smap1.renramo : ''
                    ,listeners   :
                    {
                        change : _p30_nmpolizaChange
                    }
+                   ,readOnly    :  true 
               }
              ,{
                   xtype       : 'numberfield'
@@ -345,20 +350,22 @@ var _p30_panel7Items =
                  ,name        : 'poliza'
                  ,sinOverride : true                 
                  ,labelWidth  : 170
-                 ,style       : 'margin:5px;margin-left:15px;'//'width : 50px !important;'
+                 ,style       : 'margin:0px;margin-left:5px;'//'width : 50px !important;'
+                 ,value       : !Ext.isEmpty(_p30_smap1.renpoliex) ? _p30_smap1.renpoliex : ''
                  ,listeners   :
                  {
                      change : _p30_nmpolizaChange
                  }
+                 ,readOnly    :  true 
            }
-          ,{
-                 xtype   : 'button'
-                ,itemId  : '_p30_botonCargarPoliza'
-                ,text    : 'BUSCAR'
-                ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-                ,style   : 'margin-right'
-                //,handler : _p30_cargarPoliza
-          }
+//           ,{
+//                  xtype   : 'button'
+//                 ,itemId  : '_p30_botonCargarPoliza'
+//                 ,text    : 'BUSCAR'
+//                 ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+//                 ,style   : 'margin-right'
+//                 //,handler : _p30_cargarPoliza
+//           }
        ]
     }
  ];
@@ -1017,11 +1024,11 @@ Ext.onReady(function()
     }
     ,{
         xtype   : 'fieldset'
-        ,itemId : '_p28_fieldBusquedaPoliza'
-        ,width  : 435
+        ,itemId : '_p30_fieldBusquedaPoliza'
+        ,width  : 300
         ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
         ,items  : _p30_panel7Items
-        ,hidden : true
+        ,hidden : !Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
       }
     );
     
@@ -4557,7 +4564,7 @@ function _p30_cotizar(sinTarificar)
         //crear record con los valores del formulario y el formulario oculto
         
         debug('>>> json a enviar:',json);
-        
+        return ;
         var panelpri = _fieldById('_p30_panelpri');
         panelpri.setLoading(true);
         Ext.Ajax.request(

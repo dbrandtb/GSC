@@ -877,6 +877,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 
                 renovacion = TipoTramite.RENOVACION.getCdtiptra().equals(tramite.get("CDTIPTRA"));
                 logger.debug("Es renovacion = {}", renovacion);
+                
+                if(renovacion)
+                {
+                    smap1.put("renuniext" , tramite.get("RENUNIEXT"));
+                    smap1.put("renramo"   , tramite.get("RENRAMO"));
+                    smap1.put("renpoliex" , tramite.get("RENPOLIEX"));
+                }
             }
             else
             {
