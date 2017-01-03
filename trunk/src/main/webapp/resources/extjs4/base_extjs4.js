@@ -2400,7 +2400,7 @@ function _procesaAccion(
 	                                                        value : 'Favor de revisar los requisitos y documentos obligatorios:'
 	                                                    }, {
 	                                                        xtype      : 'grid',
-	                                                        width      : 800,
+	                                                        width      : 900,
 	                                                        height     : 200,
 	                                                        autoScroll : true,
 	                                                        tipo       : 'REQ',
@@ -2473,7 +2473,7 @@ function _procesaAccion(
                                                                 }, {
                                                                     text      : 'VALOR',
                                                                     dataIndex : 'DSDATO',
-                                                                    width     : 200,
+                                                                    width     : 370,
                                                                     renderer  : function (v, md, rec) {
                                                                         if ('S' !== rec.get('SWPIDEDATO')) {
                                                                             return '<span style="font-style : italic;">(N/A)</span>';
@@ -2497,7 +2497,7 @@ function _procesaAccion(
 	                                                        })
 	                                                    }, {
                                                             xtype      : 'grid',
-                                                            width      : 800,
+                                                            width      : 900,
                                                             height     : 200,
                                                             autoScroll : true,
                                                             tipo       : 'DOC',
