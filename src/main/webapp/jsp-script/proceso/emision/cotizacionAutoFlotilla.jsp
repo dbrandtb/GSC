@@ -4564,7 +4564,7 @@ function _p30_cotizar(sinTarificar)
         //crear record con los valores del formulario y el formulario oculto
         
         debug('>>> json a enviar:',json);
-        return ;
+
         var panelpri = _fieldById('_p30_panelpri');
         panelpri.setLoading(true);
         Ext.Ajax.request(
