@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.consultas.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1130,4 +1131,32 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 		}
 	}
 	
+	 public String insertaBitacora(Date fecha,String nombre,int polizas,String rango,String usuario)throws Exception{
+		 String resultado = null;
+		 
+		    Map<String, Object> params = new HashMap<String, Object>();
+			params.put("pv_feproceso_i", fecha);
+			params.put("pv_nomarchivo_i",   nombre);
+			params.put("pv_nmpolreg_i",   polizas);
+			params.put("pv_rangopolproc_i", rango);
+			params.put("pv_nomusuario_i", usuario);
+			Map<String, Object> mapResult = ejecutaSP(new InsertaBitacoraSP(getDataSource()), params);
+			
+		 return resultado;
+	 }
+	
+	 protected class InsertaBitacoraSP extends StoredProcedure {
+
+			protected InsertaBitacoraSP(DataSource dataSource) {
+				super(dataSource, "P_INS_BITA_EMI_REMOTA_RECUPERA");
+				declareParameter(new SqlParameter("pv_feproceso_i", OracleTypes.DATE));
+				declareParameter(new SqlParameter("pv_nomarchivo_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_nmpolreg_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_rangopolproc_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_nomusuario_i", OracleTypes.VARCHAR));
+		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
 }
