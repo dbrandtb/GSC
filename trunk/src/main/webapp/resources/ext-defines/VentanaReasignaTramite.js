@@ -25,7 +25,7 @@ Ext.define('VentanaReasignaTramite',
             [
                 Ext.create('Ext.grid.Panel',
                 {
-                    width    : 600
+                    width    : 800
                     ,height  : 300
                     ,columns :
                     [
@@ -39,22 +39,28 @@ Ext.define('VentanaReasignaTramite',
                         ,{
                             text       : 'Clave'
                             ,dataIndex : 'CDUSUARI'
-                            ,width     : 120
+                            ,width     : 90
                         }
                         ,{
                             text       : 'Nombre'
-                            ,dataIndex : 'NOMBRE'
+                            ,dataIndex : 'DSUSUARI'
                             ,flex      : 1
                         }
                         ,{
-                            text       : 'Num. tr&aacute;mites asignados'
+                            text       : 'Rol'
+                            ,dataIndex : 'DSSISROL'
+                            ,flex      : 1
+                        }
+                        ,{
+                            text       : 'Tr&aacute;mites asignados'
                             ,dataIndex : 'TOTAL'
-                            ,width     : 160
+                            ,width     : 120
                         }
                     ]
                     ,store : Ext.create('Ext.data.Store',
                     {
-                        fields    : [ 'CDUSUARI' , 'NOMBRE' , 'TOTAL' , 'CDSISROL' ]
+                        fields    : [ "NTRAMITE", "CDUSUARI_ACTUAL", "STATUS_ACTUAL", "CDSISROL_ACTUAL",
+                                      "CDUSUARI", "CDSISROL", "DSUSUARI", "TOTAL", "STATUS", "DSSISROL" ]
                         ,autoLoad : true
                         ,proxy    :
                         {
@@ -74,8 +80,8 @@ Ext.define('VentanaReasignaTramite',
                     })
                 })
             ]
-            ,buttonAlign : 'center'
-            ,buttons     : []
+            //,buttonAlign : 'center'
+            //,buttons     : []
         });
         this.callParent(arguments);
     }
@@ -87,7 +93,7 @@ Ext.define('VentanaReasignaTramite',
         
         var cdusuari = rec.get('CDUSUARI');
         var cdsisrol = rec.get('CDSISROL');
-        var status   = window1.status;
+        var status   = rec.get('STATUS');
         debug('cdusuari:',cdusuari,'cdsisrol:',cdsisrol);
         debug('status:',status,'window1:',window1);
         centrarVentanaInterna(Ext.create('Ext.window.Window',

@@ -2597,8 +2597,11 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_USUARIOS_REASIGNA");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR
-					,new GenericMapper(new String[]{"CDUSUARI","NOMBRE","CDSISROL","TOTAL"})));
+			String[] cols = new String[]{
+			        "NTRAMITE", "CDUSUARI_ACTUAL", "STATUS_ACTUAL", "CDSISROL_ACTUAL",
+			        "CDUSUARI", "CDSISROL", "DSUSUARI", "TOTAL", "STATUS", "DSSISROL"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
 			compile();
@@ -5660,7 +5663,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
                                                             String pv_swestado_i) throws Exception {
         
         if(pv_estado_i.equalsIgnoreCase("W") && pv_estado_i.equalsIgnoreCase("F") ){
-            throw new ApplicationException("swestado no válido");
+            throw new ApplicationException("swestado no vï¿½lido");
         }
         Map<String, String> params = new LinkedHashMap<String, String>();
         params.put("pv_cdunieco_i",  pv_cdunieco_i);

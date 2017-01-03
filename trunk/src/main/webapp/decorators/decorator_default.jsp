@@ -39,7 +39,7 @@
         <script type="text/javascript" src="${ctx}/resources/scripts/util/session_timeout.js?${now}"></script>
         
         <!-- Manejo de sesion unica de usuario: -->
-        <script>
+        <script>/*
         var bloqueoXSession= false;
         setInterval(
         function()
@@ -88,7 +88,7 @@
                             errorComunicacion(null,'Al validar sesion');
                         }
                     });
-        },10*1000);</script>
+        },10*1000);*/</script>
         
     </head>
     <body>
