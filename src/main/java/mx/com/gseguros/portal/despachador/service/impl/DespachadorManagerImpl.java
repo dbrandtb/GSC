@@ -616,6 +616,8 @@ K                   ENCOLAR CON DATOS ORIGINALES
             ////////////////////////////////
             ////// SI ES REASIGNACION //////
             else if (StringUtils.isNotBlank(cdusuariDes) && StringUtils.isNotBlank(cdsisrolDes)) {
+                Utils.validate(status, "Falta configurar la agrupaci\u00f3n de roles (GRUPOSTATUS)");
+                
                 paso = "Recuperando sucursal del usuario";
                 logger.debug(paso);
                 String cdunieco = despachadorDAO.recuperarSucursalUsuarioPorTramite(cdusuariDes, ntramite);
@@ -624,7 +626,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 logger.debug(paso);
                 flujoMesaControlDAO.actualizarStatusTramite(
                         ntramite,
-                        null, //status nulo para que mantenga el mismo
+                        status,
                         fechaHoy,
                         cdusuariDes,
                         cdunieco);
@@ -644,12 +646,23 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         cdunieco,
                         ConstantesDespachador.TIPO_ASIGNACION_REASIGNA);
                 
-                paso = "Recuperando nombre de usuario";
+                paso = "Recuperando nombre de usuarios";
                 logger.debug(paso);
-                String dsusuari = despachadorDAO.recuperarNombreUsuario(cdusuariDes);
+                String dsusuari    = despachadorDAO.recuperarNombreUsuario(cdusuariDes),
+                       dsusuariSes = despachadorDAO.recuperarNombreUsuario(cdusuariSes);
                 
-                result.setMessage(Utils.join("Tr\u00e1mite asignado a ", dsusuari, " (", cdusuariDes.toUpperCase(),
-                        ") con las siguientes observaciones: ", comments));
+                paso = "Recuperando descripci\u00f3n de estatus";
+                logger.debug(paso);
+                String dsstatus = this.recuperarDescripcionEstatus(status);
+                
+                paso = "Recuperando descripci\u00f3n de roles";
+                logger.debug(paso);
+                String dssisrolSes = this.recuperarDescripcionRol(cdsisrolSes),
+                       dssisrol    = this.recuperarDescripcionRol(cdsisrolDes);
+                
+                result.setMessage(Utils.join("Tr\u00e1mite asignado a ", dsusuari, " (", cdusuariDes.toUpperCase(), ", sucursal ", cdunieco,
+                        ", rol ", dssisrol, ") en estatus \"", dsstatus,
+                        "\" por parte de ", dsusuariSes, " (rol ", dssisrolSes, ") con las siguientes observaciones: ", comments));
                 
                 if (sinGrabarDetalle == false) {
                     paso = "Guardando detalle";
@@ -789,7 +802,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         
                         result.setMessage(Utils.join("Tr\u00e1mite enviado a ", dsusuari, " (", destino.getCdusuari().toUpperCase(),
                                 ", sucursal ", destino.getCdunieco(), ", rol ", dssisrol,") en estatus \"",
-                                dsstatus, "\"  con las siguientes observaciones: ", comments));
+                                dsstatus, "\" con las siguientes observaciones: ", comments));
                         
                         if (sinGrabarDetalle == false) {
                             paso = "Guardando detalle";
