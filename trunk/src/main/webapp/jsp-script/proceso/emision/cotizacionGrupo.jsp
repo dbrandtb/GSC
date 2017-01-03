@@ -3950,6 +3950,18 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                             if([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 
                                     &&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N'))
                             {
+                             
+                                var ntramiteGen = _p21_ntramite;
+                                if(_p21_ntramite == false || Ext.isEmpty(_p21_ntramite))
+                                {
+                                    if(_p21_ntramiteVacio == false || Ext.isEmpty(_p21_ntramiteVacio)){
+                                        ntramiteGen = json.smap1.ntramite;
+                                    }else{
+                                        ntramiteGen = _p21_ntramiteVacio;
+                                    }
+                                    
+                                }
+                                
                                 var lanzaAprobacion = false;
                                 _p21_storeGrupos.each(function(record)
                                 {
@@ -3965,7 +3977,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                     Ext.Ajax.request({
                                         url     : _p21_urlLanzaAprobacionNombrePlan,
                                         params  : {
-                                            'smap1.ntramite'    :  _p21_ntramite,
+                                            'smap1.ntramite'    :  ntramiteGen,
                                             'smap1.tipobloqueo' : 'B'
                                         },
                                         success : function (response) {
@@ -4208,6 +4220,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                             }
                             else
                             {
+                                _p21_smap1.ntramite = json.smap1.ntramite;
                                 _p21_fieldNmpoliza().setValue(json.smap1.nmpoliza);
                                 _p21_fieldNtramite().setValue(json.smap1.ntramite);
                                 _p21_tabpanel().setDisabled(true);
