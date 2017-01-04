@@ -4330,4 +4330,90 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
             compile();
         }
     }
+    
+    @Override
+    public List<Map<String, String>> recuperarPropiedadesDespachadorSucursales (String cdtipram) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("cdtipram", cdtipram);
+        Map<String, Object> procRes = ejecutaSP(new RecuperarPropiedadesDespachadorSucursalesSP(getDataSource()), params);
+        List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+        if (lista == null) {
+            lista = new ArrayList<Map<String, String>>();
+        }
+        logger.debug("recuperarPropiedadesDespachadorSucursales lista: {}", Utils.log(lista));
+        return lista;
+    }
+    
+    protected class RecuperarPropiedadesDespachadorSucursalesSP extends StoredProcedure {
+        protected RecuperarPropiedadesDespachadorSucursalesSP (DataSource dataSource) {
+            super(dataSource,"P_DSPCH_LOG_SUCUR");
+            declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
+            String[] cols = new String[] {
+                    "CDUNIECO", "CDUNIZON", "NMCAPACI", "CDNIVEL", "SWAPOYO", "SWACTIVA", "TRAMITES", "DSUNIECO", "DSUNIZON" , "DSNIVEL"
+                    };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public List<Map<String, String>> recuperarPropiedadesDespachadorUsuarios (String cdunieco, String nivel, String cdsisrol) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("cdunieco" , cdunieco);
+        params.put("nivel"    , nivel);
+        params.put("cdsisrol" , cdsisrol);
+        Map<String, Object> procRes = ejecutaSP(new RecuperarPropiedadesDespachadorUsuariosSP(getDataSource()), params);
+        List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+        if (lista == null) {
+            lista = new ArrayList<Map<String, String>>();
+        }
+        logger.debug("recuperarPropiedadesDespachadorUsuarios lista: {}", Utils.log(lista));
+        return lista;
+    }
+    
+    protected class RecuperarPropiedadesDespachadorUsuariosSP extends StoredProcedure {
+        protected RecuperarPropiedadesDespachadorUsuariosSP (DataSource dataSource) {
+            super(dataSource,"P_DSPCH_LOG_USERROL");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nivel"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+            String[] cols = new String[] {
+                    "CDUSUARI", "DSUSUARI", "SWACTIVO", "CDSISROL", "CDESTADO", "DSSISROL", "EXCLUIDO"
+                    };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public List<Map<String, String>> recuperarPropiedadesDespachadorUsuariosAll (String cdsisrol) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("cdsisrol" , cdsisrol);
+        Map<String, Object> procRes = ejecutaSP(new RecuperarPropiedadesDespachadorUsuariosAllSP(getDataSource()), params);
+        List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+        if (lista == null) {
+            lista = new ArrayList<Map<String, String>>();
+        }
+        logger.debug("recuperarPropiedadesDespachadorUsuariosAll lista: {}", Utils.log(lista));
+        return lista;
+    }
+    
+    protected class RecuperarPropiedadesDespachadorUsuariosAllSP extends StoredProcedure {
+        protected RecuperarPropiedadesDespachadorUsuariosAllSP (DataSource dataSource) {
+            super(dataSource,"P_DSPCH_LOG_USERALL");
+            declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+            String[] cols = new String[] {
+                    "CDUSUARI", "DSUSUARI", "SWACTIVO", "CDSISROL", "CDESTADO", "DSSISROL", "EXCLUIDO",
+                    "SUCURSAL_DANIOS", "SUCURSAL_SALUD", "SWSUSMAT"
+                    };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }

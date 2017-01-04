@@ -967,4 +967,10 @@ public interface FlujoMesaControlDAO {
     public void pruebaGuardarObjeto (FlujoMesaControlDAOImpl.AlvaroObj objeto) throws Exception;
     
     public void pruebaGuardarLista (List<FlujoMesaControlDAOImpl.AlvaroObj> lista) throws Exception;
+    
+    public List<Map<String, String>> recuperarPropiedadesDespachadorSucursales (String cdtipram) throws Exception;
+    
+    public List<Map<String, String>> recuperarPropiedadesDespachadorUsuarios (String cdunieco, String nivel, String cdsisrol) throws Exception;
+    
+    public List<Map<String, String>> recuperarPropiedadesDespachadorUsuariosAll (String cdsisrol) throws Exception;
 }

@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.ActionContext;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.utils.Utils;
@@ -35,6 +36,7 @@ public class DespachadorAction extends PrincipalCoreAction {
 	private String message;
 	private boolean success;
 	private FlujoVO flujo;
+	private Map<String, Item> items;
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
@@ -110,6 +112,22 @@ public class DespachadorAction extends PrincipalCoreAction {
 	    return SUCCESS;
 	}
 	
+	@Action(value   = "pantallaDatos",
+            results = {
+                @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
+                @Result(name="success" , location="/jsp-script/proceso/flujoMesaControl/pantallaDatosDespachador.jsp")
+            })
+	public String pantallaDatos () {
+	    String result = ERROR;
+	    try {
+	        items = despachadorManager.pantallaDatos();
+	        result = SUCCESS;
+	    } catch (Exception ex) {
+	        message = Utils.manejaExcepcion(ex);
+	    }
+	    return result;
+	}
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////// GETTERS Y SETTERS /////////////////////////////////////////////////
@@ -155,6 +173,14 @@ public class DespachadorAction extends PrincipalCoreAction {
 	public void setFlujo(FlujoVO flujo) {
 		this.flujo = flujo;
 	}
+
+    public Map<String, Item> getItems() {
+        return items;
+    }
+
+    public void setItems(Map<String, Item> items) {
+        this.items = items;
+    }
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
