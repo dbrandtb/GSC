@@ -241,11 +241,9 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 					int tam = resp.getSlist().size();
 					for (int i = 0; i <= tam - 1; i++) {
 						for (Entry<String, String> en : resp.getSlist().get(i).entrySet()) {
-							switch (en.getKey()) {
-							case "MEMBRESIA":
+							if("MEMBRESIA".equals(en.getKey())) {
 								contar += 1;
 								slist1 = resp.getSlist();
-								break;
 							}
 						}
 					}
