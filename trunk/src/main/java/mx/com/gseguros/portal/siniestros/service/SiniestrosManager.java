@@ -493,7 +493,8 @@ public interface SiniestrosManager {
 
 	public void getEliminacionAsegurado(String ntramite, String factura, String valorAccion) throws Exception;
 
-	public void getEliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion) throws Exception;
+	//public void getEliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion) throws Exception; (EGS)
+	public void getEliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion, String cdramo) throws Exception; // (EGS)
 	
 	public void movTimpsini(String accion
 			,String cdunieco

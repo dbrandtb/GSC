@@ -287,7 +287,10 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			if(params.get("idNumTramite").toString().length() > 0){
 				try {
 					// Se realiza la eliminacion de las facturas
-					siniestrosManager.getEliminacionFacturaTramite(msgResult, null, "0");
+					//siniestrosManager.getEliminacionFacturaTramite(msgResult, null, "0"); (EGS)
+					logger.debug("1 - Antes de eliminar factura: null 0   ", msgResult);
+					siniestrosManager.getEliminacionFacturaTramite(msgResult, null, "0",cdramo); // (EGS)
+					logger.debug("2 - Despues de eliminar factura");
 				} catch (Exception e) {
 					logger.error("error al eliminar en TfacMesCtrl : {}", e.getMessage(), e);
 				}
@@ -495,14 +498,20 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			String tipoPagoTramite = params.get("tipoPago").toString();
 			String procedencia = params.get("procedencia").toString();
 			if(procedencia.equalsIgnoreCase("ALTA_TRAMITE")){
-				siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
+				//siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion")); (EGS)
+				logger.debug("3 - Antes de eliminar factura: tramite", params.get("ntramite"),params.get("nfactura"), params.get("valorAccion"));
+				siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"), params.get("nfactura"), params.get("valorAccion"),params.get("cdramo")); // (EGS)
+				logger.debug("4 - Despues de eliminar factura");
 				siniestrosManager.getEliminacionAsegurado(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
 				success=true;
 			}else{
 				List<Map<String,String>> aseguradosFactura = siniestrosManager.listaSiniestrosTramite2(params.get("ntramite"),params.get("nfactura"));
 				logger.debug("Paso 8.- Obtenemos los Asegurados (MSINIEST) : {}",aseguradosFactura);
 				
-				siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
+				//siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion")); (EGS)
+				logger.debug("5 - Antes de eliminar factura: {} ", params.get("ntramite"), params.get("nfactura"), params.get("valorAccion"));
+				siniestrosManager.getEliminacionFacturaTramite(params.get("ntramite"), params.get("nfactura"), params.get("valorAccion"),params.get("cdramo")); // (EGS)
+				logger.debug("6 - Despues de eliminar factura");
 				if(TipoPago.DIRECTO.getCodigo().equals(tipoPagoTramite)){
 					//siniestrosManager.getEliminacionAsegurado(params.get("ntramite"),params.get("nfactura"),params.get("valorAccion"));
 					for(int a=0; a< aseguradosFactura.size();a++){
@@ -611,7 +620,10 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 		logger.debug("Entra a guardaFacturaAltaTramite Params: {} datosTabla{}", params,datosTablas);
 		try {
 			//Realizamos la eliminaci�n de las facturas
-			siniestrosManager.getEliminacionFacturaTramite(params.get("idNumTramite"), null, "0");
+			//siniestrosManager.getEliminacionFacturaTramite(params.get("idNumTramite"), null, "0"); (EGS)
+			logger.debug("7 - Antes de eliminar factura: null 0 tramite:", params.get("idNumTramite"));
+			siniestrosManager.getEliminacionFacturaTramite(params.get("idNumTramite"), null, "0",params.get("cdramo")); // (EGS)
+			logger.debug("8 - Despues de eliminar factura");
 			for(int i=0;i<datosTablas.size();i++) {
 				siniestrosManager.guardaListaFacturaSiniestro(
 					params.get("idNumTramite"), 

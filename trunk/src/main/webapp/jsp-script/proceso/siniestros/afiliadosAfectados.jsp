@@ -5370,6 +5370,7 @@
 		                    'params.nfactura'		: _11_recordActivo.get('factura'),
 		                    'params.tipoPago'		: _tipoPago,
 		                    'params.procedencia' 	: 'SINIESTROS',
+		                    'params.cdramo'			: _11_params.CDRAMO,
 		                    'params.valorAccion' 	: 1
 						}
 						,success : function (response){
