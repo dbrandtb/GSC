@@ -3744,6 +3744,38 @@ function _iceMesaControl (ntramiteCargar) {
     });
 }
 
+function _habilitarBoton(btnId, status){
+    debug('>habilitarBoton', btnId);
+    var boton;
+    try{
+        if(!Ext.isEmpty(_fieldById(btnId))){
+            boton = _fieldById(btnId);
+            if(boton.xtype === 'button'){
+                debug('typeof(status)',typeof(status));
+                if(typeof(status) === 'boolean'){
+                    if(status){
+                        boton.enable();  
+                    }
+                    else{
+                        boton.disable();
+                    }
+                    //boton.enable = status;
+                }
+                else{
+                    debug('el status debe ser tipo booleano',status);
+                }
+            }
+            else{
+                debug('no existe id asociado a un boton...',btnId);
+            }
+        }
+    }
+    catch(err){
+        console.error("Error al habilitar boton "+err.message);
+    }
+    debug('<habilitarBoton',boton);
+}
+
 //funcion para revisar si estas en un iframe
 //http://stackoverflow.com/questions/326069/how-to-identify-if-a-webpage-is-being-loaded-inside-an-iframe-or-directly-into-t
 function inIframe () {

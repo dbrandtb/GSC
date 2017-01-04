@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.general.service.impl;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -225,6 +226,20 @@ public class RecibosManagerImpl implements RecibosManager {
         }
     }
 
+    @Override
+    public InputStream obtenerDatosReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String[] lista) throws Exception {
+        String paso = "";
+        InputStream inputStr = null;
+        try{
+            paso = "Generando reporte";
+            inputStr = recibosDAO.obtenerReporte(cdunieco, cdramo, estado, nmpoliza, lista);
+        }
+        catch(Exception ex){
+            Utils.generaExcepcion(ex, paso);
+        }
+        return inputStr;
+    }
+    
     public void setRecibosDAO(RecibosDAO recibosDAO) {
         this.recibosDAO = recibosDAO;
     }
