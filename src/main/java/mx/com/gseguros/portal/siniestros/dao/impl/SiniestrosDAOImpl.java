@@ -3293,11 +3293,13 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public void eliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion) throws Exception {
+	//public void eliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion) throws Exception { (EGS)
+	public void eliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion, String cdramo) throws Exception { // (EGS)
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_ntramite_i", ntramite);
 		params.put("pv_nfactura_i", nfactura);
 		params.put("pv_valorAccion_i", valorAccion);
+		params.put("PV_CDRAMO_I", cdramo);		// (EGS)
 		 
 		Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionFacturaTramite(this.getDataSource()), params);
 	}
@@ -3305,10 +3307,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected EliminacionFacturaTramite(DataSource dataSource)
 		{
-			super(dataSource, "PKG_PRESINIESTRO.p_borra_facturaTramite");
+			super(dataSource, "PKG_PRESINIESTRO.P_BORRA_FACTURATRAMITE");
 			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_valorAccion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRAMO_I",OracleTypes.VARCHAR)); //(EGS)
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
