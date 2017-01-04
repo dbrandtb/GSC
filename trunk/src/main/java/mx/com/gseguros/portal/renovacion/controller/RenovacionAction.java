@@ -665,7 +665,7 @@ public class RenovacionAction extends PrincipalCoreAction
 		session=ActionContext.getContext().getSession();
 		try{
 			Utils.validate(slist1, "No se recibieron polizas a renovar");
-//			renovacionManager.renovarPolizasMasivasIndividuales(slist1);
+			renovacionManager.renovarPolizasMasivasIndividuales(slist1);
 			exito = true;
 		}
 		catch(Exception ex){
