@@ -1,7 +1,9 @@
 package mx.com.gseguros.portal.despachador.service;
 
 import java.util.Date;
+import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.despachador.model.RespuestaDespachadorVO;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 
@@ -55,5 +57,7 @@ public interface DespachadorManager {
      * @throws Exception
      */
     public String recuperarDescripcionRol (String cdsisrol) throws Exception;
+ 
+    public Map<String, Item> pantallaDatos() throws Exception;
     
 }

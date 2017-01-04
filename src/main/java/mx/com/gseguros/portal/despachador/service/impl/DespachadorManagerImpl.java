@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,18 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.despachador.dao.DespachadorDAO;
 import mx.com.gseguros.portal.despachador.model.ConstantesDespachador;
 import mx.com.gseguros.portal.despachador.model.RespuestaDespachadorVO;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
+import mx.com.gseguros.portal.general.dao.PantallasDAO;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoRamo;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -58,6 +63,9 @@ public class DespachadorManagerImpl implements DespachadorManager {
 	
 	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
+	
+	@Autowired
+	private PantallasDAO pantallasDAO;
 	
 	@Override
 	public RespuestaDespachadorVO despachar (String ntramite, String status) throws Exception {
@@ -975,5 +983,85 @@ K                   ENCOLAR CON DATOS ORIGINALES
     @Override
     public String recuperarNombreUsuario (String cdusuari) throws Exception {
         return despachadorDAO.recuperarNombreUsuario(cdusuari);
+    }
+    
+    @Override
+    public Map<String, Item> pantallaDatos() throws Exception {
+        String paso = null;
+        Map<String, Item> items = new HashMap<String, Item>();
+        try {
+            paso = "Recuperando componentes";
+            logger.debug("paso: {}", paso);
+            
+            List<ComponenteVO> filtro = pantallasDAO.obtenerComponentes(
+                    null, //cdtiptra,
+                    null, //cdunieco,
+                    null, //cdramo,
+                    null, //cdtipsit,
+                    null, //estado,
+                    null, //cdsisrol,
+                    "PANTALLA_DATOS_DESPACHADOR",
+                    "FILTRO",
+                    null //orden
+                    );
+            
+            List<ComponenteVO> gridSucursales = pantallasDAO.obtenerComponentes(
+                    null, //cdtiptra,
+                    null, //cdunieco,
+                    null, //cdramo,
+                    null, //cdtipsit,
+                    null, //estado,
+                    null, //cdsisrol,
+                    "PANTALLA_DATOS_DESPACHADOR",
+                    "GRID_SUCURSALES",
+                    null //orden
+                    );
+            
+            List<ComponenteVO> gridUsuarios = pantallasDAO.obtenerComponentes(
+                    null, //cdtiptra,
+                    null, //cdunieco,
+                    null, //cdramo,
+                    null, //cdtipsit,
+                    null, //estado,
+                    null, //cdsisrol,
+                    "PANTALLA_DATOS_DESPACHADOR",
+                    "GRID_USUARIOS",
+                    null //orden
+                    );
+            
+            List<ComponenteVO> gridUsuariosAll = pantallasDAO.obtenerComponentes(
+                    null, //cdtiptra,
+                    null, //cdunieco,
+                    null, //cdramo,
+                    null, //cdtipsit,
+                    null, //estado,
+                    null, //cdsisrol,
+                    "PANTALLA_DATOS_DESPACHADOR",
+                    "GRID_USER_ALL",
+                    null //orden
+                    );
+            
+            paso = "Generando campos";
+            logger.debug("paso: {}", paso);
+            
+            GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+            gc.generaComponentes(filtro, true, false, true, false, false, false);
+            items.put("filtroItems", gc.getItems());
+            
+            gc.generaComponentes(gridSucursales, true, true, false, true, false, false);
+            items.put("gridSucursalesFields", gc.getFields());
+            items.put("gridSucursalesColumns", gc.getColumns());
+            
+            gc.generaComponentes(gridUsuarios, true, true, false, true, false, false);
+            items.put("gridUsuariosFields", gc.getFields());
+            items.put("gridUsuariosColumns", gc.getColumns());
+            
+            gc.generaComponentes(gridUsuariosAll, true, true, false, true, false, false);
+            items.put("gridUsuariosAllFields", gc.getFields());
+            items.put("gridUsuariosAllColumns", gc.getColumns());
+        } catch (Exception ex) {
+            Utils.generaExcepcion(ex, paso);
+        }
+        return items;
     }
 }

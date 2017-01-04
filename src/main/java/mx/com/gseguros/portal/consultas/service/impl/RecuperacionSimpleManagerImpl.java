@@ -1319,7 +1319,14 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_BORRADAS)) {
 				lista = endososDAO.recuperarCoberturasBorradas(params.get("cdunieco"), params.get("cdramo"),
 						params.get("estado"), params.get("nmpoliza"), params.get("nmsituac"), params.get("nmsuplem"));
-			}
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_DESPACHADOR_DATOS_SUCURSALES)) {
+			    lista = flujoMesaControlDAO.recuperarPropiedadesDespachadorSucursales(params.get("cdtipram"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_DESPACHADOR_DATOS_USUARIOS)) {
+                lista = flujoMesaControlDAO.recuperarPropiedadesDespachadorUsuarios(params.get("cdunieco"), params.get("cdnivel"),
+                        params.get("cdsisrol"));
+            } else if (consulta.equals(RecuperacionSimple.RECUPERAR_DESPACHADOR_DATOS_USER_ALL_X_ROL)) {
+                lista = flujoMesaControlDAO.recuperarPropiedadesDespachadorUsuariosAll(params.get("cdsisrol"));
+            }
 		}
 		catch(Exception ex)
 		{
