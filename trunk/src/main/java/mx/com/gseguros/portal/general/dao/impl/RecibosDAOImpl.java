@@ -1,7 +1,10 @@
 package mx.com.gseguros.portal.general.dao.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -18,10 +21,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
+import org.springframework.jdbc.support.lob.OracleLobHandler;
 
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.dao.RecibosDAO;
+import mx.com.gseguros.portal.general.dao.impl.ReportesDAOImpl.ObtieneReporteMapper;
+import mx.com.gseguros.portal.general.dao.impl.ReportesDAOImpl.ObtieneReporteSP;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
 import mx.com.gseguros.utils.Constantes;
@@ -389,4 +395,46 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
         }
     }
 
+    @Override
+    public InputStream obtenerReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String[] lista) throws Exception{
+        Map<String, Object> params = new HashMap<String, Object>();   
+        params.put("pv_cdunieco_i", cdunieco);
+        params.put("pv_cdramo_i",   cdramo);
+        params.put("pv_estado_i",   estado);
+        params.put("pv_nmpoliza_i", nmpoliza);
+        params.put("array",         new SqlArrayValue(lista));        
+        InputStream archivo =  null;
+        try {
+            Map<String, Object> resultado = ejecutaSP(new ObtieneReporteSP(getDataSource()), params);
+            logger.debug("resultado:"+resultado);
+            ArrayList<InputStream> inputList = (ArrayList<InputStream>) resultado.get("pv_registro_o");
+            archivo = inputList.get(0);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage(), e);
+        }
+        
+        return archivo;
+    }
+        
+    protected class ObtieneReporteSP extends StoredProcedure {
+        protected ObtieneReporteSP(DataSource dataSource) {
+            super(dataSource,"P_GET_REP_COS_AFI_REC");
+            declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("array",            OracleTypes.ARRAY, "LISTA_VARCHAR2"));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneReporteMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    protected class ObtieneReporteMapper implements RowMapper<InputStream> {
+        public InputStream mapRow(ResultSet rs, int rowNum) throws SQLException {
+            OracleLobHandler lobHandler = new OracleLobHandler();
+            return new ByteArrayInputStream(lobHandler.getClobAsString(rs, "DATA").getBytes()); //.getBlobAsBytes(rs, "DATA"));
+        }
+    }
 }

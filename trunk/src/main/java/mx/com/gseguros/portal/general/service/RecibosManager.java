@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.general.service;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -44,4 +45,6 @@ public interface RecibosManager {
 	public List<DetalleReciboVO> obtieneDetallesReciboSISA(String cdunieco, String cdramo, String estado, String nmpoliza, String nmrecibo, String nmfolcon) throws Exception;
 	
 	public void actualizarFolioSIGS(String cdunieco, String cdramo, String estado, String nmpoliza, String rmdbRn, UserVO user, List<Map<String, String>> lista) throws Exception;
+	
+	public InputStream obtenerDatosReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String[] lista) throws Exception;
 }

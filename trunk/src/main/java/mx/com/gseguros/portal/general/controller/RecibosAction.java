@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.general.controller;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
 import mx.com.gseguros.portal.general.service.RecibosManager;
+import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.utils.Utils;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -47,6 +49,14 @@ public class RecibosAction extends PrincipalCoreAction {
     private Map<String,Item>         imap             = null;
     
     private List<Map<String,String>> slist1           = null;
+    
+    protected String                 contentType;
+    
+    private InputStream              fileInputStream;
+    
+    private String                   filename;
+    
+    private String []                arrRec;
 	
 	/**
 	 * Action usado para la carga de la seccion de recibos, propagando parametros
@@ -243,6 +253,34 @@ public class RecibosAction extends PrincipalCoreAction {
         return SUCCESS;
     }    
     
+    public String procesoObtencionReporte() throws Exception{
+        logger.debug(Utils.log(
+                "\n###########################################"
+               ,"\n###### procesoObtencionReporte ######"
+               ,"\n###### params=",params
+               ,"\n###### arrRec=",arrRec
+               ));    
+        try {
+            Utils.validate(params,   "No se recibieron parametros");
+            Utils.validate(arrRec,   "No se recibieron recibos");
+            String cdunieco = params.get("cdunieco");
+            String cdramo   = params.get("cdramo");
+            String estado   = params.get("estado");
+            String nmpoliza = params.get("nmpoliza");
+            Utils.validate(cdunieco, "No se recibio la oficina",
+                           cdramo,   "No se recibio el producto",
+                           estado,   "No se recibio el estado",
+                           nmpoliza, "No se recibio la poliza");
+            contentType     = TipoArchivo.XLS.getContentType();
+            filename        = "DesgloseAsegurados"+TipoArchivo.XLS.getExtension();
+            fileInputStream = recibosManager.obtenerDatosReporte(cdunieco, cdramo, estado, nmpoliza, arrRec);
+        }
+        catch (Exception ex) {
+            respuesta = Utils.manejaExcepcion(ex);
+        }
+        return SUCCESS;
+    }
+    
 	// Getters and setters:
 	public Map<String, String> getParams() {
 		return params;
@@ -339,6 +377,38 @@ public class RecibosAction extends PrincipalCoreAction {
 
     public void setSlist1(List<Map<String, String>> slist1) {
         this.slist1 = slist1;
+    }
+
+    public InputStream getFileInputStream() {
+        return fileInputStream;
+    }
+
+    public void setFileInputStream(InputStream fileInputStream) {
+        this.fileInputStream = fileInputStream;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public String[] getArrRec() {
+        return arrRec;
+    }
+
+    public void setArrRec(String[] arrRec) {
+        this.arrRec = arrRec;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
 }

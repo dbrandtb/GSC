@@ -34,6 +34,7 @@
     var _URL_CONSOLIDA_RECIBOS       = '<s:url namespace="/general" action= "consolidarRecibos"       />';
     var _URL_DESCONSOLIDA_RECIBOS    = '<s:url namespace="/general" action= "desconsolidarRecibos"    />';
     var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleReciboSISA"/>';
+    var _URL_OBTENCION_REPORTE       = '<s:url namespace="/general" action= "procesoObtencionReporte" />';
     //var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action="obtieneDetalleRecibo"     />';
     //var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleRecibo"    />';
     var p_cdunieco                   = '<s:property                 value = "params.cdunieco"         />';
@@ -124,6 +125,8 @@ Ext.onReady(function(){
                             stripeRows: false,
                             getRowClass: function(record) {
                                 var style;
+                                debug('EstadoRecibo.Pendiente',EstadoRecibo.Pendiente);
+                                debug(record.data['status']);
                                 if (EstadoRecibo.Pendiente === record.data['status']) {
                                     style = 'generado-no-row';
                                 } 
@@ -199,7 +202,47 @@ Ext.onReady(function(){
                                 xtype    : 'button',
                                 itemId   : 'btnDesglose',
                                 text     : 'Desglose',
-                                disabled : true
+                                disabled : true,
+                                handler  : function(){
+                                    var lista = obtenerDataSelected(_fieldById('gridRecibos'));
+                                    debug('lista',lista);
+                                    var arrRec = [];
+                                    for(var i = 0; i < lista.length; i++){
+                                        arrRec[i] = lista[i]['nmrecibo'];
+                                    }
+                                    debug('arrRec',arrRec);
+                                    Ext.create('Ext.form.Panel').submit({
+                                        url             : _URL_OBTENCION_REPORTE
+                                        ,standardSubmit : true
+                                        ,target         : '_blank'
+                                        ,params         : {
+                                            'params.cdunieco' : p_cdunieco,
+                                            'params.cdramo'   : p_cdramo,
+                                            'params.estado'   : p_estado,
+                                            'params.nmpoliza' : p_nmpoliza,
+                                            'arrRec'          : arrRec
+                                        }
+                                    });
+                                    /*Ext.Ajax.request({
+                                        url      : _URL_OBTENCION_REPORTE,
+                                        jsonData : {
+                                            params    : {
+                                                'cdunieco' : p_cdunieco,
+                                                'cdramo'   : p_cdramo,
+                                                'estado'   : p_estado,
+                                                'nmpoliza' : p_nmpoliza
+                                            },
+                                            loadList       : obtenerDataSelected(_fieldById('gridRecibos'))
+                                        },
+                                        success  : function(response){
+                                            debug('recibos consolidados con numero de folio');
+                                            debug('response',response);
+                                        },
+                                        failure  : function(){
+                                            errorComunicacion();
+                                        }
+                                    });*/
+                                }
                             },
                             {
                                 xtype    : 'button', 

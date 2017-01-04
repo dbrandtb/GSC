@@ -248,5 +248,11 @@ var TipoUnidad = {
     Fronterizo  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoUnidad@FRONTERIZO.clave" />'
 };
 
+var EstadoRecibo = {
+        Pendiente   : '<s:property value="@mx.com.gseguros.portal.general.util.ReciboEstado@PENDIENTE.dsestado"  />',
+        Cancelado   : '<s:property value="@mx.com.gseguros.portal.general.util.ReciboEstado@CANCELADO.dsestado"  />',
+        Pagado      : '<s:property value="@mx.com.gseguros.portal.general.util.ReciboEstado@PAGADO.dsestado"     />',
+        Devuelto    : '<s:property value="@mx.com.gseguros.portal.general.util.ReciboEstado@DEVUELTO.dsestado"   />'
+};
 
 </script>
