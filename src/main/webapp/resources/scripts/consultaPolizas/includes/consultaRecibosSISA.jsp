@@ -303,15 +303,18 @@ Ext.onReady(function(){
 	           }
 	           debug('termina de recorrer seleccionados',folio,serie);
 	           debug('Antes de entrar en condiciones',conso, descon);
+	           if(conso === 0 && descon === 1){
+	               _habilitarBoton('btnDetalle'      ,true); //detalle
+	           }
 	           if(conso === 0 && descon > 1){
 	               _habilitarBoton('btnConsolidar'   ,true); //consolidar
-	               _habilitarBoton('btnDetalle'      ,true); //detalle
+	               _habilitarBoton('btnDetalle'      ,false); //detalle
 	               _habilitarBoton('btnDesglose'     ,true); //desglose
 	           }
 	           if(conso === 1 && descon === 0){
 	               seleccionarConsolidados(folio);
 	               _habilitarBoton('btnDesconsolidar',true); //desconsolidar
-	               _habilitarBoton('btnDetalle'      ,true); //detalle
+	               _habilitarBoton('btnDetalle'      ,false); //detalle
 	               _habilitarBoton('btnDesglose'     ,true); //desglose
 	           }
 	           if(conso > 0 || descon > 0){
