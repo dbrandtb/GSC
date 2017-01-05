@@ -2966,7 +2966,7 @@ public class EndososAction extends PrincipalCoreAction
 					paramCalcValorEndoso.put("pv_cdtipsup_i", tipoEndoso.getCdTipSup().toString());
 					endososManager.calcularValorEndoso(paramCalcValorEndoso);
 					
-					// Se confirma el endoso si cumple la validacion de fechas: 
+					/*// Se confirma el endoso si cumple la validacion de fechas: 
 					RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(
 							(String)omap1.get("pv_cdunieco_i")
 							,(String)omap1.get("pv_cdramo_i")
@@ -2981,7 +2981,7 @@ public class EndososAction extends PrincipalCoreAction
 							,flujo
 							,usuario.getUser()
 							,usuario.getRolActivo().getClave()
-							);
+							);*/
 					
 					if(smap1.get("confirmar").equals("auto")){
 						paso = "Realizando PDF de Vista Previa de Autos";
@@ -3030,6 +3030,26 @@ public class EndososAction extends PrincipalCoreAction
 						HttpUtil.generaArchivo(url,rutaDocumentos+"/"+pdfEndosoNom);
 						
 						smap2.put("pdfEndosoNom_o",pdfEndosoNom);
+					}
+					
+					RespuestaConfirmacionEndosoVO respConfirmacionEndoso =null;
+					if(smap1.get("confirmar").equalsIgnoreCase("si")){
+					 // Se confirma el endoso si cumple la validacion de fechas: 
+                        respConfirmacionEndoso = this.confirmarEndoso(
+                                (String)omap1.get("pv_cdunieco_i")
+                                ,(String)omap1.get("pv_cdramo_i")
+                                ,(String)omap1.get("pv_estado_i")
+                                ,(String)omap1.get("pv_nmpoliza_i")
+                                ,smap2.get("pv_nmsuplem_o")
+                                ,smap2.get("pv_nsuplogi_o")
+                                ,tipoEndoso.getCdTipSup().toString()
+                                ,""
+                                ,(Date)omap1.get("pv_fecha_i")
+                                ,null
+                                ,flujo
+                                ,usuario.getUser()
+                                ,usuario.getRolActivo().getClave()
+                                );
 					}
 					
 					if(smap1.get("confirmar").equalsIgnoreCase("si"))
@@ -10605,7 +10625,7 @@ public String retarificarEndosos()
 				paso = "Confirmando endoso";
 				logger.debug(paso);
 				
-				// Se confirma el endoso si cumple la validacion de fechas: 
+				/*// Se confirma el endoso si cumple la validacion de fechas: 
 				RespuestaConfirmacionEndosoVO respConfirmacionEndoso = this.confirmarEndoso(
 						cdunieco
 						,cdramo
@@ -10620,7 +10640,7 @@ public String retarificarEndosos()
 						,flujo
 						,cdusuari
 						,cdsisrol
-						);
+						);*/
 				
 				if(smap2.get("confirmar").equals("no")){
 					paso = "Realizando PDF de Vista Previa de Autos";
@@ -10665,6 +10685,27 @@ public String retarificarEndosos()
 					HttpUtil.generaArchivo(url,rutaDocumentos+"/"+pdfEndosoNom);
 					
 					smap2.put("pdfEndosoNom_o",pdfEndosoNom);
+				}
+				
+				RespuestaConfirmacionEndosoVO respConfirmacionEndoso = null ; 
+				
+				if(smap2.get("confirmar").equals("si")){
+				 // Se confirma el endoso si cumple la validacion de fechas: 
+	                 respConfirmacionEndoso = this.confirmarEndoso(
+	                        cdunieco
+	                        ,cdramo
+	                        ,estado
+	                        ,nmpoliza
+	                        ,nmsuplem
+	                        ,nsuplogi
+	                        ,cdtipsup
+	                        ,""
+	                        ,dFecha
+	                        ,cdtipsit
+	                        ,flujo
+	                        ,cdusuari
+	                        ,cdsisrol
+	                        );
 				}
 				
 				if(smap2.get("confirmar").equals("si")){// Si el endoso fue confirmado:
