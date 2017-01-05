@@ -453,11 +453,11 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	                if (ConstantesDespachador.TIPO_ASIGNACION_CARGA.equals(cdtipasig)) {
 	                    paso = "Recuperando siguiente usuario por carga";
 	                    cdusuari = despachadorDAO.recuperarSiguienteUsuarioCarga(cdunidspch, cdsisrol,
-	                            ConstantesDespachador.NIVEL_MATRIZ.equals(nivel));
+	                            ConstantesDespachador.NIVEL_MATRIZ.equals(nivel), ntramite);
 	                } else if (ConstantesDespachador.TIPO_ASIGNACION_CARRUSEL.equals(cdtipasig)) {
 	                    paso = "Recuperando siguiente usuario por carrusel";
 	                    cdusuari = despachadorDAO.recuperarSiguienteUsuarioCarrusel(cdunidspch, cdsisrol,
-                                ConstantesDespachador.NIVEL_MATRIZ.equals(nivel));
+                                ConstantesDespachador.NIVEL_MATRIZ.equals(nivel), ntramite);
 	                } else {
 	                    throw new ApplicationException("El tipo de turnado no es v\u00e1lido");
 	                }
