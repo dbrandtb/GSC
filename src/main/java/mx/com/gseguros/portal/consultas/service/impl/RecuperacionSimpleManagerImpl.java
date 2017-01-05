@@ -540,7 +540,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_USUARIOS_REASIGNACION_TRAMITE))
 			{
 				String ntramite = params.get("ntramite");
-				resp.setSlist(consultasDAO.recuperarUsuariosReasignacionTramite(ntramite));
+				resp.setSlist(consultasDAO.recuperarUsuariosReasignacionTramite(ntramite, cdusuari, cdsisrol));
 			}
 		}
 		catch(Exception ex)

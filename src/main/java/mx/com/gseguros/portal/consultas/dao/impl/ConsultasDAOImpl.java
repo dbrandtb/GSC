@@ -2578,10 +2578,12 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	}
 	
 	@Override
-	public List<Map<String,String>>recuperarUsuariosReasignacionTramite(String ntramite) throws Exception
+	public List<Map<String,String>>recuperarUsuariosReasignacionTramite(String ntramite, String cdusuari, String cdsisrol) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("ntramite" , ntramite);
+		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_cdusuari_i" , cdusuari);
+		params.put("pv_cdsisrol_i" , cdsisrol);
 		Map<String,Object> procRes = ejecutaSP(new RecuperarUsuariosReasignacionTramite(getDataSource()),params);
 		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
@@ -2596,7 +2598,9 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		protected RecuperarUsuariosReasignacionTramite(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_USUARIOS_REASIGNA");
-			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 			        "NTRAMITE", "CDUSUARI_ACTUAL", "STATUS_ACTUAL", "CDSISROL_ACTUAL",
 			        "CDUSUARI", "CDSISROL", "DSUSUARI", "TOTAL", "STATUS", "DSSISROL"
