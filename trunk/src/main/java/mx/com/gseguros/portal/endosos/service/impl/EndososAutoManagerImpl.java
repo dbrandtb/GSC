@@ -5928,7 +5928,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String ntramiteEmi = datosPoliza.get("ntramite");
 			
 			
-			if(flujo == null && ("si").equals(confirmar))
+			if(("si").equals(confirmar))
 			    {
 			    paso = "confirmarGuardandoDetallesTramiteEndoso";
 			    logger.debug(paso);
