@@ -302,8 +302,13 @@ Ext.onReady(function()
 										    jsonDatosConfirmacion.flujo = _p36_flujo;
 										}
 										_p36_store.each(function(record) {
-									    	debug( record.get('CVE_NUMERO_DE_SERIE'));
-									    	numSerie=(record.get('CVE_NUMERO_DE_SERIE'));
+										    if(_p36_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto){
+										    	debug( record.get('DES_NUMERO_DE_SERIE'));
+										    	numSerie=(record.get('DES_NUMERO_DE_SERIE'));
+										    }else{
+										        debug( record.get('CVE_NUMERO_DE_SERIE'));
+                                                numSerie=(record.get('CVE_NUMERO_DE_SERIE'));
+										    }
 									    });
 										debug('jsonDatosConfirmacion****',jsonDatosConfirmacion.slist1['OTVALOR99']);
 										//numSerie+=''+(record.get('parametros.pv_otvalor37'))+'|';
