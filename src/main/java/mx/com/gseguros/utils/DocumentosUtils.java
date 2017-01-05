@@ -18,16 +18,16 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.RectangleReadOnly;
-import com.lowagie.text.pdf.BaseFont;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfCopy;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.RectangleReadOnly;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class DocumentosUtils
 {
