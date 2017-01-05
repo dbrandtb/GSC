@@ -6818,6 +6818,7 @@ function _p30_confirmarEndoso()
 														function (me){
 			                                                boton.setText('Cargando...');
 			                                                boton.setDisabled(true);
+			                                                
 			                                                var json2 =
 															        {
 															            smap1 : {
@@ -6840,7 +6841,7 @@ function _p30_confirmarEndoso()
 															        });
 															        
 															if(!Ext.isEmpty(_p30_flujo)) {
-                                                                json.flujo = _p30_flujo;
+                                                                json2.flujo = _p30_flujo;
                                                             }       
                                                             
 			                                                Ext.Ajax.request( {
