@@ -13,6 +13,10 @@ var _p45_urlMarcarPoliza = '<s:url namespace="/endosos" action="marcarPolizaPara
 ////// variables //////
 var _p45_smap1 = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 debug('_p45_smap1:',_p45_smap1);
+
+var _p45_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
+debug('_p45_flujo:',_p45_flujo);
+
 ////// variables //////
 
 ////// overrides //////
@@ -83,11 +87,9 @@ Ext.onReady(function()
                             
                             me.disable();
                             me.setText('Cargando...');
-                            Ext.Ajax.request(
+                            
+                            var paramsConfirmar =
                             {
-                                url      : _p45_urlConfirmar
-                                ,params  :
-                                {
                                     'smap1.cdtipsup'  : _p45_smap1.cdtipsup
                                     ,'smap1.cdunieco' : _p45_smap1.CDUNIECO
                                     ,'smap1.cdramo'   : _p45_smap1.CDRAMO
@@ -103,7 +105,30 @@ Ext.onReady(function()
                                     ,'smap1.nmcancel' : _p45_smap1.NMCANCEL
                                     ,'smap1.comments' : ''
                                     ,'smap1.nmsuplem' : _p45_smap1.NMSUPLEM
-                                }
+                            };
+                            
+                            if(!Ext.isEmpty(_p45_flujo))
+                            {
+                                paramsConfirmar['flujo.ntramite']  = _p45_flujo.ntramite;
+                                paramsConfirmar['flujo.status']    = _p45_flujo.status;
+                                paramsConfirmar['flujo.cdtipflu']  = _p45_flujo.cdtipflu;
+                                paramsConfirmar['flujo.cdflujomc'] = _p45_flujo.cdflujomc;
+                                paramsConfirmar['flujo.webid']     = _p45_flujo.webid;
+                                paramsConfirmar['flujo.tipoent']   = _p45_flujo.tipoent;
+                                paramsConfirmar['flujo.claveent']  = _p45_flujo.claveent;
+                                paramsConfirmar['flujo.cdunieco']  = _p45_flujo.cdunieco;
+                                paramsConfirmar['flujo.cdramo']    = _p45_flujo.cdramo;
+                                paramsConfirmar['flujo.estado']    = _p45_flujo.estado;
+                                paramsConfirmar['flujo.nmpoliza']  = _p45_flujo.nmpoliza;
+                                paramsConfirmar['flujo.nmsituac']  = _p45_flujo.nmsituac;
+                                paramsConfirmar['flujo.nmsuplem']  = _p45_flujo.nmsuplem;
+                                paramsConfirmar['flujo.aux']       = _p45_flujo.aux;
+                            }
+                            
+                            Ext.Ajax.request(
+                            {
+                                url      : _p45_urlConfirmar
+                                ,params  : paramsConfirmar
                                 ,success : function(response)
                                 {
                                     me.setText('Confirmar');
