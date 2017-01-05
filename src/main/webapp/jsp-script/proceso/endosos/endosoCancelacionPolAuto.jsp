@@ -14,6 +14,10 @@ var _p43_urlValidaRazonCancelacion = '<s:url namespace="/cancelacion" action="va
 ////// variables //////
 var _p43_smap1 = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 debug('_p43_smap1:',_p43_smap1);
+
+var _p43_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
+debug('_p43_flujo:',_p43_flujo);
+
 ////// variables //////
 
 ////// overrides //////
@@ -113,11 +117,9 @@ Ext.onReady(function()
                                             if(json.success==true)
                                             {
                                                 _setLoading(true,form);
-                                                Ext.Ajax.request(
+                                                
+                                                var paramsConfirmar =
                                                 {
-                                                    url      : _p43_urlConfirmar
-                                                    ,params  :
-                                                    {
                                                         'smap1.cdunieco'  : _p43_smap1.CDUNIECO
                                                         ,'smap1.cdramo'   : _p43_smap1.CDRAMO
                                                         ,'smap1.estado'   : _p43_smap1.ESTADO
@@ -127,7 +129,30 @@ Ext.onReady(function()
                                                         ,'smap1.fevencim' : _p43_smap1.FEVENCIM
                                                         ,'smap1.fecancel' : Ext.Date.format(_fieldByName('fecancel').getValue(),'d/m/Y')
                                                         ,'smap1.cdtipsup' : _p43_smap1.cdtipsup
-                                                    }
+                                                };
+                                                
+                                                if(!Ext.isEmpty(_p43_flujo))
+                                                {
+                                                    paramsConfirmar['flujo.ntramite']  = _p43_flujo.ntramite;
+                                                    paramsConfirmar['flujo.status']    = _p43_flujo.status;
+                                                    paramsConfirmar['flujo.cdtipflu']  = _p43_flujo.cdtipflu;
+                                                    paramsConfirmar['flujo.cdflujomc'] = _p43_flujo.cdflujomc;
+                                                    paramsConfirmar['flujo.webid']     = _p43_flujo.webid;
+                                                    paramsConfirmar['flujo.tipoent']   = _p43_flujo.tipoent;
+                                                    paramsConfirmar['flujo.claveent']  = _p43_flujo.claveent;
+                                                    paramsConfirmar['flujo.cdunieco']  = _p43_flujo.cdunieco;
+                                                    paramsConfirmar['flujo.cdramo']    = _p43_flujo.cdramo;
+                                                    paramsConfirmar['flujo.estado']    = _p43_flujo.estado;
+                                                    paramsConfirmar['flujo.nmpoliza']  = _p43_flujo.nmpoliza;
+                                                    paramsConfirmar['flujo.nmsituac']  = _p43_flujo.nmsituac;
+                                                    paramsConfirmar['flujo.nmsuplem']  = _p43_flujo.nmsuplem;
+                                                    paramsConfirmar['flujo.aux']       = _p43_flujo.aux;
+                                                }
+                                                
+                                                Ext.Ajax.request(
+                                                {
+                                                    url      : _p43_urlConfirmar
+                                                    ,params  : paramsConfirmar
                                                     ,success : function(response)
                                                     {
                                                         _setLoading(false,form);
