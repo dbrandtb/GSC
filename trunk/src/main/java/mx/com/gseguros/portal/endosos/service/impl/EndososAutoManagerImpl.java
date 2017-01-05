@@ -2037,7 +2037,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso: " + res);
 				
 				if(res == null || res == 0 || res == -1){
-					logger.debug("Endoso Cambio AseguradoAlterno no exitoso");
+					logger.error("Endoso Cambio AseguradoAlterno no exitoso: XX Sin numero de endoso.");
 					return false;
 				}else{
 					endosoRecuperado = res.intValue();
@@ -2067,7 +2067,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					return false;
 				}
 			}else{
-				logger.debug("Endoso Cambio AseguradoAlterno no exitoso, valor de endoso en -1");
+				logger.error("Endoso Cambio AseguradoAlterno no exitoso: XX Sin numero de endoso.");
 				return false;
 			}
 			
@@ -2124,7 +2124,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.debug("Respuesta de Cambio AdaptacionesRC numero de endoso: " + res);
 					
 					if(res == null || res == 0 || res == -1){
-						logger.debug("Endoso Cambio AdaptacionesRC no exitoso");
+						logger.error("Endoso Cambio AdaptacionesRC no exitoso: XX Sin numero de endoso.");
 						return false;
 					}else{
 						endosoRecuperado = res.intValue();
@@ -2154,7 +2154,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					return false;
 				}
 			}else{
-				logger.debug("Endoso Cambio AdaptacionesRC no exitoso, valor de endoso en -1");
+				logger.error("Endoso Cambio AdaptacionesRC no exitoso: XX Sin numero de endoso.");
 				return false;
 			}
 			
@@ -2215,7 +2215,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.debug("Respuesta de Cambio Vigencia, numero de endoso: " + res);
 					
 					if(res == null || res == 0 || res == -1){
-						logger.debug("Endoso Cambio Vigencia no exitoso");
+						logger.error("Endoso Cambio Vigencia no exitoso: XX Sin numero de endoso.");
 						return false;
 					}else{
 						endosoRecuperado = res.intValue();
@@ -2246,7 +2246,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					return false;
 				}
 			}else{
-				logger.debug("Endoso Cambio Vigencia no exitoso, valor de endoso en -1");
+				logger.error("Endoso Cambio Vigencia no exitoso: XX Sin numero de endoso.");
 				return false;
 			}
 				
@@ -2300,7 +2300,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.debug("Respuesta de endosoTextoLibre, numero de endoso: " + res);
 					
 					if(res == null || res == 0 || res == -1){
-						logger.debug("Endoso endosoTextoLibre no exitoso");
+						logger.error("Endoso endosoTextoLibre no exitoso: XX Sin numero de endoso.");
 						return false;
 					}else{
 						endosoRecuperado = res.intValue();
@@ -2331,7 +2331,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					return false;
 				}
 			}else{
-				logger.debug("Endoso endosoTextoLibre no exitoso, valor de endoso en -1");
+				logger.error("Endoso endosoTextoLibre no exitoso: XX Sin numero de endoso.");
 				return false;
 			}
 			
@@ -2399,7 +2399,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				logger.debug("Respuesta de Cambio Beneficiario numero de endoso: " + res);
 				
 				if(res == null || res == 0 || res == -1){
-					logger.debug("Endoso Cambio Beneficiario no exitoso");
+					logger.error("Endoso Cambio Beneficiario no exitoso: XX Sin numero de endoso.");
 					return false;
 				}else{
 					endosoRecuperado = res.intValue();
@@ -2429,7 +2429,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					return false;
 				}
 			}else{
-				logger.debug("Endoso Cambio Beneficiario no exitoso, valor de endoso en -1");
+				logger.error("Endoso Cambio Beneficiario no exitoso: XX Sin numero de endoso.");
 				return false;
 			}
 			
@@ -2486,7 +2486,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.debug("Respuesta de Cambio Placas Motor, numero de endoso: " + res);
 					
 					if(res == null || res == 0 || res == -1){
-						logger.debug("Endoso Cambio Placas Motor no exitoso");
+						logger.error("Endoso Cambio Placas Motor no exitoso: XX Sin numero de endoso.");
 						return false;
 					}else{
 						endosoRecuperado = res.intValue();
@@ -2517,7 +2517,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					return false;
 				}
 			}else{
-				logger.debug("Endoso Cambio Placas Motor no exitoso, valor de endoso en -1");
+				logger.error("Endoso Cambio Placas Motor no exitoso: XX Sin numero de endoso.");
 				return false;
 			}
 				
@@ -2574,7 +2574,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.debug("Respuesta de Cambio Tipo Servicio, numero de endoso: " + res);
 					
 					if(res == null || res == 0 || res == -1){
-						logger.debug("Endoso Cambio Tipo Servicio no exitoso");
+						logger.error("Endoso Cambio Tipo Servicio no exitoso: XX Sin numero de endoso.");
 						return false;
 					}else{
 						endosoRecuperado = res.intValue();
@@ -2605,7 +2605,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					return false;
 				}
 			}else{
-				logger.debug("Endoso Cambio Tipo Servicio no exitoso, valor de endoso en -1");
+				logger.error("Endoso Cambio Tipo Servicio no exitoso: XX Sin numero de endoso.");
 				return false;
 			}
 				
@@ -2661,7 +2661,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					logger.debug("Respuesta de Cambio Serie numero de endoso: " + res);
 					
 					if(res == null || res == 0 || res == -1){
-						logger.debug("Endoso Cambio Serie no exitoso");
+						logger.error("Endoso Cambio Serie no exitoso: XX Sin numero de endoso.");
 						return false;
 					}else{
 						endosoRecuperado = res.intValue();
@@ -2692,7 +2692,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					return false;
 				}
 			}else{
-				logger.debug("Endoso Cambio Serie no exitoso, valor de endoso en -1");
+				logger.error("Endoso Cambio Serie no exitoso: XX Sin numero de endoso.");
 				return false;
 			}
 			
@@ -3062,22 +3062,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			Map<String,String> datosPoliza = consultasDAO.recuperarDatosPolizaParaDocumentos(cdunieco, cdramo, estado, nmpoliza);
 			String ntramiteEmi = datosPoliza.get("ntramite");
 			
-			String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
-					ntramiteEmi
-					,cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,nmsuplem
-					,cdtipsup
-					,nsuplogi
-					,null //dscoment
-					,dFechaEndoso
-					,flujo
-					,cdusuari
-					,cdsisrol
-					,true //confirmar
-					);
 			
 			/*
 			endososDAO.confirmarEndosoB(cdunieco,cdramo,estado,nmpoliza,nmsuplem, nsuplogi, cdtipsup, null);
@@ -3123,6 +3107,24 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			if(this.endosoVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
 				logger.info("Endoso de Vigencia exitoso...");
+				
+				String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
+	                    ntramiteEmi
+	                    ,cdunieco
+	                    ,cdramo
+	                    ,estado
+	                    ,nmpoliza
+	                    ,nmsuplem
+	                    ,cdtipsup
+	                    ,nsuplogi
+	                    ,null //dscoment
+	                    ,dFechaEndoso
+	                    ,flujo
+	                    ,cdusuari
+	                    ,cdsisrol
+	                    ,true //confirmar
+	                    );
+				
 			}else{
 				logger.error("Error al ejecutar los WS de endoso de Vigencia de poliza");
 				
@@ -6805,7 +6807,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						String respuesta[] = res.split("\\|");
 						
 						if(Integer.parseInt(respuesta[0].toString()) == 0 ){
-							logger.debug("Endoso Cambio AseguradoAlterno no exitoso");
+							logger.error("Endoso Cambio AseguradoAlterno no exitoso: XX Sin numero de endoso.");
 							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, nsuplogi, nmsuplem, Integer.parseInt(respuesta[1].toString()), "Error en endoso de actualizacion de nombre, rfc y fecha nacimiento", true);
 							if(endosoRevertido){
 								logger.error("Endoso revertido exitosamente.");
@@ -6952,7 +6954,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso =========> : " + res);
 				
 				if(Integer.parseInt(respu[0].toString()) == 0 ){
-					logger.debug("Endoso Cambio AseguradoAlterno no exitoso");
+					logger.error("Endoso Cambio AseguradoAlterno no exitoso: XX Sin numero de endoso.");
 					throw new ApplicationException(respu[1].toString());
 				}else{
 					endosoRecuperado = Integer.parseInt(respu[0].toString());
@@ -7105,7 +7107,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 			String respu[] = res.split("\\|");
 			if(Integer.parseInt(respu[0].toString()) == 0 ){
-				logger.debug("Endoso Cambio AseguradoAlterno no exitoso");
+				logger.error("Endoso Cambio AseguradoAlterno no exitoso: XX Sin numero de endoso.");
 				throw new ApplicationException(respu[1].toString());
 			}else{
 				logger.debug("Endoso Cambio AseguradoAlterno exitoso");
@@ -9030,7 +9032,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	                    logger.debug("Respuesta de Beneficiario Vida Auto, numero de endoso: " + res);
 	                    
 	                    if(res == null || res == 0 || res == -1){
-	                        logger.debug("Endoso Beneficiario Vida Auto no exitoso");
+	                        logger.error("Endoso Beneficiario Vida Auto no exitoso: XX Sin numero de endoso.");
 	                        return false;
 	                    }else{
 	                        endosoRecuperado = res.intValue();
@@ -9080,7 +9082,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	                    return false;
 	                }
 	            }else{
-	                logger.debug("Endoso Cambio Beneficiario no exitoso, valor de endoso en -1");
+	                logger.error("Endoso Cambio Beneficiario no exitoso: XX Sin numero de endoso.");
 	                return false;
 	            }
 	            
