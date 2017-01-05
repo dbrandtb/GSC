@@ -135,7 +135,7 @@ var cdper                        = null;
 var cdperson                     = null;
 var formaPago                    = null;
 var _p28_negocio                 = null;
-
+var _rangoValorBaseDatos;
 // var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 var plazoenanios;
 ////// variables //////
@@ -4511,12 +4511,12 @@ function _p28_cargarRangoValorRamo5(callback)
                         if(valor.lastValue>valormax)
                          {
                             _fieldLikeLabel('VALOR VEH').setMaxValue(valormax);
-                            _fieldLikeLabel('VALOR VEH').setValue(valormax);
+//                             _fieldLikeLabel('VALOR VEH').setValue(valormax);
                          }
                         else(valor.lastValue<valormin)
                          {
                             _fieldLikeLabel('VALOR VEH').setMinValue(valormin);
-                            _fieldLikeLabel('VALOR VEH').setValue(valormin);
+//                             _fieldLikeLabel('VALOR VEH').setValue(valormin);
                          }
                         
                         if(_p28_smap1.cdsisrol =='EJECUTIVOCUENTA')
@@ -4546,8 +4546,17 @@ function _p28_cargarRangoValorRamo5(callback)
                         }
                        return r;
                     }
+
+                    try
+                    {
+                        _rangoValorBaseDatos(valor, json);
+                    }
+                    catch(e)
+                    {
+                        debugError(e);
+                    }
                     valor.isValid();
-                    //vils llama filtrando record
+
                     _p28_cargarParametrizacionCoberturas(callback);
                 }
                 else
