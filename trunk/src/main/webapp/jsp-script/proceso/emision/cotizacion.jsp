@@ -1393,8 +1393,6 @@ function llenandoCampos (json)
          debug('fechaHoy='    , fechaHoy);
          debug('fechaLimite=' , fechaLimite);
          debug('vencida='     , vencida, '.');
-         
-         
     
          _0_limpiar();
     
@@ -1404,12 +1402,22 @@ function llenandoCampos (json)
          var diaDif = milDif/(1000*60*60*24);
          debug('diaDif:',diaDif);
        
-         /*if(!maestra&&!vencida)
+         if(diaDif<0)
          {
-             _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y'));
-         }*/
+               diaDif = diaDif*-1;
+         }
          
-         _fieldByName('feini').setValue(new Date());
+         debug('diaDif:',diaDif);
+         
+         if(!Ext.isEmpty(json.slist1[0]['feini']))
+         {
+             _fieldByName('feini').setValue(Ext.Date.parse(json.slist1[0]['feini'],'d/m/Y'));
+         }
+         else
+         {
+             _fieldByName('feini').setValue(new Date());
+         }
+         
          _fieldByName('fefin').setValue
          (
              Ext.Date.add
@@ -1444,7 +1452,6 @@ function llenandoCampos (json)
  //<< ----------------------------------------------------------------------------     
         if(cargarXpoliza || Ext.isEmpty(json.smap1.NTRAMITE))
         {
-            _0_limpiar();
             for(var i=0;i<json.slist1.length;i++)
             {
                 if(_0_smap1.SITUACION=='AUTO')
