@@ -117,7 +117,7 @@ _p54_gridButtons.push(
 
 Ext.onReady(function()
 {
-    Ext.Ajax.timeout = 1000*60*10; //10 minutos
+    Ext.Ajax.timeout = 1*60*60*1000; //1 hr
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
@@ -1338,7 +1338,7 @@ Ext.onReady(function()
                                                 ,{
                                                     xtype       : 'displayfield'
                                                     ,fieldLabel : 'INICIO DE VIGENCIA'
-                                                    ,value      : jsonSIGS.smap1.feefecto
+                                                    ,value      : jsonSIGS.smap1.feproren
                                                 }
                                                 ,{
                                                     xtype       : 'displayfield'
