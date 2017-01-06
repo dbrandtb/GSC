@@ -32,6 +32,7 @@ import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.MailService;
+import mx.com.gseguros.portal.general.util.FlujoMC;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
@@ -2075,7 +2076,11 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
             logger.debug(paso);
             cdsucadm = despachadorDAO.recuperarSucursalUsuarioPorTipoTramite(cdusuari, cdflujomc);
 			
-            if(!StringUtils.isBlank(cdramo) && !StringUtils.isBlank(cdagente)){
+            if(StringUtils.isNotBlank(cdramo)
+                    && StringUtils.isNotBlank(cdagente)
+                    && (!FlujoMC.AUTOS_ENDOSO.getCdflujomc().equals(cdflujomc)) // que no sea endoso de auto
+                    && (!FlujoMC.SALUD_ENDOSO.getCdflujomc().equals(cdflujomc)) // que no sea endoso de salud
+                ) {
                 try{
                     paso = "Recuperando cdunieco del agente";
                     logger.debug(paso);
