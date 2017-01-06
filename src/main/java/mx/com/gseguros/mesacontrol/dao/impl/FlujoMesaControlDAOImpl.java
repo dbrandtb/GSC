@@ -4380,7 +4380,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
             declareParameter(new SqlParameter("nivel"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
             String[] cols = new String[] {
-                    "CDUSUARI", "DSUSUARI", "SWACTIVO", "CDSISROL", "CDESTADO", "DSSISROL", "EXCLUIDO"
+                    "CDUSUARI", "DSUSUARI", "SWACTIVO", "CDSISROL", "CDESTADO", "DSSISROL", "EXCLUIDO", "TRAMITES"
                     };
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4408,7 +4408,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
             declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
             String[] cols = new String[] {
                     "CDUSUARI", "DSUSUARI", "SWACTIVO", "CDSISROL", "CDESTADO", "DSSISROL", "EXCLUIDO",
-                    "SUCURSAL_DANIOS", "SUCURSAL_SALUD", "SWSUSMAT"
+                    "SUCURSAL_DANIOS", "SUCURSAL_SALUD", "SWSUSMAT", "TRAMITES"
                     };
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
