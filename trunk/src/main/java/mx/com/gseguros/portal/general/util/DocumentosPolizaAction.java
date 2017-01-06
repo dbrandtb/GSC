@@ -647,8 +647,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	public void creaCarpeta(){
 		try {
 	        success = true;	        
-	        Utils.validate(params.get("path"), "No se recibio el parametro params.path");
-	        path =params.get("path");
+	        Utils.validate(path, "No se recibio el parametro path");
 	        logger.debug("path recibido: "+path);	
 	        File   carpeta        = new File(path);
 	        boolean creado = false;
