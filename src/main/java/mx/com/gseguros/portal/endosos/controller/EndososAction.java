@@ -3033,7 +3033,7 @@ public class EndososAction extends PrincipalCoreAction
 					}
 					
 					RespuestaConfirmacionEndosoVO respConfirmacionEndoso =null;
-					if(smap1.get("confirmar").equalsIgnoreCase("si")){
+					/*if(smap1.get("confirmar").equalsIgnoreCase("si")){
 					 // Se confirma el endoso si cumple la validacion de fechas: 
                         respConfirmacionEndoso = this.confirmarEndoso(
                                 (String)omap1.get("pv_cdunieco_i")
@@ -3051,7 +3051,7 @@ public class EndososAction extends PrincipalCoreAction
                                 ,usuario.getRolActivo().getClave()
                                 );
 					}
-					
+					*/
 					if(smap1.get("confirmar").equalsIgnoreCase("si"))
 					{
 					    paso = "Asigando status Mpoliper a M";
@@ -3062,7 +3062,24 @@ public class EndososAction extends PrincipalCoreAction
                                                         , (String)omap1.get("pv_nmpoliza_i")
                                                         , "0");
 					    
-					// Si el endoso fue confirmado:
+					
+                     // Se confirma el endoso si cumple la validacion de fechas: 
+                        respConfirmacionEndoso = this.confirmarEndoso(
+                                (String)omap1.get("pv_cdunieco_i")
+                                ,(String)omap1.get("pv_cdramo_i")
+                                ,(String)omap1.get("pv_estado_i")
+                                ,(String)omap1.get("pv_nmpoliza_i")
+                                ,smap2.get("pv_nmsuplem_o")
+                                ,smap2.get("pv_nsuplogi_o")
+                                ,tipoEndoso.getCdTipSup().toString()
+                                ,""
+                                ,(Date)omap1.get("pv_fecha_i")
+                                ,null
+                                ,flujo
+                                ,usuario.getUser()
+                                ,usuario.getRolActivo().getClave()
+                                );
+                     // Si el endoso fue confirmado:
 					if(respConfirmacionEndoso.isConfirmado()) {
 						endosoConfirmado = true;
 					
@@ -10689,7 +10706,7 @@ public String retarificarEndosos()
 				
 				RespuestaConfirmacionEndosoVO respConfirmacionEndoso = null ; 
 				
-				if(smap2.get("confirmar").equals("si")){
+				/*if(smap2.get("confirmar").equals("si")){
 				 // Se confirma el endoso si cumple la validacion de fechas: 
 	                 respConfirmacionEndoso = this.confirmarEndoso(
 	                        cdunieco
@@ -10706,9 +10723,26 @@ public String retarificarEndosos()
 	                        ,cdusuari
 	                        ,cdsisrol
 	                        );
-				}
+				}*/
 				
 				if(smap2.get("confirmar").equals("si")){// Si el endoso fue confirmado:
+				 // Se confirma el endoso si cumple la validacion de fechas: 
+                    respConfirmacionEndoso = this.confirmarEndoso(
+                           cdunieco
+                           ,cdramo
+                           ,estado
+                           ,nmpoliza
+                           ,nmsuplem
+                           ,nsuplogi
+                           ,cdtipsup
+                           ,""
+                           ,dFecha
+                           ,cdtipsit
+                           ,flujo
+                           ,cdusuari
+                           ,cdsisrol
+                           );
+                    
 					if(respConfirmacionEndoso.isConfirmado())
 						{
 							endosoConfirmado = true;
