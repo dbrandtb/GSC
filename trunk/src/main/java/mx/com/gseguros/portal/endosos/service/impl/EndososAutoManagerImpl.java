@@ -5928,7 +5928,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String ntramiteEmi = datosPoliza.get("ntramite");
 			
 			
-			if(("si").equals(confirmar))
+			/*if(("si").equals(confirmar))
 			    {
 			    paso = "confirmarGuardandoDetallesTramiteEndoso";
 			    logger.debug(paso);
@@ -5949,7 +5949,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	                    ,false //confirmar
 	                    );
 	            valores.put("mensajeDespacho", mensajeDespacho);
-			    }
+			    }*/
 			
 			/*Map<String,String> valores = new HashMap<String,String>();
 			valores.put("otvalor01" , ntramiteEmi);
@@ -6157,6 +6157,26 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 					
 					}
+					
+					paso = "confirmarGuardandoDetallesTramiteEndoso";
+	                logger.debug(paso);
+	                String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
+	                        ntramiteEmi
+	                        ,cdunieco
+	                        ,cdramo
+	                        ,estado
+	                        ,nmpoliza
+	                        ,propWS.getNmsuplem()
+	                        ,cdtipsup
+	                        ,propWS.getNsuplogi() //nsuplogi
+	                        ,null //dscoment
+	                        ,feinival
+	                        ,flujo
+	                        ,cdusuari
+	                        ,cdsisrol
+	                        ,false //confirmar
+	                        );
+	                valores.put("mensajeDespacho", mensajeDespacho);
 				}
 		}
 		catch(Exception ex)
@@ -6522,7 +6542,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
 			endososDAO.calcularValorEndoso(mapaValorEndoso);
 			
-			if(("si").equals(confirmar))
+			/*if(("si").equals(confirmar))
 			{
 			    String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
 	                    ntramite
@@ -6541,7 +6561,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	                    ,true
 	                    );
 	            iniciarEndosoResp.put("mensajeDespacho", mensajeDespacho);  
-			}
+			}*/
 			
 
 			String nmsuplemGen = nmsuplem;
@@ -6604,6 +6624,24 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						}
 						
 					}
+					
+					String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
+	                        ntramite
+	                        ,cdunieco
+	                        ,cdramo
+	                        ,estado
+	                        ,nmpoliza
+	                        ,nmsuplem
+	                        ,cdtipsup
+	                        ,nsuplogi
+	                        ,null //dscoment
+	                        ,dFechaEndoso
+	                        ,flujo
+	                        ,cdusuari
+	                        ,cdsisrol
+	                        ,true
+	                        );
+	                iniciarEndosoResp.put("mensajeDespacho", mensajeDespacho); 
 					
 					paso = "Ejecutando caratula";
 					logger.debug(paso);
