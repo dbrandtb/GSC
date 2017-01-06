@@ -27,7 +27,6 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.despachador.model.RespuestaDespachadorVO;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -1404,6 +1403,8 @@ public class MesaControlAction extends PrincipalCoreAction
         logger.debug("slist1: "+slist1);
         try
         {
+            this.session = ActionContext.getContext().getSession();
+            UserVO usuario = Utils.validateSession(session);
             
             Utils.validate(smap1, "No hay datos para reasignar tramite");
             Utils.validate(smap1, "No hay lista de tramites para reasignar");
@@ -1415,24 +1416,10 @@ public class MesaControlAction extends PrincipalCoreAction
             
             for(Map<String,String> tramite : slist1){
                 String ntramite = tramite.get("NTRAMITE");
-                RespuestaDespachadorVO reasignado = despachadorManager.despacharPorZona(ntramite, zonaReasig);
+                String mensaje = despachadorManager.despacharPorZona(ntramite, zonaReasig, usuario.getUser(),
+                        usuario.getRolActivo().getClave());
                 
-                String paso = "Recuperando nombre de usuario";
-                logger.debug(paso);
-                String dsusuari = despachadorManager.recuperarNombreUsuario(reasignado.getCdusuari());
-                
-                paso = "Recuperando descripci\u00f3n de estatus";
-                logger.debug(paso);
-                String dsstatus = despachadorManager.recuperarDescripcionEstatus(reasignado.getStatus());
-                
-                paso = "Recuperando descripci\u00f3n de rol";
-                logger.debug(paso);
-                String dssisrol = despachadorManager.recuperarDescripcionRol(reasignado.getCdsisrol());
-                
-                
-                resultadosReasignacion = Utils.join(resultadosReasignacion, "<br/>* Tr\u00e1mite ", ntramite, " enviado a ", dsusuari, " (", reasignado.getCdusuari().toUpperCase(),
-                        ", sucursal ", reasignado.getCdunieco(), ", rol ", dssisrol,") en estatus \"",
-                        dsstatus,"\"");
+                resultadosReasignacion = Utils.join(resultadosReasignacion, "<br/>* ", mensaje);
             }
             
             logger.debug(Utils.log("Resultado final de Reasignacion de tramites: ", resultadosReasignacion));

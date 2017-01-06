@@ -29,10 +29,11 @@ public interface DespachadorManager {
      * Metodo para despachar un tramite por zona.
      * @param ntramite
      * @param zona
-     * @return RespuestaDespachadorVO
+     * @return String
      * @throws Exception
      */
-    public RespuestaDespachadorVO despacharPorZona (String ntramite, String zonaDespacho) throws Exception;
+    public String despacharPorZona (String ntramite, String zonaDespacho, String cdusuariSes,
+            String cdsisrolSes) throws Exception;
     
     /**
      * Recupera el nombre del usuario desde la clave de usuario

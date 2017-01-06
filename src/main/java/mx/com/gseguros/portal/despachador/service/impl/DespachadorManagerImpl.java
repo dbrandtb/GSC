@@ -668,7 +668,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 String dssisrolSes = this.recuperarDescripcionRol(cdsisrolSes),
                        dssisrol    = this.recuperarDescripcionRol(cdsisrolDes);
                 
-                result.setMessage(Utils.join("Tr\u00e1mite asignado a ", dsusuari, " (", cdusuariDes.toUpperCase(), ", sucursal ", cdunieco,
+                result.setMessage(Utils.join("Tr\u00e1mite asignado a ", dsusuari, " (sucursal ", cdunieco,
                         ", rol ", dssisrol, ") en estatus \"", dsstatus,
                         "\" por parte de ", dsusuariSes, " (rol ", dssisrolSes, ") con las siguientes observaciones: ", comments));
                 
@@ -808,8 +808,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         logger.debug(paso);
                         String dssisrol = this.recuperarDescripcionRol(destino.getCdsisrol());
                         
-                        result.setMessage(Utils.join("Tr\u00e1mite enviado a ", dsusuari, " (", destino.getCdusuari().toUpperCase(),
-                                ", sucursal ", destino.getCdunieco(), ", rol ", dssisrol,") en estatus \"",
+                        result.setMessage(Utils.join("Tr\u00e1mite enviado a ", dsusuari, " (sucursal ", destino.getCdunieco(), ", rol ", dssisrol,") en estatus \"",
                                 dsstatus, "\" con las siguientes observaciones: ", comments));
                         
                         if (sinGrabarDetalle == false) {
@@ -826,7 +825,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                                     permisoAgente ? "S" : "N",
                                     destino.getCdusuari(),
                                     destino.getCdsisrol(),
-                                    status,
+                                    destino.getStatus(),
                                     false // cerrado
                                     );
                         }
@@ -898,15 +897,18 @@ K                   ENCOLAR CON DATOS ORIGINALES
     }
     
     @Override
-    public RespuestaDespachadorVO despacharPorZona (String ntramite, String zonaDespacho) throws Exception {
+    public String despacharPorZona (String ntramite, String zonaDespacho, String cdusuariSes,
+            String cdsisrolSes) throws Exception {
         logger.debug(Utils.log(
                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
                 "\n@@@@@@ despacharPorZona @@@@@@",
                 "\n@@@@@@ ntramite     = " , ntramite,
-                "\n@@@@@@ zonaDespacho = " , zonaDespacho));
+                "\n@@@@@@ zonaDespacho = " , zonaDespacho,
+                "\n@@@@@@ cdusuariSes  = " , cdusuariSes,
+                "\n@@@@@@ cdsisrolSes  = " , cdsisrolSes));
         
         String paso = null;
-        RespuestaDespachadorVO result = null;
+        String mensaje = null;
         
         try {
             
@@ -965,19 +967,88 @@ K                   ENCOLAR CON DATOS ORIGINALES
              
             quemados.put(ConstantesDespachador.ZONA_COMODIN_USUARIO , mapaComodin);
             
-            result = this.despachar(cdtipram, cdtipflu, cdflujomc, ntramite, cdramo, cdtipsit, zonaDespacho, nivel, cdunidspch, status, cdsisrol,
+            RespuestaDespachadorVO destino = this.despachar(cdtipram, cdtipflu, cdflujomc, ntramite, cdramo, cdtipsit, zonaDespacho, nivel, cdunidspch, status, cdsisrol,
                     zonaDespacho, nivel, cdunidspch, status, cdsisrol, quemados, sb);
             
             logger.debug(sb.toString());
+            
+            // Actualizando datos del tramite:
+            
+            Date fechaHoy = new Date();
+            
+            paso = "Actualizando tr\u00e1mite";
+            logger.debug(paso);
+            flujoMesaControlDAO.actualizarStatusTramite(
+                    ntramite,
+                    destino.getStatus(),
+                    fechaHoy,
+                    destino.getCdusuari(),
+                    destino.getCdunieco()
+                    );
+            
+            paso = "Cerrando historial anterior";
+            logger.debug(paso);
+            despachadorDAO.cerrarHistorialTramite(ntramite, fechaHoy, cdusuariSes, cdsisrolSes, destino.getStatus());
+            
+            paso = "Abriendo historial nuevo";
+            logger.debug(paso);
+            flujoMesaControlDAO.guardarHistoricoTramite(
+                    fechaHoy,
+                    ntramite,
+                    destino.getCdusuari(),
+                    destino.getCdsisrol(),
+                    destino.getStatus(),
+                    destino.getCdunieco(),
+                    ConstantesDespachador.TIPO_ASIGNACION_REASIGNA);
+            
+            paso = "Recuperando nombre de usuario";
+            logger.debug(paso);
+            String dsusuari = despachadorDAO.recuperarNombreUsuario(destino.getCdusuari());
+            
+            paso = "Recuperando descripci\u00f3n de estatus";
+            logger.debug(paso);
+            String dsstatus = this.recuperarDescripcionEstatus(destino.getStatus());
+            
+            paso = "Recuperando descripci\u00f3n de rol";
+            logger.debug(paso);
+            String dssisrol = this.recuperarDescripcionRol(destino.getCdsisrol());
+            
+            mensaje = Utils.join("Tr\u00e1mite ", ntramite, " asignado a ", dsusuari, " (sucursal ", destino.getCdunieco(), ", rol ", dssisrol,") en estatus \"",
+                    dsstatus,"\"");
+            
+            paso = "Guardando detalle";
+            logger.debug(paso);
+            mesaControlDAO.movimientoDetalleTramite(
+                    ntramite,
+                    fechaHoy,
+                    null, // cdclausu
+                    Utils.join(mensaje, " por reasignaci\u00f3n en bloque"),
+                    cdusuariSes,
+                    null, // cdmotivo
+                    cdsisrolSes,
+                    "S",
+                    destino.getCdusuari(),
+                    destino.getCdsisrol(),
+                    destino.getStatus(),
+                    false // cerrado
+                    );
+            
+            try {
+                paso = "Enviando correos configurados";
+                logger.debug(paso);
+                flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, false);
+            } catch (Exception ex) {
+                logger.error("Error al enviar correos de estatus al turnar", ex);
+            }
             
         } catch (Exception ex) {
             Utils.generaExcepcion(ex, paso);
         }
         logger.debug(Utils.log(
-                "\n@@@@@@ result = ", result,
+                "\n@@@@@@ mensaje = ", mensaje,
                 "\n@@@@@@ despacharPorZona @@@@@@",
                 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-        return result;
+        return mensaje;
     }
     
     @Override
