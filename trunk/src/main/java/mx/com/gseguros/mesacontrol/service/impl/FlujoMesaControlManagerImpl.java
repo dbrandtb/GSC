@@ -2076,10 +2076,15 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
             logger.debug(paso);
             cdsucadm = despachadorDAO.recuperarSucursalUsuarioPorTipoTramite(cdusuari, cdflujomc);
 			
-            if(StringUtils.isNotBlank(cdramo)
-                    && StringUtils.isNotBlank(cdagente)
-                    && (!FlujoMC.AUTOS_ENDOSO.getCdflujomc().equals(cdflujomc)) // que no sea endoso de auto
-                    && (!FlujoMC.SALUD_ENDOSO.getCdflujomc().equals(cdflujomc)) // que no sea endoso de salud
+            // Para flujos de renovacion de autos se recupera la sucursal del agente porque
+            // la que se captura (ejemplo 120) puede no existir en sicaps
+            if((
+                    FlujoMC.AUTOS_RENOVACION_INDIVIDUAL.getCdflujomc().equals(cdflujomc)
+                    || FlujoMC.AUTOS_RENOVACION_PYME.getCdflujomc().equals(cdflujomc)
+                    || FlujoMC.AUTOS_RENOVACION_FLOTILLA.getCdflujomc().equals(cdflujomc)
+                )
+                && StringUtils.isNotBlank(cdramo)
+                && StringUtils.isNotBlank(cdagente)
                 ) {
                 try{
                     paso = "Recuperando cdunieco del agente";
