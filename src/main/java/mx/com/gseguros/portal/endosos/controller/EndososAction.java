@@ -3032,7 +3032,7 @@ public class EndososAction extends PrincipalCoreAction
 						smap2.put("pdfEndosoNom_o",pdfEndosoNom);
 					}
 					
-					RespuestaConfirmacionEndosoVO respConfirmacionEndoso =null;
+					RespuestaConfirmacionEndosoVO respConfirmacionEndoso =new RespuestaConfirmacionEndosoVO();
 					/*if(smap1.get("confirmar").equalsIgnoreCase("si")){
 					 // Se confirma el endoso si cumple la validacion de fechas: 
                         respConfirmacionEndoso = this.confirmarEndoso(
