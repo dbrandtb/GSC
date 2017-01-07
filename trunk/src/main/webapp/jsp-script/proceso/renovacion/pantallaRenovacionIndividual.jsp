@@ -3093,6 +3093,7 @@ function tarifaFinal(){
 			                                	_unmask();
 			                                    var resp = Ext.decode(response.responseText);
 			                                   	var list = resp.slist1;
+			                                   	debug('resp',resp);
 			                                	if(resp.success==true && list.length > 0){
 			                                		wineditarContratante.resRenova['nmpolizaNew'] = list[0]['nmpolizaNew'];
 			                                		wineditarContratante.resRenova['nmsuplemNew'] = list[0]['nmsuplemNew'];
@@ -3636,7 +3637,8 @@ function agregaCalendario(){
                                              _unmask();
                                              var resp = Ext.decode(response.responseText);
                                              var list = resp.slist1;
-                                             if(resp.success==true && list.length > 0){
+                                             debug('resp',resp);
+                                             if(resp.success==true && list != null){
                                                  resRenova['nmpolizaNew'] = list[0]['nmpolizaNew'];
                                                  resRenova['nmsuplemNew'] = list[0]['nmsuplemNew'];
                                                  _fieldById('botonEmitirPolizaFinal').disable();
