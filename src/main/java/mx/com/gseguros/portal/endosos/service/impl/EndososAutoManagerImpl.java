@@ -1464,7 +1464,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			        ntramite = flujo.getNtramite();
 			    }
 			    
-			    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+			    /*RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
 			            cdusuari,
 			            cdsisrol,
 			            ntramite,
@@ -1479,7 +1479,25 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			            false  //sinGrabarDetalle
 			            );
 			    
-			    resParams.put("mensajeDespacho", despacho.getMessage());
+			    resParams.put("mensajeDespacho", despacho.getMessage());*/
+			    
+			    String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
+                        ntramite
+                        ,cdunieco
+                        ,cdramo
+                        ,estado
+                        ,nmpoliza
+                        ,nmsuplem
+                        ,cdtipsup
+                        ,nsuplogi
+                        ,null //dscoment
+                        ,renderFechas.parse(fecha)//dFechaEndoso
+                        ,flujo
+                        ,cdusuari
+                        ,cdsisrol
+                        ,true
+                        );
+                iniciarEndosoResp.put("mensajeDespacho", mensajeDespacho); 
 			    
 				paso = "Realizando endoso en Web Service Autos";
 				logger.debug(paso);
