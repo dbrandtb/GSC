@@ -1583,6 +1583,7 @@ function llenandoCampos (json)
                         
                         if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
                             
+                            
                             if(json.slist1[0].OTVALOR02 == '1')
                             {
                                 var me  =_fieldLikeLabel('TIPO VALOR');
@@ -3218,6 +3219,10 @@ function _0_cargarPoliza(cduniext,ramo,nmpoliex,cdusuari,tipoflot)
 
 function _0_atributoTipoPersona(combo)
 {
+    // NO HACER NADA PARA CDRAMO 16
+    if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
+        return;
+    }
     var val = 'F';
     
     if(combo != 'F')
@@ -4029,6 +4034,24 @@ Ext.onReady(function()
     //[parche] para AF y PU
     if(_0_smap1.cdtipsit=='AF' || _0_smap1.cdtipsit=='PU')
     {
+        //OCULTAR parametros.pv_otvalor20 CUANDO EL TIPO DE PERSONA SEA DIFERENTE DE FISICA
+        try{
+            var tipoPersona = _fieldByLabel('TIPO PERSONA');
+            tipoPersona.on({
+                'change':function(me){
+                    if(me.getValue()!= TipoPersona.Fisica){
+                        _fieldByName('parametros.pv_otvalor20').setValue('N');
+                        _fieldByName('parametros.pv_otvalor20').hide();
+                        console.log(me)
+                    }else{
+                        _fieldByName('parametros.pv_otvalor20').show();
+                    }
+                }
+            });
+        }catch(e){
+            
+            debugError(e);
+        }
         _0_gridIncisos.setTitle('Datos del contratante prospecto');
         _0_formAgrupados.down('[name=parametros.pv_otvalor03]').addListener('change',function()
         {
