@@ -255,4 +255,11 @@ var EstadoRecibo = {
         Devuelto    : '<s:property value="@mx.com.gseguros.portal.general.util.ReciboEstado@DEVUELTO.dsestado"   />'
 };
 
+//Catalogo de Tipos de Persona:
+var TipoPersona = {
+    Fisica  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoPersona@FISICA.tipoPersona" />',
+    Moral  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoPersona@MORAL.tipoPersona" />',
+    RegimenSimplificado  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoPersona@REGIMEN_SIMPLIFICADO.tipoPersona" />'
+};
+
 </script>
