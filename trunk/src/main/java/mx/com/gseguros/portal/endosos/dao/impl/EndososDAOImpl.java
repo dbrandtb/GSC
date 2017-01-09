@@ -6369,5 +6369,118 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
             compile();
         }
     }
+    
+    @Override
+    public List<Map<String,String>> recuperarCoberturasEndosoPrimaNeta(
+            String cdunieco
+            ,String cdramo
+            ,String estado
+            ,String nmpoliza
+            ,String nmsituac
+            ,String tstamp
+            )throws Exception
+    {
+        Map<String,String>params=new LinkedHashMap<String,String>();
+        params.put("cdunieco" , cdunieco);
+        params.put("cdramo"   , cdramo);
+        params.put("estado"   , estado);
+        params.put("nmpoliza" , nmpoliza);
+        params.put("nmsituac" , nmsituac);
+        params.put("tstamp"   , tstamp);
+        Map<String,Object>procResult   = ejecutaSP(new RecuperarCoberturasEndosoPrimasNetas(getDataSource()),params);
+        List<Map<String,String>> lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+        if(lista==null||lista.size()==0)
+        {
+            throw new ApplicationException("No se encontraron coberturas");
+        }
+        Utils.debugProcedure(logger, "PKG_CONSULTA2.P_GET_COBER_ENDOSO_FLO", params, lista);
+        return lista;
+    }
+    
+    protected class RecuperarCoberturasEndosoPrimasNetas extends StoredProcedure
+    {
+        protected RecuperarCoberturasEndosoPrimasNetas(DataSource dataSource)
+        {
+            super(dataSource,"PKG_CONSULTA2.P_GET_COBER_ENDOSO_FLO");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("tstamp"   , OracleTypes.VARCHAR));
+            String[] cols=new String[]{
+                    "CDGARANT"
+                    ,"DSGARANT"
+                    ,"CDUNIECO"
+                    ,"CDRAMO"
+                    ,"ESTADO"
+                    ,"NMPOLIZA"
+                    ,"NMSITUAC"
+                    ,"PRIMA"
+                    };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public Map<String,Object> guardarEndosoAjusteSiniestralidad(
+            String cdusuari
+            ,String cdsisrol
+            ,String cdelemen
+            ,String cdunieco
+            ,String cdramo
+            ,String estado
+            ,String nmpoliza
+            ,String cdtipsup
+            ,String tstamp
+            ,Date   feefecto
+            )throws Exception
+    {
+        Map<String,Object> params = new LinkedHashMap<String,Object>();
+        params.put("cdusuari" , cdusuari);
+        params.put("cdsisrol" , cdsisrol);
+        params.put("cdelemen" , cdelemen);
+        params.put("cdunieco" , cdunieco);
+        params.put("cdramo"   , cdramo);
+        params.put("estado"   , estado);
+        params.put("nmpoliza" , nmpoliza);
+        params.put("cdtipsup" , cdtipsup);
+        params.put("tstamp"   , tstamp);
+        params.put("feefecto" , feefecto);
+        params.put("idproces" , Utils.generaTimestamp());
+        Map<String,Object> resParams = ejecutaSP(new GuardarEndosoAjusteSiniestralidad(getDataSource()),params);
+        return resParams;
+    }
+    
+    protected class GuardarEndosoAjusteSiniestralidad extends StoredProcedure
+    {
+        protected GuardarEndosoAjusteSiniestralidad(DataSource dataSource)
+        {
+            //super(dataSource,"PKG_ENDOSOS.P_ENDOSO_DEVOLUCION_PRIMAS");
+            super(dataSource,"P_AJUSTE_SINIESTRALIDAD");
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("tstamp"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
+            declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
+            
+            declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nsuplogi_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 	    
 }
