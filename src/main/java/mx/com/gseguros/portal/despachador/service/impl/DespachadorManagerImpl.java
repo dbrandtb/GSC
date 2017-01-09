@@ -69,11 +69,17 @@ public class DespachadorManagerImpl implements DespachadorManager {
 	
 	@Override
 	public RespuestaDespachadorVO despachar (String ntramite, String status) throws Exception {
+	    return this.despachar(ntramite, status, false);
+	}
+	
+	@Override
+	public RespuestaDespachadorVO despachar (String ntramite, String status, boolean sinBuscarRegreso) throws Exception {
 	    logger.debug(Utils.log(
 	            "\n@@@@@@@@@@@@@@@@@@@@@@@",
 	            "\n@@@@@@ despachar @@@@@@",
-	            "\n@@@@@@ ntramite = " , ntramite,
-	            "\n@@@@@@ status   = " , status));
+	            "\n@@@@@@ ntramite         = " , ntramite,
+	            "\n@@@@@@ status           = " , status,
+                "\n@@@@@@ sinBuscarRegreso = " , sinBuscarRegreso));
 	    String paso = null;
 	    RespuestaDespachadorVO result = null;
 	    try {
@@ -130,6 +136,11 @@ public class DespachadorManagerImpl implements DespachadorManager {
             quemados.put(ConstantesDespachador.ZONA_ACC_BAJIO       , new LinkedHashMap<String, Boolean>());
             quemados.put(ConstantesDespachador.ZONA_SUR             , new LinkedHashMap<String, Boolean>());
             quemados.put(ConstantesDespachador.ZONA_COMODIN_USUARIO , new LinkedHashMap<String, Boolean>());
+            
+            if (sinBuscarRegreso) {
+                quemados.get(ConstantesDespachador.ZONA_COMODIN_USUARIO).put(ConstantesDespachador.NIVEL_COMODIN_USUARIO, Boolean.TRUE);
+            }
+            
             result = this.despachar(cdtipram, cdtipflu, cdflujomc, ntramite, cdramo, cdtipsit, zona, nivel, cdunidspch, status, cdsisrol,
                     zona, nivel, cdunidspch, status, cdsisrol, quemados, sb);
             if (result.isEncolado()) {
@@ -505,6 +516,17 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	}
 	
 	/**
+     * SOBRECARGADO
+     */
+    @Override
+    public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
+            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
+            boolean sinGrabarDetalle) throws Exception {
+        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
+                porEscalamiento, fechaHoy, sinGrabarDetalle, false);
+    }
+	
+	/**
      * SE TURNA/RECHAZA/REASIGNA UN TRAMITE. SE MODIFICA TMESACONTROL (STATUS, FECSTATU, CDUSUARI, CDUNIDSPCH, CDRAZRECHA),
      * THMESACONTROL (SE CIERRA EL HISTORIAL ANTERIOR, SE ABRE EL HISTORIAL NUEVO),
      * TDMESACONTROL (SE INSERTA DETALLE). SE ENVIAN CORREOS DE AVISOS Y SE RECHAZA EN SIGS 
@@ -513,7 +535,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	@Override
 	public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
 	        String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
-	        boolean sinGrabarDetalle) throws Exception {
+	        boolean sinGrabarDetalle, boolean sinBuscarRegreso) throws Exception {
 	    logger.debug(Utils.log(
 	            "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 	            "\n@@@@@@ turnarTramite @@@@@@",
@@ -528,7 +550,8 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	            "\n@@@@@@ permisoAgente    = " , permisoAgente,
 	            "\n@@@@@@ porEscalamiento  = " , porEscalamiento,
                 "\n@@@@@@ fechaHoy         = " , fechaHoy,
-                "\n@@@@@@ sinGrabarDetalle = " , sinGrabarDetalle));
+                "\n@@@@@@ sinGrabarDetalle = " , sinGrabarDetalle,
+                "\n@@@@@@ sinBuscarRegreso = " , sinBuscarRegreso));
 	    String paso = null;
         RespuestaTurnadoVO result = new RespuestaTurnadoVO();
 	    try {
@@ -710,7 +733,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 if (!esFinal) {
                     paso = "Invocando despachador";
                     logger.debug(paso);
-                    destino = this.despachar(ntramite, status);
+                    destino = this.despachar(ntramite, status, sinBuscarRegreso);
                 }
                 
                 if (!esFinal && destino.isEncolado()) { // SI NADIE PUDO ATENDER LO ENCOLAMOS

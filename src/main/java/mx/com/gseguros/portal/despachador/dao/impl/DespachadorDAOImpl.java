@@ -684,4 +684,33 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
             compile();
         }
     }
+    
+    @Override
+    public List<Map<String, String>> recuperarPermisosEndosos (String cdusuari, String cdsisrol) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("cdusuari", cdusuari);
+        params.put("cdsisrol", cdsisrol);
+        Map<String, Object> procRes = ejecutaSP(new RecuperarPermisosEndososSP(getDataSource()), params);
+        List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+        if (lista == null) {
+            lista = new ArrayList<Map<String, String>>();
+        }
+        logger.debug("recuperarPermisosEndosos lista: {}", Utils.log(lista));
+        return lista;
+    }
+    
+    protected class RecuperarPermisosEndososSP extends StoredProcedure {
+        protected RecuperarPermisosEndososSP (DataSource dataSource) {
+            super(dataSource, "P_DSPCH_GET_PERMISOS_ENDOSOS");
+            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+            String[] cols = new String[] {
+                    "CDRAMO", "DSRAMO", "CDTIPSUP", "DSTIPSUP", "PORUSUARIO", "TIPOFLOT"
+                    };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }

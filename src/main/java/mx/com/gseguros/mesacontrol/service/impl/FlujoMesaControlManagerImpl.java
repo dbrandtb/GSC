@@ -26,6 +26,7 @@ import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.despachador.dao.DespachadorDAO;
+import mx.com.gseguros.portal.despachador.model.ConstantesDespachador;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
@@ -2142,35 +2143,97 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			String cdusuariDestino = cdusuari,
 			       cdsisrolDestino = cdsisrol;
 			
+			boolean turnarAOtraPersona   = false,
+			        userSinPermisoEndoso = false;
+			
+			// Si el sistema genera el tramite o el tramite viene de sigs, hay que turnarlo
 			if (Constantes.USUARIO_SISTEMA.equals(cdusuari)
 			        || Constantes.ROL_SISTEMA.equals(cdsisrol)
 			        || inyectadoDesdeSigs
 			        ) {
-			    cdusuariDestino = null;
-			    cdsisrolDestino = null;
+			    turnarAOtraPersona = true;
 			}
 			
-			RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-			        cdusuari,
-			        cdsisrol,
-			        ntramite,
-			        status,
-			        Utils.join(
-                            "Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: ",
-                            StringUtils.isBlank(comments)
-                                ? "(sin observaciones)"
-                                : comments
-                    ),
-			        null,  // cdrazrecha
-			        cdusuariDestino,
-			        cdsisrolDestino,
-			        true,  // permisoAgente
-			        false, // porEscalamiento
-			        fechaHoy,
-			        false  // sinGrabarDetalle
-			        );
-			logger.debug(despacho.getMessage());
+			// Si la persona que registra el endoso de auto no tiene permisos, hay que turnarlo
+			if ((!turnarAOtraPersona)
+			        && origenMesa
+			        && FlujoMC.AUTOS_ENDOSO.getCdflujomc().equals(cdflujomc)
+			    ) {
+			    boolean tienePermiso = false;
+			    List<Map<String, String>> endososPermitidos = despachadorDAO.recuperarPermisosEndosos(cdusuari, cdsisrol);
+			    for (Map<String, String> elem : endososPermitidos) {
+			        if (cdramo.equals(elem.get("CDRAMO"))
+			                && cdtipsup.equals(elem.get("CDTIPSUP"))) {
+			            tienePermiso = true;
+			            break;
+			        }
+			    }
+			    if (!tienePermiso) {
+			        turnarAOtraPersona   = true;
+			        userSinPermisoEndoso = true;
+			    }
+			}
 			
+			String commentsCreacion = Utils.join(
+                    "Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: ",
+                    StringUtils.isBlank(comments)
+                        ? "(sin observaciones)"
+                        : comments
+            );
+			
+			if (turnarAOtraPersona) {
+			    cdusuariDestino = null;
+			    cdsisrolDestino = null;
+			    
+			    if (userSinPermisoEndoso) {
+    			    paso = "Guardando detalle";
+                    logger.debug(paso);
+                    mesaControlDAO.movimientoDetalleTramite(
+                            ntramite,
+                            fechaHoy,
+                            null, // cdclausu
+                            commentsCreacion,
+                            cdusuari,
+                            null, // cdmotivo
+                            cdsisrol,
+                            "S",
+                            null, //cdusuariDes,
+                            null, //cdsisrolDes,
+                            status,
+                            false // cerrado
+                            );
+                    
+                    paso = "Abriendo historial";
+                    logger.debug(paso);
+                    flujoMesaControlDAO.guardarHistoricoTramite(
+                            fechaHoy,
+                            ntramite,
+                            cdusuari,
+                            cdsisrol,
+                            status,
+                            cdunieco,
+                            ConstantesDespachador.TIPO_ASIGNACION_REASIGNA);
+                    
+                    commentsCreacion = "Tr\u00e1mite turnado autom\u00e1ticamente por perfilamiento";
+			    }
+			}
+			
+		    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+                    cdusuari,
+                    cdsisrol,
+                    ntramite,
+                    status,
+                    commentsCreacion,
+                    null,  // cdrazrecha
+                    cdusuariDestino,
+                    cdsisrolDestino,
+                    true,  // permisoAgente
+                    false, // porEscalamiento
+                    fechaHoy,
+                    false,  // sinGrabarDetalle
+                    turnarAOtraPersona
+                    );
+            logger.debug(despacho.getMessage());			
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
