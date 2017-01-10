@@ -1,1 +1,0 @@
-Error de datos de entrada
