@@ -145,4 +145,6 @@ public interface RenovacionDAO
 			String fefinal,
 			String feaplica,
 			String operacion)throws Exception;
+	
+	public void eliminacionRegistros(String ntramite,String cddocume) throws Exception;
 }

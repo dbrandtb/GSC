@@ -920,6 +920,7 @@ public class ConsultasManagerImpl implements ConsultasManager
             }
             else
             {
+                renovacionDAO.eliminacionRegistros(ntramiteDestino,cddocume);
                 logger.error(new StringBuilder("No existe el documento").append(doc).toString());
             }
         }        
