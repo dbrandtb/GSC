@@ -4511,7 +4511,7 @@ function _p28_cargarRangoValorRamo5(callback)
                         if(valor.lastValue>valormax)
                          {
                             _fieldLikeLabel('VALOR VEH').setMaxValue(valormax);
-//                             _fieldLikeLabel('VALOR VEH').setValue(valormax);
+                            _fieldLikeLabel('VALOR VEH').setValue(valormax);
                          }
                         else(valor.lastValue<valormin)
                          {
@@ -4630,7 +4630,6 @@ function _p28_limitarCoberturasDependientesSumasegRamo5()
         });
     }
 }
-
 
 function _p28_nmpolizaChange(me)
 {
