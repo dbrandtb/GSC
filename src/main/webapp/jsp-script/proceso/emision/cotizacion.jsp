@@ -169,6 +169,67 @@ var cargarXpoliza = false;
 var cargaCotiza = false;
 var _p28_panelDxnItems= [<s:property value="imap.panelDxnItems"  />];
 
+//CARGO TODOS LOS VALORES QUE SUCURSAL, RAMO Y POLIZA GENERAN
+var _0_panel7Items =
+   [
+       {
+           layout  :
+           {
+              type    : 'table'
+             ,columns : 1
+             ,style   : 'width:10px !important;'
+          }
+          ,border : 0
+          ,items  :
+          [
+           {
+                    xtype       : 'numberfield'
+                   ,itemId      : '_0_numsuc'
+                   ,fieldLabel  : 'SUCURSAL'
+                   ,name        : 'sucursal'               
+                   ,sinOverride : true
+                   ,labelWidth  : 170
+                   ,style       : 'margin:5px;margin-left:15px;'//'margin:5px;margin-left:15px;width:20px !important;'
+                   ,value       : !Ext.isEmpty(_0_smap1.RENUNIEXT) ? _0_smap1.RENUNIEXT : ''
+                   ,listeners   :
+                   {
+                       change : _0_nmpolizaChange
+                   }
+                   ,readOnly    :  true 
+               }
+              ,{
+                       xtype       : 'numberfield'
+                      ,itemId      : '_0_numram'
+                      ,fieldLabel  : 'RAMO'
+                      ,name        : 'ramo'                   
+                      ,sinOverride : true                   
+                      ,labelWidth  : 170
+                      ,style       : 'margin:5px;margin-left:15px;'//'width : 30px !important;'
+                      ,value       : !Ext.isEmpty(_0_smap1.RENRAMO) ? _0_smap1.RENRAMO : ''
+                      ,listeners   :
+                      {
+                          change : _0_nmpolizaChange
+                      }
+                      ,readOnly    :  true 
+                 }
+                ,{
+                     xtype       : 'numberfield'
+                    ,itemId      : '_0_numpol'
+                    ,fieldLabel  : 'POLIZA'
+                    ,name        : 'poliza'
+                    ,sinOverride : true                 
+                    ,labelWidth  : 170
+                    ,style       : 'margin:5px;margin-left:15px;'//'width : 50px !important;'
+                    ,value       : !Ext.isEmpty(_0_smap1.RENPOLIEX) ? _0_smap1.RENPOLIEX : ''
+                    ,listeners   :
+                    {
+                        change : _0_nmpolizaChange
+                    }
+                    ,readOnly    :  true
+              }
+          ]
+       }
+    ];
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -1896,7 +1957,6 @@ function _0_cotizar(boton)
         }
         debug('json para cotizar:',json);
         _0_panelPri.setLoading(true);
-//         alert('Va');
         Ext.Ajax.request(
         {
             url       : _0_smap1['externo']=='si'?_0_urlCotizarExterno:_0_urlCotizar
@@ -1911,7 +1971,6 @@ function _0_cotizar(boton)
 //                 	alert('Regresa');
                     debug(Ext.decode(json.smap1.fields));
                     debug(Ext.decode(json.smap1.columnas));
-                    debug('VILS >> ',json.slist2);
                     
                     _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
                                     
@@ -3292,6 +3351,19 @@ function _0_atributoNacimientoContratante(combo)
 
         }
 }
+
+function _0_nmpolizaChange(me)
+{
+    var sem = me.semaforo;
+    if(Ext.isEmpty(sem)||sem==false)
+    {
+        me.sucio = true;
+    }
+    else
+    {
+        me.sucio = false;
+    }
+}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -3506,7 +3578,7 @@ Ext.onReady(function()
     		debug('_0_FormAgrupados initComponent');
     		
     		var itemsFormAgrupados=[
-    	            			    _0_fieldNtramite
+    	            		 _0_fieldNtramite
     	    			    ,_0_fieldNmpoliza
     	    			    ,<s:property value="imap.camposAgrupados"/>
     	    			    ,{
@@ -4491,6 +4563,15 @@ Ext.onReady(function()
         debug('cdatribus_derechos:',cdatribus_derechos);
         var itemsIzq=[];
         var itemsDer=[];
+        itemsIzq.push
+        ({
+           xtype  : 'fieldset'
+          ,itemId : '_p28_fieldBusquedaPoliza'
+          ,width  : 435
+          ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
+          ,items  : _0_panel7Items
+          ,hidden : !Ext.isEmpty(_0_flujo) ? (_0_flujo.cdflujomc != 220 && _0_flujo.cdtipflu != 103 && _0_smap1.cdramo == Ramo.AutosFronterizos) : true 
+        });
         for(var i=0;i<items.length;i++)
         {
             var iItem=items[i];
@@ -4525,7 +4606,7 @@ Ext.onReady(function()
         ]);
     </s:if>
     _0_botonera      = new _0_Botonera();
-    _0_panelPri      = new _0_PanelPri();
+    _0_panelPri      = new _0_PanelPri();    
     /*///////////////////*/
     ////// contenido //////
     ///////////////////////
