@@ -739,8 +739,11 @@ public class Utils
     public static String getCellValue(Cell celda) {
         String strValor = "";
         try {
-            celda.setCellType(Cell.CELL_TYPE_STRING);
-            strValor = celda.getStringCellValue();
+            if(celda.getCellType() == Cell.CELL_TYPE_STRING) {
+                strValor = celda.getStringCellValue();
+            } else if(celda.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                strValor = String.valueOf(celda.getNumericCellValue());
+            }
         } catch (Exception e) {
             logger.warn("Error al obtener valor de la celda, se devuelve cadena vacia", e);
         }
