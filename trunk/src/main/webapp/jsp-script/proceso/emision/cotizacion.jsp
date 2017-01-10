@@ -4105,7 +4105,7 @@ Ext.onReady(function()
     {
         //OCULTAR parametros.pv_otvalor20 CUANDO EL TIPO DE PERSONA SEA DIFERENTE DE FISICA
         try{
-            var tipoPersona = _fieldByLabel('TIPO PERSONA');
+            var tipoPersona = _fieldByLabel('TIPO PERSONA',null,true);
             tipoPersona.on({
                 'change':function(me){
                     if(me.getValue()!= TipoPersona.Fisica){
