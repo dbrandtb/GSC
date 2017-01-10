@@ -5450,6 +5450,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String nmpolant         = smap1.get("nmpolant");
 		String nmrenova         = smap1.get("nmrenova");
 		String esRenovacion		= smap1.get("esRenovacion");
+		String agrupador        = smap1.get("cdpool");
 		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
 		
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
@@ -5533,7 +5534,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            mapaMpolizas.put("pv_swpatent"  , null);
 	            mapaMpolizas.put("pv_pcpgocte"  , pcpgocte);
 	            mapaMpolizas.put("pv_tipoflot"  , "F");
-	            mapaMpolizas.put("pv_agrupador" , null);
+	            mapaMpolizas.put("pv_agrupador" , agrupador);
 	            mapaMpolizas.put("pv_accion"    , "U");
 	            kernelManager.insertaMaestroPolizas(mapaMpolizas);
 			}
