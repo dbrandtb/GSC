@@ -14,6 +14,16 @@
 	        <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
 	        <url>http://repository.springsource.com/maven/bundles/external</url>
 	    </repository>
+	    <repository>
+	        <id>oracle.ojdbc</id>
+	        <name>Oracle OJDBC Repository</name>
+	        <url>https://repo.adobe.com/nexus/content/repositories/public</url>
+	    </repository>
+	    <repository>
+	        <id>com.microsoft.sqlserver</id>
+	        <name>SQL OJDBC Repository</name>
+	        <url>http://clojars.org/repo</url>
+	    </repository>
    </repositories>
     
     <dependencies>
