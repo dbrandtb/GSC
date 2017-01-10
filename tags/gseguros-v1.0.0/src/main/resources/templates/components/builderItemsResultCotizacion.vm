@@ -1,4 +1,0 @@
-
-#foreach($textfield in $parameters.TEXT_FIELDS)
-       $textfield#if($velocityCount < $parameters.TEXT_FIELDS.size()), #end
-#end

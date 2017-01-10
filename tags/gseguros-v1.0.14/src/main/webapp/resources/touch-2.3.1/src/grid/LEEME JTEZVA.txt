@@ -1,1 +1,0 @@
-EL ARCHIVO Grid.js no viene incluido en Sencha Touch. Es tomado de Sencha Touch Bundle. 

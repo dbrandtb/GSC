@@ -1,6 +1,0 @@
-{
-    tipoPago: [
-            {"key":"1",  "value":"Pago directo"},
-            {"key":"2",  "value":"Pago por reembolso"}
-    ]
-}
