@@ -947,5 +947,25 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
-	}	
+	}
+	
+    @Override
+    public void eliminacionRegistros(String ntramite,String cddocume) throws Exception {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("pv_ntramite_i", ntramite);
+            params.put("pv_cddocume_i", cddocume);
+            Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionRegistros(this.getDataSource()), params);
+        }
+        protected class EliminacionRegistros extends StoredProcedure
+        {
+            protected EliminacionRegistros(DataSource dataSource)
+            {
+                super(dataSource, "PKG_RENOVA.P_BORRA_TDOCUPOL_REGISTRO");
+                declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+                declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
+                declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+                declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+                compile();
+            }
+        }
 }
