@@ -1497,7 +1497,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                         ,cdsisrol
                         ,true
                         );
-                iniciarEndosoResp.put("mensajeDespacho", mensajeDespacho); 
+			    resParams.put("mensajeDespacho", mensajeDespacho); 
 			    
 				paso = "Realizando endoso en Web Service Autos";
 				logger.debug(paso);
