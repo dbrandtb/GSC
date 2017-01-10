@@ -3044,7 +3044,7 @@ function tarifaFinal(){
             _unmask();
             var json=Ext.decode(response.responseText);
             debug('json ',json);
-            if(!Ext.isEmpty(json.slist1)){
+            if(!Ext.isEmpty(json.slist1) && Ext.isEmpty(json.mensajeRespuesta)){
             	if(json.slist1.length > 0){
 			            datos = [];
 			            for(var i = 0; i < json.slist1.length; i++){
@@ -3224,15 +3224,15 @@ function tarifaFinal(){
             	}
             }
             else{
-            	if(json.mensajeRespuesta === 'Favor de verificar los datos adicionales correspondientes al Descuento por Nómina'){            	    
-            	    mostrarMensajeVentana('El tramite # ' + wineditarContratante.resRenova['ntramite'] + ' se turnara a suscripción para completar información DXN.');
+            	/* if(json.mensajeRespuesta === 'Favor de verificar los datos adicionales correspondientes al Descuento por Nómina'){ */            	    
+            	    mostrarMensajeVentana('El tramite # ' + wineditarContratante.resRenova['ntramite'] + ' se turnara a suscripción para completar información.');
             	    setTimeout(function(){ 
             	        turnar(wineditarContratante.resRenova['ntramite']) 
             	    }, 3000);
-            	}
+            	/* }
             	else{
             	    mensajeError(json.mensajeRespuesta);
-            	}
+            	} */
             }
         }
         ,failure : function()
@@ -3588,7 +3588,7 @@ function agregaCalendario(){
              _unmask();
              var json=Ext.decode(response.responseText);
              debug('json ',json);
-             if(!Ext.isEmpty(json.slist1)){
+             if(!Ext.isEmpty(json.slist1) && Ext.isEmpty(json.mensajeRespuesta)){
                  if(json.slist1.length > 0){
                      datos = [];
                      for(var i = 0; i < json.slist1.length; i++){
@@ -3764,7 +3764,11 @@ function agregaCalendario(){
                  }
              }
              else{
-                 mensajeError(json.mensajeRespuesta);
+                 mostrarMensajeVentana('El tramite # ' + resRenova['ntramite'] + ' se turnara a suscripción para completar información.');
+                 setTimeout(function(){ 
+                     turnar(resRenova['ntramite']) 
+                 }, 3000);
+                 /* mensajeError(json.mensajeRespuesta); */
              }
          },
          failure : function(){
