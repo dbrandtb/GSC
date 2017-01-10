@@ -10757,7 +10757,7 @@ public String retarificarEndosos()
 							
 							if(esProductoSalud)
 							{
-								// Ejecutamos el Web Service de Recibos:
+								// Ejecutamos el Web Service de Recibos: 
 								ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 										estado, nmpoliza, 
 										nmsuplem, null, 
