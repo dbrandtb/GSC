@@ -10704,7 +10704,7 @@ public String retarificarEndosos()
 					smap2.put("pdfEndosoNom_o",pdfEndosoNom);
 				}
 				
-				RespuestaConfirmacionEndosoVO respConfirmacionEndoso = null ; 
+				RespuestaConfirmacionEndosoVO respConfirmacionEndoso = new RespuestaConfirmacionEndosoVO();
 				
 				/*if(smap2.get("confirmar").equals("si")){
 				 // Se confirma el endoso si cumple la validacion de fechas: 
