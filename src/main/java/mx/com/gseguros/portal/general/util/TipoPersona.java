@@ -1,7 +1,5 @@
 package mx.com.gseguros.portal.general.util;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-
 public enum TipoPersona {
     FISICA("F"),
     MORAL("M"),
