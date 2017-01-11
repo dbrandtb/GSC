@@ -4207,33 +4207,33 @@ function _p30_cotizar(sinTarificar)
             }
     	}
     	
-   	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
-   	     try 
-   	     {
-   	         _p30_store.each
-   	         (
-   	          function(record)
-   	             {
-   	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1)
-   	                {
-   	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-   	                    if(record.get(tipoVehiName)-0==2){
-   	                        record.cdtipsit_panel = 'PC';
-   	                    }
-   	                    else if(record.get(tipoVehiName)-0==4)
-   	                    {
-   	                        record.cdtipsit_panel = 'TC';
-   	                    }else if(record.get(tipoVehiName)-0==13)
-   	                    {
-   	                        record.cdtipsit_panel = 'RQ';
-   	                    }
-   	                }
-   	             }
-   	         );
-   	     }catch (e) 
-   	     {
-   	        debug(e);//debugError , ck
-   	     }
+//    	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
+//    	     try 
+//    	     {
+//    	         _p30_store.each
+//    	         (
+//    	          function(record)
+//    	             {
+//    	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1)
+//    	                {
+//    	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+//    	                    if(record.get(tipoVehiName)-0==2){
+//    	                        record.cdtipsit_panel = 'PC';
+//    	                    }
+//    	                    else if(record.get(tipoVehiName)-0==4)
+//    	                    {
+//    	                        record.cdtipsit_panel = 'TC';
+//    	                    }else if(record.get(tipoVehiName)-0==13)
+//    	                    {
+//    	                        record.cdtipsit_panel = 'RQ';
+//    	                    }
+//    	                }
+//    	             }
+//    	         );
+//    	     }catch (e) 
+//    	     {
+//    	        debug(e);//debugError , ck
+//    	     }
     }
     
     if(valido)
