@@ -55,7 +55,7 @@ Ext.onReady(function() {
 		columns: _11_columnas_Factura
 		,tbar: [{
 			text     : 'Agregar Factura'
-			,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+			,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
 			, hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
 			,handler : _p11_agregarFacturas
 		}]
