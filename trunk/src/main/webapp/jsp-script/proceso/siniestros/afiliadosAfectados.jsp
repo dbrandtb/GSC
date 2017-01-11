@@ -2052,7 +2052,7 @@
 								},
 								{
 									text	: 'Generar Calculo'
-									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
 									,handler : _p21_generarCalculo
 									,hidden  : (_cdtipoProceso  == "1")
 								}
@@ -2336,7 +2336,7 @@
 								,items		:
 								[
 									{
-										icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+										icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
 										tooltip: 'Eliminar',
 										scope: this,
 										handler: this.onRemoveClick
@@ -2576,7 +2576,7 @@
 						tbar:[
 								{
 									text	: 'Agregar Concepto'
-									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
 									,handler : _p21_agregarConcepto
 									//, hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
 								},
@@ -2693,7 +2693,7 @@
 							,items		:
 							[
 								{
-									icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+									icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
 									tooltip: 'Eliminar',
 									scope: this,
 									handler: this.onRemoveClick
@@ -2800,7 +2800,7 @@
 					tbar:[
 							{
 								text	: 'Agregar Conceptos'
-								,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+								,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
 								,handler : _p21_agregarConcepto
 							},
 							{
