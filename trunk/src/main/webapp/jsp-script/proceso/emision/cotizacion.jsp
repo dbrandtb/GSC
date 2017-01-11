@@ -4111,7 +4111,15 @@ Ext.onReady(function()
                     if(me.getValue()!= TipoPersona.Fisica){
                         _fieldByName('parametros.pv_otvalor20').setValue('N');
                         _fieldByName('parametros.pv_otvalor20').hide();
-                        
+                        _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').setValue(null);
+                        _fieldLikeLabel('EL CONTRATANTE PADECE').setValue(null);
+                        _fieldLikeLabel('SEGURO DE VIDA').setValue('N');
+                        _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').hide();
+                        _fieldLikeLabel('EL CONTRATANTE PADECE').hide();
+                        _fieldLikeLabel('SEGURO DE VIDA').hide();
+                        _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=true;
+                        _fieldLikeLabel('EL CONTRATANTE PADECE').allowBlank=true;
+                        _fieldLikeLabel('SEGURO DE VIDA').allowBlank=true;
                     }else{
                         _fieldByName('parametros.pv_otvalor20').show();
                     }
