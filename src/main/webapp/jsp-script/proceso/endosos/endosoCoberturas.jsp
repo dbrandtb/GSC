@@ -548,7 +548,11 @@ function endcobSumit(form,confirmar)
                     callback: function(records, operation, success) {
                     	
                         // VALIDACION: Si es Suscriptor y es un Endoso de Baja, permitimos eliminar todas las coberturas (SWOBLIGA='N'):
-                        if(inputAltabajap3 == 'baja' && CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR || CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR_AUTO) {
+                        if (inputAltabajap3 === 'baja'
+                            && (
+                                CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR
+                                || RolSistema.puedeSuscribirAutos(CD_ROL_ACTUAL)
+                            )) {
                             Ext.Array.each(records, function(item, index, allItems) {
                                 item.set('SWOBLIGA','N');
                             });
@@ -624,11 +628,15 @@ function endcobSumit(form,confirmar)
                                 callback: function(records, operation, success) {
                                     
                                     // VALIDACION: Si es Suscriptor y es un Endoso de Baja, permitimos eliminar todas las coberturas (SWOBLIGA='N'):
-                                	if(inputAltabajap3 == 'baja' && CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR || CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR_AUTO) {
-                                		Ext.Array.each(records, function(item, index, allItems) {
-                                            item.set('SWOBLIGA','N');
-                                        });
-                                        storeCoberturasActuales_p3.commitChanges();
+                                	if (inputAltabajap3 === 'baja'
+                                	    && (
+                                	        CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR
+                                	        || RolSistema.puedeSuscribirAutos(CD_ROL_ACTUAL)
+                                	    )) {
+                                	    Ext.Array.each(records, function(item, index, allItems) {
+                                	        item.set('SWOBLIGA','N');
+                                	    });
+                                	    storeCoberturasActuales_p3.commitChanges();
                                 	}
                                 }
                             });
