@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.renovacion.dao;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -145,6 +146,8 @@ public interface RenovacionDAO
 			String fefinal,
 			String feaplica,
 			String operacion)throws Exception;
+	
+	public InputStream obtenerDesglose(String cdunieco, String cdramo, String estado, String nmpoliza, List<Map<String, String>> lista) throws Exception;
 	
 	public void eliminacionRegistros(String ntramite,String cddocume) throws Exception;
 }
