@@ -41,7 +41,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class CambioDomicilioCP extends StoredProcedure{
 		protected CambioDomicilioCP(DataSource dataSource){
-			super(dataSource, "sp_ActualizaDirCliente");
+			super(dataSource, "sp_ActualizaDirCliente2");
 			
 			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
 			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
@@ -87,7 +87,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class EndosoDomicilio extends StoredProcedure{
 		protected EndosoDomicilio(DataSource dataSource){
-			super(dataSource, "sp_EndosoBCamDomicilio");
+			super(dataSource, "sp_EndosoBCamDomicilio2");
 			
 			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
 			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
@@ -700,7 +700,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class CambioDomicilioSinCPColonia extends StoredProcedure{
 		protected CambioDomicilioSinCPColonia(DataSource dataSource){
-			super(dataSource, "sp_EndosoBDomicilioColonia");
+			super(dataSource, "sp_EndosoBDomicilioColonia2");
 			
 			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
 			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
