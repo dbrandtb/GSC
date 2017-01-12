@@ -13653,12 +13653,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			    	            .append(tpl)
 			    	            .toString());
 			    }
-			    
-			    Map<String,String> total = null;
-			    if (slist1.size()>1){
-			    	total=slist1.remove(slist1.size()-1);
-				this.total = total.get("total");
-			    }
 						
 				exito   = true;
 				success = true;
@@ -13748,13 +13742,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		    		,filtro
 		    		,valorFiltro
 		    		);
-		    
-		    
-		    Map<String,String> total = null;
-		    if (slist1.size()>1){
-		    	total=slist1.remove(slist1.size()-1);
-			this.total = total.get("total");
-		    }
 		
 			exito   = true;
 			success = true;
