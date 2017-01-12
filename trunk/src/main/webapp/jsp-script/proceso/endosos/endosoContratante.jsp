@@ -21,6 +21,7 @@ smap1:
     NTRAMITE: "678"
     PRIMA_TOTAL: "12207.37"
 */
+
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _35_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
