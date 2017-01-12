@@ -849,18 +849,18 @@ Ext.onReady(function()
 	                        {
 	                            text	: 'Guardar',
 	                            itemId  : 'panDatComBotonGuardar',
-	                            icon	: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
+	                            icon	: contexto+'/resources/fam3icons/icons/fam/accept.png',
 	                            handler	: function(){ _p29_actualizarCotizacion(null);}	
 	                        },
                             {
 	                            text		: 'Editar agentes',
-	                            icon		: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png',
+	                            icon		: contexto+'/resources/fam3icons/icons/fam/user_gray.png',
 	                            disabled	: true,
 	                            hidden		: true
 	                        },
 	                        {
 	                            text		: 'Editar documentos',
-	                            icon		: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png',
+	                            icon		: contexto+'/resources/fam3icons/icons/fam/book.png',
 	                            disabled	: true,
 	                            hidden		: true
 	                        },

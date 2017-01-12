@@ -264,7 +264,7 @@ Ext.onReady(function(){
             <%--
             {
                 text:'Regresar',
-                icon: contexto+'/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
+                icon: contexto+'/resources/extjs4/resources/my-custom-theme/images/toolbar/scroll-left.png',
                 handler:function()
                 {
                     Ext.create('Ext.form.Panel').submit(

@@ -390,7 +390,7 @@
 									        <%--
 											{
 												text : 'Regresar',
-												icon : contextop3+ '/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
+												icon : contextop3+ '/resources/extjs4/resources/my-custom-theme/images/toolbar/scroll-left.png',
 												handler : function() {
 													Ext
 															.create(
