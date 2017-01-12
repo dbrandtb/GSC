@@ -488,4 +488,5 @@ function _35_confirmar()
 ///////////////////////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
+
 <div id="_35_divPri" style="height:1000px;"></div>
