@@ -2640,7 +2640,7 @@ debug("validarYGuardar flag:2");
                 {
                     text:'Regresar',
                     hidden:true,
-                    icon: contextop2+'/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
+                    icon: contextop2+'/resources/extjs4/resources/my-custom-theme/images/toolbar/scroll-left.png',
                     handler:function()
                     {
                         Ext.create('Ext.form.Panel').submit({
@@ -2658,7 +2658,7 @@ debug("validarYGuardar flag:2");
                 --%>
                 {
                     text:'Guardar',
-                    icon: contextop2+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
+                    icon: contextop2+'/resources/fam3icons/icons/fam/accept.png',
                     handler:function(){
                         debug('form1p2',Ext.getCmp('form1p2').getForm().isValid());
                         if(Ext.getCmp('form1p2').getForm().isValid())
