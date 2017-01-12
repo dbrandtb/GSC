@@ -2070,7 +2070,7 @@ function _0_cotizar(boton)
                             select       : _0_tarifaSelect
                             ,afterrender : function(me)
                             {
-                                if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
+                                if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
                                 {
                                     _0_actualizarCotizacionTramite();
                                 }
@@ -2766,7 +2766,7 @@ function _0_actualizarCotizacionTramite(callback)
 
 function _0_recuperarCotizacionDeTramite()
 {
-    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
+    if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' )
     {
         var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
         try
