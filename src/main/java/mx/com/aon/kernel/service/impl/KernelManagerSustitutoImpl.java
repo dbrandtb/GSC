@@ -679,6 +679,11 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
     public WrapperResultados movMpersona(Map<String,Object> parameters) throws ApplicationException
     {
     	log.debug("### kernel sustituto movMpersona map: "+parameters);
+    	if (parameters != null) {
+    	    if (!parameters.containsKey("pv_dsocupacion_i")) {
+    	        parameters.put("pv_dsocupacion_i", null);
+    	    }
+    	}
         WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_MOV_MPERSONA);
         log.debug("### kernel sustituto movMpersona id:"+res.getMsgId());
         log.debug("### kernel sustituto movMpersona mesage:"+res.getMsgText());
