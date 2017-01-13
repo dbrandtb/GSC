@@ -11036,6 +11036,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null, false
 						);
 				
+				/*
 				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit TMS:
 				if (Ramo.MULTISALUD.getCdramo().equals(cdramo)
 						&& !TipoSituacion.TRADICIONALES_MEGASALUD.getCdtipsit().equals(cdtipsit))
@@ -11134,6 +11135,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								);
 					}
 				}
+				*/
 			}
 			
 			exito = true;
