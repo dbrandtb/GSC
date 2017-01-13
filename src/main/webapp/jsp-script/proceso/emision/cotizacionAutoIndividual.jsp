@@ -2670,6 +2670,14 @@ function _p28_cotizar(sinTarificar)
                         }
                     ];
                     
+                    var itemAntRefPol =
+                        [
+                            {
+                                xtype  : 'displayfield'
+                                ,value : 'Plan Y forma de Pago Anteriores: '+json.smap1.fila+"/"+json.smap1.columna
+                            }
+                        ];
+                    
                     <s:if test='%{getImap().get("panel5Items")!=null}'>
                         var itemsaux = [<s:property value="imap.panel5Items" />];
                         for(var ii=0;ii<itemsaux.length;ii++)
@@ -2756,6 +2764,12 @@ function _p28_cotizar(sinTarificar)
                                 xtype  : 'fieldset'
                                 ,title : '<span style="font:bold 14px Calibri;">DESCUENTO DE AGENTE</span>'
                                 ,items : itemsDescuento
+                            }
+                            ,{
+                                xtype  : 'fieldset'
+                                ,title : '<span style="font:bold 14px Calibri;">Datos de Renovacion</span>'
+                                ,items : itemAntRefPol
+                                ,hidden: !Ext.isEmpty(_p28_flujo) ? (_p28_flujo.cdflujomc != 220 && _p28_flujo.cdtipflu != 103) : true
                             }
                         ]
                         ,buttonAlign : 'right'
@@ -2897,15 +2911,37 @@ function _p28_cotizar(sinTarificar)
                                         {
 	                                        var gridTarifas = _fieldById('_p28_gridTarifas').down('grid');
 	                                        var sm = gridTarifas.getSelectionModel();
-	                                        try{
-	                                            if(sm.select({row:Number(json.smap1.fila),column:Number(json.smap1.columna)}))
-	                                             {
-	                                                sm.select({row:Number(json.smap1.fila),column:Number(json.smap1.columna)});
-	                                             }
+	                                        try
+	                                        {
+	                                            var z=0, columna=999, fila=999; 
+                                                (gridTarifas.columns).forEach(function(item)
+                                                {
+                                                    if(item.text.toLowerCase() === json.smap1.columna.toLowerCase())
+                                                    {
+	                                                     columna = z-1;
+                                                    }
+                                                    else
+                                                    {
+                                                         z++;
+                                                    }
+                                                });
+                                                
+                                                for(var IteGriTar=0;IteGriTar<17;IteGriTar++)
+                                                {
+		                                            sm.select({row:IteGriTar,column:0});
+		                                            if(json.smap1.fila.toLowerCase() === (sm.getSelection({row:IteGriTar,column:0})[0].data.DSPERPAG).toLowerCase())
+		                                            {
+	                                                      fila = IteGriTar;
+	                                                      IteGriTar = 18;
+		                                            }
+                                                }
+                                                
+                                                sm.select({row:fila,column:columna});
 	                                         }catch(e) {
 	                                           debug("Excede rango fuera de la cuadricula de tarifas");
 	                                         }
                                         }
+                                        
                                         if(!Ext.isEmpty(_p28_flujo)) // && sinTarificar !== true)
                                         {
                                             _p28_actualizarCotizacionTramite(_p28_actualizarSwexiperTramite);
@@ -2913,7 +2949,6 @@ function _p28_cotizar(sinTarificar)
                                     }
                                 }
 //                                ,selType = cellModel
-                               
                             })
                             ,_p28_formDescuento
                             ,Ext.create('Ext.panel.Panel',
