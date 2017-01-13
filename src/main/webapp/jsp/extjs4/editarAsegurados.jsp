@@ -241,36 +241,36 @@
             }
             
             /*
-	        if(typeof v == 'string')
-	                   //tengo solo el indice
-	        {
-	            //window.console&&console.log('string:');
-	            storeParentescop2.each(function(rec){
-	                //window.console&&console.log('iterando...',rec.data);
-	                if(rec.data.key==v)
-	                {
-	                    leyenda=rec.data.value; 
-	                }
-	            });
-	            //window.console&&console.log(leyenda);
-	        }
-	        else
-	        //tengo objeto que puede venir como Generic u otro mas complejo
-	        {
-	            //window.console&&console.log('object:');
-	            if(v.key&&v.value)
-	            //objeto Generic
-	            {
-	                leyenda=v.value;
-	            }
-	            else
-	            {
-	                leyenda=v.data.value;
-	            }
-	            //window.console&&console.log(leyenda);
-	        }
-	        //console.log('return',leyenda);
-	        */
+            if(typeof v == 'string')
+                       //tengo solo el indice
+            {
+                //window.console&&console.log('string:');
+                storeParentescop2.each(function(rec){
+                    //window.console&&console.log('iterando...',rec.data);
+                    if(rec.data.key==v)
+                    {
+                        leyenda=rec.data.value; 
+                    }
+                });
+                //window.console&&console.log(leyenda);
+            }
+            else
+            //tengo objeto que puede venir como Generic u otro mas complejo
+            {
+                //window.console&&console.log('object:');
+                if(v.key&&v.value)
+                //objeto Generic
+                {
+                    leyenda=v.value;
+                }
+                else
+                {
+                    leyenda=v.data.value;
+                }
+                //window.console&&console.log(leyenda);
+            }
+            //console.log('return',leyenda);
+            */
         }
         catch(e)
         {
@@ -426,217 +426,220 @@
     
     //Agrega los valores por defectopara los campos nuevos agregados. ELP
     function valoresDefault(grid){ 
-    	debug('>valoresDefault');
-    	
-    	var gridSource  = grid.getView().dataSource.data;
-    	
-    	//Valor por defecto para el campo de ocupacion ELP
-    	for(var j=0;j < gridSource.length; j++){
-    		
-    		if(Ext.isEmpty(gridSource.getAt(j).data.ocup) || gridSource.getAt(j).data.ocup == '156'){
-	    		gridSource.getAt(j).set('ocup','156');
-	    		debug('-Ocupacion ',j,'- ',gridSource.getAt(j).data.ocup);
-    		}
-    		
-    		debug(Ext.isEmpty(gridSource.getAt(j).data.cdestciv));
-    		
-    		if((gridSource.getAt(j).data.Parentesco == "T" && gridSource.getAt(j).data.cdestciv == 1)
-    			&& (gridSource.getAt(j).data.Parentesco == "C" && gridSource.getAt(j).data.cdestciv == 2)){
-    			gridSource.getAt(j).set('cdestciv','2');
-    		}else if(Ext.isEmpty(gridSource.getAt(j).data.cdestciv)){
-    			gridSource.getAt(j).set('cdestciv','1');
-    		}
-    		
-    		
-    	}
-    	
-    	debug('<valoresDefault');
+        debug('>valoresDefault');
+        
+        var gridSource  = grid.getView().dataSource.data;
+        
+        //Valor por defecto para el campo de ocupacion ELP
+        for(var j=0;j < gridSource.length; j++){
+            
+            if(Ext.isEmpty(gridSource.getAt(j).data.ocup) || gridSource.getAt(j).data.ocup == '156'){
+                gridSource.getAt(j).set('ocup','156');
+                debug('-Ocupacion ',j,'- ',gridSource.getAt(j).data.ocup);
+            }
+            
+            debug(Ext.isEmpty(gridSource.getAt(j).data.cdestciv));
+            
+            if((gridSource.getAt(j).data.Parentesco == "T" && gridSource.getAt(j).data.cdestciv == 1)
+                && (gridSource.getAt(j).data.Parentesco == "C" && gridSource.getAt(j).data.cdestciv == 2)){
+                gridSource.getAt(j).set('cdestciv','2');
+            }else if(Ext.isEmpty(gridSource.getAt(j).data.cdestciv)){
+                gridSource.getAt(j).set('cdestciv','1');
+            }
+            
+            
+        }
+        
+        debug('<valoresDefault');
     }
     
     //Pone el atributo allowBlank a los campos nuevos para una sucursal 1403 ELP
     function editarCamposPorCdunieco(grid,cdunieco){
-    	debug('>editarCamposPorCdunieco');
-    	
-    	//Obtiene las columnas del grid
-    	var gridColumns = grid.headerCt.getGridColumns();
-    	
-    	//Sucursal 1403 para el campo Estado Civil
-    	for (var i = 0; i < gridColumns.length; i++) {
-    	  if (gridColumns[i].dataIndex == "cdestciv" && cdunieco == 1403) {
-	    		gridColumns[i].editor.allowBlank = false;
-	    		debug(gridColumns[i].editor);
-	    		break;
-    	  }
-    	}
-    	
-    	//Sucursal 1403 para el campo No. de Empleado
-    	for (var i = 0; i < gridColumns.length; i++) {
-    	  if (gridColumns[i].dataIndex == "numsoc" && cdunieco == 1403) {
-	    		gridColumns[i].editor.allowBlank = false;
-	    		gridColumns[i].editor.regex = /^\d+$/;
-	    		debug(gridColumns[i].editor);
-	    		break;
-    	  }
-    	}
+        debug('>editarCamposPorCdunieco');
+        
+        //Obtiene las columnas del grid
+        var gridColumns = grid.headerCt.getGridColumns();
+        
+        //Sucursal 1403 para el campo Estado Civil
+        for (var i = 0; i < gridColumns.length; i++) {
+          if (gridColumns[i].dataIndex == "cdestciv" && cdunieco == 1403) {
+                gridColumns[i].getEditor().allowBlank = false;
+                debug(gridColumns[i].getEditor());
+                break;
+          }
+        }
+        
+        //Sucursal 1403 para el campo No. de Empleado
+        for (var i = 0; i < gridColumns.length; i++) {
+          if (gridColumns[i].dataIndex == "numsoc" && cdunieco == 1403) {
+                gridColumns[i].getEditor().allowBlank = false;
+                gridColumns[i].getEditor().regex = /^\d+$/;
+                debug(gridColumns[i].getEditor());
+                break;
+          }
+        }
 
-    	//Sucursal 1403 para el campo Clave Familiar   	
-    	for (var i = 0; i < gridColumns.length; i++) {
-    	  if (gridColumns[i].dataIndex == "clvfam" && cdunieco == 1403) {
-	    		gridColumns[i].editor.allowBlank = false;
-	    		gridColumns[i].editor.regex = /^\d+$/;
-	    		debug(gridColumns[i].editor);
-	    		break;
-    	  }
-    	}
-    	
-    	//Sucursal 1403 para el campo Ocupacion
-    	for (var i = 0; i < gridColumns.length; i++) {
-    	  if (gridColumns[i].dataIndex == "ocup" && cdunieco == 1403) {
-	    		gridColumns[i].editor.allowBlank = false;
-	    		debug(gridColumns[i].editor);
-	    		break;
-    	  }
-    	}
-    	
-    	debug('<editarCamposPorCdunieco');
+        //Sucursal 1403 para el campo Clave Familiar    
+        for (var i = 0; i < gridColumns.length; i++) {
+          if (gridColumns[i].dataIndex == "clvfam" && cdunieco == 1403) {
+                gridColumns[i].getEditor().allowBlank = false;
+                gridColumns[i].getEditor().regex = /^\d+$/;
+                debug(gridColumns[i].getEditor());
+                break;
+          }
+        }
+        
+        //Sucursal 1403 para el campo Ocupacion
+        for (var i = 0; i < gridColumns.length; i++) {
+          if (gridColumns[i].dataIndex == "ocup" && cdunieco == 1403) {
+                gridColumns[i].getEditor().allowBlank = false;
+                debug(gridColumns[i].getEditor());
+                break;
+          }
+        }
+        
+        debug('<editarCamposPorCdunieco');
     }
  
     //Valida que para sucursales diferentes de la 1403, los campos Edo civil y Ocupacion sean obligatorios solo para el titular. ELP
     function validaCamposTitular(grid,cdunieco){
-    	debug('>validaCamposTitular');
-    	
-    	var gridColumns = grid.headerCt.getGridColumns();
-    	var gridSource  = grid.getView().dataSource.data;
-    	
-    	
-    	for(var i=0; i < gridSource.length; i++){
-			if(gridSource.items[i].data.Parentesco !== "T" && cdunieco !== 1403){
-				for (var j = 0; j < gridColumns.length; j++) {
-		    	  		if (gridColumns[j].dataIndex === "cdestciv" && Ext.isEmpty(gridSource.items[i].data.cdestciv)){
-		    	  			gridColumns[j].editor.allowBlank = true;
-		    	  			debug('*Cuando no es tomador, lo pone no obligatorio',gridColumns[j].editor.allowBlank,'.');
-		    	  		}
-				}
-			}
-		}
-		
-		for(var i=0; i < gridSource.length; i++){
-			if(gridSource.items[i].data.Parentesco !== "T" && cdunieco !== 1403){
-				for (var j = 0; j < gridColumns.length; j++) {
-		    	  		if (gridColumns[j].dataIndex === "ocup" && Ext.isEmpty(gridSource.items[i].data.ocup)){
-		    	  			gridColumns[j].editor.allowBlank = true;
-		    	  			debug('**Cuando no es tomador, lo pone no obligatorio',gridColumns[j].editor.allowBlank,'.');
-		    	  		}
-				}
-			}else if(gridSource.items[i].data.Parentesco == "T" && cdunieco == 1403){
-			    
-			    for (var j = 0; j < gridColumns.length; j++) {
+        debug('>validaCamposTitular');
+        
+        var gridColumns = grid.headerCt.getGridColumns();
+        var gridSource  = grid.getView().dataSource.data;
+        
+        
+        for(var i=0; i < gridSource.length; i++){
+            if(gridSource.items[i].data.Parentesco !== "T" && cdunieco !== 1403){
+                for (var j = 0; j < gridColumns.length; j++) {
+                        if (gridColumns[j].dataIndex === "cdestciv" && Ext.isEmpty(gridSource.items[i].data.cdestciv)){
+                            debug('gridColumns',gridColumns[j]);
+                            gridColumns[j].getEditor().allowBlank = true;
+                            debug('*Cuando no es tomador, lo pone no obligatorio',gridColumns[j].getEditor().allowBlank,'.');
+                        }
+                }
+            }
+        }
+        
+        for(var i=0; i < gridSource.length; i++){
+            if(gridSource.items[i].data.Parentesco !== "T" && cdunieco !== 1403){
+                for (var j = 0; j < gridColumns.length; j++) {
+                        if (gridColumns[j].dataIndex === "ocup" && Ext.isEmpty(gridSource.items[i].data.ocup)){
+                            debug('gridColumns',gridColumns[j]);
+                            gridColumns[j].getEditor().allowBlank = true;
+                            debug('**Cuando no es tomador, lo pone no obligatorio',gridColumns[j].getEditor().allowBlank,'.');
+                        }
+                }
+            }else if(gridSource.items[i].data.Parentesco == "T" && cdunieco == 1403){
+                
+                for (var j = 0; j < gridColumns.length; j++) {
                     if (gridColumns[j].dataIndex === "ocup" && Ext.isEmpty(gridSource.items[i].data.ocup)){
                         /** A peticion de Adrian Olmos Fwd: (Nro.30) Para las pólizas de Clínica NOVA **/
-                        gridColumns[j].editor.allowBlank = false;
-                        debug('**Cuando es titular, lo pone como obligatorio obligatorio',gridColumns[j].editor.allowBlank,'.');
+                        debug('gridColumns',gridColumns[j]);
+                        gridColumns[j].getEditor().allowBlank = false;
+                        debug('**Cuando es titular, lo pone como obligatorio obligatorio',gridColumns[j].getEditor().allowBlank,'.');
                     }
                 }
-			}	
-		}
-		
-		debug('<validaCamposTitular');
+            }   
+        }
+        
+        debug('<validaCamposTitular');
     }
     
     //Valida que los datos sean validos y no se encuentren vacios solo para el registro de parentesco Titular. ELP
     function validaDatosAseguradosTitular(grid,cdunieco){
-    	debug('>validaDatosAseguradosTitular');
-    	
-    	var size = grid.getView().dataSource.data.items.length;
-		var errTitular = [];
-		var err;
-		
-		
-		for (var i=0; i < size; i++){
-		
+        debug('>validaDatosAseguradosTitular');
+        
+        var size = grid.getView().dataSource.data.items.length;
+        var errTitular = [];
+        var err;
+        
+        
+        for (var i=0; i < size; i++){
+        
 
-		        if((grid.getView().dataSource.data.items[i].data.Parentesco == "T") 
-		        	&& (Ext.isEmpty(grid.getView().dataSource.data.items[i].data.cdestciv)) && cdunieco != 1403){
-		        	
-		            errTitular.push('Estado Civil ');
-		            grid.getStore().getAt(i).set('cdestciv',null);
-		        	
-		        }
-		
-		        if(cdunieco != 1403 && grid.getView().dataSource.data.items[i].data.Parentesco == "T"
-		        	&& Ext.isEmpty(grid.getView().dataSource.data.items[i].data.ocup)){
-		           	
-	        		errTitular.push('Ocupacion');
-		        	grid.getStore().getAt(i).set('ocup','156');
-		        	
-		        }
-				
-		}
-		
-			
-			if(!Ext.isEmpty(errTitular)){
-				err = '\nEl titular tiene como obligatorios los campos '
-				for(var i=0; i < errTitular.length;i++){
-					err += errTitular[i];
-				}
-			}
-		
-		debug(err);
-		
-		debug('<validaDatosAseguradosTitular');
-		
-		return err;
-		
+                if((grid.getView().dataSource.data.items[i].data.Parentesco == "T") 
+                    && (Ext.isEmpty(grid.getView().dataSource.data.items[i].data.cdestciv)) && cdunieco != 1403){
+                    
+                    errTitular.push('Estado Civil ');
+                    grid.getStore().getAt(i).set('cdestciv',null);
+                    
+                }
+        
+                if(cdunieco != 1403 && grid.getView().dataSource.data.items[i].data.Parentesco == "T"
+                    && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.ocup)){
+                    
+                    errTitular.push('Ocupacion');
+                    grid.getStore().getAt(i).set('ocup','156');
+                    
+                }
+                
+        }
+        
+            
+            if(!Ext.isEmpty(errTitular)){
+                err = '\nEl titular tiene como obligatorios los campos '
+                for(var i=0; i < errTitular.length;i++){
+                    err += errTitular[i];
+                }
+            }
+        
+        debug(err);
+        
+        debug('<validaDatosAseguradosTitular');
+        
+        return err;
+        
     }
     
     //Valida que los datos sean validos y no se encuentren vacios solo para el registro de la sucursal 1403. ELP
     function validaDatosAsegurados(grid,cdunieco){
-    	debug('>validaDatosAsegurados');
-    	
-    	var size = grid.getView().dataSource.data.items.length;
-		var arrErrores = [];
-		var err;
-				
-		for (var i=0; i < size; i++){
-		
-			debug('edociv ',grid.getView().dataSource.data.items[i].data.cdestciv);
-			debug('ocup ',grid.getView().dataSource.data.items[i].data.ocup);
-			
-				if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.cdestciv)){
-		            arrErrores.push('Estado Civil\n');
-		            grid.getStore().getAt(i).set('cdestciv',null);
-		        }
-			
-			
-		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.numsoc)){
-		            arrErrores.push('Numero de empleado\n');
-		            grid.getStore().getAt(i).set('numsoc',null);
-		        }
-		
-		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.clvfam)){
-		            arrErrores.push('Clave Familiar\n');
-		            grid.getStore().getAt(i).set('clvfam',null);
-		         }
-		         
-		         if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.ocup)){
-		            arrErrores.push('Ocupacion\n');
-		            grid.getStore().getAt(i).set('ocup','156');
-		        }
-		
-		}
-		
-		if(!Ext.isEmpty(arrErrores)){
-			err = 'Los campos : ';
-			for(var i=0; i < arrErrores.length;i++){
-				err += arrErrores[i];
-			}
-			err +=' no son validos.';	
-		}
-		
+        debug('>validaDatosAsegurados');
+        
+        var size = grid.getView().dataSource.data.items.length;
+        var arrErrores = [];
+        var err;
+                
+        for (var i=0; i < size; i++){
+        
+            debug('edociv ',grid.getView().dataSource.data.items[i].data.cdestciv);
+            debug('ocup ',grid.getView().dataSource.data.items[i].data.ocup);
+            
+                if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.cdestciv)){
+                    arrErrores.push('Estado Civil\n');
+                    grid.getStore().getAt(i).set('cdestciv',null);
+                }
+            
+            
+                if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.numsoc)){
+                    arrErrores.push('Numero de empleado\n');
+                    grid.getStore().getAt(i).set('numsoc',null);
+                }
+        
+                if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.clvfam)){
+                    arrErrores.push('Clave Familiar\n');
+                    grid.getStore().getAt(i).set('clvfam',null);
+                 }
+                 
+                 if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.ocup)){
+                    arrErrores.push('Ocupacion\n');
+                    grid.getStore().getAt(i).set('ocup','156');
+                }
+        
+        }
+        
+        if(!Ext.isEmpty(arrErrores)){
+            err = 'Los campos : ';
+            for(var i=0; i < arrErrores.length;i++){
+                err += arrErrores[i];
+            }
+            err +=' no son validos.';   
+        }
+        
 
-		debug('<validaDatosAsegurados');
-		
-		return err;    	
+        debug('<validaDatosAsegurados');
+        
+        return err;     
     }
     
     //guardador
@@ -798,7 +801,7 @@
                                             numsoc      :  recordAsegu.get('numsoc'),
                                             clvfam      :  recordAsegu.get('clvfam'),
                                             ocup        :  recordAsegu.get('ocup'),
-                                            parentesco	:  recordAsegu.get('Parentesco'),
+                                            parentesco  :  recordAsegu.get('Parentesco'),
                                             estomador   :  recordAsegu.get('estomador')
                                         });
                                         debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
@@ -831,11 +834,11 @@
                                         cdrfc: recordAsegu.get('cdrfc'),
                                         tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
                                         nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key'),
-                                		cdestciv 	:  recordAsegu.get('cdestciv'),
-                                        numsoc   	:  recordAsegu.get('numsoc'),
-                                        clvfam   	:  recordAsegu.get('clvfam'),
-                                        ocup     	:  recordAsegu.get('ocup'),
-                                        parentesco	:  recordAsegu.get('Parentesco'),
+                                        cdestciv    :  recordAsegu.get('cdestciv'),
+                                        numsoc      :  recordAsegu.get('numsoc'),
+                                        clvfam      :  recordAsegu.get('clvfam'),
+                                        ocup        :  recordAsegu.get('ocup'),
+                                        parentesco  :  recordAsegu.get('Parentesco'),
                                         estomador   :  recordAsegu.get('estomador')
                                     });
                                     debug('*f6');
@@ -940,10 +943,10 @@
                                                                                 tpersona : datosContr.tipoper,
                                                                                 nacional : datosContr.naciona
                                                                                ,cdestciv :  recordAsegu2.get('cdestciv'),
-										                                        clvfam   :  recordAsegu2.get('clvfam'),
-										                                        numsoc   :  recordAsegu2.get('numsoc'),
-										                                        ocup     :  recordAsegu2.get('ocup'),
-										                                        parentesco	: recordAsegu2.get('Parentesco')
+                                                                                clvfam   :  recordAsegu2.get('clvfam'),
+                                                                                numsoc   :  recordAsegu2.get('numsoc'),
+                                                                                ocup     :  recordAsegu2.get('ocup'),
+                                                                                parentesco  : recordAsegu2.get('Parentesco')
                                                                             });
                                                                         }
                                                                         incisosJson.push({
@@ -962,12 +965,12 @@
                                                                             cdrfc: recordAsegu2.get('cdrfc'),
                                                                             tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
                                                                             nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
-	                                                                   	   ,cdestciv :  recordAsegu2.get('cdestciv'),
-									                                        numsoc   :  recordAsegu2.get('numsoc'),
-									                                        clvfam   :  recordAsegu2.get('clvfam'),
-									                                        ocup     :  recordAsegu2.get('ocup'),
-									                                        parentesco	: recordAsegu2.get('Parentesco'),
-									                                        estomador   : recordAsegu2.get('estomador')
+                                                                           ,cdestciv :  recordAsegu2.get('cdestciv'),
+                                                                            numsoc   :  recordAsegu2.get('numsoc'),
+                                                                            clvfam   :  recordAsegu2.get('clvfam'),
+                                                                            ocup     :  recordAsegu2.get('ocup'),
+                                                                            parentesco  : recordAsegu2.get('Parentesco'),
+                                                                            estomador   : recordAsegu2.get('estomador')
                                                                         });
                                                                     });                
                                                                     Ext.getCmp('form1p2').setLoading(false);
@@ -1088,18 +1091,18 @@ debug("validarYGuardar flag:2");
         storeEstcivp2.load();
         
         storeOcupp2 = new Ext.data.Store({
-        	model:'Generic',
-        	proxy:
-        	{
-        		type:	'ajax',
-        		url :	urlCargarCatalogosp2,
-        		extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@OCUPACION"/>'},
-        		reader:
-        		{
-        			type: 'json',
-        			root: 'lista'
-        		}
-        	}
+            model:'Generic',
+            proxy:
+            {
+                type:   'ajax',
+                url :   urlCargarCatalogosp2,
+                extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@OCUPACION"/>'},
+                reader:
+                {
+                    type: 'json',
+                    root: 'lista'
+                }
+            }
         });
         
         storeOcupp2.load();
@@ -1330,9 +1333,9 @@ debug("validarYGuardar flag:2");
                     debug("load isCopiadop2:"+(isCopiadop2?'true':'false'));
                     
                     //Valida los titulares diferentes a la sucursal 1403 ELP
-	                validaCamposTitular(gridPersonasp2,inputCduniecop2);
-	                
-	                valoresDefault(gridPersonasp2);
+                    validaCamposTitular(gridPersonasp2,inputCduniecop2);
+                    
+                    valoresDefault(gridPersonasp2);
                 }
             }               
         });
@@ -1471,18 +1474,18 @@ debug("validarYGuardar flag:2");
             allowBlank:false,
             editable:false,
             listeners: {
-				'beforeselect' : function(combo, record, index, eOpts){
-					var edicivPersona = gridPersonasp2.getSelectionModel().getLastSelected();
-					if(edicivPersona.get('estomador')){
-						Ext.Msg.show({
-							title    : 'Aviso'
-					        ,icon    : Ext.Msg.WARNING
-					        ,msg     : 'No puede cambiar el Estado Civil del Contratante.'
-					        ,buttons : Ext.Msg.OK
-					    });
-						return false;
-					}
-				}
+                'beforeselect' : function(combo, record, index, eOpts){
+                    var edicivPersona = gridPersonasp2.getSelectionModel().getLastSelected();
+                    if(edicivPersona.get('estomador')){
+                        Ext.Msg.show({
+                            title    : 'Aviso'
+                            ,icon    : Ext.Msg.WARNING
+                            ,msg     : 'No puede cambiar el Estado Civil del Contratante.'
+                            ,buttons : Ext.Msg.OK
+                        });
+                        return false;
+                    }
+                }
             }
         });
         
@@ -1495,30 +1498,30 @@ debug("validarYGuardar flag:2");
             allowBlank:false,
             editable:false,
             listeners: {
-				'beforeselect' : function(combo, record, index, eOpts){
-					var edicivPersona = gridPersonasp2.getSelectionModel().getLastSelected();
-					if(edicivPersona.get('estomador')){
-						Ext.Msg.show({
-							title    : 'Aviso'
-					        ,icon    : Ext.Msg.WARNING
-					        ,msg     : 'No puede cambiar el Estado Civil del Contratante.'
-					        ,buttons : Ext.Msg.OK
-					    });
-						return false;
-					}
-				}
+                'beforeselect' : function(combo, record, index, eOpts){
+                    var edicivPersona = gridPersonasp2.getSelectionModel().getLastSelected();
+                    if(edicivPersona.get('estomador')){
+                        Ext.Msg.show({
+                            title    : 'Aviso'
+                            ,icon    : Ext.Msg.WARNING
+                            ,msg     : 'No puede cambiar el Estado Civil del Contratante.'
+                            ,buttons : Ext.Msg.OK
+                        });
+                        return false;
+                    }
+                }
             }
         });
         
         editorOcupp2=Ext.create('Ext.form.ComboBox',
         {
-        	store: storeOcupp2,
-        	queryMode:'local',
-        	displayField: 'value',
-        	valueField: 'key',
-        	value : 'value',
-        	allowBlank:false,
-        	editable:true
+            store: storeOcupp2,
+            queryMode:'local',
+            displayField: 'value',
+            valueField: 'key',
+            value : 'value',
+            allowBlank:false,
+            editable:true
         });
         
         editorFechap2=Ext.create('Ext.form.field.Date',
@@ -1674,13 +1677,13 @@ debug("validarYGuardar flag:2");
                     var esContratante = (!Ext.isEmpty(campoAactualizar.get('estomador'))&& campoAactualizar.get('estomador'))?true:false;
                     
                     if(esContratante){
-                    	campoAactualizar.set("swexiper",'S');
-                    	campoAactualizar.set("estomador",esContratante);
-                    	return;
+                        campoAactualizar.set("swexiper",'S');
+                        campoAactualizar.set("estomador",esContratante);
+                        return;
                     }else{
-                    	campoAactualizar.set("swexiper",'N');
-                    	campoAactualizar.set("estomador",esContratante);
-                    	campoAactualizar.set("cdperson",'');
+                        campoAactualizar.set("swexiper",'N');
+                        campoAactualizar.set("estomador",esContratante);
+                        campoAactualizar.set("cdperson",'');
                         campoAactualizar.set("cdideper",'');
                         campoAactualizar.set("cdideext",'');
                     }                  
@@ -1990,7 +1993,7 @@ debug("validarYGuardar flag:2");
                 });
 
                 Ext.apply(this, {
-//                  	width: 750,
+//                      width: 750,
                     height: 200,
                     plugins: [this.cellEditing],
                     store: storePersonasp2,
@@ -2260,16 +2263,16 @@ debug("validarYGuardar flag:2");
             
             onEditarClick:function(grid,rowIndex)
             {
-            	
-            	var validaNegocioCvFam;
+                
+                var validaNegocioCvFam;
                 if(inputCduniecop2 == 1403){
-                	validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
+                    validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
                 }
                 if(!Ext.isEmpty(validaNegocioCvFam)){
-        		    mensajeWarning(validaNegocioCvFam);
-        		    return false;
-        		}
-            	
+                    mensajeWarning(validaNegocioCvFam);
+                    return false;
+                }
+                
                 var me=this;
                 debug("domicilios.click");
                 debug("validarYGuardar");
@@ -2425,15 +2428,15 @@ debug("validarYGuardar flag:2");
             
             onDomiciliosClick:function(grid,rowIndex)
             {
-            	var validaNegocioCvFam;
+                var validaNegocioCvFam;
                 if(inputCduniecop2 == 1403){
-                	validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
+                    validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
                 }
                 if(!Ext.isEmpty(validaNegocioCvFam)){
-        		    mensajeWarning(validaNegocioCvFam);
-        		    return false;
-        		}
-            	
+                    mensajeWarning(validaNegocioCvFam);
+                    return false;
+                }
+                
                 var me=this;
                 debug("domicilios.click");
                 debug("validarYGuardar");
@@ -2443,16 +2446,16 @@ debug("validarYGuardar flag:2");
             
             onExclusionClick:function(grid,rowIndex)
             {
-            	
-            	
-            	var validaNegocioCvFam;
+                
+                
+                var validaNegocioCvFam;
                 if(inputCduniecop2 == 1403){
-                	validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
+                    validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
                 }
                 if(!Ext.isEmpty(validaNegocioCvFam)){
-        		    mensajeWarning(validaNegocioCvFam);
-        		    return false;
-        		}
+                    mensajeWarning(validaNegocioCvFam);
+                    return false;
+                }
                 
                 var me=this;
                 debug("onExclusionClick");
@@ -2513,16 +2516,16 @@ debug("validarYGuardar flag:2");
             }
             ,onValositClick : function(grid,rowIndex)
             {
-            	
-            	var validaNegocioCvFam;
+                
+                var validaNegocioCvFam;
                 if(inputCduniecop2 == 1403){
-                	validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
+                    validaNegocioCvFam = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
                 }
                 if(!Ext.isEmpty(validaNegocioCvFam)){
-        		    mensajeWarning(validaNegocioCvFam);
-        		    return false;
-        		}
-            	
+                    mensajeWarning(validaNegocioCvFam);
+                    return false;
+                }
+                
                 var record=grid.getStore().getAt(rowIndex);
                 debug(record);
                 if(Ext.getCmp('valositAccordionEl'))
@@ -2640,7 +2643,7 @@ debug("validarYGuardar flag:2");
                 {
                     text:'Regresar',
                     hidden:true,
-                    icon: contextop2+'/resources/extjs4/resources/my-custom-theme/images/toolbar/scroll-left.png',
+                    icon: contextop2+'/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
                     handler:function()
                     {
                         Ext.create('Ext.form.Panel').submit({
@@ -2658,7 +2661,7 @@ debug("validarYGuardar flag:2");
                 --%>
                 {
                     text:'Guardar',
-                    icon: contextop2+'/resources/fam3icons/icons/fam/accept.png',
+                    icon: contextop2+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
                     handler:function(){
                         debug('form1p2',Ext.getCmp('form1p2').getForm().isValid());
                         if(Ext.getCmp('form1p2').getForm().isValid())
@@ -2685,70 +2688,70 @@ debug("validarYGuardar flag:2");
                                 var mensajeError;
                                 
                                 if(inputCduniecop2 == 1403){
-                                	mensajeError = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
+                                    mensajeError = validaDatosAsegurados(gridPersonasp2,inputCduniecop2);
                                 }else{
-                                	mensajeError = validaDatosAseguradosTitular(gridPersonasp2,inputCduniecop2);
+                                    mensajeError = validaDatosAseguradosTitular(gridPersonasp2,inputCduniecop2);
                                 }
-                                	
+                                    
                                 if(!Ext.isEmpty(mensajeError)){
-								    mensajeWarning(mensajeError);
-								    return false;
-								}
-								
-								var gridSource = gridPersonasp2.getView().dataSource.data;
-								
-								var hayConyuge = false;
-								var titularCasado =  false;
-								
-								var clavesFam = [];
-								var claveFamRepetida = false;
-								var titularSinOcupacion = false;
-								
-								for(var j=0;j < gridSource.length;j++){
-									if(gridSource.getAt(j).data.Parentesco == "C"){
-										hayConyuge = true;
-						    		}
-									if(gridSource.getAt(j).data.Parentesco == "T" && gridSource.getAt(j).data.cdestciv == 2){
-										titularCasado = true;
-									}
-									
-									var ocupacionRec = gridSource.getAt(j).data.ocup;
-									if(inputCduniecop2 == 1403 && gridSource.getAt(j).data.Parentesco == "T" 
-									        && ( Ext.isEmpty(ocupacionRec) || ocupacionRec == '156' || ocupacionRec == 'n')){
-									    titularSinOcupacion = true;
-									}
-									
-									if(gridSource.getAt(j).data.cdrol == '2' && !Ext.isEmpty(gridSource.getAt(j).data.clvfam)){
-										if( !Ext.Array.contains(clavesFam, gridSource.getAt(j).data.clvfam)){
-										    Ext.Array.push(clavesFam, gridSource.getAt(j).data.clvfam);
-										}else {
-										    claveFamRepetida = true;
-										}
-									}
-								}
-								
-								/** Se agrega validacion para no poder utilizar la misma clave familiar en todos los integrantes de la familia**/
-								if( inputCduniecop2 == 1403 && titularSinOcupacion){
-								    mensajeWarning('La ocupaci&oacute;n del Titular es obligatoria.');
+                                    mensajeWarning(mensajeError);
                                     return false;
-								}
-								
-								/** Se agrega validacion para no poder utilizar la misma clave familiar en todos los integrantes de la familia**/
-								if(claveFamRepetida){
-								    mensajeWarning('No se puede utilizar mas de una vez la Clave Familiar entre los integrantes de una familia.');
+                                }
+                                
+                                var gridSource = gridPersonasp2.getView().dataSource.data;
+                                
+                                var hayConyuge = false;
+                                var titularCasado =  false;
+                                
+                                var clavesFam = [];
+                                var claveFamRepetida = false;
+                                var titularSinOcupacion = false;
+                                
+                                for(var j=0;j < gridSource.length;j++){
+                                    if(gridSource.getAt(j).data.Parentesco == "C"){
+                                        hayConyuge = true;
+                                    }
+                                    if(gridSource.getAt(j).data.Parentesco == "T" && gridSource.getAt(j).data.cdestciv == 2){
+                                        titularCasado = true;
+                                    }
+                                    
+                                    var ocupacionRec = gridSource.getAt(j).data.ocup;
+                                    if(inputCduniecop2 == 1403 && gridSource.getAt(j).data.Parentesco == "T" 
+                                            && ( Ext.isEmpty(ocupacionRec) || ocupacionRec == '156' || ocupacionRec == 'n')){
+                                        titularSinOcupacion = true;
+                                    }
+                                    
+                                    if(gridSource.getAt(j).data.cdrol == '2' && !Ext.isEmpty(gridSource.getAt(j).data.clvfam)){
+                                        if( !Ext.Array.contains(clavesFam, gridSource.getAt(j).data.clvfam)){
+                                            Ext.Array.push(clavesFam, gridSource.getAt(j).data.clvfam);
+                                        }else {
+                                            claveFamRepetida = true;
+                                        }
+                                    }
+                                }
+                                
+                                /** Se agrega validacion para no poder utilizar la misma clave familiar en todos los integrantes de la familia**/
+                                if( inputCduniecop2 == 1403 && titularSinOcupacion){
+                                    mensajeWarning('La ocupaci&oacute;n del Titular es obligatoria.');
                                     return false;
-								}
-								
-								for(var j=0;j < gridSource.length;j++){
-									if(gridSource.getAt(j).data.Parentesco == "C" && titularCasado && gridSource.getAt(j).data.cdestciv != 2){
-						    			mensajeWarning('El parentesco del conyuge debe ser Casado(a).');
-						    			return false;
-						    		}/*else if(gridSource.getAt(j).data.Parentesco == "T" && gridSource.getAt(j).data.cdestciv != 2 && hayConyuge){
-										mensajeWarning('El parentesco del titular debe ser Casado(a), puesto que existe un conyuge.');
-										return false;
-						    		}*/	
-								}
-								
+                                }
+                                
+                                /** Se agrega validacion para no poder utilizar la misma clave familiar en todos los integrantes de la familia**/
+                                if(claveFamRepetida){
+                                    mensajeWarning('No se puede utilizar mas de una vez la Clave Familiar entre los integrantes de una familia.');
+                                    return false;
+                                }
+                                
+                                for(var j=0;j < gridSource.length;j++){
+                                    if(gridSource.getAt(j).data.Parentesco == "C" && titularCasado && gridSource.getAt(j).data.cdestciv != 2){
+                                        mensajeWarning('El parentesco del conyuge debe ser Casado(a).');
+                                        return false;
+                                    }/*else if(gridSource.getAt(j).data.Parentesco == "T" && gridSource.getAt(j).data.cdestciv != 2 && hayConyuge){
+                                        mensajeWarning('El parentesco del titular debe ser Casado(a), puesto que existe un conyuge.');
+                                        return false;
+                                    }*/ 
+                                }
+                                
                                 //ver si el contratante es aparte
                                 var hayContApart=true;
                                 storePersonasp2.each(function(record,index)
@@ -2883,7 +2886,7 @@ debug("validarYGuardar flag:2");
                                             numsoc      :  recordAsegu.get('numsoc'),
                                             clvfam      :  recordAsegu.get('clvfam'),
                                             ocup        :  recordAsegu.get('ocup'),
-                                            parentesco	:  recordAsegu.get('Parentesco'),
+                                            parentesco  :  recordAsegu.get('Parentesco'),
                                             estomador   :  recordAsegu.get('estomador')
                                         });
                                         debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
@@ -2913,14 +2916,14 @@ debug("validarYGuardar flag:2");
                                         segundo_nombre: recordAsegu.get('segundo_nombre'),
                                         Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
                                         Apellido_Materno: recordAsegu.get('Apellido_Materno'),
-                                        cdrfc		: recordAsegu.get('cdrfc'),
-                                        tpersona 	: typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
-                                        nacional 	: typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key'),
-                                        cdestciv 	:  recordAsegu.get('cdestciv'),
-                                        numsoc   	:  recordAsegu.get('numsoc'),
-                                        clvfam   	:  recordAsegu.get('clvfam'),
-                                        ocup     	:  recordAsegu.get('ocup'),
-                                        parentesco	: recordAsegu.get('Parentesco'),
+                                        cdrfc       : recordAsegu.get('cdrfc'),
+                                        tpersona    : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
+                                        nacional    : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key'),
+                                        cdestciv    :  recordAsegu.get('cdestciv'),
+                                        numsoc      :  recordAsegu.get('numsoc'),
+                                        clvfam      :  recordAsegu.get('clvfam'),
+                                        ocup        :  recordAsegu.get('ocup'),
+                                        parentesco  : recordAsegu.get('Parentesco'),
                                         estomador   : recordAsegu.get('estomador')
                                     });
                                     debug('**f6');
@@ -3013,7 +3016,7 @@ debug("validarYGuardar flag:2");
                                                                             Apellido_Materno: datosContr.apmat,
                                                                             cdrfc:datosContr.rfc,
                                                                             tpersona : datosContr.tipoper,
-                                                                            nacional : datosContr.naciona									                                        
+                                                                            nacional : datosContr.naciona                                                                           
                                                                         });
                                                                     }
                                                                     storePersonasp2.each(function(recordAsegu2)
@@ -3038,10 +3041,10 @@ debug("validarYGuardar flag:2");
                                                                                 tpersona : datosContr.tipoper,
                                                                                 nacional : datosContr.naciona,
                                                                                 cdestciv :  recordAsegu2.get('cdestciv'),
-										                                        clvfam   :  recordAsegu2.get('clvfam'),
-										                                        numsoc   :  recordAsegu2.get('numsoc'),
-										                                        ocup     :  recordAsegu2.get('ocup'),
-										                                        parentesco	: recordAsegu2.get('Parentesco')
+                                                                                clvfam   :  recordAsegu2.get('clvfam'),
+                                                                                numsoc   :  recordAsegu2.get('numsoc'),
+                                                                                ocup     :  recordAsegu2.get('ocup'),
+                                                                                parentesco  : recordAsegu2.get('Parentesco')
                                                                             });
                                                                         }
                                                                         incisosJson.push({
@@ -3061,11 +3064,11 @@ debug("validarYGuardar flag:2");
                                                                             tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
                                                                             nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
                                                                            ,cdestciv :  recordAsegu2.get('cdestciv'),
-									                                        numsoc   :  recordAsegu2.get('numsoc'),
-									                                        clvfam   :  recordAsegu2.get('clvfam'),
-									                                        ocup     :  recordAsegu2.get('ocup'),
-									                                        parentesco	: recordAsegu2.get('Parentesco'),
-									                                        estomador   : recordAsegu2.get('estomador')
+                                                                            numsoc   :  recordAsegu2.get('numsoc'),
+                                                                            clvfam   :  recordAsegu2.get('clvfam'),
+                                                                            ocup     :  recordAsegu2.get('ocup'),
+                                                                            parentesco  : recordAsegu2.get('Parentesco'),
+                                                                            estomador   : recordAsegu2.get('estomador')
                                                                         });
                                                                     });                
                                                                     Ext.getCmp('form1p2').setLoading(false);
