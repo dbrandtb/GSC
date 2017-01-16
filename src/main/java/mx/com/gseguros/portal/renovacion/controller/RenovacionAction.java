@@ -24,6 +24,7 @@ import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -42,7 +43,11 @@ public class RenovacionAction extends PrincipalCoreAction
 	
 	//Dependencias inyectadas
 	private RenovacionManager renovacionManager;
+	
+	@Autowired
 	private CotizacionManager cotizacionManager;
+	
+	@Autowired
 	private ConsultasManager  consultasManager;
 	
 	public String pantallaRenovacion()
@@ -811,6 +816,34 @@ public class RenovacionAction extends PrincipalCoreAction
 			respuesta = Utils.manejaExcepcion(ex);
 		}
 		return SUCCESS;
+	}
+	
+	public String validaAgenteSIGS(){
+	    logger.info(
+                new StringBuilder()
+                .append("\n###### params=").append(params)
+                .append("\n###### Entrando a validaAgenteSIGS ######")
+                .append("\n##########################################################")
+                .toString()
+                );
+	    try{
+	        Utils.validate(params, "No se recibieron parametros");
+	        String cdunieco = params.get("cdunieco");
+	        String cdramo   = params.get("cdramo");
+	        String estado   = params.get("estado");
+	        String nmpoliza = params.get("nmpoliza");
+	        String nmsuplem = params.get("nmsuplem");
+	        Utils.validate(cdunieco, "No se recibio la oficina",
+	                       cdramo,   "No se recibio el producto",
+	                       estado,   "No se recibio el estado",
+	                       nmpoliza, "No se recibio la poliza",
+	                       nmsuplem, "No se recibio el suplemento");
+	        respuesta = cotizacionManager.validaAgenteActivo(cdunieco, cdramo, estado, nmpoliza, nmsuplem);	        
+	    }
+	    catch(Exception ex){
+	        respuesta = Utils.manejaExcepcion(ex);
+	    }
+	    return SUCCESS;
 	}
 	
 	//Getters y setters
