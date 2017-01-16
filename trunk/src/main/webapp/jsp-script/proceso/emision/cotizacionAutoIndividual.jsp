@@ -2674,7 +2674,7 @@ function _p28_cotizar(sinTarificar)
                         [
                             {
                                 xtype  : 'displayfield'
-                                ,value : 'Plan Y forma de Pago Anteriores: '+json.smap1.fila+"/"+json.smap1.columna
+                                ,value : 'Plan Y forma de Pago Anteriores: ('+json.smap1.fila+')/'+json.smap1.columna
                             }
                         ];
                     
@@ -2913,23 +2913,25 @@ function _p28_cotizar(sinTarificar)
 	                                        var sm = gridTarifas.getSelectionModel();
 	                                        try
 	                                        {
-	                                            var z=0, columna=999, fila=999; 
-                                                (gridTarifas.columns).forEach(function(item)
+	                                            var columna=0, fila=999; 
+	                                            for(var IteGriTar=1;IteGriTar<gridTarifas.columns.length;IteGriTar++)
                                                 {
-                                                    if(item.text.toLowerCase() === json.smap1.columna.toLowerCase())
+	                                                if((gridTarifas.columns[IteGriTar].text).toLowerCase() === json.smap1.columna.toLowerCase())
                                                     {
-	                                                     columna = z-1;
+                                                         columna = IteGriTar - columna;
+                                                         IteGriTar = gridTarifas.columns.length + 1;
                                                     }
-                                                    else
-                                                    {
-                                                         z++;
-                                                    }
-                                                });
+	                                                else if( IteGriTar%2 != 1)
+	                                                {
+	                                                    columna ++;
+	                                                }
+                                                }
                                                 
                                                 for(var IteGriTar=0;IteGriTar<17;IteGriTar++)
                                                 {
-		                                            sm.select({row:IteGriTar,column:0});
-		                                            if(json.smap1.fila.toLowerCase() === (sm.getSelection({row:IteGriTar,column:0})[0].data.DSPERPAG).toLowerCase())
+		                                            sm.select({row:IteGriTar,column:columna});
+		                                            var texto = (sm.getSelection({row:IteGriTar,column:columna})[0].data.DSPERPAG).toLowerCase()
+		                                            if(json.smap1.fila.toLowerCase() === texto)
 		                                            {
 	                                                      fila = IteGriTar;
 	                                                      IteGriTar = 18;
