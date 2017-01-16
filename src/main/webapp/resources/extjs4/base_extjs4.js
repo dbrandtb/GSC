@@ -299,9 +299,10 @@ function mensajeInfo(mensaje,callback){
 
 function mensajeWarning(mensaje,funcion)
 {
+    var tmpMensajeEmergente;
 	if(funcion)
 	{
-		var tmpMensajeEmergente=Ext.Msg.show({
+		tmpMensajeEmergente=Ext.Msg.show({
 			title    : 'Aviso'
 	        ,icon    : Ext.Msg.WARNING
 	        ,msg     : mensaje
@@ -311,7 +312,7 @@ function mensajeWarning(mensaje,funcion)
 	}
 	else
 	{
-		var tmpMensajeEmergente=Ext.Msg.show({
+		tmpMensajeEmergente=Ext.Msg.show({
 			title    : 'Aviso'
 	        ,icon    : Ext.Msg.WARNING
 	        ,msg     : mensaje

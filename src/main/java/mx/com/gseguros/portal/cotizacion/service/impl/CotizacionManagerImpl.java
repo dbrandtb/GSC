@@ -39,6 +39,7 @@ import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradosFiltroVO;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ConfiguracionCoberturaDTO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -70,6 +71,7 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
+import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -126,6 +128,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 	
 	@Autowired
     private PersonasManager personasManager;
+	
+	@Autowired
+	private ConsultasManager consultasManager;
+	
+	@Autowired
+	private AutosSIGSDAO autosSIGSDAO;
 	
 	@Override
 	public void movimientoTvalogarGrupo(
@@ -11460,6 +11468,41 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return lista;
 	}
 	
+	@Override
+	public String validaAgenteActivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
+	    logger.info(Utils.log(
+                "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+               ,"\n@@@@@@ validaAgenteActivo @@@@@@"
+               ,"\n@@@@@@ cdunieco=" , cdunieco
+               ,"\n@@@@@@ cdramo="   , cdramo
+               ,"\n@@@@@@ estado="   , estado
+               ,"\n@@@@@@ nmpoliza=" , nmpoliza
+               ,"\n@@@@@@ nmsuplem=" , nmsuplem
+               ));
+	    String mensaje = "";
+	    try{
+            String ntramite = consultasManager.recuperarTramitePorNmsuplem(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+            if(ntramite != null){
+                Map<String, String> mapTramite = siniestrosManager.obtenerTramiteCompleto(ntramite);
+                logger.debug("validarAgenteParaNuevoTramite tramite = {}", mapTramite.get("NTRAMITE"));
+                logger.debug("validarAgenteParaNuevoTramite tiptra = {}", mapTramite.get("CDTIPTRA"));
+                logger.debug("validarAgenteParaNuevoTramite agente = {}", mapTramite.get("CDAGENTE"));
+                logger.debug("validarAgenteParaNuevoTramite ramo = {}", mapTramite.get("CDSUBRAM"));
+                if(TipoTramite.RENOVACION.getCdtiptra().equals(mapTramite.get("CDTIPTRA"))){
+                    try{
+                        autosSIGSDAO.validarAgenteParaNuevoTramite(mapTramite.get("CDAGENTE"), mapTramite.get("CDSUBRAM"), "P");
+                    }
+                    catch(Exception ex){
+                        mensaje = ex.getMessage();
+                    }
+                }
+            }
+        }
+        catch(Exception ex){
+            logger.error("No se pudo obtener el tramite de salud", ex);
+        }
+	    return mensaje;
+	}
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////

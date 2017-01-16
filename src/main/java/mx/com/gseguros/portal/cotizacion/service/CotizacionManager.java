@@ -1210,5 +1210,7 @@ public interface CotizacionManager
 			, String limit
 			, String filtro
 			, String valorFiltro) throws Exception;
+	
+	public String validaAgenteActivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
 
 }

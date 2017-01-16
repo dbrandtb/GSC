@@ -557,6 +557,7 @@ function _p29_emitirClicComplementarios()
 	                                            {
 	                                                debugError(e);
 	                                            }
+	                                            	                                            
 	                                            Ext.create('Ext.window.Window',
 	                                            {
 	                                                title: 'Tarifa final',
@@ -1140,7 +1141,22 @@ function _p29_emitirClicComplementarios()
 	                                                                    me.up().up().destroy();
 	                                                                }
 	                                                            }
-	                                                        ]
+	                                                        ],
+	                                                        listeners : {
+	                                                            afterrender : function(me){
+	                                                                try{
+	                                                                    debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
+	                                                                    if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
+	                                                                        setTimeout(function(){ 
+	                                                                            mensajeWarning(json.panel1['mensajeAgenteActivo']); 
+	                                                                        }, 3000);
+	                                                                    }
+	                                                                }
+	                                                                catch(e){
+	                                                                    debugError(e);
+	                                                                }
+	                                                            }
+	                                                        }
 	                                                    })
 	                                                ]
 	                                            }).showAt(50,50);
