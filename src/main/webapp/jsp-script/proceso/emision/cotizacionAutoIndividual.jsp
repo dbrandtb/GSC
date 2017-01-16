@@ -2674,7 +2674,7 @@ function _p28_cotizar(sinTarificar)
                         [
                             {
                                 xtype  : 'displayfield'
-                                ,value : 'Plan Y forma de Pago Anteriores: ('+json.smap1.fila+')/'+json.smap1.columna
+                                ,value : 'Plan y forma de pago de p\u00f3liza a renovar: '+json.smap1.fila+'-'+json.smap1.columna
                             }
                         ];
                     

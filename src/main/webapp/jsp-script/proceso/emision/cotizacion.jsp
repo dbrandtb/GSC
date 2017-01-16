@@ -2049,7 +2049,7 @@ function _0_cotizar(boton)
                     
                     _0_gridTarifas=Ext.create('Ext.grid.Panel',
                     {
-                        title             : (_0_flujo.cdflujomc == 220 && _0_flujo.cdtipflu == 103 && _0_smap1.cdramo == Ramo.AutosFronterizos)? 'Resultados:<br>Plan Y forma de Pago Procedentes de la Renovacion: ('+json.smap1.fila+')/'+json.smap1.columna :'Resultados'
+                        title             : (_0_flujo.cdflujomc == 220 && _0_flujo.cdtipflu == 103 && _0_smap1.cdramo == Ramo.AutosFronterizos)? 'Resultados:<br>Plan y forma de pago de p\u00f3liza a renovar: '+json.smap1.fila+'-'+json.smap1.columna :'Resultados'
                         ,store            : Ext.create('Ext.data.Store',
                         {
                             model : '_0_modeloTarifa'
@@ -5658,5 +5658,5 @@ Ext.onReady(function()
     }
 </script>
 </head>
-<body><div id="_0_divPri" style="height: 1400px;border:1px solid #CCCCCC;"></div></body>
+<body><div id="_0_divPri" style="height: 1700px;border:1px solid #CCCCCC;"></div></body>
 </html>

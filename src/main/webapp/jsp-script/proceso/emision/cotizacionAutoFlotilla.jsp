@@ -4626,7 +4626,7 @@ function _p30_cotizar(sinTarificar)
                         [
                             {
                                 xtype  : 'displayfield'
-                                ,value : 'Forma de Pago de la Renovaci\u00f3n: '+json.smap1.fila
+                                ,value : 'Forma de pago de p\u00f3liza a renovar: '+json.smap1.fila
                             }
                         ];
                     
