@@ -1791,7 +1791,7 @@ public class CotizacionAction extends PrincipalCoreAction
 //	                else if() {fila="";}//  SEMESTRAL A\r\n" + 
 			    }
 			    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
-			    if( true /*!fila.isEmpty() && !columna.isEmpty()*/)
+			    if(!fila.isEmpty() && !columna.isEmpty())
 			    { 
 			        resp.getSmap().put("fila", fila);
 			        resp.getSmap().put("columna", columna);

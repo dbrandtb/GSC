@@ -1108,20 +1108,28 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 ArrayList<String> paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsits, null);
                 columna = paqYplan.get(1);//forma Pago
                 fila= paqYplan.get(0);//paquete
-                if(columna.equals("1P"))                              {columna="1";}//PRESTIGIO
-                else if(columna.equals("1A") || columna.equals("2A")) {columna="1";}//CONFORT AMPLIA
-                else if(columna.equals("3A"))                         {columna="1";}//CONFORT AMPLIA S/ROBO
-                else if(columna.equals("2L") || columna.equals("4L")) {columna="1";}//CONFORT LIMITA
-                else if(columna.equals("5B") || columna.equals("3B")) {columna="1";}//CONFORT BASICA
-//              else if(fila.equals("5BP"))                     {resp.getSmap().put("columna", "");}//CONFORT BASICA PLUS
                 
-                if(fila.equals("1"))      {fila="0";}//  Contado/Anual\r\n" + 
-                else if(fila.equals("4")) {fila="3";}//  Mensual\r\n" + 
-                else if(fila.equals("7")) {fila="3";}//  Mensual\r\n" + 
-                else if(fila.equals("2")) {fila="6";}//  Semestral\r\n" +
-                else if(fila.equals("5")) {fila="6";}//  Semestral\r\n" +
-                else if(fila.equals("3")) {fila="7";}//  Trimestra\r\n" + 
-                else if(fila.equals("6")) {fila="7";}//  Trimestral\r\n" + 
+                if(columna.equals("1P"))                              {columna="PRESTIGIO";}
+                else if(columna.equals("1A") || columna.equals("2A")) {columna="CONFORT AMPLIA";}
+                else if(columna.equals("2L") || columna.equals("4L")) {columna="CONFORT LIMITADA";}
+                else if(columna.equals("5B") || columna.equals("3B")) {columna="CONFORT BASICA";}
+                else if(columna.equals("3A"))                         {columna="CONFORT AMPLIA S/ROBO";}
+                
+                if(        fila.equals("1") 
+                        || fila.equals("98") 
+                        || fila.equals("11")
+                        || fila.equals("12")){fila="Contado/Anual";} 
+                else if(   fila.equals("2")
+                        || fila.equals("5")
+                        || fila.equals("97")
+                        || fila.equals("63")){fila="Semestral";} 
+                else if(   fila.equals("3") 
+                        || fila.equals("6")
+                        || fila.equals("61")){fila="Trimestral";}
+                else if(  fila.equals("4") 
+                        || fila.equals("7") ){fila="Mensual";} 
+                else if(fila.equals("62")) {fila="Semanal";}
+                else if(fila.equals("64")) {fila="Contado";} 
                 
                 List<Map<String,String>> listaResultados= resp.getSlist();
                 String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
