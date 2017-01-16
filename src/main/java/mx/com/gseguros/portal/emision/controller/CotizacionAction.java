@@ -1762,12 +1762,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	                else if(columna.equals("5B") || columna.equals("3B")) {columna="CONFORT BASICA";}
 	                else if(columna.equals("3A"))                         {columna="CONFORT AMPLIA S/ROBO";}
 	                
-	                if(fila.equals("12") || fila.equals("98") 
-	                                     || fila.equals("11"))      {fila="Contado/Anual";} 
-	                else if(fila.equals("1"))                      {fila="Mensual";} 
-	                else if(fila.equals("63") || fila.equals("97")
-	                                     || fila.equals("2"))       {fila="Semestral";} 
-	                else if(fila.equals("3") || fila.equals("61")) {fila="Trimestral";}
+    	            if(        fila.equals("1") 
+    	                    || fila.equals("98") 
+                            || fila.equals("11")
+                            || fila.equals("12")){fila="Contado/Anual";} 
+	                else if(   fila.equals("2")
+	                        || fila.equals("5")
+	                        || fila.equals("97")
+	                        || fila.equals("63")){fila="Semestral";} 
+	                else if(   fila.equals("3") 
+	                        || fila.equals("6")
+	                        || fila.equals("61")){fila="Trimestral";}
+	                else if(  fila.equals("4") 
+                            || fila.equals("7") ){fila="Mensual";} 
 //	                else if(fila.equals("2"))  {fila="DXN Anual";}//  \r\n" + 
 //	                else if(fila.equals("4"))  {fila="";}//  MENSUAL6\r\n" + 
 //	                else if(fila.equals("5"))  {fila="";}//  ANUAL04\r\n" + 
