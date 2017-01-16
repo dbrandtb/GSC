@@ -4626,7 +4626,7 @@ function _p30_cotizar(sinTarificar)
                         [
                             {
                                 xtype  : 'displayfield'
-                                ,value : 'Plan Y forma de Pago Anteriores: ('+json.smap1.fila+')/'+json.smap1.columna
+                                ,value : 'Forma de Pago de la Renovaci\u00f3n: '+json.smap1.fila
                             }
                         ];
                     
