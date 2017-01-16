@@ -283,7 +283,12 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                             //var callback = function() { _p21_turnar(19,'Observaciones de la carga',false); };
                             var callback = function() {
                             	if(_p21_smap1.status == _EN_ESPERA_DE_COTIZACION){
-                            		_p21_mesacontrol();
+                            		if(_p21_smap1.cdtipsup == _TIPO_SITUACION_RENOVACION){
+                            			form.up('window').destroy();
+                            			_p21_reload(null,_EN_ESPERA_DE_COTIZACION ,_p21_smap1.nmpoliza);
+                            		}else{
+                            			_p21_mesacontrol();
+                            		}
                             	}else{
                             		mensajeCorrecto('Aviso','Se ha turnado el tr\u00e1mite a mesa de control en estatus ' +
 										'"En Tarifa" para procesar el censo. Una vez terminado podra encontrar su tr\u00e1mite ' +
@@ -500,6 +505,8 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                                                                     if(jsonBorr.success===true)
                                                                                     {
                                                                                         me.up('window').destroy();
+                                                                                        debug("Valor del button ===>",button);
+                                                                                        debug("Valor del json.smap1.nombreCensoParaConfirmar ===>",json.smap1.nombreCensoParaConfirmar);
                                                                                         _p21_subirArchivoCompleto(button,json.smap1.nombreCensoParaConfirmar);
                                                                                     }
                                                                                     else
