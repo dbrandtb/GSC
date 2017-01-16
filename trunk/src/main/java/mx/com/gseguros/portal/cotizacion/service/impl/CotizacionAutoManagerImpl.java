@@ -194,7 +194,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				catch(Exception ex)
 				{
-					throw new ApplicationException("Usted no puede cotizar este producto");
+					throw new ApplicationException("Usted no puede cotizar este producto", ex);
 				}
 			}
 			else
@@ -1430,7 +1430,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				catch(Exception ex)
 				{
-					throw new ApplicationException("Usted no puede cotizar este producto");
+					throw new ApplicationException("Usted no puede cotizar este producto", ex);
 				}
 			}
 			else
@@ -2820,7 +2820,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
                                 catch(Exception ex2)
                                 {
                                     sb.append("(E)");
-                                    throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
+                                    throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila), ex2);
                                 }
                             }
 							try
