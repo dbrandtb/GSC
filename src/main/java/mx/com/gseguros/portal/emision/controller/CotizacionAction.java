@@ -1758,16 +1758,17 @@ public class CotizacionAction extends PrincipalCoreAction
 			      
 	                if(columna.equals("1P"))                              {columna="PRESTIGIO";}
 	                else if(columna.equals("1A") || columna.equals("2A")) {columna="CONFORT AMPLIA";}
-	                else if(columna.equals("2L") || columna.equals("4L")) {columna="LIMITA";}
-	                else if(columna.equals("5B") || columna.equals("3B")) {columna="BASICA";}
+	                else if(columna.equals("2L") || columna.equals("4L")) {columna="CONFORT LIMITADA";}
+	                else if(columna.equals("5B") || columna.equals("3B")) {columna="CONFORT BASICA";}
 	                else if(columna.equals("3A"))                         {columna="CONFORT AMPLIA S/ROBO";}
 	                
 	                if(fila.equals("12") || fila.equals("98") 
 	                                     || fila.equals("11"))      {fila="Contado/Anual";} 
 	                else if(fila.equals("1"))                      {fila="Mensual";} 
-	                else if(fila.equals("63") || fila.equals("97")){fila="Semestral";} 
+	                else if(fila.equals("63") || fila.equals("97")
+	                                     || fila.equals("2"))       {fila="Semestral";} 
 	                else if(fila.equals("3") || fila.equals("61")) {fila="Trimestral";}
-	                else if(fila.equals("2"))  {fila="DXN Anual";}//  \r\n" + 
+//	                else if(fila.equals("2"))  {fila="DXN Anual";}//  \r\n" + 
 //	                else if(fila.equals("4"))  {fila="";}//  MENSUAL6\r\n" + 
 //	                else if(fila.equals("5"))  {fila="";}//  ANUAL04\r\n" + 
 //	                else if(fila.equals("6"))  {fila="";}//  DXN Quincenal\r\n" + 
@@ -1778,13 +1779,13 @@ public class CotizacionAction extends PrincipalCoreAction
 //	                else if(fila.equals("11")) {fila="";}//  DXN Decenal\r\n" + 
 //	                else if(fila.equals("13")) {fila="";}//  Multianual\r\n" + 
 //	                else if(fila.equals("14")) {fila="";}//  Mensual S/RF\r\n" + 
-//	                else if(fila.equals("62")) {fila="Semanal";}//  \r\n" + 
-//	                else if(fila.equals("64")) {fila="Contado";}//  \r\n" + 
+	                else if(fila.equals("62")) {fila="Semanal";}//  \r\n" + 
+	                else if(fila.equals("64")) {fila="Contado";}//  \r\n" + 
 //	                else if() {fila="";}//  SEMESTRAL A\r\n" + 
 			    }
 			    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
-			    if(!fila.isEmpty() && !columna.isEmpty())
-			    {
+			    if( true /*!fila.isEmpty() && !columna.isEmpty()*/)
+			    { 
 			        resp.getSmap().put("fila", fila);
 			        resp.getSmap().put("columna", columna);
 			        
