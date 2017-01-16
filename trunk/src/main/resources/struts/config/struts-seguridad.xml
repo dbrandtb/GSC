@@ -213,7 +213,10 @@
         <action name="creaCarpeta" class="documentosPolizaAction" method="creaCarpeta">
             <result name="success" type="json" />
         </action>
-        
+        <!-- crear carpeta desde Base de Datos -->
+        <action name="validaAgenteSIGS" class="renovacionAction" method="validaAgenteSIGS">
+            <result name="success" type="json" />
+        </action>
 	</package>
 	
 	<package name="loginApp" namespace="/touchApp" extends="struts-default, json-default">

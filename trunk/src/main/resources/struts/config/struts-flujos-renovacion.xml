@@ -57,5 +57,8 @@
         <action name="movimientoCalendarizacionRenovacionIndividual" class="renovacionAction" method="movimientoCalendarizacionRenovacionIndividual">
         	<result type="json" />
         </action>
+        <action name="validaAgenteSIGS" class="renovacionAction" method="validaAgenteSIGS">
+            <result type="json" />
+        </action>
     </package>
 </struts>
