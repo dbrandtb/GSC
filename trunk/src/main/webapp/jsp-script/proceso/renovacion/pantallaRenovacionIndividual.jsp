@@ -3219,7 +3219,22 @@ function tarifaFinal(){
 				                        }				                        
 				                    }
 				                }
-			    			]
+			    			],
+			    			listeners : {
+                                afterrender : function(me){
+                                    try{
+                                        debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
+                                        if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
+                                            setTimeout(function(){ 
+                                                mensajeWarning(json.panel1['mensajeAgenteActivo']); 
+                                            }, 3000);
+                                        }
+                                    }
+                                    catch(e){
+                                        debugError(e);
+                                    }
+                                }
+                            }
 							}).mostrar();
             	}
             }
@@ -3759,7 +3774,22 @@ function agregaCalendario(){
                                      }                                       
                                  }
                              }
-                         ]
+                         ],
+                         listeners : {
+                             afterrender : function(me){
+                                 try{
+                                     debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
+                                     if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
+                                         setTimeout(function(){ 
+                                             mensajeWarning(json.panel1['mensajeAgenteActivo']); 
+                                         }, 3000);
+                                     }
+                                 }
+                                 catch(e){
+                                     debugError(e);
+                                 }
+                             }
+                         }
                      }).mostrar();
                  }
              }

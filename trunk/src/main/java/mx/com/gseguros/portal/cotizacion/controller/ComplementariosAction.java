@@ -1711,6 +1711,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								"1" // CDDOCUME 1 = solicitud de emision
 						);
 					}
+					panel1.put("mensajeAgenteActivo", cotizacionManager.validaAgenteActivo(cdunieco, cdramo, "W", panel1.get("nmpoliza"), "0"));					
 				}
 			} catch(Exception ex) {
 				logger.error("error surgido al validar solicitud de emision de salud", ex);
@@ -1745,6 +1746,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				mensajeRespuesta = ex.getMessage();
 				return SUCCESS;
 			}
+						
 			///////////////////////////////////
 			////// validar la extraprima //////
 			/*///////////////////////////////*/
