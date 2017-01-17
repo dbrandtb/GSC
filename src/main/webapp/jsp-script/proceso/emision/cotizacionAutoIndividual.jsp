@@ -1590,7 +1590,7 @@ Ext.onReady(function()
     //ramo 5
     
     
-    if(_p28_smap1.cdramo+'x'=='6x')
+    if(_p28_smap1.cdramo==Ramo.ServicioPublico)
     {
         
         debug('>parche para ramo 6');
@@ -2093,8 +2093,7 @@ Ext.onReady(function()
     
     
     //ramo 6
-   
- if(_p28_smap1.cdramo+'x'=='6x')
+    if(_p28_smap1.cdramo==Ramo.ServicioPublico)
     {
      
        /////SOLO AUTOS SERVICIO PUBLICO///////
@@ -2102,9 +2101,8 @@ Ext.onReady(function()
            tipoUnidadFronteriza();
            _fieldByName('parametros.pv_otvalor35').allowBlank=true;
        }
-           
-       
        /////SOLO AUTOS SERVICIO PUBLICO///////
+       
           // FECHA FIN DE VIGENCIA SOLO LECTURA
           _fieldByLabel("FIN DE VIGENCIA").setReadOnly(true);
         
@@ -2255,37 +2253,6 @@ Ext.onReady(function()
                     _0_cargarNumPasajerosAuto();
                 }
             });
-//         _fieldByLabel('VERSION').on(
-//                 {
-//                     'select' : function()
-//                     {
-//                         _0_obtenerClaveGSPorAuto();
-//                         _0_obtenerSumaAseguradaRamo6(true);
-//                     }
-//                 });
-//         _fieldByLabel('MODELO').on(
-//                 {
-//                     select : function()
-//                     {
-//                         _0_obtenerClaveGSPorAuto();
-//                         _0_obtenerSumaAseguradaRamo6(false);
-//                     }
-//                 });
-//         _fieldByName('parametros.pv_otvalor18').on(
-//                 {
-//                     'select' : function()
-//                     {
-//                         if(_fieldByName('parametros.pv_otvalor18').getValue()+'x'=='0x')
-//                         {
-//                             _fieldByName('parametros.pv_otvalor19').allowBlank=true;
-//                         }
-//                         else
-//                         {
-//                             _fieldByName('parametros.pv_otvalor19').allowBlank=false;
-//                         }
-//                         _fieldByName('parametros.pv_otvalor19').isValid();
-//                     }
-//                 });
     }    
     
     //codigo dinamico recuperado de la base de datos
@@ -3948,6 +3915,14 @@ function llenandoCampos(json)
     var sucursal = _fieldByName('sucursal').getValue();
     var ramo = _fieldByName('ramo').getValue();
     var poliza = _fieldByName('poliza').getValue();
+    
+  	//CARGAMOS EL STORE DEL CAMPO AGENTE PARA QUE AL CARGAR UNA COTIZACION SE PUEDA LLENAR EL CAMPO
+    try{
+    	if(_p28_smap1.cdramo==Ramo.ServicioPublico)	
+      		_fieldByLabel('AGENTE',null,true).store.load();
+    }catch(e){
+    	debugError(e)
+    }
     
     debug('### cargar cotizacion:',json);
 //      valorRecuperadoValorVehiSigs = Number(json.slist1[0]["parametros.pv_otvalor13"]);
@@ -6542,7 +6517,7 @@ function tipoUnidadFronteriza(){
     });
     
     _fieldByLabel('TIPO DE UNIDAD').on({
-        select:function(me,opc){
+        change:function(me,opc){
             // 13 = TIPO UNIDAD FRONTERIZO
             if(me.getValue()==13){
 //                 _fieldById('_p28_fieldsetVehiculo').add({
@@ -6623,6 +6598,11 @@ function tipoUnidadFronteriza(){
                     it.setValue(null);
                 }
             });
+            try{
+            	_fieldByLabel('NEGOCIO',null,true).clearValue();
+        	}catch(e){
+        		debugError(e);
+        	}
         }
     })
     
