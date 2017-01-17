@@ -402,6 +402,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cancelada
 			,String cdusuari
 			,String cdtipsit
+			,String cdunieco
+			,String estado
+			,String nmpoliza
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -416,6 +419,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cancelada=" , cancelada
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				,"\n@@@@@@ cdtipsit=" , cdtipsit
+				,"\n@@@@@@ cdunieco=" , cdunieco
+				,"\n@@@@@@ cdtipsit=" , estado
+				,"\n@@@@@@ cdtipsit=" , nmpoliza
 				));
 
 		SlistSmapVO resp = new SlistSmapVO();
@@ -480,6 +486,27 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				mapa.put("TIPO_VALIDACION" , "");
 				lista.add(mapa);
 				resp.setSlist(lista);
+			}
+			//VERIFICAMOS SI LA POLIZA ESTA PAGADA
+			try{
+				if(cdramo!=null && cdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo())){
+					paso="Validando endosos pagados";
+					logger.debug("entro");
+					endososDAO.validaEndosoPagados(cdunieco, cdramo, estado, nmpoliza, null);
+				}
+				
+			}catch (ApplicationException e) {
+				logger.debug(e.getMessage());
+				//SI endososDAO.validaEndosoPagados DEVUELVE 1 QUITAMOS EL ENDOSO DE CAMBIO DE AGENTE
+				List<Map<String, String>> lista=resp.getSlist();
+				Map<String,String> remueve=null;
+				for(Map<String,String> m: lista){
+					if(m.get("CDTIPSUP").trim().equals(TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString())){
+						remueve=m;
+					}
+				}
+				if(remueve != null)
+					lista.remove(remueve);
 			}
 		}
 		catch(Exception ex)

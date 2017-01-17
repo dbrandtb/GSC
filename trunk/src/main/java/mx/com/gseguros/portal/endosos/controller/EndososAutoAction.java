@@ -156,6 +156,10 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String tipoflot  = smap1.get("tipoflot");
 			String cancelada = smap1.get("cancelada");
 			String cdtipsit  = smap1.get("cdtipsit");
+			String cdunieco  = smap1.get("cdunieco");
+			String estado	 = smap1.get("estado");
+			String nmpoliza	 = smap1.get("nmpoliza");
+			
 			
 			Utils.validate(cdramo    , "No se recibio el producto");
 			Utils.validate(nivel     , "No se recibio el nivel de endoso");
@@ -176,7 +180,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			
 			SlistSmapVO resp = endososAutoManager.recuperarEndososClasificados(
 					cdramo, nivel, multiple, tipoflot, slist1, cdsisrol,
-					cancelada, cdusuari,cdtipsit);
+					cancelada, cdusuari,cdtipsit,cdunieco,estado,nmpoliza);
 			
 			smap1.putAll(resp.getSmap());
 			slist1=resp.getSlist();

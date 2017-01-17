@@ -26,6 +26,9 @@ public interface EndososAutoManager
 			,String cancelada
 			,String cdusuari
 			,String cdtipsit
+			,String cdunieco
+			,String estado
+			,String nmpoliza
 			)throws Exception;
 	
 	/**

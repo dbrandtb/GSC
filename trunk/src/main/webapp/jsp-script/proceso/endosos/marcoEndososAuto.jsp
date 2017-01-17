@@ -680,6 +680,9 @@ function _p34_botonEndososPolizaClic(callback)
     var multiple = 'N';
     var tipoflot = 'I';
     var cdtipsit = poliza.get('CDTIPSIT');
+    var cdunieco = poliza.get('CDUNIECO');
+    var estado   = poliza.get('ESTADO');
+    var nmpoliza = poliza.get('NMPOLIZA');
     if(!Ext.isEmpty(poliza.get('TIPOFLOT')))
     {
         tipoflot = poliza.get('TIPOFLOT');
@@ -700,6 +703,9 @@ function _p34_botonEndososPolizaClic(callback)
                 ,tipoflot  : tipoflot
                 ,cancelada : !Ext.isEmpty(poliza.get('FEANULAC'))?'S':'N'
                 ,cdtipsit  : cdtipsit
+                ,cdunieco  : cdunieco
+                ,estado	   : estado
+                ,nmpoliza  : nmpoliza
             }
         }
         ,success : function(response)
