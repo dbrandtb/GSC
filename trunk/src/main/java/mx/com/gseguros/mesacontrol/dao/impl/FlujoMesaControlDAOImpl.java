@@ -1669,8 +1669,8 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	{
 		protected RecuperarTramitesSP(DataSource dataSource)
 		{
-//			super(dataSource,"PKG_MESACONTROL.P_GET_TRAMITES");
-		    super(dataSource,"P_GET_TRAMITES1");
+			super(dataSource,"PKG_MESACONTROL.P_GET_TRAMITES");
+//		    super(dataSource,"P_GET_TRAMITES1");
 			declareParameter(new SqlParameter("agrupamc"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("status"          , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari"        , OracleTypes.VARCHAR));
