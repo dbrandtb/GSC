@@ -592,6 +592,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"letra"
 					,"cdplan"
 					,"dsplanl"
+					,"cdplanorig"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

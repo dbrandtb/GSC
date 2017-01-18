@@ -4203,20 +4203,31 @@ public class CotizacionAction extends PrincipalCoreAction
 			List<ComponenteVO>componentesTatrigar;
 			
 			if(TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase(smap1.get("cdtipsup"))){
-			    String nmpolant = smap1.get("nmpolant");
-			    Map<String,String>params=new HashMap<String,String>();
-			    params.put("pv_cdunieco_i"   , Integer.parseInt(nmpolant.substring(0,4))+"");
-			    params.put("pv_cdramo_i"     , smap1.get("cdramo"));
-			    params.put("pv_estado_i"     , "M");
-			    params.put("pv_nmpoliza_i"   , Integer.parseInt(nmpolant.substring(7,13))+"");
-			    params.put("pv_cdgrupo_i"    , smap1.get("cdgrupo"));
-			    params.put("pv_cdplan_i"     , smap1.get("cdplan"));
-			    params.put("pv_sexo_i"       , "H");
-			    params.put("pv_cdtipsit_i"   , smap1.get("cdtipsit"));
-			    params.put("pv_cdgarant_i"   , smap1.get("cdgarant"));
-			    params.put("pv_cdatrivar_i"  , smap1.get("cdatrivar"));
-			    componentesTatrigar=cotizacionManager.obtenerAtributosPolizaOriginal(params);
-			    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
+			    if(smap1.get("cdplan").equalsIgnoreCase(smap1.get("cdplanOrig"))){
+			        String nmpolant = smap1.get("nmpolant");
+                    Map<String,String>params=new HashMap<String,String>();
+                    params.put("pv_cdunieco_i"   , Integer.parseInt(nmpolant.substring(0,4))+"");
+                    params.put("pv_cdramo_i"     , smap1.get("cdramo"));
+                    params.put("pv_estado_i"     , "M");
+                    params.put("pv_nmpoliza_i"   , Integer.parseInt(nmpolant.substring(7,13))+"");
+                    params.put("pv_cdgrupo_i"    , smap1.get("cdgrupo"));
+                    params.put("pv_cdplan_i"     , smap1.get("cdplan"));
+                    params.put("pv_sexo_i"       , "H");
+                    params.put("pv_cdtipsit_i"   , smap1.get("cdtipsit"));
+                    params.put("pv_cdgarant_i"   , smap1.get("cdgarant"));
+                    params.put("pv_cdatrivar_i"  , smap1.get("cdatrivar"));
+                    componentesTatrigar=cotizacionManager.obtenerAtributosPolizaOriginal(params);
+                    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
+                }
+                else{
+                    Map<String,String>params=new HashMap<String,String>();
+                    params.put("pv_cdramo_i"    , smap1.get("cdramo"));
+                    params.put("pv_cdtipsit_i"  , smap1.get("cdtipsit"));
+                    params.put("pv_cdgarant_i"  , smap1.get("cdgarant"));
+                    params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
+                    componentesTatrigar=kernelManager.obtenerTatrigar(params);
+                    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
+                }
 			}else{
 			    Map<String,String>params=new HashMap<String,String>();
 	            params.put("pv_cdramo_i"    , smap1.get("cdramo"));

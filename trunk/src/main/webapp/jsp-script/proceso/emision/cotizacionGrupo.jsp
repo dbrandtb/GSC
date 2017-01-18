@@ -339,6 +339,7 @@ Ext.onReady(function()
             ,'bonoince'
             ,'otrogast'
             ,'paquete'
+            ,'cdplanorig'
         ]
     });
     
@@ -764,6 +765,12 @@ Ext.onReady(function()
                     {
                         return rendererColumnasDinamico(v,'ptsumaaseg');
                     }
+                },
+                {
+                    header     : 'Plan Original'
+                    ,dataIndex : 'cdplanorig'
+                    ,hidden    : true
+                    ,width     : 120
                 }
                 ,{
                     xtype         : 'actioncolumn'
@@ -2404,14 +2411,15 @@ function _p21_editarGrupoClic(grid,rowIndex)
                             url      : _p21_urlObtenerHijosCobertura
                             ,params  :
                             {
-                                'smap1.cdramo'    : _p21_smap1.cdramo
-                                ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
-                                ,'smap1.cdplan'   : record.get('cdplan')
-                                ,'smap1.cdgarant' : json.slist1[i].CDGARANT
-                                ,'smap1.indice'   : i
-                                ,'smap1.cdtipsup' : _p21_cdtipsup
-                                ,'smap1.nmpolant' : _p21_smap1.nmpolant
-                                ,'smap1.cdgrupo'  : record.get('letra')
+                                'smap1.cdramo'      : _p21_smap1.cdramo
+                                ,'smap1.cdtipsit'   : _p21_smap1.cdtipsit
+                                ,'smap1.cdplan'     : record.get('cdplan')
+                                ,'smap1.cdgarant'   : json.slist1[i].CDGARANT
+                                ,'smap1.indice'     : i
+                                ,'smap1.cdtipsup'   : _p21_cdtipsup
+                                ,'smap1.nmpolant'   : _p21_smap1.nmpolant
+                                ,'smap1.cdgrupo'    : record.get('letra')
+                                ,'smap1.cdplanOrig' : record.get('cdplanorig')
                             }
                             ,success : function(response)
                             {
@@ -3683,6 +3691,7 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
         {
             if(btn == 'yes')
             {
+            	_p21_cdplanOriginal = oldValue;
                 var record = _p21_query('#'+_p21_tabGrupos.itemId)[0].items.items[0].getSelectionModel().getSelection()[0];
                 debug('record:',record);
                 var letra  = record.get('letra');
