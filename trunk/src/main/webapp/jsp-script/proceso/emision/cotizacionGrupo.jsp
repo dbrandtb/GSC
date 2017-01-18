@@ -7612,47 +7612,6 @@ function _p21_editarCoberturas(grid,row)
     debug('<_p21_editarCoberturas');
 }
 
-function _p21_editarExclusiones(grid,row)
-{
-    var record=grid.getStore().getAt(row);
-    debug('>_p21_editarExclusiones record:',record.data);
-    _p21_guardarAsegurados(grid,function()
-    {
-        var ventana=Ext.create('Ext.window.Window',
-        {
-            title   : 'Editar exclusiones de '+(record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO'))
-            ,width  : 900
-            ,height : 500
-            ,modal  : true
-            ,loader :
-            {
-                url       : _p21_urlEditarExclusiones
-                ,params   :
-                {
-                    'smap1.pv_cdunieco'      : _p21_smap1.cdunieco
-                    ,'smap1.pv_cdramo'       : _p21_smap1.cdramo
-                    ,'smap1.pv_estado'       : _p21_smap1.estado
-                    ,'smap1.pv_nmpoliza'     : _p21_smap1.nmpoliza
-                    ,'smap1.pv_nmsituac'     : record.get('NMSITUAC')
-                    ,'smap1.pv_nmsuplem'     : '0'
-                    ,'smap1.pv_cdperson'     : record.get('CDPERSON')
-                    ,'smap1.pv_cdrol'        : record.get('CDROL')
-                    ,'smap1.nombreAsegurado' : record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO')
-                    ,'smap1.cdrfc'           : record.get('RFC')
-                }
-                ,scripts  : true
-                ,autoLoad : true
-            }
-        }).show()
-        centrarVentanaInterna(ventana);
-        expande = function()
-        {
-            ventana.destroy();
-        }
-    });
-    debug('<_p21_editarExclusiones');
-}
-
 /*
 se paso al archivo funcionesCotizacionGrupo.js por exceso de tamanio
 function _p21_subirArchivoCompleto
