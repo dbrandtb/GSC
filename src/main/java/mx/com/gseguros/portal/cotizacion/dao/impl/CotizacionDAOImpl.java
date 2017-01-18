@@ -413,6 +413,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"nmpolant"
 			,"nmrenova"
 			,"nmorddom"
+			,"numcontrato"
 		};
 		
 		protected CargarDatosCotizacionGrupo(DataSource dataSource)
