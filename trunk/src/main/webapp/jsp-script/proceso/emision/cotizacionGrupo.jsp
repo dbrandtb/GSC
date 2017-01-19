@@ -541,6 +541,12 @@ Ext.onReady(function()
                     }
                 }
                 ,{
+                    header     : 'Nombre del Plan'
+                    ,dataIndex : 'dsplanl'
+                    ,width     : 380
+                    ,editor    : _p21_editorNombrePlan
+                }
+                ,{
                     header     : 'Paquete'
                     ,dataIndex : 'paquete'
                     ,width     : 120
@@ -2309,7 +2315,7 @@ function _p21_borrarGrupoClic(grid,rowIndex)
 function _verificaAprueba(){
     
     
-    if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) &&(_p21_clasif==_p21_TARIFA_MODIFICADA))
+    if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ))
     {
         //alert('suscriptor');
         var faltaAprobacion = _faltaAprobarNombrePlan;
@@ -2320,7 +2326,7 @@ function _verificaAprueba(){
         
         return faltaAprobacion;
         
-    }else if(([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) &&(_p21_clasif==_p21_TARIFA_MODIFICADA)){
+    }else if(([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 )){
         //alert('supervisor');
         Ext.Ajax.request({
             url     : _p21_urlLanzaAprobacionNombrePlan,
@@ -3543,7 +3549,7 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
              storeFactores.commitChanges();
          }
          
-         if(_p21_clasif == _p21_TARIFA_MODIFICADA){
+         if(_p21_smap1.LINEA_EXTENDIDA != 'S'){
          
 	         var smap1p = {
 	        		 cdramo  : _p21_smap1.cdramo,
@@ -3684,9 +3690,11 @@ function _p21_setActiveTab(itemId)
 
 function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
 {
+	
     debug('>_p21_editorPlanChange new',newValue,'old',oldValue+'x');
     if(!Ext.isEmpty(oldValue)&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')&&_p21_semaforoPlanChange)
     {
+    	
         centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Al cambiar el plan se borrar&aacute; el detalle del subgrupo<br/>¿Desea continuar?', function(btn)
         {
             if(btn == 'yes')
@@ -3698,31 +3706,29 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
                 debug('letra:',letra);
                 record.valido = false;
                 
-                if(_p21_clasif == _p21_TARIFA_MODIFICADA){
-	                /**
-	                 * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
-	                 * descripcion de plan que se esta editando
-	                 **/
-	                
-	                var gridGps =  combo.up().up(); 
-	                var recordGrpo = gridGps.getSelectionModel().getLastSelected();
-	                var indexDsplanL = 0;
-	                
-	                Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
-	                    if(columnGpo.dataIndex == "dsplanl"){
-	                        indexDsplanL = indexCol;
-	                        return false;
-	                    }
-	                });
-	                
-	                var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
-	                texDsplanL.setValue(combo.getRawValue());
-	                recordGrpo.commit(false,['dsplanl']);
-	                
-	                /**
-	                 * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
-	                 **/
-	            }
+                /**
+                 * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
+                 * descripcion de plan que se esta editando
+                 **/
+                
+                var gridGps =  combo.up().up(); 
+                var recordGrpo = gridGps.getSelectionModel().getLastSelected();
+                var indexDsplanL = 0;
+                
+                Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
+                    if(columnGpo.dataIndex == "dsplanl"){
+                        indexDsplanL = indexCol;
+                        return false;
+                    }
+                });
+                
+                var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
+                texDsplanL.setValue(combo.getRawValue());
+                recordGrpo.commit(false,['dsplanl']);
+                
+                /**
+                 * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
+                 **/
                 
                 _p21_quitarTabsDetalleGrupo(letra);
             }
@@ -3733,32 +3739,30 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
                 _p21_semaforoPlanChange = true;
             }
         }));
-    }else if(Ext.isEmpty(oldValue)&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')&&_p21_semaforoPlanChange){
-        if(_p21_clasif == _p21_TARIFA_MODIFICADA){
-            /**
-             * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
-             * descripcion de plan que se esta editando
-             **/
-            
-            var gridGps =  combo.up().up(); 
-            var recordGrpo = gridGps.getSelectionModel().getLastSelected();
-            var indexDsplanL = 0;
-            
-            Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
-                if(columnGpo.dataIndex == "dsplanl"){
-                    indexDsplanL = indexCol;
-                    return false;
-                }
-            });
-            
-            var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
-            texDsplanL.setValue(combo.getRawValue());
-            recordGrpo.commit(false,['dsplanl']);
-            
-            /**
-             * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
-             **/
-        }
+    }else if(_p21_semaforoPlanChange){
+        /**
+         * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
+         * descripcion de plan que se esta editando
+         **/
+        
+        var gridGps =  combo.up().up(); 
+        var recordGrpo = gridGps.getSelectionModel().getLastSelected();
+        var indexDsplanL = 0;
+        
+        Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
+            if(columnGpo.dataIndex == "dsplanl"){
+                indexDsplanL = indexCol;
+                return false;
+            }
+        });
+        
+        var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
+        texDsplanL.setValue(combo.getRawValue());
+        recordGrpo.commit(false,['dsplanl']);
+        
+        /**
+         * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
+         **/
     }
     
     if(newValue+'x'!='x'&&_p21_clasif==_p21_TARIFA_LINEA&&_p21_smap1.LINEA_EXTENDIDA=='S')
