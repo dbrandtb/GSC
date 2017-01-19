@@ -877,6 +877,8 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 		Map<String, Object> mapResult  = ejecutaSP(new ObtieneTipoCliWS(getDataSource()), params);
 		resp = (Integer) mapResult.get("rs");
 		
+		logger.debug("<<<<>>>> Respuesta de tipo cliente obtienido GS:"+resp);
+		
 		return resp;
 	}
 	
