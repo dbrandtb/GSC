@@ -741,7 +741,7 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
             declareParameter(new SqlParameter("estatus" , OracleTypes.VARCHAR));
             String[] cols = new String[] {
                     "CDUNIECO", "CDUNIZON", "CDNIVEL", "NMCAPACI", "CARGA_SUCURSAL", "CDUSUARI", "DSUSUARI", "CDSISROL",
-                    "JERARQUIA", "CAPACIDAD_ROL", "CARGA_USUARIO_ROL", "GRUPO", "SIN_EXCLUIR", "PERMISO_ENDOSO"
+                    "JERARQUIA", "CAPACIDAD_ROL", "CARGA_USUARIO_ROL", "GRUPO", "CDESTADOMC", "SIN_EXCLUIR", "PERMISO_ENDOSO"
                     };
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_dserror_o"  , OracleTypes.VARCHAR));
