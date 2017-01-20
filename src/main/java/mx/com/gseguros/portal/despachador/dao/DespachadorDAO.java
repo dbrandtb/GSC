@@ -52,4 +52,6 @@ public interface DespachadorDAO {
     public String recuperarSucursalUsuarioPorTipoTramite (String cdusuari, String cdflujomc) throws Exception;
     
     public List<Map<String, String>> recuperarPermisosEndosos (String cdusuari, String cdsisrol) throws Exception;
+    
+    public List<Map<String, String>> recuperarLogDespachadorZona (String ntramite, String cdunieco, String estatus) throws Exception;
 }
