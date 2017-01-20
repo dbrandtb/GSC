@@ -22,6 +22,7 @@ import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2VO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
+import mx.com.gseguros.portal.despachador.dao.DespachadorDAO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.IndicadoresDAO;
 import mx.com.gseguros.portal.general.util.Ramo;
@@ -45,6 +46,9 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 	
 	@Autowired
 	private IndicadoresDAO indicadoresDAO;
+	
+	@Autowired
+	private DespachadorDAO despachadorDAO;
 	
 	@Deprecated
 	@Override
@@ -1336,6 +1340,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
                         params.get("cdsisrol"));
             } else if (consulta.equals(RecuperacionSimple.RECUPERAR_DESPACHADOR_DATOS_USER_ALL_X_ROL)) {
                 lista = flujoMesaControlDAO.recuperarPropiedadesDespachadorUsuariosAll(params.get("cdsisrol"));
+            } else if (consulta.equals(RecuperacionSimple.RECUPERAR_DESPACHADOR_DATOS_ZONA)) {
+                lista = despachadorDAO.recuperarLogDespachadorZona(params.get("ntramite"), params.get("cdunieco"), params.get("estatus"));
             }
 		}
 		catch(Exception ex)
