@@ -327,6 +327,10 @@ Ext.onReady(function()
                         dataIndex : 'GRUPO',
                         flex : 2
                     }, {
+                        text : 'ESTATUS',
+                        dataIndex : 'CDESTADOMC',
+                        flex : 1
+                    }, {
                         text : 'EXCLU',
                         dataIndex : 'SIN_EXCLUIR',
                         flex : 1,
@@ -352,7 +356,7 @@ Ext.onReady(function()
                     autoLoad : false,
                     fields : [
                         "CDUNIECO", "CDUNIZON", "CDNIVEL", "NMCAPACI", "CARGA_SUCURSAL", "CDUSUARI", "DSUSUARI", "CDSISROL",
-                        "JERARQUIA", "CAPACIDAD_ROL", "CARGA_USUARIO_ROL", "GRUPO", "SIN_EXCLUIR", "PERMISO_ENDOSO"
+                        "JERARQUIA", "CAPACIDAD_ROL", "CARGA_USUARIO_ROL", "GRUPO", "CDESTADOMC", "SIN_EXCLUIR", "PERMISO_ENDOSO"
                     ],
                     proxy : {
                         type : 'ajax',
