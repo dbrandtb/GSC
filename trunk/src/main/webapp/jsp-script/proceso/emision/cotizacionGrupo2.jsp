@@ -3940,8 +3940,11 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
       	//parche para numcontrato>
       	if ((_fieldByName('tvalopol_parametros.pv_otvalor20').getValue()=="") || (Ext.isEmpty(_fieldByName('tvalopol_parametros.pv_otvalor20')) ) || (_fieldByName('tvalopol_parametros.pv_otvalor20').getValue()==null))
         {
-        	valido=false;
-        	mensajeWarning('Verificar los datos del numero de contrato', _p25_setActiveConcepto);
+        	//valido=false;
+        	//mensajeWarning('Verificar los datos del numero de contrato', _p25_setActiveConcepto);
+      		_fieldByName('tvalopol_parametros.pv_otvalor20').setValue('0');
+      		valido=true;
+        	
         }
       	else{
       		if ((_fieldByName('tvalopol_parametros.pv_otvalor20').getValue()=="0") && (_p21_smap1.cdunieco ==1403))
