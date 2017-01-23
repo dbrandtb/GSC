@@ -2528,11 +2528,10 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             
                                             var vChecked = false;
                                             var vAmparada='N';
-                                            if ((json.slist1[j].SWOBLIGA == 'S') && (json.slist1[j].SWSELECCIONADO == 'S')) {
+                                            if ((json.slist1[j].SWEDITABLE == 'S') && (json.slist1[j].SWSELECCIONADO == 'S')) {
                                             	vChecked=true;
                                             	vAmparada='S';
                                             }
-                                            debug('vChecked=' + vChecked + ' vAmparada='+ vAmparada);
                                             
                                             //para factores menor a cero
                                             var item = Ext.create('Ext.form.Panel',
@@ -2556,9 +2555,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         xtype       : 'checkbox' 
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
-                                                        //,inputValue : 'S'
-                                                        //,checked    : json.slist1[j].SWOBLIGA == 'S' && (json.slist1[j].SWSELECCIONADO == 'S')
-                                                        ,value      : vChecked
                                                         ,inputValue : vAmparada
                                                         ,checked    : vChecked
                                                         ,readOnly   : json.slist1[j].SWEDITABLE == 'N'
@@ -3413,8 +3409,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     }
                                                 }
                                             }
-                                            
-                                            if(form.datosAnteriores.raw&&form.datosAnteriores.raw.amparada=='S')
+                                           
+                                            /*if(form.datosAnteriores.raw&&form.datosAnteriores.raw.amparada=='S')
                                             {
                                                 form.down('[name=amparada]').flagPuedesBorrar = false;
                                                 form.down('[name=amparada]').setValue(true);
@@ -3426,6 +3422,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 form.down('[name=amparada]').setValue(false);
                                                 debug('se "descheckeo" el box');
                                             }
+                                            */
                                             debug('cargado:',form);
                                         }
                                     }
