@@ -46,6 +46,7 @@ Ext.define('MenuPrincipal',
         debug('lengthPrefijoLigasCotizacion:',lengthPrefijoLigasCotizacion);
         
         var valida = true;
+        /*
         if(valida)
         {
             valida = liga.length>=lengthPrefijoLigasCotizacion;
@@ -66,6 +67,7 @@ Ext.define('MenuPrincipal',
                 mensajeError(this.textos.ligaNoMovil,function(){});
             }
         }
+        */
         if(valida)
         {
         	maskui();
