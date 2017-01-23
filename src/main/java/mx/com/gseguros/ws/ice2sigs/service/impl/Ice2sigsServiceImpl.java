@@ -817,6 +817,9 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			recibos = (ArrayList<ReciboWrapper>) result.getItemList();
 			
 			cdtipsit   = kernelManager.obtenCdtipsit(params);
+			
+			params.put("pv_cdtipsit_i", cdtipsit);
+			
 			cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
 			
 		} catch (Exception e1) {
