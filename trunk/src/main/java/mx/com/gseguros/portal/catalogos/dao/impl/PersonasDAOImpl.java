@@ -1627,6 +1627,9 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	
 	@Override
 	public List<Map<String, String>> obtieneConfPatallaCli(String cdperson, String usuario, String rol, String tipoCliente) throws Exception{
+		
+		List<Map<String,String>> camposConf = null;
+		
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("pv_cdsisrol_i", rol);
 		params.put("pv_cdusuari_i", usuario);
@@ -1634,7 +1637,28 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("pv_tpcteext_i", tipoCliente);
 		Map<String,Object>resultado=ejecutaSP(new ObtieneConfPatallaCli(getDataSource()), params);
 		logger.debug("Resultado de campos a configurar" + resultado.get("pv_registro_o"));
-		return ((List<Map<String,String>>)resultado.get("pv_registro_o"));
+		
+		List<Map<String,String>> resCampos = ((List<Map<String,String>>)resultado.get("pv_registro_o"));
+		HashMap< String, Map<String,String> > camposUnicos = new HashMap< String, Map<String,String> >();
+		
+		if(resCampos != null && !resCampos.isEmpty()){
+			
+			for(Map<String,String> campo : resCampos){
+				
+				if(camposUnicos.containsKey(campo.get("CVECAMPO"))){
+					
+					if(StringUtils.isNotBlank(campo.get("USUARIO")) && campo.get("USUARIO").equalsIgnoreCase(usuario)){
+						camposUnicos.put(campo.get("CVECAMPO"), campo);
+					}
+				}else{
+					camposUnicos.put(campo.get("CVECAMPO"), campo);
+				}
+			}
+		}
+		
+		camposConf =  new ArrayList<Map<String,String>>(camposUnicos.values());
+		
+		return camposConf;
 		
 	}
 	
@@ -1648,7 +1672,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_tpcteext_i"    , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"CVECAMPO", 	"SOLOLECTURA", 	"OCULTO"
+					"CVECAMPO", "SOLOLECTURA", "OCULTO", "USUARIO"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
