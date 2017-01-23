@@ -2266,6 +2266,19 @@ function _p34_recuperarPolizaIncisosFlujo()
 			                            _p34_soloNivelPoliza = true;
 			                        }*/
 			                        
+			                        if (_p34_storePolizas.getCount() > 1 && !Ext.isEmpty(poliza.NMPOLIEX)) {
+			                            var polizasQuitar = [];
+			                            for (var i = _p34_storePolizas.getCount() -1; i >= 0; i--) {
+			                                if (_p34_storePolizas.getAt(i).get('NMPOLIEX') != poliza.NMPOLIEX) {
+			                                    polizasQuitar.push(i);
+			                                }
+			                            }
+			                            debug('polizasQuitar: ', polizasQuitar);
+			                            for (var i = 0; i < polizasQuitar.length; i++) {
+			                                _p34_storePolizas.removeAt(polizasQuitar[i]);
+			                            }
+			                        }
+			                        
 			                        _fieldById('_p34_gridPolizas').getSelectionModel().select([_p34_storePolizas.getAt(0)]);
 			                                // ^ Seleccionamos una poliza
 			                        _p34_botonEndososPolizaClic(function () { // Abrimos los endosos de poliza
