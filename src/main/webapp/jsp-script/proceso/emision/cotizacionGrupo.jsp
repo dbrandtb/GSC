@@ -230,6 +230,7 @@ var _p21_editorNombrePlan=
     ,allowBlank : true
     ,minLength  : 3
     ,readOnly   : ([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? false : true
+    ,sinmayus   : true
 };
 
 var _p21_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
@@ -651,6 +652,12 @@ Ext.onReady(function()
                         {
                             _p21_estiloEditores(context.record.get('cdplan'));
                         }
+                    },
+                    edit: function(editor,context){
+                    	var editedRecord = context.record;
+                    	if(!Ext.isEmpty(editedRecord.get('dsplanl'))){
+                    		editedRecord.set('dsplanl',editedRecord.get('dsplanl').toUpperCase());
+                    	}
                     }
                 }
             })
@@ -818,11 +825,13 @@ Ext.onReady(function()
                         {
                             _p21_estiloEditores(context.record.get('cdplan'));
                         }
-                    }/*,
+                    },
                     edit: function(editor,context){
                     	var editedRecord = context.record;
-                    	alert(editedRecord.get('cdplan'));
-                    }*/
+                    	if(!Ext.isEmpty(editedRecord.get('dsplanl'))){
+                    		editedRecord.set('dsplanl',editedRecord.get('dsplanl').toUpperCase());
+                    	}
+                    }
                 }
             })
         })
@@ -2525,14 +2534,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             }
                                             debug('json.slist1[j]::', json.slist1[j]);
                                             debug('SWOBLIGA=' + json.slist1[j].SWOBLIGA + ', SWSELECCIONADO=' + json.slist1[j].SWSELECCIONADO + ', SWEDITABLE=' + json.slist1[j].SWEDITABLE);
-                                            
-                                            var vChecked = false;
-                                            var vAmparada='N';
-                                            if ((json.slist1[j].SWEDITABLE == 'S') && (json.slist1[j].SWSELECCIONADO == 'S')) {
-                                            	vChecked=true;
-                                            	vAmparada='S';
-                                            }
-                                            
                                             //para factores menor a cero
                                             var item = Ext.create('Ext.form.Panel',
                                             {
@@ -2555,8 +2556,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         xtype       : 'checkbox' 
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
-                                                        ,inputValue : vAmparada
-                                                        ,checked    : vChecked
+                                                        ,inputValue : 'S'
+                                                        ,checked    : json.slist1[j].SWOBLIGA == 'S' && (json.slist1[j].SWSELECCIONADO == 'S')
                                                         ,readOnly   : json.slist1[j].SWEDITABLE == 'N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
@@ -3409,8 +3410,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     }
                                                 }
                                             }
-                                           
-                                            /*if(form.datosAnteriores.raw&&form.datosAnteriores.raw.amparada=='S')
+                                            
+                                            if(form.datosAnteriores.raw&&form.datosAnteriores.raw.amparada=='S')
                                             {
                                                 form.down('[name=amparada]').flagPuedesBorrar = false;
                                                 form.down('[name=amparada]').setValue(true);
@@ -3422,7 +3423,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 form.down('[name=amparada]').setValue(false);
                                                 debug('se "descheckeo" el box');
                                             }
-                                            */
                                             debug('cargado:',form);
                                         }
                                     }
@@ -3833,10 +3833,8 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
       	//parche para numcontrato>
       	if ((_fieldByName('numcontrato').getValue()=="") || (Ext.isEmpty(_fieldByName('numcontrato')) ) || (_fieldByName('numcontrato').getValue()==null))
         {
-        	//valido=false;
-        	//mensajeWarning('Verificar los datos del numero de contrato', _p25_setActiveConcepto);
-      		_fieldByName('numcontrato').setValue('0');
-      		valido=true;
+        	valido=false;
+        	mensajeWarning('Verificar los datos del numero de contrato', _p21_setActiveConcepto);
         }
       	else{
       		if ((_fieldByName('numcontrato').getValue()=="0") && (_p21_smap1.cdunieco ==1403))
