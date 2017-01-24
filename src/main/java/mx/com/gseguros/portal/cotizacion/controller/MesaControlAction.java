@@ -29,6 +29,7 @@ import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
+import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
@@ -84,6 +85,9 @@ public class MesaControlAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
+	
+	@Autowired
+    private EndososAutoManager endososAutoManager;
 	
 	public String principal()
 	{
@@ -1089,6 +1093,14 @@ public class MesaControlAction extends PrincipalCoreAction
 			{
 				omap.put((String)entry.getKey(),entry.getValue());//se pasa de smap1 a omap
 			}
+			
+			/*Se Agrega validacion al crear un trámite en la mesa de control antigua la validación de agente
+             * */
+			endososAutoManager.validacionSigsAgente(  (String)omap.get("pv_cdagente_i")
+                                                    , (String)omap.get("pv_cdramo_i")
+                                                    , (String)omap.get("pv_cdtipsit_i")
+                                                    , "A");
+			
 			omap.put("pv_cdunieco_i",smap1.get("pv_cdsucdoc_i"));//se parcha porque requiere el mismo valor
 			omap.put("pv_ferecepc_i",renderFechas.parse((String)omap.get("pv_ferecepc_i")));//se convierte String a Date
 			omap.put("pv_festatus_i",renderFechas.parse((String)omap.get("pv_festatus_i")));//se convierte String a Date
