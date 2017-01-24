@@ -273,13 +273,14 @@ function _mcdinamica_nuevoTramite(button,turnar)
                     callback();
                 }
             }
-            ,failure : function()
-            {
+            ,failure : function(form2, action){
+                
+                debug('action',action.result);
                 form.setLoading(false);
                 Ext.Msg.show(
                 {
                     title    : 'Error'
-                    ,msg     : 'Error de comunicaci&oacute;n'
+                    ,msg     :  action.result.errorMessage//'Error de comunicaci&oacute;n'
                     ,buttons : Ext.Msg.OK
                     ,icon    : Ext.Msg.ERROR
                 });
