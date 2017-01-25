@@ -1314,9 +1314,8 @@ function _0_recuperarCotizacion(nmpoliza)
         ,success : function(response)
         {
             var json=Ext.decode(response.responseText);
-            cargarXpoliza = true;
             
-            if(_0_smap1.cdramo=='6' || _0_smap1.cdramo=='16')
+            if(_0_smap1.cdramo=='6' || _0_smap1.cdramo=='16' || true)
             {   
                 if(!Ext.isEmpty(json.error))
                 {
@@ -1332,15 +1331,10 @@ function _0_recuperarCotizacion(nmpoliza)
                 		    _0_recordClienteRecuperado = primerInciso;
                 		    debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
                 	}
+                	
                     llenandoCampos(json);
                 }
                 
-            }
-
-            else
-            {
-                _0_panelPri.setLoading(false);
-                errorComunicacion(null,'Error al validar el ramo, solo fronterizos');
             }
             
         }
@@ -2049,9 +2043,7 @@ function _0_cotizar(boton)
                     
                     _0_gridTarifas=Ext.create('Ext.grid.Panel',
                     {
-                        title             : ( Ext.isEmpty(_0_flujo) ? false : (_0_flujo.cdflujomc == 220 && _0_flujo.cdtipflu == 103 && _0_smap1.cdramo == Ramo.AutosFronterizos) 
-                                            )? 'Resultados:<br>Plan y forma de pago de p\u00f3liza a renovar: '+json.smap1.fila+'-'+json.smap1.columna 
-                                          :'Resultados'
+                        title             : 'Resultados'
                         ,store            : Ext.create('Ext.data.Store',
                         {
                             model : '_0_modeloTarifa'
@@ -2078,43 +2070,7 @@ function _0_cotizar(boton)
                             select       : _0_tarifaSelect
                             ,afterrender : function(me)
                             {
-                                if(!Ext.isEmpty(json.smap1.columna) && !Ext.isEmpty(json.smap1.fila))
-                                {
-                                    var sm = _0_gridTarifas.getSelectionModel();
-                                    try
-                                    {
-                                        var columna=0, fila=999; 
-                                        for(var IteGriTar=1;IteGriTar<_0_gridTarifas.columns.length;IteGriTar++)
-                                        {
-                                            if((_0_gridTarifas.columns[IteGriTar].text).toLowerCase() === json.smap1.columna.toLowerCase())
-                                            {
-                                                 columna = IteGriTar - columna;
-                                                 IteGriTar = _0_gridTarifas.columns.length + 1;
-                                            }
-                                            else if( IteGriTar%2 != 1)
-                                            {
-                                                columna ++;
-                                            }
-                                        }
-                                        
-                                        for(var IteGriTar=0;IteGriTar<17;IteGriTar++)
-                                        {
-                                            sm.select({row:IteGriTar,column:columna});
-                                            var texto = (sm.getSelection({row:IteGriTar,column:columna})[0].data.DSPERPAG).toLowerCase()
-                                            if(json.smap1.fila.toLowerCase() === texto)
-                                            {
-                                                  fila = IteGriTar;
-                                                  IteGriTar = 18;
-                                            }
-                                        }
-                                        
-                                        sm.select({row:fila,column:columna});
-                                     }catch(e) {
-                                       debug("Excede rango fuera de la cuadricula de tarifas");
-                                     }
-                                }
-                                
-                                if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
+                                if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
                                 {
                                     _0_actualizarCotizacionTramite();
                                 }
@@ -2810,7 +2766,7 @@ function _0_actualizarCotizacionTramite(callback)
 
 function _0_recuperarCotizacionDeTramite()
 {
-    if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' )
+    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
     {
         var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
         try
@@ -5660,5 +5616,5 @@ Ext.onReady(function()
     }
 </script>
 </head>
-<body><div id="_0_divPri" style="height: 1700px;border:1px solid #CCCCCC;"></div></body>
+<body><div id="_0_divPri" style="height: 1400px;border:1px solid #CCCCCC;"></div></body>
 </html>

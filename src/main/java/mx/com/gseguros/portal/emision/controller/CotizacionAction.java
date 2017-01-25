@@ -1744,7 +1744,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	                    //pre sonbreado
 	                     columna = paqYplan.get(1);//forma Pago
 	                     fila= paqYplan.get(0);//paquete
-	                     
 	                    String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza"), cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
 	                    logger.debug(Utils.log(paqYplan));
 	                    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
@@ -1756,43 +1755,37 @@ public class CotizacionAction extends PrincipalCoreAction
 			            fila= paqYplan.get(0);//paquete
 			        }//pre sonbreado
 			      
-	                if(columna.equals("1P"))                              {columna="PRESTIGIO";}
-	                else if(columna.equals("1A") || columna.equals("2A")) {columna="CONFORT AMPLIA";}
-	                else if(columna.equals("2L") || columna.equals("4L")) {columna="CONFORT LIMITADA";}
-	                else if(columna.equals("5B") || columna.equals("3B")) {columna="CONFORT BASICA";}
-	                else if(columna.equals("3A"))                         {columna="CONFORT AMPLIA S/ROBO";}
+	                if(columna.equals("1P"))                              {columna="1";}//PRESTIGIO
+	                else if(columna.equals("1A") || columna.equals("2A")) {columna="2";}//CONFORT AMPLIA
+	                else if(columna.equals("3A"))                         {columna="3";}//CONFORT AMPLIA S/ROBO
+	                else if(columna.equals("2L") || columna.equals("4L")) {columna="4";}//CONFORT LIMITA
+	                else if(columna.equals("5B") || columna.equals("3B")) {columna="5";}//CONFORT BASICA
+//	                else if(fila.equals("5BP"))                     {resp.getSmap().put("columna", "");}//CONFORT BASICA PLUS
 	                
-    	            if(        fila.equals("1") 
-    	                    || fila.equals("98") 
-                            || fila.equals("11")
-                            || fila.equals("12")){fila="Contado/Anual";} 
-	                else if(   fila.equals("2")
-	                        || fila.equals("5")
-	                        || fila.equals("97")
-	                        || fila.equals("63")){fila="Semestral";} 
-	                else if(   fila.equals("3") 
-	                        || fila.equals("6")
-	                        || fila.equals("61")){fila="Trimestral";}
-	                else if(  fila.equals("4") 
-                            || fila.equals("7") ){fila="Mensual";} 
-//	                else if(fila.equals("2"))  {fila="DXN Anual";}//  \r\n" + 
-//	                else if(fila.equals("4"))  {fila="";}//  MENSUAL6\r\n" + 
-//	                else if(fila.equals("5"))  {fila="";}//  ANUAL04\r\n" + 
-//	                else if(fila.equals("6"))  {fila="";}//  DXN Quincenal\r\n" + 
-//	                else if(fila.equals("7"))  {fila="";}//  DXN Catorcenal\r\n" + 
-//	                else if(fila.equals("8"))  {fila="";}//  DXN Mensual\r\n" + 
-//	                else if(fila.equals("9"))  {fila="";}//  DXN 16 Dias\r\n" + 
-//	                else if(fila.equals("10")) {fila="";}//  DXN Semanal\r\n" + 
-//	                else if(fila.equals("11")) {fila="";}//  DXN Decenal\r\n" + 
-//	                else if(fila.equals("13")) {fila="";}//  Multianual\r\n" + 
-//	                else if(fila.equals("14")) {fila="";}//  Mensual S/RF\r\n" + 
-	                else if(fila.equals("62")) {fila="Semanal";}//  \r\n" + 
-	                else if(fila.equals("64")) {fila="Contado";}//  \r\n" + 
-//	                else if() {fila="";}//  SEMESTRAL A\r\n" + 
+	                if(fila.equals("12"))      {fila="0";}//  Contado/Anual\r\n" + 
+	                else if(fila.equals("1"))  {fila="1";}//  Mensual\r\n" + 
+	                else if(fila.equals("63")) {fila="2";}//  Semestral\r\n" + 
+	                else if(fila.equals("3"))  {fila="3";}//  Trimestra\r\n" + 
+	                else if(fila.equals("61")) {fila="3";}//  Trimestral\r\n" + 
+	                else if(fila.equals("98")) {fila="";}//  Contado/Anual\r\n" + 
+	                else if(fila.equals("2"))  {fila="";}//  DXN Anual\r\n" + 
+	                else if(fila.equals("4"))  {fila="";}//  MENSUAL6\r\n" + 
+	                else if(fila.equals("5"))  {fila="";}//  ANUAL04\r\n" + 
+	                else if(fila.equals("6"))  {fila="";}//  DXN Quincenal\r\n" + 
+	                else if(fila.equals("7"))  {fila="";}//  DXN Catorcenal\r\n" + 
+	                else if(fila.equals("8"))  {fila="";}//  DXN Mensual\r\n" + 
+	                else if(fila.equals("9"))  {fila="";}//  DXN 16 Dias\r\n" + 
+	                else if(fila.equals("10")) {fila="";}//  DXN Semanal\r\n" + 
+	                else if(fila.equals("11")) {fila="";}//  DXN Decenal\r\n" + 
+	                else if(fila.equals("13")) {fila="";}//  Multianual\r\n" + 
+	                else if(fila.equals("14")) {fila="";}//  Mendual S/RF\r\n" + 
+	                else if(fila.equals("62")) {fila="";}//  Semanal\r\n" + 
+	                else if(fila.equals("64")) {fila="";}//  Contado\r\n" + 
+	                else if(fila.equals("97")) {fila="";}//  SEMESTRAL A\r\n" + 
 			    }
 			    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			    if(!fila.isEmpty() && !columna.isEmpty())
-			    { 
+			    {
 			        resp.getSmap().put("fila", fila);
 			        resp.getSmap().put("columna", columna);
 			        
@@ -4203,31 +4196,20 @@ public class CotizacionAction extends PrincipalCoreAction
 			List<ComponenteVO>componentesTatrigar;
 			
 			if(TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase(smap1.get("cdtipsup"))){
-			    if(smap1.get("cdplan").equalsIgnoreCase(smap1.get("cdplanOrig"))){
-			        String nmpolant = smap1.get("nmpolant");
-                    Map<String,String>params=new HashMap<String,String>();
-                    params.put("pv_cdunieco_i"   , Integer.parseInt(nmpolant.substring(0,4))+"");
-                    params.put("pv_cdramo_i"     , smap1.get("cdramo"));
-                    params.put("pv_estado_i"     , "M");
-                    params.put("pv_nmpoliza_i"   , Integer.parseInt(nmpolant.substring(7,13))+"");
-                    params.put("pv_cdgrupo_i"    , smap1.get("cdgrupo"));
-                    params.put("pv_cdplan_i"     , smap1.get("cdplan"));
-                    params.put("pv_sexo_i"       , "H");
-                    params.put("pv_cdtipsit_i"   , smap1.get("cdtipsit"));
-                    params.put("pv_cdgarant_i"   , smap1.get("cdgarant"));
-                    params.put("pv_cdatrivar_i"  , smap1.get("cdatrivar"));
-                    componentesTatrigar=cotizacionManager.obtenerAtributosPolizaOriginal(params);
-                    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
-                }
-                else{
-                    Map<String,String>params=new HashMap<String,String>();
-                    params.put("pv_cdramo_i"    , smap1.get("cdramo"));
-                    params.put("pv_cdtipsit_i"  , smap1.get("cdtipsit"));
-                    params.put("pv_cdgarant_i"  , smap1.get("cdgarant"));
-                    params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
-                    componentesTatrigar=kernelManager.obtenerTatrigar(params);
-                    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
-                }
+			    String nmpolant = smap1.get("nmpolant");
+			    Map<String,String>params=new HashMap<String,String>();
+			    params.put("pv_cdunieco_i"   , Integer.parseInt(nmpolant.substring(0,4))+"");
+			    params.put("pv_cdramo_i"     , smap1.get("cdramo"));
+			    params.put("pv_estado_i"     , "M");
+			    params.put("pv_nmpoliza_i"   , Integer.parseInt(nmpolant.substring(7,13))+"");
+			    params.put("pv_cdgrupo_i"    , smap1.get("cdgrupo"));
+			    params.put("pv_cdplan_i"     , smap1.get("cdplan"));
+			    params.put("pv_sexo_i"       , "H");
+			    params.put("pv_cdtipsit_i"   , smap1.get("cdtipsit"));
+			    params.put("pv_cdgarant_i"   , smap1.get("cdgarant"));
+			    params.put("pv_cdatrivar_i"  , smap1.get("cdatrivar"));
+			    componentesTatrigar=cotizacionManager.obtenerAtributosPolizaOriginal(params);
+			    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
 			}else{
 			    Map<String,String>params=new HashMap<String,String>();
 	            params.put("pv_cdramo_i"    , smap1.get("cdramo"));
@@ -7254,9 +7236,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				params.put("pv_otvalor16" , smap1.get("cdformaseg"));
 				params.put("pv_otvalor17" , smap1.get("cdperpag"));
 				params.put("pv_otvalor19" , smap1.get("morbilidad"));
-				//incorporando valor para guardar el numero de contrato en los tramites
-				params.put("pv_otvalor20", smap1.get("numcontrato"));
-				
 				kernelManager.pMovTvalopol(params);
 				
 				paso = "Guardando relaci\u00f3n p\u00f3liza - contratante";

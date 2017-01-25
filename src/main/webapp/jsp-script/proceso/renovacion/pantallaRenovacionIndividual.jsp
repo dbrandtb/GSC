@@ -142,7 +142,7 @@ itemsCalendarioColumns.push({
 
 Ext.onReady(function()
 {
-    Ext.Ajax.timeout = 60*60*1000;
+    Ext.Ajax.timeout = 10*60*1000;
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
@@ -3219,22 +3219,7 @@ function tarifaFinal(){
 				                        }				                        
 				                    }
 				                }
-			    			],
-			    			listeners : {
-                                afterrender : function(me){
-                                    try{
-                                        debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
-                                        if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
-                                            setTimeout(function(){ 
-                                                mensajeWarning(json.panel1['mensajeAgenteActivo']); 
-                                            }, 3000);
-                                        }
-                                    }
-                                    catch(e){
-                                        debugError(e);
-                                    }
-                                }
-                            }
+			    			]
 							}).mostrar();
             	}
             }
@@ -3774,22 +3759,7 @@ function agregaCalendario(){
                                      }                                       
                                  }
                              }
-                         ],
-                         listeners : {
-                             afterrender : function(me){
-                                 try{
-                                     debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
-                                     if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
-                                         setTimeout(function(){ 
-                                             mensajeWarning(json.panel1['mensajeAgenteActivo']); 
-                                         }, 3000);
-                                     }
-                                 }
-                                 catch(e){
-                                     debugError(e);
-                                 }
-                             }
-                         }
+                         ]
                      }).mostrar();
                  }
              }

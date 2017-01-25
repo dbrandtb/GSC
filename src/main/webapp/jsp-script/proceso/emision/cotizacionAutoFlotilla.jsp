@@ -4622,14 +4622,6 @@ function _p30_cotizar(sinTarificar)
                         }
                     ];
                     
-                    var itemAntRefPol =
-                        [
-                            {
-                                xtype  : 'displayfield'
-                                ,value : 'Forma de pago de p\u00f3liza a renovar: '+json.smap1.fila
-                            }
-                        ];
-                    
                     <s:if test='%{getImap().get("panel5Items")!=null}'>
                         var itemsaux = [<s:property value="imap.panel5Items" />];
                         for(var ii=0;ii<itemsaux.length;ii++)
@@ -4717,12 +4709,6 @@ function _p30_cotizar(sinTarificar)
                                 xtype  : 'fieldset'
                                 ,title : '<span style="font:bold 14px Calibri;">DESCUENTO DE AGENTE</span>'
                                 ,items : itemsDescuento
-                            }
-                            ,{
-                                xtype  : 'fieldset'
-                                ,title : '<span style="font:bold 14px Calibri;">Datos de Renovacion</span>'
-                                ,items : itemAntRefPol
-                                ,hidden:  !Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
                             }
                         ]
                         ,buttonAlign : 'right'
@@ -4816,22 +4802,11 @@ function _p30_cotizar(sinTarificar)
                                         {
                                             var gridTarifas = _fieldById('_p30_gridTarifas').down('grid');
                                             var sm = gridTarifas.getSelectionModel();
-                                            try
-                                            {
-                                                var columna=1 ,fila=999; 
-                                                
-                                                for(var IteGriTar=0;IteGriTar<17;IteGriTar++)
-                                                {
-                                                    sm.select({row:IteGriTar,column:columna});
-                                                    var texto = (sm.getSelection({row:IteGriTar,column:columna})[0].data.DSPERPAG).toLowerCase()
-                                                    if(json.smap1.fila.toLowerCase() === texto)
-                                                    {
-                                                          fila = IteGriTar;
-                                                          IteGriTar = 18;
-                                                    }
-                                                }
-                                                
-                                                sm.select({row:fila,column:columna});
+                                            try{
+                                                if(sm.select({row:Number(json.smap1.fila),column:Number(json.smap1.columna)}))
+                                                 {
+                                                    sm.select({row:Number(json.smap1.fila),column:Number(json.smap1.columna)});
+                                                 }
                                              }catch(e) {
                                                debug("Excede rango fuera de la cuadricula de tarifas");
                                              }

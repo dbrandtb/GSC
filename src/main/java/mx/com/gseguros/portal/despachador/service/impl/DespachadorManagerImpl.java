@@ -559,87 +559,9 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	            comments = "(sin observaciones)";
 	        }
 	        
-	        ///////////////////////////////
-	        ////// SI VIENE DIRIGIDO //////
-	        if (status.contains("|")) {
-	            logger.debug("El algoritmo viene dirigido <status>|<cdusuari>|<cdsisrol>|ZON:|<cdunizon>|NIV:|<cdnivel>|SUC:|<cdunieco>");
-	            
-	            String[] datosDestinoDirigido = status.split("\\|");
-	            status = datosDestinoDirigido[0];
-	            cdusuariDes = datosDestinoDirigido[1];
-	            cdsisrolDes = datosDestinoDirigido[2];
-	            
-	            logger.debug("Datos de destino dirigido: {}", Utils.log("status: ", status, ", cdusuariDes: ", cdusuariDes,
-	                    ", cdsisrolDes: ", cdsisrolDes));
-	            
-	            paso = "Recuperando sucursal del usuario";
-                logger.debug(paso);
-                String cdunieco = despachadorDAO.recuperarSucursalUsuarioPorTramite(cdusuariDes, ntramite);
-                
-                paso = "Actualizando tr\u00e1mite";
-                logger.debug(paso);
-                flujoMesaControlDAO.actualizarStatusTramite(
-                        ntramite,
-                        status,
-                        fechaHoy,
-                        cdusuariDes,
-                        cdunieco);
-                
-                paso = "Cerrando historial anterior";
-                logger.debug(paso);
-                despachadorDAO.cerrarHistorialTramite(ntramite, fechaHoy, cdusuariSes, cdsisrolSes, status);
-                
-                paso = "Abriendo historial nuevo";
-                logger.debug(paso);
-                flujoMesaControlDAO.guardarHistoricoTramite(
-                        fechaHoy,
-                        ntramite,
-                        cdusuariDes,
-                        cdsisrolDes,
-                        status,
-                        cdunieco,
-                        ConstantesDespachador.TIPO_ASIGNACION_REASIGNA);
-                
-                paso = "Recuperando nombre de usuarios";
-                logger.debug(paso);
-                String dsusuari = despachadorDAO.recuperarNombreUsuario(cdusuariDes);
-                
-                paso = "Recuperando descripci\u00f3n de estatus";
-                logger.debug(paso);
-                String dsstatus = this.recuperarDescripcionEstatus(status);
-                
-                paso = "Recuperando descripci\u00f3n de roles";
-                logger.debug(paso);
-                String dssisrol = this.recuperarDescripcionRol(cdsisrolDes);
-                
-                result.setMessage(Utils.join("Tr\u00e1mite enviado a ", dsusuari, " (sucursal ", cdunieco, ", rol ", dssisrol,") en estatus \"",
-                        dsstatus, "\" con las siguientes observaciones: ", comments));
-                
-                if (sinGrabarDetalle == false) {
-                    paso = "Guardando detalle";
-                    logger.debug(paso);
-                    mesaControlDAO.movimientoDetalleTramite(
-                            ntramite,
-                            fechaHoy,
-                            null, // cdclausu
-                            result.getMessage(),
-                            cdusuariSes,
-                            null, // cdmotivo
-                            cdsisrolSes,
-                            permisoAgente ? "S" : "N",
-                            cdusuariDes,
-                            cdsisrolDes,
-                            status,
-                            false // cerrado
-                            );
-                }
-	        }
-	        ////// SI VIENE DIRIGIDO //////
-	        ///////////////////////////////
-	        
 	        //////////////////////////////
 	        ////// SI ES UN RECHAZO //////
-	        else if (EstatusTramite.RECHAZADO.getCodigo().equals(status)) {
+	        if (EstatusTramite.RECHAZADO.getCodigo().equals(status)) {
                 paso = "Validando cambios pendientes de endoso";
                 logger.debug(paso);
                 endososDAO.validarTramiteSinCambiosEndosoPendiente(ntramite);

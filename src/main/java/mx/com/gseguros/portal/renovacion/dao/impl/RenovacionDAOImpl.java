@@ -53,7 +53,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected BuscarPolizasRenovables(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_POLIZAS_RENOVABLES");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_POLIZAS_RENOVABLES");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
@@ -111,7 +111,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected MarcarPoliza(DataSource dataSource)
 		{
-			super(dataSource, "PKG_RENOVA.P_MARCAR_POLIZA");
+			super(dataSource, "PKG_RENOVA_PRE.P_MARCAR_POLIZA");
 			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("mes"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipopc" , OracleTypes.VARCHAR));
@@ -153,7 +153,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected RenovarPolizas(DataSource dataSource)
 		{
-			super(dataSource, "PKG_RENOVA.P_RENUEVA_X_LISTA_POLIZAS");
+			super(dataSource, "PKG_RENOVA_PRE.P_RENUEVA_X_LISTA_POLIZAS");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("mes"      , OracleTypes.VARCHAR));
@@ -204,7 +204,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected ActualizaRenovacionDocumentos(DataSource dataSource)
 		{
-			super(dataSource, "PKG_RENOVA.P_ACTUALIZA_TCARTERA_SWIMPDOC");
+			super(dataSource, "PKG_RENOVA_PRE.P_ACTUALIZA_TCARTERA_SWIMPDOC");
 			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("mes"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipopc" , OracleTypes.VARCHAR));
@@ -234,7 +234,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		logger.debug(
 				new StringBuilder()
 				.append("\n**************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_EXPEDIENTE_POLIZA ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_EXPEDIENTE_POLIZA ******")
 				.append("\n****** result=").append(lista)
 				.append("\n**************************************************") 
 				.toString()
@@ -246,7 +246,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected CargarDocumentosSubidosPorUsuario(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_EXPEDIENTE_POLIZA");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_EXPEDIENTE_POLIZA");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1017,7 +1017,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
         {
             protected EliminacionRegistros(DataSource dataSource)
             {
-                super(dataSource, "PKG_RENOVA.P_BORRA_TDOCUPOL_REGISTRO");
+                super(dataSource, "PKG_RENOVA_PRE.P_BORRA_TDOCUPOL_REGISTRO");
                 declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
                 declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
                 declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
