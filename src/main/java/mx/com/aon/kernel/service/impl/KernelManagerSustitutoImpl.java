@@ -50,7 +50,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         logger.debug(
         		new StringBuilder()
         		.append("\n********************************************")
-        		.append("\n****** PKG_SATELITES.P_CALC_NUMPOLIZA ******")
+        		.append("\n****** PKG_SATELITES_PRE.P_CALC_NUMPOLIZA ******")
         		.append("\n****** params=").append(parametros)
         		.append("\n********************************************")
         		.toString()
@@ -71,7 +71,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    //PKG_SATELITES.P_MOV_MPOLISIT
+    //PKG_SATELITES_PRE.P_MOV_MPOLISIT
     @Override
     public WrapperResultados insertaPolisit(Map<String, Object> parameters) throws ApplicationException
     {
@@ -82,7 +82,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    //PKG_SATELITES.P_MOV_MPOLISIT
+    //PKG_SATELITES_PRE.P_MOV_MPOLISIT
     @Override
     public WrapperResultados insertaPolisit(
     		String cdunieco
@@ -130,7 +130,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
     	return this.insertaPolisit(params);
 	}
     
-    //PKG_SATELITES2.P_MOV_TVALOSIT
+    //PKG_SATELITES2_PRE.P_MOV_TVALOSIT
     @Override
     public WrapperResultados insertaValoresSituaciones(Map<String, String> parameters) throws ApplicationException
     {
@@ -141,7 +141,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    //PKG_SATELITES2.P_MOV_TVALOSIT
+    //PKG_SATELITES2_PRE.P_MOV_TVALOSIT
     @Override
     public WrapperResultados insertaValoresSituaciones(
     		String cdunieco
@@ -275,7 +275,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug(
         		new StringBuilder()
         		.append("\n**********************************************")
-        		.append("\n****** pkg_satelites.p_get_info_usuario ******")
+        		.append("\n****** PKG_SATELITES_PRE.p_get_info_usuario ******")
         		.append("\n****** params=").append(parameters)
         		.append("\n**********************************************")
         		.toString()
@@ -333,7 +333,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		log.debug(
 				new StringBuilder()
 				.append("\n******************************************")
-				.append("\n****** PKG_LISTAS.P_GET_ATRI_POLIZA ******")
+				.append("\n****** PKG_LISTAS_PRE.P_GET_ATRI_POLIZA ******")
 				.append("\n****** params=").append(parameters)
 				.append("\n******************************************")
 				.toString()
@@ -343,7 +343,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		log.debug(
 				new StringBuilder()
 				.append("\n******************************************")
-				.append("\n****** PKG_LISTAS.P_GET_ATRI_POLIZA ******")
+				.append("\n****** PKG_LISTAS_PRE.P_GET_ATRI_POLIZA ******")
 				.append("\n****** params=").append(parameters)
 				.append("\n****** registro=").append(lista)
 				.append("\n******************************************")
@@ -362,7 +362,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug(
         		new StringBuilder()
         		.append("\n********************************************")
-        		.append("\n****** PKG_LISTAS.P_GET_ATRI_GARANTIA ******")
+        		.append("\n****** PKG_LISTAS_PRE.P_GET_ATRI_GARANTIA ******")
         		.append("\n****** params=").append(parameters)
         		.append("\n********************************************")
         		.toString()
@@ -372,7 +372,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug(
         		new StringBuilder()
         		.append("\n********************************************")
-        		.append("\n****** PKG_LISTAS.P_GET_ATRI_GARANTIA ******")
+        		.append("\n****** PKG_LISTAS_PRE.P_GET_ATRI_GARANTIA ******")
         		.append("\n****** params=")  .append(parameters)
         		.append("\n****** registro=").append(lista)
         		.append("\n********************************************")
@@ -463,7 +463,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug(
         		new StringBuilder()
         		.append("\n***************************************")
-        		.append("\n****** PKG_LISTAS.P_GET_TMANTENI ******")
+        		.append("\n****** PKG_LISTAS_PRE.P_GET_TMANTENI ******")
         		.append("\n****** params=").append(parameters)
         		.append("\n***************************************")
         		.toString()
@@ -474,7 +474,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return lista;
     }
     
-    //PKG_SATELITES.P_OBT_DATOS_MPOLIPER
+    //PKG_SATELITES_PRE.P_OBT_DATOS_MPOLIPER
     @Override
     public List<Map<String, Object>> obtenerAsegurados(Map<String, String> parameters) throws ApplicationException
     {
@@ -485,7 +485,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return lista;
     }
     
-    //PKG_SATELITES.P_OBT_DATOS_MPOLIPER
+    //PKG_SATELITES_PRE.P_OBT_DATOS_MPOLIPER
     /*
     nmsituac
 	,cdrol
@@ -679,11 +679,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
     public WrapperResultados movMpersona(Map<String,Object> parameters) throws ApplicationException
     {
     	log.debug("### kernel sustituto movMpersona map: "+parameters);
-    	if (parameters != null) {
-    	    if (!parameters.containsKey("pv_dsocupacion_i")) {
-    	        parameters.put("pv_dsocupacion_i", null);
-    	    }
-    	}
         WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_MOV_MPERSONA);
         log.debug("### kernel sustituto movMpersona id:"+res.getMsgId());
         log.debug("### kernel sustituto movMpersona mesage:"+res.getMsgText());
@@ -1234,7 +1229,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		return res;
 	}
 	
-	//PKG_COTIZA.P_OBTIENE_TVALOSIT
+	//PKG_COTIZA_PRE.P_OBTIENE_TVALOSIT
 	public Map<String, Object> obtieneValositSituac(Map<String, String> params) throws ApplicationException
 	{
 		log.debug("### kernel sustituto obtieneValositSituac map: "+params);
@@ -1243,7 +1238,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return map;
 	}
 	
-	//PKG_COTIZA.P_OBTIENE_TVALOSIT
+	//PKG_COTIZA_PRE.P_OBTIENE_TVALOSIT
 	public Map<String, Object> obtieneValositSituac(
 			String cdunieco
 			,String cdramo
@@ -1365,7 +1360,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	}
 
 	/**
-	 * PKG_SATELITES.P_MOV_MPOLIAGE_PORCENTAJES
+	 * PKG_SATELITES_PRE.P_MOV_MPOLIAGE_PORCENTAJES
 	 */
 	public WrapperResultados guardarPorcentajeAgentes(Map<String, Object> params)
 			throws ApplicationException {

@@ -1715,7 +1715,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								parametros.put("pv_cdestciv_i"    , null);
 								parametros.put("pv_cdsucemi_i"    , cli.getSucursalCli());
 								parametros.put("pv_cdusuario_i"    , usuarioCaptura);
-								parametros.put("pv_dsocupacion_i" , null);
 								parametros.put("pv_accion_i"      , "I");
 								kernelManagerSustituto.movMpersona(parametros);
 					    		

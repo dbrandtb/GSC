@@ -63,10 +63,4 @@
     var _GLOBAL_COMP_URL_MCFLUJO = '<s:property value="urlMesaFlujo" />';
     
     var _GLOBAL_CDSISROL = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
-    
-    var _GLOBAL_ES_MOVIL = false;
-    
-    <s:if test="%{#session != null && #session.containsKey('ES_MOVIL') && #session['ES_MOVIL'] == true }">
-        _GLOBAL_ES_MOVIL = true;
-    </s:if>
 </script>

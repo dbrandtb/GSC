@@ -69,17 +69,11 @@ public class DespachadorManagerImpl implements DespachadorManager {
 	
 	@Override
 	public RespuestaDespachadorVO despachar (String ntramite, String status) throws Exception {
-	    return this.despachar(ntramite, status, false);
-	}
-	
-	@Override
-	public RespuestaDespachadorVO despachar (String ntramite, String status, boolean sinBuscarRegreso) throws Exception {
 	    logger.debug(Utils.log(
 	            "\n@@@@@@@@@@@@@@@@@@@@@@@",
 	            "\n@@@@@@ despachar @@@@@@",
-	            "\n@@@@@@ ntramite         = " , ntramite,
-	            "\n@@@@@@ status           = " , status,
-                "\n@@@@@@ sinBuscarRegreso = " , sinBuscarRegreso));
+	            "\n@@@@@@ ntramite = " , ntramite,
+	            "\n@@@@@@ status   = " , status));
 	    String paso = null;
 	    RespuestaDespachadorVO result = null;
 	    try {
@@ -136,11 +130,6 @@ public class DespachadorManagerImpl implements DespachadorManager {
             quemados.put(ConstantesDespachador.ZONA_ACC_BAJIO       , new LinkedHashMap<String, Boolean>());
             quemados.put(ConstantesDespachador.ZONA_SUR             , new LinkedHashMap<String, Boolean>());
             quemados.put(ConstantesDespachador.ZONA_COMODIN_USUARIO , new LinkedHashMap<String, Boolean>());
-            
-            if (sinBuscarRegreso) {
-                quemados.get(ConstantesDespachador.ZONA_COMODIN_USUARIO).put(ConstantesDespachador.NIVEL_COMODIN_USUARIO, Boolean.TRUE);
-            }
-            
             result = this.despachar(cdtipram, cdtipflu, cdflujomc, ntramite, cdramo, cdtipsit, zona, nivel, cdunidspch, status, cdsisrol,
                     zona, nivel, cdunidspch, status, cdsisrol, quemados, sb);
             if (result.isEncolado()) {
@@ -516,17 +505,6 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	}
 	
 	/**
-     * SOBRECARGADO
-     */
-    @Override
-    public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
-            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
-            boolean sinGrabarDetalle) throws Exception {
-        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
-                porEscalamiento, fechaHoy, sinGrabarDetalle, false);
-    }
-	
-	/**
      * SE TURNA/RECHAZA/REASIGNA UN TRAMITE. SE MODIFICA TMESACONTROL (STATUS, FECSTATU, CDUSUARI, CDUNIDSPCH, CDRAZRECHA),
      * THMESACONTROL (SE CIERRA EL HISTORIAL ANTERIOR, SE ABRE EL HISTORIAL NUEVO),
      * TDMESACONTROL (SE INSERTA DETALLE). SE ENVIAN CORREOS DE AVISOS Y SE RECHAZA EN SIGS 
@@ -535,7 +513,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	@Override
 	public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
 	        String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
-	        boolean sinGrabarDetalle, boolean sinBuscarRegreso) throws Exception {
+	        boolean sinGrabarDetalle) throws Exception {
 	    logger.debug(Utils.log(
 	            "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 	            "\n@@@@@@ turnarTramite @@@@@@",
@@ -550,8 +528,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	            "\n@@@@@@ permisoAgente    = " , permisoAgente,
 	            "\n@@@@@@ porEscalamiento  = " , porEscalamiento,
                 "\n@@@@@@ fechaHoy         = " , fechaHoy,
-                "\n@@@@@@ sinGrabarDetalle = " , sinGrabarDetalle,
-                "\n@@@@@@ sinBuscarRegreso = " , sinBuscarRegreso));
+                "\n@@@@@@ sinGrabarDetalle = " , sinGrabarDetalle));
 	    String paso = null;
         RespuestaTurnadoVO result = new RespuestaTurnadoVO();
 	    try {
@@ -559,87 +536,9 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	            comments = "(sin observaciones)";
 	        }
 	        
-	        ///////////////////////////////
-	        ////// SI VIENE DIRIGIDO //////
-	        if (status.contains("|")) {
-	            logger.debug("El algoritmo viene dirigido <status>|<cdusuari>|<cdsisrol>|ZON:|<cdunizon>|NIV:|<cdnivel>|SUC:|<cdunieco>");
-	            
-	            String[] datosDestinoDirigido = status.split("\\|");
-	            status = datosDestinoDirigido[0];
-	            cdusuariDes = datosDestinoDirigido[1];
-	            cdsisrolDes = datosDestinoDirigido[2];
-	            
-	            logger.debug("Datos de destino dirigido: {}", Utils.log("status: ", status, ", cdusuariDes: ", cdusuariDes,
-	                    ", cdsisrolDes: ", cdsisrolDes));
-	            
-	            paso = "Recuperando sucursal del usuario";
-                logger.debug(paso);
-                String cdunieco = despachadorDAO.recuperarSucursalUsuarioPorTramite(cdusuariDes, ntramite);
-                
-                paso = "Actualizando tr\u00e1mite";
-                logger.debug(paso);
-                flujoMesaControlDAO.actualizarStatusTramite(
-                        ntramite,
-                        status,
-                        fechaHoy,
-                        cdusuariDes,
-                        cdunieco);
-                
-                paso = "Cerrando historial anterior";
-                logger.debug(paso);
-                despachadorDAO.cerrarHistorialTramite(ntramite, fechaHoy, cdusuariSes, cdsisrolSes, status);
-                
-                paso = "Abriendo historial nuevo";
-                logger.debug(paso);
-                flujoMesaControlDAO.guardarHistoricoTramite(
-                        fechaHoy,
-                        ntramite,
-                        cdusuariDes,
-                        cdsisrolDes,
-                        status,
-                        cdunieco,
-                        ConstantesDespachador.TIPO_ASIGNACION_REASIGNA);
-                
-                paso = "Recuperando nombre de usuarios";
-                logger.debug(paso);
-                String dsusuari = despachadorDAO.recuperarNombreUsuario(cdusuariDes);
-                
-                paso = "Recuperando descripci\u00f3n de estatus";
-                logger.debug(paso);
-                String dsstatus = this.recuperarDescripcionEstatus(status);
-                
-                paso = "Recuperando descripci\u00f3n de roles";
-                logger.debug(paso);
-                String dssisrol = this.recuperarDescripcionRol(cdsisrolDes);
-                
-                result.setMessage(Utils.join("Tr\u00e1mite enviado a ", dsusuari, " (sucursal ", cdunieco, ", rol ", dssisrol,") en estatus \"",
-                        dsstatus, "\" con las siguientes observaciones: ", comments));
-                
-                if (sinGrabarDetalle == false) {
-                    paso = "Guardando detalle";
-                    logger.debug(paso);
-                    mesaControlDAO.movimientoDetalleTramite(
-                            ntramite,
-                            fechaHoy,
-                            null, // cdclausu
-                            result.getMessage(),
-                            cdusuariSes,
-                            null, // cdmotivo
-                            cdsisrolSes,
-                            permisoAgente ? "S" : "N",
-                            cdusuariDes,
-                            cdsisrolDes,
-                            status,
-                            false // cerrado
-                            );
-                }
-	        }
-	        ////// SI VIENE DIRIGIDO //////
-	        ///////////////////////////////
-	        
 	        //////////////////////////////
 	        ////// SI ES UN RECHAZO //////
-	        else if (EstatusTramite.RECHAZADO.getCodigo().equals(status)) {
+	        if (EstatusTramite.RECHAZADO.getCodigo().equals(status)) {
                 paso = "Validando cambios pendientes de endoso";
                 logger.debug(paso);
                 endososDAO.validarTramiteSinCambiosEndosoPendiente(ntramite);
@@ -811,7 +710,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 if (!esFinal) {
                     paso = "Invocando despachador";
                     logger.debug(paso);
-                    destino = this.despachar(ntramite, status, sinBuscarRegreso);
+                    destino = this.despachar(ntramite, status);
                 }
                 
                 if (!esFinal && destino.isEncolado()) { // SI NADIE PUDO ATENDER LO ENCOLAMOS

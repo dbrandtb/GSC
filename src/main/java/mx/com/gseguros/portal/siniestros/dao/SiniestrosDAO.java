@@ -356,8 +356,7 @@ public interface SiniestrosDAO {
 	
 	public void eliminacionAsegurado(String ntramite,String factura, String valorAccion) throws Exception;
 
-	//public void eliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion) throws Exception; (EGS)
-	public void eliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion, String cdramo) throws Exception; // (EGS)
+	public void eliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion) throws Exception;
 	
 	public Map<String,String> obtenerDatosProveedor(String cdpresta) throws Exception;
 	

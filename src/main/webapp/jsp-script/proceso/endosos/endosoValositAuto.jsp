@@ -254,7 +254,6 @@ Ext.onReady(function()
 		                                };
 		                                _p36_store.each(function(record){
 		                                    var valores = {};
-		                                    
 		                                    for(var key in record.data)
 		                                    {
 		                                        var value=record.data[key];
@@ -302,13 +301,8 @@ Ext.onReady(function()
 										    jsonDatosConfirmacion.flujo = _p36_flujo;
 										}
 										_p36_store.each(function(record) {
-										    if(_p36_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto){
-										    	debug( record.get('DES_NUMERO_DE_SERIE'));
-										    	numSerie=(record.get('DES_NUMERO_DE_SERIE'));
-										    }else{
-										        debug( record.get('CVE_NUMERO_DE_SERIE'));
-                                                numSerie=(record.get('CVE_NUMERO_DE_SERIE'));
-										    }
+									    	debug( record.get('CVE_NUMERO_DE_SERIE'));
+									    	numSerie=(record.get('CVE_NUMERO_DE_SERIE'));
 									    });
 										debug('jsonDatosConfirmacion****',jsonDatosConfirmacion.slist1['OTVALOR99']);
 										//numSerie+=''+(record.get('parametros.pv_otvalor37'))+'|';
@@ -360,8 +354,8 @@ Ext.onReady(function()
 											Ext.Ajax.request({
 			                                	url     : _p29_urlObtieneValNumeroSerie,
 			                                	params :{
-												'smap1.numSerie'  : numSerie
-												,'smap1.feini'    : new Date()
+													'smap1.numSerie'  : numSerie
+													,'smap1.feini'    : new Date()
 												},
 												success : function(response){
 													var jsonNumSerie=Ext.decode(response.responseText);

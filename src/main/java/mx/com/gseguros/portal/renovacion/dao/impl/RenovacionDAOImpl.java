@@ -1,9 +1,5 @@
 package mx.com.gseguros.portal.renovacion.dao.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,11 +11,9 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
-import org.springframework.jdbc.support.lob.OracleLobHandler;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
@@ -53,7 +47,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected BuscarPolizasRenovables(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_POLIZAS_RENOVABLES");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_POLIZAS_RENOVABLES");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
@@ -111,7 +105,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected MarcarPoliza(DataSource dataSource)
 		{
-			super(dataSource, "PKG_RENOVA.P_MARCAR_POLIZA");
+			super(dataSource, "PKG_RENOVA_PRE.P_MARCAR_POLIZA");
 			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("mes"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipopc" , OracleTypes.VARCHAR));
@@ -153,7 +147,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected RenovarPolizas(DataSource dataSource)
 		{
-			super(dataSource, "PKG_RENOVA.P_RENUEVA_X_LISTA_POLIZAS");
+			super(dataSource, "PKG_RENOVA_PRE.P_RENUEVA_X_LISTA_POLIZAS");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("mes"      , OracleTypes.VARCHAR));
@@ -204,7 +198,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected ActualizaRenovacionDocumentos(DataSource dataSource)
 		{
-			super(dataSource, "PKG_RENOVA.P_ACTUALIZA_TCARTERA_SWIMPDOC");
+			super(dataSource, "PKG_RENOVA_PRE.P_ACTUALIZA_TCARTERA_SWIMPDOC");
 			declareParameter(new SqlParameter("anio"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("mes"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipopc" , OracleTypes.VARCHAR));
@@ -234,7 +228,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		logger.debug(
 				new StringBuilder()
 				.append("\n**************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_EXPEDIENTE_POLIZA ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_EXPEDIENTE_POLIZA ******")
 				.append("\n****** result=").append(lista)
 				.append("\n**************************************************") 
 				.toString()
@@ -246,7 +240,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 	{
 		protected CargarDocumentosSubidosPorUsuario(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_EXPEDIENTE_POLIZA");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_EXPEDIENTE_POLIZA");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -342,8 +336,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 						"descuento",
 						"extra_prima",
 						"nmpoliex",
-						"nmpolant",
-						"forma_pago"
+						"nmpolant"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -432,8 +425,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 						"descuento",
 						"extra_prima",
 						"nmpoliex",
-						"nmpolant",
-						"forma_pago"
+						"nmpolant"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -565,7 +557,8 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 		Map<String,Object> procedureResult        = ejecutaSP(new ConfirmarPolizaIndividual(getDataSource()),params);
 		logger.debug(new StringBuilder().append("\n****** procedureResult=").append(procedureResult).toString());	
 		List<Map<String,String>> polizasRenovadas = (List<Map<String,String>>) procedureResult.get("pv_registro_o");
-		if(polizasRenovadas==null||polizasRenovadas.size()==0){
+		if(polizasRenovadas==null||polizasRenovadas.size()==0)
+		{
 			throw new ApplicationException("No se renovaron polizas");
 		}
 		return polizasRenovadas;
@@ -954,75 +947,5 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
-	}
-
-   @Override
-   public InputStream obtenerDesglose(String cdunieco, String cdramo, String estado, String nmpoliza, List<Map<String, String>> lista) throws Exception {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("pv_cdunieco_i", cdunieco);
-        params.put("pv_cdramo_i",   cdramo);
-        params.put("pv_estado_i",   estado);
-        params.put("pv_nmpoliza_i", nmpoliza);
-        String[] array = new String[lista.size()];  
-        int i = 0;
-        for(Map<String,String> recibo : lista){
-            array[i++] = recibo.get("nmrecibo");
-        }
-        params.put("pv_lista_i",    new SqlArrayValue(array));
-        logger.debug("params=" + params);        
-        InputStream archivo =  null;
-        try {
-            Map<String, Object> resultado = ejecutaSP(new ObtenerDesglose(getDataSource()), params);
-            logger.debug("resultado:"+resultado);
-            ArrayList<InputStream> inputList = (ArrayList<InputStream>) resultado.get("pv_registro_o");
-            archivo = inputList.get(0);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage(), e);
-        }
-        
-        return archivo;
-    }
-        
-    protected class ObtenerDesglose extends StoredProcedure {
-        protected ObtenerDesglose(DataSource dataSource) {
-            super(dataSource,"PKG_TAEXTRACCION.GET_SALIDA");
-            declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_lista_i",    OracleTypes.ARRAY , "LISTA_VARCHAR2"));
-            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtenerDesgloseMapper()));
-            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    protected class ObtenerDesgloseMapper implements RowMapper<InputStream> {
-        public InputStream mapRow(ResultSet rs, int rowNum) throws SQLException {
-            OracleLobHandler lobHandler = new OracleLobHandler();
-            return new ByteArrayInputStream(lobHandler.getBlobAsBytes(rs, "DATA"));
-        }
-    }
-    
-    
-    @Override
-    public void eliminacionRegistros(String ntramite,String cddocume) throws Exception {
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("pv_ntramite_i", ntramite);
-            params.put("pv_cddocume_i", cddocume);
-            Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionRegistros(this.getDataSource()), params);
-        }
-        protected class EliminacionRegistros extends StoredProcedure
-        {
-            protected EliminacionRegistros(DataSource dataSource)
-            {
-                super(dataSource, "PKG_RENOVA.P_BORRA_TDOCUPOL_REGISTRO");
-                declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
-                declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
-                declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-                declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-                compile();
-            }
-        }
+	}	
 }

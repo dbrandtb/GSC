@@ -299,10 +299,9 @@ function mensajeInfo(mensaje,callback){
 
 function mensajeWarning(mensaje,funcion)
 {
-    var tmpMensajeEmergente;
 	if(funcion)
 	{
-		tmpMensajeEmergente=Ext.Msg.show({
+		var tmpMensajeEmergente=Ext.Msg.show({
 			title    : 'Aviso'
 	        ,icon    : Ext.Msg.WARNING
 	        ,msg     : mensaje
@@ -312,7 +311,7 @@ function mensajeWarning(mensaje,funcion)
 	}
 	else
 	{
-		tmpMensajeEmergente=Ext.Msg.show({
+		var tmpMensajeEmergente=Ext.Msg.show({
 			title    : 'Aviso'
 	        ,icon    : Ext.Msg.WARNING
 	        ,msg     : mensaje
@@ -1964,24 +1963,11 @@ function _procesaAccion(
                                                             {
                                                                 var valorRespValid = json.params.salida
                                                                     ,salida        = '';
-                                                                debug('Resultado validacion java: ', valorRespValid);
                                                                 for(var i=0 ; i<numSalidas ; i++)
                                                                 {
-                                                                    if ( 'x' + acciones[i].CDVALOR === 'x' + valorRespValid) {
+                                                                    if('x'+acciones[i].CDVALOR=='x'+valorRespValid)
+                                                                    {
                                                                         salida = acciones[i];
-                                                                        break;
-                                                                    }
-                                                                    /*
-                                                                    CUANDO LA RESPUESTA DE LA VALIDACION JAVA INICIA CON '*' (EJ: *JTEZVA|PROGRAMADOR)
-                                                                    BUSCAMOS UNA ACCION CUYO VALOR SEA '*', EJECUTAMOS ESA ACCION
-                                                                    Y LE MANDAMOS COMO AUXILIAR LA RESPUESTA JAVA SIN EL '*' (EJ: JTEZVA|PROGRAMADOR)
-                                                                    */
-                                                                    else if (acciones[i].CDVALOR === '*'
-                                                                        && !Ext.isEmpty(valorRespValid)
-                                                                        && valorRespValid.indexOf('*') === 0
-                                                                    ) {
-                                                                        salida = acciones[i];
-                                                                        salida.AUX = valorRespValid.substr(1);
                                                                         break;
                                                                     }
                                                                 }
@@ -2067,7 +2053,6 @@ function _procesaAccion(
                                                                 ck = 'Invocando validaci\u00f3n cliente';
                                                                 var valorRespValid = validacionCliente(json.datosTramite)
                                                                     ,salida        = '';
-                                                                debug('Resultado validacion cliente: ', valorRespValid);
                                                                 for(var i=0 ; i<numSalidas ; i++)
                                                                 {
                                                                     if('x'+acciones[i].CDVALOR=='x'+valorRespValid)

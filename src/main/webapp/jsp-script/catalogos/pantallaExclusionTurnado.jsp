@@ -107,7 +107,6 @@ Ext.onReady(function()
                 	  store      :  _p83_store
                      ,itemId     : '_p83_grid'
                      ,title      : 'Usuarios Excluidos'
-                     ,height     : 470
                    	 ,tbar     :
                             [
                                 '->',//Espaciador
@@ -268,6 +267,6 @@ function _p83_ventanaAgregar()
 </script>
 </head>
 <body>
-<div id="_p83_divpri" style="height:500px;border:1px solid #CCCCCC"></div>
+<div id="_p83_divpri" style="height:400px;border:1px solid #CCCCCC"></div>
 </body>
 </html>

@@ -113,11 +113,9 @@ public enum RecuperacionSimple
 	,RECUPERAR_COBERTURAS_AGREGADAS                          ("L")
 	,RECUPERAR_ASEGURADOS_AFECTADOS_END_COBERTURAS           ("L")
 	,RECUPERAR_COBERTURAS_BORRADAS                           ("L")
-	,RECUPERAR_COBERTURAS_PRIMA_NETA                         ("L")
 	,RECUPERAR_DESPACHADOR_DATOS_SUCURSALES                  ("L")
 	,RECUPERAR_DESPACHADOR_DATOS_USUARIOS                    ("L")
     ,RECUPERAR_DESPACHADOR_DATOS_USER_ALL_X_ROL              ("L")
-    ,RECUPERAR_DESPACHADOR_DATOS_ZONA                        ("L")
 	;
 	 
 	private String tipo;

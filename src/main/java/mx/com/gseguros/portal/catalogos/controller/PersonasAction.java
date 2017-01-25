@@ -773,26 +773,6 @@ public class PersonasAction extends PrincipalCoreAction
 			Integer tipoCliente = null;
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			
-			
-			if(StringUtils.isBlank(smap1.get("codigoExterno"))){
-				
-				logger.debug(">>> Complementado Codigo externo: " + smap1.get("codigoExterno"));
-				Map<String,Object> datos = personasManager.obtenerPersonaPorCdperson(smap1.get("cdperson"), timestamp);
-				Map<String,String> persona = (Map<String, String>) datos.get("persona");
-						 
-				if("D".equalsIgnoreCase(smap1.get("esSalud"))){
-					if(persona != null && persona.containsKey("CDIDEPER") && StringUtils.isNotBlank((String)persona.get("CDIDEPER"))){
-						smap1.put("codigoExterno",(String)persona.get("CDIDEPER"));
-					}
-				}else if("S".equalsIgnoreCase(smap1.get("esSalud"))){
-					if(persona!=null && persona.containsKey("CDIDEEXT") && StringUtils.isNotBlank((String)persona.get("CDIDEEXT"))){
-						smap1.put("codigoExterno",(String)persona.get("CDIDEEXT"));
-					}
-				}
-				
-				logger.debug(">>> Codigo externo Obtenido: " + smap1.get("codigoExterno"));
-			}
-			
 			if(StringUtils.isNotBlank(smap1.get("codigoExterno"))){
 				tipoCliente = personasManager.obtieneTipoCliWS(smap1.get("codigoExterno"), smap1.get("esSalud"));
 			}else{

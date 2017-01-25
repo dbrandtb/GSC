@@ -9,7 +9,6 @@
 var _p43_urlMarcarPolizaCancelar   = '<s:url namespace="/endosos"     action="marcarPolizaCancelarPorEndoso"     />';
 var _p43_urlConfirmar              = '<s:url namespace="/endosos"     action="confirmarEndosoCancelacionPolAuto" />';
 var _p43_urlValidaRazonCancelacion = '<s:url namespace="/cancelacion" action="validaRazonCancelacion"            />';
-var _p43_urlRecuperacionSimple     = '<s:url namespace="/emision" action="recuperacionSimple"        />';
 ////// urls //////
 
 ////// variables //////
@@ -246,7 +245,6 @@ Ext.onReady(function()
             errorComunicacion();
         }
     });
-    
     ////// loaders //////
     
     comboMotivoCanc = _fieldByName('cdrazon',panCanForm);
@@ -286,41 +284,6 @@ Ext.onReady(function()
             panCanInputFecha.setReadOnly(false);
             _p43_smap1.cdtipsup = '52';
         }
-        
-        
-        Ext.Ajax.request(
-   	    {
-   	         url      : _p43_urlRecuperacionSimple
-   	        ,params  :
-   	        {
-   	            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
-   	            ,'smap1.cdunieco'     : _p43_smap1.CDUNIECO
-   	            ,'smap1.cdramo'       : _p43_smap1.CDRAMO
-   	            ,'smap1.estado'       : _p43_smap1.ESTADO
-   	            ,'smap1.nmpoliza'     : _p43_smap1.NMPOLIZA
-   	            ,'smap1.cdtipsup'     : _p43_smap1.cdtipsup
-   	        }
-   	        ,success : function(response)
-   	        {
-   	            var json = Ext.decode(response.responseText);
-   	            debug('### fechas:',json);
-   	            if(json.exito)
-   	            {
-   	            	panCanInputFecha.setValue(json.smap1.FECHA_REFERENCIA);
-   	            	panCanInputFecha.setMinValue(json.smap1.FECHA_MINIMA);
-   	             	panCanInputFecha.setMaxValue(json.smap1.FECHA_MAXIMA);
-   	             	panCanInputFecha.isValid();
-   	            }
-   	            else
-   	            {
-   	                mensajeError(json.respuesta);
-   	            }
-   	        }
-   	        ,failure : function()
-   	        {
-   	            errorComunicacion();
-   	        }
-   	    });
         
         debug('<comboMotivocambio');
 }
