@@ -2438,3 +2438,62 @@ function _p21_editarExclusiones(grid,row)
     });
     debug('<_p21_editarExclusiones');
 }
+
+function _verificaAprueba(){
+    
+	debug('<<<>>> Verifica Aprueba Cambio de Nombre de Plan<<<>>>');
+	
+	if(_p21_tabGrupos){
+		var planExcedeLongitud = false;
+		
+		_p21_query('#'+_p21_tabGrupos.itemId)[0].items.items[0].getStore().each(function(record){
+	        if(!Ext.isEmpty(record.get('dsplanl')) && String(record.get('dsplanl')).length >= 40)
+	        {
+	        	planExcedeLongitud = true;
+	        	return false;
+	        }
+	    });
+		
+		if(planExcedeLongitud){
+			mensajeWarning('No se puede aprobar. El Suscriptor debe editar primero los nombres de plan ya que alguno excede la longitud permitida de caracteres.');
+			return true;
+		}
+		
+	}
+    
+    if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ))
+    {
+        //alert('suscriptor');
+        var faltaAprobacion = _faltaAprobarNombrePlan;
+        
+        if(faltaAprobacion){
+            mensajeWarning('El Supervisor debe aprobar primero los cambios realizados a los nombres de plan editados.');    
+        }
+        
+        return faltaAprobacion;
+        
+    }else if(([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 )){
+        //alert('supervisor');
+        Ext.Ajax.request({
+            url     : _p21_urlLanzaAprobacionNombrePlan,
+            params  : {
+                'smap1.ntramite'    :  _p21_ntramite,
+                'smap1.tipobloqueo' : 'D'
+            },
+            success : function (response) {
+                var json=Ext.decode(response.responseText);
+                
+                if(!json.success){
+                    debugError('Error sin impacto al eliminar bloqueo para aprobacion de cambio de nombre de plan. ', json.respuesta);
+                }
+            },
+            failure : function () {
+                errorComunicacion(null, 'Error al lanzar validaci\u00f3n cambio de nombre plan');
+            }
+        }); 
+        
+        return false;
+    }
+    
+    return false;    
+}
