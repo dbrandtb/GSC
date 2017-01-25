@@ -280,7 +280,7 @@ function _mcdinamica_nuevoTramite(button,turnar)
                 Ext.Msg.show(
                 {
                     title    : 'Error'
-                    ,msg     :  action.result.errorMessage//'Error de comunicaci&oacute;n'
+                    ,msg     :  (!Ext.isEmpty(action.result.errorMessage)) ? action.result.errorMessage :'Error de comunicaci&oacute;n'
                     ,buttons : Ext.Msg.OK
                     ,icon    : Ext.Msg.ERROR
                 });
