@@ -1287,7 +1287,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
                         ,"0"
                         ,new Date()
                         ,fileName
-                        ,"Censo Poliza Anterior "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
+                        ,"Censo Póliza Anterior "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
                         ,params.get("nmpoliza")
                         ,params.get("ntramite")
                         ,"1"

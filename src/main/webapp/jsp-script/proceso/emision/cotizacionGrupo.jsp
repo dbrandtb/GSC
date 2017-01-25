@@ -229,9 +229,7 @@ var _p21_editorNombrePlan=
     xtype       : 'textfield'
     ,allowBlank : true
     ,minLength  : 3
-    ,maxLength  : ([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? 40    : 150
     ,readOnly   : ([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? false : true
-    ,sinmayus   : true
 };
 
 var _p21_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
@@ -653,12 +651,6 @@ Ext.onReady(function()
                         {
                             _p21_estiloEditores(context.record.get('cdplan'));
                         }
-                    },
-                    edit: function(editor,context){
-                    	var editedRecord = context.record;
-                    	if(!Ext.isEmpty(editedRecord.get('dsplanl'))){
-                    		editedRecord.set('dsplanl',editedRecord.get('dsplanl').toUpperCase());
-                    	}
                     }
                 }
             })
@@ -826,13 +818,11 @@ Ext.onReady(function()
                         {
                             _p21_estiloEditores(context.record.get('cdplan'));
                         }
-                    },
+                    }/*,
                     edit: function(editor,context){
                     	var editedRecord = context.record;
-                    	if(!Ext.isEmpty(editedRecord.get('dsplanl'))){
-                    		editedRecord.set('dsplanl',editedRecord.get('dsplanl').toUpperCase());
-                    	}
-                    }
+                    	alert(editedRecord.get('cdplan'));
+                    }*/
                 }
             })
         })
@@ -2322,6 +2312,46 @@ function _p21_borrarGrupoClic(grid,rowIndex)
     debug('<_p21_borrarGrupoClic');
 }
 
+function _verificaAprueba(){
+    
+    
+    if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ))
+    {
+        //alert('suscriptor');
+        var faltaAprobacion = _faltaAprobarNombrePlan;
+        
+        if(faltaAprobacion){
+            mensajeWarning('El Supervisor debe aprobar primero los cambios realizados a los nombres de plan editados.');    
+        }
+        
+        return faltaAprobacion;
+        
+    }else if(([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 )){
+        //alert('supervisor');
+        Ext.Ajax.request({
+            url     : _p21_urlLanzaAprobacionNombrePlan,
+            params  : {
+                'smap1.ntramite'    :  _p21_ntramite,
+                'smap1.tipobloqueo' : 'D'
+            },
+            success : function (response) {
+                var json=Ext.decode(response.responseText);
+                
+                if(!json.success){
+                    debugError('Error sin impacto al eliminar bloqueo para aprobacion de cambio de nombre de plan. ', json.respuesta);
+                }
+            },
+            failure : function () {
+                errorComunicacion(null, 'Error al lanzar validaci\u00f3n cambio de nombre plan');
+            }
+        }); 
+        
+        return false;
+    }
+    
+    return false;    
+}
+
 function _p21_editarGrupoClic(grid,rowIndex)
 {
 	var gridGrupos  = grid.up();
@@ -3789,21 +3819,6 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
         {
             mensajeWarning('Verificar los datos del concepto y el censo de asegurados',_p21_setActiveConcepto);
         }
-        
-        debug("numcontrato",_fieldByName('numcontrato').getValue() );
-      	//parche para numcontrato>
-      	if ((_fieldByName('numcontrato').getValue()=="") || (Ext.isEmpty(_fieldByName('numcontrato')) ) || (_fieldByName('numcontrato').getValue()==null))
-        {
-        	valido=false;
-        	mensajeWarning('Verificar los datos del numero de contrato', _p21_setActiveConcepto);
-        }
-      	else{
-      		if ((_fieldByName('numcontrato').getValue()=="0") && (_p21_smap1.cdunieco ==1403))
-        	{
-	        	valido=false;
-	        	mensajeWarning('Verificar los datos del numero de contrato', _p21_setActiveConcepto);
-        	}
-      	}
     }
     
     if(valido)

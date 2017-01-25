@@ -7254,9 +7254,6 @@ public class CotizacionAction extends PrincipalCoreAction
 				params.put("pv_otvalor16" , smap1.get("cdformaseg"));
 				params.put("pv_otvalor17" , smap1.get("cdperpag"));
 				params.put("pv_otvalor19" , smap1.get("morbilidad"));
-				//incorporando valor para guardar el numero de contrato en los tramites
-				params.put("pv_otvalor20", smap1.get("numcontrato"));
-				
 				kernelManager.pMovTvalopol(params);
 				
 				paso = "Guardando relaci\u00f3n p\u00f3liza - contratante";

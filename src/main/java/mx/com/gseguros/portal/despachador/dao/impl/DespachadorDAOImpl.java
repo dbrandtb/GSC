@@ -40,7 +40,7 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
 	
 	protected class RecuperarDatosClasificacionSucursalSP extends StoredProcedure {
 		protected RecuperarDatosClasificacionSucursalSP (DataSource dataSource) {
-			super(dataSource, "PKG_MESACONTROL.P_GET_TUNICLAS");
+			super(dataSource, "PKG_MESACONTROL_PRE.P_GET_TUNICLAS");
 			declareParameter(new SqlParameter("cdunieco", OracleTypes.VARCHAR));
 			String[] cols = new String[] {
 					"CDUNIECO" , "DSUNIECO" , "CDUNIZON" , "DESCRIPC",
@@ -100,7 +100,7 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
 	
 	protected class RecuperarPermisosTramiteSP extends StoredProcedure {
 		protected RecuperarPermisosTramiteSP (DataSource dataSource) {
-			super(dataSource, "PKG_MESACONTROL.P_GET_TUNIPERM");
+			super(dataSource, "PKG_MESACONTROL_PRE.P_GET_TUNIPERM");
 			declareParameter(new SqlParameter("cdtipflu"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdflujomc" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
