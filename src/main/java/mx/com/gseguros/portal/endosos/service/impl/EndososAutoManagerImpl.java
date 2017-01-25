@@ -24,13 +24,11 @@ import org.springframework.stereotype.Service;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
-import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
@@ -61,7 +59,6 @@ import mx.com.gseguros.portal.general.util.TipoFlotilla;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
-import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.rehabilitacion.dao.RehabilitacionDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -104,9 +101,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Autowired
 	private MesaControlDAO mesaControlDAO;
-	
-	@Autowired
-	private AutosSIGSDAO autosDAOSIGS;
 	
 	@Autowired
 	private ClienteDAO clienteDAOSIGS;
@@ -2077,7 +2071,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			try{
 				
-				Integer res = autosDAOSIGS.endosoAseguradoAlterno(paramsEnd);
+				Integer res = autosSIGSDAO.endosoAseguradoAlterno(paramsEnd);
 				
 				logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso: " + res);
 				
@@ -2164,7 +2158,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB"     , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
 					
-					Integer res = autosDAOSIGS.endosoAdaptacionesRC(paramsEnd);
+					Integer res = autosSIGSDAO.endosoAdaptacionesRC(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio AdaptacionesRC numero de endoso: " + res);
 					
@@ -2255,7 +2249,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vFEndoso"    , datosEnd.get("FEndoso"));
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					
-					Integer res = autosDAOSIGS.endosoVigenciaPol(paramsEnd);
+					Integer res = autosSIGSDAO.endosoVigenciaPol(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Vigencia, numero de endoso: " + res);
 					
@@ -2340,7 +2334,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vTexto"    , datosEnd.get("Texto"));
 					paramsEnd.put("vFEndoso"    , datosEnd.get("FEndoso"));
 					
-					Integer res = autosDAOSIGS.endosoTextoLibre(paramsEnd);
+					Integer res = autosSIGSDAO.endosoTextoLibre(paramsEnd);
 					
 					logger.debug("Respuesta de endosoTextoLibre, numero de endoso: " + res);
 					
@@ -2439,7 +2433,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			try{
 				
-				Integer res = autosDAOSIGS.endosoBeneficiario(paramsEnd);
+				Integer res = autosSIGSDAO.endosoBeneficiario(paramsEnd);
 				
 				logger.debug("Respuesta de Cambio Beneficiario numero de endoso: " + res);
 				
@@ -2526,7 +2520,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso", datosEnd.get("FEndoso"));
 					
-					Integer res = autosDAOSIGS.endosoPlacasMotor(paramsEnd);
+					Integer res = autosSIGSDAO.endosoPlacasMotor(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Placas Motor, numero de endoso: " + res);
 					
@@ -2614,7 +2608,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso", datosEnd.get("FEndoso"));
 					
-					Integer res = autosDAOSIGS.endosoTipoServicio(paramsEnd);
+					Integer res = autosSIGSDAO.endosoTipoServicio(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Tipo Servicio, numero de endoso: " + res);
 					
@@ -2701,7 +2695,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
 					
-					Integer res = autosDAOSIGS.endosoSerie(paramsEnd);
+					Integer res = autosSIGSDAO.endosoSerie(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Serie numero de endoso: " + res);
 					
@@ -6886,7 +6880,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						
 					try{
 						
-						String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+						String res = autosSIGSDAO.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 						String respuesta[] = res.split("\\|");
 						
 						if(Integer.parseInt(respuesta[0].toString()) == 0 ){
@@ -7032,7 +7026,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paramsEnd.put("vUSER"  , cdusuari);
 
 				endosoRecuperado = -1;
-				String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+				String res = autosSIGSDAO.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 				String respu[] = res.split("\\|");
 				logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso =========> : " + res);
 				
@@ -7187,7 +7181,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paramsEnd.put("vUSER"       , usuarioCaptura);
 			
 			endosoRecuperado = -1;
-			String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+			String res = autosSIGSDAO.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 			String respu[] = res.split("\\|");
 			if(Integer.parseInt(respu[0].toString()) == 0 ){
 				logger.error("Endoso Cambio AseguradoAlterno no exitoso: XX Sin numero de endoso.");
@@ -9110,7 +9104,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	                    paramsEnd.put("vEndoB"      , (endosoRecuperado==-1)?0:endosoRecuperado);
 	                    
 	                    
-	                    Integer res = autosDAOSIGS.EndoBeneficiarioVidaAuto(paramsEnd);
+	                    Integer res = autosSIGSDAO.EndoBeneficiarioVidaAuto(paramsEnd);
 	                    
 	                    logger.debug("Respuesta de Beneficiario Vida Auto, numero de endoso: " + res);
 	                    
