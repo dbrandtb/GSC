@@ -462,6 +462,11 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 								}else if(llave.startsWith("OTVALOR")){
 									llave = llave.replace("OTVALOR", "OTVALOR1");
 								}
+								
+								//EVITAMOS QUE PLANCHE EL PLAN consultasDAO.recuperarDatosIncisoEnNivelPoliza REGRESA NULL ESTATICAMENTE EN DSPLAN
+								if(llave.equals("DSPLAN") && valor==null){
+									continue;
+								}
 
 								resp.getSlist().get(0).put(llave, valor);
 								
