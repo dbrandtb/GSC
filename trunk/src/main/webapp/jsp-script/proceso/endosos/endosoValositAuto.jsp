@@ -302,13 +302,20 @@ Ext.onReady(function()
 										    jsonDatosConfirmacion.flujo = _p36_flujo;
 										}
 										_p36_store.each(function(record) {
-										    if(_p36_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto){
-										    	debug( record.get('DES_NUMERO_DE_SERIE'));
-										    	numSerie=(record.get('DES_NUMERO_DE_SERIE'));
-										    }else{
-										        debug( record.get('CVE_NUMERO_DE_SERIE'));
+											
+											try{
+											    if(_p36_smap1.CDRAMO==Ramo.ServicioPublico){
+											    	debug( record.get('DES_NUMERO_DE_SERIE'));
+											    	numSerie=(record.get('DES_NUMERO_DE_SERIE'));
+											    }else{
+											        debug( record.get('CVE_NUMERO_DE_SERIE'));
+	                                                numSerie=(record.get('CVE_NUMERO_DE_SERIE'));
+											    }
+											}catch(e){
+												debug( record.get('CVE_NUMERO_DE_SERIE'));
                                                 numSerie=(record.get('CVE_NUMERO_DE_SERIE'));
-										    }
+												debugError(e);
+											}
 									    });
 										debug('jsonDatosConfirmacion****',jsonDatosConfirmacion.slist1['OTVALOR99']);
 										//numSerie+=''+(record.get('parametros.pv_otvalor37'))+'|';
