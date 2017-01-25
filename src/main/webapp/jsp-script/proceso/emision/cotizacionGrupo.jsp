@@ -229,6 +229,7 @@ var _p21_editorNombrePlan=
     xtype       : 'textfield'
     ,allowBlank : true
     ,minLength  : 3
+    ,maxLength  : ([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? 40    : 150
     ,readOnly   : ([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? false : true
     ,sinmayus   : true
 };
@@ -2319,46 +2320,6 @@ function _p21_borrarGrupoClic(grid,rowIndex)
         }
     }));
     debug('<_p21_borrarGrupoClic');
-}
-
-function _verificaAprueba(){
-    
-    
-    if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ))
-    {
-        //alert('suscriptor');
-        var faltaAprobacion = _faltaAprobarNombrePlan;
-        
-        if(faltaAprobacion){
-            mensajeWarning('El Supervisor debe aprobar primero los cambios realizados a los nombres de plan editados.');    
-        }
-        
-        return faltaAprobacion;
-        
-    }else if(([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 )){
-        //alert('supervisor');
-        Ext.Ajax.request({
-            url     : _p21_urlLanzaAprobacionNombrePlan,
-            params  : {
-                'smap1.ntramite'    :  _p21_ntramite,
-                'smap1.tipobloqueo' : 'D'
-            },
-            success : function (response) {
-                var json=Ext.decode(response.responseText);
-                
-                if(!json.success){
-                    debugError('Error sin impacto al eliminar bloqueo para aprobacion de cambio de nombre de plan. ', json.respuesta);
-                }
-            },
-            failure : function () {
-                errorComunicacion(null, 'Error al lanzar validaci\u00f3n cambio de nombre plan');
-            }
-        }); 
-        
-        return false;
-    }
-    
-    return false;    
 }
 
 function _p21_editarGrupoClic(grid,rowIndex)
