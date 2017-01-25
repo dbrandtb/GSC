@@ -1297,12 +1297,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	//public void getEliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion) throws Exception {  (EGS)
-	public void getEliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion, String cdramo) throws Exception {	// (EGS)
-
+	public void getEliminacionFacturaTramite(String ntramite, String nfactura, String valorAccion) throws Exception {
 		try {
-			//siniestrosDAO.eliminacionFacturaTramite(ntramite, nfactura , valorAccion); (EGS)
-			siniestrosDAO.eliminacionFacturaTramite(ntramite, nfactura, valorAccion, cdramo); // (EGS)
+			siniestrosDAO.eliminacionFacturaTramite(ntramite, nfactura , valorAccion);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}

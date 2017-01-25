@@ -142,7 +142,7 @@ itemsCalendarioColumns.push({
 
 Ext.onReady(function()
 {
-    Ext.Ajax.timeout = 60*60*1000;
+    Ext.Ajax.timeout = 10*60*1000;
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
@@ -849,18 +849,18 @@ Ext.onReady(function()
 	                        {
 	                            text	: 'Guardar',
 	                            itemId  : 'panDatComBotonGuardar',
-	                            icon	: contexto+'/resources/fam3icons/icons/fam/accept.png',
+	                            icon	: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
 	                            handler	: function(){ _p29_actualizarCotizacion(null);}	
 	                        },
                             {
 	                            text		: 'Editar agentes',
-	                            icon		: contexto+'/resources/fam3icons/icons/fam/user_gray.png',
+	                            icon		: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png',
 	                            disabled	: true,
 	                            hidden		: true
 	                        },
 	                        {
 	                            text		: 'Editar documentos',
-	                            icon		: contexto+'/resources/fam3icons/icons/fam/book.png',
+	                            icon		: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png',
 	                            disabled	: true,
 	                            hidden		: true
 	                        },
@@ -3044,7 +3044,7 @@ function tarifaFinal(){
             _unmask();
             var json=Ext.decode(response.responseText);
             debug('json ',json);
-            if(!Ext.isEmpty(json.slist1) && Ext.isEmpty(json.mensajeRespuesta)){
+            if(!Ext.isEmpty(json.slist1)){
             	if(json.slist1.length > 0){
 			            datos = [];
 			            for(var i = 0; i < json.slist1.length; i++){
@@ -3093,7 +3093,6 @@ function tarifaFinal(){
 			                                	_unmask();
 			                                    var resp = Ext.decode(response.responseText);
 			                                   	var list = resp.slist1;
-			                                   	debug('resp',resp);
 			                                	if(resp.success==true && list.length > 0){
 			                                		wineditarContratante.resRenova['nmpolizaNew'] = list[0]['nmpolizaNew'];
 			                                		wineditarContratante.resRenova['nmsuplemNew'] = list[0]['nmsuplemNew'];
@@ -3219,35 +3218,20 @@ function tarifaFinal(){
 				                        }				                        
 				                    }
 				                }
-			    			],
-			    			listeners : {
-                                afterrender : function(me){
-                                    try{
-                                        debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
-                                        if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
-                                            setTimeout(function(){ 
-                                                mensajeWarning(json.panel1['mensajeAgenteActivo']); 
-                                            }, 3000);
-                                        }
-                                    }
-                                    catch(e){
-                                        debugError(e);
-                                    }
-                                }
-                            }
+			    			]
 							}).mostrar();
             	}
             }
             else{
-            	/* if(json.mensajeRespuesta === 'Favor de verificar los datos adicionales correspondientes al Descuento por Nómina'){ */            	    
-            	    mostrarMensajeVentana('El tramite # ' + wineditarContratante.resRenova['ntramite'] + ' se turnara a suscripción para completar información.');
+            	if(json.mensajeRespuesta === 'Favor de verificar los datos adicionales correspondientes al Descuento por Nómina'){            	    
+            	    mostrarMensajeVentana('El tramite # ' + wineditarContratante.resRenova['ntramite'] + ' se turnara a suscripción para completar información DXN.');
             	    setTimeout(function(){ 
             	        turnar(wineditarContratante.resRenova['ntramite']) 
             	    }, 3000);
-            	/* }
+            	}
             	else{
             	    mensajeError(json.mensajeRespuesta);
-            	} */
+            	}
             }
         }
         ,failure : function()
@@ -3603,7 +3587,7 @@ function agregaCalendario(){
              _unmask();
              var json=Ext.decode(response.responseText);
              debug('json ',json);
-             if(!Ext.isEmpty(json.slist1) && Ext.isEmpty(json.mensajeRespuesta)){
+             if(!Ext.isEmpty(json.slist1)){
                  if(json.slist1.length > 0){
                      datos = [];
                      for(var i = 0; i < json.slist1.length; i++){
@@ -3652,8 +3636,7 @@ function agregaCalendario(){
                                              _unmask();
                                              var resp = Ext.decode(response.responseText);
                                              var list = resp.slist1;
-                                             debug('resp',resp);
-                                             if(resp.success==true && list != null){
+                                             if(resp.success==true && list.length > 0){
                                                  resRenova['nmpolizaNew'] = list[0]['nmpolizaNew'];
                                                  resRenova['nmsuplemNew'] = list[0]['nmsuplemNew'];
                                                  _fieldById('botonEmitirPolizaFinal').disable();
@@ -3774,31 +3757,12 @@ function agregaCalendario(){
                                      }                                       
                                  }
                              }
-                         ],
-                         listeners : {
-                             afterrender : function(me){
-                                 try{
-                                     debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
-                                     if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
-                                         setTimeout(function(){ 
-                                             mensajeWarning(json.panel1['mensajeAgenteActivo']); 
-                                         }, 3000);
-                                     }
-                                 }
-                                 catch(e){
-                                     debugError(e);
-                                 }
-                             }
-                         }
+                         ]
                      }).mostrar();
                  }
              }
              else{
-                 mostrarMensajeVentana('El tramite # ' + resRenova['ntramite'] + ' se turnara a suscripción para completar información.');
-                 setTimeout(function(){ 
-                     turnar(resRenova['ntramite']) 
-                 }, 3000);
-                 /* mensajeError(json.mensajeRespuesta); */
+                 mensajeError(json.mensajeRespuesta);
              }
          },
          failure : function(){

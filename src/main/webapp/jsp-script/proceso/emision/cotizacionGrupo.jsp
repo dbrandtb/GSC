@@ -229,9 +229,7 @@ var _p21_editorNombrePlan=
     xtype       : 'textfield'
     ,allowBlank : true
     ,minLength  : 3
-    ,maxLength  : ([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? 40    : 150
     ,readOnly   : ([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? false : true
-    ,sinmayus   : true
 };
 
 var _p21_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
@@ -341,7 +339,6 @@ Ext.onReady(function()
             ,'bonoince'
             ,'otrogast'
             ,'paquete'
-            ,'cdplanorig'
         ]
     });
     
@@ -543,12 +540,6 @@ Ext.onReady(function()
                     }
                 }
                 ,{
-                    header     : 'Nombre del Plan'
-                    ,dataIndex : 'dsplanl'
-                    ,width     : 380
-                    ,editor    : _p21_editorNombrePlan
-                }
-                ,{
                     header     : 'Paquete'
                     ,dataIndex : 'paquete'
                     ,width     : 120
@@ -653,12 +644,6 @@ Ext.onReady(function()
                         {
                             _p21_estiloEditores(context.record.get('cdplan'));
                         }
-                    },
-                    edit: function(editor,context){
-                    	var editedRecord = context.record;
-                    	if(!Ext.isEmpty(editedRecord.get('dsplanl'))){
-                    		editedRecord.set('dsplanl',editedRecord.get('dsplanl').toUpperCase());
-                    	}
                     }
                 }
             })
@@ -779,12 +764,6 @@ Ext.onReady(function()
                     {
                         return rendererColumnasDinamico(v,'ptsumaaseg');
                     }
-                },
-                {
-                    header     : 'Plan Original'
-                    ,dataIndex : 'cdplanorig'
-                    ,hidden    : true
-                    ,width     : 120
                 }
                 ,{
                     xtype         : 'actioncolumn'
@@ -826,13 +805,11 @@ Ext.onReady(function()
                         {
                             _p21_estiloEditores(context.record.get('cdplan'));
                         }
-                    },
+                    }/*,
                     edit: function(editor,context){
                     	var editedRecord = context.record;
-                    	if(!Ext.isEmpty(editedRecord.get('dsplanl'))){
-                    		editedRecord.set('dsplanl',editedRecord.get('dsplanl').toUpperCase());
-                    	}
-                    }
+                    	alert(editedRecord.get('cdplan'));
+                    }*/
                 }
             })
         })
@@ -2322,6 +2299,46 @@ function _p21_borrarGrupoClic(grid,rowIndex)
     debug('<_p21_borrarGrupoClic');
 }
 
+function _verificaAprueba(){
+    
+    
+    if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) &&(_p21_clasif==_p21_TARIFA_MODIFICADA))
+    {
+        //alert('suscriptor');
+        var faltaAprobacion = _faltaAprobarNombrePlan;
+        
+        if(faltaAprobacion){
+            mensajeWarning('El Supervisor debe aprobar primero los cambios realizados a los nombres de plan editados.');    
+        }
+        
+        return faltaAprobacion;
+        
+    }else if(([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) &&(_p21_clasif==_p21_TARIFA_MODIFICADA)){
+        //alert('supervisor');
+        Ext.Ajax.request({
+            url     : _p21_urlLanzaAprobacionNombrePlan,
+            params  : {
+                'smap1.ntramite'    :  _p21_ntramite,
+                'smap1.tipobloqueo' : 'D'
+            },
+            success : function (response) {
+                var json=Ext.decode(response.responseText);
+                
+                if(!json.success){
+                    debugError('Error sin impacto al eliminar bloqueo para aprobacion de cambio de nombre de plan. ', json.respuesta);
+                }
+            },
+            failure : function () {
+                errorComunicacion(null, 'Error al lanzar validaci\u00f3n cambio de nombre plan');
+            }
+        }); 
+        
+        return false;
+    }
+    
+    return false;    
+}
+
 function _p21_editarGrupoClic(grid,rowIndex)
 {
 	var gridGrupos  = grid.up();
@@ -2387,15 +2404,14 @@ function _p21_editarGrupoClic(grid,rowIndex)
                             url      : _p21_urlObtenerHijosCobertura
                             ,params  :
                             {
-                                'smap1.cdramo'      : _p21_smap1.cdramo
-                                ,'smap1.cdtipsit'   : _p21_smap1.cdtipsit
-                                ,'smap1.cdplan'     : record.get('cdplan')
-                                ,'smap1.cdgarant'   : json.slist1[i].CDGARANT
-                                ,'smap1.indice'     : i
-                                ,'smap1.cdtipsup'   : _p21_cdtipsup
-                                ,'smap1.nmpolant'   : _p21_smap1.nmpolant
-                                ,'smap1.cdgrupo'    : record.get('letra')
-                                ,'smap1.cdplanOrig' : record.get('cdplanorig')
+                                'smap1.cdramo'    : _p21_smap1.cdramo
+                                ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+                                ,'smap1.cdplan'   : record.get('cdplan')
+                                ,'smap1.cdgarant' : json.slist1[i].CDGARANT
+                                ,'smap1.indice'   : i
+                                ,'smap1.cdtipsup' : _p21_cdtipsup
+                                ,'smap1.nmpolant' : _p21_smap1.nmpolant
+                                ,'smap1.cdgrupo'  : record.get('letra')
                             }
                             ,success : function(response)
                             {
@@ -3519,7 +3535,7 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
              storeFactores.commitChanges();
          }
          
-         if(_p21_smap1.LINEA_EXTENDIDA != 'S'){
+         if(_p21_clasif == _p21_TARIFA_MODIFICADA){
          
 	         var smap1p = {
 	        		 cdramo  : _p21_smap1.cdramo,
@@ -3660,45 +3676,44 @@ function _p21_setActiveTab(itemId)
 
 function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
 {
-	
     debug('>_p21_editorPlanChange new',newValue,'old',oldValue+'x');
     if(!Ext.isEmpty(oldValue)&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')&&_p21_semaforoPlanChange)
     {
-    	
         centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Al cambiar el plan se borrar&aacute; el detalle del subgrupo<br/>¿Desea continuar?', function(btn)
         {
             if(btn == 'yes')
             {
-            	_p21_cdplanOriginal = oldValue;
                 var record = _p21_query('#'+_p21_tabGrupos.itemId)[0].items.items[0].getSelectionModel().getSelection()[0];
                 debug('record:',record);
                 var letra  = record.get('letra');
                 debug('letra:',letra);
                 record.valido = false;
                 
-                /**
-                 * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
-                 * descripcion de plan que se esta editando
-                 **/
-                
-                var gridGps =  combo.up().up(); 
-                var recordGrpo = gridGps.getSelectionModel().getLastSelected();
-                var indexDsplanL = 0;
-                
-                Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
-                    if(columnGpo.dataIndex == "dsplanl"){
-                        indexDsplanL = indexCol;
-                        return false;
-                    }
-                });
-                
-                var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
-                texDsplanL.setValue(combo.getRawValue());
-                recordGrpo.commit(false,['dsplanl']);
-                
-                /**
-                 * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
-                 **/
+                if(_p21_clasif == _p21_TARIFA_MODIFICADA){
+	                /**
+	                 * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
+	                 * descripcion de plan que se esta editando
+	                 **/
+	                
+	                var gridGps =  combo.up().up(); 
+	                var recordGrpo = gridGps.getSelectionModel().getLastSelected();
+	                var indexDsplanL = 0;
+	                
+	                Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
+	                    if(columnGpo.dataIndex == "dsplanl"){
+	                        indexDsplanL = indexCol;
+	                        return false;
+	                    }
+	                });
+	                
+	                var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
+	                texDsplanL.setValue(combo.getRawValue());
+	                recordGrpo.commit(false,['dsplanl']);
+	                
+	                /**
+	                 * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
+	                 **/
+	            }
                 
                 _p21_quitarTabsDetalleGrupo(letra);
             }
@@ -3709,30 +3724,32 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
                 _p21_semaforoPlanChange = true;
             }
         }));
-    }else if(_p21_semaforoPlanChange){
-        /**
-         * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
-         * descripcion de plan que se esta editando
-         **/
-        
-        var gridGps =  combo.up().up(); 
-        var recordGrpo = gridGps.getSelectionModel().getLastSelected();
-        var indexDsplanL = 0;
-        
-        Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
-            if(columnGpo.dataIndex == "dsplanl"){
-                indexDsplanL = indexCol;
-                return false;
-            }
-        });
-        
-        var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
-        texDsplanL.setValue(combo.getRawValue());
-        recordGrpo.commit(false,['dsplanl']);
-        
-        /**
-         * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
-         **/
+    }else if(Ext.isEmpty(oldValue)&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')&&_p21_semaforoPlanChange){
+        if(_p21_clasif == _p21_TARIFA_MODIFICADA){
+            /**
+             * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
+             * descripcion de plan que se esta editando
+             **/
+            
+            var gridGps =  combo.up().up(); 
+            var recordGrpo = gridGps.getSelectionModel().getLastSelected();
+            var indexDsplanL = 0;
+            
+            Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
+                if(columnGpo.dataIndex == "dsplanl"){
+                    indexDsplanL = indexCol;
+                    return false;
+                }
+            });
+            
+            var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
+            texDsplanL.setValue(combo.getRawValue());
+            recordGrpo.commit(false,['dsplanl']);
+            
+            /**
+             * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
+             **/
+        }
     }
     
     if(newValue+'x'!='x'&&_p21_clasif==_p21_TARIFA_LINEA&&_p21_smap1.LINEA_EXTENDIDA=='S')
@@ -3789,21 +3806,6 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
         {
             mensajeWarning('Verificar los datos del concepto y el censo de asegurados',_p21_setActiveConcepto);
         }
-        
-        debug("numcontrato",_fieldByName('numcontrato').getValue() );
-      	//parche para numcontrato>
-      	if ((_fieldByName('numcontrato').getValue()=="") || (Ext.isEmpty(_fieldByName('numcontrato')) ) || (_fieldByName('numcontrato').getValue()==null))
-        {
-        	valido=false;
-        	mensajeWarning('Verificar los datos del numero de contrato', _p21_setActiveConcepto);
-        }
-      	else{
-      		if ((_fieldByName('numcontrato').getValue()=="0") && (_p21_smap1.cdunieco ==1403))
-        	{
-	        	valido=false;
-	        	mensajeWarning('Verificar los datos del numero de contrato', _p21_setActiveConcepto);
-        	}
-      	}
     }
     
     if(valido)
@@ -3948,18 +3950,6 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                             if([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 
                                     &&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N'))
                             {
-                             
-                                var ntramiteGen = _p21_ntramite;
-                                if(_p21_ntramite == false || Ext.isEmpty(_p21_ntramite))
-                                {
-                                    if(_p21_ntramiteVacio == false || Ext.isEmpty(_p21_ntramiteVacio)){
-                                        ntramiteGen = json.smap1.ntramite;
-                                    }else{
-                                        ntramiteGen = _p21_ntramiteVacio;
-                                    }
-                                    
-                                }
-                                
                                 var lanzaAprobacion = false;
                                 _p21_storeGrupos.each(function(record)
                                 {
@@ -3975,7 +3965,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                     Ext.Ajax.request({
                                         url     : _p21_urlLanzaAprobacionNombrePlan,
                                         params  : {
-                                            'smap1.ntramite'    :  ntramiteGen,
+                                            'smap1.ntramite'    :  _p21_ntramite,
                                             'smap1.tipobloqueo' : 'B'
                                         },
                                         success : function (response) {
@@ -4218,7 +4208,6 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                             }
                             else
                             {
-                                _p21_smap1.ntramite = json.smap1.ntramite;
                                 _p21_fieldNmpoliza().setValue(json.smap1.nmpoliza);
                                 _p21_fieldNtramite().setValue(json.smap1.ntramite);
                                 _p21_tabpanel().setDisabled(true);
@@ -7599,6 +7588,47 @@ function _p21_editarCoberturas(grid,row)
         }).show());
     });
     debug('<_p21_editarCoberturas');
+}
+
+function _p21_editarExclusiones(grid,row)
+{
+    var record=grid.getStore().getAt(row);
+    debug('>_p21_editarExclusiones record:',record.data);
+    _p21_guardarAsegurados(grid,function()
+    {
+        var ventana=Ext.create('Ext.window.Window',
+        {
+            title   : 'Editar exclusiones de '+(record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO'))
+            ,width  : 900
+            ,height : 500
+            ,modal  : true
+            ,loader :
+            {
+                url       : _p21_urlEditarExclusiones
+                ,params   :
+                {
+                    'smap1.pv_cdunieco'      : _p21_smap1.cdunieco
+                    ,'smap1.pv_cdramo'       : _p21_smap1.cdramo
+                    ,'smap1.pv_estado'       : _p21_smap1.estado
+                    ,'smap1.pv_nmpoliza'     : _p21_smap1.nmpoliza
+                    ,'smap1.pv_nmsituac'     : record.get('NMSITUAC')
+                    ,'smap1.pv_nmsuplem'     : '0'
+                    ,'smap1.pv_cdperson'     : record.get('CDPERSON')
+                    ,'smap1.pv_cdrol'        : record.get('CDROL')
+                    ,'smap1.nombreAsegurado' : record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO')
+                    ,'smap1.cdrfc'           : record.get('RFC')
+                }
+                ,scripts  : true
+                ,autoLoad : true
+            }
+        }).show()
+        centrarVentanaInterna(ventana);
+        expande = function()
+        {
+            ventana.destroy();
+        }
+    });
+    debug('<_p21_editarExclusiones');
 }
 
 /*

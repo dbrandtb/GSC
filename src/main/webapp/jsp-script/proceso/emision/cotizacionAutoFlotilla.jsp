@@ -307,8 +307,7 @@ var _p30_panel7Items =
         {
            type    : 'table'
           ,columns : 1
-          ,style   : 'width:7px !important;'
-          ,align   : 'right'
+          ,style   : 'width:10px !important;'
        }
        ,border : 0
        ,items  :
@@ -320,13 +319,11 @@ var _p30_panel7Items =
                 ,name        : 'sucursal'               
                 ,sinOverride : true
                 ,labelWidth  : 170
-                ,style       : 'margin:0px;margin-left:5px;'//'margin:5px;margin-left:15px;width:20px !important;'
-                ,value       : !Ext.isEmpty(_p30_smap1.renuniext) ? _p30_smap1.renuniext : ''
+                ,style       : 'margin:5px;margin-left:15px;'//'margin:5px;margin-left:15px;width:20px !important;'
                 ,listeners   :
                 {
                     change : _p30_nmpolizaChange
                 }
-                ,readOnly    :  true 
             }
            ,{
                     xtype       : 'numberfield'
@@ -335,13 +332,11 @@ var _p30_panel7Items =
                    ,name        : 'ramo'                   
                    ,sinOverride : true                   
                    ,labelWidth  : 170
-                   ,style       : 'margin:0px;margin-left:5px;'//'width : 30px !important;'
-                   ,value       : !Ext.isEmpty(_p30_smap1.renramo) ? _p30_smap1.renramo : ''
+                   ,style       : 'margin:5px;margin-left:15px;'//'width : 30px !important;'
                    ,listeners   :
                    {
                        change : _p30_nmpolizaChange
                    }
-                   ,readOnly    :  true 
               }
              ,{
                   xtype       : 'numberfield'
@@ -350,22 +345,20 @@ var _p30_panel7Items =
                  ,name        : 'poliza'
                  ,sinOverride : true                 
                  ,labelWidth  : 170
-                 ,style       : 'margin:0px;margin-left:5px;'//'width : 50px !important;'
-                 ,value       : !Ext.isEmpty(_p30_smap1.renpoliex) ? _p30_smap1.renpoliex : ''
+                 ,style       : 'margin:5px;margin-left:15px;'//'width : 50px !important;'
                  ,listeners   :
                  {
                      change : _p30_nmpolizaChange
                  }
-                 ,readOnly    :  true 
            }
-//           ,{
-//                  xtype   : 'button'
-//                 ,itemId  : '_p30_botonCargarPoliza'
-//                 ,text    : 'BUSCAR'
-//                 ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-//                 ,style   : 'margin-right'
-//                 //,handler : _p30_cargarPoliza
-//           }
+          ,{
+                 xtype   : 'button'
+                ,itemId  : '_p30_botonCargarPoliza'
+                ,text    : 'BUSCAR'
+                ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                ,style   : 'margin-right'
+                //,handler : _p30_cargarPoliza
+          }
        ]
     }
  ];
@@ -1024,11 +1017,11 @@ Ext.onReady(function()
     }
     ,{
         xtype   : 'fieldset'
-        ,itemId : '_p30_fieldBusquedaPoliza'
-        ,width  : 300
+        ,itemId : '_p28_fieldBusquedaPoliza'
+        ,width  : 435
         ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
         ,items  : _p30_panel7Items
-        ,hidden : !Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
+        ,hidden : true
       }
     );
     
@@ -4207,33 +4200,33 @@ function _p30_cotizar(sinTarificar)
             }
     	}
     	
-//    	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
-//    	     try 
-//    	     {
-//    	         _p30_store.each
-//    	         (
-//    	          function(record)
-//    	             {
-//    	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1)
-//    	                {
-//    	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-//    	                    if(record.get(tipoVehiName)-0==2){
-//    	                        record.cdtipsit_panel = 'PC';
-//    	                    }
-//    	                    else if(record.get(tipoVehiName)-0==4)
-//    	                    {
-//    	                        record.cdtipsit_panel = 'TC';
-//    	                    }else if(record.get(tipoVehiName)-0==13)
-//    	                    {
-//    	                        record.cdtipsit_panel = 'RQ';
-//    	                    }
-//    	                }
-//    	             }
-//    	         );
-//    	     }catch (e) 
-//    	     {
-//    	        debug(e);//debugError , ck
-//    	     }
+   	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
+   	     try 
+   	     {
+   	         _p30_store.each
+   	         (
+   	          function(record)
+   	             {
+   	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1)
+   	                {
+   	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+   	                    if(record.get(tipoVehiName)-0==2){
+   	                        record.cdtipsit_panel = 'PC';
+   	                    }
+   	                    else if(record.get(tipoVehiName)-0==4)
+   	                    {
+   	                        record.cdtipsit_panel = 'TC';
+   	                    }else if(record.get(tipoVehiName)-0==13)
+   	                    {
+   	                        record.cdtipsit_panel = 'RQ';
+   	                    }
+   	                }
+   	             }
+   	         );
+   	     }catch (e) 
+   	     {
+   	        debug(e);//debugError , ck
+   	     }
     }
     
     if(valido)
@@ -4564,7 +4557,7 @@ function _p30_cotizar(sinTarificar)
         //crear record con los valores del formulario y el formulario oculto
         
         debug('>>> json a enviar:',json);
-
+        
         var panelpri = _fieldById('_p30_panelpri');
         panelpri.setLoading(true);
         Ext.Ajax.request(
@@ -4621,14 +4614,6 @@ function _p30_cotizar(sinTarificar)
                             ,value : 'Si desea aplicar un RECARGO seleccione el porcentaje menor a 0%'
                         }
                     ];
-                    
-                    var itemAntRefPol =
-                        [
-                            {
-                                xtype  : 'displayfield'
-                                ,value : 'Forma de pago de p\u00f3liza a renovar: '+json.smap1.fila
-                            }
-                        ];
                     
                     <s:if test='%{getImap().get("panel5Items")!=null}'>
                         var itemsaux = [<s:property value="imap.panel5Items" />];
@@ -4717,12 +4702,6 @@ function _p30_cotizar(sinTarificar)
                                 xtype  : 'fieldset'
                                 ,title : '<span style="font:bold 14px Calibri;">DESCUENTO DE AGENTE</span>'
                                 ,items : itemsDescuento
-                            }
-                            ,{
-                                xtype  : 'fieldset'
-                                ,title : '<span style="font:bold 14px Calibri;">Datos de Renovacion</span>'
-                                ,items : itemAntRefPol
-                                ,hidden:  !Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
                             }
                         ]
                         ,buttonAlign : 'right'
@@ -4816,22 +4795,11 @@ function _p30_cotizar(sinTarificar)
                                         {
                                             var gridTarifas = _fieldById('_p30_gridTarifas').down('grid');
                                             var sm = gridTarifas.getSelectionModel();
-                                            try
-                                            {
-                                                var columna=1 ,fila=999; 
-                                                
-                                                for(var IteGriTar=0;IteGriTar<17;IteGriTar++)
-                                                {
-                                                    sm.select({row:IteGriTar,column:columna});
-                                                    var texto = (sm.getSelection({row:IteGriTar,column:columna})[0].data.DSPERPAG).toLowerCase()
-                                                    if(json.smap1.fila.toLowerCase() === texto)
-                                                    {
-                                                          fila = IteGriTar;
-                                                          IteGriTar = 18;
-                                                    }
-                                                }
-                                                
-                                                sm.select({row:fila,column:columna});
+                                            try{
+                                                if(sm.select({row:Number(json.smap1.fila),column:Number(json.smap1.columna)}))
+                                                 {
+                                                    sm.select({row:Number(json.smap1.fila),column:Number(json.smap1.columna)});
+                                                 }
                                              }catch(e) {
                                                debug("Excede rango fuera de la cuadricula de tarifas");
                                              }
@@ -6843,7 +6811,6 @@ function _p30_confirmarEndoso()
 														function (me){
 			                                                boton.setText('Cargando...');
 			                                                boton.setDisabled(true);
-			                                                
 			                                                var json2 =
 															        {
 															            smap1 : {
@@ -6866,7 +6833,7 @@ function _p30_confirmarEndoso()
 															        });
 															        
 															if(!Ext.isEmpty(_p30_flujo)) {
-                                                                json2.flujo = _p30_flujo;
+                                                                json.flujo = _p30_flujo;
                                                             }       
                                                             
 			                                                Ext.Ajax.request( {

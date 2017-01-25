@@ -173,10 +173,10 @@ Ext.onReady(function()
 		                    me.setText('Cargando...');
 		                    json.smap1['confirmar'] = 'no';
 		                    
-		                    /*if(!Ext.isEmpty(_p44_flujo))
+		                    if(!Ext.isEmpty(_p44_flujo))
                             {
                                 json.flujo = _p44_flujo;
-                            }*/
+                            }
                             
 		                    Ext.Ajax.request(
 		                    {

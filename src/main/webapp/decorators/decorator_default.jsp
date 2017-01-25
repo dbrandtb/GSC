@@ -92,13 +92,6 @@
         
     </head>
     <body>
-        <s:if test="%{#session != null && #session.containsKey('ES_MOVIL') && #session['ES_MOVIL'] == true }">
-            <!-- MOVIL -->
-            <a href="${ctx}" onclick="_mask();" ><img src="${ctx}/resources/images/boton_menu_principal_movil.png" /></a>
-        </s:if>
-        <s:else>
-            <!-- DESKTOP -->
-        </s:else>
         <decorator:body />
     </body>
 </html>

@@ -877,14 +877,12 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 		Map<String, Object> mapResult  = ejecutaSP(new ObtieneTipoCliWS(getDataSource()), params);
 		resp = (Integer) mapResult.get("rs");
 		
-		logger.debug("<<<<>>>> Respuesta de tipo cliente obtienido GS:"+resp);
-		
 		return resp;
 	}
 	
 	public class ObtieneTipoCliWS extends StoredProcedure{
 		protected ObtieneTipoCliWS(DataSource dataSource){
-			super(dataSource, "sp_PolizasXCliente");
+			super(dataSource, "sp_PolizasXCliente2");
 			
 			declareParameter(new SqlParameter("vNumCliente", Types.INTEGER));
 			declareParameter(new SqlParameter("vTipoCliente", Types.SMALLINT));

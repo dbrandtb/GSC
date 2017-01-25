@@ -557,7 +557,6 @@ function _p29_emitirClicComplementarios()
 	                                            {
 	                                                debugError(e);
 	                                            }
-	                                            	                                            
 	                                            Ext.create('Ext.window.Window',
 	                                            {
 	                                                title: 'Tarifa final',
@@ -1141,22 +1140,7 @@ function _p29_emitirClicComplementarios()
 	                                                                    me.up().up().destroy();
 	                                                                }
 	                                                            }
-	                                                        ],
-	                                                        listeners : {
-	                                                            afterrender : function(me){
-	                                                                try{
-	                                                                    debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
-	                                                                    if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
-	                                                                        setTimeout(function(){ 
-	                                                                            mensajeWarning(json.panel1['mensajeAgenteActivo']); 
-	                                                                        }, 3000);
-	                                                                    }
-	                                                                }
-	                                                                catch(e){
-	                                                                    debugError(e);
-	                                                                }
-	                                                            }
-	                                                        }
+	                                                        ]
 	                                                    })
 	                                                ]
 	                                            }).showAt(50,50);
@@ -1874,7 +1858,7 @@ function _p29_emitirClicComplementarios()
 		                    [
 		                        {
 		                            text:'Guardar',
-		                            icon: contexto+'/resources/fam3icons/icons/fam/accept.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
 		                            handler: function(){ _p29_guardarComplementario(null);}	
 		                        },
 		                        {
@@ -1899,7 +1883,7 @@ function _p29_emitirClicComplementarios()
 		                        {
 		                            text:'Editar asegurados',
 		                            hidden:true,
-		                            icon: contexto+'/resources/fam3icons/icons/fam/user.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user.png',
 		                            handler:function(){
 		                                Ext.create('Ext.form.Panel').submit({
 		                                    url : urlEditarAsegurados,
@@ -1916,13 +1900,13 @@ function _p29_emitirClicComplementarios()
 		                        --%>
 		                        {
 		                            text:'Editar agentes',
-		                            icon: contexto+'/resources/fam3icons/icons/fam/user_gray.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png',
 		                            disabled:true,
 		                            hidden:true
 		                        },
 		                        {
 		                            text:'Editar documentos',
-		                            icon: contexto+'/resources/fam3icons/icons/fam/book.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png',
 		                            disabled:true,
 		                            hidden:true
 		                        }

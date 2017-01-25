@@ -932,23 +932,20 @@ public class RenovacionManagerImpl implements RenovacionManager
 						"33",//tipMov 33 para Renovacion
 						usuario);
 			}
-//			paso     = "antes de generar documentos";	
-			/**
-			 * Se comenta porque la generacion la hace desde el procedure
-			 */
-//			documentosManager.generarDocumentosParametrizados(
-//					cdunieco,
-//					cdramo,
-//					"M",//estado,
-//					nmpolizaNew,
-//					"0", //nmsituac
-//					nmsuplemNew,
-//					DocumentosManager.PROCESO_EMISION,
-//					ntramite,
-//					null, //nmsolici
-//					null
-//					);
-//			paso  = "antes de generar documentos";
+			paso     = "antes de generar documentos";	
+			documentosManager.generarDocumentosParametrizados(
+					cdunieco,
+					cdramo,
+					"M",//estado,
+					nmpolizaNew,
+					"0", //nmsituac
+					nmsuplemNew,
+					DocumentosManager.PROCESO_EMISION,
+					ntramite,
+					null, //nmsolici
+					null
+					);
+			paso  = "antes de generar documentos";
 //			smap1 = renovacionDAO.confirmarTramite(cdunieco, cdramo, estado, nmpoliza, cdperpag, feefecto);
 //			logger.info(new StringBuilder().append("\n@@@@@@ smap1=").append(smap1).toString());
 		}catch(Exception ex){

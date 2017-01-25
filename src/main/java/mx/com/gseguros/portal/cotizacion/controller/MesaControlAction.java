@@ -27,9 +27,9 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.despachador.model.RespuestaDespachadorVO;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
-import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
@@ -85,9 +85,6 @@ public class MesaControlAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
-	
-	@Autowired
-    private EndososAutoManager endososAutoManager;
 	
 	public String principal()
 	{
@@ -1093,14 +1090,6 @@ public class MesaControlAction extends PrincipalCoreAction
 			{
 				omap.put((String)entry.getKey(),entry.getValue());//se pasa de smap1 a omap
 			}
-			
-			/*Se Agrega validacion al crear un trámite en la mesa de control antigua la validación de agente
-             * */
-			endososAutoManager.validacionSigsAgente(  (String)omap.get("pv_cdagente_i")
-                                                    , (String)omap.get("pv_cdramo_i")
-                                                    , (String)omap.get("pv_cdtipsit_i")
-                                                    , "A");
-			
 			omap.put("pv_cdunieco_i",smap1.get("pv_cdsucdoc_i"));//se parcha porque requiere el mismo valor
 			omap.put("pv_ferecepc_i",renderFechas.parse((String)omap.get("pv_ferecepc_i")));//se convierte String a Date
 			omap.put("pv_festatus_i",renderFechas.parse((String)omap.get("pv_festatus_i")));//se convierte String a Date
@@ -1415,8 +1404,6 @@ public class MesaControlAction extends PrincipalCoreAction
         logger.debug("slist1: "+slist1);
         try
         {
-            this.session = ActionContext.getContext().getSession();
-            UserVO usuario = Utils.validateSession(session);
             
             Utils.validate(smap1, "No hay datos para reasignar tramite");
             Utils.validate(smap1, "No hay lista de tramites para reasignar");
@@ -1428,10 +1415,24 @@ public class MesaControlAction extends PrincipalCoreAction
             
             for(Map<String,String> tramite : slist1){
                 String ntramite = tramite.get("NTRAMITE");
-                String mensaje = despachadorManager.despacharPorZona(ntramite, zonaReasig, usuario.getUser(),
-                        usuario.getRolActivo().getClave());
+                RespuestaDespachadorVO reasignado = despachadorManager.despacharPorZona(ntramite, zonaReasig);
                 
-                resultadosReasignacion = Utils.join(resultadosReasignacion, "<br/>* ", mensaje);
+                String paso = "Recuperando nombre de usuario";
+                logger.debug(paso);
+                String dsusuari = despachadorManager.recuperarNombreUsuario(reasignado.getCdusuari());
+                
+                paso = "Recuperando descripci\u00f3n de estatus";
+                logger.debug(paso);
+                String dsstatus = despachadorManager.recuperarDescripcionEstatus(reasignado.getStatus());
+                
+                paso = "Recuperando descripci\u00f3n de rol";
+                logger.debug(paso);
+                String dssisrol = despachadorManager.recuperarDescripcionRol(reasignado.getCdsisrol());
+                
+                
+                resultadosReasignacion = Utils.join(resultadosReasignacion, "<br/>* Tr\u00e1mite ", ntramite, " enviado a ", dsusuari, " (", reasignado.getCdusuari().toUpperCase(),
+                        ", sucursal ", reasignado.getCdunieco(), ", rol ", dssisrol,") en estatus \"",
+                        dsstatus,"\"");
             }
             
             logger.debug(Utils.log("Resultado final de Reasignacion de tramites: ", resultadosReasignacion));

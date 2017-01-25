@@ -6,13 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import mx.com.gseguros.portal.general.dao.ReportesDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.ParamReporteVO;
 import mx.com.gseguros.portal.general.model.ReporteVO;
 import mx.com.gseguros.portal.general.service.ReportesManager;
-
-import org.apache.log4j.Logger;
+import mx.com.gseguros.utils.Utils;
 
 public class ReportesManagerImpl implements ReportesManager {
 	
@@ -32,7 +33,7 @@ public class ReportesManagerImpl implements ReportesManager {
 	public List<ComponenteVO> obtenerParametrosReportes(String cdreporte, String cdPantalla, String cdSeccion) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdreporte_i",  cdreporte);
-		params.put("pv_cdpantalla_i", cdPantalla);
+		params.put("pv_cdpantalla_i", Utils.join(cdPantalla, "_PRE"));// TODO: Eliminar _PRE cuando se de el VoBo.
 		params.put("pv_cdseccion_i",  cdSeccion);
 		return reportesDAO.obtenerParametrosReporte(params);
 	}

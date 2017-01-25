@@ -19,7 +19,6 @@ var _ejecutaQuery  			= '<s:url namespace="/consultasPoliza" action="ejecutaQuer
 
 Ext.onReady(function()
 {
-    Ext.Ajax.timeout = 30*60*1000;
     ////// modelos //////
     ////// modelos //////
     
