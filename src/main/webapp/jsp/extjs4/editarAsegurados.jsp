@@ -463,7 +463,7 @@
     	//Sucursal 1403 para el campo Estado Civil
     	for (var i = 0; i < gridColumns.length; i++) {
     	  if (gridColumns[i].dataIndex == "cdestciv" && cdunieco == 1403) {
-	    		gridColumns[i].getEditor().allowBlank = false;
+	    		gridColumns[i].editor.allowBlank = false;
 	    		debug(gridColumns[i].editor);
 	    		break;
     	  }
@@ -472,8 +472,8 @@
     	//Sucursal 1403 para el campo No. de Empleado
     	for (var i = 0; i < gridColumns.length; i++) {
     	  if (gridColumns[i].dataIndex == "numsoc" && cdunieco == 1403) {
-	    		gridColumns[i].getEditor().allowBlank = false;
-	    		gridColumns[i].getEditor().regex = /^\d+$/;
+	    		gridColumns[i].editor.allowBlank = false;
+	    		gridColumns[i].editor.regex = /^\d+$/;
 	    		debug(gridColumns[i].editor);
 	    		break;
     	  }
@@ -482,8 +482,8 @@
     	//Sucursal 1403 para el campo Clave Familiar   	
     	for (var i = 0; i < gridColumns.length; i++) {
     	  if (gridColumns[i].dataIndex == "clvfam" && cdunieco == 1403) {
-	    		gridColumns[i].getEditor().allowBlank = false;
-	    		gridColumns[i].getEditor().regex = /^\d+$/;
+	    		gridColumns[i].editor.allowBlank = false;
+	    		gridColumns[i].editor.regex = /^\d+$/;
 	    		debug(gridColumns[i].editor);
 	    		break;
     	  }
@@ -492,7 +492,7 @@
     	//Sucursal 1403 para el campo Ocupacion
     	for (var i = 0; i < gridColumns.length; i++) {
     	  if (gridColumns[i].dataIndex == "ocup" && cdunieco == 1403) {
-	    		gridColumns[i].getEditor().allowBlank = false;
+	    		gridColumns[i].editor.allowBlank = false;
 	    		debug(gridColumns[i].editor);
 	    		break;
     	  }
@@ -513,8 +513,8 @@
 			if(gridSource.items[i].data.Parentesco !== "T" && cdunieco !== 1403){
 				for (var j = 0; j < gridColumns.length; j++) {
 		    	  		if (gridColumns[j].dataIndex === "cdestciv" && Ext.isEmpty(gridSource.items[i].data.cdestciv)){
-		    	  			gridColumns[j].getEditor().allowBlank = true;
-		    	  			debug('*Cuando no es tomador, lo pone no obligatorio',gridColumns[j].getEditor().allowBlank,'.');
+		    	  			gridColumns[j].editor.allowBlank = true;
+		    	  			debug('*Cuando no es tomador, lo pone no obligatorio',gridColumns[j].editor.allowBlank,'.');
 		    	  		}
 				}
 			}
@@ -524,8 +524,8 @@
 			if(gridSource.items[i].data.Parentesco !== "T" && cdunieco !== 1403){
 				for (var j = 0; j < gridColumns.length; j++) {
 		    	  		if (gridColumns[j].dataIndex === "ocup" && Ext.isEmpty(gridSource.items[i].data.ocup)){
-		    	  			gridColumns[j].getEditor().allowBlank = true;
-		    	  			debug('**Cuando no es tomador, lo pone no obligatorio',gridColumns[j].getEditor().allowBlank,'.');
+		    	  			gridColumns[j].editor.allowBlank = true;
+		    	  			debug('**Cuando no es tomador, lo pone no obligatorio',gridColumns[j].editor.allowBlank,'.');
 		    	  		}
 				}
 			}else if(gridSource.items[i].data.Parentesco == "T" && cdunieco == 1403){
@@ -533,8 +533,8 @@
 			    for (var j = 0; j < gridColumns.length; j++) {
                     if (gridColumns[j].dataIndex === "ocup" && Ext.isEmpty(gridSource.items[i].data.ocup)){
                         /** A peticion de Adrian Olmos Fwd: (Nro.30) Para las pólizas de Clínica NOVA **/
-                        gridColumns[j].getEditor().allowBlank = false;
-                        debug('**Cuando es titular, lo pone como obligatorio obligatorio',gridColumns[j].getEditor().allowBlank,'.');
+                        gridColumns[j].editor.allowBlank = false;
+                        debug('**Cuando es titular, lo pone como obligatorio obligatorio',gridColumns[j].editor.allowBlank,'.');
                     }
                 }
 			}	
@@ -2640,7 +2640,7 @@ debug("validarYGuardar flag:2");
                 {
                     text:'Regresar',
                     hidden:true,
-                    icon: contextop2+'/resources/extjs4/resources/my-custom-theme/images/toolbar/scroll-left.png',
+                    icon: contextop2+'/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
                     handler:function()
                     {
                         Ext.create('Ext.form.Panel').submit({
@@ -2658,7 +2658,7 @@ debug("validarYGuardar flag:2");
                 --%>
                 {
                     text:'Guardar',
-                    icon: contextop2+'/resources/fam3icons/icons/fam/accept.png',
+                    icon: contextop2+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
                     handler:function(){
                         debug('form1p2',Ext.getCmp('form1p2').getForm().isValid());
                         if(Ext.getCmp('form1p2').getForm().isValid())

@@ -293,7 +293,7 @@ Ext.onReady(function() {
 				 	},
 				 	{	xtype: 'actioncolumn',			width: 30,		sortable: false,		menuDisabled: true,
 					 	items: [{
-					 		icon:_CONTEXT+'/resources/fam3icons/icons/fam/delete.png',
+					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 					 		tooltip: 'Quitar inciso',
 					 		scope: this,
 					 		handler: this.onRemoveClick
@@ -305,7 +305,7 @@ Ext.onReady(function() {
 			 	},
 		 		tbar: [{
                     text     : 'Agregar Factura'
-                    ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
+                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
                     ,handler : _p21_agregarGrupoClic
                 }]
 		 	});
@@ -345,7 +345,7 @@ Ext.onReady(function() {
 	 			[
 				 	{ 	xtype: 'actioncolumn',		 	width: 40,			 sortable: false,		 	menuDisabled: true,
 					 	items: [{
-					 		icon:_CONTEXT+'/resources/fam3icons/icons/fam/delete.png',
+					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 					 		tooltip: 'Quitar inciso',
 					 		scope: this,
 					 		handler: this.onRemoveClick
@@ -463,7 +463,7 @@ Ext.onReady(function() {
 		 		],
 		 		tbar: [
 			 		{	text     : 'Agregar Factura'
-	                    ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
+	                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 	                    ,handler : _p21_agregarGrupoClic
 	                }
 		 		]
@@ -504,7 +504,7 @@ Ext.onReady(function() {
 	 			[
 				 	{ 	xtype: 'actioncolumn',	 	width: 40,		 	sortable: false,		 	menuDisabled: true,
 					 	items: [{
-					 		icon:_CONTEXT+'/resources/fam3icons/icons/fam/delete.png',
+					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 					 		tooltip: 'Quitar inciso',
 					 		scope: this,
 					 		handler: this.onRemoveClick
@@ -618,7 +618,7 @@ Ext.onReady(function() {
 		 		],
 		 		tbar: [
 			 		{   text     : 'Agregar Documento'
-	                    ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
+	                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 	                    ,handler : _p21_agregarGrupoClic
 	                }
 		 		]
@@ -665,7 +665,7 @@ Ext.onReady(function() {
 					 	sortable: false,
 					 	menuDisabled: true,
 					 	items: [{
-					 		icon:_CONTEXT+'/resources/fam3icons/icons/fam/delete.png',
+					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 					 		tooltip: 'Quitar inciso',
 					 		scope: this,
 					 		handler: this.onRemoveClick
@@ -772,7 +772,7 @@ Ext.onReady(function() {
 		 		tbar: [
 			 		{
 	                    text     : 'Agregar Documento'
-	                    ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
+	                    ,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 	                    ,handler : _p21_agregarGrupoClic
 	                }
 		 		]

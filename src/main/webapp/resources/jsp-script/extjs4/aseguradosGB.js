@@ -1917,7 +1917,7 @@ Ext
 																	menuDisabled : true,
 																	items : [ {
 																		icon : contexto
-																				+ '/resources/fam3icons/icons/fam/delete.png',
+																				+ '/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 																		// iconCls:
 																		// 'icon-delete',
 																		tooltip : 'Quitar inciso',
@@ -1930,7 +1930,7 @@ Ext
 														},
 														tbar : [ {
 															icon : contexto
-																	+ '/resources/fam3icons/icons/fam/add.png',
+																	+ '/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 															text : 'Agregar inciso',
 															scope : this,
 															handler : this.onAddClick

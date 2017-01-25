@@ -142,7 +142,7 @@ itemsCalendarioColumns.push({
 
 Ext.onReady(function()
 {
-    Ext.Ajax.timeout = 60*60*1000;
+    Ext.Ajax.timeout = 10*60*1000;
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
@@ -849,18 +849,18 @@ Ext.onReady(function()
 	                        {
 	                            text	: 'Guardar',
 	                            itemId  : 'panDatComBotonGuardar',
-	                            icon	: contexto+'/resources/fam3icons/icons/fam/accept.png',
+	                            icon	: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
 	                            handler	: function(){ _p29_actualizarCotizacion(null);}	
 	                        },
                             {
 	                            text		: 'Editar agentes',
-	                            icon		: contexto+'/resources/fam3icons/icons/fam/user_gray.png',
+	                            icon		: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png',
 	                            disabled	: true,
 	                            hidden		: true
 	                        },
 	                        {
 	                            text		: 'Editar documentos',
-	                            icon		: contexto+'/resources/fam3icons/icons/fam/book.png',
+	                            icon		: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png',
 	                            disabled	: true,
 	                            hidden		: true
 	                        },
@@ -3219,22 +3219,7 @@ function tarifaFinal(){
 				                        }				                        
 				                    }
 				                }
-			    			],
-			    			listeners : {
-                                afterrender : function(me){
-                                    try{
-                                        debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
-                                        if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
-                                            setTimeout(function(){ 
-                                                mensajeWarning(json.panel1['mensajeAgenteActivo']); 
-                                            }, 3000);
-                                        }
-                                    }
-                                    catch(e){
-                                        debugError(e);
-                                    }
-                                }
-                            }
+			    			]
 							}).mostrar();
             	}
             }
@@ -3774,22 +3759,7 @@ function agregaCalendario(){
                                      }                                       
                                  }
                              }
-                         ],
-                         listeners : {
-                             afterrender : function(me){
-                                 try{
-                                     debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
-                                     if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
-                                         setTimeout(function(){ 
-                                             mensajeWarning(json.panel1['mensajeAgenteActivo']); 
-                                         }, 3000);
-                                     }
-                                 }
-                                 catch(e){
-                                     debugError(e);
-                                 }
-                             }
-                         }
+                         ]
                      }).mostrar();
                  }
              }

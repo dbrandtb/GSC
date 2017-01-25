@@ -20,8 +20,7 @@ public enum TipoSituacion {
 	TRADICIONALES_MEGASALUD   ("TMS"),
 	TRADICIONALES_SUSALUD     ("TSS"),
 	MOTOS                     ("MO"),
-	TRACTOCAMIONES_ARMADOS    ("TC"),
-	REMOLQUES_INDISTINTOS     ("RQ")
+	TRACTOCAMIONES_ARMADOS    ("TC")
 	;
 
 	private String cdtipsit;

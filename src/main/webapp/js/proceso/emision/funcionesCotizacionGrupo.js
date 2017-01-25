@@ -283,12 +283,7 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                             //var callback = function() { _p21_turnar(19,'Observaciones de la carga',false); };
                             var callback = function() {
                             	if(_p21_smap1.status == _EN_ESPERA_DE_COTIZACION){
-                            		if(_p21_smap1.cdtipsup == _TIPO_SITUACION_RENOVACION){
-                            			form.up('window').destroy();
-                            			_p21_reload(null,_EN_ESPERA_DE_COTIZACION ,_p21_smap1.nmpoliza);
-                            		}else{
-                            			_p21_mesacontrol();
-                            		}
+                            		_p21_mesacontrol();
                             	}else{
                             		mensajeCorrecto('Aviso','Se ha turnado el tr\u00e1mite a mesa de control en estatus ' +
 										'"En Tarifa" para procesar el censo. Una vez terminado podra encontrar su tr\u00e1mite ' +
@@ -505,8 +500,6 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                                                                     if(jsonBorr.success===true)
                                                                                     {
                                                                                         me.up('window').destroy();
-                                                                                        debug("Valor del button ===>",button);
-                                                                                        debug("Valor del json.smap1.nombreCensoParaConfirmar ===>",json.smap1.nombreCensoParaConfirmar);
                                                                                         _p21_subirArchivoCompleto(button,json.smap1.nombreCensoParaConfirmar);
                                                                                     }
                                                                                     else
@@ -2396,104 +2389,4 @@ function _p21_crearVentanaClausulas()
     }).show();
     
     centrarVentanaInterna(_ventanaClausulas);
-}
-
-function _p21_editarExclusiones(grid,row)
-{
-    var record=grid.getStore().getAt(row);
-    debug('>_p21_editarExclusiones record:',record.data);
-    _p21_guardarAsegurados(grid,function()
-    {
-        var ventana=Ext.create('Ext.window.Window',
-        {
-            title   : 'Editar exclusiones de '+(record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO'))
-            ,width  : 900
-            ,height : 500
-            ,modal  : true
-            ,loader :
-            {
-                url       : _p21_urlEditarExclusiones
-                ,params   :
-                {
-                    'smap1.pv_cdunieco'      : _p21_smap1.cdunieco
-                    ,'smap1.pv_cdramo'       : _p21_smap1.cdramo
-                    ,'smap1.pv_estado'       : _p21_smap1.estado
-                    ,'smap1.pv_nmpoliza'     : _p21_smap1.nmpoliza
-                    ,'smap1.pv_nmsituac'     : record.get('NMSITUAC')
-                    ,'smap1.pv_nmsuplem'     : '0'
-                    ,'smap1.pv_cdperson'     : record.get('CDPERSON')
-                    ,'smap1.pv_cdrol'        : record.get('CDROL')
-                    ,'smap1.nombreAsegurado' : record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO')
-                    ,'smap1.cdrfc'           : record.get('RFC')
-                }
-                ,scripts  : true
-                ,autoLoad : true
-            }
-        }).show()
-        centrarVentanaInterna(ventana);
-        expande = function()
-        {
-            ventana.destroy();
-        }
-    });
-    debug('<_p21_editarExclusiones');
-}
-
-function _verificaAprueba(){
-    
-	debug('<<<>>> Verifica Aprueba Cambio de Nombre de Plan<<<>>>');
-	
-	if(_p21_tabGrupos){
-		var planExcedeLongitud = false;
-		
-		_p21_query('#'+_p21_tabGrupos.itemId)[0].items.items[0].getStore().each(function(record){
-	        if(!Ext.isEmpty(record.get('dsplanl')) && String(record.get('dsplanl')).length >= 40)
-	        {
-	        	planExcedeLongitud = true;
-	        	return false;
-	        }
-	    });
-		
-		if(planExcedeLongitud){
-			mensajeWarning('No se puede aprobar. El Suscriptor debe editar primero los nombres de plan ya que alguno excede la longitud permitida de caracteres.');
-			return true;
-		}
-		
-	}
-    
-    if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ))
-    {
-        //alert('suscriptor');
-        var faltaAprobacion = _faltaAprobarNombrePlan;
-        
-        if(faltaAprobacion){
-            mensajeWarning('El Supervisor debe aprobar primero los cambios realizados a los nombres de plan editados.');    
-        }
-        
-        return faltaAprobacion;
-        
-    }else if(([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 )){
-        //alert('supervisor');
-        Ext.Ajax.request({
-            url     : _p21_urlLanzaAprobacionNombrePlan,
-            params  : {
-                'smap1.ntramite'    :  _p21_ntramite,
-                'smap1.tipobloqueo' : 'D'
-            },
-            success : function (response) {
-                var json=Ext.decode(response.responseText);
-                
-                if(!json.success){
-                    debugError('Error sin impacto al eliminar bloqueo para aprobacion de cambio de nombre de plan. ', json.respuesta);
-                }
-            },
-            failure : function () {
-                errorComunicacion(null, 'Error al lanzar validaci\u00f3n cambio de nombre plan');
-            }
-        }); 
-        
-        return false;
-    }
-    
-    return false;    
 }

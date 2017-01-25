@@ -169,67 +169,6 @@ var cargarXpoliza = false;
 var cargaCotiza = false;
 var _p28_panelDxnItems= [<s:property value="imap.panelDxnItems"  />];
 
-//CARGO TODOS LOS VALORES QUE SUCURSAL, RAMO Y POLIZA GENERAN
-var _0_panel7Items =
-   [
-       {
-           layout  :
-           {
-              type    : 'table'
-             ,columns : 1
-             ,style   : 'width:10px !important;'
-          }
-          ,border : 0
-          ,items  :
-          [
-           {
-                    xtype       : 'numberfield'
-                   ,itemId      : '_0_numsuc'
-                   ,fieldLabel  : 'SUCURSAL'
-                   ,name        : 'sucursal'               
-                   ,sinOverride : true
-                   ,labelWidth  : 170
-                   ,style       : 'margin:5px;margin-left:15px;'//'margin:5px;margin-left:15px;width:20px !important;'
-                   ,value       : !Ext.isEmpty(_0_smap1.RENUNIEXT) ? _0_smap1.RENUNIEXT : ''
-                   ,listeners   :
-                   {
-                       change : _0_nmpolizaChange
-                   }
-                   ,readOnly    :  true 
-               }
-              ,{
-                       xtype       : 'numberfield'
-                      ,itemId      : '_0_numram'
-                      ,fieldLabel  : 'RAMO'
-                      ,name        : 'ramo'                   
-                      ,sinOverride : true                   
-                      ,labelWidth  : 170
-                      ,style       : 'margin:5px;margin-left:15px;'//'width : 30px !important;'
-                      ,value       : !Ext.isEmpty(_0_smap1.RENRAMO) ? _0_smap1.RENRAMO : ''
-                      ,listeners   :
-                      {
-                          change : _0_nmpolizaChange
-                      }
-                      ,readOnly    :  true 
-                 }
-                ,{
-                     xtype       : 'numberfield'
-                    ,itemId      : '_0_numpol'
-                    ,fieldLabel  : 'POLIZA'
-                    ,name        : 'poliza'
-                    ,sinOverride : true                 
-                    ,labelWidth  : 170
-                    ,style       : 'margin:5px;margin-left:15px;'//'width : 50px !important;'
-                    ,value       : !Ext.isEmpty(_0_smap1.RENPOLIEX) ? _0_smap1.RENPOLIEX : ''
-                    ,listeners   :
-                    {
-                        change : _0_nmpolizaChange
-                    }
-                    ,readOnly    :  true
-              }
-          ]
-       }
-    ];
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -1314,9 +1253,8 @@ function _0_recuperarCotizacion(nmpoliza)
         ,success : function(response)
         {
             var json=Ext.decode(response.responseText);
-            cargarXpoliza = true;
             
-            if(_0_smap1.cdramo=='6' || _0_smap1.cdramo=='16')
+            if(_0_smap1.cdramo=='6' || _0_smap1.cdramo=='16' || true)
             {   
                 if(!Ext.isEmpty(json.error))
                 {
@@ -1332,15 +1270,10 @@ function _0_recuperarCotizacion(nmpoliza)
                 		    _0_recordClienteRecuperado = primerInciso;
                 		    debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
                 	}
+                	
                     llenandoCampos(json);
                 }
                 
-            }
-
-            else
-            {
-                _0_panelPri.setLoading(false);
-                errorComunicacion(null,'Error al validar el ramo, solo fronterizos');
             }
             
         }
@@ -1963,6 +1896,7 @@ function _0_cotizar(boton)
         }
         debug('json para cotizar:',json);
         _0_panelPri.setLoading(true);
+//         alert('Va');
         Ext.Ajax.request(
         {
             url       : _0_smap1['externo']=='si'?_0_urlCotizarExterno:_0_urlCotizar
@@ -1977,6 +1911,7 @@ function _0_cotizar(boton)
 //                 	alert('Regresa');
                     debug(Ext.decode(json.smap1.fields));
                     debug(Ext.decode(json.smap1.columnas));
+                    debug('VILS >> ',json.slist2);
                     
                     _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
                                     
@@ -2049,9 +1984,7 @@ function _0_cotizar(boton)
                     
                     _0_gridTarifas=Ext.create('Ext.grid.Panel',
                     {
-                        title             : ( Ext.isEmpty(_0_flujo) ? false : (_0_flujo.cdflujomc == 220 && _0_flujo.cdtipflu == 103 && _0_smap1.cdramo == Ramo.AutosFronterizos) 
-                                            )? 'Resultados:<br>Plan y forma de pago de p\u00f3liza a renovar: '+json.smap1.fila+'-'+json.smap1.columna 
-                                          :'Resultados'
+                        title             : 'Resultados'
                         ,store            : Ext.create('Ext.data.Store',
                         {
                             model : '_0_modeloTarifa'
@@ -2078,43 +2011,7 @@ function _0_cotizar(boton)
                             select       : _0_tarifaSelect
                             ,afterrender : function(me)
                             {
-                                if(!Ext.isEmpty(json.smap1.columna) && !Ext.isEmpty(json.smap1.fila))
-                                {
-                                    var sm = _0_gridTarifas.getSelectionModel();
-                                    try
-                                    {
-                                        var columna=0, fila=999; 
-                                        for(var IteGriTar=1;IteGriTar<_0_gridTarifas.columns.length;IteGriTar++)
-                                        {
-                                            if((_0_gridTarifas.columns[IteGriTar].text).toLowerCase() === json.smap1.columna.toLowerCase())
-                                            {
-                                                 columna = IteGriTar - columna;
-                                                 IteGriTar = _0_gridTarifas.columns.length + 1;
-                                            }
-                                            else if( IteGriTar%2 != 1)
-                                            {
-                                                columna ++;
-                                            }
-                                        }
-                                        
-                                        for(var IteGriTar=0;IteGriTar<17;IteGriTar++)
-                                        {
-                                            sm.select({row:IteGriTar,column:columna});
-                                            var texto = (sm.getSelection({row:IteGriTar,column:columna})[0].data.DSPERPAG).toLowerCase()
-                                            if(json.smap1.fila.toLowerCase() === texto)
-                                            {
-                                                  fila = IteGriTar;
-                                                  IteGriTar = 18;
-                                            }
-                                        }
-                                        
-                                        sm.select({row:fila,column:columna});
-                                     }catch(e) {
-                                       debug("Excede rango fuera de la cuadricula de tarifas");
-                                     }
-                                }
-                                
-                                if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
+                                if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
                                 {
                                     _0_actualizarCotizacionTramite();
                                 }
@@ -2810,7 +2707,7 @@ function _0_actualizarCotizacionTramite(callback)
 
 function _0_recuperarCotizacionDeTramite()
 {
-    if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' )
+    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
     {
         var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
         try
@@ -3322,7 +3219,10 @@ function _0_cargarPoliza(cduniext,ramo,nmpoliex,cdusuari,tipoflot)
 
 function _0_atributoTipoPersona(combo)
 {
-    
+    // NO HACER NADA PARA CDRAMO 16
+    if(_0_smap1.cdtipsit == 'AF' || _0_smap1.cdtipsit == 'PU') {
+        return;
+    }
     var val = 'F';
     
     if(combo != 'F')
@@ -3394,19 +3294,6 @@ function _0_atributoNacimientoContratante(combo)
            }
 
         }
-}
-
-function _0_nmpolizaChange(me)
-{
-    var sem = me.semaforo;
-    if(Ext.isEmpty(sem)||sem==false)
-    {
-        me.sucio = true;
-    }
-    else
-    {
-        me.sucio = false;
-    }
 }
 /*///////////////////*/
 ////// funciones //////
@@ -3622,7 +3509,7 @@ Ext.onReady(function()
     		debug('_0_FormAgrupados initComponent');
     		
     		var itemsFormAgrupados=[
-    	            		 _0_fieldNtramite
+    	            			    _0_fieldNtramite
     	    			    ,_0_fieldNmpoliza
     	    			    ,<s:property value="imap.camposAgrupados"/>
     	    			    ,{
@@ -4149,25 +4036,16 @@ Ext.onReady(function()
     {
         //OCULTAR parametros.pv_otvalor20 CUANDO EL TIPO DE PERSONA SEA DIFERENTE DE FISICA
         try{
-            var tipoPersona = _fieldByLabel('TIPO PERSONA',null,true);
+            var tipoPersona = _fieldByLabel('TIPO PERSONA');
             tipoPersona.on({
                 'change':function(me){
                     if(me.getValue()!= TipoPersona.Fisica){
                         _fieldByName('parametros.pv_otvalor20').setValue('N');
                         _fieldByName('parametros.pv_otvalor20').hide();
-                        _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').setValue(null);
-                        _fieldLikeLabel('EL CONTRATANTE PADECE').setValue(null);
-                        _fieldLikeLabel('SEGURO DE VIDA').setValue('N');
-                        _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').hide();
-                        _fieldLikeLabel('EL CONTRATANTE PADECE').hide();
-                        _fieldLikeLabel('SEGURO DE VIDA').hide();
-                        _fieldLikeLabel('FECHA DE NACIMIENTO DEL CONTRATANTE').allowBlank=true;
-                        _fieldLikeLabel('EL CONTRATANTE PADECE').allowBlank=true;
-                        _fieldLikeLabel('SEGURO DE VIDA').allowBlank=true;
+                        console.log(me)
                     }else{
                         _fieldByName('parametros.pv_otvalor20').show();
                     }
-                    _0_atributoTipoPersona(me);
                 }
             });
         }catch(e){
@@ -4615,15 +4493,6 @@ Ext.onReady(function()
         debug('cdatribus_derechos:',cdatribus_derechos);
         var itemsIzq=[];
         var itemsDer=[];
-        itemsIzq.push
-        ({
-           xtype  : 'fieldset'
-          ,itemId : '_p28_fieldBusquedaPoliza'
-          ,width  : 435
-          ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
-          ,items  : _0_panel7Items
-          ,hidden : !Ext.isEmpty(_0_flujo) ? (_0_flujo.cdflujomc != 220 && _0_flujo.cdtipflu != 103 && _0_smap1.cdramo == Ramo.AutosFronterizos) : true 
-        });
         for(var i=0;i<items.length;i++)
         {
             var iItem=items[i];
@@ -4658,7 +4527,7 @@ Ext.onReady(function()
         ]);
     </s:if>
     _0_botonera      = new _0_Botonera();
-    _0_panelPri      = new _0_PanelPri();    
+    _0_panelPri      = new _0_PanelPri();
     /*///////////////////*/
     ////// contenido //////
     ///////////////////////
@@ -5660,5 +5529,5 @@ Ext.onReady(function()
     }
 </script>
 </head>
-<body><div id="_0_divPri" style="height: 1700px;border:1px solid #CCCCCC;"></div></body>
+<body><div id="_0_divPri" style="height: 1400px;border:1px solid #CCCCCC;"></div></body>
 </html>

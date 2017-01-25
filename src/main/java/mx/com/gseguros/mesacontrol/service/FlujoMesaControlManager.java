@@ -206,7 +206,6 @@ public interface FlujoMesaControlManager
 			,String fehasta
 			,String cdpersonCliente
 			,String filtro
-			,String dscontra
 			,int start
 			,int limit
 			)throws Exception;

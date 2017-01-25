@@ -1,17 +1,15 @@
 package mx.com.gseguros.wizard.controller;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
@@ -20,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
-import com.opensymphony.xwork2.ActionContext;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal2.web.GenericVO;
@@ -44,16 +40,11 @@ import mx.com.gseguros.utils.Utils;
 public class CargaMasivaAction extends PrincipalCoreAction {
 	
 	private List<Map<String,String>>         slist1;
-	private Map<String,String>               smap1;
 	private String                           mensaje;
+	private String 							 fileNameError;
 	private static final long serialVersionUID = -3861435458381281429L;
 	
 	private static Logger logger = LoggerFactory.getLogger(CargaMasivaAction.class);
-	
-	public CargaMasivaAction()
-	{
-		this.session=ActionContext.getContext().getSession();
-	}
 	
 	@Autowired
 	private transient CatalogosManager catalogosManager; 
@@ -68,7 +59,6 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 	private File file;
     private String fileFileName;
     private String fileContentType;
-    private String respuesta;
     
     private boolean success;
 	
@@ -185,22 +175,36 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 	
 	
 	@Action(value="procesarCargaMasivaRecuperaInd",
-			results={
-					@Result(name="exito", type="json"),
-					@Result(name="error", type="json")
-					}
+		results={
+			@Result(name="success", type="json")
+		}
 	)
 	public String procesarCargaMasivaRecuperaInd() {
-		int tamano = 0;
-		int contar = 0;
-		int contar2 = 0;
-		String result = null;
-		smap1 = new HashMap<String, String>();
+		String cdperson = "";
+		String sucursal = "";
+		String poliza = "";
+		String nombre1 = "";
+		String nombre2 = "";
+		String apePat = "";
+		String apeMat = "";
+		String producto = "";
+		String cve_plan = "";
+		String esq_suma_ase = "";
+		String parentesco = "";
+		String f_nacimiento = "";
+		String RFC = "";
+		String sexo = "";
+		String peso = "";
+		String estatura = "";
+		String fecinivig = "";
+		String membresia = "";
+		String mensaje = "";
+
 		try {
 			logger.debug("Validando datos de entrada");
 			Utils.validate(file, "No se recibi\u00f3 el archivo");
 
-			logger.debug("ANTES DE HACER LA IMPLEMENTACION {}",fileFileName);
+			logger.debug("ANTES DE HACER LA IMPLEMENTACION");
 
 			List<CampoVO> campos = new ArrayList<CampoVO>();
 			campos.add(new CampoVO(CampoVO.NUMERICO, 1, 100, false)); // 1
@@ -224,134 +228,106 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 			// Nombre del archivo de errores (si los hay):
 			String fullNameArchErrValida = getText("ruta.documentos.temporal") + Constantes.SEPARADOR_ARCHIVO
 					+ "conversion_" + System.currentTimeMillis() + "_err.txt";
-			File archErrVal = validadorFormatoContext.ejecutaValidacionesFormato(file, campos, fullNameArchErrValida,
-					ValidadorFormatoContext.Strategy.VALIDACION_EXCEL);
+			File archErrVal = validadorFormatoContext.ejecutaValidacionesFormato(file, campos,
+					fullNameArchErrValida, ValidadorFormatoContext.Strategy.VALIDACION_EXCEL);
 			if (archErrVal != null && archErrVal.length() > 0) {
 				String msjeError = "Archivo tiene errores de formato";
 				resultado = new GenericVO("1", msjeError);
-				fileFileName = archErrVal.getName();
+				fileNameError = archErrVal.getName();
 				throw new ApplicationException(msjeError);
 			} else {
 				logger.debug("TERMINA PROCESO {}", campos);
 				success = true;
 				ManagerRespuestaSlistVO resp = emisionManager.procesarCargaMasivaRecupera(file);// ,tipoflot
-				logger.debug(resp.getRespuesta(), "{} #### {}", resp.getRespuestaOculta());
-				tamano = resp.getSlist().size();
+				logger.debug(resp.getRespuesta(), "{} #### {}" , resp.getRespuestaOculta());
 				if (resp.getRespuesta() == "" || resp.getRespuesta() == null) {
 					int tam = resp.getSlist().size();
 					for (int i = 0; i <= tam - 1; i++) {
 						for (Entry<String, String> en : resp.getSlist().get(i).entrySet()) {
-							if("MEMBRESIA".equals(en.getKey())) {
-								contar += 1;
-								slist1 = resp.getSlist();
+							System.out.println(en.getValue() + "VALOR" + en.getKey());
+							switch (Integer.parseInt(en.getKey())) {
+							case 0:
+								cdperson = en.getValue();
+								break;
+							case 1:
+								sucursal = en.getValue();
+								break;
+							case 2:
+								poliza = en.getValue();
+								break;
+							case 3:
+								nombre1 = en.getValue();
+								break;
+							case 4:
+								nombre2 = en.getValue();
+								break;
+							case 5:
+								apePat = en.getValue();
+								break;
+							case 6:
+								apeMat = en.getValue();
+								break;
+							case 7:
+								producto = en.getValue();
+								break;
+							case 8:
+								cve_plan = en.getValue();
+								break;
+							case 9:
+								esq_suma_ase = en.getValue();
+								break;
+							case 10:
+								parentesco = en.getValue();
+								break;
+							case 11:
+								f_nacimiento = en.getValue();
+								break;
+							case 12:
+								RFC = en.getValue();
+								break;
+							case 13:
+								sexo = en.getValue();
+								break;
+							case 14:
+								peso = en.getValue();
+								break;
+							case 15:
+								estatura = en.getValue();
+								break;
+							case 16:
+								fecinivig = en.getValue();
+								break;
+							case 17:
+								membresia = en.getValue();
+								// llamar a generaPoliza
+								 mensaje = emisionManager.generarPoliza(cdperson, sucursal, poliza,
+								 nombre1, nombre2, apePat, apeMat, producto,
+								 cve_plan, esq_suma_ase, parentesco,
+								 f_nacimiento,
+								 RFC, sexo, peso, estatura, fecinivig,
+								 membresia);
+								 logger.debug("mensaje {} ",mensaje);
+								break;
 							}
 						}
 					}
-				} else {
-
-					String delimita[] = resp.getRespuesta().split("\n");
-					logger.debug("la respuesta {}",resp.getRespuesta());
-					contar2 = delimita.length;
-					smap1.put("ERROR", resp.getRespuesta());
-					slist1 = resp.getSlist();
-					result = "errores_validacion";
+				}else{
+					File fileErrors = new File(fullNameArchErrValida);
+					BufferedWriter writerErrors = new BufferedWriter( new FileWriter(fileErrors));
+					writerErrors.write(
+							new StringBuilder()
+								.append(resp.getRespuesta()+"\n").append(" POLIZA "+resp.getRespuestaOculta()+"\n").toString());	
+					writerErrors.flush();
+					writerErrors.close();
+					throw new ApplicationException(resp.getRespuesta()+" NUMERO "+resp.getRespuestaOculta());
 				}
 			}
-			result = "exito";
-			success = true;
 		} catch (Exception ex) {
-			result = "error";
 			mensaje = Utils.manejaExcepcion(ex);
 			logger.error("Error en al carga de Archivo de Emision Recupera Individual:", ex);
 		}
-		logger.debug("NOMBRE DE ARCHIVO : ",fileFileName);
-		smap1.put("filasLeidas", String.valueOf(tamano));
-		if (contar2 > 0) {
-			smap1.put("filasErrores", String.valueOf(contar2));
-		} else {
-			smap1.put("filasErrores", String.valueOf(contar - tamano));
-		}
-		smap1.put("filasProcesadas", String.valueOf(contar));
-		smap1.put("nombreArchivo", fileFileName);
-		return result;
-	}
-	
-	
-	@Action(value           = "generarPolizasRecuperaInd",
-			results         = { @Result(name="success", type="json") },
-            interceptorRefs = {
-			    @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
-			}
-	)
-	public String generarPolizasRecuperaInd() {
-		try {
-			String mensaje = "";
-			String cdperson = "";
-			String sucursal = "";
-			String poliza = "";
-			String nombre1 = "";
-			String nombre2 = "";
-			String apePat = "";
-			String apeMat = "";
-			String producto = "";
-			String cve_plan = "";
-			String esq_suma_ase = "";
-			String parentesco = "";
-			String f_nacimiento = "";
-			String RFC = "";
-			String sexo = "";
-			String peso = "";
-			String estatura = "";
-			String fecinivig = "";
-			String membresia = "";
-			String nombreArchivo = smap1.get("nombreArchivo");
-			logger.debug(Utils.log("\n###############################", "\n###### params = ", params,
-					"\n###### list   = ", slist1, "\n###### smap   = ", smap1));
 
-			logger.debug("TAMAÑO: {}" , slist1.size());
-			for (Map<String, String> ite : slist1) {
-				membresia = null;
-				cdperson = ite.get("CDUNIECO");
-				sucursal = ite.get("SUCURSAL");
-				poliza = ite.get("POLIZA");
-				nombre1 = ite.get("NOMBRE1");
-				nombre2 = ite.get("NOMBRE2");
-				apePat = ite.get("APEPAT");
-				apeMat = ite.get("APEMAT");
-				producto = ite.get("PRODUCTO");
-				cve_plan = ite.get("PLAN");
-				esq_suma_ase = ite.get("ESQUEMA");
-				parentesco = ite.get("PARENTESCO");
-				f_nacimiento = ite.get("FECNAC");
-				RFC = ite.get("RFC");
-				sexo = ite.get("SEXO");
-				peso = ite.get("PESO");
-				estatura = ite.get("ESTATURA");
-				fecinivig = ite.get("FECINIVIG");
-				membresia = ite.get("MEMBRESIA");
-				if (membresia != null) {
-					mensaje = emisionManager.generarPoliza(cdperson, sucursal, poliza, nombre1, nombre2, apePat, apeMat,
-							producto, cve_plan, esq_suma_ase, parentesco, f_nacimiento, RFC, sexo, peso, estatura,
-							fecinivig, membresia);
-					logger.debug("mensaje {} ", mensaje);
-				}
-
-			}
-			logger.debug("MENSAJE DE TEXTO {}",mensaje);
-			if (StringUtils.isNotBlank(mensaje)) {
-				Utils.validateSession(session);
-				emisionManager.insertaBitacora(new Date(), nombreArchivo, slist1.size(),
-						slist1.size() + "-" + slist1.size(), "web");
-				respuesta = "success";
-			}else{
-				respuesta = "failure";
-			}
-		} catch (Exception ex) {
-			respuesta = "failure";
-			mensaje = Utils.manejaExcepcion(ex);
-		}
-		logger.debug("ES EL RESULTADO DE LA RESPUESTA {}",respuesta);
-		return respuesta;
+		return SUCCESS;
 	}
 	//Getters and setters:
 	
@@ -403,6 +379,13 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 		this.resultado = resultado;
 	}
 	
+	public String getFileNameError() {
+		return fileNameError;
+	}
+
+	public void setFileNameError(String fileNameError) {
+		this.fileNameError = fileNameError;
+	}
 	public String getMensaje() {
 		return this.mensaje;
 	}
@@ -417,22 +400,6 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 
 	public void setSlist1(List<Map<String, String>> slist1) {
 		this.slist1 = slist1;
-	}
-
-	public Map<String, String> getSmap1() {
-		return smap1;
-	}
-
-	public void setSmap1(Map<String, String> smap1) {
-		this.smap1 = smap1;
-	}
-
-	public String getRespuesta() {
-		return respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
 	}
 
 }

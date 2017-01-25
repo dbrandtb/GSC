@@ -10704,7 +10704,7 @@ public String retarificarEndosos()
 					smap2.put("pdfEndosoNom_o",pdfEndosoNom);
 				}
 				
-				RespuestaConfirmacionEndosoVO respConfirmacionEndoso = new RespuestaConfirmacionEndosoVO();
+				RespuestaConfirmacionEndosoVO respConfirmacionEndoso = null ; 
 				
 				/*if(smap2.get("confirmar").equals("si")){
 				 // Se confirma el endoso si cumple la validacion de fechas: 
@@ -10757,7 +10757,7 @@ public String retarificarEndosos()
 							
 							if(esProductoSalud)
 							{
-								// Ejecutamos el Web Service de Recibos: 
+								// Ejecutamos el Web Service de Recibos:
 								ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 										estado, nmpoliza, 
 										nmsuplem, null, 
