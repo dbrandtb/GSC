@@ -2495,6 +2495,16 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             }
                                             debug('json.slist1[j]::', json.slist1[j]);
                                             debug('SWOBLIGA=' + json.slist1[j].SWOBLIGA + ', SWSELECCIONADO=' + json.slist1[j].SWSELECCIONADO + ', SWEDITABLE=' + json.slist1[j].SWEDITABLE);
+                                            //amparada ch
+                                            
+                                            var vChecked = false;
+                                            var vAmparada='N';
+
+                                            if ((json.slist1[j].SWOBLIGA == 'S') || (json.slist1[j].SWSELECCIONADO == 'S')) { 
+                                            	vChecked=true;
+                                            	vAmparada='S';
+                                            }
+                                            
                                             //para factores menor a cero
                                             var item = Ext.create('Ext.form.Panel',
                                             {
@@ -2517,8 +2527,11 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         xtype       : 'checkbox' 
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
-                                                        ,inputValue : 'S'
-                                                        ,checked    : json.slist1[j].SWOBLIGA == 'S' && (json.slist1[j].SWSELECCIONADO == 'S')
+                                                        //,inputValue : 'S'
+                                                        //,checked    : json.slist1[j].SWOBLIGA == 'S' && (json.slist1[j].SWSELECCIONADO == 'S')
+                                                        ,inputValue : vAmparada
+                                                        ,checked    : vChecked
+                                                        
                                                         ,readOnly   : json.slist1[j].SWEDITABLE == 'N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
@@ -2526,7 +2539,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                             boxready : function(checkbox)
                                                             {
                                                                 var value=checkbox.getValue();
-                                                                debug('checkbox boxready:',value);
+                                                                debug('checkbox boxready:',value, me.up('form').cdgarant);
                                                                 var form = checkbox.up().up();
                                                                 for(var l=0;l<form.items.items.length;l++)
                                                                 {
@@ -2535,7 +2548,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                             }
                                                             ,change : function(me,value)
                                                             {
-                                                                debug('checkbox change:',value,me.up('form').cdgarant);
+                                                                debug('checkbox change1:',value,me.up('form').cdgarant);
                                                                 var form       = me.up('form');
                                                                 var miCdgarant = form.cdgarant;
                                                                 for(var l=0;l<form.items.items.length;l++)
@@ -2553,9 +2566,9 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         {
                                                                             debugError('Error cachado:',e);
                                                                         }
-                                                                    }
+                                                                    } 
                                                                 }
-                                                                
+                                                                debug('checkbox change2:',value,me.up('form').cdgarant);
                                                                 //4MAT y 4AYM
                                                                 if(_p21_smap1.cdsisrol!='COTIZADOR'&&value)
                                                                 {
@@ -3371,19 +3384,20 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     }
                                                 }
                                             }
-                                            
+                                            //logica
                                             if(form.datosAnteriores.raw&&form.datosAnteriores.raw.amparada=='S')
                                             {
                                                 form.down('[name=amparada]').flagPuedesBorrar = false;
-                                                form.down('[name=amparada]').setValue(true);
-                                                debug('se "checkeo" el box');
+                                                //form.down('[name=amparada]').setValue(true);
+                                                debug('se "checkeo" el box', form.down('[name=amparada]').getName());
                                                 form.down('[name=amparada]').flagPuedesBorrar = true;
                                             }
                                             else
                                             {
-                                                form.down('[name=amparada]').setValue(false);
-                                                debug('se "descheckeo" el box');
+                                                //form.down('[name=amparada]').setValue(false);
+                                                debug('se "descheckeo" el box', form.down('[name=amparada]').getName());
                                             }
+                                            
                                             debug('cargado:',form);
                                         }
                                     }

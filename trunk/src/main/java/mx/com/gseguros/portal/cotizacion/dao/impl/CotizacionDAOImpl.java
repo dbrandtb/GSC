@@ -6219,7 +6219,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected ObtenerCoberturasPlanColec(DataSource dataSource)
 		{
-			super(dataSource,"PKG_LISTAS.P_GET_COBERTURAS_COLEC");
+			super(dataSource,"PKG_CONSULTA_ANGELES.P_GET_COBERTURAS_COLEC");
+			//super(dataSource,"PKG_LISTAS.P_GET_COBERTURAS_COLEC");
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdplan"   , OracleTypes.VARCHAR));
