@@ -256,7 +256,14 @@
 		            {type:'string', name:'ETAPA'},
 		            {type:'string', name:'FECHA_DESDE'},
 		            {type:'string', name:'FECHA_RECEP_TRAMITE'},
-		            {type:'string', name:'NOMBRE_AGENTE'}
+		            {type:'string', name:'NOMBRE_AGENTE'},
+		            {type:'string', name:'OFICINA_USR_ACT'},
+		            {type:'string', name:'DS_OFICINA_USR_ACT'},
+		            {type:'string', name:'CDUSUARI_ANT'},
+		            {type:'string', name:'DSUSUARI_ANT'},
+		            {type:'string', name:'OFICINA_USR_ANT'},
+		            {type:'string', name:'DS_OFICINA_USR_ANT'},
+		            
 		        ]
 		    });
 		    
@@ -1323,7 +1330,13 @@
 							{text: 'Estatus tr\u00E1mite',    dataIndex: 'DS_STATUS_TRAMITE'},
 							{text: 'Etapa',             dataIndex: 'ETAPA'},
 							{text: 'Fecha inicio',      dataIndex: 'FECHA_DESDE'},
-							{text: 'Fecha de recepci\u00F3n', dataIndex: 'FECHA_RECEP_TRAMITE'}
+							{text: 'Fecha de recepci\u00F3n', dataIndex: 'FECHA_RECEP_TRAMITE'},
+							{text: 'CD Sucursa Usuario', dataIndex: 'OFICINA_USR_ACT'},
+							{text: 'Sucursa Usuario', dataIndex: 'DS_OFICINA_USR_ACT'},
+							{text: 'CD Usuario Ant.', dataIndex: 'CDUSUARI_ANT'},
+							{text: 'Usuario Ant.', dataIndex: 'DSUSUARI_ANT'},
+							{text: 'CD Sucursa Usr. Ant.', dataIndex: 'OFICINA_USR_ANT'},
+							{text: 'Sucursa Usr. Ant.', dataIndex: 'DS_OFICINA_USR_ANT'}
 						],
                         dockedItems: [{
                             xtype: 'toolbar',

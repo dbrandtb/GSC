@@ -281,12 +281,18 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
             		,"DSUSUARI_CREA"
             		,"CDUSUARI_ACT"
             		,"DSUSUARI_ACT"
+            		,"OFICINA_USR_ACT"
+            		,"DS_OFICINA_USR_ACT"
+            		,"CDUSUARI_ANT"
+            		,"DSUSUARI_ANT"
+            		,"OFICINA_USR_ANT"
+            		,"DS_OFICINA_USR_ANT"
             };
 			
 			declareParameter(new SqlParameter("pv_start_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_limit_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_num_rec_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o",  OracleTypes.VARCHAR));
 			compile();
