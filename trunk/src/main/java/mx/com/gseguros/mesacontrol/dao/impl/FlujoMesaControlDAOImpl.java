@@ -1695,7 +1695,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					,"NMSOLICI"   , "NOMBRE_CONTRATANTE" , "RESPONSABLE" , "RAMO"      , "DSTIPSUP"
 					,"CDTIPRAM"   , "DSTIPRAM"           , "NMPOLIEX"    , "CDTIPTRA"  , "ULTIMO_MODIFICA"
 					,"NRO_ENDOSO" , "CDUNIEXT"           , "CDSUCADM"    , "FLAG"      , "VENCIMIENTO"
-					,"CDETAPA"
+					,"CDETAPA"    , "RENPOLIEX"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
 			declareParameter(new SqlOutParameter("pv_total_o"    , OracleTypes.VARCHAR));
