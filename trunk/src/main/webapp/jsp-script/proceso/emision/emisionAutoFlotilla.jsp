@@ -1475,6 +1475,9 @@ function reintentarWSAuto(loading, params){
                             if(json.success==true)
                             {
                                 mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Reintento. P&oacute;liza Emitida: ' + json.nmpolAlt);
+                                
+                                _p31_smap1.nmpolizaEmitida=json.panel2.nmpoliza;
+                                
                                 _fieldById('_p31_numerofinalpoliza').setValue(json.nmpolAlt);
                                 _fieldById('_p31_botonDocumentosPolizaEmitida').setDisabled(false);
                                 _p31_ventanaDocs.destroy();

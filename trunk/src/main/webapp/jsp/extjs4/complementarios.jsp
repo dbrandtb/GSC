@@ -2932,6 +2932,9 @@ function _p29_emitirClicComplementarios()
 	                            	    	if(json.success==true)
 	                            	    	{
 	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Reintento. P&oacute;liza Emitida: ' + json.nmpolAlt);
+	                            	    		
+	                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
+	                            	    		
 	                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.nmpolAlt);
 	                            	    		_numeroPolizaExt = json.nmpolAlt;
                                 	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
