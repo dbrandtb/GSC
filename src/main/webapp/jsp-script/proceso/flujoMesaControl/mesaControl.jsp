@@ -680,6 +680,12 @@ Ext.onReady(function()
                                     }
                                     ,{
                                         xtype       : 'displayfield'
+                                        ,fieldLabel : 'P\u00d3LIZA ANTERIOR'
+                                        ,value      : _NVL(record.get('RENPOLIEX'), 0)
+                                        ,hidden     : record.get('CDTIPTRA') != 21 || record.get('CDTIPRAM') != 2 // Oculto si no es renovacion de auto
+                                    }
+                                    ,{
+                                        xtype       : 'displayfield'
                                         ,fieldLabel : 'P\u00d3LIZA'
                                         ,value      : _NVL(record.get('NMPOLIZA'), 0)
                                         ,hidden     : record.get('CDTIPRAM') == 2 // Oculto para autos
