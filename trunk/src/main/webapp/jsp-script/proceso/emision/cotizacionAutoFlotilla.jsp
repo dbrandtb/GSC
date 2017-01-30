@@ -5223,6 +5223,37 @@ function _p30_clonar()
 {
     debug('>_p30_clonar');
     _fieldById('_p30_form').formOculto.getForm().reset();
+    
+    var ck = 'Borrando descuentos';
+    try {
+        for (var cdtipsit in _p30_paneles) {
+            var panel  = _p30_paneles[cdtipsit];
+            var items = Ext.ComponentQuery.query('[fieldLabel*=DESCUENTO / RECARGO]', panel);
+            for (var j = 0; j < items.length; j++) {
+                var item = items[j];
+                var name = item.name;
+                if (!Ext.isEmpty(panel.valores)) {
+                    var descAnte = panel.valores[name];
+                    panel.valores[name] = '';
+                    debug('El descuento para el panel', cdtipsit, 'en el campo', name, 'se cambio de', descAnte, 'a', panel.valores[name], '.');
+                }
+            }
+        }
+        _p30_store.each(function(record) {
+            var cdtipsit = record.get('cdtipsit'),
+                nmsituac = record.get('nmsituac');
+            var items = Ext.ComponentQuery.query('[fieldLabel*=DESCUENTO / RECARGO]', _p30_tatrisitFullForms[cdtipsit]);
+            for (var i = 0; i < items.length; i++) {
+                var name = items[i].name;
+                var descAnte = record.get(name);
+                record.set(name, '');
+                debug('El descuento para el inciso', nmsituac, cdtipsit, name, 'se cambio de', descAnte, 'a', record.get(name), '.');
+            }
+        });
+    } catch (e) {
+        manejaException(e, ck);
+    }
+    
     _p30_editar();
     _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
     debug('<_p30_clonar');
