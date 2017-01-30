@@ -2697,14 +2697,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					,"AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ"
 					,"BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ"
 			};
+			
+			if(sheet.getLastRowNum() > 51 && tipoflot.equals("P"))
+			{
+			    throw new ApplicationException(Utils.join("Para PyMES 50 son los incisos maximos permitidos."));
+			}
+
 			while (rowIterator.hasNext()) 
             {
 				fila = fila + 1;
-				
-				if(fila>51 && tipoflot.equals("P"))
-	            {
-				    throw new ApplicationException(Utils.join("Para PyMES 50 son los incisos maximos permitidos."));
-	            }
 				
 				paso = new StringBuilder("Iterando fila ").append(fila).toString();
 				Row row = rowIterator.next();
@@ -2753,6 +2754,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					.append("&").append(otraProp1).append("=").append(otroVal1);
 					
 					Cell cell = row.getCell(col);
+				   try 
+                   {
+				       Cell servicio = row.getCell(1);
+                       if(servicio==null || servicio.getStringCellValue().isEmpty())
+                       {
+                           row.createCell(1);//TIPO SERVICIO
+                           row.getCell(1).setCellValue(servicioCarga(row.getCell(2), String.format("%.0f",row.getCell(0).getNumericCellValue())));
+                       }
+                    } catch (Exception e) {}
+					
 					if(propiedad.equals("cdtipsit"))
 					{
 						String valor = null;
@@ -3220,6 +3231,55 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				.toString()
 				);
 		return resp;
+	}
+	
+	public String servicioCarga(Cell tipoUso, String claveVeh)
+	{
+	    String tipoServicio= "";
+	    if(tipoUso.getStringCellValue().equals("CARGA"))
+        {
+            boolean federal = false;
+            try 
+            {
+                federal = consultasDAO.isServicioCargaFederal(claveVeh);
+            }
+            catch(Exception e){
+                federal = false;
+            }
+            if(federal)
+            {
+                tipoServicio = "FEDERAL DE CARGA";    //"FEDERAL CARGA";
+            }
+            else{
+                tipoServicio = "COMERCIAL";
+            }
+        }
+        else if(tipoUso.getStringCellValue().equals("NORMAL"))
+             {tipoServicio ="PARTICULAR";}
+        else if(tipoUso.getStringCellValue().equals("MENSAJERIA"))
+            {tipoServicio = "COMERCIAL";}
+        else if(tipoUso.getStringCellValue().equals("RENTA DIARIA"))
+            {tipoServicio = "COMERCIAL";}
+        else if(tipoUso.getStringCellValue().equals("ARRENDAMIENTO PURO"))
+            {tipoServicio = "COMERCIAL";}
+        else if(tipoUso.getStringCellValue().equals("UTILITARIO"))
+            {tipoServicio = "COMERCIAL";}
+        else if(tipoUso.getStringCellValue().equals("AUTOESCUELA"))
+            {tipoServicio = "COMERCIAL";}
+        else if(tipoUso.getStringCellValue().equals("SEGURIDAD PRIVADA"))
+            {tipoServicio = "EMERGENCIA";}
+        else if(tipoUso.getStringCellValue().equals("PATRULLAS"))
+            {tipoServicio = "EMERGENCIA";}
+        else if(tipoUso.getStringCellValue().equals("SERVICIO EMERGENCIA"))
+            {tipoServicio = "EMERGENCIA";}
+        else if(tipoUso.getStringCellValue().equals("TRANSPORTE PRIVADO PASAJEROS"))
+            {tipoServicio = "PARTICULAR";}
+        else if(tipoUso.getStringCellValue().equals("GRUA"))
+            {tipoServicio = "COMERCIAL";}
+        else if(tipoUso.getStringCellValue().equals("REPARTO"))
+            {return "COMERCIAL";}
+	    
+        return tipoServicio;
 	}
 	
 	//Segun negocio valida inciso del archivo 
