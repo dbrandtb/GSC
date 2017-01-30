@@ -5887,35 +5887,35 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
         }
     }
     
-//    @Override
-//    public String recuperarServicioXNegocioYAmis(
-//            String cdtipram
-//            ,String tipolote
-//            ) throws Exception
-//    {
-//        Map<String,String> params = new LinkedHashMap<String,String>();
-//        params.put("cdtipram" , cdtipram);
-//        params.put("tipolote" , tipolote);
-//        Map<String,Object> procRes = ejecutaSP(new recuperarServicioXNegocioYAmis(getDataSource()),params);
-//        String             impdis  = (String)procRes.get("pv_impdis_o");
-//        if(StringUtils.isBlank(impdis))
-//        {
-//            throw new ApplicationException("Error al recuperar impresiones disponibles");
-//        }
-//        return impdis;
-//    }
-//    
-//    protected class recuperarServicioXNegocioYAmis extends StoredProcedure
-//    {
-//        protected recuperarServicioXNegocioYAmis(DataSource dataSource)
-//        {
-//            super(dataSource,"");
-//            declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
-//            declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
-//            declareParameter(new SqlOutParameter("pv_impdis_o" , OracleTypes.VARCHAR));
-//            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-//            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-//            compile();
-//        }
-//    }
+    @Override
+    public boolean isServicioCargaFederal(
+            String clvgs
+            ) throws Exception
+    {
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        params.put("PV_AMIS" , clvgs);
+        Map<String,Object> procRes = ejecutaSP(new isServicioCargaFederal(getDataSource()),params);
+        String             servicioCarga  = (String)procRes.get("PV_SALIDA_O");
+        if(!StringUtils.isBlank(servicioCarga))
+        {
+            if(servicioCarga.equals("22") || servicioCarga.equals("23"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    protected class isServicioCargaFederal extends StoredProcedure
+    {
+        protected isServicioCargaFederal(DataSource dataSource)
+        {
+            super(dataSource,"P_GET_SERVICIO_CARGA");
+            declareParameter(new SqlParameter("PV_AMIS" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("PV_SALIDA_O" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }

@@ -676,5 +676,5 @@ public interface ConsultasDAO
    public String obtieneNmsituaext(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i, String pv_nmpoliza_i,
         String pv_nmsuplem_i, String pv_nmsitaux_i) throws Exception;
    
-
+   public boolean isServicioCargaFederal(String cellValue) throws Exception;
 }

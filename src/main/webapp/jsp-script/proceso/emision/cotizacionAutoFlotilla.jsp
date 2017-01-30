@@ -579,7 +579,7 @@ Ext.onReady(function()
 {
     //_grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p30_smap1.cdramo);
 
-    Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
+    Ext.Ajax.timeout = 3*60*60*1000; // 1 hora
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
@@ -7608,5 +7608,5 @@ function _p30_actualizarSwexiperTramite(callback)
 </script>
 <script type="text/javascript" src="${ctx}/js/proceso/emision/cotizacionAutoFlotillaScript.js?now=${now}"></script>
 </head>
-<body><div id="_p30_divpri" style="height:1200px;"></div></body>
+<body><div id="_p30_divpri" style="height:1500px;"></div></body>
 </html>
