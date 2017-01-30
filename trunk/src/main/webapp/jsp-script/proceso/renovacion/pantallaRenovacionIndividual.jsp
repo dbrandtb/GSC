@@ -2639,6 +2639,9 @@ function _p25_renovarPolizaClic(button,e)
     	if(pol['renovada'] == 'SI'){
     	    mensaje = mensaje+'La p\u00F3liza ya est\u00E1 renovada '+pol['nmpoliex']+'<br/>';
     	}
+    	else if(pol['renovada'] == 'CANCELADA'){
+    	    mensaje = mensaje+'La p\u00F3liza est\u00E1 cancelada '+'<br/>';
+    	}
     	else{
     	    mensaje = mensaje+'La p\u00F3liza est\u00E1 en proceso de renovaci\u00F3n'+'<br/>';
     	}
@@ -2721,7 +2724,7 @@ function _p25_renovarClic(button,e)
         var val 		= record.raw;
         val['cducreno']	= record.get('cducreno');
         //debug('record',record);
-        if(record.data['renovada'] == 'SI' || record.data['pagada'] == 'NO' || record.data['aseg_edad_val'] == 0){
+        if(record.data['renovada'] == 'SI' || record.data['renovada'] == 'CANCELADA' || record.data['pagada'] == 'NO' || record.data['aseg_edad_val'] == 0){
         	noRenova.push(val);
         }
         else{
