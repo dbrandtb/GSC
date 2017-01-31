@@ -9049,10 +9049,54 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		}
 	}
 
-}
-    
+	@Override
+	public HashMap<String, String> obtieneCodigosPostalesProducto(String cdramo) throws Exception {
+		
+		HashMap<String,String> mapaCodigosPostales =  new HashMap<String, String>();
+		
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdramo"   , cdramo);
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************************************")
+				.append("\n****** P_GET_CODIGOS_POSTALES_X_RAMO ******")
+				.append("\n****** params=").append(params)
+				.append("\n**************************************************************")
+				.toString()
+				);
+		Map<String,Object>procResult=ejecutaSP(new ObtieneCodigosPostalesProductoSP(getDataSource()),params);
+		List<Map<String,String>>codigosPostales=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(codigosPostales==null||codigosPostales.size()==0)
+		{
+			throw new Exception("No hay codigos postales para el producto: " + cdramo);
+		}
+		
+		for(Map<String,String> codPos: codigosPostales){
+			mapaCodigosPostales.put(codPos.get("CODIGOPOSTAL"), null);
+		}
+		
+		procResult = null;
+		codigosPostales = null;
+		
+		logger.debug("Tamanio de codigos postales = "+mapaCodigosPostales.size());
+		logger.debug("Contiene cp 56230: "+mapaCodigosPostales.containsKey("56230"));
+		logger.debug("Contiene cp 03020: "+mapaCodigosPostales.containsKey("03020"));
+		
+		return mapaCodigosPostales;
+	}
 	
-
-
-
-
+	protected class ObtieneCodigosPostalesProductoSP extends StoredProcedure
+	{
+		protected ObtieneCodigosPostalesProductoSP(DataSource dataSource)
+		{
+			super(dataSource,"pkg_consulta_angeles.P_GET_CODIGOS_POSTALES_X_RAMO");
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			String[] cols=new String[]
+					{"CODIGOPOSTAL"};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+}

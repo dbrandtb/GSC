@@ -5671,6 +5671,28 @@ public class CotizacionAction extends PrincipalCoreAction
 	            
 				boolean[] gruposValidos = new boolean[olist1.size()];
 				
+				HashMap<String,String> codigosPostales = null;
+				
+				try
+				{
+					codigosPostales = cotizacionManager.obtieneCodigosPostalesProducto(cdramo);
+				}
+				catch(Exception ex)
+				{
+					respuesta       = Utils.join("Error al validar Codigos Postales del Producto, sin datos. #",System.currentTimeMillis());
+					respuestaOculta = ex.getMessage();
+					exito           = false;
+					logger.error(respuesta,ex);
+				}
+				
+				if(codigosPostales == null){
+					codigosPostales = new HashMap<String, String>();
+				}
+				
+				boolean exitoCPs =  true;
+				
+				StringBuffer erroresCP = new StringBuffer("\n No se puede continuar. Corrija los errores presentados en C\u00f3digos Postales: \n");
+				
 	            while (rowIterator.hasNext()&&exito) 
 	            {
 	                Row           row            = rowIterator.next();
@@ -6028,6 +6050,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
 	                }
+	                
+	                logger.debug(">>> Validando codigo postal existente en el producto");
+	                if(StringUtils.isBlank(codpostal) || !codigosPostales.containsKey(codpostal)){
+	                	exitoCPs = false;
+	                	logger.error("Codigo Postal inexistente en la fila: " + (row.getRowNum()+1) +"Para la el asegurado: " + nombre1+" "+ nombre2 + " "+apellidoP+" " +apellidoM);
+	                	
+	                	erroresCP.append("\n *** C\u00f3digo Postal inexistente '").append(codpostal).append("' en la fila: ").append((row.getRowNum()+1)).append(" para la el asegurado: ")
+	                	.append(nombre1).append(" ").append(nombre2).append(" ").append(apellidoP).append(" ").append(apellidoM);
+	                }else{
+	                	logger.debug("<<< Codigo postal correcto..");
+	                }
+	                
+	                
 	              //ESTADO
 	                try
                 	{
@@ -6689,6 +6724,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	                {
 	                	logger.debug(Utils.log("cdgrupo=",cdgrupo,", !no se puede imprimir valido"));
 	                }
+	            }
+	            
+	            
+	            if(exito && !exitoCPs)
+	            {
+	            	exito = false;
+	            	respuesta = erroresCP.toString();
 	            }
 	            
 	            if(exito)

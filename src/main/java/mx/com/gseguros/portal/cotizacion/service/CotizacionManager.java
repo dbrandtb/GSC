@@ -1213,4 +1213,12 @@ public interface CotizacionManager
 	
 	public String validaAgenteActivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
 
+	/**
+	 * Recupera todos los codigos postales de un producto
+	 * @param cdramo
+	 * @return
+	 * @throws Exception
+	 */
+	public HashMap<String, String> obtieneCodigosPostalesProducto(String cdramo)throws Exception;
+
 }

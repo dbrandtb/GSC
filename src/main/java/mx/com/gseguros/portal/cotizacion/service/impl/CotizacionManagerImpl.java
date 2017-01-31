@@ -4951,6 +4951,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            
 				boolean[] gruposValidos = new boolean[grupos.size()];
 				
+				
+				
+				
 	            while (rowIterator.hasNext()&&resp.isExito()) 
 	            {
 	                Row           row            = rowIterator.next();
@@ -11503,6 +11506,12 @@ public class CotizacionManagerImpl implements CotizacionManager
         }
 	    return mensaje;
 	}
+	
+	@Override
+	public HashMap<String, String> obtieneCodigosPostalesProducto(String cdramo) throws Exception {
+		return cotizacionDAO.obtieneCodigosPostalesProducto(cdramo);
+	}
+	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////
@@ -11528,7 +11537,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public void setConsultasDAO(ConsultasDAO consultasDAO) {
 		this.consultasDAO = consultasDAO;
 	}
-    
+
     /////////////////////////////////////////////////////
     /////////////////////////////////////////////////////
     ////////////////  GETTERS Y SETTERS  ////////////////

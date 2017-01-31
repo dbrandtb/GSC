@@ -984,4 +984,12 @@ public interface CotizacionDAO {
 			, String filtro
 			, String valorFiltro) throws Exception;
 
+	/**
+	 * Obtiene Mapa de los codigos postales de un producto.
+	 * @param cdramo
+	 * @return
+	 * @throws Exception
+	 */
+	HashMap<String, String> obtieneCodigosPostalesProducto(String cdramo) throws Exception;
+
 }
