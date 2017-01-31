@@ -990,6 +990,6 @@ public interface CotizacionDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	HashMap<String, String> obtieneCodigosPostalesProducto(String cdramo) throws Exception;
+	HashMap<String, String> obtieneCodigosPostalesProducto() throws Exception;
 
 }

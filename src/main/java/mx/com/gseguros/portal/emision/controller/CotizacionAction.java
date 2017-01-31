@@ -5675,7 +5675,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				try
 				{
-					codigosPostales = cotizacionManager.obtieneCodigosPostalesProducto(cdramo);
+					codigosPostales = cotizacionManager.obtieneCodigosPostalesProductos();
 				}
 				catch(Exception ex)
 				{
@@ -6053,11 +6053,14 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                logger.debug(">>> Validando codigo postal existente en el producto");
 	                if(StringUtils.isBlank(codpostal) || !codigosPostales.containsKey(codpostal)){
-	                	exitoCPs = false;
 	                	logger.error("Codigo Postal inexistente en la fila: " + (row.getRowNum()+1) +"Para la el asegurado: " + nombre1+" "+ nombre2 + " "+apellidoP+" " +apellidoM);
-	                	
+	                	exitoCPs = false;
 	                	erroresCP.append("\n *** C\u00f3digo Postal inexistente '").append(codpostal).append("' en la fila: ").append((row.getRowNum()+1)).append(" para la el asegurado: ")
 	                	.append(nombre1).append(" ").append(nombre2).append(" ").append(apellidoP).append(" ").append(apellidoM);
+	                	
+	                	//Para aniadir al conjunto de errores
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
 	                }else{
 	                	logger.debug("<<< Codigo postal correcto..");
 	                }
@@ -6727,11 +6730,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	            }
 	            
 	            
-	            if(exito && !exitoCPs)
+	            /* Solo si se quiere que el error de errores de Codigos postales salga apart del conjunto de demas errores 
+	             * antes de seguir procesando e impedir que continue el flujo.
+	             *if(exito && !exitoCPs)
 	            {
 	            	exito = false;
 	            	respuesta = erroresCP.toString();
-	            }
+	            }*/
 	            
 	            if(exito)
 	            {
