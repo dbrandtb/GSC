@@ -9050,16 +9050,15 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 
 	@Override
-	public HashMap<String, String> obtieneCodigosPostalesProducto(String cdramo) throws Exception {
+	public HashMap<String, String> obtieneCodigosPostalesProducto() throws Exception {
 		
 		HashMap<String,String> mapaCodigosPostales =  new HashMap<String, String>();
 		
 		Map<String,String>params=new LinkedHashMap<String,String>();
-		params.put("cdramo"   , cdramo);
 		logger.debug(
 				new StringBuilder()
 				.append("\n**************************************************************")
-				.append("\n****** P_GET_CODIGOS_POSTALES_X_RAMO ******")
+				.append("\n****** P_GET_CODIGOS_POSTALES ******")
 				.append("\n****** params=").append(params)
 				.append("\n**************************************************************")
 				.toString()
@@ -9068,7 +9067,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		List<Map<String,String>>codigosPostales=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(codigosPostales==null||codigosPostales.size()==0)
 		{
-			throw new Exception("No hay codigos postales para el producto: " + cdramo);
+			throw new Exception("No hay codigos postales para validacion de domicilios asegurados en productos colectivos.");
 		}
 		
 		for(Map<String,String> codPos: codigosPostales){
@@ -9079,8 +9078,6 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		codigosPostales = null;
 		
 		logger.debug("Tamanio de codigos postales = "+mapaCodigosPostales.size());
-		logger.debug("Contiene cp 56230: "+mapaCodigosPostales.containsKey("56230"));
-		logger.debug("Contiene cp 03020: "+mapaCodigosPostales.containsKey("03020"));
 		
 		return mapaCodigosPostales;
 	}
@@ -9089,8 +9086,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected ObtieneCodigosPostalesProductoSP(DataSource dataSource)
 		{
-			super(dataSource,"pkg_consulta_angeles.P_GET_CODIGOS_POSTALES_X_RAMO");
-			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			super(dataSource,"pkg_consulta_angeles.P_GET_CODIGOS_POSTALES");
 			String[] cols=new String[]
 					{"CODIGOPOSTAL"};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));

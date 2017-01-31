@@ -1219,6 +1219,6 @@ public interface CotizacionManager
 	 * @return
 	 * @throws Exception
 	 */
-	public HashMap<String, String> obtieneCodigosPostalesProducto(String cdramo)throws Exception;
+	public HashMap<String, String> obtieneCodigosPostalesProductos()throws Exception;
 
 }

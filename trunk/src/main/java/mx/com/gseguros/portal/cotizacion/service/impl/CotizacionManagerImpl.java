@@ -11508,8 +11508,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public HashMap<String, String> obtieneCodigosPostalesProducto(String cdramo) throws Exception {
-		return cotizacionDAO.obtieneCodigosPostalesProducto(cdramo);
+	public HashMap<String, String> obtieneCodigosPostalesProductos() throws Exception {
+		return cotizacionDAO.obtieneCodigosPostalesProducto();
 	}
 	
 	/////////////////////////////////////////////////////
