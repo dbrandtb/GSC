@@ -263,6 +263,9 @@
 		            {type:'string', name:'DSUSUARI_ANT'},
 		            {type:'string', name:'OFICINA_USR_ANT'},
 		            {type:'string', name:'DS_OFICINA_USR_ANT'},
+		            {type:'string', name: 'CDPERSON'},
+					{type:'string', name: 'OFICINA_USR_CREA'},
+					{type:'string', name: 'DS_OFICINA_USR_CREA'}
 		            
 		        ]
 		    });
@@ -1322,6 +1325,8 @@
 							{text: 'Usuario inicia',    dataIndex: 'DSUSUARI_ACT'},
 							{text: 'CD Usuario crea',   dataIndex: 'CDUSUARI_CREA'},
 							{text: 'Usuario inicia',    dataIndex: 'DSUSUARI_CREA'},
+							{text: 'CD Sucursal Usr. crea', dataIndex: 'OFICINA_USR_CREA'},
+							{text: 'Sucursal Usr. crea', dataIndex: 'DS_OFICINA_USR_CREA'},
 							//{text: 'Cd ', dataIndex: 'CD_LINEA_NEGOCIO'},
 							{text: 'L\u00EDnea de negocio',   dataIndex: 'DS_LINEA_NEGOCIO'},
 							//{text: 'C\u00F3digo', dataIndex: 'CD_TIPO_TRAMITE'},
@@ -1331,12 +1336,14 @@
 							{text: 'Etapa',             dataIndex: 'ETAPA'},
 							{text: 'Fecha inicio',      dataIndex: 'FECHA_DESDE'},
 							{text: 'Fecha de recepci\u00F3n', dataIndex: 'FECHA_RECEP_TRAMITE'},
-							{text: 'CD Sucursa Usuario', dataIndex: 'OFICINA_USR_ACT'},
-							{text: 'Sucursa Usuario', dataIndex: 'DS_OFICINA_USR_ACT'},
-							{text: 'CD Usuario Ant.', dataIndex: 'CDUSUARI_ANT'},
+							{text: 'CD Sucursal Usuario', dataIndex: 'OFICINA_USR_ACT'},
+							{text: 'Sucursal Usuario', dataIndex: 'DS_OFICINA_USR_ACT'},
+							{text: 'CD Usuariol Ant.', dataIndex: 'CDUSUARI_ANT'},
 							{text: 'Usuario Ant.', dataIndex: 'DSUSUARI_ANT'},
-							{text: 'CD Sucursa Usr. Ant.', dataIndex: 'OFICINA_USR_ANT'},
-							{text: 'Sucursa Usr. Ant.', dataIndex: 'DS_OFICINA_USR_ANT'}
+							{text: 'CD Sucursal Usr. Ant.', dataIndex: 'OFICINA_USR_ANT'},
+							{text: 'Sucursal Usr. Ant.', dataIndex: 'DS_OFICINA_USR_ANT'},
+							{text: 'CDPERSON', dataIndex: 'CDPERSON'},
+							
 						],
                         dockedItems: [{
                             xtype: 'toolbar',
