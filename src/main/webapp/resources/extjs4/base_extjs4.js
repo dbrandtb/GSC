@@ -1,88 +1,42 @@
 ////////////////////////////////////////////////////////////////////
 // ESTE DOCUMENTO ES LA BASE DE TODOS LOS JSP QUE TENGAN EXT JS 4 //
 ////////////////////////////////////////////////////////////////////
-var _ice_debug = false;
+
 ///////////////////////
 ////// FUNCIONES //////
 /*///////////////////*/
-function debug()
+var _ice_debug = false;
+
+function debug(a,b,c,d,e)
 {
-    if (_ice_debug !== true) {
-        return;
-    }
-	try {
-	    switch (arguments.length) {
-	        case 0 : console.log('(sin argumentos)');
-	                 break;
-	        case 1 : console.log(arguments[0]);
-	                 break;
-	        case 2 : console.log(arguments[0], arguments[1]);
-                     break;
-            case 3 : console.log(arguments[0], arguments[1], arguments[2]);
-                     break;
-            case 4 : console.log(arguments[0], arguments[1], arguments[2], arguments[3]);
-                     break;
-            case 5 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
-                     break;
-            case 6 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
-                                 arguments[5]);
-                     break;
-            case 7 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
-                                 arguments[5], arguments[6]);
-                     break;
-            case 8 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
-                                 arguments[5], arguments[6], arguments[7]);
-                     break;
-            case 9 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
-                                 arguments[5], arguments[6], arguments[7], arguments[8]);
-                     break;
-            case 10 : console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
-                                 arguments[5], arguments[6], arguments[7], arguments[8], arguments[9]);
-                     break;
-            default : console.log(arguments);
-                      break;
-	    }
-	} catch (e) {}
+	if(_ice_debug)
+	{
+	    if(e!=undefined)
+            console.log(a,b,c,d,e);
+	    else if(d!=undefined)
+	        console.log(a,b,c,d);
+	    else if(c!=undefined)
+	        console.log(a,b,c);
+	    else if(b!=undefined)
+	        console.log(a,b);
+	    else
+	        console.log(a);
+	}
 }
 
-function debugError()
+function debugError(a,b,c,d)
 {
-    if (_ice_debug !== true) {
-        return;
+    if(_ice_debug)
+    {
+        if(d!=undefined)
+            console.error('error manejado:',a,b,c,d);
+        else if(c!=undefined)
+            console.error('error manejado:',a,b,c);
+        else if(b!=undefined)
+            console.error('error manejado:',a,b);
+        else
+            console.error('error manejado:',a);
     }
-    try {
-        switch (arguments.length) {
-            case 0 : console.error('Error manejado: (sin argumentos)');
-                     break;
-            case 1 : console.error('Error manejado: ', arguments[0]);
-                     break;
-            case 2 : console.error('Error manejado: ', arguments[0], arguments[1]);
-                     break;
-            case 3 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2]);
-                     break;
-            case 4 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3]);
-                     break;
-            case 5 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
-                     break;
-            case 6 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
-                                 arguments[5]);
-                     break;
-            case 7 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
-                                 arguments[5], arguments[6]);
-                     break;
-            case 8 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
-                                 arguments[5], arguments[6], arguments[7]);
-                     break;
-            case 9 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
-                                 arguments[5], arguments[6], arguments[7], arguments[8]);
-                     break;
-            case 10 : console.error('Error manejado: ', arguments[0], arguments[1], arguments[2], arguments[3], arguments[4],
-                                 arguments[5], arguments[6], arguments[7], arguments[8], arguments[9]);
-                     break;
-            default : console.error('Error manejado: ', arguments);
-                      break;
-        }
-    } catch (e) {}
 }
 
 //se llama automatico cuando un grid tiene columnas con editor y el editor es combo
@@ -137,7 +91,7 @@ function rendererColumnasDinamico(value,comboName)
     return value;
 }
 
-function validarRFC(rfc,tper, silencioso)
+function validarRFC(rfc,tper)
 {
 	debug('validarRFC',rfc,tper);
 	var valido=rfc&&rfc.length>0&&tper&&tper.length>0;
@@ -223,7 +177,6 @@ function validarRFC(rfc,tper, silencioso)
 	if(!valido)
 	{
 		
-		if(Ext.isEmpty(silencioso) || !silencioso){
 			var ven=Ext.create('Ext.window.Window',
 			{
 				title        : 'Error'
@@ -251,9 +204,6 @@ function validarRFC(rfc,tper, silencioso)
 			    ]
 			}).show();
 			centrarVentanaInterna(ven);
-		}else{
-			debug('El RFC "'+rfc+'" no es v\u00E1lido para persona '+(tper=='F'?'F\u00EDsica':(tper=='M'?'Moral':'tipo r\u00E9gimen simplificado')));
-		}
 		
 	}
 	return valido;
@@ -299,10 +249,9 @@ function mensajeInfo(mensaje,callback){
 
 function mensajeWarning(mensaje,funcion)
 {
-    var tmpMensajeEmergente;
 	if(funcion)
 	{
-		tmpMensajeEmergente=Ext.Msg.show({
+		var tmpMensajeEmergente=Ext.Msg.show({
 			title    : 'Aviso'
 	        ,icon    : Ext.Msg.WARNING
 	        ,msg     : mensaje
@@ -312,7 +261,7 @@ function mensajeWarning(mensaje,funcion)
 	}
 	else
 	{
-		tmpMensajeEmergente=Ext.Msg.show({
+		var tmpMensajeEmergente=Ext.Msg.show({
 			title    : 'Aviso'
 	        ,icon    : Ext.Msg.WARNING
 	        ,msg     : mensaje
@@ -403,7 +352,7 @@ function centrarVentanaInterna(ventana)
     try {
         var y = $(window.parent).scrollTop() + 50;
         //debug('y:',y);
-        ventana.setPosition(ventana.getPosition()[0],y);    
+        ventana.setPosition(ventana.getPosition()[0],y);
     } catch(e) {
         debug(e);
     }
@@ -610,45 +559,20 @@ function checkBool(valor,mensaje)
     }
 }
 
-// Se usa en un controlador final para que la exception no mate al navegador y muestre aviso
-// e           -> Exception o string con aviso (ejemplo exception: a is not a function. Ejemplo aviso: 'Falta la sucursal')
-// ck          -> paso (ej: 'Sacando raiz cuadrada')
-// compLoading -> componente que se quedó en loading o ventana emergente de mascara de 'Cargando...'
-function manejaException (e, ck, compLoading) {
-    if (typeof e === 'string') {
+function manejaException(e,ck,compLoading)
+{
+    if(typeof e == 'string')
+    {
         mensajeWarning(e);
-    } else {
-        debugError(e);
-        try {
-            compLoading.setLoading(false);
-        } catch (e) {}
-        try {
-            if (compLoading.maskLocal === true) {
-                compLoading.close(); // para cuando es un mask del metodo _maskLocal
-            }
-        } catch (e) {}
-        mensajeError('Error ' + ((ck || 'del sistema').toLowerCase()));
     }
-}
-
-// Se usa en un proceso intermedio para controlar la exception pero vuelve a aventar la exception para ser manejada por un controlador final
-// e           -> Exception o string con aviso (ejemplo exception: a is not a function. Ejemplo aviso: 'Falta la sucursal')
-// ck          -> paso (ej: 'Sacando raiz cuadrada')
-// compLoading -> componente que se quedó en loading o ventana emergente de mascara de 'Cargando...'
-function generaException (e, ck, compLoading) {
-    if (typeof e === 'string') {
-        throw e;
-    } else {
-        debugError(e);
-        try {
+    else
+    {
+        debugError('!exception:',e);
+        if(!Ext.isEmpty(compLoading))
+        {
             compLoading.setLoading(false);
-        } catch (e) {}
-        try {
-            if (compLoading.maskLocal === true) {
-                compLoading.close(); // para cuando es un mask del metodo _maskLocal
-            }
-        } catch (e) {}
-        throw 'Error ' + ((ck || 'del sistema').toLowerCase());
+        }
+        mensajeError('Error '+(ck.toLowerCase()));
     }
 }
 
@@ -1347,7 +1271,6 @@ function _procesaAccion(
                                     ,'flujo.nmpoliza'  : nmpoliza
                                     ,'flujo.nmsituac'  : nmsituac
                                     ,'flujo.nmsuplem'  : nmsuplem
-                                    ,'flujo.aux'       : aux
                                     ,'params.url'      : _NVL(pantalla.SWEXTERNA,'N')=='N' ?
                                                              '' :
                                                              pantalla.URLPANTMC
@@ -1587,7 +1510,6 @@ function _procesaAccion(
                                                     ,'flujo.nmpoliza'  : nmpoliza
                                                     ,'flujo.nmsituac'  : nmsituac
                                                     ,'flujo.nmsuplem'  : nmsuplem
-                                                    ,'flujo.aux'       : aux
                                                 }
                                                 ,success : function(response)
                                                 {
@@ -1605,13 +1527,12 @@ function _procesaAccion(
                                                             }
                                                             else if(numSalidas==1)
                                                             {
-                                                                /* JTEZVA 2016 08 30 YA NO QUIERO AVISOS, QUE CONTINUE
                                                                 mensajeCorrecto
                                                                 (
                                                                     'AVISO'
                                                                     ,json.message
                                                                     ,function()
-                                                                    {*/
+                                                                    {
                                                                         _procesaAccion
                                                                         (
                                                                             cdtipflu
@@ -1631,19 +1552,18 @@ function _procesaAccion(
                                                                             ,cdusuari
                                                                             ,cdsisrol
                                                                             ,callback
-                                                                        );/*
+                                                                        );
                                                                     }
-                                                                );*/
+                                                                );
                                                             }
                                                             else if(numSalidas==2)
                                                             {
-                                                                /* JTEZVA 2016 08 30 YA NO QUIERO AVISOS, QUE CONTINUE
                                                                 mensajeCorrecto
                                                                 (
                                                                     'AVISO'
                                                                     ,json.message
                                                                     ,function()
-                                                                    {*/
+                                                                    {
                                                                         _procesaAccion
                                                                         (
                                                                             cdtipflu
@@ -1663,9 +1583,9 @@ function _procesaAccion(
                                                                             ,cdusuari
                                                                             ,cdsisrol
                                                                             ,callback
-                                                                        );/*
+                                                                        );
                                                                     }
-                                                                );*/
+                                                                );
                                                             }
                                                         }
                                                         else
@@ -1964,24 +1884,11 @@ function _procesaAccion(
                                                             {
                                                                 var valorRespValid = json.params.salida
                                                                     ,salida        = '';
-                                                                debug('Resultado validacion java: ', valorRespValid);
                                                                 for(var i=0 ; i<numSalidas ; i++)
                                                                 {
-                                                                    if ( 'x' + acciones[i].CDVALOR === 'x' + valorRespValid) {
+                                                                    if('x'+acciones[i].CDVALOR=='x'+valorRespValid)
+                                                                    {
                                                                         salida = acciones[i];
-                                                                        break;
-                                                                    }
-                                                                    /*
-                                                                    CUANDO LA RESPUESTA DE LA VALIDACION JAVA INICIA CON '*' (EJ: *JTEZVA|PROGRAMADOR)
-                                                                    BUSCAMOS UNA ACCION CUYO VALOR SEA '*', EJECUTAMOS ESA ACCION
-                                                                    Y LE MANDAMOS COMO AUXILIAR LA RESPUESTA JAVA SIN EL '*' (EJ: JTEZVA|PROGRAMADOR)
-                                                                    */
-                                                                    else if (acciones[i].CDVALOR === '*'
-                                                                        && !Ext.isEmpty(valorRespValid)
-                                                                        && valorRespValid.indexOf('*') === 0
-                                                                    ) {
-                                                                        salida = acciones[i];
-                                                                        salida.AUX = valorRespValid.substr(1);
                                                                         break;
                                                                     }
                                                                 }
@@ -1996,7 +1903,7 @@ function _procesaAccion(
                                                                     ,salida.TIPODEST
                                                                     ,salida.CLAVEDEST
                                                                     ,salida.WEBIDDEST
-                                                                    ,salida.AUX
+                                                                    ,aux
                                                                     ,ntramite
                                                                     ,status
                                                                     ,cdunieco
@@ -2067,7 +1974,6 @@ function _procesaAccion(
                                                                 ck = 'Invocando validaci\u00f3n cliente';
                                                                 var valorRespValid = validacionCliente(json.datosTramite)
                                                                     ,salida        = '';
-                                                                debug('Resultado validacion cliente: ', valorRespValid);
                                                                 for(var i=0 ; i<numSalidas ; i++)
                                                                 {
                                                                     if('x'+acciones[i].CDVALOR=='x'+valorRespValid)
@@ -2087,7 +1993,7 @@ function _procesaAccion(
                                                                     ,salida.TIPODEST
                                                                     ,salida.CLAVEDEST
                                                                     ,salida.WEBIDDEST
-                                                                    ,salida.AUX
+                                                                    ,aux
                                                                     ,ntramite
                                                                     ,status
                                                                     ,cdunieco
@@ -2210,20 +2116,13 @@ function _procesaAccion(
                             */
                             if(json.list.length==0)
                             {
-                                /* jtezva 16 agosto 2016
-                                 * se comenta porque ya no es requerida una accion posterior
-                                if (aux !== 'INICIAL') { // Solo avienta exception si no es INICIAL
-                                    throw 'No hay acciones relacionadas a la revisi\u00f3n';
-                                }
-                                 */
+                                throw 'No hay acciones relacionadas a la revisi\u00f3n';
                             }
                             else if(json.list.length==1)
                             {
                                 numSalidas = 1;
                                 accion1    = json.list[0];
                             }
-                            /*
-                             * jtezva 16 agosto 2016 ya no permite doble accion
                             else if(json.list.length==2)
                             {
                                 numSalidas = 2;
@@ -2251,18 +2150,10 @@ function _procesaAccion(
                                 {
                                     throw 'Las acciones relacionadas a la revisi\u00f3n no tienen el valor EXITO/ERROR adecuado';
                                 }
-                            }*/
+                            }
                             else
                             {
-                                /*
-                                 * jtezva 16 agosto 2016
-                                 * si tiene mas de dos entonces es error
-                                if (aux !== 'INICIAL') { // Solo avienta exception si no es INICIAL
-                                 */
-                                    throw 'La revisi\u00f3n tiene demasiadas acciones relacionadas';
-                                /*
-                                }
-                                 */
+                                throw 'La revisi\u00f3n tiene demasiadas acciones relacionadas';
                             }
                             
                             ck = 'Ejecutando revisi\u00f3n';
@@ -2296,32 +2187,18 @@ function _procesaAccion(
                                         debug('### revision:',json);
                                         if(json.success==true)
                                         {
-                                            var faltanDocs = false;
-                                            
-                                            for (var i = 0; i < json.list.length; i++) {
-                                                if (json.list[i].SWOBLIGA === 'S' && json.list[i].SWACTIVO !== 'S') {
-                                                    faltanDocs = true;
-                                                    break;
-                                                }
-                                            }
-                                            
-                                            /* jtezva 16 agosto 2016
-                                            if (aux === 'INICIAL') {
-                                                faltanDocs = true;
-                                            }
-                                            */
-                                            
-                                            if (!faltanDocs && false) { // jtezva 16 agosto 2016 no se va a ir solo
+                                            if(json.list.length==0)
+                                            {
 	                                            if(numSalidas==1)
 	                                            {
-                                                    _procesaAccion
+	                                                _procesaAccion
                                                     (
                                                         cdtipflu
                                                         ,cdflujomc
                                                         ,accion1.TIPODEST
                                                         ,accion1.CLAVEDEST
                                                         ,accion1.WEBIDDEST
-                                                        ,accion1.AUX
+                                                        ,aux
                                                         ,ntramite
                                                         ,status
                                                         ,cdunieco
@@ -2337,14 +2214,14 @@ function _procesaAccion(
 	                                            }
 	                                            else if(numSalidas==2)
 	                                            {
-                                                    _procesaAccion
+	                                                _procesaAccion
                                                     (
                                                         cdtipflu
                                                         ,cdflujomc
                                                         ,accExito.TIPODEST
                                                         ,accExito.CLAVEDEST
                                                         ,accExito.WEBIDDEST
-                                                        ,accExito.AUX
+                                                        ,aux
                                                         ,ntramite
                                                         ,status
                                                         ,cdunieco
@@ -2361,398 +2238,48 @@ function _procesaAccion(
 	                                        }
 	                                        else
 	                                        {
-	                                            var listaDocs = [],
-	                                                listaReqs = [];
-	                                            
-	                                            for (var i = 0; i < json.list.length ; i++) {
-	                                                if (json.list[i].TIPO === 'DOC') {
-	                                                    listaDocs.push(json.list[i]);
-	                                                } else if (json.list[i].TIPO === 'REQ') {
-	                                                    json.list[i].CHECK = json.list[i].SWACTIVO === 'S';
-	                                                    listaReqs.push(json.list[i]);
-	                                                } else {
-	                                                    mensajeError('Tipo de doc/req inv\u00e1lido');
-	                                                }
+	                                            var lista = [];
+	                                            for(var i=0 ; i<json.list.length ; i++)
+	                                            {
+	                                                lista.push(json.list[i].DSDOCUME);
 	                                            }
-	                                            
-	                                            debug('listaDocs:', listaDocs, '.');
-	                                            debug('listaReqs;', listaReqs, '.');
-	                                            
-	                                            centrarVentanaInterna(Ext.create('Ext.window.Window', {
-	                                                title    : 'REVISI\u00D3N DE REQUISITOS Y DOCUMENTOS'
-	                                                           + (aux === 'LECTURA'
-	                                                               ? ' (SOLO LECTURA)'
-	                                                               : ''),
-	                                                itemId   : 'WINDOW_REVISION_DOCUMENTOS',
-	                                                flujo    : {
-	                                                    cdtipflu  : cdtipflu,
-	                                                    cdflujomc : cdflujomc,
-	                                                    tipodest  : tipodest,
-	                                                    clavedest : clavedest,
-	                                                    webiddest : webiddest,
-	                                                    aux       : aux,
-	                                                    ntramite  : ntramite,
-	                                                    status    : status,
-	                                                    cdunieco  : cdunieco,
-	                                                    cdramo    : cdramo,
-	                                                    estado    : estado,
-	                                                    nmpoliza  : nmpoliza,
-	                                                    nmsituac  : nmsituac,
-	                                                    nmsuplem  : nmsuplem,
-	                                                    cdusuari  : cdusuari,
-	                                                    cdsisrol  : cdsisrol,
-	                                                    callback  : callback
-	                                                },
-	                                                modal    : true,
-	                                                //closable : false,
-	                                                border   : 0,
-	                                                defaults : {
-	                                                    style : 'margin : 5px;'
-	                                                },
-	                                                items    : [
-	                                                    {
-	                                                        xtype : 'displayfield',
-	                                                        value : 'Favor de revisar los requisitos y documentos obligatorios:'
-	                                                    }, {
-	                                                        xtype      : 'grid',
-	                                                        width      : 900,
-	                                                        height     : 200,
-	                                                        autoScroll : true,
-	                                                        tipo       : 'REQ',
-	                                                        border     : 0,
-	                                                        selType    : 'cellmodel',
-                                                            plugins    : [
-                                                                Ext.create('Ext.grid.plugin.CellEditing', {
-                                                                    clicksToEdit : 1,
-                                                                    listeners : {
-                                                                        beforeedit : function (me, event) {
-                                                                            debug('DSDATO.editor.beforeedit! args:', arguments);
-                                                                            if ('S' !== event.record.get('SWPIDEDATO') || json.params.swconfirm === 'S') {
-                                                                                return false;
-                                                                            }
-                                                                        },
-                                                                        edit : function(me, event) {
-                                                                            var checked = !Ext.isEmpty(event.value) && !Ext.isEmpty(event.value.trim());
-                                                                            marcarRequisitoDesdeRevision(event.rowIdx, checked, event.value.trim(),
-                                                                                _fieldById('WINDOW_REVISION_DOCUMENTOS').down('[activable]'));
-                                                                        }
-                                                                    }
-                                                                })
-                                                            ],
-	                                                        columns    : [
-	                                                            {
-	                                                                text      : 'REQUISITO',
-	                                                                dataIndex : 'DESCRIP',
-	                                                                flex      : 1
-	                                                            }, {
-	                                                                text      : 'OBLIGATORIO',
-	                                                                dataIndex : 'SWOBLIGA',
-	                                                                width     : 100,
-	                                                                renderer  : function (v)
-	                                                                {
-	                                                                    var r = '';
-	                                                                    if (v === 'S') {
-	                                                                        r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'lock.png" />';
-	                                                                    }
-	                                                                    return r;
-	                                                                }
-                                                                }, {
-                                                                    text      : 'ESTADO',
-                                                                    xtype     : 'checkcolumn',
-                                                                    dataIndex : 'CHECK',
-                                                                    disabled  : json.params.swconfirm === 'S',
-                                                                    width     : 60,
-                                                                    listeners : {
-                                                                        beforecheckchange : function (me, row, checked, eOpts) {
-                                                                            var win = _fieldById('WINDOW_REVISION_DOCUMENTOS'),
-                                                                                rec = win.down('grid[tipo=REQ]').getStore().getAt(row);
-                                                                            if ('S' === rec.get('SWPIDEDATO')) {
-                                                                                if (true === checked) {
-                                                                                    mensajeWarning('Para activar esta casilla por favor capture el valor en la columna VALOR');
-                                                                                } else {
-                                                                                    mensajeWarning('Para desactivar esta casilla por favor borre el valor en la columna VALOR');
-                                                                                }
-                                                                                return false;
-                                                                            }
-                                                                        },
-                                                                        checkchange : function (me, row, checked) {
-                                                                            marcarRequisitoDesdeRevision(row, checked, '',
-                                                                                _fieldById('WINDOW_REVISION_DOCUMENTOS').down('[activable]'));
-                                                                        }
-                                                                    }
-                                                                }, {
-                                                                    text      : 'SWPIDEDATO',
-                                                                    dataIndex : 'SWPIDEDATO',
-                                                                    width     : 100,
-                                                                    hidden    : true
-                                                                }, {
-                                                                    text      : 'VALOR',
-                                                                    dataIndex : 'DSDATO',
-                                                                    width     : 370,
-                                                                    renderer  : function (v, md, rec) {
-                                                                        if ('S' !== rec.get('SWPIDEDATO')) {
-                                                                            return '<span style="font-style : italic;">(N/A)</span>';
-                                                                        } else if (Ext.isEmpty(v) || Ext.isEmpty(v.trim())) {
-                                                                            return '<span style="font-style : italic;">HAGA CLIC PARA CAPTURAR...</span>';
-                                                                        }
-                                                                        return v;
-                                                                    },
-                                                                    editor    : {
-                                                                        xtype      : 'textfield',
-                                                                        itemId     : 'editorRevisiDsdato',
-                                                                        minLength  : 1,
-                                                                        maxLength  : 100
-                                                                    }
-                                                                }
-	                                                        ], store : Ext.create('Ext.data.Store', {
-	                                                            fields : [
-	                                                                'CLAVE', 'DESCRIP', 'SWOBLIGA', 'SWACTIVO', 'CHECK', 'SWPIDEDATO', 'DSDATO'
-	                                                            ],
-	                                                            data   : listaReqs
-	                                                        })
-	                                                    }, {
-                                                            xtype      : 'grid',
-                                                            width      : 900,
-                                                            height     : 200,
-                                                            autoScroll : true,
-                                                            tipo       : 'DOC',
-                                                            border     : 0,
-                                                            columns    : [
-                                                                {
-                                                                    text      : 'DOCUMENTO',
-                                                                    dataIndex : 'DESCRIP',
-                                                                    flex      : 70
-                                                                }, {
-                                                                    text      : 'OBLIGATORIO',
-                                                                    dataIndex : 'SWOBLIGA',
-                                                                    flex      : 13,
-                                                                    renderer  : function (v)
-                                                                    {
-                                                                        var r = '';
-                                                                        if (v === 'S') {
-                                                                            r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'lock.png" />';
-                                                                        }
-                                                                        return r;
-                                                                    }
-                                                                }, {
-                                                                    text      : 'CARGADO',
-                                                                    dataIndex : 'SWACTIVO',
-                                                                    flex      : 10,
-                                                                    renderer  : function (v, md, rec)
-                                                                    {
-                                                                        var r = '';
-                                                                        if (v === 'S') {
-                                                                            r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'accept.png" />';
-                                                                        }
-                                                                        else if (rec.get('SWOBLIGA')  === 'S') {
-                                                                            r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'cancel.png" />';
-                                                                        }
-                                                                        return r;
-                                                                    }
-                                                                }, {
-                                                                    flex      : 7,
-                                                                    dataIndex : 'SWACTIVO',
-                                                                    renderer  : function (v, md, rec, row)
-                                                                    {
-                                                                        var r = '';
-                                                                        //if (v !== 'S' || true) {
-                                                                        if (json.params.swconfirm !== 'S') {
-                                                                            r = '<a href="#" onclick="subirArchivoDesdeRevision(' + row + '); return false;">' +
-                                                                                    '<img src="' + _GLOBAL_DIRECTORIO_ICONOS + 'page_add.png" ' +
-                                                                                    'data-qtip="Subir archivo" /></a>';
-                                                                        }
-                                                                        return r;
-                                                                    }
-                                                                }
-                                                            ], store : Ext.create('Ext.data.Store', {
-                                                                fields : [
-                                                                    'CLAVE', 'DESCRIP', 'SWOBLIGA', 'SWACTIVO'
-                                                                ],
-                                                                data   : listaDocs
-                                                            })
+	                                            if(numSalidas==1)
+                                                {
+                                                    mensajeError
+                                                    (
+                                                        'FAVOR DE SUBIR LOS SIGUIENTES DOCUMENTOS:<p>'+(lista.join('<br/>'))
+                                                    );
+                                                }
+                                                else if(numSalidas==2)
+                                                {
+                                                    mensajeError
+                                                    (
+                                                        'FAVOR DE SUBIR LOS SIGUIENTES DOCUMENTOS:<p>'+(lista.join('<br/>'))
+                                                        ,function()
+                                                        {
+                                                            _procesaAccion
+                                                            (
+                                                                cdtipflu
+                                                                ,cdflujomc
+                                                                ,accError.TIPODEST
+                                                                ,accError.CLAVEDEST
+                                                                ,accError.WEBIDDEST
+                                                                ,aux
+                                                                ,ntramite
+                                                                ,status
+                                                                ,cdunieco
+                                                                ,cdramo
+                                                                ,estado
+                                                                ,nmpoliza
+                                                                ,nmsituac
+                                                                ,nmsuplem
+                                                                ,cdusuari
+                                                                ,cdsisrol
+                                                                ,callback
+                                                            );
                                                         }
-	                                                ],
-	                                                buttonAlign : 'center',
-	                                                buttons     : [
-	                                                    /* jtezva 16 agosto 2016 ya no se usa
-	                                                    {
-	                                                        text    : 'Aceptar',
-	                                                        handler : function (me) {
-	                                                           me.up('window').destroy();
-	                                                           
-	                                                           if (numSalidas === 2 && aux != 'INICIAL') { // Cuando sean 2 salidas y no sea inicial ejecuta error
-	                                                                _procesaAccion(
-                                                                        cdtipflu
-                                                                        ,cdflujomc
-                                                                        ,accError.TIPODEST
-                                                                        ,accError.CLAVEDEST
-                                                                        ,accError.WEBIDDEST
-                                                                        ,accError.AUX
-                                                                        ,ntramite
-                                                                        ,status
-                                                                        ,cdunieco
-                                                                        ,cdramo
-                                                                        ,estado
-                                                                        ,nmpoliza
-                                                                        ,nmsituac
-                                                                        ,nmsuplem
-                                                                        ,cdusuari
-                                                                        ,cdsisrol
-                                                                        ,callback
-                                                                    );
-                                                                }
-	                                                        }
-	                                                    }*/
-	                                                    {
-	                                                        text      : 'CONFIRMAR Y CONTINUAR',
-	                                                        icon      : _GLOBAL_DIRECTORIO_ICONOS + 'control_fastforward_blue.png',
-	                                                        disabled  : numSalidas === 0 || faltanDocs === true || aux === 'LECTURA' || aux === 'INICIAL',
-	                                                        activable : numSalidas > 0 && 'LECTURA' !== aux && 'INICIAL' !== aux,
-	                                                        handler   : function (me) {
-	                                                            centrarVentanaInterna(Ext.MessageBox.confirm(
-	                                                                'Confirmar',
-	                                                                'La revisi\u00f3n de requisitos no se podr\u00e1 modificar posteriormente\u0020\u00BFDesea continuar?',
-	                                                                function(btn)
-                                                                    {
-                                                                        if(btn === 'yes')
-                                                                        {
-            	                                                            var mask, ck = 'Confirmando revisi\u00f3n';
-            	                                                            try {
-            	                                                                mask = _maskLocal(ck);
-            	                                                                Ext.Ajax.request({
-            	                                                                    url     : _GLOBAL_URL_CONFIRMAR_REVISION,
-            	                                                                    params  : {
-            	                                                                        'params.cdtipflu'  : cdtipflu,
-            	                                                                        'params.cdflujomc' : cdflujomc,
-            	                                                                        'params.ntramite'  : ntramite,
-            	                                                                        'params.cdrevisi'  : clavedest,
-            	                                                                        'params.swconfirm' : 'S'
-            	                                                                    },
-            	                                                                    success : function (response) {
-            	                                                                        mask.close();
-            	                                                                        var ck = 'Decodificando respuesta al confirmar revisi\u00f3n';
-            	                                                                        try {
-            	                                                                            var json = Ext.decode(response.responseText);
-            	                                                                            debug('### confirmar revision:', json);
-            	                                                                            if (json.success === true) {
-            	                                                                                var win = me.up('window');
-                                                                                                _procesaAccion
-                                                                                                (
-                                                                                                    cdtipflu
-                                                                                                    ,cdflujomc
-                                                                                                    ,accion1.TIPODEST
-                                                                                                    ,accion1.CLAVEDEST
-                                                                                                    ,accion1.WEBIDDEST
-                                                                                                    ,accion1.AUX
-                                                                                                    ,ntramite
-                                                                                                    ,status
-                                                                                                    ,cdunieco
-                                                                                                    ,cdramo
-                                                                                                    ,estado
-                                                                                                    ,nmpoliza
-                                                                                                    ,nmsituac
-                                                                                                    ,nmsuplem
-                                                                                                    ,cdusuari
-                                                                                                    ,cdsisrol
-                                                                                                    ,callback
-                                                                                                );
-                                                                                                win.destroy();
-            	                                                                            } else {
-            	                                                                                mensajeError(json.message);
-            	                                                                            }
-            	                                                                        } catch (e) {
-            	                                                                            manejaException(e, ck);
-            	                                                                        }
-            	                                                                    },
-            	                                                                    failure : function () {
-            	                                                                        mask.close();
-            	                                                                        errorComunicacion(null, 'Error al confirmar revisi\u00f3n');
-            	                                                                    }
-            	                                                                });
-            	                                                            } catch (e) {
-            	                                                                manejaException(e, ck, mask);
-            	                                                            }
-                                                                        }
-                                                                    }
-                                                                ));
-	                                                        }
-	                                                    }, {
-	                                                        text    : 'DOCUMENTOS',
-	                                                        icon    : _GLOBAL_DIRECTORIO_ICONOS + 'printer.png',
-	                                                        handler : function (me) {
-	                                                            var win = me.up('window');
-	                                                            Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES+'VentanaDocumentos');
-                                                                var winDoc = new window['VentanaDocumentos']({
-                                                                    cdtipflu   : cdtipflu
-                                                                    ,cdflujomc : cdflujomc
-                                                                    ,tipoent   : tipodest
-                                                                    ,claveent  : clavedest
-                                                                    ,webid     : webiddest
-                                                                    ,aux       : ''/*'INICIAL' === flujo.aux || 'LECTURA' === flujo.aux 
-                                                                                             ? ''
-                                                                                             : flujo.aux*/
-                                                                    ,ntramite  : ntramite
-                                                                    ,status    : status
-                                                                    ,cdunieco  : cdunieco
-                                                                    ,cdramo    : cdramo
-                                                                    ,estado    : estado
-                                                                    ,nmpoliza  : nmpoliza
-                                                                    ,nmsituac  : nmsituac
-                                                                    ,nmsuplem  : nmsuplem
-                                                                    ,cdusuari  : cdusuari
-                                                                    ,cdsisrol  : cdsisrol
-                                                               }).mostrar();
-                                                               winDoc.on({
-                                                                   destroy : function() {
-                                                                       win.recargar();
-                                                                   }
-                                                               });
-	                                                        }
-	                                                    }, {
-	                                                        text    : 'CONTINUAR',
-	                                                        icon    : _GLOBAL_DIRECTORIO_ICONOS + 'accept.png',
-	                                                        hidden  : !(numSalidas === 0 || faltanDocs === true || aux === 'LECTURA' || aux === 'INICIAL'),
-	                                                        handler : function (me) {
-	                                                            me.up('window').close();
-	                                                        }
-	                                                    }
-	                                                    /* jtezva 16 dic 2016 se quita
-	                                                    , {
-                                                            text    : 'RECARGAR',
-                                                            icon    : _GLOBAL_DIRECTORIO_ICONOS + 'control_repeat_blue.png',
-                                                            handler : function (me) {
-                                                                me.up('window').recargar();
-                                                            }
-                                                        }
-                                                        */
-	                                                ],
-	                                                recargar : function () {
-	                                                    debug('>WINDOW_REVISION_DOCUMENTOS recargar');
-	                                                    var me = this;
-	                                                    
-	                                                    _procesaAccion(
-                                                            me.flujo.cdtipflu
-                                                            ,me.flujo.cdflujomc
-                                                            ,me.flujo.tipodest
-                                                            ,me.flujo.clavedest
-                                                            ,me.flujo.webiddest
-                                                            ,me.flujo.aux
-                                                            ,me.flujo.ntramite
-                                                            ,me.flujo.status
-                                                            ,me.flujo.cdunieco
-                                                            ,me.flujo.cdramo
-                                                            ,me.flujo.estado
-                                                            ,me.flujo.nmpoliza
-                                                            ,me.flujo.nmsituac
-                                                            ,me.flujo.nmsuplem
-                                                            ,me.flujo.cdusuari
-                                                            ,me.flujo.cdsisrol
-                                                            ,me.flujo.callback
-                                                        );
-	                                                    
-	                                                    me.destroy();
-	                                                }
-	                                            }).show());
+                                                    );
+                                                }
 	                                        }
                                         }
                                         else
@@ -2775,7 +2302,7 @@ function _procesaAccion(
                                                             ,accError.TIPODEST
                                                             ,accError.CLAVEDEST
                                                             ,accError.WEBIDDEST
-                                                            ,accError.AUX
+                                                            ,aux
                                                             ,ntramite
                                                             ,status
                                                             ,cdunieco
@@ -2814,7 +2341,7 @@ function _procesaAccion(
                                                         ,accError.TIPODEST
                                                         ,accError.CLAVEDEST
                                                         ,accError.WEBIDDEST
-                                                        ,accError.AUX
+                                                        ,aux
                                                         ,ntramite
                                                         ,status
                                                         ,cdunieco
@@ -2852,7 +2379,7 @@ function _procesaAccion(
                                                     ,accError.TIPODEST
                                                     ,accError.CLAVEDEST
                                                     ,accError.WEBIDDEST
-                                                    ,accError.AUX
+                                                    ,aux
                                                     ,ntramite
                                                     ,status
                                                     ,cdunieco
@@ -2888,184 +2415,6 @@ function _procesaAccion(
                 }
             });
         }
-        else if(tipodest=='M')
-        {
-            ck = 'Recuperando valores de correo';
-            _mask(ck);
-            Ext.Ajax.request(
-            {
-                url      : _GLOBAL_URL_RECUPERACION
-                ,params  :
-                {
-                    'params.consulta'   : 'RECUPERAR_TFLUMAIL'
-                    ,'params.cdtipflu'  : cdtipflu
-                    ,'params.cdflujomc' : cdflujomc
-                    ,'params.cdmail'    : clavedest
-                }
-                ,success : function(response)
-                {
-                    _unmask();
-                    var ck = 'Decodificando respuesta al recuperar valores de correo';
-                    try
-                    {
-                        var json = Ext.decode(response.responseText);
-                        debug('### tflumail:',json);
-                        if(json.success==true)
-                        {
-                            if(json.list.length==0)
-                            {
-                                throw 'El correo no existe';
-                            }
-                            else if(json.list.length>1)
-                            {
-                                throw 'Correo duplicado';
-                            }
-                            var data = json.list[0];
-                            debug('data:',data);
-                            
-                            ck = 'Recuperando acciones posteriores a la validaci\u00f3n';
-                            _mask(ck);
-                            Ext.Ajax.request(
-                            {
-                                url      : _GLOBAL_URL_CARGAR_ACCIONES_ENTIDAD
-                                ,params  :
-                                {
-                                    'params.cdtipflu'   : cdtipflu
-                                    ,'params.cdflujomc' : cdflujomc
-                                    ,'params.tipoent'   : tipodest
-                                    ,'params.cdentidad' : clavedest
-                                    ,'params.webid'     : webiddest
-                                }
-                                ,success : function(response)
-                                {
-                                    _unmask();
-                                    var ck = 'Decodificando respuesta al recuperar acciones posteriores a la validaci\u00f3n';
-                                    try
-                                    {
-                                        var jsonAcc = Ext.decode(response.responseText);
-                                        debug('### acciones:',jsonAcc);
-                                        var numSalidas = jsonAcc.list.length
-                                            ,acciones  = jsonAcc.list;
-                                        if(jsonAcc.success==true)
-                                        {
-                                            if(jsonAcc.list.length < 2){
-												ck = 'Enviando correo';
-                                                _mask(ck);
-                                                Ext.Ajax.request(
-                                                {
-                                                    url      : _GLOBAL_URL_ENVIAR_CORREO_FLUJO
-                                                    ,params  :
-                                                    {
-                                                        'flujo.cdtipflu'     : cdtipflu
-                                                        ,'flujo.cdflujomc'   : cdflujomc
-                                                        ,'flujo.tipoent'     : tipodest
-                                                        ,'flujo.claveent'    : clavedest
-                                                        ,'flujo.webid'       : webiddest
-                                                        ,'flujo.ntramite'    : ntramite
-                                                        ,'flujo.status'      : status
-                                                        ,'flujo.cdunieco'    : cdunieco
-                                                        ,'flujo.cdramo'      : cdramo
-                                                        ,'flujo.estado'      : estado
-                                                        ,'flujo.nmpoliza'    : nmpoliza
-                                                        ,'flujo.nmsituac'    : nmsituac
-                                                        ,'flujo.nmsuplem'    : nmsuplem
-                                                        ,'flujo.aux'         : aux
-														,'params.dsdestino'  : data.DSDESTINO
-														,'params.dsasunto'   : data.DSASUNTO
-														,'params.dsmensaje'  : data.DSMENSAJE
-														,'params.vardestino' : data.VARDESTINO
-														,'params.varmensaje' : data.VARMENSAJE
-														,'params.varasunto'  : data.VARASUNTO
-                                                    }
-                                                    ,success : function(response)
-                                                    {
-                                                        _unmask();
-                                                        var ck = 'decod Enviando correo';
-                                                         try
-                                                         {
-                                                             var json = Ext.decode(response.responseText);
-                                                             debug('### validacion:',json);
-                                                             if(json.success==true)
-                                                             {
-                                                            	if(numSalidas == 0){
-                                                            		mensajeCorrecto('Correo enviado','Correo enviado');
-                                                            	}else{
-                                                            		_procesaAccion
-                                                            		(
-                                                            				cdtipflu
-		                                                                    ,cdflujomc
-		                                                                    ,acciones[0].TIPODEST
-		                                                                    ,acciones[0].CLAVEDEST
-		                                                                    ,acciones[0].WEBIDDEST
-		                                                                    ,acciones[0].AUX
-		                                                                    ,ntramite
-		                                                                    ,status
-		                                                                    ,cdunieco
-		                                                                    ,cdramo
-		                                                                    ,estado
-		                                                                    ,nmpoliza
-		                                                                    ,nmsituac
-		                                                                    ,nmsuplem
-		                                                                    ,cdusuari
-		                                                                    ,cdsisrol
-		                                                                    ,callback
-                                                            		);
-                                                            	}                                                               
-                                                             }
-                                                             else
-                                                             {
-                                                                 mensajeError(json.message);
-                                                             }
-                                                         }
-                                                         catch(e)
-                                                         {
-                                                             manejaException(e,ck);
-                                                         }
-                                                    }
-                                                    ,failure : function(response)
-                                                    {
-                                                        _unmask();
-                                                        errorComunicacion(null,'Error al enviar correo');
-                                                    }
-                                                });
-											}else{
-												throw 'Hay demasiadas acciones relacionadas al correo';
-											}
-                                        }
-                                        else
-                                        {
-                                            mensajeError(json.message);
-                                        }
-                                    }
-                                    catch(e)
-                                    {
-                                        manejaException(e,ck);
-                                    }
-                                }
-                                ,failure : function()
-                                {
-                                    _unmask();
-                                    errorComunicacion(null,'Error al recuperar acciones posteriores al correo');
-                                }
-                            });
-                        }
-                        else
-                        {
-                            mensajeError(json.message);
-                        }
-                    }
-                    catch(e)
-                    {
-                        manejaException(e,ck);
-                    }
-                }
-                ,failure : function()
-                {
-                    _unmask();
-                    errorComunicacion(null,'Error al recuperar valores de correo');
-                }
-            });
-        }
         else
         {
             throw 'Entidad inv\u00e1lida';
@@ -3088,7 +2437,6 @@ function _mask(text)
         ,border      : 0
         ,style       : 'padding:5px;'
         ,closeAction : 'destroy'
-        ,closable    : false
         ,items       :
         [{
             xtype  : 'displayfield'
@@ -3111,8 +2459,6 @@ function _maskLocal(text)
         ,border      : 0
         ,style       : 'padding:5px;'
         ,closeAction : 'destroy'
-        ,closable    : false
-        ,maskLocal   : true
         ,items       :
         [{
             xtype  : 'displayfield'
@@ -3140,7 +2486,6 @@ function _maskSession(text)
         }]
     }).show());
 }
-
 function _unmask()
 {
     var masks = Ext.ComponentQuery.query('[itemId=_global_loadingWindow]');
@@ -3150,25 +2495,6 @@ function _unmask()
     }
 }
 
-/**
- * Regresa el numero que se repite un substring en un string 
- * Ej. Str(strasdstr) Substr(str) resul = 2
- * @param subStr substring
- * @param str	 string	
- * @returns {Number} numero que se repite en la cadena
- */
-function _numberContainsSubstrInStr(subStr, str){
-	var lastIndex = 0,
- 		count     = 0;
- 	while(lastIndex != -1){
- 		lastIndex = str.indexOf(subStr,lastIndex);
- 		if(lastIndex != -1){
-        	count ++;
-        	lastIndex += subStr.length;
-    	}
- 	}
- 	return count;
-}
 
 /**
  * Prueba de timeout
@@ -3190,480 +2516,6 @@ function testTimeout(min) {
         	console.error('Error en Timeout de ' + min + ' min(s)', response);
         }
     });
-}
-
-/**
- *
- * ESTA FUNCIONA CONVIERTE UN OBJETO FLUJO EN UN OBJETO CUYAS PROPIEDADES SON FLUJO.X, FLUJO.Y, FLUJO.Z ...
- * SIRVE PARA ENVIAR UN FLUJO JAVASCRIPT A LA VARIABLE FLUJO DE LOS ACTION
- * Sirve para mandarlo dentro de un form.submit como params
- * o dentro de un Ext.Ajax.request como params
- * Para enviarlo como jsonData no hace falta usar esta funcion
- * El segundo parametro es un mapa de parametros (objeto) ya existente, es opcional
- * si viene el segundo parametro entonces solo se le agregan a ese los
- * datos del flujo
- *
- * Ejemplo: flujo  = { cdtipflu : 1 , cdflujomc : 2 , status : 10 ... }
- *          salida = { 'flujo.cdtipflu' : 1 , 'flujo.cdflujomc' : 2 , 'flujo.status' : 10 ... }
- */
-function _flujoToParams(flujo,paramsEntrada)
-{
-    debug('>_flujoToParams args:',arguments,'.');
-    
-    var params = {};
-    
-    if(!Ext.isEmpty(paramsEntrada)) //cuando vienen parametros de entrada se usan esos para agregar los nuevos
-    {
-        params = paramsEntrada;
-    }
-    
-    params['flujo.ntramite']  = flujo.ntramite;
-    params['flujo.status']    = flujo.status;
-    params['flujo.cdtipflu']  = flujo.cdtipflu;
-    params['flujo.cdflujomc'] = flujo.cdflujomc;
-    params['flujo.webid']     = flujo.webid;
-    params['flujo.tipoent']   = flujo.tipoent;
-    params['flujo.claveent']  = flujo.claveent;
-    params['flujo.cdunieco']  = flujo.cdunieco;
-    params['flujo.cdramo']    = flujo.cdramo;
-    params['flujo.estado']    = flujo.estado;
-    params['flujo.nmpoliza']  = flujo.nmpoliza;
-    params['flujo.nmsituac']  = flujo.nmsituac;
-    params['flujo.nmsuplem']  = flujo.nmsuplem;
-    params['flujo.aux']       = flujo.aux;
-    
-    debug('<_flujoToParams salida:',params,'.');
-    return params;
-}
-
-/**
- *
- * ESTA FUNCION CARGA LAS ACCIONES RELACIONADAS A UNA ENTIDAD
- * Y EJECUTA EL CALLBACK ENVIANDO LA LISTA DE ACCIONES
- *
- */
-function _cargarAccionesEntidad(cdtipflu,cdflujomc,tipoent,cdentidad,webid,callback)
-{
-    debug('_cargarAccionesEntidad args:',arguments,'.');
-    var mask, ck = 'Recuperando acciones de entidad';
-    try
-    {
-        _validate(
-            cdtipflu   , 'Falta flujo para recuperar acciones de entidad'
-            ,cdflujomc , 'Falta proceso para recuperar acciones de entidad'
-            ,tipoent   , 'Falta tipo de entidad para recuperar acciones de entidad'
-            ,cdentidad , 'Falta clave de entidad para recuperar acciones de entidad'
-            ,webid     , 'Falta id web de entidad para recuperar acciones de entidad'
-            ,callback  , 'Falta callback para recuperar acciones de entidad'
-        );
-        
-        mask = _maskLocal(ck);
-        Ext.Ajax.request(
-        {
-            url      : _GLOBAL_URL_CARGAR_ACCIONES_ENTIDAD
-            ,params  :
-            {
-                'params.cdtipflu'   : cdtipflu
-                ,'params.cdflujomc' : cdflujomc
-                ,'params.tipoent'   : tipoent
-                ,'params.cdentidad' : cdentidad
-                ,'params.webid'     : webid
-            }
-            ,success : function(response)
-            {
-                mask.close();
-                var ck = 'Decodificando respuesta al recuperar acciones de entidad';
-                try
-                {
-                    var json = Ext.decode(response.responseText);
-                    debug('### acciones entidad:',json,'.');
-                    if(json.success === true)
-                    {
-                        ck = 'Ejecutando callback al recuperar acciones de entidad';
-                        callback(json.list);
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                mask.close();
-                errorComunicacion(null,'Error al recuperar acciones de entidad');
-            }
-        });
-    }
-    catch(e)
-    {
-        manejaException(e,ck,mask);
-    }
-}
-
-/**
- *
- * ESTA FUNCION REVISA ARGUMENTOS EN PARES, SI EL PRIMERO ES EMPTY
- * LANZA EL SEGUNDO COMO EXCEPTION,
- * ES SIMILAR AL UTILS.VALIDATE DE JAVA
- *
- */
-function _validate()
-{
-    debug('_validate args:',arguments,'.');
-    
-    if(arguments.length % 2 === 1) // si el numero de argumentos no es par
-    {
-        throw 'Argumentos inv\u00e1lidos para funci\u00f3n _validate';
-    }
-    
-    for(var i = 0 ; i < arguments.length ; i=i+2)
-    {
-        if(Ext.isEmpty(arguments[i]))
-        {
-            throw arguments[i+1];
-        }
-    }
-}
-
-/**
- *
- * ESTA FUNCION SETEA UN CAMPO DE CDAGENTE
- * SI ES TEXTIELD HACE UN SETVALUE NORMAL
- * SI ES COMBO HACE UN SELECT
- * SI ES AUTOCOMPLETER LO CARGA Y LUEGO LE HACE EL SELECT
- *
- */
-function _setValueCampoAgente(campo,cdagente)
-{
-    debug('>_setValueCampoAgente:',arguments,'.');
-    
-    var ck;
-    
-    try
-    {
-        _validate(
-            campo     , 'No se recibi\u00f3 el campo agente para setear'
-            ,cdagente , 'No se recibi\u00f3 el valor de agente para setear'
-        );
-        
-        ck = 'Identificando tipo de campo de agente';
-        debug(ck);
-        
-        if(campo.xtype === 'textfield')
-        {
-            ck = 'Seteando valor normal de agente';
-            
-            debug(ck);
-            
-            campo.setValue(cdagente);
-        }
-        else if(campo.xtype === 'combobox')
-        {
-            if(campo.hideTrigger === true)
-            {
-                ck = 'Seteando autocompleter de agente';
-                
-                debug(ck);
-                
-                campo.getStore().load(
-                {
-                    params :
-                    {
-                        'params.agente' : cdagente
-                    }
-                    ,callback : function()
-                    {
-                        campo.setValue(campo.findRecord('key',cdagente));
-                    }
-                });
-                
-            }
-            else
-            {
-                ck = 'Seteando combo de agente'
-                
-                var rec = campo.findRecord('key',cdagente);
-                
-                debug(ck,'rec:',rec,'.');
-                
-                if(rec)
-                {
-                    campo.select(rec);
-                }
-            }
-        }
-        else
-        {
-            throw 'El campo de agente es tipo desconocido';
-        }
-        
-    }
-    catch(e)
-    {
-        manejaException(e,ck);
-    }
-}
-
-function subirArchivoDesdeRevision (row) {
-    debug('>subirArchivoDesdeRevision args:', arguments);
-    
-    var ck = 'Invocanco ventana de documentos';
-    try {
-        var win    = _fieldById('WINDOW_REVISION_DOCUMENTOS'),
-            flujo  = win.flujo,
-            record = win.down('grid[tipo=DOC]').getStore().getAt(row);
-        
-        debug('win:'    , win    , '.');
-        debug('flujo:'  , flujo  , '.');
-        debug('record:' , record , '.');
-        
-        Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES+'VentanaDocumentos');
-        new window['VentanaDocumentos']({
-            cdtipflu           : flujo.cdtipflu
-            ,cdflujomc         : flujo.cdflujomc
-            ,tipoent           : flujo.tipodest
-            ,claveent          : flujo.clavedest
-            ,webid             : flujo.webiddest
-            ,aux               : 'INICIAL' === flujo.aux || 'LECTURA' === flujo.aux 
-                                     ? ''
-                                     : flujo.aux
-            ,ntramite          : flujo.ntramite
-            ,status            : flujo.status
-            ,cdunieco          : flujo.cdunieco
-            ,cdramo            : flujo.cdramo
-            ,estado            : flujo.estado
-            ,nmpoliza          : flujo.nmpoliza
-            ,nmsituac          : flujo.nmsituac
-            ,nmsuplem          : flujo.nmsuplem
-            ,cdusuari          : flujo.cdusuari
-            ,cdsisrol          : flujo.cdsisrol
-            ,cddocumeParasubir : record.get('CLAVE')
-            ,dsdocumeParasubir : record.get('DESCRIP')
-            ,windowRevisi      : win
-       }).mostrar();
-    } catch(e) {
-        manejaException(e, ck);
-    }
-}
-
-function marcarRequisitoDesdeRevision (row, checked, dsdato, botonConfirmar) {
-    debug('>marcarRequisitoDesdeRevision args:', arguments);
-    
-    var ck = 'Marcando requisito desde revisi\u00f3n';
-    try {
-        var win    = _fieldById('WINDOW_REVISION_DOCUMENTOS'),
-            flujo  = win.flujo,
-            record = win.down('grid[tipo=REQ]').getStore().getAt(row);
-        _request({
-            mask       : ck,
-            url        : _GLOBAL_URL_MARCAR_REQUISITO,
-            background : true,
-            params     : {
-                'params.cdtipflu'  : flujo.cdtipflu,
-                'params.cdflujomc' : flujo.cdflujomc,
-                'params.ntramite'  : flujo.ntramite,
-                'params.cdrequisi' : record.get('CLAVE'),
-                'params.swactivo'  : checked === true ? 'S' : 'N',
-                'params.dsdato'    : dsdato
-            },
-            success    : function (json) {
-                try {
-                    if (true !== botonConfirmar.activable) {
-                        return;
-                    }
-                    try {
-                        botonConfirmar.setLoading(false);
-                        clearTimeout(botonConfirmar.funcionActualizarEstado);
-                    } catch (e) {}
-                    botonConfirmar.setLoading(true);
-                    botonConfirmar.funcionActualizarEstado = setTimeout(function () {
-                        var ck = 'Recuperando estado de la lista de comprobaci\u00f3n';
-                        try {
-                            var win = botonConfirmar.up('window');
-                            _request({
-                                mask       : ck,
-                                url        : _GLOBAL_URL_REVISION,
-                                background : true,
-                                params     : {
-                                    'flujo.cdtipflu'  : win.flujo.cdtipflu,
-                                    'flujo.cdflujomc' : win.flujo.cdflujomc,
-                                    'flujo.tipoent'   : win.flujo.tipodest,
-                                    'flujo.claveent'  : win.flujo.clavedest,
-                                    'flujo.webid'     : win.flujo.webiddest,
-                                    'flujo.ntramite'  : win.flujo.ntramite,
-                                    'flujo.status'    : win.flujo.status,
-                                    'flujo.cdunieco'  : win.flujo.cdunieco,
-                                    'flujo.cdramo'    : win.flujo.cdramo,
-                                    'flujo.estado'    : win.flujo.estado,
-                                    'flujo.nmpoliza'  : win.flujo.nmpoliza,
-                                    'flujo.nmsituac'  : win.flujo.nmsituac,
-                                    'flujo.nmsuplem'  : win.flujo.nmsuplem
-                                },
-                                success : function (json) {
-                                    botonConfirmar.setLoading(false);
-                                    var ck = 'Actualizando estado de la lista de comprobaci\u00f3n';
-                                    try {
-                                        var faltanDocs = false;
-                                        for (var i = 0; i < json.list.length; i++) {
-                                            if (json.list[i].SWOBLIGA === 'S' && json.list[i].SWACTIVO !== 'S') {
-                                                faltanDocs = true;
-                                                break;
-                                            }
-                                        }
-                                        if (faltanDocs === false) {
-                                            botonConfirmar.enable();
-                                        } else {
-                                            botonConfirmar.disable();
-                                        }
-                                    } catch (e) {
-                                        manejaException(e, ck);
-                                    } 
-                                },
-                                failure : function () {
-                                    debugError('callback de error al actualizar estado de checklist');
-                                    botonConfirmar.setLoading(false);
-                                }
-                            });
-                        } catch (e) {
-                            manejaException(e, ck);
-                        }
-                    }, 1000);
-                } catch (e) {
-                    debugError('Error al actualizar estado del boton de confirmar check', e);
-                }
-            }
-        });
-    } catch(e) {
-        manejaException(e, ck, mask);
-    }
-}
-
-function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar,ntramite)
-{
-    debug('_generarRemesaClic args:', arguments);
-    var ck = 'Revisando impresi\u00f3n';
-    try
-    {
-        var ven = centrarVentanaInterna(Ext.create('Ext.window.Window',
-        {
-            title     : 'Verificando impresi\u00f3n'
-            ,html     : '<span style="padding:5px;">Verificando impresi\u00f3n</span>'
-            ,width    : 200
-            ,height   : 100
-            ,modal    : true
-            ,closable : false
-        }).show());
-        
-        _setLoading(true,ven);
-        
-        Ext.Ajax.request(
-        {
-            url      : _GLOBAL_URL_MARCAR_IMPRESION
-            ,params  :
-            {
-                'params.cdunieco'    : cdunieco
-                ,'params.cdramo'     : cdramo
-                ,'params.estado'     : estado
-                ,'params.nmpoliza'   : nmpoliza
-                ,'params.marcar'     : marcar
-                ,'params.ntramiteIn' : _NVL(ntramite)
-            }
-            ,success : function(response)
-            {
-                _setLoading(false,ven);
-                ven.destroy();
-                var ck = 'Decodificando respuesta al marcar impresi\u00f3n';
-                try
-                {
-                    var json = Ext.decode(response.responseText);
-                    debug('### marcar impresion:',json);
-                    if(json.success==true)
-                    {
-                        if(json.params.preguntar=='S')
-                        {
-                            centrarVentanaInterna(Ext.MessageBox.confirm(
-                                'Confirmar'
-                                ,'¿Desea marcar el tr\u00e1mite como impreso y entregado?'
-                                ,function(btn)
-                                {
-                                    if(btn === 'yes')
-                                    {
-                                        _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,'S',ntramite);
-                                    }
-                                    else
-                                    {
-                                        debug('no quiso marcar');
-                                        callback();
-                                    }
-                                }
-                            ));
-                        }
-                        else if(json.params.marcado=='S')
-                        {
-                            debug('marcado');
-                            mensajeCorrecto('Aviso','La emisi\u00f3n/endoso se marc\u00f3 como impresa',function(){ callback(); });
-                        }
-                        else
-                        {
-                            debug('no preguntar');
-                            callback();
-                        }
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                _setLoading(false,ven);
-                ven.destroy();
-                errorComunicacion(null,'Error marcando impresi\u00f3n');
-            }
-        });
-    }
-    catch(e)
-    {
-        manejaException(e,ck);
-    }
-}
-
-function _generarRemesaClic2(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar,ntramite)
-{
-    callback();
-}
-
-function _iceMostrar() {
-    var hid = Ext.ComponentQuery.query('[hidden=true]');
-    for (var i = 0; i < hid.length; i++) {
-        var cmp = hid[i];
-        if (['grid', 'form', 'panel', 'window', 'button'].indexOf(cmp.xtype) != -1) {
-            try {
-                cmp.addCls('red');
-                cmp.show();
-            } catch (e) {}
-        }
-    }
-    hid = Ext.ComponentQuery.query('[name][hidden=true]');
-    for (var i = 0; i < hid.length; i++) {
-        var cmp = hid[i];
-        try {
-            cmp.addCls('red');
-            cmp.show();
-        } catch (e) {}
-    }
-    
-
 }
 
 function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
@@ -3739,241 +2591,6 @@ function mensajeValidacionNumSerie(titulo,imagenSeccion,txtRespuesta){
 	});
 	centrarVentanaInterna(validacionNumSerie.show());
 }
-
-function _iceNames () {
-    var names = Ext.ComponentQuery.query('[name]');
-    for (var i = 0; i < names.length; i++) {
-        names[i].setFieldLabel(names[i].fieldLabel + ', [' + names[i].name + ']');
-    }
-}
-
-function _iceMesaControl (ntramiteCargar) {
-    debug('_iceMesaControl()');
-    _mask('Redireccionando...');
-    Ext.create('Ext.form.Panel').submit({
-        url            : _GLOBAL_COMP_URL_MCFLUJO,
-        standardSubmit : true,
-        params		   : {
-        	'params.ntramiteCargar' : ntramiteCargar
-        }
-    });
-}
-
-function _habilitarBoton(btnId, status){
-    debug('>habilitarBoton', btnId);
-    var boton;
-    try{
-        if(!Ext.isEmpty(_fieldById(btnId))){
-            boton = _fieldById(btnId);
-            if(boton.xtype === 'button'){
-                debug('typeof(status)',typeof(status));
-                if(typeof(status) === 'boolean'){
-                    if(status){
-                        boton.enable();  
-                    }
-                    else{
-                        boton.disable();
-                    }
-                    //boton.enable = status;
-                }
-                else{
-                    debug('el status debe ser tipo booleano',status);
-                }
-            }
-            else{
-                debug('no existe id asociado a un boton...',btnId);
-            }
-        }
-    }
-    catch(err){
-        console.error("Error al habilitar boton "+err.message);
-    }
-    debug('<habilitarBoton',boton);
-}
-
-//funcion para revisar si estas en un iframe
-//http://stackoverflow.com/questions/326069/how-to-identify-if-a-webpage-is-being-loaded-inside-an-iframe-or-directly-into-t
-function inIframe () {
-    try {
-        return window.self !== window.top;
-    } catch (e) {
-        return true;
-    }
-}
-
-/* JTEZVA 29 NOVIEMBRE 2016
-FUNCION QUE RECUPERA COMPONENTES DE LA TABLA TCONFCMP
-LOS REGRESA YA CONSTRUIDOS EN UN OBJETO CON PROPIEDADES .fields .items .columns .buttons
-LANZA ERROR!
-parametros en el objeto de entrada params:
-    cdtiptra
-    cdunieco
-    cdramo
-    cdtipsit
-    estado
-    pantalla
-    seccion
-    orden
-    fields  boolean
-    items   boolean
-    columns boolean
-    buttons boolean
-*/
-function _obtenerComponentes (params, callback, callbackError) {
-    debug('_obtenerComponentes args:', arguments);
-    var mask, ck = 'Recuperando componentes';
-    try {
-        if (Ext.isEmpty(params)) {
-            throw 'Faltan los par\u00e1metros para recuperar componentes';
-        }
-        if (Ext.isEmpty(callback)) {
-            throw 'Faltan el callback para recuperar componentes';
-        }
-        if (typeof callback !== 'function') {
-            throw 'El callback para recuperar componentes debe ser una funci\u00f3n';
-        }
-        mask = _maskLocal(ck);
-        Ext.Ajax.request({
-            url     : _GLOBAL_URL_OBTENER_COMPONENTES,
-            params  : {
-                'params.cdtiptra' : params.cdtiptra || '',
-                'params.cdunieco' : params.cdunieco || '',
-                'params.cdramo'   : params.cdramo   || '',
-                'params.cdtipsit' : params.cdtipsit || '',
-                'params.estado'   : params.estado   || '',
-                'params.pantalla' : params.pantalla || '',
-                'params.seccion'  : params.seccion  || '',
-                'params.orden'    : params.orden    || '',
-                'params.fields'   : true === params.fields  ? 'S' : 'N',
-                'params.items'    : true === params.items   ? 'S' : 'N',
-                'params.columns'  : true === params.columns ? 'S' : 'N',
-                'params.buttons'  : true === params.buttons ? 'S' : 'N'
-            },
-            success : function (response) {
-                mask.close();
-                var ck = 'Decodificando respuesta al recuperar componentes';
-                try {
-                    var json = Ext.decode(response.responseText);
-                    debug('AJAX recuperar componentes:', json);
-                    if (true !== json.success) {
-                        throw json.message;
-                    }
-                    var componentes = {
-                        fields  : [],
-                        items   : [],
-                        columns : [],
-                        buttons : []
-                    };
-                    if (true === params.fields) {
-                        ck = 'Decodificando fields';
-                        componentes.fields = Ext.decode('[' + json.params.fields + ']');
-                    }
-                    if (true === params.items) {
-                        ck = 'Decodificando items';
-                        componentes.items = Ext.decode('[' + json.params.items + ']');
-                    }
-                    if (true === params.columns) {
-                        ck = 'Decodificando columns';
-                        componentes.columns = Ext.decode('[' + json.params.columns + ']');
-                    }
-                    if (true === params.buttons) {
-                        ck = 'Decodificando buttons';
-                        componentes.buttons = Ext.decode('[' + json.params.buttons + ']');
-                    }
-                    ck = 'Invocando callback con componentes recuperados';
-                    callback(componentes);
-                } catch (e) {
-                    manejaException(e, ck);
-                    try {
-                        callbackError();
-                    } catch (e) {}
-                }
-            },
-            failure : function () {
-                mask.close();
-                errorComunicacion(null, 'Error al recuperar componentes');
-                try {
-                    callbackError();
-                } catch (e) {}
-            }
-        });
-    } catch (e) {
-        generaException(e, ck, mask);
-        try {
-            callbackError();
-        } catch (e) {}
-    }
-}
-
-/* JTEZVA 29 NOVIEMBRE 2016
-ABREVIATURA PARA EXT.AJAX.REQUEST()
-RECIBE OBJETO PARAMS CON LOS ATRIBUTOS:
-mask (opcional) -> texto para mostrar
-url
-params
-success function (opcional)   -> funcion que se invoca si sale bien, se le manda el json
-background boolean (opcional) -> Si la peticion no debe robar el focus de la pantalla
-failure function (opcional)   -> funcion que se invoca si hay error
-LANZA ERROR!
-*/
-function _request(params) {
-    debug('_request args:', arguments);
-    var mask, ck;
-    try {
-        ck = params.mask || 'Cargando...';
-        var background = true === params.background;
-        mask = background
-            ? {close : function () {}}
-            : _maskLocal(ck);
-        Ext.Ajax.request({
-            url     : params.url,
-            params  : params.params,
-            success : function (response) {
-                mask.close();
-                var ck = 'Decodificando respuesta posterior al proceso: ' + ((params.mask || 'enviando petici\00f3n').toLowerCase());
-                try {
-                    var json = Ext.decode(response.responseText);
-                    debug('AJAX ...' + params.url.slice(-50) + ' json:', json);
-                    if (true !== json.success) {
-                        throw json.message || 'La petici\u00f3n no fue exitosa';
-                    }
-                    if (typeof params.success === 'function') {
-                        ck = 'Ejecutando callback posterior al request';
-                        params.success(json);
-                    }
-                } catch (e) {
-                    try {
-                        params.failure();
-                    } catch (e) {}
-                    manejaException(e, ck);
-                }
-            },
-            failure : function () {
-                mask.close();
-                try {
-                    params.failure();
-                } catch (e) {}
-                errorComunicacion(null, 'Error ' + (params.mask || 'de red al comunicarse con el servidor').toLowerCase());
-            }
-        });
-    } catch (e) {
-        generaException(e, ck, mask);
-    }
-}
-
-// funcion para copiar texto al portapapeles, origen:
-// http://stackoverflow.com/questions/25099409/copy-to-clipboard-as-plain-text
-// text -> texto a copiar
-function executeCopy (text) {
-    var input = document.createElement('textarea');
-    document.body.appendChild(input);
-    input.value = text;
-    input.focus();
-    input.select();
-    document.execCommand('Copy');
-    input.remove();
-}
-
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////
@@ -4165,3 +2782,90 @@ Ext.onReady(function()
     Ext.grid.RowEditor.prototype.cancelBtnText = "Cancelar";
 });
 
+
+
+/**
+ * Valida un RFC a partir de sus datos de entrada
+ * @param {} tipoPersona Indica si es F�sica o Moral
+ * @param {} nombre Primer nombre
+ * @param {} nombre2 Segundo nombre
+ * @param {} apaterno 
+ * @param {} amaterno 
+ * @param {} fecha Fecha de nacimiento para persona fisica, fecha inicio para persona moral
+ * @param {} rfc RFC a validar
+ * @return true si es valido, false si es invalido
+ */
+function validaRFC(tipoPersona, nombre, nombre2, apaterno, amaterno, fecha, rfc) {
+    try {
+        // Persona fisica
+        if(tipoPersona == 'F') {
+            if(rfc.substr(0, 1) != apaterno.substr(0, 1)) {
+                return false;
+            }
+            if(rfc.substr(2, 1) != amaterno.substr(0, 1)) {
+                return false;
+            }
+            if(rfc.substr(3, 1) != nombre.substr(0, 1)) {
+                return false;
+            }
+            if(rfc.substr(4, 2) != fecha.substr(8, 2)) {
+                return false;
+            }
+            if(rfc.substr(6, 2) != fecha.substr(3, 2)) {
+                return false;
+            }
+            if(rfc.substr(8, 2) != fecha.substr(0, 2)) {
+                return false;
+            }
+        } else if(tipoPersona == 'M' || tipoPersona == 'R') { // Persona moral
+            if(rfc.substr(0, 1) != nombre.substr(0, 1)) {
+                return false;
+            }
+            if(rfc.substr(1, 1) != nombre.substr(1, 1)) {
+                return false;
+            }
+            if(rfc.substr(2, 1) != nombre.substr(2, 1)) {
+                return false;
+            }
+            if(rfc.substr(3, 2) != fecha.substr(8, 2)) {
+                return false;
+            }
+            if(rfc.substr(5, 2) != fecha.substr(3, 2)) {
+                return false;
+            }
+            if(rfc.substr(7, 2) != fecha.substr(0, 2)) {
+                return false;
+            }
+        } else {
+            throw 'Error en la validacion, tipo de persona invalido';
+        }
+        return true;
+    } catch(e) {
+        throw 'Error al validar RFC' + e.toString();
+    }
+}
+
+
+/**
+ * Genera un RFC de acuerdo a los datos solicitados
+ * @param {} tipoPersona
+ * @param {} nombre
+ * @param {} nombre2
+ * @param {} apaterno
+ * @param {} amaterno
+ * @param {} fecha
+ */
+function generaRFC(tipoPersona, nombre, nombre2, apaterno, amaterno, fecha) {
+    try {
+        if(tipoPersona == 'F') {
+            return apaterno.substr(0,2) + amaterno.substr(0,1) + nombre.substr(0, 1) +
+                fecha.substr(8, 2) + fecha.substr(3, 2) + fecha.substr(0, 2);
+        } else if(tipoPersona == 'M' || tipoPersona == 'R') { // Persona moral
+            return nombre.substr(0,3) + fecha.substr(8, 2) + fecha.substr(3, 2) + fecha.substr(0, 2);
+        } else {
+            throw 'Error en la validacion, tipo de persona invalido';
+        }
+    } catch(e) {
+        throw 'Error al generar RFC' + e.toString();
+    }
+}

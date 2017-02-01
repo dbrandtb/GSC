@@ -1158,8 +1158,8 @@ Ext.onReady(function() {
                             'params.cdunieco': panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
                             'params.cdramo'  : panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
                             'params.estado'  : panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
-                            'params.nmpoliza': panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue()//,
-                            //'params.nmsuplem': panelBusqueda.down('form').getForm().findField("params.suplemento").getValue()
+                            'params.nmpoliza': panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
+                            'params.nmsuplem': panelBusqueda.down('form').getForm().findField("params.suplemento").getValue()
                         }
                     });
                 }
@@ -1955,11 +1955,11 @@ Ext.onReady(function() {
                     if(jsonResponse.success){
                     	mensajeCorrecto('Aviso','Ejecuci&oacuten correcta al regenerar documentos.');
                     }else{
-                    	showMessage('Error', 'Error al regenerar documentos.', Ext.Msg.OK, Ext.Msg.ERROR);
+                    	showMessage('Error', 'Error al regenerar documentos. '+jsonResponse.respuesta, Ext.Msg.OK, Ext.Msg.ERROR);
                     }
                     
                 }else{
-                    showMessage('Error', 'Error al regenerar documentos.', Ext.Msg.OK, Ext.Msg.ERROR);
+                    showMessage('Error', 'Error de conexion al regenerar documentos.', Ext.Msg.OK, Ext.Msg.ERROR);
                 }
             }
         });

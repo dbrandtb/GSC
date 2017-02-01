@@ -9,16 +9,11 @@
 var _p43_urlMarcarPolizaCancelar   = '<s:url namespace="/endosos"     action="marcarPolizaCancelarPorEndoso"     />';
 var _p43_urlConfirmar              = '<s:url namespace="/endosos"     action="confirmarEndosoCancelacionPolAuto" />';
 var _p43_urlValidaRazonCancelacion = '<s:url namespace="/cancelacion" action="validaRazonCancelacion"            />';
-var _p43_urlRecuperacionSimple     = '<s:url namespace="/emision" action="recuperacionSimple"        />';
 ////// urls //////
 
 ////// variables //////
 var _p43_smap1 = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 debug('_p43_smap1:',_p43_smap1);
-
-var _p43_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
-debug('_p43_flujo:',_p43_flujo);
-
 ////// variables //////
 
 ////// overrides //////
@@ -118,9 +113,11 @@ Ext.onReady(function()
                                             if(json.success==true)
                                             {
                                                 _setLoading(true,form);
-                                                
-                                                var paramsConfirmar =
+                                                Ext.Ajax.request(
                                                 {
+                                                    url      : _p43_urlConfirmar
+                                                    ,params  :
+                                                    {
                                                         'smap1.cdunieco'  : _p43_smap1.CDUNIECO
                                                         ,'smap1.cdramo'   : _p43_smap1.CDRAMO
                                                         ,'smap1.estado'   : _p43_smap1.ESTADO
@@ -130,30 +127,7 @@ Ext.onReady(function()
                                                         ,'smap1.fevencim' : _p43_smap1.FEVENCIM
                                                         ,'smap1.fecancel' : Ext.Date.format(_fieldByName('fecancel').getValue(),'d/m/Y')
                                                         ,'smap1.cdtipsup' : _p43_smap1.cdtipsup
-                                                };
-                                                
-                                                if(!Ext.isEmpty(_p43_flujo))
-                                                {
-                                                    paramsConfirmar['flujo.ntramite']  = _p43_flujo.ntramite;
-                                                    paramsConfirmar['flujo.status']    = _p43_flujo.status;
-                                                    paramsConfirmar['flujo.cdtipflu']  = _p43_flujo.cdtipflu;
-                                                    paramsConfirmar['flujo.cdflujomc'] = _p43_flujo.cdflujomc;
-                                                    paramsConfirmar['flujo.webid']     = _p43_flujo.webid;
-                                                    paramsConfirmar['flujo.tipoent']   = _p43_flujo.tipoent;
-                                                    paramsConfirmar['flujo.claveent']  = _p43_flujo.claveent;
-                                                    paramsConfirmar['flujo.cdunieco']  = _p43_flujo.cdunieco;
-                                                    paramsConfirmar['flujo.cdramo']    = _p43_flujo.cdramo;
-                                                    paramsConfirmar['flujo.estado']    = _p43_flujo.estado;
-                                                    paramsConfirmar['flujo.nmpoliza']  = _p43_flujo.nmpoliza;
-                                                    paramsConfirmar['flujo.nmsituac']  = _p43_flujo.nmsituac;
-                                                    paramsConfirmar['flujo.nmsuplem']  = _p43_flujo.nmsuplem;
-                                                    paramsConfirmar['flujo.aux']       = _p43_flujo.aux;
-                                                }
-                                                
-                                                Ext.Ajax.request(
-                                                {
-                                                    url      : _p43_urlConfirmar
-                                                    ,params  : paramsConfirmar
+                                                    }
                                                     ,success : function(response)
                                                     {
                                                         _setLoading(false,form);
@@ -246,7 +220,6 @@ Ext.onReady(function()
             errorComunicacion();
         }
     });
-    
     ////// loaders //////
     
     comboMotivoCanc = _fieldByName('cdrazon',panCanForm);
@@ -286,41 +259,6 @@ Ext.onReady(function()
             panCanInputFecha.setReadOnly(false);
             _p43_smap1.cdtipsup = '52';
         }
-        
-        
-        Ext.Ajax.request(
-   	    {
-   	         url      : _p43_urlRecuperacionSimple
-   	        ,params  :
-   	        {
-   	            'smap1.procedimiento' : 'RECUPERAR_FECHAS_LIMITE_ENDOSO'
-   	            ,'smap1.cdunieco'     : _p43_smap1.CDUNIECO
-   	            ,'smap1.cdramo'       : _p43_smap1.CDRAMO
-   	            ,'smap1.estado'       : _p43_smap1.ESTADO
-   	            ,'smap1.nmpoliza'     : _p43_smap1.NMPOLIZA
-   	            ,'smap1.cdtipsup'     : _p43_smap1.cdtipsup
-   	        }
-   	        ,success : function(response)
-   	        {
-   	            var json = Ext.decode(response.responseText);
-   	            debug('### fechas:',json);
-   	            if(json.exito)
-   	            {
-   	            	panCanInputFecha.setValue(json.smap1.FECHA_REFERENCIA);
-   	            	panCanInputFecha.setMinValue(json.smap1.FECHA_MINIMA);
-   	             	panCanInputFecha.setMaxValue(json.smap1.FECHA_MAXIMA);
-   	             	panCanInputFecha.isValid();
-   	            }
-   	            else
-   	            {
-   	                mensajeError(json.respuesta);
-   	            }
-   	        }
-   	        ,failure : function()
-   	        {
-   	            errorComunicacion();
-   	        }
-   	    });
         
         debug('<comboMotivocambio');
 }

@@ -130,19 +130,13 @@
         <pattern>/jsp-script/proceso/emision/cotizacionGrupo2.jsp</pattern>
         <pattern>/jsp-script/proceso/emision/cotizacionAutoIndividual.jsp</pattern>
         <pattern>/jsp-script/proceso/emision/cotizacionAutoFlotilla.jsp</pattern>
-        
-        <pattern>/jsp-script/proceso/emision/cargarExcel.jsp</pattern>
-        
         <pattern>/jsp-script/proceso/emision/emisionAutoIndividual.jsp</pattern>
         <pattern>/jsp-script/proceso/emision/emisionAutoFlotilla.jsp</pattern>
         <pattern>/emision/cotizacion.action</pattern>
         <pattern>/emision/cotizacionGrupo.action</pattern>
         <pattern>/emision/cotizacionGrupo2.action</pattern>
         <pattern>/emision/cotizacionAutoIndividual.action</pattern>
-        <pattern>/emision/cargarExcel.action</pattern>
-        
         <pattern>/emision/cotizacionAutoFlotilla.action</pattern>
-        
         <pattern>/emision/emisionAutoIndividual.action</pattern>
         <pattern>/emision/emisionAutoFlotilla.action</pattern>
         
@@ -188,9 +182,6 @@
         <pattern>/estadisticas/*.action</pattern>
         <pattern>/jsp-script/proceso/estadisticas/*.jsp</pattern>
         
-        <pattern>/indicadores/*.action</pattern>
-        <pattern>/jsp-script/proceso/indicadores/*.jsp</pattern>
-        
         <pattern>/persona/*.action*</pattern>
         
         <pattern>/jsp-script/consultas/*.jsp</pattern>
@@ -198,8 +189,6 @@
         <pattern>/flujomesacontrol/*.action*</pattern>
         <pattern>/jsp-script/proceso/flujoMesaControl/*.jsp</pattern>
         
-        <pattern>/emision/*.action*</pattern>
-        <pattern>/jsp-script/proceso/emision/*.jsp</pattern>
         
         <pattern>/demo/*.action*</pattern>
         <pattern>/jsp-script/proceso/demo/*.jsp</pattern>
@@ -212,8 +201,6 @@
         
         <pattern>/convenios/*.action*</pattern>
         <pattern>/jsp-script/proceso/convenios/*.jsp</pattern>
-        
-        <pattern>/despachador/*.action*</pattern>
 
    	</decorator>
 	

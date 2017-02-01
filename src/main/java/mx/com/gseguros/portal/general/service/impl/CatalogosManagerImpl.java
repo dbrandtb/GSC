@@ -1395,7 +1395,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		
 		List<GenericVO> lista = new ArrayList<GenericVO>();
-		List<Map<String,String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc(agrupamc, String.valueOf(TipoModelado.FLUJOS_PROCESOS.getCdtipmod()));
+		List<Map<String,String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc(agrupamc);
 		for(Map<String,String>tipoFlujo:tiposFlujo)
 		{
 			lista.add(new GenericVO(
@@ -1907,7 +1907,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, String vigente) throws Exception
+	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2107,17 +2107,6 @@ public class CatalogosManagerImpl implements CatalogosManager {
     public List<GenericVO> obtieneAdministradoraXAgente(String pv_cdagente_i) throws Exception  {      
        
         return catalogosDAO.obtieneAdminXAgente(pv_cdagente_i);
-    }
-	
-   @Override
-    public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit, String nivel) throws Exception {
-        logger.info(
-                new StringBuilder()
-                .append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-                .append("\n@@@@@@ recuperarListaFiltroPropiedadInciso @@@@@@")
-                .toString()
-                );
-        return catalogosDAO.recuperarListaFiltroPropiedadInciso(cdramo, cdtipsit, nivel);
     }
 	
 }

@@ -596,7 +596,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		public CopagoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
 			
 			CopagoVO copago = new CopagoVO();
-    		copago.setOrden(rs.getString("ORDEN"));
+    		copago.setOrden(rs.getInt("ORDEN"));
     		copago.setDescripcion(rs.getString("DESCRIPCION"));
     		copago.setValor(rs.getString("VALOR"));
     		copago.setNivel(rs.getInt("NIVEL"));
@@ -952,4 +952,5 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

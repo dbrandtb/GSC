@@ -5,17 +5,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>
-.valorNoOriginal {
-    background: #FFFF99;
+.valorNoOriginal
+{
+    background : #FFFF99;
 }
-.valorRenovacionColec {
-    background: #FFD299;
+._p21_editorLectura
+{
+    visibility : hidden;
 }
-._p21_editorLectura {
-    visibility: hidden;
-}
-.tatrigarHide {
-    display: none;
+.tatrigarHide
+{
+    display : none;
 }
 </style>
 <!-- Paging Persistence library -->
@@ -50,9 +50,6 @@ Ext.override(Ext.form.NumberField,
 ////// variables //////
 var _p21_urlObtenerCoberturas            = '<s:url namespace="/emision"         action="obtenerCoberturasPlan"            />';
 var _p21_urlObtenerCoberturasColec       = '<s:url namespace="/emision"         action="obtenerCoberturasPlanColec"       />';
-var _p21_urlObtienePlanDefinitivo        = '<s:url namespace="/emision"         action="obtienePlanDefinitivo"       />';
-var _p21_urlLanzaAprobacionNombrePlan    = '<s:url namespace="/emision"         action="lanzaAprobacionNombrePlan"       />';
-var _p21_urlObtenerSumaAseguradaDefault  = '<s:url namespace="/emision"         action="obtenSumaAseguradosMedicamentos"  />';
 var _p21_urlObtenerHijosCobertura        = '<s:url namespace="/emision"         action="obtenerTatrigarCoberturas"        />';
 var _p21_urlSubirCenso                   = '<s:url namespace="/emision"         action="subirCenso"                       />';
 var _p21_urlSubirCensoCompleto           = '<s:url namespace="/emision"         action="subirCensoCompleto"               />';
@@ -68,7 +65,7 @@ var _p21_urlObtenerDatosAdicionalesGrupo = '<s:url namespace="/emision"         
 var _p21_urlObtenerTvalogarsGrupo        = '<s:url namespace="/emision"         action="cargarTvalogarsGrupo"             />';
 var _p21_urlObtenerTarifaEdad            = '<s:url namespace="/emision"         action="cargarTarifasPorEdad"             />';
 var _p21_urlObtenerTarifaCobertura       = '<s:url namespace="/emision"         action="cargarTarifasPorCobertura"        />';
-var _p21_urlMesaControl                  = '<s:url namespace="/flujomesacontrol" action="mesaControl"                     />';
+var _p21_urlMesaControl                  = '<s:url namespace="/mesacontrol"     action="mcdinamica"                       />';
 var _p21_urlActualizarStatus             = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite"          />';
 var _p21_urlEmitir                       = '<s:url namespace="/emision"         action="emitirColectivo"                  />';
 var _p21_urlViewDoc                      = '<s:url namespace="/documentos"      action="descargaDocInline"                />';
@@ -97,8 +94,6 @@ var _p21_urlComplementoCotizacion        = '<s:url namespace="/emision"         
 var _p21_urlRecuperacion                 = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
 var _p21_urlRestaurarRespaldoCenso       = '<s:url namespace="/emision"         action="restaurarRespaldoCenso"           />';
 var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
-var _p21_urlRefrescarCensoColectivo      = '<s:url namespace="/emision"         action="refrescarCensoColectivo"          />';
-var _p21_urlReporte                 	 = '<s:url namespace="/consultasPoliza" action="consultaIncisosPoliza" />';
 
 var _p21_urlCargarAseguradosFiltroGrupoPag     = '<s:url namespace="/emision"         action="cargarAseguradosFiltroGrupoPag"      />';
 var _p21_urlCargarAseguradosFiltroExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosFiltroExtraprimas"   />';
@@ -116,8 +111,6 @@ var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nomb
 
 var _p21_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _p21_reportsServerUser = '<s:text name="pass.servidor.reports" />';
-var _TIPO_SITUACION_RENOVACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
-var _EN_ESPERA_DE_COTIZACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -144,7 +137,6 @@ var _contratanteSaved = false;
 var _callbackDomicilioAseg = false;
 
 var _ventanaPersonas;
-var _numIDpantalla;
 
 var _ventanaClausulas;
 var _ventanaGridAgentesSuperior;
@@ -161,8 +153,6 @@ var cdmuniciDefinitivo;
 
 _defaultNmordomProspecto = undefined;// valor default del numero de domicilio del prospecto
 var nmorddomProspecto = _defaultNmordomProspecto; 
-
-var _faltaAprobarNombrePlan = false;
 
 var expande                 = function(){};
 
@@ -188,15 +178,6 @@ var _p21_arrayNombresExtrreno =
 
 var _p21_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 debug('_p21_smap1:',_p21_smap1);
-var _p21_cdtipsup = _p21_smap1.cdtipsup;
-
-_p21_smap1.modificarTodo = false;
-
-if (Number(_p21_smap1.status) === 24
-    && [RolSistema.Agente, RolSistema.EjecutivoVenta, RolSistema.MesaControl].indexOf(_p21_smap1.cdsisrol) != -1
-    ) {
-    _p21_smap1.modificarTodo = true;
-}
 
 //se declara el mapa como cotcol para el archivo comun funcionesCotizacionGrupo.js
 var _cotcol_smap1 = _p21_smap1;
@@ -222,16 +203,6 @@ var _p21_editorNombreGrupo=
     xtype       : 'textfield'
     ,allowBlank : false
     ,minLength  : 3
-};
-
-var _p21_editorNombrePlan=
-{
-    xtype       : 'textfield'
-    ,allowBlank : true
-    ,minLength  : 3
-    ,maxLength  : ([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? 40    : 150
-    ,readOnly   : ([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ) ? false : true
-    ,sinmayus   : true
 };
 
 var _p21_editorPlan = <s:property value="imap.editorPlanesColumn" />.editor;
@@ -297,9 +268,6 @@ var _p21_TARIFA_MODIFICADA = 2;
 var _p82_callback;
 var _p47_callback;
 
-var _cotcol_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-debug('_cotcol_flujo:', _cotcol_flujo, '.');
-
 var listaSinPadre = [];
 ////// variables //////
 
@@ -323,7 +291,6 @@ Ext.onReady(function()
             'letra'
             ,'nombre'
             ,'cdplan'
-            ,'dsplanl'
             ,'ptsumaaseg'
             ,'ayudamater'
             ,'asisinte'
@@ -341,7 +308,6 @@ Ext.onReady(function()
             ,'bonoince'
             ,'otrogast'
             ,'paquete'
-            ,'cdplanorig'
         ]
     });
     
@@ -474,7 +440,7 @@ Ext.onReady(function()
             ,handler  : _p21_editarGrupoClic
         });
     }
-    if(!_p21_ntramite || _cotcol_smap1.modificarTodo === true)
+    if(!_p21_ntramite)
     {
         botoneslinea.push(
         {
@@ -501,7 +467,6 @@ Ext.onReady(function()
             ,handler : _p21_revisarAseguradosClic
         });
     }
-    
     _p21_tabGruposLineal =
     {
         title     : 'RESUMEN SUBGRUPOS'
@@ -516,7 +481,7 @@ Ext.onReady(function()
                     text     : 'Agregar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
                     ,handler : _p21_agregarGrupoClic
-                    ,hidden  : _p21_ntramite && _cotcol_smap1.modificarTodo === false ? true : false
+                    ,hidden  : _p21_ntramite ? true : false
                 }
             ]
             ,columns :
@@ -541,12 +506,6 @@ Ext.onReady(function()
                     {
                         return rendererColumnasDinamico(v,'cdplan');
                     }
-                }
-                ,{
-                    header     : 'Nombre del Plan'
-                    ,dataIndex : 'dsplanl'
-                    ,width     : 380
-                    ,editor    : _p21_editorNombrePlan
                 }
                 ,{
                     header     : 'Paquete'
@@ -635,16 +594,7 @@ Ext.onReady(function()
                             !_p21_ntramite||_p21_ntramiteVacio||(!Ext.isEmpty(_p21_smap1.sincenso)&&_p21_smap1.sincenso=='S')
                         ))
                         {
-                            if (_cotcol_smap1.modificarTodo === false) {
-                                if ([
-                                        RolSistema.SuscriptorTecnico,
-                                        RolSistema.SupervisorTecnico,
-                                        RolSistema.SubdirectorSalud,
-                                        RolSistema.DirectorSalud
-                                    ].indexOf(_cotcol_smap1.cdsisrol) == -1) {
-                                    return false;
-                                }
-                            }
+                            return false;
                         }
                         debug('beforeedit:',context.record.get('cdplan'));
                         _p21_editorSumaAseg.forceSelection=false;
@@ -653,12 +603,6 @@ Ext.onReady(function()
                         {
                             _p21_estiloEditores(context.record.get('cdplan'));
                         }
-                    },
-                    edit: function(editor,context){
-                    	var editedRecord = context.record;
-                    	if(!Ext.isEmpty(editedRecord.get('dsplanl'))){
-                    		editedRecord.set('dsplanl',editedRecord.get('dsplanl').toUpperCase());
-                    	}
                     }
                 }
             })
@@ -686,7 +630,7 @@ Ext.onReady(function()
             ,handler : _p21_editarGrupoClic
         }
     ];
-    if(!_p21_ntramite || _cotcol_smap1.modificarTodo === true)
+    if(!_p21_ntramite)
     {
         botonesModificada.push(
         {
@@ -727,7 +671,7 @@ Ext.onReady(function()
                     text     : 'Agregar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
                     ,handler : _p21_agregarGrupoClic
-                    ,hidden  : _p21_ntramite && _cotcol_smap1.modificarTodo === false ? true : false
+                    ,hidden  : _p21_ntramite ? true : false
                 }
             ]
             ,columns :
@@ -754,12 +698,6 @@ Ext.onReady(function()
                     }
                 }
                 ,{
-                    header     : 'Nombre del Plan'
-                    ,dataIndex : 'dsplanl'
-                    ,width     : 380
-                    ,editor    : _p21_editorNombrePlan
-                }
-                ,{
                     header     : 'Paquete'
                     ,dataIndex : 'paquete'
                     ,width     : 120
@@ -779,12 +717,6 @@ Ext.onReady(function()
                     {
                         return rendererColumnasDinamico(v,'ptsumaaseg');
                     }
-                },
-                {
-                    header     : 'Plan Original'
-                    ,dataIndex : 'cdplanorig'
-                    ,hidden    : true
-                    ,width     : 120
                 }
                 ,{
                     xtype         : 'actioncolumn'
@@ -802,36 +734,14 @@ Ext.onReady(function()
                 ,errorSummary : true
                 ,listeners    :
                 {
-                    beforeedit : function(editor,context)
+                    beforeedit : function(me)
                     {
                         if(!(
                             !_p21_ntramite||_p21_ntramiteVacio||(!Ext.isEmpty(_p21_smap1.sincenso)&&_p21_smap1.sincenso=='S')
                         ))
                         {
-                            if (_cotcol_smap1.modificarTodo === false) {
-                                if ([
-                                        RolSistema.SuscriptorTecnico,
-                                        RolSistema.SupervisorTecnico,
-                                        RolSistema.SubdirectorSalud,
-                                        RolSistema.DirectorSalud
-                                    ].indexOf(_cotcol_smap1.cdsisrol) == -1) {
-                                    return false;
-                                }
-                            }
+                            return false;
                         }
-                        debug('beforeedit clasif modif:',context.record.get('cdplan'));
-                        _p21_editorSumaAseg.forceSelection=false;
-                        _p21_editorSumaAseg.heredar(context.record.get('cdplan'));
-                        if(context.record.get('cdplan')+'x'!='x'&&_p21_clasif==_p21_TARIFA_LINEA&&_p21_smap1.LINEA_EXTENDIDA=='S')
-                        {
-                            _p21_estiloEditores(context.record.get('cdplan'));
-                        }
-                    },
-                    edit: function(editor,context){
-                    	var editedRecord = context.record;
-                    	if(!Ext.isEmpty(editedRecord.get('dsplanl'))){
-                    		editedRecord.set('dsplanl',editedRecord.get('dsplanl').toUpperCase());
-                    	}
                     }
                 }
             })
@@ -854,7 +764,8 @@ Ext.onReady(function()
     ////// contenido //////
     _p_21_panelPrincipal = Ext.create('Ext.tab.Panel',
     {
-        itemId     : '_p21_tabpanel'
+        renderTo   : '_p21_divpri'
+        ,itemId    : '_p21_tabpanel'
         ,border    : 0
         ,items     :
         [
@@ -876,7 +787,6 @@ Ext.onReady(function()
                                 xtype   : 'fieldset'
                                 ,title  : '<span style="font:bold 14px Calibri;">DATOS DEL CONTRATANTE</span>'
                                 ,hidden: (_p21_smap1.cdsisrol=='SUSCRIPTOR'&& (_p21_smap1.status-0==19 || _p21_smap1.status-0==21 || _p21_smap1.status-0==23) ) ? true :false
-                                ,disabled : ( !Ext.isEmpty(_p21_smap1.estado) && _p21_smap1.estado == 'M' )   
                                 ,layout :
                                 {
                                     type     : 'table'
@@ -916,7 +826,6 @@ Ext.onReady(function()
 										                'smap1.cdideper' : '',
 										                'smap1.cdideext' : '',
 										                'smap1.esSaludDanios' : 'S',
-										                'smap1.polizaEnEmision': 'S',
 										                'smap1.esCargaClienteNvo' : 'N' ,
 										                'smap1.ocultaBusqueda' : 'S' ,
 										                'smap1.cargaCP' : '',
@@ -925,8 +834,7 @@ Ext.onReady(function()
 										                'smap1.activaCveFamiliar': 'N',
 										                'smap1.modoRecuperaDanios': 'N',
 										                'smap1.modoSoloEdicion': 'N',
-										                'smap1.contrantantePrincipal': 'S',
-										                'smap1.tomarUnDomicilio' : 'S'
+										                'smap1.contrantantePrincipal': 'S'
 										            }
 										     });
 										     
@@ -957,7 +865,6 @@ Ext.onReady(function()
 												        ,codpostal: json.smap1.CDPOSTAL
 												        ,cdedo: json.smap1.CDEDO
 												        ,cdmunici: json.smap1.CDMUNICI
-												        ,nmorddom: json.smap1.NMORDDOM
 												        ,confirmaEmision: 'S'
 												    }
 												};
@@ -1135,7 +1042,7 @@ Ext.onReady(function()
                                 xtype     : 'fieldset'
                                 ,title    : '<span style="font:bold 14px Calibri;">CENSO</span>'
                                 ,defaults : { style : 'margin:5px;' }
-                                ,hidden   : _p21_ntramite&&_p21_smap1.sincenso!='S' && _cotcol_smap1.modificarTodo === false ? true : false
+                                ,hidden   : _p21_ntramite&&_p21_smap1.sincenso!='S' ? true : false
                                 ,items    :
                                 [
                                     {
@@ -1164,7 +1071,7 @@ Ext.onReady(function()
                                         ,fieldLabel : 'Censo de asegurados'
                                         ,name       : 'censo'
                                         ,buttonText : 'Examinar...'
-                                        ,allowBlank : _p21_ntramite&&_p21_smap1.sincenso!='S' && _cotcol_smap1.modificarTodo === false ? true : false
+                                        ,allowBlank : _p21_ntramite&&_p21_smap1.sincenso!='S' ? true : false
                                         ,buttonOnly : false
                                         ,width      : 450
                                         ,cAccept    : ['xls','xlsx']
@@ -1193,26 +1100,7 @@ Ext.onReady(function()
                             }
                         ]
                         ,buttonAlign : 'center'
-                        ,buttons:[{
-                            xtype :'panel',
-                            defaults : { style : 'margin:5px' },
-                            border   : 0,
-                            width    : 950,
-                            ui       :'footer',
-                            items    : [
-                                <s:if test='%{getImap().get("botones")!=null}'>
-                                    <s:property value="imap.botones" />,
-                                </s:if>
-                                {
-                                    text     : 'Limpiar'
-                                    ,xtype   : 'button'
-                                    ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                                    ,handler : _p21_cotizarNueva
-                                    ,hidden  : _p21_ntramite ? true : false
-                                }
-                            ]
-                        }]
-                        /*,buttons     :
+                        ,buttons     :
                         [
                             <s:if test='%{getImap().get("botones")!=null}'>
                                 <s:property value="imap.botones" />,
@@ -1223,7 +1111,7 @@ Ext.onReady(function()
                                 ,handler : _p21_cotizarNueva
                                 ,hidden  : _p21_ntramite ? true : false
                             }
-                        ]*/
+                        ]
                     })
                 ]
             }
@@ -1256,49 +1144,6 @@ Ext.onReady(function()
         }
     });
     
-    Ext.create('Ext.panel.Panel',{
-        renderTo : '_p21_divpri',
-        itemId   : '_cotcol_paneltop',
-        border   : 0,
-        items    : [
-            Ext.create('Ext.panel.Panel',
-            {
-                itemId       : '_cotcol_panelFlujo'
-                ,title       : 'ACCIONES'
-                ,hidden      : Ext.isEmpty(_cotcol_flujo)
-                ,buttonAlign : 'left'
-                ,buttons     : []
-                ,style       : 'margin-bottom: 5px;'
-                ,listeners   :
-                {
-                    afterrender : function(me)
-                    {
-                        if(!Ext.isEmpty(_cotcol_flujo))
-                        {
-                            _cargarBotonesEntidad(
-                                _cotcol_flujo.cdtipflu
-                                ,_cotcol_flujo.cdflujomc
-                                ,_cotcol_flujo.tipoent
-                                ,_cotcol_flujo.claveent
-                                ,_cotcol_flujo.webid
-                                ,me.itemId//callback
-                                ,_cotcol_flujo.ntramite
-                                ,_cotcol_flujo.status
-                                ,_cotcol_flujo.cdunieco
-                                ,_cotcol_flujo.cdramo
-                                ,_cotcol_flujo.estado
-                                ,_cotcol_flujo.nmpoliza
-                                ,_cotcol_flujo.nmsituac
-                                ,_cotcol_flujo.nmsuplem
-                                ,null//callbackDespuesProceso
-                            );
-                        }
-                    }
-                }
-            }),
-            _p_21_panelPrincipal
-        ]
-    });
     
     _callbackContPrincipal = function(json){
     	
@@ -1323,7 +1168,6 @@ Ext.onReady(function()
 		        ,codpostal: json.smap1.CDPOSTAL
 		        ,cdedo: json.smap1.CDEDO
 		        ,cdmunici: json.smap1.CDMUNICI
-		        ,nmorddom: json.smap1.NMORDDOM
 		        ,confirmaEmision: 'S'
 		    }
 		};
@@ -1366,7 +1210,6 @@ Ext.onReady(function()
             ,titleCollapse  : true
             ,startCollapsed : true
             ,resizable      : false
-            ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
             ,loader         :
             {
                 scripts   : true
@@ -1473,29 +1316,8 @@ Ext.onReady(function()
         debugError('error inofensivo al querer mover boton de agentes',e);
     }
     
-    
-    try
-    {
-    	if(_p21_cdtipsup  == _TIPO_SITUACION_RENOVACION){
-    		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
-    		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].show();
-    		Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].show();
-    		Ext.ComponentQuery.query('button[text=Complementar]')[0].hide();
-    	}else{
-    		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
-    		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].hide();
-    		Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].hide();
-    		Ext.ComponentQuery.query('button[text=Complementar]')[0].show();
-    	}
-    }
-    catch(e)
-    {
-        debugError('error para la renovacion de la Poliza',e);
-    }
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
-    
-    //_iceMostrar();
     ////// custom //////
     
     ////// loaders //////
@@ -1690,14 +1512,9 @@ Ext.onReady(function()
                 debug('json response:',json);
                 if(json.exito)
                 {
-                    
-                    _faltaAprobarNombrePlan = ( !Ext.isEmpty(json.smap1) && !Ext.isEmpty(json.smap1.ESPERA_AUT_NOMPLAN_SUPERV) && "S" == json.smap1.ESPERA_AUT_NOMPLAN_SUPERV)? true : false;
-                        
-                    //alert('falta aprobar:' + _faltaAprobarNombrePlan);
-                    
                     for(var prop in json.params)
                     {
-                        if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif'&&prop!='swexiper'&&prop!='nmorddom')
+                        if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif'&&prop!='swexiper')
                         {
                             if(prop=='pcpgocte')
                             {
@@ -1800,7 +1617,6 @@ Ext.onReady(function()
 				                'smap1.cdideper' : '',
 				                'smap1.cdideext' : '',
 				                'smap1.esSaludDanios' : 'S',
-				                'smap1.polizaEnEmision': 'S',
 				                'smap1.esCargaClienteNvo' : 'N' ,
 				                'smap1.ocultaBusqueda' : 'S' ,
 				                'smap1.cargaCP' : '',
@@ -1809,9 +1625,7 @@ Ext.onReady(function()
 				                'smap1.activaCveFamiliar': 'N',
 				                'smap1.modoRecuperaDanios': 'N',
 				                'smap1.modoSoloEdicion': 'N',
-				                'smap1.contrantantePrincipal': 'S',
-				                'smap1.tomarUnDomicilio' : 'S',
-	                    		'smap1.cargaOrdDomicilio' : (!Ext.isEmpty(json.params['swexiper']) && (json.params['swexiper'] == 'S' || json.params['swexiper'] == 's') && !Ext.isEmpty(cargacdperson))? json.params['nmorddom'] : ''
+				                'smap1.contrantantePrincipal': 'S'
 				            }
 			            });
                     }
@@ -2324,11 +2138,7 @@ function _p21_borrarGrupoClic(grid,rowIndex)
 
 function _p21_editarGrupoClic(grid,rowIndex)
 {
-	var gridGrupos  = grid.up();
-	var record      = grid.getStore().getAt(rowIndex);
-	var recordGrupo = gridGrupos.getStore().getAt(rowIndex);
-    
-    
+    var record = grid.getStore().getAt(rowIndex);
     debug('>_p21_editarGrupoClic:',record);
     
 // var cdPlanParaQuitarPrim = record.get('cdplan');
@@ -2343,15 +2153,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
         if(!valido)
         {
             mensajeWarning('Favor de seleccionar un plan para el subgrupo');
-        }
-    }
-
-    if(valido)
-    {
-        valido = !Ext.isEmpty(record.get('ptsumaaseg'));
-        if(!valido)
-        {
-            mensajeWarning('Favor de seleccionar una Suma Asegurada para el subgrupo');
         }
     }
     
@@ -2387,15 +2188,11 @@ function _p21_editarGrupoClic(grid,rowIndex)
                             url      : _p21_urlObtenerHijosCobertura
                             ,params  :
                             {
-                                'smap1.cdramo'      : _p21_smap1.cdramo
-                                ,'smap1.cdtipsit'   : _p21_smap1.cdtipsit
-                                ,'smap1.cdplan'     : record.get('cdplan')
-                                ,'smap1.cdgarant'   : json.slist1[i].CDGARANT
-                                ,'smap1.indice'     : i
-                                ,'smap1.cdtipsup'   : _p21_cdtipsup
-                                ,'smap1.nmpolant'   : _p21_smap1.nmpolant
-                                ,'smap1.cdgrupo'    : record.get('letra')
-                                ,'smap1.cdplanOrig' : record.get('cdplanorig')
+                                'smap1.cdramo'    : _p21_smap1.cdramo
+                                ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
+                                ,'smap1.cdplan'   : record.get('cdplan')
+                                ,'smap1.cdgarant' : json.slist1[i].CDGARANT
+                                ,'smap1.indice'   : i
                             }
                             ,success : function(response)
                             {
@@ -2420,32 +2217,19 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 {
                                                     var compara = function(me)
                                                     {
-                                                        debug("Valor cdtipsup ==>",_p21_cdtipsup);
                                                         if(me.isDisabled())
                                                         {
-                                                            if(_p21_cdtipsup == _TIPO_SITUACION_RENOVACION){
-                                                            	me.removeCls('valorRenovacionColec');
-                                                            }else{
-                                                            	me.removeCls('valorNoOriginal');
-                                                            }
+                                                            me.removeCls('valorNoOriginal');
                                                         }
                                                         else
                                                         {
-                                                        	if(me.getValue()!=me.valorInicial)
+                                                            if(me.getValue()!=me.valorInicial)
                                                             {
-                                                                if(_p21_cdtipsup == _TIPO_SITUACION_RENOVACION){
-	                                                            	me.addCls('valorRenovacionColec');
-	                                                            }else{
-	                                                            	me.addCls('valorNoOriginal');
-	                                                            }
+                                                                me.addCls('valorNoOriginal');
                                                             }
                                                             else
                                                             {
-                                                                if(_p21_cdtipsup == _TIPO_SITUACION_RENOVACION){
-	                                                            	me.removeCls('valorRenovacionColec');
-	                                                            }else{
-	                                                            	me.removeCls('valorNoOriginal');
-	                                                            }
+                                                                me.removeCls('valorNoOriginal');
                                                             }
                                                         }
                                                     };
@@ -2494,17 +2278,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 }
                                             }
                                             debug('json.slist1[j]::', json.slist1[j]);
-                                            debug('SWOBLIGA=' + json.slist1[j].SWOBLIGA + ', SWSELECCIONADO=' + json.slist1[j].SWSELECCIONADO + ', SWEDITABLE=' + json.slist1[j].SWEDITABLE);
-                                            //amparada ch
-                                            
-                                            var vChecked = false;
-                                            var vAmparada='N';
-
-                                            if ((json.slist1[j].SWOBLIGA == 'S') || (json.slist1[j].SWSELECCIONADO == 'S')) { 
-                                            	vChecked=true;
-                                            	vAmparada='S';
-                                            }
-                                            
+                                            debug('SWOBLIGA=' + json.slist1[j].SWOBLIGA + ', SWSELECCIONADO=' + json.slist1[j].SWSELECCIONADO + ', SWHABILITADO=' + json.slist1[j].SWHABILITADO);
                                             //para factores menor a cero
                                             var item = Ext.create('Ext.form.Panel',
                                             {
@@ -2515,7 +2289,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 ,defaults   : { style : 'margin:5px;', labelWidth : 100 }
                                                 ,items      : hijos
                                                 ,cdgarant   : json.slist1[j].CDGARANT
-                                                ,hidden     : json.slist1[j].SWVISIBLE=='N'
                                                 ,tbar       :
                                                 [
                                                     {
@@ -2527,19 +2300,18 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         xtype       : 'checkbox' 
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
-                                                        //,inputValue : 'S'
-                                                        //,checked    : json.slist1[j].SWOBLIGA == 'S' && (json.slist1[j].SWSELECCIONADO == 'S')
-                                                        ,inputValue : vAmparada
-                                                        ,checked    : vChecked
-                                                        
-                                                        ,readOnly   : json.slist1[j].SWEDITABLE == 'N'
+                                                        ,inputValue : 'S'
+                                                        ,checked    : json.slist1[j].SWOBLIGA=='S'&&(json.slist1[j].SWSELECCIONADO=='S')//SWMODIFI == 'S' es el encargado de la Asistencia a VIajes
+                                                        //,disabled : json.slist1[j].SWHABILITADO=='N'
+                                                        ,readOnly   : json.slist1[j].SWHABILITADO=='N'
+                                                        //,hideTrigger: json.slist1[j].SWHABILITADO=='N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
                                                         {
                                                             boxready : function(checkbox)
                                                             {
                                                                 var value=checkbox.getValue();
-                                                                debug('checkbox boxready:',value, me.up('form').cdgarant);
+                                                                debug('checkbox boxready:',value);
                                                                 var form = checkbox.up().up();
                                                                 for(var l=0;l<form.items.items.length;l++)
                                                                 {
@@ -2548,7 +2320,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                             }
                                                             ,change : function(me,value)
                                                             {
-                                                                debug('checkbox change1:',value,me.up('form').cdgarant);
+                                                                debug('checkbox change:',value,me.up('form').cdgarant);
                                                                 var form       = me.up('form');
                                                                 var miCdgarant = form.cdgarant;
                                                                 for(var l=0;l<form.items.items.length;l++)
@@ -2566,8 +2338,9 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         {
                                                                             debugError('Error cachado:',e);
                                                                         }
-                                                                    } 
+                                                                    }
                                                                 }
+                                                                
                                                                 //4MAT y 4AYM
                                                                 if(_p21_smap1.cdsisrol!='COTIZADOR'&&value)
                                                                 {
@@ -2600,7 +2373,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         debugError('error inofensivo al validar 4mat contra 4aym',e);
                                                                     }
                                                                 }
-
+                                                                
                                                                 //4MED
                                                                 if(_p21_smap1.cdsisrol!='COTIZADOR')
                                                                 {
@@ -2792,39 +2565,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         debugError('error inofensivo al validar dependencia de 4eac ante 4hos',e);
                                                                     }
                                                                 }
-                                                                
-                                                              //4URM Y 4HOS
-                                                                
-                                                                    try
-                                                                    {
-                                                                        if(miCdgarant=='4HOS'||miCdgarant=='4URM')
-                                                                        {
-                                                                            var cmpHos;
-                                                                            var cmpUrm;
-                                                                            if(miCdgarant=='4HOS')
-                                                                            {
-                                                                                cmpHos = me;
-                                                                                cmpUrm = me.up('form').up('panel').down('[cdgarant=4URM]').down('checkbox');
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                cmpHos = me.up('form').up('panel').down('[cdgarant=4HOS]').down('checkbox');
-                                                                                cmpUrm = me;
-                                                                            }
-                                                                            
-                                                                            if(cmpHos.getValue()&&cmpUrm.getValue())
-                                                                            {
-                                                                                
-                                                                                cmpHos.setValue(false);
-                                                                                mensajeWarning('Si seleccionaste la cobertura de Hospitalizaci&oacute;n no puede incluir la cobertura de Urgencias M&eacute;dicas');
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    catch(e)
-                                                                    {
-                                                                        debugError('error inofensivo al validar dependencia de 4eac ante 4hos',e);
-                                                                    }
-                                                                
                                                             }
                                                         }
                                                     }
@@ -3031,6 +2771,18 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                 ,decimalSeparator : '.'
                                                             }
                                                         }
+                                                        /*,{
+                                                            header     : 'Cesi&oacute;n comisi&oacute;n<br/>intermediario'
+                                                            ,dataIndex : 'cesicomi'
+                                                            ,flex      : 1
+                                                            ,editor    :
+                                                            {
+                                                                xtype             : 'numberfield'
+                                                                ,allowBlank       : false
+                                                                ,allowDecimals    : true
+                                                                ,decimalSeparator : '.'
+                                                            }
+                                                        }*/
                                                         ,{
                                                             header     : 'Ponderaci&oacute;n ubicaci&oacute;n<br/>geogr&aacute;fica'
                                                             ,dataIndex : 'pondubic'
@@ -3153,6 +2905,34 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         var name  = elem.NAME;
                                                                         var valor = elem.VALOR;
                                                                         record.set(name,valor);
+                                                                        /*
+                                                                        if(name=='extrreno')
+                                                                        {
+                                                                            $.each(_p21_arrayNombresExtrreno,function(i,nombre)
+                                                                            {
+                                                                                var componentes=Ext.ComponentQuery.query('[fieldLabel*='+nombre+']',pestania);
+                                                                                debug('componentes para poner factor extrreno:',componentes);
+                                                                                $.each(componentes,function(i,comp)
+                                                                                {
+                                                                                    debug('poniendo valor en:',comp);
+                                                                                    comp.setValue(valor);
+                                                                                });
+                                                                            });
+                                                                        }
+                                                                        else if(name=='incrinfl')
+                                                                        {
+                                                                            $.each(_p21_arrayNombresIncrinfl,function(i,nombre)
+                                                                            {
+                                                                                var componentes=Ext.ComponentQuery.query('[fieldLabel*='+nombre+']',pestania);
+                                                                                debug('componentes para poner factor incrinfl:',componentes);
+                                                                                $.each(componentes,function(i,comp)
+                                                                                {
+                                                                                    debug('poniendo valor en:',comp);
+                                                                                    comp.setValue(valor);
+                                                                                });
+                                                                            });
+                                                                        }
+                                                                        */
                                                                     }
                                                                 };
                                                                 if(Ext.isEmpty(_p21_valoresFactores))
@@ -3198,8 +2978,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 {
                                                     title      : 'TARIFA POR EDADES'
                                                     ,minHeight : 100
-                                                    ,hidden    : (_p21_ntramite && _cotcol_smap1.modificarTodo === false ? false : true)
-                                                        || RolSistema.Agente === _p21_smap1.cdsisrol
+                                                    ,hidden    : _p21_ntramite ? false : true
                                                     ,maxHeight : 250
                                                     ,tbar      :
                                                     [
@@ -3284,8 +3063,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                 {
                                                     title      : 'PRIMA PROMEDIO'
                                                     ,minHeight : 100
-                                                    ,hidden    : (_p21_ntramite && _cotcol_smap1.modificarTodo === false ? false : true)
-                                                        || RolSistema.Agente === _p21_smap1.cdsisrol
+                                                    ,hidden    : _p21_ntramite ? false : true
                                                     ,maxHeight : 250
                                                     ,store     : Ext.create('Ext.data.Store',
                                                     {
@@ -3348,8 +3126,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     text     : 'Guardar'
                                                     ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                                                     ,handler : function(button){
-                                                    	
-                                                    	_p21_guardarGrupo(button.up().up(), gridGrupos, recordGrupo, rowIndex);
+                                                    	_p21_guardarGrupo(button.up().up());
                                                     	}
                                                     ,hidden  : _p21_smap1.COBERTURAS=='N'||_p21_smap1.COBERTURAS_BOTON=='N'
                                                 }
@@ -3383,20 +3160,19 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                     }
                                                 }
                                             }
-                                            //logica
+                                            
                                             if(form.datosAnteriores.raw&&form.datosAnteriores.raw.amparada=='S')
                                             {
                                                 form.down('[name=amparada]').flagPuedesBorrar = false;
-                                                //form.down('[name=amparada]').setValue(true);
-                                                debug('se "checkeo" el box', form.down('[name=amparada]').getName());
+                                                form.down('[name=amparada]').setValue(true);
+                                                debug('se "checkeo" el box');
                                                 form.down('[name=amparada]').flagPuedesBorrar = true;
                                             }
                                             else
                                             {
-                                                //form.down('[name=amparada]').setValue(false);
-                                                debug('se "descheckeo" el box', form.down('[name=amparada]').getName());
+                                                form.down('[name=amparada]').setValue(false);
+                                                debug('se "descheckeo" el box');
                                             }
-                                            
                                             debug('cargado:',form);
                                         }
                                     }
@@ -3480,7 +3256,7 @@ function _p21_quitarTabsDetalleGrupo(letraGrupo)
     debug('<_p21_quitarTabsDetalleGrupo');
 }
 
-function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
+function _p21_guardarGrupo(panelGrupo)
 {
      debug('>_p21_guardarGrupo:',panelGrupo);
      
@@ -3492,8 +3268,6 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
      
      var tvalogars = [];
      var valido    = true;
-     validoFlag=true;
-
      if(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')
      {
          for(var i=0;i<formsTatrigar.length;i++)
@@ -3501,24 +3275,6 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
              var iFormTatrigar = formsTatrigar[i];
              valido            = valido && iFormTatrigar.isValid();
              var tvalogar      = iFormTatrigar.getValues();
-             
-             //validacion de combo 4MED para cubrir requerimiento de que el valor sea diferente de cero 
-             var miCdgarant = iFormTatrigar.cdgarant ;
-        	 if(miCdgarant=='4MED')
-             {
-             	var cboMed = iFormTatrigar.up('panel').down('[cdgarant=4MED]').down('[name=parametros.pv_otvalor001]');
-             	debug('cboMedValue en funcion guardar', cboMed.getValue());
-             	if ((cboMed.getValue() !=null)&&(cboMed.getValue() ==0)&&(cboMed.getValue() !='')){
-             		debug('Entre en el if de validacion de Medicamentos');
-             		mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo');
-             		debug('Debe elegir el importe del Beneficio Maximo');
-             		validoFlag=false;
-             	}
-             	/*else{
-             		validoFlag=true;
-             	}*/
-              }
-
              if(false)//tvalogar.swobliga=='S'&&_p21_smap1.cdsisrol!='COTIZADOR')
              {
                  tvalogar['amparada']='S';
@@ -3537,117 +3293,21 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
              datosIncompletos();
          }
      }
-     debug('valido ', valido, 'validoFlag ', validoFlag);
+     
      if(valido)
      {
-	     if (validoFlag!=false){
-	    	 debug('tvalogars:',tvalogars);
-	         var recordGrupo=_p21_obtenerGrupoPorLetra(letraGrupo);
-	         recordGrupo['tvalogars'] = tvalogars;
-	         recordGrupo['valido']    = true;
-	         debug('recordGrupo:',recordGrupo);
-	         if(_p21_smap1.FACTORES=='S')
-	         {
-	             var storeFactores = panelGrupo.down('grid[title=FACTORES DEL SUBGRUPO]').getStore();
-	             debug('storeFactores:',storeFactores);
-	             storeFactores.commitChanges();
-	         }
-	         
-	         if(_p21_smap1.LINEA_EXTENDIDA != 'S'){
-	         
-		         var smap1p = {
-		        		 cdramo  : _p21_smap1.cdramo,
-		        		 cdtipsit: _p21_smap1.cdtipsit,
-		        		 cdplan  : recordGrupoEdit.get('cdplan')
-		         };
-		         
-		         var params = {
-		        		 slist1 : tvalogars,
-		                 smap1  : smap1p
-		         };
-		         
-		         _mask('Espere un momento...');
-		         
-		         Ext.Ajax.request(
-					        {
-				            url       : _p21_urlObtienePlanDefinitivo
-				            ,jsonData : params
-				            ,success  : function(response)
-				            {
-				            	_unmask();
-		
-				            	var jsonCont = Ext.decode(response.responseText);
-				            	
-				            	var cdplanAnt = recordGrupoEdit.get('cdplan');
-				            	var dsplanAnt = recordGrupoEdit.get('dsplanl');
-				            	
-				            	if(Ext.isEmpty(dsplanAnt)){
-				            		dsplanAnt = jsonCont.smap1.DSPLAN_ORIG;
-				            	}
-				            	
-				            	var nvoCdplan = jsonCont.smap1.NVO_CDPLAN;
-			                	var nvoDSplan = jsonCont.smap1.NVO_DSPLAN;
-			                	var nvoNombrePlan = jsonCont.smap1.NVO_NOMBRE;
-			                	
-				                if(jsonCont.exito){
-				                		/**
-					                      * Se calcula el plan y las descripcion
-					                      **/
-					                    
-					                      recordGrupoEdit.set('cdplan',nvoCdplan);
-					                      recordGrupoEdit.set('dsplanl',nvoNombrePlan);
-					                      recordGrupoEdit.commit(false,['dsplanl']);
-					                    
-					                    mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',function(){         	
-					                   	 
-					                    	setTimeout(function(){
-					                    		_p21_setActiveResumen();
-					                    		
-					                    		if( cdplanAnt != nvoCdplan /* solo cuando cambia el plan principal || dsplanAnt != nvoNombrePlan*/){
-					                    			
-					                    			var valorSAorig = recordGrupoEdit.get('ptsumaaseg');
-					                    			
-						                    		mensajeWarning('El plan del grupo '+recordGrupoEdit.get('letra')+ ' ha cambido. Verifique la Suma asegurada');
-						                    		gridGrupos.editingPlugin.startEdit(recordGrupoEdit,0);
-						                    		
-						                    		var indexSumAseg = 0;
-						                    		
-						                    		Ext.Array.each(gridGrupos.columns,function(columnGpo, indexCol){
-							                       		if(columnGpo.dataIndex == "ptsumaaseg"){
-							                       			indexSumAseg = indexCol;
-							                       			return false;
-							                       		}
-							                       	});
-						                    		
-						                    		 var comboPlan = gridGrupos.columns[indexSumAseg].getEditor(recordGrupoEdit);
-						                    		setTimeout(function(){
-						                    			comboPlan.setValue(valorSAorig);
-						                        	},500); 
-					                    		}
-					                    	},250);
-					                    });
-				                	
-				                }
-				                else
-				                {
-				                    mensajeWarning(jsonCont.respuesta);
-				                }
-				            }
-				            ,failure  : function()
-				            {
-				            	_unmask();
-				                errorComunicacion();
-				            }
-				        });
-	         }//fin del if de validoFlag
-         }else{
-        	 if (validoFlag!=false){
-        	 	mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
-        	 } else{
-        		 debug('Entre en el ultimo else');
-        		 mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo');
-        	 }
+         debug('tvalogars:',tvalogars);
+         var recordGrupo=_p21_obtenerGrupoPorLetra(letraGrupo);
+         recordGrupo['tvalogars'] = tvalogars;
+         recordGrupo['valido']    = true;
+         debug('recordGrupo:',recordGrupo);
+         if(_p21_smap1.FACTORES=='S')
+         {
+             var storeFactores = panelGrupo.down('grid[title=FACTORES DEL SUBGRUPO]').getStore();
+             debug('storeFactores:',storeFactores);
+             storeFactores.commitChanges();
          }
+         mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
      }
      
      debug('<_p21_guardarGrupo');
@@ -3700,46 +3360,18 @@ function _p21_setActiveTab(itemId)
 
 function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
 {
-	
     debug('>_p21_editorPlanChange new',newValue,'old',oldValue+'x');
     if(!Ext.isEmpty(oldValue)&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')&&_p21_semaforoPlanChange)
     {
-    	
         centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Al cambiar el plan se borrar&aacute; el detalle del subgrupo<br/>¿Desea continuar?', function(btn)
         {
             if(btn == 'yes')
             {
-            	_p21_cdplanOriginal = oldValue;
                 var record = _p21_query('#'+_p21_tabGrupos.itemId)[0].items.items[0].getSelectionModel().getSelection()[0];
                 debug('record:',record);
                 var letra  = record.get('letra');
                 debug('letra:',letra);
                 record.valido = false;
-                
-                /**
-                 * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
-                 * descripcion de plan que se esta editando
-                 **/
-                
-                var gridGps =  combo.up().up(); 
-                var recordGrpo = gridGps.getSelectionModel().getLastSelected();
-                var indexDsplanL = 0;
-                
-                Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
-                    if(columnGpo.dataIndex == "dsplanl"){
-                        indexDsplanL = indexCol;
-                        return false;
-                    }
-                });
-                
-                var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
-                texDsplanL.setValue(combo.getRawValue());
-                recordGrpo.commit(false,['dsplanl']);
-                
-                /**
-                 * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
-                 **/
-                
                 _p21_quitarTabsDetalleGrupo(letra);
             }
             else
@@ -3749,32 +3381,7 @@ function _p21_editorPlanChange(combo,newValue,oldValue,eOpts)
                 _p21_semaforoPlanChange = true;
             }
         }));
-    }else if(_p21_semaforoPlanChange){
-        /**
-         * Para obtener el indice de columna de descripcion de plan y para obtener el editor text de 
-         * descripcion de plan que se esta editando
-         **/
-        
-        var gridGps =  combo.up().up(); 
-        var recordGrpo = gridGps.getSelectionModel().getLastSelected();
-        var indexDsplanL = 0;
-        
-        Ext.Array.each(gridGps.columns,function(columnGpo, indexCol){
-            if(columnGpo.dataIndex == "dsplanl"){
-                indexDsplanL = indexCol;
-                return false;
-            }
-        });
-        
-        var texDsplanL = gridGps.columns[indexDsplanL].getEditor(recordGrpo);
-        texDsplanL.setValue(combo.getRawValue());
-        recordGrpo.commit(false,['dsplanl']);
-        
-        /**
-         * Fin de segmento para limpiar nombre largo de plan al cambiar el plan
-         **/
     }
-    
     if(newValue+'x'!='x'&&_p21_clasif==_p21_TARIFA_LINEA&&_p21_smap1.LINEA_EXTENDIDA=='S')
     {
         _p21_estiloEditores(newValue);
@@ -3829,21 +3436,6 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
         {
             mensajeWarning('Verificar los datos del concepto y el censo de asegurados',_p21_setActiveConcepto);
         }
-        
-        debug("numcontrato",_fieldByName('numcontrato').getValue() );
-      	//parche para numcontrato>
-      	if ((_fieldByName('numcontrato').getValue()=="") || (Ext.isEmpty(_fieldByName('numcontrato')) ) || (_fieldByName('numcontrato').getValue()==null))
-        {
-        	valido=false;
-        	mensajeWarning('Verificar los datos del numero de contrato', _p21_setActiveConcepto);
-        }
-      	else{
-      		if ((_fieldByName('numcontrato').getValue()=="0") && (_p21_smap1.cdunieco ==1403))
-        	{
-	        	valido=false;
-	        	mensajeWarning('Verificar los datos del numero de contrato', _p21_setActiveConcepto);
-        	}
-      	}
     }
     
     if(valido)
@@ -3882,23 +3474,6 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
     
     if(valido&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N'))
     {
-        var mensajeDeError = 'Falta definir la Suma Asegurada para el(los) grupo(s): ';
-        _p21_storeGrupos.each(function(record)
-        {
-            if(Ext.isEmpty(record.get('ptsumaaseg')))
-            {
-                valido         = false;
-                mensajeDeError = mensajeDeError + record.get('letra') + '  ';
-            }
-        });
-        if(!valido)
-        {
-            mensajeWarning(mensajeDeError,_p21_setActiveResumen);
-        }
-    }
-    
-    if(valido&&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N'))
-    {
         var mensajeDeError = 'Falta definir o guardar el detalle para el(los) grupo(s): ';
         _p21_storeGrupos.each(function(record)
         {
@@ -3913,7 +3488,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
             mensajeWarning(mensajeDeError,_p21_setActiveResumen);
         }
     }
-
+    
     if(valido)
     {
         var form=_p21_tabConcepto().down('[xtype=form]');
@@ -3946,7 +3521,6 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                 conceptos['complemento']           = true==complemento?'S':'N';
                 conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
                 conceptos['asincrono']             = asincrono;
-                conceptos['duplicar']              = _cotcol_smap1.modificarTodo === true ? 'S' : 'N';
                 
                 if(_p21_smap1.cdsisrol=='SUSCRIPTOR'&& (_p21_smap1.status-0==19 || _p21_smap1.status-0==21 || _p21_smap1.status-0==23)){
                 	
@@ -3984,55 +3558,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                         debug('### generar tramite:',json);
                         if(json.exito)
                         {
-                            
-                            if([RolSistema.SuscriptorTecnico,RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 
-                                    &&(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N'))
-                            {
-                             
-                                var ntramiteGen = _p21_ntramite;
-                                if(_p21_ntramite == false || Ext.isEmpty(_p21_ntramite))
-                                {
-                                    if(_p21_ntramiteVacio == false || Ext.isEmpty(_p21_ntramiteVacio)){
-                                        ntramiteGen = json.smap1.ntramite;
-                                    }else{
-                                        ntramiteGen = _p21_ntramiteVacio;
-                                    }
-                                    
-                                }
-                                
-                                var lanzaAprobacion = false;
-                                _p21_storeGrupos.each(function(record)
-                                {
-                                    if(record.dirty && !Ext.isEmpty(record.modified['dsplanl']) && record.modified['dsplanl'] != record.get('dsplanl'))
-                                    {
-                                       lanzaAprobacion = true;
-                                       //alert('lanza aprobacion ' +record.get('dsplanl')+'--'+ record.modified['dsplanl']);
-                                    }
-                                });
-                                
-                                if(lanzaAprobacion)
-                                {
-                                    Ext.Ajax.request({
-                                        url     : _p21_urlLanzaAprobacionNombrePlan,
-                                        params  : {
-                                            'smap1.ntramite'    :  ntramiteGen,
-                                            'smap1.tipobloqueo' : 'B'
-                                        },
-                                        success : function (response) {
-                                            var json=Ext.decode(response.responseText);
-                                            
-                                            if(!json.success){
-                                                debugError('Error sin impacto al insertar bloqueo para aprobacion de cambio de nombre de plan, puede ya existir un bloqueo. ', json.respuesta);
-                                            }
-                                        },
-                                        failure : function () {
-                                            errorComunicacion(null, 'Error al lanzar validaci\u00f3n cambio de nombre plan');
-                                        }
-                                    });            
-                                }
-                            }
-                            
-                            if((_p21_ntramite||_p21_ntramiteVacio) && _cotcol_smap1.modificarTodo === false)
+                            if(_p21_ntramite||_p21_ntramiteVacio)
                             {
                                 if(callback)
                                 {
@@ -4258,7 +3784,6 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                             }
                             else
                             {
-                                _p21_smap1.ntramite = json.smap1.ntramite;
                                 _p21_fieldNmpoliza().setValue(json.smap1.nmpoliza);
                                 _p21_fieldNtramite().setValue(json.smap1.ntramite);
                                 _p21_tabpanel().setDisabled(true);
@@ -4467,7 +3992,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                 }
                                 else
                                 {
-                                    var callbackConfirmado = function(callback)
+                                    var callbackConfirmado = function()
                                     {
                                         centrarVentanaInterna(Ext.create('Ext.window.Window',
                                         {
@@ -4509,100 +4034,12 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                         }).show());
                                         if(!Ext.isEmpty(json.smap1.nombreUsuarioDestino))
                                         {
-                                            mensajeCorrecto(
-                                                'Tr&aacute;mite asignado',
-                                                'El tr&aacute;mite '+json.smap1.ntramite+' fue asignado a '+json.smap1.nombreUsuarioDestino,
-                                                function () {
-                                                    if (_cotcol_smap1.modificarTodo === true) {
-                                                        _p21_mesacontrol();
-                                                    }
-                                                }
-                                            );
-                                        } else {
-                                            mensajeCorrecto(
-                                                'Tr\u00e1mite generado',
-                                                'Se ha generado el tr\u00e1mite ' + json.smap1.ntramite +
-                                                    ', favor de revisar los requisitos y subir sus documentos antes de turnar ' +
-                                                    'al \u00e1rea t\u00e9cnica',
-                                                callback
+                                            mensajeCorrecto('Tr&aacute;mite asignado'
+                                                ,'El tr&aacute;mite '+json.smap1.ntramite+' fue asignado a '+json.smap1.nombreUsuarioDestino
                                             );
                                         }
                                     };
-                                    var callbackNormal = callbackConfirmado; 
-                                    var mask, ck = 'Recuperando lista de requisitos';
-			                        try {
-			                            var ntramite = json.smap1.ntramite;
-			                            ck = 'Recuperando validaci\u00f3n ligada a requisitos';
-			                            mask = _maskLocal(ck);
-			                            Ext.Ajax.request({
-			                                url     : _GLOBAL_URL_RECUPERACION,
-			                                params  : {
-			                                    'params.consulta' : 'RECUPERAR_VALIDACION_POR_CDVALIDAFK',
-			                                    'params.ntramite' : ntramite,
-			                                    'params.clave'    : '_CONFCOT'
-			                                },
-			                                success : function (response) {
-			                                    mask.close();
-			                                    var ck = 'Decodificando respuesta al recuperar validaci\u00f3n ligada a requisitos';
-			                                    try {
-			                                        var valida = Ext.decode(response.responseText);
-			                                        debug('### validacion ligada a checklist:', valida);
-			                                        if (valida.success === true) {
-			                                            if (valida.list.length > 0) {
-			                                                _cargarAccionesEntidad(
-			                                                    valida.list[0].CDTIPFLU,
-			                                                    valida.list[0].CDFLUJOMC,
-			                                                    valida.list[0].TIPOENT,
-			                                                    valida.list[0].CDENTIDAD,
-			                                                    valida.list[0].WEBID,
-			                                                    function (acciones) {
-			                                                        if (acciones.length > 0) {
-			                                                            debug('acciones:', acciones);
-			                                                            callbackNormal(function () {
-			                                                                _procesaAccion(
-			                                                                    acciones[0].CDTIPFLU,
-			                                                                    acciones[0].CDFLUJOMC,
-			                                                                    acciones[0].TIPODEST,
-			                                                                    acciones[0].CLAVEDEST,
-			                                                                    acciones[0].WEBIDDEST,
-			                                                                    acciones[0].AUX,
-			                                                                    valida.params.ntramite,
-			                                                                    valida.list[0].STATUS,
-			                                                                    null, //cdunieco
-			                                                                    null, //cdramo
-			                                                                    null, //estado
-			                                                                    null, //nmpoliza
-			                                                                    null, //nmsituac
-			                                                                    null, //nmsuplem
-			                                                                    valida.list[0].cdusuari,
-			                                                                    valida.list[0].cdsisrol,
-			                                                                    null // callback
-			                                                                );
-			                                                            });
-			                                                        } else {
-			                                                            callbackNormal();
-			                                                        }
-			                                                    }
-			                                                );
-			                                            } else {
-			                                                callbackNormal();
-			                                            }
-			                                        } else {
-			                                            mensajeError(json.message);
-			                                        }
-			                                    } catch (e) {
-			                                        manejaException(e, ck);
-			                                    }
-			                                },
-			                                failure : function () {
-			                                    mask.close();
-			                                    errorComunicacion(null, 'Error al recuperar validaci\u00f3n ligada a requisitos');
-			                                }
-			                            });
-			                        } catch (e) {
-			                            manejaException(e, ck, mask);
-			                            callbackNormal();
-			                        }
+                                    callbackConfirmado();
                                 }
                             }
                         }
@@ -4633,9 +4070,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                 params   :
                 {
                     'smap1.timestamp' : timestamp
-                    ,'smap1.ntramite' : _p21_ntramite && _p21_smap1.sincenso != 'S' && _cotcol_smap1.modificarTodo !== true
-                        ? _p21_ntramite
-                        : ''
+                    ,'smap1.ntramite' : _p21_ntramite&&_p21_smap1.sincenso!='S' ? _p21_ntramite : ''
                 }
                 ,success : function()
                 {
@@ -4671,8 +4106,6 @@ function _p21_reload(json,status,nmpoliza)
             ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
             ,'smap1.cdagente' : _fieldByName('cdagente').getValue()
             ,'smap1.status'   : Ext.isEmpty(status) ? _p21_smap1.status : status
-            ,'smap1.cdtipsup' : _p21_smap1.cdtipsup
-            ,'smap1.nmpolant' : _p21_smap1.nmpolant
         }
     });
     debug('<_p21_reload');
@@ -4680,14 +4113,15 @@ function _p21_reload(json,status,nmpoliza)
 
 function _p21_mesacontrol(json)
 {
-    _mask('Redireccionando...');
+    _p21_tabpanel().setLoading(true);
     Ext.create('Ext.form.Panel').submit(
     {
         standardSubmit : true
         ,url           : _p21_urlMesaControl
         ,params        :
         {
-            'params.AGRUPAMC' : 'PRINCIPAL'
+            'smap1.gridTitle'      : 'Tareas'
+            ,'smap2.pv_cdtiptra_i' : 1
         }
     });
 }
@@ -4718,7 +4152,6 @@ function _p21_turnar(status,titulo,closable)
                 ,columns    : 2
                 ,width      : 250
                 ,style      : 'margin:5px;'
-                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                 ,items      :
                 [
                     {
@@ -4726,13 +4159,12 @@ function _p21_turnar(status,titulo,closable)
                         ,itemId     : 'SWAGENTE'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'S'
-                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                     }
                     ,{
                         boxLabel    : 'No'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'N'
-                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                        ,checked    : true
                     }
                 ]
             }
@@ -5329,10 +4761,6 @@ function _p21_rfcBlur(field)
                                     ]
                                 }
                                 ,{
-                                    header     : 'ID. Asegurado'
-                                   ,dataIndex : 'CLAVECLI'
-                                   ,flex      : 1
-                                },{
                                     header     : 'RFC'
                                     ,dataIndex : 'RFCCLI'
                                     ,flex      : 1
@@ -5382,232 +4810,163 @@ function _p21_estiloEditores(cdplan)
         ,success : function(response)
         {
             var json=Ext.decode(response.responseText);
-            debug('*json',json);
-            debug('params',_p21_smap1.cdramo, _p21_smap1.cdtipsit);
-            
-            var cobertura;
-            
-            Ext.Array.each(json.slist1,function(name,index,lista){
-            		if(name.CDGARANT == "4MED"){
-            			cobertura = name.CDGARANT;
-            			debug('*cobertura',cobertura);
-            			return false;
-            		}
-            });
-            
             if(json.exito)
             {
-            	debug('*Exito');
-            	
-            	//Peticion que devuelve la suma asegurada por default para la cobertura de Medicamentos en 10 a 49 Asegurados. ELP
-            	Ext.Ajax.request(
-				{
-					url     : _p21_urlObtenerSumaAseguradaDefault
-					,params :
-					{
-						'smap1.cdramo'     : _p21_smap1.cdramo
-		                 ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
-		                 ,'smap1.cdgarant' : cobertura
-					}
-					,success : function (response)
-					{
-						var json2=Ext.decode(response.responseText);
-						debug('**json2',json2);
-						if(json.exito){
-							var key = 0;
-							var size = _p21_editorAsisInter.getStore().data.items.length;
-							
-							debug('**size',size);
-							
-							debug('**saMed',Ext.decode(response.responseText).saMed);
-							
-							for(var i=0; i < size; i++){
-								if(_p21_editorAsisInter.getStore().getAt(i).data.key === Ext.decode(response.responseText).saMed){
-									key = _p21_editorAsisInter.getStore().getAt(i).index;
-									debug('**key',key);
-									break;
-								}
-							}
-							
-							var _4HOS = false;
-			                var _4AYM = false;
-			                var _4AIV = false;
-			                var _4EE  = false;
-			                var _4MAT = false;
-			                var _4MS  = false;
-			                
-			                debug(json.slist1);
-			                
-			                $.each(json.slist1,function(i,cob)
-			                {
-			                    debug('iterando:',cob.CDGARANT);
-			                    if(cob.CDGARANT=='4HOS')
-			                    {
-			                        debug('_4HOS found');
-			                        _4HOS=true;
-			                    }
-			                    if(cob.CDGARANT=='4AYM')
-			                    {
-			                        debug('_4AYM found');
-			                        _4AYM=true;
-			                        if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&_p21_clasif==_p21_TARIFA_LINEA)
-			                        {
-			                            _4AYM=false;
-			                        }
-			                    }
-			                    if(cob.CDGARANT=='4MED')
-			                    {
-			                        debug('_4AIV found');
-			                        _4AIV=true;
-			                    }
-			                    if(cob.CDGARANT=='4EE')
-			                    {
-			                        debug('_4EE found');
-			                        _4EE=true;
-			                    }
-			                    if(cob.CDGARANT=='4MAT')
-			                    {
-			                        debug('_4MAT found');
-			                        _4MAT=true;
-			                    }
-			                    if(cob.CDGARANT=='4MS')
-			                    {
-			                        debug('_4MS found');
-			                        _4MS=true;
-			                    }
-			                });
-			                if(!_4HOS)
-			                {
-			                    _p21_editorDeducible.setValue('0');
-			                    _p21_editorDeducible.addCls('_p21_editorLectura');
-			                }
-			                else
-			                {
-			                    _p21_editorDeducible.removeCls('_p21_editorLectura');
-			                }
-			                _p21_editorDeducible.setReadOnly(!_4HOS);
-			                if(_p21_smap1.cdsisrol!='COTIZADOR')
-			                {
-			                    if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))	
-			                    {
-			                        _p21_editorAyudaMater.setValue('0');
-			                        _p21_editorAyudaMater.addCls('_p21_editorLectura');
-			                    }
-			                    else
-			                    {
-			                        //if(!_4AYM||!_4HOS||_4MAT)
-			                        if(_4MAT || _4HOS)
-			                        {
-			                            _p21_editorAyudaMater.setValue('0');
-			                             debug('>~Oculto Ayuda Maternidad');
-			                            _p21_editorAyudaMater.addCls('_p21_editorLectura');
-			                             
-			                        }
-			                        //else if(_4AYM&&_4HOS&&!_4MAT)
-			                        else if(!_4MAT)
-			                        {
-			                        	if(!_4HOS)
-			                            {
-			                            	_p21_editorAyudaMater.setValue('0');
-			                            	_p21_editorAyudaMater.addCls('_p21_editorLectura');
-			                            }else if(cdplan!='E'){
-			                            	_p21_editorAyudaMater.removeCls('_p21_editorLectura');
-			                            }
-			                            
-			                        }
-			                    }
-			                    //_p21_editorAyudaMater.setReadOnly(!_4AYM);
-			                }
-			                if(_p21_smap1.cdsisrol!='COTIZADOR')
-			                {
-			                    if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))
-			                    {
-			                    	if(cdplan == 'PA'){
-			                    		//Se selecciona el segundo elemento, es decir, el siguiente depues de cero:
-			                    		if(!Ext.isEmpty(key)){
-			                    			_p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(key).data.key); 
-			                            	_p21_editorAsisInter.addCls('_p21_editorLectura');                    			
-			                    		}
-			                    	}else{
-			                    		if(!Ext.isEmpty(key)){
-			                    			_p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(key).data.key); 
-			                            	_p21_editorAsisInter.addCls('_p21_editorLectura');
-			                    		}
-			                    	}
-			                    }
-			                    else
-			                    {
-			                    	debug('!ejecutivo de cuenta');
-			                        //if(!_4AIV||!_4MS)
-			                    	_4MS=false;
-			                        if(!_4MS)
-			                        {
-			                        	debug('Era 0 _4MS');
-			                        	if(cdplan == 'PA'){
-			                        		//Se selecciona el segundo elemento, es decir, el siguiente depues de cero:
-			                        		if(!Ext.isEmpty(key)){
-				                            	_p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(key).data.key); 
-				                            	_p21_editorAsisInter.addCls('_p21_editorLectura');
-			                        		}
-			                        	}else{
-			                        		_p21_editorAsisInter.setValue('0'); 
-				                            _p21_editorAsisInter.addCls('_p21_editorLectura');
-			                        	}
-			                        }
-			                        //else if(_4AIV&&_4MS)
-			                        else if(_4MS)
-			                        {
-			                        	if(!_4HOS)
-			                            {
-			                            	debug('No encontro 4HOS');
-			                            	_p21_editorEmerextr.setValue('0');
-			                            	_p21_editorEmerextr.addCls('_p21_editorLectura');
-			                            	if(!Ext.isEmpty(key)){
-			                            		_p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(key).data.key); //Era 0
-			                                	_p21_editorAsisInter.addCls('_p21_editorLectura');
-			                            	}
-			                            }else {
-				                            	_p21_editorAsisInter.removeCls('_p21_editorLectura');
-				                            	_p21_editorEmerextr.removeCls('_p21_editorLectura');
-			                            }
-			                        }
-			                    }
-			                }
-			                //_p21_editorAsisInter.setReadOnly(!_4AIV);
-			                if(_p21_smap1.cdsisrol!='COTIZADOR')
-			                {
-			                    if(!_4EE||cdplan=='PR'||!_4HOS)
-			                    {
-			                        _p21_editorEmerextr.setValue('N');
-			                        _p21_editorEmerextr.addCls('_p21_editorLectura');
-			                    }
-			                    else if(_4EE&&cdplan!='PR'&&_4HOS)
-			                    {
-			                        _p21_editorEmerextr.removeCls('_p21_editorLectura');
-			                    }
-			                    //_p21_editorEmerextr.setReadOnly(!_4EE);
-			                }
-			                
-			                /* pidieron que no se pueda ver EE si el plan es primario para los agentes */
-			                if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&_p21_clasif==_p21_TARIFA_LINEA&&(cdplan=='PR'||cdplan=='PA'))
-			                {
-			                    _p21_editorEmerextr.setValue('N');
-			                    _p21_editorEmerextr.addCls('_p21_editorLectura');
-			                }
-			                /* pidieron que no se pueda ver EE si el plan es primario para los agentes */
-						}else{
-							debug('**fallo');
-							debug('**json',json);
-							mensajeError(json.respuesta);
-						}
-					}
-					,failure : function(response){
-						debug('**fallo');
-						debug('**response',response);
-					}
-					//errorComunicacion
-				});
-            	debug('termina request key'); 
+                var _4HOS = false;
+                var _4AYM = false;
+                var _4AIV = false;
+                var _4EE  = false;
+                var _4MAT = false;
+                var _4MS  = false;
+                $.each(json.slist1,function(i,cob)
+                {
+                    debug('iterando:',cob.CDGARANT);
+                    if(cob.CDGARANT=='4HOS')
+                    {
+                        debug('_4HOS found');
+                        _4HOS=true;
+                    }
+                    if(cob.CDGARANT=='4AYM')
+                    {
+                        debug('_4AYM found');
+                        _4AYM=true;
+                        if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&_p21_clasif==_p21_TARIFA_LINEA)
+                        {
+                            _4AYM=false;
+                        }
+                    }
+                    if(cob.CDGARANT=='4MED')
+                    {
+                        debug('_4AIV found');
+                        _4AIV=true;
+                    }
+                    if(cob.CDGARANT=='4EE')
+                    {
+                        debug('_4EE found');
+                        _4EE=true;
+                    }
+                    if(cob.CDGARANT=='4MAT')
+                    {
+                        debug('_4MAT found');
+                        _4MAT=true;
+                    }
+                    if(cob.CDGARANT=='4MS')
+                    {
+                        debug('_4MS found');
+                        _4MS=true;
+                    }
+                });
+                if(!_4HOS)
+                {
+                    _p21_editorDeducible.setValue('0');
+                    _p21_editorDeducible.addCls('_p21_editorLectura');
+                }
+                else
+                {
+                    _p21_editorDeducible.removeCls('_p21_editorLectura');
+                }
+                _p21_editorDeducible.setReadOnly(!_4HOS);
+                if(_p21_smap1.cdsisrol!='COTIZADOR')
+                {
+                    if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))
+                    {
+                        _p21_editorAyudaMater.setValue('0');
+                        _p21_editorAyudaMater.addCls('_p21_editorLectura');
+                    }
+                    else
+                    {
+                        //if(!_4AYM||!_4HOS||_4MAT)
+                        if(_4MAT || _4HOS)
+                        {
+                            _p21_editorAyudaMater.setValue('0');
+                             debug('>~Oculto Ayuda Maternidad');
+                            _p21_editorAyudaMater.addCls('_p21_editorLectura');
+                             
+                        }
+                        //else if(_4AYM&&_4HOS&&!_4MAT)
+                        else if(!_4MAT)
+                        {
+                        	if(!_4HOS)
+                            {
+                            	_p21_editorAyudaMater.setValue('0');
+                            	_p21_editorAyudaMater.addCls('_p21_editorLectura');
+                            }else if(cdplan!='E'){
+                            	_p21_editorAyudaMater.removeCls('_p21_editorLectura');
+                            }
+                            
+                        }
+                    }
+                    //_p21_editorAyudaMater.setReadOnly(!_4AYM);
+                }
+                if(_p21_smap1.cdsisrol!='COTIZADOR')
+                {
+                    if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&(_p21_clasif==_p21_TARIFA_LINEA||(cdplan=='PR'||cdplan=='PA')))
+                    {
+                    	if(cdplan == 'PA'){
+                    		//Se selecciona el segundo elemento, es decir, el siguiente depues de cero:
+                            _p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(1).data.key); 
+                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+                    	}else{
+                    		_p21_editorAsisInter.setValue('0'); 
+                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+                    	}
+                    }
+                    else
+                    {
+                        //if(!_4AIV||!_4MS)
+                    	_4MS=false;
+                        if(!_4MS)
+                        {
+                        	debug('Era 0 _4MS');
+                        	if(cdplan == 'PA'){
+                        		//Se selecciona el segundo elemento, es decir, el siguiente depues de cero:
+	                            _p21_editorAsisInter.setValue(_p21_editorAsisInter.getStore().getAt(1).data.key); 
+	                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+                        	}else{
+                        		_p21_editorAsisInter.setValue('0'); 
+	                            _p21_editorAsisInter.addCls('_p21_editorLectura');
+                        	}
+                        }
+                        //else if(_4AIV&&_4MS)
+                        else if(_4MS)
+                        {
+                        	if(!_4HOS)
+                            {
+                            	debug('No encontro 4HOS');
+                            	_p21_editorEmerextr.setValue('0');
+                            	_p21_editorEmerextr.addCls('_p21_editorLectura');
+                            	_p21_editorAsisInter.setValue('0'); //Era 0
+                                _p21_editorAsisInter.addCls('_p21_editorLectura');
+                            }else {
+	                            	_p21_editorAsisInter.removeCls('_p21_editorLectura');
+	                            	_p21_editorEmerextr.removeCls('_p21_editorLectura');
+                            }
+                        }
+                    }
+                }
+                //_p21_editorAsisInter.setReadOnly(!_4AIV);
+                if(_p21_smap1.cdsisrol!='COTIZADOR')
+                {
+                    if(!_4EE||cdplan=='PR'||!_4HOS)
+                    {
+                        _p21_editorEmerextr.setValue('N');
+                        _p21_editorEmerextr.addCls('_p21_editorLectura');
+                    }
+                    else if(_4EE&&cdplan!='PR'&&_4HOS)
+                    {
+                        _p21_editorEmerextr.removeCls('_p21_editorLectura');
+                    }
+                    //_p21_editorEmerextr.setReadOnly(!_4EE);
+                }
+                
+                /* pidieron que no se pueda ver EE si el plan es primario para los agentes */
+                if(_p21_smap1.cdsisrol=='EJECUTIVOCUENTA'&&_p21_clasif==_p21_TARIFA_LINEA&&(cdplan=='PR'||cdplan=='PA'))
+                {
+                    _p21_editorEmerextr.setValue('N');
+                    _p21_editorEmerextr.addCls('_p21_editorLectura');
+                }
+                /* pidieron que no se pueda ver EE si el plan es primario para los agentes */
+                
             }
             else
             {
@@ -6488,7 +5847,6 @@ function _p21_emitir2(ventana,button)
 	                                ,height     : 400
 	                                ,autoScroll : true
 	                                ,modal      : true
-	                                ,cls        : 'VENTANA_DOCUMENTOS_CLASS'
 	                                ,loader     :
 	                                {
 	                                    scripts   : true
@@ -7057,21 +6415,6 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
             ]
         });
     }
-    
-    var pluginTabAsegurados = [
-        {
-            ptype    : 'pagingselectpersist',
-            pluginId : 'pagingselectasegurados'+record.get('letra')
-        }
-    ];
-    
-    if (_p21_smap1.ASEGURADOS_EDITAR === 'S') {
-        pluginTabAsegurados.push(Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToEdit  : 1,
-            errorSummary : false
-        }));
-    }
-    
     _p21_agregarTab(
     	    {
     	        title                 : 'ASEGURADOS DE SUBGRUPO '+record.get('letra')
@@ -7087,7 +6430,19 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     	            	,columns    : columnas
     	                ,width      : 980
     	                ,height     : 500
-    	                ,plugins    : pluginTabAsegurados
+    	                ,plugins    : [
+    						_p21_smap1.ASEGURADOS_EDITAR=='S' ? Ext.create('Ext.grid.plugin.RowEditing',
+    						{
+    							clicksToEdit  : 1
+    							,errorSummary : false
+    						}) : null
+    						,
+    						{
+    							ptype       : 'pagingselectpersist'
+    							,pluginId   : 'pagingselectasegurados'
+    						}
+    					]
+
     	                ,tbar       :
     	                [
     	                    {
@@ -7095,7 +6450,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     	                        ,itemId     : 'textFieldBuscar'+record.get('letra') 
     	                        ,fieldLabel : '<span style="color:white;">Buscar:</span>'
     	                        ,timeoutFn  : ''
-    	                    }, 
+    	                    }, //CODIGO DEL BOTON BUSCAR
     	                    {
     	                    	//agregar boton buscar
     	                    	xtype : 'button',
@@ -7148,7 +6503,7 @@ function _cotcol_aseguradosClic(gridSubgrupo,rowIndexSubgrupo)
     	                    ,proxy      :
     	                    {
     	                        type         : 'ajax'
-    	   				        /* ,url         : _p21_urlCargarAseguradosGrupo */
+    	   						/* ,url         : _p21_urlCargarAseguradosGrupo */
     	   						,url         : _p21_urlCargarAseguradosGrupoPag
     	   						,callbackKey : 'callback'
     	   						,extraParams :
@@ -7383,18 +6738,10 @@ function _p21_editarAsegurado(grid,rowIndex)
     try{
     	_p22_parentCallback = false;
     	_callbackDomicilioAseg = false;
-
-		var funcionEjecutar = new Function('destruirLoaderContratante'+_numIDpantalla+'();'); // alternativa de: eval('destruirLoaderContratante'+_numIDpantalla+'();');
-		funcionEjecutar();
-    	
+    	destruirLoaderContratante();
+    	_ventanaPersonas.destroy();
     }catch(e){
-    	debug('No se elimina loader de cliente, destruirLoaderContratante'+_numIDpantalla+'();',e);
-    }
-    
-    try{
-		_ventanaPersonas.destroy();    	
-    }catch(e){
-    	debug('No se elimina ventana contenedora de loader Persona, _ventanaPersonas.destroy();',e);	
+    	debug('No se elimina ventana de Persona');
     }
     
     var titularComoContratante = false;
@@ -7407,9 +6754,6 @@ function _p21_editarAsegurado(grid,rowIndex)
     
     
     if(titularComoContratante){
-    	
-    	_numIDpantalla = new Date().getTime(); 
-    	
     	_ventanaPersonas = Ext.create('Ext.window.Window',
 					        {
 					            title      : 'Editar persona '+record.get('NOMBRE') + ' ' +record.get('APELLIDO_PATERNO')
@@ -7437,8 +6781,7 @@ function _p21_editarAsegurado(grid,rowIndex)
 									                'smap1.cargaSucursalEmi' : _p21_smap1.cdunieco,
 									                'smap1.activaCveFamiliar': 'N',
 									                'smap1.modoRecuperaDanios': 'N',
-									                'smap1.modoSoloEdicion': 'S',
-									                'smap1.idPantalla': _numIDpantalla
+									                'smap1.modoSoloEdicion': 'S'
 									            }
 				                }
 					        }).show();
@@ -7641,6 +6984,336 @@ function _p21_editarCoberturas(grid,row)
     debug('<_p21_editarCoberturas');
 }
 
+function _p21_editarExclusiones(grid,row)
+{
+    var record=grid.getStore().getAt(row);
+    debug('>_p21_editarExclusiones record:',record.data);
+    _p21_guardarAsegurados(grid,function()
+    {
+        var ventana=Ext.create('Ext.window.Window',
+        {
+            title   : 'Editar exclusiones de '+(record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO'))
+            ,width  : 900
+            ,height : 500
+            ,modal  : true
+            ,loader :
+            {
+                url       : _p21_urlEditarExclusiones
+                ,params   :
+                {
+                    'smap1.pv_cdunieco'      : _p21_smap1.cdunieco
+                    ,'smap1.pv_cdramo'       : _p21_smap1.cdramo
+                    ,'smap1.pv_estado'       : _p21_smap1.estado
+                    ,'smap1.pv_nmpoliza'     : _p21_smap1.nmpoliza
+                    ,'smap1.pv_nmsituac'     : record.get('NMSITUAC')
+                    ,'smap1.pv_nmsuplem'     : '0'
+                    ,'smap1.pv_cdperson'     : record.get('CDPERSON')
+                    ,'smap1.pv_cdrol'        : record.get('CDROL')
+                    ,'smap1.nombreAsegurado' : record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO')
+                    ,'smap1.cdrfc'           : record.get('RFC')
+                }
+                ,scripts  : true
+                ,autoLoad : true
+            }
+        }).show()
+        centrarVentanaInterna(ventana);
+        expande = function()
+        {
+            ventana.destroy();
+        }
+    });
+    debug('<_p21_editarExclusiones');
+}
+
+
+
+function _p21_mostrarVentanaComplementoCotizacion(complemento,callback)
+{
+    debug('>_p21_mostrarVentanaComplementoCotizacion');
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title           : 'Complemento de '+(complemento=='C'?'cotizaci&oacute;n':'emisi&oacute;n')
+        ,width          : 500
+        ,minHeight      : 100
+        ,maxHeight      : 400
+        ,modal          : true
+        ,closeOperation : 'destroy'
+        ,items          :
+        [
+            {
+                xtype     : 'form'
+                ,url      : _p21_urlComplementoCotizacion
+                ,border   : 0
+                ,defaults : { style : 'margin:5px;' }
+                ,items    :
+                [
+                    {
+                        xtype  : 'displayfield'
+                        ,value : 'Puede subir un complemento para agregar asegurados a la '+(complemento=='C'?'cotizaci&oacute;n':'emisi&oacute;n')
+                    }
+                    ,{
+		                xtype       : 'filefield'
+		                ,fieldLabel : 'Censo de asegurados'
+		                ,name       : 'censo'
+		                ,buttonText : 'Examinar...'
+		                ,allowBlank : false
+		                ,buttonOnly : false
+		                ,width      : 450
+		                ,cAccept    : ['xls','xlsx']
+		                ,msgTarget  : 'side'
+		                ,listeners  :
+		                {
+		                    change : function(me)
+		                    {
+		                        var indexofPeriod = me.getValue().lastIndexOf("."),
+		                        uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+		                        if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+		                        {
+		                            centrarVentanaInterna(Ext.MessageBox.show(
+		                            {
+		                                title   : 'Error de tipo de archivo',
+		                                msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+		                                buttons : Ext.Msg.OK,
+		                                icon    : Ext.Msg.WARNING
+		                            }));
+		                            me.reset();
+		                        }
+		                    }
+		                }
+		            }
+                ]
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Complementar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                        ,handler : function(me)
+                        {
+                            debug('>complemento cotizacion button click');
+                            var form = me.up('form');
+                            
+                            var params =
+                            {
+                                'smap1.cdunieco'     : _p21_smap1.cdunieco
+                                ,'smap1.cdramo'      : _p21_smap1.cdramo
+                                ,'smap1.cdtipsit'    : _p21_smap1.cdtipsit
+                                ,'smap1.estado'      : _p21_smap1.estado
+                                ,'smap1.nmpoliza'    : _p21_smap1.nmpoliza
+                                ,'smap1.complemento' : complemento
+                                ,'smap1.ntramite'    : _p21_smap1.ntramite
+                                ,'smap1.cdagente'    : _fieldByName('cdagente').getValue()
+                                ,'smap1.codpostal'   : _fieldByName('codpostal').getValue()
+                                ,'smap1.cdestado'    : _fieldByName('cdedo').getValue()
+                                ,'smap1.cdmunici'    : _fieldByName('cdmunici').getValue()
+                            };
+                            for(var i=0;i<5;i++)
+                            {
+                                try
+                                {
+                                    params['smap1.cdplan'+(i+1)] = _p21_storeGrupos.getAt(i).get('cdplan');
+                                }
+                                catch(e)
+                                {
+                                    params['smap1.cdplan'+(i+1)] = '';
+                                    debug('Error inofensivo','No hay grupo '+(i+1));
+                                }
+                            }
+                            
+                            if(form.isValid())
+                            {
+                                form.setLoading(true);
+                                form.submit(
+                                {
+                                    params   : params
+                                    ,success : function(form2,action)
+                                    {
+                                        form.setLoading(false);
+                                        var ck = 'Procesando respuesta al subir complemento';
+                                        try
+                                        {
+                                            var json = Ext.decode(action.response.responseText);
+                                            debug('### submit:',json);
+                                            if(json.exito)
+                                            {
+                                                form.up('window').destroy();
+                                                
+                                                var despues = function()
+                                                {
+	                                                var numRand      = Math.floor((Math.random() * 100000) + 1);
+	                                                var nombreModelo = '_modelo'+numRand;
+	                                                var fields  = [];
+	                                                var columns = [];
+	                                                
+	                                                if(Number(json.smap1.filasProcesadas)>0)
+	                                                {
+	                                                    var record = json.slist1[0];
+	                                                    debug('record:',record);
+	                                                    for(var att in record)
+	                                                    {
+	                                                        if(att.substring(0,1)=='_')
+	                                                        {
+	                                                            var col =
+	                                                            {
+	                                                                dataIndex : att.substring(att.lastIndexOf('_')+1)
+	                                                                ,text     : record[att]
+	                                                                ,orden    : ''+att
+	                                                            };
+	                                                            columns.push(col);
+	                                                        }
+	                                                        else
+	                                                        {
+	                                                            fields.push(att);
+	                                                        }
+	                                                    }
+	                                                }
+	                                                
+	                                                for(var i=0;i<columns.length-1;i++)
+	                                                {
+	                                                    for(var j=i+1;j<columns.length;j++)
+	                                                    {
+	                                                        if(columns[i].orden>columns[j].orden)
+	                                                        {
+	                                                            var aux    = columns[i];
+	                                                            columns[i] = columns[j];
+	                                                            columns[j] = aux;
+	                                                        }
+	                                                    }
+	                                                }
+	                                                
+	                                                debug('fields:',fields,'columns:',columns);
+	                                                
+	                                                Ext.define(nombreModelo,
+	                                                {
+	                                                    extend  : 'Ext.data.Model'
+	                                                    ,fields : fields
+	                                                });
+	                                                
+	                                                var store = Ext.create('Ext.data.Store',
+	                                                {
+	                                                    model : nombreModelo
+	                                                    ,data : json.slist1
+	                                                });
+	                                                
+	                                                debug('store.getRange():',store.getRange());
+	                                                
+	                                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+	                                                {
+	                                                    width     : 600
+	                                                    ,height   : 500
+	                                                    ,title    : 'Revisar asegurados del complemento'
+	                                                    ,closable : false
+	                                                    ,items    :
+	                                                    [
+	                                                        Ext.create('Ext.panel.Panel',
+	                                                        {
+	                                                            layout    : 'hbox'
+	                                                            ,border   : 0
+	                                                            ,defaults : { style : 'margin:5px;' }
+	                                                            ,height   : 40
+	                                                            ,items    :
+	                                                            [
+	                                                                {
+	                                                                    xtype       : 'displayfield'
+	                                                                    ,fieldLabel : 'Filas leidas'
+	                                                                    ,value      : json.smap1.filasLeidas
+	                                                                }
+	                                                                ,{
+	                                                                    xtype       : 'displayfield'
+	                                                                    ,fieldLabel : 'Filas procesadas'
+	                                                                    ,value      : json.smap1.filasProcesadas
+	                                                                }
+	                                                                ,{
+	                                                                    xtype       : 'displayfield'
+	                                                                    ,fieldLabel : 'Filas con error'
+	                                                                    ,value      : json.smap1.filasErrores
+	                                                                }
+	                                                                ,{
+	                                                                    xtype    : 'button'
+	                                                                    ,text    : 'Ver errores'
+	                                                                    ,hidden  : Number(json.smap1.filasErrores)==0
+	                                                                    ,handler : function()
+	                                                                    {
+	                                                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+	                                                                        {
+	                                                                            modal        : true
+	                                                                            ,closeAction : 'destroy'
+	                                                                            ,title       : 'Errores al procesar censo'
+	                                                                            ,width       : 800
+	                                                                            ,height      : 500
+	                                                                            ,items       :
+	                                                                            [
+	                                                                                {
+	                                                                                    xtype       : 'textarea'
+	                                                                                    ,fieldStyle : 'font-family: monospace'
+	                                                                                    ,value      : json.smap1.erroresCenso
+	                                                                                    ,readOnly   : true
+	                                                                                    ,width      : 780
+	                                                                                    ,height     : 440
+	                                                                                }
+	                                                                            ]
+	                                                                        }).show());
+	                                                                    }
+	                                                                }
+	                                                            ]
+	                                                        })
+	                                                        ,Ext.create('Ext.grid.Panel',
+	                                                        {
+	                                                            height      : 350
+	                                                            ,columns    : columns
+	                                                            ,store      : store
+	                                                            ,viewConfig : viewConfigAutoSize
+	                                                        })
+	                                                    ]
+	                                                    ,buttonAlign : 'center'
+	                                                    ,buttons     :
+	                                                    [
+	                                                        {
+	                                                            text     : 'Aceptar y continuar'
+	                                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+	                                                            ,handler : function(me){ callback(); }
+	                                                        }
+	                                                        ,{
+	                                                            text     : 'Agregar m&aacute;s'
+	                                                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+	                                                            ,handler : function(me){ me.up('window').destroy(); }
+	                                                        }
+	                                                    ]
+	                                                }).show());
+                                                };
+                                                
+                                                _p21_generarTramiteClic(despues,false,false,true);
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.respuesta);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        form.setLoading(false);
+                                        errorComunicacion(null,'Error al subir archivo de complemento');
+                                    }
+                                })
+                            }
+                            else
+                            {
+                                datosIncompletos();
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }).show());
+    
+}
+
 /*
 se paso al archivo funcionesCotizacionGrupo.js por exceso de tamanio
 function _p21_subirArchivoCompleto
@@ -7654,7 +7327,7 @@ se paso al archivo funcionesCotizacionGrupo.js por exceso de tamanio
 */
 
 ////// funciones //////
-<%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <script src="${ctx}/js/proceso/emision/funcionesCotizacionGrupo.js?now=${now}"></script>
 </head>

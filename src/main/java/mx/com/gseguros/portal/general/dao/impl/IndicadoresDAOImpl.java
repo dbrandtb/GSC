@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -42,7 +41,7 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 		map.put("ingresados", (String)mapResult.get("pv_tramites_ingr_o"));
 		map.put("procesados", (String)mapResult.get("pv_tramites_proc_o"));
 		map.put("pendientes", (String)mapResult.get("pv_tramites_pend_o"));
-		map.put("eficacia",   StringUtils.isNotBlank((String)mapResult.get("pv_eficacia_o")) ? (String)mapResult.get("pv_eficacia_o") : "0");
+		map.put("eficacia",   (String)mapResult.get("pv_eficacia_o"));
 		return map;
 	}
 	
@@ -258,12 +257,11 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			String[] cols=new String[]{
             		"CDETAPA"
             		,"ETAPA"
-            		,"TIPO_FLUJO"
             		,"NTRAMITE"
             		,"FECHA_RECEP_TRAMITE"
             		,"FECHA_DESDE"
-            		,"SUCURSAL"
-            		,"DS_SUCURSAL"
+            		,"CDUNIECO"
+            		,"DSUNIECO"
             		,"CD_TIPO_TRAMITE"
             		,"TIPO_TRAMITE"
             		,"CD_LINEA_NEGOCIO"
@@ -281,18 +279,12 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
             		,"DSUSUARI_CREA"
             		,"CDUSUARI_ACT"
             		,"DSUSUARI_ACT"
-            		,"OFICINA_USR_ACT"
-            		,"DS_OFICINA_USR_ACT"
-            		,"CDUSUARI_ANT"
-            		,"DSUSUARI_ANT"
-            		,"OFICINA_USR_ANT"
-            		,"DS_OFICINA_USR_ANT"
             };
 			
 			declareParameter(new SqlParameter("pv_start_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_limit_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_num_rec_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o",  OracleTypes.VARCHAR));
 			compile();
@@ -332,8 +324,8 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			declareParameter(new SqlParameter("pv_tipotramite_i",  OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdagente_i",     OracleTypes.VARCHAR));
 			String[] cols=new String[]{
-					"SUCURSAL"
-            		,"DS_SUCURSAL"
+            		"CDUNIECO"
+            		,"DSUNIECO"
             		,"SALUD"
             		,"AUTOS"
             };
@@ -504,12 +496,11 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			String[] cols=new String[]{
             		"CDETAPA"
             		,"ETAPA"
-            		,"TIPO_FLUJO"
             		,"NTRAMITE"
             		,"FECHA_RECEP_TRAMITE"
             		,"FECHA_DESDE"
-            		,"SUCURSAL"
-            		,"DS_SUCURSAL"
+            		,"CDUNIECO"
+            		,"DSUNIECO"
             		,"CD_TIPO_TRAMITE"
             		,"TIPO_TRAMITE"
             		,"CD_LINEA_NEGOCIO"

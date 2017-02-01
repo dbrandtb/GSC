@@ -1519,7 +1519,7 @@ Ext.onReady(function() {
 					{  	header: 'Importe', 			dataIndex: 'ptimport',		 	width:100,				renderer: Ext.util.Format.usMoney  },
 					{  	xtype: 'actioncolumn',		width: 30,					 	sortable: false,	 	menuDisabled: true,
 						items: [{
-							icon:_CONTEXT+'/resources/fam3icons/icons/fam/delete.png',
+							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 							tooltip: 'Quitar tr&aacute;tamiento m&eacute;dico',
 							scope: this,
 							handler: this.onRemoveClick
@@ -1530,7 +1530,7 @@ Ext.onReady(function() {
 					selType: 'cellmodel'
 				},
 				tbar: [{
-					icon:_CONTEXT+'/resources/fam3icons/icons/fam/add.png',
+					icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 					text: 'Agregar tratamiento m&eacute;dico',
 					scope: this,
 					handler: this.onAddClick
@@ -1608,7 +1608,7 @@ Ext.onReady(function() {
 					{	header: 'Importe', 		dataIndex: 'ptimport',		 	width:100,				renderer: Ext.util.Format.usMoney    	},
 					{	xtype: 'actioncolumn',	width: 30,						sortable: false,		menuDisabled: true,
 						items: [{
-							icon:_CONTEXT+'/resources/fam3icons/icons/fam/delete.png',
+							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 							tooltip: 'Quitar base equipo quir&uacute;gico',
 							scope: this,
 							handler: this.onRemoveClick
@@ -1619,7 +1619,7 @@ Ext.onReady(function() {
 					selType: 'cellmodel'
 				},
 				tbar: [{
-					icon:_CONTEXT+'/resources/fam3icons/icons/fam/add.png',
+					icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 					text: 'Agregar base equipo quir&uacute;gico',
 					scope: this,
 					handler: this.onAddClick
@@ -1673,7 +1673,7 @@ Ext.onReady(function() {
 					{	header: 'Importe',				dataIndex: 'ptimport',	 		width:100,			renderer: Ext.util.Format.usMoney  	},
 					{	xtype: 'actioncolumn',				width: 30,						sortable: false,		menuDisabled: true,
 						items: [{
-							icon:_CONTEXT+'/resources/fam3icons/icons/fam/delete.png',
+							icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 							tooltip: 'Quitar equipo quir&uacute;gico',
 							scope: this,
 							handler: this.onRemoveClick
@@ -1684,7 +1684,7 @@ Ext.onReady(function() {
 					selType: 'cellmodel'
 				},
 				tbar: [{
-					icon:_CONTEXT+'/resources/fam3icons/icons/fam/add.png',
+					icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 					text: 'Agregar equipo quir&uacute;gico',
 					scope: this,
 					handler: this.onAddClick
@@ -3074,12 +3074,7 @@ Ext.onReady(function() {
 					valorCopago = copagoOrig;
 				}
 				if(tipoCopago =="$"){
-					if(+Ext.getCmp('idPorcIncremento').getValue() > 0){
-						Ext.getCmp('idCopagoFin').setValue("$"+valorCopago +" y "+ Ext.getCmp('idPorcIncremento').getValue() +"%");
-					}else{
-						Ext.getCmp('idCopagoFin').setValue(valorCopago);
-					}
-					
+					Ext.getCmp('idCopagoFin').setValue("$"+valorCopago +" y "+ Ext.getCmp('idPorcIncremento').getValue() +"%");
 					return true;
 				}
 				if(tipoCopago =="%"){

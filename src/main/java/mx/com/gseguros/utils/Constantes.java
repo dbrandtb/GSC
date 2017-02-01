@@ -23,9 +23,6 @@ public interface Constantes {
     public static final String STATUS_VIVO   = "V";
     public static final String STATUS_MUERTO = "M";
     
-    public static final String POLIZA_WORKING= "W";
-    public static final String POLIZA_MASTER = "M";
-    
     public static final String MAUTSINI_AREA_RECLAMACIONES = "RE";
     public static final String MAUTSINI_AREA_MEDICA        = "ME";
     public static final String MAUTSINI_SINIESTRO          = "S";
@@ -40,28 +37,4 @@ public interface Constantes {
     public static final String REGISTRO_DUPLICADO = "100006";
     
     public static final String NMSITUAC_TITULAR = "1";
-    
-    public static final String USUARIO_SISTEMA = "SISTEMA",
-                               ROL_SISTEMA     = "SISTEMA";
-    
-    public static final String PROCESO_FLAGS = "FLAGS";
-    
-    public static final String MODULO_FLAGS        = "FLAGS",
-                               MODULO_EMISION      = "EMISION",
-                               MODULO_MESA_CONTROL = "MESADECONTROL",
-                               MODULO_COTIZACION   = "COTIZACION",
-                               MODULO_GENERAL      = "GENERAL";
-    
-    public static final String EVENTO_REGRESAR              = "REGRESAR",
-                               EVENTO_FLAG_VERDE            = "VERDE",
-                               EVENTO_FLAG_AMARILLA         = "AMARILLA",
-                               EVENTO_FLAG_ROJA             = "ROJA",
-                               EVENTO_FLAG_VENCIDA          = "VENCIDA",
-                               EVENTO_COMPRAR_TRAMITE_MC    = "COMTRAMITMC",
-                               EVENTO_EMISION               = "EMISION",
-                               EVENTO_APROBACION_COT_COL    = "APROBCOTCOL",
-                               EVENTO_COTIZAR               = "COTIZA",
-                               EVENTO_GENERAR_TRAMITE_GRUPO = "GENTRAGRUP",
-                               EVENTO_TURNAR                = "TURNATRA",
-                               EVENTO_NUEVO_TRAMITE         = "NUETRAMITMC";
 }

@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -306,7 +305,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			params.put("pv_cdgarant_i",cdGarant);
 			params.put("pv_cdatribu_i",cdAtribu);
 			params.put("pv_otvalor_i" ,valAnt);
-			params.put("pv_cdsisrol_i", cdSisrol); // se agrega parï¿½metro para considerar restricciones por rol (EGS)
+			params.put("pv_cdsisrol_i", cdSisrol); // se agrega parámetro para considerar restricciones por rol (EGS)
     		
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosGar(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
@@ -324,7 +323,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR)); // se agrega parï¿½metro para considerar restricciones por rol (ESG)
+			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR)); // se agrega parámetro para considerar restricciones por rol (ESG)
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosGarMapper()));
 			declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -1982,12 +1981,12 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	}
 	
 	@Override
-	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, String vigente) throws Exception
+	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdramo"   , cdramo);
 		params.put("cdtipsit" , cdtipsit);
-		params.put("vigente"  , StringUtils.isNotBlank(vigente) ? vigente : "N");
+		params.put("vigente"  , vigente ? "S" : "N");
 		
 		Map<String,Object> procRes = ejecutaSP(new RecuperarTiposDeEndosoPorCdramoPorCdtipsitSP(getDataSource()),params);
 		
@@ -2284,41 +2283,4 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
         }
     }
     
-    public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit,String nivel) throws Exception
-    {
-        logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-                               "\n@@@@@@ recuperarListaFiltroPropiedadInciso @@@@@@",
-                               "\n@@@@@@ cdramo ",cdramo,"\n"));
-        
-        HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
-        params.put("pv_cdramo_i", cdramo);
-        params.put("pv_cdtipsit_i", cdtipsit);
-        params.put("pv_nivel_i", nivel);
-        Map<String,Object>       procRes    = ejecutaSP(new RecuperarListaFiltroPropiedadInciso(getDataSource()), params);
-        List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
-        logger.debug(Utils.log(listaMapas));
-        List<GenericVO>          lista      = new ArrayList<GenericVO>();
-        if(listaMapas!=null)
-        {
-            for(Map<String,String> mapa : listaMapas)
-            {
-                lista.add(new GenericVO(mapa.get("dsatribu"),mapa.get("dsatribu")));
-            }
-        }
-        return lista;
-    }
-    protected class RecuperarListaFiltroPropiedadInciso extends StoredProcedure
-    {
-        protected RecuperarListaFiltroPropiedadInciso(DataSource dataSource)
-        {
-            super(dataSource,"PKG_CONSULTA_PRUEBA.P_GET_LISTA_FILTROS");
-            declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nivel_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"dsatribu"})));
-            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
 }

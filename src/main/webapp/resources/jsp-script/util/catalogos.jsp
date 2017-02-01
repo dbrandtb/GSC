@@ -132,7 +132,6 @@ var TipoSituacion = {
 	DXNSEMANAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNSEMANAL.codigo" />',
 	DXNANUAL            :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNANUAL.codigo" />',
 	DXNDOCENAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNDOCENAL.codigo" />',
-	CONTADO				:    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@CONTADO.codigo" />',
 	esDxN				:    function(formaPago){
 		
 		var dxn=[
@@ -262,13 +261,5 @@ var TipoPersona = {
     Moral  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoPersona@MORAL.tipoPersona" />',
     RegimenSimplificado  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoPersona@REGIMEN_SIMPLIFICADO.tipoPersona" />'
 };
-
-// Catalogo de Tipo de Endoso
-var TipoEndoso = {
-		SUMA_ASEGURADA_INCREMENTO  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@SUMA_ASEGURADA_INCREMENTO.cdTipSup" />',
-		SUMA_ASEGURADA_DECREMENTO  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@SUMA_ASEGURADA_DECREMENTO.cdTipSup" />',
-		DEDUCIBLE_MENOS			   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEDUCIBLE_MENOS.cdTipSup"           />',
-		DEDUCIBLE_MAS			   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEDUCIBLE_MAS.cdTipSup"             />',
-}
 
 </script>

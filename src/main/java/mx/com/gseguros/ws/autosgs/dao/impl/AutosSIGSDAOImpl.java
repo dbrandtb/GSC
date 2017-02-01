@@ -41,7 +41,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class CambioDomicilioCP extends StoredProcedure{
 		protected CambioDomicilioCP(DataSource dataSource){
-			super(dataSource, "sp_ActualizaDirCliente2");
+			super(dataSource, "sp_ActualizaDirCliente");
 			
 			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
 			declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
@@ -56,9 +56,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vTelefono", Types.VARCHAR));
 			declareParameter(new SqlParameter("vCalle", Types.VARCHAR));
 			declareParameter(new SqlParameter("vNumero", Types.VARCHAR));
-			declareParameter(new SqlParameter("vNumInt", Types.VARCHAR));
-			declareParameter(new SqlParameter("vNumDir", Types.SMALLINT));
-			declareParameter(new SqlParameter("vUSER", Types.VARCHAR));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -87,7 +84,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class EndosoDomicilio extends StoredProcedure{
 		protected EndosoDomicilio(DataSource dataSource){
-			super(dataSource, "sp_EndosoBCamDomicilio2");
+			super(dataSource, "sp_EndosoBCamDomicilio");
 			
 			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
 			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
@@ -104,8 +101,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vTelefono2", Types.VARCHAR));
 			declareParameter(new SqlParameter("vTelefono3", Types.VARCHAR));
 			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
-			declareParameter(new SqlParameter("vNumDir", Types.SMALLINT));
-			declareParameter(new SqlParameter("vUSER", Types.VARCHAR));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -700,7 +695,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class CambioDomicilioSinCPColonia extends StoredProcedure{
 		protected CambioDomicilioSinCPColonia(DataSource dataSource){
-			super(dataSource, "sp_EndosoBDomicilioColonia2");
+			super(dataSource, "sp_EndosoBDomicilioColonia");
 			
 			declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
 			declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
@@ -721,8 +716,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vNumInt", Types.VARCHAR));
 			
 			declareParameter(new SqlParameter("vFEndoso", Types.DATE));
-			declareParameter(new SqlParameter("vNumDir", Types.SMALLINT));
-			declareParameter(new SqlParameter("vUSER", Types.VARCHAR));
 			
 			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
@@ -741,13 +734,8 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 
 	@Override
 	public void revierteEndosoFallidoSigs(Map<String, Object> params) throws Exception {
-		String resp = null;
-		Map<String, Object> mapResult = ejecutaSP(new RevierteEndosoFallidoSigs(getDataSource()), params);
-		resp = (String) mapResult.get("rs");
-		
-		logger.info("Mensaje de respuesta de sprevierteemision: " + resp);
-		
-//		return resp;
+		Integer resp = null;
+		ejecutaSP(new RevierteEndosoFallidoSigs(getDataSource()), params);
 	}
 	
 	public class RevierteEndosoFallidoSigs extends StoredProcedure{
@@ -761,17 +749,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vNumEndoso", Types.INTEGER));
 			declareParameter(new SqlParameter("vError", Types.SMALLINT));
 			declareParameter(new SqlParameter("vDesError", Types.VARCHAR));
-			
-			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<String>(){
-				@Override  
-				public String extractData(ResultSet rs) throws SQLException, DataAccessException {  
-					String result = null;
-					while(rs.next()){  
-						result = rs.getString(1);
-					}  
-					return result;  
-				}
-			}));
 			
 			compile();
 		}
@@ -797,10 +774,10 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 
 
 	@Override
-	public String CambioClientenombreRFCfechaNacimiento(Map<String, Object> params) throws Exception {
-		String resp = null;
+	public Integer CambioClientenombreRFCfechaNacimiento(Map<String, Object> params) throws Exception {
+		Integer resp = null;
 		Map<String, Object> mapResult = ejecutaSP(new CambioClientenombreRFCfechaNacimiento(getDataSource()), params);
-		resp = (String) mapResult.get("rs");
+		resp = (Integer) mapResult.get("rs");
 		
 		return resp;
 	}
@@ -834,14 +811,12 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			declareParameter(new SqlParameter("vTelefono1", Types.VARCHAR));
 			declareParameter(new SqlParameter("vTelefono2", Types.VARCHAR));
 			declareParameter(new SqlParameter("vTelefono3", Types.VARCHAR));
-			declareParameter(new SqlParameter("vUSER", Types.VARCHAR));
-			
-			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<String>(){  
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
 				@Override  
-				public String extractData(ResultSet rs) throws SQLException, DataAccessException {  
-					String result = null;
+				public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+					Integer result = null;
 					while(rs.next()){  
-						result = rs.getString(1)+"|"+rs.getString(2);
+						result = rs.getInt(1);
 					}  
 					return result;  
 				}
@@ -876,8 +851,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 		
 		Map<String, Object> mapResult  = ejecutaSP(new ObtieneTipoCliWS(getDataSource()), params);
 		resp = (Integer) mapResult.get("rs");
-		
-		logger.debug("<<<<>>>> Respuesta de tipo cliente obtienido GS:"+resp);
 		
 		return resp;
 	}

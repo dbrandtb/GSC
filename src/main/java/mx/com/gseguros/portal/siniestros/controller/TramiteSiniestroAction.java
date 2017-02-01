@@ -177,7 +177,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 						,null //swimpres
 						,null //cdtipflu
 						,null //cdflujomc
-						,valores, null, null, null, null
+						,valores, null
 						);
 				//if(res.getItemMap() == null){
 				if(ntramiteGenerado==null){
@@ -883,7 +883,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					,null
 					,null
 					,null
-					,null, false
+					,null
 					);
 			
 		}catch( Exception e){

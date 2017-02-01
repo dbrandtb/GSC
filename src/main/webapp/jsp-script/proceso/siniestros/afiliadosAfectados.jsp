@@ -2052,7 +2052,7 @@
 								},
 								{
 									text	: 'Generar Calculo'
-									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 									,handler : _p21_generarCalculo
 									,hidden  : (_cdtipoProceso  == "1")
 								}
@@ -2336,7 +2336,7 @@
 								,items		:
 								[
 									{
-										icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
+										icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 										tooltip: 'Eliminar',
 										scope: this,
 										handler: this.onRemoveClick
@@ -2576,7 +2576,7 @@
 						tbar:[
 								{
 									text	: 'Agregar Concepto'
-									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 									,handler : _p21_agregarConcepto
 									//, hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
 								},
@@ -2655,6 +2655,7 @@
 							,listeners : {
 								beforeedit : function() {
 									_11_aseguradoSeleccionado = gridFacturaDirecto.getView().getSelectionModel().getSelection()[0];
+									debug("VALOR DE _11_conceptoSeleccionado --->>>>>>",_11_conceptoSeleccionado);
 									_11_conceptoSeleccionado = gridEditorCoberturaRecupera.getView().getSelectionModel().getSelection()[0];
 									debug("VALOR DE _11_conceptoSeleccionado --->>>>>>",_11_conceptoSeleccionado);
 									
@@ -2692,7 +2693,7 @@
 							,items		:
 							[
 								{
-									icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
+									icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 									tooltip: 'Eliminar',
 									scope: this,
 									handler: this.onRemoveClick
@@ -2799,7 +2800,7 @@
 					tbar:[
 							{
 								text	: 'Agregar Conceptos'
-								,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+								,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 								,handler : _p21_agregarConcepto
 							},
 							{
@@ -3925,19 +3926,17 @@
                     ,columns    : 2
                     ,width      : 250
                     ,style      : 'margin:5px;'
-                    ,hidden     : _GLOBAL_CDSISROL===RolSistema
                     ,items      : [
                         {
                             boxLabel    : 'Si'
                             ,itemId     : 'SWAGENTE2'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'S'
-                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                         },{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'N'
-                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                            ,checked    : true
                         }
                     ]
                 }
@@ -4080,19 +4079,17 @@
 	                    ,columns    : 2
 	                    ,width      : 250
 	                    ,style      : 'margin:5px;'
-	                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 	                    ,items      : [
 	                        {
 	                            boxLabel    : 'Si'
 	                            ,itemId     : 'SWAGENTE3'
 	                            ,name       : 'SWAGENTE3'
 	                            ,inputValue : 'S'
-	                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 	                        },{
 	                            boxLabel    : 'No'
 	                            ,name       : 'SWAGENTE3'
 	                            ,inputValue : 'N'
-	                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+	                            ,checked    : true
 	                        }
 	                    ]
 	                }],
@@ -4674,20 +4671,18 @@
                                             ,columns    : 2
                                             ,width      : 250
                                             ,style      : 'margin:5px;'
-                                            ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                                             ,items      : [
                                                 {
                                                     boxLabel    : 'Si'
                                                     ,itemId     : 'SWAGENTE5'
                                                     ,name       : 'SWAGENTE5'
                                                     ,inputValue : 'S'
-                                                    ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                                                 }
                                                 ,{
                                                     boxLabel    : 'No'
                                                     ,name       : 'SWAGENTE5'
                                                     ,inputValue : 'N'
-                                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                    ,checked    : true
                                                 }
                                             ]
                                         }],
@@ -4918,20 +4913,18 @@
                         ,columns    : 2
                         ,width      : 250
                         ,style      : 'margin:5px;'
-                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                         ,items      : [
                             {
                                 boxLabel    : 'Si'
                                 ,itemId     : 'SWAGENTE4'
                                 ,name       : 'SWAGENTE4'
                                 ,inputValue : 'S'
-                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                             }
                             ,{
                                 boxLabel    : 'No'
                                 ,name       : 'SWAGENTE4'
                                 ,inputValue : 'N'
-                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                ,checked    : true
                             }
                         ]
                     }],
@@ -5036,7 +5029,6 @@
 											,columns    : 2
 											,width      : 250
 											,style      : 'margin:5px;'
-											,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 											,items      :
 											[
 												{
@@ -5044,13 +5036,12 @@
 													,itemId     : 'SWAGENTE2'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'S'
-													,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 												}
 												,{
 													boxLabel    : 'No'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'N'
-													,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+													,checked    : true
 												}
 											]
 										}],

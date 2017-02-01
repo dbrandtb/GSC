@@ -231,12 +231,10 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
 	}
 	
 	@Override
-	public String recuperarSiguienteUsuarioCarrusel (String cdunidspch, String cdsisrol, boolean soloUsuariomatriz, String ntramite) throws Exception {
+	public String recuperarSiguienteUsuarioCarrusel (String cdunidspch, String cdsisrol) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
-		params.put("pv_cdunidspch_i" , cdunidspch);
-		params.put("pv_cdsisrol_i"   , cdsisrol);
-        params.put("pv_swsusmat_i"   , soloUsuariomatriz ? "S" : "N");
-        params.put("pv_ntramite_i"   , ntramite);
+		params.put("cdunidspch" , cdunidspch);
+		params.put("cdsisrol"   , cdsisrol);
 		Map<String, Object> procRes = ejecutaSP(new RecuperarSiguienteUsuarioCarruselSP(getDataSource()), params);
 		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
 		if (lista == null) {
@@ -278,10 +276,8 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
 	protected class RecuperarSiguienteUsuarioCarruselSP extends StoredProcedure {
 		protected RecuperarSiguienteUsuarioCarruselSP (DataSource dataSource) {
 			super(dataSource, "P_DSPCH_CARRUSEL");
-			declareParameter(new SqlParameter("pv_cdunidspch_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdsisrol_i"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_swsusmat_i"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_ntramite_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunidspch" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
 			String[] cols = new String[] { "CDUSUARI", "SWULTIMO" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -291,12 +287,10 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
 	}
 	
 	@Override
-	public String recuperarSiguienteUsuarioCarga (String cdunidspch, String cdsisrol, boolean soloUsuariomatriz, String ntramite) throws Exception {
+	public String recuperarSiguienteUsuarioCarga (String cdunidspch, String cdsisrol) throws Exception {
 		Map<String, String> params = new LinkedHashMap<String, String>();
-		params.put("pv_cdunidspch_i" , cdunidspch);
-		params.put("pv_cdsisrol_i"   , cdsisrol);
-        params.put("pv_swsusmat_i"   , soloUsuariomatriz ? "S" : "N");
-        params.put("pv_ntramite_i"   , ntramite);
+		params.put("cdunidspch" , cdunidspch);
+		params.put("cdsisrol"   , cdsisrol);
 		Map<String, Object> procRes = ejecutaSP(new RecuperarSiguienteUsuarioCargaSP(getDataSource()), params);
 		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
 		if (lista == null) {
@@ -320,10 +314,8 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
 	protected class RecuperarSiguienteUsuarioCargaSP extends StoredProcedure {
 		protected RecuperarSiguienteUsuarioCargaSP (DataSource dataSource) {
 			super(dataSource, "P_DSPCH_CARGA");
-			declareParameter(new SqlParameter("pv_cdunidspch_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdsisrol_i"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_swsusmat_i"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_ntramite_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunidspch" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
 			String[] cols = new String[] { "CDUSUARI", "NMTAREAS" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -684,74 +676,4 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
             compile();
         }
     }
-    
-    @Override
-    public List<Map<String, String>> recuperarPermisosEndosos (String cdusuari, String cdsisrol) throws Exception {
-        Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("cdusuari", cdusuari);
-        params.put("cdsisrol", cdsisrol);
-        Map<String, Object> procRes = ejecutaSP(new RecuperarPermisosEndososSP(getDataSource()), params);
-        List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
-        if (lista == null) {
-            lista = new ArrayList<Map<String, String>>();
-        }
-        logger.debug("recuperarPermisosEndosos lista: {}", Utils.log(lista));
-        return lista;
-    }
-    
-    protected class RecuperarPermisosEndososSP extends StoredProcedure {
-        protected RecuperarPermisosEndososSP (DataSource dataSource) {
-            super(dataSource, "P_DSPCH_GET_PERMISOS_ENDOSOS");
-            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
-            String[] cols = new String[] {
-                    "CDRAMO", "DSRAMO", "CDTIPSUP", "DSTIPSUP", "PORUSUARIO", "TIPOFLOT"
-                    };
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public List<Map<String, String>> recuperarLogDespachadorZona (String ntramite, String cdunieco, String estatus) throws Exception {
-        Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("ntramite", ntramite);
-        params.put("cdunieco", cdunieco);
-        params.put("estatus", estatus);
-        Map<String, Object> procRes = ejecutaSP(new RecuperarLogDespachadorZonaSP(getDataSource()), params);
-        String error = (String) procRes.get("pv_dserror_o");
-        if (StringUtils.isNotBlank(error)) {
-            throw new ApplicationException(error);
-        }
-        List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
-        if (lista == null) {
-            lista = new ArrayList<Map<String, String>>();
-        }
-        logger.debug("recuperarLogDespachadorZona lista: {}", Utils.log(lista));
-        return lista;
-    }
-    
-    protected class RecuperarLogDespachadorZonaSP extends StoredProcedure {
-        protected RecuperarLogDespachadorZonaSP (DataSource dataSource) {
-            super(dataSource, "P_DSPCH_DESPACHA_ZONA_LOG");
-            declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("estatus" , OracleTypes.VARCHAR));
-            String[] cols = new String[] {
-                    "CDUNIECO", "CDUNIZON", "CDNIVEL", "NMCAPACI", "CARGA_SUCURSAL", "CDUSUARI", "DSUSUARI", "CDSISROL",
-                    "JERARQUIA", "CAPACIDAD_ROL", "CARGA_USUARIO_ROL", "GRUPO", "CDESTADOMC", "SIN_EXCLUIR", "PERMISO_ENDOSO"
-                    };
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_dserror_o"  , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    
-    
-    
 }

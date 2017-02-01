@@ -382,7 +382,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 							,null //swimpres
 							,null //cdtipflu
 							,null //cdflujomc
-							,valores, null, null, null, null
+							,valores, null
 							);
 					
 					if(params.get("status").trim().equalsIgnoreCase("2")){
@@ -429,7 +429,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 						String usuarioDestino = null;
 						String cdclausu       = null;
 						
-						siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu,null,null, false);
+						siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu,null,null);
 						
 						Map<String,Object>paramsO =new HashMap<String,Object>();
 						paramsO.put("pv_ntramite_i" , params.get("idNumtramiteInicial"));
@@ -541,7 +541,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					,null
 					,null
 					,null
-					,null, false
+					,null
 					);
 			
 		}catch( Exception e){
@@ -898,7 +898,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					,null
 					,null
 					,null
-					,null, false
+					,null
 					);
 			
 		}
