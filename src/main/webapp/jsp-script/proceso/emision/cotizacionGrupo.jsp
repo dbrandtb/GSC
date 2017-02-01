@@ -2568,7 +2568,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         }
                                                                     } 
                                                                 }
-                                                                debug('checkbox change2:',value,me.up('form').cdgarant);
                                                                 //4MAT y 4AYM
                                                                 if(_p21_smap1.cdsisrol!='COTIZADOR'&&value)
                                                                 {
@@ -2601,7 +2600,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         debugError('error inofensivo al validar 4mat contra 4aym',e);
                                                                     }
                                                                 }
-                                                                
+
                                                                 //4MED
                                                                 if(_p21_smap1.cdsisrol!='COTIZADOR')
                                                                 {
@@ -3493,6 +3492,8 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
      
      var tvalogars = [];
      var valido    = true;
+     validoFlag=true;
+
      if(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')
      {
          for(var i=0;i<formsTatrigar.length;i++)
@@ -3500,6 +3501,24 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
              var iFormTatrigar = formsTatrigar[i];
              valido            = valido && iFormTatrigar.isValid();
              var tvalogar      = iFormTatrigar.getValues();
+             
+             //validacion de combo 4MED para cubrir requerimiento de que el valor sea diferente de cero 
+             var miCdgarant = iFormTatrigar.cdgarant ;
+        	 if(miCdgarant=='4MED')
+             {
+             	var cboMed = iFormTatrigar.up('panel').down('[cdgarant=4MED]').down('[name=parametros.pv_otvalor001]');
+             	debug('cboMedValue en funcion guardar', cboMed.getValue());
+             	if ((cboMed.getValue() !=null)&&(cboMed.getValue() ==0)&&(cboMed.getValue() !='')){
+             		debug('Entre en el if de validacion de Medicamentos');
+             		mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo');
+             		debug('Debe elegir el importe del Beneficio Maximo');
+             		validoFlag=false;
+             	}
+             	/*else{
+             		validoFlag=true;
+             	}*/
+              }
+
              if(false)//tvalogar.swobliga=='S'&&_p21_smap1.cdsisrol!='COTIZADOR')
              {
                  tvalogar['amparada']='S';
@@ -3518,109 +3537,116 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
              datosIncompletos();
          }
      }
-     
+     debug('valido ', valido, 'validoFlag ', validoFlag);
      if(valido)
      {
-         debug('tvalogars:',tvalogars);
-         var recordGrupo=_p21_obtenerGrupoPorLetra(letraGrupo);
-         recordGrupo['tvalogars'] = tvalogars;
-         recordGrupo['valido']    = true;
-         debug('recordGrupo:',recordGrupo);
-         if(_p21_smap1.FACTORES=='S')
-         {
-             var storeFactores = panelGrupo.down('grid[title=FACTORES DEL SUBGRUPO]').getStore();
-             debug('storeFactores:',storeFactores);
-             storeFactores.commitChanges();
-         }
-         
-         if(_p21_smap1.LINEA_EXTENDIDA != 'S'){
-         
-	         var smap1p = {
-	        		 cdramo  : _p21_smap1.cdramo,
-	        		 cdtipsit: _p21_smap1.cdtipsit,
-	        		 cdplan  : recordGrupoEdit.get('cdplan')
-	         };
+	     if (validoFlag!=false){
+	    	 debug('tvalogars:',tvalogars);
+	         var recordGrupo=_p21_obtenerGrupoPorLetra(letraGrupo);
+	         recordGrupo['tvalogars'] = tvalogars;
+	         recordGrupo['valido']    = true;
+	         debug('recordGrupo:',recordGrupo);
+	         if(_p21_smap1.FACTORES=='S')
+	         {
+	             var storeFactores = panelGrupo.down('grid[title=FACTORES DEL SUBGRUPO]').getStore();
+	             debug('storeFactores:',storeFactores);
+	             storeFactores.commitChanges();
+	         }
 	         
-	         var params = {
-	        		 slist1 : tvalogars,
-	                 smap1  : smap1p
-	         };
+	         if(_p21_smap1.LINEA_EXTENDIDA != 'S'){
 	         
-	         _mask('Espere un momento...');
-	         
-	         Ext.Ajax.request(
-				        {
-			            url       : _p21_urlObtienePlanDefinitivo
-			            ,jsonData : params
-			            ,success  : function(response)
-			            {
-			            	_unmask();
-	
-			            	var jsonCont = Ext.decode(response.responseText);
-			            	
-			            	var cdplanAnt = recordGrupoEdit.get('cdplan');
-			            	var dsplanAnt = recordGrupoEdit.get('dsplanl');
-			            	
-			            	if(Ext.isEmpty(dsplanAnt)){
-			            		dsplanAnt = jsonCont.smap1.DSPLAN_ORIG;
-			            	}
-			            	
-			            	var nvoCdplan = jsonCont.smap1.NVO_CDPLAN;
-		                	var nvoDSplan = jsonCont.smap1.NVO_DSPLAN;
-		                	var nvoNombrePlan = jsonCont.smap1.NVO_NOMBRE;
-		                	
-			                if(jsonCont.exito){
-			                		/**
-				                      * Se calcula el plan y las descripcion
-				                      **/
-				                    
-				                      recordGrupoEdit.set('cdplan',nvoCdplan);
-				                      recordGrupoEdit.set('dsplanl',nvoNombrePlan);
-				                      recordGrupoEdit.commit(false,['dsplanl']);
-				                    
-				                    mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',function(){         	
-				                   	 
-				                    	setTimeout(function(){
-				                    		_p21_setActiveResumen();
-				                    		
-				                    		if( cdplanAnt != nvoCdplan /* solo cuando cambia el plan principal || dsplanAnt != nvoNombrePlan*/){
-				                    			
-				                    			var valorSAorig = recordGrupoEdit.get('ptsumaaseg');
-				                    			
-					                    		mensajeWarning('El plan del grupo '+recordGrupoEdit.get('letra')+ ' ha cambido. Verifique la Suma asegurada');
-					                    		gridGrupos.editingPlugin.startEdit(recordGrupoEdit,0);
-					                    		
-					                    		var indexSumAseg = 0;
-					                    		
-					                    		Ext.Array.each(gridGrupos.columns,function(columnGpo, indexCol){
-						                       		if(columnGpo.dataIndex == "ptsumaaseg"){
-						                       			indexSumAseg = indexCol;
-						                       			return false;
-						                       		}
-						                       	});
-					                    		
-					                    		 var comboPlan = gridGrupos.columns[indexSumAseg].getEditor(recordGrupoEdit);
-					                    		setTimeout(function(){
-					                    			comboPlan.setValue(valorSAorig);
-					                        	},500); 
-				                    		}
-				                    	},250);
-				                    });
+		         var smap1p = {
+		        		 cdramo  : _p21_smap1.cdramo,
+		        		 cdtipsit: _p21_smap1.cdtipsit,
+		        		 cdplan  : recordGrupoEdit.get('cdplan')
+		         };
+		         
+		         var params = {
+		        		 slist1 : tvalogars,
+		                 smap1  : smap1p
+		         };
+		         
+		         _mask('Espere un momento...');
+		         
+		         Ext.Ajax.request(
+					        {
+				            url       : _p21_urlObtienePlanDefinitivo
+				            ,jsonData : params
+				            ,success  : function(response)
+				            {
+				            	_unmask();
+		
+				            	var jsonCont = Ext.decode(response.responseText);
+				            	
+				            	var cdplanAnt = recordGrupoEdit.get('cdplan');
+				            	var dsplanAnt = recordGrupoEdit.get('dsplanl');
+				            	
+				            	if(Ext.isEmpty(dsplanAnt)){
+				            		dsplanAnt = jsonCont.smap1.DSPLAN_ORIG;
+				            	}
+				            	
+				            	var nvoCdplan = jsonCont.smap1.NVO_CDPLAN;
+			                	var nvoDSplan = jsonCont.smap1.NVO_DSPLAN;
+			                	var nvoNombrePlan = jsonCont.smap1.NVO_NOMBRE;
 			                	
-			                }
-			                else
-			                {
-			                    mensajeWarning(jsonCont.respuesta);
-			                }
-			            }
-			            ,failure  : function()
-			            {
-			            	_unmask();
-			                errorComunicacion();
-			            }
-			        });
+				                if(jsonCont.exito){
+				                		/**
+					                      * Se calcula el plan y las descripcion
+					                      **/
+					                    
+					                      recordGrupoEdit.set('cdplan',nvoCdplan);
+					                      recordGrupoEdit.set('dsplanl',nvoNombrePlan);
+					                      recordGrupoEdit.commit(false,['dsplanl']);
+					                    
+					                    mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',function(){         	
+					                   	 
+					                    	setTimeout(function(){
+					                    		_p21_setActiveResumen();
+					                    		
+					                    		if( cdplanAnt != nvoCdplan /* solo cuando cambia el plan principal || dsplanAnt != nvoNombrePlan*/){
+					                    			
+					                    			var valorSAorig = recordGrupoEdit.get('ptsumaaseg');
+					                    			
+						                    		mensajeWarning('El plan del grupo '+recordGrupoEdit.get('letra')+ ' ha cambido. Verifique la Suma asegurada');
+						                    		gridGrupos.editingPlugin.startEdit(recordGrupoEdit,0);
+						                    		
+						                    		var indexSumAseg = 0;
+						                    		
+						                    		Ext.Array.each(gridGrupos.columns,function(columnGpo, indexCol){
+							                       		if(columnGpo.dataIndex == "ptsumaaseg"){
+							                       			indexSumAseg = indexCol;
+							                       			return false;
+							                       		}
+							                       	});
+						                    		
+						                    		 var comboPlan = gridGrupos.columns[indexSumAseg].getEditor(recordGrupoEdit);
+						                    		setTimeout(function(){
+						                    			comboPlan.setValue(valorSAorig);
+						                        	},500); 
+					                    		}
+					                    	},250);
+					                    });
+				                	
+				                }
+				                else
+				                {
+				                    mensajeWarning(jsonCont.respuesta);
+				                }
+				            }
+				            ,failure  : function()
+				            {
+				            	_unmask();
+				                errorComunicacion();
+				            }
+				        });
+	         }//fin del if de validoFlag
          }else{
-        	 mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
+        	 if (validoFlag!=false){
+        	 	mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
+        	 } else{
+        		 debug('Entre en el ultimo else');
+        		 mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo');
+        	 }
          }
      }
      
