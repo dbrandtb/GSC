@@ -7,6 +7,7 @@ Ext.onReady(function() {
     var retornaMC = "0";
     var facturaTemporal =null;
     var _11_aseguradoSeleccionado = null;
+    var origProd = null;	// para guardar el producto original, x validación de que no se modifique (EGS)
     Ext.selection.CheckboxModel.override( {
         mode: 'SINGLE',
         allowDeselect: true
@@ -340,6 +341,11 @@ Ext.onReady(function() {
         displayField : 'value',             valueField: 'key',                  forceSelection : false,
         width        : 350,                 queryMode :'local',                 name           :'cmbRamos'
         ,store : storeRamos
+        ,listeners: {	// (EGS) agrego listener
+        	'select' : function(e){
+        		validaProducto();
+        	}
+        }
     });
     
     cmbModalidad = Ext.create('Ext.form.field.ComboBox',{
@@ -2428,6 +2434,7 @@ Ext.onReady(function() {
                 if(Ext.decode(response.responseText).listaMesaControl != null){
                     var json=Ext.decode(response.responseText).listaMesaControl[0];
                     debug("VALOR DEL JSON MODIFICADO ====>>>>",json);
+                    origProd = json.cdramomc;	// guardamos el producto original, para validar que no se modifique (EGS)
                     //ASIGNACION DE VALORES GENERALES PARA PAGO DIRECTO Y REEMBOLSO
                     panelInicialPral.down('[name=idNumTramite]').setValue(valorAction.ntramite);
                     panelInicialPral.down('[name=txtEstado]').setValue('PENDIENTE');
@@ -2680,6 +2687,20 @@ Ext.onReady(function() {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////         F   U   N   C   I   O   N   E   S   
+    
+    // (EGS). No permitir que se modifique producto
+    function validaProducto(){
+    	debug("PRODUCTO ORIGINAL",origProd,panelInicialPral.down('combo[name=cmbRamos]').getValue()); //(EGS)
+    	if (origProd != panelInicialPral.down('combo[name=cmbRamos]').getValue()){
+    		Ext.Msg.show({
+                    title:'Aviso',
+                    msg: 'Si necesita modificar Producto. Rechace el tr&aacute;mite y genere uno nuevo',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.WARNING
+            });
+            panelInicialPral.down('combo[name=cmbRamos]').setValue(origProd);
+    	}
+    }
     
     function procesaGuardaAltaTramite(submitValues,retornaMC){
         panelInicialPral.setLoading(true);
