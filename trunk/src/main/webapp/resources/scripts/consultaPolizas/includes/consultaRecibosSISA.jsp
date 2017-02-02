@@ -50,10 +50,21 @@
 //////overrides //////
 
 //////componentes dinamicos //////
-    var itemsReciboFields        = [<s:property value="imap.itemsReciboFields"  escapeHtml="false" />];
-    var itemsReciboColumns       = [<s:property value="imap.itemsReciboColumns" escapeHtml="false" />];
+    var itemsReciboFields        = [<s:property value="imap.itemsReciboFields"   escapeHtml="false" />];
+    var itemsReciboColumns       = [<s:property value="imap.itemsReciboColumns"  escapeHtml="false" />];
     var itemsDetalleFields       = [<s:property value="imap.itemsDetalleFields"  escapeHtml="false" />];
     var itemsDetalleColumns      = [<s:property value="imap.itemsDetalleColumns" escapeHtml="false" />];
+    
+    itemsReciboColumns.push({
+        xtype      : 'actioncolumn',
+        itemId     : 'btnReciboDoc',
+        icon       : '${ctx}/resources/fam3icons/icons/eye.png',
+        tooltip    : 'Ver recibo',
+        arrowAlign : 'bottom',
+        handler    : function(view, rowIndex, colIndex, item, e, record){
+            debug('Ver recibo');            
+        }
+    });
 //////componentes dinamicos //////
 
 Ext.onReady(function(){

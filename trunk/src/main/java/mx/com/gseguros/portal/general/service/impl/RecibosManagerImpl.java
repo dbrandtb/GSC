@@ -110,10 +110,11 @@ public class RecibosManagerImpl implements RecibosManager {
     @Override
     public List<Map<String, String>> obtenerDatosRecibosSISA(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
         String paso = "";
-        List<Map<String, String>> lista = new ArrayList<Map<String,String>>();
+        List<Map<String, String>> lista       = new ArrayList<Map<String,String>>();
+        List<Map<String, String>> infoRecibos = new ArrayList<Map<String,String>>();
         try{
             paso  = "Antes de obtener datos de recibos";
-            lista = recibosDAO.obtenerDatosRecibosSISA(cdunieco, cdramo, estado, nmpoliza);            
+            lista = recibosDAO.obtenerDatosRecibosSISA(cdunieco, cdramo, estado, nmpoliza);
             paso  = "Despues de obtener datos de recibos";
         }
         catch(Exception ex){
