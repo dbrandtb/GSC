@@ -9086,7 +9086,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	{
 		protected ObtieneCodigosPostalesProductoSP(DataSource dataSource)
 		{
-			super(dataSource,"pkg_consulta_angeles.P_GET_CODIGOS_POSTALES");
+			super(dataSource,"PKG_LISTAS.P_GET_CODIGOS_POSTALES");
 			String[] cols=new String[]
 					{"CODIGOPOSTAL"};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
