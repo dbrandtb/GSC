@@ -149,11 +149,15 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
                     "status",
                     "fecha_pago",
                     "des_ben_max",
-                    "nmpoliza",
                     "cdunieco",
+                    "cdsubram",
+                    "nmpoliza",                    
                     "feexpedi",
                     "nmsuplem",
                     "ntramite",
+                    "nsuplogi",
+                    "cdtipsup",
+                    "dstipsup",
                     "consecutivo"
             };
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
