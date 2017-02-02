@@ -9050,7 +9050,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 
 	@Override
-	public HashMap<String, String> obtieneCodigosPostalesProducto() throws Exception {
+	public HashMap<String, String> obtieneCodigosPostalesProductos() throws Exception {
 		
 		HashMap<String,String> mapaCodigosPostales =  new HashMap<String, String>();
 		

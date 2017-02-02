@@ -4951,8 +4951,24 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            
 				boolean[] gruposValidos = new boolean[grupos.size()];
 				
+				HashMap<String,String> codigosPostales = null;
 				
+				try
+				{
+					codigosPostales = cotizacionDAO.obtieneCodigosPostalesProductos();
+				}
+				catch(Exception ex)
+				{
+					long timestamp = System.currentTimeMillis();
+					resp.setExito(false);
+					resp.setRespuesta(new StringBuilder("Error al validar Codigos Postales del Producto, sin datos. #").append(timestamp).toString());
+					resp.setRespuestaOculta(ex.getMessage());
+					logger.error(resp.getRespuesta(),ex);
+				}
 				
+				if(codigosPostales == null){
+					codigosPostales = new HashMap<String, String>();
+				}
 				
 	            while (rowIterator.hasNext()&&resp.isExito()) 
 	            {
@@ -5336,6 +5352,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
 	                }
+	                
+	                String codpostal = null;
 	              //CODIGO POSTAL
 	                try
                 	{
@@ -5350,6 +5368,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
+		                
+		                codpostal = String.format("%.0f",row.getCell(9).getNumericCellValue());
+		                
                 	}
 	                catch(Exception ex2)
 	                {
@@ -5364,6 +5385,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 			                		row.getCell(9).getStringCellValue()
 			                		,"|"
 			                		));
+			                
+			                codpostal = row.getCell(9).getStringCellValue();
 	                	}
 		                catch(Exception ex)
 		                {
@@ -5375,6 +5398,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
 	                }
+	                
+	                logger.debug(">>> Validando codigo postal existente en el producto");
+	                if(StringUtils.isBlank(codpostal) || !codigosPostales.containsKey(codpostal)){
+	                	logger.error("Codigo Postal inexistente en la fila: " + fila);
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
+	                }else{
+	                	logger.debug("<<< Codigo postal correcto..");
+	                }
+	                
 	              //ESTADO
 	                try
                 	{
@@ -11509,7 +11542,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	
 	@Override
 	public HashMap<String, String> obtieneCodigosPostalesProductos() throws Exception {
-		return cotizacionDAO.obtieneCodigosPostalesProducto();
+		return cotizacionDAO.obtieneCodigosPostalesProductos();
 	}
 	
 	/////////////////////////////////////////////////////

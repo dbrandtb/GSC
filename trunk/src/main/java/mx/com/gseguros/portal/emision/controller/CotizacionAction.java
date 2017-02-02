@@ -4644,6 +4644,24 @@ public class CotizacionAction extends PrincipalCoreAction
 	            
 				boolean[] gruposValidos = new boolean[olist1.size()];
 				
+				HashMap<String,String> codigosPostales = null;
+				
+				try
+				{
+					codigosPostales = cotizacionManager.obtieneCodigosPostalesProductos();
+				}
+				catch(Exception ex)
+				{
+					respuesta       = Utils.join("Error al validar Codigos Postales del Producto, sin datos. #",System.currentTimeMillis());
+					respuestaOculta = ex.getMessage();
+					exito           = false;
+					logger.error(respuesta,ex);
+				}
+				
+				if(codigosPostales == null){
+					codigosPostales = new HashMap<String, String>();
+				}
+				
 	            while (rowIterator.hasNext()&&exito) {
 	                Row           row            = rowIterator.next();
 	                Date          auxDate        = null;
@@ -4903,20 +4921,37 @@ public class CotizacionAction extends PrincipalCoreAction
                     }
 	                
 	                //CODIGO POSTAL
+                    
+                    String codpostal = null;
 	                try {
 		                logger.debug("COD POSTAL: "+(String.format("%.0f",row.getCell(9).getNumericCellValue())+"|"));
 		                bufferLinea.append(String.format("%.0f",row.getCell(9).getNumericCellValue())+"|");
+		                
+		                codpostal = String.format("%.0f",row.getCell(9).getNumericCellValue());
+		                
                 	} catch(Exception ex2) {
 	                	logger.warn("error al leer codigo postal como numero, se intentara como string:",ex2);
 	                	try {
 	                		logger.debug("COD POSTAL: "+row.getCell(9).getStringCellValue()+"|");
 			                bufferLinea.append(row.getCell(9).getStringCellValue()+"|");
+			                
+			                codpostal = row.getCell(9).getStringCellValue();
+			                
 	                	} catch(Exception ex) {
 		                	filaBuena = false;
 		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (J) de la fila ",fila," "));
 		                }
 	                } finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
+	                }
+	                
+	                logger.debug(">>> Validando codigo postal existente en el producto");
+	                if(StringUtils.isBlank(codpostal) || !codigosPostales.containsKey(codpostal)){
+	                	logger.error("Codigo Postal inexistente en la fila: " + fila);
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
+	                }else{
+	                	logger.debug("<<< Codigo postal correcto..");
 	                }
 	                
 	                //ESTADO
