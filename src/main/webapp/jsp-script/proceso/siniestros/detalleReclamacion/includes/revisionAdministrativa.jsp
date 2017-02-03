@@ -1122,7 +1122,7 @@ Ext.define('EditorFacturas', {
  					hidden: true
  				} ],
 	 		tbar: [{
-			 	icon:_CONTEXT+'/resources/fam3icons/icons/fam/add.png',
+			 	icon:_CONTEXT+'/resources/fam3icons/icons/add.png',
 			 	text: 'Agregar Factura',
 			 	scope: this,
 			 	hidden: (Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == _PAGO_DIRECTO),
@@ -1434,7 +1434,7 @@ Ext.define('EditorConceptos', {
  					renderer : Ext.util.Format.usMoney
  				} ],
 	 		tbar: [{
-			 	icon:_CONTEXT+'/resources/fam3icons/icons/fam/add.png',
+			 	icon:_CONTEXT+'/resources/fam3icons/icons/add.png',
 			 	text: 'Agregar concepto',
 			 	scope: this,
 			 	handler: this.onAddClick
