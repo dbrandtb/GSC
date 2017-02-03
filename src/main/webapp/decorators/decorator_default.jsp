@@ -16,6 +16,7 @@
         <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs4/extra-custom-theme.css" />
         <script type="text/javascript" src="${ctx}/resources/jquery/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all.js"></script>
+        <!--<script type="text/javascript" src="${ctx}/resources/extjs4/ext-all-debug-w-comments.js"></script>-->
         <script type="text/javascript" src="${ctx}/resources/extjs4/locale/ext-lang-es.js?${now}"></script>
         <%@ include file="/resources/jsp-script/util/variablesGlobales.jsp"%>
         <%@ include file="/resources/jsp-script/util/catalogos.jsp"%>

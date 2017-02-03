@@ -2074,7 +2074,7 @@ debug("validarYGuardar flag:2");
                         }
                     }],
                     /*tbar: [{
-                        icon:'resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
+                        icon:'resources/extjs4/resources/fam3icons/icons/add.png',
                         text: 'Agregar',
                         scope: this,
                         handler: this.onAddClick
@@ -2667,7 +2667,7 @@ debug("validarYGuardar flag:2");
                 --%>
                 {
                     text:'Guardar',
-                    icon: contextop2+'/resources/fam3icons/icons/fam/accept.png',
+                    icon: contextop2+'/resources/fam3icons/icons/accept.png',
                     handler:function(){
                         debug('form1p2',Ext.getCmp('form1p2').getForm().isValid());
                         if(Ext.getCmp('form1p2').getForm().isValid())

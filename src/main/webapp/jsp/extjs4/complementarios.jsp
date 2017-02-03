@@ -1874,7 +1874,7 @@ function _p29_emitirClicComplementarios()
 		                    [
 		                        {
 		                            text:'Guardar',
-		                            icon: contexto+'/resources/fam3icons/icons/fam/accept.png',
+		                            icon: contexto+'/resources/fam3icons/icons/accept.png',
 		                            handler: function(){ _p29_guardarComplementario(null);}	
 		                        },
 		                        {
@@ -1899,7 +1899,7 @@ function _p29_emitirClicComplementarios()
 		                        {
 		                            text:'Editar asegurados',
 		                            hidden:true,
-		                            icon: contexto+'/resources/fam3icons/icons/fam/user.png',
+		                            icon: contexto+'/resources/fam3icons/icons/user.png',
 		                            handler:function(){
 		                                Ext.create('Ext.form.Panel').submit({
 		                                    url : urlEditarAsegurados,
@@ -1916,13 +1916,13 @@ function _p29_emitirClicComplementarios()
 		                        --%>
 		                        {
 		                            text:'Editar agentes',
-		                            icon: contexto+'/resources/fam3icons/icons/fam/user_gray.png',
+		                            icon: contexto+'/resources/fam3icons/icons/user_gray.png',
 		                            disabled:true,
 		                            hidden:true
 		                        },
 		                        {
 		                            text:'Editar documentos',
-		                            icon: contexto+'/resources/fam3icons/icons/fam/book.png',
+		                            icon: contexto+'/resources/fam3icons/icons/book.png',
 		                            disabled:true,
 		                            hidden:true
 		                        }

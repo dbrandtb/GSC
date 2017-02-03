@@ -1035,7 +1035,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	                        sortable: false,
 	                        menuDisabled: true,
 	                        items: [{
-	                            icon:'resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+	                            icon:'resources/extjs4/resources/fam3icons/icons/delete.png',
 	                            //iconCls: 'icon-delete',
 	                            tooltip: 'Quitar inciso',
 	                            scope: this,
@@ -1090,7 +1090,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								.add(Item.crear("handler","this.onTomadorClick").setQuotes(""))
 								)
 						.add(Item.crear(null,null,Item.OBJ)
-								.add("icon","resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png")
+								.add("icon","resources/extjs4/resources/fam3icons/icons/delete.png")
 								.add("tooltip","Quitar asegurado")
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onRemoveClick").setQuotes(""))
