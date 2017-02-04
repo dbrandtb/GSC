@@ -29,6 +29,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
@@ -2001,7 +2002,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
  public String modificaPrimasFlotillas(String ntramite, List<Map<String, String>> listaResultados, Integer formpagSigs, ArrayList<String> paquete, String cdunieco, String cdramo, String nmpoliza, String cdtipsit, String renuniext, String renramo, String renpoliex) throws Exception
     {
-        String mensaje = "Modificacion de primas según sigs";
+     String mensaje = "Modificacion de primas según sigs";
             try
             {       int i = 0;
                     String mnprima = null;
@@ -2213,6 +2214,84 @@ public class CotizacionAutoAction extends PrincipalCoreAction
              ,"\n###### result=" , result
              ,"\n###### getdatosFlujo ######"
              ,"\n###########################"
+             ));
+     return SUCCESS;
+ }
+ 
+ public String cargaMasivaFlotillaEmision()
+ {
+     logger.debug(Utils.log(""
+             ,"\n#########################################"
+             ,"\n###### procesarCargaMasivaFlotilla ######"
+             ,"\n###### slist1="           , slist1
+             ,"\n###### excel="            , excel
+             ,"\n###### excelFileName="    , excelFileName
+             ,"\n###### excelContentType=" , excelContentType
+             ,"\n###### smap1="            , smap1
+             ));
+     
+     try
+     {
+         logger.debug(Utils.log("","Validando datos de entrada"));
+         Utils.validate(smap1, "No se recibieron datos");
+         
+         ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO();
+         if(smap1.get("accion").equals("guardar"))
+         {
+             String excelTimestamp   = smap1.get("timestamp");
+             
+             try{
+                 String nombreexcel    = "excel_"+excelTimestamp+".xls";
+                 File archivoTxt       = new File(this.getText("ruta.documentos.temporal")+"/"+nombreexcel);
+                 
+                 if(excel!=null&&excel.exists())
+                 {
+                     try
+                     {
+                         FileUtils.copyFile(excel, archivoTxt);
+                         exito     = true;
+                         respuesta = Utils.join("Se esta procesando el archivo. ",archivoTxt,"]");
+                         logger.debug(respuesta);
+                         return SUCCESS;
+                     }
+                     catch(Exception ex)
+                     {
+                         logger.error("Error copiando archivo de usuario",ex);
+                     }
+                 }
+                 else
+                 {
+                     logger.error(new StringBuilder("No existe el documento").append(excel).toString());
+                 }
+                 
+             } catch(Exception ex){
+                 long etimestamp = System.currentTimeMillis();
+                 exito           = false;
+                 respuesta       = "Error al procesar excel #"+etimestamp;
+                 respuestaOculta = ex.getMessage();
+                 logger.error(respuesta,ex);
+             }
+         }
+
+         exito     = resp.isExito();
+         respuesta = resp.getRespuesta();
+         
+         if(!exito)
+         {
+             throw new ApplicationException(respuesta);
+         }
+
+     }
+     catch(Exception ex)
+     {
+         respuesta = Utils.manejaExcepcion(ex);
+     }
+     
+     logger.debug(Utils.log(""
+             ,"\n###### exito="  , exito
+             ,"\n###### slist1=" , slist1
+             ,"\n###### procesarCargaMasivaFlotilla ######"
+             ,"\n#########################################"
              ));
      return SUCCESS;
  }
