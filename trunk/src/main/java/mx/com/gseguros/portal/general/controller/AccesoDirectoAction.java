@@ -204,7 +204,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 			}
 
 		} else {
-			logger.warn(">>>> No está definido el Acceso Directo: {}", acceso);
+			logger.warn(">>>> No esta definido el Acceso Directo: {}", acceso);
 			acceso = "login";
 		}
 
@@ -254,7 +254,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Método que carga la pantalla que contiene el árbol de clientes y roles
+	 * Metodo que carga la pantalla que contiene el arbol de clientes y roles
 	 * 
 	 * @return success
 	 * @throws Exception
@@ -267,7 +267,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		// //// Crear un usuario y complementar su propiedades: //////
 		// //// formato decha, formato numerico, idioma, tamanio paginacion
 		// grid, //////
-		// //// cliente format date y region. Se guarda en sesión //////
+		// //// cliente format date y region. Se guarda en sesion //////
 		// /////////////////////////////////////////////////////////////////////////////
 		UserVO usuario = (UserVO) session.get("USUARIO");
 		session.put("MessageConf", null);
@@ -315,7 +315,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				logger.error(e.getMessage(), e);
 				addActionError(e.getMessage());
 				// success = false; //jtezva -> inecesario, no es json
-				session.put("MessageConf", e.getMessage()); // Se pone en sesión
+				session.put("MessageConf", e.getMessage()); // Se pone en sesion
 															// el mensaje a
 															// mostrar
 				// return SUCCESS; //jtezva -> se sustituyo por la variable
@@ -405,7 +405,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				try {
 					String msg = principalManagerJdbcTemplate
 							.configuracionCompleta(_codigoCliente);
-					logger.debug(">>>> Configuración: {}", msg);
+					logger.debug(">>>> Configuraciï¿½n: {}", msg);
 					codigoValido = true;
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
@@ -452,14 +452,14 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 		pais.setValue(isoLocal.getPais());
 		usuario.setPais(pais);
 		String cdPais = usuario.getPais().getValue();
-		logger.debug(">>>> El país del usuario es : {}", cdPais);
+		logger.debug(">>>> El paï¿½s del usuario es : {}", cdPais);
 		usuario.setFormatoFecha(isoLocal.getFormatoFecha());
 		usuario.setFormatoNumerico(isoLocal.getFormatoNumerico());
 		usuario.setIdioma(languague);
 		usuario.setTamagnoPaginacionGrid(numReg);
 		logger.debug(">>>> En seleccionaRolCliente: {}", isoLocal.getClientDateFormat());
 		usuario.setClientFormatDate(isoLocal.getClientDateFormat());
-		// Agregados códigos de Idioma y Región
+		// Agregados cï¿½digos de Idioma y Regiï¿½n
 		// languague.setValue(iso.getCdIdioma());
 		// usuario.setIdioma(languague);
 		BaseObjectVO region = new BaseObjectVO();

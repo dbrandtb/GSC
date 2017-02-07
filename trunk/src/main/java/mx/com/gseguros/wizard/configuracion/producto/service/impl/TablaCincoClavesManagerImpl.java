@@ -925,8 +925,8 @@ public class TablaCincoClavesManagerImpl implements TablaCincoClavesManager {
 		 *             las consultas a BD.        
 		 */
 		public List<LlaveValorVO> juntaListas(List<LlaveValorVO> llvVO, List<LlaveValorVO> ldVO){
-			  logger.debug("Tamaño llvVO=" + llvVO.size());
-			  logger.debug("Tamaño ldVO=" + ldVO.size());
+			  logger.debug("Tamano llvVO=" + llvVO.size());
+			  logger.debug("Tamano ldVO=" + ldVO.size());
 			  
 			  List<LlaveValorVO> jllvVO= new ArrayList<LlaveValorVO>();
 			  if(!llvVO.isEmpty()){

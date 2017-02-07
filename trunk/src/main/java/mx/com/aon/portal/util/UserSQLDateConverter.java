@@ -138,12 +138,12 @@ public class UserSQLDateConverter implements Converter, Serializable {
 //          return (defaultValue);
         }
       }
-      // Modificó MAP el 23-06-2004
+      // Modifica MAP el 23-06-2004
       // Si es SQLDate, debe devolver el mismo valor
       if (value instanceof java.sql.Date){
           return value;
       }
-      // Fin modificación MAP
+      // Fin modificacion MAP
 
       return null;
     }

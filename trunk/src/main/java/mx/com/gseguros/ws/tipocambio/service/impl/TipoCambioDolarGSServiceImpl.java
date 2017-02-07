@@ -12,7 +12,7 @@ import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
 import org.apache.axis2.AxisFault;
 
 /**
- * Implementación de los métodos para invocar al WS recibossigs
+ * Implementacion de los metodos para invocar al WS recibossigs
  * @author Ricardo
  *
  */

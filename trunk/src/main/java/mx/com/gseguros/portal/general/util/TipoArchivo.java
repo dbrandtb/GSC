@@ -1,7 +1,7 @@
 package mx.com.gseguros.portal.general.util;
 
 /**
- * Enum con información de los tipos de archivo mas com&uacute;nes 
+ * Enum con informacion de los tipos de archivo mas com&uacute;nes 
  * @author Ricardo
  *
  */

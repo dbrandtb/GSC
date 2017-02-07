@@ -493,9 +493,9 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                			//2.- Validamos si la clave del Formato es Alfanumerico
 		                			String conversionString = obtieneValor(auxCell, CampoVO.ALFANUMERICO, null, null);
 		                			String cadenaModificada = conversionString.trim().
-	                						replaceAll("á","a").replaceAll("é","e").replaceAll("í","i").replaceAll("ó","o").
-	                						replaceAll("ú","u").replaceAll("Á","A").replaceAll("É","E").replaceAll("Í","I").
-	                						replaceAll("Ó","O").replaceAll("Ú","U").replaceAll("\\*","");
+	                						replaceAll("\u00E1","a").replaceAll("\u00E9","e").replaceAll("\u00ED","i").replaceAll("\u00F3","o").
+	                						replaceAll("\u00FA","u").replaceAll("\u00C1","A").replaceAll("\u00C9","E").replaceAll("\u00CD","I").
+	                						replaceAll("\u00D3","O").replaceAll("\u00DA","U").replaceAll("\\*","");
 		                			
 		                			if(datosInformacionLayout.get(i).get("DESCEXCEL").toString().equalsIgnoreCase("CVE. ASEGURADO")){
 	                					HashMap<String, Object> paramPersona = new HashMap<String, Object>();
@@ -647,7 +647,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		                		filaBuena = false;
 		                		logger.debug("Valor de la excepcion ==>:{}",ex);
 		                		if(errorOcurrencia == 1){
-		                			bufferErroresCenso.append(Utils.join("La Fecha de ocurrencia no se encuentra dentro de las fechas de la póliza .\nError en el campo FECHA OCURRENCIA "+campoFechaOcurrencia+" de la fila ",fila," "));
+		                			bufferErroresCenso.append(Utils.join("La Fecha de ocurrencia no se encuentra dentro de las fechas de la p\u00F3liza .\nError en el campo FECHA OCURRENCIA "+campoFechaOcurrencia+" de la fila ",fila," "));
 		                		}
 		                		if(errorConcepto == 1){
 		                			bufferErroresCenso.append(Utils.join("El "+leyendaConcepto+" no se encuentra dado de alta.\nError en el campo CVE. CONCEPTO "+campocodigoConcepto+" de la fila ",fila," "));

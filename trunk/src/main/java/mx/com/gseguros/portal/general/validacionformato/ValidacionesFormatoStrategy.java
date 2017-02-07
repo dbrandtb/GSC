@@ -15,7 +15,7 @@ public interface ValidacionesFormatoStrategy {
 	 *  
 	 * @param archivo Archivo a validar
 	 * @param campos Descripcion de los campos a validar
-	 * @param nombreArchivoErrores Nombre que tendrá el archivo de errores (si existen)
+	 * @param nombreArchivoErrores Nombre que tendra  el archivo de errores (si existen)
 	 * @return File con los mensajes de error o null si no existieron errores
 	 * @throws Exception
 	 */
