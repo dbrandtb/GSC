@@ -338,7 +338,7 @@ Ext.onReady(function() {
                             var datosExtras = Ext.decode(response.responseText);
                             if(Ext.decode(response.responseText).datosInformacionAdicional != null){
                                 var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
-                                
+
                                 if(cveCauSini.REQVALIDACION =="S"){
                                     //Visualizamos el campo
                                     panelInicialPral.down('[name=idCveBeneficiario]').show();
@@ -348,7 +348,7 @@ Ext.onReady(function() {
                                     panelInicialPral.down('[name=idCveBeneficiario]').setValue('0');
                                     panelInicialPral.down('[name=idCveBeneficiario]').hide();
                                 }
-                                
+
                                 limpiarRegistrosTipoPago(e.getValue());
                                 if(panelInicialPral.down('combo[name=cmbOficReceptora]').getValue() == "1104"){
                                     panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
@@ -1540,6 +1540,16 @@ Ext.onReady(function() {
 
                             }else if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_REEMBOLSO){
                                 //PAGO POR REEMBOLSO
+                                //Validamos Beneficiario. (EGS)
+                            	if(panelInicialPral.down('combo[name=cmbBeneficiario]').value == null){
+                            		Ext.Msg.show({
+                            			title:	'Aviso',
+                            			msg	 :	'Dato no valido en campo Beneficiario. Seleccione un elemento de la lista desplegable',
+                            			buttons:Ext.Msg.OK,
+                            			icon:	Ext.Msg.INFO
+                            		});
+                            		return false;
+                            	} // fin (EGS)
                                 var obtener = [];
                                 storeFacturaReembolso.each(function(record) {
                                     obtener.push(record.data);
