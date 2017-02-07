@@ -266,10 +266,10 @@ public class UsuarioAction extends PrincipalCoreAction {
         		String ip=imp.get("IP");
         		String tipo=imp.get("TIPO");
         		String descripcion=imp.get("DESCRIPCION");
-        		Utils.validate(impresora,"No se recibió impresora",
-        				ip,"No se recibió ip",
-        				tipo,"No se recibió tipo",
-        				descripcion,"No se recibió descripcion");
+        		Utils.validate(impresora,"No se recibi\u00F3 impresora",
+        				ip,"No se recibi\u00F3 ip",
+        				tipo,"No se recibi\u00F3 tipo",
+        				descripcion,"No se recibi\u00F3 descripcion");
         		
         		errorMessage=usuarioManager.insertaActualizaImpresora(impresora, ip, tipo, descripcion, "S");
         	}
@@ -305,8 +305,8 @@ public class UsuarioAction extends PrincipalCoreAction {
     			
         		String pv_habilita=imp.get("enable");
         		String pv_impresora_i=imp.get("IMPRESORA");
-        		Utils.validate(pv_habilita,"No se recibió habilita",
-        				pv_impresora_i,"No se recibió pv_impresora_i");
+        		Utils.validate(pv_habilita,"No se recibi\u00F3 habilita",
+        				pv_impresora_i,"No se recibi\u00F3 pv_impresora_i");
         		
         		errorMessage=usuarioManager.habilitaDeshabilitaImpresora(pv_habilita, pv_impresora_i.toLowerCase(), null);
         	}
@@ -354,12 +354,12 @@ public class UsuarioAction extends PrincipalCoreAction {
         		
         		
             	Utils.validate(
-            			ip,"No se recibó ip",
-            			tipo,"No se recibó tipo",
-            			descripcion,"No se recibó descripcion",
-            			disponible,"No se recibó disponible",
-            			alta,"No se recibó alta",
-            			impresora,"No se recibió impresora");
+            			ip,"No se recib\u00F3 ip",
+            			tipo,"No se recib\u00F3 tipo",
+            			descripcion,"No se recibi\u00F3 descripcion",
+            			disponible,"No se recibi\u00F3 disponible",
+            			alta,"No se recibi\u00F3 alta",
+            			impresora,"No se recibi\u00F3 impresora");
             	usuarioManager.guardaImpresorasUsuario(cdusuario,
             											impresora,
             											ip,

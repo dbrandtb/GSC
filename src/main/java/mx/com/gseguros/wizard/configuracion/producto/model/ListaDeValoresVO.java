@@ -91,7 +91,7 @@ public class ListaDeValoresVO implements Serializable {
 	}
 	/**
 	 * 
-	 * @return descripción
+	 * @return descripcion
 	 */
 	public String getDescripcion() {
 		return descripcion;

@@ -5,7 +5,7 @@ package mx.com.aon.flujos.cotizacion.web;
 
 /**
  * 
- * Clase Action para el control y visualizacion de datos de la pantalla de resultados del proceso de cotización
+ * Clase Action para el control y visualizacion de datos de la pantalla de resultados del proceso de cotizaci&oacute;n
  * 
  * @author aurora.lozada
  * 
@@ -145,7 +145,7 @@ public class ResultadoCotizacionAction extends PrincipalCoreAction {
                    
                     if (rDatos.getCdCiaaseg().equals(registrosTransformados.get(g).get("cdCiaaseg"))
                             && rDatos.getCdPerpag().equals(registrosTransformados.get(g).get("cdPerpag"))) {
-                        logger.debug("####Entró a una aseguradora y tipo pago iguales--" + registrosTransformados.get(g).get("cdIdentifica"));
+                        logger.debug("####Entr\u00F3 a una aseguradora y tipo pago iguales--" + registrosTransformados.get(g).get("cdIdentifica"));
 
                         registrosTransformados.get(g).set("cdUnieco", rDatos.getCdUnieco());
                         registrosTransformados.get(g).set("cdRamo", rDatos.getCdRamo());
@@ -181,7 +181,7 @@ public class ResultadoCotizacionAction extends PrincipalCoreAction {
                             if(registrosTransformados.get(g).get(sPlanSinBlancos)!=null
                                     &&((String)registrosTransformados.get(g).get(sPlanSinBlancos)).length()>0)
                             {
-                                //Ya existía un valor aquí
+                                //Ya exist&iacute;a un valor aqu&iacute;
                                 Double prima=Double.parseDouble((String)registrosTransformados.get(g).get(sPlanSinBlancos));
                                 prima+=Double.parseDouble(rDatos.getMnPrima().replace(",", ""));
                                 registrosTransformados.get(g).set(sPlanSinBlancos, prima.toString());
