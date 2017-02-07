@@ -818,18 +818,18 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		String comments    = map1.get("comments");
 		logger.debug("comments: {}", comments); 
 		String commentsM   = comments.replaceAll("\n", "%0A").
-                replaceAll("�", "%C3%A1").
-                replaceAll("�", "%C3%A9").
-                replaceAll("�", "%C3%AD").
-                replaceAll("�", "%C3%B3").
-                replaceAll("�", "%C3%BA").
-                replaceAll("�", "%C3%B1").
-                replaceAll("�", "%C3%81").
-                replaceAll("�", "%C3%89").
-                replaceAll("�", "%C3%8D").
-                replaceAll("�", "%C3%93").
-                replaceAll("�", "%C3%9A").
-                replaceAll("�", "%C3%91");
+                replaceAll("\u00E1", "%C3%A1").
+                replaceAll("\u00E9", "%C3%A9").
+                replaceAll("\u00ED", "%C3%AD").
+                replaceAll("\u00F3", "%C3%B3").
+                replaceAll("\u00FA", "%C3%BA").
+                replaceAll("\u00F1", "%C3%B1").
+                replaceAll("\u00C1", "%C3%81").
+                replaceAll("\u00C9", "%C3%89").
+                replaceAll("\u00CD", "%C3%8D").
+                replaceAll("\u00D3", "%C3%93").
+                replaceAll("\u00DA", "%C3%9A").
+                replaceAll("\u00D1", "%C3%91");
 		String cdsisrol    = map1.get("cdsisrol");
 		String cdunieco    = map1.get("cdunieco");
 		String cdramo      = map1.get("cdramo");
