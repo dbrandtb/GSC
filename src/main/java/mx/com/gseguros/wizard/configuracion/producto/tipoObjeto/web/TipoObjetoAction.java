@@ -209,7 +209,7 @@ public class TipoObjetoAction extends Padre {
 	
 	/**
 	 * Metodo <code>execute</code> con el que es llamado desde Struts para
-	 * atender la petición web.
+	 * atender la petici&oacute;n web
 	 * 
 	 * @return INPUT
 	 * @throws Exception
@@ -738,7 +738,7 @@ public class TipoObjetoAction extends Padre {
     }
     
     /**
-     * Elimina el objeto (elimina la asociación que tiene el objeto con el Inciso/Riesgo) 
+     * Elimina el objeto (elimina la asociaci&oacute;n que tiene el objeto con el Inciso/Riesgo) 
      * 
      * @return success
      * @throws Exception

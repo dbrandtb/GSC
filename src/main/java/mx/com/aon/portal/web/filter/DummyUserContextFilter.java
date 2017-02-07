@@ -49,7 +49,7 @@ public class DummyUserContextFilter implements Filter {
                     HttpSession session = ((HttpServletRequest)request).getSession();
                     logger.debug("request: "+((HttpServletRequest)request).getRequestURI());
                     logger.debug("Obteniendo el usuario de la session");
-                    logger.debug("Estado de sesión: " + session);
+                    logger.debug("Estado de sesion: " + session);
     	        	UserVO userVO = (UserVO)session.getAttribute("USUARIO");
     	        	try {
     		        if (userVO == null) {

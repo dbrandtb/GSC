@@ -73,7 +73,7 @@ public class MailAction extends PrincipalCoreAction {
 					}
 					archivos.add(nombreCompletoArchivo);
 				} else {
-					String mensaje = new StringBuffer("El archivo ").append(nombreCompletoArchivo).append(" no existe, no se adjuntará").toString(); 
+					String mensaje = new StringBuffer("El archivo ").append(nombreCompletoArchivo).append(" no existe, no se adjuntar\u00E1").toString(); 
 					throw new Exception(mensaje);
 				}
 			}

@@ -3202,7 +3202,7 @@ public class ComplementariosAction extends PrincipalCoreAction
                         Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                         
 //                    } catch (Exception e) {
-//                        mensajeRespuesta = "La poliza no se logró registrar en el identificador de renovaciones";
+//                        mensajeRespuesta = "La poliza no se logr\u00F3 registrar en el identificador de renovaciones";
 //                    }
                 }
             } 

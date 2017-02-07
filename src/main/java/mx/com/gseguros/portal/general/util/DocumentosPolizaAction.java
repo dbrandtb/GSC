@@ -531,12 +531,12 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
             String pv_nmsuplem_i  = smap1.get("nmsuplem");
             String pv_cdusuari    = usuario.getUser();
             
-            Utils.validate( pv_cdunieco_i    ,"No se recibió pv_cdunieco_i ",
-                            pv_cdramo_i      ,"No se recibió pv_cdramo_i   ",
-                            pv_estado_i      ,"No se recibió pv_estado_i   ",
-                            pv_nmpoliza_i    ,"No se recibió pv_nmpoliza_i ",
-                            pv_nmsuplem_i    ,"No se recibió pv_nmsuplem_i ",
-                            pv_cdusuari      ,"No se recibió pv_cdusuari   ");
+            Utils.validate( pv_cdunieco_i    ,"No se recibi\u00F3 pv_cdunieco_i ",
+                            pv_cdramo_i      ,"No se recibi\u00F3 pv_cdramo_i   ",
+                            pv_estado_i      ,"No se recibi\u00F3 pv_estado_i   ",
+                            pv_nmpoliza_i    ,"No se recibi\u00F3 pv_nmpoliza_i ",
+                            pv_nmsuplem_i    ,"No se recibi\u00F3 pv_nmsuplem_i ",
+                            pv_cdusuari      ,"No se recibi\u00F3 pv_cdusuari   ");
             
            respuesta = consultasManager.documentosXFamilia(pv_cdunieco_i,
                                                 pv_cdramo_i,
@@ -596,11 +596,11 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
             String pv_cdtiptra_i  = smap1.get("cdTipTra");
             String pv_nmsituac_i  = smap1.get("nmsituac");
             
-            Utils.validate( pv_cdunieco_i    ,"No se recibió pv_cdunieco_i ",
-                            pv_cdramo_i      ,"No se recibió pv_cdramo_i   ",
-                            pv_estado_i      ,"No se recibió pv_estado_i   ",
-                            pv_nmpoliza_i    ,"No se recibió pv_nmpoliza_i ",
-                            pv_nmsuplem_i    ,"No se recibió pv_nmsuplem_i ");
+            Utils.validate( pv_cdunieco_i    ,"No se recibi\u00F3 pv_cdunieco_i ",
+                            pv_cdramo_i      ,"No se recibi\u00F3 pv_cdramo_i   ",
+                            pv_estado_i      ,"No se recibi\u00F3 pv_estado_i   ",
+                            pv_nmpoliza_i    ,"No se recibi\u00F3 pv_nmpoliza_i ",
+                            pv_nmsuplem_i    ,"No se recibi\u00F3 pv_nmsuplem_i ");
             
             usuario.setEmail(smap1.get("email"));
             
