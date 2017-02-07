@@ -137,7 +137,7 @@ public class ConceptosCoberturaAction extends Padre {
 
 	/**
 	 * Metodo <code>execute</code> con el que es llamado desde Struts para
-	 * atender la petición web.
+	 * atender la petici&oacute;n web.
 	 * 
 	 * @return INPUT
 	 * @throws Exception

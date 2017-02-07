@@ -62,7 +62,7 @@ public class ProcessResultManagerJdbcTemplate {
 	        }
 
             if (StringUtils.isBlank(msgText)) {
-            	String msgException = "No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida";
+            	String msgException = "No se encontr\u00F3 el mensaje de respuesta del servicio de datos, verifique los par\u00E1metros de salida";
                 logger.error(msgException);
                 throw new ApplicationException(msgException);
             }
@@ -70,7 +70,7 @@ public class ProcessResultManagerJdbcTemplate {
             logger.info(new StringBuilder("MsgText=").append(msgText));
         }
         
-        // Si msgTitle es de tipo ERROR, lanzamos la excepción con el msgText obtenido:
+        // Si msgTitle es de tipo ERROR, lanzamos la excepci&oacute;n con el msgText obtenido:
         if (msgTitle.equals(Constantes.MSG_TITLE_ERROR)) {
 			logger.error(new StringBuilder("Error de SP: ").append(msgText));
 			throw new ApplicationException(msgText);

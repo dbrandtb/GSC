@@ -82,7 +82,7 @@ public class PrincipalDAO extends AbstractDAO {
 	}
 
 	/**
-	 * Valida si el usuario ha completado la configuración
+	 * Valida si el usuario ha completado la configuraci&oacute;n
 	 * 
 	 * @author Usuario
 	 *

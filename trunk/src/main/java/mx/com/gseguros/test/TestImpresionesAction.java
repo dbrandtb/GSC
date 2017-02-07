@@ -221,7 +221,7 @@ public class TestImpresionesAction extends PrincipalCoreAction {
             	logger.info("\t\t{}: {}", attrs[i].getName(), attrs[i]);
             }
             job.print(myDoc, aset);
-            logger.info("Después de imprimir");
+            logger.info("Despu\u00E9s de imprimir");
         } catch (PrintException pe) {
         	logger.error(pe.getMessage(), pe);
         }
