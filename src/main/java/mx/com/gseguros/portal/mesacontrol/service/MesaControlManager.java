@@ -138,4 +138,10 @@ public interface MesaControlManager
 	 */
 	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws Exception;
 	
+	/**
+	 * Si ya existe un tramite cdtiptra 1 o 21 con esa cdunieco, cdramo, estado, nmsolici arroja excepcion
+	 */
+	@Deprecated
+	public void validaDuplicidadTramiteEmisionPorNmsolici (String cdunieco, String cdramo, String estado, String nmsolici) throws Exception;
+	
 }

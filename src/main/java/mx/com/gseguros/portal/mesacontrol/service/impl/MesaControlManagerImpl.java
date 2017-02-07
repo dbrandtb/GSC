@@ -425,4 +425,10 @@ public class MesaControlManagerImpl implements MesaControlManager
 	    }
 	    return lista;
 	}
+	
+	@Override
+	@Deprecated
+	public void validaDuplicidadTramiteEmisionPorNmsolici (String cdunieco, String cdramo, String estado, String nmsolici) throws Exception {
+	    mesaControlDAO.validaDuplicidadTramiteEmisionPorNmsolici(cdunieco, cdramo, estado, nmsolici);
+	}
 }
