@@ -60,7 +60,7 @@ public class ReclamoExpressVO implements Serializable {
 	private String fechaIngreso;
 	private String fechaAlta;
 	private String motivoEgreso;
-	//Variable para saber si es modo de creación o de edición.
+	//Variable para saber si es modo de creaci&oacute;n de edici&oacute;n.
 	private String modo;
 	
 	public String getReclamo() {

@@ -92,7 +92,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 		List<ConsultaPolizaActualVO> polizaActual;
 		polizaActual = new ArrayList<ConsultaPolizaActualVO>();
 		
-		// Si iCodPoliza viene vacio, es información de ICE, sino es de SISA:
+		// Si iCodPoliza viene vacio, es informaci&oacute;n de ICE, sino es de SISA:
 		if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza())){
 			polizaActual = consultasAseguradoDAOICE.obtienePolizaActual(polizaAsegurado);
 		} else {
@@ -107,7 +107,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 			AseguradoVO asegurado) throws Exception {
 		List<ConsultaDatosComplementariosVO> datosComplementarios = new ArrayList<ConsultaDatosComplementariosVO>();
 		
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
 			 datosComplementarios = consultasAseguradoDAOSISA.obtieneDatosComplementarios(poliza, asegurado);
 		 } else {
@@ -122,7 +122,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 			PolizaAseguradoVO polizaAsegurado) throws Exception {
 		 List<ConsultaDatosGeneralesPolizaVO> datosPolizas = new ArrayList<ConsultaDatosGeneralesPolizaVO>();
 		 
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		 if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza()) == false){		
 			 datosPolizas = consultasAseguradoDAOSISA.obtieneDatosPoliza(polizaAsegurado);
 		 } else {
@@ -136,7 +136,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<AseguradoDetalleVO> obtieneAseguradoDetalle(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
 		List<AseguradoDetalleVO> datosAseguradoDetalle = new ArrayList<AseguradoDetalleVO>();
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){
 			datosAseguradoDetalle = consultasAseguradoDAOSISA.obtieneAseguradoDetalle(poliza,asegurado);
 		} else {
@@ -149,7 +149,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<ConsultaDatosTitularVO> obtieneDatosTitular(PolizaVO poliza, AseguradoVO asegurado) throws Exception {
 		List<ConsultaDatosTitularVO> datosTitular = new ArrayList<ConsultaDatosTitularVO>();
 		
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
 			 datosTitular = consultasAseguradoDAOSISA.obtieneDatosTitular(poliza, asegurado);
 		 } else {
@@ -163,7 +163,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<ContratanteVO> obtieneDatosContratante(PolizaVO poliza) throws Exception {
 		List<ContratanteVO> datosContratante = new ArrayList<ContratanteVO>();
 		
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
 			 datosContratante = consultasAseguradoDAOSISA.obtieneDatosContratante(poliza);
 		 } else {
@@ -178,7 +178,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 		
 		List<AseguradoVO> asegurados = new ArrayList<AseguradoVO>();
 		
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
 			 asegurados = consultasAseguradoDAOSISA.obtieneAsegurados(poliza, asegurado);
 		 } else {
@@ -192,7 +192,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<EndosoVO> obtieneEndososPoliza(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
 		List<EndosoVO> endosos = new ArrayList<EndosoVO>();
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
 			 endosos = consultasAseguradoDAOSISA.obtieneEndososPoliza(poliza, asegurado);
 		 } else {
@@ -205,11 +205,11 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<EnfermedadVO> obtieneEnfermedades(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
 		List<EnfermedadVO> enfermedades = new ArrayList<EnfermedadVO>();
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
 			 enfermedades = consultasAseguradoDAOSISA.obtieneEnfermedades(poliza, asegurado);
 		 } 
-		 /*Por el momento no se registran las enfermedades crónicas en ICE.
+		 /*Por el momento no se registran las enfermedades cr&oacute;nicas en ICE.
 		 else {
 			 enfermedades = consultasAseguradoDAOICE.obtieneEnfermedades(poliza, asegurado);
 		 }*/
@@ -220,7 +220,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<PlanVO> obtieneDatosPlan(PolizaVO poliza) throws Exception {
 		List<PlanVO> datosPlan = new ArrayList<PlanVO>();
 		
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		 if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
 			 datosPlan = consultasAseguradoDAOSISA.obtieneDatosPlan(poliza);
 		 } else {
@@ -234,7 +234,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza) throws Exception {
 		
 		List<CopagoVO> copagos;
-		// Si iCodPoliza viene vacio, es información de ICE:
+		// Si iCodPoliza viene vacio, es informaci&oacute;n de ICE:
 		if(StringUtils.isBlank(poliza.getIcodpoliza())){
 			
 			copagos = consultasAseguradoDAOICE.obtieneCopagosPoliza(poliza);
@@ -309,7 +309,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza) throws Exception {
 		
 		List<CoberturaBasicaVO> coberturasPoliza = new ArrayList<CoberturaBasicaVO>();
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){
 			coberturasPoliza = consultasAseguradoDAOSISA.obtieneCoberturasPoliza(poliza);
 		} else {
@@ -322,7 +322,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<CoberturaBasicaVO> obtieneCoberturasBasicas(PolizaVO poliza) throws Exception {
 		
 		List<CoberturaBasicaVO> coberturasBasicas = new ArrayList<CoberturaBasicaVO>();
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){		
 			coberturasBasicas = consultasAseguradoDAOSISA.obtieneCoberturasBasicas(poliza);
 		}
@@ -335,7 +335,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 		
 		List<HistoricoVO> historico = new ArrayList<HistoricoVO>();  
 		
-		//Si iCodPoliza es nulo, es información de ICE, sino es de SISA:
+		//Si iCodPoliza es nulo, es informaci&oacute;n de ICE, sino es de SISA:
 		if(StringUtils.isBlank(polizaAsegurado.getIcodpoliza()) == false){			
 			historico = consultasAseguradoDAOSISA.obtieneHistoricoAsegurado(polizaAsegurado, asegurado);
 		} else {
@@ -349,7 +349,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<HistoricoFarmaciaVO> obtieneHistoricoFarmacia(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
 		List<HistoricoFarmaciaVO> historicoFarmacia = new ArrayList<HistoricoFarmaciaVO>();
-		//Si iCodPoliza es nulo, es información de ICE, sino es de SISA:
+		//Si iCodPoliza es nulo, es informaci&oacute;n de ICE, sino es de SISA:
 		if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){			  
 			  historicoFarmacia = consultasAseguradoDAOSISA.obtieneHistoricoFarmacia(poliza, asegurado);
 		}
@@ -361,7 +361,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<PeriodoVigenciaVO> obtienePeriodosVigencia(PolizaVO poliza,
 			AseguradoVO asegurado) throws Exception {
 		List<PeriodoVigenciaVO> periodosVigencia = new ArrayList<PeriodoVigenciaVO>();
-		// Si iCodPoliza viene vacio, es información de ICE:
+		// Si iCodPoliza viene vacio, es informaci&oacute;n de ICE:
 		if(StringUtils.isBlank(poliza.getIcodpoliza()) == false){			  
 			  periodosVigencia = consultasAseguradoDAOSISA.obtienePeriodosVigencia(poliza, asegurado);
 		}
@@ -372,7 +372,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	@Override
 	public List<BaseVO> obtieneHospitales(String filtro, PolizaVO poliza) throws Exception {
 		List<BaseVO> hospitales = new ArrayList<BaseVO>();
-		// Si iCodPoliza no es nulo, es información de SISA.
+		// Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		if(StringUtils.isNotBlank(poliza.getIcodpoliza())){
 			hospitales = consultasAseguradoDAOSISA.obtieneHospitales("%"+filtro+"%");
 		} else{
@@ -385,7 +385,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public List<AvisoHospitalizacionVO> obtieneAvisosAnteriores(
 			PolizaVO poliza, AseguradoVO asegurado) throws Exception {
 		List<AvisoHospitalizacionVO> avisosHospitalizacion = new ArrayList<AvisoHospitalizacionVO>();
-		//Si iCodPoliza no es nulo, es información de SISA.
+		//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 		if(StringUtils.isNotBlank(poliza.getIcodpoliza())){
 			avisosHospitalizacion = consultasAseguradoDAOSISA.obtieneAvisosAnteriores(asegurado);
 		}else{
@@ -399,7 +399,7 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 			throws ApplicationException {
 		try{
 			String iCodAviso;
-			//Si iCodPoliza no es nulo, es información de SISA.
+			//Si iCodPoliza no es nulo, es informaci&oacute;n de SISA.
 			if(StringUtils.isNotBlank(poliza.getIcodpoliza())){
 				iCodAviso = consultasAseguradoDAOSISA.enviarAvisoHospitalizacion(aviso);
 			}else{

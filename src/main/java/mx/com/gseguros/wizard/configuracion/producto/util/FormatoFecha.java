@@ -17,9 +17,9 @@ import org.apache.commons.lang3.StringUtils;
 public class FormatoFecha {
 	
 	/**
-	 * Formatea la fecha a un formato específico
+	 * Formatea la fecha a un formato espec&iacute;fico
 	 * @param fecha Es la fecha que se quiere formatear
-	 * @param formatoFecha Es la máscara con la que se formateara la fecha
+	 * @param formatoFecha Es la m&aacute;scara con la que se formateara la fecha
 	 * @return La Fecha formateada
 	 */
 	public static String formatoFecha(String fecha, String formatoFecha)
@@ -54,11 +54,11 @@ public class FormatoFecha {
 	}
 	
 	/**
-	 * Formatea la fecha dependiendo de un código de lenguaje y país
+	 * Formatea la fecha dependiendo de un c&oacute;digo de lenguaje y pa&iacute;s
 	 * @param fecha Es la fecha que se quiere formatear
-	 * @param languageCode Es el código del lenguaje
-	 * @param countryCode Es el código del país
-	 * @return La fecha formateada dependiendo el código de lenguaje y país
+	 * @param languageCode Es el c&oacute;digo del lenguaje
+	 * @param countryCode Es el c&oacute;digo del pa&iacute;s
+	 * @return La fecha formateada dependiendo el c&oacute;digo de lenguaje y pa&iacute;s
 	 */
 	public static String formatoFecha(String fecha, String languageCode, String countryCode)
 	{

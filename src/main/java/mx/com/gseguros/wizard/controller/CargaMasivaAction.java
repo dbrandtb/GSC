@@ -132,7 +132,7 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 				
 			} catch (Exception e) {
 				logger.error("Error en cargar tabla de apoyo, ", e);
-				throw new ApplicationException("Las claves y atributos de la tabla de apoyo no están correctamente parametrizados");
+				throw new ApplicationException("Las claves y atributos de la tabla de apoyo no est\u00E1n correctamente parametrizados");
 			}
 			
 			
@@ -308,7 +308,7 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 			logger.debug(Utils.log("\n###############################", "\n###### params = ", params,
 					"\n###### list   = ", slist1, "\n###### smap   = ", smap1));
 
-			logger.debug("TAMAÑO: {}" , slist1.size());
+			logger.debug("TAMA\u00D1O: {}" , slist1.size());
 			for (Map<String, String> ite : slist1) {
 				membresia = null;
 				cdperson = ite.get("CDUNIECO");

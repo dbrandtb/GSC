@@ -49,7 +49,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
-	/* Coincidencias del asegurado según criterios: RFC, código de asegurado y
+	/* Coincidencias del asegurado seg&uacute;n criterios: RFC, c&ocaute;digo de asegurado y
 	nombre.*/
 	@SuppressWarnings("unchecked")
 	@Override
@@ -101,7 +101,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Póliza actual del asegurado.
+	// P&ocaute;liza actual del asegurado.
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConsultaPolizaActualVO> obtienePolizaActual(
@@ -195,8 +195,8 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	//Consulta datos generales de la póliza
-	// Datos generales de la póliza.
+	//Consulta datos generales de la p&oacute;liza
+	// Datos generales de la p&oacute;liza.
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConsultaDatosGeneralesPolizaVO> obtieneDatosPoliza(
@@ -420,7 +420,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Asegurados de la póliza (Familia)
+	// Asegurados de la p&oacute;liza (Familia)
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza, AseguradoVO asegurado)
@@ -559,7 +559,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Copagos de la póliza.
+	// Copagos de lap&oacute;liza.
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza)
@@ -607,7 +607,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Coberturas póliza. Utilizan el mismo VO que las básicas. NO CAMBIAR
+	// Coberturas p&oacute;liza. Utilizan el mismo VO que las b&aacute;sicas. NO CAMBIAR
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza)
@@ -650,7 +650,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Coberturas básicas.
+	// Coberturas b&aacute;sicas.
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CoberturaBasicaVO> obtieneCoberturasBasicas(PolizaVO poliza)
@@ -687,7 +687,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Histórico del asegurado 
+	// Hist&oacute;rico del asegurado 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<HistoricoVO> obtieneHistoricoAsegurado(
@@ -736,7 +736,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	//Histórico de Farmacia
+	//Hist&oacute;rico de Farmacia
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<HistoricoFarmaciaVO> obtieneHistoricoFarmacia(PolizaVO poliza,

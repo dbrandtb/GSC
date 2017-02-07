@@ -199,7 +199,7 @@ public class LoginManagerImpl implements LoginManager {
 		return env;
 	}
 
-	// método para insertar el registro en ldap
+	// m&eacute;todo para insertar el registro en ldap
 	public boolean insertaUsuarioLDAP(String user, String password)
 			throws Exception {
 		DirContext ctx;
@@ -225,7 +225,7 @@ public class LoginManagerImpl implements LoginManager {
 		return true;
 	}
 	
-	// método para cambiar Password en ldap
+	// m&eacute;todo para cambiar Password en ldap
 		public boolean cambiarPasswordUsuarioLDAP(String user, String passwordNuevo)
 				throws Exception {
 			DirContext ctx;
