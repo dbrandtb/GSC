@@ -34,16 +34,16 @@ public class WebServicesUtil {
 	private final static Log logger = LogFactory.getLog(WebServicesUtil.class);
     
 	/**
-	 * Método para invocar un Web Service empleando Axis2 con Soap 1.1
+	 * Metodo para invocar un Web Service empleando Axis2 con Soap 1.1
 	 * @param  direccionWS URL del servicio web
 	 * @param  actionWS    Solo informativo, Metodo del servicio web a invocar 
 	 * @param  mensaje     PayLoad del servicio web para invocar que incluye los niveles de SoapEnvelope su Body y Contenido
 	 * @param  timeout     Tiempo de espera para la llamada
 	 * @param  Options     Opciones del Service Client
-	 * @param  asincrono true = síncrono, false = asíncrono
+	 * @param  asincrono true = sincrono, false = asincrono
 	 * 
 	 * @return respuesta OMElement con el mensaje de respuesta contenida en el Body
-	 * @throws Exception Si ocurre error en la invocación del servicio
+	 * @throws Exception Si ocurre error en la invocacion del servicio
 	 */
 	public static OMElement invocaWebServiceAxis2Soap11(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono) throws Exception {
 		
@@ -144,7 +144,7 @@ public class WebServicesUtil {
 	
 	
 	public static void main(String[] args) {
-		System.out.println(formatXml("<?xml version='1.0' encoding='utf-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><ns1:clienteSaludGS xmlns:ns1=\"http://ws.ice2sigs.gs.com/\"><arg0>1</arg0><arg1><agrupaCli>0</agrupaCli><apellidomCli>BARRUETA</apellidomCli><apellidopCli>ALONSO</apellidopCli><calleCli>PRUEBAS</calleCli><canconCli>0</canconCli><celularCli> </celularCli><cheqdevCli>0</cheqdevCli><claveCli>517990</claveCli><codcarCli>0</codcarCli><codposCli>3610</codposCli><coloniaCli>AMERICAS UNIDAS</coloniaCli><edocarCli>0</edocarCli><edocivilCli>2</edocivilCli><estadoCli>9</estadoCli><faxCli> </faxCli><fecaltaCli>2014-04-23T16:19:06.059-05:00</fecaltaCli><fecnacCli>1969-08-26T16:19:06.060-06:00</fecnacCli><fismorCli>1</fismorCli><giroCli>0</giroCli><municipioCli>BENITO JUÁREZ</municipioCli><nombreCli>ALEJANDRO</nombreCli><numeroCli>44 INT </numeroCli><poblacionCli>BENITO JUÁREZ</poblacionCli><rfcCli>AOBA690826</rfcCli><rmdbRn>0</rmdbRn><sexoCli>1</sexoCli><sinocurCli>0</sinocurCli><sucursalCli>1002</sucursalCli></arg1></ns1:clienteSaludGS></soapenv:Body></soapenv:Envelope>"));
+		System.out.println(formatXml("<?xml version='1.0' encoding='utf-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><ns1:clienteSaludGS xmlns:ns1=\"http://ws.ice2sigs.gs.com/\"><arg0>1</arg0><arg1><agrupaCli>0</agrupaCli><apellidomCli>BARRUETA</apellidomCli><apellidopCli>ALONSO</apellidopCli><calleCli>PRUEBAS</calleCli><canconCli>0</canconCli><celularCli> </celularCli><cheqdevCli>0</cheqdevCli><claveCli>517990</claveCli><codcarCli>0</codcarCli><codposCli>3610</codposCli><coloniaCli>AMERICAS UNIDAS</coloniaCli><edocarCli>0</edocarCli><edocivilCli>2</edocivilCli><estadoCli>9</estadoCli><faxCli> </faxCli><fecaltaCli>2014-04-23T16:19:06.059-05:00</fecaltaCli><fecnacCli>1969-08-26T16:19:06.060-06:00</fecnacCli><fismorCli>1</fismorCli><giroCli>0</giroCli><municipioCli>BENITO JUAREZ</municipioCli><nombreCli>ALEJANDRO</nombreCli><numeroCli>44 INT </numeroCli><poblacionCli>BENITO JUAREZ</poblacionCli><rfcCli>AOBA690826</rfcCli><rmdbRn>0</rmdbRn><sexoCli>1</sexoCli><sinocurCli>0</sinocurCli><sucursalCli>1002</sucursalCli></arg1></ns1:clienteSaludGS></soapenv:Body></soapenv:Envelope>"));
 	}
 	
     

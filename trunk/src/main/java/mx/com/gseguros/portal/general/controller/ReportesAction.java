@@ -88,7 +88,7 @@ public class ReportesAction extends PrincipalCoreAction {
 			filename        = cdreporte + TipoArchivo.XLS.getExtension();
 			fileInputStream = reportesManager.obtenerDatosReporte(cdreporte, username, params);
 		} catch (Exception e) {
-			logger.error("Error en la obtención del reporte", e);
+			logger.error("Error en la obtencion del reporte", e);
 		}
 		
 		success = true;
@@ -118,7 +118,7 @@ public class ReportesAction extends PrincipalCoreAction {
 		//Un texto cualquiera guardado en una variable
 		contentType = TipoArchivo.TXT.getContentType();
 		setFilename("archivoPrueba" + TipoArchivo.TXT.getExtension());
-		String saludo="Prueba de generación de texto desde ICE.";
+		String saludo="Prueba de generacion de texto desde ICE.";
 		try
 		{
 			//Crear un objeto File se encarga de crear o abrir acceso a un archivo que se especifica en su constructor
@@ -143,7 +143,7 @@ public class ReportesAction extends PrincipalCoreAction {
 		
 		contentType = TipoArchivo.PDF.getContentType();
 		filename    = "archivoPrueba" + TipoArchivo.PDF.getExtension();
-		// TODO: Reemplazar por el código de Jasper Reports que devuelve el inputstream:
+		// TODO: Reemplazar por el codigo de Jasper Reports que devuelve el inputstream:
 		fileInputStream = HttpUtil.obtenInputStream(url);
 		return SUCCESS;
 		

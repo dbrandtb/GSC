@@ -481,7 +481,7 @@ public class EmisionManagerImpl implements EmisionManager
 						int esquema = (int) esq1;
 						if (esquema != 20 && esquema != 50 && esquema != 100) {
 							errores = errores + "Error en el campo 'ESQUEMA' de la fila " + (fila - 1)
-									+ " solo se aceptan esquemas de '20,50 ó 100' \n";
+									+ " solo se aceptan esquemas de '20,50 \u00F3 100' \n";
 							resp.setRespuesta(errores);
 							resp.setExito(false);
 						}
@@ -534,7 +534,7 @@ public class EmisionManagerImpl implements EmisionManager
 						nombre = "SEXO";
 						if ((!campo.trim().equals("H")) && (!campo.trim().equals("M"))) {
 							errores = errores + "Error en el campo 'SEXO' de la fila " + (fila - 1)
-									+ " solo se acepta 'H ó M' \n";
+									+ " solo se acepta 'H \u00F3 M' \n";
 							resp.setRespuesta(errores);
 							resp.setExito(false);
 						}

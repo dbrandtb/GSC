@@ -1902,7 +1902,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             contador++;
             }
             //CodAviso        += StringUtils.isNotBlank(CodAviso) ?" VERIFIQUE SI PUEDE REALIZAR EL ENDOSO O BIEN SI NECESITA REEXPEDIR LA POLIZA INGRESE TRAMITE MESA DE CONTROL":"";
-            CodAviso        += StringUtils.isNotBlank(CodAviso) ?" Verifique si puede realizar el endoso o bien, si necesita reexpedir la póliza ingrese el trámite en mesa de control.":"";
+            CodAviso        += StringUtils.isNotBlank(CodAviso) ?" Verifique si puede realizar el endoso o bien, si necesita reexpedir la p\u00F3liza ingrese el tr\u00E1mite en mesa de control.":"";
             exito           = StringUtils.isNotBlank(CodAviso) ? false : true;
             respuesta       = CodAviso.trim();
             respuestaOculta = CodAviso;
@@ -2002,7 +2002,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
 
  public String modificaPrimasFlotillas(String ntramite, List<Map<String, String>> listaResultados, Integer formpagSigs, ArrayList<String> paquete, String cdunieco, String cdramo, String nmpoliza, String cdtipsit, String renuniext, String renramo, String renpoliex) throws Exception
     {
-     String mensaje = "Modificacion de primas según sigs";
+     String mensaje = "Modificacion de primas seg\u00FAn sigs";
             try
             {       int i = 0;
                     String mnprima = null;

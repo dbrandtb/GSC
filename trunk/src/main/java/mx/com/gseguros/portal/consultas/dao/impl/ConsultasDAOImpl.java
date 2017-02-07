@@ -5667,7 +5667,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
                                                             String pv_swestado_i) throws Exception {
         
         if(pv_estado_i.equalsIgnoreCase("W") && pv_estado_i.equalsIgnoreCase("F") ){
-            throw new ApplicationException("swestado no válido");
+            throw new ApplicationException("swestado no v\u00E1lido");
         }
         Map<String, String> params = new LinkedHashMap<String, String>();
         params.put("pv_cdunieco_i",  pv_cdunieco_i);

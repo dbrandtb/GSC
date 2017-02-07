@@ -82,7 +82,7 @@ public class MenuAction extends PrincipalCoreAction {
 			/**
 			 * Por medio de este set se concatenaron la clave de Producto y
 			 * Situacion para las pantallas que se despliegan del menu.
-			 * Se agregó cdtitulo
+			 * Se agrego cdtitulo
 			 */
 			for (MenuPrincipalVO test : listaMenu) {
 				if (StringUtils.isNotBlank(test.getHref())

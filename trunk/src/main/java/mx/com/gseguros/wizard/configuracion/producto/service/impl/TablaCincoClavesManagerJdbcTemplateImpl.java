@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 
- * Implementacion de TablaCincoClavesManagerJdbcTemplate para petición de información valores para la tabla de cinco claves para el uso de JdbcTemplate
+ * Implementacion de TablaCincoClavesManagerJdbcTemplate para peticion de informacion valores para la tabla de cinco claves para el uso de JdbcTemplate
  *
  */
 public class TablaCincoClavesManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInvoke implements TablaCincoClavesManagerJdbcTemplate {

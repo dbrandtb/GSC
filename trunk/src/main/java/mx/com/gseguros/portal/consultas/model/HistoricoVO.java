@@ -61,7 +61,7 @@ public class HistoricoVO implements Serializable{
 	private String nsuplogi;
 	
 	/**
-	 * Fecha de emisión de la poliza
+	 * Fecha de emision de la poliza
 	 */
 	private String feemisio;
 	
@@ -82,7 +82,7 @@ public class HistoricoVO implements Serializable{
 	private String ptpritot;
 		
 	/**
-	 * Plan de la póliza 
+	 * Plan de la poliza 
 	 */
 	private String dsplan;
 	
