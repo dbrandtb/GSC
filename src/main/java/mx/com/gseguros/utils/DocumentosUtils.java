@@ -244,7 +244,7 @@ public class DocumentosUtils
 	
 	
 	/**
-	 * Genera un documento de Excel en base a los parámetros de la lista
+	 * Genera un documento de Excel en base a los parametros de la lista
 	 * @param lista					
 	 * @param nombreArchivo   Nombre del archivo a generar
 	 * @param incluyeEncabezado true si se requiere agregar un registro con el nombre de los encabezados, false si no

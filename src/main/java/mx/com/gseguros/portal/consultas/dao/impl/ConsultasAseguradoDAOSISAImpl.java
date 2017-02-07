@@ -47,7 +47,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	
 	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
-	/* Coincidencias del asegurado según criterios: RFC, código de asegurado y
+	/* Coincidencias del asegurado segun criterios: RFC, codigo de asegurado y
 	nombre.*/
 	@SuppressWarnings("unchecked")
 	@Override
@@ -99,7 +99,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Póliza actual del asegurado.
+	// poliza actual del asegurado.
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConsultaPolizaActualVO> obtienePolizaActual(
@@ -187,8 +187,8 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	//Consulta datos generales de la póliza
-	// Datos generales de la póliza.
+	//Consulta datos generales de la poliza
+	// Datos generales de la poliza.
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConsultaDatosGeneralesPolizaVO> obtieneDatosPoliza(
@@ -399,7 +399,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Asegurados de la póliza.
+	// Asegurados de la poliza.
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza, AseguradoVO asegurado)
@@ -479,7 +479,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	//Datos de las enfermedades crónicas
+	//Datos de las enfermedades cronicas
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<EnfermedadVO> obtieneEnfermedades(PolizaVO poliza,
@@ -550,7 +550,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Copagos de la póliza.
+	// Copagos de la poliza.
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CopagoVO> obtieneCopagosPoliza(PolizaVO poliza)
@@ -586,7 +586,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Coberturas póliza.
+	// Coberturas poliza.
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CoberturaBasicaVO> obtieneCoberturasPoliza(PolizaVO poliza)
@@ -618,7 +618,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Coberturas básicas.
+	// Coberturas basicas.
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CoberturaBasicaVO> obtieneCoberturasBasicas(PolizaVO poliza)
@@ -655,7 +655,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	// Histórico del asegurado 
+	// Historico del asegurado 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<HistoricoVO> obtieneHistoricoAsegurado(
@@ -707,7 +707,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	//Histórico de Farmacia
+	//Historico de Farmacia
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<HistoricoFarmaciaVO> obtieneHistoricoFarmacia(PolizaVO poliza,
@@ -797,7 +797,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	/***Sección Aviso de Hospitalización***/
+	/***Seccion Aviso de Hospitalizacion***/
 	@SuppressWarnings("unchecked")
 	//Lista de hospitales
 	@Override
@@ -842,7 +842,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 		}
 	}
 	
-	//Avisos Anteriores de hospitalización
+	//Avisos Anteriores de hospitalizacion
 		@SuppressWarnings("unchecked")
 		@Override
 		public List<AvisoHospitalizacionVO> obtieneAvisosAnteriores(

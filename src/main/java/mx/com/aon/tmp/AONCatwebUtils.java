@@ -36,7 +36,7 @@ public class AONCatwebUtils {
     /**
      * Descripci&oacute;n: Metodo que convierte una fecha de tipo String a Date
      * @param date Fecha a comvertir a Date
-     * @param pattern patrón en que se encuentra la fecha en String por ejemplo dd/MM/yyyy
+     * @param pattern patron en que se encuentra la fecha en String por ejemplo dd/MM/yyyy
      * @return Regresa la fecha en tipo Date
      * @throws ParseException
      */
@@ -46,9 +46,9 @@ public class AONCatwebUtils {
     }
     
     /**
-     * Regresa el número formateado
+     * Regresa el numero formateado
      * 
-     * @return Número con el formato correcto return String
+     * @return Numero con el formato correcto return String
      */
     public static String formatNumber(BigDecimal originalNumber) {
         String newNumber = "0.00";

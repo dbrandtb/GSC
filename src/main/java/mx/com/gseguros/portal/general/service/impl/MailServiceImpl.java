@@ -39,7 +39,7 @@ public class MailServiceImpl implements MailService {
 				archivos.add(new File(ruta));
 			}
 		}
-		// Se invoca el envío de correo:
+		// Se invoca el envio de correo:
 		return enviaCorreo(to, cc, bcc, asunto, mensaje, archivos, contentTypeHTML);
 	}
 
@@ -74,10 +74,10 @@ public class MailServiceImpl implements MailService {
 			for(File file : adjuntos) {
 				if(file != null && file.exists()) {
 					helper.addAttachment(file.getName(), file);
-					logger.info( "Se adjuntó el archivo {}", file.getAbsolutePath() );
+					logger.info( "Se adjunto el archivo {}", file.getAbsolutePath() );
 				} else {
 					String fileName = (file != null) ? file.getName() : null;
-					logger.warn( "El archivo {} no existe, no se adjuntará", fileName);
+					logger.warn( "El archivo {} no existe, no se adjuntara", fileName);
 				}
 			}
 			// Se envia el correo:

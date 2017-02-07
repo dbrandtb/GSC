@@ -50,7 +50,7 @@ public class SuplementoVO implements Serializable{
 	private String nsuplogi;
 	
 	/**
-	 * Fecha de emisión de la poliza
+	 * Fecha de emision de la poliza
 	 */
 	private String feemisio;
 	

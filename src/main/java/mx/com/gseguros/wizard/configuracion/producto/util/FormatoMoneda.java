@@ -9,18 +9,18 @@ import java.text.DecimalFormatSymbols;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Clase que formatea números
+ * Clase que formatea numeros
  * @author Cesar Hernandez
  *
  */
 public class FormatoMoneda {
 	
 	/**
-	 * Formatea un número a una máscara especifica
-	 * @param valor El número que se quiere formatear
-	 * @param mascara La máscara con la que se formateara el número
+	 * Formatea un numero a una mascara especifica
+	 * @param valor El numero que se quiere formatear
+	 * @param mascara La mascara con la que se formateara el numero
 	 * @param separadores Son los separadores de miles y decimales
-	 * @return El número con formato
+	 * @return El numero con formato
 	 */
 	public static String formatoMoneda(double valor, String mascara, String separadores)
 	{
@@ -50,12 +50,12 @@ public class FormatoMoneda {
 	}
 	
 	/**
-	 * Formatea un número con respecto al código del lenguaje y país
-	 * @param valor El número que se quiere formatear
-	 * @param languageCode Código del lenguaje
-	 * @param countryCode Código del país
+	 * Formatea un numero con respecto al codigo del lenguaje y pais
+	 * @param valor El numero que se quiere formatear
+	 * @param languageCode Codigo del lenguaje
+	 * @param countryCode Codigo del pais
 	 * @param separadores Son los separadores de miles y decimales
-	 * @return El número con formato
+	 * @return El numero con formato
 	 */
 	public static String formatoMoneda(double valor, String languageCode, String countryCode, String separadores)
 	{
