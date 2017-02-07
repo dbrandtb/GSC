@@ -1441,4 +1441,31 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
             declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
         }
     }
+	
+	@Override
+    public void validaDuplicidadTramiteEmisionPorNmsolici (String cdunieco, String cdramo, String estado, String nmsolici) throws Exception {
+	    Map<String, String> params = new LinkedHashMap<String, String>();
+	    params.put("pv_cdunieco_i", cdunieco);
+	    params.put("pv_cdramo_i", cdramo);
+	    params.put("pv_estado_i", estado);
+	    params.put("pv_nmsolici_i", nmsolici);
+	    Map<String, Object> procRes = ejecutaSP(new ValidaDuplicidadTramiteEmisionPorNmsoliciSP(getDataSource()), params);
+	    String error = (String)procRes.get("pv_error_o");
+	    if (StringUtils.isNotBlank(error)) {
+	        throw new ApplicationException(error);
+	    }
+	}
+    
+    protected class ValidaDuplicidadTramiteEmisionPorNmsoliciSP extends StoredProcedure{
+        protected ValidaDuplicidadTramiteEmisionPorNmsoliciSP(DataSource dataSource){
+            super(dataSource,"P_MC_VAL_TRAM_EMI_ANTERIOR");
+            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsolici_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+        }
+    }
 }

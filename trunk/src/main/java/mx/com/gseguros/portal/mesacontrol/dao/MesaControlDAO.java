@@ -349,4 +349,9 @@ public interface MesaControlDAO
 	public List<Map<String, String>> obtenerMesaControl(String cdunieco, String ntramite, String cdramo, String nmpoliza, String estado, String cdagente, String status, String cdtipsit, String fedesde, String fehasta, 
 	        String cdrol, String cdtiptra, String contrarecibo, String tipoPago, String nfactura, String cdpresta, String cdusuari, String cdtipram, String lote, String tipolote,     
 	        String tipoimpr, String cdusuari_busq, String dscontra) throws Exception;
+	
+	/**
+     * Si ya existe un tramite cdtiptra 1 o 21 con esa cdunieco, cdramo, estado, nmsolici arroja excepcion
+     */
+    public void validaDuplicidadTramiteEmisionPorNmsolici (String cdunieco, String cdramo, String estado, String nmsolici) throws Exception;
 }

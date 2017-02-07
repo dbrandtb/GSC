@@ -32,6 +32,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
@@ -1219,110 +1220,120 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	    		}
     		}
     		//se genera un tramite
-            else
-            {
-            	try
-            	{
-            		String tipoProcesoParaRecuperarFlujo = "I";
-            		if (StringUtils.isNotBlank(tipoflot)) {
-            			tipoProcesoParaRecuperarFlujo = tipoflot;
-            		}
-            		
-            		Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(comprarCdramo,tipoProcesoParaRecuperarFlujo);
-            		
-            		String estatus = EstatusTramite.PENDIENTE.getCodigo();
-            		try {
-            			estatus = flujoMesaControlManager.recuperarEstatusDefectoRol(usuario.getRolActivo().getClave());
-            		} catch (Exception ex) {
-            			logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
-            		}
-            		
-	            	ntramite = mesaControlManager.movimientoTramite(
-	            			comprarCdunieco
-	            			,comprarCdramo
-	            			,"W"
-	            			,"0"
-	            			,"0"
-	            			,comprarCdunieco
-	            			,comprarCdunieco
-	            			,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-	            			,fechaHoy
-	            			,cdagente
-	            			,null
-	            			,""
-	            			,fechaHoy
-	            			,estatus
-	            			,""
-	            			,comprarNmpoliza
-	            			,cdtipsit
-	            			,cdusuari
-	            			,cdsisrol
-	            			,null
-	            			,datosFlujo.get("cdtipflu")
-	            			,datosFlujo.get("cdflujomc")
-	            			,null//valores
-	            			,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null
-	            			);
-	            	
-	            	smap1.put("ntramite",ntramite);
-	            	
-	            	String rolTrabajoStatus = despachadorManager.recuperarRolTrabajoEstatus(datosFlujo.get("cdtipflu"),
-	            	        datosFlujo.get("cdflujomc"), estatus);
-	            	String cdusuariDes = null,
-	            	       cdsisrolDes = null;
-	            	if (cdsisrol.equals(rolTrabajoStatus)) { // Cuando el tramite es para el mismo rol que tengo yo, es para mi y no para otro
-	            	    cdusuariDes = cdusuari;
-	            	    cdsisrolDes = cdsisrol;
-	            	}
-	            	
-	                RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-	                        cdusuari,
-	                        cdsisrol,
-	                        ntramite,
-	                        estatus,
-	                        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
-	                        null,  // cdrazrecha
-	                        cdusuariDes,
-	                        cdsisrolDes,
-	                        true,  // permisoAgente
-	                        false, // porEscalamiento
-	                        fechaHoy,
-	                        false  // sinGrabarDetalle
-	                        );
-	                
-	                respuesta = Utils.join(StringUtils.isBlank(respuesta) ? "" : respuesta, ". ", despacho.getMessage());
-	            	
-	            	try
-		            {
-		            	serviciosManager.grabarEvento(new StringBuilder("\nCotizar tramite grupo")
-		            	    ,Constantes.MODULO_EMISION     //cdmodulo
-		            	    ,Constantes.EVENTO_COMPRAR_TRAMITE_MC //cdevento
-		            	    ,new Date()    //fecha
-		            	    ,cdusuari
-		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
-		            	    ,ntramite
-		            	    ,comprarCdunieco
-		            	    ,comprarCdramo
-		            	    ,"W"
-		            	    ,comprarNmpoliza
-		            	    ,comprarNmpoliza
-		            	    ,cdagente
-		            	    ,null
-		            	    ,null);
-		            }
-		            catch(Exception ex)
-		            {
-		            	logger.error("Error al grabar evento, sin impacto",ex);
-		            }
-            	}
-	    		catch(Exception ex)
-	    		{
-	    			long timestamp  = System.currentTimeMillis();
-	    			exito           = false;
-	    			respuesta       = "Error al generar el tr\u00e1mite #"+timestamp;
-	    			respuestaOculta = ex.getMessage();
-	    			logger.error(respuesta,ex);
-	    		}
+            else {
+            	
+                try {
+                    mesaControlManager.validaDuplicidadTramiteEmisionPorNmsolici(comprarCdunieco, comprarCdramo, "W", comprarNmpoliza);
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    long timestamp = System.currentTimeMillis();
+                    exito = false;
+                    if (ex instanceof ApplicationException) {
+                        respuesta = Utils.join(ex.getMessage(), " #", timestamp);
+                    } else {
+                        respuesta = Utils.join("Error al verificar duplicidad de tr\u00e1mite #", timestamp);
+                    }
+                    logger.error(respuesta,ex);
+                }
+                
+                if (exito) {
+                    try {
+                		String tipoProcesoParaRecuperarFlujo = "I";
+                		if (StringUtils.isNotBlank(tipoflot)) {
+                			tipoProcesoParaRecuperarFlujo = tipoflot;
+                		}
+                		
+                		Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(comprarCdramo,tipoProcesoParaRecuperarFlujo);
+                		
+                		String estatus = EstatusTramite.PENDIENTE.getCodigo();
+                		try {
+                			estatus = flujoMesaControlManager.recuperarEstatusDefectoRol(usuario.getRolActivo().getClave());
+                		} catch (Exception ex) {
+                			logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
+                		}
+                		
+    	            	ntramite = mesaControlManager.movimientoTramite(
+    	            			comprarCdunieco
+    	            			,comprarCdramo
+    	            			,"W"
+    	            			,"0"
+    	            			,"0"
+    	            			,comprarCdunieco
+    	            			,comprarCdunieco
+    	            			,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+    	            			,fechaHoy
+    	            			,cdagente
+    	            			,null
+    	            			,""
+    	            			,fechaHoy
+    	            			,estatus
+    	            			,""
+    	            			,comprarNmpoliza
+    	            			,cdtipsit
+    	            			,cdusuari
+    	            			,cdsisrol
+    	            			,null
+    	            			,datosFlujo.get("cdtipflu")
+    	            			,datosFlujo.get("cdflujomc")
+    	            			,null//valores
+    	            			,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null
+    	            			);
+    	            	
+    	            	smap1.put("ntramite",ntramite);
+    	            	
+    	            	String rolTrabajoStatus = despachadorManager.recuperarRolTrabajoEstatus(datosFlujo.get("cdtipflu"),
+    	            	        datosFlujo.get("cdflujomc"), estatus);
+    	            	String cdusuariDes = null,
+    	            	       cdsisrolDes = null;
+    	            	if (cdsisrol.equals(rolTrabajoStatus)) { // Cuando el tramite es para el mismo rol que tengo yo, es para mi y no para otro
+    	            	    cdusuariDes = cdusuari;
+    	            	    cdsisrolDes = cdsisrol;
+    	            	}
+    	            	
+    	                RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+    	                        cdusuari,
+    	                        cdsisrol,
+    	                        ntramite,
+    	                        estatus,
+    	                        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
+    	                        null,  // cdrazrecha
+    	                        cdusuariDes,
+    	                        cdsisrolDes,
+    	                        true,  // permisoAgente
+    	                        false, // porEscalamiento
+    	                        fechaHoy,
+    	                        false  // sinGrabarDetalle
+    	                        );
+    	                
+    	                respuesta = Utils.join(StringUtils.isBlank(respuesta) ? "" : respuesta, ". ", despacho.getMessage());
+    	            	
+    	            	try {
+    		            	serviciosManager.grabarEvento(new StringBuilder("\nCotizar tramite grupo")
+    		            	    ,Constantes.MODULO_EMISION     //cdmodulo
+    		            	    ,Constantes.EVENTO_COMPRAR_TRAMITE_MC //cdevento
+    		            	    ,new Date()    //fecha
+    		            	    ,cdusuari
+    		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+    		            	    ,ntramite
+    		            	    ,comprarCdunieco
+    		            	    ,comprarCdramo
+    		            	    ,"W"
+    		            	    ,comprarNmpoliza
+    		            	    ,comprarNmpoliza
+    		            	    ,cdagente
+    		            	    ,null
+    		            	    ,null);
+    		            } catch (Exception ex) {
+    		            	logger.error("Error al grabar evento, sin impacto",ex);
+    		            }
+                	} catch (Exception ex) {
+    	    			long timestamp  = System.currentTimeMillis();
+    	    			exito           = false;
+    	    			respuesta       = "Error al generar el tr\u00e1mite #"+timestamp;
+    	    			respuestaOculta = ex.getMessage();
+    	    			logger.error(respuesta,ex);
+    	    		}
+                }
             }
     	}
     	
