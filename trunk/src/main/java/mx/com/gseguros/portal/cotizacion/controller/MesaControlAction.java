@@ -1094,7 +1094,7 @@ public class MesaControlAction extends PrincipalCoreAction
 				omap.put((String)entry.getKey(),entry.getValue());//se pasa de smap1 a omap
 			}
 			
-			/*Se Agrega validacion al crear un trámite en la mesa de control antigua la validación de agente
+			/*Se Agrega validacion al crear un tramite en la mesa de control antigua la validacion de agente
              * */
 			endososAutoManager.validacionSigsAgente(  (String)omap.get("pv_cdagente_i")
                                                     , (String)omap.get("pv_cdramo_i")

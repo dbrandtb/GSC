@@ -32,7 +32,7 @@ public class ConsultaResultadosAseguradoVO implements Serializable {
 	private String icodpoliza;
 	
 	/**
-	 * Origen de la póliza: SISA, ICE, etc.
+	 * Origen de la p\u00F3liza: SISA, ICE, etc.
 	 */
 	private String origen;
 	

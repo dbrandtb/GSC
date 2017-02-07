@@ -69,7 +69,7 @@ public class ColumnGridVO implements Serializable {
         }
 
         if ( j > k/2 ) {			// CASO MAYUSCULAS (> la mitad de todas las letras del header)
-        	factor = getHeader().length() * (35/4);				// valor arbitrario (width=8.75) que es el número que ocupa una letra MAYUSCULA
+        	factor = getHeader().length() * (35/4);				// valor arbitrario (width=8.75) que es el numero que ocupa una letra MAYUSCULA
         } else if ( j < k/2 ) {	// caso minusculas (< la mitad de todas las letras del header) 
         	factor = getHeader().length() / 12;
         	factor *= 100;

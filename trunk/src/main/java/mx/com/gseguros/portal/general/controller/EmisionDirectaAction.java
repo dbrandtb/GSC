@@ -65,7 +65,7 @@ public class EmisionDirectaAction extends PrincipalCoreAction
 		
 		try {
 			// Se validan datos:
-        	Utils.validate(params, "No hay parámetros");
+        	Utils.validate(params, "No hay par\u00E1metros");
         	Utils.validate(params.get("ntramite"),   "No existe el par\u00E1metro params.ntramite");
         	Utils.validate(params.get("cdusuari"),   "No existe el par\u00E1metro params.cdusuari");
         	Utils.validate(params.get("cdsisrol"),   "No existe el par\u00E1metro params.cdsisrol");

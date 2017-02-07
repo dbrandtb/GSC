@@ -696,7 +696,7 @@ public class RenovacionAction extends PrincipalCoreAction
 		List<Map<String, String>> slist = new ArrayList<Map<String,String>>();
 		try{
 			Utils.validate(smap1, "No se recibieron parametros de entrada");
-			Utils.validate(smap1.get("anio"),"No se recibio el año");
+			Utils.validate(smap1.get("anio"),"No se recibio el a\u00F1o");
 			String nmperiod = smap1.get("nmperiod");
 			String cdunieco = smap1.get("cdunieco");
 			String cdramo   = smap1.get("cdramo");
@@ -724,7 +724,7 @@ public class RenovacionAction extends PrincipalCoreAction
 		try{
 			Utils.validate(params, "No se recibieron parametros de entrada");
 			if(params.get("operacion").equals("I")){
-			    Utils.validate(params.get("anio"),      "No se recibio el año",
+			    Utils.validate(params.get("anio"),      "No se recibio el a\u00F1o",
                                params.get("mes") ,      "No se recibio el mes",
                                params.get("operacion") ,"No se recibio la operacion",
                                params.get("valor"),     "No se recibio valor");
@@ -733,7 +733,7 @@ public class RenovacionAction extends PrincipalCoreAction
 			    }
 			}
 			else{
-    			Utils.validate(params.get("anio"),"No se recibio el año",
+    			Utils.validate(params.get("anio"),"No se recibio el a\u00F1o",
     						   params.get("mes") ,"No se recibio el mes",
     						   params.get("operacion") ,"No se recibio la operacion");
 			}
@@ -767,7 +767,7 @@ public class RenovacionAction extends PrincipalCoreAction
 		List<Map<String, String>> slist = new ArrayList<Map<String,String>>();
 		try{
 			Utils.validate(smap1, "No se recibieron parametros de entrada");
-			Utils.validate(smap1.get("anio"),"No se recibio el año"/*,
+			Utils.validate(smap1.get("anio"),"No se recibio el a\u00F1o"/*,
 						   smap1.get("mes"),"No se recibio el mes"*/);
 			String anio = smap1.get("anio");
 			String mes  = smap1.get("mes");
