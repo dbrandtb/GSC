@@ -3483,17 +3483,16 @@ function _p21_quitarTabsDetalleGrupo(letraGrupo)
 function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 {
      debug('>_p21_guardarGrupo:',panelGrupo);
-     
      var letraGrupo  = panelGrupo.letraGrupo;
      debug('letraGrupo:',letraGrupo);
      
      var formsTatrigar = panelGrupo.down('[title=COBERTURAS DEL SUBGRUPO]').items.items;
      debug('formsTatrigar:',formsTatrigar);
-     
      var tvalogars = [];
      var valido    = true;
      validoFlag=true;
-
+     coberturaFlag='';
+     
      if(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')
      {
          for(var i=0;i<formsTatrigar.length;i++)
@@ -3501,25 +3500,28 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
              var iFormTatrigar = formsTatrigar[i];
              valido            = valido && iFormTatrigar.isValid();
              var tvalogar      = iFormTatrigar.getValues();
-             
-             //validacion de combo 4MED para cubrir requerimiento de que el valor sea diferente de cero 
+             //validacion de combo 4MED y 4AYM para cubrir requerimiento de que el valor sea diferente de cero  
              var miCdgarant = iFormTatrigar.cdgarant ;
         	 if(miCdgarant=='4MED')
-             {
-             	var cboMed = iFormTatrigar.up('panel').down('[cdgarant=4MED]').down('[name=parametros.pv_otvalor001]');
+        	 {
+        		var cboMed = iFormTatrigar.up('panel').down('[cdgarant=4MED]').down('[name=parametros.pv_otvalor001]');
              	debug('cboMedValue en funcion guardar', cboMed.getValue());
-             	if ((cboMed.getValue() !=null)&&(cboMed.getValue() ==0)&&(cboMed.getValue() !='')){
-             		debug('Entre en el if de validacion de Medicamentos');
-             		mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo');
-             		debug('Debe elegir el importe del Beneficio Maximo');
+             	if ((!cboMed.isDisabled()) && (cboMed.getValue() !=null) &&(cboMed.getValue() ==0) &&(cboMed.getValue() !='')){
              		validoFlag=false;
+             		coberturaFlag='4MED';
              	}
-             	/*else{
-             		validoFlag=true;
-             	}*/
-              }
-
-             if(false)//tvalogar.swobliga=='S'&&_p21_smap1.cdsisrol!='COTIZADOR')
+             }
+        	 else{
+        		if(miCdgarant=='4AYM') {
+		            var cboAYM = iFormTatrigar.up('panel').down('[cdgarant=4AYM]').down('[name=parametros.pv_otvalor001]');
+		            debug('cboAYM en funcion guardar', cboAYM.getValue());
+		            if ((!cboAYM.isDisabled()) && (cboAYM.getValue() ==0)&&(cboAYM.getValue() !='')){
+		            	validoFlag=false;
+		            	coberturaFlag='4AYM';
+		            }
+             	}
+        	 }
+        	 if(false)//tvalogar.swobliga=='S'&&_p21_smap1.cdsisrol!='COTIZADOR')
              {
                  tvalogar['amparada']='S';
              }
@@ -3537,7 +3539,7 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
              datosIncompletos();
          }
      }
-     debug('valido ', valido, 'validoFlag ', validoFlag);
+     debug('valido ', valido, 'validoFlag ', validoFlag, 'coberturaFlag ', coberturaFlag);
      if(valido)
      {
 	     if (validoFlag!=false){
@@ -3626,7 +3628,6 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 					                    		}
 					                    	},250);
 					                    });
-				                	
 				                }
 				                else
 				                {
@@ -3639,17 +3640,23 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 				                errorComunicacion();
 				            }
 				        });
-	         }//fin del if de validoFlag
+	         }//fin del if de validoFlag, no tiene else
          }else{
         	 if (validoFlag!=false){
-        	 	mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
-        	 } else{
-        		 debug('Entre en el ultimo else');
-        		 mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo');
-        	 }
+         	 	mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
+         	 } else{
+         		 debug('Entre en el ultimo else ', 'coberturaFlag ', coberturaFlag);
+         		 if(coberturaFlag=='4MED'){
+         	         mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo para la Cobertura de MEDICAMENTOS');
+         		 }
+         		 else{
+         			 if (coberturaFlag=='4AYM'){
+         			 	mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo para la Cobertura de AYUDA EN MATERNIDAD');
+         			 }
+         		 } 
+         	 }
          }
      }
-     
      debug('<_p21_guardarGrupo');
 }
 
