@@ -2447,7 +2447,7 @@ function _verificaAprueba(){
 		var planExcedeLongitud = false;
 		
 		_p21_query('#'+_p21_tabGrupos.itemId)[0].items.items[0].getStore().each(function(record){
-	        if(!Ext.isEmpty(record.get('dsplanl')) && String(record.get('dsplanl')).length >= 40)
+	        if(!Ext.isEmpty(record.get('dsplanl')) && String(record.get('dsplanl')).length > 40)
 	        {
 	        	planExcedeLongitud = true;
 	        	return false;
@@ -2455,7 +2455,7 @@ function _verificaAprueba(){
 	    });
 		
 		if(planExcedeLongitud){
-			mensajeWarning('No se puede aprobar. El Suscriptor debe editar primero los nombres de plan ya que alguno excede la longitud permitida de caracteres.');
+			mensajeWarning('No se puede aprobar. El Suscriptor/Supervisor debe editar primero los nombres de plan ya que alguno excede la longitud permitida de caracteres.');
 			return true;
 		}
 		
