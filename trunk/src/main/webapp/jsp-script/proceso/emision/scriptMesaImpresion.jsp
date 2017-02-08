@@ -1122,6 +1122,104 @@ function _4_onContinuarDescargaClic(row){
 	        manejaException(e,ck);
 	    }
 }
+// Se agrega funcion para reversar mas de un tramite
+function _4_reversaTramitesClic(){
+	debug('>_4_reversaTramitesClic');
+	
+	selected=[];
+	selctn = mcdinGrid.getSelectionModel();
+	var s = selctn.getSelection();
+	Ext.each(s, function(item) {
+		debug('item: ', item.data.ntramite);
+	    selected.push(item.data.ntramite);
+	});
+	debug('selected-> ', selected);
+	
+    
+  var ck = 'Solicitando Revesar Tramite';
+    
+    try
+    {
+	    
+	    
+	    var win = mcdinGrid;
+	    _setLoading(true,win);
+	    Ext.Ajax.request(
+	    {
+	        url      : _4_onReversarTramite
+	        ,params  :
+	        {
+	            'smap1.pv_ntramite' : selected
+	            
+	        }
+	        ,success : function(response)
+	        {
+	            _setLoading(false,win);
+	            
+	            var vk = 'Decodificando respuesta al cambiar status de tramite';
+	            try
+	            {
+	                var json = Ext.decode(response.responseText);
+	                debug('### actualizar status reverso:',json);
+	                if(json.success==true)
+	                {
+	                    mensajeCorrecto(
+	                        'Reverso actualizado'
+	                        ,'El reverso ha sido actualizado'
+	                        ,function()
+	                        {
+	                        	var params1=
+		    	    			{
+		    	    				'smap1.pv_cdunieco_i'      : _fieldByName('smap2.pv_cdunieco_i').getValue()
+		    	    			    ,'smap1.pv_cdramo_i'       : _fieldByName('smap2.pv_cdramo_i').getValue()
+		    	                    ,'smap1.pv_cdtipsit_i'     : _fieldByName('smap2.pv_cdtipsit_i').getValue()
+		    	                    ,'smap1.pv_estado_i'       : _fieldByName('smap2.pv_estado_i').getValue()
+		    	    			    ,'smap1.pv_nmpoliza_i'     : _fieldByName('smap2.pv_nmpoliza_i').getValue()
+		    	                    ,'smap1.pv_cdagente_i'     : _fieldByName('smap2.pv_cdagente_i').getValue()
+		    	    			    ,'smap1.pv_ntramite_i'     : _fieldByName('smap2.pv_ntramite_i').getValue()
+		    	                    ,'smap1.pv_status_i'       : _fieldByName('smap2.pv_status_i').getValue()
+		    	                    ,'smap1.pv_fedesde_i'      : Ext.isEmpty(_fieldByName('smap2.pv_fedesde_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fedesde_i').getValue(),'d/m/Y')
+		    	                    ,'smap1.pv_fehasta_i'      : Ext.isEmpty(_fieldByName('smap2.pv_fehasta_i').getValue())?'':Ext.Date.format(_fieldByName('smap2.pv_fehasta_i').getValue(),'d/m/Y')
+		    	                    ,'smap1.pv_cdtiptra_i'     : mcdinInput['tiptra']
+		    	    				,'smap1.pv_contrarecibo_i' : Ext.isEmpty(_fieldByName('smap2.pv_contrarecibo_i').getValue())?'':_fieldByName('smap2.pv_contrarecibo_i').getValue()
+		    	    				,'smap1.pv_tipoPago_i'	   : Ext.isEmpty(_fieldByName('smap2.pv_tipoPago_i').getValue())?'':_fieldByName('smap2.pv_tipoPago_i').getValue()
+		    	    				,'smap1.pv_nfactura_i'	   : Ext.isEmpty(_fieldByName('smap2.pv_nfactura_i').getValue())?'':_fieldByName('smap2.pv_nfactura_i').getValue()
+		    	    				,'smap1.pv_cdpresta_i'	   : Ext.isEmpty(_fieldByName('smap2.pv_cdpresta_i').getValue())?'':_fieldByName('smap2.pv_cdpresta_i').getValue()
+		    	    				,'smap1.filtro'            : loadMcdinStoreFiltro
+		    	    				,'smap1.lote'              : _getValueByName('smap1.lote'          , false)
+		    	    				,'smap1.tipolote'          : _getValueByName('smap1.tipolote'      , false)
+		    	    				,'smap1.tipoimpr'          : _getValueByName('smap1.tipoimpr'      , false)
+		    	    				,'smap1.cdusuari_busq'     : _getValueByName('smap1.cdusuari_busq' , false)
+		    	    			};
+	                           cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params1, function()
+	                           {
+	                           
+	                           }, mcdinGrid);
+	                        }
+	                    );
+	                }
+	                else
+	                {
+	                    mensajeError(json.message);
+	                }
+	            }
+	            catch(e)
+	            {
+	                manejaException(e,ck);
+	            }
+	        }
+	        ,failure : function()
+	        {
+	            _setLoading(false,win);
+	            errorComunicacion(null,'Error al solicitar cambio de reverso');
+	        }
+	    });
+	}
+	catch(e)
+	{
+	    manejaException(e,ck);
+	}
+}
 ////// funciones //////
 <s:if test="false">
 </script>

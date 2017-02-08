@@ -323,9 +323,12 @@ public class MesaControlManagerImpl implements MesaControlManager
 		String paso = null;
 		try
 		{
-			
-		 mesaControlDAO.regeneraReverso(ntramite, cdsisrol, cdusuari) ;
-	
+			//Se agrega interacion para llamar reverso de tramite por n numero de tramites
+			String ntramites[] = ntramite.split(",");
+			for(String nmtramite : ntramites){
+				logger.debug(nmtramite);
+				mesaControlDAO.regeneraReverso(nmtramite, cdsisrol, cdusuari) ;
+		    }
 		}
 		catch(Exception ex)
 		{
