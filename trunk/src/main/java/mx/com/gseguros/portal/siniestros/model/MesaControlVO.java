@@ -81,6 +81,7 @@ public class MesaControlVO implements Serializable{
 	private String otvalor48mc;
 	private String otvalor49mc;
 	private String otvalor50mc;
+	private String cdtipsup;
 
 	
 	public String getNtramitemc() {
@@ -775,6 +776,16 @@ public class MesaControlVO implements Serializable{
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
-	}	
+	}
+
+
+    public String getCdtipsup() {
+        return cdtipsup;
+    }
+
+
+    public void setCdtipsup(String cdtipsup) {
+        this.cdtipsup = cdtipsup;
+    }	
 	
 }
