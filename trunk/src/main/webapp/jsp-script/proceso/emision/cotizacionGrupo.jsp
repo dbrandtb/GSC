@@ -1,25 +1,30 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>
 .valorNoOriginal {
-    background: #FFFF99;
+	background: #FFFF99;
 }
+
 .valorRenovacionColec {
-    background: #FFD299;
+	background: #FFD299;
 }
+
 ._p21_editorLectura {
-    visibility: hidden;
+	visibility: hidden;
 }
+
 .tatrigarHide {
-    display: none;
+	display: none;
 }
 </style>
 <!-- Paging Persistence library -->
-<script type="text/javascript" src="${ctx}/resources/extjs4/plugins/pagingpersistence/pagingselectionpersistence2.js?${now}"></script>
+<script type="text/javascript"
+	src="${ctx}/resources/extjs4/plugins/pagingpersistence/pagingselectionpersistence2.js?${now}"></script>
 <script>
 ////// overrides //////
 Ext.override(Ext.form.TextField,
@@ -2495,16 +2500,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             }
                                             debug('json.slist1[j]::', json.slist1[j]);
                                             debug('SWOBLIGA=' + json.slist1[j].SWOBLIGA + ', SWSELECCIONADO=' + json.slist1[j].SWSELECCIONADO + ', SWEDITABLE=' + json.slist1[j].SWEDITABLE);
-                                            //amparada ch
-                                            
-                                            var vChecked = false;
-                                            var vAmparada='N';
-
-                                            if ((json.slist1[j].SWOBLIGA == 'S') || (json.slist1[j].SWSELECCIONADO == 'S')) { 
-                                            	vChecked=true;
-                                            	vAmparada='S';
-                                            }
-                                            
                                             //para factores menor a cero
                                             var item = Ext.create('Ext.form.Panel',
                                             {
@@ -2527,11 +2522,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                         xtype       : 'checkbox' 
                                                         ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
-                                                        //,inputValue : 'S'
-                                                        //,checked    : json.slist1[j].SWOBLIGA == 'S' && (json.slist1[j].SWSELECCIONADO == 'S')
-                                                        ,inputValue : vAmparada
-                                                        ,checked    : vChecked
-                                                        
+                                                        ,inputValue : 'S'
+                                                        ,checked    : json.slist1[j].SWOBLIGA == 'S' || (json.slist1[j].SWSELECCIONADO == 'S')
                                                         ,readOnly   : json.slist1[j].SWEDITABLE == 'N'
                                                         ,style      : 'color:white;'
                                                         ,listeners  :
@@ -2539,7 +2531,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                             boxready : function(checkbox)
                                                             {
                                                                 var value=checkbox.getValue();
-                                                                debug('checkbox boxready:',value, me.up('form').cdgarant);
+                                                                debug('checkbox boxready:',value);
                                                                 var form = checkbox.up().up();
                                                                 for(var l=0;l<form.items.items.length;l++)
                                                                 {
@@ -2548,7 +2540,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                             }
                                                             ,change : function(me,value)
                                                             {
-                                                                debug('checkbox change1:',value,me.up('form').cdgarant);
+                                                                debug('checkbox change:',value,me.up('form').cdgarant);
                                                                 var form       = me.up('form');
                                                                 var miCdgarant = form.cdgarant;
                                                                 for(var l=0;l<form.items.items.length;l++)
@@ -2566,8 +2558,9 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         {
                                                                             debugError('Error cachado:',e);
                                                                         }
-                                                                    } 
+                                                                    }
                                                                 }
+                                                                
                                                                 //4MAT y 4AYM
                                                                 if(_p21_smap1.cdsisrol!='COTIZADOR'&&value)
                                                                 {
@@ -2600,7 +2593,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                         debugError('error inofensivo al validar 4mat contra 4aym',e);
                                                                     }
                                                                 }
-
+                                                                
                                                                 //4MED
                                                                 if(_p21_smap1.cdsisrol!='COTIZADOR')
                                                                 {
@@ -2794,7 +2787,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                 }
                                                                 
                                                               //4URM Y 4HOS
-                                                                
                                                                     try
                                                                     {
                                                                         if(miCdgarant=='4HOS'||miCdgarant=='4URM')
@@ -2811,11 +2803,10 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                                 cmpHos = me.up('form').up('panel').down('[cdgarant=4HOS]').down('checkbox');
                                                                                 cmpUrm = me;
                                                                             }
-                                                                            
                                                                             if(cmpHos.getValue()&&cmpUrm.getValue())
                                                                             {
-                                                                                
-                                                                                cmpHos.setValue(false);
+                                                                            	cmpHos.setValue(true);
+                                                                                cmpUrm.setValue(false);
                                                                                 mensajeWarning('Si seleccionaste la cobertura de Hospitalizaci&oacute;n no puede incluir la cobertura de Urgencias M&eacute;dicas');
                                                                             }
                                                                         }
@@ -2824,7 +2815,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                                                     {
                                                                         debugError('error inofensivo al validar dependencia de 4eac ante 4hos',e);
                                                                     }
-                                                                
                                                             }
                                                         }
                                                     }
@@ -3387,16 +3377,15 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             if(form.datosAnteriores.raw&&form.datosAnteriores.raw.amparada=='S')
                                             {
                                                 form.down('[name=amparada]').flagPuedesBorrar = false;
-                                                //form.down('[name=amparada]').setValue(true);
-                                                debug('se "checkeo" el box', form.down('[name=amparada]').getName());
+                                                form.down('[name=amparada]').setValue(true);
+                                                debug('se "checkeo" el box');
                                                 form.down('[name=amparada]').flagPuedesBorrar = true;
                                             }
                                             else
                                             {
-                                                //form.down('[name=amparada]').setValue(false);
-                                                debug('se "descheckeo" el box', form.down('[name=amparada]').getName());
+                                                form.down('[name=amparada]').setValue(false);
+                                                debug('se "descheckeo" el box');
                                             }
-                                            
                                             debug('cargado:',form);
                                         }
                                     }
@@ -3483,16 +3472,15 @@ function _p21_quitarTabsDetalleGrupo(letraGrupo)
 function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 {
      debug('>_p21_guardarGrupo:',panelGrupo);
+     
      var letraGrupo  = panelGrupo.letraGrupo;
      debug('letraGrupo:',letraGrupo);
-     
      var formsTatrigar = panelGrupo.down('[title=COBERTURAS DEL SUBGRUPO]').items.items;
      debug('formsTatrigar:',formsTatrigar);
      var tvalogars = [];
      var valido    = true;
      validoFlag=true;
      coberturaFlag='';
-     
      if(_p21_clasif==_p21_TARIFA_MODIFICADA||_p21_smap1.LINEA_EXTENDIDA=='N')
      {
          for(var i=0;i<formsTatrigar.length;i++)
@@ -3521,7 +3509,7 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 		            }
              	}
         	 }
-        	 if(false)//tvalogar.swobliga=='S'&&_p21_smap1.cdsisrol!='COTIZADOR')
+             if(false)//tvalogar.swobliga=='S'&&_p21_smap1.cdsisrol!='COTIZADOR')
              {
                  tvalogar['amparada']='S';
              }
@@ -3539,11 +3527,10 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
              datosIncompletos();
          }
      }
-     debug('valido ', valido, 'validoFlag ', validoFlag, 'coberturaFlag ', coberturaFlag);
-     if(valido)
-     {
-	     if (validoFlag!=false){
-	    	 debug('tvalogars:',tvalogars);
+     if(validoFlag){
+	     if(valido)
+	     {
+	         debug('tvalogars:',tvalogars);
 	         var recordGrupo=_p21_obtenerGrupoPorLetra(letraGrupo);
 	         recordGrupo['tvalogars'] = tvalogars;
 	         recordGrupo['valido']    = true;
@@ -3628,6 +3615,7 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 					                    		}
 					                    	},250);
 					                    });
+				                	
 				                }
 				                else
 				                {
@@ -3640,24 +3628,24 @@ function _p21_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 				                errorComunicacion();
 				            }
 				        });
-	         }//fin del if de validoFlag, no tiene else
-         }else{
-        	 if (validoFlag!=false){
-         	 	mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
-         	 } else{
-         		 debug('Entre en el ultimo else ', 'coberturaFlag ', coberturaFlag);
-         		 if(coberturaFlag=='4MED'){
-         	         mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo para la Cobertura de MEDICAMENTOS');
-         		 }
-         		 else{
-         			 if (coberturaFlag=='4AYM'){
-         			 	mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo para la Cobertura de AYUDA EN MATERNIDAD');
-         			 }
-         		 } 
-         	 }
-         }
+	         }else{
+	        	 mensajeCorrecto('Se han guardado los datos','Se han guardado los datos',_p21_setActiveResumen);
+	         }
+	     }
+	     
+	     debug('<_p21_guardarGrupo');
+     }// fin del if de validoFlag
+     else{
+    	 debug('Entre en el ultimo else ', 'coberturaFlag ', coberturaFlag);
+ 		 if(coberturaFlag=='4MED'){
+ 	         mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo para la Cobertura de MEDICAMENTOS');
+ 		 }
+ 		 else{
+ 			 if (coberturaFlag=='4AYM'){
+ 			 	mensajeWarning('Debe elegir el importe del Beneficio M&aacuteximo para la Cobertura de AYUDA EN MATERNIDAD');
+ 			 }
+ 		 } 
      }
-     debug('<_p21_guardarGrupo');
 }
 
 function _p21_obtenerGrupoPorLetra(letra)
@@ -7663,9 +7651,10 @@ se paso al archivo funcionesCotizacionGrupo.js por exceso de tamanio
 ////// funciones //////
 <%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
 </script>
-<script src="${ctx}/js/proceso/emision/funcionesCotizacionGrupo.js?now=${now}"></script>
+<script
+	src="${ctx}/js/proceso/emision/funcionesCotizacionGrupo.js?now=${now}"></script>
 </head>
 <body>
-<div id="_p21_divpri" style="height:1400px;"></div>
+	<div id="_p21_divpri" style="height: 1400px;"></div>
 </body>
 </html>
