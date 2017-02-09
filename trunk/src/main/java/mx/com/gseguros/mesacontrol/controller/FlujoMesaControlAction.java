@@ -886,7 +886,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				));
 		try
 		{
-			Utils.validateSession(session);
+			UserVO usuario = Utils.validateSession(session);
 			
 			Utils.validate(flujo  , "No se recibieron datos del flujo");
 			Utils.validate(params , "No se recibieron par\u00e1metros");
@@ -896,8 +896,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Utils.validate(cdvalidafk , "No se recibi\u00f3 clave de validaci\u00f3n");
 			
 			params.put("salida" , flujoMesaControlManager.ejecutaValidacion(
-					flujo
-					,cdvalidafk
+					flujo,
+					cdvalidafk,
+					usuario.getUser(),
+					usuario.getRolActivo().getClave()
 					));
 			
 			success = true;
