@@ -3972,6 +3972,7 @@ function executeCopy (text) {
     input.select();
     document.execCommand('Copy');
     input.remove();
+    alert('Copiado');
 }
 
 ////////////////////////////

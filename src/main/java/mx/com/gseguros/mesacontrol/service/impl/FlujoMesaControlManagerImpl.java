@@ -26,7 +26,6 @@ import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.despachador.dao.DespachadorDAO;
-import mx.com.gseguros.portal.despachador.model.ConstantesDespachador;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
@@ -1195,14 +1194,13 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public String ejecutaValidacion(
-			FlujoVO flujo
-			,String cdvalidafk
-			)throws Exception {
+	public String ejecutaValidacion(FlujoVO flujo, String cdvalidafk, String cdusuari, String cdsisrol) throws Exception {
 		logger.debug("{}", Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 				                     "\n@@@@@@ ejecutaValidacion @@@@@@",
-				                     "\n@@@@@@ flujo="      , flujo,
-				                     "\n@@@@@@ cdvalidafk=" , cdvalidafk));
+				                     "\n@@@@@@ flujo = "      , flujo,
+				                     "\n@@@@@@ cdvalidafk = " , cdvalidafk,
+                                     "\n@@@@@@ cdusuari = "   , cdusuari,
+                                     "\n@@@@@@ cdsisrol = "   , cdsisrol));
 		String salida = null,
 		       paso   = null;
 		try {
@@ -1220,7 +1218,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
     					"", // flujo.getNmpoliza(),
     					"", // flujo.getNmsituac(),
     					"", // flujo.getNmsuplem(),
-    					cdvalidafk);
+    					cdvalidafk,
+    					cdusuari,
+    					cdsisrol);
 		    }
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
@@ -2146,8 +2146,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			String cdusuariDestino = cdusuari,
 			       cdsisrolDestino = cdsisrol;
 			
-			boolean turnarAOtraPersona   = false,
-			        userSinPermisoEndoso = false;
+			boolean turnarAOtraPersona = false;
+			        //userSinPermisoEndoso = false;
 			
 			// Si el sistema genera el tramite o el tramite viene de sigs, hay que turnarlo
 			if (Constantes.USUARIO_SISTEMA.equals(cdusuari)
@@ -2158,7 +2158,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			}
 			
 			// Si la persona que registra el endoso de auto no tiene permisos, hay que turnarlo
-			if ((!turnarAOtraPersona)
+			/*if ((!turnarAOtraPersona)
 			        && origenMesa
 			        && FlujoMC.AUTOS_ENDOSO.getCdflujomc().equals(cdflujomc)
 			    ) {
@@ -2175,7 +2175,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			        turnarAOtraPersona   = true;
 			        userSinPermisoEndoso = true;
 			    }
-			}
+			}*/
 			
 			String commentsCreacion = Utils.join(
                     "Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: ",
@@ -2188,7 +2188,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			    cdusuariDestino = null;
 			    cdsisrolDestino = null;
 			    
-			    if (userSinPermisoEndoso) {
+			    /*if (userSinPermisoEndoso) {
     			    paso = "Guardando detalle";
                     logger.debug(paso);
                     mesaControlDAO.movimientoDetalleTramite(
@@ -2218,7 +2218,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
                             ConstantesDespachador.TIPO_ASIGNACION_REASIGNA);
                     
                     commentsCreacion = "Tr\u00e1mite turnado autom\u00e1ticamente por perfilamiento";
-			    }
+			    }*/
 			}
 			
 		    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
