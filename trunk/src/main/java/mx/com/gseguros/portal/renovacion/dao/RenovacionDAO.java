@@ -150,4 +150,6 @@ public interface RenovacionDAO
 	public InputStream obtenerDesglose(String cdunieco, String cdramo, String estado, String nmpoliza, List<Map<String, String>> lista) throws Exception;
 	
 	public void eliminacionRegistros(String ntramite,String cddocume) throws Exception;
+	
+	public void validaValorExclusion(String criterio, String valor) throws Exception;
 }

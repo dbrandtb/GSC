@@ -21,6 +21,7 @@ var _p25_urlConfirmarPolizaIndividual	      = '<s:url namespace="/renovacion"  a
 var _p25_urlActualizaValoresCotizacion	      = '<s:url namespace="/renovacion"  action="actualizaValoresCotizacion"				    />';
 var _p25_urlMovimientoCondiciones	      	  = '<s:url namespace="/renovacion"  action="movimientoCondicionesRenovacionIndividual"	    />';
 var _p25_urlMovimientoCalendario	      	  = '<s:url namespace="/renovacion"  action="movimientoCalendarizacionRenovacionIndividual" />';
+var _p25_urlValidaExclusionValor              = '<s:url namespace="/renovacion"  action="validaExclusionValor" />';
 var _p25_urlBuscarContratantes  		      = '<s:url namespace="/endoso" 	 action="cargarContratantesEndosoContratante" 		    />';
 var urlPantallaValosit           		      = '<s:url namespace="/"            action="pantallaValosit"             				    />';
 var urlEditarAsegurados 				      = '<s:url namespace="/" 		     action="editarAsegurados"							    />';           
@@ -42,7 +43,7 @@ var winCambioDomicilio;
 var wineditarContratante;
 var winMensaje;
 var panCondicion;
-
+var panAyuda;
 var pantallaValositParche = false;
 var _p22_parentCallback;
 var _NOMBRE_REPORTE_CARATULA;
@@ -137,6 +138,19 @@ itemsCalendarioColumns.push({
 		borraCalendario(record);
 	}
 });
+
+itemsCondicionesRenovacion.push({
+    xtype      : 'button',
+    itemId     : 'buttonHelpValue',
+    icon       : '${ctx}/resources/fam3icons/icons/help.png',
+    tooltip    : 'Ayuda',
+    arrowAlign : 'bottom',
+    handler    : function(view, rowIndex, colIndex, item, e, record){
+        debug('ayuda');
+        panAyuda.show();
+    }
+});
+
 //itemsCondicionesRenovacion.splice(2, 0, { border : 0 });
 ////// componentes dinamicos //////
 
@@ -1817,7 +1831,8 @@ Ext.onReady(function()
 	panCondicion = Ext.create('Ext.window.Window',{
     	itemId			: 'panCondicion',
     	autoScroll		: true,
-    	height			: 200,
+    	height			: 250,
+    	width           : 850,
     	modal			: false,
     	closable		: true,
     	closeAction     : 'hide',
@@ -1853,7 +1868,7 @@ Ext.onReady(function()
   						params['params.'+k] = datos[k];
   					}
   					i++;
-  				}
+  				}  				
   				params['params.operacion'] = panCondicion['operacion'];
   				var _p25_gridCondiciones   = _fieldById('_p25_gridCondiciones');
   				params['params.nmperiod']  = _p25_gridCondiciones.nmperiod;
@@ -1862,28 +1877,28 @@ Ext.onReady(function()
   				debug('params',params);
   				_mask('Guardando cambios');
   				Ext.Ajax.request({
-        			url       : _p25_urlMovimientoCondiciones,
+        	        url       : _p25_urlMovimientoCondiciones,
         			params    : params,
         			success  : function(response){
-	                	_unmask();
-	            		var resp = Ext.decode(response.responseText);
-	            		debug('resp',resp);	            		
-	            		if(resp.exito == true){
-	            			mensajeCorrecto('Mensaje','Guardado con exito');
-	            			var _p25_gridCondiciones = _fieldById('_p25_gridCondiciones');
-	            			_p25_gridCondiciones.store.reload();
-	            			me.up('window').close();
-	            		}
-	        			else{
-	        				mensajeError(resp.respuesta);
-	        			}
-        			},
-        			failure  : function(){
-        				_unmask();
-            			errorComunicacion();
-        			}
-    			});
-  			}
+	                    _unmask();
+	            	    var resp = Ext.decode(response.responseText);
+	            	    debug('resp',resp);	            		
+	            	    if(resp.exito == true){
+	            	        mensajeCorrecto('Mensaje','Guardado con exito');
+	            		    var _p25_gridCondiciones = _fieldById('_p25_gridCondiciones');
+	            		    _p25_gridCondiciones.store.reload();
+	            		    me.up('window').close();
+	            	    }
+	        		    else{
+	        	            mensajeError(resp.respuesta);
+	        		    }
+        		    },
+        		    failure  : function(){
+        		        _unmask();
+            		    errorComunicacion();
+        		    }
+    		    });
+  		    }
   		},
   		{ 
   			text: 'Cancelar',
@@ -1990,6 +2005,45 @@ Ext.onReady(function()
   			} 
   		}]
 	});
+	
+	panAyuda = Ext.create('Ext.window.Window',{
+        itemId          : 'panAyuda',
+        autoScroll      : true,
+        height          : 219,
+        width           : 350,
+        modal           : false,
+        closable        : true,
+        closeAction     : 'hide',
+        items           : [
+            Ext.create('Ext.form.Panel',{
+                title        : 'Ayuda en el formato de valores'
+                ,itemId      : '_p25_panAyuda'
+                ,defaults    : { 
+                    style : 'margin :5px;' 
+                }
+                ,layout      : {
+                    type     : 'table'
+                    ,columns : 3
+                }
+                ,items       : [
+                    {
+                        xtype       : 'displayfield',
+                        itemId      : 'idSuggestValue',
+                        allowBlank  : true,
+                        width       : 320
+                    }
+                ]
+                ,buttonAlign : 'center'
+            })
+        ],
+        buttons: [{
+            text    : 'Cerrar',
+            handler : function(me){
+                this.up('window').close();
+            }
+        }]
+    });
+	
     ////// componentes //////
     
     ////// contenido //////
@@ -2342,11 +2396,18 @@ Ext.onReady(function()
 	     	     _fieldByName('valor2',formCondicion).enable();
 	         }
 	 		 else{
+	 		    setTextHelpValue(_fieldByName('campo',formCondicion));
 	     	    _fieldByName('valor2',formCondicion).disable();
 	 		 }  		
 			 debug('< Cambiando criterio');
   	     }
   	 });
+	 
+	 _fieldByName('campo',formCondicion).on({
+         select : function(me){
+             setTextHelpValue(_fieldByName('campo', formCondicion).getValue());
+         }
+     });
 	 
 	 var formCalendario = panCalendario.down('form');
 	 
@@ -2642,6 +2703,9 @@ function _p25_renovarPolizaClic(button,e)
     	else if(pol['renovada'] == 'CANCELADA'){
     	    mensaje = mensaje+'La p\u00F3liza est\u00E1 cancelada '+'<br/>';
     	}
+    	else if(pol['renovada'] == 'BLOQUEADA'){
+            mensaje = mensaje+'La p\u00F3liza est\u00E1 bloqueada '+'<br/>';
+        }
     	else{
     	    mensaje = mensaje+'La p\u00F3liza est\u00E1 en proceso de renovaci\u00F3n'+'<br/>';
     	}
@@ -2724,7 +2788,7 @@ function _p25_renovarClic(button,e)
         var val 		= record.raw;
         val['cducreno']	= record.get('cducreno');
         //debug('record',record);
-        if(record.data['renovada'] == 'SI' || record.data['renovada'] == 'CANCELADA' || record.data['pagada'] == 'NO' || record.data['aseg_edad_val'] == 0){
+        if(record.data['renovada'] == 'SI' || record.data['renovada'] == 'CANCELADA' || record.data['renovada'] == 'BLOQUEADA' || record.data['pagada'] == 'NO' || record.data['aseg_edad_val'] == 0){
         	noRenova.push(val);
         }
         else{
@@ -3955,6 +4019,36 @@ function agregaCalendario(){
              });
          }
  }
+ 
+ function setTextHelpValue(campo){
+     debug('>setTextHelpValue',campo);
+     var ayuda = "";
+     if(campo === 'CDSUBRAM'){
+         ayuda = "Ramos de salud individual<br/>Formato: numerico 3 digitos<br/>Ejemplo:210";
+     }
+     else if(campo === 'CDAGENTE'){
+         ayuda = "Codigo de agente<br/>Formato: numerico<br/>Ejemplo:0";
+     }
+     else if(campo === 'FEPROREN'){
+         ayuda = "Fecha<br/>Formato: fecha simple DD/MM/YYYY<br/>Ejemplo:01/01/2017";
+     }
+     else if(campo === 'NMPOLIEX'){
+         ayuda = "Poliza<br/>Formato: No. sucursal a 4 digitos(1000)+No. Ramo a 3 digitos(210)+No. Poliza a 6 digistos(001114)+No. renovacion a 6 digitos(000000)<br/>Ejemplo:1000210001114000000";
+     }
+     else if(campo === 'CDPERSON'){
+         ayuda = "Codigo de contratante<br/>Formato: numerico<br/>Ejemplo:524003";
+     }
+     else if(campo === 'CDRETEN'){
+         ayuda = "Codigo de reteneroda<br/>Formato: No. sucursal a 4 digitos(1000)+Codigo retenedora a 3 digitos(004)<br/>Ejemplo:1000004";
+     }
+     else if(campo === 'CDUNIECO'){
+         ayuda = "Codigo de sucursal<br/>Formato: numerico<br/>Ejemplo:1000";
+     }
+     idSuggestValue = _fieldById("idSuggestValue");
+     idSuggestValue.setValue(ayuda);
+     debug('<setTextHelpValue',campo);
+ }
+
 ////// funciones //////
 </script>
 </head>
