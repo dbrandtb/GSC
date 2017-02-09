@@ -11,13 +11,18 @@ import java.util.Map;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
+import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.HttpUtil;
@@ -66,6 +71,11 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	@Autowired
 	private MesaControlManager mesaControlManager;
 	
+    @Autowired
+    private SiniestrosManager siniestrosManager;
+    
+    @Autowired
+    private ConsultasPolizaManager consultasPolizaManager;
 	/**
 	 * Metodo para la descarga de los archivos de los Movimientos en los casos
 	 * de BO
@@ -268,6 +278,31 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 				smap1.put("readOnly" , "");
 			}
 		}
+		
+		if(smap1.containsKey("ntramite")){
+		    try {
+		        String ntramite = smap1.get("ntramite");
+	            List<MesaControlVO> listaMesaControl;
+	            listaMesaControl = siniestrosManager.getConsultaListaMesaControl(ntramite);
+	            if(TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase(listaMesaControl.get(0).getCdtipsup())){
+	                PolizaAseguradoVO polizaAseguradoVO = new PolizaAseguradoVO();
+                    polizaAseguradoVO.setCdunieco(listaMesaControl.get(0).getCduniecomc());
+                    polizaAseguradoVO.setCdramo(listaMesaControl.get(0).getCdramomc());
+                    polizaAseguradoVO.setEstado(listaMesaControl.get(0).getEstadomc());
+                    polizaAseguradoVO.setNmpoliza(listaMesaControl.get(0).getNmsolicimc());
+                    List<PolizaDTO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
+                    if (lista != null && !lista.isEmpty()) {
+                        consultasManager.copiarArchivosRenovacionColectivo(listaMesaControl.get(0).getCduniecomc(),listaMesaControl.get(0).getCdramomc(),"M",
+                                        Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"",ntramite, this.getText("ruta.documentos.poliza"));
+                    } 
+	            }
+	            
+            } catch (Exception e) {
+                logger.error("error al validar ventana de documentos bloqueada",e);
+            }
+           
+		}
+		
 		
 		String proceso = smap1.get("lista");
 		if(StringUtils.isNotBlank(proceso))
