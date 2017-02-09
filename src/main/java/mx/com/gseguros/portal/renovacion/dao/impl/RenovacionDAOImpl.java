@@ -433,7 +433,8 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
 						"extra_prima",
 						"nmpoliex",
 						"nmpolant",
-						"forma_pago"
+						"forma_pago",
+						"cdsubram"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1025,4 +1026,26 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
                 compile();
             }
         }
+        
+        @Override
+        public void validaValorExclusion(String criterio, String valor) throws Exception{
+            Map<String,String>params=new LinkedHashMap<String,String>();
+            params.put("pv_criterio_i", criterio);
+            params.put("pv_valor_i"   , valor);
+            ejecutaSP(new ValidaValorExclusion(getDataSource()),params);
+        }
+        
+        protected class ValidaValorExclusion extends StoredProcedure{
+            protected ValidaValorExclusion(DataSource dataSource)
+            {
+                super(dataSource,"PKG_RENOVACION_IND.p_valida_trenova_value");
+                declareParameter(new SqlParameter("pv_criterio_i" , OracleTypes.VARCHAR));
+                declareParameter(new SqlParameter("pv_valor_i"   , OracleTypes.VARCHAR));
+                declareParameter(new SqlOutParameter("pv_valido_o", OracleTypes.VARCHAR));
+                declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+                declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+                declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+                compile();
+            }
+        }  
 }
