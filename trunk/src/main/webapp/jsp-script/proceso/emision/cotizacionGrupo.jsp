@@ -3829,8 +3829,10 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
       	//parche para numcontrato>
       	if ((_fieldByName('numcontrato').getValue()=="") || (Ext.isEmpty(_fieldByName('numcontrato')) ) || (_fieldByName('numcontrato').getValue()==null))
         {
-        	valido=false;
-        	mensajeWarning('Verificar los datos del numero de contrato', _p21_setActiveConcepto);
+        	//valido=false;
+        	//mensajeWarning('Verificar los datos del numero de contrato', _p25_setActiveConcepto);
+      		_fieldByName('numcontrato').setValue('0');
+      		valido=true;
         }
       	else{
       		if ((_fieldByName('numcontrato').getValue()=="0") && (_p21_smap1.cdunieco ==1403))
