@@ -128,5 +128,5 @@ public interface RenovacionManager
 			String feaplica,
 			String operacion) throws Exception;
 	
-	public void validaValorExclusion(String criterio, String valor, String valor2) throws Exception;
+	public String validaValorExclusion(String criterio, String valor) throws Exception;
 }
