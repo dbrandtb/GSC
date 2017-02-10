@@ -8,14 +8,15 @@
 
 <script>
 ////// urls //////
-var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"            />'
-    ,_p54_urlRecuperarPoliza          = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnica"         />'
-    ,_p54_urlRegistrarTramite         = '<s:url namespace="/flujomesacontrol" action="registrarTramite"             />'
-    ,_p54_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto"     />'
-    ,_p54_urlRecuperarPolizaDanios    = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnicaDanios"   />'
-    ,_p54_urlRecuperarPolizaSIGS      = '<s:url namespace="/emision"          action="cargarPoliza"                 />'
-    ,_p54_urlRecuperarChecklist       = '<s:url namespace="/flujomesacontrol" action="recuperarChecklistInicial"    />'
-    ,_p54_urlactulizaNumFolioMcSigs   = '<s:url namespace="/consultasPoliza"  action="actualizaEstatusTramiteMCsigs"/>';
+var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"             />'
+    ,_p54_urlRecuperarPoliza          = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnica"          />'
+    ,_p54_urlRegistrarTramite         = '<s:url namespace="/flujomesacontrol" action="registrarTramite"              />'
+    ,_p54_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto"      />'
+    ,_p54_urlRecuperarPolizaDanios    = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnicaDanios"    />'
+    ,_p54_urlRecuperarPolizaSIGS      = '<s:url namespace="/emision"          action="cargarPoliza"                  />'
+    ,_p54_urlRecuperarChecklist       = '<s:url namespace="/flujomesacontrol" action="recuperarChecklistInicial"     />'
+    ,_p54_urlactulizaNumFolioMcSigs   = '<s:url namespace="/consultasPoliza"  action="actualizaEstatusTramiteMCsigs" />'
+    ,_p54_urlCargarParametrosCoti     = '<s:url namespace="/emision"          action="obtenerParametrosCotizacion"   />';
 ////// urls //////
 
 ////// variables //////
@@ -1377,6 +1378,69 @@ Ext.onReady(function()
                                                         me.up('window').down('[name=CDTIPSITEND]').setValue(jsonSIGS.smap1.cdtipsit);
                                                         me.up('window').down('[name=NMPOLIZA]').setValue('0');
                                                         
+                                                        if (tipoflot === 'P' || tipoflot === 'F') {
+                                                            var mascaraContarCamiones;
+                                                            try {
+                                                                mascaraContarCamiones = _maskLocal();
+                                                                Ext.Ajax.request({
+                                                                    url    : _p54_urlCargarParametrosCoti,
+                                                                    params : {
+                                                                        'smap1.parametro' : 'MAX_CAMIONES_PYME_FLOT',
+                                                                        'smap1.cdramo'    : '5',
+                                                                        'smap1.cdtipsit'  : 'AR',
+                                                                        'smap1.clave4'    : tipoflot
+                                                                    },
+                                                                    success : function (response) {
+                                                                        mascaraContarCamiones.close();
+                                                                        try {
+                                                                            var json = Ext.decode(response.responseText);
+                                                                            debug('AJAX param MAX_CAMIONES_PYME_FLOT:', json);
+                                                                            if (json.exito !== true) {
+                                                                                throw json.respuesta;
+                                                                            }
+                                                                            
+                                                                            var cdtipsitCamiones = json.smap1.P1VALOR;
+                                                                            
+                                                                            debug('cdtipsitCamiones:', cdtipsitCamiones);
+                                                                            
+                                                                            if (Ext.isEmpty(cdtipsitCamiones)) {
+                                                                                throw 'No aplica validacion';
+                                                                            }
+                                                                            
+                                                                            var nCamiones = 0;
+                                                                            
+                                                                            for (var i = 0; i < jsonSIGS.slist1.length; i++) {
+                                                                                if (cdtipsitCamiones.indexOf('|' + jsonSIGS.slist1[i].CDTIPSIT + '|') != -1) {
+                                                                                    nCamiones = nCamiones + 1;
+                                                                                }
+                                                                            }
+                                                                            
+                                                                            if (nCamiones > 0) {
+                                                                                var form = _p54_windowNuevo.down('form');
+                                                                                form.add({
+                                                                                    xtype : 'numberfield',
+                                                                                    name : 'otvalor08',
+                                                                                    value : nCamiones,
+                                                                                    hidden : true
+                                                                                });
+                                                                            }
+                                                                            
+                                                                        } catch (e) {
+                                                                            debugError('error al contar camiones (2):', e);
+                                                                        }
+                                                                    },
+                                                                    failure : function() {
+                                                                        mascaraContarCamiones.close();
+                                                                        throw 'error de comunicacion al cargar parametro MAX_CAMIONES_PYME_FLOT';
+                                                                    }
+                                                                });
+                                                            } catch (e) {
+                                                                try {
+                                                                    mascaraContarCamiones.close();
+                                                                } catch (e) {}
+                                                                debugError('error al contar camiones (1):', e);
+                                                            }
+                                                        }
                                                     }
                                                 }
                                                 ,{
