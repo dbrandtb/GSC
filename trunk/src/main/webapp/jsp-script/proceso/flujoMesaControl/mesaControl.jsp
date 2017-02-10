@@ -1410,19 +1410,27 @@ Ext.onReady(function()
                                                                             var nCamiones = 0;
                                                                             
                                                                             for (var i = 0; i < jsonSIGS.slist1.length; i++) {
+                                                                                debug('iterando:', jsonSIGS.slist1[i]);
                                                                                 if (cdtipsitCamiones.indexOf('|' + jsonSIGS.slist1[i].CDTIPSIT + '|') != -1) {
                                                                                     nCamiones = nCamiones + 1;
                                                                                 }
+                                                                                debug('nCamiones al final de la iteracion:', nCamiones);
                                                                             }
                                                                             
                                                                             if (nCamiones > 0) {
+                                                                                debug('nCamiones SI HAY!');
                                                                                 var form = _p54_windowNuevo.down('form');
+                                                                                try {
+                                                                                    form.remove(form.down('[name=otvalor08]'));
+                                                                                } catch(e) {}
                                                                                 form.add({
                                                                                     xtype : 'numberfield',
                                                                                     name : 'otvalor08',
                                                                                     value : nCamiones,
                                                                                     hidden : true
                                                                                 });
+                                                                            } else {
+                                                                                nCamiones('nCamiones NO HAY');
                                                                             }
                                                                             
                                                                         } catch (e) {
