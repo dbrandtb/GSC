@@ -1424,11 +1424,14 @@ Ext.onReady(function()
                                                                                     form.remove(form.down('[name=otvalor08]'));
                                                                                 } catch(e) {}
                                                                                 form.add({
-                                                                                    xtype : 'numberfield',
-                                                                                    name : 'otvalor08',
-                                                                                    value : nCamiones,
-                                                                                    hidden : true
+                                                                                    xtype      : 'numberfield',
+                                                                                    name       : 'otvalor08',
+                                                                                    fieldLabel : 'numero de camiones',
+                                                                                    value      : '',
+                                                                                    hidden     : true
                                                                                 });
+                                                                                form.doLayout();
+                                                                                form.down('[name=otvalor08]').setValue(nCamiones);
                                                                             } else {
                                                                                 nCamiones('nCamiones NO HAY');
                                                                             }
