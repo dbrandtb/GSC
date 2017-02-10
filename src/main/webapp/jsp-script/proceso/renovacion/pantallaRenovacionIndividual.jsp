@@ -1860,6 +1860,7 @@ Ext.onReady(function()
   				var params = {};
   				debug('_p25_condiciones.form',_p25_condiciones.form);
   				var i = 0;
+  				var valid = true;
   				for(var k in datos){  					
   					if(k === 'criterio'){
   	  					params['params.'+k] = _p25_condiciones.form.getFields().items[i].rawValue;
@@ -1875,29 +1876,44 @@ Ext.onReady(function()
   				params['params.cdunieco']  = _p25_gridCondiciones.cdunieco;
   				params['params.cdramo']    = _p25_gridCondiciones.cdramo;
   				debug('params',params);
-  				_mask('Guardando cambios');
-  				Ext.Ajax.request({
-        	        url       : _p25_urlMovimientoCondiciones,
-        			params    : params,
-        			success  : function(response){
-	                    _unmask();
-	            	    var resp = Ext.decode(response.responseText);
-	            	    debug('resp',resp);	            		
-	            	    if(resp.exito == true){
-	            	        mensajeCorrecto('Mensaje','Guardado con exito');
-	            		    var _p25_gridCondiciones = _fieldById('_p25_gridCondiciones');
-	            		    _p25_gridCondiciones.store.reload();
-	            		    me.up('window').close();
-	            	    }
-	        		    else{
-	        	            mensajeError(resp.respuesta);
-	        		    }
-        		    },
-        		    failure  : function(){
-        		        _unmask();
-            		    errorComunicacion();
-        		    }
-    		    });
+  				if(params['params.campo'] === 'FEPROREN'){
+  				    debug('es fecha',isValidDate(params['params.valor']));
+                    if(!isValidDate(params['params.valor'])){
+                        valid = false;
+                        mensajeError('El valor de fecha no es valido (DD/MM/YYYY)');
+                    }
+                    if(!Ext.isEmpty(params['params.valor2'])){
+                        if(!isValidDate(params['params.valor2'])){
+                            valid = false;
+                            mensajeError('El valor 2 de fecha no es valido (DD/MM/YYYY)');
+                        }
+                    }
+    		    }
+    		    if (valid === true){
+    		        _mask('Guardando cambios');    		    
+                    Ext.Ajax.request({
+                        url       : _p25_urlMovimientoCondiciones,
+                        params    : params,
+                        success  : function(response){
+                            _unmask();
+                            var resp = Ext.decode(response.responseText);
+                            debug('resp',resp);                      
+                            if(resp.exito == true){
+                                mensajeCorrecto('Mensaje','Guardado con exito');
+                                var _p25_gridCondiciones = _fieldById('_p25_gridCondiciones');
+                                _p25_gridCondiciones.store.reload();
+                                me.up('window').close();
+                            }
+                            else{
+                                mensajeError(resp.respuesta);
+                            }
+                        },
+                        failure  : function(){
+                            _unmask();
+                            errorComunicacion();
+                        }
+                    });
+                }
   		    }
   		},
   		{ 
