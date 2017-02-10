@@ -139,7 +139,11 @@ itemsCalendarioColumns.push({
 	}
 });
 
-itemsCondicionesRenovacion.push({
+//itemsCondicionesRenovacion.splice(3, 0, { border : 0 });
+
+itemsCondicionesRenovacion.splice(3, 0, { border : 0 });
+
+itemsCondicionesRenovacion.splice(7,0, {
     xtype      : 'button',
     itemId     : 'buttonHelpValue',
     icon       : '${ctx}/resources/fam3icons/icons/help.png',
@@ -151,7 +155,6 @@ itemsCondicionesRenovacion.push({
     }
 });
 
-//itemsCondicionesRenovacion.splice(2, 0, { border : 0 });
 ////// componentes dinamicos //////
 
 Ext.onReady(function()
@@ -1832,7 +1835,7 @@ Ext.onReady(function()
     	itemId			: 'panCondicion',
     	autoScroll		: true,
     	height			: 250,
-    	width           : 850,
+    	width           : 900,
     	modal			: false,
     	closable		: true,
     	closeAction     : 'hide',
@@ -1845,7 +1848,7 @@ Ext.onReady(function()
                 }
                 ,layout      : {
                     type     : 'table'
-                    ,columns : 3
+                    ,columns : 4
                 }
                 ,items       : itemsCondicionesRenovacion
                 ,buttonAlign : 'center'
