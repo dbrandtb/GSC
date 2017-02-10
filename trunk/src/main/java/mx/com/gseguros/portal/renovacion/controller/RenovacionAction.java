@@ -846,6 +846,37 @@ public class RenovacionAction extends PrincipalCoreAction
 	    return SUCCESS;
 	}
 	
+	public String validateValueExclusion(){
+	    logger.info(
+                new StringBuilder()
+                .append("\n###### params=").append(params)
+                .append("\n###### Entrando a validateValueExclusion ######")
+                .append("\n##########################################################")
+                .toString()
+                );
+        try{
+            Utils.validate(params, "No se recibieron parametros");
+            String criterio = params.get("criterio");
+            String valor    = params.get("valor");
+            Utils.validate(criterio, "No se recibio el criterio",
+                           valor,    "No se recibio el valor");
+            respuesta = renovacionManager.validaValorExclusion(criterio, valor);
+            exito = true;
+        }
+        catch(Exception ex){
+            exito     = false;
+            respuesta = Utils.manejaExcepcion(ex);
+        }
+        logger.info(
+                new StringBuilder()
+                .append("\n###### exito=").append(exito)
+                .append("\n###### respuesta=").append(respuesta)
+                .append("\n###### Saliendo a validateValueExclusion ######")
+                .append("\n##########################################################")
+                .toString()
+                );
+        return SUCCESS;
+	}
 	//Getters y setters
 	public boolean isSuccess() {
 		return success;

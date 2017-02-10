@@ -30,6 +30,7 @@ var panDatComUrlDoc2                          = '<s:url namespace="/documentos" 
 var compleUrlViewDoc             			  = '<s:url namespace="/documentos"  action="descargaDocInline"           				    />';
 var urlRecotizar                 		      = '<s:url namespace="/"            action="recotizar"                   				    />';
 var _p25_urlObtenerItemsTvalopol		      = '<s:url namespace="/renovacion"  action="obtenerItemsTvalopol"						    />';
+var _p25_urlValidateValueExclusion            = '<s:url namespace="/renovacion"  action="validateValueExclusion"                        />';
 var sesionDsrol   						      = _GLOBAL_CDSISROL;
 var _p25_storePolizas;
 var _p25_storePolizasMasivas;
@@ -155,6 +156,19 @@ itemsCondicionesRenovacion.splice(7,0, {
     }
 });
 
+itemsCondicionesRenovacion.push({ 
+    xtype       : 'displayfield',
+    itemId      : 'idValueExclu',
+    allowBlank  : true,
+    width       : 320 
+});
+
+itemsCondicionesRenovacion.push({ 
+    xtype       : 'displayfield',
+    itemId      : 'idValueExclu2',
+    allowBlank  : true,
+    width       : 320 
+});
 ////// componentes dinamicos //////
 
 Ext.onReady(function()
@@ -2425,8 +2439,86 @@ Ext.onReady(function()
 	 _fieldByName('campo',formCondicion).on({
          select : function(me){
              setTextHelpValue(_fieldByName('campo', formCondicion).getValue());
-         }
+         }        
      });
+	 
+	 _fieldByName('valor',formCondicion).on({         
+         blur   : function(me){
+            var campo = _fieldByName('campo',formCondicion).getValue();
+            debug('campo ',campo);
+            debug('me '   ,me.getValue());
+            if(!Ext.isEmpty(campo)){
+                _mask('Validando...');
+                Ext.Ajax.request({
+                    url     : _p25_urlValidateValueExclusion
+                    ,params : {
+                        'params.criterio'  : campo,
+                        'params.valor'     : me.getValue()
+                    }
+                    ,success : function(response){
+                        _unmask();
+                        var ck = '';
+                        var json = Ext.decode(response.responseText);
+                        try{                         
+                            if(json.exito === true){
+                                _fieldById('idValueExclu').setValue(json.respuesta);
+                                debug('respuesta',json.respuesta);                                                     
+                            }
+                            else{
+                                mensajeError(json.respuesta);
+                            }
+                        }
+                        catch(e){
+                            manejaException(e,ck);
+                        }
+                    }
+                    ,failure : function(){
+                        _unmask();
+                        errorComunicacion(null,'Error de red');
+                    }
+                });
+            }    
+        }         
+    });
+	 
+	 _fieldByName('valor2',formCondicion).on({         
+         blur   : function(me){
+            var campo = _fieldByName('campo',formCondicion).getValue();
+            debug('campo ',campo);
+            debug('me '   ,me.getValue());
+            if(!Ext.isEmpty(campo)){
+                _mask('Validando...');
+                Ext.Ajax.request({
+                    url     : _p25_urlValidateValueExclusion
+                    ,params : {
+                        'params.criterio'  : campo,
+                        'params.valor'     : me.getValue()
+                    }
+                    ,success : function(response){
+                        _unmask();
+                        var ck = '';
+                        var json = Ext.decode(response.responseText);
+                        try{                         
+                            if(json.exito === true){
+                                _fieldById('idValueExclu2').setValue(json.respuesta);
+                                debug('respuesta',json.respuesta);                                                     
+                            }
+                            else{
+                                mensajeError(json.respuesta);
+                            }
+                        }
+                        catch(e){
+                            manejaException(e,ck);
+                        }
+                    }
+                    ,failure : function(){
+                        _unmask();
+                        errorComunicacion(null,'Error de red');
+                    }
+                });
+            }
+        }         
+    });
 	 
 	 var formCalendario = panCalendario.down('form');
 	 

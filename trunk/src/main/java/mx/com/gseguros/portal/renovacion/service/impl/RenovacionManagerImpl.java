@@ -1050,9 +1050,6 @@ public class RenovacionManagerImpl implements RenovacionManager
 		String paso = "";
 		try{
 			paso = "Antes de entrar a mov condiciones de renovacion programada";
-			if(operacion.equals("I")){
-			    validaValorExclusion(campo, valor, valor2);
-			}
 			renovacionDAO.movimientoCondicionesRenovacionProgramada(nmperiod, cdunieco, cdramo, anio, mes, criterio, campo, valor, valor2, operacion);
 			paso = "Despues de mov condiciones de renovacion programada";
 		}
@@ -1105,18 +1102,17 @@ public class RenovacionManagerImpl implements RenovacionManager
 	}
 	
 	@Override
-	public void validaValorExclusion(String criterio, String valor, String valor2) throws Exception{
+	public String validaValorExclusion(String criterio, String valor) throws Exception{
 	    String paso = "";
+	    String result = "";
 	    try{
 	        paso = "Validando valor de exclusion";
-	        renovacionDAO.validaValorExclusion(criterio, valor);
-	        if(null != valor2){
-	            renovacionDAO.validaValorExclusion(criterio, valor2);
-	        }
+	        result = renovacionDAO.validaValorExclusion(criterio, valor);
 	    }
 	    catch(Exception ex){
 	        Utils.generaExcepcion(ex, paso);
 	    }
+	    return result;
 	}
 	
 	//Getters y setters

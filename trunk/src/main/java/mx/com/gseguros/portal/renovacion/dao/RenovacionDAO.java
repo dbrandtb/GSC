@@ -151,5 +151,5 @@ public interface RenovacionDAO
 	
 	public void eliminacionRegistros(String ntramite,String cddocume) throws Exception;
 	
-	public void validaValorExclusion(String criterio, String valor) throws Exception;
+	public String validaValorExclusion(String criterio, String valor) throws Exception;
 }

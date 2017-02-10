@@ -1028,11 +1028,15 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
         }
         
         @Override
-        public void validaValorExclusion(String criterio, String valor) throws Exception{
+        public String validaValorExclusion(String criterio, String valor) throws Exception{
             Map<String,String>params=new LinkedHashMap<String,String>();
+            String result;
             params.put("pv_criterio_i", criterio);
             params.put("pv_valor_i"   , valor);
-            ejecutaSP(new ValidaValorExclusion(getDataSource()),params);
+            Map<String, Object> resultado = ejecutaSP(new ValidaValorExclusion(getDataSource()),params);                        
+            result = (String) resultado.get("pv_valido_o");
+            logger.debug("resultado:"+result);
+            return result;
         }
         
         protected class ValidaValorExclusion extends StoredProcedure{

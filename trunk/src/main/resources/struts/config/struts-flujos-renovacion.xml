@@ -60,5 +60,8 @@
         <action name="validaAgenteSIGS" class="renovacionAction" method="validaAgenteSIGS">
             <result type="json" />
         </action>
+        <action name="validateValueExclusion" class="renovacionAction" method="validateValueExclusion">
+            <result type="json" />
+        </action>
     </package>
 </struts>
