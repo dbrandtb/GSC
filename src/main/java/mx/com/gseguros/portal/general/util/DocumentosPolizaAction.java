@@ -705,6 +705,65 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		}
 	}
 	
+	/**
+	 * Lista los archivos de un directorio especificado
+	 * @param path ruta del directorio a explorar
+	 * @return 
+	 */
+	public String  listarDirectorio(){
+		try {
+			success = true;	        
+
+			UserVO usuario = (UserVO)session.get("USUARIO");
+            if(usuario == null){
+                throw new ApplicationException("No hay usuario en sesion");
+            }
+
+			Utils.validate(path, "No se recibio el parametro path");
+	        File f = new File(path);
+	        
+	        slist1= new ArrayList<Map<String, String>>();
+	        
+	        if (f.exists()){
+	        	File[] ficheros = f.listFiles();
+	        	File fichero;
+	        	
+	        	for (int i=0;i<ficheros.length;i++){
+	        		smap1 = new HashMap<String, String>();
+	        		fichero = ficheros[i];
+		        	logger.debug(fichero.getName());
+		        	
+		        	String permisoLectura = (fichero.canRead())?"r":"";
+		        	String permisoEscritura= (fichero.canWrite())?"w":"";
+		        	String permisoEjecucion = (fichero .canExecute())?"x":"";
+		        	String permisos=permisoLectura+permisoEscritura+permisoEjecucion;
+		
+		        	smap1.put("nombreDoc", fichero.getName());
+		        	
+		        	long unidad = 1048576;
+		        	long bytesFichero = fichero.length();
+		        	long megasFichero = bytesFichero / unidad;
+		        	smap1.put("tamDoc", (String.valueOf(megasFichero)+" MB"));//tam en bytes para convertir a MB debe dividir entre 1048576
+		    		
+		        	long fechaFichero = fichero.lastModified(); //fecha en milisegundos
+		        	String sFechaFichero = Utils.formateaFechaMilisegundos(fechaFichero); 
+
+		        	smap1.put("modificado", sFechaFichero);
+		        	smap1.put("permisos", permisos);
+		        	smap1.put("propietario", "--");
+		        	slist1.add(smap1);	
+		        	exito=true;
+	        	}
+	        	
+	        } else { 
+	        	throw new Exception("No existe el directorio: "+path) ;
+	        }
+		} catch (Exception e) {
+			respuesta = Utils.manejaExcepcion(e);
+		}
+		return SUCCESS;
+	}
+	
 	//Getters and setters:
 	
 	public InputStream getFileInputStream() {
