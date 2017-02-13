@@ -14,6 +14,7 @@
     var storeIncisos_p3;
     var panelCoberturasp3;
     var paramsincisos    = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
+    var slist2		     = <s:property value="%{convertToJSON('slist2')}" escapeHtml="false" />;
     var _p3_smap1        = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
     var pantallaOrigen   = '<s:property value="smap1.pantallaOrigen" />';
     var inputCduniecop3  = '<s:property value="smap1.CDUNIECO" />';
@@ -493,7 +494,8 @@ function endcobSumit(form,confirmar)
                     root : 'slist1'
                 }
             },
-            autoLoad : false
+            autoLoad : false,
+
         });
         
         storeCoberturasEditadas_p3 = Ext.create('Ext.data.Store', {
@@ -777,6 +779,24 @@ function endcobSumit(form,confirmar)
                                 debug('inciso seleccionado?', hayIncisoSeleccionado);
                                 debug('incisoSelected=', incisoSelected);
                                 debug('cellIndex=', cellIndex);
+                                
+                                try{
+                        			if(_p3_smap1.CDRAMO==Ramo.ServicioPublico &&
+                        			   _p3_smap1.cdtipsup == TipoEndoso.BAJA_COBERTURAS){ 
+                           				var garant=$.grep(slist2,function(ele){
+                           					return ele.cdgarant==record.get("GARANTIA")
+                           				});
+                           				
+                       					if(garant[0].SWOBLIG == "1"){
+                       						mensajeWarning('Esta cobertura es incancelable');
+                       						return;
+                       					}
+                        			
+                            		}
+                        		}catch(e){
+                        			debugError(e)
+                        		}
+                                
                                 
                                 if(cellIndex==1 && hayIncisoSeleccionado) {
                                 	if(record.get('SWOBLIGA')=='N' && inputAltabajap3=='baja') {

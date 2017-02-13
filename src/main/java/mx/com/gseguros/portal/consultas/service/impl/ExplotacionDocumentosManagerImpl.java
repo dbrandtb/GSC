@@ -574,6 +574,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
                                     , hoja.length() > 1 ? ("M".equals(papelDoc) ? charola2 : charola1) : charola1,
                                     (esDuplex && swImpDpxArchivo));
                         } catch (Exception e) {
+                        	logger.error("Error al ejecutar el comando de impresion: ",e);
                             String dsdocume = archivo.get("dsdocume");
                             hayErrores.set(true);
                             BufferedWriter bw = new BufferedWriter(new FileWriter(noExiste, true));

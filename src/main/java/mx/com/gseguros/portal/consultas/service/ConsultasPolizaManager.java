@@ -353,4 +353,6 @@ public interface ConsultasPolizaManager {
     public Map<String, String> obtieneTvalopol(String cdunieco, String cdramo, String estado, String nmpoliza)
             throws Exception;
 
+	public List<Map<String, String>> obtieneCoberturas(String cdramo, String cdtipsit, String cdplan) throws Exception;
+
 }

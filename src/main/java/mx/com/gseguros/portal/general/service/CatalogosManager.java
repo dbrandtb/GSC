@@ -260,4 +260,6 @@ public interface CatalogosManager {
     public List<GenericVO> obtieneAdministradoraXAgente(String pv_cdagente_i) throws Exception;
     
     public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit, String nivel) throws Exception;
+
+	public List<GenericVO> obtieneComentariosNegocio(String cdramo, String cdtipsit, String negocio) throws Exception;
 }

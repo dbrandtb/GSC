@@ -21,6 +21,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
@@ -44,6 +45,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private Map<String,Object>       omap1;
 	private Map<String,Item>         imap;
 	private List<Map<String,String>> slist1;
+	private List<Map<String,String>> slist2;
 	private PersonasManager          personasManager;
 	private String                   error;
 	
@@ -59,6 +61,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	@Autowired
 	private EndososManager endososManager;
+	
+	@Autowired
+	private ConsultasPolizaManager consultasPolizaManager;
 	
 	public EndososAutoAction()
 	{
@@ -1494,7 +1499,11 @@ public class EndososAutoAction extends PrincipalCoreAction
 			smap1.put("tstamp" , Utils.generaTimestamp());
 			
 			imap = endososAutoManager.endosoDevolucionPrimas(cdtipsup, cdramo);
-			
+			try{
+				slist2=consultasPolizaManager.obtieneCoberturas(smap1.get("CDRAMO"), smap1.get("CDTIPSIT"), smap1.get("CDMEJRED"));
+			}catch(Exception ex){
+				logger.error("Error obteniendo las coberturas", ex);
+			}
 			result = SUCCESS;
 		}
 		catch(Exception ex)
@@ -3154,5 +3163,13 @@ public class EndososAutoAction extends PrincipalCoreAction
 
 	public void setFlujo(FlujoVO flujo) {
 		this.flujo = flujo;
+	}
+	
+	public List<Map<String, String>> getSlist2() {
+		return slist2;
+	}
+
+	public void setSlist2(List<Map<String, String>> slist2) {
+		this.slist2 = slist2;
 	}
 }

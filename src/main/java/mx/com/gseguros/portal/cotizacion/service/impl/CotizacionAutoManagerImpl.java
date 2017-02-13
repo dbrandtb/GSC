@@ -50,6 +50,7 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -691,6 +692,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				    tatri.setOculto(true);
 				    aux.add(tatri);
 				}
+				else if(tatri.getLabel().equals("NEGOCIO") && cdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo()) ){
+					
+					resp.getSmap().put("NEGOCIO" , tatri.getDefaultValue());
+					tatri.setOculto(true);
+				    aux.add(tatri);
+				}
 			}
 			tatrisit=aux;
 			
@@ -744,6 +751,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			gc.generaComponentes(tatripoldxn, true, false, true, false, false, false);
 			resp.getImap().put("panelDxnItems"  , gc.getItems());
+			
+			List<ComponenteVO>ramo6 = pantallasDAO.obtenerComponentes(
+					TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,cdunieco
+					,cdramo
+					,cdtipsit
+					,"I"
+					,cdsisrol
+					,"COTIZACION_CUSTOM"
+					,"EMISION_RAMO6"
+					,null
+					);
+			
+			gc.generaComponentes(ramo6, true, false, true, false, false, false);
+			resp.getImap().put("customRamo6"  , gc.getItems());
 			
 		}
 		catch(Exception ex)

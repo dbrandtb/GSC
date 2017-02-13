@@ -2296,6 +2296,43 @@ public class CotizacionAutoAction extends PrincipalCoreAction
      return SUCCESS;
  }
  
+ public String obtieneRangoPeriodoGraciaAgente()
+ {
+     logger.debug(Utils.log(""
+             ,"\n#########################################"
+             ,"\n###### obtieneRangoPeriodoGraciaAgente ######"
+             ,"\n###### slist1="           , slist1
+             ,"\n###### smap1="            , smap1
+             ));
+     
+     try
+     {
+    	 Utils.validate(smap1, "No se recibieron datos");
+    	 String cdramo   = smap1.get("cdramo");
+    	 String cdtipsit = smap1.get("cdtipsit");
+    	 String cdagente = smap1.get("cdagente");
+    	 Utils.validate( cdramo  ,"No se recibio cdramo"
+    			 		,cdtipsit,"No se recibio cdtipsit"
+    			 		,cdagente,"No se recibio cdagente");
+         slist1=consultasManager.obtieneRangoPeriodoGracia(cdramo,cdtipsit,cdagente);
+         
+         
+         exito=true;
+     }
+     catch(Exception ex)
+     {
+         respuesta = Utils.manejaExcepcion(ex);
+     }
+     
+     logger.debug(Utils.log(""
+             ,"\n###### exito="  , exito
+             ,"\n###### slist1=" , slist1
+             ,"\n###### obtieneRangoPeriodoGraciaAgente ######"
+             ,"\n#########################################"
+             ));
+     return SUCCESS;
+ }
+ 
      /*
      * Getters y setters
      */

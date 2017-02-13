@@ -265,10 +265,13 @@ var TipoPersona = {
 
 // Catalogo de Tipo de Endoso
 var TipoEndoso = {
-		SUMA_ASEGURADA_INCREMENTO  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@SUMA_ASEGURADA_INCREMENTO.cdTipSup" />',
-		SUMA_ASEGURADA_DECREMENTO  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@SUMA_ASEGURADA_DECREMENTO.cdTipSup" />',
-		DEDUCIBLE_MENOS			   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEDUCIBLE_MENOS.cdTipSup"           />',
-		DEDUCIBLE_MAS			   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEDUCIBLE_MAS.cdTipSup"             />',
+		SUMA_ASEGURADA_INCREMENTO                  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@SUMA_ASEGURADA_INCREMENTO.cdTipSup" />',
+		SUMA_ASEGURADA_DECREMENTO                  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@SUMA_ASEGURADA_DECREMENTO.cdTipSup" />',
+		DEDUCIBLE_MENOS			   				   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEDUCIBLE_MENOS.cdTipSup"           />',
+		DEDUCIBLE_MAS			   				   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEDUCIBLE_MAS.cdTipSup"             />',
+		BAJA_COBERTURAS							   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@BAJA_COBERTURAS.cdTipSup"             />',
+		ALTA_COBERTURAS			 		   		   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ALTA_COBERTURAS.cdTipSup"             />',
+		DEVOLUCION_PRIMAS_NO_DEVENGADAS			   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEVOLUCION_PRIMAS_NO_DEVENGADAS.cdTipSup"  />',
 }
 
 </script>

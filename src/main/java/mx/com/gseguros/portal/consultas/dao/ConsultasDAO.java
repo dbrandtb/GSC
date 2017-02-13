@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 
 public interface ConsultasDAO
@@ -677,4 +678,12 @@ public interface ConsultasDAO
         String pv_nmsuplem_i, String pv_nmsitaux_i) throws Exception;
    
    public boolean isServicioCargaFederal(String cellValue) throws Exception;
+
+
+
+   public List<Map<String, String>> obtieneRangoPeriodoGracia(String pv_cdramo_i, String pv_cdtipsit_i, String pv_cdagente_i)
+		throws Exception;
+
+   public List<GenericVO> obtieneComentariosNegocio(String pv_cdramo_i, String pv_cdtipsit_i, String pv_negocio_i)
+		throws Exception;
 }

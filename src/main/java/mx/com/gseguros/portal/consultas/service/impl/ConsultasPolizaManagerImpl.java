@@ -556,4 +556,10 @@ public class ConsultasPolizaManagerImpl implements ConsultasPolizaManager {
         return cotizacionDAO.cargarTvalopol(cdunieco, cdramo, estado, nmpoliza);
     }
 	
+	@Override
+    public List<Map<String, String>> obtieneCoberturas( String cdramo, String cdtipsit, String cdplan)
+            throws Exception {
+        return cotizacionDAO.getCoberturas(cdramo, cdplan, cdtipsit);
+    }
+	
 }
