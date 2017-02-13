@@ -1967,8 +1967,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       comments    = params.get("COMMENTS"),
 			       cdrazrecha  = params.get("CDRAZRECHA"),
 			       cdusuariDes = params.get("CDUSUARI_DES"),
-			       cdsisrolDes = params.get("CDSISROL_DES"),
-			       ntrasust    = params.get("NTRASUST");
+			       cdsisrolDes = params.get("CDSISROL_DES");
 			boolean cerrado = "S".equals(params.get("cerrado"));
 			Date fechaHoy = new Date();
 			Utils.validate(ntramite  , "No se recibi\u00f3 el tr\u00e1mite",
@@ -1985,9 +1984,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			        "S".equalsIgnoreCase(swagente),
 			        false, // porEscalamiento
 			        fechaHoy,
-			        false, //sinGrabarDetalle
-			        false,
-			        ntrasust
+			        false //sinGrabarDetalle
 			        );
 			message = despacho.getMessage();
 			success = true;

@@ -21,10 +21,10 @@ Ext.define('VentanaRechazo',
         {
             throw '#C22 - No se recibieron datos';
         }
-        /*if(Ext.isEmpty(config.aux))
+        if(Ext.isEmpty(config.aux))
         {
             throw '#C22 - No se recibi\u00f3 el par\u00e1metro';
-        }*/
+        }
         Ext.apply(me,
         {
             items :
@@ -70,7 +70,7 @@ Ext.define('VentanaRechazo',
                         ,{
                             xtype       : 'textfield'
                             ,name       : 'STATUSNEW'
-                            ,value      : '4'//config.aux
+                            ,value      : config.aux
                             ,allowBlank : false
                             ,readOnly   : true
                             ,hidden     : true
@@ -150,37 +150,6 @@ Ext.define('VentanaRechazo',
                                 select : function (me, records) {
                                     debug('>CDRAZRECHA.select!');
                                     me.up('form').down('[name=COMMENTSEXT]').setValue(records[0].get('aux'));
-                                    try {
-                                        me.up('window').down('[name=NTRASUST]').mostrar(records[0].get('value'));
-                                    } catch (e) {
-                                        debugError('error al invocar funcionamiento de ntrasust', e);
-                                    }
-                                }
-                            }
-                        }, {
-                            xtype      : 'numberfield',
-                            fieldLabel : 'Tr\u00e1mite nuevo',
-                            name       : 'NTRASUST',
-                            hidden     : true,
-                            mostrar    : function (dsmotivo) {
-                                debug('NTRASUST.mostrar args:', arguments);
-                                var me = this;
-                                try {
-                                    if (Ext.isEmpty(dsmotivo)
-                                        || dsmotivo.toUpperCase().indexOf('POR') == -1
-                                        || dsmotivo.toUpperCase().indexOf('SUSTITUCI') == -1) {
-                                        debug('NTRASUST hide');
-                                        me.allowBlank = true;
-                                        me.setValue('');
-                                        me.hide();
-                                    } else {
-                                        debug('NTRASUST show');
-                                        me.allowBlank = false;
-                                        me.setValue('');
-                                        me.show();
-                                    }
-                                } catch (e) {
-                                    debugError('error en el funcionamiento de NTRASUST', e);
                                 }
                             }
                         }, {

@@ -1339,7 +1339,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	
     	//generar cotizacion
     	if(exito
-    			//&&!comprarCdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo())
+    			&&!comprarCdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo())
     			&&(!esFlotilla||"P".equals(tipoflot))
     			)
     	{

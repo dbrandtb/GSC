@@ -2109,25 +2109,4 @@ public class CatalogosManagerImpl implements CatalogosManager {
         return catalogosDAO.obtieneAdminXAgente(pv_cdagente_i);
     }
 	
-   @Override
-    public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit, String nivel) throws Exception {
-        logger.info(
-                new StringBuilder()
-                .append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-                .append("\n@@@@@@ recuperarListaFiltroPropiedadInciso @@@@@@")
-                .toString()
-                );
-        return catalogosDAO.recuperarListaFiltroPropiedadInciso(cdramo, cdtipsit, nivel);
-    }
-   
-   @Override
-   public List<GenericVO> obtieneComentariosNegocio(
-           String cdramo
-           ,String cdtipsit
-           ,String negocio
-           )throws Exception{
-       return consultasDAO.obtieneComentariosNegocio(cdramo, cdtipsit, negocio);
-               
-   }
-	
 }

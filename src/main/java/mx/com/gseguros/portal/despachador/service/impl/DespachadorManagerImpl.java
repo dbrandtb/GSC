@@ -519,21 +519,11 @@ K                   ENCOLAR CON DATOS ORIGINALES
      * SOBRECARGADO
      */
     @Override
-    @Deprecated
     public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
             String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle) throws Exception {
         return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
-                porEscalamiento, fechaHoy, sinGrabarDetalle, false, null);
-    }
-    
-    @Override
-    @Deprecated
-    public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
-            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
-            boolean sinGrabarDetalle, boolean sinBuscarRegreso) throws Exception {
-        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
-                porEscalamiento, fechaHoy, sinGrabarDetalle, sinBuscarRegreso, null);
+                porEscalamiento, fechaHoy, sinGrabarDetalle, false);
     }
 	
 	/**
@@ -545,7 +535,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	@Override
 	public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
 	        String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
-	        boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust) throws Exception {
+	        boolean sinGrabarDetalle, boolean sinBuscarRegreso) throws Exception {
 	    logger.debug(Utils.log(
 	            "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 	            "\n@@@@@@ turnarTramite @@@@@@",
@@ -561,8 +551,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	            "\n@@@@@@ porEscalamiento  = " , porEscalamiento,
                 "\n@@@@@@ fechaHoy         = " , fechaHoy,
                 "\n@@@@@@ sinGrabarDetalle = " , sinGrabarDetalle,
-                "\n@@@@@@ sinBuscarRegreso = " , sinBuscarRegreso,
-                "\n@@@@@@ ntrasust         = " , ntrasust));
+                "\n@@@@@@ sinBuscarRegreso = " , sinBuscarRegreso));
 	    String paso = null;
         RespuestaTurnadoVO result = new RespuestaTurnadoVO();
 	    try {
@@ -658,12 +647,6 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 paso = "Rechazando tr\u00e1mite";
                 logger.debug(paso);
                 flujoMesaControlDAO.actualizarStatusTramite(ntramite, status, fechaHoy, null, null);
-                
-                if (StringUtils.isNotBlank(ntrasust)) {
-                    paso = "Guardando tr\u00e1mite sustituto";
-                    logger.debug(paso);
-                    flujoMesaControlDAO.actualizarTramiteSustituto(ntramite, ntrasust);
-                }
                 
                 if (StringUtils.isNotBlank(cdrazrecha)) {
                     paso = "Marcando motivo de rechazo";
