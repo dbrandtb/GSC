@@ -3582,6 +3582,9 @@ function _p28_ramo5ClienteChange(combcl)
             centrarVentanaInterna(ventana);
         }
     } 
+        _fieldByName('fefin').setValue(
+            Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20').getValue())
+        );
     
     debug('<_p28_ramo5ClienteChange');
 }
@@ -5958,6 +5961,7 @@ function _p28_recuperarClienteTramite()
                     }
                 });
             }
+            
         }
         catch(e)
         {
