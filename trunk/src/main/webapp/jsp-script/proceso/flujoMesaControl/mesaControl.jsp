@@ -708,6 +708,11 @@ Ext.onReady(function()
                                         ,fieldLabel : 'ENDOSO'
                                         ,value      : _NVL(record.get('NRO_ENDOSO'), '-')
                                         ,hidden     : Number(record.get('CDTIPTRA')) !== 15
+                                    }, {
+                                        xtype      : 'displayfield',
+                                        fieldLabel : 'TR\u00c1MITE SUSTITUTO',
+                                        value      : _NVL(record.get('NTRASUST')),
+                                        hidden     : record.get('CDTIPRAM') != 2
                                     }
                                 ]
                                 ,buttonAlign : 'center'
