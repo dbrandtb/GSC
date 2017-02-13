@@ -974,4 +974,6 @@ public interface FlujoMesaControlDAO {
     public List<Map<String, String>> recuperarPropiedadesDespachadorUsuarios (String cdunieco, String nivel, String cdsisrol) throws Exception;
     
     public List<Map<String, String>> recuperarPropiedadesDespachadorUsuariosAll (String cdsisrol) throws Exception;
+    
+    public void actualizarTramiteSustituto(String ntramite, String ntrasust) throws Exception;
 }

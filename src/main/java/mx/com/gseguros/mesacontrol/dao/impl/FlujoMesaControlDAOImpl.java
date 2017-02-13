@@ -1695,7 +1695,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					,"NMSOLICI"   , "NOMBRE_CONTRATANTE" , "RESPONSABLE" , "RAMO"      , "DSTIPSUP"
 					,"CDTIPRAM"   , "DSTIPRAM"           , "NMPOLIEX"    , "CDTIPTRA"  , "ULTIMO_MODIFICA"
 					,"NRO_ENDOSO" , "CDUNIEXT"           , "CDSUCADM"    , "FLAG"      , "VENCIMIENTO"
-					,"CDETAPA"    , "RENPOLIEX"
+					,"CDETAPA"    , "RENPOLIEX"          , "NTRASUST"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
 			declareParameter(new SqlOutParameter("pv_total_o"    , OracleTypes.VARCHAR));
@@ -4421,6 +4421,30 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public void actualizarTramiteSustituto(String ntramite, String ntrasust) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("pv_ntramite_i", ntramite);
+        params.put("pv_ntrasust_i", ntrasust);
+        Map<String, Object> procRes = ejecutaSP(new ActualizarTramiteSustitutoSP(getDataSource()), params);
+        String error = (String) procRes.get("pv_dserror_o");
+        if (StringUtils.isNotBlank(error)) {
+            throw new ApplicationException(error);
+        }
+    }
+    
+    protected class ActualizarTramiteSustitutoSP extends StoredProcedure {
+        protected ActualizarTramiteSustitutoSP (DataSource dataSource) {
+            super(dataSource,"P_MC_UPD_NTRASUST_TRAMITE");
+            declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_ntrasust_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_dserror_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
             compile();
         }
     }
