@@ -21,6 +21,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
@@ -5918,4 +5919,80 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
         }
     }
+    
+    @Override
+    public List<GenericVO> obtieneComentariosNegocio(
+                                                 String pv_cdramo_i  ,
+                                                 String pv_cdtipsit_i  ,
+                                                 String pv_negocio_i) throws Exception {
+        
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("pv_cdramo_i"    ,  pv_cdramo_i);
+        params.put("pv_cdtipsit_i"  ,  pv_cdtipsit_i  );
+        params.put("pv_negocio_i"   ,  pv_negocio_i  );
+     
+        
+        Map<String, Object> resultado = ejecutaSP(new ObtieneComentariosNegocio(getDataSource()), params);
+        return (List<GenericVO>) resultado.get("pv_registro_o");
+        
+    }
+
+    protected class ObtieneComentariosNegocio extends StoredProcedure {
+        protected ObtieneComentariosNegocio(DataSource dataSource) {
+            super(dataSource, "PKG_CONSULTA2.P_OBTIENE_COMENTARIOS_NEGOCIO");
+            declareParameter(new SqlParameter("pv_cdramo_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_negocio_i",    OracleTypes.VARCHAR));
+          
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new ObtieneComentariosMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    protected class ObtieneComentariosMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new GenericVO(rs.getString("COMENTARIO"),rs.getString("COMENTARIO"));
+        }
+    }
+    
+    
+    @Override
+    public List<Map<String,String>> obtieneRangoPeriodoGracia(
+                                      String pv_cdramo_i,
+                                      String pv_cdtipsit_i,
+                                      String pv_cdagente_i) throws Exception {
+        
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("pv_cdramo_i",  pv_cdramo_i);
+        params.put("pv_cdtipsit_i",pv_cdtipsit_i);
+        params.put("pv_cdagente_i",pv_cdagente_i);
+        
+        Map<String, Object> respuestaProcedure = ejecutaSP(new ObtieneRangoPeriodoGracia(getDataSource()), params);
+        List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
+        
+        return lista;
+        
+    }
+
+    protected class ObtieneRangoPeriodoGracia extends StoredProcedure {
+        protected ObtieneRangoPeriodoGracia(DataSource dataSource) {
+            super(dataSource, "PKG_CONSULTA2.P_OBTIENE_PGRACIA_AGENTE");
+            declareParameter(new SqlParameter("pv_cdramo_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdagente_i",    OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+                    "MINIMO",
+                    "MAXIMO"
+                   
+            };
+            
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
 }

@@ -1030,6 +1030,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case VALIDACIONESGRALES:
                     lista = siniestrosManager.getConsultaListaValidacionesGenerales();
                     break;
+				case COMENTARIOS_NEGOCIO:
+					if(params == null){
+                        params = new HashMap<String,String>();
+                    }
+					lista = catalogosManager.obtieneComentariosNegocio(params.get("cdramo"), params.get("cdtipsit"), params.get("negocio"));
+                	break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

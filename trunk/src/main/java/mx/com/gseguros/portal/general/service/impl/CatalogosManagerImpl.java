@@ -2119,5 +2119,15 @@ public class CatalogosManagerImpl implements CatalogosManager {
                 );
         return catalogosDAO.recuperarListaFiltroPropiedadInciso(cdramo, cdtipsit, nivel);
     }
+   
+   @Override
+   public List<GenericVO> obtieneComentariosNegocio(
+           String cdramo
+           ,String cdtipsit
+           ,String negocio
+           )throws Exception{
+       return consultasDAO.obtieneComentariosNegocio(cdramo, cdtipsit, negocio);
+               
+   }
 	
 }

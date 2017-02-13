@@ -30,6 +30,8 @@ var url_buscar_empleado                     = '<s:url namespace="/emision"      
 var urlCargar                               = '<s:url namespace="/"                     action="cargarDatosComplementarios"  />';
 var url_guarda_empleado                     = '<s:url namespace="/emision"                action="guardaEmpleados"  />';
 var url_admin_ret                           = '<s:url namespace="/emision"                action="obtieneAdminRet"  />';
+var _p29_urlRangoPeriodogracia              = '<s:url namespace="/emision"   action="obtieneRangoPeriodoGraciaAgente"              />';
+
 
     
 
@@ -158,6 +160,9 @@ Ext.onReady(function()
         }
         _p29_polizaAdicionalesItems = aux;
     </s:if>
+    <s:if test='%{getImap().get("customRamo6")!=null}'>
+	    _p29_polizaAdicionalesItems.push(<s:property value="imap.customRamo6" />);
+    </s:if>
     for(var i=0;i<_p29_polizaAdicionalesItems.length;i++)
     {
         _p29_polizaAdicionalesItems[i].labelWidth=295;
@@ -169,6 +174,7 @@ Ext.onReady(function()
     </s:if>
     
     var _p29_datosGeneralesItems = [<s:property value="imap.polizaItems" />];
+    	
     for(var i=0;i<_p29_datosGeneralesItems.length;i++)
     {
         _p29_datosGeneralesItems[i].labelWidth=295;
@@ -222,6 +228,7 @@ Ext.onReady(function()
     {
         itemId    : '_p29_panelpri'
         ,renderTo : '_p29_divpri'
+        ,title    : _p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto?'Emisi&oacute;n Servicio P&uacute;blico Auto':_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoMicro?'Emisi&oacute;n Servicio P&uacute;blico Microbus':null
         ,border   : 0
         ,defaults : { style : 'margin:5px;' }
         ,items    :
@@ -612,6 +619,8 @@ Ext.onReady(function()
     }
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
+    
+    
     ////// custom //////
     
     ////// loaders //////
@@ -671,7 +680,8 @@ Ext.onReady(function()
                         'smap1.cargaFenacMin' : _aplicaCobVida?_FechaMinEdad:'',
                         'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:'',
                         'smap1.tomarUnDomicilio' : 'S',
-                        'smap1.cargaOrdDomicilio' : json.smap1.nmorddom
+                        'smap1.cargaOrdDomicilio' : json.smap1.nmorddom,
+                        'smap1.muestraBusqueda' : _p29_smap1.cdramo == Ramo.ServicioPublico?'S':'N' // forzamos a que aparezca el campo para buscar personas
                     }
                 });
                 
@@ -727,6 +737,13 @@ Ext.onReady(function()
                 }
 
                 _p29_loadCallback();
+                
+                if(_p29_smap1.cdramo==Ramo.ServicioPublico)
+                {
+                	cargaComentariosRamo6();
+                }
+              //RANGO PERIODO DE GRACIA
+        	    rangoPeriodoGracia()
             }
             else
             {
@@ -737,6 +754,7 @@ Ext.onReady(function()
     });
     ////// loaders //////
    
+    
     if(_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
         var folio  = _fieldByName('parametros.pv_otvalor35');
     }else if(_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoMicro){
@@ -893,7 +911,7 @@ function _p29_loadCallback()
         ,failure : errorComunicacion
     });
     
-    if(_p29_smap1.cdramo+'x'=='5x')
+    if(_p29_smap1.cdramo==Ramo.ServicioPublico || _p29_smap1.cdramo==Ramo.AutosResidentes)
     {
         Ext.Ajax.request(
         {
@@ -1017,7 +1035,7 @@ function _p29_guardar(callback)
     
     if(valido)
     {
-        valido = _fieldByName('_p22_formBusqueda').hidden;
+        valido = _fieldByName('_p22_formBusqueda').isValid() && _fieldByName('_p22_formDatosGenerales').isValid() && _fieldByName('_p22_formDomicilio').isValid() ;
         if(!valido)
         {
             mensajeWarning('Falta registrar un cliente');
@@ -2193,6 +2211,72 @@ function buscarEmpleado(administradora,retenedora,ce,rfc,ap,am,nom){
                 }
             });
     
+}
+
+function cargaComentariosRamo6(){
+	try{
+		Ext.ComponentQuery.query('[name=aux.otvalor08]').forEach(function(it){
+			it.store.proxy.extraParams['params.negocio']=_fieldByLabel('NEGOCIO',null,true).getValue();
+			it.store.load();
+			it.store.on({
+                load      : function(store){
+                               store.insert(0,{"aux":null,"aux2":null,"aux3":null,"key":null,"value":"(NINGUNO)"})
+                            }
+});
+		});
+	}catch(e){
+		debugError(e);
+	}
+}
+
+function rangoPeriodoGracia(){
+	
+	try{
+		Ext.Ajax.request(
+			    {
+			        url     : _p29_urlRangoPeriodogracia
+			        ,params :
+			        {
+			            
+			             'smap1.cdramo'   : _p29_smap1.cdramo
+			            ,'smap1.cdtipsit' : _p29_smap1.cdtipsit
+			            ,'smap1.cdagente' : _fieldByLabel('AGENTE',null,true).getValue()
+			           
+			        }
+			        ,success : function(response)
+			        {
+			            var json=Ext.decode(response.responseText);
+			            debug('### respuesta periodo gracia:',json);
+			            if(json.exito)
+			            {
+			                if(!Ext.isEmpty(json.slist1)){
+			                	json.slist1.forEach(function(it){
+			                		_fieldByLabel('PERIODO GRACIA',null,true).getStore().filter(
+			                				[
+			                					{
+			                						filterFn: function(item) {
+			                							var val=parseInt(item.get("key"));
+			                							it.MINIMO=parseInt(it.MINIMO);
+			                							it.MAXIMO=parseInt(it.MAXIMO);
+			                							debug("test: ",item.get("key")," - ",it.MINIMO," ",it.MAXIMO," ",item.get("key") >= it.MINIMO," ",item.get("key") <= it.MAXIMO)
+			                							return val >= it.MINIMO && val <= it.MAXIMO ; 
+			                						}
+			                					}
+			                				]
+			                				);
+			                	});
+			                }
+			            }
+			            else
+			            {
+			                mensajeError(json.respuesta);
+			            }
+			        }
+			        ,failure : errorComunicacion
+			    });
+	}catch(e){
+		debugError(e)
+	}
 }
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>

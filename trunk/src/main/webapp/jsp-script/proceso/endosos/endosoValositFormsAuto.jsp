@@ -564,30 +564,30 @@ Ext.onReady(function()
 	            	item.setMaxValue(2400000);
 	            }
 	            
-	            if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto ){
+	            if(_p44_smap1.CDRAMO==Ramo.ServicioPublico ){
 	                if(_p44_smap1.cdtipsup == TipoEndoso.SUMA_ASEGURADA_DECREMENTO ||
 		   	           _p44_smap1.cdtipsup == TipoEndoso.SUMA_ASEGURADA_INCREMENTO ){
 		            	if(item.store ){
 		            			if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto)
 			            			switch(item.cdatribu){
-				            			case 'CVE_SUMA_ASEGURADA_RESP__CIVIL_': 
+				            			case 'CVE_DEDUCIBLE_RESP__CIVIL_': 
 				            				item.getStore().filter([{filterFn: function(item) {
 				            					return item.get("key")>=500000 && item.get("key")<=5000000;
 				            				}}])
 						            		break;
+				            			case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
+				            				item.getStore().filter([{filterFn: function(item) {
+				            					return item.get("key")>=1500 && item.get("key")<=20000;
+				            				}}])
+				            				break;
 				            			case 'CVE_SUMA_ASEGURADA_GASTOS_MEDICOS':
 				            				item.getStore().filter([{filterFn: function(item) {
 				            					return item.get("key")>=10000 && item.get("key")<=200000;
 				            				}}])
-						            		break;
-				            			case 'CVE_MUERTE_ACCIDENTAL_CONDUCTOR': 
+				            				break;
+				            			case 'CVE_MUERTE_ACCIDENTAL_CONDUCTOR':
 				            				item.getStore().filter([{filterFn: function(item) {
 				            					return item.get("key")>=30000 && item.get("key")<=100000;
-				            				}}])
-						            		break;
-				            			case 'CVE_SUMA_ASEGURADA_RESP__CIVIL_VIAJERO':
-				            				item.getStore().filter([{filterFn: function(item) {
-				            					return item.get("key")>=1500 && item.get("key")<=20000;
 				            				}}])
 				            				break;
 			            			}
@@ -597,49 +597,55 @@ Ext.onReady(function()
 		            					item.setMaxValue(4200000);
 		            					item.setMinValue(50000);
 		            					break;
-			            			case 'CVE_SUMA_ASEGURADA_RESP__CIVIL_': 
+			            			case 'CVE_DEDUCIBLE_RESP__CIVIL_': 
 			            				item.getStore().filter([{filterFn: function(item) {
 			            					return item.get("key")>=500000 && item.get("key")<=5000000;
 			            				}}])
 					            		break;
-			            			case 'CVE_SUMA_ASEGURADA_GASTOS_MEDICOS': 
+			            			case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
+			            				item.getStore().filter([{filterFn: function(item) {
+			            					return item.get("key")>=1500 && item.get("key")<=20000;
+			            				}}])
+			            				break;
+			            			case 'CVE_SUMA_ASEGURADA_GASTOS_MEDICOS':
 			            				item.getStore().filter([{filterFn: function(item) {
 			            					return item.get("key")>=10000 && item.get("key")<=200000;
 			            				}}])
-					            		break;
-			            			case 'CVE_MUERTE_ACCIDENTAL_CONDUCTOR': 
+			            				break;
+			            			case 'CVE_MUERTE_ACCIDENTAL_CONDUCTOR':
 			            				item.getStore().filter([{filterFn: function(item) {
 			            					return item.get("key")>=30000 && item.get("key")<=100000;
-			            				}}])
-					            		break;
-			            			case 'CVE_SUMA_ASEGURADA_RESP__CIVIL_VIAJERO':
-			            				item.getStore().filter([{filterFn: function(item) {
-			            					return item.get("key")>=1500 && item.get("key")<=20000;
 			            				}}])
 			            				break;
 		            			}
 		            	}
 	                }
-	                //alert(_p44_smap1.cdtipsup+" - "+TipoEndoso.DEDUCIBLE_MAS+" - " +TipoEndoso.DEDUCIBLE_MENOS )
 	                if(_p44_smap1.cdtipsup == TipoEndoso.DEDUCIBLE_MAS ||
 	 		   	       _p44_smap1.cdtipsup == TipoEndoso.DEDUCIBLE_MENOS ){
 	                	//alert()
-	                	switch(item.cdatribu){
-	                		case 'CVE_DEDUCIBLE_DANOS_MATERIALES':
-	                			item.getStore().filter([{filterFn: function(item) {
-	            					return item.get("key")>=5 && item.get("key")<=20;
-	            				}}])
-	                			break;
-	                		case 'CVE_DEDUCIBLE_ROBO_TOTAL':
-	                			item.getStore().filter([{filterFn: function(item) {
-	            					return item.get("key")>=10 && item.get("key")<=20;
-	            				}}])
-	                			break;
-	                		case 'CVE_DEDUCIBLE_RESP__CIVIL':
-	                			item.getStore().filter([{filterFn: function(item) {
-	            					return item.get("key")>=25 && item.get("key")<=300;
-	            				}}])
-	                			break;
+	                	if(item.store ){
+		                	switch(item.cdatribu){
+		                		case 'CVE_DEDUCIBLE_DANOS_MATERIALES':
+		                			item.getStore().filter([{filterFn: function(item) {
+		            					return item.get("key")>=5 && item.get("key")<=20;
+		            				}}])
+		                			break;
+		                		case 'CVE_DEDUCIBLE_ROBO_TOTAL':
+		                			item.getStore().filter([{filterFn: function(item) {
+		            					return item.get("key")>=10 && item.get("key")<=20;
+		            				}}])
+		                			break;
+		                		case 'CVE_DEDUCIBLE_RESP__CIVIL':
+		                			item.getStore().filter([{filterFn: function(item) {
+		            					return item.get("key")>=25 && item.get("key")<=300;
+		            				}}])
+		                			break;
+		                		case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
+		                			item.getStore().filter([{filterFn: function(item) {
+		            					return item.get("key")>=0 && item.get("key")<=8;
+		            				}}])
+		                			break;
+		                	}
 	                	}
 	                }
 	            	
@@ -718,7 +724,9 @@ function _0_obtenerSumaAseguradaRamo6(modelo,version,cdramo,cdtipsit,valorComerc
             }
             else 
             {
-                mensajeWarning(json.respuesta);
+            	
+            	valorComercial.setMinValue(1);  
+                //mensajeWarning(json.respuesta);
             }
         }
         ,failure : function()

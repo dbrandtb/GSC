@@ -9094,4 +9094,45 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String,String>> getCoberturas(String pv_cdramo_i, String pv_cdplan_i, String pv_cdtipsit_i) throws Exception {
+	    
+	    Map<String,Object> params = new LinkedHashMap<String,Object>();
+	    params.put("pv_cdramo_i" , pv_cdramo_i);
+	    params.put("pv_cdplan_i"   , pv_cdplan_i);
+	    params.put("pv_cdtipsit_i"   , pv_cdtipsit_i);
+	
+	    Map<String,Object>procResult=ejecutaSP(new GetCoberturas(getDataSource()),params);
+		List<Map<String,String>>coberturas=(List<Map<String,String>>)procResult.get("pv_registro_o");
+		if(coberturas==null||coberturas.size()==0)
+		{
+			throw new Exception("No hay situaciones para el grupo");
+		}
+		return coberturas;
+
+	}
+	
+	protected class GetCoberturas extends StoredProcedure {
+	    protected GetCoberturas (DataSource dataSource) {
+	        super(dataSource,"Pkg_Listas.P_COBERTURAS");
+	        declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_cdplan_i"  , OracleTypes.VARCHAR));
+	        declareParameter(new SqlParameter("pv_cdtipsit_i"  , OracleTypes.VARCHAR));
+	        
+	        String[] cols=new String[]
+					{
+					"cdgarant"
+					,"dsgarant"
+					,"fecha_add"
+					,"SWOBLIG"
+					};
+	        
+	        
+	        declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o",OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o" ,OracleTypes.VARCHAR));
+	        compile();
+	    }
+	}
 }
