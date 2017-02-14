@@ -552,8 +552,8 @@ Ext.onReady(function()
             	// FILTRO DE VALORES PARA SERVICIO PUBLICO
 	            if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto && 
 	            		item.fieldLabel=='VALOR COMERCIAL' &&
-	            		(_p44_smap1.cdtipsup == TipoEndoso.SUMA_ASEGURADA_DECREMENTO ||
-	            		_p44_smap1.cdtipsup == TipoEndoso.SUMA_ASEGURADA_INCREMENTO )
+	            		(_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaDecremento ||
+	            		_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaIncremento )
 	               ){
 	            	item.enable();
 	            	_0_obtenerSumaAseguradaRamo6(inciso.CVE_MODELO.substr(inciso.CVE_MODELO.length-4,4)
@@ -565,8 +565,8 @@ Ext.onReady(function()
 	            }
 	            
 	            if(_p44_smap1.CDRAMO==Ramo.ServicioPublico ){
-	                if(_p44_smap1.cdtipsup == TipoEndoso.SUMA_ASEGURADA_DECREMENTO ||
-		   	           _p44_smap1.cdtipsup == TipoEndoso.SUMA_ASEGURADA_INCREMENTO ){
+	                if(_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaDecremento ||
+		   	           _p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaIncremento ){
 		            	if(item.store ){
 		            			if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto)
 			            			switch(item.cdatribu){
@@ -620,8 +620,8 @@ Ext.onReady(function()
 		            			}
 		            	}
 	                }
-	                if(_p44_smap1.cdtipsup == TipoEndoso.DEDUCIBLE_MAS ||
-	 		   	       _p44_smap1.cdtipsup == TipoEndoso.DEDUCIBLE_MENOS ){
+	                if(_p44_smap1.cdtipsup == TipoEndoso.DeducibleMas ||
+	 		   	       _p44_smap1.cdtipsup == TipoEndoso.DeducibleMenos ){
 	                	//alert()
 	                	if(item.store ){
 		                	switch(item.cdatribu){

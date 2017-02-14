@@ -53,7 +53,7 @@ _p39_coberturaColumns.push(
     			var sel= _p39_storeCoberturas.getAt(rowIndex);
     			debug(sel," - - ",rowIndex)
      			if(_p39_smap1.CDRAMO==Ramo.ServicioPublico &&
-     			   _p39_smap1.cdtipsup == TipoEndoso.DEVOLUCION_PRIMAS_NO_DEVENGADAS){ 
+     			   _p39_smap1.cdtipsup == TipoEndoso.DevolucionDePrimasNoDevengadas){ 
         				var garant=$.grep(_p39_slist2,function(ele){
         					return ele.cdgarant==sel.get("CDGARANT")
         				});

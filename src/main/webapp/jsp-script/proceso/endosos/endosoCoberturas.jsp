@@ -782,7 +782,7 @@ function endcobSumit(form,confirmar)
                                 
                                 try{
                         			if(_p3_smap1.CDRAMO==Ramo.ServicioPublico &&
-                        			   _p3_smap1.cdtipsup == TipoEndoso.BAJA_COBERTURAS){ 
+                        			   _p3_smap1.cdtipsup == TipoEndoso.BajaCoberturas){ 
                            				var garant=$.grep(slist2,function(ele){
                            					return ele.cdgarant==record.get("GARANTIA")
                            				});
