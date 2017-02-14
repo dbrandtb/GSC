@@ -1845,11 +1845,24 @@ Ext.onReady(function()
     	]
     });
 	
+	debug('itemsCondicionesRenovacion',itemsCondicionesRenovacion);
+
+	for(var con = 0; con < itemsCondicionesRenovacion.length; con++){
+	    if(con === 3 || con === 7){
+            itemsCondicionesRenovacion[con].labelWidth = 0;
+            itemsCondicionesRenovacion[con].width = 25;
+	    }
+	    else{
+	        itemsCondicionesRenovacion[con].labelWidth = 90;
+            itemsCondicionesRenovacion[con].width = 250;
+	    }	    
+	}
+	
 	panCondicion = Ext.create('Ext.window.Window',{
     	itemId			: 'panCondicion',
     	autoScroll		: true,
     	height			: 250,
-    	width           : 900,
+    	width           : 830,
     	modal			: false,
     	closable		: true,
     	closeAction     : 'hide',
@@ -1858,11 +1871,12 @@ Ext.onReady(function()
             	title        : 'Condiciones de renovacion programada'
                 ,itemId      : '_p25_condiciones'
                 ,defaults    : { 
-                	style : 'margin :5px;' 
+                	style      : 'margin :2px;'
                 }
-                ,layout      : {
-                    type     : 'table'
-                    ,columns : 4
+                ,layout        : {
+                    type       : 'table',
+                    columns    : 4,
+                    align      : 'left'
                 }
                 ,items       : itemsCondicionesRenovacion
                 ,buttonAlign : 'center'
@@ -2275,7 +2289,7 @@ Ext.onReady(function()
     _fieldByName('tipo',form).getStore().on({
         load : function(me){
   		    _fieldByName('tipo',form).setValue('AS');
-  		    if(_GLOBAL_CDSISROL == RolSistema.Agente){
+  		    if(_GLOBAL_CDSISROL == RolSistema.Agente || _GLOBAL_CDSISROL == RolSistema.EjecutivoVenta){
   		        _fieldByName('tipo',form).readOnly = true;
   		    }
   	    }
@@ -4008,7 +4022,7 @@ function agregaCalendario(){
  }
  
  function turnar(ntramite){
-     if (_GLOBAL_CDSISROL == RolSistema.Agente){
+     if (_GLOBAL_CDSISROL == RolSistema.Agente || _GLOBAL_CDSISROL == RolSistema.EjecutivoVenta){
          var callbackNormal = function (callback) {
              mensajeCorrecto(
                  'Tr\u00e1mite generado',
