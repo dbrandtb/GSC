@@ -39,14 +39,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		try {
 			Map<String,Object> params=new LinkedHashMap<String,Object>(0);
 			params.put("pv_cdtabla", cdTabla);
-			logger.debug(
-	        		new StringBuilder()
-	        		.append("\n***************************************")
-	        		.append("\n****** PKG_LISTAS.P_GET_TMANTENI ******")
-	        		.append("\n****** params=").append(params)
-	        		.append("\n***************************************")
-	        		.toString()
-	        		);
 			Map<String, Object> resultado = ejecutaSP(new ObtenerTmanteni(getDataSource()), params);
 			return (List<GenericVO>) resultado.get("pv_registro_o");
 			
@@ -472,7 +464,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("pv_suc_admon_i" , cdunieco);
 		params.put("pv_cdusuari_i"  , cdusuari);
-		Utils.debugProcedure(logger, "PKG_LISTAS.P_GET_SUCURSALES", params);
 		Map<String, Object> resultado = ejecutaSP(new ObtieneSucursales(getDataSource()), params);
 		return (List<GenericVO>) resultado.get("pv_registro_o");
 	}
@@ -504,7 +495,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("pv_cdtiptra_i" , tipoTramite.getCdtiptra());
 		params.put("pv_tipocant_i" , rango.getClave());
 		params.put("pv_numval_i"   , validacion.getClave());
-		logger.debug("obtieneCantidadMaxima params: "+params);
 		Map<String, Object> resultado = ejecutaSP(new ObtieneCantidadMaxima(getDataSource()), params);
 		return (String) resultado.get("pv_cantidad_o");
 	}
@@ -715,21 +705,13 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("cdatribu"   , cdatribu);
 		params.put("tipoUnidad" , tipoUnidad);
 		params.put("cdagente"   , cdagente);
-		logger.debug(
-				new StringBuilder()
-				.append("\n********************************************")
-				.append("\n****** PKG_LISTAS.P_GET_ATRIBUTOS_NEG ******")
-				.append("\n****** params=").append(params)
-				.append("\n********************************************")
-				.toString()
-				);
 		Map<String,Object>procResult     = ejecutaSP(new CargarListaNegocioServicioPublico(getDataSource()),params);
 		List<GenericVO>lista             = new ArrayList<GenericVO>();
 		List<Map<String,String>>listaAux = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		logger.debug(
 				new StringBuilder()
 				.append("\n********************************************")
-				.append("\n****** PKG_LISTAS.P_GET_ATRIBUTOS_NEG ******")
+				.append("\n****** ...P_GET_ATRIBUTOS_NEG ******")
 				.append("\n****** params=").append(params)
 				.append("\n****** registro=").append(listaAux)
 				.append("\n********************************************")
@@ -776,14 +758,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("submarca" , submarca);
 		params.put("cdtipsit" , cdtipsit);
-		logger.debug(
-				new StringBuilder()
-				.append("\n*******************************************")
-				.append("\n****** PKG_LISTAS.P_RECUPERA_MODELOS ******")
-				.append("\n****** params=").append(params)
-				.append("\n*******************************************")
-				.toString()
-				);
 		Map<String,Object>procResult=ejecutaSP(new CargarModelosPorSubmarcaRamo5(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -799,7 +773,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				new StringBuilder()
 				.append("\n*******************************************")
 				.append("\n****** registro=").append(listaGeneric)
-				.append("\n****** PKG_LISTAS.P_RECUPERA_MODELOS ******")
+				.append("\n****** ...P_RECUPERA_MODELOS ******")
 				.append("\n*******************************************")
 				.toString()
 				);
@@ -831,14 +805,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("submarca" , submarca);
 		params.put("modelo"   , modelo);
 		params.put("cdtipsit" , cdtipsit);
-		logger.debug(
-				new StringBuilder()
-				.append("\n*************************************************")
-				.append("\n****** PKG_LISTAS.P_RECUPERA_DESCRIPCIONES ******")
-				.append("\n****** params=").append(params)
-				.append("\n*************************************************")
-				.toString()
-				);
 		Map<String,Object>procResult=ejecutaSP(new CargarVersionesPorModeloSubmarcaRamo5(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -854,7 +820,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				new StringBuilder()
 				.append("\n*************************************************")
 				.append("\n****** registro=").append(listaGeneric)
-				.append("\n****** PKG_LISTAS.P_RECUPERA_DESCRIPCIONES ******")
+				.append("\n****** ...P_RECUPERA_DESCRIPCIONES ******")
 				.append("\n*************************************************")
 				.toString()
 				);
@@ -894,20 +860,13 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("cdtipsit" , cdtipsit);
 		params.put("servicio" , servicio);
 		params.put("uso"      , uso);
-		logger.debug(
-				new StringBuilder()
-				.append("\n*************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_VEHICULOS_RAMO_5 ******")
-				.append("\n****** params=").append(params)
-				.toString()
-				);
 		Map<String,Object>procResult=ejecutaSP(new CargarAutosPorCadenaRamo5(getDataSource()),params);
 		List<Map<String,String>>lista=(List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
 		{
 			lista=new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_VEHICULOS_RAMO_5",lista));
+		logger.debug(Utils.log("****** ...P_GET_VEHICULOS_RAMO_5",lista));
 		List<GenericVO>listaGeneric=new ArrayList<GenericVO>();
 		for(Map<String,String>descripcion:lista)
 		{
@@ -931,7 +890,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				new StringBuilder()
 				.append("\n*************************************************")
 				.append("\n****** registro=").append(listaGeneric)
-				.append("\n****** PKG_CONSULTA.P_GET_VEHICULOS_RAMO_5 ******")
+				.append("\n****** ...P_GET_VEHICULOS_RAMO_5 ******")
 				.append("\n*************************************************")
 				.toString()
 				);
@@ -970,14 +929,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdtabla" , cdtabla);
-		logger.debug(
-				new StringBuilder()
-				.append("\n*****************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_TTAPVAT1 ******")
-				.append("\n****** params=").append(params)
-				.append("\n*****************************************")
-				.toString()
-				);
 		Map<String,Object>procResult  = ejecutaSP(new CargarTtapvat1(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
@@ -1021,14 +972,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdtipsit",cdtipsit);
-		logger.debug(
-				new StringBuilder()
-				.append("\n***************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_NEGOCIO_X_CDTIPSIT ******")
-				.append("\n****** params=").append(params)
-				.append("\n***************************************************")
-				.toString()
-				);
 		Map<String,Object>procResult  = ejecutaSP(new CargarNegocioPorCdtipsitRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
@@ -1065,14 +1008,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("cdtipsit"  , cdtipsit);
 		params.put("servicio"  , servicio);
 		params.put("tipocot"   , tipocot);
-		logger.debug(
-				new StringBuilder()
-				.append("\n***********************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_USOS_X_NEGOCIO ******")
-				.append("\n****** params=").append(params)
-				.append("\n***********************************************")
-				.toString()
-				);
 		Map<String,Object>procResult  = ejecutaSP(new CargarUsosPorNegocioRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
@@ -1110,14 +1045,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdnegocio" , cdnegocio);
 		params.put("cdtipsit"  , cdtipsit);
-		logger.debug(
-				new StringBuilder()
-				.append("\n*************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_MARCAS_X_NEGOCIO ******")
-				.append("\n****** params=").append(params)
-				.append("\n*************************************************")
-				.toString()
-				);
 		Map<String,Object>procResult  = ejecutaSP(new CargarMarcasPorNegocioRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
@@ -1158,10 +1085,9 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("cdagente" , cdagente);
 		params.put("cdsisrol" , cdsisrol);
 		params.put("tipoflot" , tipoflot);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_RAMO5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarNegociosPorAgenteRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_RAMO5", params,lista);
+		Utils.debugProcedure(logger, "...P_GET_NEGOCIO_X_AGENTE_RAMO5", params,lista);
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
 		if(lista!=null&&lista.size()>0)
 		{
@@ -1195,10 +1121,9 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdsisrol" , cdsisrol);
 		params.put("negocio"  , negocio);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_CAT_CARGA_RAMO5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarCargasPorNegocioRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_CAT_CARGA_RAMO5", params, lista);
+		Utils.debugProcedure(logger, "...P_GET_CAT_CARGA_RAMO5", params, lista);
 		List<GenericVO>listaGen = new ArrayList<GenericVO>();
 		if(lista!=null)
 		{
@@ -1250,10 +1175,9 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("clavegs"  , clavegs);
 		params.put("servicio" , servicio);
 		params.put("tipoflot" , tipoflot);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_PLANES_CUSTOM_RAMO5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarPlanesPorNegocioModeloClavegsRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_PLANES_CUSTOM_RAMO5", params, lista);
+		Utils.debugProcedure(logger, "...P_GET_PLANES_CUSTOM_RAMO5", params, lista);
 		List<GenericVO>listaGen = new ArrayList<GenericVO>();
 		for(Map<String,String>plan:lista)
 		{
@@ -1298,7 +1222,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("cdagente" , cdagente);
 		params.put("producto" , producto);
 		params.put("cdsisrol" , cdsisrol);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_TIPSIT", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarNegociosPorTipoSituacionAgenteRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1309,7 +1232,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(negocio.get("OTCLAVE"),negocio.get("OTVALOR")));
 			}
 		}
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_NEGOCIO_X_AGENTE_TIPSIT", params, listaGen);
+		Utils.debugProcedure(logger, "...P_GET_NEGOCIO_X_AGENTE_TIPSIT", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1339,7 +1262,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("negocio"  , negocio);
 		params.put("producto" , producto);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarTiposSituacionPorNegocioRamo5(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1350,7 +1272,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(tiposit.get("CDTIPSIT"),tiposit.get("DSTIPSIT")));
 			}
 		}
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_TIPOSIT_X_NEGOCIO_RAMO_5", params, listaGen);
+		Utils.debugProcedure(logger, "...P_GET_TIPOSIT_X_NEGOCIO_RAMO_5", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1377,7 +1299,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdtipsit" , cdtipsit);
-		Utils.debugProcedure(logger, "PKG_LISTAS.P_RECUPERA_CUADROS_COM_X_PROD", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarCuadrosPorSituacion(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1388,7 +1309,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(tiposit.get("NMCUADRO"),tiposit.get("PORC_COMISION")));
 			}
 		}
-		Utils.debugProcedure(logger, "PKG_LISTAS.P_RECUPERA_CUADROS_COM_X_PROD", params, listaGen);
+		Utils.debugProcedure(logger, "...P_RECUPERA_CUADROS_COM_X_PROD", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1415,7 +1336,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("cdsisrol" , cdsisrol);
 		params.put("cdplan"   , cdplan);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_SUMA_ASEG_MSC", params);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarSumaAseguradaRamo4(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1426,7 +1346,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(tiposit.get("OTCLAVE"),tiposit.get("OTVALOR")));
 			}
 		}
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_SUMA_ASEG_MSC", params, listaGen);
+		Utils.debugProcedure(logger, "...P_GET_SUMA_ASEG_MSC", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1465,7 +1385,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsituac" , nmsituac);
 		params.put("nmsuplem" , nmsuplem);
-		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_TIPO_SERVICIO_AUTO", params);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarTiposServicioPorAuto(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1476,7 +1395,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(tiposit.get("OTCLAVE"),tiposit.get("OTVALOR")));
 			}
 		}
-		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_TIPO_SERVICIO_AUTO", params, listaGen);
+		Utils.debugProcedure(logger, "...P_GET_TIPO_SERVICIO_AUTO", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1509,7 +1428,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("cdtipsit" , cdtipsit);
 		params.put("cdsisrol" , cdsisrol);
 		params.put("cdusuari" , cdusuari);
-		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_TIPOVALOR_ROL_RAMO5", params);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarListaTiposValorRamo5PorRol(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1520,7 +1438,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(tiposit.get("OTCLAVE"),tiposit.get("OTVALOR")));
 			}
 		}
-		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_TIPOVALOR_ROL_RAMO5", params, listaGen);
+		Utils.debugProcedure(logger, "...P_GET_TIPOVALOR_ROL_RAMO5", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1546,7 +1464,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	public List<GenericVO> recuperarModulosEstadisticas() throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		Utils.debugProcedure(logger, "PKG_ESTADISTICA.P_GET_MODULOS", params);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarModulosEstadisticas(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1557,7 +1474,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(tiposit.get("OTCLAVE"),tiposit.get("OTVALOR")));
 			}
 		}
-		Utils.debugProcedure(logger, "PKG_ESTADISTICA.P_GET_MODULOS", params, listaGen);
+		Utils.debugProcedure(logger, "...P_GET_MODULOS", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1582,7 +1499,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdmodulo" , cdmodulo);
-		Utils.debugProcedure(logger, "PKG_ESTADISTICA.P_GET_TAREAS", params);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarTareasEstadisticas(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		List<GenericVO>listaGen       = new ArrayList<GenericVO>();
@@ -1593,7 +1509,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 				listaGen.add(new GenericVO(tiposit.get("CDTAREA"),tiposit.get("DSTAREA")));
 			}
 		}
-		Utils.debugProcedure(logger, "PKG_ESTADISTICA.P_GET_TAREAS", params, listaGen);
+		Utils.debugProcedure(logger, "...P_GET_TAREAS", params, listaGen);
 		return listaGen;
 	}
 	
@@ -1674,14 +1590,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		try {
 			Map<String,Object> params=new LinkedHashMap<String,Object>(0);
 			params.put("pv_cdtabla", cdTabla);
-			logger.debug(
-	        		new StringBuilder()
-	        		.append("\n************************************************")
-	        		.append("\n****** PKG_SINIESTRO.P_GET_ATRIBUTO_EXCEL ******")
-	        		.append("\n****** params=").append(params)
-	        		.append("\n************************************************")
-	        		.toString()
-	        		);
 			Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosExcel(getDataSource()), params);
 			return (List<GenericVO>) resultado.get("pv_registro_o");
 			
@@ -1735,7 +1643,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	{
 		Map<String,Object>       procRes    = ejecutaSP(new RecuperarListaConvenios(getDataSource()),new LinkedHashMap<String,String>());
 		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
-		logger.debug(Utils.log(listaMapas));
+		logger.debug(Utils.log("ListaConvenios:", listaMapas));
 		List<GenericVO>          lista      = new ArrayList<GenericVO>();
 		if(listaMapas!=null)
 		{
@@ -1762,14 +1670,11 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
 	public List<GenericVO> recuperarContratantesSalud(String nombre) throws Exception
 	{
-		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-							   "\n@@@@@@ recuperaContratantesSalud @@@@@@",
-							   "\n@@@@@@ nombre ",nombre,"\n"));
 		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
 		params.put("pv_cadena_i", nombre);
 		Map<String,Object>       procRes    = ejecutaSP(new RecuperarContratantesSalud(getDataSource()), params);
 		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
-		logger.debug(Utils.log(listaMapas));
+		logger.debug(Utils.log("ContratantesSalud:", listaMapas));
 		List<GenericVO>          lista      = new ArrayList<GenericVO>();
 		if(listaMapas!=null)
 		{
@@ -1796,13 +1701,11 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
 	public List<GenericVO> recuperaRamosColectivoTipoRamo(String tipoRamo) throws Exception
 	{
-		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-							   "\n@@@@@@ recuperaRamosColectivoTipoRamo @@@@@@"));
 		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
 		params.put("pv_tiporamo_i", tipoRamo);
 		Map<String,Object>       procRes    = ejecutaSP(new RecuperaRamosColectivoTipoRamo(getDataSource()), params);
 		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
-		logger.debug(Utils.log(listaMapas));
+		logger.debug(Utils.log("RamosColectivoTipoRamo:", listaMapas));
 		List<GenericVO>          lista      = new ArrayList<GenericVO>();
 		if(listaMapas!=null)
 		{
@@ -1829,15 +1732,12 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	
 	public List<GenericVO> recuperarTiposRamoSituacionColectivo(String tipoRamo, String cdramo) throws Exception
 	{
-		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-							   "\n@@@@@@ recuperarTiposRamoSituacionColectivo @@@@@@",
-							   "\n@@@@@@ cdramo ",cdramo,"\n"));
 		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
 		params.put("pv_tiporamo_i", tipoRamo);
 		params.put("pv_cdramo_i", cdramo);
 		Map<String,Object>       procRes    = ejecutaSP(new RecuperarTiposRamoSituacionColectivo(getDataSource()), params);
 		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
-		logger.debug(Utils.log(listaMapas));
+		logger.debug(Utils.log("TiposRamoSituacionColectivo=", listaMapas));
 		List<GenericVO>          lista      = new ArrayList<GenericVO>();
 		if(listaMapas!=null)
 		{
@@ -1865,9 +1765,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	
 	public List<GenericVO> recuperarListaFiltroPropiedadesInciso(String cdunieco, String cdramo,String estado,String nmpoliza) throws Exception
 	{
-		logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-							   "\n@@@@@@ recuperarTiposRamoSituacionColectivo @@@@@@",
-							   "\n@@@@@@ cdramo ",cdramo,"\n"));
 		
 		HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -1876,7 +1773,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		params.put("pv_nmpoliza_i", nmpoliza);
 		Map<String,Object>       procRes    = ejecutaSP(new RecuperarListaFiltroPropiedadesInciso(getDataSource()), params);
 		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
-		logger.debug(Utils.log(listaMapas));
+		logger.debug(Utils.log("ListaFiltroPropiedadesInciso:", listaMapas));
 		List<GenericVO>          lista      = new ArrayList<GenericVO>();
 		if(listaMapas!=null)
 		{
@@ -2057,7 +1954,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	public List<Map<String,String>> obtenerTablaApoyo1(String cdtabla)throws Exception{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("pv_cdtabla_i"  , cdtabla);
-		Utils.debugProcedure(logger, "P_GET_VAL_TTAPVAT1", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtenerTablaApoyo1(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -2088,7 +1984,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	@Override
 	public List<Map<String,String>> obtenerCamposExclusionRenovacion()throws Exception{
 		Map<String,String>params=new LinkedHashMap<String,String>();
-		Utils.debugProcedure(logger, "P_GET_CAMPEXTREN", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtenerCamposExclusionRenovacion(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -2234,8 +2129,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             params.put("pv_numsuc_i", pv_numsuc_i);
             params.put("pv_cveent_i", pv_cveent_i);
             params.put("pv_cdramo_i", pv_cdramo_i);
-            params.put("pv_cdtipsit_i", pv_cdtipsit_i);
-            logger.debug(Utils.log(params));   
+            params.put("pv_cdtipsit_i", pv_cdtipsit_i);   
             Map<String, Object> resultado = ejecutaSP(new ObtieneClaveDescuentoSubRamo(getDataSource()), params);
             return (List<GenericVO>) resultado.get("pv_registro_o");
         } catch (Exception e) {
@@ -2287,17 +2181,13 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     
     public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit,String nivel) throws Exception
     {
-        logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-                               "\n@@@@@@ recuperarListaFiltroPropiedadInciso @@@@@@",
-                               "\n@@@@@@ cdramo ",cdramo,"\n"));
-        
         HashMap<String,Object> params =  new LinkedHashMap<String, Object>();
         params.put("pv_cdramo_i", cdramo);
         params.put("pv_cdtipsit_i", cdtipsit);
         params.put("pv_nivel_i", nivel);
         Map<String,Object>       procRes    = ejecutaSP(new RecuperarListaFiltroPropiedadInciso(getDataSource()), params);
         List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
-        logger.debug(Utils.log(listaMapas));
+        logger.debug(Utils.log("ListaFiltroPropiedadInciso:", listaMapas));
         List<GenericVO>          lista      = new ArrayList<GenericVO>();
         if(listaMapas!=null)
         {
