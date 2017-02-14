@@ -19,6 +19,10 @@
     <!-- Scan Struts2 annotations -->
     <constant name="struts.convention.action.packages" value="mx.com.gseguros" />
     
+    <!-- Struts Convention Property modifications for Weblogic: -->
+    <constant name="struts.convention.action.includeJars" value=".*?/gseguros_clientes.*?jar(!/)?"/>
+    <constant name="struts.convention.action.fileProtocols" value="jar,zip"/>
+    
     <!-- Maximum Size File Uploading (in Bytes): -->
     <constant name="struts.multipart.maxSize" value="10485760"/>
     

@@ -21,7 +21,6 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
-import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
@@ -45,7 +44,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 	private Map<String,Object>       omap1;
 	private Map<String,Item>         imap;
 	private List<Map<String,String>> slist1;
-	private List<Map<String,String>> slist2;
 	private PersonasManager          personasManager;
 	private String                   error;
 	
@@ -61,9 +59,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	@Autowired
 	private EndososManager endososManager;
-	
-	@Autowired
-	private ConsultasPolizaManager consultasPolizaManager;
 	
 	public EndososAutoAction()
 	{
@@ -161,10 +156,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 			String tipoflot  = smap1.get("tipoflot");
 			String cancelada = smap1.get("cancelada");
 			String cdtipsit  = smap1.get("cdtipsit");
-			String cdunieco  = smap1.get("cdunieco");
-			String estado	 = smap1.get("estado");
-			String nmpoliza	 = smap1.get("nmpoliza");
-			
 			
 			Utils.validate(cdramo    , "No se recibio el producto");
 			Utils.validate(nivel     , "No se recibio el nivel de endoso");
@@ -185,7 +176,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			
 			SlistSmapVO resp = endososAutoManager.recuperarEndososClasificados(
 					cdramo, nivel, multiple, tipoflot, slist1, cdsisrol,
-					cancelada, cdusuari,cdtipsit,cdunieco,estado,nmpoliza);
+					cancelada, cdusuari,cdtipsit);
 			
 			smap1.putAll(resp.getSmap());
 			slist1=resp.getSlist();
@@ -1499,11 +1490,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			smap1.put("tstamp" , Utils.generaTimestamp());
 			
 			imap = endososAutoManager.endosoDevolucionPrimas(cdtipsup, cdramo);
-			try{
-				slist2=consultasPolizaManager.obtieneCoberturas(smap1.get("CDRAMO"), smap1.get("CDTIPSIT"), smap1.get("CDMEJRED"));
-			}catch(Exception ex){
-				logger.error("Error obteniendo las coberturas", ex);
-			}
+			
 			result = SUCCESS;
 		}
 		catch(Exception ex)
@@ -2936,167 +2923,6 @@ public class EndososAutoAction extends PrincipalCoreAction
                    ));
            return SUCCESS;
        }
-       
-       public String endosoAjusteSiniestralidad()
-       {
-           logger.debug(Utils.log(
-                    "\n########################################"
-                   ,"\n###### endosoAjusteSiniestralidad ######"
-                   ,"\n###### smap1="  , smap1
-                   ,"\n###### slist1=" , slist1
-                   ));
-
-           String result = ERROR;
-           
-           try
-           {
-               Utils.validate(smap1  , "No se recibieron datos de poliza");
-               Utils.validate(slist1 , "No se recibieron incisos");
-               
-               String cdramo   = smap1.get("CDRAMO");
-               String cdtipsup = smap1.get("cdtipsup");
-               logger.debug(smap1);
-               
-               Utils.validate(cdramo   , "No se recibio el producto");
-               Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
-               
-               smap1.put("tstamp" , Utils.generaTimestamp());
-               
-               imap = endososAutoManager.endosoAjusteSiniestralidad(cdtipsup, cdramo);
-               
-               result = SUCCESS;
-           }
-           catch(Exception ex)
-           {
-               respuesta = Utils.manejaExcepcion(ex);
-           }
-           
-           logger.debug(Utils.log(
-                   "\n###### endosoAjusteSiniestralidad ######"
-                   ,"\n#######################################"
-                   ));
-           return result;
-       }
-       
-       public String guardarEndosoAjusteSiniestralidad()
-       {
-           logger.debug(Utils.log(
-                    "\n###############################################"
-                   ,"\n###### guardarEndosoAjusteSiniestralidad ######"
-                   ,"\n###### smap1  = " , smap1
-                   ,"\n###### smap2  = " , smap2
-                   ,"\n###### slist1 = " , slist1
-                   ,"\n###### flujo  = " , flujo
-                   ));
-           
-           try
-           {
-               UserVO user = Utils.validateSession(session);
-               logger.debug("Iniciando impresion de valores");
-               logger.debug(smap1);
-               logger.debug(smap2);
-               logger.debug(slist1);
-               logger.debug(flujo);
-               logger.debug("Terminando impresion de valores");
-               
-               
-               Utils.validate(smap1  , "No se recibieron datos de poliza");
-               Utils.validate(smap2  , "No se recibieron datos de endoso");
-               Utils.validate(slist1 , "No se recibieron incisos");
-               
-               
-               String   cdunieco = smap1.get("CDUNIECO")
-                       ,cdramo   = smap1.get("CDRAMO")
-                       ,estado   = smap1.get("ESTADO")
-                       ,nmpoliza = smap1.get("NMPOLIZA")
-                       ,cdtipsup = smap1.get("cdtipsup")
-                       ,tstamp   = smap1.get("tstamp")
-                       ,fechaEnd = smap2.get("feefecto")
-                       ,nmtramite= smap1.get("NTRAMITE");
-               Utils.validate(
-                       cdunieco  , "No se recibio la sucursal"
-                       ,cdramo   , "No se recibio el producto"
-                       ,estado   , "No se recibio el estado de la poliza"
-                       ,nmpoliza , "No se recibio el numero de poliza"
-                       ,cdtipsup , "No se recibio el codigo de endoso"
-                       ,tstamp   , "No se recibio el ID de proceso"
-                       ,fechaEnd , "No se recibio la fecha de efecto"
-                       );
-               
-               omap1 = endososAutoManager.guardarEndosoAjusteSiniestralidad(
-                       user.getUser()
-                       ,user.getRolActivo().getClave()
-                       ,user.getEmpresa().getElementoId()
-                       ,cdunieco
-                       ,cdramo
-                       ,estado
-                       ,nmpoliza
-                       ,cdtipsup
-                       ,tstamp
-                       ,renderFechas.parse(fechaEnd)
-                       ,slist1
-                       ,user
-                       ,flujo
-                       ,nmtramite
-                       );
-               
-               success = true;
-           }
-           catch(Exception ex)
-           {
-               respuesta = Utils.manejaExcepcion(ex);
-           }
-           
-           logger.debug(Utils.log(
-                    "\n###### success   = " , success
-                   ,"\n###### respuesta = " , respuesta
-                   ,"\n###### omap1     = " , omap1
-                   ,"\n###### guardarEndosoAjusteSiniestralidad ######"
-                   ,"\n###############################################"
-                   ));
-           return SUCCESS;
-       }
-       
-       public String endosoCambioTipoCarga()
-       {
-           logger.debug(Utils.log(
-                    "\n########################################"
-                   ,"\n###### endosoCambioTipoCarga ###########"
-                   ,"\n###### smap1="  , smap1
-                   ,"\n###### slist1=" , slist1
-                   ));
-
-           String result = ERROR;
-           
-           try
-           {
-               Utils.validate(smap1  , "No se recibieron datos de poliza");
-               Utils.validate(slist1 , "No se recibieron incisos");
-               
-               String cdramo   = smap1.get("CDRAMO");
-               String cdtipsup = smap1.get("cdtipsup");
-               logger.debug(smap1);
-               
-               Utils.validate(cdramo   , "No se recibio el producto");
-               Utils.validate(cdtipsup , "No se recibio el codigo de endoso");
-               
-               smap1.put("tstamp" , Utils.generaTimestamp());
-               
-               imap = endososAutoManager.endosoCambioTipoCarga(cdtipsup, cdramo);
-               
-               result = SUCCESS;
-           }
-           catch(Exception ex)
-           {
-               respuesta = Utils.manejaExcepcion(ex);
-           }
-           
-           logger.debug(Utils.log(
-                   "\n###### endosoCambioTipoCarga ###########"
-                   ,"\n#######################################"
-                   ));
-           return result;
-       }
 	
 	/*
 	 * Getters y setters
@@ -3163,13 +2989,5 @@ public class EndososAutoAction extends PrincipalCoreAction
 
 	public void setFlujo(FlujoVO flujo) {
 		this.flujo = flujo;
-	}
-	
-	public List<Map<String, String>> getSlist2() {
-		return slist2;
-	}
-
-	public void setSlist2(List<Map<String, String>> slist2) {
-		this.slist2 = slist2;
 	}
 }

@@ -680,9 +680,6 @@ function _p34_botonEndososPolizaClic(callback)
     var multiple = 'N';
     var tipoflot = 'I';
     var cdtipsit = poliza.get('CDTIPSIT');
-    var cdunieco = poliza.get('CDUNIECO');
-    var estado   = poliza.get('ESTADO');
-    var nmpoliza = poliza.get('NMPOLIZA');
     if(!Ext.isEmpty(poliza.get('TIPOFLOT')))
     {
         tipoflot = poliza.get('TIPOFLOT');
@@ -703,9 +700,6 @@ function _p34_botonEndososPolizaClic(callback)
                 ,tipoflot  : tipoflot
                 ,cancelada : !Ext.isEmpty(poliza.get('FEANULAC'))?'S':'N'
                 ,cdtipsit  : cdtipsit
-                ,cdunieco  : cdunieco
-                ,estado	   : estado
-                ,nmpoliza  : nmpoliza
             }
         }
         ,success : function(response)
@@ -1119,10 +1113,11 @@ function _p34_incisos(nivel,recordNivel,cols,padre,callback)
 			                                    	    }
 			                                    	    ,extraParams:
 			                                    	    {
-			                                    	        catalogo           : 'RECUPERAR_LISTA_FILTRO_PROPIEDAD_INCISO'
-                                                            ,'params.cdramo'   :  recordPoliza.get('CDRAMO')
-                                                            ,'params.cdtipsit' :  recordPoliza.get('CDTIPSIT')
-                                                            ,'params.nivel'    :  "I"
+			                                    	        catalogo           : 'RECUPERAR_LISTA_FILTRO_PROPIEDADDES_INCISO'
+			                                    	        ,'params.cdunieco' : recordPoliza.get('CDUNIECO')
+			                                    	        ,'params.cdramo' : recordPoliza.get('CDRAMO')
+			                                    	        ,'params.estado' : recordPoliza.get('ESTADO')
+			                                    	        ,'params.nmpoliza' : recordPoliza.get('NMPOLIZA')
 			                                    	    }
 			                                    	}
 				                                    ,listeners :

@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.despachador.service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -79,39 +78,5 @@ public interface DespachadorManager {
     public String recuperarDescripcionRol (String cdsisrol) throws Exception;
  
     public Map<String, Item> pantallaDatos() throws Exception;
- 
-    /**
-     * Carga la configuracion de una sucursal
-     * @param cdunieco
-     * @param cdunizon 
-     * @param cdnivel 
-     * @return
-     * @throws Exception
-     */
-    public List<Map<String, String>> cargaConfSucursales(String cdunieco, String cdunizon, String cdnivel) throws Exception;
     
-    /**
-     * Guarda la configuracion de una sucursal para el despachador
-     * @param sucursal
-     * @throws Exception
-     */
-    public void guardaConfSucursales(Map<String, String> sucursal) throws Exception;
-
-    /**
-     * Carga la configuracion permisos de flujos
-     * @param cdtipflu
-     * @param cdflujomc 
-     * @param cdramo 
-     * @param cdtipsit 
-     * @return
-     * @throws Exception
-     */
-    public List<Map<String, String>> cargaConfPermisos(String cdtipflu, String cdflujomc, String cdramo, String cdtipsit) throws Exception;
-    
-    /**
-     * Guarda la configuracion de permisos de flujos
-     * @param sucursal
-     * @throws Exception
-     */
-    public void guardaConfPermisos(Map<String, String> permiso) throws Exception;
 }
