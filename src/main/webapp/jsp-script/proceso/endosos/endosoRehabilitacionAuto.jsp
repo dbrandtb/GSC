@@ -16,6 +16,7 @@ debug('_p40_smap1:',_p40_smap1);
 
 var _p40_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
 debug('_p40_flujo:',_p40_flujo);
+debug('TipoEndoso',TipoEndoso.RecuperarEndososRehabilitables);
 
 var _p40_storeEndosos = null;
 ////// variables //////
@@ -53,7 +54,7 @@ Ext.onReady(function()
             ,url         : _p40_urlRecuperacionSimpleLista
             ,extraParams :
             {
-                'smap1.procedimiento' : 'RECUPERAR_ENDOSOS_REHABILITABLES'
+                'smap1.procedimiento' : !Ext.isEmpty(_p40_smap1.cdtipsup) && _p40_smap1.cdtipsup==TipoEndoso.RecuperarEndososRehabilitables?'RECUPERAR_ENDOSOS_REHABILITABLES':'RECUPERAR_ENDOSOS_SINIESTRALIDAD_REHA'
                 ,'smap1.cdunieco'     : _p40_smap1.CDUNIECO
                 ,'smap1.cdramo'       : _p40_smap1.CDRAMO
                 ,'smap1.estado'       : _p40_smap1.ESTADO

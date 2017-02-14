@@ -7418,7 +7418,8 @@ public String retarificarEndosos()
 				smap1.put("cdperson", datos.get("CDPERSON"));
 				smap1.put("cdrol", datos.get("CDROL"));
 			}else{
-				logger.error("Error al obtener datos de contratante para pantalla de endoso de domicilio autos");
+			    message = "Error al obtener datos de contratante para pantalla de endoso de domicilio autos";
+				logger.error(message);
 				return ERROR;
 			}
 			

@@ -1167,4 +1167,81 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
         }
     }
     
+    @Override
+    public Integer endosoCambioModeloDescripcion(Map<String, Object> params) throws Exception {
+        Integer resp = null;
+        Map<String, Object> mapResult = ejecutaSP(new EndosoCambModelo(getDataSource()), params);
+        resp = (Integer) mapResult.get("rs");
+        
+        return resp;
+    }
+    
+    public class EndosoCambModelo extends StoredProcedure{
+        protected EndosoCambModelo(DataSource dataSource){
+            super(dataSource, "sp_EndosoBDescripcionModelo");
+            
+            declareParameter(new SqlParameter("vIdMotivo", Types.SMALLINT));
+            declareParameter(new SqlParameter("vSucursal", Types.SMALLINT));
+            declareParameter(new SqlParameter("vRamo", Types.SMALLINT));
+            declareParameter(new SqlParameter("vPoliza", Types.INTEGER));
+            declareParameter(new SqlParameter("vInciso", Types.SMALLINT));
+            declareParameter(new SqlParameter("vDescripcion", Types.VARCHAR));
+            declareParameter(new SqlParameter("vModelo", Types.INTEGER));
+            declareParameter(new SqlParameter("vFEndoso", Types.DATE));
+            declareParameter(new SqlParameter("vUser", Types.VARCHAR));
+            declareParameter(new SqlParameter("vEndoB", Types.INTEGER));
+            
+            
+            declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+                @Override  
+                public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+                    Integer result = null;
+                    while(rs.next()){  
+                        result = rs.getInt(1);
+                    }  
+                    return result;  
+                }
+            }));
+            
+            compile();
+        }
+    }
+    
+    @Override
+    public Integer endosoTipoCarga(Map<String, Object> params) throws Exception {
+        Integer resp = null;
+        Map<String, Object> mapResult = ejecutaSP(new EndosoTipoCarga(getDataSource()), params);
+        resp = (Integer) mapResult.get("rs");
+        
+        return resp;
+    }
+    
+    public class EndosoTipoCarga extends StoredProcedure{
+        protected EndosoTipoCarga(DataSource dataSource){
+            super(dataSource, "sp_EndosoBCambioCarga");
+            
+            declareParameter(new SqlParameter("vIdMotivo"  , Types.SMALLINT));
+            declareParameter(new SqlParameter("vSucursal"  , Types.SMALLINT));
+            declareParameter(new SqlParameter("vRamo"      , Types.SMALLINT));
+            declareParameter(new SqlParameter("vPoliza"    , Types.INTEGER));
+            declareParameter(new SqlParameter("vInciso"    , Types.SMALLINT));
+            declareParameter(new SqlParameter("vCveCarga"  , Types.SMALLINT));
+            declareParameter(new SqlParameter("vFEndoso"   , Types.DATE));
+            declareParameter(new SqlParameter("vUser"      , Types.CHAR));
+            declareParameter(new SqlParameter("vEndoB"     , Types.INTEGER));
+            
+            declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+                @Override  
+                public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+                    Integer result = null;
+                    while(rs.next()){  
+                        result = rs.getInt(1);
+                    }  
+                    return result;  
+                }
+            }));
+            
+            compile();
+        }
+    }
 }

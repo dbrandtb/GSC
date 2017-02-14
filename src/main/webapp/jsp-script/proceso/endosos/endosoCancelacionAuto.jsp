@@ -16,6 +16,7 @@ debug('_p41_smap1:',_p41_smap1);
 
 var _p41_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
 debug('_p41_flujo:',_p41_flujo);
+debug('TipoEndoso', TipoEndoso.CancelacionAutomaticaEndodo);
 
 var _p41_storeEndosos = null;
 ////// variables //////
@@ -53,7 +54,7 @@ Ext.onReady(function()
             ,url         : _p41_urlRecuperacionSimpleLista
             ,extraParams :
             {
-                'smap1.procedimiento' : 'RECUPERAR_ENDOSOS_CANCELABLES'
+                'smap1.procedimiento' : !Ext.isEmpty(_p41_smap1.cdtipsup) && _p41_smap1.cdtipsup==TipoEndoso.CancelacionAutomaticaEndodo?'RECUPERAR_ENDOSOS_CANCELABLES':'RECUPERAR_ENDOSOS_SINIESTRALIDAD'
                 ,'smap1.cdunieco'     : _p41_smap1.CDUNIECO
                 ,'smap1.cdramo'       : _p41_smap1.CDRAMO
                 ,'smap1.estado'       : _p41_smap1.ESTADO
