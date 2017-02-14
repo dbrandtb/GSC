@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
@@ -22,6 +23,7 @@ import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
 @Controller
@@ -126,6 +128,237 @@ public class DespachadorAction extends PrincipalCoreAction {
 	        message = Utils.manejaExcepcion(ex);
 	    }
 	    return result;
+	}
+	
+	
+	@Action(value   = "cargaConfSucursales",
+            results = { @Result(name="success", type="json") }
+            )
+	public String cargaConfSucursales(){
+		logger.debug(Utils.log(
+	            "\n#################################",
+	            "\n###### cargaConfSucursales ######",
+	            "\n###### params = ", params));
+	    try {
+	    	Utils.validate(params, "No se recibieron par\u00e1metros");
+		    
+		    String cdunieco = params.get("cdunieco");
+		    String cdunizon = params.get("cdunizon");
+		    String cdnivel  = params.get("cdnivel");
+		    
+	        list = despachadorManager.cargaConfSucursales(cdunieco, cdunizon, cdnivel);
+	        
+	        success = true;
+	    } catch (Exception ex) {
+	        message = Utils.manejaExcepcion(ex);
+	    }
+	    
+	    logger.debug(Utils.log(
+                "\n###### success = " , success,
+                "\n###### message = " , message,
+                "\n###### cargaConfSucursales ######",
+                "\n#################################"));
+	    
+	    return SUCCESS;
+	}
+
+	@Action(value   = "guardaConfSucursales",
+			results         = { @Result(name="success", type="json") },
+            interceptorRefs = {
+			    @InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+			})
+	public String guardaConfSucursales(){
+		logger.debug(Utils.log(
+				"\n##################################",
+				"\n###### guardaConfSucursales ######",
+				"\n###### list = ", list));
+		try {
+			Utils.validate(list, "No se recibieron par\u00e1metros");
+			
+			for(Map<String, String> sucursal : list){
+				sucursal.put("OP", Constantes.UPDATE_MODE);
+				despachadorManager.guardaConfSucursales(sucursal);
+			}
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### guardaConfSucursales ######",
+				"\n##################################"));
+		
+		return SUCCESS;
+	}
+
+	@Action(value   = "agregaConfSucursal",
+			results = { @Result(name="success", type="json") }
+	)
+	public String agregaConfSucursal(){
+		logger.debug(Utils.log(
+				"\n################################",
+				"\n###### agregaConfSucursal ######",
+				"\n###### params = ", params));
+		try {
+			Utils.validate(params, "No se recibieron par\u00e1metros");
+			params.put("OP", Constantes.INSERT_MODE);
+			despachadorManager.guardaConfSucursales(params);
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### agregaConfSucursal ######",
+				"\n################################"));
+		
+		return SUCCESS;
+	}
+
+	@Action(value   = "eliminaConfSucursal",
+			results = { @Result(name="success", type="json") }
+	)
+	public String eliminaConfSucursal(){
+		logger.debug(Utils.log(
+				"\n#################################",
+				"\n###### eliminaConfSucursal ######",
+				"\n###### params = ", params));
+		try {
+			Utils.validate(params, "No se recibieron par\u00e1metros");
+			params.put("OP", Constantes.DELETE_MODE);
+			despachadorManager.guardaConfSucursales(params);
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### eliminaConfSucursal #######",
+				"\n##################################"));
+		
+		return SUCCESS;
+	}
+	
+	
+	@Action(value   = "cargaConfPermisos",
+			results = { @Result(name="success", type="json") }
+			)
+	public String cargaConfPermisos(){
+		logger.debug(Utils.log(
+				"\n#################################",
+				"\n###### cargaConfPermisos ######",
+				"\n###### params = ", params));
+		try {
+			Utils.validate(params, "No se recibieron par\u00e1metros");
+			
+			String cdtipflu  = params.get("cdtipflu");
+			String cdflujomc = params.get("cdflujomc");
+			String cdramo    = params.get("cdramo");
+			String cdtipsit  = params.get("cdtipsit");
+			
+			list = despachadorManager.cargaConfPermisos(cdtipflu, cdflujomc, cdramo, cdtipsit);
+			
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### cargaConfPermisos ######",
+				"\n#################################"));
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "guardaConfPermisos",
+			results         = { @Result(name="success", type="json") },
+			interceptorRefs = {
+					@InterceptorRef(value = "json", params = {"enableSMD", "true", "ignoreSMDMethodInterfaces", "false" })
+	})
+	public String guardaConfPermisos(){
+		logger.debug(Utils.log(
+				"\n##################################",
+				"\n###### guardaConfPermisos ######",
+				"\n###### list = ", list));
+		try {
+			Utils.validate(list, "No se recibieron par\u00e1metros");
+			
+			for(Map<String, String> permiso : list){
+				permiso.put("OP", Constantes.UPDATE_MODE);
+				despachadorManager.guardaConfPermisos(permiso);
+			}
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### guardaConfPermisos ########",
+				"\n##################################"));
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "agregaConfPermiso",
+			results = { @Result(name="success", type="json") }
+			)
+	public String agregaConfPermiso(){
+		logger.debug(Utils.log(
+				"\n################################",
+				"\n###### agregaConfPermiso #######",
+				"\n###### params = ", params));
+		try {
+			Utils.validate(params, "No se recibieron par\u00e1metros");
+			params.put("OP", Constantes.INSERT_MODE);
+			despachadorManager.guardaConfPermisos(params);
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### agregaConfPermiso #########",
+				"\n##################################"));
+		
+		return SUCCESS;
+	}
+	
+	@Action(value   = "eliminaConfPermiso",
+			results = { @Result(name="success", type="json") }
+			)
+	public String eliminaConfPermiso(){
+		logger.debug(Utils.log(
+				"\n#################################",
+				"\n###### eliminaConfPermiso #######",
+				"\n###### params = ", params));
+		try {
+			Utils.validate(params, "No se recibieron par\u00e1metros");
+			params.put("OP", Constantes.DELETE_MODE);
+			despachadorManager.guardaConfPermisos(params);
+			success = true;
+		} catch (Exception ex) {
+			message = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log(
+				"\n###### success = " , success,
+				"\n###### message = " , message,
+				"\n###### eliminaConfPermiso ########",
+				"\n##################################"));
+		
+		return SUCCESS;
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

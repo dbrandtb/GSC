@@ -21,6 +21,7 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
 /**
@@ -173,6 +174,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPOS_PAGO_POLIZA_SIN_DXN_MULTIANUAL:
 				case CATALOGO_ESTADOS_RECIBO:
 				case ZONAS_SUCURSALES:
+				case NIVELES_SUCURSALES:
 				case TAPOYO:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
@@ -226,6 +228,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 					for(Map<String,String> ramo:ramos) {
 						lista.add(new GenericVO(ramo.get("cdramo"), ramo.get("dsramo")));
 					}
+					
+					if(!lista.isEmpty() && params != null && params.containsKey("aniadeComodinTodos") && Constantes.SI.equalsIgnoreCase(params.get("aniadeComodinTodos"))){
+						lista.add(0,new GenericVO("-1", " ---- Todos ---- "));
+					}
+					
 					break;
 				case RAMOSALUD:
 					lista =siniestrosManager.getConsultaListaRamoSalud();
@@ -236,6 +243,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 					for(Map<String,String> tipsit:tipsits) {
 						lista.add(new GenericVO(tipsit.get("CDTIPSIT"), tipsit.get("DSTIPSIT")));
 					}
+					
+					if(!lista.isEmpty() && params != null && params.containsKey("aniadeComodinTodos") && Constantes.SI.equalsIgnoreCase(params.get("aniadeComodinTodos"))){
+						lista.add(0,new GenericVO("*", " ---- Todos ---- "));
+					}
+					
 					break;
 				case ROLES_SISTEMA:
 					String filtro = null;
