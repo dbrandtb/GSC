@@ -5856,4 +5856,89 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
         }
     }
     
+    @Override
+    public List<Map<String,String>> recuperarEndososSiniestralidad(
+            String cdunieco
+            ,String cdramo
+            ,String estado
+            ,String nmpoliza
+            )throws Exception
+    {
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        params.put("cdunieco" , cdunieco);
+        params.put("cdramo"   , cdramo);
+        params.put("estado"   , estado);
+        params.put("nmpoliza" , nmpoliza);
+        Map<String,Object>       procResult = ejecutaSP(new RecuperarEndososSiniestralidad(getDataSource()),params);
+        List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
+        if(lista==null)
+        {
+            lista = new ArrayList<Map<String,String>>();
+        }
+        return lista;
+    }
+    
+    protected class RecuperarEndososSiniestralidad extends StoredProcedure
+    {
+        protected RecuperarEndososSiniestralidad(DataSource dataSource)
+        {
+            super(dataSource , "PKG_CANCELA.P_GET_ENDOSOS_X_POLIZA_SINIES");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+                    "NSUPLOGI"  , "CDDEVCIA" , "CDGESTOR" , "FEEMISIO" , "FEINIVAL" , "FEFINVAL"
+                    ,"FEEFECTO" , "FEPROREN" , "CDMONEDA" , "NMSUPLEM" , "FEINICIO"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public List<Map<String,String>> recuperarEndososRehabilitablesSiniestralidad(
+            String cdunieco
+            ,String cdramo
+            ,String estado
+            ,String nmpoliza
+            )throws Exception
+    {
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        params.put("cdunieco" , cdunieco);
+        params.put("cdramo"   , cdramo);
+        params.put("estado"   , estado);
+        params.put("nmpoliza" , nmpoliza);
+        Map<String,Object>       procResult = ejecutaSP(new RecuperarEndosoSiniestralidad(getDataSource()),params);
+        List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
+        if(lista==null)
+        {
+            lista = new ArrayList<Map<String,String>>();
+        }
+        return lista;
+    }
+    
+    protected class RecuperarEndosoSiniestralidad extends StoredProcedure
+    {
+        protected RecuperarEndosoSiniestralidad(DataSource dataSource)
+        {
+            super(dataSource , "PKG_CANCELA.P_GET_ENDOSOS_REHAB_SINI");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+                    "NSUPLOGI"  , "CDDEVCIA" , "CDGESTOR" , "FEEMISIO" , "FEINIVAL" , "FEFINVAL"
+                    ,"FEEFECTO" , "FEPROREN" , "CDMONEDA" , "NMSUPLEM"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+
+    
 }

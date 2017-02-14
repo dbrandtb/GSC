@@ -272,6 +272,8 @@ var TipoEndoso = {
 		BAJA_COBERTURAS							   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@BAJA_COBERTURAS.cdTipSup"             />',
 		ALTA_COBERTURAS			 		   		   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ALTA_COBERTURAS.cdTipSup"             />',
 		DEVOLUCION_PRIMAS_NO_DEVENGADAS			   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEVOLUCION_PRIMAS_NO_DEVENGADAS.cdTipSup"  />',
+		CancelacionAutomaticaEndodo                : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@CANCELACION_AUTOMATICA_ENDOSO.cdTipSup"    />',
+        RecuperarEndososRehabilitables             : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@REHABILITACION_ENDOSO.cdTipSup" />'
 }
 
 </script>

@@ -28,6 +28,7 @@ import mx.com.gseguros.portal.cotizacion.model.SlistSmapVO;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Utils;
 
 @Controller
@@ -230,6 +231,21 @@ public class EndososAutoAction extends PrincipalCoreAction
 			
 			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
 			imap = endososAutoManager.pantallaEndosoValosit(cdtipsup,cdramo, cdsisrol);
+			//Se agrega Filtro para el Endoso Cambio de Modelo y Cambio de Descripcion 
+			if(TipoEndoso.ENDOSO_CAMBIO_MODELO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup) ){
+			    List<Map<String,String>> slist2 =new ArrayList<Map<String,String>>();
+			    ArrayList<String> TipSituacion = new ArrayList<String>();
+                TipSituacion.add(TipoSituacion.TRACTOCAMIONES_ARMADOS.getCdtipsit().toString());
+                TipSituacion.add(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().toString());
+			    for (int i = 0; i < slist1.size(); i++) {
+			       boolean aux =  TipSituacion.contains(slist1.get(i).get("CDTIPSIT"));
+			       if(aux){
+			            slist2.add(slist1.get(i));
+			        }
+	            }
+			    slist1.clear();
+			    slist1.addAll(slist2);
+			}
 			
 			result = SUCCESS;
 		}
@@ -3096,6 +3112,85 @@ public class EndososAutoAction extends PrincipalCoreAction
                    ,"\n#######################################"
                    ));
            return result;
+       }
+       
+       public String guardarEndosoCambioTipoCarga()
+       {
+           logger.debug(Utils.log(
+                    "\n###############################################"
+                   ,"\n###### guardarEndosoCambioTipoCarga ######"
+                   ,"\n###### smap1  = " , smap1
+                   ,"\n###### smap2  = " , smap2
+                   ,"\n###### slist1 = " , slist1
+                   ,"\n###### flujo  = " , flujo
+                   ));
+           
+           try
+           {
+               UserVO user = Utils.validateSession(session);
+               logger.debug("Iniciando impresion de valores");
+               logger.debug(smap1);
+               logger.debug(smap2);
+               logger.debug(slist1);
+               logger.debug(flujo);
+               logger.debug("Terminando impresion de valores");
+               
+               
+               Utils.validate(smap1  , "No se recibieron datos de poliza");
+               Utils.validate(smap2  , "No se recibieron datos de endoso");
+               Utils.validate(slist1 , "No se recibieron incisos");
+               
+               
+               String   cdunieco = smap1.get("CDUNIECO")
+                       ,cdramo   = smap1.get("CDRAMO")
+                       ,estado   = smap1.get("ESTADO")
+                       ,nmpoliza = smap1.get("NMPOLIZA")
+                       ,cdtipsup = smap1.get("cdtipsup")
+                       ,tstamp   = smap1.get("tstamp")
+                       ,fechaEnd = smap2.get("feefecto")
+                       ,nmtramite= smap1.get("NTRAMITE");
+               Utils.validate(
+                       cdunieco  , "No se recibio la sucursal"
+                       ,cdramo   , "No se recibio el producto"
+                       ,estado   , "No se recibio el estado de la poliza"
+                       ,nmpoliza , "No se recibio el numero de poliza"
+                       ,cdtipsup , "No se recibio el codigo de endoso"
+                       ,tstamp   , "No se recibio el ID de proceso"
+                       ,fechaEnd , "No se recibio la fecha de efecto"
+                       );
+               
+               omap1 = endososAutoManager.guardarEndosoCambioTipoCarga(
+                       user.getUser()
+                       ,user.getRolActivo().getClave()
+                       ,user.getEmpresa().getElementoId()
+                       ,cdunieco
+                       ,cdramo
+                       ,estado
+                       ,nmpoliza
+                       ,cdtipsup
+                       ,tstamp
+                       ,renderFechas.parse(fechaEnd)
+                       ,slist1
+                       ,user
+                       ,flujo
+                       ,nmtramite
+                       );
+               
+               success = true;
+           }
+           catch(Exception ex)
+           {
+               respuesta = Utils.manejaExcepcion(ex);
+           }
+           
+           logger.debug(Utils.log(
+                    "\n###### success   = " , success
+                   ,"\n###### respuesta = " , respuesta
+                   ,"\n###### omap1     = " , omap1
+                   ,"\n###### guardarEndosoCambioTipoCarga ######"
+                   ,"\n###############################################"
+                   ));
+           return SUCCESS;
        }
 	
 	/*
