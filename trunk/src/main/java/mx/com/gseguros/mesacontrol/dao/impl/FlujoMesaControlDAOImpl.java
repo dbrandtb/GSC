@@ -4439,9 +4439,33 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
     
     protected class ActualizarTramiteSustitutoSP extends StoredProcedure {
         protected ActualizarTramiteSustitutoSP (DataSource dataSource) {
-            super(dataSource,"P_MC_UPD_NTRASUST_TRAMITE");
+            super(dataSource, "P_MC_UPD_NTRASUST_TRAMITE");
             declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_ntrasust_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_dserror_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public void cambiarTipoEndosoTramite (String ntramite, String cdtipsup) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("pv_ntramite_i", ntramite);
+        params.put("pv_cdtipsup_i", cdtipsup);
+        Map<String, Object> procRes = ejecutaSP(new CambiarTipoEndosoTramiteSP(getDataSource()), params);
+        String error = (String) procRes.get("pv_dserror_o");
+        if (StringUtils.isNotBlank(error)) {
+            throw new ApplicationException(error);
+        }
+    }
+    
+    protected class CambiarTipoEndosoTramiteSP extends StoredProcedure {
+        protected CambiarTipoEndosoTramiteSP (DataSource dataSource) {
+            super(dataSource, "P_MC_UPD_TIPO_ENDOSO_TRAMITE");
+            declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_dserror_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));

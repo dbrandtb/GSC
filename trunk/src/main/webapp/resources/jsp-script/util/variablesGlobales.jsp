@@ -54,7 +54,8 @@
         ,_GLOBAL_COMP_URL_AUTORIZAR_ENDOSO          = '<s:url namespace="/endosos"          action="autorizarEndoso"            />'
         ,_GLOBAL_COMP_RECUPERAR_COTI_COLEC          = '<s:url namespace="/flujomesacontrol" action="recuperarCotiColec"         />'
         ,_GLOBAL_URL_OBTENER_COMPONENTES            = '<s:url namespace="/pantallas"        action="obtenerComponentes"         />'
-        ,_GLOBAL_COMP_URL_GUARDAR_DATOS_TRAMITE     = '<s:url namespace="/flujomesacontrol" action="guardarVentanaDatosTramite" />';
+        ,_GLOBAL_COMP_URL_GUARDAR_DATOS_TRAMITE     = '<s:url namespace="/flujomesacontrol" action="guardarVentanaDatosTramite" />'
+        ,_GLOBAL_COMP_URL_CAMBIAR_TIPO_ENDOSO       = '<s:url namespace="/flujomesacontrol" action="cambiarTipoEndosoTramite"   />';
     
     <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo">
         <s:param name="params.AGRUPAMC" value="%{'PRINCIPAL'}" />

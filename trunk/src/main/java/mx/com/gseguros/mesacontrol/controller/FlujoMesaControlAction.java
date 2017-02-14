@@ -2819,6 +2819,37 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
         return SUCCESS;
     }
 	
+	@Action(value   = "cambiarTipoEndosoTramite",
+            results = { @Result(name="success", type="json") }
+            )
+	public String cambiarTipoEndosoTramite () {
+	    logger.debug("{}", Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+	                                 "\n@@@@@@ cambiarTipoEndosoTramite @@@@@@",
+	                                 "\n@@@@@@ params = ", params));
+	    try {
+	        UserVO usuario = Utils.validateSession(session);
+	        Utils.validate(params, "No se recibieron datos para cambiar motivo de endoso");
+	        String ntramite = params.get("NTRAMITE"),
+	               cdtipsup = params.get("CDTIPSUP"),
+	               comments = params.get("COMMENTS"),
+	               swagente = params.get("SWAGENTE"),
+	               status   = params.get("STATUS");
+	        Utils.validate(ntramite , "Falta ntramite",
+	                       cdtipsup , "Falta cdtipsup",
+	                       status   , "Falta status");
+	        flujoMesaControlManager.cambiarTipoEndosoTramite(ntramite, status, cdtipsup, comments, "S".equals(swagente),
+	                usuario.getUser(), usuario.getRolActivo().getClave());
+	        success = true;
+	    } catch (Exception ex) {
+	        message = Utils.manejaExcepcion(ex);
+	    }
+        logger.debug("{}", Utils.log("\n@@@@@@ success = ", success,
+                                     "\n@@@@@@ message = ", message,
+                                     "\n@@@@@@ cambiarTipoEndosoTramite @@@@@@",
+                                     "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+	    return SUCCESS;
+	}
+	
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
 	                                                      //

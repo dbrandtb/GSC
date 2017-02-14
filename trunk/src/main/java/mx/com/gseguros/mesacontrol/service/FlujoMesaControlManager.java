@@ -416,4 +416,7 @@ public interface FlujoMesaControlManager
     public void pruebaGuardarObjeto () throws Exception;
 	
 	public void pruebaGuardarLista () throws Exception;
+	
+	public void cambiarTipoEndosoTramite (String ntramite, String status, String cdtipsup, String comments, boolean swagente,
+	        String cdusuari, String cdsisrol) throws Exception;
 }

@@ -1036,6 +1036,11 @@ public class CatalogosAction extends PrincipalCoreAction {
                     }
 					lista = catalogosManager.obtieneComentariosNegocio(params.get("cdramo"), params.get("cdtipsit"), params.get("negocio"));
                 	break;
+				case TIPOS_ENDOSO_X_TRAMITE:
+				    if (params !=null && StringUtils.isNotBlank(params.get("ntramite"))) {
+				        lista = catalogosManager.recuperarTiposEndosoPorTramite(params.get("ntramite"));
+				    }
+				    break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
