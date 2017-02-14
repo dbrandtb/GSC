@@ -132,7 +132,6 @@ var TipoSituacion = {
 	DXNSEMANAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNSEMANAL.codigo" />',
 	DXNANUAL            :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNANUAL.codigo" />',
 	DXNDOCENAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNDOCENAL.codigo" />',
-	CONTADO				:    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@CONTADO.codigo" />',
 	esDxN				:    function(formaPago){
 		
 		var dxn=[
@@ -262,18 +261,5 @@ var TipoPersona = {
     Moral  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoPersona@MORAL.tipoPersona" />',
     RegimenSimplificado  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoPersona@REGIMEN_SIMPLIFICADO.tipoPersona" />'
 };
-
-// Catalogo de Tipo de Endoso
-var TipoEndoso = {
-		SumaAseguradaIncremento   	               : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@SUMA_ASEGURADA_INCREMENTO.cdTipSup" />',
-		SumaAseguradaDecremento    	               : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@SUMA_ASEGURADA_DECREMENTO.cdTipSup" />',
-		DeducibleMenos			   				   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEDUCIBLE_MENOS.cdTipSup"           />',
-		DeducibleMas			   				   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEDUCIBLE_MAS.cdTipSup"             />',
-		BajaCoberturas							   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@BAJA_COBERTURAS.cdTipSup"             />',
-		AltaCoberturas			 		   		   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ALTA_COBERTURAS.cdTipSup"             />',
-		DevolucionDePrimasNoDevengadas			   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEVOLUCION_PRIMAS_NO_DEVENGADAS.cdTipSup"  />',
-		CancelacionAutomaticaEndodo                : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@CANCELACION_AUTOMATICA_ENDOSO.cdTipSup"    />',
-        RecuperarEndososRehabilitables             : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@REHABILITACION_ENDOSO.cdTipSup" />'
-}
 
 </script>

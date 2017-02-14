@@ -3936,15 +3936,16 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
             mensajeWarning('Verificar los datos del concepto y el censo de asegurados',_p25_setActiveConcepto);
         }
         
-        //debug("numcontrato",_fieldByName('tvalopol_parametros.pv_otvalor20').getValue() );
+        debug("numcontrato",_fieldByName('tvalopol_parametros.pv_otvalor20').getValue() );
       	//parche para numcontrato>
-      	var campoNumContrato = _fieldByName('tvalopol_parametros.pv_otvalor20', null, true);
-      	if (!Ext.isEmpty(campoNumContrato)
-      	    && campoNumContrato.fieldLabel.toUpperCase().indexOf('CONTRATO') != -1 ) {
-      	    if (Ext.isEmpty(campoNumContrato.getValue())) {
-      		    campoNumContrato.setValue('0');
-            }
-            if (_p21_smap1.cdunieco == 1403 && campoNumContrato.getValue() == 0) {
+      	if ((_fieldByName('tvalopol_parametros.pv_otvalor20').getValue()=="") || (Ext.isEmpty(_fieldByName('tvalopol_parametros.pv_otvalor20')) ) || (_fieldByName('tvalopol_parametros.pv_otvalor20').getValue()==null))
+        {
+        	valido=false;
+        	mensajeWarning('Verificar los datos del numero de contrato', _p25_setActiveConcepto);
+        }
+      	else{
+      		if ((_fieldByName('tvalopol_parametros.pv_otvalor20').getValue()=="0") && (_p21_smap1.cdunieco ==1403))
+        	{
 	        	valido=false;
 	        	mensajeWarning('Verificar los datos del numero de contrato', _p25_setActiveConcepto);
         	}

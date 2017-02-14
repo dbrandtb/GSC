@@ -118,8 +118,6 @@ public enum RecuperacionSimple
 	,RECUPERAR_DESPACHADOR_DATOS_USUARIOS                    ("L")
     ,RECUPERAR_DESPACHADOR_DATOS_USER_ALL_X_ROL              ("L")
     ,RECUPERAR_DESPACHADOR_DATOS_ZONA                        ("L")
-    ,RECUPERAR_ENDOSOS_SINIESTRALIDAD                        ("L")
-    ,RECUPERAR_ENDOSOS_SINIESTRALIDAD_REHA                   ("L")
 	;
 	 
 	private String tipo;

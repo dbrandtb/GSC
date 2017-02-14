@@ -6,11 +6,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// urls //////
-var url_PantallaPreview         = '<s:url namespace="/endosos"          action="includes/previewEndosos"         />';
-var _p44_urlConfirmar           = '<s:url namespace="/endosos"          action="confirmarEndosoValositFormsAuto" />';
-var _p44_urlRecuperacionSimple  = '<s:url namespace="/emision"          action="recuperacionSimple"              />';
-var _p30_urlViewDoc             = '<s:url namespace="/documentos"       action="descargaDocInline"               />';
-var _p28_urlCargarSumaAsegurada = '<s:url namespace="/emision"          action="cargarSumaAseguradaAuto"         />';
+var url_PantallaPreview        = '<s:url namespace="/endosos"      action="includes/previewEndosos"         />';
+var _p44_urlConfirmar          = '<s:url namespace="/endosos"      action="confirmarEndosoValositFormsAuto" />';
+var _p44_urlRecuperacionSimple = '<s:url namespace="/emision"      action="recuperacionSimple"              />';
+var _p30_urlViewDoc          = '<s:url namespace="/documentos"      action="descargaDocInline"      />';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 ////// urls //////
 
@@ -546,115 +545,6 @@ Ext.onReady(function()
                     item.store.load();
                 }
             }
-            
-            try{
-            	
-            	// FILTRO DE VALORES PARA SERVICIO PUBLICO
-	            if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto && 
-	            		item.fieldLabel=='VALOR COMERCIAL' &&
-	            		(_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaDecremento ||
-	            		_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaIncremento )
-	               ){
-	            	item.enable();
-	            	_0_obtenerSumaAseguradaRamo6(inciso.CVE_MODELO.substr(inciso.CVE_MODELO.length-4,4)
-	            								,inciso.CVE_VERSION
-	                                            ,inciso.CDRAMO
-	                                            ,inciso.CDTIPSIT
-	                                            ,item);
-	            	item.setMaxValue(2400000);
-	            }
-	            
-	            if(_p44_smap1.CDRAMO==Ramo.ServicioPublico ){
-	                if(_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaDecremento ||
-		   	           _p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaIncremento ){
-		            	if(item.store ){
-		            			if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto)
-			            			switch(item.cdatribu){
-				            			case 'CVE_DEDUCIBLE_RESP__CIVIL_': 
-				            				item.getStore().filter([{filterFn: function(item) {
-				            					return item.get("key")>=500000 && item.get("key")<=5000000;
-				            				}}])
-						            		break;
-				            			case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
-				            				item.getStore().filter([{filterFn: function(item) {
-				            					return item.get("key")>=1500 && item.get("key")<=20000;
-				            				}}])
-				            				break;
-				            			case 'CVE_SUMA_ASEGURADA_GASTOS_MEDICOS':
-				            				item.getStore().filter([{filterFn: function(item) {
-				            					return item.get("key")>=10000 && item.get("key")<=200000;
-				            				}}])
-				            				break;
-				            			case 'CVE_MUERTE_ACCIDENTAL_CONDUCTOR':
-				            				item.getStore().filter([{filterFn: function(item) {
-				            					return item.get("key")>=30000 && item.get("key")<=100000;
-				            				}}])
-				            				break;
-			            			}
-		            			else if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoMicro)
-		            				switch(item.cdatribu){
-		            				case 'CVE_VALOR_COMERCIAL':
-		            					item.setMaxValue(4200000);
-		            					item.setMinValue(50000);
-		            					break;
-			            			case 'CVE_DEDUCIBLE_RESP__CIVIL_': 
-			            				item.getStore().filter([{filterFn: function(item) {
-			            					return item.get("key")>=500000 && item.get("key")<=5000000;
-			            				}}])
-					            		break;
-			            			case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
-			            				item.getStore().filter([{filterFn: function(item) {
-			            					return item.get("key")>=1500 && item.get("key")<=20000;
-			            				}}])
-			            				break;
-			            			case 'CVE_SUMA_ASEGURADA_GASTOS_MEDICOS':
-			            				item.getStore().filter([{filterFn: function(item) {
-			            					return item.get("key")>=10000 && item.get("key")<=200000;
-			            				}}])
-			            				break;
-			            			case 'CVE_MUERTE_ACCIDENTAL_CONDUCTOR':
-			            				item.getStore().filter([{filterFn: function(item) {
-			            					return item.get("key")>=30000 && item.get("key")<=100000;
-			            				}}])
-			            				break;
-		            			}
-		            	}
-	                }
-	                if(_p44_smap1.cdtipsup == TipoEndoso.DeducibleMas ||
-	 		   	       _p44_smap1.cdtipsup == TipoEndoso.DeducibleMenos ){
-	                	//alert()
-	                	if(item.store ){
-		                	switch(item.cdatribu){
-		                		case 'CVE_DEDUCIBLE_DANOS_MATERIALES':
-		                			item.getStore().filter([{filterFn: function(item) {
-		            					return item.get("key")>=5 && item.get("key")<=20;
-		            				}}])
-		                			break;
-		                		case 'CVE_DEDUCIBLE_ROBO_TOTAL':
-		                			item.getStore().filter([{filterFn: function(item) {
-		            					return item.get("key")>=10 && item.get("key")<=20;
-		            				}}])
-		                			break;
-		                		case 'CVE_DEDUCIBLE_RESP__CIVIL':
-		                			item.getStore().filter([{filterFn: function(item) {
-		            					return item.get("key")>=25 && item.get("key")<=300;
-		            				}}])
-		                			break;
-		                		case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
-		                			item.getStore().filter([{filterFn: function(item) {
-		            					return item.get("key")>=0 && item.get("key")<=8;
-		            				}}])
-		                			break;
-		                	}
-	                	}
-	                }
-	            	
-	            }
-	            
-            }catch(e){
-            	debugError(e);
-            }
-            
         }
     }
     
@@ -695,50 +585,6 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
-
-function _0_obtenerSumaAseguradaRamo6(modelo,version,cdramo,cdtipsit,valorComercial)
-{
-//     _0_panelPri.setLoading(true);
-   // var loading_0_obtenerSumaAseguradaRamo6 = _maskLocal();
-    Ext.Ajax.request(
-    {
-        url      : _p28_urlCargarSumaAsegurada
-        ,params  :
-        {
-            'smap1.modelo'    : modelo
-            ,'smap1.version'  : version
-            ,'smap1.cdsisrol' : _GLOBAL_CDSISROL
-            ,'smap1.cdramo'   : cdramo
-            ,'smap1.cdtipsit' : cdtipsit
-        }
-        ,success : function(response)
-        {
-
-//           _0_panelPri.setLoading(false); 
-            
-            var json=Ext.decode(response.responseText);
-            debug('### json response obtener suma asegurada:',json);
-            if(json.exito)
-            {
-                	valorComercial.setMinValue(json.smap1.SUMASEG);            
-            }
-            else 
-            {
-            	
-            	valorComercial.setMinValue(1);  
-                //mensajeWarning(json.respuesta);
-            }
-        }
-        ,failure : function()
-        {
-//             _0_panelPri.setLoading(false);
-         
-            errorComunicacion();
-        }
-    });
-}
-
-
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>

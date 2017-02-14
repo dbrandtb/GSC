@@ -49,7 +49,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
 	
 	protected class ObtieneRecibos extends StoredProcedure {
     	protected ObtieneRecibos(DataSource dataSource) {
-    		super(dataSource, "Pkg_Consulta.P_OBTIENE_RECIBOS");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_OBTIENE_RECIBOS");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
@@ -90,7 +90,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
 	
 	protected class ConsultaDetalleRecibo extends StoredProcedure {
 		protected ConsultaDetalleRecibo(DataSource dataSource) {
-			super(dataSource, "Pkg_Consulta.P_OBTIENE_MRECIDET");
+			super(dataSource, "PKG_CONSULTA_PRE.P_OBTIENE_MRECIDET");
     		declareParameter(new SqlParameter("pv_cdUnieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdRamo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_Estado_i", OracleTypes.VARCHAR));

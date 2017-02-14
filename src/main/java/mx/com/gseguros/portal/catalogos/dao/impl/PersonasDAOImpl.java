@@ -34,7 +34,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	private static final Logger logger = Logger.getLogger(PersonasDAOImpl.class);
 	
 	/**
-	 * Obtiene personas por RFC de PKG_CONSULTA.P_GET_MPERSONA
+	 * Obtiene personas por RFC de PKG_CONSULTA_PRE.P_GET_MPERSONA
 	 * @param rfc
 	 * @return
 	 * @throws Exception
@@ -45,7 +45,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n*****************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_MPERSONA ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_MPERSONA ******")
 				.append("\n****** params=").append(params)
 				.append("\n*****************************************")
 				.toString()
@@ -63,7 +63,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class ObtenerPersonasPorRFC extends StoredProcedure
 	{
     	protected ObtenerPersonasPorRFC(DataSource dataSource) {
-            super(dataSource,"PKG_CONSULTA.P_GET_MPERSONA");
+            super(dataSource,"PKG_CONSULTA_PRE.P_GET_MPERSONA");
             declareParameter(new SqlParameter("pv_cdrfc_i",OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_dsnombre_i",OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_validapol_i",OracleTypes.VARCHAR));
@@ -110,7 +110,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n****************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_MPERSONA_X_CDPERSON ******")
 				.append("\n****** params=").append(params)
 				.append("\n****************************************************")
 				.toString()
@@ -132,7 +132,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("pv_cdperson_i" , cdperson);
 		logger.debug(Utils.log(
 				 "\n****************************************************"
-				,"\n****** PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON ******"
+				,"\n****** PKG_CONSULTA_PRE.P_GET_MPERSONA_X_CDPERSON ******"
 				,"\n****** params=",params
 				,"\n****************************************************"
 				));
@@ -150,7 +150,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 				 "\n****************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , registro.get(0)
-				,"\n****** PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON ******"
+				,"\n****** PKG_CONSULTA_PRE.P_GET_MPERSONA_X_CDPERSON ******"
 				,"\n****************************************************"
 				));
 		return registro.get(0);
@@ -159,7 +159,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class CargarPersonaPorCdperson extends StoredProcedure
 	{
     	protected CargarPersonaPorCdperson(DataSource dataSource) {
-            super(dataSource,"PKG_CONSULTA.P_GET_MPERSONA_X_CDPERSON");
+            super(dataSource,"PKG_CONSULTA_PRE.P_GET_MPERSONA_X_CDPERSON");
             declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
             String[] cols = new String[]{
             		"CDPERSON"
@@ -193,7 +193,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     }
 	
 	/**
-	 * Guarda mpersona con PKG_SATELITES2.P_MOV_MPERSONA
+	 * Guarda mpersona con PKG_SATELITES2_PRE.P_MOV_MPERSONA
 	 */
 	@Override
 	public void movimientosMpersona(String cdperson
@@ -251,7 +251,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
-				.append("\n****** PKG_SATELITES2.P_MOV_MPERSONA ******")
+				.append("\n****** PKG_SATELITES2_PRE.P_MOV_MPERSONA ******")
 				.append("\n****** params=").append(params)
 				.append("\n******************************************")
 				.toString()
@@ -262,7 +262,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class MovimientosMpersona extends StoredProcedure
 	{
     	protected MovimientosMpersona(DataSource dataSource) {
-            super(dataSource,"PKG_SATELITES2.P_MOV_MPERSONA");
+            super(dataSource,"PKG_SATELITES2_PRE.P_MOV_MPERSONA");
     		declareParameter(new SqlParameter("cdperson"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipide"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdideper"    , OracleTypes.VARCHAR));
@@ -308,7 +308,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
-				.append("\n****** PKG_SATELITES2.P_ACT_DAT_OBLIG_PARAM_ART140 ******")
+				.append("\n****** PKG_SATELITES2_PRE.P_ACT_DAT_OBLIG_PARAM_ART140 ******")
 				.append("\n****** params=").append(params)
 				.append("\n******************************************")
 				.toString()
@@ -319,7 +319,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class ActualizaFactoresArt140 extends StoredProcedure
 	{
 		protected ActualizaFactoresArt140(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_ACT_DAT_OBLIG_PARAM_ART140");
+			super(dataSource,"PKG_SATELITES2_PRE.P_ACT_DAT_OBLIG_PARAM_ART140");
 			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdnacion_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otfisjur_i"    , OracleTypes.VARCHAR));
@@ -332,7 +332,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	}
 	
 	/**
-	 * obtener domicilio por cdperson desde PKG_CONSULTA.P_GET_MDOMICIL
+	 * obtener domicilio por cdperson desde PKG_CONSULTA_PRE.P_GET_MDOMICIL
 	 */
 	@Override
 	public Map<String,String> obtenerDomicilioPorCdperson(String cdperson, String nmorddom) throws Exception
@@ -344,7 +344,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n*****************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_MDOMICIL ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_MDOMICIL ******")
 				.append("\n****** params=").append(params)
 				.append("\n*****************************************")
 				.toString()
@@ -373,7 +373,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n*****************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_MDOMICIL ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_MDOMICIL ******")
 				.append("\n****** params=").append(params)
 				.append("\n*****************************************")
 				.toString()
@@ -391,7 +391,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class ObtenerDomicilioPorCdperson extends StoredProcedure
 	{
     	protected ObtenerDomicilioPorCdperson(DataSource dataSource) {
-            super(dataSource,"PKG_CONSULTA.P_GET_MDOMICIL");
+            super(dataSource,"PKG_CONSULTA_PRE.P_GET_MDOMICIL");
     		declareParameter(new SqlParameter("cdperson"    , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("nmorddom"    , OracleTypes.VARCHAR));
     		String[] cols=new String[]{
@@ -413,7 +413,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n*****************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_DATOS_CONTRATANTE ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_DATOS_CONTRATANTE ******")
 				.append("\n****** params=").append(params)
 				.append("\n*****************************************")
 				.toString()
@@ -436,7 +436,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class ObtenerDomicilioContratante extends StoredProcedure
 	{
     	protected ObtenerDomicilioContratante(DataSource dataSource) {
-            super(dataSource,"PKG_CONSULTA.P_GET_DATOS_CONTRATANTE");
+            super(dataSource,"PKG_CONSULTA_PRE.P_GET_DATOS_CONTRATANTE");
     		declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -453,7 +453,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     }
 	
 	/**
-	 * Obtener nuevo cdperson de PKG_SATELITES.P_GEN_CDPERSON
+	 * Obtener nuevo cdperson de PKG_SATELITES_PRE.P_GEN_CDPERSON
 	 */
 	@Override
 	public String obtenerNuevoCdperson() throws Exception
@@ -462,7 +462,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
-				.append("\n****** PKG_SATELITES.P_GEN_CDPERSON ******")
+				.append("\n****** PKG_SATELITES_PRE.P_GEN_CDPERSON ******")
 				.append("\n****** sin parametros")
 				.append("\n******************************************")
 				.toString()
@@ -478,7 +478,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class ObtenerNuevoCdperson extends StoredProcedure
 	{
     	protected ObtenerNuevoCdperson(DataSource dataSource) {
-            super(dataSource,"PKG_SATELITES.P_GEN_CDPERSON");
+            super(dataSource,"PKG_SATELITES_PRE.P_GEN_CDPERSON");
             declareParameter(new SqlOutParameter("pv_cdperson_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -499,7 +499,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class ValidaExisteRFC extends StoredProcedure
 	{
 		protected ValidaExisteRFC(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_VALIDA_EXISTE_RFC");
+			super(dataSource,"PKG_SATELITES2_PRE.P_VALIDA_EXISTE_RFC");
 			declareParameter(new SqlOutParameter("pv_cdrfc_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -508,7 +508,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	}
 	
 	/**
-	 * movimientos de domicilio por cdperson de PKG_SATELITES2.P_MOV_MDOMICIL
+	 * movimientos de domicilio por cdperson de PKG_SATELITES2_PRE.P_MOV_MDOMICIL
 	 */
 	@Override
 	public void movimientosMdomicil(String cdperson
@@ -544,7 +544,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
-				.append("\n****** PKG_SATELITES2.P_MOV_MDOMICIL ******")
+				.append("\n****** PKG_SATELITES2_PRE.P_MOV_MDOMICIL ******")
 				.append("\n****** params=").append(params)
 				.append("\n******************************************")
 				.toString()
@@ -555,7 +555,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class MovimientosMdomicil extends StoredProcedure
 	{
     	protected MovimientosMdomicil(DataSource dataSource) {
-            super(dataSource,"PKG_SATELITES2.P_MOV_MDOMICIL");
+            super(dataSource,"PKG_SATELITES2_PRE.P_MOV_MDOMICIL");
     		declareParameter(new SqlParameter("cdperson"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmorddom"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dsdomici"       , OracleTypes.VARCHAR));
@@ -577,7 +577,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     }
 	
 	/**
-	 * Obtener los componentes de tatriper por cdrol y cdperson de PKG_LISTAS.P_GET_ATRI_PER
+	 * Obtener los componentes de tatriper por cdrol y cdperson de PKG_LISTAS_PRE.P_GET_ATRI_PER
 	 */
 	@Override
 	public List<ComponenteVO> obtenerAtributosPersona(String cdperson, String cdrol) throws Exception
@@ -588,7 +588,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n**************************************")
-				.append("\n****** PKG_LISTAS.P_GET_ATRIPER ******")
+				.append("\n****** PKG_LISTAS_PRE.P_GET_ATRIPER ******")
 				.append("\n****** params=").append(params)
 				.append("\n**************************************")
 				.toString()
@@ -606,7 +606,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class ObtenerAtributosPersona extends StoredProcedure
 	{
     	protected ObtenerAtributosPersona(DataSource dataSource) {
-            super(dataSource,"PKG_LISTAS.P_GET_ATRIPER");
+            super(dataSource,"PKG_LISTAS_PRE.P_GET_ATRIPER");
 			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneTatriperMapper()));
@@ -617,7 +617,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     }
 	
 	/**
-	 * Obtiene los valores de tvaloper para un cdperson y un cdrol de PKG_CONSULTA.P_GET_TVALOPER
+	 * Obtiene los valores de tvaloper para un cdperson y un cdrol de PKG_CONSULTA_PRE.P_GET_TVALOPER
 	 */
 	@Override
 	public Map<String,String> obtenerTvaloper(String cdrol,String cdperson) throws Exception
@@ -628,7 +628,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n*****************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_TVALOPER ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_TVALOPER ******")
 				.append("\n****** params=").append(params)
 				.append("\n*****************************************")
 				.toString()
@@ -647,7 +647,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class ObtenerTvaloper extends StoredProcedure
 	{
     	protected ObtenerTvaloper(DataSource dataSource) {
-            super(dataSource,"PKG_CONSULTA.P_GET_TVALOPER");
+            super(dataSource,"PKG_CONSULTA_PRE.P_GET_TVALOPER");
 			declareParameter(new SqlParameter("cdrol"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
@@ -676,7 +676,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
     }
 	
 	/**
-	 * Movimientos de tvaloper por cdperson de PKG_SATELITES.P_MOV_TVALOPER_NUEVO
+	 * Movimientos de tvaloper por cdperson de PKG_SATELITES_PRE.P_MOV_TVALOPER_NUEVO
 	 */
 	@Override
 	public void movimientosTvaloper(String cdrol, String cdperson
@@ -771,7 +771,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n************************************************")
-				.append("\n****** PKG_SATELITES.P_MOV_TVALOPER_NUEVO ******")
+				.append("\n****** PKG_SATELITES_PRE.P_MOV_TVALOPER_NUEVO ******")
 				.append("\n****** params=").append(params)
 				.append("\n************************************************")
 				.toString()
@@ -783,7 +783,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
     	protected MovimientosTvaloper(DataSource dataSource)
     	{
-            super(dataSource,"PKG_SATELITES2.P_MOV_TVALOPER_NUEVO");
+            super(dataSource,"PKG_SATELITES2_PRE.P_MOV_TVALOPER_NUEVO");
             declareParameter(new SqlParameter("cdrol"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdperson"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor01" , OracleTypes.VARCHAR));
@@ -1005,7 +1005,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class PMovTvaloper extends StoredProcedure {
 		
 		protected PMovTvaloper(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_MOV_TVALOPER");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_TVALOPER");
 			
 			declareParameter(new SqlParameter("pv_cdunieco",  OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo",    OracleTypes.NUMERIC));
@@ -1137,7 +1137,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n***************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_DOCUMENTOS_PERSONA ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_DOCUMENTOS_PERSONA ******")
 				.append("\n****** params=").append(params)
 				.append("\n***************************************************")
 				.toString()
@@ -1158,7 +1158,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		
     	protected CargarDocumentosPersona(DataSource dataSource)
     	{
-            super(dataSource,"PKG_CONSULTA.P_GET_DOCUMENTOS_PERSONA");
+            super(dataSource,"PKG_CONSULTA_PRE.P_GET_DOCUMENTOS_PERSONA");
             declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1174,7 +1174,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n***************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_ESTRUC_CORPORATIVA ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_ESTRUC_CORPORATIVA ******")
 				.append("\n****** params=").append(params)
 				.append("\n***************************************************")
 				.toString()
@@ -1188,7 +1188,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		
 		protected ObtieneAccionistas(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_ESTRUC_CORPORATIVA");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_ESTRUC_CORPORATIVA");
 			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdatribu_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtpesco_i" , OracleTypes.VARCHAR));
@@ -1208,7 +1208,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n********************************************************")
-				.append("\n****** PKG_SATELITES.P_VALIDA_DOCTOS_OBLIGATORIOS ******")
+				.append("\n****** PKG_SATELITES_PRE.P_VALIDA_DOCTOS_OBLIGATORIOS ******")
 				.append("\n****** params=").append(params)
 				.append("\n********************************************************")
 				.toString()
@@ -1220,7 +1220,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
     	protected ValidarDocumentosPersona(DataSource dataSource)
     	{
-            super(dataSource,"PKG_SATELITES.P_VALIDA_DOCTOS_OBLIGATORIOS");
+            super(dataSource,"PKG_SATELITES_PRE.P_VALIDA_DOCTOS_OBLIGATORIOS");
             declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdrol" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
@@ -1235,7 +1235,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n********************************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_NOMBRE_CDDOCUME_PERSONA ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_NOMBRE_CDDOCUME_PERSONA ******")
 				.append("\n****** params=").append(params)
 				.append("\n********************************************************")
 				.toString()
@@ -1248,7 +1248,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
     	protected CargarNombreDocumentoPersona(DataSource dataSource)
     	{
-            super(dataSource,"PKG_CONSULTA.P_GET_NOMBRE_CDDOCUME_PERSONA");
+            super(dataSource,"PKG_CONSULTA_PRE.P_GET_NOMBRE_CDDOCUME_PERSONA");
             declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("codidocu" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_cddocume_o" , OracleTypes.VARCHAR));
@@ -1264,7 +1264,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************")
-				.append("\n****** PKG_SATELITES.P_MOV_TESCOPER ******")
+				.append("\n****** PKG_SATELITES_PRE.P_MOV_TESCOPER ******")
 				.append("\n****** params=").append(params)
 				.append("\n******************************************")
 				.toString()
@@ -1277,7 +1277,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		protected GuardaAccionista(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_MOV_TESCOPER");
+			super(dataSource,"PKG_SATELITES_PRE.P_MOV_TESCOPER");
 			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdatribu_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtpesco_i" , OracleTypes.VARCHAR));
@@ -1298,7 +1298,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n**********************************************")
-				.append("\n****** PKG_SATELITES.P_ELIMINA_TESCOPER ******")
+				.append("\n****** PKG_SATELITES_PRE.P_ELIMINA_TESCOPER ******")
 				.append("\n****** params=").append(params)
 				.append("\n**********************************************")
 				.toString()
@@ -1311,7 +1311,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		protected EliminaAccionistas(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_ELIMINA_TESCOPER");
+			super(dataSource,"PKG_SATELITES_PRE.P_ELIMINA_TESCOPER");
 			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdatribu_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1326,7 +1326,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************************")
-				.append("\n****** PKG_SATELITES.P_ACTUALIZA_STATUS_PERSONA ******")
+				.append("\n****** PKG_SATELITES_PRE.P_ACTUALIZA_STATUS_PERSONA ******")
 				.append("\n****** params=").append(params)
 				.append("\n******************************************************")
 				.toString()
@@ -1340,7 +1340,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		protected ActualizaStatusPersona(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_ACTUALIZA_STATUS_PERSONA");
+			super(dataSource,"PKG_SATELITES_PRE.P_ACTUALIZA_STATUS_PERSONA");
 			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdrol_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_dsstatus_o" , OracleTypes.VARCHAR));
@@ -1361,7 +1361,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		protected ObtieneMunicipioYcolonia(DataSource dataSource)
 		{
-			super(dataSource,"PKG_LISTAS.P_RECUPERA_MUNICIPIO_COLONIA");
+			super(dataSource,"PKG_LISTAS_PRE.P_RECUPERA_MUNICIPIO_COLONIA");
 			declareParameter(new SqlParameter("pv_cdpostal_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdedo_i"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsmunici_i"    	, OracleTypes.VARCHAR));
@@ -1385,7 +1385,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		protected ActualizaCodigoExterno(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_ACTUALIZA_CDIDEPER_ART140");
+			super(dataSource,"PKG_SATELITES2_PRE.P_ACTUALIZA_CDIDEPER_ART140");
 			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdideper_i"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_swsalud_i"    	, OracleTypes.VARCHAR));
@@ -1417,7 +1417,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		protected RecuperarEspPersona(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_ESPEJO_MPERSONA");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_ESPEJO_MPERSONA");
 			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"cdperson"  , "cdtipide"  , "cdideper"   , "dsnombre"    , "cdtipper"
@@ -1448,7 +1448,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		
 		protected ObtieneCdpersonSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_COTIZA.P_GET_CDPERSON");
+			super(dataSource, "PKG_COTIZA_PRE.P_GET_CDPERSON");
 			declareParameter(new SqlOutParameter("pv_cdperson_o", OracleTypes.VARCHAR));
 		    declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 		    declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -1474,7 +1474,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	protected class ActualizaCdideperSP extends StoredProcedure {
 
 		protected ActualizaCdideperSP(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_ACTUALIZA_CODCLI_EXTERNO");
+			super(dataSource, "PKG_SATELITES_PRE.P_ACTUALIZA_CODCLI_EXTERNO");
 
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
@@ -1616,7 +1616,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		protected ValidaExisteAseguradoSicaps(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_VALIDA_PERSONA_SICAPS");
+			super(dataSource,"PKG_CONSULTA_PRE.P_VALIDA_PERSONA_SICAPS");
 			declareParameter(new SqlParameter("pv_cdideper_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdperson_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1666,7 +1666,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		protected ObtieneConfPatallaCli(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_CAMPOS_CLIENTE_X_USUROL");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_CAMPOS_CLIENTE_X_USUROL");
 			declareParameter(new SqlParameter("pv_cdsisrol_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdusuari_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
@@ -1711,7 +1711,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	{
 		protected SincronizaPersonaToValositSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_SYNC_PERSONA_TO_VALOSIT");
+			super(dataSource,"PKG_SATELITES2_PRE.P_SYNC_PERSONA_TO_VALOSIT");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));

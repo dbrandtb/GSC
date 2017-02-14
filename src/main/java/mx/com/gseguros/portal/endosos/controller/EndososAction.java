@@ -311,12 +311,6 @@ public class EndososAction extends PrincipalCoreAction
 			gc.generaComponentes(componentes, true, false, false, true, false, false);
 			columnas = gc.getColumns().toString();
 			logger.debug("columnasTatrisit=" + columnas);
-			try{
-				slist2=consultasPolizaManager.obtieneCoberturas(smap1.get("CDRAMO"), smap1.get("CDTIPSIT"), smap1.get("CDMEJRED"));
-			}catch(Exception ex){
-				logger.error("Error obteniendo coberturas. {}",ex);
-				
-			}
 			
 		} catch (Exception e) {
 			Utils.manejaExcepcion(e);
@@ -7418,8 +7412,7 @@ public String retarificarEndosos()
 				smap1.put("cdperson", datos.get("CDPERSON"));
 				smap1.put("cdrol", datos.get("CDROL"));
 			}else{
-			    message = "Error al obtener datos de contratante para pantalla de endoso de domicilio autos";
-				logger.error(message);
+				logger.error("Error al obtener datos de contratante para pantalla de endoso de domicilio autos");
 				return ERROR;
 			}
 			
