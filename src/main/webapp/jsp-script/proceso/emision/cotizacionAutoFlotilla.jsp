@@ -307,7 +307,7 @@ var _p30_panel7Items =
         {
            type    : 'table'
           ,columns : 1
-          ,style   : 'width:7px !important;'
+          ,style   : 'width: 20px !important;'
           ,align   : 'right'
        }
        ,border : 0
@@ -319,7 +319,7 @@ var _p30_panel7Items =
                 ,fieldLabel  : 'SUCURSAL'
                 ,name        : 'sucursal'               
                 ,sinOverride : true
-                ,labelWidth  : 170
+                ,labelWidth  : 100
                 ,style       : 'margin:0px;margin-left:5px;'//'margin:5px;margin-left:15px;width:20px !important;'
                 ,value       : !Ext.isEmpty(_p30_smap1.renuniext) ? _p30_smap1.renuniext : ''
                 ,listeners   :
@@ -334,7 +334,7 @@ var _p30_panel7Items =
                    ,fieldLabel  : 'RAMO'
                    ,name        : 'ramo'                   
                    ,sinOverride : true                   
-                   ,labelWidth  : 170
+                   ,labelWidth  : 100
                    ,style       : 'margin:0px;margin-left:5px;'//'width : 30px !important;'
                    ,value       : !Ext.isEmpty(_p30_smap1.renramo) ? _p30_smap1.renramo : ''
                    ,listeners   :
@@ -349,7 +349,7 @@ var _p30_panel7Items =
                  ,fieldLabel  : 'POLIZA'
                  ,name        : 'poliza'
                  ,sinOverride : true                 
-                 ,labelWidth  : 170
+                 ,labelWidth  : 100
                  ,style       : 'margin:0px;margin-left:5px;'//'width : 50px !important;'
                  ,value       : !Ext.isEmpty(_p30_smap1.renpoliex) ? _p30_smap1.renpoliex : ''
                  ,listeners   :
@@ -1025,7 +1025,7 @@ Ext.onReady(function()
     ,{
         xtype   : 'fieldset'
         ,itemId : '_p30_fieldBusquedaPoliza'
-        ,width  : 300
+        ,width  : 290
         ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
         ,items  : _p30_panel7Items
         ,hidden : !Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
