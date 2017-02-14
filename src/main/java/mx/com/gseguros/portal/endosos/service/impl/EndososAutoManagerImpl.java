@@ -24,11 +24,13 @@ import org.springframework.stereotype.Service;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
+import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
@@ -59,6 +61,7 @@ import mx.com.gseguros.portal.general.util.TipoFlotilla;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.rehabilitacion.dao.RehabilitacionDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -101,6 +104,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Autowired
 	private MesaControlDAO mesaControlDAO;
+	
+	@Autowired
+	private AutosSIGSDAO autosDAOSIGS;
 	
 	@Autowired
 	private ClienteDAO clienteDAOSIGS;
@@ -396,9 +402,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			,String cancelada
 			,String cdusuari
 			,String cdtipsit
-			,String cdunieco
-			,String estado
-			,String nmpoliza
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -413,9 +416,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ cancelada=" , cancelada
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				,"\n@@@@@@ cdtipsit=" , cdtipsit
-				,"\n@@@@@@ cdunieco=" , cdunieco
-				,"\n@@@@@@ cdtipsit=" , estado
-				,"\n@@@@@@ cdtipsit=" , nmpoliza
 				));
 
 		SlistSmapVO resp = new SlistSmapVO();
@@ -480,27 +480,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				mapa.put("TIPO_VALIDACION" , "");
 				lista.add(mapa);
 				resp.setSlist(lista);
-			}
-			//VERIFICAMOS SI LA POLIZA ESTA PAGADA
-			try{
-				if(cdramo!=null && cdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo())){
-					paso="Validando endosos pagados";
-					logger.debug("entro");
-					endososDAO.validaEndosoPagados(cdunieco, cdramo, estado, nmpoliza, null);
-				}
-				
-			}catch (ApplicationException e) {
-				logger.debug(e.getMessage());
-				//SI endososDAO.validaEndosoPagados DEVUELVE 1 QUITAMOS EL ENDOSO DE CAMBIO DE AGENTE
-				List<Map<String, String>> lista=resp.getSlist();
-				Map<String,String> remueve=null;
-				for(Map<String,String> m: lista){
-					if(m.get("CDTIPSUP").trim().equals(TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString())){
-						remueve=m;
-					}
-				}
-				if(remueve != null)
-					lista.remove(remueve);
 			}
 		}
 		catch(Exception ex)
@@ -2071,7 +2050,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			try{
 				
-				Integer res = autosSIGSDAO.endosoAseguradoAlterno(paramsEnd);
+				Integer res = autosDAOSIGS.endosoAseguradoAlterno(paramsEnd);
 				
 				logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso: " + res);
 				
@@ -2158,7 +2137,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB"     , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
 					
-					Integer res = autosSIGSDAO.endosoAdaptacionesRC(paramsEnd);
+					Integer res = autosDAOSIGS.endosoAdaptacionesRC(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio AdaptacionesRC numero de endoso: " + res);
 					
@@ -2249,7 +2228,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vFEndoso"    , datosEnd.get("FEndoso"));
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					
-					Integer res = autosSIGSDAO.endosoVigenciaPol(paramsEnd);
+					Integer res = autosDAOSIGS.endosoVigenciaPol(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Vigencia, numero de endoso: " + res);
 					
@@ -2334,7 +2313,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vTexto"    , datosEnd.get("Texto"));
 					paramsEnd.put("vFEndoso"    , datosEnd.get("FEndoso"));
 					
-					Integer res = autosSIGSDAO.endosoTextoLibre(paramsEnd);
+					Integer res = autosDAOSIGS.endosoTextoLibre(paramsEnd);
 					
 					logger.debug("Respuesta de endosoTextoLibre, numero de endoso: " + res);
 					
@@ -2433,7 +2412,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			try{
 				
-				Integer res = autosSIGSDAO.endosoBeneficiario(paramsEnd);
+				Integer res = autosDAOSIGS.endosoBeneficiario(paramsEnd);
 				
 				logger.debug("Respuesta de Cambio Beneficiario numero de endoso: " + res);
 				
@@ -2520,7 +2499,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso", datosEnd.get("FEndoso"));
 					
-					Integer res = autosSIGSDAO.endosoPlacasMotor(paramsEnd);
+					Integer res = autosDAOSIGS.endosoPlacasMotor(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Placas Motor, numero de endoso: " + res);
 					
@@ -2608,7 +2587,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso", datosEnd.get("FEndoso"));
 					
-					Integer res = autosSIGSDAO.endosoTipoServicio(paramsEnd);
+					Integer res = autosDAOSIGS.endosoTipoServicio(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Tipo Servicio, numero de endoso: " + res);
 					
@@ -2695,7 +2674,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
 					
-					Integer res = autosSIGSDAO.endosoSerie(paramsEnd);
+					Integer res = autosDAOSIGS.endosoSerie(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Serie numero de endoso: " + res);
 					
@@ -6880,7 +6859,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						
 					try{
 						
-						String res = autosSIGSDAO.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+						String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 						String respuesta[] = res.split("\\|");
 						
 						if(Integer.parseInt(respuesta[0].toString()) == 0 ){
@@ -7026,7 +7005,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paramsEnd.put("vUSER"  , cdusuari);
 
 				endosoRecuperado = -1;
-				String res = autosSIGSDAO.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+				String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 				String respu[] = res.split("\\|");
 				logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso =========> : " + res);
 				
@@ -7181,7 +7160,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paramsEnd.put("vUSER"       , usuarioCaptura);
 			
 			endosoRecuperado = -1;
-			String res = autosSIGSDAO.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+			String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 			String respu[] = res.split("\\|");
 			if(Integer.parseInt(respu[0].toString()) == 0 ){
 				logger.error("Endoso Cambio AseguradoAlterno no exitoso: XX Sin numero de endoso.");
@@ -9104,7 +9083,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	                    paramsEnd.put("vEndoB"      , (endosoRecuperado==-1)?0:endosoRecuperado);
 	                    
 	                    
-	                    Integer res = autosSIGSDAO.EndoBeneficiarioVidaAuto(paramsEnd);
+	                    Integer res = autosDAOSIGS.EndoBeneficiarioVidaAuto(paramsEnd);
 	                    
 	                    logger.debug("Respuesta de Beneficiario Vida Auto, numero de endoso: " + res);
 	                    
@@ -9169,292 +9148,5 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	        }
 	        
 	        return true;
-	    }	   
-	    
-	    @Override
-        public Map<String,Item> endosoAjusteSiniestralidad(
-                String cdtipsup
-                ,String cdramo
-                )throws Exception
-        {
-            logger.debug(Utils.log(
-                     "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                    ,"\n@@@@@@ endosoAjusteSiniestralidad @@@@@@"
-                    ,"\n@@@@@@ cdtipsup=" , cdtipsup
-                    ,"\n@@@@@@ cdramo="   , cdramo
-                    ));
-            
-            Map<String,Item> items = new HashMap<String,Item>();
-            String           paso  = null;
-            
-            try
-            {
-                paso = "Recuperando columnas de inciso";
-                logger.debug(paso);
-                List<ComponenteVO> columnasInciso = pantallasDAO.obtenerComponentes(
-                        null  //cdtiptra
-                        ,null //cdunieco
-                        ,"|"+cdramo+"|"
-                        ,null //cdtipsit
-                        ,null //estado
-                        ,null //cdsisrol
-                        ,"ENDOSO_AJUSTE_SINIESTRALIDAD"
-                        ,"COLUMNAS_INCISO"
-                        ,null //orden
-                        );
-                
-                    paso = "Recuperando columnas de cobertura";
-                    logger.debug(paso);
-                    List<ComponenteVO> columnasCobertura = pantallasDAO.obtenerComponentes(
-                            cdtipsup//cdtiptra
-                            ,null //cdunieco
-                            ,cdramo
-                            ,null //cdtipsit
-                            ,null //estado
-                            ,null //cdsisrol
-                            ,"ENDOSO_AJUSTE_SINIESTRALIDAD"
-                            ,"COLUMNAS_COBERTURA"
-                            ,null //orden
-                            );
-                
-                paso = "Construyendo componentes";
-                logger.debug(paso);
-                GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-                gc.generaComponentes(columnasInciso, true, false, false, true, true, false);
-                items.put("incisoColumns" , gc.getColumns());
-                
-                gc.generaComponentes(columnasCobertura, true, true, false, true, true, false);
-                items.put("coberturaColumns" , gc.getColumns());
-            }
-            catch(Exception ex)
-            {
-                Utils.generaExcepcion(ex, paso);
-            }
-            
-            logger.debug(Utils.log(
-                     "\n@@@@@@ endosoAjusteSiniestralidad @@@@@@"
-                    ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                    ));
-            return items;
-        }
-        
-        public Map<String,Object> guardarEndosoAjusteSiniestralidad(
-                String cdusuari
-                ,String cdsisrol
-                ,String cdelemen
-                ,String cdunieco
-                ,String cdramo
-                ,String estado
-                ,String nmpoliza
-                ,String cdtipsup
-                ,String tstamp
-                ,Date   feefecto
-                ,List<Map<String,String>> incisos
-                ,UserVO usuarioSesion
-                ,FlujoVO flujo
-                ,String nmtramite
-                )throws Exception
-        {
-            logger.debug(Utils.log(
-                     "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                    ,"\n@@@@@@ guardarEndosoAjusteSiniestralidad @@@@@@"
-                    ,"\n@@@@@@ cdusuari      = " , cdusuari
-                    ,"\n@@@@@@ cdsisrol      = " , cdsisrol
-                    ,"\n@@@@@@ cdelemen      = " , cdelemen
-                    ,"\n@@@@@@ cdunieco      = " , cdunieco
-                    ,"\n@@@@@@ cdramo        = " , cdramo
-                    ,"\n@@@@@@ estado        = " , estado
-                    ,"\n@@@@@@ nmpoliza      = " , nmpoliza
-                    ,"\n@@@@@@ cdtipsup      = " , cdtipsup
-                    ,"\n@@@@@@ tstamp        = " , tstamp
-                    ,"\n@@@@@@ feefecto      = " , feefecto
-                    ,"\n@@@@@@ incisos       = " , incisos
-                    ,"\n@@@@@@ usuarioSesion = " , usuarioSesion
-                    ,"\n@@@@@@ flujo         = " , flujo
-                    ,"\n@@@@@@ nmtramite     = " , nmtramite
-                    ));
-            
-            String paso = null;
-            try
-            {
-                paso = "Guardando incisos temporales";
-                logger.debug(paso);
-                for(Map<String,String> inciso : incisos)
-                {
-                    endososDAO.guardarTvalositEndoso(
-                            cdunieco
-                            ,cdramo
-                            ,estado
-                            ,nmpoliza
-                            ,inciso.get("nmsituac")
-                            ,inciso.get("nmsuplem")
-                            ,inciso.get("status")
-                            ,inciso.get("cdtipsit")
-                            ,"BAJA"  , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null
-                            ,tstamp
-                            );
-                }
-                
-                // Se genera el endoso, se confirma y se genera el tramite:
-                paso = "Confirmando endoso";
-                logger.debug(paso);
-                resParams = endososDAO.guardarEndosoAjusteSiniestralidad(cdusuari, cdsisrol, cdelemen,
-                        cdunieco, cdramo, estado, nmpoliza, cdtipsup, tstamp, feefecto);
-                String pv_nmsuplem_o  = (String) resParams.get("pv_nmsuplem_o"),
-                        pv_ntramite_o = (String) resParams.get("pv_ntramite_o") ,
-                        pv_tipoflot_o = (String) resParams.get("pv_tipoflot_o"),
-                        pv_nsuplogi_o = (String) resParams.get("pv_nsuplogi_o");
-                logger.debug("pv_nmsuplem_o: ",pv_nmsuplem_o);
-                        logger.debug("pv_ntramite_o: ",pv_ntramite_o);
-                                logger.debug("pv_tipoflot_o: ",pv_tipoflot_o);
-                                        logger.debug("pv_nsuplogi_o: ",pv_nsuplogi_o);
-                String nmsuplemGen     = (String) resParams.get("pv_nmsuplem_o");
-                String ntramite        = (String) resParams.get("pv_ntramite_o");
-                String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
-                String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
-                
-                String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
-                        nmtramite//ntramite
-                        ,cdunieco
-                        ,cdramo
-                        ,estado
-                        ,nmpoliza
-                        ,nmsuplemGen
-                        ,cdtipsup
-                        ,nsuplogi
-                        ,null //dscoment
-                        ,feefecto
-                        ,flujo
-                        ,cdusuari
-                        ,cdsisrol
-                        ,false //confirmar
-                        );
-                resParams.put("mensajeDespacho", mensajeDespacho);
-                
-                // Se envian los datos a traves del WS de autos:
-                paso = "Realizando endoso en Web Service Autos";
-                logger.debug(paso);
-                
-                EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, nmtramite, null, usuarioSesion);
-                if(aux == null || !aux.isExitoRecibos()){
-                    logger.error("Error al ejecutar los WS de endoso para devolucion de primas");
-                    
-                    boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
-                    
-                    if(aux!=null && aux.isEndosoSinRetarif()){
-                        throw new ApplicationException("Endoso sin Tarifa. "+(endosoRevertido?"Endoso revertido exitosamente.":"Error al revertir el endoso"));
-                    }
-                    
-                    if(endosoRevertido){
-                        logger.error("Endoso revertido exitosamente.");
-                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
-                    }else{
-                        logger.error("Error al revertir el endoso");
-                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
-                    }
-                    
-                }
-                
-                Map<String,String> incisosAfectados = new HashMap<String, String>();
-                
-                for(Map<String,String> coberturasIncisos : incisos){
-                
-                    String inciso = coberturasIncisos.get("nmsituac");
-                    
-                    if(StringUtils.isNotBlank(inciso)){
-                        incisosAfectados.put(inciso,inciso);
-                    }
-                }
-                
-                ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, nmtramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
-            }
-            catch(Exception ex)
-            {
-                Utils.generaExcepcion(ex, paso);
-            }
-            
-            logger.debug(Utils.log(
-                     "\n@@@@@@ guardarEndosoAjusteSiniestralidad @@@@@@"
-                    ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                    ));
-            return resParams;
-        }
-        
-        
-        
-        @Override
-        public Map<String,Item> endosoCambioTipoCarga(
-                String cdtipsup
-                ,String cdramo
-                )throws Exception
-        {
-            logger.debug(Utils.log(
-                     "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                    ,"\n@@@@@@ endosoCambioTipoCarga @@@@@@@@@@@"
-                    ,"\n@@@@@@ cdtipsup=" , cdtipsup
-                    ,"\n@@@@@@ cdramo="   , cdramo
-                    ));
-            
-            Map<String,Item> items = new HashMap<String,Item>();
-            String           paso  = null;
-            
-            try
-            {
-                paso = "Recuperando columnas de inciso";
-                logger.debug(paso);
-                List<ComponenteVO> columnasInciso = pantallasDAO.obtenerComponentes(
-                        cdtipsup  //cdtiptra
-                        ,null //cdunieco
-                        ,"|"+cdramo+"|"
-                        ,null //cdtipsit
-                        ,null //estado
-                        ,null //cdsisrol
-                        ,"ENDOSO_AJUSTE_SINIESTRALIDAD"
-                        ,"COLUMNAS_INCISO"
-                        ,null //orden
-                        );
-                
-                    paso = "Recuperando columnas de cobertura";
-                    logger.debug(paso);
-                    List<ComponenteVO> columnasCobertura = pantallasDAO.obtenerComponentes(
-                            cdtipsup //cdtiptra
-                            ,null //cdunieco
-                            ,cdramo
-                            ,null //cdtipsit
-                            ,null //estado
-                            ,null //cdsisrol
-                            ,"ENDOSO_AJUSTE_SINIESTRALIDAD"
-                            ,"COLUMNAS_COBERTURA"
-                            ,null //orden
-                            );
-                
-                paso = "Construyendo componentes";
-                logger.debug(paso);
-                GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-                gc.generaComponentes(columnasInciso, true, false, false, true, true, false);
-                items.put("incisoColumns" , gc.getColumns());
-                
-                gc.generaComponentes(columnasCobertura, true, true, false, true, true, false);
-                items.put("coberturaColumns" , gc.getColumns());
-            }
-            catch(Exception ex)
-            {
-                Utils.generaExcepcion(ex, paso);
-            }
-            
-            logger.debug(Utils.log(
-                     "\n@@@@@@ endosoCambioTipoCarga @@@@@@@@@@@"
-                    ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                    ));
-            return items;
-        }
+	    }	    
 }

@@ -85,7 +85,7 @@ public class SumaAseguradaDAO extends AbstractDAO{
     protected class CatalogoTipoSumaAseg extends CustomStoredProcedure {
 
         protected CatalogoTipoSumaAseg(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_TIPO_SUMA");
+            super(dataSource, "PKG_LISTAS_PRE.P_TIPO_SUMA");
             
             declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new SumaAsegMapper()));
             declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
@@ -106,7 +106,7 @@ public class SumaAseguradaDAO extends AbstractDAO{
     protected class CatalogoSumaAseg extends CustomStoredProcedure {
 
         protected CatalogoSumaAseg(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_CAPITAL");
+            super(dataSource, "PKG_LISTAS_PRE.P_CAPITAL");
             
             declareParameter(new SqlParameter("PV_CDRAMO_I",OracleTypes.VARCHAR));
             
@@ -128,7 +128,7 @@ public class SumaAseguradaDAO extends AbstractDAO{
     protected class CatalogoMonedaSumaAseg extends CustomStoredProcedure {
 
         protected CatalogoMonedaSumaAseg(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_MONEDAS");
+            super(dataSource, "PKG_LISTAS_PRE.P_MONEDAS");
             declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new SumaAsegMapper()));
             declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));

@@ -19,7 +19,6 @@ var _RUTA_DOCUMENTOS_TEMPORAL       = '<s:text name="ruta.documentos.temporal"  
 ////// variables //////
 var _p39_smap1  = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 var _p39_slist1 = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
-var _p39_slist2 = <s:property value="%{convertToJSON('slist2')}" escapeHtml="false" />;
 var _p39_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
 debug('_p39_smap1:'  , _p39_smap1);
 debug('_p39_slist1:' , _p39_slist1);
@@ -47,27 +46,6 @@ _p39_coberturaColumns.push(
     {
     	checkchange : function(me, rowIndex , checked)
 	    {
-    		
-    		// VALIDACION PARA NO DEVOLVER RC, RC-VIAJERO Y ASESORIA LEGAL (COBERTURAS OBLIGATORIAS PARA RAMO 6)
-    		 try{
-    			var sel= _p39_storeCoberturas.getAt(rowIndex);
-    			debug(sel," - - ",rowIndex)
-     			if(_p39_smap1.CDRAMO==Ramo.ServicioPublico &&
-     			   _p39_smap1.cdtipsup == TipoEndoso.DEVOLUCION_PRIMAS_NO_DEVENGADAS){ 
-        				var garant=$.grep(_p39_slist2,function(ele){
-        					return ele.cdgarant==sel.get("CDGARANT")
-        				});
-        				
-    					if(garant[0].SWOBLIG == "1"){
-    						mensajeWarning('Esta cobertura no se puede devolver');
-    						sel.set('DEVOLVER', false);
-    						return;
-    					}
-     			
-         		}
-     		}catch(e){
-     			debugError(e)
-     		}
             centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se guardar\u00e1 el estatus de devoluci\u00f3n de la cobertura <br>¿Desea continuar?', function(btn)
         	{
             	if(btn === 'yes')

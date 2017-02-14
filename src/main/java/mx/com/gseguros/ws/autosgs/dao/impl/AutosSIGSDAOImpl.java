@@ -884,7 +884,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class ObtieneTipoCliWS extends StoredProcedure{
 		protected ObtieneTipoCliWS(DataSource dataSource){
-			super(dataSource, "sp_PolizasXCliente");
+			super(dataSource, "sp_PolizasXCliente2");
 			
 			declareParameter(new SqlParameter("vNumCliente", Types.INTEGER));
 			declareParameter(new SqlParameter("vTipoCliente", Types.SMALLINT));
