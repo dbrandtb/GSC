@@ -4032,4 +4032,50 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	        Utils.generaExcepcion(ex, paso);
 	    }
 	}
+	
+	@Override
+	public void cambiarTipoEndosoTramite (String ntramite, String status, String cdtipsup, String comments, boolean swagente,
+            String cdusuari, String cdsisrol) throws Exception {
+	    logger.debug("{}", Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+	                                 "\n@@@@@@ cambiarTipoEndosoTramite @@@@@@",
+	                                 "\n@@@@@@ ntramite = " , ntramite,
+                                     "\n@@@@@@ status   = " , status,
+	                                 "\n@@@@@@ cdtipsup = " , cdtipsup,
+	                                 "\n@@@@@@ comments = " , comments,
+                                     "\n@@@@@@ swagente = " , swagente,
+	                                 "\n@@@@@@ cdusuari = " , cdusuari,
+	                                 "\n@@@@@@ cdsisrol = " , cdsisrol));
+	    String paso = null;
+	    try {
+	        paso = "Recuperando descripci\u00f3n de endoso";
+	        logger.debug(paso);
+	        String dstipsup = consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup);
+	        
+	        paso = "Actualizando motivo de endoso";
+	        logger.debug(paso);
+	        flujoMesaControlDAO.cambiarTipoEndosoTramite(ntramite, cdtipsup);
+	        
+	        paso = "Registrando detalle";
+	        logger.debug(paso);
+	        mesaControlDAO.movimientoDetalleTramite(
+	                ntramite,
+	                new Date(), //feinicio
+	                null, //cdclausu
+	                Utils.log("Se cambia el motivo de endoso a \"", dstipsup, "\" con las siguientes observaciones: ",
+	                        Utils.NVL(comments, "(sin comentarios)")),
+	                cdusuari,
+	                null, //cdmotivo
+	                cdsisrol,
+	                swagente ? "S" : "N",
+	                null, //cdusuariDest
+	                null, //cdsisrolDest
+	                status,
+	                false
+	                );
+	    } catch (Exception ex) {
+	        Utils.generaExcepcion(ex, paso);
+	    }
+        logger.debug("{}", Utils.log("\n@@@@@@ cambiarTipoEndosoTramite @@@@@@",
+                                     "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+	}
 }

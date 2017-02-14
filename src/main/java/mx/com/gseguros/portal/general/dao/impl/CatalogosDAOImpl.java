@@ -11,7 +11,8 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -30,7 +31,7 @@ import oracle.jdbc.driver.OracleTypes;
 
 public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO {
 
-	protected static final transient Logger logger = Logger.getLogger(CatalogosDAOImpl.class);
+	protected static final transient Logger logger = LoggerFactory.getLogger(CatalogosDAOImpl.class);
 	
 	@Override
 	public List<GenericVO> obtieneTmanteni(String cdTabla) throws Exception{
@@ -2316,6 +2317,32 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_nivel_i", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"dsatribu"})));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public List<Map<String, String>> recuperarTiposEndosoPorTramite (String ntramite) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("pv_ntramite_i", ntramite);
+        Map<String, Object> procRes = ejecutaSP(new RecuperarTiposEndosoPorTramiteSP(getDataSource()), params);
+        List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+        if (lista == null) {
+            lista = new ArrayList<Map<String, String>>();
+        }
+        logger.debug("recuperarTiposEndosoPorTramite lista {}", Utils.log(lista));
+        return lista;
+    }
+    
+    protected class RecuperarTiposEndosoPorTramiteSP extends StoredProcedure {
+        protected RecuperarTiposEndosoPorTramiteSP (DataSource dataSource) {
+            super(dataSource, "P_END_GET_TIPOS_END_X_TRAMITE");
+            declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{
+                    "CDTIPSUP", "DSTIPSUP"
+            })));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();

@@ -185,5 +185,7 @@ public interface CatalogosDAO {
     public List<GenericVO> obtieneAdminXAgente(String pv_cdagente_i) throws Exception;
     
     public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit,String nivel) throws Exception;
+    
+    public List<Map<String, String>> recuperarTiposEndosoPorTramite (String ntramite) throws Exception;
 	
 }
