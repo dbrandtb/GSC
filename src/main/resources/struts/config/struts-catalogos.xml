@@ -579,5 +579,10 @@
         <action name="obtieneConfPatallaCli" class="personasAction" method="obtieneConfPatallaCli">
             <result type="json" />
         </action>
+        
+        <action name="adminCelulasMC" class="menuAction">
+            <result name="input">/jsp-script/catalogos/adminCelulasMC.jsp</result>
+        </action>
+        
     </package>
 </struts>
