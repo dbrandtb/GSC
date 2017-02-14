@@ -7393,10 +7393,10 @@ public String retarificarEndosos()
 		
 		logger.debug("endosoDomicilioFull()");
 		logger.debug(new StringBuilder("\n")
-		.append("\n#################################")
-		.append("\n#################################")
-		.append("\n###### endosoDomicilioFull ######")
-		.append("\n######                     ######").toString());
+		.append("\n#####################################")
+		.append("\n#####################################")
+		.append("\n###### endosoDomicilioAutoFull ######")
+		.append("\n######                         ######").toString());
 		
 		try{
 			
@@ -7405,8 +7405,8 @@ public String retarificarEndosos()
 			paramsValues.put("param2", smap1.get("CDRAMO"));
 			paramsValues.put("param3", smap1.get("ESTADO"));
 			paramsValues.put("param4", smap1.get("NMPOLIZA"));
-			paramsValues.put("param5", "0");//nmsituac contrantante auto
-			paramsValues.put("param6", null);
+			paramsValues.put("param5", "0");// nmsituac contrantante auto
+			paramsValues.put("param6", "1");// rol para contratante
 			paramsValues.put("param7", null);
 			
 			List<Map<String,String>> datosContr=storedProceduresManager.procedureListCall(
@@ -7414,9 +7414,9 @@ public String retarificarEndosos()
 			if(datosContr!=null && !datosContr.isEmpty() && datosContr.get(0) != null)
 			{
 				Map<String,String> datos = datosContr.get(0);
-				smap1.put("nmsituac", "1");
+				smap1.put("nmsituac", datos.get("NMSITUAC"));
 				smap1.put("cdperson", datos.get("CDPERSON"));
-				smap1.put("cdrol", datos.get("CDROL"));
+				smap1.put("cdrol"   , datos.get("CDROL"));
 			}else{
 			    message = "Error al obtener datos de contratante para pantalla de endoso de domicilio autos";
 				logger.error(message);
@@ -7478,10 +7478,10 @@ public String retarificarEndosos()
 		}
 		
 		logger.debug(new StringBuilder("\n")
-		.append("\n######                     ######")
-		.append("\n###### endosoDomicilioFull ######")
-		.append("\n#################################")
-		.append("\n#################################").toString());
+		.append("\n######                         ######")
+		.append("\n###### endosoDomicilioAutoFull ######")
+		.append("\n#####################################")
+		.append("\n#####################################").toString());
 		
 		return resp.isSuccess() ? SUCCESS : ERROR;
 	}
