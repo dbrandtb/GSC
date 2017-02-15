@@ -241,6 +241,20 @@ public class RecibosManagerImpl implements RecibosManager {
         return inputStr;
     }
     
+    @Override
+    public InputStream obtenerReporteRecibos(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
+        String paso = "";
+        InputStream inputStr = null;
+        try{
+            paso = "Generando reporte";
+            inputStr = recibosDAO.obtenerReporteRecibos(cdunieco, cdramo, estado, nmpoliza);
+        }
+        catch(Exception ex){
+            Utils.generaExcepcion(ex, paso);
+        }
+        return inputStr;
+    }
+    
     public void setRecibosDAO(RecibosDAO recibosDAO) {
         this.recibosDAO = recibosDAO;
     }

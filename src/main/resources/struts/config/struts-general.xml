@@ -128,6 +128,14 @@
                 <param name="bufferSize">4096</param>
             </result>
         </action>
+        <action name="procesoReporteRecibos" class="recibosAction" method="procesoReporteRecibos">
+            <result name="success" type="stream">
+                <param name="contentType">${contentType}</param>
+                <param name="inputName">fileInputStream</param>
+                <param name="contentDisposition">attachment; filename="${filename}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
 	</package>
 	
 </struts>
