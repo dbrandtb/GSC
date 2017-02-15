@@ -35,6 +35,7 @@ import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -73,6 +74,15 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     @Autowired
     private CotizacionDAO  cotizacionDAO;
 
+    @Value("${sigs.facultaDatosPolizaSicaps.url}")
+    private String sigsFacultaDatosPolizaSicapsUrl;	
+    
+    @Value("${ruta.documentos.temporal}")
+    private String rutaDocumentosTemporal;
+    
+    @Value("${sigs.obtenerDatosPorSucRamPol.url}")
+    private String sigsObtenerDatosPorSucRamPolUrl;
+    
     /**
      * Constructor que se asegura de que el action tenga sesion
      */
@@ -1979,7 +1989,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         try
         {
             String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-                  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
+                  ,respuestaWS =HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl,params);
                 HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
                 Map<String,String>parametros = (Map<String,String>)someObject.get("params");
                 String formpagSigs = parametros.get("formpagSigs");
@@ -2034,7 +2044,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     try
                     {
                         String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
-                               mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
+                               mensaje = HttpUtil.sendPost(sigsFacultaDatosPolizaSicapsUrl,params);
                         if(mensaje != null)
                         {
                             return mensaje;
@@ -2236,7 +2246,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
              
              try{
                  String nombreexcel    = "excel_"+excelTimestamp+".xls";
-                 File archivoTxt       = new File(this.getText("ruta.documentos.temporal")+"/"+nombreexcel);
+                 File archivoTxt       = new File(this.rutaDocumentosTemporal+"/"+nombreexcel);
                  
                  if(excel!=null&&excel.exists())
                  {

@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Value;
 
 @Controller
 @Scope("prototype")
@@ -49,6 +50,9 @@ public class TestArchivosAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private ProcesadorArchivosContext procesadorArchivosContext; 
+	
+	@Value("${ruta.documentos.temporal}")
+    private String rutaDocumentosTemporal;
 	
 	@Action(value="validaArchivoExcel",
 			results={@Result(name="success", type="json")}
@@ -114,7 +118,7 @@ public class TestArchivosAction extends PrincipalCoreAction {
 			logger.info("Se valida el formato de los campos: " + campos);
 			
 			// Nombre del archivo de errores (si los hay):
-			String fullNameArchErrValida = getText("ruta.documentos.temporal") + Constantes.SEPARADOR_ARCHIVO+"conversion_" + System.currentTimeMillis() + "_err.txt";
+			String fullNameArchErrValida = rutaDocumentosTemporal + Constantes.SEPARADOR_ARCHIVO+"conversion_" + System.currentTimeMillis() + "_err.txt";
 			
 			File archErrVal = validadorFormatoContext.ejecutaValidacionesFormato(new File(fileNameIn), campos, fullNameArchErrValida, ValidadorFormatoContext.Strategy.VALIDACION_EXCEL);
 			if(archErrVal != null && archErrVal.length() > 0) {
@@ -127,7 +131,7 @@ public class TestArchivosAction extends PrincipalCoreAction {
 			
 			/*
 			// PROCESAMIENTO DEL ARCHIVO:
-			logger.info("Se ejecuta proceso de archivo: " + this.getText("directorio.server.layouts")+Constantes.SEPARADOR_ARCHIVO+fileFileName);
+			logger.info("Se ejecuta proceso de archivo: " + this.directorioServerLayouts+Constantes.SEPARADOR_ARCHIVO+fileFileName);
 			
 			mx.com.gseguros.portal.general.procesoarchivo.ProcesadorArchivosContext.Strategy estrategiaProcesaArchivo = null;
 			if(tipoTabla == TipoTabla.UNA.getCodigo()) {

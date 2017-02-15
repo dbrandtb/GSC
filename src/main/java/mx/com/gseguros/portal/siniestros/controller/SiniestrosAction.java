@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -141,6 +142,15 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	@Autowired
 	private MesaControlManager mesaControlManager;
 
+    @Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+    
+    @Value("${pass.servidor.reports}")
+    private String passServidorReports;	
+    
+    @Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;
+    
 	/**
 	* metodo para consultar la poliza en especifico
 	* @param unieco, Ramo, Estado, Nmpoliza, cdperson
@@ -777,7 +787,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				}
 			}
 			
-			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
+			File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
 				logger.debug("no existe la carpeta : {}",paramsO.get("pv_ntramite_i"));
 				carpeta.mkdir();
@@ -790,19 +800,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				logger.debug("existe la carpeta :{}",paramsO.get("pv_ntramite_i"));
 			}
 			String urlContrareciboSiniestro = ""
-					+ getText("ruta.servidor.reports")
+					+ rutaServidorReports
 					+ "?p_usuario=" + usuario.getUser() 
 					+ "&p_ntramite=" + paramsO.get("pv_ntramite_i")
 					+ "&destype=cache"
 					+ "&desformat=PDF"
-					+ "&userid="+getText("pass.servidor.reports")
+					+ "&userid="+passServidorReports
 					+ "&ACCESSIBLE=YES"
 					+ "&report="+ nombreRdf
 					+ "&paramform=no"
 					;
 			String nombreArchivo = getText("pdf.siniestro.cartarechazo.nombre");
 			String pathArchivo=""
-					+ getText("ruta.documentos.poliza")
+					+ rutaDocumentosPoliza
 					+ "/" + paramsO.get("pv_ntramite_i")
 					+ "/" + nombreArchivo
 					;
@@ -1241,7 +1251,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				paramsO.putAll(params);
 				
 				//String nombreRdf = getText("rdf.siniestro.cartafiniquito.nombre");
-				File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
+				File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
 				if(!carpeta.exists()){
 					logger.debug("no existe la carpeta: {}",paramsO.get("pv_ntramite_i"));
 					carpeta.mkdir();
@@ -1262,7 +1272,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					}
 					
 					String urlFiniquitoSiniestro = ""
-							+ getText("ruta.servidor.reports")
+							+ rutaServidorReports
 							+ "?p_unieco=" + siniestro.getCdunieco() 
 							+ "&p_ramo="   + siniestro.getCdramo()
 							+ "&p_estado=" + siniestro.getEstado()
@@ -1274,14 +1284,14 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							+ "&p_sinies="+ siniestro.getNmsinies()
 							+ "&destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+getText("pass.servidor.reports")
+							+ "&userid="+passServidorReports
 							+ "&ACCESSIBLE=YES"
 							+ "&report="+ nombreRdf
 							+ "&paramform=no"
 							;
 					String nombreArchivo = siniestro.getNmsinies() +"_"+ siniestro.getAapertu() +"_" + getText("pdf.siniestro.finiquito.nombre");
 					String pathArchivo=""
-							+ getText("ruta.documentos.poliza")
+							+ rutaDocumentosPoliza
 							+ "/" + paramsO.get("pv_ntramite_i")
 							+ "/" + nombreArchivo
 							;

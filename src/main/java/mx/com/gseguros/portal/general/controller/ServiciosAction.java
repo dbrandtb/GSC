@@ -13,6 +13,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Value;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
@@ -55,6 +56,9 @@ public class ServiciosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
+	
+	@Value("${ruta.documentos.temporal}")
+    private String rutaDocumentosTemporal;
 	
 	@Action(value   = "reemplazarDocumentoCotizacion",
 		    results = {
@@ -200,7 +204,7 @@ public class ServiciosAction extends PrincipalCoreAction
 		
 		try
 		{
-			serviciosManager.recibosSubsecuentes(getText("ruta.documentos.temporal"),false);
+			serviciosManager.recibosSubsecuentes(rutaDocumentosTemporal,false);
 		}
 		catch(Exception ex)
 		{
@@ -228,7 +232,7 @@ public class ServiciosAction extends PrincipalCoreAction
 		
 		try
 		{
-			serviciosManager.recibosSubsecuentes(getText("ruta.documentos.temporal"),true);
+			serviciosManager.recibosSubsecuentes(rutaDocumentosTemporal,true);
 		}
 		catch(Exception ex)
 		{

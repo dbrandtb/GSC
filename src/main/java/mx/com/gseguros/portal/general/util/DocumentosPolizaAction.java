@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 public class DocumentosPolizaAction extends PrincipalCoreAction {
 
@@ -76,6 +77,19 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
     
     @Autowired
     private ConsultasPolizaManager consultasPolizaManager;
+    
+    @Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+    
+    @Value("${pass.servidor.reports}")
+    private String passServidorReports;
+    
+    @Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;
+    
+    @Value("${ruta.documentos.temporal}")
+    private String rutaDocumentosTemporal;
+    
 	/**
 	 * Metodo para la descarga de los archivos de los Movimientos en los casos
 	 * de BO
@@ -146,11 +160,11 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	                   nmsuplem      = "999999999999999999",//smap1.get("pv_nmsuplem_i"),
 	                   nmtramite     = smap1.get("pv_nmtramite_i"),
 	                   nombreReporte = smap1.get("pv_cddocume_i").substring(0 , smap1.get("pv_cddocume_i").length()-3);
-	            
+	                       
 	            paso = "Generando URL para SOL_VIDA_AUTO.pdf";
-	            String rutaReports    = getText("ruta.servidor.reports");
-	            String passReports    = getText("pass.servidor.reports");
-	            String rutaDocumentos = getText("ruta.documentos.poliza");
+	            String rutaReports    = rutaServidorReports;
+	            String passReports    = passServidorReports;
+	            String rutaDocumentos = rutaDocumentosPoliza;
 	            String url = rutaReports
 	                    + "?destype=cache"
 	                    + "&desformat=PDF"
@@ -293,7 +307,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
                     List<PolizaDTO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
                     if (lista != null && !lista.isEmpty()) {
                         consultasManager.copiarArchivosRenovacionColectivo(listaMesaControl.get(0).getCduniecomc(),listaMesaControl.get(0).getCdramomc(),"M",
-                                        Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"",ntramite, this.getText("ruta.documentos.poliza"));
+                                        Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"",ntramite, this.rutaDocumentosPoliza);
                     } 
 	            }
 	            
@@ -382,7 +396,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 				{
 					File file = new File(
 							new StringBuilder().
-							append(this.getText("ruta.documentos.poliza"))
+							append(this.rutaDocumentosPoliza)
 							.append(Constantes.SEPARADOR_ARCHIVO).append(ntramite)
 							.append(Constantes.SEPARADOR_ARCHIVO).append(iArchivo)
 							.toString()
@@ -393,7 +407,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		
 				File fusionado = DocumentosUtils.fusionarDocumentosPDF(files,new File(
 						new StringBuilder()
-						.append(this.getText("ruta.documentos.temporal")).append(Constantes.SEPARADOR_ARCHIVO)
+						.append(this.rutaDocumentosTemporal).append(Constantes.SEPARADOR_ARCHIVO)
 						.append(System.currentTimeMillis()).append("_fusion_").append(ntramite).append(".pdf")
 						.toString()
 						));
@@ -442,7 +456,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		
 		StringBuilder sbRutaArchivo = new StringBuilder();
 		// Agregamos la ruta:
-		sbRutaArchivo.append(StringUtils.isNotBlank(ruta) ? ruta : this.getText("ruta.documentos.poliza"));
+		sbRutaArchivo.append(StringUtils.isNotBlank(ruta) ? ruta : this.rutaDocumentosPoliza);
 		sbRutaArchivo.append(Constantes.SEPARADOR_ARCHIVO);
 		// Agregamos la subcarpeta si existe:
 		if(StringUtils.isNotBlank(subcarpeta)) {

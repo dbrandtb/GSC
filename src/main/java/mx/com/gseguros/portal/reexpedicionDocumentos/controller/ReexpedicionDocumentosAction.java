@@ -20,6 +20,7 @@ import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 {
@@ -39,6 +40,15 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 	private Map<String,String>            stringMap;
 	private boolean                       success;
 
+    @Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+    
+    @Value("${pass.servidor.reports}")
+    private String passServidorReports;	
+    
+    @Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;
+    
 	public String principal()
 	{
 		logger.info(""
@@ -115,10 +125,10 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 						nombrePDF = nombrePDF += "_"+ nmsuplem;
 					}
 					String url = new StringBuilder()
-						.append(this.getText("ruta.servidor.reports"))
+						.append(rutaServidorReports)
 						.append("?destype=cache")
 						.append("&desformat=PDF")
-						.append("&userid=").append(this.getText("pass.servidor.reports"))
+						.append("&userid=").append(this.passServidorReports)
 						.append("&report=").append(pag).append(".rdf")
 						.append("&paramform=no")
 						.append("&ACCESSIBLE=YES")
@@ -129,7 +139,7 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 						.append("&p_suplem=").append(nmsuplem)
 						.toString();
 					HttpUtil.generaArchivo(url, new StringBuilder()
-							.append(this.getText("ruta.documentos.poliza")).append("/").append(ntramite).append("/")
+							.append(this.rutaDocumentosPoliza).append("/").append(ntramite).append("/")
 							.append(nombrePDF).append(".pdf").toString());
 				}
 			}
@@ -186,10 +196,10 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 						nombrePDF = nombrePDF += "_"+ nmsuplem;
 					}
 					String url = new StringBuilder()
-						.append(this.getText("ruta.servidor.reports"))
+						.append(rutaServidorReports)
 						.append("?destype=cache")
 						.append("&desformat=PDF")
-						.append("&userid=").append(this.getText("pass.servidor.reports"))
+						.append("&userid=").append(this.passServidorReports)
 						.append("&report=").append(pag).append(".rdf")
 						.append("&paramform=no")
 						.append("&ACCESSIBLE=YES")
@@ -200,7 +210,7 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 						.append("&p_suplem=").append(nmsuplem)
 						.toString();
 					HttpUtil.generaArchivo(url, new StringBuilder()
-							.append(this.getText("ruta.documentos.poliza")).append("/").append(ntramite).append("/")
+							.append(this.rutaDocumentosPoliza).append("/").append(ntramite).append("/")
 							.append(nombrePDF).append(".pdf").toString());
 				}
 			}

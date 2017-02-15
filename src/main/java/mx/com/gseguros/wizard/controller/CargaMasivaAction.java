@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -50,6 +51,9 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 	
 	private static Logger logger = LoggerFactory.getLogger(CargaMasivaAction.class);
 	
+	@Value("${directorio.server.layouts}")
+    private String directorioServerLayouts;
+	
 	public CargaMasivaAction()
 	{
 		this.session=ActionContext.getContext().getSession();
@@ -78,6 +82,8 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 	@Autowired
 	private ProcesadorArchivosContext procesadorArchivosContext;
 	
+	@Value("${ruta.documentos.temporal}")
+    private String rutaDocumentosTemporal;
 	
 	@Action(value="cargaTablaApoyo",
 	results={@Result(name="success", type="json")}
@@ -139,7 +145,7 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 			// VALIDACION DE FORMATO:
 			logger.info("Se valida el formato de los campos: {}", campos);
 			
-			String fullNameArchErrValida = getText("ruta.documentos.temporal") + Constantes.SEPARADOR_ARCHIVO+"conversion_" + System.currentTimeMillis() + "_err.txt";
+			String fullNameArchErrValida = rutaDocumentosTemporal + Constantes.SEPARADOR_ARCHIVO+"conversion_" + System.currentTimeMillis() + "_err.txt";
 			File archErrVal = validadorFormatoContext.ejecutaValidacionesFormato(file, campos, fullNameArchErrValida, mx.com.gseguros.portal.general.validacionformato.ValidadorFormatoContext.Strategy.VALIDACION_EXCEL);
 			if(archErrVal != null && archErrVal.length() > 0) {
 				String msjeError = "Archivo tiene errores de formato";
@@ -150,8 +156,8 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 			
 			
 			// PROCESAMIENTO DEL ARCHIVO:
-			//logger.info("Se ejecuta proceso de archivo: " + this.getText("directorio.server.layouts")+Constantes.SEPARADOR_ARCHIVO+fileFileName);
-			logger.info("Se ejecuta proceso de archivo: {}", this.getText("directorio.server.layouts"),Constantes.SEPARADOR_ARCHIVO,fileFileName);
+			//logger.info("Se ejecuta proceso de archivo: " + this.directorioServerLayouts+Constantes.SEPARADOR_ARCHIVO+fileFileName);
+			logger.info("Se ejecuta proceso de archivo: {}", this.directorioServerLayouts,Constantes.SEPARADOR_ARCHIVO,fileFileName);
 			
 			mx.com.gseguros.portal.general.procesoarchivo.ProcesadorArchivosContext.Strategy estrategiaProcesaArchivo = null;
 			if(tipoTabla == TipoTabla.UNA.getCodigo()) {
@@ -222,7 +228,7 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, true)); // 17
 			campos.add(new CampoVO(CampoVO.ALFANUMERICO, 1, 100, false)); // 18
 			// Nombre del archivo de errores (si los hay):
-			String fullNameArchErrValida = getText("ruta.documentos.temporal") + Constantes.SEPARADOR_ARCHIVO
+			String fullNameArchErrValida = rutaDocumentosTemporal + Constantes.SEPARADOR_ARCHIVO
 					+ "conversion_" + System.currentTimeMillis() + "_err.txt";
 			File archErrVal = validadorFormatoContext.ejecutaValidacionesFormato(file, campos, fullNameArchErrValida,
 					ValidadorFormatoContext.Strategy.VALIDACION_EXCEL);

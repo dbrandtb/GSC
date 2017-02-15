@@ -30,6 +30,7 @@ import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -91,6 +92,22 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
     
 	@Autowired
 	private CotizacionManager cotizacionManager;
+	
+	@Value("${ruta.documentos.temporal}")
+    private String rutaDocumentosTemporal;
+	
+	@Value("${user.server.layouts}")
+    private String userServerLayouts;	
+
+	@Value("${pass.server.layouts}")
+    private String passServerLayouts;	
+
+	@Value("${directorio.server.layouts}")
+    private String directorioServerLayouts;	
+
+	@Value("${dominio.server.layouts}")
+    private String dominioServerLayouts;
+
 	/**
 	* Funcion donde obtenemos los datos de las validaciones del siniestro
 	* @param params
@@ -208,15 +225,15 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 		if(StringUtils.isBlank(ntramite))
 		{
 			String timestamp = smap1.get("timestamp");
-			//censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
+			//censo.renameTo(new File(this.rutaDocumentosTemporal+"/censo_"+timestamp));
 			try {
-            	FileUtils.copyFile(censo, new File(this.getText("ruta.documentos.temporal")+"/layoutGral_"+timestamp));
+            	FileUtils.copyFile(censo, new File(this.rutaDocumentosTemporal+"/layoutGral_"+timestamp));
             	logger.debug("archivo movido");
 			} catch (Exception e) {
 				logger.error("archivo NO movido", e);
 			}
 			
-			logger.debug("censo renamed to: "+this.getText("ruta.documentos.temporal")+"/layoutGral_"+timestamp);
+			logger.debug("censo renamed to: "+this.rutaDocumentosTemporal+"/layoutGral_"+timestamp);
 		}
 		
 		logger.debug(""
@@ -242,7 +259,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 			String cdpresta        = smap1.get("cdpresta");
 			String layoutConf      = smap1.get("tipoLayout");
 			
-			layoutGral = new File(this.getText("ruta.documentos.temporal")+"/layoutGral_"+layoutTimestamp);
+			layoutGral = new File(this.rutaDocumentosTemporal+"/layoutGral_"+layoutTimestamp);
 			logger.debug("============== VALOR DEL NOMBRE DEL LAYOUT GENERAL ==========:  {}",layoutGral);
 			List<CampoVO> campos = new ArrayList<CampoVO>();
 			List<Map<String,String>>  datosInformacionLayout;
@@ -312,7 +329,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 					}
 				}
 				
-				String fullNameArchErrValida = getText("ruta.documentos.temporal") + Constantes.SEPARADOR_ARCHIVO+"conversion_" + System.currentTimeMillis() + "_err.txt";
+				String fullNameArchErrValida = rutaDocumentosTemporal + Constantes.SEPARADOR_ARCHIVO+"conversion_" + System.currentTimeMillis() + "_err.txt";
 				
 				File archErrVal = validadorFormatoContext.ejecutaValidacionesFormato(layoutGral, campos, fullNameArchErrValida, ValidadorFormatoContext.Strategy.VALIDACION_EXCEL);
 				
@@ -372,7 +389,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 			String cdpresta        = smap1.get("cdpresta");
 			String layoutConf      = smap1.get("tipoLayout");
 			
-			layoutGral = new File(this.getText("ruta.documentos.temporal")+"/layoutGral_"+layoutTimestamp);
+			layoutGral = new File(this.rutaDocumentosTemporal+"/layoutGral_"+layoutTimestamp);
 			
 			List<Map<String,String>>  datosInformacionLayout = siniestrosManager.requiereConfiguracionLayoutProveedor(cdpresta, layoutConf);
 			String nombreLayout = null;
@@ -392,7 +409,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 					sheet       = workbook.getSheetAt(0);
 					inTimestamp = System.currentTimeMillis();
 					nombreLayout = "layout_"+inTimestamp+".txt";
-					archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreLayout);
+					archivoTxt  = new File(this.rutaDocumentosTemporal +"/"+nombreLayout);
 					output      = new PrintStream(archivoTxt);
 				}
 				catch(Exception ex){
@@ -750,19 +767,19 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 						}else{
 							exito = FTPSUtils.upload
 									(
-										this.getText("dominio.server.layouts"),
-										this.getText("user.server.layouts"),
-										this.getText("pass.server.layouts"),
+										this.dominioServerLayouts,
+										this.userServerLayouts,
+										this.passServerLayouts,
 										archivoTxt.getAbsolutePath(),
-										this.getText("directorio.server.layouts")+"/"+nombreLayout
+										this.directorioServerLayouts+"/"+nombreLayout
 								    )
 									&&FTPSUtils.upload
 									(
-										this.getText("dominio.server.layouts2"),
-										this.getText("user.server.layouts"),
-										this.getText("pass.server.layouts"),
+										this.dominioServerLayouts,
+										this.userServerLayouts,
+										this.passServerLayouts,
 										archivoTxt.getAbsolutePath(),
-										this.getText("directorio.server.layouts")+"/"+nombreLayout
+										this.directorioServerLayouts+"/"+nombreLayout
 									);
 							
 							if(!exito)

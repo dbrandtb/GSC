@@ -25,6 +25,7 @@ import mx.com.gseguros.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -50,6 +51,15 @@ public class RenovacionAction extends PrincipalCoreAction
 	@Autowired
 	private ConsultasManager  consultasManager;
 	
+    @Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+    
+    @Value("${pass.servidor.reports}")
+    private String passServidorReports;	
+    
+    @Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;
+    
 	public String pantallaRenovacion()
 	{
 		logger.info(
@@ -290,9 +300,9 @@ public class RenovacionAction extends PrincipalCoreAction
 					,cdusuari
 					,anio
 					,mes
-					,getText("ruta.documentos.poliza")
-					,getText("ruta.servidor.reports")
-					,getText("pass.servidor.reports")
+					,rutaDocumentosPoliza
+					,rutaServidorReports
+					,passServidorReports
 					,usuario
 					);
 			exito           = resp.isExito();
@@ -610,9 +620,9 @@ public class RenovacionAction extends PrincipalCoreAction
 					cdperpag,
 					feefecto,
 					usuario,
-					getText("ruta.documentos.poliza")//,
-//					getText("ruta.servidor.reports"),
-//					getText("pass.servidor.reports")
+					rutaDocumentosPoliza//,
+//					rutaServidorReports,
+//					passServidorReports
 					);
 			List<Map<String, String>> lista = new ArrayList<Map<String,String>>();			
 			logger.info(new StringBuilder().append("\n###### lista").append(lista));

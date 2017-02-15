@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -65,6 +66,12 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
+	
+	@Value("${caratula.impresion.autos.endosob.url}")
+    private String caratulaImpresionAutosEndosobUrl;
+	
+	@Value("${logs.ruta}")
+    private String logsRuta;
 	
 	public EndososAutoAction()
 	{
@@ -679,7 +686,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		smap1.put("tipoPantalla", "0");
 		smap1.put("FEINIVAL", null);
 		smap1.put("cdtipsup",TipoEndoso.REHABILITACION_NOMBRE_RFC_FENAC.getCdTipSup().toString());
-		smap1.put("rutaPDF",this.getText("caratula.impresion.autos.endosob.url"));
+		smap1.put("rutaPDF",this.caratulaImpresionAutosEndosobUrl);
 		
 		logger.debug(new StringBuilder()
 		.append("\n############################")
@@ -703,7 +710,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 		HashMap<String,String>smap=new HashMap<String,String>();
 		smap.put("cdtipsup",TipoEndoso.REHABILITACION_NOMBRE_RFC_FENAC.getCdTipSup().toString());
 		smap.put("tipoPantalla","1");
-		smap.put("rutaPDF",this.getText("caratula.impresion.autos.endosob.url"));
+		smap.put("rutaPDF",this.caratulaImpresionAutosEndosobUrl);
 		smap1 = smap;
 		logger.debug(new StringBuilder()
 		.append("\n#####################################")
@@ -1908,7 +1915,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(smap1.get("error")   , "No se recibio el numero de error");
 			Utils.validate(smap1.get("archivo") , "No se recibio el nombre del archivo");
 			
-			smap1.putAll(endososAutoManager.buscarError(smap1.get("error"),getText("logs.ruta"),smap1.get("archivo")));
+			smap1.putAll(endososAutoManager.buscarError(smap1.get("error"),logsRuta,smap1.get("archivo")));
 			
 		}
 		catch(Exception ex)
@@ -2616,7 +2623,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy");
 			String fechaEndoso  = sdf.format(new Date());
 			Date   dFechaEndoso = renderFechas.parse(fechaEndoso);
-			String urlCaratula =  this.getText("caratula.impresion.autos.endosob.url");
+			String urlCaratula =  this.caratulaImpresionAutosEndosobUrl;
 			
 			Utils.validate(tipoPantalla   , "No se recibio el origen del llamado");
 			
@@ -2716,7 +2723,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 			SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy");
 			String fechaEndoso  = sdf.format(new Date());
 			Date   dFechaEndoso = renderFechas.parse(fechaEndoso);
-			String urlCaratula =  this.getText("caratula.impresion.autos.endosob.url");
+			String urlCaratula =  this.caratulaImpresionAutosEndosobUrl;
 			
 			
 			int claveEndoso = endososAutoManager.guardarEndosoDomicilioNoSICAPS(
