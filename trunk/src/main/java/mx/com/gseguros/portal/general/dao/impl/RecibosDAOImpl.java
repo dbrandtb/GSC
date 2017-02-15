@@ -441,4 +441,38 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
             return new ByteArrayInputStream(lobHandler.getClobAsString(rs, "DATA").getBytes()); //.getBlobAsBytes(rs, "DATA"));
         }
     }
+    
+    @Override
+    public InputStream obtenerReporteRecibos(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
+        Map<String, Object> params = new HashMap<String, Object>();   
+        params.put("pv_cdunieco_i", cdunieco);
+        params.put("pv_cdramo_i",   cdramo);
+        params.put("pv_estado_i",   estado);
+        params.put("pv_nmpoliza_i", nmpoliza);   
+        InputStream archivo =  null;
+        try {
+            Map<String, Object> resultado = ejecutaSP(new ObtenerReporteRecibos(getDataSource()), params);
+            logger.debug("resultado:"+resultado);
+            ArrayList<InputStream> inputList = (ArrayList<InputStream>) resultado.get("pv_registro_o");
+            archivo = inputList.get(0);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage(), e);
+        }
+        
+        return archivo;
+    }
+        
+    protected class ObtenerReporteRecibos extends StoredProcedure {
+        protected ObtenerReporteRecibos(DataSource dataSource) {
+            super(dataSource,"P_GET_REP_REC_SISA");
+            declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneReporteMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
+        }
+    }    
 }
