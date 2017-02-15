@@ -1250,12 +1250,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             {
                 throw new ApplicationException(respuesta);
             }
-            
-            if(resp.getSlist().size()>50 && tipoflot.equals("P"))
-            {
-                respuestaOculta="Incisos maximos permitidos 50";
-                return SUCCESS;
-            }
 
             //Pone vacio en los valores desc/rec de la lista
             resp.setSlist(cotizacionAutoManager.validaVacioDescRecg(resp.getSlist()));
