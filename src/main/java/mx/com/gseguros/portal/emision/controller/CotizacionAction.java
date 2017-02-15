@@ -14043,20 +14043,23 @@ public class CotizacionAction extends PrincipalCoreAction
                            modelo = row.getCell(4).toString().length() == 4 ? row.getCell(4).toString() : row.getCell(4).toString().substring(0,4),
                            valorVeh = String.format("%.2f", Double.parseDouble(row.getCell(6).toString()));
                            row.getCell(0).setCellValue(clveVeh);row.getCell(4).setCellValue(modelo);row.getCell(6).setCellValue(valorVeh);
-                    if(!olist1.get(fila).containsValue(row.getCell(0).toString())) //Clave Vehiculo
-                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso"+(fila)+"en la clave vehiculo";
+                           
+                    if(    !olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.MOTOS.getCdtipsit())//Clave no aplicable para motos 
+                        && !olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())//Ni autos fonterizos
+                        && !olist1.get(fila).containsValue(row.getCell(0).toString())) //Clave Vehiculo
+                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+2)+" en la clave vehiculo "+row.getCell(0).toString();
                         exito           = false;   break;
                     }if(!olist1.get(fila).containsValue(row.getCell(6).toString())) //Valor Vehiculo
-                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso"+(fila)+"en el valor del Vehiculo";;
+                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+2)+" en el valor del Vehiculo "+row.getCell(6).toString();
                         exito           = false;   break;
                     }if(!olist1.get(fila).containsValue(row.getCell(3).toString())) //Descripcion
-                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso"+(fila)+"en la la clave vehiculo";;
+                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+2)+" en la la clave vehiculo "+row.getCell(3).toString();
                         exito           = false;   break;
                     }if(!olist1.get(fila).containsValue(row.getCell(9).toString())) //No. Serie
-                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente  en el inciso"+(fila)+"en el numero de serie";;
+                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente  en el inciso "+(fila+2)+" en el numero de serie"+row.getCell(9).toString();
                         exito           = false;   break;
                     }if(!olist1.get(fila).containsValue(row.getCell(4).toString())) //Modelo
-                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso"+(fila)+"en el modelo";;
+                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+2)+" en el modelo "+row.getCell(4).toString();
                         exito           = false;   break;
                     }
                     logger.debug("El excel introducido, coincide en el inciso numero: "+fila);
