@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionContext;
 
+import org.springframework.beans.factory.annotation.Value;
+
 
 @SuppressWarnings("serial")
 public class EmisionAction extends PrincipalCoreAction
@@ -29,6 +31,9 @@ public class EmisionAction extends PrincipalCoreAction
 	private Map<String,String>       smap1     = null;
 	private Map<String,Item>         imap      = null;
 	private List<Map<String,String>> slist1    = null;
+	
+	@Value("${sigs.obtenerDatosPorSucRamPol.url}")
+    private String sigsObtenerDatosPorSucRamPolUrl;
 	
 	public EmisionAction()
 	{
@@ -117,7 +122,7 @@ public class EmisionAction extends PrincipalCoreAction
 		try {//CHECAR PARA CAMBIOS FUTUROS
 			String login  = smap1.get("cdusuari"),
 			       params = Utils.join("login=",login),
-			       idUsu  = HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"), params);
+			       idUsu  = HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl, params);
 			
 			smap1.put("idUsu", idUsu);
 			
@@ -151,7 +156,7 @@ public class EmisionAction extends PrincipalCoreAction
 		try
 		{
 			String params        = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-		          ,valoresCampos = HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
+		          ,valoresCampos = HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl,params);
 			
 			logger.debug(Utils.log("\n Parametros Regresados\nValores de Campos: ",valoresCampos));
 			

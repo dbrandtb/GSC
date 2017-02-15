@@ -16,6 +16,7 @@ import org.apache.struts2.dispatcher.SessionMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -39,6 +40,12 @@ public class AutenticacionAction extends PrincipalCoreAction {
 	private boolean success;
 	private String errorMessage;
 
+	@Value("${login.auth.ldap.activa}")
+    private String loginAuthLdapActiva;	
+	
+	@Value("${login.modo.agregar.usuarios.ldap}")
+    private String loginModoAgregarUsuariosLdap;	
+	
 	public String execute() throws Exception {
 		logger.debug("Entrando a execute");
 		return INPUT;
@@ -60,7 +67,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		/**
 		 * Si es true agrega los usuarios en LDAP si ya existen previamente en BD (flujo temporal), <br/> false si solo autentica en LDAP y BD (flujo correcto)
 		 */
-		if(new Boolean(getText("login.modo.agregar.usuarios.ldap"))){
+		if(new Boolean(loginModoAgregarUsuariosLdap)){
 			logger.debug("Autentificacion,entrando a modo Agregar Usuarios a LDAP");
 			return autenticaUsuarioAgregaLDAP();
 		}
@@ -70,7 +77,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		try {
 			
 			boolean existeUsuario = true;
-			if(new Boolean(getText("login.auth.ldap.activa"))){
+			if(new Boolean(loginAuthLdapActiva)){
 				existeUsuario = loginManager.validaUsuarioLDAP(false, user, password); 
 			}
 			if (existeUsuario) {

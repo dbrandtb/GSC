@@ -14,6 +14,7 @@ import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -86,6 +87,15 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	@Autowired
 	private MesaControlManager mesaControlManager;
 	
+    @Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+    
+    @Value("${pass.servidor.reports}")
+    private String passServidorReports;	
+    
+    @Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;
+    
 	public String autorizacionServicios() {
 		logger.debug("Entra a autorizacionServicios Params: {}", params);
 		try {
@@ -460,7 +470,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	private String generarAutoriServicio(Map<String, Object> paramsO){
 		logger.debug("Entra a generarAutoriServicio Valores para generarAutoriServicio: {}", paramsO);
 		try {
-			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
+			File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
 				logger.debug("no existe la carpeta:::  {}", paramsO.get("pv_ntramite_i"));
 				carpeta.mkdir();
@@ -486,7 +496,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			}
 			
 			String urlAutorizacionServicio = ""
-				+ getText("ruta.servidor.reports")
+				+ rutaServidorReports
 				+ "?p_unieco=" +  paramsO.get("pv_cdunieco_i")
 				+ "&p_ramo=" + paramsO.get("pv_cdramo_i")
 				+ "&p_estado=" + paramsO.get("pv_estado_i")
@@ -495,7 +505,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 				+ "&P_CDPERSON=" + paramsO.get("pv_cdperson_i")
 				+ "&destype=cache"
 				+ "&desformat=PDF"
-				+ "&userid="+getText("pass.servidor.reports")
+				+ "&userid="+passServidorReports
 				+ "&ACCESSIBLE=YES"
 				+ "&report="+reporteSeleccion
 				+ "&paramform=no"
@@ -506,7 +516,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			
 			String nombreArchivoModificado = nombreArchivo.substring(nombreArchivo.indexOf(".")+1)+System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+".pdf";
 			String pathArchivo=""
-				+ getText("ruta.documentos.poliza")
+				+ rutaDocumentosPoliza
 				+ "/" + paramsO.get("pv_ntramite_i")
 				+ "/" + nombreArchivoModificado
 				;
@@ -836,9 +846,9 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		String estado      = map1.get("estado");
 		String nmpoliza    = map1.get("nmpoliza");
 		String nmsuplem    = map1.get("nmsuplem");
-		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
+		String rutaCarpeta = this.rutaDocumentosPoliza+"/"+ntramite;
 
-		File carpeta=new File(this.getText("ruta.documentos.poliza")+"/"+ntramite);
+		File carpeta=new File(this.rutaDocumentosPoliza+"/"+ntramite);
 		if(!carpeta.exists()){
 			logger.debug("no existe la carpeta: {}", ntramite);
 			carpeta.mkdir();
@@ -850,10 +860,10 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		} else {
 			logger.debug("existe la carpeta: {}", ntramite);
 		}
-		String url         = this.getText("ruta.servidor.reports")
+		String url         = this.rutaServidorReports
 						+ "?destype=cache"
 						+ "&desformat=PDF"
-						+ "&userid="+this.getText("pass.servidor.reports")
+						+ "&userid="+this.passServidorReports
 						+ "&report="+(cdsisrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())?
 						this.getText("rdf.emision.rechazo.medico.nombre"):
 						this.getText("rdf.emision.rechazo.admin.nombre"))

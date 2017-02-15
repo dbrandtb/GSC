@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Value;
 
 @Controller
 @Scope("prototype")
@@ -65,6 +66,9 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private RecuperacionSimpleManager recuperacionSimpleManager;
+	
+	@Value("${ruta.documentos.temporal}")
+    private String rutaDocumentosTemporal;
 	
 	@Action(value   = "recuperar",
     	results = { @Result(name="success", type="json") }
@@ -140,7 +144,7 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
 			       
 			       logger.info("Exportando Excel para " + params.get("consulta"));
 			       this.fileName =  rec.name()+Utils.generaTimestamp()+TipoArchivo.XLSX.getExtension();
-	                String fullFileName = getText("ruta.documentos.temporal") + Constantes.SEPARADOR_ARCHIVO + this.fileName;
+	                String fullFileName = rutaDocumentosTemporal + Constantes.SEPARADOR_ARCHIVO + this.fileName;
 	                
 	                boolean exito = DocumentosUtils.generaExcel(list, fullFileName, true);
 	                if(exito) {

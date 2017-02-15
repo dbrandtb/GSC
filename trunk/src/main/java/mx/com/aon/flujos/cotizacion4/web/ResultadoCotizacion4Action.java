@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -193,6 +194,15 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
+	
+	@Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+	
+	@Value("${pass.servidor.reports}")
+    private String passServidorReports;	
+	
+	@Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;	
 	
     public String entrar()
     {
@@ -1345,7 +1355,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	{
             try
             {
-	            File carpeta=new File(getText("ruta.documentos.poliza")+"/"+ntramite);
+	            File carpeta=new File(rutaDocumentosPoliza+"/"+ntramite);
 	            if(!carpeta.exists())
 	            {
 	            	if(!carpeta.mkdir())
@@ -1355,7 +1365,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            }
 	            
 	            StringBuilder urlReporteCotizacion=new StringBuilder()
-	                   .append(getText("ruta.servidor.reports"))
+	                   .append(rutaServidorReports)
 	                   .append("?p_unieco=")  .append(comprarCdunieco)
 	                   .append("&p_ramo=")    .append(comprarCdramo)
 	                   .append("&p_subramo=") .append(cdtipsit)
@@ -1367,7 +1377,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                   .append("&p_perpag=")  .append(comprarCdperpag)
 	                   .append("&p_ntramite=").append(ntramite)
 	                   .append("&p_cdusuari=").append(cdusuari)
-	                   .append("&userid=")    .append(getText("pass.servidor.reports"));
+	                   .append("&userid=")    .append(passServidorReports);
 	            
 	            if(!esFlotilla)
 	            {
@@ -1386,7 +1396,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            
 	            String nombreArchivoCotizacion = Utils.join("cotizacion_", comprarNmpoliza, ".pdf");
 	            String pathArchivoCotizacion=new StringBuilder()
-            					.append(getText("ruta.documentos.poliza"))
+            					.append(rutaDocumentosPoliza)
             					.append("/").append(ntramite)
             					.append("/").append(nombreArchivoCotizacion)
             					.toString();
@@ -1459,7 +1469,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				String nombreExcel1 = Utils.join("COTIZACION",TipoArchivo.XLS.getExtension());
 				
 				FileUtils.copyInputStreamToFile(excel, new File(Utils.join(
-								getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreExcel1
+						rutaDocumentosPoliza,"/",ntramite,"/",nombreExcel1
 				)));
 				
 				//Map<String,Object>mapaExcel1 = new LinkedHashMap<String,Object>(0);
@@ -1516,7 +1526,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				String nombreExcel2 = Utils.join("RESUMEN DE COTIZACION",TipoArchivo.XLS.getExtension());
 				
 				FileUtils.copyInputStreamToFile(excel2, new File(Utils.join(
-								getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreExcel2
+						rutaDocumentosPoliza,"/",ntramite,"/",nombreExcel2
 				)));
 				
 				//Map<String,Object>mapaExcel2 = new LinkedHashMap<String,Object>(0);

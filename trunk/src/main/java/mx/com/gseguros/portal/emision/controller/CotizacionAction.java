@@ -30,6 +30,7 @@ import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -172,6 +173,39 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
     private PersonasManager personasManager;
+	
+	@Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+	
+	@Value("${pass.servidor.reports}")
+    private String passServidorReports;	
+	
+	@Value("${sigs.facultaDatosPolizaSicaps.url}")
+    private String sigsFacultaDatosPolizaSicapsUrl;	
+	
+	@Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;
+	
+	@Value("${ruta.documentos.temporal}")
+    private String rutaDocumentosTemporal;
+	
+	@Value("${user.server.layouts}")
+    private String userServerLayouts;	
+
+	@Value("${pass.server.layouts}")
+    private String passServerLayouts;	
+
+	@Value("${directorio.server.layouts}")
+    private String directorioServerLayouts;	
+
+	@Value("${dominio.server.layouts}")
+    private String dominioServerLayouts;	
+	
+	@Value("${dominio.server.layouts2}")
+    private String dominioServerLayouts2;
+	
+	@Value("${sigs.obtenerDatosPorSucRamPol.url}")
+    private String sigsObtenerDatosPorSucRamPolUrl;
 	
 	public CotizacionAction()
 	{
@@ -1362,7 +1396,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo,
 						"M", nmpolizaEmi, 
-						nmsuplemEmi, this.getText("ruta.documentos.poliza")+"/"+ntramite,
+						nmsuplemEmi, this.rutaDocumentosPoliza+"/"+ntramite,
 						cdunieco, nmpoliza,ntramite, 
 						true, TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
 						usuario);
@@ -1866,7 +1900,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			            try
 			    		{
 			    			String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
-			    				   mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
+			    				   mensaje = HttpUtil.sendPost(sigsFacultaDatosPolizaSicapsUrl,params);
 			    			if(mensaje != null)
 			    			{
 			    				return mensaje;
@@ -1901,7 +1935,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{
 				String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-					  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
+					  ,respuestaWS =HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl,params);
 					HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
 					Map<String,String>parametros = (Map<String,String>)someObject.get("params");
 					String formpagSigs = parametros.get("formpagSigs");
@@ -3349,7 +3383,7 @@ public class CotizacionAction extends PrincipalCoreAction
                         if (lista != null && !lista.isEmpty()) {
                             smap1.put("nmpolant" , lista.get(0).getNmpolant());
                             consultasManager.copiarArchivosRenovacionColectivo(smap1.get("cdunieco"), smap1.get("cdramo"), "M", Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"", 
-                                    tramite.get("NTRAMITE"), this.getText("ruta.documentos.poliza"));
+                                    tramite.get("NTRAMITE"), this.rutaDocumentosPoliza);
                         }else{
                             smap1.put("nmpolant" , "");
                         }
@@ -3533,7 +3567,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						if (lista != null && !lista.isEmpty()) {
 							smap1.put("nmpolant" , lista.get(0).getNmpolant());
 							consultasManager.copiarArchivosRenovacionColectivo(smap1.get("cdunieco"), smap1.get("cdramo"), "M", Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"", 
-                                    tramite.get("NTRAMITE"), this.getText("ruta.documentos.poliza"));
+                                    tramite.get("NTRAMITE"), this.rutaDocumentosPoliza);
 						}else{
 							smap1.put("nmpolant" , "");
 						}
@@ -4277,15 +4311,15 @@ public class CotizacionAction extends PrincipalCoreAction
 		if(StringUtils.isBlank(ntramite))
 		{
 			String timestamp = smap1.get("timestamp");
-			//censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
+			//censo.renameTo(new File(this.rutaDocumentosTemporal+"/censo_"+timestamp));
 			try {
-            	FileUtils.copyFile(censo, new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
+            	FileUtils.copyFile(censo, new File(this.rutaDocumentosTemporal+"/censo_"+timestamp));
             	logger.debug("archivo movido");
 			} catch (Exception e) {
 				logger.error("archivo NO movido", e);
 			}
 			
-			logger.debug("censo renamed to: "+this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
+			logger.debug("censo renamed to: "+this.rutaDocumentosTemporal+"/censo_"+timestamp);
 		}
 		
 		logger.debug(""
@@ -4396,7 +4430,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdelemen = user.getEmpresa().getElementoId();
 			cdsisrol = user.getRolActivo().getClave();
 			
-			rutaDocsTemp = getText("ruta.documentos.temporal");
+			rutaDocsTemp = rutaDocumentosTemporal;
 		}
 		catch(ApplicationException ax)
 		{
@@ -4432,10 +4466,10 @@ public class CotizacionAction extends PrincipalCoreAction
 						,pcpgocte
 						,rutaDocsTemp
 						,censoTimestamp
-						,getText("dominio.server.layouts")
-						,getText("user.server.layouts")
-						,getText("pass.server.layouts")
-						,getText("directorio.server.layouts")
+						,dominioServerLayouts
+						,userServerLayouts
+						,passServerLayouts
+						,directorioServerLayouts
 						,cdtipsit
 						,cdusuari
 						,cdsisrol
@@ -4473,10 +4507,10 @@ public class CotizacionAction extends PrincipalCoreAction
 						,pcpgocte
 						,rutaDocsTemp
 						,censoTimestamp
-						,getText("dominio.server.layouts")
-						,getText("user.server.layouts")
-						,getText("pass.server.layouts")
-						,getText("directorio.server.layouts")
+						,dominioServerLayouts
+						,userServerLayouts
+						,passServerLayouts
+						,directorioServerLayouts
 						,cdtipsit
 						,cdusuari
 						,cdsisrol
@@ -4562,7 +4596,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String estado           = smap1.get("estado");
 		String nmsuplem         = smap1.get("nmsuplem");
 		
-		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
+		censo = new File(this.rutaDocumentosTemporal+"/censo_"+censoTimestamp);
 		
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 		boolean pagoRepartido = false;
@@ -4605,7 +4639,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				sheet       = workbook.getSheetAt(0);
 				inTimestamp = System.currentTimeMillis();
 				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
-				archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
+				archivoTxt  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
 				output      = new PrintStream(archivoTxt);
 			} catch(Exception ex){
 				long etimestamp = System.currentTimeMillis();
@@ -5359,19 +5393,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 					exito = FTPSUtils.upload
 							(
-								this.getText("dominio.server.layouts"),
-								this.getText("user.server.layouts"),
-								this.getText("pass.server.layouts"),
+								this.dominioServerLayouts,
+								this.userServerLayouts,
+								this.passServerLayouts,
 								archivoTxt.getAbsolutePath(),
-								this.getText("directorio.server.layouts")+"/"+nombreCenso
+								this.directorioServerLayouts+"/"+nombreCenso
 						    )
 							&&FTPSUtils.upload
 							(
-								this.getText("dominio.server.layouts2"),
-								this.getText("user.server.layouts"),
-								this.getText("pass.server.layouts"),
-								archivoTxt.getAbsolutePath(),
-								this.getText("directorio.server.layouts")+"/"+nombreCenso
+									this.dominioServerLayouts2,
+									this.userServerLayouts,
+									this.passServerLayouts,
+									archivoTxt.getAbsolutePath(),
+									this.directorioServerLayouts+"/"+nombreCenso
 							);
 					
 					if(!exito)
@@ -5512,7 +5546,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String nmrenova         = smap1.get("nmrenova");
 		String esRenovacion		= smap1.get("esRenovacion");
 		String agrupador        = smap1.get("cdpool");
-		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
+		censo = new File(this.rutaDocumentosTemporal+"/censo_"+censoTimestamp);
 		
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 		
@@ -5660,7 +5694,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				sheet       = workbook.getSheetAt(0);
 				inTimestamp = System.currentTimeMillis();
 				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
-				archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
+				archivoTxt  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
 				output      = new PrintStream(archivoTxt);
 			}
 			catch(Exception ex)
@@ -6880,19 +6914,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 					exito = FTPSUtils.upload
 							(
-								this.getText("dominio.server.layouts"),
-								this.getText("user.server.layouts"),
-								this.getText("pass.server.layouts"),
-								archivoTxt.getAbsolutePath(),
-								this.getText("directorio.server.layouts")+"/"+nombreCenso
+								dominioServerLayouts
+								,userServerLayouts
+								,passServerLayouts
+								,archivoTxt.getAbsolutePath()
+								,directorioServerLayouts+"/"+nombreCenso
 						    )
 							&&FTPSUtils.upload
 							(
-								this.getText("dominio.server.layouts2"),
-								this.getText("user.server.layouts"),
-								this.getText("pass.server.layouts"),
-								archivoTxt.getAbsolutePath(),
-								this.getText("directorio.server.layouts")+"/"+nombreCenso
+								dominioServerLayouts
+								,userServerLayouts
+								,passServerLayouts
+								,archivoTxt.getAbsolutePath()
+								,directorioServerLayouts+"/"+nombreCenso
 							);
 					
 					if(!exito)
@@ -7040,11 +7074,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			nmpolant        = smap1.get("nmpolant");
 			nmrenova        = smap1.get("nmrenova");
 			
-			rutaDocumentosTemporal  = getText("ruta.documentos.temporal");
-			dominioServerLayouts    = getText("dominio.server.layouts");
-			userServerLayouts       = getText("user.server.layouts");
-			passServerLayouts       = getText("pass.server.layouts");
-			directorioServerLayouts = getText("directorio.server.layouts");
+			rutaDocumentosTemporal  = rutaDocumentosTemporal;
+			dominioServerLayouts    = dominioServerLayouts;
+			userServerLayouts       = userServerLayouts;
+			passServerLayouts       = passServerLayouts;
+			directorioServerLayouts = directorioServerLayouts;
 			
 			String sincensoS      = smap1.get("sincenso");
 			sincenso              = StringUtils.isNotBlank(sincensoS)&&sincensoS.equals("S");
@@ -7204,7 +7238,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			boolean complemento = "S".equals(smap1.get("complemento"));
 			
-			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+inTimestamp);
+			censo = new File(this.rutaDocumentosTemporal+"/censo_"+inTimestamp);
 			
 			String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
@@ -7398,7 +7432,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					workbook = WorkbookFactory.create(input);
 					sheet    = workbook.getSheetAt(0);
 					
-					archivoTxt = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
+					archivoTxt = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
 					output     = new PrintStream(archivoTxt);
 					
 					if(workbook.getNumberOfSheets()!=1)
@@ -7961,20 +7995,20 @@ public class CotizacionAction extends PrincipalCoreAction
 						throw new ApplicationException(Utils.join("No hay asegurados para el grupo ",cdgrupoVacio));
 					}
 					
-					boolean transferidoAmbosServer = FTPSUtils.upload(
-							this.getText("dominio.server.layouts"),
-								this.getText("user.server.layouts"),
-								this.getText("pass.server.layouts"),
+					boolean transferidoAmbosServer = FTPSUtils.upload(					
+								this.dominioServerLayouts,
+								this.userServerLayouts,
+								this.passServerLayouts,
 								archivoTxt.getAbsolutePath(),
-								this.getText("directorio.server.layouts")+"/"+nombreCenso
+								this.directorioServerLayouts+"/"+nombreCenso
 							)
 							&&FTPSUtils.upload
 							(
-								this.getText("dominio.server.layouts2"),
-								this.getText("user.server.layouts"),
-								this.getText("pass.server.layouts"),
+								this.dominioServerLayouts,
+								this.userServerLayouts,
+								this.passServerLayouts,
 								archivoTxt.getAbsolutePath(),
-								this.getText("directorio.server.layouts")+"/"+nombreCenso
+								this.directorioServerLayouts+"/"+nombreCenso
 							);
 						
 					if(!transferidoAmbosServer)
@@ -11039,7 +11073,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 }
 				
 				String urlReporteCotizacion=Utils.join(
-						  getText("ruta.servidor.reports")
+						  rutaServidorReports
 						, "?p_unieco="      , cdunieco
 						, "&p_ramo="        , cdramo
 						, "&p_estado="      , estado
@@ -11051,7 +11085,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						, "&p_cdplan="
 	                    , "&destype=cache"
 	                    , "&desformat=PDF"
-	                    , "&userid="        , getText("pass.servidor.reports")
+	                    , "&userid="        , passServidorReports
 	                    , "&ACCESSIBLE=YES"
 	                    , "&report="        , getText("rdf.cotizacion.nombre."+cdtipsit)
 	                    , "&paramform=no"
@@ -11059,7 +11093,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				String nombreArchivoCotizacion = Utils.join("cotizacion_",nmpoliza,".pdf")
 				       ,pathArchivoCotizacion  = Utils.join(
-				    		   getText("ruta.documentos.poliza")
+				    		   rutaDocumentosPoliza
 				    		   ,"/" , ntramite
 				    		   ,"/" , nombreArchivoCotizacion
 				    		   );
@@ -11090,7 +11124,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						);
 				
 				String urlReporteCotizacion2=Utils.join(
-						  getText("ruta.servidor.reports")
+						  rutaServidorReports
 						, "?p_unieco="      , cdunieco
 						, "&p_ramo="        , cdramo
 						, "&p_estado="      , estado
@@ -11101,7 +11135,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						, "&p_cdplan="
 						, "&destype=cache"
 						, "&desformat=PDF"
-						, "&userid="        , getText("pass.servidor.reports")
+						, "&userid="        , passServidorReports
 						, "&ACCESSIBLE=YES"
 						, "&report="        , getText(Utils.join("rdf.cotizacion2.nombre.",cdtipsit))
 						, "&paramform=no"
@@ -11109,7 +11143,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				String nombreArchivoCotizacion2 = Utils.join("cotizacion2_",nmpoliza,".pdf")
 				       ,pathArchivoCotizacion2  = Utils.join(
-				    		   getText("ruta.documentos.poliza")
+				    		   rutaDocumentosPoliza
 				    		   ,"/" , ntramite
 				    		   ,"/" , nombreArchivoCotizacion2
 				    		   );
@@ -11146,7 +11180,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					//pdf resumen
 					String urlReporteResumenCotizacion=Utils.join(
-							  getText("ruta.servidor.reports")
+							  rutaServidorReports
 							, "?p_unieco="      , cdunieco
 							, "&p_ramo="        , cdramo
 							, "&p_estado="      , estado
@@ -11156,7 +11190,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							, "&p_suplem=0"
 		                    , "&destype=cache"
 		                    , "&desformat=PDF"
-		                    , "&userid="        , getText("pass.servidor.reports")
+		                    , "&userid="        , passServidorReports
 		                    , "&ACCESSIBLE=YES"
 		                    , "&report="        , getText(Utils.join("rdf.resumen.cotizacion.col.",cdramo))
 		                    , "&paramform=no"
@@ -11164,7 +11198,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					String nombreArchivoResumenCotizacion = Utils.join("resumen_cotizacion_col_",nmpoliza,".pdf")
 					       ,pathArchivoResumenCotizacion  = Utils.join(
-					    		   getText("ruta.documentos.poliza")
+					    		   rutaDocumentosPoliza
 					    		   ,"/" , ntramite
 					    		   ,"/" , nombreArchivoResumenCotizacion
 					    		   );
@@ -11213,7 +11247,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						String nombreCotGrupo = Utils.join("COTIZACION_GRUPO_",i,"_",nmpoliza,TipoArchivo.XLS.getExtension());
 						
 						FileUtils.copyInputStreamToFile(excelGrupo, new File(Utils.join(
-										getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreCotGrupo
+										rutaDocumentosPoliza,"/",ntramite,"/",nombreCotGrupo
 						)));
 						
 						documentosManager.guardarDocumento(
@@ -12789,11 +12823,11 @@ public class CotizacionAction extends PrincipalCoreAction
 					,nmpoliza
 					,complemento
 					,censo
-					,getText("ruta.documentos.temporal")
-					,getText("dominio.server.layouts")
-					,getText("user.server.layouts")
-					,getText("pass.server.layouts")
-					,getText("directorio.server.layouts")
+					,rutaDocumentosTemporal
+					,dominioServerLayouts
+					,userServerLayouts
+					,passServerLayouts
+					,directorioServerLayouts
 					,cdtipsit
 					,user.getUser()
 					,user.getRolActivo().getClave()
@@ -13897,7 +13931,7 @@ public class CotizacionAction extends PrincipalCoreAction
         String nmrenova         = smap1.get("nmrenova");
         String esRenovacion     = smap1.get("esRenovacion");
         String agrupador        = smap1.get("cdpool");
-        censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
+        censo = new File(this.rutaDocumentosTemporal+"/censo_"+censoTimestamp);
         
         String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
         
@@ -13920,7 +13954,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 sheet       = workbook.getSheetAt(0);
                 inTimestamp = System.currentTimeMillis();
                 nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
-                archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
+                archivoTxt  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
                 output      = new PrintStream(archivoTxt);
             }
             catch(Exception ex)
@@ -13959,19 +13993,19 @@ public class CotizacionAction extends PrincipalCoreAction
                 {
                     exito = FTPSUtils.upload
                     (
-                        this.getText("dominio.server.layouts"),
-                        this.getText("user.server.layouts"),
-                        this.getText("pass.server.layouts"),
+                        this.dominioServerLayouts,
+                        this.userServerLayouts,
+                        this.passServerLayouts,
                         archivoTxt.getAbsolutePath(),
-                        this.getText("directorio.server.layouts")+"/"+nombreCenso
+                        this.directorioServerLayouts+"/"+nombreCenso
                     )
                     &&FTPSUtils.upload
                     (
-                        this.getText("dominio.server.layouts2"),
-                        this.getText("user.server.layouts"),
-                        this.getText("pass.server.layouts"),
+                    	this.dominioServerLayouts,
+                        this.userServerLayouts,
+                        this.passServerLayouts,
                         archivoTxt.getAbsolutePath(),
-                        this.getText("directorio.server.layouts")+"/"+nombreCenso
+                        this.directorioServerLayouts+"/"+nombreCenso
                     );
                     
                     if(!exito)
@@ -14017,7 +14051,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 respuesta       = "Error al recuperar layOut Complementario";
                 String inTimestamp =smap1.get("timestamp");
                 String nombreCenso = "excel_"+inTimestamp+".xls";
-                File layOutCompl  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
+                File layOutCompl  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
                 FileInputStream input       = new FileInputStream(layOutCompl);
                 Workbook workbook    = WorkbookFactory.create(input);
                 Sheet sheet       = workbook.getSheetAt(0);
