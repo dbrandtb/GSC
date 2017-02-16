@@ -10,7 +10,7 @@
     <!-- Dev Mode: -->
     <constant name="struts.devMode" value="false"/>
     <!-- Load custom default resource bundles: -->
-    <constant name="struts.custom.i18n.resources" value="global, messages-database, reportes"/>
+    <constant name="struts.custom.i18n.resources" value="messages-database, reportes, portal"/>
     <!-- Parser to handle HTTP POST requests, encoded using the MIME-type multipart/form-data: -->
     <constant name="struts.multipart.parser" value="monitored"/>
     <!-- Allow slashes and parameters in action names: -->
