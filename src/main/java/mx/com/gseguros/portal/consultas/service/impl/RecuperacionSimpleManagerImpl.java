@@ -737,6 +737,8 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 						params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"));
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_PERSONA_ENDOSO_ALTA)) {
 				mapa = endososDAO.recuperarPersonaEndosoAlta(params.get("cdperson"));
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_CORREO_AGENTE_TRAMITE)) {
+			    mapa .put("correoAgente", flujoMesaControlDAO.recuperarCorreoAgenteTramite(params.get("ntramite")));
 			}
 		}
 		catch(Exception ex)

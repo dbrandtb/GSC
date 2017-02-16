@@ -4472,4 +4472,25 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
             compile();
         }
     }
+    
+    @Override
+    public String recuperarCorreoAgenteTramite (String ntramite) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("pv_ntramite_i", ntramite);
+        Map<String, Object> procRes = ejecutaSP(new RecuperarCorreoAgenteTramiteSP(getDataSource()), params);
+        String mail = (String) procRes.get("pv_result_o");
+        logger.debug("recuperarCorreoAgenteTramite 3 correo: {}", mail);
+        return mail;
+    }
+    
+    protected class RecuperarCorreoAgenteTramiteSP extends StoredProcedure {
+        protected RecuperarCorreoAgenteTramiteSP (DataSource dataSource) {
+            super(dataSource, "P_MAIL_GET_MAIL_AGE");
+            declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_result_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
