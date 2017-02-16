@@ -4513,8 +4513,9 @@ function _p30_cotizar(sinTarificar)
                 ,feini       : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
                 ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
                 ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
-                ,notarificar : sinTarificar ? 'si' : ''
+                ,notarificar : !Ext.isEmpty(sinTarificar)&&sinTarificar==true? 'si':'no'
                 ,tipoflot    : _p30_smap1.tipoflot
+                ,modPrim     : !Ext.isEmpty(sinTarificar)&&sinTarificar+'X'=='modPrimX' ?'si' : 'no'
             }
             ,slist1 : []
             ,slist2 : []
@@ -4736,7 +4737,7 @@ function _p30_cotizar(sinTarificar)
                                 {
                                     if(me.up('form').getForm().isValid())
                                     {
-                                        _p30_cotizar();
+                                        _p30_cotizar('modPrim');
                                     }
                                     else
                                     {
@@ -4761,7 +4762,7 @@ function _p30_cotizar(sinTarificar)
                             disabledDesc = true;
                         }
                     }
-                    _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
+//                     _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
                     
                     //bloquear comision
                     var arrComi      = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formCesion'));
