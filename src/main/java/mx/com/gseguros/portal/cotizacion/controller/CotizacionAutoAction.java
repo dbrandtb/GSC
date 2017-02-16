@@ -83,6 +83,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     @Value("${sigs.obtenerDatosPorSucRamPol.url}")
     private String sigsObtenerDatosPorSucRamPolUrl;
     
+    @Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+
+    @Value("${pass.servidor.reports}")
+    private String passServidorReports; 
+    
     /**
      * Constructor que se asegura de que el action tenga sesion
      */

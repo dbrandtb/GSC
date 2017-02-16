@@ -180,6 +180,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	@Value("${ruta.documentos.poliza}")
     private String rutaDocumentosPoliza;
 	
+	@Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+	
+	@Value("${pass.servidor.reports}")
+    private String passServidorReports;
+	
 	/**
 	 * Metodo de entrada a consulta de polizas
 	 * 

@@ -56,8 +56,8 @@
             var urlDetalleCotizacion=       '<s:url namespace="/"                action="detalleCotizacion" />';
             var contexto='${ctx}';
             var urlVentanaDocumentos =      '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
-            var urlImprimirCotiza    = '<s:text name="ruta.servidor.reports" />';
-            var repSrvUsr            = '<s:text name="pass.servidor.reports" />';
+            var urlImprimirCotiza    = '<s:property value="ruta.servidor.reports" />';
+            var repSrvUsr            = '<s:property value="pass.servidor.reports" />';
             var urlEnviarCorreo      =      '<s:url namespace="/general"         action="enviaCorreo" />';
             var urlDatosComplementarios =   '<s:url namespace="/"                action="datosComplementarios" />';
             var urlDocumentosTramite =      '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';

@@ -92,8 +92,8 @@ var url_obtiene_forma_pago                    = '<s:url namespace="/emision"    
 var _p28_datosFlujo                           = '<s:url namespace="/emision"          action="datosFlujo"                                     />';
 var _p28_urlCargarAutoPorClaveGS              = '<s:url namespace="/emision"          action="cargarAutoPorClaveGS"           />';
 var _p28_urlCargarSumaAsegurada               = '<s:url namespace="/emision"          action="cargarSumaAseguradaAuto"        />';
-var _p28_urlImprimirCotiza                    = '<s:text name="ruta.servidor.reports" />';
-var _p28_reportsServerUser                    = '<s:text name="pass.servidor.reports" />';
+var _p28_urlImprimirCotiza                    = '<s:property value="ruta.servidor.reports" />';
+var _p28_reportsServerUser                    = '<s:property value="pass.servidor.reports" />';
 var _0_urlCargaValidacionDescuentoR6          = '<s:url namespace="/emision"          action="obtieneValidacionDescuentoR6"                 />';
 var _0_urlNada                                = '<s:url namespace="/emision"          action="webServiceNada"                 />';
 var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />'; 

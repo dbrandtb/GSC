@@ -43,8 +43,8 @@ var _p29_urlObtieneValNumeroSerie           = '<s:url namespace="/emision"      
 var MontoMaximo = 0;
 var MontoMinimo = 0;
 
-var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
-var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
+var _p30_urlImprimirCotiza = '<s:property value="ruta.servidor.reports" />';
+var _p30_reportsServerUser = '<s:property value="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 

@@ -110,8 +110,8 @@ var _p25_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p25_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p25_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p25_urlImprimirCotiza      = '<s:text name="ruta.servidor.reports" />';
-var _p25_reportsServerUser      = '<s:text name="pass.servidor.reports" />';
+var _p25_urlImprimirCotiza      = '<s:property value="ruta.servidor.reports" />';
+var _p25_reportsServerUser      = '<s:property value="pass.servidor.reports" />';
 var _TIPO_SITUACION_RENOVACION  = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 var _EN_ESPERA_DE_COTIZACION    = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
