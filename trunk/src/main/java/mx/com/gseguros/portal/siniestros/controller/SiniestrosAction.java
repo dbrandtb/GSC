@@ -2923,6 +2923,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				
 				Map<String,String> facturaIte        = null;
 				for(int i = 0; i < facturasAux.size(); i++) {
+					deducibleFacturaIte = 0d; //(EGS) Reiniciamos valor en cada iteracion para evitar que se quede con basura
 					facturaIte = facturasAux.get(i);
 					Map<String,Object>facturaObj=new HashMap<String,Object>();
 					facturaObj.putAll(facturaIte);
