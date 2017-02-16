@@ -1037,6 +1037,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             Utils.validate(slist3, "No se recibieron las configuraciones de plan");
             
             boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
+            boolean modPrim = StringUtils.isNotBlank(smap1.get("modPrim"))&&smap1.get("modPrim").equals("si");
             
             Map<String,String>tvalopol=new HashMap<String,String>();
             for(Entry<String,String>en:smap1.entrySet())
@@ -1081,7 +1082,10 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 }
             }
 
-            ManagerRespuestaSlistSmapVO resp=cotizacionAutoManager.cotizarAutosFlotilla(
+            ManagerRespuestaSlistSmapVO resp= new ManagerRespuestaSlistSmapVO();
+            if(!modPrim)
+            {
+               resp=cotizacionAutoManager.cotizarAutosFlotilla(
                     cdusuari
                     ,cdsisrol
                     ,cdelemen
@@ -1108,6 +1112,20 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,parame.get("RENPOLIEX")
                     ,ntramite
                     );
+            }
+            else
+            { //no es por inciso es por poliza el descuento
+                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, slist1, cdtipsit);
+                if(!mensajeModPrim.isEmpty())
+                {
+                    resp.setExito(false);
+                    resp.setRespuesta(mensajeModPrim);
+                    resp.setRespuestaOculta(mensajeModPrim);
+                }
+                else
+                    resp.setExito(true);
+                    resp.setSmap(smap1);
+            }
             
             exito     = resp.isExito();
             if(!exito)
@@ -1149,10 +1167,13 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 else if(fila.equals("64")) {fila="Contado";} 
                 
                 List<Map<String,String>> listaResultados= resp.getSlist();
-                String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                if(!modPrim)
+                {  
+                    String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                }
                 logger.debug(Utils.log(paqYplan));
-                resp.setSlist(cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza));
             }
+            resp.setSlist(cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza));
             
             respuesta = resp.getRespuesta();
            
