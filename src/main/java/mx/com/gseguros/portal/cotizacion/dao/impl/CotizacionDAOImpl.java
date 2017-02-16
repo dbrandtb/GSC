@@ -9135,4 +9135,46 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	        compile();
 	    }
 	}
+	
+	@Override
+    public String aplicaDescAutos(String pcdunieco, String pcdramo, String pnmpoliza, String pdesc, String pisflot) throws Exception {
+        
+        try 
+        {
+            Map<String,Object> params = new LinkedHashMap<String,Object>();
+            params.put("PCDUNIECO" , pcdunieco);
+            params.put("PCDRAMO"   , pcdramo);
+            params.put("PNMPOLIZA" , pnmpoliza);
+            params.put("PDESC"     , pdesc);
+            params.put("PISFLOT"   , pisflot);
+            
+            String mensaje = "";
+            Map<String, Object> procRes =ejecutaSP(new AplicaDescAutos(getDataSource()),params);
+            
+            if(procRes.get("PV_SALIDA_O")!=null && !procRes.get("PV_SALIDA_O").toString().isEmpty())
+            {
+                mensaje = procRes.get("PV_SALIDA_O").toString();
+            }
+            return mensaje;
+            
+        } catch (Exception e) 
+        {
+            throw new Exception("Error al aplicar descuento en Mpolirec");
+        }
+    }
+    
+    protected class AplicaDescAutos extends StoredProcedure {
+        protected AplicaDescAutos (DataSource dataSource) {
+            super(dataSource,"P_APLICA_DESCUENTO_AUTOS");
+            declareParameter(new SqlParameter("PCDUNIECO" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("PCDRAMO"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("PNMPOLIZA" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("PDESC"     , OracleTypes.SMALLINT));
+            declareParameter(new SqlParameter("PISFLOT"   , OracleTypes.SMALLINT));
+            declareParameter(new SqlOutParameter("PV_SALIDA_O" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("PV_MSG_ID_O" ,OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("PV_TITLE_O"  ,OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }

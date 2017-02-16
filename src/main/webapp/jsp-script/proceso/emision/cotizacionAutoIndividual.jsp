@@ -1197,13 +1197,13 @@ Ext.onReady(function()
         if(!Ext.isEmpty(_fieldLikeLabel('NEGOCIO',null,true)))
         _fieldByLabel('NEGOCIO').on(
         {
-            //VILS llama filtrando record
+            //llama filtrando record
             change : function(){ _p28_cargarParametrizacionCoberturas(); }
         });
         if(!Ext.isEmpty(_fieldLikeLabel('TIPO PERSONA',null,true)))
         _fieldByLabel('TIPO PERSONA').on(
         {
-            //vils llama filtrando record
+            //llama filtrando record
             change : function(){ _p28_cargarParametrizacionCoberturas(); }
         });
         if(!Ext.isEmpty(_fieldLikeLabel('TIPO SERVICIO',null,true)))
@@ -1213,7 +1213,7 @@ Ext.onReady(function()
             {
                 if(me.findRecord('key',val)!=false)
                 {
-                    ////vils llama filtrando record
+                    ////llama filtrando record
                     _p28_cargarParametrizacionCoberturas();
                     if(!Ext.isEmpty(_fieldLikeLabel('CLAVE GS',null,true)) && ('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
                     {
@@ -2558,7 +2558,20 @@ function _p28_cotizar(sinTarificar)
         _p28_smap1['cdpersonCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CLAVECLI;
         _p28_smap1['cdideperCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.CDIDEPER;
         _p28_smap1['nmorddomCli'] = Ext.isEmpty(_p28_recordClienteRecuperado) ? '' : _p28_recordClienteRecuperado.raw.NMORDDOM;
-        _p28_smap1['notarificar'] = !Ext.isEmpty(sinTarificar)&&sinTarificar==true?'si':'no';//Se utiliza para no retarid
+        
+        if(!Ext.isEmpty(sinTarificar)      &&  sinTarificar     == true)
+        {
+            _p28_smap1['notarificar'] = 'si';//Se utiliza para no retarid
+        }
+        else if(!Ext.isEmpty(sinTarificar) &&  sinTarificar+'X' == 'modPrimX')
+        {
+            _p28_smap1['notarificar'] = 'no';//Se utiliza para no retarid
+            _p28_smap1['modPrim']     = 'si';
+        }
+        else
+        {
+            _p28_smap1['notarificar'] = 'no';//Se utiliza para no retarid
+        }
         
         if(cargarXpoliza)
             {
@@ -2741,6 +2754,7 @@ function _p28_cotizar(sinTarificar)
                                                 if(me.up('form').getForm().isValid())
                                                 {
                                                     me.up('window').hide();
+                                                    
                                                     _p28_cotizar(true);
                                                 }
                                                 else
@@ -2778,7 +2792,7 @@ function _p28_cotizar(sinTarificar)
                                 {
                                     if(me.up('form').getForm().isValid())
                                     {
-                                        _p28_cotizar();
+                                        _p28_cotizar('modPrim');
                                     }
                                     else
                                     {
@@ -2803,7 +2817,7 @@ function _p28_cotizar(sinTarificar)
                             disabledDesc = true;
                         }
                     }
-                    _fieldById('_p28_botonAplicarDescuento').setDisabled(disabledDesc);
+//                     _fieldById('s').setDisabled(disabledDesc);
                     
                     //bloquear comision
                     var arrComi      = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_formCesion'));
@@ -4767,7 +4781,6 @@ function _p28_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p28_botonImprimir').setDisabled(false);
         _fieldById('_p28_botonEnviar').setDisabled(false);
         _fieldById('_p28_botonDetalles').setDisabled(false);
-        //vils
         /*if( Number(_p28_selectedCdperpag) == 1 && (_p28_selectedCdplan=="3A" || _p28_selectedCdplan =="4L" || _p28_selectedCdplan =="5B"))
         {
             debug(".D.");
@@ -5460,7 +5473,6 @@ function _p28_cargarParametrizacionCoberturas(callback)
                                     debug('minimo=',minimo,'maximo=',maximo);
                                     item.store.filterBy(function(record)
                                     {
-                                        //VILS
                                         debug('filtrando record=',record);
                                         var key=record.get('key')-0;
                                         debug('quitando key=',key,key>=minimo&&key<=maximo,'.');

@@ -1700,7 +1700,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
 			boolean conIncisos  = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
-			
+            boolean modPrim = StringUtils.isNotBlank(smap1.get("modPrim"))&&smap1.get("modPrim").equals("si");
+
 			Map<String,String>tvalopol=new HashMap<String,String>();
 			for(Entry<String,String>en:slist1.get(0).entrySet())
 			{
@@ -1725,7 +1726,11 @@ public class CotizacionAction extends PrincipalCoreAction
 						));
 			}
 			
-			ManagerRespuestaSlistSmapVO resp=cotizacionManager.cotizar(
+	         ManagerRespuestaSlistSmapVO resp= new ManagerRespuestaSlistSmapVO();
+	            if(!modPrim)
+	            {
+	                resp=cotizacionManager.cotizar(
+
 					cdunieco
 					,cdramo
 					,cdtipsit
@@ -1751,6 +1756,20 @@ public class CotizacionAction extends PrincipalCoreAction
 					,parame.get("RENPOLIEX")
 					,ntramite
 					);
+	            }
+	            else
+	            {
+	                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, slist1, cdtipsit);
+	                if(!mensajeModPrim.isEmpty())
+	                {
+	                    resp.setExito(false);
+	                    resp.setRespuesta(mensajeModPrim);
+	                    resp.setRespuestaOculta(mensajeModPrim);
+	                }
+	                else
+	                    resp.setExito(true);
+	            }
+
 			
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -1779,7 +1798,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	                     columna = paqYplan.get(1);//forma Pago
 	                     fila= paqYplan.get(0);//paquete
 	                     
-	                    String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza"), cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+	                       if(!modPrim)
+	                        {   
+	                            String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza")==null?nmpoliza:resp.getSmap().get("nmpoliza") , cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+	                        }
+
 	                    logger.debug(Utils.log(paqYplan));
 	                    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			        }
@@ -1824,7 +1847,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                else if(fila.equals("64")) {fila="Contado";}//  \r\n" + 
 //	                else if() {fila="";}//  SEMESTRAL A\r\n" + 
 			    }
-			    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
+	            resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap()==null?nmpoliza:resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			    if(!fila.isEmpty() && !columna.isEmpty())
 			    { 
 			        resp.getSmap().put("fila", fila);

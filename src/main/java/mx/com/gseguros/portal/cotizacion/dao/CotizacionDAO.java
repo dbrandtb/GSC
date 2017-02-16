@@ -1003,4 +1003,5 @@ public interface CotizacionDAO {
 	public List<Map<String, String>> getCoberturas(String pv_cdramo_i, String pv_cdplan_i, String pv_cdtipsit_i)
 			throws Exception;
 
+	public String aplicaDescAutos(String pcdunieco, String pcdramo, String pnmpoliza, String pdesc, String pisflot) throws Exception;
 }
