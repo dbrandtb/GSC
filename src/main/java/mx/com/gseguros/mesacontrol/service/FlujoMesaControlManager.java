@@ -354,23 +354,9 @@ public interface FlujoMesaControlManager
 	
 	public Map<String, String> recuperarChecklistInicial (String ntramite, String cdsisrol) throws Exception;
 	
-	/**
-	 * SOBRECARGADO
-	 */
-	@Deprecated
 	public Map<String, String> enviaCorreoFlujo(FlujoVO flujo, Map<String, String> params) throws Exception;
 	
-	public Map<String, String> enviaCorreoFlujo(FlujoVO flujo, Map<String, String> params, boolean soloCorreosRecibidos,
-	        String correosRecibidos) throws Exception;
-	
-	/**
-	 * SOBRECARGADO
-	 */
-	@Deprecated
 	public void mandarCorreosStatusTramite(String ntramite, String cdsisrol, boolean porEscalamiento) throws Exception;
-	
-	public void mandarCorreosStatusTramite(String ntramite, String cdsisrol, boolean porEscalamiento, boolean soloCorreosRecibidos,
-	        String correosRecibidos) throws Exception;
 	
 	@Deprecated
 	public void guardarMensajeCorreoEmision(String ntramite, String mensajeCorreoEmision) throws Exception;

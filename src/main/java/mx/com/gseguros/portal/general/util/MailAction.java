@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Value;
 
 public class MailAction extends PrincipalCoreAction {
 
@@ -53,8 +52,6 @@ public class MailAction extends PrincipalCoreAction {
 	 */
 	private boolean html;
 	
-	@Value("${ruta.documentos.temporal}")
-    private String rutaDocumentosTemporal;
 	
 	/**
 	 * Envia un e-mail. Se pueden adjuntar archivos de 2 formas: <br/>
@@ -69,7 +66,7 @@ public class MailAction extends PrincipalCoreAction {
 		try{
 			// Si viene la url de un archivo lo agrega a la lista de archivos adjuntos:
 			if(StringUtils.isNotBlank(urlArchivo) && StringUtils.isNotBlank(nombreArchivo) ) {
-				String nombreCompletoArchivo = this.rutaDocumentosTemporal + File.separator + nombreArchivo;
+				String nombreCompletoArchivo = this.getText("ruta.documentos.temporal") + File.separator + nombreArchivo;
 				if(HttpUtil.generaArchivo(urlArchivo, nombreCompletoArchivo)) {
 					if(archivos == null) {
 						archivos = new ArrayList<String>();

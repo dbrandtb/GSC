@@ -11545,37 +11545,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return cotizacionDAO.obtieneCodigosPostalesProductos();
 	}
 	
-	@Override
-    public String aplicaDescAutos(
-             String cdunieco
-            ,String cdramo
-            ,String nmpoliza
-            ,List<Map<String,String>>incisos
-            ,String cdtipsit
-            )throws Exception
-    {
-        //////////////////////////////////////////
-        ////// alterar mpolirec sin recotizar/////
-        String paso = "Modificacion de primas al aplicar descuento";
-        try
-        {
-            if(!TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().equals(cdtipsit) && !TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equals(cdtipsit))
-            {
-                return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, incisos.get(0).get("parametros.pv_otvalor19"),"0");
-            }
-            else
-            {
-                return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, incisos.get(0).get("parametros.pv_otvalor25"),"0");
-            }
-        }
-        catch(Exception ex)
-        {
-            throw new ApplicationException(paso);
-        }
-        ////// alterar mpolirec sin recotizar/////
-        //////////////////////////////////////////
-    }
-	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////

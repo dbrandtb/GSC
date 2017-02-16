@@ -1954,13 +1954,10 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				,"\n###### turnarDesdeComp ######"
 				,"\n###### params=" , params));
 		try {
-			UserVO user = Utils.validateSession(session);
-			
-			String cdusuari = user.getUser(),
-			       cdsisrol = user.getRolActivo().getClave();
-			
+			UserVO user     = Utils.validateSession(session);
+			String cdusuari = user.getUser();
+			String cdsisrol = user.getRolActivo().getClave();
 			Utils.validate(params, "No se recibieron datos");
-			
 			String cdtipflu    = params.get("CDTIPFLU"),
 			       cdflujomc   = params.get("CDFLUJOMC"),
 			       ntramite    = params.get("NTRAMITE"),
@@ -1971,17 +1968,11 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       cdrazrecha  = params.get("CDRAZRECHA"),
 			       cdusuariDes = params.get("CDUSUARI_DES"),
 			       cdsisrolDes = params.get("CDSISROL_DES"),
-			       ntrasust    = params.get("NTRASUST"),
-			       correos     = params.get("CORREOS");
-			
-			boolean cerrado              = "S".equals(params.get("cerrado")),
-			        soloCorreosRecibidos = "S".equals(params.get("SOLO_CORREOS_RECIBIDOS"));
-			
+			       ntrasust    = params.get("NTRASUST");
+			boolean cerrado = "S".equals(params.get("cerrado"));
 			Date fechaHoy = new Date();
-			
 			Utils.validate(ntramite  , "No se recibi\u00f3 el tr\u00e1mite",
-			               statusNew , "No se recibi\u00f3 el status nuevo");
-			
+			        statusNew , "No se recibi\u00f3 el status nuevo");
 			RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
 			        cdusuari,
 			        cdsisrol,
@@ -1996,11 +1987,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			        fechaHoy,
 			        false, //sinGrabarDetalle
 			        false,
-			        ntrasust,
-			        soloCorreosRecibidos,
-			        correos
+			        ntrasust
 			        );
-			
 			message = despacho.getMessage();
 			success = true;
 			logger.debug(Utils.log(

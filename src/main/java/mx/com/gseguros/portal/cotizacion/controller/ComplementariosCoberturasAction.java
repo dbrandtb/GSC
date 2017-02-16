@@ -121,13 +121,8 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	public String cargarPantallaCoberturas() 
+	public String cargarPantallaCoberturas()
 	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ cargarPantallaCoberturas @@@@@@"
-				,"\n@@@@@@ smap1=" , smap1, "\n",slist1
-				));
 		try
 		{
 			/*
@@ -147,13 +142,6 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			logger.error("error al cargar la pantalla de coberturas",ex);
 			success=false;
 		}
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ slist1=",slist1
-			    ,"\n@@@@@@ cargarPantallaCoberturas @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-		
 		return SUCCESS;
 	}
 	
