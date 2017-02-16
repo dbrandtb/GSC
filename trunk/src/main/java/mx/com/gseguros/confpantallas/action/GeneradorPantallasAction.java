@@ -3,6 +3,8 @@ package mx.com.gseguros.confpantallas.action;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.confpantallas.service.impl.GeneradorPantallasManager;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import org.apache.log4j.Logger;
 
 public class GeneradorPantallasAction extends PrincipalCoreAction {
@@ -19,7 +21,11 @@ public class GeneradorPantallasAction extends PrincipalCoreAction {
 	
 	private String componentes;
 	
-	
+	@Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+
+	@Value("${pass.servidor.reports}")
+    private String passServidorReports; 
 	
 	
 	public String guardaPantalla() throws Exception {

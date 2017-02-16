@@ -6922,7 +6922,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						    )
 							&&FTPSUtils.upload
 							(
-								dominioServerLayouts
+								dominioServerLayouts2
 								,userServerLayouts
 								,passServerLayouts
 								,archivoTxt.getAbsolutePath()
@@ -8004,7 +8004,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							)
 							&&FTPSUtils.upload
 							(
-								this.dominioServerLayouts,
+								this.dominioServerLayouts2,
 								this.userServerLayouts,
 								this.passServerLayouts,
 								archivoTxt.getAbsolutePath(),
@@ -14001,7 +14001,7 @@ public class CotizacionAction extends PrincipalCoreAction
                     )
                     &&FTPSUtils.upload
                     (
-                    	this.dominioServerLayouts,
+                    	this.dominioServerLayouts2,
                         this.userServerLayouts,
                         this.passServerLayouts,
                         archivoTxt.getAbsolutePath(),

@@ -48,8 +48,8 @@
             
             
             //Variables para la generacion de Reportes
-            var _urlViewReport      = '<s:text name="ruta.servidor.reports" />';
-            var _reportsServerUser  = '<s:text name="pass.servidor.reports" />';
+            var _urlViewReport      = '<s:property value="ruta.servidor.reports" />';
+            var _reportsServerUser  = '<s:property value="pass.servidor.reports" />';
             var _reporteEdoCtaSin   = '<s:text name="rdf.siniestro.estadocuenta.nombre" />';
             var _urlViewDoc         = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
             
