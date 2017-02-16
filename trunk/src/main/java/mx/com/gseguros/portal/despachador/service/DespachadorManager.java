@@ -31,6 +31,14 @@ public interface DespachadorManager {
             boolean sinGrabarDetalle, boolean sinBuscarRegreso) throws Exception;
     
     /**
+     * SOBRECARGADO
+     */
+    @Deprecated
+    public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
+            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
+            boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust) throws Exception;
+    
+    /**
      * SE TURNA/RECHAZA/REASIGNA UN TRAMITE. SE MODIFICA TMESACONTROL (STATUS, FECSTATU, CDUSUARI, CDUNIDSPCH, CDRAZRECHA),
      * THMESACONTROL (SE CIERRA EL HISTORIAL ANTERIOR, SE ABRE EL HISTORIAL NUEVO),
      * TDMESACONTROL (SE INSERTA DETALLE). SE ENVIAN CORREOS DE AVISOS Y SE RECHAZA EN SIGS 
@@ -39,7 +47,8 @@ public interface DespachadorManager {
      */
     public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
             String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
-            boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust) throws Exception;
+            boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust, boolean soloCorreosRecibidos, String correosRecibidos)
+            throws Exception;
     
     @Deprecated
     public String recuperarRolTrabajoEstatus (String cdtipflu, String cdflujomc, String estatus) throws Exception;

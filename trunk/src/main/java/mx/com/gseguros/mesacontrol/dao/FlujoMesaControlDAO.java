@@ -978,4 +978,6 @@ public interface FlujoMesaControlDAO {
     public void actualizarTramiteSustituto(String ntramite, String ntrasust) throws Exception;
     
     public void cambiarTipoEndosoTramite (String ntramite, String cdtipsup) throws Exception;
+    
+    public String recuperarCorreoAgenteTramite (String ntramite) throws Exception;
 }

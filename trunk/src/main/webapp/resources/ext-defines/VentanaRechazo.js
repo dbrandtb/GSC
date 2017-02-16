@@ -173,11 +173,18 @@ Ext.define('VentanaRechazo',
                                         me.allowBlank = true;
                                         me.setValue('');
                                         me.hide();
+                                        try {
+                                            var correosCmp = me.up('window').down('[name=CORREOS]');
+                                            correosCmp.setValue(correosCmp.correoAgente || '');
+                                        } catch (e) {}
                                     } else {
                                         debug('NTRASUST show');
                                         me.allowBlank = false;
                                         me.setValue('');
                                         me.show();
+                                        try {
+                                            me.up('window').down('[name=CORREOS]').setValue('');
+                                        } catch (e) {}
                                     }
                                 } catch (e) {
                                     debugError('error en el funcionamiento de NTRASUST', e);
@@ -327,6 +334,35 @@ Ext.define('VentanaRechazo',
                             ,name       : 'COMMENTSINT'
                             ,width      : 570
                             ,height     : 100
+                        }, {
+                            xtype      : 'textfield',
+                            fieldLabel : 'Correo(s) separados por (;)',
+                            name       : 'CORREOS',
+                            width      : 550,
+                            emptyText  : 'Correos separados por ;',
+                            listeners  : {
+                                afterrender : function (me) {
+                                    _request({
+                                        mask   : 'Recuperando correo del agente',
+                                        url    : _GLOBAL_URL_RECUPERACION,
+                                        params : {
+                                            'params.consulta' : 'RECUPERAR_CORREO_AGENTE_TRAMITE',
+                                            'params.ntramite' : config.ntramite
+                                        },
+                                        success : function(json) {
+                                            if (!Ext.isEmpty(json.params.correoAgente)) {
+                                                me.correoAgente = json.params.correoAgente;
+                                                me.setValue(json.params.correoAgente);
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }, {
+                            xtype  : 'textfield',
+                            name   : 'SOLO_CORREOS_RECIBIDOS',
+                            value  : 'S',
+                            hidden : true
                         }
                     ]
                 }
