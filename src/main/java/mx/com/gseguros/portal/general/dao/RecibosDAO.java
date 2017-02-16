@@ -42,6 +42,4 @@ public interface RecibosDAO {
 	public List<Map<String, String>> obtenerInfoRecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String nmrecibo, String nmsuplem) throws Exception;
 	
 	public InputStream obtenerReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String[] lista) throws Exception;
-	
-	public InputStream obtenerReporteRecibos(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 }

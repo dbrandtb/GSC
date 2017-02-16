@@ -573,23 +573,7 @@
         
         <action name="cargarAseguradosFiltroExtraprimas2" class="CotizacionAction" method="cargarAseguradosFiltroExtraprimas2">
             <result name="success" type="json" />
-        </action>
-        <action name="obtieneRangoPeriodoGraciaAgente" class="cotizacionAutoAction" method="obtieneRangoPeriodoGraciaAgente">
-            <result name="success" type="json" />
-        </action>       
-        
-       <action name="cargaMasivaFlotillaEmision" class="cotizacionAutoAction" method="cargaMasivaFlotillaEmision">
-            <result name="success" type="json" />
-        </action>
-        
-        <action name="procesarCargaMasivaFlotillaEmision" class="CotizacionAction" method="procesarCargaMasivaFlotillaEmision">
-           <interceptor-ref name="json">
-               <param name="enableSMD">true</param>
-               <param name="ignoreSMDMethodInterfaces">false</param>
-           </interceptor-ref>
-           <result type="json" />
-       </action>
-        
+        </action>        
     </package>
     
 </struts>
