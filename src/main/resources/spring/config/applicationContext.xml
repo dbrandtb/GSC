@@ -17,8 +17,9 @@
         <property name="locations">
             <list>
                  <!-- <value>file:/u01/wlserver/wldomain/gseguros/properties/mail.properties</value> -->
+                 <value>file:/RES/properties/gseguros/global.properties</value>
                  <value>classpath:mail.properties</value>
-                 <value>classpath:global.properties</value>
+                 <value>classpath:portal.properties</value>
                  <value>classpath:reportes.properties</value>
             </list>
         </property> 
@@ -45,7 +46,7 @@
         <property name="username" value="sa"/>
         <property name="password" value="sa4925"/>
     </bean>
-    
+     
     <bean id="dataSourceSIGS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.informix.jdbc.IfxDriver"/>
         <property name="url" value="jdbc:informix-sqli://10.101.1.167:1001/dbsigs:INFORMIXSERVER=infdss"/>
