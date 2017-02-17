@@ -4515,7 +4515,7 @@ function _p30_cotizar(sinTarificar)
                 ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
                 ,notarificar : !Ext.isEmpty(sinTarificar)&&sinTarificar==true? 'si':'no'
                 ,tipoflot    : _p30_smap1.tipoflot
-                ,modPrim     : !Ext.isEmpty(sinTarificar)&&sinTarificar+'X'=='modPrimX' ?'si' : 'no'
+                ,modPrim     : !Ext.isEmpty(sinTarificar)&&sinTarificar+0>-100 ?sinTarificar:''
             }
             ,slist1 : []
             ,slist2 : []
@@ -4737,7 +4737,8 @@ function _p30_cotizar(sinTarificar)
                                 {
                                     if(me.up('form').getForm().isValid())
                                     {
-                                        _p30_cotizar('modPrim');
+                                        var modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formDescuento'))[0].lastValue;
+                                        _p30_cotizar(modPrim);
                                     }
                                     else
                                     {

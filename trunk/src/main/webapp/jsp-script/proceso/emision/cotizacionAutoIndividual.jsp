@@ -2563,10 +2563,10 @@ function _p28_cotizar(sinTarificar)
         {
             _p28_smap1['notarificar'] = 'si';//Se utiliza para no retarid
         }
-        else if(!Ext.isEmpty(sinTarificar) &&  sinTarificar+'X' == 'modPrimX')
+        else if(!Ext.isEmpty(sinTarificar) &&  sinTarificar+0>-100)
         {
             _p28_smap1['notarificar'] = 'no';//Se utiliza para no retarid
-            _p28_smap1['modPrim']     = 'si';
+            _p28_smap1['modPrim']     = sinTarificar;
         }
         else
         {
@@ -2792,7 +2792,8 @@ function _p28_cotizar(sinTarificar)
                                 {
                                     if(me.up('form').getForm().isValid())
                                     {
-                                        _p28_cotizar('modPrim');
+                                        var modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_formDescuento'))[0].lastValue;
+                                        _p28_cotizar(modPrim);
                                     }
                                     else
                                     {
