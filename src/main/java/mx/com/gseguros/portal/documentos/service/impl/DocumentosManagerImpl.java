@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.documentos.service.impl;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.exception.ApplicationException;
@@ -389,5 +391,16 @@ public class DocumentosManagerImpl implements DocumentosManager
 				
 			}
 		}
+	}
+
+	@Override
+	public List<Map<String, String>> obtenerValorDefectoParametrizados(String cdsisrol, String campo, String renovacionGral)
+			throws Exception {
+		Map<String,String> result = new HashMap<String,String>();
+		
+		List<Map<String, String>> datosPoliza = consultasDAO.recuperarDatosValorDefectoLayout(cdsisrol,campo,renovacionGral);
+		//datosPoliza.get("ntramite");
+		//datosPoliza.get("nmsolici");
+		return datosPoliza;
 	}
 }

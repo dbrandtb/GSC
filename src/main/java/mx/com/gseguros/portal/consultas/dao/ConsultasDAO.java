@@ -699,5 +699,9 @@ public interface ConsultasDAO
            ,String nmpoliza
            )throws Exception;
    
-
+	public List<Map<String, String>> recuperarDatosValorDefectoLayout(
+			String cdsisrol
+			,String campo
+			,String renovacionGral
+			)throws Exception;	
 }
