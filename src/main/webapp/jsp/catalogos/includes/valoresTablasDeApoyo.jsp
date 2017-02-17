@@ -352,7 +352,7 @@ Ext.onReady(function() {
 			 	sortable: false,
 			 	menuDisabled: true,
 			 	items: [{
-			 		icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
+			 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 			 		tooltip: 'Eliminar Clave',
 			 		handler: function(grid, rowIndex){
 			 					debug('eliminando',rowIndex);

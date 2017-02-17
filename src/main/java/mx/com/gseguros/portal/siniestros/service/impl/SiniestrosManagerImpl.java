@@ -1414,124 +1414,121 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public Map<String,Object> moverTramite(
-			String ntramite
-			,String nuevoStatus
-			,String comments
-			,String cdusuariSesion
-			,String cdsisrolSesion
-			,String cdusuariDestino
-			,String cdsisrolDestino
-			,String cdmotivo
-			,String cdclausu
-			,String swagente
-			,Long stamp, boolean enviarCorreos
-			) throws Exception
-	{
-		if(stamp==null)
-		{
-			stamp = System.currentTimeMillis(); 
-		}
-		else
-		{
-			logger.debug(Utils.log(stamp, "Se llama la actualizacion de status despues de esperar tarifa"));
-		}
-		log.debug(Utils.log(stamp
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ moverTramite @@@@@@"
-				,"\n@@@@@@ ntramite="        , ntramite
-				,"\n@@@@@@ comments="        , comments
-				,"\n@@@@@@ cdusuariSesion="  , cdusuariSesion
-				,"\n@@@@@@ cdsisrolSesion="  , cdsisrolSesion
-				,"\n@@@@@@ cdusuariDestino=" , cdusuariDestino
-				,"\n@@@@@@ cdsisrolDestino=" , cdsisrolDestino
-				,"\n@@@@@@ cdmotivo="        , cdmotivo
-				,"\n@@@@@@ cdclausu="        , cdclausu
-				,"\n@@@@@@ swagente="        , swagente
-				,"\n@@@@@@ enviarCorreos="   ,  enviarCorreos
-				));
-		
-		int bloqueos = consultasDAO.recuperarConteoTbloqueoTramite(ntramite);
-		logger.debug(Utils.log(stamp,"bloqueos=",bloqueos));
-		
-		Map<String,Object> res = new HashMap<String,Object>();
-		
-		/*
-		 * si hay bloqueos entonces se manda asincrono y se enciende una bandera en mesa de control, este primer
-		 * caso es el normal
-		 */
-		if(bloqueos==0)
-		{
-			res = siniestrosDAO.moverTramite(
-					ntramite
-					,nuevoStatus
-					,comments
-					,cdusuariSesion
-					,cdsisrolSesion
-					,cdusuariDestino
-					,cdsisrolDestino
-					,cdmotivo
-					,cdclausu
-					,swagente
-					);
-			if(enviarCorreos){
-				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSesion, false);
-			}
-			try
-	        {
-				cotizacionDAO.grabarEvento(new StringBuilder("\nTurnar tramite")
-	        	    ,Constantes.MODULO_GENERAL    //cdmodulo
-	        	    ,Constantes.EVENTO_TURNAR     //cdevento
-	        	    ,new Date()   //fecha
-	        	    ,cdusuariSesion
-	        	    ,cdsisrolSesion
-	        	    ,ntramite
-	        	    ,"-1"
-	        	    ,null
-	        	    ,null
-	        	    ,null
-	        	    ,null
-	        	    ,null
-	        	    ,cdusuariDestino
-	        	    ,cdsisrolDestino
-	        	    ,nuevoStatus);
-	        }
-	        catch(Exception ex)
-	        {
-	        	logger.error("Error al grabar evento, sin impacto",ex);
-	        }
-		}
-		/*
-		 * en esta parte vamos a esperar a que los bloqueos terminen para hacer el turnado
-		 */
-		else
-		{
-			res.put("ESCALADO" , false);
-			res.put("NOMBRE"   , "");
-			res.put("ASYNC"    , "S");
-			
-			new MoverTramiteAsync(
-					ntramite
-					,nuevoStatus
-					,comments
-					,cdusuariSesion
-					,cdsisrolSesion
-					,cdusuariDestino
-					,cdsisrolDestino
-					,cdmotivo
-					,cdclausu
-					,swagente
-					,stamp
-					).start();
-		}
-		
-		log.debug(Utils.log(stamp
-				,"\n###### res=", res
-				,"\n###### moverTramite ######"
-				,"\n##########################"
-				));
-		return res;
-	}
+    public Map<String,Object> moverTramite(
+            String ntramite
+            ,String nuevoStatus
+            ,String comments
+            ,String cdusuariSesion
+            ,String cdsisrolSesion
+            ,String cdusuariDestino
+            ,String cdsisrolDestino
+            ,String cdmotivo
+            ,String cdclausu
+            ,String swagente
+            ,Long stamp
+            ) throws Exception
+    {
+        if(stamp==null)
+        {
+            stamp = System.currentTimeMillis(); 
+        }
+        else
+        {
+            logger.debug(Utils.log(stamp, "Se llama la actualizacion de status despues de esperar tarifa"));
+        }
+        log.debug(Utils.log(stamp
+                ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                ,"\n@@@@@@ moverTramite @@@@@@"
+                ,"\n@@@@@@ ntramite="        , ntramite
+                ,"\n@@@@@@ comments="        , comments
+                ,"\n@@@@@@ cdusuariSesion="  , cdusuariSesion
+                ,"\n@@@@@@ cdsisrolSesion="  , cdsisrolSesion
+                ,"\n@@@@@@ cdusuariDestino=" , cdusuariDestino
+                ,"\n@@@@@@ cdsisrolDestino=" , cdsisrolDestino
+                ,"\n@@@@@@ cdmotivo="        , cdmotivo
+                ,"\n@@@@@@ cdclausu="        , cdclausu
+                ,"\n@@@@@@ swagente="        , swagente
+                ));
+        
+        int bloqueos = consultasDAO.recuperarConteoTbloqueoTramite(ntramite);
+        logger.debug(Utils.log(stamp,"bloqueos=",bloqueos));
+        
+        Map<String,Object> res = new HashMap<String,Object>();
+        
+        /*
+         * si hay bloqueos entonces se manda asincrono y se enciende una bandera en mesa de control, este primer
+         * caso es el normal
+         */
+        if(bloqueos==0)
+        {
+            res = siniestrosDAO.moverTramite(
+                    ntramite
+                    ,nuevoStatus
+                    ,comments
+                    ,cdusuariSesion
+                    ,cdsisrolSesion
+                    ,cdusuariDestino
+                    ,cdsisrolDestino
+                    ,cdmotivo
+                    ,cdclausu
+                    ,swagente
+                    );
+            
+            try
+            {
+                cotizacionDAO.grabarEvento(new StringBuilder("\nTurnar tramite")
+                    ,"GENERAL"    //cdmodulo
+                    ,"TURNATRA"   //cdevento
+                    ,new Date()   //fecha
+                    ,cdusuariSesion
+                    ,cdsisrolSesion
+                    ,ntramite
+                    ,"-1"
+                    ,null
+                    ,null
+                    ,null
+                    ,null
+                    ,null
+                    ,cdusuariDestino
+                    ,cdsisrolDestino
+                    ,nuevoStatus);
+            }
+            catch(Exception ex)
+            {
+                logger.error("Error al grabar evento, sin impacto",ex);
+            }
+        }
+        /*
+         * en esta parte vamos a esperar a que los bloqueos terminen para hacer el turnado
+         */
+        else
+        {
+            res.put("ESCALADO" , false);
+            res.put("NOMBRE"   , "");
+            res.put("ASYNC"    , "S");
+            
+            new MoverTramiteAsync(
+                    ntramite
+                    ,nuevoStatus
+                    ,comments
+                    ,cdusuariSesion
+                    ,cdsisrolSesion
+                    ,cdusuariDestino
+                    ,cdsisrolDestino
+                    ,cdmotivo
+                    ,cdclausu
+                    ,swagente
+                    ,stamp
+                    ).start();
+        }
+        
+        log.debug(Utils.log(stamp
+                ,"\n###### res=", res
+                ,"\n###### moverTramite ######"
+                ,"\n##########################"
+                ));
+        return res;
+    }
 	
 	private class MoverTramiteAsync extends Thread
 	{
@@ -1633,7 +1630,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 					,cdmotivo
 					,cdclausu
 					,swagente
-					,stamp, true
+					,stamp
 					);
 			}
 			catch(Exception ex)
@@ -2680,14 +2677,4 @@ public class SiniestrosManagerImpl implements SiniestrosManager
             throw new Exception(daoExc.getMessage(), daoExc);
         }
     }
-	
-	@Override
-	public String validaProveedorPD(String ntramite) throws Exception{ // (EGS)
-		try{
-			return siniestrosDAO.validaProveedorPD(ntramite);
-		} catch (DaoException daoExc){
-			throw new Exception(daoExc.getMessage(),daoExc);
-		}
-	}
-    
 }

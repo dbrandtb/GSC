@@ -56,7 +56,6 @@ var _UrlRechazarTramiteWindwow  		= '<s:url namespace="/siniestros" 	action="inc
 var _UrlDetalleSiniestro        		= '<s:url namespace="/siniestros" 	action="detalleSiniestro" />';
 var _UrlDetalleSiniestroDirecto 		= '<s:url namespace="/siniestros" 	action="afiliadosAfectados"        />';
 var _UrlSolicitarPago           		= '<s:url namespace="/siniestros" 	action="solicitarPago"             />';
-var _URL_VALIDAR_PROVEEDOR_PD			= '<s:url namespace="/siniestros"	action="validarProveedorPD" />'; // (EGS)
 var _UrlSolicitarComplemento			= '<s:url namespace="/siniestros" 	action="solicitarComplemento"      />';
 var _URL_CONCEPTODESTINO        		= '<s:url namespace="/siniestros"   action="guardarConceptoDestino" />';
 var _mesasin_url_lista_reasignacion 	= '<s:url namespace="/siniestros" 	action="obtenerUsuariosPorRol" />';
@@ -560,7 +559,6 @@ var msgWindow;
 										                ,columns    : 2
 										                ,width      : 250
 										                ,style      : 'margin:5px;'
-										                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 										                ,items      :
 										                [
 										                    {
@@ -568,13 +566,12 @@ var msgWindow;
 										                        ,itemId     : 'SWAGENTE2'
 										                        ,name       : 'SWAGENTE2'
 										                        ,inputValue : 'S'
-										                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 										                    }
 										                    ,{
 										                        boxLabel    : 'No'
 										                        ,name       : 'SWAGENTE2'
 										                        ,inputValue : 'N'
-                                                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                                ,checked    : true
 										                    }
 										                ]
 										            }],
@@ -1036,7 +1033,6 @@ var msgWindow;
        	                        ,columns    : 2
        	                        ,width      : 250
        	                        ,style      : 'margin:5px;'
-       	                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
        	                        ,items      :
        	                        [
        	                            {
@@ -1044,13 +1040,12 @@ var msgWindow;
        	                                ,itemId     : 'SWAGENTE3'
        	                                ,name       : 'SWAGENTE3'
        	                                ,inputValue : 'S'
-       	                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
        	                            }
        	                            ,{
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE3'
        	                                ,inputValue : 'N'
-                                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                        ,checked    : true
        	                            }
        	                        ]
        	                    }],
@@ -1185,7 +1180,6 @@ var msgWindow;
 				        	                        ,columns    : 2
 				        	                        ,width      : 250
 				        	                        ,style      : 'margin:5px;'
-				        	                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 				        	                        ,items      :
 				        	                        [
 				        	                            {
@@ -1193,13 +1187,12 @@ var msgWindow;
 				        	                                ,itemId     : 'SWAGENTE4'
 				        	                                ,name       : 'SWAGENTE4'
 				        	                                ,inputValue : 'S'
-				        	                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 				        	                            }
 				        	                            ,{
 				        	                                boxLabel    : 'No'
 				        	                                ,name       : 'SWAGENTE4'
 				        	                                ,inputValue : 'N'
-                                                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                            ,checked    : true
 				        	                            }
 				        	                        ]
 				        	                    }],
@@ -1313,7 +1306,6 @@ var msgWindow;
        	                        ,columns    : 2
        	                        ,width      : 250
        	                        ,style      : 'margin:5px;'
-       	                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
        	                        ,items      :
        	                        [
        	                            {
@@ -1321,13 +1313,12 @@ var msgWindow;
        	                                ,itemId     : 'SWAGENTE5'
        	                                ,name       : 'SWAGENTE5'
        	                                ,inputValue : 'S'
-       	                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
        	                            }
        	                            ,{
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE5'
        	                                ,inputValue : 'N'
-                                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                        ,checked    : true
        	                            }
        	                        ]
        	                    }],
@@ -1460,8 +1451,7 @@ var msgWindow;
 								if(jsonRespuesta.success == true){
 									if( record.get('parametros.pv_otvalor02') ==_PAGO_DIRECTO){
 										//mostrarSolicitudPago(grid,rowIndex,colIndex); --------------->
-										_11_validaProveedorPagoDirecto(grid,rowIndex,colIndex); // (EGS) validamos solo un proveedor en reclamo pago directo
-										//_11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex); // (EGS) se comenta aquí pero se agrega en funcion _11_validaProveedorPagoDirecto()
+										_11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex);
 									}else{
 										Ext.Ajax.request({
 											url	 : _URL_VAL_AJUSTADOR_MEDICO
@@ -2324,7 +2314,6 @@ function turnarDevolucionTramite(grid,rowIndex,colIndex){
                     ,columns    : 2
                     ,width      : 250
                     ,style      : 'margin:5px;'
-                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                     ,items      :
                     [
                         {
@@ -2332,13 +2321,12 @@ function turnarDevolucionTramite(grid,rowIndex,colIndex){
                             ,itemId     : 'SWAGENTE6'
                             ,name       : 'SWAGENTE6'
                             ,inputValue : 'S'
-                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                         }
                         ,{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE6'
                             ,inputValue : 'N'
-                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                            ,checked    : true
                         }
                     ]
                 }],
@@ -2400,47 +2388,6 @@ function turnarDevolucionTramite(grid,rowIndex,colIndex){
 	}).show();
 	centrarVentana(windowLoader);
 }
-
-	//(EGS) Validamos solo un proveedor en reclamo pago directo
-	function _11_validaProveedorPagoDirecto(grid,rowIndex,colIndex){
-		var myMask = new Ext.LoadMask(Ext.getBody(),{msg:"loading..."});
-		myMask.show();
-		var record = grid.getStore().getAt(rowIndex);
-		Ext.Ajax.request({
-			url		:	_URL_VALIDAR_PROVEEDOR_PD
-			,params	:{
-				'params.ntramite'	: record.get('ntramite')
-			}
-			,success : function(response,opts) {
-				json = Ext.decode(response.responseText);
-				var mensaje = json.mensaje;
-				debug("success...",response.responseText);
-				if(mensaje > 1){
-					myMask.hide();
-					centrarVentanaInterna(Ext.Msg.show({
-						title: 'No es posible solicitar el pago',
-						msg : 'Est&aacute; tratando de enviar un Pago Directo, para diferentes proveedores',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.ERROR
-					}));
-				}else{
-					_11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex);
-				}
-			}
-			,failure : function(response,opts){
-				var obj = Ext.decode(response.responseText);
-				var mensaje = obj.mensaje;
-				debug("failure...",obj.mensaje);
-				centrarVentanaInterna(Ext.Msg.show({
-					title: 'Error',
-					msg: Ext.isEmpty(mensaje) ? 'Error de comunicaci&oacute;n' : mensaje,
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				}));
-			}
-		});
-	}
-
 
 Ext.onReady(function()
 		{

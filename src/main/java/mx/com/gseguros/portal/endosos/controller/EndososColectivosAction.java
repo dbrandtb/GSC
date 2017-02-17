@@ -4,9 +4,39 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.swing.JOptionPane;
+
+import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.endosos.model.RespuestaConfirmacionEndosoVO;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
+import mx.com.gseguros.portal.general.model.RolVO;
+import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
+import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -23,24 +53,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
-
-import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.kernel.service.KernelManagerSustituto;
-import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.model.FlujoVO;
-import mx.com.gseguros.portal.consultas.service.ConsultasManager;
-import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
-import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
-import mx.com.gseguros.portal.endosos.service.EndososManager;
-import mx.com.gseguros.portal.general.service.PantallasManager;
-import mx.com.gseguros.portal.general.util.EstatusTramite;
-import mx.com.gseguros.portal.general.util.RolSistema;
-import mx.com.gseguros.portal.general.util.TipoEndoso;
-import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
-import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
-import mx.com.gseguros.utils.Utils;
 
 @Controller
 @Scope("prototype")
@@ -71,9 +83,6 @@ public class EndososColectivosAction extends PrincipalCoreAction
 	private Map<String,Item>         imap1;
 	private File 					 censo;	
 	private File					 censoFileName;
-	
-	private FlujoVO flujo;
-	
 	@Autowired
 	private ConsultasManager         consultasManager;
 	
@@ -95,21 +104,6 @@ public class EndososColectivosAction extends PrincipalCoreAction
 	@Autowired
 	private KernelManagerSustituto kernelManager;
 	
-	@Value("${ruta.documentos.temporal}")
-    private String rutaDocumentosTemporal;
-
-	@Value("${dominio.server.layouts}")
-    private String dominioServerLayouts;
-
-	@Value("${user.server.layouts}")
-    private String userServerLayouts;
-
-	@Value("${pass.server.layouts}")
-    private String passServerLayouts;	
-	
-	@Value("${directorio.server.layouts}")
-    private String directorioServerLayouts;	
-
 	public EndososColectivosAction()
 	{
 		this.session = ActionContext.getContext().getSession();
@@ -262,9 +256,8 @@ public class EndososColectivosAction extends PrincipalCoreAction
 		logger.debug(Utils.log(
 				 "\n#####################################"
 				,"\n###### confirmarEndosoFamilias ######"
-				,"\n###### params = " , params
-				,"\n###### list   = " , list
-				,"\n###### flujo  = " , flujo
+				,"\n###### params=" , params
+				,"\n###### list="   , list
 				));
 		
 		try
@@ -324,7 +317,6 @@ public class EndososColectivosAction extends PrincipalCoreAction
 						,incisos
 						,cdtipsitPrimerInciso
 						,nmsolici
-						,flujo
 					);
 			}
 			else
@@ -354,7 +346,6 @@ public class EndososColectivosAction extends PrincipalCoreAction
 						,incisos
 						,cdtipsitPrimerInciso
 						,nmsolici
-						,flujo
 						);
 			}
 			
@@ -367,8 +358,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				 "\n###### success = " , success
-				,"\n###### message = " , message
+				 "\n###### message=",message
 				,"\n###### confirmarEndosoFamilias ######"
 				,"\n#####################################"
 				));
@@ -653,7 +643,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 			String cdtipsup           = TipoEndoso.EMISION_POLIZA.getCdTipSup().toString();
 			long timestamp            = System.currentTimeMillis();
 			boolean esProductoSalud   = consultasManager.esProductoSalud(cdramo);
-			boolean esPolizaColectiva =  ("F".equalsIgnoreCase(params.get("TIPOFLOT")));// flotilla o Colectiva
+			boolean esPolizaColectiva = ("F".equalsIgnoreCase(params.get("TIPOFLOT")));// flotilla o Colectiva
 			logger.debug(Utils.log("usuario en sesion ",usuario.getRolActivo().getClave()));
             logger.debug(Utils.log("######		parametros		######\n", 
 					  			   "##################################\n",
@@ -725,7 +715,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																			 null,
 																			 null, 
 																			 "N", 
-																			 timestamp, false);					
+																			 timestamp);					
 					if (res.containsKey("NOMBRE") && StringUtils.isNotBlank((String) res.get("NOMBRE"))) {
 						usuarioTramite = " fue asignado a: " + (String) res.get("NOMBRE");
 					}
@@ -748,7 +738,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																			 null,
 																			 null, 
 																			 "N", 
-																			 timestamp, false);					
+																			 timestamp);					
 					logger.debug(Utils.log("*****************Resultado de asignacion******************"));
 					logger.debug(Utils.log(res));
 					setMensaje("Se gener&oacute; el tr&aacute;mite "
@@ -900,11 +890,11 @@ public class EndososColectivosAction extends PrincipalCoreAction
 				    estadoOrig,
 				    nmpolizaOrig,
 				    censo,
-				    rutaDocumentosTemporal,
-				    dominioServerLayouts,
-				    userServerLayouts,
-				    passServerLayouts,
-				    directorioServerLayouts,
+				    getText("ruta.documentos.temporal"),
+				    getText("dominio.server.layouts"),
+				    getText("user.server.layouts"),
+				    getText("pass.server.layouts"),
+				    getText("directorio.server.layouts"),
 				    cdtipsit,
 				    user.getUser(),
 				    user.getRolActivo().getClave());
@@ -971,7 +961,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																		 null,
 																		 null, 
 																		 "N", 
-																		 timestamp, false);
+																		 timestamp);
 				if (res.containsKey("NOMBRE") && StringUtils.isNotBlank((String) res.get("NOMBRE"))) {
 					usuarioTramite = " fue asignado a: " + (String) res.get("NOMBRE");
 				}
@@ -993,7 +983,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 																		 null,
 																		 null, 
 																		 "N", 
-																		 timestamp, false);
+																		 timestamp);
 				logger.debug(Utils.log("*****************Resultado de asignacion******************"));
 				logger.debug(Utils.log(res));
 				setMensaje("Se gener&oacute; el tr&aacute;mite "
@@ -1173,13 +1163,5 @@ public class EndososColectivosAction extends PrincipalCoreAction
 
 	public void setCenso(File censo) {
 		this.censo = censo;
-	}
-
-	public FlujoVO getFlujo() {
-		return flujo;
-	}
-
-	public void setFlujo(FlujoVO flujo) {
-		this.flujo = flujo;
 	}
 }

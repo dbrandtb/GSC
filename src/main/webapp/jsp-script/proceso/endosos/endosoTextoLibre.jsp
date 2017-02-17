@@ -6,13 +6,10 @@
 	var situaciones          = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
 	var guardaTextoLibre = '<s:url namespace="/endosos" action="guardarEndosoTextoLibre"       />';
 	
-	var endTexLibFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-	
 	var _p44_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple" />';
 	var _cdTipSupEndLibre = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_B_LIBRE.cdTipSup" />';
 	
 	debug('paramsEntrada  -->:',paramsEntrada);
-	debug('endTexLibFlujo:',endTexLibFlujo);
 	
 	Ext.onReady(function() {
 		
@@ -65,11 +62,6 @@
 	        				paramsEntrada.TEXTOEND = panelInicialPral.down('[name="textoEndoso"]').getValue();
 	        				submitValues['smap1']= paramsEntrada;
 	        				submitValues['slist1']= situaciones;
-	        				
-	        				if(!Ext.isEmpty(endTexLibFlujo))
-	        				{
-	        				    submitValues['flujo'] = endTexLibFlujo;
-	        				}
 	        				
 	        				var panelMask = new Ext.LoadMask('maindivText', {msg:"Confirmando..."});
 							panelMask.show();

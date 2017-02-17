@@ -90,7 +90,6 @@ var _p21_urlComplementoCotizacion        = '<s:url namespace="/emision"         
 var _p21_urlRecuperacion                 = '<s:url namespace="/recuperacion"    action="recuperar"                        />';
 var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
 var _p21_urlRestaurarRespaldoCenso       = '<s:url namespace="/emision"         action="restaurarRespaldoCenso"           />';
-var _p21_urlMarcoEndosos                 = '<s:url namespace="/endosos"         action="marcoEndosos"                     />';
 
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
 var _cotcol_urlPantallaEspPersona   = '<s:url namespace="/persona"  action="includes/pantallaEspPersona"  />'
@@ -103,8 +102,8 @@ var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p21_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p21_urlImprimirCotiza = '<s:property value="ruta.servidor.reports" />';
-var _p21_reportsServerUser = '<s:property value="pass.servidor.reports" />';
+var _p21_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p21_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -268,8 +267,8 @@ var listaSinPadre = [];
 Ext.onReady(function()
 {
 
-    /*_grabarEvento('COTIZACION','ACCCOTIZA'
-                  ,_p21_ntramiteVacio?_p21_ntramiteVacio:(_p21_ntramite?_p21_ntramite:''),_p21_smap1.cdunieco,_p21_smap1.cdramo);*/
+    _grabarEvento('COTIZACION','ACCCOTIZA'
+                  ,_p21_ntramiteVacio?_p21_ntramiteVacio:(_p21_ntramite?_p21_ntramite:''),_p21_smap1.cdunieco,_p21_smap1.cdramo);
 
     Ext.Ajax.timeout = 60*60*1000;
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
@@ -981,26 +980,7 @@ Ext.onReady(function()
                             }
                         ]
                         ,buttonAlign : 'center'
-                        ,buttons:[{
-                            xtype :'panel',
-                            defaults : { style : 'margin:5px' },
-                            border   : 0,
-                            width    : 950,
-                            ui       :'footer',
-                            items    : [
-                                <s:if test='%{getImap().get("botones")!=null}'>
-                                    <s:property value="imap.botones" />,
-                                </s:if>
-                                {
-                                    text     : 'Limpiar'
-                                    ,xtype   : 'button'
-                                    ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                                    ,handler : _p21_cotizarNueva
-                                    ,hidden  : _p21_ntramite ? true : false
-                                }
-                            ]
-                        }]
-                        /*,buttons     :
+                        ,buttons     :
                         [
                             <s:if test='%{getImap().get("botones")!=null}'>
                                 <s:property value="imap.botones" />,
@@ -1011,7 +991,7 @@ Ext.onReady(function()
                                 ,handler : _p21_cotizarNueva
                                 ,hidden  : _p21_ntramite ? true : false
                             }
-                        ]*/
+                        ]
                     })
                 ]
             }
@@ -1113,7 +1093,6 @@ Ext.onReady(function()
             ,titleCollapse  : true
             ,startCollapsed : true
             ,resizable      : false
-            ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
             ,loader         :
             {
                 scripts   : true
@@ -2028,9 +2007,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                 ,'smap1.cdplan'   : record.get('cdplan')
                                 ,'smap1.cdgarant' : json.slist1[i].CDGARANT
                                 ,'smap1.indice'   : i
-                                ,'smap1.cdtipsup'  : null
-                                ,'smap1.nmpolant'  : null
-                                ,'smap1.cdgrupo'   : null
                             }
                             ,success : function(response)
                             {
@@ -3943,8 +3919,6 @@ function _p21_reload(json,status,nmpoliza)
             ,'smap1.ntramite' : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
             ,'smap1.cdagente' : _fieldByName('cdagente').getValue()
             ,'smap1.status'   : Ext.isEmpty(status) ? _p21_smap1.status : status
-            ,'smap1.cdtipsup' : null
-            ,'smap1.nmpolant' : null
         }
     });
     debug('<_p21_reload');
@@ -3963,40 +3937,13 @@ function _p21_mesacontrol(json)
         }
     });
 }
-function _p21_recarga (status, titulo, closable) {
-	mensajeCorrecto('Asegurados',
-	    'Asegurado guardado correctamente.',
-	    function () {
-			/*
-			Se comenta a peticion de Angeles. Ahora debo abrir el marco de endosos y volver a abrir la pantalla de endoso de alta de incisos.
-			Puede venir con flujo o sin flujo y no debe perder los datos.
+function _p21_recarga(status,titulo,closable){
+	mensajeCorrecto('Asegurados'
+            ,'Asegurado guardado correctamente.'
+            ,function()
+        {
 			marendNavegacion(2);
-			*/
-			var mask, ck = 'Recargando ventana para continuar endoso de alta de asegurados';
-			try {
-			    var params = {
-			        'smap1.cdunieco'                              : _p21_smap1.cdunieco,
-			        'smap1.cdramo'                                : _p21_smap1.cdramo,
-			        'smap1.estado'                                : _p21_smap1.estado,
-			        'smap1.nmpoliza'                              : _p21_smap1.nmpoliza,
-			        'smap1.recuperarEndosoAltaAseguradosSaludCol' : 'S'
-			    };
-			    try {
-			        if (!Ext.isEmpty(_p48_flujo)) {
-			            params = _flujoToParams(_p48_flujo, params);
-			        }
-			    } catch (e) {}
-			    mask = _maskLocal(ck);
-			    Ext.create('Ext.form.Panel').submit({
-			        url            : _p21_urlMarcoEndosos,
-			        standardSubmit : true,
-			        params         : params
-			    });
-			} catch (e) {
-			    manejaException(e, ck, mask);
-			}
-        }
-    );
+        });
 }
 
 
@@ -4028,7 +3975,6 @@ function _p21_turnar(status,titulo,closable)
                 ,columns    : 2
                 ,width      : 250
                 ,style      : 'margin:5px;'
-                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                 ,items      :
                 [
                     {
@@ -4036,13 +3982,12 @@ function _p21_turnar(status,titulo,closable)
                         ,itemId     : 'SWAGENTE'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'S'
-                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                     }
                     ,{
                         boxLabel    : 'No'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'N'
-                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                        ,checked    : true
                     }
                 ]
             }
@@ -4119,7 +4064,7 @@ function _p21_turnar(status,titulo,closable)
                                             
                                             if(json.smap1.ASYNC=='S')
                                             {
-                                                mensajeTurnado = 'El tr\u00e1mite '+_p21_smap1.ntramite+' qued\u00f3 en espera y ser\u00e1 procesado posteriormente';
+                                                mensajeTurnado = 'El tr\u00e1mite qued\u00f3 en espera y ser\u00e1 procesado posteriormente';
                                             }
                                         
                                             mensajeCorrecto('Tr&aacute;mite guardado'
@@ -5549,7 +5494,6 @@ function _p21_emitir2(ventana,button)
 	                                ,height     : 400
 	                                ,autoScroll : true
 	                                ,modal      : true
-	                                ,cls        : 'VENTANA_DOCUMENTOS_CLASS'
 	                                ,loader     :
 	                                {
 	                                    scripts   : true

@@ -36,29 +36,25 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	
 	static final Logger logger = LoggerFactory.getLogger(AccesoDirectoAction.class);
 
-	public static final String DEFAULT_DATE_FORMAT_PARAM       = "defaultDateFormat";
+	public static final String DEFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
 	public static final String DEFAULT_DECIMAL_SEPARATOR_PARAM = "defaultDecimalSeparator";
 	public static final String DEFAULT_DECIMAL_PRECISION_PARAM = "decimalPrecision";
 	
 	public static final String ACCESO_CODIGOS_POSTALES = "codigosPostales";
-	public static final String ACCESO_COTIZADOR        = "cotizador";
+	public static final String ACCESO_COTIZADOR = "cotizador";
 	public static final String ACCESO_COTIZADOR_AUTO_INDIVIDUAL = "cotizadorAutoIndividual";
-	public static final String ACCESO_COTIZADOR_AUTO_FLOTILLA   = "cotizadorAutoFlotilla";
-	public static final String ACCESO_COTIZADOR_GRUPO  = "cotizadorGrupo";
+	public static final String ACCESO_COTIZADOR_AUTO_FLOTILLA = "cotizadorAutoFlotilla";
+	public static final String ACCESO_COTIZADOR_GRUPO = "cotizadorGrupo";
 	public static final String ACCESO_COTIZADOR_GRUPO2 = "cotizadorGrupo2";
 	public static final String ACCESO_CONSULTA_POLIZAS = "consultaPolizas";
-	public static final String ACCESO_CONSULTA_ASEGURADOS       = "consultaAsegurados";
-	public static final String ACCESO_CLIENTE_UNICO    = "clienteUnico";
-	public static final String ACCESO_ENDOSO_POLIZAS_NO_SICAPS  = "endosoPolizasNoSICAPS";
+	public static final String ACCESO_CONSULTA_ASEGURADOS = "consultaAsegurados";
+	public static final String ACCESO_CLIENTE_UNICO = "clienteUnico";
+	public static final String ACCESO_ENDOSO_POLIZAS_NO_SICAPS = "endosoPolizasNoSICAPS";
 	public static final String ACCESO_ENDOSO_DOMPOLIZAS_NO_SICAPS = "endosoDomicilioNOSICAPS";  
-	public static final String ENDOSOS_AUTOS           = "endososAutos";
-	public static final String FLUJO_MESA_CONTROL      = "flujoMesaControl";
-	public static final String IMPRESION_DOCUMENTOS    = "impresionDocumentos";
-	public static final String IMPRESION_RECIBOS       = "impresionRecibos";
-	public static final String MENU_PRINCIPAL          = "menuPrincipal";
-	public static final String MESA_CONTROL_AGENTES    = "mesaControlAgentes";
-	public static final String REDIRECT_SIMPLE         = "redirectSimple";
-	
+	public static final String ENDOSOS_AUTOS = "endososAutos";
+	public static final String MENU_PRINCIPAL = "menuPrincipal";
+	public static final String MESA_CONTROL_AGENTES = "mesaControlAgentes";
+
 	/**
 	 * Success property
 	 */
@@ -156,10 +152,6 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| MESA_CONTROL_AGENTES.equals(acceso)
 				|| ACCESO_ENDOSO_POLIZAS_NO_SICAPS.equals(acceso)
 				|| ACCESO_ENDOSO_DOMPOLIZAS_NO_SICAPS.equals(acceso)
-				|| FLUJO_MESA_CONTROL.equals(acceso)
-				|| IMPRESION_DOCUMENTOS.equals(acceso)
-				|| IMPRESION_RECIBOS.equals(acceso)
-				|| REDIRECT_SIMPLE.equals(acceso)
 				) {
 			
 			// Patch para traducir el rol, ya que el portal manda un codigo: 

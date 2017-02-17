@@ -72,7 +72,6 @@
 			var _URL_LISTA_SUBCOBERTURA					= '<s:url namespace="/siniestros"  		action="consultaListaSubcobertura" />';
 			var _URL_CONCEPTODESTINO        			= '<s:url namespace="/siniestros"       action="guardarConceptoDestino" />';
             var _URL_SOLICITARPAGO           			= '<s:url namespace="/siniestros" 		action="solicitarPago" />';
-            var _URL_VALIDAR_PROVEEDOR_PD				= '<s:url namespace="/siniestros"		action="validarProveedorPD" />'; // (EGS)
             var _URL_TIPO_ATENCION						= '<s:url namespace="/siniestros"  		action="consultaListaTipoAtencion" />';
             var _URL_CONSULTA_TRAMITE       			= '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
           	var _URL_LISTARECHAZOS						= '<s:url namespace="/siniestros"		action="loadListaRechazos" />';
@@ -1200,13 +1199,7 @@
 					valueField   : 'cdpresta',			forceSelection : true,
 					matchFieldWidth: false,				queryMode :'remote',				queryParam: 'params.cdpresta',
 					minChars  : 2,						store : storeProveedor,				triggerAction: 'all',
-					hideTrigger	:true,					allowBlank:false,
-					listeners	: {	//(EGS)
-						'blur'	: function(e){
-							debug("blur...");
-							_11_clickAplicarCambiosFactura();
-						}
-					}
+					hideTrigger:true,					allowBlank:false					
 				});
 				var comboICDPrimario = Ext.create('Ext.form.field.ComboBox',
 				{
@@ -2059,7 +2052,7 @@
 								},
 								{
 									text	: 'Generar Calculo'
-									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 									,handler : _p21_generarCalculo
 									,hidden  : (_cdtipoProceso  == "1")
 								}
@@ -2343,7 +2336,7 @@
 								,items		:
 								[
 									{
-										icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
+										icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 										tooltip: 'Eliminar',
 										scope: this,
 										handler: this.onRemoveClick
@@ -2583,7 +2576,7 @@
 						tbar:[
 								{
 									text	: 'Agregar Concepto'
-									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+									,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 									,handler : _p21_agregarConcepto
 									//, hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
 								},
@@ -2699,7 +2692,7 @@
 							,items		:
 							[
 								{
-									icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
+									icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 									tooltip: 'Eliminar',
 									scope: this,
 									handler: this.onRemoveClick
@@ -2806,7 +2799,7 @@
 					tbar:[
 							{
 								text	: 'Agregar Conceptos'
-								,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+								,icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 								,handler : _p21_agregarConcepto
 							},
 							{
@@ -3186,9 +3179,7 @@
 							text:'Aplicar Cambios Factura',
 							icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
 							handler:function() {
-								debug("Aplicar Cambios Factura");
-								_11_clickAplicarCambiosFactura(); // (EGS) codigo original se convierte en funcion para re-utilizarlo
-/*
+								
 								var valido = panelInicialPral.isValid();
 								if(!valido) {
 									datosIncompletos();
@@ -3238,7 +3229,6 @@
 										});
 									}
 								}
-*/
 							}
 						},
 						{
@@ -3935,19 +3925,17 @@
                     ,columns    : 2
                     ,width      : 250
                     ,style      : 'margin:5px;'
-                    ,hidden     : _GLOBAL_CDSISROL===RolSistema
                     ,items      : [
                         {
                             boxLabel    : 'Si'
                             ,itemId     : 'SWAGENTE2'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'S'
-                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                         },{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'N'
-                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                            ,checked    : true
                         }
                     ]
                 }
@@ -4090,19 +4078,17 @@
 	                    ,columns    : 2
 	                    ,width      : 250
 	                    ,style      : 'margin:5px;'
-	                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 	                    ,items      : [
 	                        {
 	                            boxLabel    : 'Si'
 	                            ,itemId     : 'SWAGENTE3'
 	                            ,name       : 'SWAGENTE3'
 	                            ,inputValue : 'S'
-	                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 	                        },{
 	                            boxLabel    : 'No'
 	                            ,name       : 'SWAGENTE3'
 	                            ,inputValue : 'N'
-	                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+	                            ,checked    : true
 	                        }
 	                    ]
 	                }],
@@ -4240,8 +4226,7 @@
 								if(jsonRespuesta.success == true){
 									if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
 										//_11_mostrarSolicitudPago(); ...1
-										_11_validaProveedorPagoDirecto(); // (EGS) validamos solo un proveedor en reclamo pago directo
-										//_11_validaAseguroLimiteCoberturas(); // (EGS) se comenta aquí pero se agrega en funcion _11_validaProveedorPagoDirecto()
+										_11_validaAseguroLimiteCoberturas();
 									}else{
 										//Verificamos si tiene la validacion del dictaminador medico
 										Ext.Ajax.request({
@@ -4685,20 +4670,18 @@
                                             ,columns    : 2
                                             ,width      : 250
                                             ,style      : 'margin:5px;'
-                                            ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                                             ,items      : [
                                                 {
                                                     boxLabel    : 'Si'
                                                     ,itemId     : 'SWAGENTE5'
                                                     ,name       : 'SWAGENTE5'
                                                     ,inputValue : 'S'
-                                                    ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                                                 }
                                                 ,{
                                                     boxLabel    : 'No'
                                                     ,name       : 'SWAGENTE5'
                                                     ,inputValue : 'N'
-                                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                    ,checked    : true
                                                 }
                                             ]
                                         }],
@@ -4929,20 +4912,18 @@
                         ,columns    : 2
                         ,width      : 250
                         ,style      : 'margin:5px;'
-                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                         ,items      : [
                             {
                                 boxLabel    : 'Si'
                                 ,itemId     : 'SWAGENTE4'
                                 ,name       : 'SWAGENTE4'
                                 ,inputValue : 'S'
-                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                             }
                             ,{
                                 boxLabel    : 'No'
                                 ,name       : 'SWAGENTE4'
                                 ,inputValue : 'N'
-                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                ,checked    : true
                             }
                         ]
                     }],
@@ -5047,7 +5028,6 @@
 											,columns    : 2
 											,width      : 250
 											,style      : 'margin:5px;'
-											,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 											,items      :
 											[
 												{
@@ -5055,13 +5035,12 @@
 													,itemId     : 'SWAGENTE2'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'S'
-													,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 												}
 												,{
 													boxLabel    : 'No'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'N'
-													,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+													,checked    : true
 												}
 											]
 										}],
@@ -7160,94 +7139,6 @@
 		//}
 	}
 	
-	//(EGS) Codigo que se ejecuta cuando usuario da click en botón Aplicar Cambios Factura.
-	// Se hace función para re-utilizarlo
-	function _11_clickAplicarCambiosFactura(){
-		debug("_11_clickAplicarCambiosFactura");
-		var valido = panelInicialPral.isValid();
-		if(!valido) {
-			datosIncompletos();
-		}else{
-			var autorizaRecla = panelInicialPral.down('[name="params.autrecla"]').getValue()+"";
-			var autorizaMedic = panelInicialPral.down('[name="params.autmedic"]').getValue()+"";
-			if(autorizaRecla == "null" || autorizaRecla == null){
-				autorizaRecla="S";
-			}
-			if(autorizaMedic == "null" || autorizaMedic == null){
-				autorizaMedic="S";
-			}
-			var valido =  autorizaRecla =='S' &&  autorizaMedic!='N' ;
-			if(!valido) {
-				mensajeWarning(
-					'El tr&aacute;mite ser&aacute; cancelado debido a que no ha sido autorizado alguno de los siniestros'
-					,function(){
-						_11_rechazarTramiteSiniestro();
-					});
-			}else{
-				//Guardamos la información de la factura
-				panelInicialPral.form.submit({
-					waitMsg:'Procesando...',	
-					url: _URL_GUARDA_CAMBIOS_FACTURA,
-					failure: function(form, action) {
-						centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
-					},
-					success: function(form, action) {
-						if(_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO){
-							Ext.create('Ext.form.Panel').submit({
-								standardSubmit :true
-								,params		: {
-									'params.ntramite' : _11_params.NTRAMITE
-								}
-							});
-							panelInicialPral.getForm().reset();
-							storeAseguradoFactura.removeAll();
-							storeConceptos.removeAll();
-							}
-					}
-				});
-			}
-		}
-	}
-
-	//(EGS) Validamos solo un proveedor en reclamo pago directo
-	function _11_validaProveedorPagoDirecto(){
-		var myMask = new Ext.LoadMask(Ext.getBody(),{msg:"loading..."});
-		myMask.show();
-		Ext.Ajax.request({
-			url		:	_URL_VALIDAR_PROVEEDOR_PD
-			,params	:{
-				'params.ntramite'	: _11_params.NTRAMITE
-			}
-			,success : function(response,opts) {
-				json = Ext.decode(response.responseText);
-				var mensaje = json.mensaje;
-				debug("success...",response.responseText);
-				if(mensaje > 1){
-					myMask.hide();
-					centrarVentanaInterna(Ext.Msg.show({
-						title: 'No es posible solicitar el pago',
-						msg : 'Est&aacute; tratando de enviar un Pago Directo, para diferentes proveedores',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.ERROR
-					}));
-				}else{
-					_11_validaAseguroLimiteCoberturas();
-				}
-			}
-			,failure : function(response,opts){
-				var obj = Ext.decode(response.responseText);
-				var mensaje = obj.mensaje;
-				debug("failure...",obj.mensaje);
-				centrarVentanaInterna(Ext.Msg.show({
-					title: 'Error',
-					msg: Ext.isEmpty(mensaje) ? 'Error de comunicaci&oacute;n' : mensaje,
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				}));
-			}
-		});
-	}
-
 	//FIN DE FUNCIONES
 		</script>
 		<script type="text/javascript" src="${ctx}/js/proceso/siniestros/afiliadosAfectados.js?${now}"></script>
