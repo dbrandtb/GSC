@@ -172,7 +172,6 @@ public class ArbolProductosAction extends Padre{
 		boolean isDebugEnabled = log.isDebugEnabled();
 		
 		this.nivel = "1";
-		this.posicionProducto = posicionProducto;
 		if(isDebugEnabled){
 			log.debug("el problema va mas lejos");
 		}
