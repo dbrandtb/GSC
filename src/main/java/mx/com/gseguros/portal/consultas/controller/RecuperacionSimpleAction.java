@@ -3,6 +3,10 @@ package mx.com.gseguros.portal.consultas.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
@@ -11,10 +15,6 @@ import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2VO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.utils.Utils;
-
-import org.apache.log4j.Logger;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class RecuperacionSimpleAction extends PrincipalCoreAction
 {
@@ -32,9 +32,8 @@ public class RecuperacionSimpleAction extends PrincipalCoreAction
 	private String limit;
 	private String total;
 	
-	public RecuperacionSimpleAction()
-	{
-		this.session=this.session=ActionContext.getContext().getSession();
+	public RecuperacionSimpleAction () {
+		this.session = ActionContext.getContext().getSession();
 	}
 	/*
 	 * Utilidades

@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.emision.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +64,6 @@ import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -77,7 +73,6 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
-import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoProcesoBloqueo;
 import mx.com.gseguros.portal.general.util.TipoRamo;
@@ -7158,12 +7153,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String ntramite                = null;
 		String ntramiteVacio           = null;
 		String miTimestamp             = null;
-		String rutaDocumentosTemporal  = null;
 		String tipoCenso               = null;
-		String dominioServerLayouts    = null;
-		String userServerLayouts       = null;
-		String passServerLayouts       = null;
-		String directorioServerLayouts = null;
 		String cdtipsit                = null;
 		String codpostal               = null;
 		String cdedo                   = null;
@@ -7243,12 +7233,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdideext_       = smap1.get("cdideext_");
 			nmpolant        = smap1.get("nmpolant");
 			nmrenova        = smap1.get("nmrenova");
-			
-			rutaDocumentosTemporal  = rutaDocumentosTemporal;
-			dominioServerLayouts    = dominioServerLayouts;
-			userServerLayouts       = userServerLayouts;
-			passServerLayouts       = passServerLayouts;
-			directorioServerLayouts = directorioServerLayouts;
 			
 			String sincensoS      = smap1.get("sincenso");
 			sincenso              = StringUtils.isNotBlank(sincensoS)&&sincensoS.equals("S");
