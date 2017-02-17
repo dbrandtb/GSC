@@ -2680,14 +2680,4 @@ public class SiniestrosManagerImpl implements SiniestrosManager
             throw new Exception(daoExc.getMessage(), daoExc);
         }
     }
-	
-	@Override
-	public String validaProveedorPD(String ntramite) throws Exception{ // (EGS)
-		try{
-			return siniestrosDAO.validaProveedorPD(ntramite);
-		} catch (DaoException daoExc){
-			throw new Exception(daoExc.getMessage(),daoExc);
-		}
-	}
-    
 }

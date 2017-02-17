@@ -19,7 +19,6 @@ import org.apache.struts2.convention.annotation.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -40,12 +39,6 @@ public class EncoderURLAction extends PrincipalCoreAction {
 	
 	@Autowired
     private EmisionDAO emisionDAO;
-	
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-	
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;	
 	
 	/**
 	 * Obtiene el flujo de bytes de un reporte
@@ -72,8 +65,8 @@ public class EncoderURLAction extends PrincipalCoreAction {
 		try 
 		{
 			StringBuilder url = new StringBuilder()
-			.append(rutaServidorReports)
-            .append("?userid=").append(passServidorReports)
+			.append(getText("ruta.servidor.reports"))
+            .append("?userid=").append(getText("pass.servidor.reports"))
             .append("&destype=cache")
             .append("&desformat=PDF")
             .append("&ACCESSIBLE=YES")
@@ -131,8 +124,8 @@ public class EncoderURLAction extends PrincipalCoreAction {
         try 
         {
             StringBuilder url = new StringBuilder()
-            .append(rutaServidorReports)
-            .append("?userid=").append(passServidorReports)
+            .append(getText("ruta.servidor.reports"))
+            .append("?userid=").append(getText("pass.servidor.reports"))
             .append("&destype=cache")
             .append("&desformat=PDF")
             .append("&ACCESSIBLE=YES")

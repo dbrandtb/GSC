@@ -7545,7 +7545,7 @@ public class CotizacionManagerImpl implements CotizacionManager
       	            {
       	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
       	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
-      	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Autom&oacute;viles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
+      	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Autom�viles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
       	            			planValido;
       	            	
       	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
@@ -11544,52 +11544,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public HashMap<String, String> obtieneCodigosPostalesProductos() throws Exception {
 		return cotizacionDAO.obtieneCodigosPostalesProductos();
 	}
-	
-	@Override
-    public String aplicaDescAutos(
-             String cdunieco
-            ,String cdramo
-            ,String nmpoliza
-            ,List<Map<String,String>>incisos
-            ,String cdtipsit
-            )throws Exception
-    {
-        //////////////////////////////////////////
-        ////// alterar mpolirec sin recotizar/////
-        String paso = "Modificacion de primas al aplicar descuento";
-        try
-        {
-            if(incisos.size()==1)
-            {
-                if(!TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().equals(cdtipsit) && !TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equals(cdtipsit))
-                {
-                    return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, incisos.get(0).get("parametros.pv_otvalor19"),"0");
-                }
-                else
-                {
-                    return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, incisos.get(0).get("parametros.pv_otvalor25"),"0");
-                }    
-            }
-            else
-            {
-                if(!TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().equals(incisos.get(0).get("cdtipsit")) && !TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equals(incisos.get(0).get("cdtipsit")))
-                {
-                    return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, incisos.get(0).get("parametros.pv_otvalor19"),"1");
-                }
-                else
-                {
-                    return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, incisos.get(0).get("parametros.pv_otvalor25"),"1");
-                }   
-            }
-            
-        }
-        catch(Exception ex)
-        {
-            throw new ApplicationException(paso);
-        }
-        ////// alterar mpolirec sin recotizar/////
-        //////////////////////////////////////////
-    }
 	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////

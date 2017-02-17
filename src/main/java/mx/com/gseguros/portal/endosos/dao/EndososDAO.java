@@ -880,45 +880,4 @@ public interface EndososDAO
      */
     public void conviertePuntoMuertoMpoliperBeneficiarioVida (String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
     
-    public List<Map<String,String>> recuperarCoberturasEndosoPrimaNeta(
-            String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            ,String nmsituac
-            ,String tstamp
-            )throws Exception;
-    
-    public Map<String,Object> guardarEndosoAjusteSiniestralidad(
-            String cdusuari
-            ,String cdsisrol
-            ,String cdelemen
-            ,String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            ,String cdtipsup
-            ,String tstamp
-            ,Date   feefecto
-            )throws Exception;
-    
-    public Map<String,Object> guardarEndosoCambioTipoCarga(
-            String cdusuari
-            ,String cdsisrol
-            ,String cdelemen
-            ,String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            ,String cdtipsup
-            ,String tstamp
-            ,Date   feefecto
-            )throws Exception;
-    
-    public List<Map<String,String>> obtieneDatosEndCamModelo(Map<String, String> params)throws Exception;
-    
-    public List<Map<String,String>> obtieneDatosEndCamDescripcion(Map<String, String> params)throws Exception;
-    
-    public List<Map<String,String>> obtieneDatosEndTipoCarga(Map<String, String> params)throws Exception;
-    
 }
