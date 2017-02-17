@@ -992,16 +992,4 @@ public interface CotizacionDAO {
 	 */
 	HashMap<String, String> obtieneCodigosPostalesProductos() throws Exception;
 
-	/**
-	 * Obtiene las coberturas por plan y si son obligatorias. 
-	 * @param pv_cdramo_i
-	 * @param pv_cdplan_i
-	 * @param pv_cdtipsit_i
-	 * @return lista de coberturas por plan
-	 * @throws Exception
-	 */
-	public List<Map<String, String>> getCoberturas(String pv_cdramo_i, String pv_cdplan_i, String pv_cdtipsit_i)
-			throws Exception;
-
-	public String aplicaDescAutos(String pcdunieco, String pcdramo, String pnmpoliza, String pdesc, String pisflot) throws Exception;
 }

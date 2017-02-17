@@ -1139,12 +1139,5 @@ public class ConsultasManagerImpl implements ConsultasManager
         return consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
                 
     }
-    
-    @Override
-    public List<Map<String,String>> obtieneRangoPeriodoGracia(String pv_cdramo_i, String pv_cdtipsit_i, String pv_cdagente_i)
-    		throws Exception{
-        return consultasDAO.obtieneRangoPeriodoGracia(pv_cdramo_i, pv_cdtipsit_i, pv_cdagente_i);
-                
-    }
 
 }

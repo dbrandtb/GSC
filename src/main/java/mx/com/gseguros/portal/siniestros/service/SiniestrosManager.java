@@ -746,7 +746,4 @@ public interface SiniestrosManager {
     public List<Map<String, String>> obtenerDatosValTipoEventoAlta(String cdramo, String cdtipsit, String cdgarant, String cdconval) throws Exception;
     
     public List<GenericVO> getConsultaListaValidacionesGenerales() throws Exception;
-    
-	public String validaProveedorPD(String ntramite) throws Exception; // (EGS)
-    
 }

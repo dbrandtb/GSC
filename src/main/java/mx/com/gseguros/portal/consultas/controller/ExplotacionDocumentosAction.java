@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -55,21 +54,6 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 	@Autowired
 	private ExplotacionDocumentosManager explotacionDocumentosManager;
 	
-	@Value("${user.server.layouts}")
-    private String userServerLayouts;	
-
-	@Value("${pass.server.layouts}")
-    private String passServerLayouts;	
-
-	@Value("${directorio.server.layouts}")
-    private String directorioServerLayouts;	
-
-	@Value("${dominio.server.layouts}")
-    private String dominioServerLayouts;	
-
-	@Value("${dominio.server.layouts2}")
-    private String dominioServerLayouts2;	
-
 	public ExplotacionDocumentosAction()
 	{
 		this.session=ActionContext.getContext().getSession();
@@ -928,11 +912,11 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					, tpdocum
 					, cdusuari
 					, cdsisrol
-					, this.userServerLayouts
-					, this.passServerLayouts
-					, this.directorioServerLayouts
-					, this.dominioServerLayouts
-					, this.dominioServerLayouts2
+					, this.getText("user.server.layouts")
+					, this.getText("pass.server.layouts")
+					, this.getText("directorio.server.layouts")
+					, this.getText("dominio.server.layouts")
+					, this.getText("dominio.server.layouts2")
 					);
 		    list=lay.getValidacion();
 		    session.put("layout.datos.para.documentos", lay.getDocumentos());
