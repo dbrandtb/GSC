@@ -238,4 +238,6 @@ public interface PersonasDAO
 			,String nmsituac
 			,String nmsuplem
 			)throws Exception;
+
+    public String obtieneAseguradoSICAPS(String nombres, String apellidoP, String apellidoM, Date fechaNac) throws Exception;
 }

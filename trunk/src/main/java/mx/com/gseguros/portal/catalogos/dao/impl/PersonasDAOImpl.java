@@ -1726,5 +1726,34 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			compile();
 		}
 	}
+	
+    @Override
+    public String obtieneAseguradoSICAPS(String nombres, String apellidoP, String apellidoM, Date fechaNac)throws Exception
+    {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("pv_nombres_i", nombres);
+        params.put("pv_apellidoP_i", apellidoP);
+        params.put("pv_apellidoM_i", apellidoM);
+        params.put("pv_fechaNac_i", fechaNac);
+        Map<String,Object>resultado=ejecutaSP(new ObtieneAseguradoSICAPS(getDataSource()), params);
+        logger.debug("Estatus de la persona: " + resultado.get("pv_existe_o") );
+        return (String)resultado.get("pv_existe_o");
+    }
+    
+    protected class ObtieneAseguradoSICAPS extends StoredProcedure
+    {
+        protected ObtieneAseguradoSICAPS(DataSource dataSource)
+        {
+            super(dataSource,"PKG_CONSULTA2.P_OBTIENE_ASEGURADO_SICAPS");
+            declareParameter(new SqlParameter("pv_nombres_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_apellidoP_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_apellidoM_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_fechaNac_i"    , OracleTypes.DATE));
+            declareParameter(new SqlOutParameter("pv_existe_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 
 }

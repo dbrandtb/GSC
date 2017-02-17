@@ -5939,6 +5939,44 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
         }
     }
+    
+    @Override
+    public List<Map<String,String>> recuperarDatosValorDefectoLayout(
+            String cdsisrol
+            ,String campo
+            ,String renovacionGral
+            )throws Exception
+    {
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        params.put("pv_rol_i" 		, cdsisrol);
+        params.put("pv_campo_i"   	, campo);
+        params.put("pv_proceso_i"   , renovacionGral);
+        Map<String,Object>       procResult = ejecutaSP(new RecuperarDatosValorDefectoLayout(getDataSource()),params);
+        List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
+        if(lista==null)
+        {
+            lista = new ArrayList<Map<String,String>>();
+        }
+        return lista;
+    }
+    
+    protected class RecuperarDatosValorDefectoLayout extends StoredProcedure
+    {
+        protected RecuperarDatosValorDefectoLayout(DataSource dataSource)
+        {
+            super(dataSource , "PKG_CONSULTA_ANGELES.P_GET_CARGA_LAYOUT");
+            declareParameter(new SqlParameter("pv_rol_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_campo_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_proceso_i"   , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+                    "CAMPO"  , "OBLIGATORIO"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 
     
 }

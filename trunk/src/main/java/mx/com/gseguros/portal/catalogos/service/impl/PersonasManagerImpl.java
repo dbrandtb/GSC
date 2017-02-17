@@ -1580,5 +1580,10 @@ public class PersonasManagerImpl implements PersonasManager
                 ));
         
     }
+
+    @Override
+    public String obtieneAseguradoSICAPS(String nombres, String apellidoP, String apellidoM, Date fechaNac)throws Exception {
+        return personasDAO.obtieneAseguradoSICAPS(nombres,apellidoP,apellidoM,fechaNac);
+    }
 		
 }

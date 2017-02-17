@@ -160,4 +160,6 @@ public interface PersonasManager
 	
 	public void guardarBeneficiarios(String cdunieco, String cdramo, String estado, String nmpoliza,
             String usuarioCaptura, List<Map<String, String>> beneficiarios) throws Exception;
+
+    public String obtieneAseguradoSICAPS(String nombres, String apellidoP, String apellidoM, Date fechaNac) throws Exception;
 }
