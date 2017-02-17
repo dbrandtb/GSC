@@ -108,35 +108,35 @@ public class CotizacionAction extends PrincipalCoreAction
 	private static SimpleDateFormat renderHora       = new SimpleDateFormat  ("HH:mm");
 	
 	private transient CatalogosManager       catalogosManager;
-	private ConsultasManager                 consultasManager;
-	private String                           error;
-	private Map<String,Item>                 imap;
+	private ConsultasManager                  consultasManager;
+	private String                            error;
+	private Map<String,Item>                  imap;
 	private transient KernelManagerSustituto kernelManager;
-	private PantallasManager                 pantallasManager;
-	private List<Map<String,String>>         slist1;
-	private List<Map<String,String>>         slist2;
-	private Map<String,String>               smap1;
-	private Map<String,String>               params;
-	private StoredProceduresManager          storedProceduresManager;
-	private NadaService          			 nadaService;
-	private TipoCambioDolarGSService         tipoCambioService;
+	private PantallasManager                  pantallasManager;
+	private List<Map<String,String>>          slist1;
+	private List<Map<String,String>>          slist2;
+	private Map<String,String>                smap1;
+	private Map<String,String>                params;
+	private StoredProceduresManager           storedProceduresManager;
+	private NadaService          			   nadaService;
+	private TipoCambioDolarGSService          tipoCambioService;
 	private transient Ice2sigsService        ice2sigsService;
-	private AgentePorFolioService            agentePorFolioService;
+	private AgentePorFolioService             agentePorFolioService;
 	private boolean                          success;
-	private String                           respuesta;
-	private String                           respuestaOculta = null;
+	private String                            respuesta;
+	private String                            respuestaOculta = null;
 	private boolean                          exito           = false;
-	private File                             censo;
-	private String                           censoFileName;
-	private String                           censoContentType;
-	private List<Map<String,Object>>         olist1;
-	private CotizacionManager                cotizacionManager;
-	private SiniestrosManager                siniestrosManager;
-	private FlujoVO                          flujo;
-	private String start;
-	private String limit;
-	private String total;
-	private String saMed;
+	private File                              censo;
+	private String                            censoFileName;
+	private String                            censoContentType;
+	private List<Map<String,Object>>          olist1;
+	private CotizacionManager                 cotizacionManager;
+	private SiniestrosManager                 siniestrosManager;
+	private FlujoVO                           flujo;
+	private String                            start;
+	private String                            limit;
+	private String                            total;
+	private String                            saMed;
 	
 	@Autowired
 	private EmisionManager emisionManager;
@@ -160,10 +160,10 @@ public class CotizacionAction extends PrincipalCoreAction
 	private RecuperacionSimpleManager recuperacionSimpleManager;
 	
 	@Autowired
-	private EndososManager           endososManager;
+	private EndososManager endososManager;
 	
 	@Autowired
-	private CotizacionDAO  cotizacionDAO;
+	private CotizacionDAO cotizacionDAO;
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
