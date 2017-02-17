@@ -5964,7 +5964,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
         protected RecuperarDatosValorDefectoLayout(DataSource dataSource)
         {
-            super(dataSource , "PKG_CONSULTA_ANGELES.P_GET_CARGA_LAYOUT");
+            super(dataSource , "PKG_CONSULTA2.P_GET_CARGA_LAYOUT");
             declareParameter(new SqlParameter("pv_rol_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_campo_i"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_proceso_i"   , OracleTypes.VARCHAR));

@@ -6785,6 +6785,7 @@ public class CotizacionAction extends PrincipalCoreAction
                     //ID. ASEGURADO
 	                try {
                         logger.debug("ID. ASEGURADO: "+(String.format("%.0f",row.getCell(30).getNumericCellValue())+"|"));
+                        auxCell=row.getCell(30);
                         cveAsegurado = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue()):"";
 		                
                         if(Constantes.SI.equalsIgnoreCase(configCampo.get(30).get("OBLIGATORIO"))){
