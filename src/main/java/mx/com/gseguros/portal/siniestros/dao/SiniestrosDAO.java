@@ -608,4 +608,7 @@ public interface SiniestrosDAO {
     public List<Map<String,String>> obtenerDatosValTipoEventoAlta(Map<String, String> params) throws Exception;
     
     public List<GenericVO> obtieneListadoValidacionesGrales() throws Exception;
+    
+	public String validaProveedorPD(String ntramite) throws Exception; // (EGS)
+
 }

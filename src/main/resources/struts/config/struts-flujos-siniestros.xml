@@ -1363,6 +1363,17 @@
                 </param>
             </result>
         </action>
+
+		<!-- agregado (EGS) para validar solo un proveedor en pago directo -->
+		<action name="validarProveedorPD" class="siniestrosAction" method="validarProveedorPD">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>
