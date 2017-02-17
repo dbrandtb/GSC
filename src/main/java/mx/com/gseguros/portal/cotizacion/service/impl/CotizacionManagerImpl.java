@@ -11550,7 +11550,7 @@ public class CotizacionManagerImpl implements CotizacionManager
              String cdunieco
             ,String cdramo
             ,String nmpoliza
-            ,List<Map<String,String>>incisos
+            ,String modPrim
             ,String cdtipsit
             )throws Exception
     {
@@ -11559,29 +11559,7 @@ public class CotizacionManagerImpl implements CotizacionManager
         String paso = "Modificacion de primas al aplicar descuento";
         try
         {
-            if(incisos.size()==1)
-            {
-                if(!TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().equals(cdtipsit) && !TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equals(cdtipsit))
-                {
-                    return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, incisos.get(0).get("parametros.pv_otvalor19"),"0");
-                }
-                else
-                {
-                    return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, incisos.get(0).get("parametros.pv_otvalor25"),"0");
-                }    
-            }
-            else
-            {
-                if(!TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit().equals(incisos.get(0).get("cdtipsit")) && !TipoSituacion.AUTOS_PICK_UP.getCdtipsit().equals(incisos.get(0).get("cdtipsit")))
-                {
-                    return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, incisos.get(0).get("parametros.pv_otvalor19"),"1");
-                }
-                else
-                {
-                    return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, incisos.get(0).get("parametros.pv_otvalor25"),"1");
-                }   
-            }
-            
+             return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim,cdtipsit.isEmpty()?"1":"0");
         }
         catch(Exception ex)
         {

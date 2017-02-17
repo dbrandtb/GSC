@@ -1700,7 +1700,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
 			boolean conIncisos  = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
-            boolean modPrim = StringUtils.isNotBlank(smap1.get("modPrim"))&&smap1.get("modPrim").equals("si");
+			String modPrim = StringUtils.isNotBlank(smap1.get("modPrim"))?smap1.get("modPrim"):"";
 
 			Map<String,String>tvalopol=new HashMap<String,String>();
 			for(Entry<String,String>en:slist1.get(0).entrySet())
@@ -1727,7 +1727,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 	         ManagerRespuestaSlistSmapVO resp= new ManagerRespuestaSlistSmapVO();
-	            if(!modPrim)
+	            if(modPrim.isEmpty())
 	            {
 	                resp=cotizacionManager.cotizar(
 					cdunieco
@@ -1758,7 +1758,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            }
 	            else
 	            {
-	                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, slist1, cdtipsit);
+	                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, cdtipsit);
 	                resp.setExito(true);
 	                if(!mensajeModPrim.isEmpty())
 	                {
@@ -1793,7 +1793,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                     columna = paqYplan.get(1);//forma Pago
 	                     fila= paqYplan.get(0);//paquete
 	                     
-	                       if(!modPrim)
+	                       if(modPrim.isEmpty())
 	                        {   
 	                            String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza")==null?nmpoliza:resp.getSmap().get("nmpoliza") , cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
 	                        }

@@ -1222,7 +1222,7 @@ public interface CotizacionManager
 	public HashMap<String, String> obtieneCodigosPostalesProductos()throws Exception;
 
     public String aplicaDescAutos(String cdunieco, String cdramo, String nmpoliza,
-            List<Map<String, String>> incisos, String cdtipsit)
+            String modPrim, String cdtipsit)
             throws Exception;
 
 }

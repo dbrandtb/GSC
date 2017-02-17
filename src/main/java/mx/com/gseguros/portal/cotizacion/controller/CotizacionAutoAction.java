@@ -1037,7 +1037,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             Utils.validate(slist3, "No se recibieron las configuraciones de plan");
             
             boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
-            boolean modPrim = StringUtils.isNotBlank(smap1.get("modPrim"))&&smap1.get("modPrim").equals("si");
+            String modPrim = StringUtils.isNotBlank(smap1.get("modPrim"))?smap1.get("modPrim"):"";
             
             Map<String,String>tvalopol=new HashMap<String,String>();
             for(Entry<String,String>en:smap1.entrySet())
@@ -1083,7 +1083,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             }
 
             ManagerRespuestaSlistSmapVO resp= new ManagerRespuestaSlistSmapVO();
-            if(!modPrim)
+            if(modPrim.isEmpty())
             {
                resp=cotizacionAutoManager.cotizarAutosFlotilla(
                     cdusuari
@@ -1115,7 +1115,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             }
             else
             { //no es por inciso es por poliza el descuento
-                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, slist1, cdtipsit);
+                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, "");
                 if(!mensajeModPrim.isEmpty())
                 {
                     resp.setExito(false);
@@ -1167,7 +1167,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 else if(fila.equals("64")) {fila="Contado";} 
                 
                 List<Map<String,String>> listaResultados= resp.getSlist();
-                if(!modPrim)
+                if(modPrim.isEmpty())
                 {  
                     String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                 }
