@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.ClaveVO;
@@ -15,10 +19,6 @@ import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.VariableV
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.ExpresionesManager;
 import mx.com.gseguros.wizard.configuracion.producto.web.ExpresionesPadre;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 public class PrincipalExpresionesAction extends ExpresionesPadre {
@@ -583,7 +583,7 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 		{
 			log.debug("Valida expresion: " + codigoExpresion);
 			
-			WrapperResultados mensajeExp = mensajeExp =  expresionesManager.validarExpresion(Integer.parseInt(codigoExpresion), descripcion, "P", "0");
+			WrapperResultados mensajeExp = expresionesManager.validarExpresion(Integer.parseInt(codigoExpresion), descripcion, "P", "0");
 			if(mensajeExp != null)
 			{
 				mensajeDelAction = mensajeExp.getMsgText();
