@@ -3725,6 +3725,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					}
 				}else{
 					mensaje = "Verifica los C\u00e1lculos - El importe total de las facturas es menor al total a pagar.";
+					// (EGS) Si diferencia es menor o igual a 50 centavos, mostrar diferencia
+					if (impxpagar - impFactura <= 0.5){
+						StringBuilder diferencia = new StringBuilder();
+						mensaje = diferencia.append(mensaje).append(" La diferencia es: ").append(impxpagar - impFactura).toString();
+					}
+					// (EGS) fin
 					success = false;
 				}
 			}
@@ -6094,6 +6100,23 @@ public class SiniestrosAction extends PrincipalCoreAction {
         success = true;
         return SUCCESS;
     }
+	
+	/**
+	 * (EGS) Valida solo un proveedor por reclamo pago directo
+	 * @return - cantidad de proveedores involucrados en el reclamo
+	 */
+	public String validarProveedorPD(){
+		logger.debug("Entra a validarProveedorPD Datos de entrada: {}",params);
+		try{
+			mensaje = siniestrosManager.validaProveedorPD(params.get("ntramite"));
+			logger.debug(mensaje);
+		}catch(Exception e){
+			logger.debug("Error durante la validacion de proveedor, pago directo",e.getMessage(),e);
+			success = false;
+			mensaje = "";
+		}
+		return SUCCESS;
+	}
     
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {

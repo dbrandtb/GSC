@@ -6155,4 +6155,26 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
             compile();
         }
     }
+	
+	@Override
+	public String validaProveedorPD(String ntramite) throws Exception{ //(EGS) validar proveedor unico en siniestro pago directo
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("PV_NTRAMITE_I", ntramite);
+		Map<String, Object> resultado = ejecutaSP(new ConsultaProveedorPagoDirecto(getDataSource()),params);
+		logger.debug(resultado.get("PV_N_CDPRESTA_O"));
+		return (String)resultado.get("PV_N_CDPRESTA_O");
+	}
+	
+	protected class ConsultaProveedorPagoDirecto extends StoredProcedure{
+		
+		protected ConsultaProveedorPagoDirecto(DataSource dataSource){
+			super(dataSource, "PKG_SINIESTRO.P_VALIDA_CDPRESTA_PD");
+			declareParameter(new SqlParameter("PV_NTRAMITE_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_N_CDPRESTA_O", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+    
 }
