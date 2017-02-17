@@ -1730,7 +1730,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	            if(!modPrim)
 	            {
 	                resp=cotizacionManager.cotizar(
-
 					cdunieco
 					,cdramo
 					,cdtipsit
@@ -1760,17 +1759,13 @@ public class CotizacionAction extends PrincipalCoreAction
 	            else
 	            {
 	                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, slist1, cdtipsit);
+	                resp.setExito(true);
 	                if(!mensajeModPrim.isEmpty())
 	                {
-	                    resp.setExito(false);
 	                    resp.setRespuesta(mensajeModPrim);
 	                    resp.setRespuestaOculta(mensajeModPrim);
 	                }
-	                else
-	                    resp.setExito(true);
 	            }
-
-			
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();

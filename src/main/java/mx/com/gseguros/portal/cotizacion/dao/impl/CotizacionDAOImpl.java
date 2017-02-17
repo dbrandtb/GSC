@@ -9139,6 +9139,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	@Override
     public String aplicaDescAutos(String pcdunieco, String pcdramo, String pnmpoliza, String pdesc, String pisflot) throws Exception {
         
+	    String mensaje = "";
         try 
         {
             Map<String,Object> params = new LinkedHashMap<String,Object>();
@@ -9148,19 +9149,23 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             params.put("PDESC"     , pdesc);
             params.put("PISFLOT"   , pisflot);
             
-            String mensaje = "";
             Map<String, Object> procRes =ejecutaSP(new AplicaDescAutos(getDataSource()),params);
             
-            if(procRes.get("PV_SALIDA_O")!=null && !procRes.get("PV_SALIDA_O").toString().isEmpty())
+            int idMsn = Integer.parseInt(procRes.get("PV_MSG_ID_O")+"");
+            if(idMsn==0)
             {
-                mensaje = procRes.get("PV_SALIDA_O").toString();
+                mensaje = procRes.get("PV_SALIDA_O")!=null && !procRes.get("PV_SALIDA_O").toString().isEmpty()?procRes.get("PV_SALIDA_O").toString():"";
+            }
+            else
+            {
+                throw new Exception("Error al aplicar descuento a tarifas.");   
             }
             return mensaje;
             
         } catch (Exception e) 
         {
-            throw new Exception("Error al aplicar descuento en Mpolirec");
-        }
+            throw new Exception("Error al aplicar descuento en Mpolirec."+mensaje);
+        } 
     }
     
     protected class AplicaDescAutos extends StoredProcedure {
