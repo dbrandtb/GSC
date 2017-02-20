@@ -1949,7 +1949,7 @@ public class EndososAction extends PrincipalCoreAction
 					String nmsituac=docu.get("nmsituac");
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
-					String url=this.sutaServidorReports
+					String url=this.rutaServidorReports
 							+ "?destype=cache"
 							+ "&desformat=PDF"
 							+ "&userid="+this.passServidorReports
