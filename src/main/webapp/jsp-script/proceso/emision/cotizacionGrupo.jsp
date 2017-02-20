@@ -590,8 +590,8 @@ Ext.onReady(function()
                     ,dataIndex : 'ayudamater'
                     ,width     : 140
                     ,editor    : _p21_editorAyudaMater
-                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
-                    //,hidden    : true
+                    //,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
+                    ,hidden    : true
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'ayudamater');
@@ -602,8 +602,8 @@ Ext.onReady(function()
                     ,dataIndex : 'asisinte'
                     ,width     : 140
                     ,editor    : _p21_editorAsisInter
-                    ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
-                    //,hidden    : true
+                    //,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
+                    ,hidden    : true
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'asisinte');
