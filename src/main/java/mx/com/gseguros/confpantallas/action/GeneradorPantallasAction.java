@@ -71,7 +71,12 @@ public class GeneradorPantallasAction extends PrincipalCoreAction {
 		this.componentes = componentes;
 	}
 	
-	
-	
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
 	
 }

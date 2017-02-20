@@ -65,8 +65,8 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
-	
-    @Value("${ruta.servidor.reports}")
+
+	@Value("${ruta.servidor.reports}")
     private String rutaServidorReports;
     
     @Value("${pass.servidor.reports}")
@@ -1105,5 +1105,17 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 
 	public void setValidaCdTipsitTramite(String validaCdTipsitTramite) {
 		this.validaCdTipsitTramite = validaCdTipsitTramite;
+	}
+	
+    public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
+
+	public String getRutaDocumentosPoliza() {
+		return rutaDocumentosPoliza;
 	}
 }

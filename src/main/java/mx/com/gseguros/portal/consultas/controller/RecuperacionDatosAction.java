@@ -66,7 +66,7 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private RecuperacionSimpleManager recuperacionSimpleManager;
-	
+
 	@Value("${ruta.documentos.temporal}")
     private String rutaDocumentosTemporal;
 	
@@ -248,5 +248,9 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
     public void setInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
     }
+    
+	public String getRutaDocumentosTemporal() {
+		return rutaDocumentosTemporal;
+	}
 	
 }

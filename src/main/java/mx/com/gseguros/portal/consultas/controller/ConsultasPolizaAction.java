@@ -1597,5 +1597,18 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
     public void setInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
     }
+    
+    public String getRutaDocumentosPoliza() {
+		return rutaDocumentosPoliza;
+	}
+
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
+
 	
 }

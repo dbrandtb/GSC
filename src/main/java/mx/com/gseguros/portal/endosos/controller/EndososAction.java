@@ -165,7 +165,7 @@ public class EndososAction extends PrincipalCoreAction
 
 	@Value("${ruta.servidor.reports}")
     private String rutaServidorReports;
-	
+
 	@Value("${pass.servidor.reports}")
     private String passServidorReports;	
 	
@@ -14558,7 +14558,76 @@ public String retarificarEndosos()
 		this.nsuplogi = nsuplogi;
 	}
 	
-	
-	
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
+
+	public String getRutaDocumentosPoliza() {
+		return rutaDocumentosPoliza;
+	}
+
+	public String getRutaDocumentosTemporal() {
+		return rutaDocumentosTemporal;
+	}
+
+	public String getReciboImpresionAutosUrl() {
+		return reciboImpresionAutosUrl;
+	}
+
+	public String getCaicImpresionAutosUrl() {
+		return caicImpresionAutosUrl;
+	}
+
+	public String getAeuaImpresionAutosUrl() {
+		return aeuaImpresionAutosUrl;
+	}
+
+	public String getApImpresionAutosUrl() {
+		return apImpresionAutosUrl;
+	}
+
+	public String getIncisosFlotillasImpresionAutosUrl() {
+		return incisosFlotillasImpresionAutosUrl;
+	}
+
+	public String getTarjetaIdenImpresionAutosUrl() {
+		return tarjetaIdenImpresionAutosUrl;
+	}
+
+	public String getNumeroIncisosReporte() {
+		return numeroIncisosReporte;
+	}
+
+	public String getCaratulaImpresionAutosUrl() {
+		return caratulaImpresionAutosUrl;
+	}
+
+	public String getCaratulaImpresionAutosEndosobUrl() {
+		return caratulaImpresionAutosEndosobUrl;
+	}
+
+	public String getCaratulaImpresionAutosServiciopublicoUrl() {
+		return caratulaImpresionAutosServiciopublicoUrl;
+	}
+
+	public String getCaratulaImpresionAutosFlotillasUrl() {
+		return caratulaImpresionAutosFlotillasUrl;
+	}
+
+	public String getManualAgenteTxtinfocobredgs() {
+		return manualAgenteTxtinfocobredgs;
+	}
+
+	public String getManualAgenteCondgralescobsegvida() {
+		return manualAgenteCondgralescobsegvida;
+	}
+
+	public String getManualAgenteTxtinfocobgesgs() {
+		return manualAgenteTxtinfocobgesgs;
+	}
 	
 }

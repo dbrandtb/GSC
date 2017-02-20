@@ -66,7 +66,7 @@ public class EndososAutoAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
-	
+
 	@Value("${caratula.impresion.autos.endosob.url}")
     private String caratulaImpresionAutosEndosobUrl;
 	
@@ -3273,5 +3273,13 @@ public class EndososAutoAction extends PrincipalCoreAction
 
 	public void setSlist2(List<Map<String, String>> slist2) {
 		this.slist2 = slist2;
+	}
+	
+	public String getCaratulaImpresionAutosEndosobUrl() {
+		return caratulaImpresionAutosEndosobUrl;
+	}
+
+	public String getLogsRuta() {
+		return logsRuta;
 	}
 }

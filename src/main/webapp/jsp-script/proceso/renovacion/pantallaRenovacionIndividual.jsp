@@ -6,8 +6,8 @@
 <script>
 ////// variables //////
 var contexto							      = '${ctx}';
-var urlServidorReports  					  = '<s:property value="ruta.servidor.reports"         										    />';
-var complerepSrvUsr     					  = '<s:property value="pass.servidor.reports"         										    />';
+var urlServidorReports  					  = '<s:property value="rutaServidorReports"         										    />';
+var complerepSrvUsr     					  = '<s:property value="passServidorReports"         										    />';
 var panDatComMap1 						      = '<s:property value="%{convertToJSON('slist')}" escapeHtml="false" 				        />';
 var urlGuardar                   		      = '<s:url namespace="/"            action="guardarDatosComplementarios" 				    />';
 var urlCargarCatalogos              	      = '<s:url namespace="/catalogos"   action="obtieneCatalogo"             				    />';

@@ -171,7 +171,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Value("${ruta.servidor.reports}")
     private String rutaServidorReports;
-	
+
 	@Value("${pass.servidor.reports}")
     private String passServidorReports;	
 	
@@ -14537,6 +14537,50 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setSaMed(String saMed) {
 		this.saMed = saMed;
+	}
+	
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
+
+	public String getSigsFacultaDatosPolizaSicapsUrl() {
+		return sigsFacultaDatosPolizaSicapsUrl;
+	}
+
+	public String getRutaDocumentosPoliza() {
+		return rutaDocumentosPoliza;
+	}
+
+	public String getRutaDocumentosTemporal() {
+		return rutaDocumentosTemporal;
+	}
+
+	public String getUserServerLayouts() {
+		return userServerLayouts;
+	}
+
+	public String getPassServerLayouts() {
+		return passServerLayouts;
+	}
+
+	public String getDirectorioServerLayouts() {
+		return directorioServerLayouts;
+	}
+
+	public String getDominioServerLayouts() {
+		return dominioServerLayouts;
+	}
+
+	public String getDominioServerLayouts2() {
+		return dominioServerLayouts2;
+	}
+
+	public String getSigsObtenerDatosPorSucRamPolUrl() {
+		return sigsObtenerDatosPorSucRamPolUrl;
 	}
 	
 }

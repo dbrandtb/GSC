@@ -50,7 +50,7 @@ public class TestArchivosAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private ProcesadorArchivosContext procesadorArchivosContext; 
-	
+
 	@Value("${ruta.documentos.temporal}")
     private String rutaDocumentosTemporal;
 	
@@ -205,4 +205,8 @@ public class TestArchivosAction extends PrincipalCoreAction {
 		this.success = success;
 	}
 	
+	public String getRutaDocumentosTemporal() {
+		return rutaDocumentosTemporal;
+	}
+
 }

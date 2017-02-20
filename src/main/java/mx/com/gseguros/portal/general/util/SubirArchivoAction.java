@@ -76,7 +76,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     @Autowired
     private ConsultasManager consultasManager;
     
-    @Value("${ruta.servidor.reports}")
+	@Value("${ruta.servidor.reports}")
     private String rutaServidorReports;
     
     @Value("${pass.servidor.reports}")
@@ -879,6 +879,41 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 		this.totalCount = totalCount;
 	}
 	
-	
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
+
+	public String getRutaDocumentosPoliza() {
+		return rutaDocumentosPoliza;
+	}
+
+	public String getRutaDocumentosPersona() {
+		return rutaDocumentosPersona;
+	}
+
+	public String getUserServerLayouts() {
+		return userServerLayouts;
+	}
+
+	public String getPassServerLayouts() {
+		return passServerLayouts;
+	}
+
+	public String getDirectorioServerLayouts() {
+		return directorioServerLayouts;
+	}
+
+	public String getDominioServerLayouts() {
+		return dominioServerLayouts;
+	}
+
+	public String getDominioServerLayouts2() {
+		return dominioServerLayouts2;
+	}
+
     
 }

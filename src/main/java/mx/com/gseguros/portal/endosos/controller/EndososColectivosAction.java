@@ -94,7 +94,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private KernelManagerSustituto kernelManager;
-	
+
 	@Value("${ruta.documentos.temporal}")
     private String rutaDocumentosTemporal;
 
@@ -1181,5 +1181,25 @@ public class EndososColectivosAction extends PrincipalCoreAction
 
 	public void setFlujo(FlujoVO flujo) {
 		this.flujo = flujo;
+	}
+	
+	public String getRutaDocumentosTemporal() {
+		return rutaDocumentosTemporal;
+	}
+
+	public String getDominioServerLayouts() {
+		return dominioServerLayouts;
+	}
+
+	public String getUserServerLayouts() {
+		return userServerLayouts;
+	}
+
+	public String getPassServerLayouts() {
+		return passServerLayouts;
+	}
+
+	public String getDirectorioServerLayouts() {
+		return directorioServerLayouts;
 	}
 }

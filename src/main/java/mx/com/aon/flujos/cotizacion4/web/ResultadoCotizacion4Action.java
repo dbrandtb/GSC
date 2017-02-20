@@ -2343,5 +2343,17 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	public void setFlujo(FlujoVO flujo) {
 		this.flujo = flujo;
 	}
+	
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
+
+	public String getRutaDocumentosPoliza() {
+		return rutaDocumentosPoliza;
+	}
     
 }
