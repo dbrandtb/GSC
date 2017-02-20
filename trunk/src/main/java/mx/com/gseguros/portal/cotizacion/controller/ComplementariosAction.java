@@ -4725,4 +4725,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 		this.params = params;
 	}
 
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
+
 }
