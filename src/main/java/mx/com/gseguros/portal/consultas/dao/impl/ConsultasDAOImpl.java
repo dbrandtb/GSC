@@ -144,7 +144,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarMpolizasPorParametrosVariables(DataSource dataSource)
         {
-            super(dataSource,"PKG_SATELITES2.P_GET_MPOLIZAS_X_PAR_VAR");
+            super(dataSource,"PKG_SATELITES2_PRE.P_GET_MPOLIZAS_X_PAR_VAR");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -206,7 +206,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarTconvalsit(DataSource dataSource)
         {
-            super(dataSource,"PKG_SATELITES2.P_GET_TCONVALSIT");
+            super(dataSource,"PKG_SATELITES2_PRE.P_GET_TCONVALSIT");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -274,7 +274,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarTbasvalsit(DataSource dataSource)
         {
-            super(dataSource,"PKG_SATELITES2.P_GET_TBASVALSIT");
+            super(dataSource,"PKG_SATELITES2_PRE.P_GET_TBASVALSIT");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -351,7 +351,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarMpoliperSituac(DataSource dataSource)
         {
-            super(dataSource,"PKG_SATELITES2.P_GET_MPOLIPER_SITUAC");
+            super(dataSource,"PKG_SATELITES2_PRE.P_GET_MPOLIPER_SITUAC");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -411,7 +411,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarMpolisitSituac(DataSource dataSource)
         {
-            super(dataSource,"PKG_SATELITES2.P_GET_MPOLISIT_SITUAC");
+            super(dataSource,"PKG_SATELITES2_PRE.P_GET_MPOLISIT_SITUAC");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -459,7 +459,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarTvalosit(DataSource dataSource)
         {
-            super(dataSource,"PKG_SATELITES2.P_GET_TVALOSIT");
+            super(dataSource,"PKG_SATELITES2_PRE.P_GET_TVALOSIT");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -512,7 +512,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarMpoliage(DataSource dataSource)
     	{
-    		super(dataSource,"PKG_SATELITES.P_OBTIENE_MPOLIAGE2");
+    		super(dataSource,"PKG_SATELITES_PRE.P_OBTIENE_MPOLIAGE2");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -548,7 +548,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected ValidarDatosCliente(DataSource dataSource)
     	{
-    		super(dataSource,"PKG_SATELITES2.P_VALIDAR_CODIGO_EXTERNO_CTE");
+    		super(dataSource,"PKG_SATELITES2_PRE.P_VALIDAR_CODIGO_EXTERNO_CTE");
     		declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -578,7 +578,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected ValidarDatosObligatoriosPrevex(DataSource dataSource)
     	{
-    		super(dataSource,"PKG_SATELITES.P_VALIDA_DATOS_OBLIG_PREVEX");
+    		super(dataSource,"PKG_SATELITES_PRE.P_VALIDA_DATOS_OBLIG_PREVEX");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -610,7 +610,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected ValidarAtributosDXN(DataSource dataSource)
     	{
-    		super(dataSource,"PKG_SATELITES.P_VALIDA_ATRIB_FP_DXN");
+    		super(dataSource,"PKG_SATELITES_PRE.P_VALIDA_ATRIB_FP_DXN");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -645,7 +645,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarUltimoNmsuplemPoliza(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_MAX_SUPLEMENTO");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_MAX_SUPLEMENTO");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -689,7 +689,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarMpoliperOtrosRolesPorNmsituac(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_SATELITES2.P_GET_MPOLIPER_OTROS_ROLES");
+    		super(dataSource , "PKG_SATELITES2_PRE.P_GET_MPOLIPER_OTROS_ROLES");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -748,7 +748,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarTiposSituacionPorRamo(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_OBTIENE_SITUACION");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_OBTIENE_SITUACION");
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             String[] cols=new String[]{"CDTIPSIT","DSTIPSIT"};
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -773,7 +773,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected VerificarCodigoPostalFronterizo(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_SATELITES2.P_VERIFICA_CDPOSTAL_FRONTER");
+    		super(dataSource , "PKG_SATELITES2_PRE.P_VERIFICA_CDPOSTAL_FRONTER");
             declareParameter(new SqlParameter("cdpostal"   , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_fronterizo_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
@@ -805,7 +805,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarAtributosBaseCotizacion(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_SATELITES.P_OBT_ATRIBUTOS");
+    		super(dataSource , "PKG_SATELITES_PRE.P_OBT_ATRIBUTOS");
             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
             String[] cols=new String[]{"SEXO","FENACIMI","PARENTESCO","CODPOSTAL"};
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -848,7 +848,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargarInformacionPoliza(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_SATELITES.P_GET_INFO_MPOLIZAS");
+    		super(dataSource , "PKG_SATELITES_PRE.P_GET_INFO_MPOLIZAS");
     		declareParameter(new SqlParameter("cdunieco" , OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -897,7 +897,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarPorcentajeRecargoPorProducto(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_PORC_RECARGO");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_PORC_RECARGO");
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("cdperpag" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_porcrcgo_o" , OracleTypes.VARCHAR));
@@ -932,7 +932,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarValoresPantalla(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_SATELITES2.P_GET_VALORES_PANTALLA");
+    		super(dataSource , "PKG_SATELITES2_PRE.P_GET_VALORES_PANTALLA");
     		declareParameter(new SqlParameter("pantalla" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
@@ -966,7 +966,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarValoresAtributosFactores(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_SATELITES2.P_GET_VALORES_DEFECTO_FACTORES");
+    		super(dataSource , "PKG_SATELITES2_PRE.P_GET_VALORES_DEFECTO_FACTORES");
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
             String[] cols=new String[]{
@@ -1012,7 +1012,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected ObtieneContratantePoliza(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_SATELITES.P_OBTIENE_MPOLIPER");
+    		super(dataSource , "PKG_SATELITES_PRE.P_OBTIENE_MPOLIPER");
     		declareParameter(new SqlParameter("cdunieco"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1072,7 +1072,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarPolizasEndosables(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_POLIZAS_PARA_ENDOSOS");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_POLIZAS_PARA_ENDOSOS");
             declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
@@ -1169,7 +1169,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarHistoricoPoliza(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_HISTORICO_POLIZA");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_HISTORICO_POLIZA");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1229,7 +1229,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarIncisosPolizaGrupoFamilia(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA_PRUEBA.P_GET_DATOS_INCISOS_F");
+    		super(dataSource , "PKG_CONSULTA_PRUEBA_PRE.P_GET_DATOS_INCISOS_F");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1331,7 +1331,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarDatosIncisoEnNivelPoliza(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_DATOS_NIVEL_INC_Y_POLIZA");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_DATOS_NIVEL_INC_Y_POLIZA");
     		declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1440,7 +1440,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarValorAtributoUnico(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_SATELITES2.P_GET_OTVALOR_CAT_TATRISIT");
+    		super(dataSource , "PKG_SATELITES2_PRE.P_GET_OTVALOR_CAT_TATRISIT");
             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("otclave"  , OracleTypes.VARCHAR));
@@ -1478,7 +1478,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarGruposPoliza(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_GRUPOS_POLIZA");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_GRUPOS_POLIZA");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1520,7 +1520,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarFamiliasPoliza(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_FAMILIAS_POLIZA");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_FAMILIAS_POLIZA");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1550,7 +1550,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     
     protected class ValidaProductoSaludSP extends StoredProcedure {
     	protected ValidaProductoSaludSP(DataSource dataSource) {
-    		super(dataSource , "PKG_CONSULTA.P_VALIDA_PRODUCTO_SALUD");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_VALIDA_PRODUCTO_SALUD");
             declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_swprosalud_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   ,  OracleTypes.NUMERIC));
@@ -1583,7 +1583,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarDescripcionAtributosProducto(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_DSATRIBUS_TATRIPOL");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_DSATRIBUS_TATRIPOL");
     		declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"ATRIBUTO"})));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   ,  OracleTypes.NUMERIC));
@@ -1616,7 +1616,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarDescripcionAtributosSituacionPorRamo(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_DSATRIBUS_TATRISIT");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_DSATRIBUS_TATRISIT");
             declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"ATRIBUTO"})));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   ,  OracleTypes.NUMERIC));
@@ -1658,7 +1658,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarFechasLimiteEndoso(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_FECHAS_ENDOSO");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_FECHAS_ENDOSO");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1703,7 +1703,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarEndososRehabilitables(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CANCELA.P_GET_ENDOSOS_X_POLIZA_A_REHAB");
+    		super(dataSource , "PKG_CANCELA_PRE.P_GET_ENDOSOS_X_POLIZA_A_REHAB");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1746,7 +1746,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarEndososCancelables(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CANCELA.P_GET_ENDOSOS_X_POLIZA_A_CANC");
+    		super(dataSource , "PKG_CANCELA_PRE.P_GET_ENDOSOS_X_POLIZA_A_CANC");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1776,7 +1776,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarPermisoDevolucionPrimasUsuario(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_PERM_DEVOL_PRI_X_USUA");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_PERM_DEVOL_PRI_X_USUA");
             declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_permiso_o" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
@@ -1805,7 +1805,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarValorMaximoSituacionPorRol(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_VALMAX_X_ROL");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_VALMAX_X_ROL");
             declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_valor_o"  , OracleTypes.VARCHAR));
@@ -1831,7 +1831,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected ObtieneSubramoGS(DataSource dataSource)
     	{
-    		super(dataSource , "Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_OBTIENE_SUBRAMO_X_CDTIPSIT");
             declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_cdsubram_o"  , OracleTypes.VARCHAR));
@@ -1915,7 +1915,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected RecuperarCotizacionFlotillas(DataSource dataSource)
     	{
-    		super(dataSource , "PKG_CONSULTA.P_GET_DATOS_POLIZA_FLOTILLAS");
+    		super(dataSource , "PKG_CONSULTA_PRE.P_GET_DATOS_POLIZA_FLOTILLAS");
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
@@ -2155,7 +2155,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected ObtieneAtributosSituacionCoberturaAmparada(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_TATRISIT_AMPARADO");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_TATRISIT_AMPARADO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2206,7 +2206,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected ValidacionesSuplemento(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_VALIDA_SUPLEMENTO");
+			super(dataSource,"PKG_SATELITES2_PRE.P_VALIDA_SUPLEMENTO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2249,7 +2249,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarRevisionColectivosEndosos(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_REVISION_COLECTIVOEND");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_REVISION_COLECTIVOEND");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2292,7 +2292,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarRevisionColectivos(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_REVISION_COLECTIVO");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_REVISION_COLECTIVO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2334,7 +2334,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarRevisionColectivosFinal(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_ZWCENSOTRAD");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_ZWCENSOTRAD");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2373,7 +2373,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected CopiaDocumentosTdocupol(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_INS_TDOCUPOL_DOCTOS_USUARIO");
+			super(dataSource,"PKG_SATELITES2_PRE.P_INS_TDOCUPOL_DOCTOS_USUARIO");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -2404,7 +2404,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarDerechosPolizaPorPaqueteRamo1(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DERPOL_X_PAQ_RAMO1");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DERPOL_X_PAQ_RAMO1");
 			declareParameter(new SqlParameter("paquete" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_derechos_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2436,7 +2436,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected ValidaPagoPolizaRepartido(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_SWCONTRIBUTORIO");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_SWCONTRIBUTORIO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2467,7 +2467,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarAtributosPorRol(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_ATRIXROL_AUTOS");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_ATRIXROL_AUTOS");
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR
@@ -2501,7 +2501,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected ValidaClientePideNumeroEmpleado(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_VALIDA_CLIENTE_NEMP");
+			super(dataSource,"PKG_CONSULTA_PRE.P_VALIDA_CLIENTE_NEMP");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2533,7 +2533,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarUsuariosReasignacionTramite(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_USUARIOS_REASIGNA");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_USUARIOS_REASIGNA");
 			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
@@ -2569,7 +2569,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected ValidarVentanaDocumentosBloqueada(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_VALIDA_VENT_DOCS_BLOQUEADA");
+			super(dataSource,"PKG_CONSULTA_PRE.P_VALIDA_VENT_DOCS_BLOQUEADA");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtiptra" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
@@ -2610,7 +2610,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarMovimientosEndosoAltaBajaAsegurados(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_MOV_ALTA_BAJA_ASEG");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_MOV_ALTA_BAJA_ASEG");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2760,7 +2760,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarConteoTbloqueo(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_COUNT_TBLOQUEO");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_COUNT_TBLOQUEO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2794,7 +2794,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected ConsultaFeNacContratanteAuto(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_OBT_RANGOS_FECNAC");
+			super(dataSource,"PKG_CONSULTA_PRE.P_OBT_RANGOS_FECNAC");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2829,7 +2829,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarSubramos(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_OBT_RAMOS_X_PROD");
+			super(dataSource,"PKG_CONSULTA_PRE.P_OBT_RAMOS_X_PROD");
 			declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDSUBRAM"  , "DESCRIPCION"
@@ -2865,7 +2865,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarTparagen(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_OBTIENE_TPARAGEN");
+			super(dataSource,"PKG_CONSULTA_PRE.P_OBTIENE_TPARAGEN");
 			declareParameter(new SqlParameter("nomparam" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"VALPARAM"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -2890,7 +2890,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarTiposRamo(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_OBTENER_TIPOS_RAMO");
+			super(dataSource,"PKG_CONSULTA_PRE.P_OBTENER_TIPOS_RAMO");
 			String[] cols = new String[]{
 					"CDTIPRAM"  , "DSTIPRAM"
             };
@@ -2919,7 +2919,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarRamosPorTipoRamo(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_OBT_RAMOS_X_CDTIPRAM");
+			super(dataSource,"PKG_CONSULTA_PRE.P_OBT_RAMOS_X_CDTIPRAM");
 			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDRAMO"  , "DSRAMO"
@@ -2949,7 +2949,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarSucursalesPorTipoRamo(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_SUCURSALES_X_CDTIPRAM");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_SUCURSALES_X_CDTIPRAM");
 			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDUNIECO"  , "DSUNIECO"
@@ -3000,7 +3000,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarPolizasParaImprimir(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_POLIZAS_PARA_IMPRIMIR");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_POLIZAS_PARA_IMPRIMIR");
 			declareParameter(new SqlParameter("cdtipram"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cduniecos"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"         , OracleTypes.VARCHAR));
@@ -3073,7 +3073,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarUltimoNmsuplem(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_ULTIMO_NMSUPLEM");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_ULTIMO_NMSUPLEM");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -3101,7 +3101,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarSecuenciaLote(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_SEQLOTE");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_SEQLOTE");
 			declareParameter(new SqlOutParameter("pv_seqlote_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
@@ -3131,7 +3131,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarImpresionesDisponiblesPorTipoRamo(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_IMP_DISP_X_CDTIPRAM");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_IMP_DISP_X_CDTIPRAM");
 			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_impdis_o" , OracleTypes.VARCHAR));
@@ -3165,7 +3165,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarDetalleImpresionLote(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DET_IMP_LOTE");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DET_IMP_LOTE");
 			declareParameter(new SqlParameter("pv_lote_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_permiso_o" , OracleTypes.VARCHAR));
@@ -3201,7 +3201,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarImpresorasPorPapelYSucursal(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_IMPRESORAS");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_IMPRESORAS");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("papel"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("activo"   , OracleTypes.VARCHAR));
@@ -3242,7 +3242,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarComboUsuarios(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_USUARIOS");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_USUARIOS");
 			declareParameter(new SqlParameter("cadena" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"cdusuari"
@@ -3278,7 +3278,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarConfigImpresionSucursales(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_TCNFIMPINCEXCSUC");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_TCNFIMPINCEXCSUC");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
@@ -3320,7 +3320,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarConfigImpresionAgentes(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_TCNFIMPINCEXCAGT");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_TCNFIMPINCEXCAGT");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
@@ -3364,7 +3364,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected MovPermisoImpresionSucursal(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MOV_TCNFIMPINCEXCSUC");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_TCNFIMPINCEXCSUC");
 			declareParameter(new SqlParameter("cdusuari"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipram"    , OracleTypes.VARCHAR));
@@ -3401,7 +3401,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected MovPermisoImpresionAgente(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MOV_TCNFIMPINCEXCAGT");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_TCNFIMPINCEXCAGT");
 			declareParameter(new SqlParameter("cdusuari"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipram"    , OracleTypes.VARCHAR));
@@ -3447,7 +3447,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarRecibosLote(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_RECIBOS_PARA_HABILITAR");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_RECIBOS_PARA_HABILITAR");
 			declareParameter(new SqlParameter("cdtipram"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cduniecos" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("feinicio"  , OracleTypes.DATE));
@@ -3506,7 +3506,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarDetalleRemesa(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DETALLE_REMESAS");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DETALLE_REMESAS");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
@@ -3560,7 +3560,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarArchivosParaImprimirLote(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DOCUMENTOS_X_LOTE");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DOCUMENTOS_X_LOTE");
 			declareParameter(new SqlParameter("lote"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("papel"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
@@ -3622,7 +3622,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarDatosPolizaParaDocumentos(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_RECUPERA_DATOS_EMI");
+			super(dataSource,"PKG_CONSULTA_PRE.P_RECUPERA_DATOS_EMI");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -3654,7 +3654,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarTipoRamoPorCdramo(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_CDTIPRAM_X_CDRAMO");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_CDTIPRAM_X_CDRAMO");
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdtipram_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -3692,7 +3692,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarTramitePorNmsuplem(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_TRAMITE_X_NMSUPLEM");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_TRAMITE_X_NMSUPLEM");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -3742,7 +3742,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected VerificarRemesaEmisionEndosoAnterior(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_REMESA_UNICA");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DATOS_REMESA_UNICA");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -3776,7 +3776,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarDstipsupPorCdtipsup(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DSTIPSUP_X_CDTIPSUP");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DSTIPSUP_X_CDTIPSUP");
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_dstipsup_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -3809,7 +3809,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarSucursalesPermisoImpresion(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_SUCURSALES_PARA_IMPRIMIR");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_SUCURSALES_PARA_IMPRIMIR");
 			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
@@ -3843,7 +3843,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarConfigImpresionUsuarios(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_TCNFIMPINCEXCUSR");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_TCNFIMPINCEXCUSR");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipram" , OracleTypes.VARCHAR));
@@ -3887,7 +3887,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected MovPermisoImpresionUsuario(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MOV_TCNFIMPINCEXCUSR");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_TCNFIMPINCEXCUSR");
 			declareParameter(new SqlParameter("cdusuari"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipram"    , OracleTypes.VARCHAR));
@@ -3916,7 +3916,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarRolesTodosSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_TODOS_ROLES");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_TODOS_ROLES");
 			String[] cols = new String[]{
 					"CDSISROL"
 					,"DSSISROL"
@@ -3957,7 +3957,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected ObtieneBeneficiariosPoliza(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_WS_BENEF_AUTOS_COB_VIDA");
+			super(dataSource,"PKG_CONSULTA_PRE.P_WS_BENEF_AUTOS_COB_VIDA");
 			
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
@@ -3997,7 +3997,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarDatosFlujoEmisionSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_FLUJO_EMI");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DATOS_FLUJO_EMI");
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("tipoflot" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdtipflu_o"  , OracleTypes.VARCHAR));
@@ -4029,7 +4029,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{ 
 		protected RecuperarDias(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA. P_GET_RANGO_FECHA_FACTURA");
+			super(dataSource,"PKG_CONSULTA_PRE. P_GET_RANGO_FECHA_FACTURA");
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_rangofec_o", OracleTypes.VARCHAR));
@@ -4057,7 +4057,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{ 
 		protected GuardarDatosDemoSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_MESACONTROL.P_GUARDA_DATOS_DEMO");
+			super(dataSource,"PKG_MESACONTROL_PRE.P_GUARDA_DATOS_DEMO");
 			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
 			for(int i=1 ; i<=30 ; i++)
 			{
@@ -4096,7 +4096,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected CargarDatosDemoSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_MESACONTROL.P_CARGA_DATOS_DEMO");
+			super(dataSource,"PKG_MESACONTROL_PRE.P_CARGA_DATOS_DEMO");
 			
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
@@ -4133,7 +4133,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarPermisoBotonEnviarCensoSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_PERMISO_BOTON_CENSO");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_PERMISO_BOTON_CENSO");
 			
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_permiso_o" , OracleTypes.VARCHAR));
@@ -4170,7 +4170,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarConteoTbloqueoTramiteSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_BLOQUEO_TRAMITE");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_BLOQUEO_TRAMITE");
 			
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{ "REGS_TBLOQUEO" };
@@ -4194,7 +4194,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarExclusionTurnadosSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_EXCLUSIONES_TURNADO");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_EXCLUSIONES_TURNADO");
 			
 			String[] cols = new String[]{ "cdusuari", "dsusuari" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -4219,7 +4219,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected cargarCotizadoresActivosSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_COTIZADORES_ACTIVOS");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_COTIZADORES_ACTIVOS");
 			declareParameter(new SqlParameter("cadena" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{ "cdusuari", "dsusuari" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -4245,7 +4245,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected ObtieneMotivosReexp(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_MOTIVOS_CANC_REEXP");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_MOTIVOS_CANC_REEXP");
 			declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{ "codigo", "motivo" };
@@ -4279,7 +4279,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarPermisoBotonEmitirSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_PERMISO_BOTON_EMITIR");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_PERMISO_BOTON_EMITIR");
 			
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
@@ -4348,7 +4348,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarCodigoCustomSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_CODIGO_CUSTOM_PANTALLA");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_CODIGO_CUSTOM_PANTALLA");
 			declareParameter(new SqlParameter("cdpantalla" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("codigo"      , OracleTypes.VARCHAR));
@@ -4373,7 +4373,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarListaTatrisitSinPadreSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_LISTA_TATRISIT_SIN_PADRE");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_LISTA_TATRISIT_SIN_PADRE");
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{ "otclave", "otvalor"}; 	
@@ -4404,7 +4404,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarFormasDePagoPorRamoTipsitSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_LISTAS.P_GET_FORMA_PAGO");
+			super(dataSource,"PKG_LISTAS_PRE.P_GET_FORMA_PAGO");
 			declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
@@ -4436,7 +4436,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarClientesPorNombreApellidoSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_CLIENTES_X_NOMBRE_APE");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_CLIENTES_X_NOMBRE_APE");
 			
 			declareParameter(new SqlParameter("cadena" , OracleTypes.VARCHAR));
 			
@@ -4473,7 +4473,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarConveniosPorPoliza(DataSource dataSource)
 		{
-			super(dataSource,"Pkg_Consulta.P_GET_DATOS_CONVENIOS");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DATOS_CONVENIOS");
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4511,7 +4511,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected InsertarConvenioPoliza(DataSource dataSource)
 		{
-			super(dataSource,"pkg_satelites2.P_MOV_TCONVENIOS");			
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_TCONVENIOS");			
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));			
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4558,7 +4558,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarCancelacionesConveniosPorPoliza(DataSource dataSource)
 		{
-			super(dataSource,"Pkg_Consulta.P_GET_DATOS_TPOLPROTEG");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DATOS_TPOLPROTEG");
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4593,7 +4593,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected InsertarCancelacionesConvenioPoliza(DataSource dataSource)
 		{
-			super(dataSource,"pkg_satelites2.P_MOV_TPOLPROTEG");			
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_TPOLPROTEG");			
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));			
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4630,7 +4630,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperaCoberturasExtraprimaSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_COBERTURAS_EXTRAPRIMA");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_COBERTURAS_EXTRAPRIMA");
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"CDGARANT"})));
@@ -4786,7 +4786,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 
 	protected class ConsultaListaComboSP extends StoredProcedure {
     	protected ConsultaListaComboSP(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA_PRUEBA.P_Lista_Att_Inc");
+    		super(dataSource, "PKG_CONSULTA_PRUEBA_PRE.P_Lista_Att_Inc");
             declareParameter(new SqlParameter("PV_CDUNIECO_I", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("PV_ESTADO_I", OracleTypes.VARCHAR));
@@ -4822,7 +4822,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 
 	protected class RecuperarCduniextPorLlavePolizaSP extends StoredProcedure {
     	protected RecuperarCduniextPorLlavePolizaSP(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_GET_CDUNIEXT");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_GET_CDUNIEXT");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -5041,7 +5041,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected CargaLayoutImpresion(DataSource dataSource)
         {
-            super(dataSource,"PKG_IMPRESION.P_CARGA_LAYOUT_IMPRESION");
+            super(dataSource,"PKG_IMPRESION_PRE.P_CARGA_LAYOUT_IMPRESION");
             declareParameter(new SqlParameter("pv_filename_i"  , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdtipimp_i"  , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdusuari_i"  , OracleTypes.VARCHAR));
@@ -5082,7 +5082,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected EliminaZwimpxlayout(DataSource dataSource)
         {
-            super(dataSource,"PKG_IMPRESION.P_ELIMINA_ZWIMPXLAYOUT");
+            super(dataSource,"PKG_IMPRESION_PRE.P_ELIMINA_ZWIMPXLAYOUT");
             declareParameter(new SqlParameter("pv_idproceso_i"  , OracleTypes.VARCHAR));
           
             declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
@@ -5114,7 +5114,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	protected GetDocumentosLayout(DataSource dataSource)
         {
-            super(dataSource,"PKG_IMPRESION.P_GET_DOCUMENTOS_LAYOUT");
+            super(dataSource,"PKG_IMPRESION_PRE.P_GET_DOCUMENTOS_LAYOUT");
             declareParameter(new SqlParameter("pv_idproceso_i"  , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdtipimp_i"  , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_papel_i"  , OracleTypes.VARCHAR));
@@ -5189,7 +5189,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	
     	protected FormasPagoRetenedora(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_RETENEDORAS.P_GET_FORMAS_PAGO_RETENEDORA");
+    		super(dataSource, "PKG_RETENEDORAS_PRE.P_GET_FORMAS_PAGO_RETENEDORA");
 			declareParameter(new SqlParameter("pv_administradora_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_retenedora_i" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
@@ -5220,7 +5220,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
         
         protected ObtieneCdagente(DataSource dataSource) {
             
-            super(dataSource, "Pkg_CONSULTA2.P_GET_CDAGENTE");
+            super(dataSource, "PKG_CONSULTA2_PRE.P_GET_CDAGENTE");
             declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
             
             String[] cols = new String[]{
@@ -5258,7 +5258,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
         
         protected RemesaDocumentosLayout(DataSource dataSource) {
             
-            super(dataSource, "PKG_IMPRESION.P_GEN_REMESA_DOCUMENTOS_LAYOUT");
+            super(dataSource, "PKG_IMPRESION_PRE.P_GEN_REMESA_DOCUMENTOS_LAYOUT");
             declareParameter(new SqlParameter("pv_idproceso_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdtipimp_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
@@ -5293,7 +5293,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 
     protected class ObtenerCursorTrafudoc extends StoredProcedure {
         protected ObtenerCursorTrafudoc(DataSource dataSource) {
-            super(dataSource, "PKG_DOCUMENTOS.P_GET_TRAFUDOC");
+            super(dataSource, "PKG_DOCUMENTOS_PRE.P_GET_TRAFUDOC");
             declareParameter(new SqlParameter("cdfunci",  OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo",   OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdtipsit", OracleTypes.VARCHAR));
@@ -5321,7 +5321,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
         
         protected ObtieneRetAdmin(DataSource dataSource) {
             
-            super(dataSource, "PKG_RETENEDORAS.P_GET_RSDXNADMRET");
+            super(dataSource, "PKG_RETENEDORAS_PRE.P_GET_RSDXNADMRET");
             declareParameter(new SqlParameter("pv_numsuc_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cveent_i" , OracleTypes.VARCHAR));
             String[] cols = new String[]{
@@ -5382,7 +5382,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
         
         protected ObtieneUsuarioXAgente(DataSource dataSource) {
             
-            super(dataSource, "Pkg_CONSULTA2.P_GET_TUSUARIO_X_AGENTE");
+            super(dataSource, "PKG_CONSULTA2_PRE.P_GET_TUSUARIO_X_AGENTE");
             declareParameter(new SqlParameter("pv_cdagente_i" , OracleTypes.VARCHAR));
             
             String[] cols = new String[]{
@@ -5735,7 +5735,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 
     protected class ObtieneNmsituaext extends StoredProcedure {
         protected ObtieneNmsituaext(DataSource dataSource) {
-            super(dataSource, "PKG_CONSULTA2.P_GET_NRO_EMPLEADO");
+            super(dataSource, "PKG_CONSULTA2_PRE.P_GET_NRO_EMPLEADO");
             declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
@@ -5800,7 +5800,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 
     protected class ObtieneComentariosNegocio extends StoredProcedure {
         protected ObtieneComentariosNegocio(DataSource dataSource) {
-            super(dataSource, "PKG_CONSULTA2.P_OBTIENE_COMENTARIOS_NEGOCIO");
+            super(dataSource, "PKG_CONSULTA2_PRE.P_OBTIENE_COMENTARIOS_NEGOCIO");
             declareParameter(new SqlParameter("pv_cdramo_i",  OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdtipsit_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_negocio_i",    OracleTypes.VARCHAR));
@@ -5839,7 +5839,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 
     protected class ObtieneRangoPeriodoGracia extends StoredProcedure {
         protected ObtieneRangoPeriodoGracia(DataSource dataSource) {
-            super(dataSource, "PKG_CONSULTA2.P_OBTIENE_PGRACIA_AGENTE");
+            super(dataSource, "PKG_CONSULTA2_PRE.P_OBTIENE_PGRACIA_AGENTE");
             declareParameter(new SqlParameter("pv_cdramo_i",  OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdtipsit_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdagente_i",    OracleTypes.VARCHAR));
@@ -5852,90 +5852,6 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public List<Map<String,String>> recuperarEndososSiniestralidad(
-            String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            )throws Exception
-    {
-        Map<String,String> params = new LinkedHashMap<String,String>();
-        params.put("cdunieco" , cdunieco);
-        params.put("cdramo"   , cdramo);
-        params.put("estado"   , estado);
-        params.put("nmpoliza" , nmpoliza);
-        Map<String,Object>       procResult = ejecutaSP(new RecuperarEndososSiniestralidad(getDataSource()),params);
-        List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
-        if(lista==null)
-        {
-            lista = new ArrayList<Map<String,String>>();
-        }
-        return lista;
-    }
-    
-    protected class RecuperarEndososSiniestralidad extends StoredProcedure
-    {
-        protected RecuperarEndososSiniestralidad(DataSource dataSource)
-        {
-            super(dataSource , "PKG_CANCELA.P_GET_ENDOSOS_X_POLIZA_SINIES");
-            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
-            String[] cols = new String[]{
-                    "NSUPLOGI"  , "CDDEVCIA" , "CDGESTOR" , "FEEMISIO" , "FEINIVAL" , "FEFINVAL"
-                    ,"FEEFECTO" , "FEPROREN" , "CDMONEDA" , "NMSUPLEM" , "FEINICIO"
-            };
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public List<Map<String,String>> recuperarEndososRehabilitablesSiniestralidad(
-            String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            )throws Exception
-    {
-        Map<String,String> params = new LinkedHashMap<String,String>();
-        params.put("cdunieco" , cdunieco);
-        params.put("cdramo"   , cdramo);
-        params.put("estado"   , estado);
-        params.put("nmpoliza" , nmpoliza);
-        Map<String,Object>       procResult = ejecutaSP(new RecuperarEndosoSiniestralidad(getDataSource()),params);
-        List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
-        if(lista==null)
-        {
-            lista = new ArrayList<Map<String,String>>();
-        }
-        return lista;
-    }
-    
-    protected class RecuperarEndosoSiniestralidad extends StoredProcedure
-    {
-        protected RecuperarEndosoSiniestralidad(DataSource dataSource)
-        {
-            super(dataSource , "PKG_CANCELA.P_GET_ENDOSOS_REHAB_SINI");
-            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
-            String[] cols = new String[]{
-                    "NSUPLOGI"  , "CDDEVCIA" , "CDGESTOR" , "FEEMISIO" , "FEINIVAL" , "FEFINVAL"
-                    ,"FEEFECTO" , "FEPROREN" , "CDMONEDA" , "NMSUPLEM"
-            };
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
             compile();
         }
     }
@@ -5964,7 +5880,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
         protected RecuperarDatosValorDefectoLayout(DataSource dataSource)
         {
-            super(dataSource , "PKG_CONSULTA2.P_GET_CARGA_LAYOUT");
+            super(dataSource , "PKG_CONSULTA2_PRE.P_GET_CARGA_LAYOUT");
             declareParameter(new SqlParameter("pv_rol_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_campo_i"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_proceso_i"   , OracleTypes.VARCHAR));
@@ -5977,6 +5893,4 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
         }
     }
-
-    
 }

@@ -21,7 +21,6 @@ smap1:
     NTRAMITE: "678"
     PRIMA_TOTAL: "12207.37"
 */
-
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _35_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
@@ -488,5 +487,4 @@ function _35_confirmar()
 ///////////////////////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
-
 <div id="_35_divPri" style="height:1000px;"></div>

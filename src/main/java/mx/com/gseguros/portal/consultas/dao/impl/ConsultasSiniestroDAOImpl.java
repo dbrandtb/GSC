@@ -33,7 +33,7 @@ public class ConsultasSiniestroDAOImpl extends AbstractManagerDAO implements Con
 	{
 		protected ConsultaListaAseguradosPagoReembolso(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_GET_SIN_ASEG_RE");
+			super(dataSource, "PKG_SINIESTRO_PRE.P_GET_SIN_ASEG_RE");
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaAasegurado()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -73,7 +73,7 @@ public class ConsultasSiniestroDAOImpl extends AbstractManagerDAO implements Con
 	{
 		protected ConsultaListaFacturasPagoDirecto(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_GET_SIN_ASEG_PD");
+			super(dataSource, "PKG_SINIESTRO_PRE.P_GET_SIN_ASEG_PD");
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_proveedor_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_factura_i", OracleTypes.VARCHAR));
