@@ -39,7 +39,7 @@ public class PeritajeAction extends PrincipalCoreAction
 	private InputStream              fileInputStream;
 	private String                   contentType;
 	private String                   filename;
-	
+
 	@Value("${ruta.servidor.reports}")
     private String rutaServidorReports;
 	
@@ -895,6 +895,18 @@ public class PeritajeAction extends PrincipalCoreAction
 
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+	
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
+
+	public String getRutaDocumentosEperitaje() {
+		return rutaDocumentosEperitaje;
 	}
 	
 }

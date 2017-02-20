@@ -56,7 +56,7 @@ public class ServiciosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
-	
+
 	@Value("${ruta.documentos.temporal}")
     private String rutaDocumentosTemporal;
 	
@@ -531,4 +531,8 @@ public class ServiciosAction extends PrincipalCoreAction
 		this.serviciosManager = serviciosManager;
 	}
 	
+	public String getRutaDocumentosTemporal() {
+		return rutaDocumentosTemporal;
+	}
+
 }

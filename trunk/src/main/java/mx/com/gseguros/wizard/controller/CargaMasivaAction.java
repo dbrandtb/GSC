@@ -50,7 +50,7 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 	private static final long serialVersionUID = -3861435458381281429L;
 	
 	private static Logger logger = LoggerFactory.getLogger(CargaMasivaAction.class);
-	
+
 	@Value("${directorio.server.layouts}")
     private String directorioServerLayouts;
 	
@@ -440,5 +440,8 @@ public class CargaMasivaAction extends PrincipalCoreAction {
 	public void setRespuesta(String respuesta) {
 		this.respuesta = respuesta;
 	}
-
+	
+	public String getDirectorioServerLayouts() {
+		return directorioServerLayouts;
+	}
 }

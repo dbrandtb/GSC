@@ -92,7 +92,7 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
     
 	@Autowired
 	private CotizacionManager cotizacionManager;
-	
+
 	@Value("${ruta.documentos.temporal}")
     private String rutaDocumentosTemporal;
 	
@@ -1064,4 +1064,25 @@ public class ConfiguracionLayoutAction extends PrincipalCoreAction {
 	public void setValidacionGeneral(String validacionGeneral) {
 		this.validacionGeneral = validacionGeneral;
 	}
+	
+	public String getRutaDocumentosTemporal() {
+		return rutaDocumentosTemporal;
+	}
+
+	public String getUserServerLayouts() {
+		return userServerLayouts;
+	}
+
+	public String getPassServerLayouts() {
+		return passServerLayouts;
+	}
+
+	public String getDirectorioServerLayouts() {
+		return directorioServerLayouts;
+	}
+
+	public String getDominioServerLayouts() {
+		return dominioServerLayouts;
+	}
+
 }

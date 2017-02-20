@@ -280,4 +280,12 @@ public class EncoderURLAction extends PrincipalCoreAction {
     public void setEmisionDAO(EmisionDAO emisionDAO) {
         this.emisionDAO = emisionDAO;
     }
+    
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
 }

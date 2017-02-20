@@ -77,8 +77,8 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
     
     @Autowired
     private ConsultasPolizaManager consultasPolizaManager;
-    
-    @Value("${ruta.servidor.reports}")
+
+	@Value("${ruta.servidor.reports}")
     private String rutaServidorReports;
     
     @Value("${pass.servidor.reports}")
@@ -905,5 +905,21 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
     public void setParams(Map<String, String> params) {
         this.params = params;
     }
+    
+    public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
+
+	public String getRutaDocumentosPoliza() {
+		return rutaDocumentosPoliza;
+	}
+
+	public String getRutaDocumentosTemporal() {
+		return rutaDocumentosTemporal;
+	}
 	
 }

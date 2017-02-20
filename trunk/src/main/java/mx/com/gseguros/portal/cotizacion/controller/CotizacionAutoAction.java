@@ -74,7 +74,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     @Autowired
     private CotizacionDAO  cotizacionDAO;
 
-    @Value("${sigs.facultaDatosPolizaSicaps.url}")
+	@Value("${sigs.facultaDatosPolizaSicaps.url}")
     private String sigsFacultaDatosPolizaSicapsUrl;	
     
     @Value("${ruta.documentos.temporal}")
@@ -2478,4 +2478,24 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     public void setFlujo(FlujoVO flujo) {
         this.flujo = flujo;
     }
+    
+    public String getSigsFacultaDatosPolizaSicapsUrl() {
+		return sigsFacultaDatosPolizaSicapsUrl;
+	}
+
+	public String getRutaDocumentosTemporal() {
+		return rutaDocumentosTemporal;
+	}
+
+	public String getSigsObtenerDatosPorSucRamPolUrl() {
+		return sigsObtenerDatosPorSucRamPolUrl;
+	}
+
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
 }

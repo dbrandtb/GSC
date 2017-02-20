@@ -342,12 +342,19 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		return params;
 	}
 
-
 	public void setParams(Map<String, String> params) {
 		this.params = params;
 	}
 
 	public mx.com.gseguros.portal.general.service.NavigationManager getNavigationManagerNuevo() {
 		return navigationManagerNuevo;
+	}
+	
+	public String getLoginAuthLdapActiva() {
+		return loginAuthLdapActiva;
+	}
+
+	public String getLoginModoAgregarUsuariosLdap() {
+		return loginModoAgregarUsuariosLdap;
 	}
 }

@@ -31,7 +31,7 @@ public class EmisionAction extends PrincipalCoreAction
 	private Map<String,String>       smap1     = null;
 	private Map<String,Item>         imap      = null;
 	private List<Map<String,String>> slist1    = null;
-	
+
 	@Value("${sigs.obtenerDatosPorSucRamPol.url}")
     private String sigsObtenerDatosPorSucRamPolUrl;
 	
@@ -229,4 +229,7 @@ public class EmisionAction extends PrincipalCoreAction
 		this.imap = imap;
 	}
 	
+	public String getSigsObtenerDatosPorSucRamPolUrl() {
+		return sigsObtenerDatosPorSucRamPolUrl;
+	}
 }

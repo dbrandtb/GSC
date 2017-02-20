@@ -119,8 +119,8 @@ var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p21_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p21_urlImprimirCotiza = '<s:property value="ruta.servidor.reports" />';
-var _p21_reportsServerUser = '<s:property value="pass.servidor.reports" />';
+var _p21_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
+var _p21_reportsServerUser = '<s:property value="passServidorReports" />';
 var _TIPO_SITUACION_RENOVACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 var _EN_ESPERA_DE_COTIZACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
 
@@ -591,6 +591,7 @@ Ext.onReady(function()
                     ,width     : 140
                     ,editor    : _p21_editorAyudaMater
                     ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
+                    //,hidden    : true
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'ayudamater');
@@ -602,6 +603,7 @@ Ext.onReady(function()
                     ,width     : 140
                     ,editor    : _p21_editorAsisInter
                     ,hidden    : _p21_smap1.cdramo!='4'||_p21_smap1.LINEA_EXTENDIDA=='N'
+                    //,hidden    : true
                     ,renderer  : function(v)
                     {
                         return rendererColumnasDinamico(v,'asisinte');

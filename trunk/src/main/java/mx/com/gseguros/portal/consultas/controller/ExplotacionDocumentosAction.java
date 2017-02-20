@@ -54,7 +54,6 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ExplotacionDocumentosManager explotacionDocumentosManager;
-	
 	@Value("${user.server.layouts}")
     private String userServerLayouts;	
 
@@ -1133,7 +1132,31 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 
 	public void setTramites(List<String> tramites) {
 		this.tramites = tramites;
-	}//
+	}
+	
+	public String getUserServerLayouts() {
+		return userServerLayouts;
+	}
+
+	public String getPassServerLayouts() {
+		return passServerLayouts;
+	}
+
+	public String getDirectorioServerLayouts() {
+		return directorioServerLayouts;
+	}
+
+	public String getDominioServerLayouts() {
+		return dominioServerLayouts;
+	}
+
+	public String getDominioServerLayouts2() {
+		return dominioServerLayouts2;
+	}
+
+
+	
+	//
                                                                   //
     ////////////////////////////////////////////////////////////////
 }

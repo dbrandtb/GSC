@@ -32,8 +32,8 @@ var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="fa
 var _0_flujo      = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _0_urlImprimirCotiza = '<s:property value="ruta.servidor.reports" />';
-var _0_reportsServerUser = '<s:property value="pass.servidor.reports" />';
+var _0_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
+var _0_reportsServerUser = '<s:property value="passServidorReports" />';
 
 var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                        />';
 var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                        />';
