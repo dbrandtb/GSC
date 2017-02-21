@@ -66,7 +66,6 @@ Ext.onReady(function()
         [
             {
                 xtype  : 'fieldset'
-                ,itemId: '_p38_datVeh'
                 ,title : '<span style="font:bold 14px Calibri;">Datos del veh&iacute;culo</span>'
                 ,items : _p38_items
             }
@@ -165,12 +164,6 @@ Ext.onReady(function()
 																						_mask();
 																						me.up('window').destroy();
 																						jsonConfirmar.smap1['confirmar'] = 'si';
-																						
-																						if(!Ext.isEmpty(_p38_flujo))
-                                                                                        {
-                                                                                            jsonConfirmar.flujo = _p38_flujo;
-                                                                                        }
-                                                                                        
 																						 Ext.Ajax.request(
 																			                    {
 																			                        url       : _p38_urlConfirmarEndoso
@@ -252,7 +245,6 @@ Ext.onReady(function()
                         }
                         ,failure  : function()
                         {
-                            _unmask();
                             me.setText('Confirmar');
                             me.setDisabled(false);
                             errorComunicacion();
@@ -273,7 +265,7 @@ Ext.onReady(function()
 	            var marcaCmp    = _fieldByLabel('MARCA');
 	            var submarcaCmp = _fieldByLabel('SUBMARCA');
 	            var modeloCmp   = _fieldByLabel('MODELO');
-	            var versionCmp  = _fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])");
+	            var versionCmp  = _fieldLikeLabel('VERSI');
 	            var record      = records[0];
 	            
 	            debug('marcaCmp:'            , marcaCmp);
@@ -313,9 +305,9 @@ Ext.onReady(function()
                             _fieldByLabel('MODELO').heredar(true,function()
                             {
                                 _fieldByLabel('MODELO').setValue(_fieldByLabel('MODELO').findRecord('value',modelo));
-                                _fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").heredar(true,function()
+                                _fieldLikeLabel('VERSI').heredar(true,function()
                                 {
-                                    _fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").setValue(_fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").findRecord('value',version));    
+                                	_fieldLikeLabel('VERSI').setValue(_fieldLikeLabel('VERSI').findRecord('value',version));    
                                     _0_obtenerSumaAseguradaRamo6(true);                        
                                 });
                             });
@@ -558,7 +550,7 @@ Ext.onReady(function()
             ,success : function(response)
             {
                 var json=Ext.decode(response.responseText);
-                debug('### obtener rango aÃ±os response:',json);
+                debug('### obtener rango años response:',json);
                 if(json.exito)
                 {
                     var limiteInferior = json.smap1.P1VALOR-0;
@@ -598,9 +590,6 @@ Ext.onReady(function()
     if(_p38_slist1[0].CDTIPSIT == 'AT'){
     	
 //         if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|') != -1)
-    
-        tipoUnidadFronteriza();
-        
 	    RolSistema.puedeSuscribirAutos(_p38_smap1.cdsisrol)
         {
         	_fieldByLabel('TIPO DE UNIDAD').setReadOnly(false);
@@ -860,7 +849,7 @@ function _0_obtenerSumaAseguradaRamo6(mostrarError,respetarValue)
         ,params  :
         {
             'smap1.modelo'    : String(_fieldByLabel('MODELO').getValue()).substr(_fieldByLabel('MODELO').getValue().length-4,4)
-            ,'smap1.version'  : _fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").getValue()
+            ,'smap1.version'  : _fieldLikeLabel('VERSI').getValue()
             ,'smap1.cdsisrol' : _p38_smap1.cdsisrol
             ,'smap1.cdramo'   : _p38_smap1.CDRAMO
             ,'smap1.cdtipsit' : _p38_slist1[0].CDTIPSIT
@@ -951,7 +940,7 @@ function _0_obtenerClaveGSPorAuto()
                 +' - '+_fieldByLabel('MARCA').findRecord('key',_fieldByLabel('MARCA').getValue()).get('value')
                 +' - '+_fieldByLabel('SUBMARCA').findRecord('key',_fieldByLabel('SUBMARCA').getValue()).get('value')
                 +' - '+_fieldByLabel('MODELO').findRecord('key',_fieldByLabel('MODELO').getValue()).get('value')
-                +' - '+_fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").findRecord('key',_fieldLikeLabel('VERSI').getValue()).get('value');
+                +' - '+_fieldLikeLabel('VERSI').findRecord('key',_fieldLikeLabel('VERSI').getValue()).get('value');
             debug('valor para el auto:',valor);
             _fieldLikeLabel('CLAVE').setValue(
             		_fieldLikeLabel('CLAVE').findRecord('value',valor)
@@ -960,167 +949,6 @@ function _0_obtenerClaveGSPorAuto()
         }
     });
 }
-
-function tipoUnidadFronteriza(){
-    
-    try{
-        _fieldByLabel('TIPO DE UNIDAD').on({
-            change:function(me){
-                
-                if(me.getValue()==TipoUnidad.Fronterizo){
-                    _fieldByLabel('NUMERO DE SERIE').on(
-                            {blur:fronterizos}
-                            );
-                    Ext.ComponentQuery.query('#_p38_datVeh [fieldLabel*=FRONTERIZO], #_p38_datVeh [fieldLabel="NUMERO DE SERIE"]').forEach(function(it,i){ 
-                        debug("### item: ",it);
-                        it.allowBlank=false;
-                        it.show();
-                        it.setDisabled(false);
-                        
-                    });
-                    
-                    Ext.ComponentQuery.query('[fieldLabel*=AUTO],[fieldLabel=MARCA],[fieldLabel=SUBMARCA],[fieldLabel=MODELO],[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])',_fieldById('_p38_datVeh')).forEach(function(it,i){ 
-                        debug("### item: ",it);
-                        it.allowBlank=true;
-                        it.hide();
-                        it.setDisabled(true);
-                        if(it.xtype=='combobox'){
-	                         it.clearValue();
-	                    }else{
-	                         it.setValue(null);
-	                    }
-                     })
-                                        
-                }else{
-                   
-                    Ext.ComponentQuery.query('#_p38_datVeh [fieldLabel*=FRONTERIZO], #_p38_datVeh [fieldLabel="NUMERO DE SERIE"]').forEach(function(it,i){ 
-                        debug("### item: ",it);
-                        it.allowBlank=true;
-                        it.hide();
-                        it.setDisabled(true);
-                        if(it.xtype=='combobox'){
-                            it.clearValue();
-                       }else{
-                            it.setValue(null);
-                       }
-                    });
-                    
-                    Ext.ComponentQuery.query('[fieldLabel*=AUTO],[fieldLabel=MARCA],[fieldLabel=SUBMARCA],[fieldLabel=MODELO],[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])',_fieldById('_p38_datVeh')).forEach(function(it,i){ 
-                        debug("### item: ",it);
-                        it.allowBlank=false;
-                        it.show();
-                        it.setDisabled(false);
-                     })
-                    
-                }
-            }
-        });
-    }catch(e){
-        throw e;
-        debugError(e);
-    }
-}
-
-function fronterizos()
-{
-    var _0_formAgrupados=_fieldById('_p38_datVeh');
-//     if(Ext.isEmpty(_0_formAgrupados.down('[name=parametros.pv_otvalor23').getValue()) || !_0_formAgrupados.down('[name=parametros.pv_otvalor23]').isValid()){
-//         mensajeWarning('Debe de capturar primero el C&oacute;digo Postal');
-//         return;
-//     }
-    
-    var vim = this.value;
-//     if( (this.minLength > 0 && vim.length < this.minLength) || (vim.length < this.minLength || vim.length > this.maxLength) )
-//     {
-//         if(this.minLength == this.maxLength) {
-//             mensajeWarning('La longitud del n&uacute;mero de serie debe ser ' + this.minLength);
-//         } else {
-//             mensajeWarning('La longitud del n&uacute;mero de serie debe ser entre ' + this.minLength + ' y ' + this.maxLength);
-//         }
-//         return;
-//     }
-    debug('>llamando a nada:',vim);
-    _0_formAgrupados.setLoading(true);
-    
-    Ext.Ajax.request(
-    {
-        url     : _p38_urlNadaEndoso
-        ,params :
-        {
-            'smap1.vim'       : vim
-            ,'smap1.cdunieco' : _p38_slist1[0].CDUNIECO
-            ,'smap1.cdramo'   : _p38_slist1[0].CDRAMO
-            ,'smap1.nmpoliza' : _p38_slist1[0].NMPOLIZA
-            ,'smap1.cdtipsit' : _p38_slist1[0].CDTIPSIT
-            ,'smap1.tipoveh'  : '1'
-            ,'smap1.nmsituac' : _p38_slist1[0].NMSITUAC
-            ,'smap1.nmsuplem' : _p38_slist1[0].NMSUPLEM
-        }
-        ,success : function(response)
-        {
-            _0_formAgrupados.setLoading(false);
-            var json = Ext.decode(response.responseText);
-            debug('nada response:', json);
-            if(json.success)
-            {
-                var precioDolar = Number(json.smap1.PRECIO_DOLAR);
-                debug('precioDolar:',precioDolar);
-                _38_formAuto.down('[name=OTVALOR92][fieldLabel*=FRONTERIZO]').setValue(json.smap1.AUTO_MARCA);
-                _38_formAuto.down('[name=OTVALOR94][fieldLabel*=FRONTERIZO]').setValue(json.smap1.AUTO_ANIO);
-                _38_formAuto.down('[name=OTVALOR95][fieldLabel*=FRONTERIZO]').setValue(json.smap1.AUTO_DESCRIPCION);
-                _38_formAuto.down('[name=OTVALOR97]').setMinValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
-                _38_formAuto.down('[name=OTVALOR97]').setMaxValue(((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
-                _38_formAuto.down('[name=OTVALOR97]').setValue((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2));
-                debug('set min value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1-(json.smap1.FACTOR_MIN-0)));
-                debug('set max value:',((json.smap1.AUTO_PRECIO*precioDolar).toFixed(2))*(1+(json.smap1.FACTOR_MAX-0)));
-                
-                Ext.Ajax.request({
-                    url     : _p38_urlObtieneValNumeroSerie
-                    ,params :
-                    {
-                        'smap1.numSerie'  :  _38_formAuto.down('[name=OTVALOR99][fieldLabel*=SERIE]').getValue()
-                        ,'smap1.feini'    :  _fieldByName('feefecto').getValue()
-                    }
-                    ,success : function(response)
-                    {
-                        var json=Ext.decode(response.responseText);
-                        debug(json);
-                        if(json.exito!=true)
-                        {
-//                             if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|')==-1)   
-                            if(!RolSistema.puedeSuscribirAutos(_p38_smap1.cdsisrol))
-                            {
-                                mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-                            }else{
-                                mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
-                            }
-                        }
-                    }
-                    ,failure : errorComunicacion
-                });
-            }
-            else
-            {
-                // Si no obtuvo datos el servicio "NADA", reseteamos valores:
-                _38_formAuto.down('[name=OTVALOR92]').setValue();
-                _38_formAuto.down('[name=OTVALOR94]').setValue();
-                _38_formAuto.down('[name=OTVALOR95]').setValue();
-                _38_formAuto.down('[name=OTVALOR97]').setValue();
-                _38_formAuto.down('[name=OTVALOR97]').setMinValue();
-                _38_formAuto.down('[name=OTVALOR97]').setMaxValue();
-            }
-        }
-        ,failure : function()
-        {
-            _0_formAgrupados.setLoading(false);
-            debug("Entra a esta parte");
-            errorComunicacion();
-        }
-    });
-    debug('<llamando a nada');  
-}
-
-
 
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>

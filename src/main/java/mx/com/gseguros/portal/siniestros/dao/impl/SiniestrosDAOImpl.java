@@ -3259,7 +3259,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setOtvalor48mc(rs.getString("OTVALOR48"));
         	consulta.setOtvalor49mc(rs.getString("OTVALOR49"));
         	consulta.setOtvalor50mc(rs.getString("OTVALOR50"));
-        	consulta.setCdtipsup(rs.getString("CDTIPSUP"));
         	return consulta;
         }
     }

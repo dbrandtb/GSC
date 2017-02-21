@@ -264,7 +264,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					,null //swimpres
 					,null //cdtipflu
 					,null //cdflujomc
-					,valores, null, null, null, null
+					,valores, null
 					);
 			
 			//if(res.getItemMap() == null){
@@ -844,7 +844,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					,null
 					,null
 					,null
-					,null, false
+					,null
 					);
 			
 		}catch( Exception e){
@@ -1329,7 +1329,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							,null
 							,null
 							,null
-							,null, false
+							,null
 							);
 					
 				}

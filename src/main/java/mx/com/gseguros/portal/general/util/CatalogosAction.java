@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -21,8 +18,10 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
-import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * 
@@ -171,10 +170,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPO_BUSQUEDA_RENOVACION_INDIVIDUAL:
 				case CRITERIOS_RENOVACION_INDIVIDUAL:	
 				case CATALOGO_TRAFUDOC_CDFUNCI:
-				case TIPOS_PAGO_POLIZA_SIN_DXN_MULTIANUAL:
-				case CATALOGO_ESTADOS_RECIBO:
-				case ZONAS_SUCURSALES:
-				case NIVELES_SUCURSALES:
 				case TAPOYO:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
@@ -216,7 +211,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case TATRIGAR:
 					//lista = catalogosManager.obtieneAtributosGarantia(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdgarant"));
-					// se agrega par�metro cdSisrol para considerar restricciones por rol (EGS)
+					// se agrega parametro cdSisrol para considerar restricciones por rol (EGS)
 					lista = catalogosManager.obtieneAtributosGarantia(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdgarant"),((UserVO) session.get("USUARIO")).getRolActivo().getClave());
 					break;
 				case TATRIPER:
@@ -228,11 +223,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					for(Map<String,String> ramo:ramos) {
 						lista.add(new GenericVO(ramo.get("cdramo"), ramo.get("dsramo")));
 					}
-					
-					if(!lista.isEmpty() && params != null && params.containsKey("aniadeComodinTodos") && Constantes.SI.equalsIgnoreCase(params.get("aniadeComodinTodos"))){
-						lista.add(0,new GenericVO("-1", " ---- Todos ---- "));
-					}
-					
 					break;
 				case RAMOSALUD:
 					lista =siniestrosManager.getConsultaListaRamoSalud();
@@ -243,11 +233,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					for(Map<String,String> tipsit:tipsits) {
 						lista.add(new GenericVO(tipsit.get("CDTIPSIT"), tipsit.get("DSTIPSIT")));
 					}
-					
-					if(!lista.isEmpty() && params != null && params.containsKey("aniadeComodinTodos") && Constantes.SI.equalsIgnoreCase(params.get("aniadeComodinTodos"))){
-						lista.add(0,new GenericVO("*", " ---- Todos ---- "));
-					}
-					
 					break;
 				case ROLES_SISTEMA:
 					String filtro = null;
@@ -908,14 +893,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 						params = new HashMap<String,String>();
 					}
 					lista = catalogosManager.recuperarListaFiltroPropiedadesInciso(params.get("cdunieco"),params.get("cdramo"),params.get("estado"),params.get("nmpoliza"));
-					break;
-				case RECUPERAR_LISTA_FILTRO_PROPIEDAD_INCISO:
-                    if(params == null)
-                    {
-                        params = new HashMap<String,String>();
-                    }
-                    lista = catalogosManager.recuperarListaFiltroPropiedadInciso(params.get("cdramo"),params.get("cdtipsit"),params.get("nivel"));
-                    break;
+					break;				
 				case CATALOGO_CERRADO: //ESTE CATALOGO SOLO REGRESA SUS 5 PARES DE PARAMS COMO 5 RECORDS PARA EL STORE
 					if(params == null)
 					{
@@ -974,9 +952,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 						lista = catalogosManager.recuperarTiposDeEndosoPorCdramoPorCdtipsit(
 							params.get("cdramo"),
 							params.get("cdtipsit"),
-							StringUtils.isNotBlank(params.get("vigente"))
-							    ? params.get("vigente")
-							    : "N"
+							"S".equals(params.get("vigente"))
 					    );
 					}
 					break;
@@ -1039,20 +1015,9 @@ public class CatalogosAction extends PrincipalCoreAction {
                     }
 				    lista=catalogosManager.obtieneAdministradoraXAgente(params.get("cdagente"));
 				    break;
-				case VALIDACIONESGRALES:
+                case VALIDACIONESGRALES:
                     lista = siniestrosManager.getConsultaListaValidacionesGenerales();
                     break;
-				case COMENTARIOS_NEGOCIO:
-					if(params == null){
-                        params = new HashMap<String,String>();
-                    }
-					lista = catalogosManager.obtieneComentariosNegocio(params.get("cdramo"), params.get("cdtipsit"), params.get("negocio"));
-                	break;
-				case TIPOS_ENDOSO_X_TRAMITE:
-				    if (params !=null && StringUtils.isNotBlank(params.get("ntramite"))) {
-				        lista = catalogosManager.recuperarTiposEndosoPorTramite(params.get("ntramite"));
-				    }
-				    break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

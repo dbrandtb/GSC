@@ -293,7 +293,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 						,"0"
 						,Documento.RECIBO
 						,null
-						,null, false
+						,null
 						);
 				
 			} catch (Exception e) {

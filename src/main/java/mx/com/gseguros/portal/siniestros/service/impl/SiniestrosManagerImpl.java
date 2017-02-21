@@ -1425,7 +1425,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			,String cdmotivo
 			,String cdclausu
 			,String swagente
-			,Long stamp, boolean enviarCorreos
+            ,Long stamp
 			) throws Exception
 	{
 		if(stamp==null)
@@ -1448,7 +1448,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 				,"\n@@@@@@ cdmotivo="        , cdmotivo
 				,"\n@@@@@@ cdclausu="        , cdclausu
 				,"\n@@@@@@ swagente="        , swagente
-				,"\n@@@@@@ enviarCorreos="   ,  enviarCorreos
 				));
 		
 		int bloqueos = consultasDAO.recuperarConteoTbloqueoTramite(ntramite);
@@ -1474,9 +1473,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 					,cdclausu
 					,swagente
 					);
-			if(enviarCorreos){
-				flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSesion, false);
-			}
+            
 			try
 	        {
 				cotizacionDAO.grabarEvento(new StringBuilder("\nTurnar tramite")
@@ -1633,7 +1630,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 					,cdmotivo
 					,cdclausu
 					,swagente
-					,stamp, true
+					,stamp
 					);
 			}
 			catch(Exception ex)

@@ -5,19 +5,12 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
 
 import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
@@ -39,10 +32,15 @@ import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Ccomision;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSalud;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.DirCli;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 import oracle.jdbc.driver.OracleTypes;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
 
 /**
  * Clase que contiene los accesos a datos que se encuentran en Base De Datos de
@@ -135,7 +133,6 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTIENE_DATOS_CLIENTE="OBTIENE_DATOS_CLIENTE";
     public static final String OBTIENE_DATOS_CLIENTE_GENERAL="OBTIENE_DATOS_CLIENTE_GENERAL";
     public static final String OBTIENE_DATOS_CLIENTE_GENERAL_X_CDPERSON="OBTIENE_DATOS_CLIENTE_GENERAL_X_CDPERSON";
-    public static final String OBTIENE_DATOS_DOMICILIO_GENERAL_X_CDPERSON="OBTIENE_DATOS_DOMICILIO_GENERAL_X_CDPERSON";
     public static final String MESACONTROL_UPDATE_SOLICI="MESACONTROL_UPDATE_SOLICI";
     public static final String MESACONTROL_UPDATE_STATUS="MESACONTROL_UPDATE_STATUS";
     public static final String MESACONTROL_FINALIZAR_DETALLE="MESACONTROL_FINALIZAR_DETALLE";
@@ -248,7 +245,6 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTIENE_DATOS_CLIENTE, new ObtenDatosCliente(getDataSource()));
         addStoredProcedure(OBTIENE_DATOS_CLIENTE_GENERAL, new ObtenDatosClienteGeneral(getDataSource()));
         addStoredProcedure(OBTIENE_DATOS_CLIENTE_GENERAL_X_CDPERSON, new ObtenDatosClienteGeneralXcdperson(getDataSource()));
-        addStoredProcedure(OBTIENE_DATOS_DOMICILIO_GENERAL_X_CDPERSON, new ObtenDatosDomicilioGeneralXcdperson(getDataSource()));
         addStoredProcedure(MESACONTROL_UPDATE_SOLICI, new MesaControlUpdateSolici(getDataSource()));
         addStoredProcedure(MESACONTROL_UPDATE_STATUS, new MesaControlUpdateStatus(getDataSource()));
         addStoredProcedure(MESACONTROL_FINALIZAR_DETALLE, new MesaControlFinalizarDetalle(getDataSource()));
@@ -1680,7 +1676,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		/**
     		 * Problema:
     		 * Cuando cargo asegurados su fenacimi puede venir como 01/12/1990 o como 1990-12-01 00:00:00.0
-    		 * Solucion:
+    		 * Soluci�n:
     		 * Hacer este if
     		 */
     		String fenacimi=rs.getString("fenacimi");
@@ -1730,10 +1726,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		r.put("CONDUCTO"          , rs.getString("CONDUCTO"));
     		r.put("PTCUMUPR"          , rs.getString("PTCUMUPR"));
     		r.put("RESIDENCIA"        , rs.getString("RESIDENCIA"));
-    		r.put("cdestciv",           rs.getString("cdestciv"));
-    		r.put("ocup",               rs.getString("dsocupacion"));
-    		r.put("numsoc",             rs.getString("numsoc"));
-    		r.put("clvfam",             rs.getString("clvfam"));
     		return r;
     	}
     }
@@ -1922,7 +1914,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PMovTvaloper extends CustomStoredProcedure {
 	
 		protected PMovTvaloper(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_MOV_TVALOPER");
+			super(dataSource,"PKG_SATELITES.P_MOV_TVALOPER");
 	
 			declareParameter(new SqlParameter("pv_cdunieco",  OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo",    OracleTypes.NUMERIC));
@@ -1985,61 +1977,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_otvalor47", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor48", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor49", OracleTypes.VARCHAR));
-			
 			declareParameter(new SqlParameter("pv_otvalor50", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor51", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor52", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor53", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor54", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor55", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor56", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor57", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor58", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor59", OracleTypes.VARCHAR));
-
-			declareParameter(new SqlParameter("pv_otvalor60", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor61", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor62", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor63", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor64", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor65", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor66", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor67", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor68", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor69", OracleTypes.VARCHAR));
-
-			declareParameter(new SqlParameter("pv_otvalor70", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor71", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor72", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor73", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor74", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor75", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor76", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor77", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor78", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor79", OracleTypes.VARCHAR));
-
-			declareParameter(new SqlParameter("pv_otvalor80", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor81", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor82", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor83", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor84", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor85", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor86", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor87", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor88", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor89", OracleTypes.VARCHAR));
-
-			declareParameter(new SqlParameter("pv_otvalor90", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor91", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor92", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor93", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor94", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor95", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor96", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor97", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor98", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor99", OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -2262,7 +2200,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PMovMpersona extends CustomStoredProcedure {
     	
     	protected PMovMpersona(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES2.P_MOV_MPERSONA");
+    		super(dataSource,"PKG_SATELITES.P_MOV_MPERSONA");
     		declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipide_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdideper_i"    , OracleTypes.VARCHAR));
@@ -2286,8 +2224,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_cdideext_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdestciv_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsucemi_i"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdusuario_i"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_dsocupacion_i"    , OracleTypes.VARCHAR));//�� 
 			declareParameter(new SqlParameter("pv_accion_i"      , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -2515,7 +2451,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PMovMdomicil extends CustomStoredProcedure {
 	
 		protected PMovMdomicil(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_MOV_MDOMICIL");
+			super(dataSource,"PKG_SATELITES.P_MOV_MDOMICIL");
 			/*
 			pv_cdperson_i smap1.pv_cdperson
 			pv_nmorddom_i smap1.NMORDDOM
@@ -2541,9 +2477,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_cdcoloni_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmnumero_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmnumint_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipdom_i"       , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdusuario_i"       , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_swactivo_i"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_accion_i", 		OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
@@ -2856,7 +2789,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerDomicilioGeneral(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_MDOMICIL_ART140");
+			super(dataSource,"PKG_COTIZA.P_GET_MDOMICIL_ART140");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -2865,7 +2798,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_nmsuplem_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmorddom_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_record_o",    OracleTypes.CURSOR, new ObtenerDomicilioMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",    OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",     OracleTypes.VARCHAR));
@@ -2893,7 +2825,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_nmsuplem_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmorddom_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_record_o",    OracleTypes.CURSOR, new ObtenerDomicilioMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",    OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",     OracleTypes.VARCHAR));
@@ -2923,9 +2854,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			map.put("CDCOLONI"  , rs.getString("CDCOLONI"));
 			map.put("NMNUMERO"  , rs.getString("NMNUMERO"));
 			map.put("NMNUMINT"  , rs.getString("NMNUMINT"));
-			map.put("CDTIPDOM"  , rs.getString("CDTIPDOM"));
-			map.put("SWACTIVO"  , rs.getString("SWACTIVO"));
-			map.put("CDUSRCRE"  , rs.getString("CDUSRCRE"));
 			return map;
 		}
 	}
@@ -3097,7 +3025,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 			String cols[] = new String[] { "nmsolici", "cddocume", "dsdocume",
 					"feinici", "ntramite", "tipmov", "nmsuplem", "nsuplogi",
-					"editable", "feinicio", "fefinal", "nmsituac", "nmcertif", "cdmoddoc", "total", "tramite_endoso"};
+					"editable", "feinicio", "fefinal", "nmsituac", "nmcertif", "cdmoddoc", "total" };
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
@@ -3308,8 +3236,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerMesaControl(DataSource dataSource)
 		{
-//			super(dataSource,"PKG_SATELITES2.P_OBTIENE_MESACONTROL");
-			super(dataSource,"P_OBTIENE_MESACONTROL1");
+			super(dataSource,"PKG_SATELITES2.P_OBTIENE_MESACONTROL");
 			declareParameter(new SqlParameter("pv_cdunieco_i"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"       , OracleTypes.VARCHAR));
@@ -3332,7 +3259,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("tipolote"          , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipoimpr"          , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari_busq"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("dscontra"          , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o"  , OracleTypes.CURSOR, new ObtenerMesaControlMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
@@ -3432,7 +3358,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerDetalleMesaControl(DataSource dataSource)
 		{
-			super(dataSource,"P_CONS_DET_MESACTRL");
+			super(dataSource,"PKG_CONSULTA.P_cons_det_mesactrl");
 			declareParameter(new SqlParameter("pv_ntramite_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerDetalleMesaControlMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
@@ -3453,19 +3379,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
-			String cols[]=new String[]{
-					"NTRAMITE"      , "NMORDINA"     , "CDTIPTRA"
-					,"CDCLAUSU"     , "FECHAINI"     , "FECHAFIN"
-					,"COMMENTS"     , "CDUSUARI_INI" , "CDUSUARI_FIN"
-					,"usuario_ini"  , "usuario_fin"  , "cdmotivo"
-					,"SWAGENTE"
-					,"STATUS"        , "DSSTATUS"
-					,"CDSISROL_INI"  , "DSSISROL_INI"
-					,"CDSISROL_FIN"  , "DSSISROL_FIN"
-					,"DSUSUARI_INI"  , "DSUSUARI_FIN"
-					,"CDUSUARI_DEST" , "CDSISROL_DEST"
-					,"DSUSUARI_DEST" , "DSSISROL_DEST"
-					};
+			String cols[]=new String[]{"NTRAMITE","NMORDINA","CDTIPTRA","CDCLAUSU","FECHAINI","FECHAFIN",
+					"COMMENTS","CDUSUARI_INI","CDUSUARI_FIN","usuario_ini","usuario_fin","cdmotivo","SWAGENTE"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
@@ -3890,7 +3805,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	}
     }
 
-    
     protected class ObtenDatosClienteGeneralXcdperson extends CustomStoredProcedure {
     	
     	protected ObtenDatosClienteGeneralXcdperson(DataSource dataSource) {
@@ -3899,29 +3813,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlParameter("pv_compania_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ClienteGeneralMapper()));
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		compile();
-    	}
-    	
-    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-    		WrapperResultados wrapperResultados = mapper.build(map);
-    		List result = (List) map.get("pv_registro_o");
-    		wrapperResultados.setItemList(result);
-    		return wrapperResultados;
-    	}
-    }
-
-    protected class ObtenDatosDomicilioGeneralXcdperson extends CustomStoredProcedure {
-    	
-    	protected ObtenDatosDomicilioGeneralXcdperson(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_WS_CLIENTES_ART140DOMICI");
-    		
-    		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));			
-    		declareParameter(new SqlParameter("pv_compania_i", OracleTypes.VARCHAR));			
-    		declareParameter(new SqlParameter("pv_nmorddom_i", OracleTypes.VARCHAR));			
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DireccionClienteGeneralMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
     		compile();
@@ -3977,6 +3868,9 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 //    			claveCli = Integer.parseInt(llaveCli.substring(llaveCli.length()-10));
 //    		}
     		
+    		logger.debug("VARLOR DE LA CLAVE CLI PARA ws DE ART 140: " + rs.getInt("claveCli"));
+    		logger.debug("VARLOR DE LA CLAVE CLI PARA WS DE ART 140 MAYUS: " + rs.getInt("CLAVECLI"));
+    		
     		cliente.setAgrupaCli(rs.getInt("agrupaCli"));
     		cliente.setApellidomCli(rs.getString("apellidomCli"));
     		cliente.setApellidopCli(rs.getString("apellidopCli"));
@@ -4029,8 +3923,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setSinocurCli(rs.getInt("sinocurCli"));
     		cliente.setSucursalCli(rs.getInt("sucursalCli"));
     		cliente.setTelefonoCli(rs.getString("telefonoCli"));
-    		cliente.setFaxCli(rs.getString("telefonoCli2"));
-    		cliente.setCelularCli(rs.getString("telefonoCli3"));
     		
     		
     		logger.debug("TElefono cli : " + rs.getString("telefonoCli"));
@@ -4050,20 +3942,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setAdmconCli(rs.getString("admconCli"));
     		cliente.setApodeCli(rs.getString("apodeCli"));
     		cliente.setPasaporteCli(rs.getString("pasaporteCli"));
-    		
-    		try{
-    			cliente.setUsucapCli(rs.getInt("usucapCli"));
-    		}
-    		catch(Exception e){
-    			logger.error("No se pudo mapear el codigo de usuario captura, se envia 0 por default, claveCli: "+rs.getInt("claveCli"),e);
-    		}
-    		
-    		try{
-    			cliente.setUsuautCli(rs.getInt("usuautCli"));
-			}
-			catch(Exception e){
-				logger.error("No se pudo mapear el codigo de usuario Autoriza actualiza, se envia 0 por default, claveCli: "+rs.getInt("claveCli"),e);
-			}
+    		cliente.setUsucapCli(rs.getInt("usucapCli"));
+    		cliente.setUsuautCli(rs.getInt("usuautCli"));
     		
     		cliente.setStatusCli(rs.getString("STATUSCLI"));
     		
@@ -4082,53 +3962,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setMpoSepomex(rs.getInt("MPOSEPOMEX"));
     		
     		return cliente;
-    	}
-    }
-
-    protected class DireccionClienteGeneralMapper  implements RowMapper {
-    	
-    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-    		DirCli dirCliente = new DirCli();
-    		SimpleDateFormat spdf = new SimpleDateFormat("dd/MM/yyyy");
-    		Calendar cal;
-    		
-    		dirCliente.setCalCli(rs.getString("calleCli"));
-    		dirCliente.setCodPos(Integer.parseInt(rs.getString("codposCli")));
-    		dirCliente.setColonia(rs.getString("coloniaCli"));
-//    		dirCliente.setCveCia(param);// falta fijar valor
-    		
-    		
-    		dirCliente.setCveCli(Integer.parseInt(rs.getString("llaveCli").substring(rs.getString("llaveCli").length()-10)));
-    		
-    		
-    		dirCliente.setCveEst(rs.getShort("estadoCli"));
-    		//dirCliente.setCveMpo(param);// no es necesario llenar
-    		dirCliente.setCveMpoSpm(rs.getShort("MPOSEPOMEX"));
-  
-    		cal = Utils.getCalendarTimeZone0(spdf.format(new Date()), Constantes.FORMATO_FECHA);
-    		if(cal != null){
-    			dirCliente.setFecAct(cal);
-    		}else{
-    			logger.error("NO SE PUDO PARSEAR LA FECHA FecAct !!! " + spdf.format(new Date()));
-    		}
-    		
-    		cal = Utils.getCalendarTimeZone0(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
-        	if(cal != null){
-        		dirCliente.setFecAlt(cal);
-        	}else{
-        		logger.error("NO SE PUDO PARSEAR LA FECHA fecaltaCli !!! " + rs.getString("fecaltaCli"));
-        	}
-    		
-    		
-    		dirCliente.setNumCli(rs.getString("NUMEROEXT"));
-//    		dirCliente.setNumDir(param);// falta fijar valor
-    		dirCliente.setNumInt(rs.getString("NUMEROINT"));
-    		dirCliente.setPoblaci(rs.getString("poblacionCli"));
-    		dirCliente.setStaDir(StringUtils.isNotBlank(rs.getString("SWACTIVO")) && Constantes.NO.equalsIgnoreCase(rs.getString("SWACTIVO"))? "0":"1");
-    		dirCliente.setTipDir(rs.getInt("CDTIPDOM"));
-//    		dirCliente.setUsuCap(param);// falta fijar valor
-    		
-    		return dirCliente;
     	}
     }
     
@@ -4197,14 +4030,13 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     /*///////////////////////////////////////////////////////*/
     protected class MesaControlFinalizarDetalle extends CustomStoredProcedure {
     	protected MesaControlFinalizarDetalle(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES2.P_UPDATE_TDMESA");
+    		super(dataSource,"PKG_SATELITES.P_UPDATE_TDMESA");
     		
     		declareParameter(new SqlParameter("pv_nmordina_i",     OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_ntramite_i",     OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdusuari_fin_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_cdsisrol_fin_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_comments_i",     OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_fechafin_i",     OracleTypes.TIMESTAMP));
+    		declareParameter(new SqlParameter("pv_fechafin_i",     OracleTypes.DATE));
     		//declareParameter(new SqlParameter("pv_cdmotivo_i",     OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O",    OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("PV_TITLE_O",     OracleTypes.VARCHAR));
@@ -4261,11 +4093,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		protected BuscarRFC(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_VALIDA_RFC");
-			declareParameter(new SqlParameter("pv_rfc_i"      , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new BuscarRFCMapper()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_rfc_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new BuscarRFCMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
 		}
 	
 		public WrapperResultados mapWrapperResultados(Map map) throws Exception
@@ -4287,7 +4118,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 					"SEXO", "TIPOPERSONA", "NACIONALIDAD",
 					"NOMBRE", "SNOMBRE", "APPAT",
 					"APMAT","CODPOSTAL","CDEDO","CDMUNICI","DSDOMICIL",
-					"NMNUMERO","NMNUMINT", "NMORDDOM"
+					"NMNUMERO","NMNUMINT"
 					};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)

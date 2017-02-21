@@ -63,8 +63,8 @@
             var _URL_CONSULTA_CLAUSU         = '<s:url namespace="/catalogos"       action="consultaClausulas"           />';
             var _URL_ObtieneValNumeroSerie   = '<s:url namespace="/emision" 		action="obtieneValNumeroSerie"       />';
             var urlEditarAsegurados = '${ctx}<s:property value="map1.urlAsegurados" />?now=${now}';
-            var urlServidorReports  = '<s:property value="rutaServidorReports"         />';
-            var complerepSrvUsr     = '<s:property value="passServidorReports"         />';
+            var urlServidorReports  = '<s:text name="ruta.servidor.reports"         />';
+            var complerepSrvUsr     = '<s:text name="pass.servidor.reports"         />';
             var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarValoresSituacion"               />';
             var urlPantallaBeneficiarios = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
             
@@ -254,11 +254,13 @@ function checarBenef()
 	                  if(_p29_validaSeguro == "S")
 	                  {    
 	                	  var panel = Ext.getCmp('panelBeneficiarioHere');
+ 	                	  /*
  	                	  panel.on({
  	                		  afterrender : function(me){
  	                			  me.getLoader().load();
  	                		  }
- 	                	  })
+ 	                	  });
+ 	                	  */
 	                	  panel.show();
                 	  }
 	          }
@@ -268,10 +270,6 @@ function checarBenef()
 	          }
 	      }
 	  });
-	 }
-	 else
-		 {
-	 debug('No es ramo 16, es '+inputCdramo);
 		 }
 }
 
@@ -301,7 +299,6 @@ function _datComTurnarSuscripcion()
                 ,columns    : 2
                 ,width      : 250
                 ,style      : 'margin:5px;'
-                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                 ,items      :
                 [
                     {
@@ -309,13 +306,12 @@ function _datComTurnarSuscripcion()
                         ,itemId     : 'SWAGENTE'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'S'
-                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                     }
                     ,{
                         boxLabel    : 'No'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'N'
-                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                        ,checked    : true
                     }
                 ]
             }
@@ -516,7 +512,6 @@ function _p29_emitirClicComplementarios()
 	        return;
 	    }
 	    var form=Ext.getCmp('formPanel');
-	    debug('contrato',_fieldByLabel('NUMERO DE CONTRATO',null,true));
 	    if(form.isValid())
 	    {
 	        form.setLoading(true);
@@ -579,7 +574,6 @@ function _p29_emitirClicComplementarios()
 	                                            {
 	                                                debugError(e);
 	                                            }
-	                                            	                                            
 	                                            Ext.create('Ext.window.Window',
 	                                            {
 	                                                title: 'Tarifa final',
@@ -695,7 +689,6 @@ function _p29_emitirClicComplementarios()
 	                                                                id      : 'botonEmitirPolizaFinal'
 	                                                                ,xtype  : 'button'
 	                                                                ,text   : 'Emitir'
-	                                                                ,hidden : panDatComMap1.SITUACION !== 'AUTO' && ('SUSCRIPTOR' !== sesionDsrol)
 	                                                                ,icon   : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
 	                                                                //,disabled : true
 	                                                                ,handler:function()
@@ -792,7 +785,7 @@ function _p29_emitirClicComplementarios()
 	                                                                                    Ext.getCmp('botonEnvioEmail').hide();
 	                                                                                }
 	                                                                                
-	                                                                                if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
+	                                                                                if(panDatComMap1.SITUACION=='AUTO')
 	                                                                                {
 	                                                                                    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
 	                                                                                }
@@ -827,7 +820,7 @@ function _p29_emitirClicComplementarios()
 	                                                                                    Ext.getCmp('botonEmitirPolizaFinal').hide();
 	                                                                                    Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 	                                                                                    
-	                                                                                    if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
+	                                                                                    if(panDatComMap1.SITUACION=='AUTO')
 	                                                                                    {
 	                                                                                        Ext.getCmp('venDocVenEmiBotIrCotiza').show();
 	                                                                                    }
@@ -1041,7 +1034,6 @@ function _p29_emitirClicComplementarios()
 	                                                                            ,width       : 600
 	                                                                            ,height      : 400
 	                                                                            ,autoScroll  : true
-	                                                                            ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
 	                                                                            ,loader      :
 	                                                                            {
 	                                                                                url       : panDatComUrlDoc2
@@ -1163,22 +1155,7 @@ function _p29_emitirClicComplementarios()
 	                                                                    me.up().up().destroy();
 	                                                                }
 	                                                            }
-	                                                        ],
-	                                                        listeners : {
-	                                                            afterrender : function(me){
-	                                                                try{
-	                                                                    debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
-	                                                                    if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
-	                                                                        setTimeout(function(){ 
-	                                                                            mensajeWarning(json.panel1['mensajeAgenteActivo']); 
-	                                                                        }, 3000);
-	                                                                    }
-	                                                                }
-	                                                                catch(e){
-	                                                                    debugError(e);
-	                                                                }
-	                                                            }
-	                                                        }
+	                                                        ]
 	                                                    })
 	                                                ]
 	                                            }).showAt(50,50);
@@ -1260,8 +1237,8 @@ function _p29_emitirClicComplementarios()
                 accordion=Ext.create('Ext.tab.Panel',
                 {
                 	title:'Tr&aacute;mite '+inputNtramite,
-                	border:0
-                	//renderTo : 'maindiv'
+                	border:0,
+                	renderTo : 'maindiv'
                 	/*,layout   :
                		{
                 		type           : 'accordion'
@@ -1307,7 +1284,7 @@ function _p29_emitirClicComplementarios()
                         ,Ext.create('Ext.panel.Panel',
                         {
                             id:'tabPanelAsegurados'
-                            ,title:inputCdtipsit=='AF'||inputCdtipsit=='PU'?'Editar clientes':'Editar contratante'
+                            ,title:inputCdtipsit=='AF'||inputCdtipsit=='PU'?'Editar clientes':'Editar asegurados'
                             ,cls:'claseTitulo'
                             ,border:0
                             ,loader:
@@ -1320,8 +1297,6 @@ function _p29_emitirClicComplementarios()
                                     ,'map1.cdtipsit' : inputCdtipsit
                                     ,'map1.estado'   : inputEstado
                                     ,'map1.nmpoliza' : inputNmpoliza
-                                    ,'map1.cdpercli' : panDatComMap1.cdpercli
-                                    ,'map1.ntramite' : inputNtramite
                                 }
                                 ,scripts:true
                                 ,autoLoad:true
@@ -1890,13 +1865,21 @@ function _p29_emitirClicComplementarios()
 			                                       ,autoLoad: false
 			                                       ,scripts:true
 			                                   }
-			                               })
+							                   ,listeners: {
+	                                               afterrender:function(me)
+	                                               {
+	                                                   debug('afterrender panel beneficiarios');
+	                                                   me.loader.load();
+	                                               }
+	                                           }
+			                               }
+			                               )
 		                    ],
 		                    buttons:
 		                    [
 		                        {
 		                            text:'Guardar',
-		                            icon: contexto+'/resources/fam3icons/icons/accept.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
 		                            handler: function(){ _p29_guardarComplementario(null);}	
 		                        },
 		                        {
@@ -1921,7 +1904,7 @@ function _p29_emitirClicComplementarios()
 		                        {
 		                            text:'Editar asegurados',
 		                            hidden:true,
-		                            icon: contexto+'/resources/fam3icons/icons/user.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user.png',
 		                            handler:function(){
 		                                Ext.create('Ext.form.Panel').submit({
 		                                    url : urlEditarAsegurados,
@@ -1938,13 +1921,13 @@ function _p29_emitirClicComplementarios()
 		                        --%>
 		                        {
 		                            text:'Editar agentes',
-		                            icon: contexto+'/resources/fam3icons/icons/user_gray.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png',
 		                            disabled:true,
 		                            hidden:true
 		                        },
 		                        {
 		                            text:'Editar documentos',
-		                            icon: contexto+'/resources/fam3icons/icons/book.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png',
 		                            disabled:true,
 		                            hidden:true
 		                        }
@@ -1980,7 +1963,6 @@ function _p29_emitirClicComplementarios()
 															                ,columns    : 2
 															                ,width      : 250
 															                ,style      : 'margin:5px;'
-															                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 															                ,items      :
 															                [
 															                    {
@@ -1988,13 +1970,12 @@ function _p29_emitirClicComplementarios()
 															                        ,itemId     : 'SWAGENTE'
 															                        ,name       : 'SWAGENTE'
 															                        ,inputValue : 'S'
-															                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 															                    }
 															                    ,{
 															                        boxLabel    : 'No'
 															                        ,name       : 'SWAGENTE'
 															                        ,inputValue : 'N'
-                                                                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                                                    ,checked    : true
 															                    }
 															                ]
 															            }
@@ -2098,23 +2079,18 @@ function _p29_emitirClicComplementarios()
                                      }
                                 }
 		                        ,{
-		                            text     : ['COTIZADOR', 'SUPTECSALUD'].indexOf(sesionDsrol) != -1
-		                                           ? 'Cotizar'
-		                                           : 'Emitir'
+		                            text     : 'Emitir'
                                     ,itemId  : 'panDatComBotonRetarificar'
                                     ,icon    : contexto+'/resources/fam3icons/icons/key.png'
-                                    //,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
-                                    ,hidden  : panDatComMap1.SITUACION !== 'AUTO' && (['SUSCRIPTOR', 'COTIZADOR', 'SUPTECSALUD'].indexOf(sesionDsrol) === -1)
+                                    ,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
                                     ,handler : function(me)
                                     {
                                     	try
                                     	{
-	                                    	_p29_guardarComplementario
-	                                    	(
-	                                    	  function()
-	                                    	  {
 	                                    			if(inputCdramo == 16)
 	                                                {
+	                                    		_p32_guardarClic
+		                                    	(
 	                                                  Ext.Ajax.request(
 	                                                             {
 	                                                                 url     : _URL_urlCargarTvalosit
@@ -2151,12 +2127,9 @@ function _p29_emitirClicComplementarios()
 	                                                                                 }
 	                                                                                 else
 	                                                                                 {
-	                                                                                	 try{
-	                                                                                     _p32_guardarClic(_p29_emitirClicComplementarios);
+                                                                                    _p29_emitirClicComplementarios();
 	                                                                                	 }
-	                                                                                	 catch(e){manejaException(e);}
-	                                                                                     
-	                                                                                 }
+
 	
 	                                                                             }
 	                                                                             else
@@ -2169,14 +2142,13 @@ function _p29_emitirClicComplementarios()
 	                                                                         mensajeError(json.respuesta);
 	                                                                     }
 	                                                                 }
-	                                                             });
+                                                            })
+			                                    );
 	                                                }
 	                                                else
 	                                                {
 	                                                    _p29_emitirClicComplementarios();
 	                                                }
-	                                    	  }
-	                                    	);
                                     	}
                                     	catch(e)
                                         {
@@ -2216,7 +2188,6 @@ function _p29_emitirClicComplementarios()
 										                ,columns    : 2
 										                ,width      : 250
 										                ,style      : 'margin:5px;'
-										                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 										                ,items      :
 										                [
 										                    {
@@ -2224,13 +2195,12 @@ function _p29_emitirClicComplementarios()
 										                        ,itemId     : 'SWAGENTE'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'S'
-										                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 										                    }
 										                    ,{
 										                        boxLabel    : 'No'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'N'
-                                                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                                ,checked    : true
 										                    }
 										                ]
 										            }
@@ -2368,7 +2338,6 @@ function _p29_emitirClicComplementarios()
 										                ,columns    : 2
 										                ,width      : 250
 										                ,style      : 'margin:5px;'
-										                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 										                ,items      :
 										                [
 										                    {
@@ -2376,13 +2345,12 @@ function _p29_emitirClicComplementarios()
 										                        ,itemId     : 'SWAGENTE'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'S'
-										                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 										                    }
 										                    ,{
 										                        boxLabel    : 'No'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'N'
-                                                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                                ,checked    : true
 										                    }
 										                ]
 										            }
@@ -2561,7 +2529,6 @@ function _p29_emitirClicComplementarios()
 													                ,columns    : 2
 													                ,width      : 250
 													                ,style      : 'margin:5px;'
-													                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 													                ,items      :
 													                [
 													                    {
@@ -2569,13 +2536,12 @@ function _p29_emitirClicComplementarios()
 													                        ,itemId     : 'SWAGENTE'
 													                        ,name       : 'SWAGENTE'
 													                        ,inputValue : 'S'
-													                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 													                    }
 													                    ,{
 													                        boxLabel    : 'No'
 													                        ,name       : 'SWAGENTE'
 													                        ,inputValue : 'N'
-                                                                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                                            ,checked    : true
 													                    }
 													                ]
 													            }
@@ -2591,7 +2557,14 @@ function _p29_emitirClicComplementarios()
    		                                                                {
    		                                                                    var window=this.up().up();
    		                                                                    window.setLoading(true);
-   		                                                                    
+   		                                                                    /*form.submit({
+   		                                                                        params:{
+   		                                                                            'map1.pv_cdunieco' :  inputCdunieco,
+   		                                                                            'map1.pv_cdramo' :    inputCdramo,
+   		                                                                            'map1.pv_estado' :    inputEstado,
+   		                                                                            'map1.pv_nmpoliza' :  inputNmpoliza
+   		                                                                        },
+   		                                                                        success:function(){*/
                                                                             Ext.Ajax.request
                                                                             ({
                                                                                 url     : datComUrlMCUpdateStatus
@@ -2664,7 +2637,18 @@ function _p29_emitirClicComplementarios()
                                                                                         icon: Ext.Msg.ERROR
                                                                                     });
                                                                                 }
+   		                                                                            });/*
+   		                                                                        },
+   		                                                                        failure:function(){
+   		                                                                            window.setLoading(false);
+   		                                                                            Ext.Msg.show({
+   		                                                                                title:'Error',
+   		                                                                                msg: 'Error de comunicaci&oacute;n',
+   		                                                                                buttons: Ext.Msg.OK,
+   		                                                                                icon: Ext.Msg.ERROR
                                                                             });
+   		                                                                        }
+   		                                                                    });*/
    		                                                                }
    		                                                                else
    		                                                                {
@@ -2821,54 +2805,9 @@ function _p29_emitirClicComplementarios()
                     }
                 });
                 
-                Ext.create('Ext.panel.Panel',
-                {
-                    renderTo  : 'maindiv'
-                    ,defaults : { style : 'margin:5px;' }
-                    ,border   : 0
-                    ,items    :
-                    [
-                        Ext.create('Ext.panel.Panel',
-			            {
-			                itemId       : '_datcom_panelFlujo'
-			                ,title       : 'ACCIONES'
-			                ,hidden      : Ext.isEmpty(panDatComFlujo)
-			                ,buttonAlign : 'left'
-			                ,buttons     : []
-			                ,listeners   :
-			                {
-			                    afterrender : function(me)
-			                    {
-			                        if(!Ext.isEmpty(panDatComFlujo))
-			                        {
-			                            _cargarBotonesEntidad(
-			                                panDatComFlujo.cdtipflu
-			                                ,panDatComFlujo.cdflujomc
-			                                ,panDatComFlujo.tipoent
-			                                ,panDatComFlujo.claveent
-			                                ,panDatComFlujo.webid
-			                                ,me.itemId//callback
-			                                ,panDatComFlujo.ntramite
-			                                ,panDatComFlujo.status
-			                                ,panDatComFlujo.cdunieco
-			                                ,panDatComFlujo.cdramo
-			                                ,panDatComFlujo.estado
-			                                ,panDatComFlujo.nmpoliza
-			                                ,panDatComFlujo.nmsituac
-			                                ,panDatComFlujo.nmsuplem
-			                                ,null//callbackDespuesProceso
-			                            );
-			                        }
-			                    }
-			                }
-			            })
-			            ,accordion
-                    ]
-                });
                 
                 checarBenef();
                 
-                /*
                 if(!Ext.isEmpty(panDatComFlujo))
                 {
                     var formPanel = _fieldById('formPanel');
@@ -2901,7 +2840,6 @@ function _p29_emitirClicComplementarios()
                         ,function(){alert();}
                     );
                 }
-                */
                 
                 function creaWindowPay(url, params, tarjet )
 			    {
@@ -2957,9 +2895,6 @@ function _p29_emitirClicComplementarios()
 	                            	    	if(json.success==true)
 	                            	    	{
 	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Reintento. P&oacute;liza Emitida: ' + json.nmpolAlt);
-	                            	    		
-	                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
-	                            	    		
 	                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.nmpolAlt);
 	                            	    		_numeroPolizaExt = json.nmpolAlt;
                                 	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
@@ -3088,7 +3023,6 @@ function _p29_emitirClicComplementarios()
 		            ,titleCollapse  : true
 		            ,startCollapsed : true
 		            ,resizable      : false
-		            ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
 		            ,loader         :
 		            {
 		                scripts   : true
@@ -3104,7 +3038,6 @@ function _p29_emitirClicComplementarios()
 		                    ,'smap1.nmsolici' : ''
 		                    ,'smap1.ntramite' : inputNtramite
 		                    ,'smap1.tipomov'  : '0'
-		                    ,'smap1.lista'    : 'EMISION'
 		                }
 		            }
 		        }).showAt(500,0);
