@@ -4155,8 +4155,7 @@ function _p30_cotizar(sinTarificar)
     	   !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
 //     	   (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
     	   )
-    	{
-    		
+    	{	
     		var ncamiones = 0;
             var ntractocamiones = 0;
             var nsemiremolques = 0;
@@ -4207,33 +4206,33 @@ function _p30_cotizar(sinTarificar)
             }
     	}
     	
-//    	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
-//    	     try 
-//    	     {
-//    	         _p30_store.each
-//    	         (
-//    	          function(record)
-//    	             {
-//    	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1)
-//    	                {
-//    	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-//    	                    if(record.get(tipoVehiName)-0==2){
-//    	                        record.cdtipsit_panel = 'PC';
-//    	                    }
-//    	                    else if(record.get(tipoVehiName)-0==4)
-//    	                    {
-//    	                        record.cdtipsit_panel = 'TC';
-//    	                    }else if(record.get(tipoVehiName)-0==13)
-//    	                    {
-//    	                        record.cdtipsit_panel = 'RQ';
-//    	                    }
-//    	                }
-//    	             }
-//    	         );
-//    	     }catch (e) 
-//    	     {
-//    	        debug(e);//debugError , ck
-//    	     }
+   	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
+   	     try 
+   	     {
+   	         _p30_store.each
+   	         (
+   	          function(record)
+   	             {
+   	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1)
+   	                {
+   	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+   	                    if(record.get(tipoVehiName)-0==2){
+   	                        record.cdtipsit_panel = 'PC';
+   	                    }
+   	                    else if(record.get(tipoVehiName)-0==4)
+   	                    {
+   	                        record.cdtipsit_panel = 'TC';
+   	                    }else if(record.get(tipoVehiName)-0==13)
+   	                    {
+   	                        record.cdtipsit_panel = 'RQ';
+   	                    }
+   	                }
+   	             }
+   	         );
+   	     }catch (e) 
+   	     {
+   	        debug(e);//debugError , ck
+   	     }
     }
     
     if(valido)
@@ -4515,7 +4514,7 @@ function _p30_cotizar(sinTarificar)
                 ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
                 ,notarificar : !Ext.isEmpty(sinTarificar)&&sinTarificar==true? 'si':'no'
                 ,tipoflot    : _p30_smap1.tipoflot
-                ,modPrim     : !Ext.isEmpty(sinTarificar)&&sinTarificar+0>-100 ?sinTarificar:''
+                ,modPrim     : Number(sinTarificar)!=0 && Number(sinTarificar)!= 1 ? sinTarificar:''
             }
             ,slist1 : []
             ,slist2 : []
