@@ -71,7 +71,7 @@ var poliza;
 var _p29_habilitarBotonEmitir  = "S";
 
 var _url_domiciliacion = '<s:text name="portal.agentes.domiciliacion.url" />';
-var _URL_IDUSULOGIN = '<s:property value="sigsObtenerDatosPorSucRamPolUrl" />';
+var _URL_IDUSULOGIN = '<s:property value="sigs.obtenerDatosPorSucRamPol.url" />';
 
 var panelDxnItems=[<s:property value="imap.panelDxnItems" />];
 
@@ -399,6 +399,7 @@ Ext.onReady(function()
                                                            json.parametros.pv_otvalor08!=null 
                                                         && (json.parametros.pv_otvalor08+'').trim()!=''
                                                         && json.parametros.pv_otvalor08!='-1'
+                                                        && _p29_smap1.cdramo!=Ramo.ServicioPublico
                                                   ){
                                                     
                                                         esDXN=true;
