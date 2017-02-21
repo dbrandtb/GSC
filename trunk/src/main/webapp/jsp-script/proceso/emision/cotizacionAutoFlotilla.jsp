@@ -4514,7 +4514,7 @@ function _p30_cotizar(sinTarificar)
                 ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
                 ,notarificar : !Ext.isEmpty(sinTarificar)&&sinTarificar==true? 'si':'no'
                 ,tipoflot    : _p30_smap1.tipoflot
-                ,modPrim     : Number(sinTarificar)!=0 && Number(sinTarificar)!= 1 ? sinTarificar:''
+                ,modPrim     : sinTarificar == false || sinTarificar== true ? "" : sinTarificar
             }
             ,slist1 : []
             ,slist2 : []
