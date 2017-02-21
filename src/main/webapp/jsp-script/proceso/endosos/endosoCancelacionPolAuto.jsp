@@ -216,6 +216,7 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
+    var mask = _maskLocal();
     Ext.Ajax.request(
     {
         url      : _p43_urlMarcarPolizaCancelar
@@ -227,6 +228,7 @@ Ext.onReady(function()
         }
         ,success : function(response)
         {
+            mask.close();
             var json = Ext.decode(response.responseText);
             debug('### marcar poliza:',json);
             if(json.success)
@@ -243,6 +245,7 @@ Ext.onReady(function()
         }
         ,failure : function()
         {
+            mask.close();
             errorComunicacion();
         }
     });
