@@ -2563,7 +2563,7 @@ function _p28_cotizar(sinTarificar)
         {
             _p28_smap1['notarificar'] = 'si';//Se utiliza para no retarid
         }
-        else if(!Ext.isEmpty(sinTarificar) &&  sinTarificar+0>-100)
+        else if(!Ext.isEmpty(sinTarificar) && sinTarificar != false && sinTarificar != true)
         {
             _p28_smap1['notarificar'] = 'no';//Se utiliza para no retarid
             _p28_smap1['modPrim']     = sinTarificar;
