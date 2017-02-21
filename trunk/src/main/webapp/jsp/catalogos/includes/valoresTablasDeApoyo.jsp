@@ -585,7 +585,7 @@ Ext.onReady(function() {
 			                            					items: [
 			                            						{boxLabel: 'Agregar Datos Nuevos', name: 'tipoBusqueda', inputValue: 1,  width: 200},
 			                            						{boxLabel: 'Actualizar Tarifas', name: 'tipoBusqueda', inputValue: 2, checked: true, width: 200},
-			                            						{boxLabel: 'Reemplazar Datos', name: 'tipoBusqueda', inputValue: 3,width: 200}
+			                            						{boxLabel: 'Reemplazar Datos', name: 'tipoBusqueda', inputValue: 3,width: 200, hidden: (cdSisRolActivo==RolSistema.SuscriptorAuto) ? true : false,}
 									                                ],
 			                            					listeners : {
 			                            						change : function(radiogroup, newValue, oldValue, eOpts) {
@@ -712,7 +712,7 @@ Ext.onReady(function() {
 							    	text : 'Exportar',
 							    	tooltip: 'Exporta la tabla a formato Excel.',
 							    	icon:_CONTEXT+'/resources/fam3icons/icons/database_table.png',
-							    	 hidden: true ,//(cdSisRolActivo==RolSistema.ParametrizadorSistemas ||  cdSisRolActivo==RolSistema.Parametrizador) ? false : true,//se evalua habilitar o desabilitar Boton, dependiendo el rol
+							    	 hidden: (cdSisRolActivo==RolSistema.SuscriptorAuto) ? false : true, //(cdSisRolActivo==RolSistema.SuscriptorAuto || cdSisRolActivo==RolSistema.Parametrizador) ? false : true,//se evalua habilitar o desabilitar Boton, dependiendo el rol
 							    	handler: function(btn){
 							    		var loadMaskExport = new Ext.LoadMask('divValoresCincoClaves', {msg:"Exportando Tabla de Apoyo..."});
 										loadMaskExport.show();
