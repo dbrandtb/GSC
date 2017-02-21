@@ -2589,13 +2589,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
   	            	logger.debug("Amis Y Modelo con Irregularidades en coberturas: "+planValido);
   	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
   	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
-  	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Autom&oacute;viles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
-  	            			planValido;
-  	            	
+  	            	String mensajeACorreo= "Se le notif\u00EDca que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de autom\u00F3viles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + planValido;   
   	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
   	            	//{"XXXX@XXX.com.mx","YYYYY@YYYY.com.mx"};";
   	            	String [] adjuntos = new String[0];
-  	            	boolean mailSend = mailService.enviaCorreo(listamails, null, null, "Reporte de Tarifa incompleta - SICAPS", mensajeACorreo, adjuntos, false);
+  	            	boolean mailSend = mailService.enviaCorreo(listamails, null, null, "Reporte de Tarifa incompleta - SICAPS", mensajeACorreo, adjuntos, true);
   	        		if(!mailSend)
   	        		{
   	        			throw new ApplicationException("4");
