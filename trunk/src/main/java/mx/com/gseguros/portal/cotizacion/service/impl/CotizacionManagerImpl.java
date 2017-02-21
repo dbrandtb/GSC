@@ -11569,6 +11569,30 @@ public class CotizacionManagerImpl implements CotizacionManager
         //////////////////////////////////////////
     }
 	
+	@Override
+    public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception
+    {
+        return  cotizacionDAO.validaDatosAutoSigs(incisosSigs);
+        
+    }
+    
+	@Override
+	public List<Map<String, String>> cargarResultadosCotizacion(
+	            String cdusuari, String cdunieco, String cdramo, String estado,
+	            String nmpoliza, String cdelemen, String cdtipsit) throws Exception
+	{
+	      return cotizacionDAO.cargarResultadosCotizacion(cdusuari, cdunieco, cdramo, estado, nmpoliza, cdelemen, cdtipsit);
+	}
+	
+    @Override
+    public List<Map<String, String>> cargarResultadosCotizacionAutoFlotilla(
+            String cdunieco, String cdramo, String estado, String nmpoliza)
+            throws Exception
+    {
+        return cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza);
+        
+    }
+	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////

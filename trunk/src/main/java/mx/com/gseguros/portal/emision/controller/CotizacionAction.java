@@ -1773,7 +1773,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			    {
 			        if(!cdtipsit.equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit()) && !cdtipsit.equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit()))
 			        {
-			            List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
+			            List<Map<String,String>> listaResultados=cotizacionManager.cargarResultadosCotizacion(
 	                            cdusuari
 	                            ,cdunieco
 	                            ,cdramo
