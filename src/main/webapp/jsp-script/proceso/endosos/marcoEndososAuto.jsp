@@ -349,6 +349,14 @@ Ext.onReady(function()
             ,simpleSortMode: true
         }
         ,listeners : {
+			beforeload:function(){
+				try{
+					_fieldById('_p34_gridIncisos',null,true).setLoading(true);
+				}catch(e){
+					Ext.ComponentQuery.query('#_p34_gridIncisos').forEach(function(it){ it.setLoading(false)})
+					debugError(e);
+				}
+			},        
 		  	load: function(me, records, success){
 			 	debug('### incisos load',records,success);
 	            if(success)
@@ -384,7 +392,13 @@ Ext.onReady(function()
 	                }
 	                
 	                _p34_storeIncisos.commitChanges();
-	            }    
+	            } 
+	            try{
+					_fieldById('_p34_gridIncisos',null,true).setLoading(false);
+				}catch(e){
+					Ext.ComponentQuery.query('#_p34_gridIncisos').forEach(function(it){ it.setLoading(false)})
+					debugError(e);
+				}
 		    }		        
 	     }
     });
