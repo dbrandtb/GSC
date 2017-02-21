@@ -110,8 +110,8 @@ var _p25_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p25_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p25_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p25_urlImprimirCotiza      = '<s:property value="rutaServidorReports" />';
-var _p25_reportsServerUser      = '<s:property value="passServidorReports" />';
+var _p25_urlImprimirCotiza      = '<s:text name="ruta.servidor.reports" />';
+var _p25_reportsServerUser      = '<s:text name="pass.servidor.reports" />';
 var _TIPO_SITUACION_RENOVACION  = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 var _EN_ESPERA_DE_COTIZACION    = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
@@ -3936,15 +3936,16 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
             mensajeWarning('Verificar los datos del concepto y el censo de asegurados',_p25_setActiveConcepto);
         }
         
-        //debug("numcontrato",_fieldByName('tvalopol_parametros.pv_otvalor20').getValue() );
+        debug("numcontrato",_fieldByName('tvalopol_parametros.pv_otvalor20').getValue() );
       	//parche para numcontrato>
-      	var campoNumContrato = _fieldByName('tvalopol_parametros.pv_otvalor20', null, true);
-      	if (!Ext.isEmpty(campoNumContrato)
-      	    && campoNumContrato.fieldLabel.toUpperCase().indexOf('CONTRATO') != -1 ) {
-      	    if (Ext.isEmpty(campoNumContrato.getValue())) {
-      		    campoNumContrato.setValue('0');
-            }
-            if (_p21_smap1.cdunieco == 1403 && campoNumContrato.getValue() == 0) {
+      	if ((_fieldByName('tvalopol_parametros.pv_otvalor20').getValue()=="") || (Ext.isEmpty(_fieldByName('tvalopol_parametros.pv_otvalor20')) ) || (_fieldByName('tvalopol_parametros.pv_otvalor20').getValue()==null))
+        {
+        	valido=false;
+        	mensajeWarning('Verificar los datos del numero de contrato', _p25_setActiveConcepto);
+        }
+      	else{
+      		if ((_fieldByName('tvalopol_parametros.pv_otvalor20').getValue()=="0") && (_p21_smap1.cdunieco ==1403))
+        	{
 	        	valido=false;
 	        	mensajeWarning('Verificar los datos del numero de contrato', _p25_setActiveConcepto);
         	}

@@ -1221,17 +1221,4 @@ public interface CotizacionManager
 	 */
 	public HashMap<String, String> obtieneCodigosPostalesProductos()throws Exception;
 
-    public String aplicaDescAutos(String cdunieco, String cdramo, String nmpoliza,
-            String modPrim, String cdtipsit)
-            throws Exception;
-    
-    public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception;
-    
-    public List<Map<String, String>> cargarResultadosCotizacion(
-            String cdusuari, String cdunieco, String cdramo, String estado,
-            String nmpoliza, String cdelemen, String cdtipsit) throws Exception;
-    
-    public List<Map<String, String>> cargarResultadosCotizacionAutoFlotilla(
-            String cdunieco, String cdramo, String estado, String nmpoliza)
-            throws Exception;
 }
