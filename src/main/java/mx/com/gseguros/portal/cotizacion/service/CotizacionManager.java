@@ -1221,8 +1221,4 @@ public interface CotizacionManager
 	 */
 	public HashMap<String, String> obtieneCodigosPostalesProductos()throws Exception;
 
-    public String aplicaDescAutos(String cdunieco, String cdramo, String nmpoliza,
-            String modPrim, String cdtipsit)
-            throws Exception;
-
 }

@@ -281,32 +281,6 @@ public class RecibosAction extends PrincipalCoreAction {
         return SUCCESS;
     }
     
-    public String procesoReporteRecibos() throws Exception{
-        logger.debug(Utils.log(
-                "\n###########################################"
-               ,"\n###### procesoReporteRecibos ######"
-               ,"\n###### params=",params
-               ));    
-        try {
-            Utils.validate(params,   "No se recibieron parametros");
-            String cdunieco = params.get("cdunieco");
-            String cdramo   = params.get("cdramo");
-            String estado   = params.get("estado");
-            String nmpoliza = params.get("nmpoliza");
-            Utils.validate(cdunieco, "No se recibio la oficina",
-                           cdramo,   "No se recibio el producto",
-                           estado,   "No se recibio el estado",
-                           nmpoliza, "No se recibio la poliza");
-            contentType     = TipoArchivo.XLS.getContentType();
-            filename        = "Recibos_"+cdunieco+"_"+cdramo+"_"+nmpoliza+"_"+TipoArchivo.XLS.getExtension();
-            fileInputStream = recibosManager.obtenerReporteRecibos(cdunieco, cdramo, estado, nmpoliza);
-        }
-        catch (Exception ex) {
-            respuesta = Utils.manejaExcepcion(ex);
-        }
-        return SUCCESS;
-    }
-    
 	// Getters and setters:
 	public Map<String, String> getParams() {
 		return params;

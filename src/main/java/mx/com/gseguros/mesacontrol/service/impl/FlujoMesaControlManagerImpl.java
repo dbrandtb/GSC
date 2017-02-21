@@ -3327,25 +3327,13 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		return mapa;
 	}
 	
-	/**
-	 * SOBRECARGADO
-	 */
 	@Override
-	@Deprecated
-	public Map<String, String> enviaCorreoFlujo(FlujoVO flujo, Map<String, String> params) throws Exception {
-	    return this.enviaCorreoFlujo(flujo, params, false, null);
-	}
-	
-	@Override
-	public Map<String, String> enviaCorreoFlujo(FlujoVO flujo, Map<String, String> params, boolean soloCorreosRecibidos,
-            String correosRecibidos) throws Exception {		
+	public Map<String, String> enviaCorreoFlujo(FlujoVO flujo, Map<String, String> params) throws Exception {		
 		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 				"\n@@@@@@ enviaCorreoFlujo @@@@@@",
-				"\n@@@@@@ flujo                = " , flujo,
-				"\n@@@@@@ params               = " , params,
-                "\n@@@@@@ soloCorreosRecibidos = " , soloCorreosRecibidos,
-                "\n@@@@@@ correosRecibidos     = " , correosRecibidos
+				"\n@@@@@@ flujo  = " , flujo,
+				"\n@@@@@@ params = " , params
 				));
 		String paso = null;
 		Map<String, String> mapa = null;
@@ -3356,13 +3344,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			for(Map<String, String> map:funciones){
 				mapFunciones.put(Integer.parseInt(map.get("CDVARMAIL")), map);
 			}
-			
-			if (soloCorreosRecibidos) {
-			    params.put("dsdestino", correosRecibidos);
-			} else {
-			    params.put("dsdestino", cambiarTextoCorreo(flujo.getNtramite(), params.get("dsdestino"), params.get("vardestino"), mapFunciones));
-			}
-			
+			params.put("dsdestino", cambiarTextoCorreo(flujo.getNtramite(), params.get("dsdestino"), params.get("vardestino"), mapFunciones));
 			params.put("dsasunto" , cambiarTextoCorreo(flujo.getNtramite(), params.get("dsasunto") , params.get("varasunto") , mapFunciones));
 			params.put("dsmensaje", cambiarTextoCorreo(flujo.getNtramite(), params.get("dsmensaje"), params.get("varmensaje"), mapFunciones));
 			
@@ -3382,7 +3364,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					"\n|||||||||||||||||||||||||||||||||||||||"
 			));
 			
-			if (StringUtils.isNotBlank(params.get("dsdestino")) && !params.get("dsdestino").contains("()")){
+			if(!params.get("dsdestino").contains("()")){
 				boolean enviado = mailService.enviaCorreo(StringUtils.split(params.get("dsdestino"),";"), 
 						  new String[]{}, 
 						  new String[]{}, 
@@ -3448,26 +3430,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		return mensaje;
 	}
 	
-	/**
-	 * SOBRECARGADO
-	 */
-	@Deprecated
 	@Override
 	public void mandarCorreosStatusTramite(String ntramite, String cdsisrol, boolean porEscalamiento) throws Exception {
-	    
-	}
-	
-	@Override
-	public void mandarCorreosStatusTramite(String ntramite, String cdsisrol, boolean porEscalamiento, boolean soloCorreosRecibidos,
-	            String correosRecibidos) throws Exception {
 		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 				"\n@@@@@@ mandarCorreosStatusTramite @@@@@@",
-				"\n@@@@@@ ntramite             = " , ntramite,
-				"\n@@@@@@ cdsisrol             = " , cdsisrol,
-				"\n@@@@@@ porEscalamiento      = " , porEscalamiento,
-                "\n@@@@@@ soloCorreosRecibidos = " , soloCorreosRecibidos,
-                "\n@@@@@@ correosRecibidos     = " , correosRecibidos
+				"\n@@@@@@ ntramite        = " , ntramite,
+				"\n@@@@@@ cdsisrol        = " , cdsisrol,
+				"\n@@@@@@ porEscalamiento = " , porEscalamiento
 				));
 		String paso = "Recuperando correos de estatus";
 		logger.debug(paso);
@@ -3480,7 +3450,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			logger.debug(paso);
 			
 			for (Map<String, String> params:correos) {
-				enviaCorreoFlujo(flujo, params, soloCorreosRecibidos, correosRecibidos);
+				enviaCorreoFlujo(flujo, params);
 			}
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);

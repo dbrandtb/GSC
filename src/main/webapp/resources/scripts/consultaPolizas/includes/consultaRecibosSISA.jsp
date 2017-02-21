@@ -35,7 +35,6 @@
     var _URL_DESCONSOLIDA_RECIBOS    = '<s:url namespace="/general" action= "desconsolidarRecibos"    />';
     var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleReciboSISA"/>';
     var _URL_OBTENCION_REPORTE       = '<s:url namespace="/general" action= "procesoObtencionReporte" />';
-    var _URL_REPORTE_RECIBOS         = '<s:url namespace="/general" action= "procesoReporteRecibos" />';
     //var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action="obtieneDetalleRecibo"     />';
     //var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleRecibo"    />';
     var p_cdunieco                   = '<s:property                 value = "params.cdunieco"         />';
@@ -56,7 +55,7 @@
     var itemsDetalleFields       = [<s:property value="imap.itemsDetalleFields"  escapeHtml="false" />];
     var itemsDetalleColumns      = [<s:property value="imap.itemsDetalleColumns" escapeHtml="false" />];
     
-    /*itemsReciboColumns.push({
+    itemsReciboColumns.push({
         xtype      : 'actioncolumn',
         itemId     : 'btnReciboDoc',
         icon       : '${ctx}/resources/fam3icons/icons/eye.png',
@@ -65,7 +64,7 @@
         handler    : function(view, rowIndex, colIndex, item, e, record){
             debug('Ver recibo');            
         }
-    });*/
+    });
 //////componentes dinamicos //////
 
 Ext.onReady(function(){
@@ -212,24 +211,6 @@ Ext.onReady(function(){
                             },
                             {
                                 xtype    : 'button',
-                                itemId   : 'btnReporte',
-                                text     : 'Reporte',
-                                handler  : function(){
-                                    Ext.create('Ext.form.Panel').submit({
-                                        url             : _URL_REPORTE_RECIBOS
-                                        ,standardSubmit : true
-                                        ,target         : '_blank'
-                                        ,params         : {
-                                            'params.cdunieco' : p_cdunieco,
-                                            'params.cdramo'   : p_cdramo,
-                                            'params.estado'   : p_estado,
-                                            'params.nmpoliza' : p_nmpoliza
-                                        }
-                                    });
-                                }
-                            },
-                            {
-                                xtype    : 'button',
                                 itemId   : 'btnDesglose',
                                 text     : 'Desglose',
                                 disabled : true,
@@ -253,6 +234,25 @@ Ext.onReady(function(){
                                             'arrRec'          : arrRec
                                         }
                                     });
+                                    /*Ext.Ajax.request({
+                                        url      : _URL_OBTENCION_REPORTE,
+                                        jsonData : {
+                                            params    : {
+                                                'cdunieco' : p_cdunieco,
+                                                'cdramo'   : p_cdramo,
+                                                'estado'   : p_estado,
+                                                'nmpoliza' : p_nmpoliza
+                                            },
+                                            loadList       : obtenerDataSelected(_fieldById('gridRecibos'))
+                                        },
+                                        success  : function(response){
+                                            debug('recibos consolidados con numero de folio');
+                                            debug('response',response);
+                                        },
+                                        failure  : function(){
+                                            errorComunicacion();
+                                        }
+                                    });*/
                                 }
                             },
                             {
@@ -279,14 +279,6 @@ Ext.onReady(function(){
             'params.cdramo'   : p_cdramo,
             'params.estado'   : p_estado,
             'params.nmpoliza' : p_nmpoliza
-        }
-    });
-    
-    _p25_storeRecibos.on({
-        load : function(me){
-            if(me.data.length === 0){
-                _habilitarBoton('btnReporte'   ,true);
-            }
         }
     });
     
