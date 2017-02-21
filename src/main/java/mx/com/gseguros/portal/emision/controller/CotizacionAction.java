@@ -1755,6 +1755,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 	                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, cdtipsit);
 	                resp.setExito(true);
+	                resp.setSmap(smap1);
 	                if(!mensajeModPrim.isEmpty())
 	                {
 	                    resp.setRespuesta(mensajeModPrim);
@@ -1777,7 +1778,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                            ,cdunieco
 	                            ,cdramo
 	                            ,"W"
-	                            ,resp.getSmap().get("nmpoliza")
+	                            ,resp.getSmap().get("nmpoliza")==null?nmpoliza:resp.getSmap().get("nmpoliza")
 	                            ,cdelemen
 	                            ,cdtipsit
 	                            );
@@ -1794,7 +1795,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                        }
 
 	                    logger.debug(Utils.log(paqYplan));
-	                    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
+	                    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza")==null?nmpoliza:resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			        }
 			        if(paqYplan.isEmpty())
 			        {  
