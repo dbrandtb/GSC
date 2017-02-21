@@ -71,9 +71,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     @Autowired
     private CotizacionManager cotizacionManager;
     
-    @Autowired
-    private CotizacionDAO  cotizacionDAO;
-
 	@Value("${sigs.facultaDatosPolizaSicaps.url}")
     private String sigsFacultaDatosPolizaSicapsUrl;	
     
@@ -1076,7 +1073,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 {nmpoliza = parame.get("NMPOLIZA");}
                 if(parame.get("CDTIPTRA").equals("21"))
                 {
-                    String detalles = cotizacionDAO.validaDatosAutoSigs(slist1);
+                    String detalles = cotizacionManager.validaDatosAutoSigs(slist1);
                     if(!detalles.isEmpty())
                     throw new ApplicationException(detalles);
                 }
@@ -1173,7 +1170,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 }
                 logger.debug(Utils.log(paqYplan));
             }
-            resp.setSlist(cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza));
+            resp.setSlist(cotizacionManager.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza));
             
             respuesta = resp.getRespuesta();
            
