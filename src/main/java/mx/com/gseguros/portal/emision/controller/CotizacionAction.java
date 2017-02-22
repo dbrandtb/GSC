@@ -47,7 +47,6 @@ import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.consultas.service.RecuperacionSimpleManager;
-import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
@@ -156,9 +155,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
 	private EndososManager endososManager;
-	
-	@Autowired
-	private CotizacionDAO cotizacionDAO;
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
@@ -8758,16 +8754,16 @@ public class CotizacionAction extends PrincipalCoreAction
 				try {
 				    
 					try {
-					    cotizacionDAO.eliminarGrupos(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit);
+					    cotizacionManager.eliminarGrupos(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit);
 					} catch (Exception e) {
 						logger.warn("No se eliminaron los grupos de la poliza: {}", e);
 					}
 					for(Map<String,Object> grupoIte : olist1) {
 						logger.debug("grupoIte=={}", grupoIte);
 						// Guardar el maestro de grupos mpoligrup:
-						cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("nombre"), (String)grupoIte.get("cdplan"),(String)grupoIte.get("dsplanl"), null, "0", "0", Constantes.NO, Constantes.NO, Constantes.NO);
+						cotizacionManager.insertaMpoligrup(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("nombre"), (String)grupoIte.get("cdplan"),(String)grupoIte.get("dsplanl"), null, "0", "0", Constantes.NO, Constantes.NO, Constantes.NO);
 						// Guardar el detalle de grupos mgrupogar:
-						cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("cdplan"), "0");
+						cotizacionManager.insertaMgrupogar(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit, (String)grupoIte.get("letra"), (String)grupoIte.get("cdplan"), "0");
 					}
 				} catch(Exception ex) {
 					long timestamp = System.currentTimeMillis();
@@ -11221,7 +11217,7 @@ public class CotizacionAction extends PrincipalCoreAction
                     /**
                      * Elimina los documentos de cotizacion para cuando afectan datos de las caratulas no se visualicen documentos anteriores
                      */
-                    cotizacionDAO.eliminaDocsCotiza(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, ntramite);
+					cotizacionManager.eliminaDocsCotiza(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, ntramite);
                     
                 } catch (Exception e) {
                     logger.warn("No se eliminaron los documentos de cotizacion de la poliza: {}", e);
