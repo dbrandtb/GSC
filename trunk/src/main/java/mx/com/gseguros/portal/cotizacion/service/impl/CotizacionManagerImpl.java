@@ -11592,6 +11592,31 @@ public class CotizacionManagerImpl implements CotizacionManager
         return cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza);
         
     }
+    
+    @Override
+	public void eliminaDocsCotiza(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String ntramite) throws Exception{
+		this.cotizacionDAO.eliminaDocsCotiza(cdunieco, cdramo, estado, nmpoliza, ntramite);
+		
+	}
+
+	@Override
+	public void insertaMpoligrup(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
+			String cdgrupo, String dsgrupo, String cdplan, String dsplanVariable, String cdcveplan, String nmsumaaseg, String nmdeducible,
+			String swmat, String swmed, String swee) throws Exception{
+		this.cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, estado, nmpoliza, cdtipsit, cdgrupo, dsgrupo, cdplan, dsplanVariable, cdcveplan, nmsumaaseg, nmdeducible, swmat, swmed, swee);
+	}
+
+	@Override
+	public void insertaMgrupogar(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
+			String cdgrupo, String cdplan, String nmsumaaseg) throws Exception{
+		this.cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, estado, nmpoliza, cdtipsit, cdgrupo, cdplan, nmsumaaseg);
+	}
+
+	@Override
+	public void eliminarGrupos(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit) throws Exception{
+		this.cotizacionDAO.eliminarGrupos(cdunieco, cdramo, estado, nmpoliza, cdtipsit);
+	}
 	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
@@ -11618,6 +11643,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public void setConsultasDAO(ConsultasDAO consultasDAO) {
 		this.consultasDAO = consultasDAO;
 	}
+
 
     /////////////////////////////////////////////////////
     /////////////////////////////////////////////////////
