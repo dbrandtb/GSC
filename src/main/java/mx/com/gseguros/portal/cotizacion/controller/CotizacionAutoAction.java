@@ -28,13 +28,11 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -70,21 +68,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     @Autowired
     private CotizacionManager cotizacionManager;
     
-	@Value("${sigs.facultaDatosPolizaSicaps.url}")
-    private String sigsFacultaDatosPolizaSicapsUrl;	
-    
-    @Value("${ruta.documentos.temporal}")
-    private String rutaDocumentosTemporal;
-    
-    @Value("${sigs.obtenerDatosPorSucRamPol.url}")
-    private String sigsObtenerDatosPorSucRamPolUrl;
-    
-    @Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
 
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports; 
-    
+
     /**
      * Constructor que se asegura de que el action tenga sesion
      */
@@ -1033,7 +1018,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             Utils.validate(slist3, "No se recibieron las configuraciones de plan");
             
             boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
-            String modPrim = StringUtils.isNotBlank(smap1.get("modPrim"))?smap1.get("modPrim"):"";
             
             Map<String,String>tvalopol=new HashMap<String,String>();
             for(Entry<String,String>en:smap1.entrySet())
@@ -1078,10 +1062,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 }
             }
 
-            ManagerRespuestaSlistSmapVO resp= new ManagerRespuestaSlistSmapVO();
-            if(modPrim.isEmpty())
-            {
-               resp=cotizacionAutoManager.cotizarAutosFlotilla(
+            ManagerRespuestaSlistSmapVO resp=cotizacionAutoManager.cotizarAutosFlotilla(
                     cdusuari
                     ,cdsisrol
                     ,cdelemen
@@ -1108,20 +1089,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,parame.get("RENPOLIEX")
                     ,ntramite
                     );
-            }
-            else
-            { //no es por inciso es por poliza el descuento
-                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, "");
-                if(!mensajeModPrim.isEmpty())
-                {
-                    resp.setExito(false);
-                    resp.setRespuesta(mensajeModPrim);
-                    resp.setRespuestaOculta(mensajeModPrim);
-                }
-                else
-                    resp.setExito(true);
-                    resp.setSmap(smap1);
-            }
             
             exito     = resp.isExito();
             if(!exito)
@@ -1163,11 +1130,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 else if(fila.equals("64")) {fila="Contado";} 
                 
                 List<Map<String,String>> listaResultados= resp.getSlist();
-                if(modPrim.isEmpty())
-                {  
-                    String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-                }
+                String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                 logger.debug(Utils.log(paqYplan));
+                
             }
             resp.setSlist(cotizacionManager.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza));
             
@@ -1282,6 +1247,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             if(!exito)
             {
                 throw new ApplicationException(respuesta);
+            }
+            
+            if(resp.getSlist().size()>50 && tipoflot.equals("P"))
+            {
+                respuestaOculta="Incisos maximos permitidos 50";
+                return SUCCESS;
             }
 
             //Pone vacio en los valores desc/rec de la lista
@@ -2012,7 +1983,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         try
         {
             String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-                  ,respuestaWS =HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl,params);
+                  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
                 HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
                 Map<String,String>parametros = (Map<String,String>)someObject.get("params");
                 String formpagSigs = parametros.get("formpagSigs");
@@ -2067,7 +2038,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     try
                     {
                         String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
-                               mensaje = HttpUtil.sendPost(sigsFacultaDatosPolizaSicapsUrl,params);
+                               mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
                         if(mensaje != null)
                         {
                             return mensaje;
@@ -2245,121 +2216,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
      return SUCCESS;
  }
  
- public String cargaMasivaFlotillaEmision()
- {
-     logger.debug(Utils.log(""
-             ,"\n#########################################"
-             ,"\n###### procesarCargaMasivaFlotilla ######"
-             ,"\n###### slist1="           , slist1
-             ,"\n###### excel="            , excel
-             ,"\n###### excelFileName="    , excelFileName
-             ,"\n###### excelContentType=" , excelContentType
-             ,"\n###### smap1="            , smap1
-             ));
-     
-     try
-     {
-         logger.debug(Utils.log("","Validando datos de entrada"));
-         Utils.validate(smap1, "No se recibieron datos");
-         
-         ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO();
-         if(smap1.get("accion").equals("guardar"))
-         {
-             String excelTimestamp   = smap1.get("timestamp");
-             
-             try{
-                 String nombreexcel    = "excel_"+excelTimestamp+".xls";
-                 File archivoTxt       = new File(this.rutaDocumentosTemporal+"/"+nombreexcel);
-                 
-                 if(excel!=null&&excel.exists())
-                 {
-                     try
-                     {
-                         FileUtils.copyFile(excel, archivoTxt);
-                         exito     = true;
-                         respuesta = Utils.join("Se esta procesando el archivo. ",archivoTxt,"]");
-                         logger.debug(respuesta);
-                         return SUCCESS;
-                     }
-                     catch(Exception ex)
-                     {
-                         logger.error("Error copiando archivo de usuario",ex);
-                     }
-                 }
-                 else
-                 {
-                     logger.error(new StringBuilder("No existe el documento").append(excel).toString());
-                 }
-                 
-             } catch(Exception ex){
-                 long etimestamp = System.currentTimeMillis();
-                 exito           = false;
-                 respuesta       = "Error al procesar excel #"+etimestamp;
-                 respuestaOculta = ex.getMessage();
-                 logger.error(respuesta,ex);
-             }
-         }
-
-         exito     = resp.isExito();
-         respuesta = resp.getRespuesta();
-         
-         if(!exito)
-         {
-             throw new ApplicationException(respuesta);
-         }
-
-     }
-     catch(Exception ex)
-     {
-         respuesta = Utils.manejaExcepcion(ex);
-     }
-     
-     logger.debug(Utils.log(""
-             ,"\n###### exito="  , exito
-             ,"\n###### slist1=" , slist1
-             ,"\n###### procesarCargaMasivaFlotilla ######"
-             ,"\n#########################################"
-             ));
-     return SUCCESS;
- }
- 
- public String obtieneRangoPeriodoGraciaAgente()
- {
-     logger.debug(Utils.log(""
-             ,"\n#########################################"
-             ,"\n###### obtieneRangoPeriodoGraciaAgente ######"
-             ,"\n###### slist1="           , slist1
-             ,"\n###### smap1="            , smap1
-             ));
-     
-     try
-     {
-    	 Utils.validate(smap1, "No se recibieron datos");
-    	 String cdramo   = smap1.get("cdramo");
-    	 String cdtipsit = smap1.get("cdtipsit");
-    	 String cdagente = smap1.get("cdagente");
-    	 Utils.validate( cdramo  ,"No se recibio cdramo"
-    			 		,cdtipsit,"No se recibio cdtipsit"
-    			 		,cdagente,"No se recibio cdagente");
-         slist1=consultasManager.obtieneRangoPeriodoGracia(cdramo,cdtipsit,cdagente);
-         
-         
-         exito=true;
-     }
-     catch(Exception ex)
-     {
-         respuesta = Utils.manejaExcepcion(ex);
-     }
-     
-     logger.debug(Utils.log(""
-             ,"\n###### exito="  , exito
-             ,"\n###### slist1=" , slist1
-             ,"\n###### obtieneRangoPeriodoGraciaAgente ######"
-             ,"\n#########################################"
-             ));
-     return SUCCESS;
- }
- 
      /*
      * Getters y setters
      */
@@ -2474,24 +2330,4 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     public void setFlujo(FlujoVO flujo) {
         this.flujo = flujo;
     }
-    
-    public String getSigsFacultaDatosPolizaSicapsUrl() {
-		return sigsFacultaDatosPolizaSicapsUrl;
-	}
-
-	public String getRutaDocumentosTemporal() {
-		return rutaDocumentosTemporal;
-	}
-
-	public String getSigsObtenerDatosPorSucRamPolUrl() {
-		return sigsObtenerDatosPorSucRamPolUrl;
-	}
-
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
 }

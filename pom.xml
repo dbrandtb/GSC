@@ -2,10 +2,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>mx.com.gseguros</groupId>
-    <artifactId>gseguros</artifactId>
+    <artifactId>gseguros_clientes</artifactId>
     <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gseguros</name>
+    <name>gseguros_clientes</name>
     <url>http://maven.apache.org</url>
     
     <repositories>
@@ -67,6 +67,17 @@
             <version>3.0.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>velocity</groupId>
+            <artifactId>velocity-dep</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-tools</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <!-- PARA tags -->
 
         <!-- Spring Framework -->
         <dependency>
@@ -310,7 +321,7 @@
             <groupId>oracle</groupId>
             <artifactId>ojdbc</artifactId>
             <version>1.4</version>
-            <!-- <scope>provided</scope> -->
+            <scope>provided</scope>
         </dependency>
         
         <!-- SQL Server Driver -->
@@ -318,7 +329,7 @@
 		    <groupId>com.microsoft.sqlserver</groupId>
 		    <artifactId>sqljdbc4</artifactId>
 		    <version>4.0</version>
-		    <!-- <scope>provided</scope> -->
+		    <scope>provided</scope>
 		</dependency>
 		
 		<!-- Informix Driver -->
@@ -424,7 +435,7 @@
     </dependencies>
     
     <build>
-        <finalName>gseguros</finalName>
+        <finalName>gseguros_clientes</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
