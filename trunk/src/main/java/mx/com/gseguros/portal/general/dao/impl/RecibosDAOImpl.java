@@ -128,7 +128,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
     
     protected class ObtenerDatosRecibosSISA extends StoredProcedure {
         protected ObtenerDatosRecibosSISA(DataSource dataSource) {
-            super(dataSource, "P_GET_INFO_RECIBOS_SISA");
+            super(dataSource, "PKG_RECIBOS_SISA_SIGS.P_GET_INFO_RECIBOS_SISA");
             declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -184,7 +184,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
     
     protected class ConsolidarRecibos extends StoredProcedure{
         protected ConsolidarRecibos(DataSource dataSource){
-            super(dataSource,"P_CONSOLIDA_RECIBOS");
+            super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_CONSOLIDA_RECIBOS");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("array"    , OracleTypes.ARRAY , "LISTA_VARCHAR2"));
             declareParameter(new SqlOutParameter("pv_nmfolcon_o", OracleTypes.NUMERIC));
@@ -202,7 +202,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
     
     protected class DesconsolidarRecibos extends StoredProcedure{
         protected DesconsolidarRecibos(DataSource dataSource){
-            super(dataSource,"P_DESCONSOLIDA_RECIBOS");
+            super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_DESCONSOLIDA_RECIBOS");
             declareParameter(new SqlParameter("folio" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -230,7 +230,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
     
     protected class ObtieneDetalleReciboSISA extends StoredProcedure {
         protected ObtieneDetalleReciboSISA(DataSource dataSource) {
-            super(dataSource, "P_OBTIENE_MRECIDET");
+            super(dataSource, "PKG_RECIBOS_SISA_SIGS.P_OBTIENE_MRECIDET");
             declareParameter(new SqlParameter("cdunieco",         OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo",           OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado",           OracleTypes.VARCHAR));
@@ -422,7 +422,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
         
     protected class ObtieneReporteSP extends StoredProcedure {
         protected ObtieneReporteSP(DataSource dataSource) {
-            super(dataSource,"P_GET_REP_COS_AFI_REC");
+            super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_GET_REP_COS_AFI_REC");
             declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -464,7 +464,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
         
     protected class ObtenerReporteRecibos extends StoredProcedure {
         protected ObtenerReporteRecibos(DataSource dataSource) {
-            super(dataSource,"P_GET_REP_REC_SISA");
+            super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_GET_REP_REC_SISA");
             declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -474,5 +474,5 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
             declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
             compile();
         }
-    }    
+    }
 }
