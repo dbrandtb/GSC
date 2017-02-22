@@ -63,8 +63,8 @@
             var _URL_CONSULTA_CLAUSU         = '<s:url namespace="/catalogos"       action="consultaClausulas"           />';
             var _URL_ObtieneValNumeroSerie   = '<s:url namespace="/emision" 		action="obtieneValNumeroSerie"       />';
             var urlEditarAsegurados = '${ctx}<s:property value="map1.urlAsegurados" />?now=${now}';
-            var urlServidorReports  = '<s:property value="rutaServidorReports"         />';
-            var complerepSrvUsr     = '<s:property value="passServidorReports"         />';
+            var urlServidorReports  = '<s:text name="ruta.servidor.reports"         />';
+            var complerepSrvUsr     = '<s:text name="pass.servidor.reports"         />';
             var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarValoresSituacion"               />';
             var urlPantallaBeneficiarios = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
             

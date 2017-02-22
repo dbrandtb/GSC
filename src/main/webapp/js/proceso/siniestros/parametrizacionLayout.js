@@ -144,7 +144,7 @@ Ext.onReady(function() {
 				[
 					{	xtype: 'actioncolumn',		width: 30,		sortable: false,		menuDisabled: true,
 						items: [{
-							icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
+							icon:_CONTEXT+'/resources/fam3icons/icons/fam/delete.png',
 							tooltip: 'Quitar inciso',
 							scope: this,
 							handler: this.onRemoveClick
@@ -263,7 +263,7 @@ Ext.onReady(function() {
 				},
 				tbar: [{
 					text     : 'Agregar Atributo'
-					,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+					,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
 					,handler : _p21_agregarGrupoClic
 				}]
 			});
