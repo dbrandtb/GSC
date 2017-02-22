@@ -675,15 +675,15 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 logger.debug(paso);
                 endososDAO.validarTramiteSinCambiosEndosoPendiente(ntramite);
                 
-                paso = "Rechazando tr\u00e1mite";
-                logger.debug(paso);
-                flujoMesaControlDAO.actualizarStatusTramite(ntramite, status, fechaHoy, null, null);
-                
                 if (StringUtils.isNotBlank(ntrasust)) {
                     paso = "Guardando tr\u00e1mite sustituto";
                     logger.debug(paso);
                     flujoMesaControlDAO.actualizarTramiteSustituto(ntramite, ntrasust);
                 }
+                
+                paso = "Rechazando tr\u00e1mite";
+                logger.debug(paso);
+                flujoMesaControlDAO.actualizarStatusTramite(ntramite, status, fechaHoy, null, null);
                 
                 if (StringUtils.isNotBlank(cdrazrecha)) {
                     paso = "Marcando motivo de rechazo";
