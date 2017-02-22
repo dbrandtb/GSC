@@ -9174,7 +9174,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             declareParameter(new SqlParameter("PCDUNIECO" , OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("PCDRAMO"   , OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("PNMPOLIZA" , OracleTypes.NUMERIC));
-            declareParameter(new SqlParameter("PDESC"     , OracleTypes.SMALLINT));
+            declareParameter(new SqlParameter("PDESC"     , OracleTypes.FLOAT));
             declareParameter(new SqlParameter("PISFLOT"   , OracleTypes.SMALLINT));
             declareParameter(new SqlOutParameter("PV_SALIDA_O" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("PV_MSG_ID_O" ,OracleTypes.NUMERIC));
