@@ -4206,33 +4206,33 @@ function _p30_cotizar(sinTarificar)
             }
     	}
     	
-   	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
-   	     try 
-   	     {
-   	         _p30_store.each
-   	         (
-   	          function(record)
-   	             {
-   	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1)
-   	                {
-   	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-   	                    if(record.get(tipoVehiName)-0==2){
-   	                        record.cdtipsit_panel = 'PC';
-   	                    }
-   	                    else if(record.get(tipoVehiName)-0==4)
-   	                    {
-   	                        record.cdtipsit_panel = 'TC';
-   	                    }else if(record.get(tipoVehiName)-0==13)
-   	                    {
-   	                        record.cdtipsit_panel = 'RQ';
-   	                    }
-   	                }
-   	             }
-   	         );
-   	     }catch (e) 
-   	     {
-   	        debug(e);//debugError , ck
-   	     }
+//    	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
+//    	     try 
+//    	     {
+//    	         _p30_store.each
+//    	         (
+//    	          function(record)
+//    	             {
+//    	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1)
+//    	                {
+//    	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+//    	                    if(record.get(tipoVehiName)-0==2){
+//    	                        record.cdtipsit_panel = 'PC';
+//    	                    }
+//    	                    else if(record.get(tipoVehiName)-0==4)
+//    	                    {
+//    	                        record.cdtipsit_panel = 'TC';
+//    	                    }else if(record.get(tipoVehiName)-0==13)
+//    	                    {
+//    	                        record.cdtipsit_panel = 'RQ';
+//    	                    }
+//    	                }
+//    	             }
+//    	         );
+//    	     }catch (e) 
+//    	     {
+//    	        debug(e);//debugError , ck
+//    	     }
     }
     
     if(valido)
@@ -4736,7 +4736,11 @@ function _p30_cotizar(sinTarificar)
                                 {
                                     if(me.up('form').getForm().isValid())
                                     {
-                                        var modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formDescuento'))[0].lastValue;
+                                        var modPrim = false;
+                                        if(_p30_smap1.tipoflot == TipoFlotilla.Flotilla)
+                                        {
+                                          modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formDescuento'))[0].lastValue;
+                                        }    
                                         _p30_cotizar(modPrim);
                                     }
                                     else
@@ -4762,7 +4766,11 @@ function _p30_cotizar(sinTarificar)
                             disabledDesc = true;
                         }
                     }
-//                     _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
+                    
+                    if(_p30_smap1.tipoflot != TipoFlotilla.Flotilla)
+                    {
+                      _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
+                    }
                     
                     //bloquear comision
                     var arrComi      = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formCesion'));

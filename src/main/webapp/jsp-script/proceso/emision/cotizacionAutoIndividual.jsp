@@ -2792,8 +2792,8 @@ function _p28_cotizar(sinTarificar)
                                 {
                                     if(me.up('form').getForm().isValid())
                                     {
-                                        var modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_formDescuento'))[0].lastValue;
-                                        _p28_cotizar(modPrim);
+//                                      var modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_formDescuento'))[0].lastValue;
+                                        _p28_cotizar(false);//_p28_cotizar(modPrim);
                                     }
                                     else
                                     {
@@ -2818,7 +2818,8 @@ function _p28_cotizar(sinTarificar)
                             disabledDesc = true;
                         }
                     }
-//                     _fieldById('s').setDisabled(disabledDesc);
+                    
+                    _fieldById('_p28_botonAplicarDescuento').setDisabled(disabledDesc);
                     
                     //bloquear comision
                     var arrComi      = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_formCesion'));

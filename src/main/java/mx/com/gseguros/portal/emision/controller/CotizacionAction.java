@@ -1767,7 +1767,24 @@ public class CotizacionAction extends PrincipalCoreAction
 			    String columna="",fila="";//pauete
 			    if(parame!=null && !parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null)
 			    {
-			        if(!cdtipsit.equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit()) && !cdtipsit.equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit()))
+			         boolean emergency= false;
+			         
+			         if(   !cdtipsit.equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())//AF
+			             &&!cdtipsit.equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())//PU
+			             &&!cdtipsit.equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit())//PC
+			             &&!cdtipsit.equals(TipoSituacion.REMOLQUES_INDISTINTOS.getCdtipsit())//RQ
+			             &&!cdtipsit.equals(TipoSituacion.TRACTOCAMIONES_ARMADOS.getCdtipsit())//TC
+			             && slist1.get(0).get("parametros.pv_otvalor03").trim().equals("04")//SERVICIO EMERGENCIA
+			           )
+	                 {
+			             emergency= true;
+	                 }
+			        
+			        if(
+			                !cdtipsit.equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit()) 
+			             && !cdtipsit.equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit())
+			             && !emergency
+			          )
 			        {
 			            List<Map<String,String>> listaResultados=cotizacionManager.cargarResultadosCotizacion(
 	                            cdusuari
