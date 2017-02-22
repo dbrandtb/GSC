@@ -23,6 +23,11 @@
     background-color: #FA8258; 
     color: #900; 
 }
+
+.blanco-row .x-grid-cell { 
+    background-color: #FFFFFF; 
+    color: #900; 
+}
 </style>
 <script>
 //////urls //////
@@ -131,6 +136,7 @@ Ext.onReady(function(){
                     Ext.create('Ext.grid.Panel',{
                         itemId     : 'gridRecibos',
                         height     : 300,
+                        width      : 800,
                         store      : _p25_storeRecibos,
                         columns    : itemsReciboColumns,
                         viewConfig : { 
@@ -140,7 +146,14 @@ Ext.onReady(function(){
                                 debug('EstadoRecibo.Pendiente',EstadoRecibo.Pendiente);
                                 debug(record.data['status']);
                                 if (EstadoRecibo.Pendiente === record.data['status']) {
-                                    style = 'generado-no-row';
+                                    var feactual = new Date();                                  
+                                    var feinicio = record.data['feinicio'];
+                                    if(feactual > feinicio){
+                                        style = 'generado-no-row';
+                                    }
+                                    else{
+                                        style = 'blanco-row';                                        
+                                    }
                                 } 
                                 else if (EstadoRecibo.Cancelado === record.data['status']) {
                                     style = 'cancelado-row';
