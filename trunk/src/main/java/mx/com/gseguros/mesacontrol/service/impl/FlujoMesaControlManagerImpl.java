@@ -1220,7 +1220,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
     					"", // flujo.getNmsuplem(),
     					cdvalidafk,
     					cdusuari,
-    					cdsisrol);
+    					cdsisrol,
+    					flujo.getClaveent());
 		    }
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);

@@ -1790,7 +1790,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 	//TODO: NO SE ESTA USANDO
 	@Override
 	public String ejecutaValidacion(String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac,
-	        String nmsuplem, String cdvalidafk, String cdusuari, String cdsisrol) throws Exception {
+	        String nmsuplem, String cdvalidafk, String cdusuari, String cdsisrol, String cdvalida) throws Exception {
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		//params.put("status"     , status);//<<< NO SE USA
 		params.put("cdunieco"   , cdunieco);
@@ -1803,6 +1803,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("ntramite"   , ntramite);
         params.put("cdusuari"   , cdusuari);
         params.put("cdsisrol"   , cdsisrol);
+        params.put("cdvalida"   , cdvalida);
 		
 		Map<String,Object> procRes = ejecutaSP(new EjecutaValidacionSP(getDataSource()),params);
 		
@@ -1830,6 +1831,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdusuari"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdvalida"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_result_o"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
