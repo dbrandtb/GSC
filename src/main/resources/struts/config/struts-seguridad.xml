@@ -221,6 +221,10 @@
         <action name="validaAgenteSIGS" class="renovacionAction" method="validaAgenteSIGS">
             <result name="success" type="json" />
         </action>
+        <!-- Lanzar recibos desde base de datos -->
+        <action name="manualWSRecibosDxN" class="beanDatosComplementarios" method="ejecutaWSManualRecibosDxN">
+            <result name="success" type="json" />
+        </action>
 	</package>
 	
 	<package name="loginApp" namespace="/touchApp" extends="struts-default, json-default">
