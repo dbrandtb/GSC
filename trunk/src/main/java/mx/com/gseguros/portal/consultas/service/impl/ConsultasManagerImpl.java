@@ -1147,4 +1147,24 @@ public class ConsultasManagerImpl implements ConsultasManager
                 
     }
 
+    @Override
+    public boolean esDxn(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
+        String paso  = "";
+        String esDxn = "";
+        boolean esDXN = false;
+        try{
+            paso = "Antes de consultar si poliza es DXN";
+            esDxn = consultasDAO.esDXN(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+            if(esDxn.equals("S")){
+                esDXN = true;
+            }
+            else{
+                esDXN = false;
+            }
+        }
+        catch(Exception ex){
+            Utils.generaExcepcion(ex, paso);
+        }
+        return esDXN;
+    }
 }

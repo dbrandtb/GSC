@@ -5977,6 +5977,34 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
         }
     }
-
+    
+    @Override
+    public String esDXN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        params.put("pv_cdunieco_i", cdunieco);
+        params.put("pv_cdramo_i"  , cdramo);
+        params.put("pv_estado_i"  , estado);
+        params.put("pv_nmpoliza_i", nmpoliza);
+        params.put("pv_nmsuplem_i", nmsuplem);
+        Map<String,Object> procRes = ejecutaSP(new EsDXN(getDataSource()),params);
+        String esDxn  = (String)procRes.get("pv_esDXN_o");
+        return esDxn;
+    }
+    
+    protected class EsDXN extends StoredProcedure{
+        protected EsDXN(DataSource dataSource){
+            super(dataSource,"P_ES_DXN");
+            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_esDXN_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
     
 }

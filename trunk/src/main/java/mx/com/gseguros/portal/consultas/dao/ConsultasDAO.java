@@ -703,5 +703,12 @@ public interface ConsultasDAO
 			String cdsisrol
 			,String campo
 			,String renovacionGral
-			)throws Exception;	
+			)throws Exception;
+	
+	public String esDXN(
+	        String cdunieco, 
+	        String cdramo, 
+	        String estado, 
+	        String nmpoliza, 
+	        String nmsuplem) throws Exception;
 }

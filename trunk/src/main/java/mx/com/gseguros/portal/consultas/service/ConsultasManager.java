@@ -225,5 +225,5 @@ public interface ConsultasManager
 	public List<Map<String, String>> obtieneRangoPeriodoGracia(String pv_cdramo_i, String pv_cdtipsit_i, String pv_cdagente_i)
 			throws Exception;
 
-	
+	public boolean esDxn(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
 }
