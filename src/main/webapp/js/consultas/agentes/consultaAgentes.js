@@ -280,7 +280,7 @@ Ext.onReady(function() {
 							{
 					    		xtype		: 'actioncolumn',		width: 60,		 sortable: false,				menuDisabled: true,
 					    		items: [{
-                                        icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
+                                        icon:_CONTEXT+'/resources/fam3icons/icons/fam/delete.png',
                                         tooltip: 'Quitar Agente',
                                         scope: this,
                                         handler: this.onRemoveClick
@@ -303,7 +303,7 @@ Ext.onReady(function() {
 							
 				    	],
 				    	tbar: [{
-			                    icon:_CONTEXT+'/resources/fam3icons/icons/add.png',
+			                    icon:_CONTEXT+'/resources/fam3icons/icons/fam/add.png',
 			                    text: 'Agregar agente',
 			                    id:'btnAgregarAgente',
 			                    scope: this,

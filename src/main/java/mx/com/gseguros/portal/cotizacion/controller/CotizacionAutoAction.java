@@ -34,7 +34,6 @@ import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -70,21 +69,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     @Autowired
     private CotizacionManager cotizacionManager;
     
-	@Value("${sigs.facultaDatosPolizaSicaps.url}")
-    private String sigsFacultaDatosPolizaSicapsUrl;	
-    
-    @Value("${ruta.documentos.temporal}")
-    private String rutaDocumentosTemporal;
-    
-    @Value("${sigs.obtenerDatosPorSucRamPol.url}")
-    private String sigsObtenerDatosPorSucRamPolUrl;
-    
-    @Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
 
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports; 
-    
+
     /**
      * Constructor que se asegura de que el action tenga sesion
      */
@@ -1111,7 +1097,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             }
             else
             { //no es por inciso es por poliza el descuento
-                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, "");
+            	String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, "");
                 if(!mensajeModPrim.isEmpty())
                 {
                     resp.setExito(false);
@@ -1167,7 +1153,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 {  
                     String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                 }
+                String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                 logger.debug(Utils.log(paqYplan));
+                
             }
             resp.setSlist(cotizacionManager.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza));
             
@@ -1283,6 +1271,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             {
                 throw new ApplicationException(respuesta);
             }
+            
 
             //Pone vacio en los valores desc/rec de la lista
             resp.setSlist(cotizacionAutoManager.validaVacioDescRecg(resp.getSlist()));
@@ -2012,7 +2001,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         try
         {
             String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-                  ,respuestaWS =HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl,params);
+                  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
                 HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
                 Map<String,String>parametros = (Map<String,String>)someObject.get("params");
                 String formpagSigs = parametros.get("formpagSigs");
@@ -2067,7 +2056,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     try
                     {
                         String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
-                               mensaje = HttpUtil.sendPost(sigsFacultaDatosPolizaSicapsUrl,params);
+                               mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
                         if(mensaje != null)
                         {
                             return mensaje;
@@ -2269,7 +2258,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
              
              try{
                  String nombreexcel    = "excel_"+excelTimestamp+".xls";
-                 File archivoTxt       = new File(this.rutaDocumentosTemporal+"/"+nombreexcel);
+                 File archivoTxt       = new File(this.getText("ruta.documentos.temporal")+"/"+nombreexcel);
                  
                  if(excel!=null&&excel.exists())
                  {
@@ -2321,45 +2310,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
              ,"\n#########################################"
              ));
      return SUCCESS;
- }
- 
- public String obtieneRangoPeriodoGraciaAgente()
- {
-     logger.debug(Utils.log(""
-             ,"\n#########################################"
-             ,"\n###### obtieneRangoPeriodoGraciaAgente ######"
-             ,"\n###### slist1="           , slist1
-             ,"\n###### smap1="            , smap1
-             ));
-     
-     try
-     {
-    	 Utils.validate(smap1, "No se recibieron datos");
-    	 String cdramo   = smap1.get("cdramo");
-    	 String cdtipsit = smap1.get("cdtipsit");
-    	 String cdagente = smap1.get("cdagente");
-    	 Utils.validate( cdramo  ,"No se recibio cdramo"
-    			 		,cdtipsit,"No se recibio cdtipsit"
-    			 		,cdagente,"No se recibio cdagente");
-         slist1=consultasManager.obtieneRangoPeriodoGracia(cdramo,cdtipsit,cdagente);
-         
-         
-         exito=true;
-     }
-     catch(Exception ex)
-     {
-         respuesta = Utils.manejaExcepcion(ex);
-     }
-     
-     logger.debug(Utils.log(""
-             ,"\n###### exito="  , exito
-             ,"\n###### slist1=" , slist1
-             ,"\n###### obtieneRangoPeriodoGraciaAgente ######"
-             ,"\n#########################################"
-             ));
-     return SUCCESS;
- }
- 
+ } 
      /*
      * Getters y setters
      */
@@ -2474,24 +2425,4 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     public void setFlujo(FlujoVO flujo) {
         this.flujo = flujo;
     }
-    
-    public String getSigsFacultaDatosPolizaSicapsUrl() {
-		return sigsFacultaDatosPolizaSicapsUrl;
-	}
-
-	public String getRutaDocumentosTemporal() {
-		return rutaDocumentosTemporal;
-	}
-
-	public String getSigsObtenerDatosPorSucRamPolUrl() {
-		return sigsObtenerDatosPorSucRamPolUrl;
-	}
-
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
 }
