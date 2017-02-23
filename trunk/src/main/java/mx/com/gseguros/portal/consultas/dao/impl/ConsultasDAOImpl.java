@@ -5994,12 +5994,12 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     protected class EsDXN extends StoredProcedure{
         protected EsDXN(DataSource dataSource){
             super(dataSource,"P_ES_DXN");
-            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.NUMERIC));
-            declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.NUMERIC));
-            declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.NUMERIC));
-            declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.NUMERIC));
-            declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_esDXN_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsuplem_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_esDXN_o"  , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
