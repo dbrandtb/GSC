@@ -1155,6 +1155,8 @@ public class ConsultasManagerImpl implements ConsultasManager
         try{
             paso = "Antes de consultar si poliza es DXN";
             esDxn = consultasDAO.esDXN(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+            
+            logger.debug("<<<>>> ES DXN : "+esDxn);
             if(esDxn.equals("S")){
                 esDXN = true;
             }

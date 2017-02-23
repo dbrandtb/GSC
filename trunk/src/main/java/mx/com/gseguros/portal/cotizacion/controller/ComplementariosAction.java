@@ -3680,8 +3680,26 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 				// Ejecutamos el Web Service de Recibos Sincrono:
 				success = ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, false, tipoMov, (UserVO) session.get("USUARIO"));
-				
+
 				Utils.validate(success, "No se regeneraron correctamente todos los recibos.");
+				
+				
+				if(success && (TipoEndoso.EMISION_POLIZA.getCdTipSup().toString().equalsIgnoreCase((tipoMov)) || TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase((tipoMov)) )){
+					boolean esDxn = false;
+					
+					// Ejecutamos el Web Service de Recibos DxN:
+					try{
+						esDxn = this.consultasManager.esDxn(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+					}catch (Exception e){
+						logger.error("Error al buscar obtener esDxn",e);
+						success=false;
+					}
+					
+					if(success && esDxn){
+						success = recibosSigsService.generaRecibosDxN(cdunieco, cdramo, estado, nmpoliza, nmsuplem, sucursal, nmsolici, nmtramite, (UserVO) session.get("USUARIO"));
+					}
+					Utils.validate(success, "No se regeneraron todos los recibos y calendarios Dxn. Verificar en Tbitacobros");
+				}
 				
 			}else{
 				// Ejecutamos el Web Service de Recibos Asincrono:
