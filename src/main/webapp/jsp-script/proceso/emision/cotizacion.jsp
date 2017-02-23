@@ -5510,6 +5510,50 @@ Ext.onReady(function()
             select : _0_gmiCirchospSelect
         });
     }
+    try{
+	    if(_0_smap1.cdramo==Ramo.ServicioPublico){
+	    	Ext.ComponentQuery
+	    	.query("[fieldLabel*='(FRONTERIZO)'],[fieldLabel*='MERO DE SERIE'],[fieldLabel*='TIPO DE CAMBIO AL D'],[fieldLabel*='PAQUETE'],[fieldLabel*='NOMBRE CLIENTE'],[fieldLabel*='TIPO PERSONA'],[fieldLabel*='FECHA DE NACIMIENTO DEL CONTRATANTE']")
+	    	.forEach(function(it){ 
+		    		it.allowBlank=true; 
+		    		it.hide();
+	    		}
+	    	);
+	    	
+	    	
+	    	
+	    	Ext.ComponentQuery.query('[title=<span style="font:bold 14px Calibri;">DATOS GENERALES</span>]')[0]
+	    	.items
+	    	.items
+	    	.sort(function(a,b){
+	    		if(_0_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
+	    			var ordenOriginal=[16,17,22,1,2,3,4,5,6,25,7,18,19,20,24,23,21,31,32];
+	    		}else if(_0_smap1.cdtipsit==TipoSituacion.ServicioPublicoMicro){
+	    			var ordenOriginal=[16,17,1,22,2,3,4,5,6,18,19,20,24,23,21,30,31];
+	    		}
+	    		
+	    		
+	    		var va=ordenOriginal.indexOf(Number(a.cdatribu));
+	    		var vb=ordenOriginal.indexOf(Number(b.cdatribu));
+	    	    
+	    		if(va==-1 ) va=10000000000;
+	    		if(vb==-1 ) vb=10000000000;
+	    		if(a.fieldLabel=='COTIZACI&Oacute;N') va=-1;
+	    		if(b.fieldLabel=='COTIZACI&Oacute;N') vb=-1;
+	    		if(va>vb){
+	    			return 1;
+	    		}else if(va<vb){
+	    			return -1;
+	    		}
+	    		return 0;
+	    	});
+	    	Ext.ComponentQuery.query('[title=<span style="font:bold 14px Calibri;">DATOS GENERALES</span>]')[0]
+	    	.doLayout();
+	    }
+    }catch(e){
+    	debugError(e);
+    }
+    
     
     // Para TODOS LOS PRODUCTOS (si aplican), se agrega validacion de Codigo Postal vs Estado:
     agregaValidacionCPvsEstado();

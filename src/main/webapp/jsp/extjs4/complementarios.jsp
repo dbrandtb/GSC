@@ -1297,6 +1297,21 @@ function _p29_emitirClicComplementarios()
                                 {
                                     window.parent.scrollTo(0,150+p.y);
                                 }*/
+                            	activate: function(){
+                        			try{
+                        		        if(inputCdramo==Ramo.ServicioPublico){
+                        		        	Ext.ComponentQuery
+                        		        	.query("[fieldLabel*='(FRONTERIZO)'],[fieldLabel*='TIPO DE CAMBIO AL D'],[fieldLabel*='PAQUETE'],[fieldLabel*='NOMBRE CLIENTE'],[fieldLabel*='TIPO PERSONA'],[fieldLabel*='FECHA DE NACIMIENTO DEL CONTRATANTE']")
+                        		        	.forEach(function(it){ 
+                        		    	    		it.allowBlank=true; 
+                        		    	    		it.hide();
+                        		        		}
+                        		        	);
+                        		    	}
+                        		    }catch(e){
+                        		    	debugError(e);
+                        		    }
+                        		},
                                 afterrender:function(tab)
                                 {
                                 	debug('afterrender tabPanelValosit');
