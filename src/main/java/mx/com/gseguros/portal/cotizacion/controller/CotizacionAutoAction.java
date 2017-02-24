@@ -24,6 +24,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
@@ -1068,8 +1069,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             }
             else if(!parame.isEmpty())
             {
-                if(nmpoliza== null && !parame.get("NMPOLIZA").equals("0"))
-                {nmpoliza = parame.get("NMPOLIZA");}
+                if(nmpoliza== null && parame.get("NMSOLICI") != null)
+                {nmpoliza = parame.get("NMSOLICI");}
                 if(parame.get("CDTIPTRA").equals("21"))
                 {
                     String detalles = cotizacionManager.validaDatosAutoSigs(slist1);
@@ -1133,8 +1134,34 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             if(!parame.isEmpty() && parame.get("Mensaje")==null && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 && parame.get("RENPOLIEX")!=null && !parame.get("RENPOLIEX").isEmpty())
             {
                 List<String> cdtipsits = new ArrayList<String>();
+                boolean facultar = true,emergency= false;
+                
                 for(Map<String,String> tipsit: slist1) 
-                {cdtipsits.add(tipsit.get("cdtipsit"));}
+                {   
+                    if(
+                          !emergency && facultar 
+                        &&!tipsit.get("cdtipsit").equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())//AF
+                        &&!tipsit.get("cdtipsit").equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())//PU
+                        &&!tipsit.get("cdtipsit").equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit())//PC
+                        &&!tipsit.get("cdtipsit").equals(TipoSituacion.REMOLQUES_INDISTINTOS.getCdtipsit())//RQ
+                        &&!tipsit.get("cdtipsit").equals(TipoSituacion.TRACTOCAMIONES_ARMADOS.getCdtipsit())//TC
+                        && tipsit.get("parametros.pv_otvalor03").trim().equals("04")//SERVICIO EMERGENCIA 
+                      )
+                    {
+                        emergency= true;
+                    }    
+                    
+                    if(   facultar && !emergency &&
+                          (   tipsit.get("cdtipsit").equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit()) 
+                           || tipsit.get("cdtipsit").equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit()) 
+                          )
+                      )
+                    {
+                        facultar = false;
+                    }
+                    
+                    cdtipsits.add(tipsit.get("cdtipsit"));
+                }
                 
                 ArrayList<String> paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsits, null);
                 columna = paqYplan.get(1);//forma Pago
@@ -1163,7 +1190,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 else if(fila.equals("64")) {fila="Contado";} 
                 
                 List<Map<String,String>> listaResultados= resp.getSlist();
-                if(modPrim.isEmpty())
+               
+                if(modPrim.isEmpty() && facultar && !emergency)
                 {  
                     String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                 }

@@ -3775,7 +3775,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		{
 			if(nmpoliza!=null && !nmpoliza.equals("0") && !nmpoliza.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
 			{	
-				return siniestrosManager.obtenerTramiteCompletoXNmpoliza(nmpoliza, cdunieco, cdramo);
+				return siniestrosManager.obtenerTramiteCompletoXNmsolici(nmpoliza, cdunieco, cdramo);
 				
 			}
 			else if(ntramite!=null && !ntramite.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
