@@ -208,15 +208,6 @@ Ext.onReady(function()
                 
                 comboOriginal.setValue(_9_smap1['perpag']);
                 _9_panelEndoso.items.items[0].setValue(_9_smap1.fechaInicio);
-                try{
-					if(_9_smap1.CDRAMO==Ramo.ServicioPublico)
-						comboNuevo.getStore().filter([{filterFn: function(item) {
-        					return item.get("key")==FormaPago.CONTADO || item.get("key")==FormaPago.SEMESTRAL;
-        				}}])
-					
-				}catch(e){
-					debugError(e)
-				}
                 
                 comboNuevo.on('change',function(combo,newVal,oldVal)
                 {
@@ -327,19 +318,6 @@ function _9_confirmar()
             {
             	json1=Ext.decode(response.responseText);
 				debug('datosjson1windowsa:',json1);
-				
-				//VERIFICAMOS LA RESPUESTA DEL SERVIDOR
-				try{
-					if(_9_smap1.CDRAMO==Ramo.ServicioPublico)
-						if(json1.success==false){
-							mensajeError(json1.error);
-							panelMask.hide();
-							return ;
-						}
-					
-				}catch(e){
-					debugError(e)
-				}
             	Ext.create('Ext.window.Window',
 						{
 							title        : 'Tarifa final'
