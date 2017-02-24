@@ -208,7 +208,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 		params.put("pv_cdunieco_i" , cdunieco);
 		params.put("pv_cdramo_i"   , cdramo);
 		params.put("pv_estado_i"   , estado);
-		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsolici_i" , nmpoliza);
 		params.put("pv_cdtiptra_i" , cdtiptra);
 		params.put("pv_renuniext_i", renuniext);
 		params.put("pv_renramo_i"  , renramo);
@@ -226,7 +226,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsolici_i"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdtiptra_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_renuniext_i"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_renramo_i"    , OracleTypes.NUMERIC));

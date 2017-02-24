@@ -700,10 +700,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	 * 
 	 */
 	@Override
-	public Map<String,String> obtenerTramiteCompletoXNmpoliza(String nmpoliza, String cdunieco, String cdramo) throws Exception
+	public Map<String,String> obtenerTramiteCompletoXNmsolici(String nmpoliza, String cdunieco, String cdramo) throws Exception
 	{
 		Map<String,String> params = new HashMap<String,String>();
-		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsolici_i" , nmpoliza);
 		params.put("pv_cdunieco_i" , cdunieco);
 		params.put("pv_cdramo_i" , cdramo);
 		params.put("pv_cdtiptra_i" , "21");

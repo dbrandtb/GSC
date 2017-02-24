@@ -1665,7 +1665,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		protected obtenerTramiteCompletoXNmpoliza(DataSource dataSource)
 		{
 			super(dataSource, "PKG_SATELITES2.P_GET_TRAMITE_X_NMPOLIZA");
-			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsolici_i" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
