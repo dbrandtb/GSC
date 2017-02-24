@@ -953,57 +953,6 @@
             <result type="json" />
         </action>
         
-        <action name="includes/endosoAjusteSiniestralidad" class="endososAutoAction" method="endosoAjusteSiniestralidad">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/endosos/endosoAjusteSiniestralidad.jsp</result>
-        </action>
-        
-        <action name="guardarEndosoAjusteSiniestralidad" class="endososAutoAction" method="guardarEndosoAjusteSiniestralidad">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result type="json" />
-        </action>
-        
-        <action name="includes/endosoCobroPrimas" class="endososAutoAction" method="endosoAjusteSiniestralidad">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/endosos/endosoAjusteSiniestralidad.jsp</result>
-        </action>
-        
-        <action name="guardarEndosoCobroPrimas" class="endososAutoAction" method="guardarEndosoCobroPrimas">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result type="json" />
-        </action>
-        
-        <action name="includes/endosoCambioTipoCarga" class="endososAutoAction" method="endosoCambioTipoCarga">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/endosos/endosoCambioTipoCarga.jsp</result>
-        </action>
-        
-        <action name="guardarEndosoCambioTipoCarga" class="endososAutoAction" method="guardarEndosoCambioTipoCarga">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result type="json" />
-        </action>
-        
     </package>
 
 </struts>

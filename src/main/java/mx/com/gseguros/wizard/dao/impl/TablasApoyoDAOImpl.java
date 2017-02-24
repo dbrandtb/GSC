@@ -24,7 +24,7 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 	
 	protected class ObtieneValoresTablaApoyo5claves extends StoredProcedure {
 		protected ObtieneValoresTablaApoyo5claves(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO.P_OBTIENE_TTAPVAAT");
+			super(dataSource,"PKG_TABAPOYO_PRE.P_OBTIENE_TTAPVAAT");
 			declareParameter(new SqlParameter("PV_NMTABLA_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_OTCLAVE1_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_OTCLAVE2_I" , OracleTypes.VARCHAR));
@@ -85,7 +85,7 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 	
 	protected class ObtieneValoresTablaApoyo1clave extends StoredProcedure {
 		protected ObtieneValoresTablaApoyo1clave(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO.P_OBTIENE_TTAPVAT1");
+			super(dataSource,"PKG_TABAPOYO_PRE.P_OBTIENE_TTAPVAT1");
 			declareParameter(new SqlParameter("PV_NMTABLA_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_OTCLAVE1_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_LIMITE_I" ,   OracleTypes.VARCHAR));
@@ -108,7 +108,7 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 	
 	protected class GuardaValoresTablaApoyo extends StoredProcedure {
 		protected GuardaValoresTablaApoyo(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO.P_MOV_TTAPVAAT");
+			super(dataSource,"PKG_TABAPOYO_PRE.P_MOV_TTAPVAAT");
 			declareParameter(new SqlParameter("PV_ACCION_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_SWCOMMIT_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_NMTABLA_I" , OracleTypes.VARCHAR));
@@ -159,7 +159,7 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 	
 	protected class GuardaValoresTablaApoyo1Clave extends StoredProcedure {
 		protected GuardaValoresTablaApoyo1Clave(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO.P_MOV_TTAPVAT1");
+			super(dataSource,"PKG_TABAPOYO_PRE.P_MOV_TTAPVAT1");
 			declareParameter(new SqlParameter("PV_ACCION_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_SWCOMMIT_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_NMTABLA_I" , OracleTypes.VARCHAR));
@@ -186,7 +186,7 @@ public class TablasApoyoDAOImpl extends AbstractManagerDAO implements TablasApoy
 	
 	protected class CargaMasivaTablaApoyoSP extends StoredProcedure {
 		protected CargaMasivaTablaApoyoSP(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO.P_BULK_INSERT_TABLA_APOYO");
+			super(dataSource,"PKG_TABAPOYO_PRE.P_BULK_INSERT_TABLA_APOYO");
 			declareParameter(new SqlParameter("pv_tipotabla_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmtabla_i"    , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_tipoProceso_i", OracleTypes.NUMERIC));
