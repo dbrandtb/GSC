@@ -14,7 +14,7 @@ var Accion = {
     ValidaEdadAsegurados      : '<s:property value="@mx.com.gseguros.portal.general.util.ObjetoBD@VALIDA_EDAD_ASEGURADOS" />'
 };
 
-// Nombre de catálogos:
+// Nombre de catï¿½logos:
 var Cat = {
     Agentes                   : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES" />',
     CausaSiniestro            : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO" />',
@@ -198,6 +198,7 @@ var RolSistema = {
     ,SupervisorTecnico            : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUPERVISOR_TECNICO_SALUD.cdsisrol"    />'
     ,SubdirectorSalud             : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUBDIRECTOR_SALUD.cdsisrol"           />'
     ,DirectorSalud                : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@DIRECTOR_SALUD.cdsisrol"              />'
+    ,GerenteOperacionesEmision    : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GENERENTE_OPERACION_EMISION.cdsisrol" />'
     ,
     
     

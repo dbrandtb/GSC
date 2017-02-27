@@ -2288,9 +2288,14 @@ Ext.onReady(function()
     
     _fieldByName('tipo',form).getStore().on({
         load : function(me){
-  		    _fieldByName('tipo',form).setValue('AS');
-  		    if(_GLOBAL_CDSISROL == RolSistema.Agente || _GLOBAL_CDSISROL == RolSistema.EjecutivoVenta){
-  		        _fieldByName('tipo',form).readOnly = true;
+  		    var tipo = _fieldByName('tipo',form);
+  		    tipo.setValue('AS');  		    
+  		    if(_GLOBAL_CDSISROL != RolSistema.GerenteOperacionesEmision){
+  		        debug('tipo',tipo);
+  		        tipo.store.removeAt(2);
+  		    }  		    
+  		    if(_GLOBAL_CDSISROL == RolSistema.Agente || _GLOBAL_CDSISROL == RolSistema.EjecutivoVenta || _GLOBAL_CDSISROL == RolSistema.MesaControl){
+  		        tipo.readOnly = true;
   		    }
   	    }
   	});
@@ -4022,7 +4027,7 @@ function agregaCalendario(){
  }
  
  function turnar(ntramite){
-     if (_GLOBAL_CDSISROL == RolSistema.Agente || _GLOBAL_CDSISROL == RolSistema.EjecutivoVenta){
+     if (_GLOBAL_CDSISROL == RolSistema.Agente || _GLOBAL_CDSISROL == RolSistema.EjecutivoVenta || _GLOBAL_CDSISROL == RolSistema.MesaControl){
          var callbackNormal = function (callback) {
              mensajeCorrecto(
                  'Tr\u00e1mite generado',
