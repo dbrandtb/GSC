@@ -328,32 +328,27 @@ Ext.onReady(function(){
 	                   else{
 	                       descon = 0;
 	                       break;
-	                   }	                  
+	                   }
 	               }
 	               folio = selected[i].data['folio'];
 	               serie = selected[i].data['codigo_serial'];
 	           }
 	           debug('termina de recorrer seleccionados',folio,serie);
 	           debug('Antes de entrar en condiciones',conso, descon);
-	           if(conso === 0 && descon === 1){
-	               _habilitarBoton('btnDetalle'      ,true); //detalle
+	           if(selected.length === 1){
+	               _habilitarBoton('btnDetalle'      ,true);  //detalle
 	           }
 	           if(conso === 0 && descon > 1){
-	               _habilitarBoton('btnConsolidar'   ,true); //consolidar
-	               _habilitarBoton('btnDetalle'      ,false); //detalle
-	               _habilitarBoton('btnDesglose'     ,true); //desglose
+	               _habilitarBoton('btnConsolidar'   ,true);  //consolidar
+	               _habilitarBoton('btnDesglose'     ,true);  //desglose
 	           }
 	           if(conso === 1 && descon === 0){
 	               seleccionarConsolidados(folio);
-	               _habilitarBoton('btnDesconsolidar',true); //desconsolidar
-	               _habilitarBoton('btnDetalle'      ,false); //detalle
-	               _habilitarBoton('btnDesglose'     ,true); //desglose
+	               _habilitarBoton('btnDesconsolidar',true);  //desconsolidar
+	               _habilitarBoton('btnDesglose'     ,true);  //desglose
 	           }
 	           if(conso > 0 || descon > 0){
-/*	               if(conso === selected.length){
-	                   _habilitarBoton('btnDesconsolidar',true); //desconsolidar
-	               }*/
-	               _habilitarBoton('btnDesglose'     ,true); //desglose
+	               _habilitarBoton('btnDesglose'     ,true);  //desglose
 	           }
            }
        } 
@@ -495,42 +490,51 @@ Ext.onReady(function(){
     
     winSimbologia= Ext.create('Ext.window.Window',{
         title       : 'Simbologia',
-        width       : 290,
+        width       : 400,
         modal       : true,
         closeAction : 'hide',
         items       : [
             Ext.create('Ext.form.Panel', {
                 bodyPadding : 15,
                 defaults    : {
-                    width      : 200,
-                    readOnly   : true,
-                    labelStyle : 'width:120px;'
+                    width      : 350,
+                    readOnly   : true
                 },
                 items       : [
                     {
                         xtype       : 'textfield',
                         name        : 'fieldPagadoId',
                         fieldLabel  : 'Pagado',
-                        fieldStyle  : 'background-color: #80FF00; background-image: none;'
+                        labelWidth  : 160,
+                        fieldStyle  : 'background-color: #80FF00; background-image: none; width:150px;'
                     },
                     {
                         xtype       : 'textfield',
                         name        : 'fieldGeneradoNoId',
                         fieldLabel  : 'Generado(No imp)',
-                        fieldStyle  : 'background-color: #81DAF5; background-image: none;'
+                        labelWidth  : 160,
+                        fieldStyle  : 'background-color: #81DAF5; background-image: none; width:150px;'
                     },
                     {
                         xtype       : 'textfield',
                         name        : 'fieldGeneradoId',
                         fieldLabel  : 'Generado',
-                        fieldStyle  : 'background-color: #F3F781; background-image: none;'
+                        labelWidth  : 160,
+                        fieldStyle  : 'background-color: #F3F781; background-image: none; width:150px;'
                     },
                     {
                         xtype       : 'textfield',
                         name        : 'fieldCanceladoId',
                         fieldLabel  : 'Cancelado',
-                        fieldStyle  : 'background-color: #FA8258; background-image: none;',
-                        labelStyle  : 'width:120px;'
+                        labelWidth  : 160,
+                        fieldStyle  : 'background-color: #FA8258; background-image: none; width:150px;',
+                    },
+                    {
+                        xtype       : 'textfield',
+                        name        : 'fieldGeneradoNoId',
+                        fieldLabel  : 'Generado(Fuera de vigencia)',
+                        labelWidth  : 160,
+                        fieldStyle  : 'background-color: #FFFFFF; background-image: none; width:150px;'
                     }
                 ],
                 buttons     : [{
