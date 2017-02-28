@@ -25,7 +25,6 @@ import mx.com.gseguros.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -50,16 +49,7 @@ public class RenovacionAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ConsultasManager  consultasManager;
-
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-    
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-    
-    @Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-    
+	
 	public String pantallaRenovacion()
 	{
 		logger.info(
@@ -300,9 +290,9 @@ public class RenovacionAction extends PrincipalCoreAction
 					,cdusuari
 					,anio
 					,mes
-					,rutaDocumentosPoliza
-					,rutaServidorReports
-					,passServidorReports
+					,getText("ruta.documentos.poliza")
+					,getText("ruta.servidor.reports")
+					,getText("pass.servidor.reports")
 					,usuario
 					);
 			exito           = resp.isExito();
@@ -620,9 +610,9 @@ public class RenovacionAction extends PrincipalCoreAction
 					cdperpag,
 					feefecto,
 					usuario,
-					rutaDocumentosPoliza//,
-//					rutaServidorReports,
-//					passServidorReports
+					getText("ruta.documentos.poliza")//,
+//					getText("ruta.servidor.reports"),
+//					getText("pass.servidor.reports")
 					);
 			List<Map<String, String>> lista = new ArrayList<Map<String,String>>();			
 			logger.info(new StringBuilder().append("\n###### lista").append(lista));
@@ -954,17 +944,5 @@ public class RenovacionAction extends PrincipalCoreAction
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
-	}
-	
-    public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
 	}
 }
