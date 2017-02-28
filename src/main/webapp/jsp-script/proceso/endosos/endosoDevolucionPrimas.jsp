@@ -10,7 +10,6 @@ var _p39_urlRecuperacionSimpleLista = '<s:url namespace="/emision" action="recup
 var _p39_urlGuardarTvalositEndoso   = '<s:url namespace="/endosos" action="guardarTvalositEndoso"         />';
 var _p39_urlConfirmarEndoso         = '<s:url namespace="/endosos" action="guardarEndosoDevolucionPrimas" />';
 var url_PantallaPreview             = '<s:url namespace="/endosos" action="includes/previewEndosos"       />';
-var _p48_urlMovimientos             = '<s:url namespace="/movimientos"           action="ejecutar"        />';
 var _p39_urlRecuperacionSimple      = '<s:url namespace="/emision" action="recuperacionSimple"            />';
 var _p30_urlViewDoc                 = '<s:url namespace="/documentos"      action="descargaDocInline"     />';
 var _RUTA_DOCUMENTOS_TEMPORAL       = '<s:text name="ruta.documentos.temporal"                            />';
@@ -19,11 +18,8 @@ var _RUTA_DOCUMENTOS_TEMPORAL       = '<s:text name="ruta.documentos.temporal"  
 ////// variables //////
 var _p39_smap1  = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 var _p39_slist1 = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
-var _p39_slist2 = <s:property value="%{convertToJSON('slist2')}" escapeHtml="false" />;
-var _p39_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
 debug('_p39_smap1:'  , _p39_smap1);
 debug('_p39_slist1:' , _p39_slist1);
-debug('_p39_flujo:'  , _p39_flujo);
 
 var _p39_storeIncisos    = null;
 var _p39_storeCoberturas = null;
@@ -47,27 +43,6 @@ _p39_coberturaColumns.push(
     {
     	checkchange : function(me, rowIndex , checked)
 	    {
-    		
-    		// VALIDACION PARA NO DEVOLVER RC, RC-VIAJERO Y ASESORIA LEGAL (COBERTURAS OBLIGATORIAS PARA RAMO 6)
-    		 try{
-    			var sel= _p39_storeCoberturas.getAt(rowIndex);
-    			debug(sel," - - ",rowIndex)
-     			if(_p39_smap1.CDRAMO==Ramo.ServicioPublico &&
-     			   _p39_smap1.cdtipsup == TipoEndoso.DevolucionDePrimasNoDevengadas){ 
-        				var garant=$.grep(_p39_slist2,function(ele){
-        					return ele.cdgarant==sel.get("CDGARANT")
-        				});
-        				
-    					if(garant[0].SWOBLIG == "1"){
-    						mensajeWarning('Esta cobertura no se puede devolver');
-    						sel.set('DEVOLVER', false);
-    						return;
-    					}
-     			
-         		}
-     		}catch(e){
-     			debugError(e)
-     		}
             centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se guardar\u00e1 el estatus de devoluci\u00f3n de la cobertura <br>¿Desea continuar?', function(btn)
         	{
             	if(btn === 'yes')
@@ -354,10 +329,6 @@ Ext.onReady(function()
                                 ,slist1 : lista
                             };
                             
-                            if(!Ext.isEmpty(_p39_flujo))
-                            {
-                                jsonData.flujo = _p39_flujo;
-                            }
                             jsonData.smap1['confirmar'] = 'no';
                             jsonData.smap1['cdperpag'] = _p39_smap1.CDPERPAG;
                             jsonData.smap1['p_plan']   = _p39_smap1.CDMEJRED;
@@ -406,11 +377,6 @@ Ext.onReady(function()
 																					_mask();
 																					me.up('window').destroy();
 																					jsonData.smap1['confirmar'] = 'si';
-																					
-																					if(!Ext.isEmpty(_p39_flujo))
-                                                                                    {
-                                                                                        jsonData.flujo = _p39_flujo;
-                                                                                    }
 																					
 																					Ext.Ajax.request(
 																						{

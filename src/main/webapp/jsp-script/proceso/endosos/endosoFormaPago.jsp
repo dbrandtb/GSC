@@ -26,7 +26,6 @@ smap1:
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _9_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-var _9_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 
 var _9_formLectura;
 var _9_formFormaPago;
@@ -41,7 +40,6 @@ var _9_urlRecuperacionSimple = '<s:url namespace="/emision"         action="recu
 var _p30_urlViewDoc          = '<s:url namespace="/documentos"      action="descargaDocInline"      />';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 debug('_9_smap1:',_9_smap1);
-debug('_9_flujo:',_9_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -208,15 +206,6 @@ Ext.onReady(function()
                 
                 comboOriginal.setValue(_9_smap1['perpag']);
                 _9_panelEndoso.items.items[0].setValue(_9_smap1.fechaInicio);
-                try{
-					if(_9_smap1.CDRAMO==Ramo.ServicioPublico)
-						comboNuevo.getStore().filter([{filterFn: function(item) {
-        					return item.get("key")==FormaPago.CONTADO || item.get("key")==FormaPago.SEMESTRAL;
-        				}}])
-					
-				}catch(e){
-					debugError(e)
-				}
                 
                 comboNuevo.on('change',function(combo,newVal,oldVal)
                 {
@@ -307,11 +296,6 @@ function _9_confirmar()
             }
         }
         
-        if(!Ext.isEmpty(_9_flujo))
-        {
-            json.flujo = _9_flujo;
-        }
-        
         debug('datos que se enviaran:',json);
         
         var panelMask = new Ext.LoadMask('_9_divPri', {msg:"Confirmando..."});
@@ -327,19 +311,6 @@ function _9_confirmar()
             {
             	json1=Ext.decode(response.responseText);
 				debug('datosjson1windowsa:',json1);
-				
-				//VERIFICAMOS LA RESPUESTA DEL SERVIDOR
-				try{
-					if(_9_smap1.CDRAMO==Ramo.ServicioPublico)
-						if(json1.success==false){
-							mensajeError(json1.error);
-							panelMask.hide();
-							return ;
-						}
-					
-				}catch(e){
-					debugError(e)
-				}
             	Ext.create('Ext.window.Window',
 						{
 							title        : 'Tarifa final'
@@ -384,11 +355,6 @@ function _9_confirmar()
 																                ,confirmar   : 'si'
 																            }
 																        }
-																        
-																        if(!Ext.isEmpty(_9_flujo)) {
-																            json1.flujo = _9_flujo;
-																        }
-																        
 																Ext.Ajax.request(
 																	        {
 																	            url       : _9_urlGuardar

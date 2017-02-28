@@ -21,9 +21,7 @@ public enum TipoSituacion {
 	TRADICIONALES_SUSALUD     ("TSS"),
 	MOTOS                     ("MO"),
 	TRACTOCAMIONES_ARMADOS    ("TC"),
-	REMOLQUES_INDISTINTOS     ("RQ"),
-	TURISTA_LICENCIA          ("TL"),
-	TURISTA_VEHICULO          ("TV")
+	REMOLQUES_INDISTINTOS     ("RQ")
 	;
 
 	private String cdtipsit;

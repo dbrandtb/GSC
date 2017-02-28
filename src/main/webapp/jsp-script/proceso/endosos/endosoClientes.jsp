@@ -2,17 +2,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script>
 	var _CONTEXT = '${ctx}';
-	
-	var clienteSeleccionado  = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
-	var _endCli_flujo        = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-	
-	var _URL_OBTIENE_CLIENTE = '<s:url namespace="/persona"   action="obtieneInformacionCliente"   />';
-	var _URL_CATALOGOS 		 = '<s:url namespace="/catalogos" action="obtieneCatalogo"             />';
-	var _35_urlGuardar     	 = '<s:url namespace="/endosos"   action="guardarEndosoNombreRFCFecha" />';
-	var _UrlImportaPersonaWS = '<s:url namespace="/catalogos" action="importaPersonaExtWSNoSicaps" />';
-	
-	var _CATALOGO_SUCURSALES = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
-	
+	var clienteSeleccionado             = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+	var _URL_OBTIENE_CLIENTE      		= '<s:url namespace="/persona" action="obtieneInformacionCliente" />';
+	var _URL_CATALOGOS 					= '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+	var _CATALOGO_SUCURSALES			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
+	var _35_urlGuardar     				= '<s:url namespace="/endosos" action="guardarEndosoNombreRFCFecha"       />';
+	var _UrlImportaPersonaWS 			= '<s:url namespace="/catalogos" action="importaPersonaExtWSNoSicaps" />';
+	debug('clienteSeleccionado  ===>:',clienteSeleccionado);
 	var _35_panelPri;
 	var cdpersonNuevo;
 	var codigoCliExterno;
@@ -26,10 +22,6 @@
 	var intfecha    = 0;
 	var intRazonS   = 0;
 	var tipoPerGral = null;
-	
-	debug('clienteSeleccionado:',clienteSeleccionado);
-	
-	debug('_endCli_flujo:',_endCli_flujo);
 	
 	debug("pantallaPrincipal ===>", pantallaPrincipal);
 	Ext.onReady(function() {
@@ -504,12 +496,6 @@
 								'nmsuplem'  : clienteSeleccionado.NMSUPLEM
 							}
 							submitValues['smap1']= params;
-							
-							if(!Ext.isEmpty(_endCli_flujo))
-							{
-							    submitValues['flujo'] = _endCli_flujo;
-							}
-							
 							debug("Valor a enviar ==>",submitValues);
 							
 							Ext.Ajax.request( {
