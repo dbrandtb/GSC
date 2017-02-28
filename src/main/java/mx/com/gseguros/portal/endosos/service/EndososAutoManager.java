@@ -642,48 +642,4 @@ public interface EndososAutoManager
            ,List<Map<String,String>> incisos
            ,FlujoVO flujo
            )throws Exception;
-   
-   public Map<String,Item> endosoAjusteSiniestralidad(
-           String cdtipsup
-           ,String cdramo
-           )throws Exception;
-   
-   public Map<String,Item> endosoCambioTipoCarga(
-           String cdtipsup
-           ,String cdramo
-           )throws Exception;
-   
-   public Map<String,Object> guardarEndosoAjusteSiniestralidad(
-           String cdusuari
-           ,String cdsisrol
-           ,String cdelemen
-           ,String cdunieco
-           ,String cdramo
-           ,String estado
-           ,String nmpoliza
-           ,String cdtipsup
-           ,String tstamp
-           ,Date   feefecto
-           ,List<Map<String,String>> incisos
-           ,UserVO usuarioSesion
-           ,FlujoVO flujo
-           ,String nmtramite
-           )throws Exception;
-   
-   public Map<String,Object> guardarEndosoCambioTipoCarga(
-           String cdusuari
-           ,String cdsisrol
-           ,String cdelemen
-           ,String cdunieco
-           ,String cdramo
-           ,String estado
-           ,String nmpoliza
-           ,String cdtipsup
-           ,String tstamp
-           ,Date   feefecto
-           ,List<Map<String,String>> incisos
-           ,UserVO usuarioSesion
-           ,FlujoVO flujo
-           ,String nmtramite
-           )throws Exception;
 }

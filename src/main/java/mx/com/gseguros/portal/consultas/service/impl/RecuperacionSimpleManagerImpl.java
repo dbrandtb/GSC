@@ -550,29 +550,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			{
 				String ntramite = params.get("ntramite");
 				resp.setSlist(consultasDAO.recuperarUsuariosReasignacionTramite(ntramite, cdusuari, cdsisrol));
-			} 
-			else if(proc.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_PRIMA_NETA))
-            {
-                String cdunieco = params.get("cdunieco");
-                String cdramo   = params.get("cdramo");
-                String estado   = params.get("estado");
-                String nmpoliza = params.get("nmpoliza");
-                String nmsituac = params.get("nmsituac");
-                String tstamp   = params.get("tstamp");
-                resp.setSlist(endososDAO.recuperarCoberturasEndosoPrimaNeta(cdunieco, cdramo, estado, nmpoliza, nmsituac, tstamp));
-            }else if(proc.equals(RecuperacionSimple.RECUPERAR_ENDOSOS_SINIESTRALIDAD)){
-                String cdunieco = params.get("cdunieco");
-                String cdramo   = params.get("cdramo");
-                String estado   = params.get("estado");
-                String nmpoliza = params.get("nmpoliza");
-                resp.setSlist(consultasDAO.recuperarEndososSiniestralidad(cdunieco, cdramo, estado, nmpoliza));
-            }else if(proc.equals(RecuperacionSimple.RECUPERAR_ENDOSOS_SINIESTRALIDAD_REHA)){
-                String cdunieco = params.get("cdunieco");
-                String cdramo   = params.get("cdramo");
-                String estado   = params.get("estado");
-                String nmpoliza = params.get("nmpoliza");
-                resp.setSlist(consultasDAO.recuperarEndososRehabilitablesSiniestralidad(cdunieco, cdramo, estado, nmpoliza));
-            }
+			}
 		}
 		catch(Exception ex)
 		{

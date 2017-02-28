@@ -315,7 +315,7 @@ Ext.onReady(function()
                                 _fieldByLabel('MODELO').setValue(_fieldByLabel('MODELO').findRecord('value',modelo));
                                 _fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").heredar(true,function()
                                 {
-                                    _fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").setValue(_fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").findRecord('value',version));    
+                                	_fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").setValue(_fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").findRecord('value',version));    
                                     _0_obtenerSumaAseguradaRamo6(true);                        
                                 });
                             });
@@ -598,9 +598,9 @@ Ext.onReady(function()
     if(_p38_slist1[0].CDTIPSIT == 'AT'){
     	
 //         if(rolesSuscriptores.lastIndexOf('|'+_p38_smap1.cdsisrol+'|') != -1)
-    
-        tipoUnidadFronteriza();
-        
+
+		tipoUnidadFronteriza();
+		
 	    RolSistema.puedeSuscribirAutos(_p38_smap1.cdsisrol)
         {
         	_fieldByLabel('TIPO DE UNIDAD').setReadOnly(false);
@@ -860,7 +860,7 @@ function _0_obtenerSumaAseguradaRamo6(mostrarError,respetarValue)
         ,params  :
         {
             'smap1.modelo'    : String(_fieldByLabel('MODELO').getValue()).substr(_fieldByLabel('MODELO').getValue().length-4,4)
-            ,'smap1.version'  : _fieldById('_p38_datVeh').down("[fieldLabel*=VERSI]:not([fieldLabel*=FRONTERIZO])").getValue()
+            ,'smap1.version'  : _fieldLikeLabel('VERSI').getValue()
             ,'smap1.cdsisrol' : _p38_smap1.cdsisrol
             ,'smap1.cdramo'   : _p38_smap1.CDRAMO
             ,'smap1.cdtipsit' : _p38_slist1[0].CDTIPSIT
@@ -1119,9 +1119,6 @@ function fronterizos()
     });
     debug('<llamando a nada');  
 }
-
-
-
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
