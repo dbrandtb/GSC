@@ -699,7 +699,11 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 logger.debug(paso);
                 despachadorDAO.cerrarHistorialTramite(ntramite, fechaHoy, cdusuariSes, cdsisrolSes, status);
                 
-                result.setMessage(Utils.join("Tr\u00e1mite rechazado con las siguientes observaciones: ", comments));
+                if (StringUtils.isBlank(ntrasust)) {
+                    result.setMessage(Utils.join("Tr\u00e1mite rechazado con las siguientes observaciones: ", comments));
+                } else {
+                    result.setMessage(Utils.join("Tr\u00e1mite rechazado (sustituto: ", ntrasust, ") con las siguientes observaciones: ", comments));
+                }
                 
                 if (sinGrabarDetalle == false) {
                     paso = "Guardando detalle";
