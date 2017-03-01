@@ -159,8 +159,25 @@ Ext.onReady(function()
 		                                item.disable();
 		                            }
 		                        }
-		                        
-		                        json.slist1.push(inciso);
+		                        if(_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioModelo){
+     							 	debug('Entro a Cambio Modelo Vehiculo');
+		                        	if(item.value!=item.valorInicial){
+		                        		debug('Entro a insertar en slist1');
+		                        		json.slist1.push(inciso);
+		                        	}
+		                        }else if(_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioDescripcion){
+     							 	debug('Entro a Cambio Descripcion Vehiculo');
+		                        	if(item.value!=item.valorInicial){
+		                        		debug('Entro a insertar en slist1');
+		                        		json.slist1.push(inciso);
+		                        	}
+		                        }else{
+		                        	//if(item.value!=item.valorInicial){
+		                        		debug('Entro a insertar en slist1');
+		                        		json.slist1.push(inciso);
+		                        	//}
+		                        }
+		                        //json.slist1.push(inciso);
 		                    }
 		                    
 		                    if(!Ext.isEmpty(_p44_flujo))
@@ -345,318 +362,387 @@ Ext.onReady(function()
     ////// custom //////
     
     ////// loaders //////
-    var forms = Ext.ComponentQuery.query('form[nmsituac]',_fieldById('_p44_panelpri'));
-    debug('forms:',forms);
-    for(var i in _p44_slist1)
-    {
-        var inciso   = _p44_slist1[i];
-        var nmsituac = inciso.NMSITUAC;
-        var form     = _fieldById('_p44_formInciso'+nmsituac);
-        debug('form:',form);
-        var items    = Ext.ComponentQuery.query('[name]',form);
-        debug('items:',items);
+    if(_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioModelo 
+     ||_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioDescripcion){
+     	//codigo cuando es un endoso de Cambio de Modelo o Endoso de Camdio de Descripcion
+        debug('Entrando a Endoso Cambio Descripcion y Modelo Vehiculo');  
         
-        if(items.length==0)
-        {
-            mensajeError('El endoso no aplica para el inciso '+form.nmsituac);
-            _fieldById('_p44_botonConfirmar').disable();
-            _fieldById('_p44_botonConfirmar').setText('No aplica');
-        }
-        
-        for(var j in items)
-        {
-            var item = items[j];
-            item.setValue(inciso[item.name]);
-            item.valorInicial = inciso[item.name];
-            
-            if(item.hidden==false&&item.readOnly==false)
-            {
-	            if(_p44_smap1.TIPO_VALIDACION=='MENOR')
-	            {
-	                item.validator = function()
-	                {
-	                    var val = this.getValue();
-	                    debug('validator-:',val);
-	                    if(Number(this.valorInicial)<Number(val))
-	                    {
-	                        return 'Valor m&aacute;ximo '+this.valorInicial;
-	                    }
-	                    return true;
-	                };
-	            }
-	            else if(_p44_smap1.TIPO_VALIDACION=='MAYOR')
-	            {
-	                item.validator = function()
-	                {
-	                    var val = this.getValue();
-	                    debug('validator+:',val);
-	                    if(Number(this.valorInicial)>Number(val))
-	                    {
-	                        return 'Valor m&iacute;nimo '+this.valorInicial;
-	                    }
-	                    return true;
-	                };
-	            }
-            }
-            
-            item.extraParams =
-            {
-                'cdunieco'  : inciso.CDUNIECO
-                ,'cdramo'   : inciso.CDRAMO
-                ,'estado'   : inciso.ESTADO
-                ,'nmpoliza' : inciso.NMPOLIZA
-                ,'nmsituac' : inciso.NMSITUAC
-                ,'nmsuplem' : inciso.NMSUPLEM
-                ,'cdtipsit' : inciso.CDTIPSIT
-            };
-            
-            if(item.param1=='amparado')
-            {
-                item.disable();
-                try
-                {
-                    var params =
-                    {
-                        'smap1.procedimiento' : 'RECUPERAR_TATRISIT_AMPARADO'
-                        ,'smap1.cdatribu'     : item.value1
-                        ,'smap1.compId'       : item.id
-                    };
-                    for (var i in item.extraParams)
-                    {
-                        params['smap1.'+i] = item.extraParams[i];
-                    } 
-                    Ext.Ajax.request(
-                    {
-                        url      : _p44_urlRecuperacionSimple
-                        ,params  : params
-                        ,success : function(response)
-                        {
-                            try
-                            {
-                                var json = Ext.decode(response.responseText);
-                                debug('### amparada:',json);
-                                if(json.exito)
-                                {
-                                    if(json.smap1.CONTEO>0)
-                                    {
-                                        Ext.getCmp(json.smap1.compId).enable();
-                                    }
-                                }
-                                else
-                                {
-                                    mensajeError(json.respuesta);
-                                    _fieldById('_p44_botonConfirmar').disable();
-                                    _fieldById('_p44_botonConfirmar').setText('Verificacion de cobertura no exitosa');
-                                }
-                            }
-                            catch(e)
-                            {
-                                manejaException(e,'descodificando cobertura amparada');
-                                _fieldById('_p44_botonConfirmar').disable();
-                                _fieldById('_p44_botonConfirmar').setText('Error al decodificar verificacion de coberturas');
-                            }
-                        }
-                        ,failure : function()
-                        {
-                            errorComunicacion();
-                            _fieldById('_p44_botonConfirmar').disable();
-                            _fieldById('_p44_botonConfirmar').setText('Error al solicitar verificacion de coberturas');
-                        }
-                    });
-                }
-                catch(e)
-                {
-                    manejaException(e,'Verificando cobertura amparada');
-                    _fieldById('_p44_botonConfirmar').disable();
-                    _fieldById('_p44_botonConfirmar').setText('Error al verificar coberturas');
-                }
-            }
-            
-            if(!Ext.isEmpty(item.store))
-            {
-                item.store.proxy.extraParams['params.cdunieco'] = inciso.CDUNIECO;
-                item.store.proxy.extraParams['params.cdramo']   = inciso.CDRAMO;
-                item.store.proxy.extraParams['params.estado']   = inciso.ESTADO;
-                item.store.proxy.extraParams['params.nmpoliza'] = inciso.NMPOLIZA;
-                item.store.proxy.extraParams['params.nmsituac'] = inciso.NMSITUAC;
-                item.store.proxy.extraParams['params.nmsuplem'] = inciso.NMSUPLEM;
-                item.store.proxy.extraParams['params.cdtipsit'] = inciso.CDTIPSIT;
-                debug('item con store:',item);
-                
-                if(Number(_p44_smap1.cdtipsup)==43
-                    &&'|AR|CR|PC|PP|'.lastIndexOf('|'+inciso.CDTIPSIT+'|')!=-1
-                    &&item.name=='CVE_TIPO_USO'
-                    )
-                {
-                    debug('@CUSTOM TIPO USO:',item);
-                    item.anidado                                     = true;
-                    item.store.proxy.extraParams['params.cdnegocio'] = inciso.CVE_NEGOCIO+'';
-                    item.store.padre                                 = item;
-                    item.padre                                       = items[j-1];
-                    item.heredar                                     = function()
-                    {
-                        this.store.load(
-                        {
-                            params :
-                            {
-                                'params.servicio' : this.padre.getValue()
-                            }
-                        });
-                    };
-                    
-                    item.store.on(
-                    {
-                        load : function(me)
-                        {
-                            var padre = me.padre;
-                            var value = padre.getValue();
-                            if(!Ext.isEmpty(value))
-                            {
-                                var dentro = false;
-                                me.each(function(record)
-                                {
-                                    if(value==record.get('key'))
-                                    {
-                                        dentro=true;
-                                    }
-                                });
-                                if(!dentro)
-                                {
-                                    padre.clearValue();
-                                }
-                            }
-                        }
-                    });
-                    
-                    item.padre.hijo = item;
-                    item.padre.on(
-                    {
-                        select : function(me)
-                        {
-                            me.hijo.heredar();
-                        }
-                    });
-                    debug('item:',item);
-                    
-                    item.heredar(true);
-                }
-                //para todos los demas que requieren los atributos extras puestos arriba (deberan venir con autoload=false)
-                else if(item.store.autoLoad==false)
-                {
-                    item.store.load();
-                }
-            }
-            
-            try{
-            	
-            	// FILTRO DE VALORES PARA SERVICIO PUBLICO
-	            if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto && 
-	            		item.fieldLabel=='VALOR COMERCIAL' &&
-	            		(_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaDecremento ||
-	            		_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaIncremento )
-	               ){
-	            	item.enable();
-	            	_0_obtenerSumaAseguradaRamo6(inciso.CVE_MODELO.substr(inciso.CVE_MODELO.length-4,4)
-	            								,inciso.CVE_VERSION
-	                                            ,inciso.CDRAMO
-	                                            ,inciso.CDTIPSIT
-	                                            ,item);
-	            	item.setMaxValue(2400000);
-	            }
-	            
-	            if(_p44_smap1.CDRAMO==Ramo.ServicioPublico ){
-	                if(_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaDecremento ||
-		   	           _p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaIncremento ){
-		            	if(item.store ){
-		            			if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto)
-			            			switch(item.cdatribu){
-				            			case 'CVE_DEDUCIBLE_RESP__CIVIL_': 
-				            				item.getStore().filter([{filterFn: function(item) {
-				            					return item.get("key")>=500000 && item.get("key")<=5000000;
+     	var forms = Ext.ComponentQuery.query('form[nmsituac]',_fieldById('_p44_panelpri'));
+    	debug('forms:',forms);
+    	for(var i in _p44_slist1)
+		    {
+		        var inciso   = _p44_slist1[i];
+		        var nmsituac = inciso.NMSITUAC;
+		        var form     = _fieldById('_p44_formInciso'+nmsituac);
+		        debug('form:',form);
+		        var items    = Ext.ComponentQuery.query('[name]',form);
+		        debug('items:',items);
+		        
+		        if(items.length==0)
+		        {
+		            mensajeError('El endoso no aplica para el inciso '+form.nmsituac);
+		            _fieldById('_p44_botonConfirmar').disable();
+		            _fieldById('_p44_botonConfirmar').setText('No aplica');
+		        }
+		        
+		        for(var j in items)
+		        {
+		            var item = items[j];
+		            item.setValue(inciso[item.name]);
+		            item.valorInicial = inciso[item.name];
+		            
+		            if(!Ext.isEmpty(item.store))
+		            {
+		                item.store.proxy.extraParams['params.cdunieco'] = inciso.CDUNIECO;
+		                item.store.proxy.extraParams['params.cdramo']   = inciso.CDRAMO;
+		                item.store.proxy.extraParams['params.estado']   = inciso.ESTADO;
+		                item.store.proxy.extraParams['params.nmpoliza'] = inciso.NMPOLIZA;
+		                item.store.proxy.extraParams['params.nmsituac'] = inciso.NMSITUAC;
+		                item.store.proxy.extraParams['params.nmsuplem'] = inciso.NMSUPLEM;
+		                item.store.proxy.extraParams['params.cdtipsit'] = inciso.CDTIPSIT;
+		                debug('item con store:',item);
+		                
+		                    item.store.load();
+		            }
+		        }
+		    }
+		    if(_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioModelo){
+		    	debug('Entro a cambio de Modelo');
+		    	mensajeError('El Endoso Cambio de Modelo aplica para menor o mayor a una año. ');
+		    	Ext.ComponentQuery.query('[fieldLabel=MODELO]',_fieldById('_p44_panelpri')).forEach(function(it){ 
+			                                                                                            it.on({change:function( me, newValue, oldValue){
+			                                                                                            	            debug(me);
+			                                                                                            	            debug(Number(me.valorInicial)+1);
+			                                                                                            	            debug(me.valorInicial-1);
+			                                                                                            	            me.validator=function(val){
+			                                                                                            	            	
+			                                                                                            	            		if(val>Number(me.valorInicial)+1 || val<Number(me.valorInicial)-1){
+			                                                                                            	            			debug('invalido');
+			                                                                                            	            			return "Invalido, Valor Original: "+ me.valorInicial;
+			                                                                                            	            		}
+			                                                                                            	            		debug('Validos');
+			                                                                                            	            		return true;
+			                                                                                            	            }
+			                                                                                                           }
+			                                                                                                   })
+                                                                                                   });
+		    }
+     }else{
+     	var forms = Ext.ComponentQuery.query('form[nmsituac]',_fieldById('_p44_panelpri'));
+    	debug('forms:',forms);
+    	for(var i in _p44_slist1)
+		    {
+		        var inciso   = _p44_slist1[i];
+		        var nmsituac = inciso.NMSITUAC;
+		        var form     = _fieldById('_p44_formInciso'+nmsituac);
+		        debug('form:',form);
+		        var items    = Ext.ComponentQuery.query('[name]',form);
+		        debug('items:',items);
+		        
+		        if(items.length==0)
+		        {
+		            mensajeError('El endoso no aplica para el inciso '+form.nmsituac);
+		            _fieldById('_p44_botonConfirmar').disable();
+		            _fieldById('_p44_botonConfirmar').setText('No aplica');
+		        }
+		        
+		        for(var j in items)
+		        {
+		            var item = items[j];
+		            item.setValue(inciso[item.name]);
+		            item.valorInicial = inciso[item.name];
+		            
+		            if(item.hidden==false&&item.readOnly==false)
+		            {
+			            if(_p44_smap1.TIPO_VALIDACION=='MENOR')
+			            {
+			                item.validator = function()
+			                {
+			                    var val = this.getValue();
+			                    debug('validator-:',val);
+			                    if(Number(this.valorInicial)<Number(val))
+			                    {
+			                        return 'Valor m&aacute;ximo '+this.valorInicial;
+			                    }
+			                    return true;
+			                };
+			            }
+			            else if(_p44_smap1.TIPO_VALIDACION=='MAYOR')
+			            {
+			                item.validator = function()
+			                {
+			                    var val = this.getValue();
+			                    debug('validator+:',val);
+			                    if(Number(this.valorInicial)>Number(val))
+			                    {
+			                        return 'Valor m&iacute;nimo '+this.valorInicial;
+			                    }
+			                    return true;
+			                };
+			            }
+		            }
+		            
+		            item.extraParams =
+		            {
+		                'cdunieco'  : inciso.CDUNIECO
+		                ,'cdramo'   : inciso.CDRAMO
+		                ,'estado'   : inciso.ESTADO
+		                ,'nmpoliza' : inciso.NMPOLIZA
+		                ,'nmsituac' : inciso.NMSITUAC
+		                ,'nmsuplem' : inciso.NMSUPLEM
+		                ,'cdtipsit' : inciso.CDTIPSIT
+		            };
+		            
+		            if(item.param1=='amparado')
+		            {
+		                item.disable();
+		                try
+		                {
+		                    var params =
+		                    {
+		                        'smap1.procedimiento' : 'RECUPERAR_TATRISIT_AMPARADO'
+		                        ,'smap1.cdatribu'     : item.value1
+		                        ,'smap1.compId'       : item.id
+		                    };
+		                    for (var i in item.extraParams)
+		                    {
+		                        params['smap1.'+i] = item.extraParams[i];
+		                    } 
+		                    Ext.Ajax.request(
+		                    {
+		                        url      : _p44_urlRecuperacionSimple
+		                        ,params  : params
+		                        ,success : function(response)
+		                        {
+		                            try
+		                            {
+		                                var json = Ext.decode(response.responseText);
+		                                debug('### amparada:',json);
+		                                if(json.exito)
+		                                {
+		                                    if(json.smap1.CONTEO>0)
+		                                    {
+		                                        Ext.getCmp(json.smap1.compId).enable();
+		                                    }
+		                                }
+		                                else
+		                                {
+		                                    mensajeError(json.respuesta);
+		                                    _fieldById('_p44_botonConfirmar').disable();
+		                                    _fieldById('_p44_botonConfirmar').setText('Verificacion de cobertura no exitosa');
+		                                }
+		                            }
+		                            catch(e)
+		                            {
+		                                manejaException(e,'descodificando cobertura amparada');
+		                                _fieldById('_p44_botonConfirmar').disable();
+		                                _fieldById('_p44_botonConfirmar').setText('Error al decodificar verificacion de coberturas');
+		                            }
+		                        }
+		                        ,failure : function()
+		                        {
+		                            errorComunicacion();
+		                            _fieldById('_p44_botonConfirmar').disable();
+		                            _fieldById('_p44_botonConfirmar').setText('Error al solicitar verificacion de coberturas');
+		                        }
+		                    });
+		                }
+		                catch(e)
+		                {
+		                    manejaException(e,'Verificando cobertura amparada');
+		                    _fieldById('_p44_botonConfirmar').disable();
+		                    _fieldById('_p44_botonConfirmar').setText('Error al verificar coberturas');
+		                }
+		            }
+		            
+		            if(!Ext.isEmpty(item.store))
+		            {
+		                item.store.proxy.extraParams['params.cdunieco'] = inciso.CDUNIECO;
+		                item.store.proxy.extraParams['params.cdramo']   = inciso.CDRAMO;
+		                item.store.proxy.extraParams['params.estado']   = inciso.ESTADO;
+		                item.store.proxy.extraParams['params.nmpoliza'] = inciso.NMPOLIZA;
+		                item.store.proxy.extraParams['params.nmsituac'] = inciso.NMSITUAC;
+		                item.store.proxy.extraParams['params.nmsuplem'] = inciso.NMSUPLEM;
+		                item.store.proxy.extraParams['params.cdtipsit'] = inciso.CDTIPSIT;
+		                debug('item con store:',item);
+		                
+		                if(Number(_p44_smap1.cdtipsup)==43
+		                    &&'|AR|CR|PC|PP|'.lastIndexOf('|'+inciso.CDTIPSIT+'|')!=-1
+		                    &&item.name=='CVE_TIPO_USO'
+		                    )
+		                {
+		                    debug('@CUSTOM TIPO USO:',item);
+		                    item.anidado                                     = true;
+		                    item.store.proxy.extraParams['params.cdnegocio'] = inciso.CVE_NEGOCIO+'';
+		                    item.store.padre                                 = item;
+		                    item.padre                                       = items[j-1];
+		                    item.heredar                                     = function()
+		                    {
+		                        this.store.load(
+		                        {
+		                            params :
+		                            {
+		                                'params.servicio' : this.padre.getValue()
+		                            }
+		                        });
+		                    };
+		                    
+		                    item.store.on(
+		                    {
+		                        load : function(me)
+		                        {
+		                            var padre = me.padre;
+		                            var value = padre.getValue();
+		                            if(!Ext.isEmpty(value))
+		                            {
+		                                var dentro = false;
+		                                me.each(function(record)
+		                                {
+		                                    if(value==record.get('key'))
+		                                    {
+		                                        dentro=true;
+		                                    }
+		                                });
+		                                if(!dentro)
+		                                {
+		                                    padre.clearValue();
+		                                }
+		                            }
+		                        }
+		                    });
+		                    
+		                    item.padre.hijo = item;
+		                    item.padre.on(
+		                    {
+		                        select : function(me)
+		                        {
+		                            me.hijo.heredar();
+		                        }
+		                    });
+		                    debug('item:',item);
+		                    
+		                    item.heredar(true);
+		                }
+		                //para todos los demas que requieren los atributos extras puestos arriba (deberan venir con autoload=false)
+		                else if(item.store.autoLoad==false)
+		                {
+		                    item.store.load();
+		                }
+		            }
+		            
+		            try{
+		            	
+		            	// FILTRO DE VALORES PARA SERVICIO PUBLICO
+			            if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto && 
+			            		item.fieldLabel=='VALOR COMERCIAL' &&
+			            		(_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaDecremento ||
+			            		_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaIncremento )
+			               ){
+			            	item.enable();
+			            	_0_obtenerSumaAseguradaRamo6(inciso.CVE_MODELO.substr(inciso.CVE_MODELO.length-4,4)
+			            								,inciso.CVE_VERSION
+			                                            ,inciso.CDRAMO
+			                                            ,inciso.CDTIPSIT
+			                                            ,item);
+			            	item.setMaxValue(2400000);
+			            }
+			            
+			            if(_p44_smap1.CDRAMO==Ramo.ServicioPublico ){
+			                if(_p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaDecremento ||
+				   	           _p44_smap1.cdtipsup == TipoEndoso.SumaAseguradaIncremento ){
+				            	if(item.store ){
+				            			if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoAuto)
+					            			switch(item.cdatribu){
+						            			case 'CVE_DEDUCIBLE_RESP__CIVIL_': 
+						            				item.getStore().filter([{filterFn: function(item) {
+						            					return item.get("key")>=500000 && item.get("key")<=5000000;
+						            				}}])
+								            		break;
+						            			case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
+						            				item.getStore().filter([{filterFn: function(item) {
+						            					return item.get("key")>=1500 && item.get("key")<=20000;
+						            				}}])
+						            				break;
+						            			case 'CVE_SUMA_ASEGURADA_GASTOS_MEDICOS':
+						            				item.getStore().filter([{filterFn: function(item) {
+						            					return item.get("key")>=10000 && item.get("key")<=200000;
+						            				}}])
+						            				break;
+						            			case 'CVE_MUERTE_ACCIDENTAL_CONDUCTOR':
+						            				item.getStore().filter([{filterFn: function(item) {
+						            					return item.get("key")>=30000 && item.get("key")<=100000;
+						            				}}])
+						            				break;
+					            			}
+				            			else if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoMicro)
+				            				switch(item.cdatribu){
+				            				case 'CVE_VALOR_COMERCIAL':
+				            					item.setMaxValue(4200000);
+				            					item.setMinValue(50000);
+				            					break;
+					            			case 'CVE_DEDUCIBLE_RESP__CIVIL_': 
+					            				item.getStore().filter([{filterFn: function(item) {
+					            					return item.get("key")>=500000 && item.get("key")<=5000000;
+					            				}}])
+							            		break;
+					            			case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
+					            				item.getStore().filter([{filterFn: function(item) {
+					            					return item.get("key")>=1500 && item.get("key")<=20000;
+					            				}}])
+					            				break;
+					            			case 'CVE_SUMA_ASEGURADA_GASTOS_MEDICOS':
+					            				item.getStore().filter([{filterFn: function(item) {
+					            					return item.get("key")>=10000 && item.get("key")<=200000;
+					            				}}])
+					            				break;
+					            			case 'CVE_MUERTE_ACCIDENTAL_CONDUCTOR':
+					            				item.getStore().filter([{filterFn: function(item) {
+					            					return item.get("key")>=30000 && item.get("key")<=100000;
+					            				}}])
+					            				break;
+				            			}
+				            	}
+			                }
+			                if(_p44_smap1.cdtipsup == TipoEndoso.DeducibleMas ||
+			 		   	       _p44_smap1.cdtipsup == TipoEndoso.DeducibleMenos ){
+			                	//alert()
+			                	if(item.store ){
+				                	switch(item.cdatribu){
+				                		case 'CVE_DEDUCIBLE_DANOS_MATERIALES':
+				                			item.getStore().filter([{filterFn: function(item) {
+				            					return item.get("key")>=5 && item.get("key")<=20;
 				            				}}])
-						            		break;
-				            			case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
-				            				item.getStore().filter([{filterFn: function(item) {
-				            					return item.get("key")>=1500 && item.get("key")<=20000;
+				                			break;
+				                		case 'CVE_DEDUCIBLE_ROBO_TOTAL':
+				                			item.getStore().filter([{filterFn: function(item) {
+				            					return item.get("key")>=10 && item.get("key")<=20;
 				            				}}])
-				            				break;
-				            			case 'CVE_SUMA_ASEGURADA_GASTOS_MEDICOS':
-				            				item.getStore().filter([{filterFn: function(item) {
-				            					return item.get("key")>=10000 && item.get("key")<=200000;
+				                			break;
+				                		case 'CVE_DEDUCIBLE_RESP__CIVIL':
+				                			item.getStore().filter([{filterFn: function(item) {
+				            					return item.get("key")>=25 && item.get("key")<=300;
 				            				}}])
-				            				break;
-				            			case 'CVE_MUERTE_ACCIDENTAL_CONDUCTOR':
-				            				item.getStore().filter([{filterFn: function(item) {
-				            					return item.get("key")>=30000 && item.get("key")<=100000;
+				                			break;
+				                		case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
+				                			item.getStore().filter([{filterFn: function(item) {
+				            					return item.get("key")>=0 && item.get("key")<=8;
 				            				}}])
-				            				break;
-			            			}
-		            			else if(_p44_smap1.CDTIPSIT==TipoSituacion.ServicioPublicoMicro)
-		            				switch(item.cdatribu){
-		            				case 'CVE_VALOR_COMERCIAL':
-		            					item.setMaxValue(4200000);
-		            					item.setMinValue(50000);
-		            					break;
-			            			case 'CVE_DEDUCIBLE_RESP__CIVIL_': 
-			            				item.getStore().filter([{filterFn: function(item) {
-			            					return item.get("key")>=500000 && item.get("key")<=5000000;
-			            				}}])
-					            		break;
-			            			case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
-			            				item.getStore().filter([{filterFn: function(item) {
-			            					return item.get("key")>=1500 && item.get("key")<=20000;
-			            				}}])
-			            				break;
-			            			case 'CVE_SUMA_ASEGURADA_GASTOS_MEDICOS':
-			            				item.getStore().filter([{filterFn: function(item) {
-			            					return item.get("key")>=10000 && item.get("key")<=200000;
-			            				}}])
-			            				break;
-			            			case 'CVE_MUERTE_ACCIDENTAL_CONDUCTOR':
-			            				item.getStore().filter([{filterFn: function(item) {
-			            					return item.get("key")>=30000 && item.get("key")<=100000;
-			            				}}])
-			            				break;
-		            			}
-		            	}
-	                }
-	                if(_p44_smap1.cdtipsup == TipoEndoso.DeducibleMas ||
-	 		   	       _p44_smap1.cdtipsup == TipoEndoso.DeducibleMenos ){
-	                	//alert()
-	                	if(item.store ){
-		                	switch(item.cdatribu){
-		                		case 'CVE_DEDUCIBLE_DANOS_MATERIALES':
-		                			item.getStore().filter([{filterFn: function(item) {
-		            					return item.get("key")>=5 && item.get("key")<=20;
-		            				}}])
-		                			break;
-		                		case 'CVE_DEDUCIBLE_ROBO_TOTAL':
-		                			item.getStore().filter([{filterFn: function(item) {
-		            					return item.get("key")>=10 && item.get("key")<=20;
-		            				}}])
-		                			break;
-		                		case 'CVE_DEDUCIBLE_RESP__CIVIL':
-		                			item.getStore().filter([{filterFn: function(item) {
-		            					return item.get("key")>=25 && item.get("key")<=300;
-		            				}}])
-		                			break;
-		                		case 'CVE_DEDUCIBLE_RESP__CIVIL_VIAJERO':
-		                			item.getStore().filter([{filterFn: function(item) {
-		            					return item.get("key")>=0 && item.get("key")<=8;
-		            				}}])
-		                			break;
-		                	}
-	                	}
-	                }
-	            	
-	            }
-	            
-            }catch(e){
-            	debugError(e);
-            }
-            
-        }
-    }
+				                			break;
+				                	}
+			                	}
+			                }
+			            	
+			            }
+			            
+		            }catch(e){
+		            	debugError(e);
+		            }
+		            
+		        }
+		    }
+     	
+     }
+    
     
     Ext.Ajax.request(
     {
@@ -691,6 +777,7 @@ Ext.onReady(function()
             errorComunicacion();
         }
     });
+    
     ////// loaders //////
 });
 
