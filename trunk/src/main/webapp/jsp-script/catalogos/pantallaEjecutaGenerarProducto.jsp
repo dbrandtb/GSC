@@ -5,7 +5,7 @@
 <head>
 <script>
 ////// urls //////
-var _urlGenerarProducto = '<s:url namespace="/definicion"    action="GenerarProducto" />';
+var _urlGenerarProducto = '<s:url namespace="/definicion"    action="GenerarProducto2" />';
 ////// urls //////
 
 ////// variables //////
