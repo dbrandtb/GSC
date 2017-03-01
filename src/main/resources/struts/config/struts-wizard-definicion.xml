@@ -109,6 +109,10 @@
 			<result name="success" type="json" />
 		</action>
 		
+		<action name="GenerarProducto2" class="PrincipalProductosAction" method="generarProducto2">
+			<result name="success" type="json" />
+		</action>
+		
 	</package>
 
 </struts>

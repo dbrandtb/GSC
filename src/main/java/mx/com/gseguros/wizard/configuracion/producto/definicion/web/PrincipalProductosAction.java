@@ -16,6 +16,7 @@ import java.util.List;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.ClausulaVO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.PeriodoVO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.ProductoVO;
@@ -32,6 +33,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * PrincipalProductosAction
@@ -190,6 +192,18 @@ public class PrincipalProductosAction extends Padre {
 	private String mensaje;
     
     private boolean habilita;
+    
+    @Value("${user.server.layouts}")
+    private String userServerLayouts;	
+
+	@Value("${pass.server.layouts}")
+    private String passServerLayouts;	
+
+	@Value("${dominio.server.layouts}")
+    private String dominioServerLayouts;	
+
+	@Value("${dominio.server.layouts2}")
+    private String dominioServerLayouts2;	
 	
 	/**
 	 * @return the mensaje
@@ -1152,6 +1166,31 @@ public class PrincipalProductosAction extends Padre {
 			success = false;
 			return SUCCESS;
 		}
+		
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String generarProducto2() {
+		
+		log.debug(Utils.log(
+				 "\n###########################################"
+				,"\n###### generarProducto2 ######"
+				,"\n###### codigoRamo=",codigoRamo
+				));
+		try {
+			mensaje = productoManager.generarProducto(codigoRamo + "",dominioServerLayouts,userServerLayouts,passServerLayouts); 
+			mensaje = productoManager.generarProducto(codigoRamo + "",dominioServerLayouts2,userServerLayouts,passServerLayouts); 
+		} catch (ApplicationException e) {
+			log.error("Error al generar el producto: " + e.getMessage());
+			mensaje = e.getMessage();
+			success = false;
+			return SUCCESS;
+		}
+		log.debug(Utils.log(
+				"\n###### generarProducto2 ######"
+				,"\n###########################################"
+				));
 		
 		success = true;
 		return SUCCESS;
