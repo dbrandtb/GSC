@@ -1595,6 +1595,15 @@ Ext.onReady(function()
         
         debug('>parche para ramo 6');
         
+        try{
+        	
+    	        _fieldByName('fefin').setValue(
+    	            Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20',null,true).getValue())
+    	        );
+        	
+        }catch(e){
+        	debugError(e);
+        }
         //FRILTRO DE PLANES
         try{
             
@@ -1751,8 +1760,12 @@ Ext.onReady(function()
                             debug('### obtener auto por clave gs:',ijson);
                             if(ijson.success)
                             {
-                                _fieldLikeLabel('DESCUENTO').setMinValue(ijson.smap1.RANGO_MINIMO);
-                                _fieldLikeLabel('DESCUENTO').setMaxValue(ijson.smap1.RANGO_MAXIMO);
+                            	try{
+	                                _fieldLikeLabel('DESCUENTO').setMinValue(ijson.smap1.RANGO_MINIMO);
+	                                _fieldLikeLabel('DESCUENTO').setMaxValue(ijson.smap1.RANGO_MAXIMO);
+                            	}catch(e){
+                            		debugError(e)
+                            	}
                                 _fieldLikeLabel('DESCUENTO').setLoading(false);
                             }
                             else
@@ -3598,16 +3611,6 @@ function _p28_ramo5ClienteChange(combcl)
             centrarVentanaInterna(ventana);
         }
     } 
-    try{
-    	if(_p28_smap1.cdramo==Ramo.ServicioPublico){
-	        _fieldByName('fefin').setValue(
-	            Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20',null,true).getValue())
-	        );
-    	}
-    }catch(e){
-    	debugError(e);
-    }
-    
     debug('<_p28_ramo5ClienteChange');
 }
 
