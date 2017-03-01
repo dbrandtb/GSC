@@ -531,11 +531,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		
 		try
 		{
-		    String cdtipsit = null;
-		    
-		    if(TipoEndoso.ENDOSO_CAMBIO_MODELO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-		        cdtipsit ="|RQ|";
-		    }
 			paso="Recuperando columnas de lectura";
 			logger.debug(paso);
 			
@@ -543,7 +538,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					cdtipsup //cdtiptra
 					,null    //cdunieco
 					,cdramo
-					,cdtipsit    //cdtipsit
+					,null    //cdtipsit
 					,null    //estado
 					,cdsisrol//cdsisrol
 					,"ENDOSO_VALOSIT_AUTO"
@@ -558,7 +553,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					cdtipsup //cdtiptra
 					,null    //cdunieco
 					,"|"+cdramo+"|"
-					,cdtipsit    //cdtipsit
+					,null    //cdtipsit
 					,null    //estado
 					,cdsisrol//cdsisrol
 					,"ENDOSO_VALOSIT_AUTO"
@@ -1044,37 +1039,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
 					}
 				}
-			}else if(TipoEndoso.ENDOSO_CAMBIO_MODELO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-			    if(this.endosoCambioModelo(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
-                    logger.info("Endoso de AdaptacionesRC exitoso...");
-                }else{
-                    logger.error("Error al ejecutar los WS de endoso de Cambio de Modelo");
-                    
-                    boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
-                    if(endosoRevertido){
-                        logger.error("Endoso revertido exitosamente.");
-                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
-                    }else{
-                        logger.error("Error al revertir el endoso");
-                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
-                    }
-                }
-			}else if(TipoEndoso.ENDOSO_CAMBIO_DESCRIPCION.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-			    if(this.endosoCambioDescripcion(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramite, cdtipsup)){
-                    logger.info("Endoso de AdaptacionesRC exitoso...");
-                }else{
-                    logger.error("Error al ejecutar los WS de endoso de Cambio de Descripcion");
-                    
-                    boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplem, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
-                    if(endosoRevertido){
-                        logger.error("Endoso revertido exitosamente.");
-                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
-                    }else{
-                        logger.error("Error al revertir el endoso");
-                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
-                    }
-                }
-            }else{
+			}else{
 				
 				paso = "Realizando endoso en Web Service Autos";
 				logger.debug(paso);
@@ -6119,7 +6084,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						
 					}
 					
-					if(TipoEndoso.CAMBIO_TIPO_SERVICIO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup) && ("no").equals(confirmar)){
+					if(TipoEndoso.CAMBIO_TIPO_SERVICIO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup) && ("no").equals(confirmar)
+					 ||TipoEndoso.ENDOSO_CAMBIO_TIPO_CARGA.getCdTipSup().toString().equalsIgnoreCase(cdtipsup) && ("no").equals(confirmar)
+					 ||TipoEndoso.ENDOSO_CAMBIO_MODELO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup) && ("no").equals(confirmar)
+					 ||TipoEndoso.ENDOSO_CAMBIO_DESCRIPCION.getCdTipSup().toString().equalsIgnoreCase(cdtipsup) && ("no").equals(confirmar)){
 					    Map<String,String>paramDetallePoliza=new LinkedHashMap<String,String>(0);
 			            paramDetallePoliza.put("pv_cdunieco_i" , cdunieco);
 			            paramDetallePoliza.put("pv_cdramo_i"   , cdramo);
@@ -6230,7 +6198,88 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						
 						ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
 					
-					}
+					}else if(TipoEndoso.ENDOSO_CAMBIO_TIPO_CARGA.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
+						
+						paso = "Realizando endoso en Web Service Autos";
+						logger.debug(paso);
+						
+						EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
+						if(aux == null || (StringUtils.isBlank(aux.getNmpoliex()) && !aux.isEndosoSinRetarif())){
+							logger.error("Error al ejecutar los WS de endoso Cambio de Tipo Carga");
+							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
+							
+							if(endosoRevertido){
+								logger.error("Endoso revertido exitosamente.");
+								throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
+							}else{
+								logger.error("Error al revertir el endoso");
+								throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+							}
+						}
+						
+						if(aux.isEndosoSinRetarif()){
+							
+							if(this.endosoTipoCarga(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup)){
+								logger.info("Endoso Cambio de Tipo Carga exitoso...");
+							}else{
+								logger.error("Error al ejecutar los WS de endoso de Cambio de Tipo Carga");
+								boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
+								if(endosoRevertido){
+									logger.error("Endoso revertido exitosamente.");
+									throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
+								}else{
+									logger.error("Error al revertir el endoso");
+									throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+								}
+							}
+							
+						}else if(aux.isExitoRecibos()){
+							
+							ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
+						}else{
+							logger.error("Error al ejecutar los WS de endoso de Cambio de Tipo Carga");
+							boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
+							
+							if(endosoRevertido){
+								logger.error("Endoso revertido exitosamente.");
+								throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
+							}else{
+								logger.error("Error al revertir el endoso");
+								throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+							}
+						}
+						
+					}else if(TipoEndoso.ENDOSO_CAMBIO_MODELO.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
+					    if(this.endosoCambioModelo(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup)){
+		                    logger.info("Endoso de Cambio de Modelo exitoso.. ");
+		                }else{
+		                    logger.error("Error al ejecutar los WS de endoso de Cambio de Modelo");
+		                    
+		                    boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
+		                    if(endosoRevertido){
+		                        logger.error("Endoso revertido exitosamente.");
+		                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
+		                    }else{
+		                        logger.error("Error al revertir el endoso");
+		                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+		                    }
+		                }
+		            }else if(TipoEndoso.ENDOSO_CAMBIO_DESCRIPCION.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
+					    if(this.endosoCambioDescripcion(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup)){
+		                    logger.info("Endoso Cambio Descripcion exitoso...");
+		                }else{
+		                    logger.error("Error al ejecutar los WS de endoso de Cambio de Descripcion");
+		                    
+		                    boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
+		                    if(endosoRevertido){
+		                        logger.error("Endoso revertido exitosamente.");
+		                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
+		                    }else{
+		                        logger.error("Error al revertir el endoso");
+		                        throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+		                    }
+		                }
+		            }
 					
 					paso = "confirmarGuardandoDetallesTramiteEndoso";
 	                logger.debug(paso);
@@ -9417,234 +9466,6 @@ public class EndososAutoManagerImpl implements EndososAutoManager
             return resParams;
         }
         
-        
-        
-        @Override
-        public Map<String,Item> endosoCambioTipoCarga(
-                String cdtipsup
-                ,String cdramo
-                )throws Exception
-        {
-            logger.debug(Utils.log(
-                     "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                    ,"\n@@@@@@ endosoCambioTipoCarga @@@@@@@@@@@"
-                    ,"\n@@@@@@ cdtipsup=" , cdtipsup
-                    ,"\n@@@@@@ cdramo="   , cdramo
-                    ));
-            
-            Map<String,Item> items = new HashMap<String,Item>();
-            String           paso  = null;
-            
-            try
-            {
-                paso = "Recuperando columnas de inciso";
-                logger.debug(paso);
-                List<ComponenteVO> columnasInciso = pantallasDAO.obtenerComponentes(
-                        cdtipsup  //cdtiptra
-                        ,null //cdunieco
-                        ,"|"+cdramo+"|"
-                        ,null //cdtipsit
-                        ,null //estado
-                        ,null //cdsisrol
-                        ,"ENDOSO_AJUSTE_SINIESTRALIDAD"
-                        ,"COLUMNAS_INCISO"
-                        ,null //orden
-                        );
-                
-                paso = "Construyendo componentes";
-                logger.debug(paso);
-                GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-                gc.generaComponentes(columnasInciso, true, false, false, true, true, false);
-                items.put("incisoColumns" , gc.getColumns());
-                
-            }
-            catch(Exception ex)
-            {
-                Utils.generaExcepcion(ex, paso);
-            }
-            
-            logger.debug(Utils.log(
-                     "\n@@@@@@ endosoCambioTipoCarga @@@@@@@@@@@"
-                    ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                    ));
-            return items;
-        }
-        
-        public Map<String,Object> guardarEndosoCambioTipoCarga(
-                String cdusuari
-                ,String cdsisrol
-                ,String cdelemen
-                ,String cdunieco
-                ,String cdramo
-                ,String estado
-                ,String nmpoliza
-                ,String cdtipsup
-                ,String tstamp
-                ,Date   feefecto
-                ,List<Map<String,String>> incisos
-                ,UserVO usuarioSesion
-                ,FlujoVO flujo
-                ,String nmtramite
-                )throws Exception
-        {
-            logger.debug(Utils.log(
-                     "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                    ,"\n@@@@@@ guardarEndosoCambioTipoCarga @@@@@@"
-                    ,"\n@@@@@@ cdusuari      = " , cdusuari
-                    ,"\n@@@@@@ cdsisrol      = " , cdsisrol
-                    ,"\n@@@@@@ cdelemen      = " , cdelemen
-                    ,"\n@@@@@@ cdunieco      = " , cdunieco
-                    ,"\n@@@@@@ cdramo        = " , cdramo
-                    ,"\n@@@@@@ estado        = " , estado
-                    ,"\n@@@@@@ nmpoliza      = " , nmpoliza
-                    ,"\n@@@@@@ cdtipsup      = " , cdtipsup
-                    ,"\n@@@@@@ tstamp        = " , tstamp
-                    ,"\n@@@@@@ feefecto      = " , feefecto
-                    ,"\n@@@@@@ incisos       = " , incisos
-                    ,"\n@@@@@@ usuarioSesion = " , usuarioSesion
-                    ,"\n@@@@@@ flujo         = " , flujo
-                    ,"\n@@@@@@ nmtramite     = " , nmtramite
-                    ));
-            
-            String paso = null;
-            try
-            {
-                paso = "Guardando incisos temporales";
-                logger.debug(paso);
-                for(Map<String,String> inciso : incisos)
-                {
-                    endososDAO.guardarTvalositEndoso(
-                            cdunieco
-                            ,cdramo
-                            ,estado
-                            ,nmpoliza
-                            ,inciso.get("nmsituac")
-                            ,inciso.get("nmsuplem")
-                            ,inciso.get("status")
-                            ,inciso.get("cdtipsit")
-                            ,"BAJA"  , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null , null
-                            ,null    , null , null , null , null , null , null , null , null
-                            ,tstamp
-                            );
-                }
-                
-                // Se genera el endoso, se confirma y se genera el tramite:
-                paso = "Confirmando endoso";
-                logger.debug(paso);
-                resParams = endososDAO.guardarEndosoCambioTipoCarga(cdusuari, cdsisrol, cdelemen,
-                        cdunieco, cdramo, estado, nmpoliza, cdtipsup, tstamp, feefecto);
-
-                String nmsuplemGen     = (String) resParams.get("pv_nmsuplem_o");
-                String ntramite        = (String) resParams.get("pv_ntramite_o");
-                String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
-                String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
-                
-                String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
-                        nmtramite//ntramite
-                        ,cdunieco
-                        ,cdramo
-                        ,estado
-                        ,nmpoliza
-                        ,nmsuplemGen
-                        ,cdtipsup
-                        ,nsuplogi
-                        ,null //dscoment
-                        ,feefecto
-                        ,flujo
-                        ,cdusuari
-                        ,cdsisrol
-                        ,false //confirmar
-                        );
-                resParams.put("mensajeDespacho", mensajeDespacho);
-                
-                // Se envian los datos a traves del WS de autos:
-                paso = "Realizando endoso en Web Service Autos";
-                logger.debug(paso);
-                if(TipoEndoso.ENDOSO_CAMBIO_TIPO_CARGA.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-                    
-                    paso = "Realizando endoso en Web Service Autos";
-                    logger.debug(paso);
-                    
-                    EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
-                    if(aux == null || (StringUtils.isBlank(aux.getNmpoliex()) && !aux.isEndosoSinRetarif())){
-                        logger.error("Error al ejecutar los WS de endoso Cambio de Tipo Carga");
-                        boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
-                        
-                        if(endosoRevertido){
-                            logger.error("Endoso revertido exitosamente.");
-                            throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
-                        }else{
-                            logger.error("Error al revertir el endoso");
-                            throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
-                        }
-                    }
-                    
-                    if(aux.isEndosoSinRetarif()){
-                        
-                        if(this.endosoTipoCarga(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup)){
-                            logger.info("Endoso de Tipo Servicio sin Tarificacion exitoso...");
-                        }else{
-                            logger.error("Error al ejecutar los WS de endoso de Tipo Carga sin Tarificacion");
-                            boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, 88888, "Error en endoso B tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), true);
-                            if(endosoRevertido){
-                                logger.error("Endoso revertido exitosamente.");
-                                throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
-                            }else{
-                                logger.error("Error al revertir el endoso");
-                                throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
-                            }
-                        }
-                        
-                    }else if(aux.isExitoRecibos()){
-                        Map<String,String> incisosAfectados = new HashMap<String, String>();
-                        
-                        for(Map<String,String> coberturasIncisos : incisos){
-                        
-                            String inciso = coberturasIncisos.get("nmsituac");
-                            
-                            if(StringUtils.isNotBlank(inciso)){
-                                incisosAfectados.put(inciso,inciso);
-                            }
-                        }
-                        
-                        ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, nmtramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
-                    }else{
-                        logger.error("Error al ejecutar los WS de endoso Cambio de Tipo Carga");
-                        boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
-                        
-                        if(endosoRevertido){
-                            logger.error("Endoso revertido exitosamente.");
-                            throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
-                        }else{
-                            logger.error("Error al revertir el endoso");
-                            throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
-                        }
-                    }
-                    
-                }
-                
-                
-            }
-            catch(Exception ex)
-            {
-                Utils.generaExcepcion(ex, paso);
-            }
-            
-            logger.debug(Utils.log(
-                     "\n@@@@@@ guardarEndosoCambioTipoCarga @@@@@@"
-                    ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                    ));
-            return resParams;
-        }
-        
         private boolean endosoCambioModelo(String cdunieco, String cdramo,
                 String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsup){
             
@@ -9681,8 +9502,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                         paramsEnd.put("vRamo"          , datosEnd.get("Ramo"));
                         paramsEnd.put("vPoliza"        , datosEnd.get("Poliza"));
                         paramsEnd.put("vInciso"        , datosEnd.get("Inciso"));
-                        paramsEnd.put("vDescripcion"   , datosEnd.get("Descripcion").isEmpty()?" ":datosEnd.get("Descripcion"));
-                        paramsEnd.put("vModelo"        , datosEnd.get("Modelo").isEmpty()?"00":datosEnd.get("Modelo"));
+                        paramsEnd.put("vDescripcion"   , "xxx");//datosEnd.get("Descripcion"));
+                        paramsEnd.put("vModelo"        , datosEnd.get("Modelo"));
                         paramsEnd.put("vFEndoso"       , datosEnd.get("FEndoso"));
                         paramsEnd.put("vUser"          , datosEnd.get("Usuario"));
                         paramsEnd.put("vEndoB"         , (endosoRecuperado==-1)?0:endosoRecuperado);
@@ -9770,8 +9591,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                         paramsEnd.put("vRamo"          , datosEnd.get("Ramo"));
                         paramsEnd.put("vPoliza"        , datosEnd.get("Poliza"));
                         paramsEnd.put("vInciso"        , datosEnd.get("Inciso"));
-                        paramsEnd.put("vDescripcion"   , datosEnd.get("Descripcion").isEmpty()?" ":datosEnd.get("Descripcion"));
-                        paramsEnd.put("vModelo"        , datosEnd.get("Modelo").isEmpty()?"00":datosEnd.get("Modelo"));
+                        paramsEnd.put("vDescripcion"   , datosEnd.get("Descripcion"));
+                        paramsEnd.put("vModelo"        , "2100");//datosEnd.get("Modelo"));
                         paramsEnd.put("vFEndoso"       , datosEnd.get("FEndoso"));
                         paramsEnd.put("vUser"          , datosEnd.get("Usuario"));
                         paramsEnd.put("vEndoB"         , (endosoRecuperado==-1)?0:endosoRecuperado);
