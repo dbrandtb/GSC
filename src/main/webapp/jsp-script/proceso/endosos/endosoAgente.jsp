@@ -24,8 +24,6 @@ smap1:
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _10_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-var _10_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
 var _10_formLectura;
 var _10_panelPri;
 var _10_panelEndoso;
@@ -33,13 +31,11 @@ var _10_fieldFechaEndoso;
 var _10_storeAgentes;
 var _10_gridAgentes;
 
-var _10_urlGuardar              = '<s:url namespace="/endosos" action="guardarEndosoAgente"       />';
-var _10_urlLoadAgentes          = '<s:url namespace="/endosos" action="cargarAgentesEndosoAgente" />';
-var _10_urlRecuperacionSimple   = '<s:url namespace="/emision" action="recuperacionSimple"        />';
-var _10_urlValidacionSigsAgente = '<s:url namespace="/endosos" action="validacionSigsAgente"      />';
+var _10_urlGuardar            = '<s:url namespace="/endosos" action="guardarEndosoAgente"       />';
+var _10_urlLoadAgentes        = '<s:url namespace="/endosos" action="cargarAgentesEndosoAgente" />';
+var _10_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple"        />';
 
 debug('_10_smap1:',_10_smap1);
-debug('_10_flujo:',_10_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -136,48 +132,14 @@ Ext.onReady(function()
 							                 	var comboAgente = _fieldByNameDown('NUEVOAGENTE',windowAgente);
 							                 	
 							                 	if(comboAgente.isValid() && comboAgente.getStore().find('key',comboAgente.getValue()) >= 0 ){
-							                 	    var callback = function () {
-								                 	    recordSel.set('CDAGENTE',comboAgente.getValue());
-								                 	    recordSel.set('NOMBRE',comboAgente.getRawValue());
-								                	    if (!recordSel.isModified('CDAGENTE')){
-								                		    recordSel.reject();
-								                	    }
-								                	    windowAgente.close();
-								                	};
-								                	var mask, ck = 'Validando agente';
-								                	try {
-								                	    mask = _maskLocal(ck);
-								                	    Ext.Ajax.request({
-								                	        url     : _10_urlValidacionSigsAgente,
-								                	        params  : {
-								                	            'params.cdagente' : comboAgente.getValue(),
-								                	            'params.cdramo'   : _10_smap1.CDRAMO,
-								                	            'params.cdtipsit' : _10_smap1.CDTIPSIT,
-								                	            'params.cdtipend' : 'A'
-								                	        },
-								                	        success : function (response) {
-								                	            mask.close();
-								                	            var ck = 'Decodificando datos al validar agente';
-								                	            try {
-								                	                var json = Ext.decode(response.responseText);
-								                	                debug('### validar agente:', json, '.');
-								                	                if (json.success === true) {
-								                	                    callback();
-								                	                } else {
-								                	                    mensajeError(json.message);
-								                	                }
-								                	            } catch (e) {
-								                	                manejaException(e, ck);
-								                	            }
-								                	        },
-								                	        failure : function () {
-								                	            mask.close();
-								                	            errorComunicacion(null, 'Error al validar agente');
-								                	        }
-								                	    });
-								                	} catch (e) {
-								                	    manejaException(e, ck, mask);
+								                 	recordSel.set('CDAGENTE',comboAgente.getValue());
+								                 	recordSel.set('NOMBRE',comboAgente.getRawValue());
+								                	
+								                	if(!recordSel.isModified('CDAGENTE')){
+								                		recordSel.reject();
 								                	}
+								                	
+								                	windowAgente.close();
 							                 	}else{
 							                 		comboAgente.reset();
 							                 		showMessage("Aviso","Debe seleccionar un agente.", Ext.Msg.OK, Ext.Msg.INFO);
@@ -440,12 +402,6 @@ function _10_confirmar()
             }
             ,slist1 : slist1
         }
-        
-        if(!Ext.isEmpty(_10_flujo))
-        {
-            json.flujo = _10_flujo;
-        }
-        
         debug('datos que se enviaran:',json);
         
         var panelMask = new Ext.LoadMask('_10_divPri', {msg:"Confirmando..."});
@@ -463,32 +419,15 @@ function _10_confirmar()
                 debug('datos recibidos:',json);
                 if(json.success==true)
                 {
-                    var callbackRemesa = function()
-                    {
-                        //////////////////////////////////
-                        ////// usa codigo del padre //////
-                        /*//////////////////////////////*/
-                        marendNavegacion(2);
-                        /*//////////////////////////////*/
-                        ////// usa codigo del padre //////
-                        //////////////////////////////////
-                    };
+                    mensajeCorrecto('Endoso generado',json.mensaje);
                     
-                    mensajeCorrecto('Endoso generado',json.mensaje,function()
-                    {
-                    	if(json.endosoConfirmado){
-                        	_generarRemesaClic(
-	                            true
-	                            ,_10_smap1.CDUNIECO
-	                            ,_10_smap1.CDRAMO
-	                            ,_10_smap1.ESTADO
-	                            ,_10_smap1.NMPOLIZA
-	                            ,callbackRemesa
-    	                    );
-                        }else{
-                        	callbackRemesa();
-                        }
-                    });
+                    //////////////////////////////////
+                    ////// usa codigo del padre //////
+                    /*//////////////////////////////*/
+                    marendNavegacion(2);
+                    /*//////////////////////////////*/
+                    ////// usa codigo del padre //////
+                    //////////////////////////////////
                 }
                 else
                 {
@@ -505,6 +444,5 @@ function _10_confirmar()
 };
 ////// funciones //////
 ///////////////////////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="_10_divPri" style="height:1000px;"></div>

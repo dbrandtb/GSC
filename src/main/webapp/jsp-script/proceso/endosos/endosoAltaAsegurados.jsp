@@ -906,10 +906,6 @@ function _p59_agregarFuncionamientoRFC () {
                                                         debug('PERSONAS EXISTENTES actioncolumn handler() args:', arguments);
                                                         _p59_recuperarPersona(record.get('CDPERSON'), record.get('NMORDDOM'), v.up('window'));
                                                     }
-                                                },{
-                                                   header     : 'ID. Asegurado',
-                                                   dataIndex  : 'CDPERSON',
-                                                   width      : 120
                                                 }, {
                                                     text      : 'RFC',
                                                     dataIndex : 'RFC',

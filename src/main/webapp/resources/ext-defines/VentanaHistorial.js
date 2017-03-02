@@ -5,8 +5,8 @@ Ext.define('VentanaHistorial',
     ,itemId      : '_c21_instance'
     ,closeAction : 'destroy'
     ,modal       : true
-    ,width       : 800
-    ,height      : 430
+    ,width       : 700
+    ,height      : 400
     ,mostrar     : function()
     {
         var me = this;
@@ -38,11 +38,6 @@ Ext.define('VentanaHistorial',
                             ,"CDUSUARI_FIN"
                             ,"usuario_ini"
                             ,"usuario_fin"
-                            ,"STATUS"       , "DSSTATUS"
-                            ,"CDSISROL_INI" , "DSSISROL_INI"
-                            ,"CDSISROL_FIN" , "DSSISROL_FIN"
-                            ,"DSUSUARI_INI" , "DSUSUARI_FIN"
-                            ,'STATUS'       , 'DSSTATUS'
                         ]
                         ,autoLoad : true
                         ,proxy    :
@@ -66,7 +61,6 @@ Ext.define('VentanaHistorial',
                             header     : 'Tr&aacute;mite'
                             ,dataIndex : 'NTRAMITE'
                             ,width     : 60
-                            ,hidden    : true
                         }
                         ,{
                             header     : 'No.'
@@ -74,60 +68,65 @@ Ext.define('VentanaHistorial',
                             ,width     : 40
                         }
                         ,{
-                            header     : 'Usuario'
-                            ,dataIndex : 'usuario_fin'
-                            ,width     : 300
-                            ,renderer  : function(v,md,rec)
-                            {
-                                return _NVL(rec.get('DSUSUARI_FIN')) + ' - ' +  _NVL(rec.get('DSSISROL_FIN'));
-                            }
-                        }
-                        ,{
-                            header     : 'Usuario'
-                            ,dataIndex : 'usuario_ini'
-                            ,width     : 300
-                            ,renderer  : function(v,md,rec)
-                            {
-                                return _NVL(rec.get('DSUSUARI_INI')) + ' - ' +  _NVL(rec.get('DSSISROL_INI'));
-                            }
-                            ,hidden    : true
-                        }
-                        ,{
-                            header     : 'Inicio'
+                            header     : 'Fecha de inicio'
                             ,xtype     : 'datecolumn'
                             ,dataIndex : 'FECHAINI'
                             ,format    : 'd M Y H:i'
-                            ,width     : 125
+                            ,width     : 130
                         }
                         ,{
-                            header     : 'Fin'
+                            header     : 'Usuario inicio'
+                            ,dataIndex : 'usuario_ini'
+                            ,width     : 150
+                        }
+                        ,{
+                            header     : 'Fecha de fin'
                             ,xtype     : 'datecolumn'
                             ,dataIndex : 'FECHAFIN'
                             ,format    : 'd M Y H:i'
-                            ,width     : 125
+                            ,width     : 90
                         }
                         ,{
-                            header     : 'Estatus'
-                            ,dataIndex : 'DSSTATUS'
-                            ,width     : 160
-                            ,renderer  : function(v)
-                            {
-                                return _NVL(v);
-                            }
+                            header     : 'Usuario fin'
+                            ,dataIndex : 'usuario_fin'
+                            ,width     : 150
                         }
                         ,{
-                            dataIndex : 'usuario_ini'
-                            ,width    : 30
-                            ,renderer : function(val,md,rec)
+                            width         : 30
+                            ,menuDisabled : true
+                            ,dataIndex    : 'FECHAFIN'
+                            ,renderer     : function(value)
                             {
-                                var r = '';
-                                if(config.cdsisrol!='EJECUTIVOCUENTA'||rec.raw.SWAGENTE=='S')
+                                debug(value);
+                                if(value&&value!=null)
                                 {
-                                    r = '<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'book_edit.png" style="cursor:pointer;" data-qtip="Modificar detalle" />';
+                                    value='';
                                 }
-                                return r;
+                                else
+                                {
+                                    value='<img src="'+_GLOBAL_DIRECTORIO_ICONOS+'accept.png" style="cursor:pointer;" data-qtip="Finalizar" />';
+                                }
+                                return value;
                             }
                         }
+                        /*,{
+                            width         : 30
+                            ,menuDisabled : true
+                            ,dataIndex    : 'CDCLAUSU'
+                            ,renderer     : function(value)
+                            {
+                                debug(value);
+                                if(value&&value!=null&&value.length>0)
+                                {
+                                    value='<img src="${ctx}/resources/fam3icons/icons/printer.png" style="cursor:pointer;" data-qtip="Imprimir" />';
+                                }
+                                else
+                                {
+                                    value='';
+                                }
+                                return value;
+                            }
+                        }*/
                     ]
                     ,listeners :
                     {
@@ -136,16 +135,16 @@ Ext.define('VentanaHistorial',
                                 rowIndex, e, eOpts)
                         {
                             debug(record);
-                            if($(td).find('img').length==0)
+                            if(cellIndex<6)
                             {
                                 _fieldById('_c21_inputReadDetalleHtmlVisor').setValue((config.cdsisrol!='EJECUTIVOCUENTA'||record.raw.SWAGENTE=='S')?record.get('COMMENTS'):'');
                             }
-                            else if($(td).find('img').length>0)
+                            else if(cellIndex==6&&$(td).find('img').length>0)
                             {
                                 debug('finalizar');
                                 centrarVentanaInterna(Ext.create('Ext.window.Window',
                                 {
-                                    title        : 'Modificar detalle'
+                                    title        : 'Finalizar detalle'
                                     ,width       : 600
                                     ,height      : 400
                                     ,buttonAlign : 'center'
@@ -156,9 +155,10 @@ Ext.define('VentanaHistorial',
                                     [
                                         {
                                             xtype   : 'textarea'
+                                            ,itemId : '_c21_inputHtmlEditorFinalizarDetalleMesCon'
                                             ,width  : 570
                                             ,height : 300
-                                            //,value  : record.get('COMMENTS')
+                                            ,value  : record.get('COMMENTS')
                                         }
                                     ]
                                     ,buttons     :
@@ -168,60 +168,51 @@ Ext.define('VentanaHistorial',
                                             ,icon    : _GLOBAL_DIRECTORIO_ICONOS+'disk.png'
                                             ,handler : function(me)
                                             {
-                                                var mask, ck = 'Modificando detalle';
-                                                try
+                                                var win = me.up('window');
+                                                win.setLoading(true);
+                                                Ext.Ajax.request(
                                                 {
-                                                    mask = _maskLocal(ck);
-                                                    Ext.Ajax.request(
+                                                    url      : _GLOBAL_COMP_URL_FINAL_HIST
+                                                    ,params  :
                                                     {
-                                                        url      : _GLOBAL_COMP_URL_MODIF_HIST
-                                                        ,params  :
+                                                        'smap1.pv_ntramite_i'  : record.get('NTRAMITE')
+                                                        ,'smap1.pv_nmordina_i' : record.get('NMORDINA')
+                                                        ,'smap1.pv_comments_i' : _fieldById('_c21_inputHtmlEditorFinalizarDetalleMesCon').getValue()
+                                                    }
+                                                    ,success : function (response)
+                                                    {
+                                                        var json=Ext.decode(response.responseText);
+                                                        if(json.success==true)
                                                         {
-                                                            'params.ntramite'  : record.get('NTRAMITE')
-                                                            ,'params.nmordina' : record.get('NMORDINA')
-                                                            ,'params.comments' : me.up('window').down('textarea').getValue()
+                                                            win.destroy();
+                                                            Ext.Msg.show({
+                                                                title:'Detalle actualizado',
+                                                                msg: 'Se finaliz&oacute; el detalle',
+                                                                buttons: Ext.Msg.OK
+                                                            });
                                                         }
-                                                        ,success : function (response)
+                                                        else
                                                         {
-                                                            mask.close();
-                                                            var ck = 'Decodificando respuesta al modificar detalle';
-                                                            try
-                                                            {
-                                                                var json=Ext.decode(response.responseText);
-                                                                if(json.success === true)
-                                                                {
-                                                                    mensajeCorrecto(
-                                                                        'Detalle actualizado'
-                                                                        ,'Detalle actualizado'
-                                                                        ,function()
-                                                                        {
-                                                                            record.set('COMMENTS',json.params.comments);
-                                                                            _fieldById('_c21_inputReadDetalleHtmlVisor').setValue(record.get('COMMENTS'));
-                                                                            me.up('window').destroy();
-                                                                        }
-                                                                    );
-                                                                }
-                                                                else
-                                                                {
-                                                                    mensajeError(json.message);
-                                                                }
-                                                            }
-                                                            catch(e)
-                                                            {
-                                                                manejaException(e,ck);
-                                                            }
+                                                            win.setLoading(false);
+                                                            Ext.Msg.show({
+                                                                title:'Error',
+                                                                msg: 'Error al finalizar detalle',
+                                                                buttons: Ext.Msg.OK,
+                                                                icon: Ext.Msg.ERROR
+                                                            });
                                                         }
-                                                        ,failure : function()
-                                                        {
-                                                            mask.close();
-                                                            errorComunicacion(null,'Error al modificar detalle');
-                                                        }
-                                                    });
-                                                }
-                                                catch(e)
-                                                {
-                                                    manejaException(e,ck,mask);
-                                                }
+                                                    }
+                                                    ,failure : function()
+                                                    {
+                                                        win.setLoading(false);
+                                                        Ext.Msg.show({
+                                                            title:'Error',
+                                                            msg: 'Error de comunicaci&oacute;n',
+                                                            buttons: Ext.Msg.OK,
+                                                            icon: Ext.Msg.ERROR
+                                                        });
+                                                    }
+                                                });
                                             }
                                         }
                                         ,{
@@ -235,17 +226,19 @@ Ext.define('VentanaHistorial',
                                     ]
                                 }).show());
                             }
+                            /*else if(cellIndex==5&&$(td).find('img').length>0)
+                            {
+                                debug("APRETASTE EL BOTON IMPRIMIR PARA EL RECORD:",record);
+                            }*/
                         }
                     }
                 })
                 ,{
-                    xtype       : 'textarea'
-                    ,itemId     : '_c21_inputReadDetalleHtmlVisor'
-                    ,width      : 780
-                    ,height     : 180
-                    ,readOnly   : true
-                    ,labelAlign : 'top'
-                    ,fieldLabel : 'Se recibe con los siguientes comentarios:'
+                    xtype     : 'textarea'
+                    ,itemId   : '_c21_inputReadDetalleHtmlVisor'
+                    ,width    : 690
+                    ,height   : 200
+                    ,readOnly : true
                 }
             ]
         });

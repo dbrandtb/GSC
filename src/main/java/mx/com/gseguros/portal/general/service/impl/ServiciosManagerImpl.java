@@ -8,6 +8,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
+import mx.com.gseguros.portal.endosos.dao.EndososDAO;
+import mx.com.gseguros.portal.general.service.MailService;
+import mx.com.gseguros.portal.general.service.ServiciosManager;
+import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.utils.Utils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
@@ -15,23 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
-import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
-import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
-import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
-import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
-import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
-import mx.com.gseguros.portal.despachador.service.DespachadorManager;
-import mx.com.gseguros.portal.emision.dao.EmisionDAO;
-import mx.com.gseguros.portal.endosos.dao.EndososDAO;
-import mx.com.gseguros.portal.general.service.MailService;
-import mx.com.gseguros.portal.general.service.ServiciosManager;
-import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
-import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.Utils;
 
 @Service
 public class ServiciosManagerImpl implements ServiciosManager
@@ -55,24 +46,6 @@ public class ServiciosManagerImpl implements ServiciosManager
 	
 	@Autowired
 	private MailService mailService;
-	
-	@Autowired
-	private FlujoMesaControlDAO flujoMesaControlDAO;
-	
-	@Autowired
-	private ConsultasDAO consultasDAO;
-	
-	@Autowired
-	private FlujoMesaControlManager flujoMesaControlManager;
-	
-	@Autowired
-	private MesaControlDAO mesaControlDAO;
-	
-	@Autowired
-	private EmisionDAO emisionDAO;
-	
-	@Autowired
-	private DespachadorManager despachadorManager;
 	
 	@Override
 	public String reemplazarDocumentoCotizacion(StringBuilder sb, String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
@@ -386,229 +359,5 @@ public class ServiciosManagerImpl implements ServiciosManager
 				 "\n@@@@@@ recibosSubsecuentes @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
-	}
-	
-	@Override
-	public int generarFlagsTramites () throws Exception {
-		logger.debug(Utils.log(
-			"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-			"\n@@@@@@ generarFlagsTramites @@@@@@"
-		));
-		int generadas = 0;
-		String paso = null;
-		try {
-			paso = "Recuperando tramites que no tengan flag actualizada";
-			logger.debug(paso);
-			List<Map<String, String>> tramitesSinFlag = flujoMesaControlDAO.recuperarTramitesSinFlag();
-			
-			int minutosAmarillosDefault = 0,
-				minutosRojosDefault     = 0,
-				minutosMaxDefault       = 0;
-			
-			if (tramitesSinFlag.size() > 0) {
-				paso = "Recuperando minutos default";
-				logger.debug(paso);
-				
-				minutosAmarillosDefault = Integer.parseInt(consultasDAO.recuperarTparagen(ParametroGeneral.MINUTOS_FLAG_AMARILLA));
-				minutosRojosDefault     = Integer.parseInt(consultasDAO.recuperarTparagen(ParametroGeneral.MINUTOS_FLAG_ROJA));
-				minutosMaxDefault       = Integer.parseInt(consultasDAO.recuperarTparagen(ParametroGeneral.MINUTOS_FLAG_MAXIMA));
-			}
-			
-			for (Map<String, String> tramite: tramitesSinFlag) {
-				paso = Utils.join("Iterando tramite ", tramite);
-				logger.debug(paso);
-				
-				String ntramite = tramite.get("NTRAMITE");
-				String status   = tramite.get("STATUS");
-				
-				Date fecstatu = Utils.parseConHora(tramite.get("FECSTATU"));
-				Calendar fecstatu2 = Calendar.getInstance();
-				fecstatu2.setTime(fecstatu);
-				if (fecstatu2.get(Calendar.HOUR_OF_DAY) == 0 && fecstatu2.get(Calendar.MINUTE) == 0) {
-					fecstatu2.set(Calendar.HOUR_OF_DAY, 12);
-				}
-				
-				int minutosAmarillos = Integer.parseInt(tramite.get("TIMEWRN1"));
-				if (minutosAmarillos == 0) {
-					minutosAmarillos = minutosAmarillosDefault;
-				}
-				
-				int minutosRojos = Integer.parseInt(tramite.get("TIMEWRN2"));
-				if (minutosRojos == 0) {
-					minutosRojos = minutosRojosDefault;
-				}
-				
-				int minutosMax = Integer.parseInt(tramite.get("TIMEMAX"));
-				if (minutosMax == 0) {
-					minutosMax = minutosMaxDefault;
-				}
-				
-				flujoMesaControlDAO.insertarFlagTramite(
-						ntramite,
-						fecstatu,
-						"V", //verde
-						Utils.calcularFechaLaboral(fecstatu2, minutosAmarillos).getTime(),
-						Utils.calcularFechaLaboral(fecstatu2, minutosRojos).getTime(),
-						Utils.calcularFechaLaboral(fecstatu2, minutosMax).getTime()
-						);
-				
-				try {
-					cotizacionDAO.grabarEvento(
-							new StringBuilder()
-							,Constantes.MODULO_FLAGS
-							,Constantes.EVENTO_FLAG_VERDE
-							,new Date()
-							,Constantes.USUARIO_SISTEMA
-							,Constantes.ROL_SISTEMA
-							,ntramite
-							,null //cdunieco
-							,null //cdramo
-							,null //estado
-							,null //nmpoliza
-							,null //nmsolici
-							,null //cdagente
-							,null //cdusuariDes
-							,null //cdsisrolDes
-							,status
-							);
-					Thread.sleep(1000l);
-				} catch (Exception ex) {
-					logger.debug("Error al grabar evento", ex);
-				}
-				
-				generadas++;
-			}
-		} catch (Exception ex) {
-			Utils.generaExcepcion(ex, paso);
-		}
-		logger.debug(Utils.log(
-			"\n@@@@@@ generadas = ", generadas,
-			"\n@@@@@@ generarFlagsTramites @@@@@@",
-			"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-		));
-		return generadas;
-	}
-	
-	@Override
-	public int actualizarFlagsTramites () throws Exception {
-		logger.debug(Utils.log(
-			"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-			"\n@@@@@@ actualizarFlagsTramites @@@@@@"
-		));
-		int actualizadas = 0;
-		String paso = null;
-		try {
-			paso = "Recuperando tramites tengan flags vencidas";
-			logger.debug(paso);
-			List<Map<String, String>> tramitesConFlagVencida = flujoMesaControlDAO.recuperarTramitesConFlagVencida();
-			
-			Date fechaHoy = new Date();
-			
-			for (Map<String, String> tramite: tramitesConFlagVencida) {
-				paso = Utils.join("Iterando tramite ", tramite);
-				logger.debug(paso);
-				
-				String ntramite  = tramite.get("NTRAMITE");
-				String cdtipflu  = tramite.get("CDTIPFLU");
-				String cdflujomc = tramite.get("CDFLUJOMC");
-				String status    = tramite.get("STATUS");
-				String nuevaflag = tramite.get("NUEVAFLAG");
-				String statusout = tramite.get("STATUSOUT");
-				
-				Date fecstatu   = Utils.parseConHora(tramite.get("FECSTATU"));
-				Date feamarilla = Utils.parseConHora(tramite.get("FEAMARILLA"));
-				Date feroja     = Utils.parseConHora(tramite.get("FEROJA"));
-				Date fevencim   = Utils.parseConHora(tramite.get("FEVENCIM"));
-				
-				flujoMesaControlDAO.insertarFlagTramite(
-						ntramite,
-						fecstatu,
-						nuevaflag,
-						feamarilla,
-						feroja,
-						fevencim
-						);
-				
-				if ("X".equals(nuevaflag)) { // Cuando el tramite vence
-					
-					flujoMesaControlManager.mandarCorreosStatusTramite(
-							ntramite,
-							Constantes.ROL_SISTEMA,
-							true
-							);
-					
-					if (!"-1".equals(statusout)) { // Status de vencimiento definido
-					    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-					            Constantes.USUARIO_SISTEMA, // cdusuariSes
-					            Constantes.ROL_SISTEMA,     // cdsisrolSes
-					            ntramite,
-					            statusout,
-					            Utils.join(
-                                        "Tr\u00e1mite vencido",
-                                        "\nFecha de recepci\u00f3n: " , Utils.formatConHora(fecstatu)
-                                        ,"\nFecha primera alerta: " , Utils.formatConHora(feamarilla)
-                                        ,"\nFecha segunda alerta: " , Utils.formatConHora(feroja)
-                                        ,"\nFecha l\u00edmite: " , Utils.formatConHora(fevencim)
-                                ),     // comments
-					            null,  // cdrazrecha
-					            null,  // cdusuariDes
-					            null,  // cdsisrolDes
-					            false, // permisoAgente
-					            true,  // porEscalamiento
-					            fechaHoy,
-					            false  // sinGrabarDetalle
-					            );
-					}
-				}
-				
-				String nombreFlag = "nombreFlag";
-				if ("A".equals(nuevaflag)) {
-					nombreFlag = Constantes.EVENTO_FLAG_AMARILLA;
-				} else if ("R".equals(nuevaflag)) {
-					nombreFlag = Constantes.EVENTO_FLAG_ROJA;
-				} else if ("X".equals(nuevaflag)) {
-					nombreFlag = Constantes.EVENTO_FLAG_VENCIDA;
-				}
-				
-				try {
-					cotizacionDAO.grabarEvento(
-							new StringBuilder()
-							,Constantes.MODULO_FLAGS
-							,nombreFlag
-							,fechaHoy
-							,Constantes.USUARIO_SISTEMA
-							,Constantes.ROL_SISTEMA
-							,ntramite
-							,null //cdunieco
-							,null //cdramo
-							,null //estado
-							,null //nmpoliza
-							,null //nmsolici
-							,null //cdagente
-							,null //cdusuariDes
-							,null //cdsisrolDes
-							,status
-							);
-					Thread.sleep(1000l);
-				} catch (Exception ex) {
-					logger.debug("Error al grabar evento", ex);
-				}
-				
-				actualizadas++;
-			}
-		} catch (Exception ex) {
-			Utils.generaExcepcion(ex, paso);
-		}
-		logger.debug(Utils.log(
-			"\n@@@@@@ actualizadas = ", actualizadas,
-			"\n@@@@@@ actualizarFlagsTramites @@@@@@",
-			"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-		));
-		return actualizadas;
-	}
-	
-	@Override
-	public void bloquearProceso (String cdproceso, boolean bloquear, String cdusuari, String cdsisrol) throws Exception {
-		emisionDAO.bloquearProceso(cdproceso, bloquear, cdusuari, cdsisrol);
 	}
 }

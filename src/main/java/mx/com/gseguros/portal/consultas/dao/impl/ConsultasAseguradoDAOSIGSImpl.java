@@ -32,6 +32,11 @@ import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
+import mx.com.gseguros.portal.reclamoExpress.dao.impl.ReclamoExpressDAOSIGSImpl.ConsultaReclamoExpressSP;
+import mx.com.gseguros.portal.reclamoExpress.dao.impl.ReclamoExpressDAOSIGSImpl.ReclamoExpressMapper;
+import mx.com.gseguros.portal.reclamoExpress.model.ReclamoExpressVO;
+import mx.com.gseguros.ws.autosgs.dao.impl.AutosSIGSDAOImpl;
+
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -266,4 +271,6 @@ public class ConsultasAseguradoDAOSIGSImpl extends AbstractManagerDAO implements
 			return solicitudesCXP;
 		}
 	}
+	
+	
 }

@@ -16,24 +16,7 @@
 	        var _MODO_AGREGAR_USUARIOS_A_LDAP = <s:text name="login.modo.agregar.usuarios.ldap"/>;
 	        
 	        var _GLOBAL_URL_GRABAR_EVENTO = '<s:url namespace="/servicios" action="grabarEvento" />';
-	        //funcion para revisar si estas en un iframe
-	        //http://stackoverflow.com/questions/326069/how-to-identify-if-a-webpage-is-being-loaded-inside-an-iframe-or-directly-into-t
-	        function inIframe () {
-	            try {
-	                return window.self !== window.top;
-	            } catch (e) {
-	                return true;
-	            }
-	        }
-	        if (inIframe()) {
-	            try {
-	                stop = true;
-	                window.top.location = window.location;
-	            } catch (e) {
-	                alert('Error');
-	                window.location='error';
-	            }
-	        }
+	        
 	    </script>
 	    <link href="${ctx}/resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" rel="stylesheet" type="text/css" />
 	    <link href="${ctx}/resources/extjs4/extra-custom-theme.css" rel="stylesheet" type="text/css" />
@@ -73,8 +56,7 @@
 			</tr>
 	        <tr> 
 			    <td colspan="5" class="textologin">
-                    <br>INFORMACI&Oacute;N DE GENERAL DE SEGUROS.<br><br><br><br>
-                    á a Á A
+                    <br>INFORMACI&Oacute;N DE GENERAL DE SEGUROS v 1.6.1<br><br><br><br>  
 			    </td>
 			</tr>
 	    </table>

@@ -151,18 +151,10 @@
                 <param name="smap1.cargaCP">${params.cargaCP}</param>
                 <param name="smap1.cargaTipoPersona">${params.cargaTipoPersona}</param>
                 <param name="smap1.modoRecuperaDanios">${params.modoRecuperaDanios}</param>
-                <param name="smap1.cveModo">${params.cveModo}</param>
-                <param name="smap1.tomarUnDomicilio">${params.tomarUnDomicilio}</param>
-                <param name="smap1.domicilioSimple">${params.domicilioSimple}</param>
-                <param name="smap1.cargaOrdDomicilio">${params.cargaOrdDomicilio}</param>
 		    </result>
 		    <result name="endosoPolizasNoSICAPS" type="redirectAction">
                 <param name="namespace">/endosos</param>
                 <param name="actionName">polizasNoSICAPS</param>
-            </result>
-            <result name="endosoDomicilioNOSICAPS" type="redirectAction">
-                <param name="namespace">/endosos</param>
-                <param name="actionName">endosoDomicilioNOSICAPS</param>
             </result>
 		    <result name="endososAutos" type="redirectAction">
                 <param name="namespace">/endosos</param>
@@ -181,50 +173,8 @@
                 <param name="smap1.cdtres">${params.cdtipsit}</param>        <!-- SL -->
                 <param name="smap1.cdsiete">${params.mc}</param>             <!-- MCAGENTES -->
             </result>
-            <result name="flujoMesaControl" type="redirectAction">
-                <param name="namespace">/flujomesacontrol</param>
-                <param name="actionName">mesaControl</param>
-                <param name="params.AGRUPAMC">${params.agrupamc}</param>
-            </result>
-            <result name="impresionDocumentos" type="redirectAction">
-                <param name="namespace">/consultas</param>
-                <param name="actionName">pantallaExplotacionDocumentos</param>
-            </result>
-            <result name="impresionRecibos" type="redirectAction">
-                <param name="namespace">/consultas</param>
-                <param name="actionName">pantallaExplotacionRecibos</param>
-            </result>
-            <result name="redirectSimple" type="redirectAction">
-                <param name="namespace">${params.namespace}</param>
-                <param name="actionName">${params.actionName}</param>
-            </result>
         </action>
         
-        <action name="descargaDocInline" class="documentosPolizaAction" method="descargaDocumento">
-            <result name="success" type="stream">
-                <param name="contentType">${contentType}</param>
-                <param name="inputName">fileInputStream</param>
-                <param name="contentDisposition">inline; filename="${filename}"</param>
-                <param name="bufferSize">4096</param>
-            </result>
-        </action>
-        
-        <!-- crear carpeta desde Base de Datos -->
-        <action name="creaCarpeta" class="documentosPolizaAction" method="creaCarpeta">
-            <result name="success" type="json" />
-        </action>
-        <!-- lista archivos de un directorio -->
-        <action name="listarDirectorio" class="documentosPolizaAction" method="listarDirectorio">
-            <result name="success" type="json" />
-        </action>
-        <!-- crear carpeta desde Base de Datos -->
-        <action name="validaAgenteSIGS" class="renovacionAction" method="validaAgenteSIGS">
-            <result name="success" type="json" />
-        </action>
-        <!-- Lanzar recibos desde SIGS -->
-        <action name="manualWSrecibos" class="beanDatosComplementarios" method="ejecutaWSManualRecibos">
-            <result name="success" type="json" />
-        </action>
 	</package>
 	
 	<package name="loginApp" namespace="/touchApp" extends="struts-default, json-default">

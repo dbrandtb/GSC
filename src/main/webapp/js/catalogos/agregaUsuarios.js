@@ -233,7 +233,7 @@ Ext.onReady(function() {
                     },{
                         xtype       : 'combo',
                         name        : 'params.cdunieco',
-                        fieldLabel  : 'Sucursal Da&ntilde;os',
+                        fieldLabel  : 'Sucursal',
                         allowBlank  : false,
                         valueField  : 'key',
                         displayField: 'value',
@@ -247,8 +247,7 @@ Ext.onReady(function() {
                                 type : 'ajax',
                                 url : _URL_CARGA_CATALOGO,
                                 extraParams : {
-                                    catalogo : 'SUCURSALES_X_TIPORAMO',
-                                    'params.idPadre'   : '2' 
+                                    catalogo : Cat.SucursalesAdminMC
                                 },
                                 reader : {
                                     type : 'json',
@@ -291,105 +290,7 @@ Ext.onReady(function() {
                                 
                             }
                         }
-                    },
-                    
-                    {
-                        xtype       : 'combo',
-                        name        : 'params.cdunisld',
-                        fieldLabel  : 'Sucursal Salud',
-                        allowBlank  : false,
-                        valueField  : 'key',
-                        displayField: 'value',
-                        forceSelection: true,
-                        queryMode   :'local',
-                        anyMatch    : true,
-                        store       : Ext.create('Ext.data.Store', {
-                            model : 'Generic',
-                            autoLoad : true,
-                            proxy : {
-                                type : 'ajax',
-                                url : _URL_CARGA_CATALOGO,
-                                extraParams : {
-                                    catalogo : 'SUCURSALES_X_TIPORAMO',
-                                    'params.idPadre'   : '10' 
-                                },
-                                reader : {
-                                    type : 'json',
-                                    root : 'lista'
-                                }
-                            },
-                            listeners: {
-                                load: function (){
-                                    if(editMode){
-                                        panelPersona.getForm().findField('params.cdunisld').setValue(_parametros.cdunisld);
-                                    }
-                                }
-                            }
-                        }),
-                        listeners : {
-                            /*select: function(combo, records){
-                                // Recargamos el grid de Productos:
-                                panelPersona.down('[name=params.cdramo]').getStore().load({
-                                    params: {
-                                        'params.idPadre': records[0].get('key')
-                                    }
-                                });
-                                
-                                // Asignamos valor a sucursal (onlyRead):
-                                panelPersona.down('[name=params.cduniecoRuta]').setValue(records[0].get('key'));
-                            },*/
-                            change: function( field, newValue, oldValue, eOpts ) {
-                                
-                                debug('EVENTO CHANGE', newValue, oldValue);
-                                
-                                // Recargamos el grid de Productos:
-                                panelPersona.down('[name=params.cdramo]').getStore().load({
-                                    params: {
-                                        'params.idPadre': newValue
-                                    }
-                                });
-                                
-                                // Asignamos valor a sucursal (onlyRead):
-                                panelPersona.down('[name=params.cduniecoRuta]').setValue(newValue);
-                                
-                            }
-                        }
                     },{
-                        xtype       : 'combo',
-                        name        : 'params.swsusmat',
-                        fieldLabel  : '&iquest;Es suscriptor matriz?',
-                        allowBlank  : false,
-                        valueField  : 'key',
-                        displayField: 'value',
-                        forceSelection: true,
-                        queryMode   :'local',
-                        store       : Ext.create('Ext.data.Store', {
-                            model : 'Generic',
-                            autoLoad : true,
-                            proxy : {
-                                type : 'ajax',
-                                url : _URL_CARGA_CATALOGO,
-                                extraParams : {
-                                    catalogo : Cat.Sino
-                                },
-                                reader : {
-                                    type : 'json',
-                                    root : 'lista'
-                                }
-                            },
-                            listeners: {
-                                load: function (){
-                                    if(editMode){
-                                        panelPersona.getForm().findField('params.swsusmat').setValue(_parametros.swsusmat);
-                                    }else {
-                                        panelPersona.getForm().findField('params.swsusmat').setValue("N");
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    
-                    ,{
                     	//Se agrega el combo para elegir Empresa:Todas (1) General de Salud (2),General de Seguros (3)
                     	xtype       : 'combo',
                         name        : 'params.cdempresa',
