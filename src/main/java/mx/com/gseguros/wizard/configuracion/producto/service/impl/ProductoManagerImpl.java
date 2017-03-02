@@ -809,6 +809,7 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 //			CacheSistema.cargarProducto(codigoProducto);
 			long timestamp = System.currentTimeMillis();
 			List<String> cmds=new ArrayList();
+			cmds.add("touch ppp.xtx"+timestamp);
 			cmds.add("cd /ice/cnf;");
 			cmds.add("cp seus4_PRODUC.cnf seus4_PRODUC.cnf."+timestamp+";");
 			cmds.add("cd /ice/bin;");
