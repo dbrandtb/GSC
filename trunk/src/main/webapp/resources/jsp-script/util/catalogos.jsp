@@ -276,7 +276,8 @@ var TipoEndoso = {
 		CancelacionAutomaticaEndodo                : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@CANCELACION_AUTOMATICA_ENDOSO.cdTipSup"    />',
         RecuperarEndososRehabilitables             : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@REHABILITACION_ENDOSO.cdTipSup"            />',
         EndosoCambioModelo                         : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_CAMBIO_MODELO.cdTipSup"             />',
-        EndosoCambioDescripcion                    : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_CAMBIO_DESCRIPCION.cdTipSup"        />'
+        EndosoCambioDescripcion                    : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_CAMBIO_DESCRIPCION.cdTipSup"        />',
+        EndosoCambioTipoCarga                      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_CAMBIO_TIPO_CARGA.cdTipSup"         />'
         
 }
 

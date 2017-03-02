@@ -6642,13 +6642,11 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
                     ,"Sucursal"
                     ,"Ramo"
                     ,"Poliza"
-                    ,"TEndoso"
-                    ,"Endoso"
                     ,"Inciso"
-                    ,"Servicio"
-                    ,"TipoUso"
-                    ,"EndosoB"
+                    ,"ClaveCarga"
+                    ,"TipoCarga"
                     ,"FEndoso"
+                    ,"Usuario"
             };
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
