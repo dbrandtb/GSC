@@ -2415,13 +2415,13 @@ Ext.onReady(function()
                         debug('### obtener rango años response:',json);
                         if(json.exito)
                         {
-                            var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50');
+                            var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50', null, true);
                             derechoAgenteCmp.limiteInferior = json.smap1.P1VALOR;
                             derechoAgenteCmp.limiteSuperior = json.smap1.P2VALOR;
                             
                             derechoAgenteCmp.validator=function(value)
                             {
-                                var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50');
+                                var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50', null, true);
                                 
                                 var r = true;
                                 var max = derechoAgenteCmp.limiteSuperior;
