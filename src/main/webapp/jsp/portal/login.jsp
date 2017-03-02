@@ -73,8 +73,7 @@
 			</tr>
 	        <tr> 
 			    <td colspan="5" class="textologin">
-                    <br>INFORMACI&Oacute;N DE GENERAL DE SEGUROS.<br><br><br><br>
-                    á a Á A
+                    <br>INFORMACI&Oacute;N DE GENERAL DE SEGUROS b 0.9.19<br><br><br><br>  
 			    </td>
 			</tr>
 	    </table>

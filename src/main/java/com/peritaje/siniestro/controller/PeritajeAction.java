@@ -10,7 +10,6 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.peritaje.siniestro.manager.PeritajeManager;
 
@@ -39,15 +38,6 @@ public class PeritajeAction extends PrincipalCoreAction
 	private InputStream              fileInputStream;
 	private String                   contentType;
 	private String                   filename;
-
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-	
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-	
-	@Value("${ruta.documentos.eperitaje}")
-    private String rutaDocumentosEperitaje;
 	
 	public String execute()
 	{
@@ -556,14 +546,14 @@ public class PeritajeAction extends PrincipalCoreAction
 					,observaciones
 					);
 			
-			String rutaReports    = rutaServidorReports;
-			String passReports    = passServidorReports;
+			String rutaReports    = getText("ruta.servidor.reports");
+			String passReports    = getText("pass.servidor.reports");
 			String nombreReporte  = "INSPE_VEHICULO.rdf";
 			if(ajuste)
 			{
 				nombreReporte  = "ORDENAUTO.rdf";
 			}
-			String rutaDocumentos = rutaDocumentosEperitaje;
+			String rutaDocumentos = getText("ruta.documentos.eperitaje");
 			String rutaCarpeta    = rutaDocumentos+"/"+nmorden;
 			String nombreArchivo  = "/inspeccion_"+(System.currentTimeMillis())+".pdf";
 			if(ajuste)
@@ -895,18 +885,6 @@ public class PeritajeAction extends PrincipalCoreAction
 
 	public void setFilename(String filename) {
 		this.filename = filename;
-	}
-	
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosEperitaje() {
-		return rutaDocumentosEperitaje;
 	}
 	
 }
