@@ -816,6 +816,7 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 			mensaje=ejecutarComandoSshService.ejectutarCmd(server, usuario, pass, cmds);
 			
 		} catch (Exception e) {
+			logger.error("Ejecutando ssh {}", e);
 			throw new ApplicationException(e.getMessage());
 		}
 
