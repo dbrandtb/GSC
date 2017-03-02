@@ -386,7 +386,29 @@ Ext.define('VentanaRechazo',
                             name       : 'CORREOSCC',
                             width      : 550,
                             emptyText  : 'Correos separados por ;',
-                            labelWidth : 120
+                            labelWidth : 120,
+                            validator  : function (val) {
+                                var r = 'Error';
+                                try {
+                                    if (Ext.isEmpty(val)) {
+                                        return true;
+                                    }
+                                    var emails = [val];
+                                    if (val.indexOf(';') !== -1) { // tiene mas de un correo
+                                        emails = val.split(';');
+                                    }
+                                    var ereg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+                                    for (var i = 0; i < emails.length; i++) {
+                                        if (ereg.test(emails[i]) !== true) {
+                                            return 'El correo ' + emails[i] + ' no es v\u00e1lido';
+                                        }
+                                    }
+                                    return true;
+                                } catch (e) {
+                                    debugError('error al validar emails cc:', e);
+                                }
+                                return r;
+                            }
                         }, {
                             xtype  : 'textfield',
                             name   : 'SOLO_CORREOS_RECIBIDOS',
