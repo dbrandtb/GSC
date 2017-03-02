@@ -165,7 +165,8 @@ Ext.onReady(function()
 		                        		debug('Entro a insertar en slist1');
 		                        		json.slist1.push(inciso);
 		                        	}
-		                        }else if(_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioDescripcion){
+		                        }else if(_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioDescripcion
+		                                 ||_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioTipoCarga ){
      							 	debug('Entro a Cambio Descripcion Vehiculo');
 		                        	if(item.value!=item.valorInicial){
 		                        		debug('Entro a insertar en slist1');

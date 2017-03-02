@@ -9676,13 +9676,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                         paramsEnd.put("vSucursal"      , datosEnd.get("Sucursal"));
                         paramsEnd.put("vRamo"          , datosEnd.get("Ramo"));
                         paramsEnd.put("vPoliza"        , datosEnd.get("Poliza"));
-                        paramsEnd.put("vTEndoso"       , StringUtils.isBlank(datosEnd.get("TEndoso"))?" " : datosEnd.get("TEndoso"));
-                        paramsEnd.put("vInciso"        , datosEnd.get("Endoso"));
-                        paramsEnd.put("vCveCarga"      , datosEnd.get("Inciso"));
-                        paramsEnd.put("vTipoCarga"     , datosEnd.get("Servicio"));
-                        paramsEnd.put("vFEndoso"       , datosEnd.get("TipoUso"));
-                        paramsEnd.put("vUser"          , (endosoRecuperado==-1)?0:endosoRecuperado);
-                        paramsEnd.put("vEndoB"         , datosEnd.get("FEndoso"));
+                        paramsEnd.put("vInciso"        , datosEnd.get("Inciso"));
+                        paramsEnd.put("vCveCarga"      , datosEnd.get("ClaveCarga"));
+                        paramsEnd.put("vTipoCarga"     , "xxx");//se manda estatico ya que este dato se recupera de lado de SIGS
+                        paramsEnd.put("vFEndoso"       , datosEnd.get("FEndoso"));
+                        paramsEnd.put("vUser"          , datosEnd.get("Usuario"));
+                        paramsEnd.put("vEndoB"         , (endosoRecuperado==-1)?0:endosoRecuperado);
                         
                         Integer res = autosSIGSDAO.endosoTipoCarga(paramsEnd);
                         
