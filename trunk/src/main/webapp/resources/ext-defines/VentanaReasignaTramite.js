@@ -19,6 +19,29 @@ Ext.define('VentanaReasignaTramite',
         {
             throw '#c61 - No se recibieron datos';
         }
+        
+        var storeReasignacion = Ext.create('Ext.data.Store',
+        {
+            fields    : [ "NTRAMITE", "CDUSUARI_ACTUAL", "STATUS_ACTUAL", "CDSISROL_ACTUAL",
+                          "CDUSUARI", "CDSISROL", "DSUSUARI", "TOTAL", "STATUS", "DSSISROL" ]
+            ,autoLoad : true
+            ,proxy    :
+            {
+                type         : 'ajax'
+                ,url         : _GLOBAL_COMP_URL_RECUPERACION_SIMPLE_LISTA
+                ,extraParams :
+                {
+                    'smap1.procedimiento' : 'RECUPERAR_USUARIOS_REASIGNACION_TRAMITE'
+                    ,'smap1.ntramite'     : config.ntramite
+                }
+                ,reader      :
+                {
+                    type : 'json',
+                    root : 'slist1'
+                }
+            }
+        });
+        
         Ext.apply(me,
         {
             items :
@@ -57,27 +80,31 @@ Ext.define('VentanaReasignaTramite',
                             ,width     : 120
                         }
                     ]
-                    ,store : Ext.create('Ext.data.Store',
-                    {
-                        fields    : [ "NTRAMITE", "CDUSUARI_ACTUAL", "STATUS_ACTUAL", "CDSISROL_ACTUAL",
-                                      "CDUSUARI", "CDSISROL", "DSUSUARI", "TOTAL", "STATUS", "DSSISROL" ]
-                        ,autoLoad : true
-                        ,proxy    :
-                        {
-                            type         : 'ajax'
-                            ,url         : _GLOBAL_COMP_URL_RECUPERACION_SIMPLE_LISTA
-                            ,extraParams :
-                            {
-                                'smap1.procedimiento' : 'RECUPERAR_USUARIOS_REASIGNACION_TRAMITE'
-                                ,'smap1.ntramite'     : config.ntramite
-                            }
-                            ,reader      :
-                            {
-                                type : 'json',
-                                root : 'slist1'
-                            }
+                    ,store : storeReasignacion,
+                    tbar: [{
+                        xtype : 'textfield',
+                        fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Nombre:</span>',
+                        labelWidth : 100,
+                        width: 260,
+                        maxLength : 50,
+                        listeners:{
+                        	change: function(elem,newValue,oldValue){
+                        		newValue = Ext.util.Format.uppercase(newValue);
+                        		
+        	            		//Validacion de valor anterior ya que la pantalla hace lowercase en automatico y manda doble change
+        						if( newValue == Ext.util.Format.uppercase(oldValue)){
+        							return false;
+        						}
+        						
+        						try{
+        							storeReasignacion.removeFilter('filtroAseg');
+        							storeReasignacion.filter(Ext.create('Ext.util.Filter', {property: 'DSUSUARI', anyMatch: true, value: newValue, root: 'data', id:'filtroAseg'}));
+        						}catch(e){
+        							error('Error al filtrar por asegurado',e);
+        						}
+                        	}
                         }
-                    })
+                    }]
                 })
             ]
             //,buttonAlign : 'center'
