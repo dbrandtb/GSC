@@ -632,7 +632,7 @@ Ext.onReady(function()
     
 	if(_p38_slist1[0].CDTIPSIT == 'MC'){
 		
-		alert('En inicio: ' + _p38_slist1[0].CVE_MODELO);
+		//alert('En inicio: ' + _p38_slist1[0].CVE_MODELO);
 		_fieldByLabel('MODELO').setValue(_p38_slist1[0].CVE_MODELO);
 		_fieldLikeLabel('VERSI').setValue(_p38_slist1[0].DES_VERSION);
 		_fieldLikeLabel('VALOR').setValue(_p38_slist1[0].CVE_VALOR_COMERCIAL);

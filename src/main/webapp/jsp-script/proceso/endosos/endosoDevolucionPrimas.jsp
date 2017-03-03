@@ -60,7 +60,7 @@ _p39_coberturaColumns.push(
         				
     					if(garant[0].SWOBLIG == "1"){
     						mensajeWarning('Esta cobertura no se puede devolver');
-    						sel.set('DEVOLVER', false);
+    						sel.set('DEVOLVER', true);
     						return;
     					}
      			

@@ -211,7 +211,7 @@ Ext.onReady(function()
                 try{
 					if(_9_smap1.CDRAMO==Ramo.ServicioPublico)
 						comboNuevo.getStore().filter([{filterFn: function(item) {
-        					return item.get("key")==FormaPago.CONTADO || item.get("key")==FormaPago.SEMESTRAL;
+        					return item.get("key")==FormaPago.ANUAL || item.get("key")==FormaPago.CONTADO || item.get("key")==FormaPago.SEMESTRAL;
         				}}])
 					
 				}catch(e){

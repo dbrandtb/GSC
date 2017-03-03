@@ -1596,10 +1596,14 @@ Ext.onReady(function()
         debug('>parche para ramo 6');
         
         try{
-        	
-    	        _fieldByName('fefin').setValue(
-    	            Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20',null,true).getValue())
-    	        );
+        	_fieldByLabel('AGENTE',null,true).on({
+        		change:function(){
+        			_fieldByName('fefin').setValue(
+            	            Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20',null,true).getValue())
+            	        );
+        		}
+        	});
+    	        
         	
         }catch(e){
         	debugError(e);
