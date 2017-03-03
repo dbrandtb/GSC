@@ -7545,7 +7545,7 @@ public class CotizacionManagerImpl implements CotizacionManager
       	            {
       	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
       	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
-      	            	String mensajeACorreo= "Se le notif\u00EDca que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de autom\u00F3viles en el paquete de cobertura prestigio, amplia  y limitada:\n" + 
+      	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Autom�viles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
       	            			planValido;
       	            	
       	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
@@ -11546,30 +11546,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-    public String aplicaDescAutos(
-             String cdunieco
-            ,String cdramo
-            ,String nmpoliza
-            ,String modPrim
-            ,String cdtipsit
-            )throws Exception
-    {
-        //////////////////////////////////////////
-        ////// alterar mpolirec sin recotizar/////
-        String paso = "Modificacion de primas al aplicar descuento";
-        try
-        {
-             return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim,cdtipsit.isEmpty()?"1":"0");
-        }
-        catch(Exception ex)
-        {
-            throw new ApplicationException(paso);
-        }
-        ////// alterar mpolirec sin recotizar/////
-        //////////////////////////////////////////
-    }
-	
-	@Override
     public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception
     {
         return  cotizacionDAO.validaDatosAutoSigs(incisosSigs);
@@ -11643,7 +11619,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public void setConsultasDAO(ConsultasDAO consultasDAO) {
 		this.consultasDAO = consultasDAO;
 	}
-
 
     /////////////////////////////////////////////////////
     /////////////////////////////////////////////////////
