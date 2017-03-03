@@ -1050,10 +1050,8 @@ function _cargarBotonesEntidad(
 /**
  * Equivalente a NVL base de datos
  */
-function _NVL(origen,valor)
-{
-    if(Ext.isEmpty(origen))
-    {
+function _NVL (origen,valor) {
+    if (Ext.isEmpty(origen) || '_null' === '_' + origen) {
         return !Ext.isEmpty(valor) ? valor : '';
     }
     return origen;

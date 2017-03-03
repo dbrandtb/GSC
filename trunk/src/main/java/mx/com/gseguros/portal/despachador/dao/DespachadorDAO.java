@@ -47,6 +47,8 @@ public interface DespachadorDAO {
     
     public List<Map<String, String>> recuperarHistorialMesa (String ntramite) throws Exception;
     
+    public List<Map<String, String>> recuperarHistorialMesaHora (String ntramite) throws Exception;
+    
     public Map<String, String> recuperarAgenteDestino (String ntramite) throws Exception;
     
     public String recuperarSucursalUsuarioPorTipoTramite (String cdusuari, String cdflujomc) throws Exception;
@@ -91,4 +93,6 @@ public interface DespachadorDAO {
      * @throws Exception
      */
     public void guardaConfPermisos(Map<String, String> permiso) throws Exception;
+    
+    public List<Map<String, String>> recuperarDetallesMesaHora (String ntramite) throws Exception;
 }
