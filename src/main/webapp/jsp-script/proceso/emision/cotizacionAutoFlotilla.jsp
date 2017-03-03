@@ -43,8 +43,8 @@ var _p29_urlObtieneValNumeroSerie           = '<s:url namespace="/emision"      
 var MontoMaximo = 0;
 var MontoMinimo = 0;
 
-var _p30_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p30_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 
@@ -307,7 +307,7 @@ var _p30_panel7Items =
         {
            type    : 'table'
           ,columns : 1
-          ,style   : 'width: 20px !important;'
+          ,style   : 'width:7px !important;'
           ,align   : 'right'
        }
        ,border : 0
@@ -319,7 +319,7 @@ var _p30_panel7Items =
                 ,fieldLabel  : 'SUCURSAL'
                 ,name        : 'sucursal'               
                 ,sinOverride : true
-                ,labelWidth  : 100
+                ,labelWidth  : 170
                 ,style       : 'margin:0px;margin-left:5px;'//'margin:5px;margin-left:15px;width:20px !important;'
                 ,value       : !Ext.isEmpty(_p30_smap1.renuniext) ? _p30_smap1.renuniext : ''
                 ,listeners   :
@@ -334,7 +334,7 @@ var _p30_panel7Items =
                    ,fieldLabel  : 'RAMO'
                    ,name        : 'ramo'                   
                    ,sinOverride : true                   
-                   ,labelWidth  : 100
+                   ,labelWidth  : 170
                    ,style       : 'margin:0px;margin-left:5px;'//'width : 30px !important;'
                    ,value       : !Ext.isEmpty(_p30_smap1.renramo) ? _p30_smap1.renramo : ''
                    ,listeners   :
@@ -349,7 +349,7 @@ var _p30_panel7Items =
                  ,fieldLabel  : 'POLIZA'
                  ,name        : 'poliza'
                  ,sinOverride : true                 
-                 ,labelWidth  : 100
+                 ,labelWidth  : 170
                  ,style       : 'margin:0px;margin-left:5px;'//'width : 50px !important;'
                  ,value       : !Ext.isEmpty(_p30_smap1.renpoliex) ? _p30_smap1.renpoliex : ''
                  ,listeners   :
@@ -579,7 +579,7 @@ Ext.onReady(function()
 {
     //_grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p30_smap1.cdramo);
 
-    Ext.Ajax.timeout = 3*60*60*1000; // 1 hora
+    Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
@@ -1025,7 +1025,7 @@ Ext.onReady(function()
     ,{
         xtype   : 'fieldset'
         ,itemId : '_p30_fieldBusquedaPoliza'
-        ,width  : 290
+        ,width  : 300
         ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
         ,items  : _p30_panel7Items
         ,hidden : !Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
@@ -4155,7 +4155,8 @@ function _p30_cotizar(sinTarificar)
     	   !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
 //     	   (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
     	   )
-    	{	
+    	{
+    		
     		var ncamiones = 0;
             var ntractocamiones = 0;
             var nsemiremolques = 0;
@@ -4512,9 +4513,8 @@ function _p30_cotizar(sinTarificar)
                 ,feini       : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
                 ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
                 ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
-                ,notarificar : !Ext.isEmpty(sinTarificar)&&sinTarificar==true? 'si':'no'
+                ,notarificar : sinTarificar ? 'si' : ''
                 ,tipoflot    : _p30_smap1.tipoflot
-                ,modPrim     : sinTarificar == false || sinTarificar== true ? "" : sinTarificar
             }
             ,slist1 : []
             ,slist2 : []
@@ -4736,12 +4736,7 @@ function _p30_cotizar(sinTarificar)
                                 {
                                     if(me.up('form').getForm().isValid())
                                     {
-                                        var modPrim = false;
-                                        if(_p30_smap1.tipoflot == TipoFlotilla.Flotilla)
-                                        {
-                                          modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formDescuento'))[0].lastValue;
-                                        }    
-                                        _p30_cotizar(modPrim);
+                                        _p30_cotizar();
                                     }
                                     else
                                     {
@@ -4766,11 +4761,7 @@ function _p30_cotizar(sinTarificar)
                             disabledDesc = true;
                         }
                     }
-                    
-                    if(_p30_smap1.tipoflot != TipoFlotilla.Flotilla)
-                    {
-                      _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
-                    }
+                    _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
                     
                     //bloquear comision
                     var arrComi      = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formCesion'));
@@ -7617,5 +7608,5 @@ function _p30_actualizarSwexiperTramite(callback)
 </script>
 <script type="text/javascript" src="${ctx}/js/proceso/emision/cotizacionAutoFlotillaScript.js?now=${now}"></script>
 </head>
-<body><div id="_p30_divpri" style="height:1500px;"></div></body>
+<body><div id="_p30_divpri" style="height:1200px;"></div></body>
 </html>

@@ -6710,7 +6710,7 @@
                                         debug("diferenciador 2 ==>",diferenciador);
                                         
                                         if(diferenciador == "MEI"){
-                                            if(+consultasTotales > +maxConsulta){ //(EGS) se deja > en vez de >=
+                                            if(+consultasTotales >= +maxConsulta){
                                                 maxconsultas = false;
                                                 centrarVentanaInterna(Ext.Msg.show({
                                                        title: 'Aviso',

@@ -2238,7 +2238,6 @@ function reasignarClick(grid,dataIndex)
 					,modal  : true
 					,width  : 400
 					,height : 300
-					,overflowY: 'scroll' //(EGS)
 					,items  :
 					[
 					    Ext.create('Ext.grid.Panel',

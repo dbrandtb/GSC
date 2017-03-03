@@ -13,8 +13,8 @@ _0_smap1['panelGenerado'] = '';
 _0_smap1['variablesGeneradas'] = '';
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _0_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser = '<s:property value="passServidorReports" />';
+var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _0_urlCotizar              = '<s:url namespace="/emision"         action="cotizar"                 />';
 var _0_urlCotizarExterno       = '<s:url namespace="/externo"         action="cotizar"                 />';
