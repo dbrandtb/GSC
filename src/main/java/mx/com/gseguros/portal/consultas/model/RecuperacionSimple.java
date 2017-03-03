@@ -121,6 +121,8 @@ public enum RecuperacionSimple
     ,RECUPERAR_ENDOSOS_SINIESTRALIDAD                        ("L")
     ,RECUPERAR_ENDOSOS_SINIESTRALIDAD_REHA                   ("L")
     ,RECUPERAR_CORREO_AGENTE_TRAMITE                         ("M")
+    ,RECUPERAR_HISTORIAL_TRAMITE                             ("L")
+    ,RECUPERAR_DETALLES_TRAMITE                              ("L")
 	;
 	 
 	private String tipo;

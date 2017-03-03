@@ -813,6 +813,43 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
     }
     
     @Override
+    public List<Map<String, String>> recuperarHistorialMesaHora (String ntramite) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("ntramite", ntramite);
+        Map<String, Object> procRes = ejecutaSP(new RecuperarHistorialMesaHoraSP(getDataSource()), params);
+        List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+        if (lista == null) {
+            lista = new ArrayList<Map<String, String>>();
+        }
+        logger.debug("recuperarHistorialMesa lista: {}", lista);
+        return lista;
+    }
+    
+    protected class RecuperarHistorialMesaHoraSP extends StoredProcedure {
+        protected RecuperarHistorialMesaHoraSP (DataSource dataSource) {
+            super(dataSource, "P_DSPCH_GET_THMESACONTROL");
+            declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+            String[] cols = new String[] {
+                    "FEFECHA",
+                    "NTRAMITE",
+                    "CDUSUARI",
+                    "CDSISROL",
+                    "STATUS",
+                    "CDUNIDSPCH",
+                    "CDTIPASIG",
+                    "CDUSUARI_FIN",
+                    "CDSISROL_FIN",
+                    "STATUS_FIN",
+                    "FEFECHA_FIN"
+                    };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols, true)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
     public Map<String, String> recuperarAgenteDestino (String ntramite) throws Exception {
         Map<String, String> params = new LinkedHashMap<String, String>();
         params.put("ntramite", ntramite);
@@ -929,7 +966,35 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
         }
     }
     
+    @Override
+    public List<Map<String, String>> recuperarDetallesMesaHora (String ntramite) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("ntramite", ntramite);
+        List<Map<String, String>> lista =
+                (List<Map<String, String>>) ejecutaSP(new RecuperarDetallesMesaHoraSP(getDataSource()), params).get("pv_registro_o");
+        if (lista == null) {
+            lista = new ArrayList<Map<String, String>>();
+        }
+        logger.debug("recuperarDetallesMesaHora lista: {}", Utils.log(lista));
+        return lista;
+    }
     
-    
-    
+    protected class RecuperarDetallesMesaHoraSP extends StoredProcedure {
+        protected RecuperarDetallesMesaHoraSP (DataSource dataSource) {
+            super(dataSource, "P_MC_GET_TDMESACONTROL");
+            declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+            String[] cols = new String[] {
+                    "NTRAMITE", "NMORDINA", "CDTIPTRA", "CDCLAUSU",
+                    "FECHAINI", "FECHAFIN", "COMMENTS", "CDUSUARI_INI",
+                    "CDUSUARI_FIN", "CDMOTIVO", "CDSISROL_INI", "SWAGENTE",
+                    "CDUSUARI_DEST", "CDSISROL_DEST", "STATUS", "CDSISROL_FIN",
+                    "CDMODULO", "CDEVENTO", "DSUSUARI_INI", "DSUSUARI_FIN",
+                    "DSSISROL_INI", "DSSISROL_FIN"
+                    };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols, true)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }

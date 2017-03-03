@@ -1361,6 +1361,10 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
                 lista = flujoMesaControlDAO.recuperarPropiedadesDespachadorUsuariosAll(params.get("cdsisrol"));
             } else if (consulta.equals(RecuperacionSimple.RECUPERAR_DESPACHADOR_DATOS_ZONA)) {
                 lista = despachadorDAO.recuperarLogDespachadorZona(params.get("ntramite"), params.get("cdunieco"), params.get("estatus"));
+            } else if (consulta.equals(RecuperacionSimple.RECUPERAR_HISTORIAL_TRAMITE)) {
+                lista = despachadorDAO.recuperarHistorialMesaHora(params.get("ntramite"));
+            } else if (consulta.equals(RecuperacionSimple.RECUPERAR_DETALLES_TRAMITE)) {
+                lista = despachadorDAO.recuperarDetallesMesaHora(params.get("ntramite"));
             }
 		}
 		catch(Exception ex)
