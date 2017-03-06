@@ -50,11 +50,6 @@
     var p_nmsuplem                   = '<s:property                 value = "params.nmsuplem"         />';
     var pRcb_wndDetalleRecibo;
     var winSimbologia;
-    var arrRolesConso                = [RolSistema.SuscriptorTecnico, 
-                                        RolSistema.SuscriptorSalud,
-                                        RolSistema.SupervisorTecnico,
-                                        RolSistema.GerenteOperacionesEmision,
-                                        RolSistema.SubdirectorSalud];
 //////variables //////
 
 //////overrides //////
@@ -120,17 +115,6 @@ Ext.onReady(function(){
                 root: 'detallesRecibo'
             }
         }
-    });
-    
-    _p25_storeHistCons = Ext.create('Ext.data.Store', {
-        storeId:'_p25_modeloHistCons',
-        fields:['recibos', 'accion', 'fecha', 'folio'],
-        data:[
-            { 'recibos': '2401,2409',  "accion": 'CONSOLIDAR',      "fecha": '01/03/2017',  "folio": '1243'},
-            { 'recibos': '2401,2409',  "accion": 'DESCONSOLIDAR',   "fecha": '01/03/2017',  "folio": ''},
-            { 'recibos': '2402,2410',  "accion": 'CONSOLIDAR',      "fecha": '01/03/2017',  "folio": '1244'},
-            { 'recibos': '2402,2410',  "accion": 'DESCONSOLIDAR',   "fecha": '01/03/2017',  "folio": ''}
-        ]
     });
     ////// stores //////
     
@@ -222,7 +206,6 @@ Ext.onReady(function(){
                                 itemId   : 'btnConsolidar',
                                 text     : 'Consolidar',
                                 disabled : true,
-                                hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');                                    
                                     consolidarRecibos(obtenerDataSelected(gridRecibos));
@@ -234,7 +217,6 @@ Ext.onReady(function(){
                                 itemId   : 'btnDesconsolidar',
                                 text     : 'Desconsolidar',
                                 disabled : true,
-                                hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');
                                     desconsolidarRecibos(obtenerDataSelected(gridRecibos));
@@ -294,16 +276,7 @@ Ext.onReady(function(){
                                 handler  : function(){
                                     winSimbologia.show();
                                 }
-                            }/*,
-                            {
-                                xtype    : 'button', 
-                                itemId   : 'btnHistCons',
-                                text     : 'Historial consolidado',
-                                disabled : false,
-                                handler  : function(){
-                                    winHistCons.show();
-                                }
-                            }*/
+                            }
                         ]
                     })
                 ]
@@ -571,43 +544,7 @@ Ext.onReady(function(){
                     }
                 }]
             })
-        ]
-    });
-    
-    winHistCons = Ext.create('Ext.window.Window',{
-        title       : 'Historial de consolidacion',
-        width       : 400,
-        modal       : true,
-        itemId      : 'winHistCons',
-        closeAction : 'hide',
-        items       : [
-            Ext.create('Ext.form.Panel', {
-                bodyPadding : 15,
-                defaults    : {
-                    width      : 350,
-                    readOnly   : true
-                },
-                items       : [{
-                    xtype       : 'grid',
-                    itemId      : 'idGridHistCons',
-                    store       : _p25_storeHistCons,
-                    height      : 285,
-                    autoScroll  : true,
-                    columns     : [
-                        { text: 'Recibos',  dataIndex: 'recibos' },
-                        { text: 'Accion',   dataIndex: 'accion'},
-                        { text: 'Fecha',    dataIndex: 'fecha' },
-                        { text: 'Folio',    dataIndex: 'folio' }
-                    ]                    
-                }],
-                buttons     : [{
-                    text    : 'Aceptar',
-                    handler : function(btn){
-                        winHistCons.close();
-                    }
-                }]
-            })
-        ]
+        ]         
     });
 });
 </script>
