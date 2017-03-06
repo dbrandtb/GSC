@@ -2422,7 +2422,7 @@ Ext.onReady(function()
                             var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50', null, true);
                             derechoAgenteCmp.limiteInferior = json.smap1.P1VALOR;
                             derechoAgenteCmp.limiteSuperior = json.smap1.P2VALOR;
-                            
+                            /* se coloca en comentario a solicitud de Angeles
                             derechoAgenteCmp.validator=function(value)
                             {
                                 var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50', null, true);
@@ -2439,6 +2439,7 @@ Ext.onReady(function()
                                 }
                                 return r;
                            };
+                           */
                        }
                        else
                        {
