@@ -199,6 +199,7 @@ var RolSistema = {
     ,SubdirectorSalud             : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUBDIRECTOR_SALUD.cdsisrol"           />'
     ,DirectorSalud                : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@DIRECTOR_SALUD.cdsisrol"              />'
     ,GerenteOperacionesEmision    : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GENERENTE_OPERACION_EMISION.cdsisrol" />'
+    ,SuscriptorSalud              : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR.cdsisrol" />'  
     ,
     
     
