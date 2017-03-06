@@ -6,8 +6,8 @@
 <script>
 ////// variables //////
 var contexto							      = '${ctx}';
-var urlServidorReports  					  = '<s:property value="rutaServidorReports"         										    />';
-var complerepSrvUsr     					  = '<s:property value="passServidorReports"         										    />';
+var urlServidorReports  					  = '<s:text name="ruta.servidor.reports"         										    />';
+var complerepSrvUsr     					  = '<s:text name="pass.servidor.reports"         										    />';
 var panDatComMap1 						      = '<s:property value="%{convertToJSON('slist')}" escapeHtml="false" 				        />';
 var urlGuardar                   		      = '<s:url namespace="/"            action="guardarDatosComplementarios" 				    />';
 var urlCargarCatalogos              	      = '<s:url namespace="/catalogos"   action="obtieneCatalogo"             				    />';
@@ -2288,14 +2288,9 @@ Ext.onReady(function()
     
     _fieldByName('tipo',form).getStore().on({
         load : function(me){
-  		    var tipo = _fieldByName('tipo',form);
-  		    tipo.setValue('AS');  		    
-  		    if(_GLOBAL_CDSISROL != RolSistema.GerenteOperacionesEmision){
-  		        debug('tipo',tipo);
-  		        tipo.store.removeAt(2);
-  		    }  		    
-  		    if(_GLOBAL_CDSISROL == RolSistema.Agente || _GLOBAL_CDSISROL == RolSistema.EjecutivoVenta || _GLOBAL_CDSISROL == RolSistema.MesaControl){
-  		        tipo.readOnly = true;
+  		    _fieldByName('tipo',form).setValue('AS');
+  		    if(_GLOBAL_CDSISROL == RolSistema.Agente || _GLOBAL_CDSISROL == RolSistema.EjecutivoVenta){
+  		        _fieldByName('tipo',form).readOnly = true;
   		    }
   	    }
   	});
@@ -4027,7 +4022,7 @@ function agregaCalendario(){
  }
  
  function turnar(ntramite){
-     if (_GLOBAL_CDSISROL == RolSistema.Agente || _GLOBAL_CDSISROL == RolSistema.EjecutivoVenta || _GLOBAL_CDSISROL == RolSistema.MesaControl){
+     if (_GLOBAL_CDSISROL == RolSistema.Agente || _GLOBAL_CDSISROL == RolSistema.EjecutivoVenta){
          var callbackNormal = function (callback) {
              mensajeCorrecto(
                  'Tr\u00e1mite generado',

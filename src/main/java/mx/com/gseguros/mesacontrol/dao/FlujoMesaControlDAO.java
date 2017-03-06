@@ -554,7 +554,7 @@ public interface FlujoMesaControlDAO {
 			)throws Exception;
 	
 	public String ejecutaValidacion(String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac,
-            String nmsuplem, String cdvalidafk, String cdusuari, String cdsisrol, String cdvalida) throws Exception;
+            String nmsuplem, String cdvalidafk, String cdusuari, String cdsisrol) throws Exception;
 	
 	public List<Map<String,String>>cargarAccionesEntidad(
 			String cdtipflu
@@ -978,6 +978,4 @@ public interface FlujoMesaControlDAO {
     public void actualizarTramiteSustituto(String ntramite, String ntrasust) throws Exception;
     
     public void cambiarTipoEndosoTramite (String ntramite, String cdtipsup) throws Exception;
-    
-    public String recuperarCorreoAgenteTramite (String ntramite) throws Exception;
 }

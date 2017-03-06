@@ -716,39 +716,27 @@ Ext.onReady(function()
                                     }
                                 ]
                                 ,buttonAlign : 'center'
-                                ,bbar        : [
+                                ,buttons     : _cargarBotonesEntidad
+                                (
+                                    record.get('CDTIPFLU')
+                                    ,record.get('CDFLUJOMC')
+                                    ,'E'
+                                    ,record.get('STATUS')
+                                    ,''
+                                    ,'_p54_windowAcciones'
+                                    ,record.get('NTRAMITE')
+                                    ,record.get('STATUS')
+                                    ,record.get('CDUNIECO')
+                                    ,record.get('CDRAMO')
+                                    ,record.get('ESTADO')
+                                    ,record.get('NMPOLIZA')
+                                    ,record.get('NMSITUAC')
+                                    ,record.get('NMSUPLEM')
+                                    ,function()
                                     {
-                                        xtype  : 'panel',
-                                        itemId : '_p54_windowAccionesButtons',
-                                        border : 0,
-                                        ui     : 'footer',
-                                        layout : {
-                                            type    : 'table',
-                                            columns : 5
-                                        },
-                                        items : _cargarBotonesEntidad(
-                                            record.get('CDTIPFLU'),
-                                            record.get('CDFLUJOMC'),
-                                            'E',
-                                            record.get('STATUS'),
-                                            '',
-                                            function (botones) {
-                                                _fieldById('_p54_windowAccionesButtons').add(botones);
-                                            },
-                                            record.get('NTRAMITE'),
-                                            record.get('STATUS'),
-                                            record.get('CDUNIECO'),
-                                            record.get('CDRAMO'),
-                                            record.get('ESTADO'),
-                                            record.get('NMPOLIZA'),
-                                            record.get('NMSITUAC'),
-                                            record.get('NMSUPLEM'),
-                                            function () {
-                                                _p54_store.reload();
-                                            }
-                                        )
+                                        _p54_store.reload();
                                     }
-                                ]
+                                )
                             }).show());
                         }
                         catch(e)

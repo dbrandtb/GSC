@@ -541,13 +541,6 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					resultWS = ejecutaClienteGeneralGS(op, cliente, null, async);
 					clientesRespuesta = (ClienteGeneralRespuesta) resultWS.getResultadoWS();
 					
-					if(clientesRespuesta != null && clientesRespuesta.getClientesGeneral() != null &&
-							clientesRespuesta.getClientesGeneral().length > 0 ){
-						for(ClienteGeneral cliItImp : clientesRespuesta.getClientesGeneral()){
-							cliItImp.setRfcCli(StringUtils.trim(cliItImp.getRfcCli()));
-						}
-					}
-					
 					logger.debug("XML de entrada: " + resultWS.getXmlIn());
 
 					if (Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo() && Estatus.EXITO.getCodigo() != clientesRespuesta.getCodigo() 

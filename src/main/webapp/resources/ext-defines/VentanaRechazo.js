@@ -173,18 +173,11 @@ Ext.define('VentanaRechazo',
                                         me.allowBlank = true;
                                         me.setValue('');
                                         me.hide();
-                                        try {
-                                            var correosCmp = me.up('window').down('[name=CORREOS]');
-                                            correosCmp.setValue(correosCmp.correoAgente || '');
-                                        } catch (e) {}
                                     } else {
                                         debug('NTRASUST show');
                                         me.allowBlank = false;
                                         me.setValue('');
                                         me.show();
-                                        try {
-                                            me.up('window').down('[name=CORREOS]').setValue('');
-                                        } catch (e) {}
                                     }
                                 } catch (e) {
                                     debugError('error en el funcionamiento de NTRASUST', e);
@@ -334,86 +327,30 @@ Ext.define('VentanaRechazo',
                             ,name       : 'COMMENTSINT'
                             ,width      : 570
                             ,height     : 100
-                        }, {
-                            xtype       : 'radiogroup',
-                            fieldLabel : 'Mostrar al agente',
-                            columns    : 2,
-                            width      : 250,
-                            style      : 'margin:5px;',
-                            hidden     : _GLOBAL_CDSISROL===RolSistema.Agente,
-                            items      : [
-                                {
-                                    boxLabel    : 'Si',
-                                    itemId     : 'SWAGENTE',
-                                    name       : 'SWAGENTE',
-                                    inputValue : 'S',
-                                    checked    : _GLOBAL_CDSISROL===RolSistema.Agente
-                                }, {
-                                    boxLabel    : 'No',
-                                    name       : 'SWAGENTE',
-                                    inputValue : 'N',
-                                    checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
-                                }
-                            ]
-                        }, {
-                            xtype      : 'textfield',
-                            fieldLabel : 'Correo del agente',
-                            readOnly   : true,
-                            name       : 'CORREOS',
-                            width      : 550,
-                            labelWidth : 120,
-                            listeners  : {
-                                afterrender : function (me) {
-                                    _request({
-                                        mask   : 'Recuperando correo del agente',
-                                        url    : _GLOBAL_URL_RECUPERACION,
-                                        params : {
-                                            'params.consulta' : 'RECUPERAR_CORREO_AGENTE_TRAMITE',
-                                            'params.ntramite' : config.ntramite
-                                        },
-                                        success : function(json) {
-                                            if (!Ext.isEmpty(json.params.correoAgente)) {
-                                                me.correoAgente = json.params.correoAgente;
-                                                me.setValue(json.params.correoAgente);
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        }, {
-                            xtype      : 'textfield',
-                            fieldLabel : 'Cc (separados por ;)',
-                            name       : 'CORREOSCC',
-                            width      : 550,
-                            emptyText  : 'Correos separados por ;',
-                            labelWidth : 120,
-                            validator  : function (val) {
-                                var r = 'Error';
-                                try {
-                                    if (Ext.isEmpty(val)) {
-                                        return true;
-                                    }
-                                    var emails = [val];
-                                    if (val.indexOf(';') !== -1) { // tiene mas de un correo
-                                        emails = val.split(';');
-                                    }
-                                    var ereg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-                                    for (var i = 0; i < emails.length; i++) {
-                                        if (ereg.test(emails[i]) !== true) {
-                                            return 'El correo ' + emails[i] + ' no es v\u00e1lido';
-                                        }
-                                    }
-                                    return true;
-                                } catch (e) {
-                                    debugError('error al validar emails cc:', e);
-                                }
-                                return r;
-                            }
-                        }, {
-                            xtype  : 'textfield',
-                            name   : 'SOLO_CORREOS_RECIBIDOS',
-                            value  : 'S',
-                            hidden : true
+                        }
+                    ]
+                }
+                ,{
+                    xtype       : 'radiogroup'
+                    ,fieldLabel : 'Mostrar al agente'
+                    ,columns    : 2
+                    ,width      : 250
+                    ,style      : 'margin:5px;'
+                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
+                    ,items      :
+                    [
+                        {
+                            boxLabel    : 'Si'
+                            ,itemId     : 'SWAGENTE'
+                            ,name       : 'SWAGENTE'
+                            ,inputValue : 'S'
+                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
+                        }
+                        ,{
+                            boxLabel    : 'No'
+                            ,name       : 'SWAGENTE'
+                            ,inputValue : 'N'
+                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
                         }
                     ]
                 }
@@ -436,23 +373,9 @@ Ext.define('VentanaRechazo',
                         }
                         var values = form.getValues();
                         values.SWAGENTE = _fieldById('SWAGENTE',win).getGroupValue();
+                        debug('values:',values);
                         values.COMMENTS = values.COMMENTSINT;
                         values.cerrado  = 'S';
-                        debug('values:',values);
-                        
-                        var correos = values.CORREOS;
-                        if (Ext.isEmpty(correos)) {
-                            if (!Ext.isEmpty(values.CORREOSCC)) {
-                                correos = values.CORREOSCC;
-                            }
-                        } else {
-                            if (!Ext.isEmpty(values.CORREOSCC)) {
-                                correos = correos + ';' + values.CORREOSCC;
-                            }
-                        }
-                        values.CORREOS = correos;
-                        
-                        debug('values (despues de correos):',values);
                         
                         _mask(ck);
                         Ext.Ajax.request(

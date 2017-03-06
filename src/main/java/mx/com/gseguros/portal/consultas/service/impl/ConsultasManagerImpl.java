@@ -1139,34 +1139,5 @@ public class ConsultasManagerImpl implements ConsultasManager
         return consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
                 
     }
-    
-    @Override
-    public List<Map<String,String>> obtieneRangoPeriodoGracia(String pv_cdramo_i, String pv_cdtipsit_i, String pv_cdagente_i)
-    		throws Exception{
-        return consultasDAO.obtieneRangoPeriodoGracia(pv_cdramo_i, pv_cdtipsit_i, pv_cdagente_i);
-                
-    }
 
-    @Override
-    public boolean esDxn(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
-        String paso  = "";
-        String esDxn = "";
-        boolean esDXN = false;
-        try{
-            paso = "Antes de consultar si poliza es DXN";
-            esDxn = consultasDAO.esDXN(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
-            
-            logger.debug("<<<>>> ES DXN : "+esDxn);
-            if(esDxn.equals("S")){
-                esDXN = true;
-            }
-            else{
-                esDXN = false;
-            }
-        }
-        catch(Exception ex){
-            Utils.generaExcepcion(ex, paso);
-        }
-        return esDXN;
-    }
 }

@@ -47,6 +47,4 @@ public interface RecibosManager {
 	public void actualizarFolioSIGS(String cdunieco, String cdramo, String estado, String nmpoliza, String rmdbRn, UserVO user, List<Map<String, String>> lista) throws Exception;
 	
 	public InputStream obtenerDatosReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String[] lista) throws Exception;
-	
-	public InputStream obtenerReporteRecibos(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 }

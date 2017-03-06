@@ -609,6 +609,5 @@ public interface SiniestrosDAO {
     
     public List<GenericVO> obtieneListadoValidacionesGrales() throws Exception;
     
-	public String validaProveedorPD(String ntramite) throws Exception; // (EGS)
-
+    public String validaProveedorPD(String ntramite) throws Exception; // (EGS)
 }

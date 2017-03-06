@@ -94,7 +94,7 @@ public class ListaValoresDAO extends AbstractDAO {
 	protected class ObtenerListaCargaManual extends CustomStoredProcedure {
 
 		protected ObtenerListaCargaManual(DataSource dataSource) {
-			super(dataSource, "PKG_TABAPOYO.P_OBTENER_VALORATT_TODO");
+			super(dataSource, "PKG_TABAPOYO_PRE.P_OBTENER_VALORATT_TODO");
 
 			declareParameter(new SqlParameter("PI_TABLA", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PI_ATRIB_DESC", OracleTypes.VARCHAR));
@@ -148,7 +148,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class ObtenerListaCvesDependencias extends CustomStoredProcedure {
 
 		protected ObtenerListaCvesDependencias(DataSource dataSource) {
-			super(dataSource, "PKG_LISTAS.P_GET_ATRB_TAB_APOYO");
+			super(dataSource, "PKG_LISTAS_PRE.P_GET_ATRB_TAB_APOYO");
 
 			declareParameter(new SqlParameter("PV_CDTABLA_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_LANGCODE", OracleTypes.VARCHAR));
@@ -184,7 +184,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class GuardaListaValores extends CustomStoredProcedure {
     	
     	protected GuardaListaValores(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_GUARDA_TABLA");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_GUARDA_TABLA");
     		
     		declareParameter(new SqlParameter("PI_CDTABLA", OracleTypes.VARCHAR));
     		declareParameter(new SqlInOutParameter("PI_NMTABLA", OracleTypes.VARCHAR));
@@ -218,7 +218,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class GuardaCveListaValores extends CustomStoredProcedure {
     	
     	protected GuardaCveListaValores(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_GUARDA_CLAVES");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_GUARDA_CLAVES");
     		
     		declareParameter(new SqlParameter("PI_TIP_TRAN", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
@@ -259,7 +259,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class GuardaDesListaValores extends CustomStoredProcedure {
     	
     	protected GuardaDesListaValores(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_GUARDA_ATRIBUTOS");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_GUARDA_ATRIBUTOS");
     		
     		declareParameter(new SqlParameter("PI_TIP_TRAN", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
@@ -285,7 +285,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class GuardaListaCargaManual extends CustomStoredProcedure {
     	
     	protected GuardaListaCargaManual(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_GUARDA_VALORES_UNA");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_GUARDA_VALORES_UNA");
     		
     		declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PI_OTCLAVE", OracleTypes.VARCHAR));
@@ -308,7 +308,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class EliminaListaCargaManual extends CustomStoredProcedure {
     	
     	protected EliminaListaCargaManual(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_BORRA_VALORATT");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_BORRA_VALORATT");
     		
     		declareParameter(new SqlParameter("pi_tabla", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_clave01", OracleTypes.VARCHAR));
@@ -333,7 +333,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class ObtieneTabla1y5 extends CustomStoredProcedure {
 
 		protected ObtieneTabla1y5(DataSource dataSource) {
-			super(dataSource, "PKG_TABAPOYO.P_OBTIENE_TABLA");
+			super(dataSource, "PKG_TABAPOYO_PRE.P_OBTIENE_TABLA");
 
 			declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
 			
@@ -396,7 +396,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class ObtieneClaves1y5 extends CustomStoredProcedure {
     	
     	protected ObtieneClaves1y5(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_OBTIENE_CLAVES");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_OBTIENE_CLAVES");
     		
     		declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
     		
@@ -433,7 +433,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class ObtieneClaveListaValores extends CustomStoredProcedure {
     	
     	protected ObtieneClaveListaValores(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_OBTIENE_CLAVES");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_OBTIENE_CLAVES");
     		
     		declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
     		
@@ -457,7 +457,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class ObtieneDes1y5 extends CustomStoredProcedure {
     	
     	protected ObtieneDes1y5(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_OBTIENE_ATRIBUTOS");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_OBTIENE_ATRIBUTOS");
     		
     		declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
     		
@@ -496,7 +496,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class ObtieneDesListaValores extends CustomStoredProcedure {
     	
     	protected ObtieneDesListaValores(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_OBTIENE_ATRIBUTOS");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_OBTIENE_ATRIBUTOS");
     		
     		declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
     		
@@ -520,7 +520,7 @@ public class ListaValoresDAO extends AbstractDAO {
     protected class EliminarTablaClave extends CustomStoredProcedure {
     	
     	protected EliminarTablaClave(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_BORRA_TABLA");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_BORRA_TABLA");
     		
     		declareParameter(new SqlParameter("pi_nmtabla_i", OracleTypes.VARCHAR));
     		

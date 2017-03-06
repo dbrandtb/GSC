@@ -1206,7 +1206,7 @@
 							debug("blur...");
 							_11_clickAplicarCambiosFactura();
 						}
-					}
+					}					
 				});
 				var comboICDPrimario = Ext.create('Ext.form.field.ComboBox',
 				{
@@ -6710,7 +6710,7 @@
                                         debug("diferenciador 2 ==>",diferenciador);
                                         
                                         if(diferenciador == "MEI"){
-                                            if(+consultasTotales > +maxConsulta){ //(EGS) se deja > en vez de >=
+                                            if(+consultasTotales >= +maxConsulta){
                                                 maxconsultas = false;
                                                 centrarVentanaInterna(Ext.Msg.show({
                                                        title: 'Aviso',
@@ -7247,7 +7247,7 @@
 			}
 		});
 	}
-
+	
 	//FIN DE FUNCIONES
 		</script>
 		<script type="text/javascript" src="${ctx}/js/proceso/siniestros/afiliadosAfectados.js?${now}"></script>

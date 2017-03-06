@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.despachador.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -525,33 +524,17 @@ K                   ENCOLAR CON DATOS ORIGINALES
             String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle) throws Exception {
         return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
-                porEscalamiento, fechaHoy, sinGrabarDetalle, false, null, false, null);
+                porEscalamiento, fechaHoy, sinGrabarDetalle, false, null);
     }
     
-    /**
-     * SOBRECARGADO
-     */
-
     @Override
     @Deprecated
     public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
             String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle, boolean sinBuscarRegreso) throws Exception {
         return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
-                porEscalamiento, fechaHoy, sinGrabarDetalle, sinBuscarRegreso, null, false, null);
+                porEscalamiento, fechaHoy, sinGrabarDetalle, sinBuscarRegreso, null);
     }
-	
-    /**
-     * SOBRECARGADO
-     */
-	@Override
-	@Deprecated
-	public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
-            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
-            boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust) throws Exception {
-	    return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
-                porEscalamiento, fechaHoy, sinGrabarDetalle, sinBuscarRegreso, null, false, null);
-	}
 	
 	/**
      * SE TURNA/RECHAZA/REASIGNA UN TRAMITE. SE MODIFICA TMESACONTROL (STATUS, FECSTATU, CDUSUARI, CDUNIDSPCH, CDRAZRECHA),
@@ -559,30 +542,27 @@ K                   ENCOLAR CON DATOS ORIGINALES
      * TDMESACONTROL (SE INSERTA DETALLE). SE ENVIAN CORREOS DE AVISOS Y SE RECHAZA EN SIGS 
      * @return String message, boolean encolado
      */
-    @Override
+	@Override
 	public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
 	        String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
-	        boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust, boolean soloCorreosRecibidos, String correosRecibidos)
-	        throws Exception {
+	        boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust) throws Exception {
 	    logger.debug(Utils.log(
 	            "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@",
 	            "\n@@@@@@ turnarTramite @@@@@@",
-	            "\n@@@@@@ cdusuariSes          = " , cdusuariSes,
-	            "\n@@@@@@ cdsisrolSes          = " , cdsisrolSes,
-	            "\n@@@@@@ ntramite             = " , ntramite,
-	            "\n@@@@@@ status               = " , status,
-	            "\n@@@@@@ comments             = " , comments,
-	            "\n@@@@@@ cdrazrecha           = " , cdrazrecha,
-	            "\n@@@@@@ cdusuariDes          = " , cdusuariDes,
-	            "\n@@@@@@ cdsisrolDes          = " , cdsisrolDes,
-	            "\n@@@@@@ permisoAgente        = " , permisoAgente,
-	            "\n@@@@@@ porEscalamiento      = " , porEscalamiento,
-                "\n@@@@@@ fechaHoy             = " , fechaHoy,
-                "\n@@@@@@ sinGrabarDetalle     = " , sinGrabarDetalle,
-                "\n@@@@@@ sinBuscarRegreso     = " , sinBuscarRegreso,
-                "\n@@@@@@ ntrasust             = " , ntrasust,
-                "\n@@@@@@ soloCorreosRecibidos = " , soloCorreosRecibidos,
-                "\n@@@@@@ correosRecibidos     = " , correosRecibidos));
+	            "\n@@@@@@ cdusuariSes      = " , cdusuariSes,
+	            "\n@@@@@@ cdsisrolSes      = " , cdsisrolSes,
+	            "\n@@@@@@ ntramite         = " , ntramite,
+	            "\n@@@@@@ status           = " , status,
+	            "\n@@@@@@ comments         = " , comments,
+	            "\n@@@@@@ cdrazrecha       = " , cdrazrecha,
+	            "\n@@@@@@ cdusuariDes      = " , cdusuariDes,
+	            "\n@@@@@@ cdsisrolDes      = " , cdsisrolDes,
+	            "\n@@@@@@ permisoAgente    = " , permisoAgente,
+	            "\n@@@@@@ porEscalamiento  = " , porEscalamiento,
+                "\n@@@@@@ fechaHoy         = " , fechaHoy,
+                "\n@@@@@@ sinGrabarDetalle = " , sinGrabarDetalle,
+                "\n@@@@@@ sinBuscarRegreso = " , sinBuscarRegreso,
+                "\n@@@@@@ ntrasust         = " , ntrasust));
 	    String paso = null;
         RespuestaTurnadoVO result = new RespuestaTurnadoVO();
 	    try {
@@ -675,15 +655,15 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 logger.debug(paso);
                 endososDAO.validarTramiteSinCambiosEndosoPendiente(ntramite);
                 
+                paso = "Rechazando tr\u00e1mite";
+                logger.debug(paso);
+                flujoMesaControlDAO.actualizarStatusTramite(ntramite, status, fechaHoy, null, null);
+                
                 if (StringUtils.isNotBlank(ntrasust)) {
                     paso = "Guardando tr\u00e1mite sustituto";
                     logger.debug(paso);
                     flujoMesaControlDAO.actualizarTramiteSustituto(ntramite, ntrasust);
                 }
-                
-                paso = "Rechazando tr\u00e1mite";
-                logger.debug(paso);
-                flujoMesaControlDAO.actualizarStatusTramite(ntramite, status, fechaHoy, null, null);
                 
                 if (StringUtils.isNotBlank(cdrazrecha)) {
                     paso = "Marcando motivo de rechazo";
@@ -699,11 +679,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 logger.debug(paso);
                 despachadorDAO.cerrarHistorialTramite(ntramite, fechaHoy, cdusuariSes, cdsisrolSes, status);
                 
-                if (StringUtils.isBlank(ntrasust)) {
-                    result.setMessage(Utils.join("Tr\u00e1mite rechazado con las siguientes observaciones: ", comments));
-                } else {
-                    result.setMessage(Utils.join("Tr\u00e1mite rechazado (sustituto: ", ntrasust, ") con las siguientes observaciones: ", comments));
-                }
+                result.setMessage(Utils.join("Tr\u00e1mite rechazado con las siguientes observaciones: ", comments));
                 
                 if (sinGrabarDetalle == false) {
                     paso = "Guardando detalle";
@@ -727,8 +703,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 try {
                     paso = "Enviando correos configurados";
                     logger.debug(paso);
-                    flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
-                            correosRecibidos);
+                    flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento);
                 } catch (Exception ex) {
                     logger.debug("Error al enviar correos de estatus al turnar", ex);
                 }
@@ -909,8 +884,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         try {
                             paso = "Enviando correos configurados";
                             logger.debug(paso);
-                            flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
-                                    correosRecibidos);
+                            flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento);
                         } catch (Exception ex) {
                             logger.error("Error al mandar correos de estatus al turnar", ex);
                         }
@@ -977,8 +951,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         try {
                             paso = "Enviando correos configurados";
                             logger.debug(paso);
-                            flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
-                                    correosRecibidos);
+                            flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento);
                         } catch (Exception ex) {
                             logger.error("Error al enviar correos de estatus al turnar", ex);
                         }
@@ -1279,41 +1252,5 @@ K                   ENCOLAR CON DATOS ORIGINALES
             Utils.generaExcepcion(ex, paso);
         }
         return items;
-    }
-
-    @Override
-    public List<Map<String, String>> cargaConfSucursales(String cdunieco, String cdunizon, String cdnivel) throws Exception {
-    	String paso = null;
-    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-    	
-    	try {
-    		lista = despachadorDAO.recuperarClasifSucursalZonaNivel(cdunieco, cdunizon, cdnivel);
-    	} catch (Exception ex) {
-    		Utils.generaExcepcion(ex, paso);
-    	}
-    	return lista;
-    }
-
-    @Override
-    public void guardaConfSucursales(Map<String, String> sucursal) throws Exception {
-    	despachadorDAO.guardaConfSucursales(sucursal);
-    }
-
-    @Override
-    public List<Map<String, String>> cargaConfPermisos(String cdtipflu, String cdflujomc, String cdramo, String cdtipsit) throws Exception {
-    	String paso = null;
-    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-    	
-    	try {
-    		lista = despachadorDAO.recuperarPermisosFlujos(cdtipflu, cdflujomc, cdramo, cdtipsit);
-    	} catch (Exception ex) {
-    		Utils.generaExcepcion(ex, paso);
-    	}
-    	return lista;
-    }
-    
-    @Override
-    public void guardaConfPermisos(Map<String, String> permiso) throws Exception {
-    	despachadorDAO.guardaConfPermisos(permiso);
     }
 }

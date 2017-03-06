@@ -213,16 +213,8 @@
         <action name="creaCarpeta" class="documentosPolizaAction" method="creaCarpeta">
             <result name="success" type="json" />
         </action>
-        <!-- lista archivos de un directorio -->
-        <action name="listarDirectorio" class="documentosPolizaAction" method="listarDirectorio">
-            <result name="success" type="json" />
-        </action>
         <!-- crear carpeta desde Base de Datos -->
         <action name="validaAgenteSIGS" class="renovacionAction" method="validaAgenteSIGS">
-            <result name="success" type="json" />
-        </action>
-        <!-- Lanzar recibos desde SIGS -->
-        <action name="manualWSrecibos" class="beanDatosComplementarios" method="ejecutaWSManualRecibos">
             <result name="success" type="json" />
         </action>
 	</package>

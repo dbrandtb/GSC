@@ -1363,8 +1363,8 @@
                 </param>
             </result>
         </action>
-
-		<!-- agregado (EGS) para validar solo un proveedor en pago directo -->
+        
+        <!-- agregado (EGS) para validar solo un proveedor en pago directo -->
 		<action name="validarProveedorPD" class="siniestrosAction" method="validarProveedorPD">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>

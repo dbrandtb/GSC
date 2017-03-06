@@ -32,8 +32,8 @@ var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="fa
 var _0_flujo      = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _0_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser = '<s:property value="passServidorReports" />';
+var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                        />';
 var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                        />';
@@ -2114,7 +2114,7 @@ function _0_cotizar(boton)
                                      }
                                 }
                                 
-                                if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
+                                if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
                                 {
                                     _0_actualizarCotizacionTramite();
                                 }
@@ -2810,7 +2810,7 @@ function _0_actualizarCotizacionTramite(callback)
 
 function _0_recuperarCotizacionDeTramite()
 {
-    if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' )
+    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
     {
         var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
         try
@@ -5510,50 +5510,6 @@ Ext.onReady(function()
             select : _0_gmiCirchospSelect
         });
     }
-    try{
-	    if(_0_smap1.cdramo==Ramo.ServicioPublico){
-	    	Ext.ComponentQuery
-	    	.query("[fieldLabel*='(FRONTERIZO)'],[fieldLabel*='MERO DE SERIE'],[fieldLabel*='TIPO DE CAMBIO AL D'],[fieldLabel*='PAQUETE'],[fieldLabel*='NOMBRE CLIENTE'],[fieldLabel*='TIPO PERSONA'],[fieldLabel*='FECHA DE NACIMIENTO DEL CONTRATANTE']")
-	    	.forEach(function(it){ 
-		    		it.allowBlank=true; 
-		    		it.hide();
-	    		}
-	    	);
-	    	
-	    	
-	    	
-	    	Ext.ComponentQuery.query('[title=<span style="font:bold 14px Calibri;">DATOS GENERALES</span>]')[0]
-	    	.items
-	    	.items
-	    	.sort(function(a,b){
-	    		if(_0_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
-	    			var ordenOriginal=[16,17,22,1,2,3,4,5,6,25,7,18,19,20,24,23,21,31,32];
-	    		}else if(_0_smap1.cdtipsit==TipoSituacion.ServicioPublicoMicro){
-	    			var ordenOriginal=[16,17,1,22,2,3,4,5,6,18,19,20,24,23,21,30,31];
-	    		}
-	    		
-	    		
-	    		var va=ordenOriginal.indexOf(Number(a.cdatribu));
-	    		var vb=ordenOriginal.indexOf(Number(b.cdatribu));
-	    	    
-	    		if(va==-1 ) va=10000000000;
-	    		if(vb==-1 ) vb=10000000000;
-	    		if(a.fieldLabel=='COTIZACI&Oacute;N') va=-1;
-	    		if(b.fieldLabel=='COTIZACI&Oacute;N') vb=-1;
-	    		if(va>vb){
-	    			return 1;
-	    		}else if(va<vb){
-	    			return -1;
-	    		}
-	    		return 0;
-	    	});
-	    	Ext.ComponentQuery.query('[title=<span style="font:bold 14px Calibri;">DATOS GENERALES</span>]')[0]
-	    	.doLayout();
-	    }
-    }catch(e){
-    	debugError(e);
-    }
-    
     
     // Para TODOS LOS PRODUCTOS (si aplican), se agrega validacion de Codigo Postal vs Estado:
     agregaValidacionCPvsEstado();

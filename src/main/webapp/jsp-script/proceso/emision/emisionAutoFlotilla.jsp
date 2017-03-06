@@ -22,8 +22,6 @@ var urlReintentarWS                        = '<s:url namespace="/"           act
 var _urlEnviarCorreo                       = '<s:url namespace="/general"    action="enviaCorreo"                        />';
 var _p31_urlCargarCatalogo                 = '<s:url namespace="/catalogos"  action="obtieneCatalogo"                    />';
 var _p29_urlObtieneValNumeroSerie          = '<s:url namespace="/emision"    action="obtieneValNumeroSerie"              />';
-var _p31_urlCargaMasiva                    = '<s:url namespace="/emision"    action="cargaMasivaFlotillaEmision"         />';
-var _p31_urlProcesaCargaMasiva             = '<s:url namespace="/emision"    action="procesarCargaMasivaFlotillaEmision" />';
 ////// urls //////
 
 ////// variables //////
@@ -381,121 +379,6 @@ Ext.onReady(function()
                 ,columns  : _p31_incisoColumns
                 ,store    : _p31_storeIncisos
                 ,height   : 200
-                ,bbar     :
-                    [
-						'->'
-					   ,{
-						    xtype  : 'form'
-						   ,hidden : _p31_smap1.tipoflot+'x'!='Fx' && _p31_smap1.tipoflot+'x'!='Px'
-						   ,layout : 'hbox'
-						   ,items  :
-						   [
-							   {
-								    xtype         : 'filefield'
-								    ,buttonOnly   : true
-								    ,style        : 'margin:0px;'
-								    ,name         : 'excel'
-								    ,style        : 'background:#223772;'
-								    ,buttonConfig :
-								    {
-								        text  : 'Cargar layout complementario...'
-								        ,icon : '${ctx}/resources/fam3icons/icons/book_next.png'
-								    }
-								    ,listeners :
-								    {
-								        change : function(me)
-		                                { 
-								            var indexofPeriod = me.getValue().lastIndexOf("."),
-		                                    uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
-		                                    debug('uploadedExtension:',uploadedExtension);
-		                                    var valido=Ext.Array.contains(['xls','xlsx'], uploadedExtension);
-		                                    if(!valido)
-		                                    {
-		                                        mensajeWarning('Solo se permiten hojas de c&aacute;lculo');
-		                                        me.reset();
-		                                    }
-		                                    if(valido&&_p31_smap1.cdramo+'x'!='5x')
-		                                    {
-	                                            mensajeWarning('Solo aplica para negocio de Autos');
-	                                            me.reset();
-		                                    }
-		                                    
-								            var timestamp = new Date().getTime();
-		                                    me.up('form').submit(
-                                            {
-                                                 url      : _p31_urlCargaMasiva
-                                                ,params   :
-                                                {
-                                                     'smap1.timestamp' : timestamp
-                                                    ,'smap1.accion'  : 'guardar'
-                                                },success : function()
-                                                {
-                                                    var json =
-                                                    {
-                                                        slist1 : []
-                                                    };        
-                                                                                            
-                                                    for(var itera in _p31_storeIncisos.data.items)
-                                                    {
-                                                        json.slist1.push(_p31_storeIncisos.data.items[itera].raw);
-                                                    }
-                                                    
-                                                    var conceptos = {};
-                                                    
-                                                    conceptos['timestamp'] = timestamp;
-                                                    conceptos['accion']    = 'guardar';
-                                                    
-                                                    Ext.Ajax.request(
-                                                    {
-                                                        url       : _p31_urlProcesaCargaMasiva
-                                                        ,jsonData :
-                                                        {
-                                                             smap1  : conceptos
-                                                            ,olist1 : json.slist1
-                                                        }
-                                                        ,success  : function(response)
-                                                        {
-                                                            var json=Ext.decode(response.responseText);
-                                                            debug('respuesta al cargar el archivo para complementar',json);
-                                                            if(json.exito)
-                                                            {
-                                                                for(var itera in json.olist1)//_p31_storeIncisos.data.items)
-                                                                {
-                                                                    _p31_storeIncisos.data.items[itera].raw = json.olist1[itera];
-                                                                } 
-                                                    
-                                                                var iterando = 0;
-                                                                _p31_storeIncisos.each(function(record)
-                                                                {
-                                                                    record.data = _p31_storeIncisos.data.items[iterando].raw;
-                                                                    iterando++;
-                                                                });
-                                                                _p31_guardar(_fieldById('_p31_gridIncisos').getView().refresh(true));
-                                                            }
-                                                            else
-                                                            {
-                                                                mensajeError(json.respuesta);
-                                                            }
-                                                        }
-                                                        ,failure  : function()
-                                                        {
-                                                            _fieldById('_p31_panelpri').setLoading(false);
-                                                            errorComunicacion();
-                                                        }
-                                                    });
-                                                }
-                                                ,failure : function()
-                                                {
-                                                    _fieldById('_p31_panelpri').setLoading(false);
-                                                    errorComunicacion();
-                                                }
-                                            });
-		                                }
-								    }
-							   }
-						   ]
-						}
-					]
                 ,selModel :
                 {
                     selType        : 'checkboxmodel'

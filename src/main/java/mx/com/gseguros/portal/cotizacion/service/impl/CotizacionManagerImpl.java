@@ -7545,7 +7545,7 @@ public class CotizacionManagerImpl implements CotizacionManager
       	            {
       	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
       	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
-      	            	String mensajeACorreo= "Se le notif\u00EDca que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de autom\u00F3viles en el paquete de cobertura prestigio, amplia  y limitada:\n" + 
+      	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Autom�viles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
       	            			planValido;
       	            	
       	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
@@ -11545,79 +11545,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return cotizacionDAO.obtieneCodigosPostalesProductos();
 	}
 	
-	@Override
-    public String aplicaDescAutos(
-             String cdunieco
-            ,String cdramo
-            ,String nmpoliza
-            ,String modPrim
-            ,String cdtipsit
-            )throws Exception
-    {
-        //////////////////////////////////////////
-        ////// alterar mpolirec sin recotizar/////
-        String paso = "Modificacion de primas al aplicar descuento";
-        try
-        {
-             return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim,cdtipsit.isEmpty()?"1":"0");
-        }
-        catch(Exception ex)
-        {
-            throw new ApplicationException(paso);
-        }
-        ////// alterar mpolirec sin recotizar/////
-        //////////////////////////////////////////
-    }
-	
-	@Override
-    public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception
-    {
-        return  cotizacionDAO.validaDatosAutoSigs(incisosSigs);
-        
-    }
-    
-	@Override
-	public List<Map<String, String>> cargarResultadosCotizacion(
-	            String cdusuari, String cdunieco, String cdramo, String estado,
-	            String nmpoliza, String cdelemen, String cdtipsit) throws Exception
-	{
-	      return cotizacionDAO.cargarResultadosCotizacion(cdusuari, cdunieco, cdramo, estado, nmpoliza, cdelemen, cdtipsit);
-	}
-	
-    @Override
-    public List<Map<String, String>> cargarResultadosCotizacionAutoFlotilla(
-            String cdunieco, String cdramo, String estado, String nmpoliza)
-            throws Exception
-    {
-        return cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza);
-        
-    }
-    
-    @Override
-	public void eliminaDocsCotiza(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String ntramite) throws Exception{
-		this.cotizacionDAO.eliminaDocsCotiza(cdunieco, cdramo, estado, nmpoliza, ntramite);
-		
-	}
-
-	@Override
-	public void insertaMpoligrup(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
-			String cdgrupo, String dsgrupo, String cdplan, String dsplanVariable, String cdcveplan, String nmsumaaseg, String nmdeducible,
-			String swmat, String swmed, String swee) throws Exception{
-		this.cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, estado, nmpoliza, cdtipsit, cdgrupo, dsgrupo, cdplan, dsplanVariable, cdcveplan, nmsumaaseg, nmdeducible, swmat, swmed, swee);
-	}
-
-	@Override
-	public void insertaMgrupogar(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
-			String cdgrupo, String cdplan, String nmsumaaseg) throws Exception{
-		this.cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, estado, nmpoliza, cdtipsit, cdgrupo, cdplan, nmsumaaseg);
-	}
-
-	@Override
-	public void eliminarGrupos(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit) throws Exception{
-		this.cotizacionDAO.eliminarGrupos(cdunieco, cdramo, estado, nmpoliza, cdtipsit);
-	}
-	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////
@@ -11643,7 +11570,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public void setConsultasDAO(ConsultasDAO consultasDAO) {
 		this.consultasDAO = consultasDAO;
 	}
-
 
     /////////////////////////////////////////////////////
     /////////////////////////////////////////////////////

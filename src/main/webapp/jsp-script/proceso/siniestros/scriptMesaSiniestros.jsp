@@ -2238,7 +2238,6 @@ function reasignarClick(grid,dataIndex)
 					,modal  : true
 					,width  : 400
 					,height : 300
-					,overflowY: 'scroll' //(EGS)
 					,items  :
 					[
 					    Ext.create('Ext.grid.Panel',
@@ -2402,46 +2401,45 @@ function turnarDevolucionTramite(grid,rowIndex,colIndex){
 	centrarVentana(windowLoader);
 }
 
-	//(EGS) Validamos solo un proveedor en reclamo pago directo
-	function _11_validaProveedorPagoDirecto(grid,rowIndex,colIndex){
-		var myMask = new Ext.LoadMask(Ext.getBody(),{msg:"loading..."});
-		myMask.show();
-		var record = grid.getStore().getAt(rowIndex);
-		Ext.Ajax.request({
-			url		:	_URL_VALIDAR_PROVEEDOR_PD
-			,params	:{
-				'params.ntramite'	: record.get('ntramite')
-			}
-			,success : function(response,opts) {
-				json = Ext.decode(response.responseText);
-				var mensaje = json.mensaje;
-				debug("success...",response.responseText);
-				if(mensaje > 1){
-					myMask.hide();
-					centrarVentanaInterna(Ext.Msg.show({
-						title: 'No es posible solicitar el pago',
-						msg : 'Est&aacute; tratando de enviar un Pago Directo, para diferentes proveedores',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.ERROR
-					}));
-				}else{
-					_11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex);
-				}
-			}
-			,failure : function(response,opts){
-				var obj = Ext.decode(response.responseText);
-				var mensaje = obj.mensaje;
-				debug("failure...",obj.mensaje);
+//(EGS) Validamos solo un proveedor en reclamo pago directo
+function _11_validaProveedorPagoDirecto(grid,rowIndex,colIndex){
+	var myMask = new Ext.LoadMask(Ext.getBody(),{msg:"loading..."});
+	myMask.show();
+	var record = grid.getStore().getAt(rowIndex);
+	Ext.Ajax.request({
+		url		:	_URL_VALIDAR_PROVEEDOR_PD
+		,params	:{
+			'params.ntramite'	: record.get('ntramite')
+		}
+		,success : function(response,opts) {
+			json = Ext.decode(response.responseText);
+			var mensaje = json.mensaje;
+			debug("success...",response.responseText);
+			if(mensaje > 1){
+				myMask.hide();
 				centrarVentanaInterna(Ext.Msg.show({
-					title: 'Error',
-					msg: Ext.isEmpty(mensaje) ? 'Error de comunicaci&oacute;n' : mensaje,
+					title: 'No es posible solicitar el pago',
+					msg : 'Est&aacute; tratando de enviar un Pago Directo, para diferentes proveedores',
 					buttons: Ext.Msg.OK,
 					icon: Ext.Msg.ERROR
 				}));
+			}else{
+				_11_validaAseguroLimiteCoberturas(grid,rowIndex,colIndex);
 			}
-		});
-	}
-
+		}
+		,failure : function(response,opts){
+			var obj = Ext.decode(response.responseText);
+			var mensaje = obj.mensaje;
+			debug("failure...",obj.mensaje);
+			centrarVentanaInterna(Ext.Msg.show({
+				title: 'Error',
+				msg: Ext.isEmpty(mensaje) ? 'Error de comunicaci&oacute;n' : mensaje,
+				buttons: Ext.Msg.OK,
+				icon: Ext.Msg.ERROR
+			}));
+		}
+	});
+}
 
 Ext.onReady(function()
 		{
