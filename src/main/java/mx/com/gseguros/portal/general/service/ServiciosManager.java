@@ -28,10 +28,4 @@ public interface ServiciosManager
 			String rutaDocumentosTemporal
 			,boolean test
 			) throws Exception;
-	
-	public int generarFlagsTramites () throws Exception;
-	
-	public int actualizarFlagsTramites () throws Exception;
-	
-	public void bloquearProceso (String cdproceso, boolean bloquear, String cdusuari, String cdsisrol) throws Exception;
 }

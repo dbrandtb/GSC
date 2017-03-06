@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -34,14 +33,12 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.mesacontrol.model.TFLUJOMC;
+import mx.com.gseguros.mesacontrol.model.TTIPFLUMC;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
-import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
-import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
-import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
@@ -90,9 +87,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     @Autowired
     private MesaControlManager mesaControlManager;
-    
-    @Autowired
-    private PersonasManager personasManager;
     
     //Constantes de catalogos
     public static final String cdatribuSexo                         ="1";
@@ -183,27 +177,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     @Autowired
     private ServiciosManager serviciosManager;
-	
-	@Autowired
-	private ConsultasManager consultasManager;
-	
-	@Autowired
-	private FlujoMesaControlManager flujoMesaControlManager;
     
-	private FlujoVO flujo;
-	
-	@Autowired
-	private DespachadorManager despachadorManager;
-	
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-	
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-	
-	@Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;	
-	
+    @Autowired
+    private ConsultasManager consultasManager;
+    
+    @Autowired
+    private FlujoMesaControlManager flujoMesaControlManager;
+    
     public String entrar()
     {
         UserVO usuario=(UserVO) session.get("USUARIO");
@@ -853,6 +833,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         return SUCCESS;
     }
     
+    public String comprarCotizacion()
     /*pv_cdunieco   input
     --pv_cdramo     input
     --pv_estado     W
@@ -863,21 +844,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     --pv_cdasegur   input
     --pv_cdplan     input
     --pv_cdperpag   input
-     */
-    public String comprarCotizacion()
+    */
     {
     	logger.debug(Utils.log(
     			 "\n################################"
     			,"\n###### comprar cotizacion ######"
-    			,"\n###### smap1=" , smap1
-    			,"\n###### flujo=" , flujo
-    			,"\n###### comprarNmpoliza=" , comprarNmpoliza
-    			,"\n###### comprarCdplan=" , comprarCdplan
-    			,"\n###### comprarCdperpag=" , comprarCdperpag
-    			,"\n###### comprarCdramo=" , comprarCdramo
-    			,"\n###### comprarCdciaaguradora=" , comprarCdciaaguradora
-    			,"\n###### comprarCdunieco=" , comprarCdunieco
-    			,"\n###### cdtipsit=" , cdtipsit
+    			,"\n###### smap1=",smap1
     			));
     	
     	exito   = true;
@@ -894,13 +866,10 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	String nmcuadro    = null;
     	String cdelemen    = null;
     	String cdpersonCli = null;
-    	String nmorddomCli = null;
     	String cdideperCli = null;
     	String cdagenteExt = null;
     	boolean esFlotilla = false;
     	String tipoflot    = null;
-    	
-    	Date fechaHoy = new Date();
     	
     	//sesion valida
     	if(exito)
@@ -916,7 +885,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		{
     			long timestamp  = System.currentTimeMillis();
     			exito           = false;
-    			respuesta       = "Sesi\u00f3n inv\u00e1lida #"+timestamp;
+    			respuesta       = "Sesi&oacute;n inv&aacute;lida #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
@@ -936,15 +905,11 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     					&&StringUtils.isNotBlank(comprarCdperpag)
     					&&smap1!=null;
     			
-    			logger.debug(Utils.log("Parametros compra:::: ","comprarCdunieco: ",comprarCdunieco,", comprarCdramo: ",comprarCdramo,", cdtipsit: ",cdtipsit,
-    			        ", comprarNmpoliza: ",comprarNmpoliza,", comprarCdciaaguradora: ",comprarCdciaaguradora,", comprarCdplan: ",comprarCdplan, ", comprarCdperpag: ",comprarCdperpag));
-    			
     			if(completos)
     			{
     				ntramite    = smap1.get("ntramite");
     				cdpersonCli = smap1.get("cdpersonCli");
     				cdideperCli = smap1.get("cdideperCli");
-    				nmorddomCli = smap1.get("nmorddomCli");
     				cdagenteExt = smap1.get("cdagenteExt");
     				fechaInicio = smap1.get("fechaInicio");
     				fechaFin    = smap1.get("fechaFin");
@@ -1077,7 +1042,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		{
     			long timestamp  = System.currentTimeMillis();
     			exito           = false;
-    			respuesta       = "Error al insertar hist\u00f3rico de p\u00f3liza #"+timestamp;
+    			respuesta       = "Error al insertar hist&oacute;rico de p&oacute;liza #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
@@ -1124,7 +1089,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		{
     			long timestamp  = System.currentTimeMillis();
     			exito           = false;
-    			respuesta       = "Error al ligar la p\u00f3liza al agente #"+timestamp;
+    			respuesta       = "Error al ligar la p&oacute;liza al agente #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
@@ -1165,7 +1130,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     		{
     			long timestamp  = System.currentTimeMillis();
     			exito           = false;
-    			respuesta       = "Error al generar p\u00f3liza #"+timestamp;
+    			respuesta       = "Error al generar p&oacute;liza #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
@@ -1192,39 +1157,22 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            	parDmesCon.put("pv_cdmotivo_i"   , null);
 	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
 	            	*/
-	            	
-	            	String statusDetalle = EstatusTramite.PENDIENTE.getCodigo();
-	            	
-	            	if(flujo!=null && StringUtils.isNotBlank(flujo.getStatus()))
-	            	{
-	            		logger.debug("El status se usa del flujo y no PENDIENTE");
-	            		statusDetalle = flujo.getStatus();
-	            	} else {
-    	            	try {
-    	            	    statusDetalle = flujoMesaControlManager.recuperarEstatusDefectoRol(usuario.getRolActivo().getClave());
-                        } catch (Exception ex) {
-                            logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
-                        }
-	            	}
-	            	
 	            	mesaControlManager.movimientoDetalleTramite(
 	            			ntramite
-	            			,fechaHoy
+	            			,new Date()
 	            			,null//cdclausu
-	            			,Utils.join("Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite: ",comprarNmpoliza)
+	            			,"Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite"
 	            			,cdusuari
 	            			,null//cdmotivo
 	            			,cdsisrol
 	            			,"S"
-	            			,statusDetalle
-	            			,false
 	            			);
 	            }
 	    		catch(Exception ex)
 	    		{
 	    			long timestamp  = System.currentTimeMillis();
 	    			exito           = false;
-	    			respuesta       = "Error al actualizar el tr\u00e1mite #"+timestamp;
+	    			respuesta       = "Error al actualizar el tr&aacute;mite #"+timestamp;
 	    			respuestaOculta = ex.getMessage();
 	    			logger.error(respuesta,ex);
 	    		}
@@ -1253,8 +1201,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 			tipoProcesoParaRecuperarFlujo = tipoflot;
                 		}
                 		
-                		Map<String,String> datosFlujo = consultasManager.recuperarDatosFlujoEmision(comprarCdramo,tipoProcesoParaRecuperarFlujo);
-                		
                 		String estatus = EstatusTramite.PENDIENTE.getCodigo();
                 		try {
                 			estatus = flujoMesaControlManager.recuperarEstatusDefectoRol(usuario.getRolActivo().getClave());
@@ -1262,86 +1208,82 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 			logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
                 		}
                 		
-    	            	ntramite = mesaControlManager.movimientoTramite(
-    	            			comprarCdunieco
-    	            			,comprarCdramo
-    	            			,"W"
-    	            			,"0"
-    	            			,"0"
-    	            			,comprarCdunieco
-    	            			,comprarCdunieco
-    	            			,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-    	            			,fechaHoy
-    	            			,cdagente
-    	            			,null
-    	            			,""
-    	            			,fechaHoy
-    	            			,estatus
-    	            			,""
-    	            			,comprarNmpoliza
-    	            			,cdtipsit
-    	            			,cdusuari
-    	            			,cdsisrol
-    	            			,null
-    	            			,datosFlujo.get("cdtipflu")
-    	            			,datosFlujo.get("cdflujomc")
-    	            			,null//valores
-    	            			,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null
-    	            			);
-    	            	
-    	            	smap1.put("ntramite",ntramite);
-    	            	
-    	            	String rolTrabajoStatus = despachadorManager.recuperarRolTrabajoEstatus(datosFlujo.get("cdtipflu"),
-    	            	        datosFlujo.get("cdflujomc"), estatus);
-    	            	String cdusuariDes = null,
-    	            	       cdsisrolDes = null;
-    	            	if (cdsisrol.equals(rolTrabajoStatus)) { // Cuando el tramite es para el mismo rol que tengo yo, es para mi y no para otro
-    	            	    cdusuariDes = cdusuari;
-    	            	    cdsisrolDes = cdsisrol;
-    	            	}
-    	            	
-    	                RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-    	                        cdusuari,
-    	                        cdsisrol,
-    	                        ntramite,
-    	                        estatus,
-    	                        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
-    	                        null,  // cdrazrecha
-    	                        cdusuariDes,
-    	                        cdsisrolDes,
-    	                        true,  // permisoAgente
-    	                        false, // porEscalamiento
-    	                        fechaHoy,
-    	                        false  // sinGrabarDetalle
-    	                        );
-    	                
-    	                respuesta = Utils.join(StringUtils.isBlank(respuesta) ? "" : respuesta, ". ", despacho.getMessage());
-    	            	
+	            	ntramite = mesaControlManager.movimientoTramite(
+	            			comprarCdunieco
+	            			,comprarCdramo
+	            			,"W"
+	            			,"0"
+	            			,"0"
+	            			,null
+	            			,null
+	            			,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+	            			,new Date()
+	            			,cdagente
+	            			,null
+	            			,""
+	            			,new Date()
+	            			,"2"
+	            			,""
+	            			,comprarNmpoliza
+	            			,cdtipsit
+	            			,cdusuari
+	            			,cdsisrol
+	            			,null
+	            			,"2".equals(comprarCdramo) ? TTIPFLUMC.POLIZA_NUEVA : ""
+	            			,"2".equals(comprarCdramo) ? TFLUJOMC.EMISION_SALUD_INDIVIDUAL : ""
+	            			,null//valores
+	            			,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+	            			);
+	            	
+	            	smap1.put("ntramite",ntramite);
+	            	
+	            	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	            	parDmesCon.put("pv_ntramite_i"   , ntramite);
+	            	parDmesCon.put("pv_feinicio_i"   , new Date());
+	            	parDmesCon.put("pv_cdclausu_i"   , null);
+	            	parDmesCon.put("pv_comments_i"   , "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente");
+	            	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+	            	parDmesCon.put("pv_cdmotivo_i"   , null);
+	            	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
+	            	kernelManagerSustituto.movDmesacontrol(parDmesCon);*/
+	            	mesaControlManager.movimientoDetalleTramite(
+	            			ntramite
+	            			,new Date()
+	            			,null//cdclausu
+	            			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
+	            			,cdusuari
+	            			,null//cdmotivo
+	            			,cdsisrol
+	            			,"S"//swagente
+	            			);
+	            	
     	            	try {
-    		            	serviciosManager.grabarEvento(new StringBuilder("\nCotizar tramite grupo")
-    		            	    ,Constantes.MODULO_EMISION     //cdmodulo
-    		            	    ,Constantes.EVENTO_COMPRAR_TRAMITE_MC //cdevento
-    		            	    ,new Date()    //fecha
-    		            	    ,cdusuari
-    		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
-    		            	    ,ntramite
-    		            	    ,comprarCdunieco
-    		            	    ,comprarCdramo
-    		            	    ,"W"
-    		            	    ,comprarNmpoliza
-    		            	    ,comprarNmpoliza
-    		            	    ,cdagente
-    		            	    ,null
-    		            	    ,null);
+		            	serviciosManager.grabarEvento(new StringBuilder("\nCotizar tramite grupo")
+		            	    ,"EMISION"     //cdmodulo
+		            	    ,"COMTRAMITMC" //cdevento
+		            	    ,new Date()    //fecha
+		            	    ,cdusuari
+		            	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+		            	    ,ntramite
+		            	    ,comprarCdunieco
+		            	    ,comprarCdramo
+		            	    ,"W"
+		            	    ,comprarNmpoliza
+		            	    ,comprarNmpoliza
+		            	    ,cdagente
+		            	    ,null
+		            	    ,null);
     		            } catch (Exception ex) {
-    		            	logger.error("Error al grabar evento, sin impacto",ex);
-    		            }
+
+		            	logger.error("Error al grabar evento, sin impacto",ex);
+		            }
                 	} catch (Exception ex) {
-    	    			long timestamp  = System.currentTimeMillis();
-    	    			exito           = false;
-    	    			respuesta       = "Error al generar el tr\u00e1mite #"+timestamp;
-    	    			respuestaOculta = ex.getMessage();
-    	    			logger.error(respuesta,ex);
+
+	    			long timestamp  = System.currentTimeMillis();
+	    			exito           = false;
+	    			respuesta       = "Error al generar el tr&aacute;mite #"+timestamp;
+	    			respuestaOculta = ex.getMessage();
+	    			logger.error(respuesta,ex);
     	    		}
                 }
             }
@@ -1349,13 +1291,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	
     	//generar cotizacion
     	if(exito
-    			//&&!comprarCdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo())
+    			&&!comprarCdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo())
     			&&(!esFlotilla||"P".equals(tipoflot))
     			)
     	{
             try
             {
-	            File carpeta=new File(rutaDocumentosPoliza+"/"+ntramite);
+	            File carpeta=new File(getText("ruta.documentos.poliza")+"/"+ntramite);
 	            if(!carpeta.exists())
 	            {
 	            	if(!carpeta.mkdir())
@@ -1365,7 +1307,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            }
 	            
 	            StringBuilder urlReporteCotizacion=new StringBuilder()
-	                   .append(rutaServidorReports)
+	                   .append(getText("ruta.servidor.reports"))
 	                   .append("?p_unieco=")  .append(comprarCdunieco)
 	                   .append("&p_ramo=")    .append(comprarCdramo)
 	                   .append("&p_subramo=") .append(cdtipsit)
@@ -1377,7 +1319,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                   .append("&p_perpag=")  .append(comprarCdperpag)
 	                   .append("&p_ntramite=").append(ntramite)
 	                   .append("&p_cdusuari=").append(cdusuari)
-	                   .append("&userid=")    .append(passServidorReports);
+	                   .append("&userid=")    .append(getText("pass.servidor.reports"));
 	            
 	            if(!esFlotilla)
 	            {
@@ -1394,9 +1336,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                .append("&ACCESSIBLE=YES")
 	                .append("&paramform=no");
 	            
-	            String nombreArchivoCotizacion = Utils.join("cotizacion_", comprarNmpoliza, ".pdf");
+	            String nombreArchivoCotizacion="cotizacion.pdf";
 	            String pathArchivoCotizacion=new StringBuilder()
-            					.append(rutaDocumentosPoliza)
+            					.append(getText("ruta.documentos.poliza"))
             					.append("/").append(ntramite)
             					.append("/").append(nombreArchivoCotizacion)
             					.toString();
@@ -1410,7 +1352,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            //mapArchivo.put("pv_nmsuplem_i"  , "0");
 	            //mapArchivo.put("pv_feinici_i"   , new Date());
 	            //mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
-	            //mapArchivo.put("pv_dsdocume_i"  , "COTIZACI\u00f3N");
+	            //mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N");
 	            //mapArchivo.put("pv_ntramite_i"  , ntramite);
 	            //mapArchivo.put("pv_nmsolici_i"  , comprarNmpoliza);
 	            //mapArchivo.put("pv_tipmov_i"    , "1");
@@ -1425,7 +1367,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            		,"0"
 	            		,new Date()
 	            		,nombreArchivoCotizacion
-	            		,Utils.join("COTIZACI\u00D3N (", comprarNmpoliza, ")")
+	            		,"COTIZACI\u00D3N"
 	            		,comprarNmpoliza
 	            		,ntramite
 	            		,"1"
@@ -1435,14 +1377,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            		,null
 	            		,null
 	            		,null
-	            		,null, false
+	            		,null
 	            		);
             }
     		catch(Exception ex)
     		{
     			long timestamp  = System.currentTimeMillis();
     			exito           = false;
-    			respuesta       = "Error al generar la cotizaci\u00f3n #"+timestamp;
+    			respuesta       = "Error al generar la cotizaci&oacute;n #"+timestamp;
     			respuestaOculta = ex.getMessage();
     			logger.error(respuesta,ex);
     		}
@@ -1469,7 +1411,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				String nombreExcel1 = Utils.join("COTIZACION",TipoArchivo.XLS.getExtension());
 				
 				FileUtils.copyInputStreamToFile(excel, new File(Utils.join(
-						rutaDocumentosPoliza,"/",ntramite,"/",nombreExcel1
+								getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreExcel1
 				)));
 				
 				//Map<String,Object>mapaExcel1 = new LinkedHashMap<String,Object>(0);
@@ -1480,7 +1422,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				//mapaExcel1.put("pv_nmsuplem_i"  , "0");
 				//mapaExcel1.put("pv_feinici_i"   , new Date());
 				//mapaExcel1.put("pv_cddocume_i"  , nombreExcel1);
-				//mapaExcel1.put("pv_dsdocume_i"  , "COTIZACI\u00f3N (XLS)");
+				//mapaExcel1.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N (XLS)");
 				//mapaExcel1.put("pv_ntramite_i"  , ntramite);
 				//mapaExcel1.put("pv_nmsolici_i"  , comprarNmpoliza);
 				//mapaExcel1.put("pv_tipmov_i"    , "1");
@@ -1505,7 +1447,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 						,null
 						,null
 						,null
-						,null, false
+						,null
 						);
 	    		
 	    		//guardar excel 2
@@ -1526,7 +1468,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				String nombreExcel2 = Utils.join("RESUMEN DE COTIZACION",TipoArchivo.XLS.getExtension());
 				
 				FileUtils.copyInputStreamToFile(excel2, new File(Utils.join(
-						rutaDocumentosPoliza,"/",ntramite,"/",nombreExcel2
+								getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreExcel2
 				)));
 				
 				//Map<String,Object>mapaExcel2 = new LinkedHashMap<String,Object>(0);
@@ -1537,7 +1479,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				//mapaExcel2.put("pv_nmsuplem_i"  , "0");
 				//mapaExcel2.put("pv_feinici_i"   , new Date());
 				//mapaExcel2.put("pv_cddocume_i"  , nombreExcel2);
-				//mapaExcel2.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI\u00f3N (XLS)");
+				//mapaExcel2.put("pv_dsdocume_i"  , "RESUMEN DE COTIZACI&Oacute;N (XLS)");
 				//mapaExcel2.put("pv_ntramite_i"  , ntramite);
 				//mapaExcel2.put("pv_nmsolici_i"  , comprarNmpoliza);
 				//mapaExcel2.put("pv_tipmov_i"    , "1");
@@ -1562,7 +1504,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 						,null
 						,null
 						,null
-						,null, false
+						,null
 						);
     		}
     		catch(Exception ex)
@@ -1593,7 +1535,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     				parametros.put("pv_cdperson_i" , cdpersonCli);
     				parametros.put("pv_nmsuplem_i" , "0");
     				parametros.put("pv_status_i"   , "V");
-    				parametros.put("pv_nmorddom_i" , nmorddomCli);
+    				parametros.put("pv_nmorddom_i" , "1");
     				parametros.put("pv_swreclam_i" , null);
     				parametros.put("pv_accion_i"   , "I");
     				parametros.put("pv_swexiper_i" , "S");
@@ -1620,16 +1562,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(comprarCdramo)
 				    	){
 			    		
-			    		String usuarioCaptura =  null;
-						
-						if(usuario!=null){
-							if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
-								usuarioCaptura = usuario.getClaveUsuarioCaptura();
-							}else{
-								usuarioCaptura = usuario.getCodigoPersona();
-							}
-							
-						}
 			    		
 			    		HashMap<String, Object> paramsTip =  new HashMap<String, Object>();
 			    		paramsTip.put("pv_cdramo_i", comprarCdramo);
@@ -1735,8 +1667,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								parametros.put("pv_cdideext_i"    , null);
 								parametros.put("pv_cdestciv_i"    , null);
 								parametros.put("pv_cdsucemi_i"    , cli.getSucursalCli());
-								parametros.put("pv_cdusuario_i"    , usuarioCaptura);
-								parametros.put("pv_dsocupacion_i" , null);
 								parametros.put("pv_accion_i"      , "I");
 								kernelManagerSustituto.movMpersona(parametros);
 					    		
@@ -1746,37 +1676,18 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				    			paramDomicil.put("pv_nmorddom_i", "1");
 				    			paramDomicil.put("pv_msdomici_i", cli.getCalleCli() +" "+ cli.getNumeroCli());
 				    			paramDomicil.put("pv_nmtelefo_i", cli.getTelefonoCli());
-				    			
-				    			String codPosImp = cli.getCodposCli();
-				    			if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
-				    			    codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
-				    			}
-				    			
-				    			paramDomicil.put("pv_cdpostal_i", codPosImp);
+				    			paramDomicil.put("pv_cdpostal_i", cli.getCodposCli());
 				    			
 				    			String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
 				    			if(edoAdosPos2.length() ==  1){
 				    				edoAdosPos2 = "0"+edoAdosPos2;
 				    			}
 				    			
-				    			HashMap<String,String> paramsMunCol = new HashMap<String, String>();
-				    			paramsMunCol.put("pv_cdpostal_i", codPosImp);
-				    			paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
-				    			paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
-				    			paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
-				                
-				                Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
-				    			
-				                
-				    			paramDomicil.put("pv_cdedo_i",    codPosImp+edoAdosPos2);
-				    			paramDomicil.put("pv_cdmunici_i", munycol.get("CDMUNICI"));
-				    			paramDomicil.put("pv_cdcoloni_i", munycol.get("CDCOLONI"));
+				    			paramDomicil.put("pv_cdedo_i",    cli.getCodposCli()+edoAdosPos2);
+				    			paramDomicil.put("pv_cdmunici_i", null/*cliDom.getMunicipioCli()*/);
+				    			paramDomicil.put("pv_cdcoloni_i", null/*cliDom.getColoniaCli()*/);
 				    			paramDomicil.put("pv_nmnumero_i", cli.getNumeroCli());
 				    			paramDomicil.put("pv_nmnumint_i", null);
-				    			paramDomicil.put("pv_cdtipdom_i", "1");
-				    			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
-				    			paramDomicil.put("pv_swactivo_i", Constantes.SI);
-				    			
 				    			paramDomicil.put("pv_accion_i", "I");
 			
 				    			kernelManagerSustituto.pMovMdomicil(paramDomicil);
@@ -1796,15 +1707,54 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				    			
 				    			paramValoper.put("pv_otvalor01", cli.getCveEle());
 				    			paramValoper.put("pv_otvalor02", cli.getPasaporteCli());
+				    			paramValoper.put("pv_otvalor03", null);
+				    			paramValoper.put("pv_otvalor04", null);
+				    			paramValoper.put("pv_otvalor05", null);
+				    			paramValoper.put("pv_otvalor06", null);
+				    			paramValoper.put("pv_otvalor07", null);
 				    			paramValoper.put("pv_otvalor08", cli.getOrirecCli());
+				    			paramValoper.put("pv_otvalor09", null);
+				    			paramValoper.put("pv_otvalor10", null);
 				    			paramValoper.put("pv_otvalor11", cli.getNacCli());
+				    			paramValoper.put("pv_otvalor12", null);
+				    			paramValoper.put("pv_otvalor13", null);
+				    			paramValoper.put("pv_otvalor14", null);
+				    			paramValoper.put("pv_otvalor15", null);
+				    			paramValoper.put("pv_otvalor16", null);
+				    			paramValoper.put("pv_otvalor17", null);
+				    			paramValoper.put("pv_otvalor18", null);
+				    			paramValoper.put("pv_otvalor19", null);
 				    			paramValoper.put("pv_otvalor20", (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0");
+				    			paramValoper.put("pv_otvalor21", null);
+				    			paramValoper.put("pv_otvalor22", null);
+				    			paramValoper.put("pv_otvalor23", null);
+				    			paramValoper.put("pv_otvalor24", null);
 				    			paramValoper.put("pv_otvalor25", cli.getCurpCli());
+				    			paramValoper.put("pv_otvalor26", null);
+				    			paramValoper.put("pv_otvalor27", null);
+				    			paramValoper.put("pv_otvalor28", null);
+				    			paramValoper.put("pv_otvalor29", null);
+				    			paramValoper.put("pv_otvalor30", null);
+				    			paramValoper.put("pv_otvalor31", null);
+				    			paramValoper.put("pv_otvalor32", null);
+				    			paramValoper.put("pv_otvalor33", null);
+				    			paramValoper.put("pv_otvalor34", null);
+				    			paramValoper.put("pv_otvalor35", null);
+				    			paramValoper.put("pv_otvalor36", null);
+				    			paramValoper.put("pv_otvalor37", null);
 				    			paramValoper.put("pv_otvalor38", cli.getTelefonoCli());
 				    			paramValoper.put("pv_otvalor39", cli.getMailCli());
-
-				    			paramValoper.put("pv_otvalor51", cli.getFaxCli());
-				    			paramValoper.put("pv_otvalor52", cli.getCelularCli());
+				    			paramValoper.put("pv_otvalor40", null);
+				    			paramValoper.put("pv_otvalor41", null);
+				    			paramValoper.put("pv_otvalor42", null);
+				    			paramValoper.put("pv_otvalor43", null);
+				    			paramValoper.put("pv_otvalor44", null);
+				    			paramValoper.put("pv_otvalor45", null);
+				    			paramValoper.put("pv_otvalor46", null);
+				    			paramValoper.put("pv_otvalor47", null);
+				    			paramValoper.put("pv_otvalor48", null);
+				    			paramValoper.put("pv_otvalor49", null);
+				    			paramValoper.put("pv_otvalor50", null);
 				    			
 				    			kernelManagerSustituto.pMovTvaloper(paramValoper);
 				    			
@@ -1871,19 +1821,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         return SUCCESS;
     }
 
-    /////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	////////////////  GETTERS Y SETTERS  ////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
+    
+    //Getters and setters:
     
     public void setKernelManagerSustituto(KernelManagerSustituto kernelManagerSustituto) {
         this.kernelManagerSustituto = kernelManagerSustituto;
@@ -2334,26 +2273,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
 	public void setServiciosManager(ServiciosManager serviciosManager) {
 		this.serviciosManager = serviciosManager;
-	}
-
-	public FlujoVO getFlujo() {
-		return flujo;
-	}
-
-	public void setFlujo(FlujoVO flujo) {
-		this.flujo = flujo;
-	}
-	
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
 	}
     
 }

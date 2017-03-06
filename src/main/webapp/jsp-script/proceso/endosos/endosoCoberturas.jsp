@@ -14,7 +14,6 @@
     var storeIncisos_p3;
     var panelCoberturasp3;
     var paramsincisos    = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
-    var slist2		     = <s:property value="%{convertToJSON('slist2')}" escapeHtml="false" />;
     var _p3_smap1        = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
     var pantallaOrigen   = '<s:property value="smap1.pantallaOrigen" />';
     var inputCduniecop3  = '<s:property value="smap1.CDUNIECO" />';
@@ -32,6 +31,7 @@
     var urlGuardarCoberturasp3                         = '<s:url namespace="/"           action="guardarCoberturasUsuario"             />';
     var urlTatrip3                                     = '<s:url namespace="/"           action="obtenerCamposTatrigar"                />';
     var urlLoadTatrip3                                 = '<s:url namespace="/"           action="obtenerValoresTatrigar"               />';
+    var urlSaveTatrip3            = '<s:url namespace="/" action="guardarValoresTatrigar" />';
     var urlRecuperacionSimplep3                        = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
     var urlRecuperacionSimpleListap3                   = '<s:url namespace="/emision"    action="recuperacionSimpleLista"              />';
     var endcobUrlDoc                                   = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
@@ -48,10 +48,6 @@
     debug('inputCdpersonap3',inputCdpersonap3);
     debug('inputNtramitep3',inputNtramitep3);
     debug('inputAltabajap3',inputAltabajap3);
-    
-    var _p3_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-     
-    debug('_p3_flujo:',_p3_flujo);
     /*///////////////////*/
     //////variables //////
     ///////////////////////
@@ -111,10 +107,7 @@ function endcobSumit(form,confirmar)
             
             json['smap1']=_p3_smap1;
             
-            if(!Ext.isEmpty(_p3_flujo))
-            {
-                json['flujo'] = _p3_flujo;
-            }
+
             
             debug(json);
             
@@ -132,11 +125,6 @@ function endcobSumit(form,confirmar)
                 myMask.show();
             	json.smap1.confirmar = 'si';
             	confirmar = 'si';
-            	
-            	if(!Ext.isEmpty(_p3_flujo))
-                {
-                    json['flujo'] = _p3_flujo;
-                }
             	
             	Ext.Ajax.request(
                     {
@@ -213,10 +201,6 @@ function endcobSumit(form,confirmar)
             
             if(confirmar=='auto'){
             	json.smap1.confirmar = 'auto';
-            	if(!Ext.isEmpty(_p3_flujo))
-                {
-                    json['flujo'] = _p3_flujo;
-                }
             	Ext.Ajax.request(
                     {
                         url       : endcobUrlGuardar
@@ -494,8 +478,7 @@ function endcobSumit(form,confirmar)
                     root : 'slist1'
                 }
             },
-            autoLoad : false,
-
+            autoLoad : false
         });
         
         storeCoberturasEditadas_p3 = Ext.create('Ext.data.Store', {
@@ -550,11 +533,7 @@ function endcobSumit(form,confirmar)
                     callback: function(records, operation, success) {
                     	
                         // VALIDACION: Si es Suscriptor y es un Endoso de Baja, permitimos eliminar todas las coberturas (SWOBLIGA='N'):
-                        if (inputAltabajap3 === 'baja'
-                            && (
-                                CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR
-                                || RolSistema.puedeSuscribirAutos(CD_ROL_ACTUAL)
-                            )) {
+                        if(inputAltabajap3 == 'baja' && CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR || CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR_AUTO) {
                             Ext.Array.each(records, function(item, index, allItems) {
                                 item.set('SWOBLIGA','N');
                             });
@@ -630,15 +609,11 @@ function endcobSumit(form,confirmar)
                                 callback: function(records, operation, success) {
                                     
                                     // VALIDACION: Si es Suscriptor y es un Endoso de Baja, permitimos eliminar todas las coberturas (SWOBLIGA='N'):
-                                	if (inputAltabajap3 === 'baja'
-                                	    && (
-                                	        CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR
-                                	        || RolSistema.puedeSuscribirAutos(CD_ROL_ACTUAL)
-                                	    )) {
-                                	    Ext.Array.each(records, function(item, index, allItems) {
-                                	        item.set('SWOBLIGA','N');
-                                	    });
-                                	    storeCoberturasActuales_p3.commitChanges();
+                                	if(inputAltabajap3 == 'baja' && CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR || CD_ROL_ACTUAL == CD_ROL_SUSCRIPTOR_AUTO) {
+                                		Ext.Array.each(records, function(item, index, allItems) {
+                                            item.set('SWOBLIGA','N');
+                                        });
+                                        storeCoberturasActuales_p3.commitChanges();
                                 	}
                                 }
                             });
@@ -779,24 +754,6 @@ function endcobSumit(form,confirmar)
                                 debug('inciso seleccionado?', hayIncisoSeleccionado);
                                 debug('incisoSelected=', incisoSelected);
                                 debug('cellIndex=', cellIndex);
-                                
-                                try{
-                        			if(_p3_smap1.CDRAMO==Ramo.ServicioPublico &&
-                        			   _p3_smap1.cdtipsup == TipoEndoso.BajaCoberturas){ 
-                           				var garant=$.grep(slist2,function(ele){
-                           					return ele.cdgarant==record.get("GARANTIA")
-                           				});
-                           				
-                       					if(garant[0].SWOBLIG == "1"){
-                       						mensajeWarning('Esta cobertura es incancelable');
-                       						return;
-                       					}
-                        			
-                            		}
-                        		}catch(e){
-                        			debugError(e)
-                        		}
-                                
                                 
                                 if(cellIndex==1 && hayIncisoSeleccionado) {
                                 	if(record.get('SWOBLIGA')=='N' && inputAltabajap3=='baja') {
@@ -1214,7 +1171,6 @@ function endcobSumit(form,confirmar)
                                         ,width       : 600
                                         ,height      : 400
                                         ,autoScroll  : true
-                                        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                                         ,loader      :
                                         {
                                             url       : endcobUrlDoc

@@ -33,13 +33,9 @@ import com.opensymphony.xwork2.ActionContext;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
-import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
-import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradosFiltroVO;
-import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ConfiguracionCoberturaDTO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -51,10 +47,6 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
-import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
-import mx.com.gseguros.portal.despachador.service.DespachadorManager;
-import mx.com.gseguros.portal.emision.dao.EmisionDAO;
-import mx.com.gseguros.portal.general.dao.AseguradoDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.MailService;
@@ -66,12 +58,10 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
-import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.FTPSUtils;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
-import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -107,34 +97,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	
 	@Autowired
     private MailService mailService;
-	
-	@Autowired
-	private FlujoMesaControlDAO flujoMesaControlDAO;
-	
-	@Autowired
-	private EmisionDAO emisionDAO;
-	
-	@Autowired
-	private SiniestrosManager siniestrosManager;
 	    
-	@Autowired
-	private FlujoMesaControlManager flujoMesaControlManager;
-	
-	@Autowired
-	private AseguradoDAO aseguradoDAO;
-	
-	@Autowired
-	private DespachadorManager despachadorManager;
-	
-	@Autowired
-    private PersonasManager personasManager;
-	
-	@Autowired
-	private ConsultasManager consultasManager;
-	
-	@Autowired
-	private AutosSIGSDAO autosSIGSDAO;
-	
 	@Override
 	public void movimientoTvalogarGrupo(
 			String cdunieco
@@ -461,9 +424,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		params.put("nmpoliza" , nmpoliza);
 		params.put("ntramite" , ntramite);
 		Map<String,String>datos=cotizacionDAO.cargarDatosCotizacionGrupoEndoso(params);
-		
-		logger.info("datos"+datos);
-		
 		if(datos==null)
 		{
 			datos=new HashMap<String,String>();
@@ -921,18 +881,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		Map<String,String>res = cotizacionDAO.obtieneTipoValorAutomovil(params);
 		return Integer.parseInt(res.get("pv_etiqueta_o"));
 	}
-
-	public String obtieneCodigoPostalAutomovil(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac, String nmsuplem) throws Exception{
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("pv_cdunieco_i"  , cdunieco);
-		params.put("pv_cdramo_i"    , cdramo);
-		params.put("pv_estado_i"    , estado);
-		params.put("pv_nmpoliza_i"  , nmpoliza);
-		params.put("pv_nmsituac_i"  , nmsituac);
-		params.put("pv_nmsuplem_i"  , nmsuplem);
-		
-		return cotizacionDAO.obtieneCodigoPostalAutomovil(params);
-	}
 	
 	@Override
 	public List<Map<String,String>>cargarAseguradosExtraprimas(
@@ -981,6 +929,18 @@ public class CotizacionManagerImpl implements CotizacionManager
 				+ "\n#########################################"
 				);
 		return lista;
+	}
+	
+	public String obtieneCodigoPostalAutomovil(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac, String nmsuplem) throws Exception{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i"  , cdunieco);
+		params.put("pv_cdramo_i"    , cdramo);
+		params.put("pv_estado_i"    , estado);
+		params.put("pv_nmpoliza_i"  , nmpoliza);
+		params.put("pv_nmsituac_i"  , nmsituac);
+		params.put("pv_nmsuplem_i"  , nmsuplem);
+		
+		return cotizacionDAO.obtieneCodigoPostalAutomovil(params);
 	}
 	
 	@Override
@@ -1061,19 +1021,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 			paso = "Actualizando valores adicionales de situaci\u00f3n";
 			logger.debug(paso);
 			
-			cotizacionDAO.guardarExtraprimaAsegurado(
-					cdunieco
-					,cdramo
-					,estado
-					,nmpoliza
-					,nmsuplem
-					,nmsituac
-					,ocupacion
-					,extraprimaOcupacion
-					,peso
-					,estatura
-					,extraprimaSobrepeso
-					);
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("cdunieco"            , cdunieco);
+			params.put("cdramo"              , cdramo);
+			params.put("estado"              , estado);
+			params.put("nmpoliza"            , nmpoliza);
+			params.put("nmsuplem"            , nmsuplem);
+			params.put("nmsituac"            , nmsituac);
+			params.put("ocupacion"           , ocupacion);
+			params.put("extraprimaOcupacion" , extraprimaOcupacion);
+			params.put("peso"                , peso);
+			params.put("estatura"            , estatura);
+			params.put("extraprimaSobrepeso" , extraprimaSobrepeso);
+			cotizacionDAO.guardarExtraprimaAsegurado(params);
 			
 			paso = "Recuperando coberturas de extraprimas";
 			logger.debug(paso);
@@ -1307,22 +1267,27 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public String cargarCduniecoAgenteAuto(String cdagente, String cdtipram)throws Exception
+	public String cargarCduniecoAgenteAuto(String cdagente)throws Exception
 	{
-		logger.debug(Utils.log(
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-				"\n@@@@@@ cargarCduniecoAgenteAuto @@@@@@",
-				"\n@@@@@@ cdagente = ", cdagente,
-				"\n@@@@@@ cdtipram = ", cdtipram
-				));
-		
-		String cdunieco = cotizacionDAO.cargarCduniecoAgenteAuto(cdagente, cdtipram);
-		
-		logger.debug(Utils.log(
-				"\n@@@@@@ cdunieco = ", cdunieco,
-				"\n@@@@@@ cargarCduniecoAgenteAuto @@@@@@",
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
+		logger.info(
+				new StringBuilder()
+				.append("\n######################################")
+				.append("\n###### cargarCduniecoAgenteAuto ######")
+				.append("\ncdagente ")
+				.append(cdagente)
+				.toString()
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdagente",cdagente);
+		String cdunieco=cotizacionDAO.cargarCduniecoAgenteAuto(params);
+		logger.info(
+				new StringBuilder()
+				.append("\ncdunieco ")
+				.append(cdunieco)
+				.append("\n###### cargarCduniecoAgenteAuto ######")
+				.append("\n######################################")
+				.toString()
+				);
 		return cdunieco;
 	}
 	
@@ -1379,7 +1344,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			resp.setExito(false);
 			resp.setRespuesta(
 					new StringBuilder()
-					.append("No existe el par\u00e1metro #").append(timestamp)
+					.append("No existe el par&aacute;metro #").append(timestamp)
 					.toString()
 					);
 			resp.setRespuestaOculta(ex.getMessage());
@@ -2035,11 +2000,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 					{
 						logger.debug(new StringBuilder("SE AGREGA PARA COLUMNA BASE ").append(iTatri).toString());
 						iTatri.setColumna("S");
-						//Se oculta para cdsisrol indicados, la columna DERECHOS DE POLIZA, para cdtipsit RC (EGS)
-						if((RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
-							&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)&&iTatri.getLabel().equals("DERECHOS DE POLIZA")){
-							iTatri.setColumna(iTatri.COLUMNA_OCULTA);
-						}
 						tatrisitColsBase.add(iTatri);
 					}
 				}
@@ -2068,11 +2028,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 					{
 						logger.debug(new StringBuilder("SE AGREGA PARA COLUMNA DE COBERTURA ").append(iTatri).toString());
 						iTatri.setColumna("S");
-						//Se oculta para cdsisrol indicados, la columna DERECHOS DE POLIZA, para cdtipsit RC (EGS)
-						if((RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
-							&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)&&iTatri.getLabel().equals("DERECHOS DE POLIZA")){
-							iTatri.setColumna(iTatri.COLUMNA_OCULTA); //EGS
-						}
 						tatrisitColsCober.add(iTatri);
 					}
 				}
@@ -2560,7 +2515,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmpolant
 			,String nmrenova
 			,UserVO usuarioSesion
-			,boolean duplicar
 			)
 	{
 		logger.info(
@@ -2612,8 +2566,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.append("\n@@@@@@ cdideext_=")              .append(cdideext_)
 				.append("\n@@@@@@ nmpolant=")               .append(nmpolant)
 				.append("\n@@@@@@ nmrenova=")               .append(nmrenova)
-				.append("\n@@@@@@ duplicar=")               .append(duplicar)
-				.append("\n@@@@@@ usuarioSesion=")          .append(usuarioSesion.toString())
 				.toString()
 				);
 		
@@ -2629,7 +2581,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//nmpoliza
-		if(resp.isExito()&&(StringUtils.isBlank(nmpoliza) || duplicar))
+		if(resp.isExito()&&StringUtils.isBlank(nmpoliza))
 		{
 			try
 			{
@@ -2833,7 +2785,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		String  nombreCenso     = nombreCensoConfirmado;
 		
 		//enviar censo
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso)&&!sincenso&&!complemento&&StringUtils.isBlank(nombreCensoConfirmado))
 		{
 			FileInputStream input       = null;
 			Workbook        workbook    = null;
@@ -3376,7 +3328,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			            	logger.error(resp.getRespuesta(),ex);
 			            }
 			            
-			            //if(resp.isExito()&&!clasif.equals("1")) // Si el censo es distinto a Linea (menor a 50 asegurados), validamos el num. de titulares
 			            if(resp.isExito())
 			            {
 				            int nMin = 0;
@@ -3585,14 +3536,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 					if(clasif.equals("1")&&nSituac>49)
 					{
 						long timestamp  = System.currentTimeMillis();
-						//se condiciona por rol la asignaci�n de valores, para que guarde las coberturas sin necesidad de editar subgrupo, para RC y roles restringidos (EGS)
-						if(!(RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
-								&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)){
-							resp.setExito(false);
-							resp.setRespuesta(Utils.join("No se permiten mas de 49 asegurados #",timestamp));
-						}
-						//resp.setExito(false); //(EGS)
-						//resp.setRespuesta(Utils.join("No se permiten mas de 49 asegurados #",timestamp)); //(EGS)
+						resp.setExito(false);
+						resp.setRespuesta(Utils.join("No se permiten mas de 49 asegurados #",timestamp));
 						resp.setRespuestaOculta(resp.getRespuesta());
 						logger.error(resp.getRespuesta());
 					}
@@ -3663,7 +3608,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//pl censo
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
 		{
 			String nombreProcedureCenso = null;
 			String tipoCensoParam       = "AGRUPADO";
@@ -3746,7 +3691,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 			}
 		}
 		
-		if((resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||duplicar))
+		if((resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso))
 				&&StringUtils.isBlank(nombreCensoConfirmado)
 		)
 		{
@@ -3795,7 +3740,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,cdideext_
 					,usuarioSesion
 					,false
-					,duplicar
 					);
 			
 			resp.setExito(respInterna.isExito());
@@ -3853,7 +3797,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String cdideext_
 			,UserVO usuarioSesion
 			,boolean censoCompleto
-			,boolean duplicar
 			)
 	{
 		logger.info(Utils.log(
@@ -3893,15 +3836,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ cdideper_="            , cdideper_
 				,"\n@@@@@@ cdideext_="            , cdideext_
 				,"\n@@@@@@ censoCompleto="        , censoCompleto
-				,"\n@@@@@@ duplicar="             , duplicar
 				));
 		
 		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
 		resp.setSmap(new HashMap<String,String>());
 		
 		final String LINEA = "1";
-		
-		Date fechaHoy = new Date();
 		
 		//mpolisit y tvalosit
 		if(resp.isExito())
@@ -3968,7 +3908,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		if(resp.isExito()
-				&&(!hayTramite||hayTramiteVacio||duplicar)
+				&&(!hayTramite||hayTramiteVacio)
 				&&
 				(
 					RolSistema.AGENTE.getCdsisrol().equals(cdsisrol)
@@ -3982,7 +3922,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//sigsvdef
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto||duplicar)&&asincrono==false)
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto)&&asincrono==false)
 		{
 			try
 			{
@@ -4012,9 +3952,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 				try
 	            {
 	            	cotizacionDAO.grabarEvento(new StringBuilder("\nCotizacion grupo")
-	            	    ,Constantes.MODULO_COTIZACION //cdmodulo
-	            	    ,Constantes.EVENTO_COTIZAR    //cdevento
-	            	    ,fechaHoy   //fecha
+	            	    ,"COTIZACION" //cdmodulo
+	            	    ,"COTIZA"     //cdevento
+	            	    ,new Date()   //fecha
 	            	    ,cdusuari
 	            	    ,((UserVO)ActionContext.getContext().getSession().get("USUARIO")).getRolActivo().getClave()
 	            	    ,ntramite
@@ -4146,7 +4086,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//tramite
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado||duplicar))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||censoAtrasado))
 		{
 			try
 			{
@@ -4155,16 +4095,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 					Map<String,String>otvalorMesaControl=new HashMap<String,String>();
 					otvalorMesaControl.put("otvalor01" , clasif);
 					otvalorMesaControl.put("otvalor02" , sincenso ? "S" : "N");
-					
-					Map<String,String> datosFlujo = consultasDAO.recuperarDatosFlujoEmision(cdramo,"C");
-					
-					String estatus = EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo();
-					try {
-            			estatus = flujoMesaControlDAO.recuperarEstatusDefectoRol(cdsisrol);
-            		} catch (Exception ex) {
-            			logger.warn("Error sin impacto al querer recuperar estatus por defecto de un rol", ex);
-            		}
-					
 					ntramite = mesaControlDAO.movimientoMesaControl(
 							cdunieco
 							,cdramo
@@ -4174,44 +4104,21 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,cdunieco
 							,cdunieco
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,fechaHoy
+							,new Date()
 							,cdagente
 							,null      //referencia
 							,null      //nombre
-							,fechaHoy
-							,estatus
-							,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
+							,new Date()
+							,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							,null      //comments
 							,nmpoliza
 							,cdtipsit
 							,cdusuari
-							,cdsisrol
-							,null //swimpres
-							,datosFlujo.get("cdtipflu")
-	            			,datosFlujo.get("cdflujomc")
-							,otvalorMesaControl
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(), null, null, null, false, null
+							,cdsisrol, null,null,null
+							,otvalorMesaControl, null
 							);
 					resp.getSmap().put("ntramite" , ntramite);
 					
-					RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-					        cdusuari,
-					        cdsisrol,
-					        ntramite,
-					        estatus,
-					        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
-					        null,  // cdrazrecha
-					        cdusuari,
-					        cdsisrol,
-					        true,  // permisoAgente
-					        false, //porEscalamiento
-					        fechaHoy,
-					        false  // sinGrabarDetalle
-					        );
-					
-					resp.setRespuesta(despacho.getMessage());
-					
-					/* JTEZVA 7 sep 2016
-					 * el tramite no se turna por lo que no lleva doble detalle
 					mesaControlDAO.movimientoDetalleTramite(
 							ntramite
 							,new Date()
@@ -4223,21 +4130,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,"S"
 							,null
 							,null
-							,estatus
-							,false
+							//,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo()
+							//,false
 							);
-					*/
 					
-					/* ya no turna, solo lo crea y ya JTEZVA 2016 09 02
-					 * resp.getSmap().put("nombreUsuarioDestino"
+					resp.getSmap().put("nombreUsuarioDestino"
 							,mesaControlDAO.turnaPorCargaTrabajo(ntramite,"COTIZADOR",EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())
-					);*/
+					);
 					
 					try
 		            {
 						cotizacionDAO.grabarEvento(new StringBuilder("\nNuevo tramite grupo")
-		            	    ,Constantes.MODULO_EMISION    //cdmodulo
-		            	    ,Constantes.EVENTO_GENERAR_TRAMITE_GRUPO //cdevento
+		            	    ,"EMISION"    //cdmodulo
+		            	    ,"GENTRAGRUP" //cdevento
 		            	    ,new Date()   //fecha
 		            	    ,cdusuari
 		            	    ,((UserVO)ActionContext.getContext().getSession().get("USUARIO")).getRolActivo().getClave()
@@ -4277,24 +4182,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,null    //cdsucdoc
 							,null    //comments
 							,valoresTramite);
-					
-					if (duplicar) {
-					    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-					            cdusuari,
-					            cdsisrol,
-					            ntramiteActualiza,
-					            EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo(),
-					            Utils.join("Se duplica la cotizaci\u00f3n para generar la nueva solicitud ", nmpoliza),
-					            null,  // cdrazrecha,
-					            null,  // cdusuariDes,
-					            null,  // cdsisrolDes,
-					            true,  // permisoAgente,
-					            false, // porEscalamiento,
-					            fechaHoy,
-					            false  // sinGrabarDetalle
-					            );
-					    resp.setRespuesta(despacho.getMessage());
-					}
 				}
 			}
 			catch(Exception ex)
@@ -4308,7 +4195,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		
 		//mpoliage
-		if(resp.isExito()&&(!hayTramite||hayTramiteVacio||duplicar))
+		if(resp.isExito()&&(!hayTramite||hayTramiteVacio))
 		{
 			try
 			{
@@ -4353,7 +4240,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		{
 			try
 			{
-				logger.debug("@@@@@@@@@@lanzatarAsincrono1 ",lanzatarAsincrono);
 				if(lanzatarAsincrono)
 				{
 					new EjecutaTarificacionConcurrente(
@@ -4365,8 +4251,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,"0" //nmsituac
 							,"1" //tipotari
 							,cdperpag
-							,cdusuari
-							,cdsisrol
 							).start();
 				}
 				else
@@ -4391,11 +4275,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 							,"1" //tipotari
 							,cdperpag
 							);
-					logger.debug("##############GRABANDO EVENTO DE COTIZACION 1##############");
-					cotizacionDAO.grabarEvento(new StringBuilder(),
-					        Constantes.MODULO_COTIZACION,
-					        Constantes.EVENTO_COTIZAR,
-					        new Date(), cdusuari, cdsisrol, ntramite, cdunieco, cdramo, "W", nmpoliza, nmpoliza, cdagente, "", "", null);
 				}
 			}
 			catch(Exception ex)
@@ -4424,20 +4303,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,LINEA_EXTENDIDA
 					,grupos
 					,cdtipsit
-					,cdusuari
-					,cdsisrol
-					,duplicar
 					);
 		}
 		
 		if(resp.isExito())
 		{
-		    String mensaje = resp.getRespuesta();
-			resp.setRespuesta(Utils.join("Se gener\u00f3 el tr\u00e1mite ", ntramite,
-			        StringUtils.isBlank(mensaje)
-			            ? ""
-			            : (Utils.join(". ", mensaje))
-			));
+			resp.setRespuesta(new StringBuilder("Se gener&oacute; el tr&aacute;mite ").append(ntramite).toString());
 			resp.setRespuestaOculta("Todo OK");
 		}
 		
@@ -4487,29 +4358,29 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public List<Map<String,String>> cargarAseguradosExtraprimas2(
+	public ManagerRespuestaSlistVO cargarAseguradosExtraprimas2(
 			String cdunieco
 			,String cdramo
 			,String estado
 			,String nmpoliza
 			,String nmsuplem
 			,String cdgrupo
-			)throws Exception
+			)
 	{
-		logger.info(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@"
-				,"\n@@@@@@ cdunieco=" , cdunieco
-				,"\n@@@@@@ cdramo="   , cdramo
-				,"\n@@@@@@ estado="   , estado
-				,"\n@@@@@@ nmpoliza=" , nmpoliza
-				,"\n@@@@@@ nmsuplem=" , nmsuplem
-				,"\n@@@@@@ cdgrupo="  , cdgrupo
-				));
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ cdgrupo=") .append(cdgrupo)
+				.toString()
+				);
 		
-		List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
-		
-		String paso = "Recuperando asegurados extraprima";
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
 		
 		//cargar situaciones grupo
 		try
@@ -4522,6 +4393,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,nmsuplem
 					,cdgrupo);
 			
+			List<Map<String,String>>editadas=new ArrayList<Map<String,String>>();
 			for(Map<String,String>situacion:situaciones)
 		    {
 		    	String tpl = null;
@@ -4531,13 +4403,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 		    	}
 		    	else
 		    	{
-		    		tpl = Utils.join(
-		    				"Familia (" , situacion.get("familia") , ") de " , situacion.get("titular")
-		    				);
+		    		tpl = new StringBuilder()
+    	                    .append("Familia (")
+    	                    .append(situacion.get("familia"))
+    	                    .append(") de ")
+    	                    .append(situacion.get("titular"))
+    	            		.toString();
 		    	}
 		    	situacion.put("agrupador",
-		    			Utils.join(StringUtils.leftPad(situacion.get("familia"),3,"0") , "_" , tpl)
-		    			);
+		    			new StringBuilder()
+		    	            .append(StringUtils.leftPad(situacion.get("familia"),3,"0"))
+		    	            .append("_")
+		    	            .append(tpl)
+		    	            .toString());
 		    	
 		    	Map<String,String>editada=new HashMap<String,String>();
 		    	for(Entry<String,String>en:situacion.entrySet())
@@ -4555,21 +4433,36 @@ public class CotizacionManagerImpl implements CotizacionManager
 		    			editada.put(key,en.getValue());
 		    		}
 		    	}
-		    	lista.add(editada);
+		    	editadas.add(editada);
 		    }
+			
+			resp.setSlist(editadas);
 		}
 		catch(ApplicationException ax)
 		{
-			Utils.generaExcepcion(ax, paso);
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder(ax.getMessage()).append(" #").append(timestamp).toString());
+			resp.setRespuestaOculta(ax.getMessage());
+			logger.error(resp.getRespuesta(),ax);
+		}
+		catch(Exception dx)
+		{
+			long timestamp = System.currentTimeMillis();
+			resp.setExito(false);
+			resp.setRespuesta(new StringBuilder("Error al obtener situaciones #").append(timestamp).toString());
+			resp.setRespuestaOculta(dx.getMessage());
+			logger.error(resp.getRespuesta(),dx);
 		}
 		
-		logger.info(Utils.log(
-				 "\n@@@@@@ lista=" , lista
-				,"\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-		
-		return lista;
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargarAseguradosExtraprimas2 @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
 	}
 	
 	public ManagerRespuestaVoidVO guardarValoresSituaciones(
@@ -4853,8 +4746,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		String  nombreCenso   = null;
 		boolean pagoRepartido = false;
 		
-		int     filasError    = 0;
-		
 		if(resp.isExito())
 		{
 			try
@@ -4939,10 +4830,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            StringBuilder bufferErroresCenso = new StringBuilder();
 	            int           filasLeidas        = 0;
 	            int           filasProcesadas    = 0;
-	            filasError         = 0;
-	            
-	            Map<Integer,List<Map<String,String>>> listaFamilias = new HashMap<Integer, List<Map<String,String>>>(); 
-	            List<Map<String,String>>             filasFamilia = new ArrayList<Map<String,String>>(); 
+	            int           filasError         = 0;
 	            
 	            Map<Integer,String>  familias       = new LinkedHashMap<Integer,String>();
 				Map<Integer,Boolean> estadoFamilias = new LinkedHashMap<Integer,Boolean>();
@@ -4979,10 +4867,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                StringBuilder bufferLineaStr = new StringBuilder();
 	                boolean       filaBuena      = true;
 	                
-	                String fechaNac =  null;
-	                String fecanti  = null;
-	                String feingreso =  null;
-	                
 	                if(Utils.isRowEmpty(row))
 	                {
 	                	break;
@@ -4992,10 +4876,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                filasLeidas = filasLeidas + 1;
 	                
 	                String parentesco = null;
-	                String dependiente = null;
 	                String nombre     = "";
 	                double cdgrupo    = -1d;
-	              //GRUPO
+	                
 	                try
                 	{
 	                	cdgrupo = row.getCell(0).getNumericCellValue();
@@ -5019,55 +4902,17 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	}
 	                catch(Exception ex)
 	                {
-	                	//filaBuena = false;
-	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
-	                    try{
-                            cdgrupo = Double.parseDouble(row.getCell(0).getStringCellValue());
-                            logger.debug("GRUPO: "+(row.getCell(0).getStringCellValue()+"|"));
-                            bufferLinea.append(row.getCell(0).getStringCellValue()+"|");
-                            if(cdgrupo>grupos.size())
-                            {
-                                bufferErroresCenso.append(Utils.join("Grupo no permitido: ",cdgrupo," (grupos: ",grupos.size(),") en la fila ",fila," "));
-                                throw new ApplicationException("El grupo de excel no existe");
-                            }
-                        }catch (Exception e) {
-                            filaBuena = false;
-                            bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
-                        }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Grupo' (A) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
 	                }
 	                
-	              //CERTIFICADO
-	                try {
-		                auxCell=row.getCell(1);
-		                dependiente = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|";
-		                logger.debug("CERTIFICADO: "+dependiente);
-		                bufferLinea.append(dependiente);
-	                } catch(Exception ex) {
-	                	logger.error("error al leer dependiente como numero, se intentara como string:",ex);
-	                	try {
-	                		dependiente = row.getCell(1).getStringCellValue()+"|";
-	                		if("|".equals(dependiente)) {
-	                			dependiente = "0|";
-	                		}
-	                		logger.debug("CERTIFICADO: "+dependiente);
-			                bufferLinea.append(dependiente);
-	                	} catch(Exception ex2) {
-		                	logger.error("error dependiente:",ex2);
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Certificado' (B) de la fila ",fila," "));
-		                }
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
-	                }
-	                
-	              //PARENTESCO
 	                try
                 	{
-	                	parentesco = row.getCell(2).getStringCellValue();
+	                	parentesco = row.getCell(1).getStringCellValue();
 	                	if(StringUtils.isBlank(parentesco)
                 				||(!parentesco.equals("T")
                 						&&!parentesco.equals("H")
@@ -5102,22 +4947,48 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	filaBuena = false;
 	                	if(fila==1)
 	                	{
-	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (C) de la fila ",fila," la primer fila debe ser titular, se excluir\u00e1n las filas hasta el siguiente titular "));
+	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," la primer fila debe ser titular, se excluir\u00e1n las filas hasta el siguiente titular "));
 	                	}
 	                	else
 	                	{
-	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (C) de la fila ",fila," "));
+	                		bufferErroresCenso.append(Utils.join("Error en el campo 'Parentesco' (B) de la fila ",fila," "));
 	                	}
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+	                }
+	                
+	                try
+                	{
+		                logger.debug(
+		                		new StringBuilder("PATERNO: ")
+		                		.append(row.getCell(2).getStringCellValue())
+		                		.append("|")
+		                		.toString()
+		                		);
+		                bufferLinea.append(
+		                		new StringBuilder(row.getCell(2).getStringCellValue())
+		                		.append("|")
+		                		.toString()
+		                		);
+		                
+		                nombre = Utils.join(nombre,row.getCell(2).getStringCellValue()," ");
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (C) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
 	                }
-	              //PATERNO
+	                
 	                try
                 	{
 		                logger.debug(
-		                		new StringBuilder("PATERNO: ")
+		                		new StringBuilder("MATERNO: ")
 		                		.append(row.getCell(3).getStringCellValue())
 		                		.append("|")
 		                		.toString()
@@ -5133,17 +5004,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido paterno' (D) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (D) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
 	                }
-	              //MATERNO
+	                
 	                try
                 	{
 		                logger.debug(
-		                		new StringBuilder("MATERNO: ")
+		                		new StringBuilder("NOMBRE: ")
 		                		.append(row.getCell(4).getStringCellValue())
 		                		.append("|")
 		                		.toString()
@@ -5159,42 +5030,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Apellido materno' (E) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (E) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
 	                }
-	              //PRIMER NOMBRE
+	                
 	                try
                 	{
-		                logger.debug(
-		                		new StringBuilder("NOMBRE: ")
-		                		.append(row.getCell(5).getStringCellValue())
-		                		.append("|")
-		                		.toString()
-		                		);
-		                bufferLinea.append(
-		                		new StringBuilder(row.getCell(5).getStringCellValue())
-		                		.append("|")
-		                		.toString()
-		                		);
-		                
-		                nombre = Utils.join(nombre,row.getCell(5).getStringCellValue()," ");
-                	}
-	                catch(Exception ex)
-	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Nombre' (F) de la fila ",fila," "));
-	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
-	                }
-	              //SEGUNDO NOMBRE
-	                try
-                	{
-		                auxCell=row.getCell(6);
+		                auxCell=row.getCell(5);
 		                logger.debug(
 		                		new StringBuilder("SEGUNDO NOMBRE: ")
 		                		.append(
@@ -5215,31 +5060,25 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                
 		                if("T".equals(parentesco))
 		                {
-		                	if(nFamilia > 0){
-		                		listaFamilias.put(nFamilia, filasFamilia);
-		                		filasFamilia = new ArrayList<Map<String,String>>(); 
-		                	}
-		                	
 		                	nFamilia++;
 		                	familias.put(nFamilia,"");
 		                	estadoFamilias.put(nFamilia,true);
 		                	titulares.put(nFamilia,nombre);
-		                	
 		                }
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (G) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (F) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
 	                }
-	              //SEXO
+	                
 	                try
                 	{
-	                	String sexo = row.getCell(7).getStringCellValue();
+	                	String sexo = row.getCell(6).getStringCellValue();
 	                	if(StringUtils.isBlank(sexo)
                 				||(!sexo.equals("H")&&!sexo.equals("M")))
                 		{
@@ -5260,16 +5099,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (H) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Sexo' (G) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
 	                }
-	              //FECHA NACIMIENTO
+	                
 	                try
                 	{
-		                auxDate=row.getCell(8).getDateCellValue();
+		                auxDate=row.getCell(7).getDateCellValue();
 		                if(auxDate!=null)
 		                {
 		                	Calendar cal = Calendar.getInstance();
@@ -5281,11 +5120,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		throw new ApplicationException("El anio de la fecha no es valido");
 		                	}
 		                }
-		                
-		                fechaNac = auxDate!=null?
-        						renderFechas.format(auxDate)
-        						:"";
-        						
 		                logger.debug(
 		                		new StringBuilder("FECHA NACIMIENTO: ")
 		                		.append(
@@ -5304,53 +5138,12 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	}
 	                catch(Exception ex)
 	                {
-	                	//filaBuena = false;
-	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (I) de la fila ",fila," "));
-	                    try
-	                    {
-	                        //auxDate=row.getCell(8).getDateCellValue();
-	                        auxDate= renderFechas.parse(row.getCell(8).getStringCellValue());
-	                        if(auxDate!=null)
-	                        {
-	                            Calendar cal = Calendar.getInstance();
-	                            cal.setTime(auxDate);
-	                            if(cal.get(Calendar.YEAR)>2100
-	                                    ||cal.get(Calendar.YEAR)<1900
-	                                    )
-	                            {
-	                                throw new ApplicationException("El anio de la fecha no es valido");
-	                            }
-	                        }
-	                        
-	                        fechaNac = auxDate!=null?
-	                                renderFechas.format(auxDate)
-	                                :"";
-	                                
-	                        logger.debug(
-	                                new StringBuilder("FECHA NACIMIENTO: ")
-	                                .append(
-	                                        auxDate!=null?
-	                                                renderFechas.format(auxDate)
-	                                                :""
-	                                )
-	                                .append("|")
-	                                .toString()
-	                                );
-	                        bufferLinea.append(
-	                                auxDate!=null?
-	                                        new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
-	                                        :"|"
-	                                );
-	                    }
-	                    catch(Exception e)
-	                    {
-	                        filaBuena = false;
-	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (I) de la fila ",fila," "));
-	                    }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de nacimiento' (H) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
 	                }
 	                
 	                String codpostal = null;
@@ -5359,12 +5152,12 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	{
 		                logger.debug(
 		                		new StringBuilder("COD POSTAL: ")
-		                		.append(String.format("%.0f",row.getCell(9).getNumericCellValue()))
+		                		.append(String.format("%.0f",row.getCell(8).getNumericCellValue()))
 		                		.append("|")
 		                		.toString()
 		                		);
 		                bufferLinea.append(
-		                		new StringBuilder(String.format("%.0f",row.getCell(9).getNumericCellValue()))
+		                		new StringBuilder(String.format("%.0f",row.getCell(8).getNumericCellValue()))
 		                		.append("|")
 		                		.toString()
 		                		);
@@ -5378,11 +5171,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	try
 	                	{
 	                		logger.debug(Utils.log("COD POSTAL: "
-	                				,row.getCell(9).getStringCellValue()
+	                				,row.getCell(8).getStringCellValue()
 			                		,"|"
 			                		));
 			                bufferLinea.append(Utils.join(
-			                		row.getCell(9).getStringCellValue()
+			                		row.getCell(8).getStringCellValue()
 			                		,"|"
 			                		));
 			                
@@ -5391,12 +5184,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                catch(Exception ex)
 		                {
 		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (J) de la fila ",fila," "));
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' (I) de la fila ",fila," "));
 		                }
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
 	                }
 	                
 	                logger.debug(">>> Validando codigo postal existente en el producto");
@@ -5413,6 +5206,30 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	{
 		                logger.debug(
 		                		new StringBuilder("ESTADO: ")
+		                		.append(row.getCell(9).getStringCellValue())
+		                		.append("|")
+		                		.toString()
+		                		);
+		                bufferLinea.append(
+		                		new StringBuilder(row.getCell(9).getStringCellValue())
+		                		.append("|")
+		                		.toString()
+		                		);
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado' (J) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
+	                }
+	                
+	                try
+                	{
+		                logger.debug(
+		                		new StringBuilder("MUNICIPIO: ")
 		                		.append(row.getCell(10).getStringCellValue())
 		                		.append("|")
 		                		.toString()
@@ -5426,17 +5243,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado' (K) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Municipio' (K) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
 	                }
-	              //MUNICIPIO
+	                
 	                try
                 	{
 		                logger.debug(
-		                		new StringBuilder("MUNICIPIO: ")
+		                		new StringBuilder("COLONIA: ")
 		                		.append(row.getCell(11).getStringCellValue())
 		                		.append("|")
 		                		.toString()
@@ -5450,17 +5267,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Municipio' (L) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Colonia' (L) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
 	                }
-	              //COLONIA
+	                
 	                try
                 	{
 		                logger.debug(
-		                		new StringBuilder("COLONIA: ")
+		                		new StringBuilder("CALLE: ")
 		                		.append(row.getCell(12).getStringCellValue())
 		                		.append("|")
 		                		.toString()
@@ -5474,40 +5291,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Colonia' (M) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Calle' (M) de la fila ",fila," "));
 	                }
 	                finally
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
 	                }
-	              //CALLE
+	                
 	                try
                 	{
-		                logger.debug(
-		                		new StringBuilder("CALLE: ")
-		                		.append(row.getCell(13).getStringCellValue())
-		                		.append("|")
-		                		.toString()
-		                		);
-		                bufferLinea.append(
-		                		new StringBuilder(row.getCell(13).getStringCellValue())
-		                		.append("|")
-		                		.toString()
-		                		);
-                	}
-	                catch(Exception ex)
-	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Calle' (N) de la fila ",fila," "));
-	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
-	                }
-	              //NUM. EXTERIOR
-	                try
-                	{
-	                	String numExt = extraerStringDeCelda(row.getCell(14));
+	                	String numExt = extraerStringDeCelda(row.getCell(13));
 	                	if(StringUtils.isBlank(numExt))
 	                	{
 	                		throw new ApplicationException("Falta numero exterior");
@@ -5518,32 +5311,32 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (O) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero exterior' (N) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
 	                }
-	              //NUM. INTERIOR
+	                
 	                try
                 	{
-		                String numInt = extraerStringDeCelda(row.getCell(15));
+		                String numInt = extraerStringDeCelda(row.getCell(14));
 		                logger.debug(Utils.log("NUM INT: ",numInt,"|"));
 		                bufferLinea.append(Utils.join(numInt,"|"));
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero interior' (P) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Numero interior' (O) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
 	                }
-	              //RFC
+	                
 	                try
                 	{
-	                	auxCell = row.getCell(16);
+	                	auxCell = row.getCell(15);
 		                logger.debug(Utils.log("RFC: ",auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 		                bufferLinea.append(Utils.join(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
 		                if(
@@ -5558,16 +5351,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'RFC' (Q) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'RFC' (P) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
 	                }
-	              //CORREO
+	                
 	                try
                 	{
-		                auxCell=row.getCell(17);
+		                auxCell=row.getCell(16);
 		                logger.debug(
 		                		new StringBuilder("CORREO: ")
 		                		.append(
@@ -5586,17 +5379,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (R) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Correo' (Q) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(17)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
 	                }
-	              //TELEFONO
+	                
 	                try
                 	{
-	                    logger.debug("Se intenta como Entero ==> ");
-	                    auxCell=row.getCell(18);
+		                auxCell=row.getCell(17);
 		                logger.debug(
 		                		new StringBuilder("TELEFONO: ")
 		                		.append(
@@ -5615,87 +5407,52 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	}
 	                catch(Exception ex)
 	                {
-	                	try
-	                    {
-	                	    logger.debug("Se intenta como String ==> ");
-	                        auxCell=row.getCell(18);
-	                        logger.debug(
-	                                new StringBuilder("TELEFONO: ")
-	                                .append(
-	                                        auxCell!=null?
-	                                                auxCell.getStringCellValue()
-	                                                :""
-	                                )
-	                                .append("|")
-	                                .toString()
-	                                );
-	                        bufferLinea.append(
-	                                auxCell!=null?
-	                                        new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-	                                        :"|"
-	                                );
-	                    }
-	                    catch(Exception ex2)
-	                    {
-	                        logger.debug("Se intenta como ==> "+ex2);
-	                        filaBuena = false;
-	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono :/' (S) de la fila ",fila," "));
-	                    }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Telefono' (R) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(17)),"-"));
 	                }
-	              //IDENTIDAD NO.DE EMPLEADO
+	                
 	                try
                 	{
-		                auxCell=row.getCell(19);
+		                auxCell=row.getCell(18);
 		                if(pideNumCliemte&&
 		                		(auxCell==null||auxCell.getStringCellValue()==null||StringUtils.isBlank(auxCell.getStringCellValue()))
 		                )
 		                {
 		                	throw new ApplicationException("Necesito el numero de empleado");
 		                }
-		                logger.debug("IDENTIDAD: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                
-		                if(cdunieco.equalsIgnoreCase("1403")){
-		                	if(auxCell!=null){
-		                		//Validamos que en verdad
-		                		String identidad = auxCell.getStringCellValue();
-		                		String identidadModificada[] = identidad.split("\\-");
-		                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
-		                		logger.debug("Seccion 1 IDENTIDAD : {}",seccion1);
-		                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
-		                		logger.debug("Seccion 2 IDENTIDAD : {}",seccion2);
-		                		
-		                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
-		                			bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
-		                		}else{
-		                			//mandamos excepcion
-			                		throw new ApplicationException("No es numero");
-		                		}		                		
-		                	}else{
-		                		//mandamos excepcion
-		                		throw new ApplicationException("La identidad no puede ser null");
-		                	}
-		                }else{
-		                	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-		                }
+		                logger.debug(
+		                		new StringBuilder("IDENTIDAD: ")
+		                		.append(
+		                				auxCell!=null?
+		                						auxCell.getStringCellValue()
+		                						:""
+		                		)
+		                		.append("|")
+		                		.toString()
+		                		);
+		                bufferLinea.append(
+		                		auxCell!=null?
+		                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+		                				:"|"
+		                		);
                 	}
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (T) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (S) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
 	                }
 	                
-	              //FECHA DE RECONOCIMIENTO DE ANTIGUEDAD
 	                try
                 	{
-		                auxDate=row.getCell(20)!=null?row.getCell(20).getDateCellValue():null;
+		                auxDate=row.getCell(19)!=null?row.getCell(19).getDateCellValue():null;
 		                if(auxDate!=null)
 		                {
 		                	Calendar cal = Calendar.getInstance();
@@ -5707,10 +5464,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		throw new ApplicationException("El anio de la fecha de reconocimiento de antiguedad no es valido");
 		                	}
 		                }
-		                fecanti = auxDate!=null?
-        						renderFechas.format(auxDate)
-        						:"";
-        						
 		                logger.debug(
 		                		new StringBuilder("FECHA RECONOCIMIENTO ANTIGUEDAD: ")
 		                		.append(
@@ -5729,67 +5482,17 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	}
 	                catch(Exception ex)
 	                {
-	                	//filaBuena = false;
-	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (U) de la fila ",fila," "));
-	                    try
-	                    {
-	                        auxDate=row.getCell(20)!=null?renderFechas.parse(row.getCell(20).getStringCellValue()):null;
-	                        if(auxDate!=null)
-	                        {
-	                            Calendar cal = Calendar.getInstance();
-	                            cal.setTime(auxDate);
-	                            if(cal.get(Calendar.YEAR)>2100
-	                                    ||cal.get(Calendar.YEAR)<1900
-	                                    )
-	                            {
-	                                throw new ApplicationException("El anio de la fecha de reconocimiento de antiguedad no es valido");
-	                            }
-	                        }
-	                        fecanti = auxDate!=null?
-	                                renderFechas.format(auxDate)
-	                                :"";
-	                                
-	                        logger.debug(
-	                                new StringBuilder("FECHA RECONOCIMIENTO ANTIGUEDAD: ")
-	                                .append(
-	                                        auxDate!=null?
-	                                                renderFechas.format(auxDate)
-	                                                :""
-	                                )
-	                                .append("|")
-	                                .toString()
-	                                );
-	                        bufferLinea.append(
-	                                auxDate!=null?
-	                                        new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
-	                                        :"|"
-	                                );
-	                    }
-	                    catch(Exception ex3)
-	                    {
-	                        filaBuena = false;
-	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (U) de la fila ",fila," "));
-	                    }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de reconocimiento antiguedad' (T) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(20)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
-	              //OCUPACION
-	                try {
-		                auxCell=row.getCell(21);
-		                logger.debug("OCUPACION: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ocupaci&oacute;n' (V) de la fila ",fila," "));
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(21)),"-"));
-	                }
-	              //EXT. OCUPACIONAL
+	                
 	                try
                 	{
-		                auxCell=row.getCell(22);
+		                auxCell=row.getCell(20);
 		                logger.debug(
 		                		new StringBuilder("EXTRAPRIMA OCUPACION: ")
 		                		.append(
@@ -5804,37 +5507,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                }
 	                catch(Exception ex)
 	                {
-	                	//filaBuena = false;
-	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (W) de la fila ",fila," "));
-	                    try
-	                    {
-	                        auxCell=row.getCell(22);
-	                        logger.debug(
-	                                new StringBuilder("EXTRAPRIMA OCUPACION: ")
-	                                .append(
-	                                        auxCell!=null?
-	                                                new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-	                                                :"|"
-	                                ).toString());
-	                        bufferLinea.append(
-	                                auxCell!=null?
-	                                        new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-	                                        :"|");
-	                    }
-	                    catch(Exception e)
-	                    {
-	                        filaBuena = false;
-	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (W) de la fila ",fila," "));
-	                    }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de ocupacion' (U) de la fila ",fila," "));
 	                }
                     finally
                     {
-                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(22)),"-"));
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(8)),"-"));
                     }
-	              //PESO
+	                
 	                try
                 	{
-		                auxCell=row.getCell(23);
+		                auxCell=row.getCell(21);
 		                logger.debug(
 		                		new StringBuilder("PESO: ")
 		                		.append(
@@ -5849,37 +5532,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                }
 	                catch(Exception ex)
 	                {
-	                	//filaBuena = false;
-	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (X) de la fila ",fila," "));
-	                    try
-	                    {
-	                        auxCell=row.getCell(23);
-	                        logger.debug(
-	                                new StringBuilder("PESO: ")
-	                                .append(
-	                                        auxCell!=null?
-	                                                new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-	                                                :"|"
-	                                ).toString());
-	                        bufferLinea.append(
-	                                auxCell!=null?
-	                                        new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-	                                        :"|");
-	                    }
-	                    catch(Exception ex2)
-	                    {
-	                        filaBuena = false;
-	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (X) de la fila ",fila," "));
-	                    }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Peso' (V) de la fila ",fila," "));
 	                }
                     finally
                     {
-                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(23)),"-"));
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(9)),"-"));
                     }
-	              //ESTATURA
+	                
 	                try
                 	{
-		                auxCell=row.getCell(24);
+		                auxCell=row.getCell(22);
 		                logger.debug(
 		                		new StringBuilder("ESTATURA: ")
 		                		.append(
@@ -5894,37 +5557,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                }
 	                catch(Exception ex)
 	                {
-	                	//filaBuena = false;
-	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (Y) de la fila ",fila," "));
-	                    try
-	                    {
-	                        auxCell=row.getCell(24);
-	                        logger.debug(
-	                                new StringBuilder("ESTATURA: ")
-	                                .append(
-	                                        auxCell!=null?
-	                                                new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-	                                                :"|"
-	                                ).toString());
-	                        bufferLinea.append(
-	                                auxCell!=null?
-	                                        new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-	                                        :"|");
-	                    }
-	                    catch(Exception e)
-	                    {
-	                        filaBuena = false;
-	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (Y) de la fila ",fila," "));
-	                    }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estatura' (W) de la fila ",fila," "));
 	                }
                     finally
                     {
-                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(24)),"-"));
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(10)),"-"));
                     }
-	              //EXT. SOBREPESO
+	                
 	                try
                 	{
-		                auxCell=row.getCell(25);
+		                auxCell=row.getCell(23);
 		                logger.debug(
 		                		new StringBuilder("EXTRAPRIMA SOBREPESO: ")
 		                		.append(
@@ -5939,38 +5582,19 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                }
 	                catch(Exception ex)
 	                {
-	                	//filaBuena = false;
-	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (Z) de la fila ",fila," "));
-	                    try
-	                    {
-	                        auxCell=row.getCell(25);
-	                        logger.debug(
-	                                new StringBuilder("EXTRAPRIMA SOBREPESO: ")
-	                                .append(
-	                                        auxCell!=null?
-	                                                new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-	                                                :"|"
-	                                ).toString());
-	                        bufferLinea.append(
-	                                auxCell!=null?
-	                                        new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-	                                        :"|");
-	                    }
-	                    catch(Exception e)
-	                    {
-	                        filaBuena = false;
-	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (Z) de la fila ",fila," "));
-	                    }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Extraprima de sobrepeso' (X) de la fila ",fila," "));
 	                }
                     finally
                     {
-                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(25)),"-"));
+                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(11)),"-"));
                     }
 	                
-	              //ESTADO CIVIL
+	                /* nuevos para SSI */
+	                
 	                try
                 	{
-	                	String estadoCivil = row.getCell(26).getStringCellValue();
+	                	String estadoCivil = row.getCell(24).getStringCellValue();
 	                	
 	                	//TODO: quitar cdtipsit estatico y ponerlo por subramo
 	                	if("SSI".equals(cdtipsit)&&StringUtils.isBlank(estadoCivil))
@@ -6007,16 +5631,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado civil' (AA) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Estado civil' (Y) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(26)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(24)),"-"));
 	                }
-	              //FECHA INGRESO
+	                
 	                try
                 	{
-		                auxDate=row.getCell(27)!=null?row.getCell(27).getDateCellValue():null;
+		                auxDate=row.getCell(25)!=null?row.getCell(25).getDateCellValue():null;
 		                if(auxDate!=null)
 		                {
 		                	Calendar cal = Calendar.getInstance();
@@ -6028,11 +5652,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		throw new ApplicationException("El anio de la fecha de ingreso no es valido");
 		                	}
 		                }
-		                
-		                feingreso = auxDate!=null?
-        						renderFechas.format(auxDate)
-        						:"";
-        						
 		                logger.debug(
 		                		new StringBuilder("FECHA INGRESO EMPLEADO: ")
 		                		.append(
@@ -6051,81 +5670,17 @@ public class CotizacionManagerImpl implements CotizacionManager
                 	}
 	                catch(Exception ex)
 	                {
-	                	//filaBuena = false;
-	                	//bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (AB) de la fila ",fila," "));
-	                    try
-	                    {
-	                        //auxDate=row.getCell(27)!=null?row.getCell(27).getDateCellValue():null;
-	                        auxDate= ((extraerStringDeCelda(row.getCell(27))!=null) && 
-                                    StringUtils.isNotBlank(extraerStringDeCelda(row.getCell(27)))) ?
-                                            renderFechas.parse(extraerStringDeCelda(row.getCell(27))):
-                                            null;
-	                        if(auxDate!=null)
-	                        {
-	                            Calendar cal = Calendar.getInstance();
-	                            cal.setTime(auxDate);
-	                            if(cal.get(Calendar.YEAR)>2100
-	                                    ||cal.get(Calendar.YEAR)<1900
-	                                    )
-	                            {
-	                                throw new ApplicationException("El anio de la fecha de ingreso no es valido");
-	                            }
-	                        }
-	                        
-	                        feingreso = auxDate!=null?
-	                                renderFechas.format(auxDate)
-	                                :"";
-	                                
-	                        logger.debug(
-	                                new StringBuilder("FECHA INGRESO EMPLEADO: ")
-	                                .append(
-	                                        auxDate!=null?
-	                                                renderFechas.format(auxDate)
-	                                                :""
-	                                )
-	                                .append("|")
-	                                .toString()
-	                                );
-	                        bufferLinea.append(
-	                                auxDate!=null?
-	                                        new StringBuilder(renderFechas.format(auxDate)).append("|").toString()
-	                                        :"|"
-	                                );
-	                    }
-	                    catch(Exception e)
-	                    {
-	                        filaBuena = false;
-	                        bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (AB) de la fila ",fila," "));
-	                    }
-	                    finally
-	                    {
-	                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(27)),"-"));
-	                    }
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Fecha de ingreso empleado' (Z) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(27)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(25)),"-"));
 	                }
-	              //ID SISA
-	                try {
-		                logger.debug("ID SISA: "+(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|"));
-		                bufferLinea.append(String.format("%.0f",row.getCell(28).getNumericCellValue())+"|");
-                	} catch(Exception ex2) {
-	                	logger.warn("error al leer el peso, se intentara como string:",ex2);
-	                	try {
-	                		auxCell=row.getCell(28);
-			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Id. SISA' (AC) de la fila ",fila," "));
-		                }
-	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(28)),"-"));
-	                }
-	              //PLAZA
+	                
 	                try
                 	{
-		                auxCell=row.getCell(29);
+		                auxCell=row.getCell(26);
 		                logger.debug(
 		                		new StringBuilder("PLAZA: ")
 		                		.append(
@@ -6145,28 +5700,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                catch(Exception ex)
 	                {
 	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Plaza' (AD) de la fila ",fila," "));
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Plaza' (AA) de la fila ",fila," "));
 	                }
 	                finally
 	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(29)),"-"));
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(26)),"-"));
 	                }
-	              //ID ASEGURADO
-                    try {
-                        logger.debug("ID. ASEGURADO: "+(String.format("%.0f",row.getCell(30).getNumericCellValue())+"|"));
-                        bufferLinea.append(String.format("%.0f",row.getCell(30).getNumericCellValue())+"|");
-                    } catch(Exception ex2) {
-                        logger.warn("error al leer Id. Asegurado, se intentara como string:",ex2);
-                        try {
-                            auxCell=row.getCell(30);
-                            bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                        } catch(Exception ex) {
-                            filaBuena = false;
-                            bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' (AE) de la fila ",fila," "));
-                        }
-                    } finally {
-                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(30)),"-"));
-                    }
+	                
 	                /* nuevos para SSI fin */
 	                
 	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
@@ -6176,45 +5716,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	familias.put(nFamilia,Utils.join(familias.get(nFamilia),bufferLinea.toString(),"\n"));
 	                	filasProcesadas = filasProcesadas + 1;
 	                	gruposValidos[((int)cdgrupo)-1]=true;
-	                	
-                		Map<String,String> params =  new HashMap<String, String>();
-    					
-    					params.put("pv_cdunieco_i", cdunieco);
-    					params.put("pv_cdramo_i", cdramo);
-    					params.put("pv_estado_i", "W");
-    					params.put("pv_nmpoliza_i", nmpoliza);
-    					params.put("pv_cdgrupo_i", extraerStringDeCelda(row.getCell(0)));
-    					params.put("pv_parentesco_i", extraerStringDeCelda(row.getCell(2)));
-    					params.put("pv_dsapellido_i", extraerStringDeCelda(row.getCell(3)));
-    					params.put("pv_dsapellido1_i", extraerStringDeCelda(row.getCell(4)));
-    					params.put("pv_dsnombre_i", extraerStringDeCelda(row.getCell(5)));
-    					params.put("pv_dsnombre1_i", extraerStringDeCelda(row.getCell(6)));
-    					params.put("pv_otsexo_i", extraerStringDeCelda(row.getCell(7)));
-    					
-    					params.put("pv_fenacimi_i", fechaNac);
-    					params.put("pv_cdpostal_i", extraerStringDeCelda(row.getCell(9)));
-    					params.put("pv_dsestado_i", extraerStringDeCelda(row.getCell(10)));
-    					params.put("pv_dsmunicipio_i", extraerStringDeCelda(row.getCell(11)));
-    					params.put("pv_dscolonia_i", extraerStringDeCelda(row.getCell(12)));
-    					params.put("pv_dsdomici_i", extraerStringDeCelda(row.getCell(13)));
-    					params.put("pv_nmnumero_i", extraerStringDeCelda(row.getCell(14)));
-    					params.put("pv_nmnumint_i", extraerStringDeCelda(row.getCell(15)));
-    					params.put("pv_cdrfc_i",    extraerStringDeCelda(row.getCell(16)));
-    					params.put("pv_dsemail_i",  extraerStringDeCelda(row.getCell(17)));
-    					params.put("pv_nmtelefo_i", extraerStringDeCelda(row.getCell(18)));
-    					params.put("pv_identidad_i",extraerStringDeCelda(row.getCell(19)));
-    					params.put("pv_fecantig_i", fecanti);
-    					params.put("pv_expocupacion_i", extraerStringDeCelda(row.getCell(22)));
-    					params.put("pv_peso_i",     extraerStringDeCelda(row.getCell(23)));
-    					params.put("pv_estatura_i", extraerStringDeCelda(row.getCell(24)));
-    					params.put("pv_expsobrepeso_i", extraerStringDeCelda(row.getCell(25)));
-    					params.put("pv_edocivil_i", extraerStringDeCelda(row.getCell(26)));
-    					params.put("pv_feingresoempleo_i", feingreso);
-    					params.put("pv_plaza_i", extraerStringDeCelda(row.getCell(29)));
-    					params.put("pv_idasegurado_i", extraerStringDeCelda(row.getCell(30)));
-    					
-    					filasFamilia.add(params);
-	                	
 	                }
 	                else
 	                {
@@ -6294,31 +5795,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            	resp.getSmap().put("filasLeidas"     , Integer.toString(filasLeidas));
 	            	resp.getSmap().put("filasProcesadas" , Integer.toString(filasProcesadas));
 	            	resp.getSmap().put("filasErrores"    , Integer.toString(filasError));
-	            	
-	            	
-	            	if(nFamilia > 0 && !filasFamilia.isEmpty()){
-	            		listaFamilias.put(nFamilia, filasFamilia);
-	            		
-	            		try
-	    				{
-	            			for(Entry<Integer, List<Map<String,String>>> entry : listaFamilias.entrySet())
-	            			{
-	            				Integer numFam = entry.getKey();
-	            				
-	            				if(estadoFamilias.containsKey(numFam) && estadoFamilias.get(numFam)){
-	            					
-	            					for(Map<String,String> paramsElemFam: listaFamilias.get(numFam)){
-	            						cotizacionDAO.insertaRegistroInfoCenso(paramsElemFam);
-	            					}
-	            				}
-	            			}
-	    				}
-	    	            catch(Exception ex)
-	    	            {
-	    	            	logger.error("Error al insetar registro de censo", ex);
-	    	            }
-	            		
-	            	}
 	            }
 	            
 	            if(resp.isExito())
@@ -6377,143 +5853,142 @@ public class CotizacionManagerImpl implements CotizacionManager
 					}
 	            }
 			}
+		}
+		
+		//pl censo
+		if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
+		{
+			String nombreProcedureCenso = null;
+			String tipoCensoParam       = "COMPLETO";
 			
-			if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
+			//obtener el PL
+			try
 			{
-				resp.getSmap().put("nombreCensoParaConfirmar", nombreCenso);
-				resp.setRespuesta(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
+				Map<String,String>mapaAux=cotizacionDAO.obtenerParametrosCotizacion(
+						ParametroCotizacion.PROCEDURE_CENSO
+						,cdramo
+						,cdtipsit
+						,tipoCensoParam
+						,null
+						);
+				nombreProcedureCenso = mapaAux.get("P1VALOR");
+				if(StringUtils.isBlank(nombreProcedureCenso))
+				{
+					throw new ApplicationException("No se encontraron datos");
+				}
 			}
+            catch(ApplicationException ax)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(
+            			new StringBuilder("Error al obtener el nombre del procedimiento del censo: ")
+            			.append(ax.getMessage())
+            			.append(" #")
+            			.append(timestamp)
+            			.toString());
+            	resp.setRespuestaOculta(ax.getMessage());
+            	logger.error(resp.getRespuesta(),ax);
+            }
+            catch(Exception ex)
+            {
+            	long timestamp = System.currentTimeMillis();
+            	resp.setExito(false);
+            	resp.setRespuesta(new StringBuilder("Error al obtener el nombre del procedimiento para el censo #").append(timestamp).toString());
+            	resp.setRespuestaOculta(ex.getMessage());
+            	logger.error(resp.getRespuesta(),ex);
+            }
+			
+			//ejecutar el PL
+			if(resp.isExito())
+			{
+				try
+				{
+					cotizacionDAO.procesarCenso(
+							nombreProcedureCenso
+							,cdusuari
+							,cdsisrol
+							,nombreCenso
+							,cdunieco
+							,cdramo
+							,"W"
+							,nmpoliza
+							,cdtipsit
+							,cdagente
+							,codpostalCli
+							,cdedoCli
+							,cdmuniciCli
+							,"N"
+							);
+				}
+	            catch(Exception ex)
+	            {
+	            	long timestamp = System.currentTimeMillis();
+	            	resp.setExito(false);
+	            	resp.setRespuesta(new StringBuilder("Error al ejecutar procedimiento del censo #").append(timestamp).toString());
+	            	resp.setRespuestaOculta(ex.getMessage());
+	            	logger.error(resp.getRespuesta(),ex);
+	            }
+			}
+		}
+		
+		boolean hayTramite      = StringUtils.isNotBlank(ntramite);
+		boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
+		
+		if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
+		{
+			resp.getSmap().put("nombreCensoParaConfirmar", nombreCenso);
+			resp.setExito(true);
+			resp.setRespuesta(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
+			logger.info(resp.getRespuesta());
+			return resp;
+		}
+		
+		if(resp.isExito())
+		{
+			ManagerRespuestaSmapVO respInterna = procesoColectivoInterno(
+					grupos
+					,cdunieco
+					,cdramo
+					,nmpoliza
+					,hayTramite
+					,hayTramiteVacio
+					,clasif
+					,LINEA_EXTENDIDA
+					,cdtipsit
+					,cdpersonCli
+					,nombreCli
+					,rfcCli
+					,dsdomiciCli
+					,codpostalCli
+					,cdedoCli
+					,cdmuniciCli
+					,nmnumeroCli
+					,nmnumintCli
+					,ntramite
+					,ntramiteVacio
+					,cdagente
+					,cdusuari
+					,cdelemen
+					,true
+					,false
+					,false
+					,cdperpag
+					,false //resubirCenso
+					,cdsisrol
+					,false
+					,false //asincrono
+					,cdideper_
+					,cdideext_
+					,usuarioSesion
+					,true
+					);
 		}
 		
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@ ").append(resp)
 				.append("\n@@@@@@ subirCensoCompleto @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.toString()
-				);
-		return resp;
-	}
-
-	@Override
-	public void insertaRegistroInfoCenso(Map<String, String> params)
-			throws Exception{
-		cotizacionDAO.insertaRegistroInfoCenso(params);
-	}
-	
-	@Override
-	public ManagerRespuestaSmapVO confirmarCensoCompleto(
-			String cdunieco
-			,String cdramo
-			,String nmpoliza
-			,String feini
-			,String fefin
-			,String cdperpag
-			,String pcpgocte
-			,String rutaDocsTemp
-			,String censoTimestamp
-			,String dominioServerLayout
-			,String usuarioServerLayout
-			,String passwordServerLayout
-			,String direcServerLayout
-			,String cdtipsit
-			,String cdusuari
-			,String cdsisrol
-			,String cdagente
-			,String codpostalCli
-			,String cdedoCli
-			,String cdmuniciCli
-			,List<Map<String,Object>>grupos
-			,String clasif
-			,String LINEA_EXTENDIDA
-			,String cdpersonCli
-			,String nombreCli
-			,String rfcCli
-			,String dsdomiciCli
-			,String nmnumeroCli
-			,String nmnumintCli
-			,String ntramite
-			,String ntramiteVacio
-			,String cdelemen
-			,String nombreCensoConfirmado
-			,String cdideper_
-			,String cdideext_
-			,String nmpolant
-			,String nmrenova
-			,UserVO usuarioSesion
-			,String estatuRenovacion
-			)
-	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ confirmarCensoCompleto @@@@@@")
-				.append("\n@@@@@@ cdunieco=")            .append(cdunieco)
-				.append("\n@@@@@@ cdramo=")              .append(cdramo)
-				.append("\n@@@@@@ nmpoliza=")            .append(nmpoliza)
-				.append("\n@@@@@@ feini=")               .append(feini)
-				.append("\n@@@@@@ fefin=")               .append(fefin)
-				.append("\n@@@@@@ cdperpag=")            .append(cdperpag)
-				.append("\n@@@@@@ pcpgocte=")            .append(pcpgocte)
-				.append("\n@@@@@@ rutaDocsTemp=")        .append(rutaDocsTemp)
-				.append("\n@@@@@@ censoTimestamp=")      .append(censoTimestamp)
-				.append("\n@@@@@@ dominioServerLayout=") .append(dominioServerLayout)
-				.append("\n@@@@@@ usuarioServerLayout=") .append(usuarioServerLayout)
-				.append("\n@@@@@@ passwordServerLayout=").append(passwordServerLayout)
-				.append("\n@@@@@@ direcServerLayout=")   .append(direcServerLayout)
-				.append("\n@@@@@@ cdtipsit=")            .append(cdtipsit)
-				.append("\n@@@@@@ cdusuari=")            .append(cdusuari)
-				.append("\n@@@@@@ cdsisrol=")            .append(cdsisrol)
-				.append("\n@@@@@@ cdagente=")            .append(cdagente)
-				.append("\n@@@@@@ codpostalCli=")        .append(codpostalCli)
-				.append("\n@@@@@@ cdedoCli=")            .append(cdedoCli)
-				.append("\n@@@@@@ cdmuniciCli=")         .append(cdmuniciCli)
-				.append("\n@@@@@@ grupos=")              .append(grupos)
-				.append("\n@@@@@@ clasif=")              .append(clasif)
-				.append("\n@@@@@@ LINEA_EXTENDIDA=")     .append(LINEA_EXTENDIDA)
-				.append("\n@@@@@@ cdpersonCli=")         .append(cdpersonCli)
-				.append("\n@@@@@@ nombreCli=")           .append(nombreCli)
-				.append("\n@@@@@@ dsdomiciCli=")         .append(dsdomiciCli)
-				.append("\n@@@@@@ nmnumeroCli=")         .append(nmnumeroCli)
-				.append("\n@@@@@@ nmnumintCli=")         .append(nmnumintCli)
-				.append("\n@@@@@@ ntramite=")            .append(ntramite)
-				.append("\n@@@@@@ ntramiteVacio=")       .append(ntramiteVacio)
-				.append("\n@@@@@@ cdelemen=")            .append(cdelemen)
-				.append("\n@@@@@@ nombreCensoConfirmado=").append(nombreCensoConfirmado)
-				.append("\n@@@@@@ cdideper_=")            .append(cdideper_)
-				.append("\n@@@@@@ cdideext_=")            .append(cdideext_)
-				.append("\n@@@@@@ nmpolant=")             .append(nmpolant)
-				.append("\n@@@@@@ nmrenova=")             .append(nmrenova)
-				.append("\n@@@@@@ estatuRenovacion=")     .append(estatuRenovacion)
-				.toString()
-				);
-		
-		ManagerRespuestaSmapVO resp = new ManagerRespuestaSmapVO(true);
-		resp.setSmap(new HashMap<String,String>());
-		
-		try
-		{
-			new ConfirmaCensoConcurrente(cdunieco, cdramo, nmpoliza, cdtipsit,
-					nombreCensoConfirmado, cdusuari, cdsisrol, nombreCensoConfirmado, cdagente,
-					codpostalCli, cdedoCli, cdmuniciCli, ntramite, ntramiteVacio,
-					clasif, LINEA_EXTENDIDA, cdpersonCli, nombreCli, rfcCli,
-					dsdomiciCli, nmnumeroCli, nmnumintCli, cdelemen, cdideper_,
-					cdideext_, cdperpag, usuarioSesion, grupos, estatuRenovacion
-					).start();
-		}
-		catch(Exception ex)
-		{
-			long timestamp = System.currentTimeMillis();
-			resp.setExito(false);
-			resp.setRespuesta(new StringBuilder("Error al confirmar el censo concurrente. #").append(timestamp).toString());
-			resp.setRespuestaOculta(ex.getMessage());
-			logger.error(resp.getRespuesta(),ex);
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@ ").append(resp)
-				.append("\n@@@@@@ confirmarCensoCompleto @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
@@ -6694,15 +6169,12 @@ public class CotizacionManagerImpl implements CotizacionManager
 					
 				}
 				
-				/**
-				 * GURADA UN PROSPECTO PERO COMO NO SE INDICA UN TIPO DE PERSONA SE GUARDA POR DEFAULT COMO MORAL
-				 */
 				personasDAO.movimientosMpersona(
 					cdperson
 					,"1"         //cdtipide
 					,null        //cdideper
 					,nombre
-					,"99"        //cdtipper 99 PARA PROSPECTO TEMPORAL, se borra despues de la emision.
+					,"1"         //cdtipper
 					,"M"         //otfisjur
 					,"H"         //otsexo
 					,new Date()  //fenacimi
@@ -6721,7 +6193,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,null		 //cdideext
 					,null		 //cdestcivil
 					,null		 //cdsucemi
-					,usuarioCaptura
 					,Constantes.INSERT_MODE
 				);
 				
@@ -6738,9 +6209,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,null       //cdcoloni
 					,nmnumero
 					,nmnumint
-					,"1" // domicilio personal default
-					,usuarioCaptura
-					,Constantes.SI  //domicilio activo
 					,Constantes.INSERT_MODE
 				);
 				
@@ -6882,7 +6350,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String fefin
 			,String fesolici
 			,String cdpersonCli
-			,String nmorddomCli
 			,String cdideperCli
 			,boolean noTarificar
 			,boolean conIncisos
@@ -6890,12 +6357,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,boolean flagMovil
 			,Map<String,String>tvalopol
 			,String cdagente
-			,UserVO usuarioSesion
-			,String fromSigs
-			,String cduniext
-			,String renramo
-			,String nmpoliex
-			,String ntramite
 			)throws Exception
     {
     	logger.debug(Utils.log(
@@ -6912,14 +6373,12 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,"\n@@@@@@ fesolici="    , fesolici
     			,"\n@@@@@@ cdpersonCli=" , cdpersonCli
     			,"\n@@@@@@ cdideperCli=" , cdideperCli
-    			,"\n@@@@@@ nmorddomCli=" , nmorddomCli
     			,"\n@@@@@@ noTarificar=" , noTarificar
     			,"\n@@@@@@ conIncisos="  , conIncisos
     			,"\n@@@@@@ incisos="     , incisos
     			,"\n@@@@@@ flagMovil="   , flagMovil
     			,"\n@@@@@@ tvalopol="    , tvalopol
     			,"\n@@@@@@ cdagente="    , cdagente
-    			,"\n@@@@@@ fromSigs="    , fromSigs
     			));
     	
     	ManagerRespuestaSlistSmapVO resp=new ManagerRespuestaSlistSmapVO(true);
@@ -6941,31 +6400,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 			{
 				////////////////////////////////
 				////// si no hay nmpoliza //////
-				if(StringUtils.isBlank(nmpoliza) || nmpoliza.equals("0"))
+				if(StringUtils.isBlank(nmpoliza))
 				{
 					try
 					{
 						paso = "Recuperando consecutivo de p\u00F3liza";
 						nmpoliza = cotizacionDAO.calculaNumeroPoliza(cdunieco,cdramo,"W");
 						resp.getSmap().put("nmpoliza" , nmpoliza);
-						if(nmpoliex != null && !nmpoliex.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 && fromSigs.equals("S"))
-						{
-							flujoMesaControlManager.actualizaTramiteMC(
-							         ntramite 
-									,cdunieco
-									,cdramo
-									,"W"//estado
-									,nmpoliza
-									,"21"//cdtiptra 
-									,cduniext
-									,renramo
-									,nmpoliex
-									);
-						}
 					}
 					catch(Exception ex)
 					{
-						throw new ApplicationException("Falta parametrizar la numeraci\u00f3n de p\u00f3liza");
+						throw new ApplicationException("Falta parametrizar la numeraci&oacute;n de p&oacute;liza");
 					}
 				}
 				////// si no hay nmpoliza //////
@@ -7228,7 +6673,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             	}
             	catch(Exception ex)
             	{
-            		logger.warn("Error sin impacto funcional al cotizar");
+            		logger.warn("Error sin impacto funcional al cotizar",ex);
             	}
                 	
             	if(cdtipsit.equals(TipoSituacion.GASTOS_MEDICOS_INDIVIDUAL.getCdtipsit()))
@@ -7304,7 +6749,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				 */
 
 				if (!consultasDAO.esProductoSalud(cdramo) && StringUtils.isBlank(cdpersonCli) && StringUtils.isNotBlank(cdideperCli)) {
-					logger.debug("Persona proveniente de WS, Se importar�, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
+					logger.debug("Persona proveniente de WS, Se importara, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
 					
 					
 					/**
@@ -7360,16 +6805,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 									String newCdPerson = personasDAO.obtenerNuevoCdperson();
 
 									logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
-									
-									String usuarioCaptura =  null;
-									
-									if(usuarioSesion!=null){
-										if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-											usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-										}else{
-											usuarioCaptura = usuarioSesion.getCodigoPersona();
-										}
-									}
 						    		
 						    		String apellidoPat = "";
 							    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
@@ -7412,40 +6847,23 @@ public class CotizacionManagerImpl implements CotizacionManager
 							    		nacionalidad = "002";
 							    	}
 							    	
-							    	String codPosImp = cli.getCodposCli();
-	                                if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
-	                                    codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
-	                                }
-							    	
 						    		//GUARDAR MPERSONA
 						    		
 									personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
 											, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
 											, (cli.getFismorCli() == 1) ? apellidoPat : "", (cli.getFismorCli() == 1) ? apellidoMat: "", calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
-											, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
+											, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), "I");
 									
 									String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
 					    			if(edoAdosPos2.length() ==  1){
 					    				edoAdosPos2 = "0"+edoAdosPos2;
 					    			}
-					    			
-					    			HashMap<String,String> paramsMunCol = new HashMap<String, String>();
-	                                paramsMunCol.put("pv_cdpostal_i", codPosImp);
-	                                paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
-	                                paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
-	                                paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
-	                                
-	                                Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
 						    		
 						    		//GUARDAR DOMICILIO
 					    			
 					    			personasDAO.movimientosMdomicil(newCdPerson, "1", cli.getCalleCli(), cli.getTelefonoCli()
-						    				, codPosImp, codPosImp+edoAdosPos2, munycol.get("CDMUNICI"), munycol.get("CDCOLONI")
-						    				, cli.getNumeroCli(), null
-						    				,"1" // domicilio personal default
-											,usuarioCaptura
-											,Constantes.SI  //domicilio activo
-											,Constantes.INSERT_MODE);
+						    				, cli.getCodposCli(), cli.getCodposCli()+edoAdosPos2, null/*cliDom.getMunicipioCli()*/, null/*cliDom.getColoniaCli()*/
+						    				, cli.getNumeroCli(), null, "I");
 
 					    			//GUARDAR TVALOPER
 					    			
@@ -7458,12 +6876,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 					    				null, null, null, null, null, 
 					    				null, null, cli.getTelefonoCli(), cli.getMailCli(), null, 
 					    				null, null, null, null, null, 
-					    				null, null, null, null, null,
-	    		    					cli.getFaxCli(), cli.getCelularCli());
+					    				null, null, null, null, null);
 					    			
 					    			
 					    			cdpersonCli = newCdPerson;
-					    			nmorddomCli = "1";
 
 								}
 							}
@@ -7484,7 +6900,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            			,cdpersonCli //cdperson
 	            			,"0"         //nmsuplem
 	            			,"V"         //status
-	            			,nmorddomCli //nmorddom
+	            			,"1"         //nmorddom
 	            			,null        //swreclam
 	            			,"I"         //accion
 	            			,"S"         //swexiper
@@ -7545,7 +6961,7 @@ public class CotizacionManagerImpl implements CotizacionManager
       	            {
       	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
       	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
-      	            	String mensajeACorreo= "Se le notif\u00EDca que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de autom\u00F3viles en el paquete de cobertura prestigio, amplia  y limitada:\n" + 
+      	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de Automoviles en el paquete de cobertura Prestigio, Amplio  y Limitado:\n" + 
       	            			planValido;
       	            	
       	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
@@ -7564,40 +6980,8 @@ public class CotizacionManagerImpl implements CotizacionManager
             	}
 //            }
             
-            /*///////////////////////////////*/
-            ////// Generacion cotizacion //////
-            ///////////////////////////////////
+            ////// 0.1 verificamos que el plan tenga las coberturas que le corresponden //////
             
-        	return resp;
-    	}
-    	catch(Exception ex)
-    	{
-    		Utils.generaExcepcion(ex, paso);
-    	}
-    	
-    	logger.debug(Utils.log(
-    		 "\n@@@@@@ ",resp
-    		,"\n@@@@@@ cotizar @@@@@@"
-   			,"\n@@@@@@@@@@@@@@@@@@@@@"
-   			));
-    	
-    	resp.setRespuesta("El n\u00FAmero de p\u00F3liza es : "+nmpoliza);
-    	return resp;
-    }
-
-    @Override
-    public ManagerRespuestaSlistSmapVO cotizarContinuacion(String cdusuari,String cdunieco,String cdramo,String cdelemen,String cdtipsit,String nmpoliza,  boolean flagMovil)throws Exception
-    {
-	logger.debug(Utils.log(
-			 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-			,"\n@@@@@@ cotizarContinuacion @@@@@@"
-			));
-	ManagerRespuestaSlistSmapVO resp=new ManagerRespuestaSlistSmapVO(true);
-	resp.setSmap(new HashMap<String,String>());
-	resp.getSmap().put("nmpoliza" , nmpoliza);
-	String paso = "cotizarContinuacion";
-	try
-	{
 		 paso = "Recuperando resultados de cotizaci\u00F3n";
 	     List<Map<String,String>> listaResultados=cotizacionDAO.cargarResultadosCotizacion(
 	     		 cdusuari
@@ -7609,9 +6993,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	     		,cdtipsit
 	     		);
 	     logger.debug("listaResultados: "+listaResultados);
-	     resp.setSlist(listaResultados);
-		
-		paso = "Cotizando";
+            /*///////////////////////////////*/
+            ////// Generacion cotizacion //////
+            ///////////////////////////////////
         ////////////////////////////////
         ////// Agrupar resultados //////
         /*
@@ -7886,12 +7270,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 			String fechaInicio, String fechaFin, String ntramite, String cdagenteExt, String cdciaaguradora,
 			String cdplan, String cdperpag, String cdusuari, String cdsisrol, String cdelemen,
 			boolean esFlotilla, String tipoflot, String cdpersonCli, String cdideperCli,
-			String nombreReporteCotizacion, String nombreReporteCotizacionFlot, UserVO usuarioSesion,
-			String swrenovacion, String sucursal, String ramo, String poliza, String porparti, String porredau) throws Exception {
+			String nombreReporteCotizacion, String nombreReporteCotizacionFlot) throws Exception {
     	
     	String paso = null;
-    	
-    	Date fechaHoy = new Date();
     	
     	try {
     		
@@ -7918,7 +7299,7 @@ public class CotizacionManagerImpl implements CotizacionManager
             
         	
         	//maestro historico poliza
-            paso = "Insertando hist�rico de p�liza";
+            paso = "Insertando historico de poliza";
             
             SimpleDateFormat renderHora = new SimpleDateFormat("HH:mm");
             cotizacionDAO.movimientoMsupleme(
@@ -7929,7 +7310,7 @@ public class CotizacionManagerImpl implements CotizacionManager
         	
         	//mpoliage
             paso = "Ligando la poliza al agente";
-        		String cesionComision = porredau;
+        		String cesionComision = "0";
         		Map<String,String> tipoSituacion = cotizacionDAO.cargarTipoSituacion(cdramo, cdtipsit);
         		
         		if(tipoSituacion.get("SITUACION").equals("AUTO")) {
@@ -7938,7 +7319,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                 
                 cotizacionDAO.movimientoMpoliage(cdunieco, cdramo, "W", nmpoliza, 
             			cdagente, "0", "V", "1", cesionComision, nmcuadro, null, 
-            			"I", StringUtils.isNotBlank(ntramite) ? ntramite : null, porparti);
+            			"I", StringUtils.isNotBlank(ntramite) ? ntramite : null, "100");
         	
             // Actualizando la cesion de comision:
             paso = "Actualizando la cesion de comision";
@@ -7956,98 +7337,39 @@ public class CotizacionManagerImpl implements CotizacionManager
             		cdelemen, cdperson, cdciaaguradora, cdplan, cdperpag);
         	
             //acutalizar/generar tramite
-            paso = "Actualizando y generando tr�mite " + ntramite;
+            paso = "Actualizando y generando tramite " + ntramite;
             
     		//actualizar tramite
             
     		if(StringUtils.isNotBlank(ntramite)) {
     			
-    			paso = "Actualizando el tr�mite";
+    			paso = "Actualizando el tramite";
     			
     			mesaControlDAO.actualizarNmsoliciTramite(ntramite, nmpoliza);
             	logger.debug("se inserta detalle nuevo");
             	
             	mesaControlDAO.movimientoDetalleTramite(
             			ntramite, new Date(), null
-            			,Utils.join("Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite: ",nmpoliza)
+            			,"Se guard\u00f3 una cotizaci\u00f3n nueva para el tr\u00e1mite"
             			,cdusuari, null, cdsisrol,"S", null, null
-            			,EstatusTramite.PENDIENTE.getCodigo(),false
+            			//,EstatusTramite.PENDIENTE.getCodigo(),false
             			);
         		
     		} else { //se genera un tramite
     			
-    			paso = "Recuperando datos de flujo de emisi\u00f3n";
-    			logger.debug(paso);
+    			paso = "Generando el tramite";
     			
-    			String tipoProcesoParaRecuperarFlujo = "I";
-        		if (StringUtils.isNotBlank(tipoflot)) {
-        			tipoProcesoParaRecuperarFlujo = tipoflot;
-        		}
-        		
-        		Map<String,String> datosFlujo = null;
-        		String cdtiptra = null;
-        		
-        		if ("S".equals(swrenovacion)) {
-        			datosFlujo = consultasDAO.recuperarDatosFlujoRenovacion(cdramo,tipoProcesoParaRecuperarFlujo);
-        			cdtiptra   = TipoTramite.RENOVACION.getCdtiptra();
-        		} else { // es emision
-        			datosFlujo = consultasDAO.recuperarDatosFlujoEmision(cdramo,tipoProcesoParaRecuperarFlujo);
-        			cdtiptra   = TipoTramite.POLIZA_NUEVA.getCdtiptra();
-        		}
-    			
-    			paso = "Generando el tr\u00e1mite";
-    			logger.debug(paso);
-    			
-            	ntramite = mesaControlDAO.movimientoMesaControl(
-            			cdunieco,
-            			cdramo,
-            			"W",
-            			"0",
-            			"0", 
-            			cdunieco,
-            			cdunieco,
-            			cdtiptra,
-            			fechaHoy,
-            			cdagente,
-            			"",
-            			"", 
-            			fechaHoy,
-            			EstatusTramite.PENDIENTE.getCodigo(),
-            			"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
-            			nmpoliza,
-            			cdtipsit,
-            			cdusuari,
-            			cdsisrol,
-            			null,
-            			datosFlujo.get("cdtipflu"),
-            			datosFlujo.get("cdflujomc"),
-            			null,
-            			TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
-            			sucursal,
-            			ramo,
-            			poliza,
-            			false,
-            			null
-            	);
+            	ntramite = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo,"W", "0", "0", 
+            			null, null, "1", new Date(), cdagente, null, "", new Date(), EstatusTramite.PENDIENTE.getCodigo(),
+            			"", nmpoliza, cdtipsit, cdusuari, cdsisrol, null, null, null, null, null);
             	
-            	RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-            	        cdusuari,
-            	        cdsisrol,
-            	        ntramite,
-            	        EstatusTramite.PENDIENTE.getCodigo(),
-            	        "Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente",
-            	        null,  // cdrazrecha
-            	        null,  // cdusuariDes
-            	        null,  // cdsisrolDes
-            	        true,  // permisoAgente
-            	        false, // porEscalamiento
-            	        fechaHoy,
-            	        false  // sinGrabarDetalle
-            	        );
-            	logger.debug(despacho.getMessage());
+            	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null
+            			,"Se guard\u00f3 un nuevo tr\u00e1mite en mesa de control desde cotizaci\u00f3n de agente"
+            			,cdusuari, null, cdsisrol,"S", null, null/*, EstatusTramite.PENDIENTE.getCodigo(),false*/);
+            	
             	try {
 	            	cotizacionDAO.grabarEvento(new StringBuilder("\nCotizar tramite grupo"), 
-	            			Constantes.MODULO_EMISION, Constantes.EVENTO_COMPRAR_TRAMITE_MC, new Date(), cdusuari, cdsisrol, ntramite, 
+	            			"EMISION", "COMTRAMITMC", new Date(), cdusuari, cdsisrol, ntramite, 
 	            			cdunieco, cdramo, "W", nmpoliza, nmpoliza, 
 	            			cdagente, null, null, null);
 	            } catch(Exception ex) {
@@ -8058,7 +7380,7 @@ public class CotizacionManagerImpl implements CotizacionManager
         	//generar cotizacion
         	if(!cdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo()) && (!esFlotilla||"P".equals(tipoflot))) {
         		
-        		paso = "Generando la cotizaci�n";
+        		paso = "Generando la cotizacion";
         		
                 File carpeta=new File(rutaDocumentosPoliza+"/"+ntramite);
                 if(!carpeta.exists()) {
@@ -8100,8 +7422,8 @@ public class CotizacionManagerImpl implements CotizacionManager
                 
                 mesaControlDAO.guardarDocumento(cdunieco, cdramo, "W",
             			"0", "0", new Date(), nombreArchivoCotizacion,
-            			"COTIZACI\u00f3N", nmpoliza, ntramite, "1",
-            			null, null, "1", null, null, null, null, false);
+            			"COTIZACI&Oacute;N", nmpoliza, ntramite, "1",
+            			null, null, "1", null, null, null, null);
             }
         	
     		if(StringUtils.isNotBlank(cdpersonCli)){
@@ -8151,17 +7473,6 @@ public class CotizacionManagerImpl implements CotizacionManager
     			    		String newCdPerson = personasDAO.obtieneCdperson();
     			    		
     			    		logger.debug("Insertando nueva persona, cdperson generado: " + newCdPerson);
-    			    		
-    			    		String usuarioCaptura =  null;
-							
-							if(usuarioSesion!=null){
-								if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-									usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-								}else{
-									usuarioCaptura = usuarioSesion.getCodigoPersona();
-								}
-								
-							}
     			    		
     			    		String apellidoPat = "";
     				    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
@@ -8216,7 +7527,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     								"1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(),
     								null, (cli.getFismorCli() == 1) ? apellidoPat : "", (cli.getFismorCli() == 1) ? apellidoMat : "", calendarIngreso.getTime(), nacionalidad,
     								cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())),
-    								null, null, null, null, null, null, String.valueOf(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
+    								null, null, null, null, null, null, String.valueOf(cli.getSucursalCli()),"I");
     			    		
     			    		//GUARDAR DOMICILIO
     			    		String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
@@ -8224,27 +7535,9 @@ public class CotizacionManagerImpl implements CotizacionManager
     		    				edoAdosPos2 = "0"+edoAdosPos2;
     		    			}
     		    			
-    		    			String codPosImp = cli.getCodposCli();
-                            if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
-                                codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
-                            }
-                            
-                            HashMap<String,String> paramsMunCol = new HashMap<String, String>();
-                            paramsMunCol.put("pv_cdpostal_i", codPosImp);
-                            paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
-                            paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
-                            paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
-                            
-                            Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
-    		    			
     		    			personasDAO.movimientosMdomicil(newCdPerson,"1", cli.getCalleCli() +" "+ cli.getNumeroCli()
-    		    					,cli.getTelefonoCli(), codPosImp, codPosImp+edoAdosPos2
-    		    					,munycol.get("CDMUNICI"), munycol.get("CDCOLONI"), cli.getNumeroCli(), null
-    		    					,"1" // domicilio personal default
-									,usuarioCaptura
-									,Constantes.SI  //domicilio activo
-									,Constantes.INSERT_MODE);
-    		    			
+    		    					,cli.getTelefonoCli(), cli.getCodposCli(), cli.getCodposCli()+edoAdosPos2
+    		    					,null, null, cli.getNumeroCli(), null, "I");
     		    			
     		    			personasDAO.insertaTvaloper("0", "0", null, "0", null,
     		    					null, null, "1", newCdPerson, null, null,
@@ -8257,8 +7550,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     		    					null, null, null, null, null,
     		    					null, null, cli.getTelefonoCli(), cli.getMailCli(), null,
     		    					null, null, null, null, null,
-    		    					null, null, null, null, null,
-    		    					cli.getFaxCli(), cli.getCelularCli());
+    		    					null, null, null, null, null);
     	    				
     	    				cotizacionDAO.borrarMpoliperTodos(cdunieco, cdramo, "W", nmpoliza);
     						
@@ -8358,8 +7650,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String nmsituac
 			,String tipotari
 			,String cdperpag
-			,String cdusuari
-			,String cdsisrol
 			)throws Exception
 	{
     	logger.debug(Utils.log(
@@ -8373,11 +7663,8 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,"\n@@@@@@ nmsituac=" , nmsituac
     			,"\n@@@@@@ tipotari=" , tipotari
     			,"\n@@@@@@ cdperpag=" , cdperpag
-    			,"\n@@@@@@ cdusuari=" , cdusuari
-    			,"\n@@@@@@ cdsisrol=" , cdsisrol
     			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     			));
-    	logger.debug("@@@@@@@@@@@@@@@ lanzatarAsincrono2 ",lanzatarAsincrono);
     	if(lanzatarAsincrono)
     	{
 	    	new EjecutaTarificacionConcurrente(
@@ -8389,8 +7676,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	    			,nmsituac
 	    			,tipotari
 	    			,cdperpag
-	    			,cdusuari
-	    			,cdsisrol
 	    			).start();
     	}
     	else
@@ -8415,225 +7700,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	    			,tipotari
 	    			,cdperpag
 	    			);
-    		logger.debug("@@@@@@@@@@@@@@@@@GRABANDO EVENTO DE COTIZACION 2@@@@@@@@@@@@@@@@@");
-    		cotizacionDAO.grabarEvento(new StringBuilder(), Constantes.MODULO_COTIZACION, Constantes.EVENTO_COTIZAR,
-    		        new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
     	}
 	}
-    
-    
-    private class ConfirmaCensoConcurrente extends Thread
-    {
-    	private String cdunieco
-    	               ,cdramo
-    	               ,nmpoliza
-    	               ,cdtipsit
-    	               ,nombreCensoConfirmado
-    	               ,cdusuari
-    	               ,cdsisrol
-    	               ,nombreCenso
-    	               ,cdagente
-    	               ,codpostalCli
-    	               ,cdedoCli
-    	               ,cdmuniciCli
-    	               ,ntramite
-    	               ,ntramiteVacio
-    	               ,clasif
-    	               ,LINEA_EXTENDIDA
-    	               ,cdpersonCli
-    	               ,nombreCli
-					   ,rfcCli
-					   ,dsdomiciCli
-					   ,nmnumeroCli
-					   ,nmnumintCli
-					   ,cdelemen
-					   ,cdideper_
-					   ,cdideext_
-					   ,cdperpag
-					   ,estatuRenovacion;
-    	
-    	private UserVO usuarioSesion;
-    	List<Map<String,Object>>grupos;
-    	               
-    	public ConfirmaCensoConcurrente(String cdunieco, String cdramo, String nmpoliza, String cdtipsit,
-				String nombreCensoConfirmado, String cdusuari, String cdsisrol, String nombreCenso, String cdagente,
-				String codpostalCli, String cdedoCli, String cdmuniciCli, String ntramite, String ntramiteVacio,
-				String clasif, String lINEA_EXTENDIDA, String cdpersonCli, String nombreCli, String rfcCli,
-				String dsdomiciCli, String nmnumeroCli, String nmnumintCli, String cdelemen, String cdideper_,
-				String cdideext_, String cdperpag, UserVO usuarioSesion, List<Map<String, Object>> grupos, String estatuRenovacion) {
-			this.cdunieco = cdunieco;
-			this.cdramo = cdramo;
-			this.nmpoliza = nmpoliza;
-			this.cdtipsit = cdtipsit;
-			this.nombreCensoConfirmado = nombreCensoConfirmado;
-			this.cdusuari = cdusuari;
-			this.cdsisrol = cdsisrol;
-			this.nombreCenso = nombreCenso;
-			this.cdagente = cdagente;
-			this.codpostalCli = codpostalCli;
-			this.cdedoCli = cdedoCli;
-			this.cdmuniciCli = cdmuniciCli;
-			this.ntramite = ntramite;
-			this.ntramiteVacio = ntramiteVacio;
-			this.clasif = clasif;
-			LINEA_EXTENDIDA = lINEA_EXTENDIDA;
-			this.cdpersonCli = cdpersonCli;
-			this.nombreCli = nombreCli;
-			this.rfcCli = rfcCli;
-			this.dsdomiciCli = dsdomiciCli;
-			this.nmnumeroCli = nmnumeroCli;
-			this.nmnumintCli = nmnumintCli;
-			this.cdelemen = cdelemen;
-			this.cdideper_ = cdideper_;
-			this.cdideext_ = cdideext_;
-			this.cdperpag = cdperpag;
-			this.usuarioSesion = usuarioSesion;
-			this.grupos = grupos;
-			this.estatuRenovacion = estatuRenovacion;
-		}
-
-		@Override
-    	public void run()
-    	{
-    		try
-    		{
-    			
-    			mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_TARIFA.getCodigo());
-    			
-				String nombreProcedureCenso = null;
-				String tipoCensoParam       = "COMPLETO";
-				
-				//obtener el PL
-				try
-				{
-					Map<String,String>mapaAux=cotizacionDAO.obtenerParametrosCotizacion(
-							ParametroCotizacion.PROCEDURE_CENSO
-							,cdramo
-							,cdtipsit
-							,tipoCensoParam
-							,null
-							);
-					nombreProcedureCenso = mapaAux.get("P1VALOR");
-					if(StringUtils.isBlank(nombreProcedureCenso))
-					{
-						throw new ApplicationException("No se encontraron datos");
-					}
-				}
-	            catch(Exception ax)
-	            {
-	            	long timestamp = System.currentTimeMillis();
-	            	throw new ApplicationException(
-	            			new StringBuilder("Error al obtener el nombre del procedimiento del censo: ")
-	            			.append(ax.getMessage())
-	            			.append(" #")
-	            			.append(timestamp)
-	            			.toString());
-	            }
-				
-				try
-				{
-					cotizacionDAO.procesarCenso(
-							nombreProcedureCenso
-							,cdusuari
-							,cdsisrol
-							,nombreCenso
-							,cdunieco
-							,cdramo
-							,"W"
-							,nmpoliza
-							,cdtipsit
-							,cdagente
-							,codpostalCli
-							,cdedoCli
-							,cdmuniciCli
-							,"N"
-							);
-				}
-	            catch(Exception ex)
-	            {
-	            	long timestamp = System.currentTimeMillis();
-	            	throw new ApplicationException(new StringBuilder("Error al ejecutar procedimiento del censo #").append(timestamp).toString());
-	            }
-    				
-    			logger.info(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
-    			
-    			boolean hayTramite      = StringUtils.isNotBlank(ntramite);
-    			boolean hayTramiteVacio = StringUtils.isNotBlank(ntramiteVacio);
-    			
-//    			if(resp.isExito()&&StringUtils.isBlank(nombreCensoConfirmado))
-//    			{
-//    				resp.getSmap().put("nombreCensoParaConfirmar", nombreCenso);
-//    				resp.setExito(true);
-//    				resp.setRespuesta(Utils.join("Se ha revisado el censo [REV. ",System.currentTimeMillis(),"]"));
-//    				logger.info(resp.getRespuesta());
-//    				return resp;
-//    			}
-    			
-    			try
-				{
-    				ManagerRespuestaSmapVO respInterna = procesoColectivoInterno(
-    						grupos
-    						,cdunieco
-    						,cdramo
-    						,nmpoliza
-    						,hayTramite
-    						,hayTramiteVacio
-    						,clasif
-    						,LINEA_EXTENDIDA
-    						,cdtipsit
-    						,cdpersonCli
-    						,nombreCli
-    						,rfcCli
-    						,dsdomiciCli
-    						,codpostalCli
-    						,cdedoCli
-    						,cdmuniciCli
-    						,nmnumeroCli
-    						,nmnumintCli
-    						,ntramite
-    						,ntramiteVacio
-    						,cdagente
-    						,cdusuari
-    						,cdelemen
-    						,true
-    						,false
-    						,false
-    						,cdperpag
-    						,false //resubirCenso
-    						,cdsisrol
-    						,false
-    						,false //asincrono
-    						,cdideper_
-    						,cdideext_
-    						,usuarioSesion
-    						,true
-    						,false // duplicar
-    						);
-    			}
-	            catch(Exception ex)
-	            {
-	            	long timestamp = System.currentTimeMillis();
-	            	throw new ApplicationException(new StringBuilder("Error al ejecutar procesoColectivoInterno al confirmar censo concurrente  2 #").append(timestamp).toString());
-	            }
-    			
-    			long stamp = System.currentTimeMillis();
-    			logger.debug(Utils.log(stamp,"Mandando el tramite a estatus completo despues de subir censo cocurrente 2 y proceso colectivo interno"));
-
-    			if(estatuRenovacion.equalsIgnoreCase(EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())){
-    			    mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
-    			}else{
-    			    mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
-    			}
-    			
-    			
-    		}
-    		catch(Exception ex)
-    		{
-    			logger.error("Error en confirmar censo concurrente 2", ex);
-    		}
-    	}
-    }
-    
     
     private class EjecutaTarificacionConcurrente extends Thread
     {
@@ -8644,9 +7712,7 @@ public class CotizacionManagerImpl implements CotizacionManager
     	               ,nmsuplem
     	               ,nmsituac
     	               ,tipotari
-    	               ,cdperpag
-    	               ,cdusuari
-    	               ,cdsisrol;
+    	               ,cdperpag;
     	
     	public EjecutaTarificacionConcurrente(
     			String cdunieco
@@ -8657,8 +7723,6 @@ public class CotizacionManagerImpl implements CotizacionManager
     			,String nmsituac
     			,String tipotari
     			,String cdperpag
-    			,String cdusuari
-    			,String cdsisrol
     			)
     	{
 			this.cdunieco = cdunieco;
@@ -8669,8 +7733,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			this.nmsituac = nmsituac;
 			this.tipotari = tipotari;
 			this.cdperpag = cdperpag;
-			this.cdusuari = cdusuari;
-			this.cdsisrol = cdsisrol;
     	}
     	
     	@Override
@@ -8698,9 +7760,6 @@ public class CotizacionManagerImpl implements CotizacionManager
         			,tipotari
         			,cdperpag
         			);
-    		    logger.debug("@@@@@@@@@@@@@@@@@GRABANDO EVENTO DE COTIZACION 3@@@@@@@@@@@@@@@@@");
-    		    cotizacionDAO.grabarEvento(new StringBuilder(), Constantes.MODULO_COTIZACION, Constantes.EVENTO_COTIZAR,
-    		            new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
     		}
     		catch(Exception ex)
     		{
@@ -9173,7 +8232,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return pagoRepartido;
 	}
 	
-	/*
 	@Deprecated
 	@Override
 	public String turnaPorCargaTrabajo(
@@ -9199,7 +8257,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				));
 		return nombre;
 	}
-	*/
 	
 	@Override
 	public String guardarConfiguracionGarantias(
@@ -10016,9 +9073,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String LINEA_EXTENDIDA
 			,List<Map<String,Object>> olist1
 			,String cdtipsit
-			,String cdusuari
-			,String cdsisrol
-			,boolean duplicar
 			)
 	{
 		logger.debug(Utils.log(
@@ -10037,9 +9091,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
 				,"\n@@@@@@ olist1="          , olist1
 				,"\n@@@@@@ cdtipsit="        , cdtipsit
-				,"\n@@@@@@ cdusuari="        , cdusuari
-				,"\n@@@@@@ cdsisrol="        , cdsisrol
-				,"\n@@@@@@ duplicar="        , duplicar
 				));
 		new ProcesoColectivoAsincrono(
 				hayTramite
@@ -10055,9 +9106,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,LINEA_EXTENDIDA
 				,olist1
 				,cdtipsit
-				,cdusuari
-				,cdsisrol
-				,duplicar
 				).start();
 	}
 	
@@ -10068,7 +9116,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                ,censoAtrasado
 		                ,resubirCenso
 		                ,complemento
-		                ,duplicar
 		                ;
 		
 		private String cdunieco
@@ -10079,8 +9126,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		               ,LINEA
 		               ,LINEA_EXTENDIDA
 		               ,cdtipsit
-		               ,cdusuari
-		               ,cdsisrol
 		               ;
 		
 		private List<Map<String,Object>> olist1;
@@ -10099,9 +9144,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,String LINEA_EXTENDIDA
 				,List<Map<String,Object>> olist1
 				,String cdtipsit
-				,String cdusuari
-				,String cdsisrol
-				,boolean duplicar
 				)
 		{
 			this.hayTramite      = hayTramite;
@@ -10117,9 +9159,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			this.LINEA_EXTENDIDA = LINEA_EXTENDIDA;
 			this.olist1          = olist1;
 			this.cdtipsit        = cdtipsit;
-			this.cdusuari        = cdusuari;
-			this.cdsisrol        = cdsisrol;
-			this.duplicar        = duplicar;
 		}
 		
 		@Override
@@ -10144,13 +9183,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,"\n&&&&&& LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
 					,"\n&&&&&& olist1="          , olist1
 					,"\n&&&&&& cdtipsit="        , cdtipsit
-					,"\n&&&&&& cdusuari="        , cdusuari
-					,"\n&&&&&& cdsisrol="        , cdsisrol
-					,"\n&&&&&& duplicar="        , duplicar
 					));
 			try
 			{
-				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||duplicar)
+				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento)
 				{
 					logger.debug(Utils.log("\n&&&&&& ejecutaValoresDefectoConcurrente [id=",timestamp,"] &&&&&&"));		
 					cotizacionDAO.ejecutaValoresDefectoConcurrente(
@@ -10180,9 +9216,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 						
 						//ASISTENCIA INTERNACIONAL VIAJES --AHORA MEDICAMENTOS
 						String asisinte = (String)iGrupo.get("asisinte");
-						if (StringUtils.isBlank(asisinte)) {
-							asisinte = "0";
-						}
 						cdgarant = "4MED";
 						if(Integer.parseInt(asisinte)>0)
 						{
@@ -10312,8 +9345,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            		,"0"
 	            		,"1"
 	            		,cdperpag
-	            		,cdusuari
-	            		,cdsisrol
 	            		);
 			}
 			catch(Exception ex)
@@ -10343,9 +9374,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			,String LINEA_EXTENDIDA
 			,List<Map<String,Object>> grupos
 			,String cdtipsit
-			,String cdusuari
-			,String cdsisrol
-			,boolean duplicar
 			)
 	{
 		logger.debug(Utils.log(
@@ -10363,9 +9391,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@ LINEA="           , LINEA
 				,"\n@@@@@@ LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
 				,"\n@@@@@@ grupos="          , grupos
-				,"\n@@@@@@ cdusuari="        , cdusuari
-				,"\n@@@@@@ cdsisrol="        , cdsisrol
-				,"\n@@@@@@ duplicar="        , duplicar
+				,"\n@@@@@@ cdtipsit="        , cdtipsit
 				));
 		new ProcesoColectivoAsincrono2(
 				hayTramite
@@ -10381,9 +9407,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,LINEA_EXTENDIDA
 				,grupos
 				,cdtipsit
-				,cdusuari
-				,cdsisrol
-				,duplicar
 				).start();
 	}
 	
@@ -10394,7 +9417,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                ,censoAtrasado
 		                ,resubirCenso
 		                ,complemento
-		                ,duplicar
 		                ;
 		
 		private String cdunieco
@@ -10405,8 +9427,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		               ,LINEA
 		               ,LINEA_EXTENDIDA
 		               ,cdtipsit
-		               ,cdusuari
-		               ,cdsisrol
 		               ;
 		
 		private List<Map<String,Object>> grupos;
@@ -10425,9 +9445,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,String LINEA_EXTENDIDA
 				,List<Map<String,Object>> grupos
 				,String cdtipsit
-				,String cdusuari
-				,String cdsisrol
-				,boolean duplicar
 				)
 		{
 			this.hayTramite      = hayTramite;
@@ -10443,9 +9460,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 			this.LINEA_EXTENDIDA = LINEA_EXTENDIDA;
 			this.grupos          = grupos;
 			this.cdtipsit        = cdtipsit;
-			this.cdusuari        = cdusuari;
-			this.cdsisrol        = cdsisrol;
-			this.duplicar        = duplicar;
 		}
 		
 		@Override
@@ -10470,13 +9484,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 					,"\n&&&&&& LINEA_EXTENDIDA=" , LINEA_EXTENDIDA
 					,"\n&&&&&& grupos="          , grupos
 					,"\n&&&&&& cdtipsit="        , cdtipsit
-					,"\n&&&&&& cdusuari="        , cdusuari
-					,"\n&&&&&& cdsisrol="        , cdsisrol
-					,"\n&&&&&& duplicar="        , duplicar
 					));
 			try
 			{
-				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||duplicar)
+				if(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento)
 				{
 					logger.debug(Utils.log("\n&&&&&& ejecutaValoresDefectoConcurrente [id=",timestamp,"] &&&&&&"));
 					cotizacionDAO.ejecutaValoresDefectoConcurrente(
@@ -10597,9 +9608,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 						,"1" //tipotari
 						,cdperpag
 						);
-				logger.debug("@@@@@@@@@@@@@@@@@GRABANDO EVENTO DE COTIZACION 4@@@@@@@@@@@@@@@@@");
-				cotizacionDAO.grabarEvento(new StringBuilder(), Constantes.MODULO_COTIZACION, Constantes.EVENTO_COTIZAR,
-				        new Date(), cdusuari, cdsisrol, "", cdunieco, cdramo, "W", nmpoliza, nmpoliza, "", "", "", null);
 			}
 			catch(Exception ex)
 			{
@@ -10859,7 +9867,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 	}
-	
+	/*
 	@Override
 	@Deprecated
 	public void movimientoTbloqueo(
@@ -10873,7 +9881,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	{
 		cotizacionDAO.movimientoTbloqueo(cdunieco,cdramo,estado,nmpoliza,nmsituac,accion);
 	}
-	
+	*/
 	@Override
 	public String consultaExtraprimOcup(
 			String cdtipsit
@@ -10887,91 +9895,18 @@ public class CotizacionManagerImpl implements CotizacionManager
 
 		String paso = null;
 		String otvalor = null;
-
 		try{
 			paso = "Recuperando coberturas de extraprimas";
 			logger.debug(paso);
-			
 			otvalor = cotizacionDAO.consultaExtraprimOcup(cdtipsit);
-			
-			
 		}
 		catch(Exception ex)
 		{
 			Utils.generaExcepcion(ex, paso);
 		}
-
 		logger.debug(Utils.log(
 				 "\n@@@@@@ consultaExtraprimOcup @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-		
-		return otvalor;
-	}
-	
-	@Override
-	public void actualizarOtvalorTramitePorDsatribu(
-			String ntramite
-			,String dsatribu
-			,String otvalor
-			,String accion
-			)throws Exception
-	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ actualizarOtvalorTramitePorDsatribu @@@@@@"
-				,"\n@@@@@@ ntramite=", ntramite
-				,"\n@@@@@@ dsatribu=", dsatribu
-				,"\n@@@@@@ otvalor=" , otvalor
-				,"\n@@@@@@ accion="  , accion
-				));
-		
-		String paso = "Ejecutando actualizaci\u00f3n de valor din\u00e1mico de tr\u00e1mite";
-		
-		try
-		{
-			mesaControlDAO.actualizarOtvalorTramitePorDsatribu(ntramite,dsatribu,otvalor,accion);
-		}
-		catch(Exception ex)
-		{
-			Utils.generaExcepcion(ex, paso);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ actualizarOtvalorTramitePorDsatribu @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-	}
-	
-	@Override
-	public String recuperarOtvalorTramitePorDsatribu(
-			String ntramite
-			,String dsatribu
-			)throws Exception
-	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ recuperarOtvalorTramitePorDsatribu @@@@@@"
-				,"\n@@@@@@ ntramite=", ntramite
-				,"\n@@@@@@ dsatribu=", dsatribu
-				));
-		
-		String paso     = "Ejecutando actualizaci\u00f3n de valor din\u00e1mico de tr\u00e1mite"
-		       ,otvalor = null;
-		
-		try
-		{
-			otvalor = mesaControlDAO.recuperarOtvalorTramitePorDsatribu(ntramite,dsatribu);
-		}
-		catch(Exception ex)
-		{
-			Utils.generaExcepcion(ex, paso);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ otvalor=", otvalor
-				,"\n@@@@@@ recuperarOtvalorTramitePorDsatribu @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
 		return otvalor;
 	}
@@ -11072,75 +10007,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return lista;
 	}
 	
-	@Override
-	public String obtenSumaAseguradosMedicamentos(
-			String cdramo,
-			String cdtipsit,
-			String cdgarant
-			)throws Exception
-	{
-		logger.info(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ obtenSumaAseguradosMedicamentos @@@@@@"
-				,"\n@@@@@@ cdramo   ="   , cdramo
-				,"\n@@@@@@ cdtipsit ="   , cdtipsit
-				,"\n@@@@@@ cdgarant ="   , cdgarant
-				));
-		
-		String sumaAseguradosMed = cotizacionDAO.obtenSumaAseguradosMedicamentos(cdramo, cdtipsit, cdgarant);
-		
-		
-		
-		logger.info(Utils.log(
-				 "\n@@@@@@ sumaAseguradosMed=" , sumaAseguradosMed
-				,"\n@@@@@@ obtenSumaAseguradosMedicamentos @@@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-		
-		return sumaAseguradosMed;
-		
-		
-	}
-	
-	@Override
-	public String recuperarDescripcionEstatusTramite (String status) throws Exception {
-		logger.debug(Utils.log(
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-				"\n@@@@@@ recuperarDescripcionEstatusTramite @@@@@@",
-				"\n@@@@@@ status = ", status));
-		String dsstatus = null;
-		String paso = "Recuperando descripci\u00f3n de status";
-		try {
-			List<Map<String, String>> lista = flujoMesaControlDAO.recuperaTestadomc(status);
-			if (lista == null || lista.size() == 0) {
-				throw new ApplicationException(Utils.join("No hay descripciones para el estatus '", status,"'"));
-			}
-			for (Map<String, String> estado : lista) {
-				if (status.equals(estado.get("CDESTADOMC"))) {
-					dsstatus = estado.get("DSESTADOMC");
-					break;
-				}
-			}
-			if (StringUtils.isBlank(dsstatus)) {
-				throw new ApplicationException(Utils.join("No hay descripci\u00f3n para el estatus '", status,"'"));
-			}
-		} catch (Exception ex) {
-			Utils.generaExcepcion(ex, paso);
-		}
-		logger.debug(Utils.log(
-				"\n@@@@@@ dsstatus = ", dsstatus,
-				"\n@@@@@@ recuperarDescripcionEstatusTramite @@@@@@",
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-		return dsstatus;
-	}
-	
-	@Override
-	@Deprecated // LOS METODOS DE MANAGER SIN LOGICA QUE SOLO INVOCAN AL DAO DEBEN DEJAR DE USARSE
-	public void actualizarCdplanGrupo(String cdunieco, String cdramo, String estado, String nmpoliza,
-		String nmsuplem, String cdgrupo, String cdplan) throws Exception {
-		emisionDAO.actualizarCdplanGrupo(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdgrupo, cdplan);
-	}
-	
+
 	@Override
 	public Map<String,String> obtieneFormapago(String administradora,String retenedora) throws Exception{
 		
@@ -11234,68 +10101,8 @@ public class CotizacionManagerImpl implements CotizacionManager
         return "";
         
     }
-
-    @Override
-    public Map<String, String> obtieneValidacionDescuentoR6(String tipoUnidad, String uso, String zona,
-            String promotoria, String cdagente, String cdtipsit, String cdatribu) throws Exception {
-        return cotizacionDAO.obtieneValidacionDescuentoR6(tipoUnidad, uso, zona,
-                promotoria, cdagente, cdtipsit, cdatribu);
-    }
-
-    @Override
-    public List<ComponenteVO> obtenerAtributosPolizaOriginal(Map<String, String> params) throws Exception {
-        if(!params.containsKey("pv_cdatrivar_i")) {
-            params.put("pv_atrivar_i" , null);
-        }
-        return cotizacionDAO.obtenerAtributosPolizaOriginal(params);
-    }
-
-    @Override
-    public String obtenerAseguradoDuplicado(HashMap<String, Object> paramPersona) throws Exception {
-        try {
-            return cotizacionDAO.obtenerAseguradoDuplicado(paramPersona);
-        } catch (Exception daoExc) {
-            throw new Exception(daoExc.getMessage(), daoExc);
-        }
-    }
-    
-    @Override
-    public void agregarAsegurado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,
-            String feefecto, String dsnombre, String dsnombre1, String paterno, String materno, String cdrfc,
-            String sexo, String fenacimi, String cdestciv, String dsocupacion, String cdtipsit, String cdplan,
-            String nmorddom, String cdagrupa, String otvalor01, String otvalor02, String otvalor03, String otvalor04,
-            String otvalor05, String otvalor06, String otvalor07, String otvalor08, String otvalor09, String otvalor10)
-            throws Exception {
-        
-        aseguradoDAO.agregarAsegurado(cdunieco, cdramo, estado, nmpoliza, nmsuplem, feefecto, dsnombre, dsnombre1,
-                paterno, materno, cdrfc, sexo, fenacimi, cdestciv, dsocupacion, cdtipsit, cdplan, nmorddom, cdagrupa, otvalor01, otvalor02,
-                otvalor03, otvalor04, otvalor05, otvalor06, otvalor07, otvalor08, otvalor09, otvalor10);
-    }
-
-    @Override
-    public String validaCertificadoGrupo(HashMap<String, Object> paramCertificado) throws Exception {
-        return cotizacionDAO.validaCertificadoGrupo(paramCertificado);
-    }
-    
-    public void guardaDatosAgenteSecundarioSigs(String ntramite,String agt_sec, String porc_part) throws Exception {
-        String paso = "Actualizando Otvalor mesa de control";
-        try {
-            paso = "Insertando Agente Secundario";
-            mesaControlDAO.actualizarOtvalorTramitePorDsatribu(ntramite, "AUX%CLAVE%AGENTE%SECUNDARIO", agt_sec, "I");
-            paso = "Insertando Porcentaje Participacion Agente Secundario";
-            mesaControlDAO.actualizarOtvalorTramitePorDsatribu(ntramite, "AUX%PARTICIPACI%N%AGENTE%SECUNDARIO", porc_part, "I");
-        } 
-        catch(Exception ex)
-        {
-            Utils.generaExcepcion(ex, paso);
-        }
-    }
 	
-    @Override
-    public void refrescarCensoColectivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsolici)throws Exception
-    {
-        cotizacionDAO.refrescarCensoColectivo(cdunieco,cdramo,estado,nmpoliza,nmsolici);
-    }
+
     
 	public AseguradosFiltroVO cargarAseguradosFiltroGrupo(
 			String cdunieco
@@ -11504,118 +10311,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return lista;
 	}
 	
-	@Override
-	public String validaAgenteActivo(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
-	    logger.info(Utils.log(
-                "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-               ,"\n@@@@@@ validaAgenteActivo @@@@@@"
-               ,"\n@@@@@@ cdunieco=" , cdunieco
-               ,"\n@@@@@@ cdramo="   , cdramo
-               ,"\n@@@@@@ estado="   , estado
-               ,"\n@@@@@@ nmpoliza=" , nmpoliza
-               ,"\n@@@@@@ nmsuplem=" , nmsuplem
-               ));
-	    String mensaje = "";
-	    try{
-            String ntramite = consultasManager.recuperarTramitePorNmsuplem(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
-            if(ntramite != null){
-                Map<String, String> mapTramite = siniestrosManager.obtenerTramiteCompleto(ntramite);
-                logger.debug("validarAgenteParaNuevoTramite tramite = {}", mapTramite.get("NTRAMITE"));
-                logger.debug("validarAgenteParaNuevoTramite tiptra = {}", mapTramite.get("CDTIPTRA"));
-                logger.debug("validarAgenteParaNuevoTramite agente = {}", mapTramite.get("CDAGENTE"));
-                logger.debug("validarAgenteParaNuevoTramite ramo = {}", mapTramite.get("CDSUBRAM"));
-                if(TipoTramite.RENOVACION.getCdtiptra().equals(mapTramite.get("CDTIPTRA"))){
-                    try{
-                        autosSIGSDAO.validarAgenteParaNuevoTramite(mapTramite.get("CDAGENTE"), mapTramite.get("CDSUBRAM"), "P");
-                    }
-                    catch(Exception ex){
-                        mensaje = ex.getMessage();
-                    }
-                }
-            }
-        }
-        catch(Exception ex){
-            logger.error("No se pudo obtener el tramite de salud", ex);
-        }
-	    return mensaje;
-	}
 	
 	@Override
 	public HashMap<String, String> obtieneCodigosPostalesProductos() throws Exception {
 		return cotizacionDAO.obtieneCodigosPostalesProductos();
-	}
-	
-	@Override
-    public String aplicaDescAutos(
-             String cdunieco
-            ,String cdramo
-            ,String nmpoliza
-            ,String modPrim
-            ,String cdtipsit
-            )throws Exception
-    {
-        //////////////////////////////////////////
-        ////// alterar mpolirec sin recotizar/////
-        String paso = "Modificacion de primas al aplicar descuento";
-        try
-        {
-             return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim,cdtipsit.isEmpty()?"1":"0");
-        }
-        catch(Exception ex)
-        {
-            throw new ApplicationException(paso);
-        }
-        ////// alterar mpolirec sin recotizar/////
-        //////////////////////////////////////////
-    }
-	
-	@Override
-    public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception
-    {
-        return  cotizacionDAO.validaDatosAutoSigs(incisosSigs);
-        
-    }
-    
-	@Override
-	public List<Map<String, String>> cargarResultadosCotizacion(
-	            String cdusuari, String cdunieco, String cdramo, String estado,
-	            String nmpoliza, String cdelemen, String cdtipsit) throws Exception
-	{
-	      return cotizacionDAO.cargarResultadosCotizacion(cdusuari, cdunieco, cdramo, estado, nmpoliza, cdelemen, cdtipsit);
-	}
-	
-    @Override
-    public List<Map<String, String>> cargarResultadosCotizacionAutoFlotilla(
-            String cdunieco, String cdramo, String estado, String nmpoliza)
-            throws Exception
-    {
-        return cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza);
-        
-    }
-    
-    @Override
-	public void eliminaDocsCotiza(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String ntramite) throws Exception{
-		this.cotizacionDAO.eliminaDocsCotiza(cdunieco, cdramo, estado, nmpoliza, ntramite);
-		
-	}
-
-	@Override
-	public void insertaMpoligrup(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
-			String cdgrupo, String dsgrupo, String cdplan, String dsplanVariable, String cdcveplan, String nmsumaaseg, String nmdeducible,
-			String swmat, String swmed, String swee) throws Exception{
-		this.cotizacionDAO.insertaMpoligrup(cdunieco, cdramo, estado, nmpoliza, cdtipsit, cdgrupo, dsgrupo, cdplan, dsplanVariable, cdcveplan, nmsumaaseg, nmdeducible, swmat, swmed, swee);
-	}
-
-	@Override
-	public void insertaMgrupogar(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit,
-			String cdgrupo, String cdplan, String nmsumaaseg) throws Exception{
-		this.cotizacionDAO.insertaMgrupogar(cdunieco, cdramo, estado, nmpoliza, cdtipsit, cdgrupo, cdplan, nmsumaaseg);
-	}
-
-	@Override
-	public void eliminarGrupos(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit) throws Exception{
-		this.cotizacionDAO.eliminarGrupos(cdunieco, cdramo, estado, nmpoliza, cdtipsit);
 	}
 	
 	/////////////////////////////////////////////////////
@@ -11643,7 +10342,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public void setConsultasDAO(ConsultasDAO consultasDAO) {
 		this.consultasDAO = consultasDAO;
 	}
-
 
     /////////////////////////////////////////////////////
     /////////////////////////////////////////////////////

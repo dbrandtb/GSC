@@ -5,10 +5,10 @@
 <head>
 <title>Cotizar</title>
 <link rel="stylesheet" href="${ctx}/resources/touch-2.3.1/resources/css/sencha-touch.css"></style>
-<script src="${ctx}/resources/jquery/jquery-1.10.2.min.js"></script>
+<script src="${ctx}/resources/extjs4/jquery-1.10.2.min.js"></script>
 <script src="${ctx}/resources/touch-2.3.1/sencha-touch-all.js"></script>
 <script src="${ctx}/resources/touch-2.3.1/overrides.js"></script>
-<script src="${ctx}/resources/touch-2.3.1/locale/ext-lang-es.js"></script>
+<script src="${ctx}/resources/touch-2.3.1/src/locale/ext-lang-es.js"></script>
 <script>
 ////// overrides //////
 Ext.util.Format.usMoney = function (v)
@@ -73,8 +73,8 @@ debug('_mcotiza_necesitoIncisos:',_mcotiza_necesitoIncisos);
 var _mcotiza_smap1         = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
  _mcotiza_smap1.conincisos = _mcotiza_necesitoIncisos?'si':'no';
 
-var _mcotiza_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _mcotiza_reportsServerUser = '<s:property value="passServidorReports" />';
+var _mcotiza_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _mcotiza_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _mcotiza_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _mcotiza_urlEnviarCorreo   = '<s:url namespace="/general" action="enviaCorreo" />';
 

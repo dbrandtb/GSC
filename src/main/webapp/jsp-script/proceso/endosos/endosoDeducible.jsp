@@ -35,10 +35,6 @@ var _6_fieldFechaEndoso;
 var _6_urlGuardar = '<s:url namespace="/endosos" action="guardarEndosoDeducible" />';
 
 debug('_6_smap1:',_6_smap1);
-
-var _p6_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p6_flujo:',_p6_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -242,12 +238,6 @@ function _6_confirmar()
 				,deducible   : _6_formDeducible.items.items[1].getValue()
 			}
 		}
-		
-		if(!Ext.isEmpty(_p6_flujo))
-		{
-		    json.flujo = _p6_flujo;
-		}
-		
 		debug('datos que se enviaran:',json);
 		_setLoading(true,_6_panelPri);
 		Ext.Ajax.request(
@@ -261,28 +251,15 @@ function _6_confirmar()
 				debug('datos recibidos:',json);
 				if(json.success==true)
 				{
-					var callbackRemesa = function()
-					{
-					    //////////////////////////////////
-                        ////// usa codigo del padre //////
-                        /*//////////////////////////////*/
-                        marendNavegacion(2);
-                        /*//////////////////////////////*/
-                        ////// usa codigo del padre //////
-                        //////////////////////////////////
-                    };
-                    
-                    mensajeCorrecto('Endoso generado',json.mensaje,function()
-                    {
-                        _generarRemesaClic(
-                            true
-                            ,_6_smap1.CDUNIECO
-                            ,_6_smap1.CDRAMO
-                            ,_6_smap1.ESTADO
-                            ,_6_smap1.NMPOLIZA
-                            ,callbackRemesa
-                        );
-                    });
+					mensajeCorrecto('Endoso generado',json.mensaje);
+					
+					//////////////////////////////////
+                    ////// usa codigo del padre //////
+                    /*//////////////////////////////*/
+                    marendNavegacion(2);
+                    /*//////////////////////////////*/
+                    ////// usa codigo del padre //////
+                    //////////////////////////////////
 				}
 				else
 				{
@@ -299,6 +276,5 @@ function _6_confirmar()
 };
 ////// funciones //////
 ///////////////////////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="_6_divPri" style="height:1000px;"></div>

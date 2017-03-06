@@ -1917,7 +1917,7 @@ Ext
 																	menuDisabled : true,
 																	items : [ {
 																		icon : contexto
-																				+ '/resources/fam3icons/icons/delete.png',
+																				+ '/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 																		// iconCls:
 																		// 'icon-delete',
 																		tooltip : 'Quitar inciso',
@@ -1930,7 +1930,7 @@ Ext
 														},
 														tbar : [ {
 															icon : contexto
-																	+ '/resources/fam3icons/icons/add.png',
+																	+ '/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 															text : 'Agregar inciso',
 															scope : this,
 															handler : this.onAddClick
@@ -2693,7 +2693,6 @@ Ext
 											                ,columns    : 2
 											                ,width      : 250
 											                ,style      : 'margin:5px;'
-											                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 											                ,items      :
 											                [
 											                    {
@@ -2701,13 +2700,12 @@ Ext
 											                        ,itemId     : 'SWAGENTE'
 											                        ,name       : 'SWAGENTE'
 											                        ,inputValue : 'S'
-											                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 											                    }
 											                    ,{
 											                        boxLabel    : 'No'
 											                        ,name       : 'SWAGENTE'
 											                        ,inputValue : 'N'
-                                                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                                    ,checked    : true
 											                    }
 											                ]
 											            }
@@ -2817,7 +2815,6 @@ Ext
 					titleCollapse : true,
 					startCollapsed : true,
 					resizable : false,
-					cls         : 'VENTANA_DOCUMENTOS_CLASS',
 					loader : {
 						scripts : true,
 						autoLoad : true,

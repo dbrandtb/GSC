@@ -29,11 +29,10 @@ Ext.override(Ext.form.TextField,
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-var _0_flujo      = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _0_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser = '<s:property value="passServidorReports" />';
+var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                        />';
 var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                        />';
@@ -65,14 +64,7 @@ var _p0_urlCargarPoliza           = '<s:url namespace="/emision"         action=
 var _0_urlCargarDetalleNegocioRamo5= '<s:url namespace="/emision"         action="cargarDetalleNegocioRamo5"      />';
 var url_obtiene_forma_pago					  = '<s:url namespace="/emision"          action="obtieneFormaPago"    />';
 
-var _0_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"      action="movimientoDetalleTramite"                    />';
-var _0_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"          action="actualizarOtvalorTramitePorDsatribu"         />';
-var _0_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"          action="recuperarOtvalorTramitePorDsatribu"          />';
-var _0_urlCargarParamerizacionCoberturas    = '<s:url namespace="/emision"          action="cargarParamerizacionConfiguracionCoberturas" />';
-var _0_urlRecuperarDatosTramiteValidacion   = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente"      />';
-var _0_urlCargarPoliza                      = '<s:url namespace="/emision"          action="cargarPoliza"                                />';
 var _0_urlCargarCatalogo                    = '<s:url namespace="/catalogos"       action="obtieneCatalogo"                     />';
-var _0_urlCargaValidacionDescuentoR6        = '<s:url namespace="/emision"         action="obtieneValidacionDescuentoR6"                 />';
 var _0_urlAplicaDxn                         = '<s:url namespace="/emision"         action="aplicaDxn"                 />';
 
 
@@ -88,15 +80,6 @@ var _0_necesitoIncisos = true;
 </s:if>
 _0_smap1.conincisos=_0_necesitoIncisos?'si':'no';
 debug('_0_necesitoIncisos:',_0_necesitoIncisos);
-
-if(!Ext.isEmpty(_0_flujo))
-{
-    <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo" includeParams="get">
-        <s:param name="params.AGRUPAMC" value="%{'PRINCIPAL'}" />
-    </s:url>
-    _0_urlMesaControl = '<s:property value="urlMesaFlujo" />';
-    debug('_0_urlMesaControl:',_0_urlMesaControl);
-}
 
 var _0_panelPri;
 var _0_formAgrupados;
@@ -169,67 +152,6 @@ var cargarXpoliza = false;
 var cargaCotiza = false;
 var _p28_panelDxnItems= [<s:property value="imap.panelDxnItems"  />];
 
-//CARGO TODOS LOS VALORES QUE SUCURSAL, RAMO Y POLIZA GENERAN
-var _0_panel7Items =
-   [
-       {
-           layout  :
-           {
-              type    : 'table'
-             ,columns : 1
-             ,style   : 'width:10px !important;'
-          }
-          ,border : 0
-          ,items  :
-          [
-           {
-                    xtype       : 'numberfield'
-                   ,itemId      : '_0_numsuc'
-                   ,fieldLabel  : 'SUCURSAL'
-                   ,name        : 'sucursal'               
-                   ,sinOverride : true
-                   ,labelWidth  : 170
-                   ,style       : 'margin:5px;margin-left:15px;'//'margin:5px;margin-left:15px;width:20px !important;'
-                   ,value       : !Ext.isEmpty(_0_smap1.RENUNIEXT) ? _0_smap1.RENUNIEXT : ''
-                   ,listeners   :
-                   {
-                       change : _0_nmpolizaChange
-                   }
-                   ,readOnly    :  true 
-               }
-              ,{
-                       xtype       : 'numberfield'
-                      ,itemId      : '_0_numram'
-                      ,fieldLabel  : 'RAMO'
-                      ,name        : 'ramo'                   
-                      ,sinOverride : true                   
-                      ,labelWidth  : 170
-                      ,style       : 'margin:5px;margin-left:15px;'//'width : 30px !important;'
-                      ,value       : !Ext.isEmpty(_0_smap1.RENRAMO) ? _0_smap1.RENRAMO : ''
-                      ,listeners   :
-                      {
-                          change : _0_nmpolizaChange
-                      }
-                      ,readOnly    :  true 
-                 }
-                ,{
-                     xtype       : 'numberfield'
-                    ,itemId      : '_0_numpol'
-                    ,fieldLabel  : 'POLIZA'
-                    ,name        : 'poliza'
-                    ,sinOverride : true                 
-                    ,labelWidth  : 170
-                    ,style       : 'margin:5px;margin-left:15px;'//'width : 50px !important;'
-                    ,value       : !Ext.isEmpty(_0_smap1.RENPOLIEX) ? _0_smap1.RENPOLIEX : ''
-                    ,listeners   :
-                    {
-                        change : _0_nmpolizaChange
-                    }
-                    ,readOnly    :  true
-              }
-          ]
-       }
-    ];
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -385,8 +307,7 @@ function _0_comprar()
             ,'smap1.fechaInicio'   : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(),'d/m/Y')
             ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(),'d/m/Y')
             ,'smap1.ntramite'      : _0_smap1.ntramite
-            ,'smap1.cdpersonCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CLAVECLI
-            ,'smap1.nmorddomCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM
+            ,'smap1.cdpersonCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.get('CLAVECLI')
             ,'smap1.cdideperCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER
             ,'smap1.cdagenteExt'   : (_0_smap1.cdramo == '6' || _0_smap1.cdramo == '16') ? _fieldByLabel('AGENTE').getValue() : ''
         }
@@ -453,11 +374,6 @@ function _0_comprar()
                     if(_0_smap1.SITUACION=='AUTO')
                     {
                         debug("_0_smap1.SITUACION=='AUTO'");
-                        if(Ext.isEmpty(_0_flujo)
-                            ||Ext.isEmpty(_0_flujo.aux)
-                            ||_0_flujo.aux.indexOf('onComprar')==-1
-                        ) //si no hay flujo, o no hay auxiliar en flujo, o el auxiliar no contiene la palabra onComprar
-                        {
                             var msg = Ext.Msg.show(
                             {
                                 title    : 'Tr&aacute;mite actualizado'
@@ -468,7 +384,11 @@ function _0_comprar()
                                 ,y       : 50
                                 ,fn      : function()
                                 {
-                                    var paramsDatCom =
+                                Ext.create('Ext.form.Panel').submit(
+                                {
+                                    url             : _0_urlDatosComplementarios
+                                    ,standardSubmit : true
+                                    ,params         :
                                     {
                                         cdunieco         : _0_smap1.cdunieco
                                         ,cdramo          : _0_smap1.cdramo
@@ -476,200 +396,28 @@ function _0_comprar()
                                         ,nmpoliza        : _0_fieldNmpoliza.getValue()
                                         ,'map1.ntramite' : json.smap1.ntramite
                                         ,cdtipsit        : _0_smap1.cdtipsit
-                                    };
-                                    
-                                    if(!Ext.isEmpty(_0_flujo))
-                                    {
-                                        paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
-                                        paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
-                                        paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
-                                        paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
-                                        paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
-                                        paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
-                                        paramsDatCom['flujo.status']    = _0_flujo.status;
-                                        paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
-                                        paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
-                                        paramsDatCom['flujo.estado']    = _0_flujo.estado;
-                                        paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
-                                        paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
-                                        paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
-                                        paramsDatCom['flujo.aux']       = 'RECUPERAR';
                                     }
                                 
-                                    Ext.create('Ext.form.Panel').submit(
-                                    {
-                                        url             : _0_urlDatosComplementarios
-                                        ,standardSubmit : true
-                                        ,params         : paramsDatCom
                                     });
                                 }
                             });
-                        }
-                        else //flujo tiene la palabra onComprar
-                        {
-                            //si el flujo tiene este comodin ejecutaremos un turnado con el status indicado
-                            var ck = 'Turnando tr\u00e1mite';
-                            try
-                            {
-                                var status = _0_flujo.aux.split('_')[1];
-                                debug('status para turnar onComprar:',status,'.');
-                                
-                                _mask(ck);
-                                Ext.Ajax.request(
-                                {
-                                    url      : _GLOBAL_COMP_URL_TURNAR
-                                    ,params  :
-                                    {
-                                        'params.CDTIPFLU'   : _0_flujo.cdtipflu
-                                        ,'params.CDFLUJOMC' : _0_flujo.cdflujomc
-                                        ,'params.NTRAMITE'  : _0_flujo.ntramite
-                                        ,'params.STATUSOLD' : _0_flujo.status
-                                        ,'params.STATUSNEW' : status
-                                        ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
-                                        ,'params.SWAGENTE'  : 'S'
-                                    }
-                                    ,success : function(response)
-                                    {
-                                        _unmask();
-                                        var ck = '';
-                                        try
-                                        {
-                                            var json = Ext.decode(response.responseText);
-                                            debug('### turnar:',json);
-                                            if(json.success)
-                                            {
-                                                mensajeCorrecto
-                                                (
-                                                    'Tr\u00e1mite turnado'
-                                                    //,json.message
-                                                    ,'El tr\u00e1mite fue turnado para aprobaci\u00f3n del agente/promotor'
-                                                    ,function()
-                                                    {
-                                                        _mask('Redireccionando');
-                                                        Ext.create('Ext.form.Panel').submit(
-                                                        {
-                                                            url             : _GLOBAL_COMP_URL_MCFLUJO
-                                                            ,standardSubmit : true
-                                                        });
-                                                    }
-                                                );
-                                            }
-                                            else
-                                            {
-                                                mensajeError(json.message);
-                                            }
-                                        }
-                                        catch(e)
-                                        {
-                                            manejaException(e,ck);
-                                        }
-                                    }
-                                    ,failure : function()
-                                    {
-                                        _unmask();
-                                        errorComunicacion(null,'Error al turnar tr\u00e1mite');
-                                    }
-                                });
-                            }
-                            catch(e)
-                            {
-                                manejaException(e,ck);
-                            }
-                        }
                     }
                     else
                     {
-                        var callbackNormal = function (callback) {
-                            mensajeCorrecto(
-                                'Tr\u00e1mite generado',
-                                'Se ha generado el tr\u00e1mite ' + json.smap1.ntramite +
-                                    ', favor de revisar los requisitos y subir sus documentos antes de turnar a SUSCRIPCI\u00d3N',
-                                callback
-                            );
-                        };
-                        var mask, ck = 'Recuperando lista de requisitos';
-                        try {
-                            var ntramite = json.smap1.ntramite;
-                            ck = 'Recuperando validaci\u00f3n ligada a requisitos';
-                            mask = _maskLocal(ck);
-                            Ext.Ajax.request({
-                                url     : _GLOBAL_URL_RECUPERACION,
-                                params  : {
-                                    'params.consulta' : 'RECUPERAR_VALIDACION_POR_CDVALIDAFK',
-                                    'params.ntramite' : json.smap1.ntramite,
-                                    'params.clave'    : '_CONFCOT'
-                                },
-                                success : function (response) {
-                                    mask.close();
-                                    var ck = 'Decodificando respuesta al recuperar validaci\u00f3n ligada a requisitos';
-                                    try {
-                                        var valida = Ext.decode(response.responseText);
-                                        debug('### validacion ligada a checklist:', valida);
-                                        if (valida.success === true) {
-                                            if (valida.list.length > 0) {
-                                                _cargarAccionesEntidad(
-                                                    valida.list[0].CDTIPFLU,
-                                                    valida.list[0].CDFLUJOMC,
-                                                    valida.list[0].TIPOENT,
-                                                    valida.list[0].CDENTIDAD,
-                                                    valida.list[0].WEBID,
-                                                    function (acciones) {
-                                                        if (acciones.length > 0) {
-                                                            debug('acciones:', acciones);
-                                                            callbackNormal(function () {
-                                                                _procesaAccion(
-                                                                    acciones[0].CDTIPFLU,
-                                                                    acciones[0].CDFLUJOMC,
-                                                                    acciones[0].TIPODEST,
-                                                                    acciones[0].CLAVEDEST,
-                                                                    acciones[0].WEBIDDEST,
-                                                                    acciones[0].AUX,
-                                                                    valida.params.ntramite,
-                                                                    valida.list[0].STATUS,
-                                                                    null, //cdunieco
-                                                                    null, //cdramo
-                                                                    null, //estado
-                                                                    null, //nmpoliza
-                                                                    null, //nmsituac
-                                                                    null, //nmsuplem
-                                                                    valida.list[0].cdusuari,
-                                                                    valida.list[0].cdsisrol,
-                                                                    null // callback
-                                                                );
-                                                            });
-                                                        } else {
-                                                            callbackNormal();
-                                                        }
-                                                    }
-                                                );
-                                            } else {
-                                                callbackNormal();
-                                            }
-                                        } else {
-                                            mensajeError(json.message);
-                                        }
-                                    } catch (e) {
-                                        manejaException(e, ck);
-                                    }
-                                },
-                                failure : function () {
-                                    mask.close();
-                                    errorComunicacion(null, 'Error al recuperar validaci\u00f3n ligada a requisitos');
-                                }
-                            });
-                        } catch (e) {
-                            manejaException(e, ck, mask);
-                            callbackNormal();
-                        }
+                        var msg = Ext.Msg.show(
+                        {
+                            title    : 'Solicitud enviada'
+                            ,msg     : 'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '
+                                        + json.smap1.ntramite
+                                        + ', ahora puede subir los documentos del trámite'
+                            ,buttons : Ext.Msg.OK
+                            ,y       : 50
+                        });
+                        msg.setY(50);
                     }
                 }
                 else
                 {
-                    if(Ext.isEmpty(_0_flujo)
-                        ||Ext.isEmpty(_0_flujo.aux)
-                        ||_0_flujo.aux.indexOf('onComprar')==-1
-                    ) //si no hay flujo, o no hay auxiliar en flujo, o el auxiliar no contiene la palabra onComprar
-                    {
                         var msg = Ext.Msg.show(
                         {
                             title    : 'Tr&aacute;mite actualizado'
@@ -680,7 +428,11 @@ function _0_comprar()
                             ,y       : 50
                             ,fn      : function()
                             {
-                                var paramsDatCom =
+                            Ext.create('Ext.form.Panel').submit(
+                            {
+                                url             : _0_urlDatosComplementarios
+                                ,standardSubmit : true
+                                ,params         :
                                 {
                                     cdunieco         : _0_smap1.cdunieco
                                     ,cdramo          : _0_smap1.cdramo
@@ -688,106 +440,12 @@ function _0_comprar()
                                     ,nmpoliza        : _0_fieldNmpoliza.getValue()
                                     ,'map1.ntramite' : _0_smap1.ntramite
                                     ,cdtipsit        : _0_smap1.cdtipsit
-                                };
-                                
-                                if(!Ext.isEmpty(_0_flujo))
-                                {
-                                    paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
-                                    paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
-                                    paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
-                                    paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
-                                    paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
-                                    paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
-                                    paramsDatCom['flujo.status']    = _0_flujo.status;
-                                    paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
-                                    paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
-                                    paramsDatCom['flujo.estado']    = _0_flujo.estado;
-                                    paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
-                                    paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
-                                    paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
-                                    paramsDatCom['flujo.aux']       = 'RECUPERAR';
                                 }
                                 
-                                Ext.create('Ext.form.Panel').submit(
-                                {
-                                    url             : _0_urlDatosComplementarios
-                                    ,standardSubmit : true
-                                    ,params         : paramsDatCom
                                 });
                             }
                         });
                         msg.setY(50);
-                    }
-                    else //flujo tiene la palabra onComprar
-                    {
-                        //si el flujo tiene este comodin ejecutaremos un turnado con el status indicado
-                        var ck = 'Turnando tr\u00e1mite';
-                        try
-                        {
-                            var status = _0_flujo.aux.split('_')[1];
-                            debug('status para turnar onComprar:',status,'.');
-                            
-                            _mask(ck);
-                            Ext.Ajax.request(
-                            {
-                                url      : _GLOBAL_COMP_URL_TURNAR
-                                ,params  :
-                                {
-                                    'params.CDTIPFLU'   : _0_flujo.cdtipflu
-                                    ,'params.CDFLUJOMC' : _0_flujo.cdflujomc
-                                    ,'params.NTRAMITE'  : _0_flujo.ntramite
-                                    ,'params.STATUSOLD' : _0_flujo.status
-                                    ,'params.STATUSNEW' : status
-                                    ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
-                                    ,'params.SWAGENTE'  : 'S'
-                                }
-                                ,success : function(response)
-                                {
-                                    _unmask();
-                                    var ck = '';
-                                    try
-                                    {
-                                        var json = Ext.decode(response.responseText);
-                                        debug('### turnar:',json);
-                                        if(json.success)
-                                        {
-                                            mensajeCorrecto
-                                            (
-                                                'Tr\u00e1mite turnado'
-                                                ,json.message
-                                                ,function()
-                                                {
-                                                    _mask('Redireccionando');
-                                                    Ext.create('Ext.form.Panel').submit(
-                                                    {
-                                                        url             : _GLOBAL_COMP_URL_MCFLUJO
-                                                        ,standardSubmit : true
-                                                    });
-                                                }
-                                            );
-                                        }
-                                        else
-                                        {
-                                            mensajeError(json.message);
-                                        }
-                                    }
-                                    catch(e)
-                                    {
-                                        manejaException(e,ck);
-                                    }
-                                }
-                                ,failure : function()
-                                {
-                                    _unmask();
-                                    errorComunicacion(null,'Error al turnar tr\u00e1mite');
-                                }
-                            });
-                        }
-                        catch(e)
-                        {
-                            manejaException(e,ck);
-                        }
-                    }
                 }
             }
             else
@@ -1309,40 +967,23 @@ function _0_recuperarCotizacion(nmpoliza)
             ,'smap1.cdramo'     : _0_smap1.cdramo
             ,'smap1.cdunieco'   : _0_smap1.cdunieco
             ,'smap1.cdtipsit'   : _0_smap1.cdtipsit
-            ,'smap1.ntramiteIn' : _NVL(_0_smap1.ntramite)
         }
         ,success : function(response)
         {
             var json=Ext.decode(response.responseText);
-            cargarXpoliza = true;
             
-            if(_0_smap1.cdramo=='6' || _0_smap1.cdramo=='16')
+            if(_0_smap1.cdramo=='6')
             {   
-                if(!Ext.isEmpty(json.error))
-                {
-                	mensajeError(json.error); 
-                	_0_panelPri.setLoading(false);
-                }
-                else
-                {
                 	var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
 
                 	if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
                 	{
                 		    _0_recordClienteRecuperado = primerInciso;
                 		    debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
-                	}
-                    llenandoCampos(json);
                 }
-                
-            }
-
-            else
-            {
-                _0_panelPri.setLoading(false);
-                errorComunicacion(null,'Error al validar el ramo, solo fronterizos');
             }
             
+            llenandoCampos(json);
         }
         ,failure : function()
         {
@@ -1460,6 +1101,8 @@ function llenandoCampos (json)
          debug('fechaHoy='    , fechaHoy);
          debug('fechaLimite=' , fechaLimite);
          debug('vencida='     , vencida, '.');
+         
+         
     
          _0_limpiar();
     
@@ -1469,22 +1112,12 @@ function llenandoCampos (json)
          var diaDif = milDif/(1000*60*60*24);
          debug('diaDif:',diaDif);
        
-         if(diaDif<0)
+         /*if(!maestra&&!vencida)
          {
-               diaDif = diaDif*-1;
-         }
+             _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEEFECTO,'d/m/Y'));
+         }*/
          
-         debug('diaDif:',diaDif);
-         
-         if(!Ext.isEmpty(json.slist1[0]['feini']))
-         {
-             _fieldByName('feini').setValue(Ext.Date.parse(json.slist1[0]['feini'],'d/m/Y'));
-         }
-         else
-         {
-             _fieldByName('feini').setValue(new Date());
-         }
-         
+         _fieldByName('feini').setValue(new Date());
          _fieldByName('fefin').setValue
          (
              Ext.Date.add
@@ -1519,6 +1152,7 @@ function llenandoCampos (json)
  //<< ----------------------------------------------------------------------------     
         if(cargarXpoliza || Ext.isEmpty(json.smap1.NTRAMITE))
         {
+            _0_limpiar();
             for(var i=0;i<json.slist1.length;i++)
             {
                 if(_0_smap1.SITUACION=='AUTO')
@@ -1617,15 +1251,7 @@ function llenandoCampos (json)
                 {
                     if(!cargarXpoliza)
                     {
-	               	    if(maestra)//SE DEJA EN BLANCO CUANDO "M" PARA GENERAR NUEVO NUMERO 
-	               		{
-	               		    _fieldByName('nmpoliza').setValue('');
-	               		    _fieldByName('FESOLICI').setValue(new Date());
-	               		}
-	               	    else
-	               	    {
-	               	        _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
-               		    }
+                           _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
                     }
                     
                     _0_panelPri.setLoading(false);
@@ -1684,28 +1310,6 @@ function llenandoCampos (json)
                             cargaCotiza = true;
                             sinTarificar = !maestra&&!vencida ;
                             
-                            if (cargarXpoliza === true) 
-                            { // Cuando es una renovacion importada de SIGS
-                                sinTarificar = false;
-                                
-                                if(_0_smap1.cdramo=='6' || _0_smap1.cdramo=='16' || true)
-                                {   
-                                           if(!Ext.isEmpty(primerInciso.raw.CLAVECLI))
-                                        {
-                                                _0_recordClienteRecuperado = primerInciso;
-                                                debug('_0_recordClienteRecuperado:',_0_recordClienteRecuperado);
-                                        }
-                                    
-                                }
-                            
-                                var fesoliciCmp = _fieldByName('FESOLICI', null, true);
-                                if (!Ext.isEmpty(fesoliciCmp)
-                                    && Ext.isEmpty(fesoliciCmp.getSubmitValue())
-                                ) {
-                                    fesoliciCmp.setValue(new Date());
-                                }
-                            }
-                            
                             _0_cotizar();
                         }
                         
@@ -1721,12 +1325,17 @@ function llenandoCampos (json)
                         }
                 }
             };
+
             _0_panelPri.setLoading(true);
             renderiza();
         }
         else
         {
-            var paramsDatCom =
+            Ext.create('Ext.form.Panel').submit(
+            {
+                url             : _0_urlDatosComplementarios
+                ,standardSubmit : true
+                ,params         :
             {
                 cdunieco         : json.smap1.CDUNIECO
                 ,cdramo          : json.smap1.cdramo
@@ -1734,31 +1343,8 @@ function llenandoCampos (json)
                 ,nmpoliza        : json.smap1.nmpoliza
                 ,'map1.ntramite' : json.smap1.NTRAMITE
                 ,cdtipsit        : json.smap1.cdtipsit
-            };
-            
-            if(!Ext.isEmpty(_0_flujo))
-            {
-                paramsDatCom['flujo.cdtipflu']  = _0_flujo.cdtipflu;
-                paramsDatCom['flujo.cdflujomc'] = _0_flujo.cdflujomc;
-                paramsDatCom['flujo.tipoent']   = _0_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
-                paramsDatCom['flujo.claveent']  = _0_flujo.claveent; //ACTUAL QUE SE RECUPERARA
-                paramsDatCom['flujo.webid']     = _0_flujo.webid;    //ACTUAL QUE SE RECUPERARA
-                paramsDatCom['flujo.ntramite']  = _0_flujo.ntramite;
-                paramsDatCom['flujo.status']    = _0_flujo.status;
-                paramsDatCom['flujo.cdunieco']  = _0_flujo.cdunieco;
-                paramsDatCom['flujo.cdramo']    = _0_flujo.cdramo;
-                paramsDatCom['flujo.estado']    = _0_flujo.estado;
-                paramsDatCom['flujo.nmpoliza']  = _0_flujo.nmpoliza;
-                paramsDatCom['flujo.nmsituac']  = _0_flujo.nmsituac;
-                paramsDatCom['flujo.nmsuplem']  = _0_flujo.nmsuplem;
-                paramsDatCom['flujo.aux']       = 'RECUPERAR';
             }
             
-            Ext.create('Ext.form.Panel').submit(
-            {
-                url             : _0_urlDatosComplementarios
-                ,standardSubmit : true
-                ,params         : paramsDatCom
             });
         }
     }
@@ -1837,7 +1423,6 @@ function _0_cotizar(boton)
     debug('_0_cotizar');
     if(_0_validarBase())//
     {
-    	var smap = _0_smap1;
     	
         if(!Ext.isEmpty(_0_recordClienteRecuperado))
         {
@@ -1856,17 +1441,8 @@ function _0_cotizar(boton)
                }
                else
                {
-                   if(!Ext.isEmpty(agenteCmp.getValue()))
-                   {
                    smap.cdagenteAux=agenteCmp.getValue();
                    }
-               }
-               
-               if(!Ext.isEmpty(cdagenteCotiza))
-               {
-                    _0_smap1['cdagente']    = 'A'+cdagenteCotiza;
-                    _fieldByLabel('AGENTE').setValue(cdagenteCotiza);
-               }
             }
         }
         
@@ -1893,6 +1469,8 @@ function _0_cotizar(boton)
                   _0_smap1['cdagente']    = 'A'+cdagenteCotiza;
              }
         }
+        
+        var smap = _0_smap1;
         
         var json=
         {
@@ -1974,9 +1552,9 @@ function _0_cotizar(boton)
                 json=Ext.decode(response.responseText);
                 if(json.success==true)
                 {
-//                 	alert('Regresa');
                     debug(Ext.decode(json.smap1.fields));
                     debug(Ext.decode(json.smap1.columnas));
+                    debug(json.slist2);
                     
                     _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
                                     
@@ -2049,9 +1627,7 @@ function _0_cotizar(boton)
                     
                     _0_gridTarifas=Ext.create('Ext.grid.Panel',
                     {
-                        title             : ( Ext.isEmpty(_0_flujo) ? false : (_0_flujo.cdflujomc == 220 && _0_flujo.cdtipflu == 103 && _0_smap1.cdramo == Ramo.AutosFronterizos) 
-                                            )? 'Resultados:<br>Plan y forma de pago de p\u00f3liza a renovar: '+json.smap1.fila+'-'+json.smap1.columna 
-                                          :'Resultados'
+                        title             : 'Resultados'
                         ,store            : Ext.create('Ext.data.Store',
                         {
                             model : '_0_modeloTarifa'
@@ -2076,49 +1652,6 @@ function _0_cotizar(boton)
                         ,listeners        :
                         {
                             select       : _0_tarifaSelect
-                            ,afterrender : function(me)
-                            {
-                                if(!Ext.isEmpty(json.smap1.columna) && !Ext.isEmpty(json.smap1.fila))
-                                {
-                                    var sm = _0_gridTarifas.getSelectionModel();
-                                    try
-                                    {
-                                        var columna=0, fila=999; 
-                                        for(var IteGriTar=1;IteGriTar<_0_gridTarifas.columns.length;IteGriTar++)
-                                        {
-                                            if((_0_gridTarifas.columns[IteGriTar].text).toLowerCase() === json.smap1.columna.toLowerCase())
-                                            {
-                                                 columna = IteGriTar - columna;
-                                                 IteGriTar = _0_gridTarifas.columns.length + 1;
-                                            }
-                                            else if( IteGriTar%2 != 1)
-                                            {
-                                                columna ++;
-                                            }
-                                        }
-                                        
-                                        for(var IteGriTar=0;IteGriTar<17;IteGriTar++)
-                                        {
-                                            sm.select({row:IteGriTar,column:columna});
-                                            var texto = (sm.getSelection({row:IteGriTar,column:columna})[0].data.DSPERPAG).toLowerCase()
-                                            if(json.smap1.fila.toLowerCase() === texto)
-                                            {
-                                                  fila = IteGriTar;
-                                                  IteGriTar = 18;
-                                            }
-                                        }
-                                        
-                                        sm.select({row:fila,column:columna});
-                                     }catch(e) {
-                                       debug("Excede rango fuera de la cuadricula de tarifas");
-                                     }
-                                }
-                                
-                                if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
-                                {
-                                    _0_actualizarCotizacionTramite();
-                                }
-                            }
                         }
                     });
                     
@@ -2810,7 +2343,7 @@ function _0_actualizarCotizacionTramite(callback)
 
 function _0_recuperarCotizacionDeTramite()
 {
-    if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' )
+    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
     {
         var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
         try
@@ -3267,7 +2800,6 @@ function _0_cargarPoliza(cduniext,ramo,nmpoliex,cdusuari,tipoflot)
                 ,'smap1.cdpoliza'   : nmpoliex
                 ,'smap1.cdusuari'   : cdusuari
                 ,'smap1.tipoflot'   : tipoflot
-                ,'smap1.cargaCotiza': 'S'
             }
             ,success : function(response)
             {
@@ -3395,19 +2927,6 @@ function _0_atributoNacimientoContratante(combo)
 
         }
 }
-
-function _0_nmpolizaChange(me)
-{
-    var sem = me.semaforo;
-    if(Ext.isEmpty(sem)||sem==false)
-    {
-        me.sucio = true;
-    }
-    else
-    {
-        me.sucio = false;
-    }
-}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -3415,7 +2934,7 @@ function _0_nmpolizaChange(me)
 Ext.onReady(function()
 {
     
-    //_grabarEvento('COTIZACION','ACCCOTIZA',_0_smap1.ntramite,_0_smap1.cdunieco,_0_smap1.cdramo);
+    _grabarEvento('COTIZACION','ACCCOTIZA',_0_smap1.ntramite,_0_smap1.cdunieco,_0_smap1.cdramo);
     
     Ext.Ajax.timeout = 5*60*1000;
     
@@ -3622,7 +3141,7 @@ Ext.onReady(function()
     		debug('_0_FormAgrupados initComponent');
     		
     		var itemsFormAgrupados=[
-    	            		 _0_fieldNtramite
+    	            			    _0_fieldNtramite
     	    			    ,_0_fieldNmpoliza
     	    			    ,<s:property value="imap.camposAgrupados"/>
     	    			    ,{
@@ -3784,7 +3303,7 @@ Ext.onReady(function()
 		                                id        : 'inputTextareaCommentsToRechazo'
 		                                ,width  : 570
 		                                ,height : 300
-		                                ,xtype  : 'textarea'
+                                        ,xtype  : 'textfield'
 		                            }
 		                            ,{
 						                xtype       : 'radiogroup'
@@ -3792,7 +3311,6 @@ Ext.onReady(function()
 						                ,columns    : 2
 						                ,width      : 250
 						                ,style      : 'margin:5px;'
-						                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 						                ,items      :
 						                [
 						                    {
@@ -3800,13 +3318,12 @@ Ext.onReady(function()
 						                        ,itemId     : 'SWAGENTE'
 						                        ,name       : 'SWAGENTE'
 						                        ,inputValue : 'S'
-						                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 						                    }
 						                    ,{
 						                        boxLabel    : 'No'
 						                        ,name       : 'SWAGENTE'
 						                        ,inputValue : 'N'
-                                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                ,checked    : true
 						                    }
 						                ]
 						            }
@@ -3904,44 +3421,9 @@ Ext.onReady(function()
    		        {
    		            style : 'margin:5px;'
    		        }
-   		        ,border   : 0
    		        ,items    :
    		        [
-   		            Ext.create('Ext.panel.Panel',
-		            {
-		                itemId       : '_0_panelFlujo'
-		                ,title       : 'ACCIONES'
-		                ,hidden      : Ext.isEmpty(_0_flujo) || !_0_smap1.SITUACION === 'AUTO'
-		                ,buttonAlign : 'left'
-		                ,buttons     : []
-		                ,listeners   :
-		                {
-		                    afterrender : function(me)
-		                    {
-		                        if(!Ext.isEmpty(_0_flujo))
-		                        {
-		                            _cargarBotonesEntidad(
-		                                _0_flujo.cdtipflu
-		                                ,_0_flujo.cdflujomc
-		                                ,_0_flujo.tipoent
-		                                ,_0_flujo.claveent
-		                                ,_0_flujo.webid
-		                                ,me.itemId//callback
-		                                ,_0_flujo.ntramite
-		                                ,_0_flujo.status
-		                                ,_0_flujo.cdunieco
-		                                ,_0_flujo.cdramo
-		                                ,_0_flujo.estado
-		                                ,_0_flujo.nmpoliza
-		                                ,_0_flujo.nmsituac
-		                                ,_0_flujo.nmsuplem
-		                                ,null//callbackDespuesProceso
-		                            );
-		                        }
-		                    }
-		                }
-		            })
-   		            ,_0_formAvisos
+                    _0_formAvisos
    		            ,_0_formAgrupados
    		            ,_0_gridIncisos
    		            ,_0_botonera
@@ -4113,10 +3595,7 @@ Ext.onReady(function()
     {
         text     : _0_smap1.ntramite?'Precaptura':'Cotizar'
         ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
-        ,handler : function (me) {
-            sinTarificar = false;
-            _0_cotizar(me);
-        }
+        ,handler : _0_cotizar
     });
     
     _0_botCargar=Ext.create('Ext.Button',
@@ -4504,19 +3983,6 @@ Ext.onReady(function()
                     'select' : retroactividadfechaini
                 });
         
-        var tipoServicio = _fieldLikeLabel('TIPO SERVICIO',null,true);
-        tipoServicio.on(
-		        		{
-		        			change : function(){ _0_cargarParametrizacionCoberturas();}
-		        	    }
-		        	   );
-//         { _f1_tipoServicio = _fieldByLabel('TIPO SERVICIO').getValue();}
-        var modelo = _fieldLikeLabel('MODELO',null,true);
-        modelo.on(
-                        {
-                        	'blur' : function(){ _0_cargarParametrizacionCoberturas();}
-                        }
-                       );
         
         if(!Ext.isEmpty(_fieldLikeLabel('EL CONTRATANTE PADECE',null,true)))
        	{
@@ -4615,15 +4081,6 @@ Ext.onReady(function()
         debug('cdatribus_derechos:',cdatribus_derechos);
         var itemsIzq=[];
         var itemsDer=[];
-        itemsIzq.push
-        ({
-           xtype  : 'fieldset'
-          ,itemId : '_p28_fieldBusquedaPoliza'
-          ,width  : 435
-          ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
-          ,items  : _0_panel7Items
-          ,hidden : !Ext.isEmpty(_0_flujo) ? (_0_flujo.cdflujomc != 220 && _0_flujo.cdtipflu != 103 && _0_smap1.cdramo == Ramo.AutosFronterizos) : true 
-        });
         for(var i=0;i<items.length;i++)
         {
             var iItem=items[i];
@@ -4658,7 +4115,7 @@ Ext.onReady(function()
         ]);
     </s:if>
     _0_botonera      = new _0_Botonera();
-    _0_panelPri      = new _0_PanelPri();    
+    _0_panelPri      = new _0_PanelPri();
     /*///////////////////*/
     ////// contenido //////
     ///////////////////////
@@ -4746,36 +4203,20 @@ Ext.onReady(function()
                 if(valido)
                 {
                     _fieldLikeLabel('DESCUENTO').setLoading(true);
-                    
-                    Ext.Ajax.request({
-               	        url      : _0_urlCargaValidacionDescuentoR6
-               	        ,params :
+                    _fieldLikeLabel('DESCUENTO').getStore().load(
+                    {
+                        params :
                         {
-                            'smap1.tipoUnidad' : _fieldByLabel('TIPO DE UNIDAD').getValue()
-                            ,'smap1.uso'       : _fieldByLabel('TIPO DE USO').getValue()
-                            ,'smap1.cdagente'  : _fieldByLabel('AGENTE').getValue()
-                            ,'smap1.cdtipsit'  : _0_smap1.cdtipsit
-                            ,'smap1.cdatribu'  : '21'
+                            'params.tipoUnidad' : _fieldByLabel('TIPO DE UNIDAD').getValue()
+                            ,'params.uso'       : _fieldByLabel('TIPO DE USO').getValue()
+                            ,'params.cdagente'  : _fieldByLabel('AGENTE').getValue()
+                            ,'params.cdtipsit'  : _0_smap1.cdtipsit
+                            ,'params.cdatribu'  : '21'
                         }
-               	        ,success : function(response)
-               	        {
-               	            var ijson=Ext.decode(response.responseText);
-               	            debug('### obtener auto por clave gs:',ijson);
-               	            if(ijson.success)
-               	            {
-               	            	_fieldLikeLabel('DESCUENTO').setMinValue(ijson.smap1.RANGO_MINIMO);
-               	            	_fieldLikeLabel('DESCUENTO').setMaxValue(ijson.smap1.RANGO_MAXIMO);
-               	             	_fieldLikeLabel('DESCUENTO').setLoading(false);
-               	            }
-               	            else
-               	            {
-               	                mensajeWarning(ijson.respuesta);
-               	            }
-               	        }
-               	        ,failure : function()
-               	        {
-               	            errorComunicacion();
-               	        }
+                        ,callback : function()
+                        {
+                            _fieldLikeLabel('DESCUENTO').setLoading(false);
+                        }
                	    });
                     
                 }
@@ -5332,7 +4773,6 @@ Ext.onReady(function()
     }
     
     // Se busca la imagen para mostrar en el cotizador segun el producto:
-    /*
     Ext.Ajax.request({
         url    : _0_urlObtenerParametros,
         params :{
@@ -5360,7 +4800,6 @@ Ext.onReady(function()
            }
         }
     });
-    */
     
     if(_0_smap1.ntramite&&_0_smap1.ntramite.length>0)
     {
@@ -5375,7 +4814,6 @@ Ext.onReady(function()
             ,titleCollapse  : true
             ,startCollapsed : true
             ,resizable      : false
-            ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
             ,loader         :
             {
                 scripts   : true
@@ -5510,59 +4948,9 @@ Ext.onReady(function()
             select : _0_gmiCirchospSelect
         });
     }
-    try{
-	    if(_0_smap1.cdramo==Ramo.ServicioPublico){
-	    	Ext.ComponentQuery
-	    	.query("[fieldLabel*='(FRONTERIZO)'],[fieldLabel*='MERO DE SERIE'],[fieldLabel*='TIPO DE CAMBIO AL D'],[fieldLabel*='PAQUETE'],[fieldLabel*='NOMBRE CLIENTE'],[fieldLabel*='TIPO PERSONA'],[fieldLabel*='FECHA DE NACIMIENTO DEL CONTRATANTE']")
-	    	.forEach(function(it){ 
-		    		it.allowBlank=true; 
-		    		it.hide();
-	    		}
-	    	);
-	    	
-	    	
-	    	
-	    	Ext.ComponentQuery.query('[title=<span style="font:bold 14px Calibri;">DATOS GENERALES</span>]')[0]
-	    	.items
-	    	.items
-	    	.sort(function(a,b){
-	    		if(_0_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
-	    			var ordenOriginal=[16,17,22,1,2,3,4,5,6,25,7,18,19,20,24,23,21,31,32];
-	    		}else if(_0_smap1.cdtipsit==TipoSituacion.ServicioPublicoMicro){
-	    			var ordenOriginal=[16,17,1,22,2,3,4,5,6,18,19,20,24,23,21,30,31];
-	    		}
-	    		
-	    		
-	    		var va=ordenOriginal.indexOf(Number(a.cdatribu));
-	    		var vb=ordenOriginal.indexOf(Number(b.cdatribu));
-	    	    
-	    		if(va==-1 ) va=10000000000;
-	    		if(vb==-1 ) vb=10000000000;
-	    		if(a.fieldLabel=='COTIZACI&Oacute;N') va=-1;
-	    		if(b.fieldLabel=='COTIZACI&Oacute;N') vb=-1;
-	    		if(va>vb){
-	    			return 1;
-	    		}else if(va<vb){
-	    			return -1;
-	    		}
-	    		return 0;
-	    	});
-	    	Ext.ComponentQuery.query('[title=<span style="font:bold 14px Calibri;">DATOS GENERALES</span>]')[0]
-	    	.doLayout();
-	    }
-    }catch(e){
-    	debugError(e);
-    }
-    
     
     // Para TODOS LOS PRODUCTOS (si aplican), se agrega validacion de Codigo Postal vs Estado:
     agregaValidacionCPvsEstado();
-    
-    //si hay flujo de autos se recupera cotizacion ultima
-    _0_recuperarCotizacionDeTramite();
-    
-    //recuperar poliza desde sigs para renovacion
-    _0_recuperarPolizaSIGS();
     
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
@@ -5704,5 +5092,7 @@ Ext.onReady(function()
     }
 </script>
 </head>
-<body><div id="_0_divPri" style="height: 1700px;border:1px solid #CCCCCC;"></div></body>
+<body>
+    <div id="_0_divPri" style="height: 1100px;"></div>
+</body>
 </html>
