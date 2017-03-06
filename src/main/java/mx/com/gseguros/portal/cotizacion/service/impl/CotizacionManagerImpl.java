@@ -11544,7 +11544,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public HashMap<String, String> obtieneCodigosPostalesProductos() throws Exception {
 		return cotizacionDAO.obtieneCodigosPostalesProductos();
 	}
-	
+
 	@Override
     public String aplicaDescAutos(
              String cdunieco
@@ -11559,7 +11559,7 @@ public class CotizacionManagerImpl implements CotizacionManager
         String paso = "Modificacion de primas al aplicar descuento";
         try
         {
-             return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim,cdtipsit.isEmpty()?"1":"0");
+        	return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim,cdtipsit.isEmpty()?"1":"0");
         }
         catch(Exception ex)
         {
@@ -11592,7 +11592,7 @@ public class CotizacionManagerImpl implements CotizacionManager
         return cotizacionDAO.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza);
         
     }
-    
+        
     @Override
 	public void eliminaDocsCotiza(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String ntramite) throws Exception{
@@ -11617,7 +11617,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public void eliminarGrupos(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit) throws Exception{
 		this.cotizacionDAO.eliminarGrupos(cdunieco, cdramo, estado, nmpoliza, cdtipsit);
 	}
-	
+
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////

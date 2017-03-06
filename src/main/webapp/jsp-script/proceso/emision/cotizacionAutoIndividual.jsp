@@ -58,6 +58,7 @@ Ext.override(Ext.form.TextField,
     }
 });
 
+
 ////// urls //////
 var _p28_urlCargarCduniecoAgenteAuto          = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto"                       />';
 var _p28_urlCatalogos                         = '<s:url namespace="/catalogos"        action="obtieneCatalogo"                                />';  
@@ -92,12 +93,12 @@ var url_obtiene_forma_pago                    = '<s:url namespace="/emision"    
 var _p28_datosFlujo                           = '<s:url namespace="/emision"          action="datosFlujo"                                     />';
 var _p28_urlCargarAutoPorClaveGS              = '<s:url namespace="/emision"          action="cargarAutoPorClaveGS"           />';
 var _p28_urlCargarSumaAsegurada               = '<s:url namespace="/emision"          action="cargarSumaAseguradaAuto"        />';
-var _p28_urlImprimirCotiza                    = '<s:property value="rutaServidorReports" />';
-var _p28_reportsServerUser                    = '<s:property value="passServidorReports" />';
-var _0_urlCargaValidacionDescuentoR6          = '<s:url namespace="/emision"          action="obtieneValidacionDescuentoR6"                 />';
+var _p28_urlImprimirCotiza                    = '<s:text name="ruta.servidor.reports" />';
+var _p28_reportsServerUser                    = '<s:text name="pass.servidor.reports" />';
+var _0_urlCargaValidacionDescuentoR6          = '<s:url namespace="/emision"         action="obtieneValidacionDescuentoR6"                 />';
 var _0_urlNada                                = '<s:url namespace="/emision"          action="webServiceNada"                 />';
-var _p28_urlImprimirCotiza = '<s:property value="rutaServidorReports" />'; 
-var _p28_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p28_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p28_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _0_urlObtieneValNumeroSerie    = '<s:url namespace="/emision"         action="obtieneValNumeroSerie"          />';
 ////// urls //////
 
@@ -495,8 +496,7 @@ Ext.onReady(function()
         }
     </s:if>
     
-    
-    try{
+        try{
         _p28_panel2Items.forEach(function(it,idx){
             if(it.fieldLabel=='TIPO DE UNIDAD')
                 it.style='margin-left:15px;';
@@ -504,7 +504,6 @@ Ext.onReady(function()
     }catch(e){
         debugError(e);
     }
-    
     
    //CARGO TODOS LOS VALORES QUE SUCURSAL, RAMO Y POLIZA GENERAN
      var _p28_panel7Items =
@@ -663,6 +662,7 @@ Ext.onReady(function()
         ,items      : _p28_panelDxnItems
         ,hidden     : _p28_smap1.cdramo+'x'=='6x'
     }
+    
     ,{
         xtype       : 'datefield'
         ,itemId     : '_p28_feiniItem'
@@ -1596,15 +1596,13 @@ Ext.onReady(function()
         debug('>parche para ramo 6');
         
         try{
-        	_fieldByLabel('AGENTE',null,true).on({
+    		_fieldByLabel('AGENTE',null,true).on({
         		change:function(){
         			_fieldByName('fefin').setValue(
             	            Ext.Date.add(_fieldByName('feini').getValue(),Ext.Date.MONTH,_fieldByName('parametros.pv_otvalor20',null,true).getValue())
-            	        );
+            		);
         		}
         	});
-    	        
-        	
         }catch(e){
         	debugError(e);
         }
@@ -1619,7 +1617,7 @@ Ext.onReady(function()
         }catch(e){
             debugError(e)
         }
-
+        
         //PARCHE PARA TOUPPERCASE EN TEXTFIELDS
         
         Ext.ComponentQuery.query('[xtype=textfield]').forEach(function(item,idx,arr){
@@ -1972,7 +1970,7 @@ Ext.onReady(function()
                         url      : _p28_urlCargarParametros
                         ,params  :
                         {
-                             'smap1.parametro' : 'NUMERO_PASAJEROS_SERV_PUBL'
+                            'smap1.parametro' : 'NUMERO_PASAJEROS_SERV_PUBL'
                             ,'smap1.cdramo'   : _0_smap1.cdramo
                             ,'smap1.cdtipsit' : _0_smap1.cdtipsit
                             ,'smap1.clave4'   : valArray[0].data.key
@@ -1986,7 +1984,7 @@ Ext.onReady(function()
                             if(json.exito)
                             {
                                 _fieldByName('parametros.pv_otvalor04').setValue(json.smap1.P1VALOR);
-                                _fieldByName('parametros.pv_otvalor04').setMinValue(json.smap1.P2VALOR);
+                                 _fieldByName('parametros.pv_otvalor04').setMinValue(json.smap1.P2VALOR);
                                 _fieldByName('parametros.pv_otvalor04').setMaxValue(json.smap1.P3VALOR);
                                 _fieldByName('parametros.pv_otvalor22').setValue(json.smap1.P4VALOR);
                                 _fieldByName('parametros.pv_otvalor04').isValid();
@@ -2113,10 +2111,10 @@ Ext.onReady(function()
     
     
     //ramo 6
-    if(_p28_smap1.cdramo==Ramo.ServicioPublico)
+   
+ if(_p28_smap1.cdramo==Ramo.ServicioPublico)
     {
-     
-       /////SOLO AUTOS SERVICIO PUBLICO///////
+          /////SOLO AUTOS SERVICIO PUBLICO///////
        if(_p28_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
            tipoUnidadFronteriza();
            _fieldByName('parametros.pv_otvalor35').allowBlank=true;
@@ -2143,7 +2141,7 @@ Ext.onReady(function()
        }
        /////SOLO AUTOS SERVICIO PUBLICO///////
        
-          // FECHA FIN DE VIGENCIA SOLO LECTURA
+       // FECHA FIN DE VIGENCIA SOLO LECTURA
           _fieldByLabel("FIN DE VIGENCIA").setReadOnly(true);
         
       //agente
@@ -2253,7 +2251,6 @@ Ext.onReady(function()
             {
                 'select' : function(comp,arr)
                 {
-                    
                     var tmp=_fieldByName('parametros.pv_otvalor22').getValue()
                     debug('auto seleccionado:',arr[0]);
                     var value    = arr[0].get('value');
@@ -2288,7 +2285,6 @@ Ext.onReady(function()
                         });
                     });
                     
-                   
                     _fieldByName('parametros.pv_otvalor22').setValue(tmp)
                     _0_cargarNumPasajerosAuto();
                 }
@@ -2419,13 +2415,13 @@ Ext.onReady(function()
                         debug('### obtener rango años response:',json);
                         if(json.exito)
                         {
-                            var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50', null, true);
+                            var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50');
                             derechoAgenteCmp.limiteInferior = json.smap1.P1VALOR;
                             derechoAgenteCmp.limiteSuperior = json.smap1.P2VALOR;
-                            /* se coloca en comentario a solicitud de Angeles
+                            
                             derechoAgenteCmp.validator=function(value)
                             {
-                                var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50', null, true);
+                                var derechoAgenteCmp = _fieldByName('parametros.pv_otvalor50');
                                 
                                 var r = true;
                                 var max = derechoAgenteCmp.limiteSuperior;
@@ -2439,7 +2435,6 @@ Ext.onReady(function()
                                 }
                                 return r;
                            };
-                           */
                        }
                        else
                        {
@@ -2532,7 +2527,7 @@ function _p28_cotizar(sinTarificar)
     debug('p28_form:',_fieldById('_p28_form'));
     if(!valido)
     {
-    	_fieldById('_p28_form').query("field{isValid()==false}").forEach(function(it){
+        _fieldById('_p28_form').query("field{isValid()==false}").forEach(function(it){
         	debug("### Falta llenar : ",it," - ",it.getValue()," valido ",it.isValid())
         	debug("### msj: ",it.invalidText)
         });
@@ -2581,7 +2576,7 @@ function _p28_cotizar(sinTarificar)
         {
             _p28_smap1['notarificar'] = 'si';//Se utiliza para no retarid
         }
-        else if(!Ext.isEmpty(sinTarificar) && sinTarificar != false && sinTarificar != true)
+                else if(!Ext.isEmpty(sinTarificar) && sinTarificar != false && sinTarificar != true)
         {
             _p28_smap1['notarificar'] = 'no';//Se utiliza para no retarid
             _p28_smap1['modPrim']     = sinTarificar;
@@ -2772,7 +2767,6 @@ function _p28_cotizar(sinTarificar)
                                                 if(me.up('form').getForm().isValid())
                                                 {
                                                     me.up('window').hide();
-                                                    
                                                     _p28_cotizar(true);
                                                 }
                                                 else
@@ -2887,9 +2881,10 @@ function _p28_cotizar(sinTarificar)
                         
                         formasPago=soloDXN;
                     }
-                    ///////////////// DXN /////////////////////////////
                     
-                    /////// FILTRO PARA LOS PLANES DE COTIZACION
+         ///////////////// DXN /////////////////////////////
+         
+         /////// FILTRO PARA LOS PLANES DE COTIZACION
                     var columnas = Ext.decode(json.smap1.columnas);
                     try{
                         
@@ -2912,7 +2907,7 @@ function _p28_cotizar(sinTarificar)
                         debugError(e);
                     }
                     
-                    /////// FILTRO PARA LOS PLANES DE COTIZACION
+                    /////// FILTRO PARA LOS PLANES DE COTIZACION           
                    var gridTarifas=Ext.create('Ext.panel.Panel',
                     {
                         itemId : '_p28_gridTarifas'
@@ -3156,8 +3151,8 @@ function _p28_cotizar(sinTarificar)
 function _p28_bloquear(b)
 {
     debug('>_p28_bloquear:',b);
-    
     var comps=Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p28_form'));
+    
     for(var i=0;i<comps.length;i++)
     {
         comps[i].setReadOnly(b);
@@ -3548,7 +3543,6 @@ function _p28_ramo5ClienteChange(combcl)
                                             }
                                         });
                                     }
-                                    
                                 }
                             }
                         ]
@@ -3977,7 +3971,7 @@ function llenandoCampos(json)
     var ramo = _fieldByName('ramo').getValue();
     var poliza = _fieldByName('poliza').getValue();
     
-  	//CARGAMOS EL STORE DEL CAMPO AGENTE PARA QUE AL CARGAR UNA COTIZACION SE PUEDA LLENAR EL CAMPO
+    //CARGAMOS EL STORE DEL CAMPO AGENTE PARA QUE AL CARGAR UNA COTIZACION SE PUEDA LLENAR EL CAMPO
     try{
     	if(_p28_smap1.cdramo==Ramo.ServicioPublico)	
       		_fieldByLabel('AGENTE',null,true).store.load();
@@ -5390,7 +5384,7 @@ function _p28_cargarParametrizacionCoberturas(callback)
     
     if(!Ext.isEmpty(_fieldLikeLabel('TIPO SERVICIO',null,true)))
     { _f1_tipoServicio = _fieldByLabel('TIPO SERVICIO').getValue();}
-    else if(_p28_smap1.cdramo==Ramo.ServicioPublico){
+        else if(_p28_smap1.cdramo==Ramo.ServicioPublico){
         _f1_tipoServicio = '2';
     }
     
@@ -5418,15 +5412,13 @@ function _p28_cargarParametrizacionCoberturas(callback)
         _f1_submarca='00000';
         _f1_modelo=Ext.ComponentQuery.query('[fieldLabel=MODELO]')[0].getValue();
     }
-    
     var valido = !Ext.isEmpty(_f1_negocio)
                  &&!Ext.isEmpty(_f1_tipoServicio)
                  &&!Ext.isEmpty(_f1_modelo)
                  &&!Ext.isEmpty(_f1_tipoPersona)
                  &&!Ext.isEmpty(_f1_submarca)
                  &&!Ext.isEmpty(_f1_clavegs);
-    
-                
+                 
     if(valido)
     {
         var _f1_panelpri = _fieldById('_p28_panelpri');
@@ -5478,11 +5470,11 @@ function _p28_cargarParametrizacionCoberturas(callback)
                                 item.maxValue = maximo;
                                 if(item.xtype=='combobox')
                                 {
-                                   
                                     debug('item=',item.fieldLabel);
                                     debug('minimo=',minimo,'maximo=',maximo);
                                     item.store.filterBy(function(record)
                                     {
+                                        //VILS
                                         debug('filtrando record=',record);
                                         var key=record.get('key')-0;
                                         debug('quitando key=',key,key>=minimo&&key<=maximo,'.');
@@ -5504,7 +5496,6 @@ function _p28_cargarParametrizacionCoberturas(callback)
                                             });
                                         }
                                     });
-                                    
                                     item.validator=function(value)
                                     {
                                         var valido=true;
@@ -5517,7 +5508,6 @@ function _p28_cargarParametrizacionCoberturas(callback)
                                                 return 'Valor incorrecto';
                                             }
                                             value=this.getStore().findRecord('value',value).get('key')
-                                            
                                             if(Number(value)<Number(this.minValue))
                                             {
                                                 valido = 'El valor m&iacute;nimo es '+this.minValue;
@@ -5528,16 +5518,15 @@ function _p28_cargarParametrizacionCoberturas(callback)
                                             }
                                         }
                                         return valido;
-                                      }
+                                    }
                                     if(!item.isValid())
                                     {
                                         item.reset();
                                     }
+                                  }
                                 }
-                            }
                             itt=item
                             item.isValid();
-                            
                         }
                         else
                         {
@@ -5606,7 +5595,6 @@ function _p28_cargarParametrizacionCoberturas(callback)
                 {
                     mensajeError(_f1_json.respuesta);
                 }
-                
             }
             ,failure : function()
             {
@@ -5635,7 +5623,6 @@ function _p28_cargarConfig()
         {
             var json = Ext.decode(response.responseText);
             debug('### config:',json);
-            
             if(json.exito)
             {
                 for(var prop in json.smap1)//json.smap1{parametros.pv_otvalor02:    "0", parametros.pv_otvalor03:"01"...}
@@ -5662,21 +5649,18 @@ function _p28_cargarConfig()
                     }
                 }
                 _p28_inicializarTatripol();
-               
                 _p28_cargarParamerizacionCoberturasRol();
             }
             else
             {
                 mensajeError(json.respuesta);
             }
-            
         }
         ,failure : function()
         {
             errorComunicacion();
         }
     });
-    
     debug('<_p28_cargarConfig');
 }
 
@@ -6439,7 +6423,6 @@ function agregarAgenteDXN(){
 }
 function _0_obtenerClaveGSPorAuto(callback)
 {
-	
     _fieldByName('parametros.pv_otvalor22').getStore().load(
     {
         params :
@@ -6448,14 +6431,6 @@ function _0_obtenerClaveGSPorAuto(callback)
         }
         ,callback : function(records)
         {
-            var dat=Ext.ComponentQuery.query('[fieldLabel="VERSION"],[fieldLabel="TIPO DE UNIDAD"],[fieldLabel="MARCA"],[fieldLabel="SUBMARCA"],[fieldLabel="MODELO"]')
-            for(i in dat){
-                debug("->",dat[i].getValue())
-                if(Ext.isEmpty(dat[i].getValue())){
-                    return;
-                }
-            }
-            
             debug('callback records:',records);
             debug('### ',_fieldByLabel('TIPO DE UNIDAD'),_fieldByLabel('TIPO DE UNIDAD').getValue());
             
@@ -6469,12 +6444,9 @@ function _0_obtenerClaveGSPorAuto(callback)
             _fieldByName('parametros.pv_otvalor22').setValue(
                 _fieldByName('parametros.pv_otvalor22').findRecord('value',valor)
             );
-           
             _0_cargarNumPasajerosAuto(callback);
-            
         }
     });
-    
 }
 
 function _0_cargarNumPasajerosAuto(callback)
@@ -6491,7 +6463,6 @@ function _0_cargarNumPasajerosAuto(callback)
         }
         ,success : function(response)
         {
-           
             var ijson=Ext.decode(response.responseText);
             debug('### obtener auto por clave gs:',ijson);
             if(ijson.exito)
@@ -6593,7 +6564,7 @@ function tipoUnidadFronteriza(){
         change:function(me,opc){
             // 13 = TIPO UNIDAD FRONTERIZO
             if(me.getValue()==13){
-//                 _fieldById('_p28_fieldsetVehiculo').add({
+                //                 _fieldById('_p28_fieldsetVehiculo').add({
 //                     xtype       : 'hiddenfield'
 //                     ,name        : 'aux.otvalor01'
 //                 })
@@ -6604,7 +6575,6 @@ function tipoUnidadFronteriza(){
 			    .forEach(function(it,idx){
 			        it.setReadOnly(!RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol));
 			    });
-                
                 _fieldByName('parametros.pv_otvalor22').allowBlank=true;
                 _fieldByName('parametros.pv_otvalor02').allowBlank=true;
                 _fieldByName('parametros.pv_otvalor03').allowBlank=true;
@@ -6764,13 +6734,12 @@ function fronterizos()
                         RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol)
                         ) {
                     // Si no obtuvo datos el servicio "NADA", reseteamos valores:
-                   Ext.ComponentQuery.query('[name=parametros.pv_otvalor36]').setValue();
+                    Ext.ComponentQuery.query('[name=parametros.pv_otvalor36]').setValue();
                    Ext.ComponentQuery.query('[name=parametros.pv_otvalor37]').setValue();
                    Ext.ComponentQuery.query('[name=parametros.pv_otvalor38]').setValue();
                    Ext.ComponentQuery.query('[name=parametros.pv_otvalor25]').setValue();
                    Ext.ComponentQuery.query('[name=parametros.pv_otvalor25]').setMinValue();
                    Ext.ComponentQuery.query('[name=parametros.pv_otvalor25]').setMaxValue();
-                    
                 } else {
                     mensajeError(json.error);
                 }
