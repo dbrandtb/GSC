@@ -281,7 +281,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				if("AT".equals(cdtipsit) && tatri.getNameCdatribu().equals("34")){
 				    
 				    ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
-                    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
+				    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
                     {
                         tatri.setOculto(true);
                         tatri.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
